@@ -259,28 +259,13 @@
       opacity: 0.86;
       min-width: 0;
     }
-    .lockup-meta b {
-      display: block;
-      margin-top: 5px;
-      font-size: var(--gs-fs-label-medium);
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      text-transform: none;
-      opacity: 0.96;
-    }
     .hero h1 {
       font-size: clamp(28px, 4.4vw, var(--gs-fs-display-small));
       line-height: var(--gs-lh-tight);
       font-weight: 700;
       letter-spacing: -0.03em;
-      margin-bottom: var(--gs-space-5);
-      max-width: 18ch;
-    }
-    .hero-tag {
-      font-size: var(--gs-fs-body-large);
-      line-height: var(--gs-lh-body);
-      max-width: 46ch;
       margin-bottom: var(--gs-space-7);
+      max-width: 18ch;
     }
     .hero-cta {
       display: flex;
@@ -288,34 +273,6 @@
       gap: var(--gs-space-4);
       align-items: center;
       margin-bottom: var(--gs-space-7);
-    }
-    .hero-note {
-      font-size: var(--gs-fs-body-small);
-      line-height: var(--gs-lh-body);
-      max-width: 54ch;
-      padding-top: var(--gs-space-5);
-      border-top: 1px solid var(--gs-hero-line);
-      opacity: 0.92;
-    }
-    .hero-note code { background: var(--gs-hero-line); color: inherit; }
-    .hero-facts {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--gs-space-7);
-      margin-top: var(--gs-space-6);
-    }
-    .fact { min-width: 0; }
-    .fact b {
-      display: block;
-      font-size: var(--gs-fs-title-medium);
-      font-weight: 700;
-      line-height: var(--gs-lh-tight);
-      letter-spacing: -0.02em;
-    }
-    .fact span {
-      font-size: var(--gs-fs-label-small);
-      line-height: var(--gs-lh-tight);
-      opacity: 0.84;
     }
 
     .hero-panel {
@@ -401,16 +358,6 @@
       line-height: var(--gs-lh-tight);
       margin: var(--gs-space-1) 0 var(--gs-space-3);
     }
-    .cell-note {
-      font-size: var(--gs-fs-body-small);
-      line-height: var(--gs-lh-body);
-      color: var(--gs-content-secondary);
-      /* keep-all 은 한국어 가독성을 위해 유지하되, 끊을 자리가 없는 나열
-         (Default·Hover·… 같은 가운뎃점 런)이 좁은 폭에서 문서를 넘기지
-         않도록 마지막 수단의 줄바꿈을 허용한다. */
-      overflow-wrap: anywhere;
-    }
-    .cell-note + .cell-note { margin-top: var(--gs-space-3); }
     .demo {
       margin: var(--gs-space-5) 0;
       display: flex;
@@ -1496,23 +1443,12 @@
         <div class="hero-copy">
           <div class="lockup">
             <span class="lockup-plate"><img src="/logos/gs-shop-logotype.svg" alt="GS SHOP 워드마크" height="26"></span>
-            <span class="lockup-meta">Design System<b>ref · sys · comp 3계층 토큰</b></span>
+            <span class="lockup-meta">Design System</span>
           </div>
           <h1>파랑은 계정, 분홍은 전환</h1>
-          <p class="hero-tag">TV 편성표와 모바일 라이브가 한 앱에 공존하는 홈쇼핑 커머스. 2025년 BI 리뉴얼 뒤 계정 동선은 다이내믹 블루가, 구매 동선은 브라이트 핑크가 맡는 2색 대비 위에 서 있다.</p>
           <div class="hero-cta">
             <button class="btn btn-cta btn-big" type="button">구매하기</button>
             <button class="btn btn-on-field btn-big" type="button">회원가입</button>
-          </div>
-          <p class="hero-note">마케팅 표면만 브랜드 블루를 풀블리드로 깐다.</p>
-          <template data-theme-variant="dark">
-            <p class="hero-note">지금 보는 다크 표면은 GS SHOP이 발행한 값이 아니다 — 라이브 사이트는 <code>prefers-color-scheme: dark</code>를 인식하기는 하나 별도의 다크 테마 클래스도 <code>data-theme</code> 속성도 없어 실질 라이트 전용이고, 이 스코프는 카탈로그가 파생한 렌더링이다.</p>
-          </template>
-          <div class="hero-facts">
-            <span class="fact"><b>1995</b><span>GS SHOP 개국</span></span>
-            <span class="fact"><b>2025. 9. 1.</b><span>BI 리뉴얼 시행일</span></span>
-            <span class="fact"><b>Pretendard</b><span>앱·웹 단일 서체</span></span>
-            <span class="fact"><b>34종</b><span>공식 컴포넌트 카탈로그</span></span>
           </div>
         </div>
 
@@ -1576,7 +1512,7 @@
 
         <div class="cell">
           <p class="cell-kicker">interaction states</p>
-          <h3>State Layer</h3>
+          <h3>State Layer (가정)</h3>
           <div class="demo">
             <span class="state-chip">Default</span>
             <span class="state-chip is-hover">Hover</span>
@@ -1585,12 +1521,11 @@
             <span class="state-chip is-dragged">Dragged</span>
             <span class="state-chip is-disabled">Disabled</span>
           </div>
-          <p class="cell-note">Disabled 는 Gray 50 대신 <code>content-disabled</code>로 그렸다.</p>
         </div>
 
         <div class="cell span-2">
           <p class="cell-kicker">button variant · shape · icon</p>
-          <h3>공식 Button 속성축</h3>
+          <h3>공식 Button 속성축 (가정)</h3>
           <div class="demo demo--stack">
             <div class="demo">
               <button class="btn btn-primary" type="button">contained</button>
@@ -1607,7 +1542,6 @@
               <button class="btn btn-primary" type="button">endIcon<i class="btn-ic" aria-hidden="true"></i></button>
             </div>
           </div>
-          <p class="cell-note">text 라벨색과 아이콘 도상은 프리뷰가 고른 대체 표현이다.</p>
         </div>
 
       </div>
@@ -1623,7 +1557,7 @@
 
         <div class="cell span-2">
           <p class="cell-kicker">textfield</p>
-          <h3>입력 필드 — large</h3>
+          <h3>입력 필드 — large (가정)</h3>
           <div class="demo demo--stack">
             <label class="field">
               <span class="field-label">아이디</span>
@@ -1652,7 +1586,6 @@
               <span class="field-input is-disabled"><input type="text" placeholder="입력할 수 없습니다" disabled aria-label="추천인 코드"></span>
             </label>
           </div>
-          <p class="cell-note">공식 state 9종 중 6종을 그렸고, positive 색은 error 규칙을 대칭 적용했다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1680,24 +1613,23 @@
 
         <div class="cell span-2">
           <p class="cell-kicker">accordion</p>
-          <h3>아코디언 — standard / compact</h3>
+          <h3>아코디언 — standard / compact (가정)</h3>
           <details class="acc" open>
-            <summary>문안은 원인이 아니라 결과를 말한다<i class="acc-chev" aria-hidden="true"></i></summary>
-            <div class="acc-body">“전국적 통신장애로…” 대신 “시스템 오류로 배송이 지연되고 있습니다”. 사용자가 할 수 있는 것을 말하고, ‘정말·참·매우·성공적으로’ 같은 부사어와 중복 표현은 뺀다.</div>
+            <summary>standard 항목<i class="acc-chev" aria-hidden="true"></i></summary>
+            <div class="acc-body">펼친 내용 영역</div>
           </details>
           <details class="acc">
-            <summary>화면당 버튼은 하나만 강조<i class="acc-chev" aria-hidden="true"></i></summary>
-            <div class="acc-body">눈에 띄는 주요 버튼은 화면당 하나만 두고, 위계는 CTA·Primary·Default 순으로 정리한다.</div>
+            <summary>standard 항목<i class="acc-chev" aria-hidden="true"></i></summary>
+            <div class="acc-body">펼친 내용 영역</div>
           </details>
           <details class="acc is-compact">
-            <summary>날짜·시간 표기<i class="acc-chev" aria-hidden="true"></i></summary>
-            <div class="acc-body">년·월 뒤와 ‘일’을 나타내는 마침표 뒤를 띄어 쓰고, 연월일 축약은 마침표로 통일한다. 시간은 12시간 표기법이 기본이다.</div>
+            <summary>compact 항목<i class="acc-chev" aria-hidden="true"></i></summary>
+            <div class="acc-body">펼친 내용 영역</div>
           </details>
           <details class="acc is-compact" open>
-            <summary>여백은 4px 배수 축<i class="acc-chev" aria-hidden="true"></i></summary>
-            <div class="acc-body">기본 여백은 space-4이고, 그 값을 4px 배수 축 안에서 고른다.</div>
+            <summary>compact 항목<i class="acc-chev" aria-hidden="true"></i></summary>
+            <div class="acc-body">펼친 내용 영역</div>
           </details>
-          <p class="cell-note">compact 행의 작은 글자는 프리뷰가 고른 표현이다.</p>
         </div>
 
         <div class="cell">
@@ -1738,7 +1670,7 @@
 
         <div class="cell span-2">
           <p class="cell-kicker">product-card</p>
-          <h3>상품 카드</h3>
+          <h3>상품 카드 (가정)</h3>
           <p class="catalog-dummy">아래 상품 카드의 상품명·판매가·원가·할인율·별점·리뷰수와 LIVE 방송 플래그, ‘내일도착’·‘무료배송’ 배송 배지는 전부 레이아웃 시연용 더미 데이터이며, 실제 판매·배송·편성 정보가 아닙니다.</p>
           <div class="prod-row">
             <article class="prod">
@@ -1779,8 +1711,6 @@
               </div>
             </article>
           </div>
-          <p class="cell-note">tv·deal 변형의 형태는 이름에서 편 프리뷰의 렌더다.</p>
-          <p class="cell-note">안내 배지는 규정된 inverse 계열 대신 <code>bg-tertiary</code>로 그렸다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1819,7 +1749,7 @@
 
         <div class="cell span-2">
           <p class="cell-kicker">badge-notification · badge-informational · badge-ranking</p>
-          <h3>배지 3종</h3>
+          <h3>배지 3종 (가정)</h3>
           <p class="catalog-dummy">아래 배지의 알림 개수·순위 숫자와 ‘품절 임박’·‘오늘 마감’·‘무이자 할부’ 안내 문구는 레이아웃 시연용 더미 데이터이며, 실제 알림·판매 순위·결제 조건이 아닙니다.</p>
           <div class="demo">
             <span class="badge-noti">3</span>
@@ -1830,7 +1760,6 @@
             <span class="badge-rank">1</span>
             <span class="badge-rank">2</span>
           </div>
-          <p class="cell-note">순위 배지는 규정된 inverse 계열 대신 반전 표면으로 그렸다.</p>
         </div>
 
         <div class="cell span-2">
@@ -1843,12 +1772,11 @@
             <span class="tier tier-vvip"><svg class="tier-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7l4.5 4L12 4l4.5 7L21 7l-2 12H5Z" fill="currentColor"/></svg>vvip</span>
             <span class="tier tier-diamond"><svg class="tier-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10l4 6-9 12L3 9Z" fill="currentColor"/></svg>diamond</span>
           </div>
-          <p class="cell-note">위 마크는 대체 글리프다.</p>
         </div>
 
         <div class="cell span-2">
           <p class="cell-kicker">dialog · snackbar</p>
-          <h3>피드백 표면과 그림자</h3>
+          <h3>피드백 표면과 그림자 (가정)</h3>
           <div class="demo demo--stack">
             <div class="dialog" role="group" aria-label="다이얼로그 예시">
               <h4>장바구니에서 뺄까요?</h4>
@@ -1860,10 +1788,6 @@
             </div>
             <div class="snackbar">장바구니에 담았습니다 <b>보기</b></div>
           </div>
-          <template data-theme-variant="dark" data-theme-op="insert">
-            <p class="cell-note">다크에서는 8~16% 알파가 묻혀 이 프리뷰가 40~58%로 다시 잡았다.</p>
-          </template>
-          <p class="cell-note">그림자를 얹을 표면과 스낵바의 어두운 컨테이너는 규정이 없어 프리뷰가 고른 배치다.</p>
         </div>
 
       </div>
@@ -1879,7 +1803,7 @@
 
         <div class="cell span-2">
           <p class="cell-kicker">bottom-navigation-web</p>
-          <h3>모바일 웹 홈</h3>
+          <h3>모바일 웹 홈 (가정)</h3>
           <p class="catalog-dummy">아래 화면의 상단 상태바 시각, 카테고리 이름, 방송 제목과 종료 예정 시각, ‘다시보기 제공’ 문구, LIVE 플래그, 상품명·판매가·할인율·별점·리뷰수, 순위 배지와 알림 개수는 전부 레이아웃 시연용 더미 데이터이며, 실제 편성·판매·알림 정보가 아닙니다.</p>
           <div class="stage">
             <div class="phone">
@@ -1942,7 +1866,6 @@
               </nav>
             </div>
           </div>
-          <p class="cell-note">위 하단 탭의 글리프는 원본 도상이 아니라 프리뷰가 그린 형태 스케치다.</p>
         </div>
 
         <div class="cell span-2">

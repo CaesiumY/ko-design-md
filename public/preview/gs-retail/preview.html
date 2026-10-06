@@ -178,18 +178,7 @@
       font-size: clamp(30px, 5.4vw, 46px);
       font-weight: 800; line-height: 1.16;
     }
-    .lede {
-      margin-top: 16px; max-width: 46ch;
-      color: var(--ink-muted); font-size: 15px;
-    }
     .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
-    .facts { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 24px; }
-    .facts li { min-width: 0; }
-    .facts-k {
-      display: block; font-size: 11px; font-weight: 700;
-      letter-spacing: 0.1em; color: var(--ink-faint); text-transform: uppercase;
-    }
-    .facts-v { font-size: 13px; font-weight: 600; }
 
     .hero-lockup-wrap { min-width: 0; }
     /* 워드마크 자산은 흰색·투명 PNG 다. 밝은 면 위에서는 보이지 않으므로
@@ -206,16 +195,11 @@
       height: 42px; width: auto; max-width: 100%;
       object-fit: contain; display: block;
     }
-    .hero-note {
-      margin-top: 12px; font-size: 12px; line-height: 1.55;
-      color: var(--ink-muted);
-    }
 
     /* ── 섹션 ────────────────────────────────────────────────────────────── */
     .section { padding: 8px 0 34px; }
     .section-head { border-top: 1px solid var(--rule-strong); padding-top: 18px; margin-bottom: 18px; }
     .section-head h2 { font-size: 20px; font-weight: 800; }
-    .section-sub { margin-top: 8px; color: var(--ink-muted); font-size: 13.5px; max-width: 68ch; }
 
     .showcase {
       display: grid;
@@ -247,7 +231,6 @@
       padding: 2px 9px; max-width: 100%; min-width: 0;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .spec { font-size: 12.5px; line-height: 1.6; color: var(--ink-muted); }
     .demo {
       background: var(--surface-sunken);
       border-radius: var(--r-inner);
@@ -533,22 +516,12 @@
     }
     .fab svg { width: 18px; height: 18px; }
 
-    /* ── 노트 ────────────────────────────────────────────────────────────── */
-    .notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
-    .note {
-      min-width: 0; background: var(--surface);
-      border: 1px solid var(--line); border-left: 3px solid var(--brand-face);
-      border-radius: var(--r-inner); padding: 14px 16px;
-    }
-    .note h3 { font-size: 13px; font-weight: 800; margin-bottom: 8px; }
-    .note p { font-size: 12.5px; line-height: 1.65; color: var(--ink-muted); }
-    .note p + p { margin-top: 8px; }
+    /* ── 꼬리말 ────────────────────────────────────────────────────────────── */
     .foot {
       border-top: 1px solid var(--rule-strong);
       padding: 18px 0 40px; display: flex; flex-direction: column; gap: 6px;
     }
     .catalog-attribution { font-size: 12px; color: var(--ink-muted); }
-    .foot-meta { font-size: 11px; color: var(--ink-faint); overflow-wrap: anywhere; }
 
     /* ── 반응형 붕괴 ─────────────────────────────────────────────────────── */
     @media (max-width: 860px) {
@@ -657,25 +630,15 @@
       <div class="hero-copy">
         <p class="eyebrow">GS25 · GS더프레시 · 와인25플러스</p>
         <h1>흰 바탕 카드 위에<br>청록 브랜드 면과<br>근접 검정 액션</h1>
-        <p class="lede">GS리테일의 O4O 앱이다. 청록은 브랜드 표면(아이콘 배경·마스코트·원형 아이콘)에 남기고 1차 액션만 근접 검정 채움으로 가르는 이 역할 분리가 md 가 관찰로 적은 배치다.</p>
         <div class="hero-actions">
           <button class="btn" type="button">가까운 매장 찾기</button>
           <button class="btn btn-ghost" type="button">브랜드 선택</button>
         </div>
-        <ul class="facts">
-          <li><span class="facts-k">출시</span><span class="facts-v">2022-10-11 · 4개 앱 통합</span></li>
-          <li><span class="facts-k">구현</span><span class="facts-v">Flutter · DX본부 O4O개발팀</span></li>
-          <li><span class="facts-k">1급 표면</span><span class="facts-v">모바일 앱 — 반응형 웹 없음</span></li>
-        </ul>
       </div>
       <div class="hero-lockup-wrap">
         <div class="hero-lockup">
           <img class="hero-wordmark" src="/logos/gs-retail-logotype.png" alt="우리동네GS 가로형 워드마크" height="42">
         </div>
-        <p class="hero-note">가로형 워드마크 자산은 277×84 흰색·투명 PNG 라 밝은 면 위에서는 보이지 않는다. 앱 아이콘이 청록 배경 위 흰 워드마크이므로 여기서도 같은 청록 면 위에 올렸다 — 재현이지 발명이 아니다.</p>
-        <template data-theme-variant="dark" data-theme-op="swap">
-          <p class="hero-note">다크에서도 워드마크가 놓이는 면은 청록 그대로 둔다. 흰색·투명 PNG 는 어두운 지면 위에서도 읽히지만, 그렇게 두면 청록 면이 곧 브랜드 표면이라는 관찰이 화면에서 사라진다.</p>
-        </template>
       </div>
     </div>
   </section>
@@ -683,7 +646,6 @@
   <section class="section">
     <div class="section-head">
       <h2>컴포넌트</h2>
-      <p class="section-sub">아래 캡션은 규범이 아니라 관찰문이다.</p>
     </div>
 
     <div class="showcase">
@@ -693,10 +655,6 @@
           <h3>button-primary</h3>
           <span class="scope">앱 내부 GS ALL 웹뷰 · .GS25 스코프</span>
         </div>
-        <p class="spec">배경 <code>primary-dark</code> · 전경 white — 확인된 값.</p>
-        <template data-theme-variant="dark" data-theme-op="swap">
-          <p class="spec">이 다크 렌더는 색상각·채도를 유지한 채 명도만 올린 적응이고, 발행된 다크 토큰이 아니다.</p>
-        </template>
         <div class="demo">
           <div class="btn-row">
             <div class="btn-demo">
@@ -726,7 +684,6 @@
           <h3>home-header-actions</h3>
           <span class="scope">네이티브 · 공식 확인</span>
         </div>
-        <p class="spec">아이콘 도상은 대체 글리프다.</p>
         <p class="catalog-dummy">장바구니 뱃지의 숫자는 레이아웃 시연용 더미 데이터이며, 실제 장바구니 상태를 나타내지 않는다.</p>
         <div class="demo">
           <div class="hdr-actions">
@@ -756,7 +713,7 @@
 
       <article class="cell">
         <div class="cell-head">
-          <h3>action-pill</h3>
+          <h3>action-pill (가정)</h3>
           <span class="scope">스토어 캡처 관찰</span>
         </div>
         <div class="demo">
@@ -765,15 +722,13 @@
             <button type="button">배달</button>
           </div>
         </div>
-        <p class="spec">선택 쪽을 채움으로 그린 것은 프리뷰의 렌더다.</p>
       </article>
 
       <article class="cell span2">
         <div class="cell-head">
-          <h3>segmented-tab</h3>
+          <h3>segmented-tab (가정)</h3>
           <span class="scope">스토어 캡처 관찰</span>
         </div>
-        <p class="spec">인디케이터 색은 프리뷰가 고른 값이다.</p>
         <div class="demo">
           <div class="seg" role="tablist" aria-label="GS더프레시 수령 방법">
             <button type="button" role="tab" aria-selected="true">매장수령</button>
@@ -810,15 +765,13 @@
             <span class="cat-item"><span class="cat-ico"><svg aria-hidden="true"><use href="#i-home"/></svg></span><span class="cat-label">생활가전</span></span>
           </div>
         </div>
-        <p class="spec">위 도형은 대체 글리프다.</p>
       </article>
 
       <article class="cell">
         <div class="cell-head">
-          <h3>my-fridge-card</h3>
+          <h3>my-fridge-card (가정)</h3>
           <span class="scope">스토어 캡처 관찰</span>
         </div>
-        <p class="spec">아래 주황은 프리뷰가 고른 값이다.</p>
         <p class="catalog-dummy">상품명·남은 일수·보관 수량은 레이아웃 시연용 더미 데이터이며, 실제 보관 상품이나 유효기간이 아니다.</p>
         <div class="demo">
           <div class="fridge">
@@ -841,11 +794,10 @@
             <span class="wine-ico"><svg aria-hidden="true"><use href="#i-wine"/></svg></span>
             <div class="wine-body">
               <p class="fridge-name">와인25플러스</p>
-              <p class="spec">매장 픽업 주류 예약</p>
             </div>
           </div>
           <div class="chip-row">
-            <span class="chip chip-observed">테두리 — 캡처 인상, 프리뷰 렌더</span>
+            <span class="chip chip-observed">테두리 (가정)</span>
             <span class="chip chip-published">wine25-pink — 발행값</span>
           </div>
         </div>
@@ -853,10 +805,9 @@
 
       <article class="cell">
         <div class="cell-head">
-          <h3>promo-tag</h3>
+          <h3>promo-tag (가정)</h3>
           <span class="scope">스토어 캡처 관찰</span>
         </div>
-        <p class="spec">배지의 주황은 프리뷰가 고른 값이다.</p>
         <p class="catalog-dummy">상품명·가격·할인 전 가격, 그리고 ‘무료배송·마감할인·사전예약’ 배지가 이 상품에 붙어 있다는 표시까지 전부 레이아웃 시연용 더미 데이터이며, GS25·GS더프레시의 실제 판매·배송·할인 조건이 아니다.</p>
         <div class="demo">
           <div class="prod">
@@ -873,10 +824,9 @@
 
       <article class="cell">
         <div class="cell-head">
-          <h3>quantity-stepper-sheet</h3>
+          <h3>quantity-stepper-sheet (가정)</h3>
           <span class="scope">2차 자료 캡처</span>
         </div>
-        <p class="spec">곡률·그림자와 비활성 표현은 프리뷰의 렌더다.</p>
         <p class="catalog-dummy">상품명·가격·재고 수량·선택 수량은 레이아웃 시연용 더미 데이터이며, 실제 재고나 판매가가 아니다.</p>
         <div class="demo" style="padding-bottom:0">
           <div class="sheet">
@@ -897,24 +847,21 @@
 
       <article class="cell">
         <div class="cell-head">
-          <h3>empty-cart-state</h3>
+          <h3>empty-cart-state (가정)</h3>
           <span class="scope">2차 자료 캡처</span>
         </div>
-        <p class="spec">일러스트 대신 청록 면으로 자리만 표시했다.</p>
         <div class="demo">
           <div class="empty">
             <span class="mascot">일러스트 자산 미포함</span>
-            <p class="spec">장바구니가 비어 있어요</p>
           </div>
         </div>
       </article>
 
       <article class="cell">
         <div class="cell-head">
-          <h3>home-widget</h3>
+          <h3>home-widget (가정)</h3>
           <span class="scope">스토어 리스팅</span>
         </div>
-        <p class="spec">아래 타일 형태는 프리뷰의 렌더다.</p>
         <div class="demo">
           <div class="widget-grid">
             <span class="widget-item"><svg aria-hidden="true"><use href="#i-qr"/></svg><span>결제/적립</span></span>
@@ -927,10 +874,9 @@
 
       <article class="cell">
         <div class="cell-head">
-          <h3>banner-carousel</h3>
+          <h3>banner-carousel (가정)</h3>
           <span class="scope">네이티브 · 공식 확인</span>
         </div>
-        <p class="spec">아래 면과 인디케이터는 프리뷰의 렌더다.</p>
         <p class="catalog-dummy">배너 문구와 슬라이드 순번은 레이아웃 시연용 더미 데이터이며, 실제 진행 중인 행사가 아니다.</p>
         <div class="demo">
           <div class="banner">
@@ -946,7 +892,6 @@
           <h3>표기 규정</h3>
           <span class="scope">서비스 브랜드 아카이브</span>
         </div>
-        <p class="spec"><code>GS Pay</code> 는 GS 와 P 사이를 띄운다.</p>
         <div class="demo">
           <div class="chip-row" style="margin-top:0">
             <span class="chip chip-gsall">GS ALL 멤버십</span>
@@ -960,7 +905,6 @@
           <h3>bottom-tab-bar · tab-bar-fab</h3>
           <span class="scope">2차 자료 캡처</span>
         </div>
-        <p class="spec">글리프는 대체 도상이다.</p>
         <div class="demo" style="padding-top:34px">
           <nav class="tabbar" aria-label="하단 탭">
             <button class="tab is-on" type="button"><svg aria-hidden="true"><use href="#i-home"/></svg><span>홈</span></button>
@@ -976,10 +920,9 @@
 
       <article class="cell span2">
         <div class="cell-head">
-          <h3>brand-selector-card</h3>
+          <h3>brand-selector-card (가정)</h3>
           <span class="scope">스토어 캡처 관찰</span>
         </div>
-        <p class="spec">마스코트 자리는 빈 면으로 뒀다.</p>
         <div class="demo">
           <div class="bcards">
             <article class="bcard bcard-gs25">
@@ -1010,13 +953,7 @@
   <section class="section">
     <div class="section-head">
       <h2>홈 화면 스케치</h2>
-      <p class="section-sub">이 스케치의 첫 슬롯은 md 의 40×40 헤더 액션이 아니라 관찰된 배송지 pill 이다.</p>
     </div>
-    <p class="spec">앱 기본 배경은 흰 바탕 카드 레이아웃으로 관찰된다.</p>
-    <template data-theme-variant="dark" data-theme-op="swap">
-      <p class="spec">다크 표면값은 발행된 것이 없어, 이 어두운 면은 프리뷰가 정한 값이다.</p>
-    </template>
-    <p class="spec">다크의 밝은 잉크는 이 화면의 적응이다.</p>
     <p class="catalog-dummy">이 화면의 배송지·배너 문구·상품명·남은 일수·장바구니 뱃지 숫자·보관 수량은 전부 레이아웃 시연용 더미 데이터이며, GS25·GS더프레시·와인25플러스의 실제 판매·재고·배송·혜택 정보가 아니다.</p>
     <div class="mock-wrap">
       <div class="phone">
@@ -1090,36 +1027,8 @@
     </div>
   </section>
 
-  <section class="section">
-    <div class="section-head">
-      <h2>이 프리뷰가 지어내지 않은 것</h2>
-      <p class="section-sub">확보된 정확값은 색 2종 · 타이포 1종 · 치수 2종이 전부다.</p>
-    </div>
-    <div class="notes">
-      <div class="note">
-        <h3>곡률과 깊이</h3>
-        <p>radius·elevation 은 공개된 것이 없어 이 화면의 곡률과 그림자는 렌더를 위한 선택이고 어디에도 값으로 적지 않았다.</p>
-        <p>깊이는 면 분리로 읽힌다.</p>
-        <template data-theme-variant="dark" data-theme-op="swap">
-          <p>다크에서도 깊이는 면 명도 차로 읽히고, 그 명도는 발행값이 아니다.</p>
-        </template>
-      </div>
-      <div class="note">
-        <h3>서체</h3>
-        <p>네이티브 UI 서체 패밀리명은 미확인이라, md 가 ‘작업 기준선’ 이라고 못 박은 스택으로 렌더한다.</p>
-      </div>
-      <div class="note">
-        <h3>색의 등급</h3>
-        <p>정확값은 primary-dark·signature-cyan 두 색뿐이고, 근사 관찰색 셋은 발행값이 아니라 렌더를 위한 선택이다.</p>
-        <p>무채색 램프의 이름·번호는 명도순으로 붙인 것이지 발행된 토큰명이 아니다.</p>
-        <p>POP 두 색은 서비스표 통상사용권 계약 대상이라 이 파일에 싣지 않았다.</p>
-      </div>
-    </div>
-  </section>
-
   <footer class="foot">
     <p class="catalog-attribution">우리동네GS 는 GS리테일이 만들어 배포하는 앱이고, 이 화면은 그 앱의 공개 자료를 바탕으로 카탈로그가 재현한 비공식 스케치다.</p>
-    <p class="foot-meta">services/gs-retail.md — 프리뷰는 md 가 값으로 확정한 것만 값으로 쓴다.</p>
   </footer>
 </div>
 </body>

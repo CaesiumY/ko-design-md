@@ -122,15 +122,7 @@
       color: var(--c101-onview1);
     }
     .hero h1 .accent { color: var(--c101-onview-primary); }
-    .hero-sub {
-      margin: 0 0 26px;
-      max-width: 620px;
-      font-size: 18px;
-      line-height: 26px;
-      color: var(--c101-onview2);
-    }
-    .hero-cta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-    .hero-note { margin-top: 16px; font-size: 12px; line-height: 16px; color: var(--c101-onview3); }
+    .hero-cta { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 
     /* ---------- 섹션 골격 ---------- */
     .sec { padding: 38px 0 10px; }
@@ -142,7 +134,6 @@
       gap: 12px;
     }
     .sec-title { margin: 0; font-size: 24px; line-height: 32px; font-weight: 800; color: var(--c101-onview1); }
-    .sec-desc { margin: 6px 0 22px; max-width: 640px; font-size: 14px; line-height: 20px; color: var(--c101-onview2); }
 
     /* ---------- 쇼케이스 그리드 ---------- */
     .showcase {
@@ -163,7 +154,6 @@
       border-radius: var(--c101-r-xl);
     }
     .cell-full { grid-column: span 6; }
-    .cell-cap { margin-top: auto; font-size: 12px; line-height: 16px; color: var(--c101-onview3); }
     .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; min-width: 0; }
 
     /* ---------- 버튼 ---------- */
@@ -596,17 +586,11 @@
     /* ---------- 화면 스케치 (폰 목업) ---------- */
     .screen-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 380px);
+      grid-template-columns: minmax(0, 1fr);
       gap: 36px;
       align-items: center;
       padding-bottom: 40px;
     }
-    .screen-copy { min-width: 0; }
-    .screen-copy h3 { margin: 0 0 10px; font-size: 20px; line-height: 26px; font-weight: 700; color: var(--c101-onview1); }
-    .screen-copy p { margin: 0 0 18px; font-size: 15px; line-height: 21px; color: var(--c101-onview2); max-width: 520px; }
-    .pointlist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
-    .pointlist li { display: flex; gap: 10px; font-size: 14px; line-height: 20px; color: var(--c101-onview2); min-width: 0; }
-    .pointlist .hangul-idx { flex: none; font-size: 13px; }
     .phone-slot { min-width: 0; display: flex; justify-content: center; }
     .phone {
       position: relative;
@@ -890,15 +874,7 @@
       color: var(--c101-onview1);
     }
 [data-theme="dark"] .hero h1 .accent { color: var(--c101-onview-primary); }
-[data-theme="dark"] .hero-sub {
-      margin: 0 0 26px;
-      max-width: 620px;
-      font-size: 18px;
-      line-height: 26px;
-      color: var(--c101-onview2);
-    }
-[data-theme="dark"] .hero-cta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-[data-theme="dark"] .hero-note { margin-top: 16px; font-size: 12px; line-height: 16px; color: var(--c101-onview3); }
+[data-theme="dark"] .hero-cta { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 /* ---------- 섹션 골격 ---------- */
 [data-theme="dark"] .sec { padding: 38px 0 10px; }
 [data-theme="dark"] .sec-head {
@@ -909,7 +885,6 @@
       gap: 12px;
     }
 [data-theme="dark"] .sec-title { margin: 0; font-size: 24px; line-height: 32px; font-weight: 800; color: var(--c101-onview1); }
-[data-theme="dark"] .sec-desc { margin: 6px 0 22px; max-width: 640px; font-size: 14px; line-height: 20px; color: var(--c101-onview2); }
 /* ---------- 쇼케이스 그리드 ---------- */
 [data-theme="dark"] .showcase {
       display: grid;
@@ -929,7 +904,6 @@
       border-radius: var(--c101-r-xl);
     }
 [data-theme="dark"] .cell-full { grid-column: span 6; }
-[data-theme="dark"] .cell-cap { margin-top: auto; font-size: 12px; line-height: 16px; color: var(--c101-onview3); }
 [data-theme="dark"] .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; min-width: 0; }
 /* ---------- 버튼 ---------- */
 [data-theme="dark"] .btn {
@@ -1350,17 +1324,11 @@
 /* ---------- 화면 스케치 (폰 목업) ---------- */
 [data-theme="dark"] .screen-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 380px);
+      grid-template-columns: minmax(0, 1fr);
       gap: 36px;
       align-items: center;
       padding-bottom: 40px;
     }
-[data-theme="dark"] .screen-copy { min-width: 0; }
-[data-theme="dark"] .screen-copy h3 { margin: 0 0 10px; font-size: 20px; line-height: 26px; font-weight: 700; color: var(--c101-onview1); }
-[data-theme="dark"] .screen-copy p { margin: 0 0 18px; font-size: 15px; line-height: 21px; color: var(--c101-onview2); max-width: 520px; }
-[data-theme="dark"] .pointlist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
-[data-theme="dark"] .pointlist li { display: flex; gap: 10px; font-size: 14px; line-height: 20px; color: var(--c101-onview2); min-width: 0; }
-[data-theme="dark"] .pointlist .hangul-idx { flex: none; font-size: 13px; }
 [data-theme="dark"] .phone-slot { min-width: 0; display: flex; justify-content: center; }
 [data-theme="dark"] .phone {
       position: relative;
@@ -1535,20 +1503,10 @@
       <img class="hero-logo" src="/logos/class101.png" alt="클래스101">
       <div class="text-meta-caps">CLASS101 · 온라인 클래스 플랫폼</div>
       <h1 class="text-display">원하는 모든 것,<br>나답게 <span class="accent">배우다</span></h1>
-      <p class="hero-sub"><span data-theme-text="">
-        강조는 단 하나의 오렌지로 수렴하고, 텍스트는 onView 3단 잉크로 층을 나누며,
-        구획은 그림자 대신 반투명 헤어라인이 맡습니다. 취미부터 커리어까지 —
-        배움의 경험을 하나의 절제된 시각 언어로 잇습니다.
-      </span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">
-        다크 캔버스에서도 강조는 단 하나의 오렌지로 수렴하고, 텍스트는 onView 3단 잉크로
-        층을 나누며, 구획은 그림자 대신 반투명 흰색 헤어라인이 맡습니다. 취미부터
-        커리어까지 — 배움의 경험을 하나의 절제된 시각 언어로 잇습니다.
-      </span></template></p>
       <div class="hero-cta">
         <button class="btn btn-lg btn-primary">클래스 둘러보기</button>
         <button class="btn btn-lg btn-outlined">크리에이터 시작하기</button>
       </div>
-      <p class="hero-note"><span data-theme-text="">같은 오렌지가 라이트·다크 캔버스 어디서든 그대로 — 버튼·배지·선택 상태가 전부 한 색을 공유합니다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">버튼·배지·FAB의 오렌지 필은 라이트와 동일값 그대로 — 텍스트용 오렌지만 onViewPrimary 다크값으로 한 단계 밝아집니다.</span></template></p>
     </section>
 
     <!-- ================= 01 컴포넌트 ================= -->
@@ -1557,7 +1515,6 @@
         <span class="hangul-idx">01</span>
         <h2 class="sec-title">컴포넌트</h2>
       </div>
-      <p class="sec-desc"><span data-theme-text="">버튼·칩·토스트부터 드롭다운·탭·테이블까지 같은 토큰 사전 위에서 동작합니다 — 잉크 반전 2차 버튼, pill 실루엣, 상태 4색과 container 틴트.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">버튼·칩·토스트부터 드롭다운·탭·테이블까지 같은 토큰 사전 위에서 동작합니다 — 다크는 별도 팔레트가 아니라 같은 토큰명의 값 오버라이드, 상태 틴트는 딥 톤 쌍으로 뒤집힙니다.</span></template></p>
 
       <div class="showcase">
         <!-- A. Buttons -->
@@ -1578,7 +1535,6 @@
             <button class="btn btn-md btn-primary"><span class="spinner"></span>저장 중</button>
             <button class="btn btn-md btn-primary" disabled="">저장하기</button>
           </div>
-          <p class="cell-cap"><span data-theme-text="">강조는 primary 하나로 수렴 — 2차는 잉크 반전 표면, 3차는 반투명 워시. loading 스피너와 disabled 상태를 내장합니다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">강조는 primary 하나로 수렴 — 2차 잉크 반전은 밝은 표면으로 뒤집히고, 3차 워시는 5% 흰색으로 적응합니다. loading 스피너와 disabled 상태를 내장합니다.</span></template></p>
         </div>
 
         <!-- B. FilterChip -->
@@ -1598,7 +1554,6 @@
             <button class="chip chip-sm"><span class="chip-label">이번 주 신규</span></button>
             <button class="chip chip-sm chip-clip"><span class="chip-label">아이패드 캐릭터 드로잉 입문</span></button>
           </div>
-          <p class="cell-cap"><span data-theme-text="">완전한 pill 실루엣 — 선택 상태도 같은 오렌지로 표시하고, 긴 라벨은 lineLimit 말줄임으로 접습니다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">완전한 pill 실루엣 — 선택 상태는 같은 오렌지 보더와 딥 톤 primaryContainer 틴트로 표시하고, 긴 라벨은 lineLimit 말줄임으로 접습니다.</span></template></p>
         </div>
 
         <!-- C. TextField -->
@@ -1622,7 +1577,6 @@
             </div>
             <p class="field-helper">이메일을 입력해주세요</p>
           </div>
-          <p class="cell-cap">라벨이 필드 안에서 떠오르는 다이내믹 라벨 — 헤어라인 보더에 clearable, 에러 상태는 보더와 helper가 함께 붉어집니다.</p>
         </div>
 
         <!-- D. Toast -->
@@ -1638,7 +1592,6 @@
             <span class="toast-title">일시적인 오류가 발생했습니다</span>
             <button class="toast-action">다시 시도</button>
           </div>
-          <p class="cell-cap"><span data-theme-text="">짙은 잉크 표면의 라운드 필 — 상태 아이콘과 존댓말 안내형 카피("~되었습니다"), 짧은 동사형 액션이 얹힙니다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">잉크 반전 필이 다크에선 밝은 종이 톤으로 뒤집힙니다 — 존댓말 안내형 카피("~되었습니다") 위에 짧은 동사형 액션이 다크 텍스트용 오렌지를 그대로 씁니다.</span></template></p>
         </div>
 
         <!-- E. Callout -->
@@ -1663,7 +1616,6 @@
               <span class="callout-body">결제 수단을 확인해주세요</span>
             </div>
           </div>
-          <p class="cell-cap"><span data-theme-text="">informative / success / warning / error — 상태 4색이 각자의 옅은 container 틴트를 동반하고, 내장 버튼 옵션을 갖습니다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">informative / success / warning / error — 상태 4색은 동일값을 유지하고, container 틴트만 딥 톤 다크 쌍으로 뒤집힙니다. 내장 버튼 옵션을 갖습니다.</span></template></p>
         </div>
 
         <!-- F. Breadcrumbs · Divider -->
@@ -1681,7 +1633,6 @@
             <hr class="div-dashed">
             <hr class="div-thick">
           </div>
-          <p class="cell-cap"><span data-theme-text="">현재 페이지는 항상 onView1 — 구획은 그림자 대신 5%·10% 반투명 헤어라인(default · dashed · thick)이 맡습니다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">현재 페이지는 항상 onView1 — 구획은 그림자 대신 8%·15% 반투명 흰색 헤어라인(default · dashed · thick)이 맡습니다.</span></template></p>
         </div>
 
         <!-- G. Avatar · Badge · Skeleton -->
@@ -1709,7 +1660,6 @@
               <div class="sk sk-chip"></div>
             </div>
           </div>
-          <p class="cell-cap"><span data-theme-text="">배지는 확장 팔레트의 보조 악센트까지 허용 — 스켈레톤은 실제 컴포넌트와 동일 사이즈라 로딩 전후 레이아웃이 흔들리지 않습니다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">배지의 보조 악센트는 두 모드 동일값, 아바타의 orangeMuted 바탕은 딥 톤으로 대칭 반전 — 스켈레톤은 실제 컴포넌트와 동일 사이즈라 로딩 전후 레이아웃이 흔들리지 않습니다.</span></template></p>
         </div>
 
         <!-- H. ModalBottomSheet -->
@@ -1724,7 +1674,6 @@
               <button class="sheet-subbtn">나중에 보기</button>
             </div>
           </div>
-          <p class="cell-cap">모바일에선 바텀 시트, PC에선 모달로 등장하는 적응형 다이얼로그 — Primary 없이 Secondary·Sub 버튼을 쓸 수 없습니다.</p>
         </div>
 
         <!-- I. Dropdown -->
@@ -1742,7 +1691,6 @@
               <button class="dd-item">찜 많은 순</button>
             </div>
           </div>
-          <p class="cell-cap"><span data-theme-text="">renderOpener 아래 8px 오프셋으로 붙는 부착형 패널 — PC에선 드롭다운, 모바일에선 바텀 시트로 등장하고, 패널 구획도 그림자 없는 5%·10% 헤어라인이 맡습니다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">renderOpener 아래 8px 오프셋으로 붙는 부착형 패널 — PC에선 드롭다운, 모바일에선 바텀 시트로 등장하고, 패널 구획도 그림자 없는 8%·15% 헤어라인이 맡습니다.</span></template></p>
         </div>
 
         <!-- J. ScrollTabsLayout · ViewPagerTabGroup -->
@@ -1756,10 +1704,9 @@
               <button class="tabbar-tab">리뷰</button>
             </div>
             <div class="tabpane">
-              <p><span data-theme-text="">탭 바가 콘텐츠 스크롤을 따라 현재 섹션을 가리키고, 탭을 선택하면 페이지 뷰가 전환됩니다. 활성 탭만 텍스트용 오렌지를 얻습니다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">탭 바가 콘텐츠 스크롤을 따라 현재 섹션을 가리키고, 탭을 선택하면 페이지 뷰가 전환됩니다. 활성 탭만 한 단계 밝은 텍스트용 오렌지를 얻습니다.</span></template></p>
+              <p>탭 콘텐츠 영역</p>
             </div>
           </div>
-          <p class="cell-cap">ScrollTabsLayout은 스크롤 위치와 연동되는 고정 탭, ViewPagerTabGroup은 탭 선택으로 뷰를 스와이프 전환하는 탭 — 두 레이아웃이 같은 탭 바 문법을 공유합니다.</p>
         </div>
 
         <!-- K. Slider -->
@@ -1797,7 +1744,6 @@
               <p class="ttl">프로크리에이트로 나만의 굿즈 만들기</p>
             </div>
           </div>
-          <p class="cell-cap">loop·snap·panelsPerView로 제어하는 가로 캐러셀 — 다음 패널이 오른쪽에 살짝 걸쳐 보이며 이어짐을 암시하는 카드 레일 패턴의 기반입니다.</p>
         </div>
 
         <!-- L. Table -->
@@ -1857,7 +1803,6 @@
               </tbody>
             </table>
           </div>
-          <p class="cell-cap"><span data-theme-text="">행 선택·정렬·필터칩을 갖춘 어드민급 데이터 스위트 — 액션 라벨은 "새로고침"·"추가" 같은 2–4자 동사형, 선택 행은 옅은 primaryContainer 틴트, 좁은 폭에선 표만 가로 스크롤로 접힙니다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">행 선택·정렬·필터칩을 갖춘 어드민급 데이터 스위트 — 액션 라벨은 "새로고침"·"추가" 같은 2–4자 동사형, 선택 행은 딥 톤 primaryContainer 틴트, 좁은 폭에선 표만 가로 스크롤로 접힙니다.</span></template></p>
         </div>
       </div>
     </section>
@@ -1868,26 +1813,8 @@
         <span class="hangul-idx">02</span>
         <h2 class="sec-title">화면 스케치</h2>
       </div>
-      <p class="sec-desc">바텀바·FAB·바텀시트가 zIndex 1급 토큰으로 명명된 모바일 앱 우선 시스템 — 탐색 화면 한 장으로 요약합니다.</p>
 
       <div class="screen-grid">
-        <div class="screen-copy">
-          <h3>탐색 화면, 토큰 그대로</h3>
-          <p><span data-theme-text="">
-            흰 캔버스 위에 헤어라인으로만 구획을 나누고, 오렌지는 활성 탭과
-            플로팅 액션 버튼 두 곳에만 등장합니다. 카드 일러스트의 유채색은
-            확장 팔레트의 몫입니다.
-          </span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">
-            딥 잉크 캔버스 위에 반투명 흰색 헤어라인으로만 구획을 나누고, 오렌지는
-            활성 탭과 플로팅 액션 버튼 두 곳에만 등장합니다. 카드 일러스트의
-            유채색은 확장 팔레트의 몫입니다.
-          </span></template></p>
-          <ul class="pointlist">
-            <li><span class="hangul-idx">1</span><span>TopBar emphasis — 메인 상단은 큰 타이틀과 좌우 아이콘 액션 슬롯.</span></li>
-            <li><span class="hangul-idx">2</span><span>GridList — 브레이크포인트별 열 선언(2→3→4열)으로 접히는 카드 그리드.</span></li>
-            <li><span class="hangul-idx">3</span><span><span data-theme-text="">카테고리 라벨은 텍스트용 오렌지(onViewPrimary), 크리에이터명은 onView3 — 3단 잉크 위계.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">카테고리 라벨은 한 단계 밝은 텍스트용 오렌지(onViewPrimary 다크값), 크리에이터명은 onView3 — 3단 잉크 위계.</span></template></span></li>
-          </ul>
-        </div>
         <div class="phone-slot">
           <div class="phone">
             <div class="topbar">

@@ -219,29 +219,6 @@
       color: var(--ldsg-white);
       border: 1px solid oklch(1 0 0 / 0.6);
     }
-    .hero-meta {
-      position: relative;
-      display: grid;
-      /* 메타 4개 기준 — 항목 수를 바꾸면 이 column 수도 함께 조정 (정적 프리뷰) */
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 20px 28px;
-      margin-top: 36px;
-      padding-top: 24px;
-      border-top: 1px solid oklch(1 0 0 / 0.2);
-    }
-    .hero-meta-item {
-      font-size: 12px;
-      opacity: 0.9;
-      min-width: 0;
-    }
-    .hero-meta-item strong {
-      display: block;
-      font-size: 16px;
-      font-weight: 800;
-      margin-bottom: 4px;
-      letter-spacing: -0.02em;
-      overflow-wrap: anywhere;
-    }
     .hero-family-badge {
       display: inline-flex;
       align-items: center;
@@ -1159,36 +1136,10 @@
     }
 
     /* ---------- Footer note ---------- */
-    .footer-note {
-      margin-top: 40px;
-      padding-top: 20px;
-      border-top: 1px solid var(--shell-line);
-      font-size: 12px;
-      color: var(--shell-muted);
-      line-height: 1.7;
-    }
-    .footer-note code {
-      font-family: ui-monospace, "SF Mono", Menlo, monospace;
-      font-size: 11px;
-      color: var(--ldsg-linegreen);
-      background: var(--ldsg-gray-150);
-      padding: 1px 5px;
-      border-radius: 3px;
-      overflow-wrap: anywhere;
-    }
 
     .korean { font-feature-settings: "ss01", "kern"; }
-    .note-line {
-      font-size: 11px;
-      color: var(--shell-muted);
-      line-height: 1.6;
-      margin-top: 14px;
-    }
 
     /* ---------- Mobile (≤720px) grid collapse ---------- */
-    @media (max-width: 720px) {
-      .hero-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
 
     /* ---------- Mobile (≤560px) component overrides ---------- */
     @media (max-width: 560px) {
@@ -1207,7 +1158,6 @@
       .hero-name { font-size: 30px; }
       .hero-family-badge { margin-left: 0; margin-top: 8px; }
       .hero-cta { height: 44px; padding: 0 18px; font-size: 14px; }
-      .hero-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 18px; }
 
       .section-head { flex-wrap: wrap; gap: 6px 14px; margin: 40px 0 16px; }
       .section-sub { margin-left: 0; flex-basis: 100%; }
@@ -1445,29 +1395,6 @@
       color: var(--ldsg-white);
       border: 1px solid oklch(1 0 0 / 0.6);
     }
-[data-theme="dark"] .hero-meta {
-      position: relative;
-      display: grid;
-      /* 메타 4개 기준 — 항목 수를 바꾸면 이 column 수도 함께 조정 (정적 프리뷰) */
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 20px 28px;
-      margin-top: 36px;
-      padding-top: 24px;
-      border-top: 1px solid oklch(1 0 0 / 0.2);
-    }
-[data-theme="dark"] .hero-meta-item {
-      font-size: 12px;
-      opacity: 0.92;
-      min-width: 0;
-    }
-[data-theme="dark"] .hero-meta-item strong {
-      display: block;
-      font-size: 16px;
-      font-weight: 800;
-      margin-bottom: 4px;
-      letter-spacing: -0.02em;
-      overflow-wrap: anywhere;
-    }
 [data-theme="dark"] .hero-family-badge {
       display: inline-flex;
       align-items: center;
@@ -1481,21 +1408,6 @@
       text-transform: uppercase;
       margin-left: 8px;
       vertical-align: middle;
-    }
-/* ---------- Dark-mode 안내 배너 ---------- */
-[data-theme="dark"] .dark-banner {
-      margin-top: 24px;
-      padding: 14px 18px;
-      background: oklch(0.18 0.04 70);
-      border: 1px solid oklch(0.7 0.15 70 / 0.4);
-      border-radius: var(--ldsg-radius-300);
-      font-size: 12px;
-      color: oklch(0.92 0.06 70);
-      line-height: 1.65;
-    }
-[data-theme="dark"] .dark-banner strong {
-      color: oklch(0.88 0.12 70);
-      font-weight: 700;
     }
 /* ---------- Section header ---------- */
 [data-theme="dark"] .section-head {
@@ -2376,32 +2288,8 @@
       opacity: 0.88;
     }
 /* ---------- Footer note ---------- */
-[data-theme="dark"] .footer-note {
-      margin-top: 40px;
-      padding-top: 20px;
-      border-top: 1px solid var(--shell-line);
-      font-size: 12px;
-      color: var(--shell-muted);
-      line-height: 1.7;
-    }
-[data-theme="dark"] .footer-note code {
-      font-family: ui-monospace, "SF Mono", Menlo, monospace;
-      font-size: 11px;
-      color: var(--ldsg-linegreen-dark);
-      background: var(--d-surface-100);
-      padding: 1px 5px;
-      border-radius: 3px;
-      overflow-wrap: anywhere;
-    }
 [data-theme="dark"] .korean { font-feature-settings: "ss01", "kern"; }
-[data-theme="dark"] .note-line {
-      font-size: 11px;
-      color: var(--shell-muted);
-      line-height: 1.6;
-      margin-top: 14px;
-    }
 /* ---------- Mobile (≤720px) grid collapse ---------- */
-@media (max-width: 720px) {[data-theme="dark"] .hero-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }}
 /* ---------- Mobile (≤560px) component overrides ---------- */
 @media (max-width: 560px) {[data-theme="dark"] .btn-rows { gap: 12px; }
 [data-theme="dark"] .btn-row:not([style*="column"]) { gap: 10px; }
@@ -2417,7 +2305,6 @@
 [data-theme="dark"] .hero-name { font-size: 30px; }
 [data-theme="dark"] .hero-family-badge { margin-left: 0; margin-top: 8px; }
 [data-theme="dark"] .hero-cta { height: 44px; padding: 0 18px; font-size: 14px; }
-[data-theme="dark"] .hero-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 18px; }
 [data-theme="dark"] .section-head { flex-wrap: wrap; gap: 6px 14px; margin: 40px 0 16px; }
 [data-theme="dark"] .section-sub { margin-left: 0; flex-basis: 100%; }}
 </style></head>
@@ -2446,53 +2333,12 @@
         <span class="hero-family-chip"><span class="dot"></span>LINE Manga</span>
         <span class="hero-family-chip"><span class="dot"></span>LINE Shopping</span>
       </div>
-      <p class="hero-tagline korean">
-        절제된 친근함. LDSG는 메신저·페이·뮤직·만화·쇼핑을 가로지르는
-        <strong>크로스-프로덕트 레이어</strong>로, LINE Green을 패밀리 공통 Primary로 약속하고
-        Hover 70% · Pressed 50% opacity 상태 모델 한 줄로 모든 피드백을 통합합니다.
-        일본 · 대만 · 태국 어디서나 같은 가족처럼 느껴지는 화면을 유지합니다.
-      </p><template data-theme-variant="dark" data-theme-op="swap"><p class="hero-tagline korean">
-        절제된 친근함. LDSG는 메신저·페이·뮤직·만화·쇼핑을 가로지르는
-        <strong>크로스-프로덕트 레이어</strong>로, LINE Green을 패밀리 공통 Primary로 약속하고
-        Hover 70% · Pressed 50% opacity 상태 모델 한 줄로 모든 피드백을 통합합니다.
-        다크 환경에서는 LINE Green의 명도를 +7 올려 가독성을 확보합니다.
-      </p></template>
+      <p class="hero-tagline korean">절제된 친근함.</p>
       <div class="hero-cta-row">
         <button class="hero-cta hero-cta-primary">시작하기</button>
         <button class="hero-cta hero-cta-outlined">토큰 가이드</button>
       </div>
-      <div class="hero-meta">
-        <div class="hero-meta-item">
-          <strong>LDSG</strong>
-          Global Family Service 공용 시스템
-        </div>
-        <div class="hero-meta-item">
-          <strong>oklch(0.72 0.205 149)</strong>
-          LINE Green · Brand Primary
-        </div><template data-theme-variant="dark" data-theme-op="swap"><div class="hero-meta-item">
-          <strong>oklch(0.72 0.205 149)</strong>
-          LINE Green 원본 (light 정전)
-        </div></template>
-        <div class="hero-meta-item">
-          <strong>System-native</strong>
-          EN · JP · TC · TH 언어팩 (커스텀 웹폰트 없음)
-        </div><template data-theme-variant="dark" data-theme-op="swap"><div class="hero-meta-item">
-          <strong>+7 명도</strong>
-          Dark 보강 oklch(0.79 0.205 149)
-        </div></template>
-        <div class="hero-meta-item">
-          <strong>LAICON</strong>
-          공식 아이콘 라이브러리
-        </div><template data-theme-variant="dark" data-theme-op="swap"><div class="hero-meta-item">
-          <strong>Known Gap</strong>
-          LDSG 공식 다크 토큰 미공개
-        </div></template>
-      </div>
-    </section><template data-theme-variant="dark" data-theme-op="insert"><div class="dark-banner korean">
-      <strong>다크 모드 안내</strong> — LDSG 공식 문서는 다크 모드 카운터파트 토큰을 정의하지 않습니다(Known Gaps).
-      본 미리보기는 토큰을 재정의하지 않고 표현 레이어에서만 셸·카드 배경을 어둡게 매핑하며,
-      LINE Green primary(oklch 0.72 → 0.79)와 role-negative(0.61 → 0.66)의 명도를 올려 대비를 확보합니다.
-    </div></template>
+    </section>
 
     <!-- =================== COMPONENTS — BUTTONS =================== -->
     <div class="section-head">
@@ -2532,9 +2378,6 @@
           <div class="btn-row" style="align-items: stretch; flex-direction: column; gap: 8px; padding-top: 10px; border-top: 1px dashed var(--shell-line); margin-top: 4px;">
             <span class="btn-rowlabel" style="margin-bottom: 4px;">Full-Bleed · iPhone X+</span>
             <button class="btn contained" style="width: 100%; border-radius: 0; height: 56px; font-size: 16px;">결제하기</button>
-            <div style="font-size: 11px; color: var(--shell-muted); line-height: 1.55;">
-              라운드 0 · 전체 너비 · 화면 최하단 고정. Home indicator 영역도 같은 색으로 칠하며 화면 최하단 1차 액션 한정으로만 사용한다.
-            </div>
           </div>
         </div>
       </div>
@@ -2643,9 +2486,6 @@
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8.5" r="3.5"></circle><path d="M5 20c1-3.5 4-5.5 7-5.5s6 2 7 5.5"></path></svg>
             </div>
           </div>
-          <div style="font-size: 11px; color: var(--shell-muted); margin-top: 16px; line-height: 1.6;">
-            기본 권장: Primary 또는 Red 계열.<br>두 자리 이상은 twoDigit 옵션.
-          </div>
         </div>
       </div>
 
@@ -2693,11 +2533,6 @@
               새로고침
             </button>
           </div>
-          <div style="font-size: 11px; color: var(--shell-muted); margin-top: 16px; line-height: 1.6;">
-            Circle: 단일 또는 Expandable (메인 채움 LINE Green).<br>Pill: 흰 배경 · gray-300 보더 · 보조 액션 유도용.
-          </div><template data-theme-variant="dark" data-theme-op="swap"><div style="font-size: 11px; color: var(--shell-muted); margin-top: 16px; line-height: 1.6;">
-            Circle: 단일 또는 Expandable (메인 채움 LINE Green).<br>Pill: gray-300 보더 · 보조 액션 유도용.
-          </div></template>
         </div>
       </div>
 
@@ -2741,7 +2576,6 @@
             <div class="check-box indeterminate"></div>
             <div class="check-label-block">
               <div class="check-label korean">전체 약관 동의</div>
-              <div class="check-desc korean">자식이 섞이면 부모는 Indeterminate</div>
             </div>
           </div>
           <div class="check-nest">
@@ -2955,7 +2789,6 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 8v5"></path><circle cx="12" cy="16.5" r="0.6" fill="currentColor"></circle><circle cx="12" cy="12" r="9"></circle></svg>
             <span class="korean">네트워크를 확인하세요</span>
           </div>
-          <div class="note-line korean">텍스트 text-m / gray-100 · 사용자가 닫을 수 없음 (강제 확인엔 popup).</div>
         </div>
       </div>
     </div>
@@ -3063,7 +2896,6 @@
               <div class="bnav-ic" style="width: 24px; height: 24px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8"></path></svg></div>설정
             </div>
           </div></template>
-          <div class="note-line korean">selected 검정 solid · enabled gray-600 outline · disabled #E4E4E4 · 최대 5개 · 가로 스크롤 없음.</div>
         </div>
       </div>
 
@@ -3085,7 +2917,6 @@
           </div><template data-theme-variant="dark" data-theme-op="swap"><div style="background: linear-gradient(135deg, var(--ldsg-brand-secondary), var(--ldsg-linegreen-dark)); border-radius: var(--ldsg-radius-300); padding: 16px; width: 100%; box-sizing: border-box; display: flex; justify-content: flex-end;">
             <span class="pind-num"><span>3</span><span class="total">/ 8</span></span>
           </div></template>
-          <div class="note-line korean" style="margin-top: 0; text-align: center;">Number 타입은 black-40 배경 · white-10 보더 · 이미지/캐러셀 위에 올립니다.</div>
         </div>
       </div>
     </div>
@@ -3116,7 +2947,6 @@
             <div class="skel skel-line"></div>
             <div class="skel skel-line w70"></div>
           </div>
-          <div class="note-line korean">progress indicator와 동시 사용 금지.</div>
         </div>
       </div>
 
@@ -3137,7 +2967,6 @@
             </div>
             <div class="appfooter-copy">© LY Corporation</div>
           </div>
-          <div class="note-line korean">items gray-500 · copyright gray-400 · 컨테이너 gray-150 · divider black-5 · 375px 고정.</div>
         </div>
       </div>
     </div>
@@ -3146,7 +2975,6 @@
     <div class="section-head">
       <span class="section-idx">07</span>
       <h2 class="section-title korean">화면 목업 — 1:1 채팅</h2>
-      <span class="section-sub korean">LDSG 토큰이 실제 라인 채팅 화면에 적용된 모습</span>
     </div>
 
     <div class="screen-mock">
@@ -3208,19 +3036,6 @@
     </div>
 
     <!-- =================== FOOTER NOTE =================== -->
-    <div class="footer-note korean">
-      본 미리보기는 <code>services/line-design-system.md</code>의 토큰을 기준으로 시각화한 LDSG 카탈로그입니다.
-      색 hex는 LDSG가 텍스트 데이터로 발행하며, 이 문서의 색 토큰 24개 중 22개가 발행값과 ΔE ≤ 0.02로 일치합니다 — <code>gray-800</code>은 발행값 #2A2A2A와 다릅니다.
-      파생 Brand/Role hex(<code>red-600</code> = #E8332E, <code>blue-600</code> = #2C7DFA 등)는 매핑이 공식이고 hex가 재구성이며, 타입 px는 공식 이미지에서 측정한 근사값, spacing 사다리는 컴포넌트 spec 실측에서 재구성한 값입니다.
-      타이포는 언어별 system-native이며 한국어는 LDSG Language Pack 1급이 아니라 다운스트림 Pretendard 폴백으로 렌더됩니다.
-      LDSM(LINE Messenger 본체)의 Semantic Colors 명명 체계는 포함되지 않습니다.
-    </div><template data-theme-variant="dark" data-theme-op="swap"><div class="footer-note korean">
-      본 미리보기는 <code>services/line-design-system.md</code>의 토큰을 기준으로 시각화한 LDSG 카탈로그입니다.
-      색 hex는 LDSG가 텍스트 데이터로 발행하며, 이 문서의 색 토큰 24개 중 22개가 발행값과 ΔE ≤ 0.02로 일치합니다 — <code>gray-800</code>은 발행값 #2A2A2A와 다릅니다.
-      파생 Brand/Role hex(<code>red-600</code> = #E8332E, <code>blue-600</code> = #2C7DFA 등)는 매핑이 공식이고 hex가 재구성이며, 타입 px는 공식 이미지에서 측정한 근사값, spacing 사다리는 컴포넌트 spec 실측에서 재구성한 값입니다.
-      다크 모드는 LDSG 공식 토큰이 없어(Known Gap) 표현 레이어에서만 매핑하며, LINE Green(0.72 → 0.79)과 role-negative(0.61 → 0.66)의 명도를 올렸습니다.
-      타이포는 언어별 system-native이며 한국어는 다운스트림 Pretendard 폴백으로 렌더됩니다.
-    </div></template>
 
   </div>
 

@@ -211,13 +211,6 @@
       letter-spacing: 0;
     }
 
-    .hero-copy {
-      max-width: 520px;
-      margin: 20px 0 0;
-      color: var(--fg-muted);
-      font-size: 18px;
-      line-height: 1.75;
-    }
 
     .service-link-list {
       display: grid;
@@ -356,12 +349,6 @@
       letter-spacing: 0;
     }
 
-    .section-desc {
-      margin: 0;
-      color: var(--fg-muted);
-      font-size: 15px;
-      line-height: 1.75;
-    }
 
     .component-grid {
       display: grid;
@@ -590,18 +577,12 @@
     }
 
     .sheet h3 {
-      margin: 18px 20px 4px;
+      margin: 18px 20px 18px;
       color: var(--fg);
       font-size: 22px;
       line-height: 1.3;
     }
 
-    .sheet p {
-      margin: 0 20px 18px;
-      color: var(--fg-muted);
-      font-size: 14px;
-      line-height: 1.5;
-    }
 
     .sheet-actions {
       display: grid;
@@ -737,8 +718,7 @@
 
     .banner-copy strong,
     .banner-copy span,
-    .callout-copy strong,
-    .callout-copy span {
+    .callout-copy strong {
       display: block;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -752,8 +732,7 @@
       white-space: nowrap;
     }
 
-    .banner-copy span,
-    .callout-copy span {
+    .banner-copy span {
       margin-top: 3px;
       color: var(--fg-muted);
       font-size: 12px;
@@ -1066,8 +1045,7 @@
     }
 
     .result-copy,
-    .result-copy strong,
-    .result-copy span {
+    .result-copy strong {
       display: block;
     }
 
@@ -1077,12 +1055,6 @@
       font-weight: 900;
     }
 
-    .result-copy span {
-      margin-top: 4px;
-      color: var(--fg-muted);
-      font-size: 13px;
-      line-height: 1.45;
-    }
 
     .placeholder-card {
       display: grid;
@@ -1229,14 +1201,6 @@
       font-weight: 900;
     }
 
-    .dialog-card p,
-    .menu-sheet-mini p,
-    .help-bubble-card p {
-      margin: 8px 0 0;
-      color: var(--fg-muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
 
     .dialog-actions {
       display: grid;
@@ -1283,23 +1247,7 @@
       background: var(--surface);
     }
 
-    .code-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
 
-    .code-card {
-      padding: 18px;
-      border: 1px solid var(--stroke);
-      border-radius: 8px;
-      background: var(--surface);
-      color: var(--fg);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 12px;
-      line-height: 1.75;
-      overflow-x: auto;
-    }
 
     @media (max-width: 1040px) {
       .hero .shell,
@@ -1375,10 +1323,6 @@
         line-height: 1.16;
       }
 
-      .hero-copy {
-        max-width: 340px;
-        font-size: 16px;
-      }
 
       .service-link {
         min-height: 96px;
@@ -1399,9 +1343,6 @@
         font-size: 28px;
       }
 
-      .code-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
     }
     /* Content Placeholder — SEED ships a component for exactly this surface:
        "이미지나 콘텐츠가 로드되지 않았을 때, 해당 영역의 성격을 전달하는 대체
@@ -1455,12 +1396,6 @@
       letter-spacing: -0.01em;
     }
 
-    .ramp-note {
-      margin: 8px 0 0;
-      font-size: 11px;
-      line-height: 1.5;
-      color: var(--fg-muted);
-    }
 
     /* ── 02 / Foundations — token axes, rendered ───────────────────────── */
     .fx-grid {
@@ -2114,13 +2049,6 @@
       font-weight: 900;
       letter-spacing: 0;
     }
-[data-theme="dark"] .hero-copy {
-      max-width: 520px;
-      margin: 20px 0 0;
-      color: var(--fg-muted);
-      font-size: 18px;
-      line-height: 1.75;
-    }
 [data-theme="dark"] .service-link-list {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2239,12 +2167,6 @@
       font-size: 36px;
       line-height: 1.22;
       letter-spacing: 0;
-    }
-[data-theme="dark"] .section-desc {
-      margin: 0;
-      color: var(--fg-muted);
-      font-size: 15px;
-      line-height: 1.75;
     }
 [data-theme="dark"] .component-grid {
       display: grid;
@@ -2439,16 +2361,10 @@
       background: var(--fg-soft);
     }
 [data-theme="dark"] .sheet h3 {
-      margin: 18px 20px 4px;
+      margin: 18px 20px 18px;
       color: var(--fg);
       font-size: 22px;
       line-height: 1.3;
-    }
-[data-theme="dark"] .sheet p {
-      margin: 0 20px 18px;
-      color: var(--fg-muted);
-      font-size: 14px;
-      line-height: 1.5;
     }
 [data-theme="dark"] .sheet-actions {
       display: grid;
@@ -2554,7 +2470,7 @@
       background: var(--brand);
       font-weight: 900;
     }
-[data-theme="dark"] .banner-copy strong, [data-theme="dark"] .banner-copy span, [data-theme="dark"] .callout-copy strong, [data-theme="dark"] .callout-copy span {
+[data-theme="dark"] .banner-copy strong, [data-theme="dark"] .banner-copy span, [data-theme="dark"] .callout-copy strong {
       display: block;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -2565,7 +2481,7 @@
       font-weight: 850;
       white-space: nowrap;
     }
-[data-theme="dark"] .banner-copy span, [data-theme="dark"] .callout-copy span {
+[data-theme="dark"] .banner-copy span {
       margin-top: 3px;
       color: var(--fg-muted);
       font-size: 12px;
@@ -2832,19 +2748,13 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
       align-items: center;
       padding: 16px;
     }
-[data-theme="dark"] .result-copy, [data-theme="dark"] .result-copy strong, [data-theme="dark"] .result-copy span {
+[data-theme="dark"] .result-copy, [data-theme="dark"] .result-copy strong {
       display: block;
     }
 [data-theme="dark"] .result-copy strong {
       color: var(--fg);
       font-size: 16px;
       font-weight: 900;
-    }
-[data-theme="dark"] .result-copy span {
-      margin-top: 4px;
-      color: var(--fg-muted);
-      font-size: 13px;
-      line-height: 1.45;
     }
 [data-theme="dark"] .placeholder-card {
       display: grid;
@@ -2971,12 +2881,6 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
       line-height: 1.35;
       font-weight: 900;
     }
-[data-theme="dark"] .dialog-card p, [data-theme="dark"] .menu-sheet-mini p, [data-theme="dark"] .help-bubble-card p {
-      margin: 8px 0 0;
-      color: var(--fg-muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
 [data-theme="dark"] .dialog-actions {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3016,22 +2920,6 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
       height: 16px;
       transform: rotate(45deg);
       background: var(--surface);
-    }
-[data-theme="dark"] .code-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
-[data-theme="dark"] .code-card {
-      padding: 18px;
-      border: 1px solid var(--stroke);
-      border-radius: 8px;
-      background: var(--surface);
-      color: var(--fg);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 12px;
-      line-height: 1.75;
-      overflow-x: auto;
     }
 @media (max-width: 1040px) {[data-theme="dark"] .hero .shell, [data-theme="dark"] .section-head {
         grid-template-columns: minmax(0, 1fr);
@@ -3086,10 +2974,6 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
         font-size: 38px;
         line-height: 1.16;
       }
-[data-theme="dark"] .hero-copy {
-        max-width: 340px;
-        font-size: 16px;
-      }
 [data-theme="dark"] .service-link {
         min-height: 96px;
         padding: 14px;
@@ -3104,9 +2988,6 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
       }
 [data-theme="dark"] .section h2 {
         font-size: 28px;
-      }
-[data-theme="dark"] .code-grid {
-        grid-template-columns: minmax(0, 1fr);
       }}
 /* Content Placeholder — SEED ships a component for exactly this surface:
        "이미지나 콘텐츠가 로드되지 않았을 때, 해당 영역의 성격을 전달하는 대체
@@ -3151,12 +3032,6 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
       font-weight: 800;
       text-align: center;
       letter-spacing: -0.01em;
-    }
-[data-theme="dark"] .ramp-note {
-      margin: 8px 0 0;
-      font-size: 11px;
-      line-height: 1.5;
-      color: var(--fg-muted);
     }
 /* ── 02 / Foundations — token axes, rendered ───────────────────────── */
 [data-theme="dark"] .fx-grid {
@@ -3594,7 +3469,6 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
           <span class="service-mark"><img src="/logos/seed-design-symbol.png" alt=""></span>
           <span class="eyebrow">당근 제품을 위한 통합 디자인 언어</span>
           <h1>동네의 거래와 이야기를 가볍게 연결하는 화면.</h1>
-          <p class="hero-copy">SEED 는 색을 팔레트가 아니라 역할로 부르고, 브랜드 주황은 꼭 필요한 곳에만 쓴다. 아래는 그 토큰과 컴포넌트를 이 카탈로그가 재현한 화면이다.</p>
           <div class="service-link-list">
             
             <a class="service-link" href="#">
@@ -3705,7 +3579,6 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
             <span class="kicker">01 / Components</span>
             <h2>SEED 컴포넌트를 앱 표면의 우선순위대로 배치했다.</h2>
           </div>
-          <p class="section-desc">Action Button, List, Top Navigation, Bottom Sheet, Text Field, Manner Temp에 더해 상태, 입력, 로딩, 결과, 오버레이 컴포넌트를 앱 표면의 우선순위에 맞춰 배치했다. Brand 컬러는 꼭 필요한 곳에만 사용한다.</p>
         </div>
 
         <div class="component-grid">
@@ -3772,7 +3645,6 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
               <div class="sheet">
                 <span class="handle"></span>
                 <h3>거래 방법을 선택해 주세요</h3>
-                <p>현재 화면 맥락은 유지하면서 필요한 액션만 하단 레이어에 모읍니다.</p>
                 <div class="sheet-actions">
                   <span class="sheet-action">직거래 약속 잡기 <b class="sd-tag">›</b></span>
                   <span class="sheet-action">가격 제안 보내기 <b class="sd-tag">›</b></span>
@@ -3811,7 +3683,6 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
                 <span class="chip">응답이 빨라요</span>
               </div>
               <div class="temp-ramp" role="img" aria-label="매너온도 10단계 색 램프"><i style="background:oklch(0.961 0.002 248);color:oklch(0.581 0.017 261)">1</i><template data-theme-variant="dark" data-theme-op="swap"><i style="background:oklch(0.281 0.000 0);color:oklch(0.783 0.001 286)">1</i></template><i style="background:oklch(0.968 0.011 85);color:oklch(0.641 0.100 82)">2</i><template data-theme-variant="dark" data-theme-op="swap"><i style="background:oklch(0.277 0.051 87);color:oklch(0.898 0.091 89)">2</i></template><i style="background:oklch(0.974 0.024 80);color:oklch(0.707 0.156 67)">3</i><template data-theme-variant="dark" data-theme-op="swap"><i style="background:oklch(0.294 0.059 92);color:oklch(0.896 0.140 93)">3</i></template><i style="background:oklch(0.970 0.023 72);color:oklch(0.715 0.178 54)">4</i><template data-theme-variant="dark" data-theme-op="swap"><i style="background:oklch(0.274 0.056 76);color:oklch(0.838 0.139 78)">4</i></template><i style="background:oklch(0.966 0.022 63);color:oklch(0.713 0.195 48)">5</i><template data-theme-variant="dark" data-theme-op="swap"><i style="background:oklch(0.265 0.057 68);color:oklch(0.803 0.143 69)">5</i></template><i style="background:oklch(0.964 0.022 59);color:oklch(0.696 0.204 43)">6</i><template data-theme-variant="dark" data-theme-op="swap"><i style="background:oklch(0.253 0.055 60);color:oklch(0.771 0.145 53)">6</i></template><i style="background:oklch(0.962 0.022 54);color:oklch(0.672 0.221 38)">7</i><template data-theme-variant="dark" data-theme-op="swap"><i style="background:oklch(0.248 0.061 53);color:oklch(0.716 0.179 49)">7</i></template><i style="background:oklch(0.960 0.022 50);color:oklch(0.646 0.241 33)">8</i><template data-theme-variant="dark" data-theme-op="swap"><i style="background:oklch(0.235 0.071 42);color:oklch(0.702 0.193 39)">8</i></template><i style="background:oklch(0.959 0.017 17);color:oklch(0.606 0.220 21)">9</i><template data-theme-variant="dark" data-theme-op="swap"><i style="background:oklch(0.221 0.081 33);color:oklch(0.706 0.183 28)">9</i></template><i style="background:oklch(0.957 0.022 7);color:oklch(0.531 0.215 24)">10</i><template data-theme-variant="dark" data-theme-op="swap"><i style="background:oklch(0.213 0.076 19);color:oklch(0.716 0.171 14)">10</i></template></div>
-              <p class="ramp-note">1단계는 중립 회색, 6단계가 브랜드 주황, 10단계가 적색이다.</p>
             </div>
           </div>
 
@@ -3831,10 +3702,10 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
               </div>
               <div class="callout">
                 <span class="callout-icon">?</span>
-                <span class="callout-copy"><strong>가격 제안은 한 번 더 확인해요</strong><span>Callout은 화면 안에서 맥락을 끊지 않는 안내에 사용합니다.</span></span>
+                <span class="callout-copy"><strong>가격 제안은 한 번 더 확인해요</strong></span>
               </div>
               <div class="snackbar">
-                <span><strong>관심 목록에 저장했어요</strong><span>5초 뒤 자동으로 사라지는 하단 피드백</span></span>
+                <span><strong>관심 목록에 저장했어요</strong></span>
                 <b class="sd-tag">보기</b>
               </div>
             </div>
@@ -3887,7 +3758,7 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
               </div>
               <div class="result-panel">
                 <span class="progress-circle"><span>72%</span></span>
-                <span class="result-copy"><strong>사진 업로드 중</strong><span>Progress Circle은 긴 작업의 현재 상태를 명확히 보여준다.</span></span>
+                <span class="result-copy"><strong>사진 업로드 중</strong></span>
               </div>
               <div class="placeholder-card">
                 <span><strong>아직 결과가 없어요</strong><br>검색어를 바꾸거나 동네 범위를 넓혀보세요.</span>
@@ -3920,7 +3791,6 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
             <div class="overlay-demo">
               <div class="menu-sheet-mini">
                 <h3>Menu Sheet</h3>
-                <p>화면을 벗어나지 않고 여러 행동을 묶어 보여줍니다.</p>
                 <div class="menu-list">
                   <span>게시글 수정 <b class="sd-tag">›</b></span>
                   <span>끌어올리기 <b class="sd-tag">›</b></span>
@@ -3930,7 +3800,6 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
               <div class="dialog-card">
                 <span>
                   <h3>Alert Dialog</h3>
-                  <p>되돌리기 어려운 행동은 별도 확인 레이어로 분리합니다.</p>
                 </span>
                 <div class="dialog-actions">
                   <span>취소</span>
@@ -3939,7 +3808,6 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
               </div>
               <div class="help-bubble-card">
                 <h3>Help Bubble</h3>
-                <p>낯선 기능을 짧게 설명하고 바로 닫을 수 있게 합니다.</p>
                 <div class="help-bubble">가격 제안은 판매자가 허용한 글에서만 보낼 수 있어요.</div>
               </div>
             </div>
@@ -3955,7 +3823,6 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
             <span class="kicker">02 / Foundations</span>
             <h2>토큰을 적용하면 표면이 이렇게 정해진다.</h2>
           </div>
-          <p class="section-desc">아래 값은 모두 이 항목의 design.md 에서 그대로 읽어 렌더한 것이다. 색은 팔레트가 아니라 역할 이름으로 부르고, 테마 전환은 역할이 아니라 그 역할이 가리키는 팔레트 단계가 뒤집히며 일어난다.</p>
         </div>
 
         <div class="fx-grid">
@@ -3982,56 +3849,21 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
           <div class="panel pad fx-4">
             <p class="panel-title">Elevation <small>shadow s1 – s3</small></p>
             <div class="fx-elevs"><div class="fx-elev" style="box-shadow:0px 1px 4px 0px oklch(0 0 0 / 0.078)"><b class="sd-tag">s1</b></div><template data-theme-variant="dark" data-theme-op="swap"><div class="fx-elev" style="box-shadow:0px 1px 4px 0px oklch(0 0 0 / 0.502)"><b class="sd-tag">s1</b></div></template><div class="fx-elev" style="box-shadow:0px 2px 10px 0px oklch(0 0 0 / 0.102)"><b class="sd-tag">s2</b></div><template data-theme-variant="dark" data-theme-op="swap"><div class="fx-elev" style="box-shadow:0px 2px 10px 0px oklch(0 0 0 / 0.678)"><b class="sd-tag">s2</b></div></template><div class="fx-elev" style="box-shadow:0px 4px 16px 0px oklch(0 0 0 / 0.122)"><b class="sd-tag">s3</b></div><template data-theme-variant="dark" data-theme-op="swap"><div class="fx-elev" style="box-shadow:0px 4px 16px 0px oklch(0 0 0 / 0.8)"><b class="sd-tag">s3</b></div></template></div>
-            <p class="ramp-note">다크에서는 같은 단계의 알파가 크게 올라간다 — 어두운 배경에서 같은 농도로는 층이 보이지 않기 때문이다.</p>
           </div>
 
           <div class="panel pad fx-6">
             <p class="panel-title">Motion <small>0.2초 경계</small></p>
             <div class="fx-motions"><div class="fx-motion"><span></span><b class="sd-tag">duration-d2</b><i>100ms</i></div><div class="fx-motion"><span></span><b class="sd-tag">duration-d4</b><i>200ms</i></div><div class="fx-motion"><span></span><b class="sd-tag">duration-d6</b><i>300ms</i></div></div>
-            <p class="ramp-note">마이크로 모션은 0.2초 이하, 매크로 모션은 0.2초 초과로 나뉜다.</p>
           </div>
 
           <div class="panel pad fx-6">
             <p class="panel-title">Gradient <small>magic 계열</small></p>
             <div class="fx-grads"><div class="fx-grad" style="background:linear-gradient(120deg, oklch(0.980 0.009 9) 0%, oklch(0.964 0.019 55) 80%, oklch(0.977 0.003 68) 100%)"><b class="sd-tag">glow-magic</b></div><template data-theme-variant="dark" data-theme-op="swap"><div class="fx-grad" style="background:linear-gradient(120deg, oklch(0.277 0.018 326) 0%, oklch(0.321 0.017 56) 80%, oklch(0.318 0.001 17) 100%)"><b class="sd-tag">glow-magic</b></div></template><div class="fx-grad" style="background:linear-gradient(120deg, oklch(0.696 0.204 43) 20%, oklch(0.658 0.200 330) 100%)"><b class="sd-tag">highlight-magic</b></div></div>
-            <p class="ramp-note">입체감과 AI 기능 표현에 쓰는 별도 축이다.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section">
-      <div class="shell">
-        <div class="section-head">
-          <div>
-            <span class="kicker">03 / Implementation</span>
-            <h2>구현 메모는 토큰 이름과 컴포넌트 위계를 함께 남긴다.</h2>
-          </div>
-          <p class="section-desc">프리뷰의 목적은 장식이 아니라 실제 화면에서 반복될 수 있는 컴포넌트 조합을 보여주는 것이다.</p>
-        </div>
-        <div class="code-grid">
-          <pre class="code-card">ActionButton
-  props="size / layout / variant / state / width / hierarchy"
-  cta="bg.brand-solid + fg.neutral-inverted + rounded.full"
-  fullWidth="flexGrow — 공식 API 에 fill 속성은 없다"
-  brand="꼭 필요한 곳에만"</pre>
-          <pre class="code-card">ListItem
-  anatomy="prefix / title / detail / suffix"
-  background="컴포넌트 자체에는 지정돼 있지 않다"
-  grouping="List Header 로 묶는다"
-  nesting="중첩 표면은 concentric radius"</pre>
-          <pre class="code-card">BottomSheet
-  anatomy="backdrop / container / header / close / footer"
-  handle="노출 여부를 속성으로 고른다"
-  limits="최대 너비 · 최대 높이 · snap point · 키보드 대응이 규정된다"
-  context="현재 맥락을 유지한 채 추가 정보나 액션 목록을 제공"</pre>
-          <pre class="code-card">Color
-  fg="fg.neutral / fg.neutral-muted"
-  bg="bg.layer-default / bg.layer-floating"
-  brand="꼭 필요한 곳에만"</pre>
-        </div>
-      </div>
-    </section>
   </main>
 
 

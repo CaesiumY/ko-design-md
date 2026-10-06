@@ -310,10 +310,6 @@ img { max-width: 100%; }
   font-size: var(--ci-glyph-32); line-height: var(--ci-glyph-32-lh);
   letter-spacing: var(--ci-glyph-32-ls); font-weight: var(--ci-w-bold); margin: var(--ci-spacing-12) 0 0;
 }
-.sec-head p {
-  font-size: var(--ci-glyph-18); line-height: var(--ci-glyph-18-lh);
-  color: var(--ci-txt-secondary); margin: var(--ci-spacing-8) 0 0;
-}
 .grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -335,10 +331,6 @@ img { max-width: 100%; }
 .cell-title {
   font-size: var(--ci-glyph-18); line-height: var(--ci-glyph-18-lh);
   font-weight: var(--ci-w-bold); margin: 0;
-}
-.cell-note {
-  font-size: var(--ci-glyph-14); line-height: var(--ci-glyph-14-lh);
-  color: var(--ci-txt-tertiary); margin: var(--ci-spacing-2) 0 0;
 }
 /* demo canvas — nested one radius step below its container (중첩 규칙) */
 .stage {
@@ -1049,10 +1041,6 @@ img { max-width: 100%; }
   font-size: var(--ci-glyph-32); line-height: var(--ci-glyph-32-lh);
   letter-spacing: var(--ci-glyph-32-ls); font-weight: var(--ci-w-bold); margin: var(--ci-spacing-12) 0 0;
 }
-[data-theme="dark"] .sec-head p {
-  font-size: var(--ci-glyph-18); line-height: var(--ci-glyph-18-lh);
-  color: var(--ci-txt-secondary); margin: var(--ci-spacing-8) 0 0;
-}
 [data-theme="dark"] .grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1072,10 +1060,6 @@ img { max-width: 100%; }
 [data-theme="dark"] .cell-title {
   font-size: var(--ci-glyph-18); line-height: var(--ci-glyph-18-lh);
   font-weight: var(--ci-w-bold); margin: 0;
-}
-[data-theme="dark"] .cell-note {
-  font-size: var(--ci-glyph-14); line-height: var(--ci-glyph-14-lh);
-  color: var(--ci-txt-tertiary); margin: var(--ci-spacing-2) 0 0;
 }
 /* demo canvas — nested one radius step below its container (중첩 규칙) */
 [data-theme="dark"] .stage {
@@ -1506,7 +1490,6 @@ img { max-width: 100%; }
   <div class="sec-head">
     <span class="lb lb-gray lb-rect">Components · Patterns</span>
     <h2>일관성 속의 자율성</h2>
-    <p>Foundations 위에 세운 컴포넌트 17종과 패턴 4종. 방향은 제시하되 창의성을 제한하지 않습니다.</p>
   </div>
 
   <div class="grid">
@@ -1514,7 +1497,7 @@ img { max-width: 100%; }
     <!-- Buttons: Primary / Secondary -->
     <article class="cell span-2">
       <div><h3 class="cell-title">Button — Primary · Secondary</h3>
-      <p class="cell-note">Size L·M·S / State default·hover·disabled / Icon-left·right</p></div>
+      </div>
       <div class="stage">
         <div class="row">
           <span class="tag">Primary</span>
@@ -1546,7 +1529,7 @@ img { max-width: 100%; }
     <!-- Buttons: Tertiary / Text / Icon -->
     <article class="cell span-2">
       <div><h3 class="cell-title">Button — Tertiary · Text · Icon</h3>
-      <p class="cell-note">Color gray·purple / Tertiary는 Full width 불가 / Icon은 유니버설 의미만</p></div>
+      </div>
       <div class="stage">
         <div class="row">
           <span class="tag">Tertiary</span>
@@ -1586,7 +1569,7 @@ img { max-width: 100%; }
     <!-- Label -->
     <article class="cell">
       <div><h3 class="cell-title">Label</h3>
-      <p class="cell-note">Shape round·rectangle / Color 6종 / Invert — 의미가 다르면 컬러도 다르게</p></div>
+      </div>
       <div class="stage">
         <div class="row" style="gap:var(--ci-spacing-6)">
           <span class="lb lb-purple">진행 중</span>
@@ -1608,7 +1591,7 @@ img { max-width: 100%; }
     <!-- Tooltip -->
     <article class="cell">
       <div><h3 class="cell-title">Tooltip</h3>
-      <p class="cell-note">Position 8방향 / Color gray·purple / Close icon</p></div>
+      </div>
       <div class="stage">
         <div class="tip-wrap">
           <span class="tip"><span>툴팁 텍스트</span>
@@ -1622,7 +1605,7 @@ img { max-width: 100%; }
     <!-- Tabs -->
     <article class="cell span-2">
       <div><h3 class="cell-title">Tabs</h3>
-      <p class="cell-note">State / Color gray·purple / Size L·M·S / Selected / Count / Underline — 항상 정확히 하나만 selected</p></div>
+      </div>
       <div class="stage">
         <div class="tabs tabs-purple" role="tablist">
           <button class="tab" role="tab" aria-selected="true">전체 <span class="cnt">24</span></button>
@@ -1640,7 +1623,7 @@ img { max-width: 100%; }
     <!-- Text Field -->
     <article class="cell">
       <div><h3 class="cell-title">Text Field</h3>
-      <p class="cell-note">Filled / Focused / Helper Text / Right Box / Variant default·error·positive</p></div>
+      </div>
       <div class="stage">
         <div class="field">
           <div class="ctrl"><span class="ph">레이블</span></div>
@@ -1671,7 +1654,7 @@ img { max-width: 100%; }
     <!-- Textarea -->
     <article class="cell">
       <div><h3 class="cell-title">Textarea</h3>
-      <p class="cell-note">Word Limit / Filled / State default·disabled·focused / Size L·S — 최소 3줄 이상</p></div>
+      </div>
       <div class="stage">
         <div class="field">
           <div class="ctrl ta"><span class="ph">내용을 입력해 주세요.</span></div>
@@ -1686,7 +1669,7 @@ img { max-width: 100%; }
     <!-- Select -->
     <article class="cell">
       <div><h3 class="cell-title">Select</h3>
-      <p class="cell-note">선택 영역 + 인디케이터 아이콘 — 모바일에서는 Bottom Sheet로 교체</p></div>
+      </div>
       <div class="stage">
         <div class="field">
           <div class="ctrl"><span class="ph">선택해 주세요</span>
@@ -1704,7 +1687,7 @@ img { max-width: 100%; }
     <!-- Dropdown -->
     <article class="cell">
       <div><h3 class="cell-title">Dropdown</h3>
-      <p class="cell-note">max-height 182px / Checkbox·Description·Search / State / Align — 5개 이상이면 스크롤</p></div>
+      </div>
       <div class="stage">
         <div class="field notch">
           <span class="lbl">레이블</span>
@@ -1727,7 +1710,7 @@ img { max-width: 100%; }
     <!-- Checkbox -->
     <article class="cell">
       <div><h3 class="cell-title">Checkbox</h3>
-      <p class="cell-note">Clickable Area = 레이블 포함 행 전체 / 항목 간격 최소 12px / Size L·S</p></div>
+      </div>
       <div class="stage">
         <div>
           <label class="opt is-on">
@@ -1749,7 +1732,7 @@ img { max-width: 100%; }
     <!-- Radio Button -->
     <article class="cell">
       <div><h3 class="cell-title">Radio Button</h3>
-      <p class="cell-note">Clickable Area = 행 전체 / 필수라면 기본 선택값 제공 / 5개 이상이면 Dropdown 권장</p></div>
+      </div>
       <div class="stage">
         <div>
           <label class="opt is-on">
@@ -1771,7 +1754,7 @@ img { max-width: 100%; }
     <!-- Accordion -->
     <article class="cell span-2">
       <div><h3 class="cell-title">Accordion</h3>
-      <p class="cell-note">Row gap 16px / 텍스트 max-width 700px / Focused / Size L·S — 펼친 타이틀은 txt-purple-primary</p></div>
+      </div>
       <p class="catalog-dummy">FAQ 답변의 환불 기한·환불 범위 안내는 펼침 동작을 보여 주기 위한 레이아웃 시연용 더미 데이터이며, 실제 코드잇 환불 정책이 아닙니다.</p>
       <div class="stage">
         <div class="acc">
@@ -1797,7 +1780,7 @@ img { max-width: 100%; }
     <!-- Modal -->
     <article class="cell span-2">
       <div><h3 class="cell-title">Modal</h3>
-      <p class="cell-note">최대 높이 = 뷰포트 80% / Breakpoint PC·MO — [취소하기]가 있으므로 Close 아이콘은 함께 쓰지 않음</p></div>
+      </div>
       <div class="stage">
         <div class="modal">
           <div class="modal-ic">
@@ -1822,7 +1805,7 @@ img { max-width: 100%; }
     <!-- Toast -->
     <article class="cell">
       <div><h3 class="cell-title">Toast</h3>
-      <p class="cell-note">상태 아이콘 + 레이블 + 디스크립션 + "라이트 박스"(리워드·수치 변화 전용)</p></div>
+      </div>
       <div class="stage">
         <div class="toast">
           <span class="toast-ic"><svg class="i i-s" viewBox="0 0 24 24" aria-hidden="true" style="stroke-width:2.4"><path d="M5 12.5 9.5 17 19 7"></path></svg></span>
@@ -1839,7 +1822,7 @@ img { max-width: 100%; }
     <!-- Snackbar -->
     <article class="cell">
       <div><h3 class="cell-title">Snackbar</h3>
-      <p class="cell-note">아이콘 / 레이블(Bold) / 디스크립션(한 문단 이내) / 닫기(우측 상단) / Primary Button</p></div>
+      </div>
       <div class="stage">
         <div class="snack">
           <div class="snack-hd">
@@ -1860,7 +1843,7 @@ img { max-width: 100%; }
     <!-- Table -->
     <article class="cell span-2">
       <div><h3 class="cell-title">Table</h3>
-      <p class="cell-note">Table Item을 조합하는 컨테이너 / Select · State default·hover — 모바일은 Fill 대신 가로 스크롤</p></div>
+      </div>
       <div class="stage">
         <div class="tbl-wrap">
           <table class="tbl">
@@ -1898,7 +1881,7 @@ img { max-width: 100%; }
     <!-- Pagination -->
     <article class="cell">
       <div><h3 class="cell-title">Pagination</h3>
-      <p class="cell-note">첫 페이지 · 페이지 버튼 · 페이지 이동 · 마지막 페이지</p></div>
+      </div>
       <div class="stage">
         <nav class="pg" aria-label="페이지">
           <button aria-label="첫 페이지" disabled="">«</button>
@@ -1914,7 +1897,7 @@ img { max-width: 100%; }
     <!-- Bottom Sheet -->
     <article class="cell">
       <div><h3 class="cell-title">Bottom Sheet</h3>
-      <p class="cell-note">백드롭·바디 필수 + 헤더·푸터 선택 / 모바일 width 100% — 다중 선택이면 [적용하기] 유지</p></div>
+      </div>
       <div class="stage" style="justify-content:flex-end;padding-bottom:0;overflow:hidden">
         <div class="sheet">
           <span class="handle"></span>
@@ -1937,7 +1920,7 @@ img { max-width: 100%; }
     <!-- Empty Section -->
     <article class="cell">
       <div><h3 class="cell-title">Pattern — Empty Section</h3>
-      <p class="cell-note">ESSENTIAL Text + OPTIONAL Icon·Button·Background</p></div>
+      </div>
       <div class="stage">
         <div class="empty">
           <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13h5l1.5 3h5L16 13h5M4.5 13 7 5h10l2.5 8v6H4.5v-6z"></path></svg>
@@ -1950,7 +1933,7 @@ img { max-width: 100%; }
     <!-- Filter -->
     <article class="cell">
       <div><h3 class="cell-title">Pattern — Filter</h3>
-      <p class="cell-note">Filter Button(적용 여부로 on/off) · Header(개수 + 닫기) · Body</p></div>
+      </div>
       <div class="stage">
         <div class="row">
           <button class="btn btn-tertiary is-purple btn-s">
@@ -1983,7 +1966,7 @@ img { max-width: 100%; }
     <!-- Title pattern -->
     <article class="cell">
       <div><h3 class="cell-title">Pattern — Title</h3>
-      <p class="cell-note">Label · Title · Description · Button을 함께 묶는 텍스트 패턴</p></div>
+      </div>
       <div class="stage">
         <div class="title-p">
           <span class="lb lb-purple lb-rect">Foundations</span>
@@ -1999,7 +1982,7 @@ img { max-width: 100%; }
     <!-- Loading -->
     <article class="cell">
       <div><h3 class="cell-title">Pattern — Loading</h3>
-      <p class="cell-note">요청한 데이터를 처리 중임을 시각적으로 전달</p></div>
+      </div>
       <div class="stage">
         <div class="load">
           <span class="spin" role="status" aria-label="불러오는 중"></span>
@@ -2011,7 +1994,7 @@ img { max-width: 100%; }
     <!-- Diff -->
     <article class="cell span-2">
       <div><h3 class="cell-title">Diff — 코드 비교 파운데이션</h3>
-      <p class="cell-note">확보된 시맨틱 22종 중 4종이 diff 전용 / 코드 텍스트는 Menlo 고정폭</p></div>
+      </div>
       <div class="stage">
         <pre class="code"><code><span class="ln">function count(items) {</span><span class="ln del">-   const total = items.length</span><span class="ln add">+   const total = items?.length ?? 0</span><span class="ln">    return total</span><span class="ln">}</span></code></pre>
       </div>
@@ -2020,7 +2003,7 @@ img { max-width: 100%; }
     <!-- Key screen -->
     <article class="cell span-2">
       <div><h3 class="cell-title">화면 조합 — 설정</h3>
-      <p class="cell-note">Title 패턴 · Tabs · Text Field · Radio · Checkbox · Button을 한 화면에서 조합</p></div>
+      </div>
       <div class="stage">
         <div class="screen">
           <div class="appbar">
@@ -2089,7 +2072,6 @@ img { max-width: 100%; }
 
 <footer class="wrap foot">
   <p>코드잇 디자인 시스템 · <a href="https://design.codeit.com">design.codeit.com</a></p>
-  <p>이 프리뷰는 공개 문서와 프로덕션 번들 실측을 근거로 재구성한 비공식 데모입니다. 엘리베이션·모션 토큰과 아이콘 세트는 공개되지 않아 재현하지 않았습니다.</p>
 </footer>
 
 

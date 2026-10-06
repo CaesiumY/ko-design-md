@@ -127,8 +127,6 @@
     font-weight: 700;
     color: var(--text-strong);
   }
-  .card > p.desc { margin: 0 0 16px; font-size: 12.5px; color: var(--text-sub); }
-  .card .rule { font-size: 11.5px; color: var(--text-sub); margin-top: 12px; }
 
   /* ── 폰 목업: 확장 앱바 + 검색 + 리스트 + 바텀 내비 ── */
   .phone-col { display: flex; flex-direction: column; align-items: center; min-width: 0; }
@@ -259,7 +257,7 @@
   .panes .p { height: 34px; border-radius: 8px; background: var(--surface-inset); display: flex; align-items: center; justify-content: center; font-size: 10.5px; color: var(--text-sub); min-width: 0; overflow: hidden; }
   .panes .p.first { background: color-mix(in oklab, var(--primary) 16%, var(--surface-card)); color: var(--text-strong); }
 
-  .phone-col > h2, .phone-col > p.desc, .phone-col > p.rule { align-self: stretch; }
+  .phone-col > h2 { align-self: stretch; }
 
   /* ── 선택 컨트롤: 선택 모드 목업 ── */
   .select-all { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 28px; font-size: 13px; color: var(--text-sub); }
@@ -321,12 +319,6 @@
   .toast-anim .t-a { grid-area: 1 / 1; animation: oneui-text-out 4.8s var(--ease-oneui) infinite; }
   .toast-anim .t-b { grid-area: 1 / 1; opacity: 0; animation: oneui-text-in 4.8s var(--ease-oneui) infinite; }
 
-  .provenance {
-    margin: 28px 0 8px;
-    text-align: center;
-    font-size: 11.5px;
-    color: var(--text-sub);
-  }
 
   @keyframes oneui-spin { to { transform: rotate(360deg); } }
   @keyframes oneui-toast { 0% { opacity: 0; } 6.25%, 87.5% { opacity: 1; } 93.75%, 100% { opacity: 0; } }
@@ -460,8 +452,6 @@
     font-weight: 700;
     color: var(--text-strong);
   }
-[data-theme="dark"] .card > p.desc { margin: 0 0 16px; font-size: 12.5px; color: var(--text-sub); }
-[data-theme="dark"] .card .rule { font-size: 11.5px; color: var(--text-sub); margin-top: 12px; }
 /* ── 폰 목업: 확장 앱바 + 검색 + 리스트 + 바텀 내비 ── */
 [data-theme="dark"] .phone-col { display: flex; flex-direction: column; align-items: center; min-width: 0; }
 [data-theme="dark"] .phone {
@@ -586,7 +576,7 @@
 [data-theme="dark"] .panes { display: flex; gap: 4px; margin-top: 12px; min-width: 0; }
 [data-theme="dark"] .panes .p { height: 34px; border-radius: 8px; background: var(--surface-inset); display: flex; align-items: center; justify-content: center; font-size: 10.5px; color: var(--text-sub); min-width: 0; overflow: hidden; }
 [data-theme="dark"] .panes .p.first { background: color-mix(in oklab, var(--primary) 30%, var(--surface-card)); color: var(--white); }
-[data-theme="dark"] .phone-col > h2, [data-theme="dark"] .phone-col > p.desc, [data-theme="dark"] .phone-col > p.rule { align-self: stretch; }
+[data-theme="dark"] .phone-col > h2 { align-self: stretch; }
 /* ── 선택 컨트롤: 선택 모드 목업 ── */
 [data-theme="dark"] .select-all { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 28px; font-size: 13px; color: var(--text-sub); }
 [data-theme="dark"] .li.sel { background: color-mix(in oklab, var(--color-control-activated) 10%, var(--surface-card)); }
@@ -641,12 +631,6 @@
 [data-theme="dark"] .toast-anim { display: inline-grid; animation: oneui-toast 4.8s var(--ease-oneui) infinite; }
 [data-theme="dark"] .toast-anim .t-a { grid-area: 1 / 1; animation: oneui-text-out 4.8s var(--ease-oneui) infinite; }
 [data-theme="dark"] .toast-anim .t-b { grid-area: 1 / 1; opacity: 0; animation: oneui-text-in 4.8s var(--ease-oneui) infinite; }
-[data-theme="dark"] .provenance {
-    margin: 28px 0 8px;
-    text-align: center;
-    font-size: 11.5px;
-    color: var(--text-sub);
-  }
 @keyframes oneui-spin { to { transform: rotate(360deg); } }
 @keyframes oneui-toast { 0% { opacity: 0; } 6.25%, 87.5% { opacity: 1; } 93.75%, 100% { opacity: 0; } }
 @keyframes oneui-text-out { 0%, 37.5% { opacity: 1; } 43.75%, 100% { opacity: 0; } }
@@ -673,7 +657,7 @@
   <header class="hero">
     <div><span class="lockup-plate"><img class="app-mark" src="/logos/samsung-one-ui.png" alt="One UI Home 앱 아이콘" width="30" height="30"><img src="/logos/samsung-one-ui-logotype.svg" alt="Samsung 워드마크" height="26"></span></div>
     <h1>삼성 One UI</h1>
-    <p class="tagline"><span data-theme-text="">보는 영역은 위에, 조작은 아래에. 갤럭시 디바이스 전반의 OS 디자인 언어를 공개 공식 문서 기준으로 재현한 데모다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">보는 영역은 위에, 조작은 아래에. 이 화면의 다크 배경은 발행 다크 팔레트의 Black 값(black-dark)을 쓴다.</span></template></p>
+    <p class="tagline">보는 영역은 위에, 조작은 아래에.</p>
     <div class="cta-row">
       <button class="btn btn-contained-high">시작하기</button>
       <button class="btn btn-contained-mid">둘러보기</button>
@@ -684,7 +668,6 @@
     <!-- 폰 목업 -->
     <section class="card phone-col">
       <h2>뷰잉 / 인터랙션 영역</h2>
-      <p class="desc">확장 앱바(중앙 타이틀) · 검색 · 우측 토글 리스트 · 텍스트 전용 바텀 내비게이션.</p>
       <p class="catalog-dummy"><span data-theme-text="">화면 속 연결 상태·예약 여부는 레이아웃 시연용 더미 데이터다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">화면 속 연결 상태·사용 여부는 레이아웃 시연용 더미 데이터다.</span></template></p>
       <div class="phone" role="img" aria-label="One UI 스타일 설정 화면 목업">
         <div class="appbar-ext"><div class="big-title">설정</div></div>
@@ -714,7 +697,6 @@
     <!-- 다이얼로그 -->
     <section class="card">
       <h2>다이얼로그 배치</h2>
-      <p class="desc">선택·확인은 화면 하단, 정보 안내는 화면 중앙.</p>
       <div class="dlg-stage">
         <div class="dlg-bottom">
           <p class="q">3개 항목을 삭제할까요?</p>
@@ -727,26 +709,22 @@
       <div class="dlg-center-stage">
         <div class="dlg-center">업데이트를 설치하는 중입니다. 기기를 끄지 마세요.</div>
       </div>
-      <p class="rule">결정 다이얼로그는 선택·Back·바깥 탭 전까지 유지된다.</p>
     </section>
 
     <!-- 버튼 -->
     <section class="card">
       <h2>버튼 — 단일 스타일 체계</h2>
-      <p class="desc"><span data-theme-text="">회색 배경 = 중간 강조, 유채색 배경 = 높은 강조. radius 18px(무버전 발행 drawable 스펙 18dp).</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">회색 배경 = 중간 강조, 유채색 배경 = 높은 강조. 다크 강조 텍스트는 primary-dark-on-dark.</span></template></p>
       <div class="cta-row" style="justify-content:flex-start">
         <button class="btn btn-contained-high">확인</button>
         <button class="btn btn-contained-mid">나중에</button>
         <button class="btn btn-flat">건너뛰기</button>
         <button class="btn btn-contained-high" disabled="">비활성</button>
       </div>
-      <p class="rule">한 화면에는 한 가지 버튼 스타일만 쓴다 — 강조는 배경색으로만 올린다.</p>
     </section>
 
     <!-- 바텀 바 -->
     <section class="card">
       <h2>바텀 바 — 아이콘 + 텍스트</h2>
-      <p class="desc">최대 5버튼, 1버튼 금지. 초과분은 More options로.</p>
       <div class="bbar">
         <button><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-share"/></svg>공유</button>
         <button><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-edit"/></svg>편집</button>
@@ -754,26 +732,22 @@
         <button><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-delete"/></svg>삭제</button>
         <button><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-more"/></svg>더보기</button>
       </div>
-      <p class="rule">버튼에는 아이콘과 텍스트를 함께 넣는다. 스크롤 다운 시 숨김 허용.</p>
     </section>
 
     <!-- 토스트 + 모션 -->
     <section class="card">
       <h2>토스트 · 모션</h2>
-      <p class="desc">토스트는 한 줄 안팎, 3줄 초과 금지. 가벼운 결과 안내 전용.</p>
       <div class="toast-demo" role="img" aria-label="토스트가 나타나 문구를 바꾼 뒤 사라지는 모션 시연 — 사진 1장을 저장했습니다에서 사진 2장을 저장했습니다로"><span class="toast toast-anim"><span class="t-a">사진 1장을 저장했습니다</span><span class="t-b">사진 2장을 저장했습니다</span></span></div>
       <div class="chip-row">
         <span class="chip">duration <b>100–500ms</b></span>
         <span class="chip">easing <b>cubic-bezier(0.22, 0.25, 0, 1)</b></span>
         <span class="chip">텍스트 교체 <b>순차 페이드</b></span>
       </div>
-      <p class="rule">등장·문구 교체·퇴장은 각 300ms, 새 문구는 이전 문구가 사라진 뒤 들어온다. 토스트 표시 시간은 발행되지 않아 반복 주기는 시연용이다.</p>
     </section>
 
     <!-- 윈도우 클래스 -->
     <section class="card">
       <h2>윈도우 클래스 · 멀티페인</h2>
-      <p class="desc">600dp부터 대형 화면 레이아웃. 폴더블 전용 분할은 50:50.</p>
       <table class="wc-table">
         <tbody><tr><th>Class</th><th>폭(dp)</th><th>내비게이션</th></tr>
         <tr><td><b>Compact</b></td><td>&lt; 600</td><td>bar + drawer</td></tr>
@@ -788,7 +762,6 @@
     <!-- 선택 모드: 2019 가이드라인 16. Selection control -->
     <section class="card phone-col">
       <h2>선택 모드</h2>
-      <p class="desc">항목을 고르면 앱바가 선택 개수를, 하단이 아이콘 + 텍스트 바텀 바를 띄운다.</p>
       <p class="catalog-dummy">화면 속 항목 이름·크기·선택 상태는 레이아웃 시연용 더미 데이터다.</p>
       <div class="phone" role="img" aria-label="One UI 스타일 선택 모드 목업 — 3개 항목 중 2개 선택">
         <div class="appbar-ext"><div class="big-title">2개 선택됨</div></div>
@@ -805,14 +778,12 @@
           <span class="b"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-more"/></svg>더보기</span>
         </div>
       </div>
-      <p class="rule">선택한 항목이 없으면 바텀 바를 띄우지 않는다. 2019 가이드 p.54–55</p>
     </section>
 
     <div class="card-stack">
       <!-- 슬라이더: 2019 가이드라인 06. Slider -->
       <section class="card">
         <h2>슬라이더</h2>
-        <p class="desc">슬라이더는 primary 역할색이다. 기본형은 네 상태를, 볼륨 팝업·퀵 패널 밝기형(선택 사항)은 두 상태를 둔다.</p>
         <div class="state-grid">
           <div><span class="state-label">Normal</span><div class="sl" role="img" aria-label="슬라이더 Normal 상태"><span class="tr"></span><span class="fi" style="width: 18%"></span><span class="th" style="left: 18%"></span></div></div>
           <div><span class="state-label">Focus</span><div class="sl" role="img" aria-label="슬라이더 Focus 상태"><span class="tr"></span><span class="fi" style="width: 36%"></span><span class="halo" style="left: 36%"></span><span class="th" style="left: 36%"></span></div></div>
@@ -824,46 +795,40 @@
           <div><span class="state-label">Normal</span><div class="vol" role="img" aria-label="볼륨 슬라이더 Normal 상태"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-volume"/></svg><div class="sl"><span class="tr"></span><span class="fi" style="width: 30%"></span><span class="th" style="left: 30%"></span></div></div></div>
           <div><span class="state-label">Click</span><div class="vol" role="img" aria-label="볼륨 슬라이더 Click 상태"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-volume"/></svg><div class="vol-bar"><span class="fi" style="width: 48%"></span></div></div></div>
         </div>
-        <p class="rule">2019 가이드 p.36</p>
       </section>
 
       <!-- 액션 토스트: 2019 가이드라인 13. Action toast -->
       <section class="card">
         <h2>액션 토스트</h2>
-        <p class="desc">토스트에 동작 버튼을 붙여 내용과 관련된 동작을 바로 실행하게 한다. 다른 토스트처럼 정해진 시간이 지나면 사라진다.</p>
         <div class="toast-stack">
           <span class="toast">복사했습니다<span class="act">앨범 보기</span></span>
           <span class="toast">파일 1개를 받았습니다<span class="act">파일 열기</span></span>
         </div>
-        <p class="rule">닫기·완료·확인처럼 팝업을 닫기만 하는 버튼은 넣지 않고, 동작 버튼은 하나만 둔다. 버튼을 누를 때까지 남는 스낵바와는 다르다. 2019 가이드 p.50</p>
       </section>
     </div>
 
     <!-- 진행 표시: 2019 가이드라인 10. Progress indicator -->
     <section class="card card-wide">
       <h2>진행 표시 — 막대와 원</h2>
-      <p class="desc">완료 시점을 알면 막대, 모르면 원. 진행 표시는 본문이나 방금 누른 버튼 자리에 두고, 화면을 덮는 진행 팝업은 피한다.</p>
       <p class="catalog-dummy" style="text-align: left">진행 상태는 레이아웃 시연용 더미 데이터다.</p>
       <div class="progress-grid">
         <div class="inset">
           <div class="pbar-head"><span>파일 받는 중</span><span class="count">3 / 5</span></div>
           <div class="pbar" role="progressbar" aria-label="파일 받는 중" aria-valuemin="0" aria-valuemax="5" aria-valuenow="3"><span class="fill" style="width: 60%"></span></div>
-          <span class="cap">막대 · 완료 시점을 알 때</span>
+          <span class="cap">막대</span>
         </div>
         <div class="inset">
           <button class="btn btn-contained-high btn-busy" aria-label="처리 중"><svg class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9" opacity="0.3"/><path d="M21 12a9 9 0 0 0-9-9"/></svg></button>
-          <span class="cap">원 · 모를 때, 방금 누른 버튼 자리에</span>
+          <span class="cap">원</span>
         </div>
         <div class="inset">
           <div class="cover" role="img" aria-label="화면을 덮는 진행 팝업 — 피할 배치"><div class="scrim"><svg class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9" opacity="0.3"/><path d="M21 12a9 9 0 0 0-9-9"/></svg></div></div>
           <span class="cap">피할 것 · 화면을 덮는 진행 팝업</span>
         </div>
       </div>
-      <p class="rule">2019 가이드 p.45–47</p>
     </section>
   </div>
 
-  <p class="provenance">White/Black 계열 색과 썸네일 radius는 One UI 2(2019) 발행값, primary 계열 색과 버튼 radius는 무버전 현행 발행분 — 세대 표기는 services/samsung-one-ui.md 참조. 2019 가이드 쪽수는 인쇄 페이지 번호다.</p>
 </div>
 
 

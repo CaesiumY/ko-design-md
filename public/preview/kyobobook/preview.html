@@ -239,33 +239,8 @@
       word-break: keep-all;
     }
 
-    .hero-copy {
-      max-width: 520px;
-      margin: 20px 0 0;
-      color: var(--shell-muted);
-      font-size: 17px;
-      line-height: 1.72;
-    }
 
-    .hero-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 24px;
-    }
 
-    .meta-chip {
-      display: inline-flex;
-      align-items: center;
-      min-height: 32px;
-      padding: 0 13px;
-      border: 1px solid var(--shell-line);
-      border-radius: 9999px;
-      color: var(--shell-muted);
-      background: var(--shell-card);
-      font-size: 12px;
-      font-weight: 600;
-    }
 
     .hero-cta-row {
       display: flex;
@@ -748,7 +723,6 @@
       letter-spacing: -0.02em;
       word-break: keep-all;
     }
-    .section-desc { margin: 0; color: var(--shell-muted); font-size: 14px; line-height: 1.72; word-break: keep-all; }
 
     .grid {
       display: grid;
@@ -785,18 +759,6 @@
       font-weight: 600;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-    }
-    .panel-note {
-      margin: 14px 0 0;
-      color: var(--kds-gray-500);
-      font-size: 12px;
-      line-height: 1.62;
-      word-break: keep-all;
-    }
-    .panel-note code {
-      font-family: var(--kds-mono);
-      font-size: 11px;
-      color: var(--kds-gray-700);
     }
 
     .demo-block + .demo-block { margin-top: 18px; }
@@ -866,7 +828,6 @@
     .kds-spinner i:nth-child(3) { bottom: 0; left: 50%; transform: translateX(-50%); background: var(--kds-red-500); }
     .kds-spinner i:nth-child(4) { left: 0; top: 50%; transform: translateY(-50%); background: var(--kds-brand-navy); }
     @keyframes kds-spin { to { transform: rotate(360deg); } }
-    .loading-caption { color: var(--kds-gray-500); font-size: 12px; line-height: 1.6; max-width: 220px; }
 
     /* ---- Bottom-sheet demos ---- */
     .sheet-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
@@ -943,7 +904,6 @@
     .field .help { font-size: 11px; line-height: 1.5; }
     .field .help.err { color: var(--kds-red-500); }
     .field .help.ok { color: var(--kds-green-700); }
-    .field .help.muted { color: var(--kds-gray-500); }
 
     /* ---- Spacing / radius / elevation ---- */
 
@@ -964,22 +924,6 @@
     .symbol-ref .s40 { width: 56px; height: 56px; }
     .symbol-ref .s40 img { width: 40px; height: 40px; }
 
-    /* ---- Implementation notes ---- */
-    .code-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-    .code-card {
-      margin: 0;
-      padding: 18px;
-      border: 1px solid var(--kds-gray-300);
-      border-radius: 12px;
-      background: var(--kds-gray-50);
-      color: var(--kds-gray-700);
-      font-family: var(--kds-mono);
-      font-size: 12px;
-      line-height: 1.7;
-      overflow-x: auto;
-    }
-    .code-card .tok { color: var(--kds-blue-700); }
-
     /* ---- Footer ---- */
     .brand-footer {
       display: grid;
@@ -988,7 +932,6 @@
       padding: 30px 0 32px;
     }
     .brand-footer-logo img { height: 26px; width: auto; object-fit: contain; }
-    .footer-note { margin-top: 12px; color: var(--shell-muted); font-size: 12px; line-height: 1.62; }
     .footer-group { display: grid; gap: 10px; align-content: start; }
     .footer-group strong { color: var(--shell-fg); font-size: 14px; font-weight: 700; }
     .footer-group span { color: var(--shell-muted); font-size: 13px; line-height: 1.4; }
@@ -1000,7 +943,7 @@
       .phone-wrap { margin: 0 auto; }
       .phone-wrap.secondary { margin-top: 0; }
       .span-5, .span-7, .span-12 { grid-column: 1 / -1; }
-      .sheet-pair, .field-grid, .code-grid { grid-template-columns: 1fr; }
+      .sheet-pair, .field-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 720px) {
@@ -1010,7 +953,6 @@
       .theme-pill { margin-left: auto; }
       .hero .shell, .section .shell { padding-top: 52px; padding-bottom: 52px; }
       h1 { font-size: 34px; }
-      .hero-copy { font-size: 16px; }
       .section h2 { font-size: 26px; }
       .brand-footer { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 20px; }
       .brand-footer > :first-child { grid-column: 1 / -1; }
@@ -1255,31 +1197,6 @@
       font-weight: 700;
       letter-spacing: -0.02em;
       word-break: keep-all;
-    }
-[data-theme="dark"] .hero-copy {
-      max-width: 520px;
-      margin: 20px 0 0;
-      color: var(--shell-muted);
-      font-size: 17px;
-      line-height: 1.72;
-    }
-[data-theme="dark"] .hero-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 24px;
-    }
-[data-theme="dark"] .meta-chip {
-      display: inline-flex;
-      align-items: center;
-      min-height: 32px;
-      padding: 0 13px;
-      border: 1px solid var(--shell-line);
-      border-radius: 9999px;
-      color: var(--shell-muted);
-      background: var(--shell-card);
-      font-size: 12px;
-      font-weight: 600;
     }
 [data-theme="dark"] .hero-cta-row {
       display: flex;
@@ -1722,7 +1639,6 @@
       letter-spacing: -0.02em;
       word-break: keep-all;
     }
-[data-theme="dark"] .section-desc { margin: 0; color: var(--shell-muted); font-size: 14px; line-height: 1.72; word-break: keep-all; }
 [data-theme="dark"] .grid {
       display: grid;
       grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -1755,19 +1671,6 @@
       letter-spacing: 0.06em;
       text-transform: uppercase;
     }
-[data-theme="dark"] .panel-note {
-      margin: 14px 0 0;
-      color: var(--kds-gray-500);
-      font-size: 12px;
-      line-height: 1.62;
-      word-break: keep-all;
-    }
-[data-theme="dark"] .panel-note code {
-      font-family: var(--kds-mono);
-      font-size: 11px;
-      color: var(--kds-gray-700);
-    }
-[data-theme="dark"] .panel-note strong { color: var(--kds-gray-800); }
 [data-theme="dark"] .demo-block + .demo-block { margin-top: 18px; }
 [data-theme="dark"] .demo-label {
       margin: 0 0 9px;
@@ -1834,8 +1737,6 @@
 [data-theme="dark"] .kds-spinner i:nth-child(3) { bottom: 0; left: 50%; transform: translateX(-50%); background: var(--kds-red-500); }
 [data-theme="dark"] .kds-spinner i:nth-child(4) { left: 0; top: 50%; transform: translateY(-50%); background: oklch(0.560 0.150 264); }
 @keyframes kds-spin { to { transform: rotate(360deg); } }
-[data-theme="dark"] .loading-caption { color: var(--kds-gray-500); font-size: 12px; line-height: 1.6; max-width: 220px; }
-[data-theme="dark"] .loading-caption strong { color: var(--kds-gray-800); }
 /* ---- Bottom-sheet demos ---- */
 [data-theme="dark"] .sheet-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 [data-theme="dark"] .sheet-stage {
@@ -1912,7 +1813,6 @@
 [data-theme="dark"] .field .help { font-size: 11px; line-height: 1.5; }
 [data-theme="dark"] .field .help.err { color: var(--kds-red-500); }
 [data-theme="dark"] .field .help.ok { color: var(--kds-green-600); }
-[data-theme="dark"] .field .help.muted { color: var(--kds-gray-500); }
 /* ---- Spacing / radius / elevation ---- */
 
     /* compact symbol reference */
@@ -1931,21 +1831,6 @@
 [data-theme="dark"] .symbol-ref .s24 img { width: 24px; height: 24px; }
 [data-theme="dark"] .symbol-ref .s40 { width: 56px; height: 56px; }
 [data-theme="dark"] .symbol-ref .s40 img { width: 40px; height: 40px; }
-/* ---- Implementation notes ---- */
-[data-theme="dark"] .code-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-[data-theme="dark"] .code-card {
-      margin: 0;
-      padding: 18px;
-      border: 1px solid var(--kds-gray-300);
-      border-radius: 12px;
-      background: var(--kds-gray-100);
-      color: var(--kds-gray-700);
-      font-family: var(--kds-mono);
-      font-size: 12px;
-      line-height: 1.7;
-      overflow-x: auto;
-    }
-[data-theme="dark"] .code-card .tok { color: var(--kds-blue-700); }
 /* ---- Footer ---- */
 [data-theme="dark"] .brand-footer {
       display: grid;
@@ -1954,7 +1839,6 @@
       padding: 30px 0 32px;
     }
 [data-theme="dark"] .brand-footer-logo img { height: 26px; width: auto; object-fit: contain; filter: brightness(0) invert(1); }
-[data-theme="dark"] .footer-note { margin-top: 12px; color: var(--shell-muted); font-size: 12px; line-height: 1.62; }
 [data-theme="dark"] .footer-group { display: grid; gap: 10px; align-content: start; }
 [data-theme="dark"] .footer-group strong { color: var(--shell-fg); font-size: 14px; font-weight: 700; }
 [data-theme="dark"] .footer-group span { color: var(--shell-muted); font-size: 13px; line-height: 1.4; }
@@ -1964,14 +1848,13 @@
 [data-theme="dark"] .phone-wrap { margin: 0 auto; }
 [data-theme="dark"] .phone-wrap.secondary { margin-top: 0; }
 [data-theme="dark"] .span-5, [data-theme="dark"] .span-7, [data-theme="dark"] .span-12 { grid-column: 1 / -1; }
-[data-theme="dark"] .sheet-pair, [data-theme="dark"] .field-grid, [data-theme="dark"] .code-grid { grid-template-columns: 1fr; }}
+[data-theme="dark"] .sheet-pair, [data-theme="dark"] .field-grid { grid-template-columns: 1fr; }}
 @media (max-width: 720px) {[data-theme="dark"] .shell { padding: 0 18px; }
 [data-theme="dark"] .site-header .shell { min-height: 78px; flex-wrap: wrap; gap: 8px 14px; padding: 12px 18px; }
 [data-theme="dark"] .nav { order: 3; width: 100%; gap: 16px; overflow-x: auto; font-size: 13px; }
 [data-theme="dark"] .theme-pill { margin-left: auto; }
 [data-theme="dark"] .hero .shell, [data-theme="dark"] .section .shell { padding-top: 52px; padding-bottom: 52px; }
 [data-theme="dark"] h1 { font-size: 34px; }
-[data-theme="dark"] .hero-copy { font-size: 16px; }
 [data-theme="dark"] .section h2 { font-size: 26px; }
 [data-theme="dark"] .brand-footer { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 20px; }
 [data-theme="dark"] .brand-footer > :first-child { grid-column: 1 / -1; }
@@ -1988,7 +1871,6 @@
       <nav class="nav" aria-label="교보문고 KDS 프리뷰 섹션">
         <a href="#hero">개요</a>
         <a href="#components">컴포넌트</a>
-        <a href="#notes">구현</a>
       </nav>
       <span class="theme-pill"><span data-theme-text="">light · 라이트 우선</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">dark · 다크 적응</span></template></span>
     </div>
@@ -2002,13 +1884,6 @@
           <span class="hero-logo"><img src="/logos/kyobobook-logotype.png" alt="교보문고 KYOBO Book Centre"></span>
           <span class="eyebrow">Kyobo Design System · 미니멀, 읽기 우선</span>
           <h1>책을 읽듯, 정보가 자연스럽게 흐르는 화면.</h1>
-          <p class="hero-copy"><span data-theme-text="">교보문고의 디자인 시스템 KDS는 트렌디함을 덜어내고 가독성과 신뢰를 택합니다. 색은 책 표지가 공급하고 배경은 흰색·옅은 그레이로 비웁니다. 표면은 강한 그림자가 아니라 1px 헤어라인과 배경 워시로 나뉘며, 코어 액션 색은 periwinkle indigo blue-700입니다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">KDS는 라이트 모드 우선이라 공개된 다크 팔레트가 없습니다. 이 화면은 브랜드 색을 새로 만들지 않고, KDS의 차분한 푸른 회색 램프에서 다크 표면을 파생한 다음 액션·의미색만 대비를 위해 명도를 끌어올린 적응입니다. 코어 액션은 여전히 blue-700 계열입니다.</span></template></p>
-          <div class="hero-meta">
-            <span class="meta-chip">서점 · 커머스 · 옴니채널</span>
-            <span class="meta-chip">Noto Sans KR + Roboto</span>
-            <span class="meta-chip">4px 간격·반경 리듬</span>
-            <span class="meta-chip"><span data-theme-text="">라이트 모드 우선</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">다크 = 파생 표면</span></template></span>
-          </div>
           <div class="hero-cta-row">
             <button class="kds-btn primary" type="button">구매하기</button>
             <button class="kds-btn secondary" type="button">장바구니 담기</button>
@@ -2339,7 +2214,6 @@
             <span class="kicker"><span class="hangul-idx">01</span> Components</span>
             <h2><span data-theme-text="">시그니처 컴포넌트는 교보의 차분한 reading-first 표면 위에서 보여야 한다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">시그니처 컴포넌트는 다크 표면 위에서도 같은 위계로 읽혀야 한다.</span></template></h2>
           </div>
-          <p class="section-desc"><span data-theme-text="">Button 위계 · Chip · Badge · Input · BottomSheet · 하단 네비게이션의 초록 MY 버튼 · 4색 반시계 Loading을 KDS 실제 토큰으로 렌더링했다. 브랜드 색은 한 영역의 1차 행동에만, blue-700으로 쓴다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">Button 위계 · Chip · Badge · Input · BottomSheet · 하단 네비게이션의 초록 MY 버튼 · 4색 반시계 Loading을 다크 적응 토큰으로 렌더링했다. 액션 색은 한 영역의 1차 행동에만, 명도를 끌어올린 blue-700으로 쓴다.</span></template></p>
         </div>
 
         <div class="grid">
@@ -2376,7 +2250,6 @@
                 </button>
               </div>
             </div>
-            <p class="panel-note">한 영역에는 하나의 1차 행동만 둔다. Primary는 <code>accent</code> blue-700 fill, hover는 blue-800, disabled는 gray-200/gray-400. 눌림 연출은 fill·tint를 어둡게 할 뿐 bounce·scale을 쓰지 않는다.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="panel-note">한 영역에는 하나의 1차 행동만 둔다. 다크에서는 fill 위 텍스트가 어두운 잉크가 되도록 <code>fg-on-accent</code>를 반전했고, hover는 라이트와 반대로 더 밝은 단계로 간다. bounce·scale은 쓰지 않는다.</p></template>
           </div>
 
           <!-- Loading + symbol -->
@@ -2386,7 +2259,6 @@
               <span class="kds-spinner lg" role="status" aria-label="불러오는 중">
                 <i></i><i></i><i></i><i></i>
               </span>
-              <span class="loading-caption">교보 4색 아이덴티티 링이 90° 기준 <strong>반시계 방향</strong>으로 회전한다. 1초 이상(2~5초) 대기에만, 콘텐츠 중앙에 하나만 노출한다.</span><template data-theme-variant="dark" data-theme-op="swap"><span class="loading-caption">교보 4색 아이덴티티 링이 90° 기준 <strong>반시계 방향</strong>으로 회전한다. 다크에서는 navy 도트를 끌어올려 네 색이 모두 어두운 카드 위에서 읽히게 했다.</span></template>
             </div>
             <div class="demo-block">
               <p class="demo-label">Symbol — compact / favicon scale (777×777 새 마크)</p>
@@ -2396,7 +2268,6 @@
                 <span class="sy s40"><img src="/logos/kyobobook.png" alt="교보문고 심볼 40px"></span>
               </div>
             </div>
-            <p class="panel-note">새 마크의 green은 <code>brand-green</code>으로 로고 전용이며, UI 액션 색이 아니다. 컴팩트/파비콘 스케일에서만 심볼을 단독으로 쓴다.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="panel-note">새 마크 green은 <code>brand-green</code>으로 로고 전용이며, 테마와 무관하게 게시값 그대로 둔다. 컴팩트/파비콘 스케일에서만 심볼을 단독으로 쓴다.</p></template>
           </div>
 
           <!-- Chip -->
@@ -2428,7 +2299,6 @@
                 <span class="kds-chip action"># 연관검색</span>
               </div>
             </div>
-            <p class="panel-note">레이블은 최대 20자 + 말줄임이며 두 줄로 감싸지 않는다. 선택 상태는 색뿐 아니라 텍스트 대비로도 구분된다. Anchor는 페이지 내 이동, Action은 즉시 실행으로 역할이 다르다.</p>
           </div>
 
           <!-- Badge -->
@@ -2463,7 +2333,6 @@
                 <span class="kds-badge ad">AD</span>
               </div>
             </div>
-            <p class="panel-note">높이 22px 고정·좌우 여백 basic 4px / intermediate 6px. 보조 팔레트를 쓰되 항상 코어 색 하나와 균형을 맞춘다. Hottracks 빨강과 Negative 빨강은 역할이 달라 혼동하지 않는다.</p>
           </div>
 
           <!-- BottomSheet -->
@@ -2501,7 +2370,6 @@
                 </div>
               </div>
             </div>
-            <p class="panel-note"><span data-theme-text="">Standard는 기본 콘텐츠와 함께 다룰 수 있고, Modal은 해제해야 상호작용할 수 있다. 상단 코너는 16~24px 구간, 딤은 검정 45% 알파다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">Standard는 기본 콘텐츠와 함께 다룰 수 있고, Modal은 해제해야 상호작용할 수 있다. 상단 코너는 16~24px 구간, 다크에서는 딤을 검정 60% 알파로 깊게 둔다.</span></template></p>
           </div>
 
           <!-- Input -->
@@ -2513,12 +2381,10 @@
                 <div class="kds-input">검색어를 입력하세요
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
                 </div>
-                <span class="help muted">기본 폭은 가변, 높이는 고정이다.</span>
               </div>
               <div class="field">
                 <label>Focused</label>
                 <div class="kds-input focused">홍길동<span class="caret"></span></div>
-                <span class="help muted">focus 보더는 1.5px blue-700.</span>
               </div>
               <div class="field">
                 <label>Success</label>
@@ -2535,7 +2401,6 @@
                 <span class="help err">올바른 이메일을 입력해 주십시오.</span>
               </div>
             </div>
-            <p class="panel-note">상태 7종(Default/Focused/Filled/Disabled/Error/Success/Autocomplete). Error는 <code>negative</code> red-500로 표기하되 색만으로 의미를 전하지 않고 보조 텍스트를 병기한다.</p>
           </div>
 
           <!-- Bottom-nav MY signature -->
@@ -2568,56 +2433,12 @@
                   </span>
                 </div>
               </div>
-              <p class="panel-note" style="flex:1; min-width:240px; margin:0;">유일한 컬러 섀도다 — MY(User menu) 버튼은 55×55px 아바타에 <code>shadow-green-100</code>(green 40% alpha)을 얹어 브랜드 색을 그림자로 끌어와 시그니처를 만든다. 일반 아이콘은 특수 26px 사이즈를 쓴다. 나머지 두 섀도 토큰은 검정 10% alpha의 중립 섀도다.</p><template data-theme-variant="dark" data-theme-op="swap"><p class="panel-note" style="flex:1; min-width:240px; margin:0;">유일한 컬러 섀도다 — MY(User menu) 버튼은 55×55px 아바타에 <code>shadow-green-100</code>(green 45% alpha)을 얹어 브랜드 색을 그림자로 끌어와 시그니처를 만든다. 다크에서도 이 한 곳만 컬러 섀도를 유지하고, 나머지는 검정 알파의 중립 섀도를 깊게 쓴다. 일반 아이콘은 특수 26px 사이즈다.</p></template>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ============ IMPLEMENTATION ============ -->
-    <section class="section" id="notes">
-      <div class="shell">
-        <div class="section-head">
-          <div>
-            <span class="kicker"><span class="hangul-idx">02</span> Implementation</span>
-            <h2>구현 메모는 토큰 이름과 컴포넌트 위계를 함께 남긴다.</h2>
-          </div>
-          <p class="section-desc"><span data-theme-text="">KDS는 공식 문서에 18개 컴포넌트를 게시한다. Button은 hierarchy·element·size를 명시해 구현하고, 색은 시맨틱 토큰으로 의도를 먼저 표현한다. 라이트 모드 우선이며 다크 토큰은 추정하지 않는다.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">KDS는 공식 문서에 18개 컴포넌트를 게시한다. Button은 hierarchy·element·size를 명시해 구현하고, 색은 시맨틱 토큰으로 의도를 먼저 표현한다. 이 다크는 파생 표면 위 적응이며, 공개 다크 토큰이 나오면 교체해야 한다.</span></template></p>
-        </div>
-        <div class="code-grid">
-          <pre class="code-card">Button
-  hierarchy=<span class="tok">"primary"</span>   // primary | secondary | tertiary
-  element=<span class="tok">"box"</span>        // box | text | icon | capsule
-  size=<span class="tok">"m"</span>             // 공개 픽셀값 없음 — 토큰으로 지정
-  fill=<span class="tok">"accent"</span>        // blue-700 · hover blue-800</pre><template data-theme-variant="dark" data-theme-op="swap"><pre class="code-card">Button
-  hierarchy=<span class="tok">"primary"</span>   // primary | secondary | tertiary
-  element=<span class="tok">"box"</span>        // box | text | icon | capsule
-  size=<span class="tok">"m"</span>             // 공개 픽셀값 없음 — 토큰으로 지정
-  fill=<span class="tok">"accent"</span>        // dark: +L blue · 잉크 텍스트</pre></template>
-          <pre class="code-card">Color
-  action=<span class="tok">"accent"</span>        // blue-700, 한 영역 1차 행동만
-  text=<span class="tok">"fg"</span>             // gray-900 본문 기본
-  surface=<span class="tok">"bg / border"</span>  // 1px gray-300 헤어라인 워시
-  brand=<span class="tok">"navy / green"</span>   // LOGO ONLY — 액션 색 금지</pre><template data-theme-variant="dark" data-theme-op="swap"><pre class="code-card">Color
-  action=<span class="tok">"accent"</span>        // blue-700(+L), 한 영역 1차만
-  text=<span class="tok">"fg"</span>             // gray-900 본문 기본
-  surface=<span class="tok">"bg / border"</span>  // 파생 다크 + 1px 헤어라인
-  brand=<span class="tok">"navy / green"</span>   // LOGO ONLY — 게시값 고정</pre></template>
-          <pre class="code-card">Chip / Badge
-  chip=<span class="tok">"radius-round"</span>    // selected = gray-900
-  badge=<span class="tok">"h 22px"</span>         // basic | intermediate | special
-  loading=<span class="tok">"4-color ↺"</span>    // counter-clockwise, center only</pre>
-          <pre class="code-card">Theme
-  mode=<span class="tok">"light-first"</span>     // 공개 다크 팔레트 없음
-  depth=<span class="tok">"divider-first"</span>  // 강한 드롭섀도 금지
-  motion=<span class="tok">"150 / 240ms"</span>   // ease (0.4,0,0.2,1) · toast 4s</pre><template data-theme-variant="dark" data-theme-op="swap"><pre class="code-card">Theme
-  mode=<span class="tok">"dark-derived"</span>    // 공개 다크 팔레트 없음
-  depth=<span class="tok">"divider-first"</span>  // 다크는 알파만 키움
-  motion=<span class="tok">"150 / 240ms"</span>   // ease (0.4,0,0.2,1) · toast 4s</pre></template>
-        </div>
-      </div>
-    </section>
 
     <!-- ============ FOOTER ============ -->
     <section class="section" style="border-bottom:0;">
@@ -2625,7 +2446,6 @@
         <div class="brand-footer">
           <div>
             <span class="brand-footer-logo"><img src="/logos/kyobobook-logotype.png" alt="교보문고"></span>
-            <p class="footer-note"><span data-theme-text="">교보문고 Kyobo Design System (KDS) — 미니멀, 읽기 우선. 책을 읽듯 정보가 흐르는 화면. 라이트 모드 우선.</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">교보문고 Kyobo Design System (KDS) — 미니멀, 읽기 우선. 다크는 라이트 우선 시스템에서 파생한 적응 표면이다.</span></template></p>
           </div>
           <div class="footer-group">
             <strong>서비스</strong>
