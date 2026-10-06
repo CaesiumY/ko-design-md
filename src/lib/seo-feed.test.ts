@@ -39,6 +39,7 @@ function serviceDoc(overrides: {
   createdAt?: string
   body: string
   tagline?: string
+  designSystemName?: string
 }): ServiceDoc {
   return {
     frontmatter: {
@@ -48,6 +49,9 @@ function serviceDoc(overrides: {
       last_updated: overrides.lastUpdated,
       created_at: overrides.createdAt ?? overrides.lastUpdated,
       lang: "ko",
+      ...(overrides.designSystemName === undefined
+        ? {}
+        : { design_system_name: overrides.designSystemName }),
     },
     raw: overrides.body,
     body: overrides.body,
@@ -409,6 +413,73 @@ describe("buildLlmsTxt", () => {
     expect(entryLines).toHaveLength(1)
   })
 
+  // The design-system name rides in the metadata slot, after the category,
+  // whenever the entry publishes one (#466). Its own name is often not the
+  // brand's — class101's system is Vibrant, greeting's is Doodlin UI — and the
+  // tagline names it only by accident, so without it here an agent asked for
+  // the system by name could not find the entry from the index.
+  function withSystem(
+    designSystemName: string,
+    tagline = "태그라인입니다."
+  ): string {
+    return buildLlmsTxt({
+      siteUrl: SITE_URL,
+      services: [
+        serviceDoc({
+          name: "클래스",
+          slug: "class",
+          lastUpdated: "2026-05-10",
+          body: "body",
+          tagline,
+          designSystemName,
+        }),
+      ],
+    })
+  }
+
+  it("puts the design-system name after the category when the entry publishes one", () => {
+    expect(withSystem("Vibrant")).toContain(
+      "- [클래스](https://ko-design.example/services/class/llms.txt): etc · Vibrant — 태그라인입니다."
+    )
+  })
+
+  it("carries the design-system name even when the tagline already says it", () => {
+    // Always in the same slot, so a reader looks in one place rather than
+    // also searching the prose for it.
+    expect(
+      withSystem("Vibrant", "Vibrant 는 클래스의 디자인 시스템이다.")
+    ).toContain("): etc · Vibrant — Vibrant 는 클래스의 디자인 시스템이다.")
+  })
+
+  it("keeps the name fallback and no dangling dash when a system name meets an empty tagline", () => {
+    expect(withSystem("Vibrant", "")).toContain(
+      "- [클래스](https://ko-design.example/services/class/llms.txt): etc · Vibrant — 클래스"
+    )
+    const blank = withSystem("Vibrant", "   \n\t ")
+    expect(blank).toContain("): etc · Vibrant — 클래스")
+    expect(blank).not.toMatch(/— *$/m)
+  })
+
+  it("escapes markdown brackets in the design-system name the way it does in the name", () => {
+    expect(withSystem("Kyobo [KDS]")).toContain(
+      "): etc · Kyobo \\[KDS\\] — 태그라인입니다."
+    )
+  })
+
+  it("folds whitespace in the design-system name so the entry stays on one line", () => {
+    const txt = withSystem("LINE Design\n  System")
+    expect(txt).toContain("): etc · LINE Design System — 태그라인입니다.")
+    expect(catalogEntryLines(txt)).toHaveLength(1)
+  })
+
+  it("writes a blank design-system name as if there were none", () => {
+    // The validator blocks a blank value (`bad-design-system-name`); this only
+    // keeps an unvalidated one from leaving a bare `etc ·` behind.
+    expect(withSystem("   ")).toContain(
+      "- [클래스](https://ko-design.example/services/class/llms.txt): etc — 태그라인입니다."
+    )
+  })
+
   it("does not throw and still emits the header for an empty catalog", () => {
     const txt = buildLlmsTxt({ siteUrl: SITE_URL, services: [] })
 
@@ -434,6 +505,34 @@ describe("buildLlmsTxt with real /services/*.md content", () => {
         /\]\(https:\/\/ko-design\.example\/services\/[^/]+\/llms\.txt\): /
       )
     }
+  })
+
+  it("puts each entry's design-system name, and only that, in the metadata slot", () => {
+    // The slot runs from `): ` to the FIRST ` — `. Taglines are prose and may
+    // carry ` — ` or ` · ` themselves (bezier's does), so the slot is cut by
+    // position and compared whole rather than searched for a separator. That
+    // also makes this the guard for the one name the slot cannot carry: a
+    // design-system name containing ` — ` would end the slot early, and the
+    // slot would no longer equal `category · name`.
+    const bySlug = new Map(
+      getAllServices().map((doc) => [doc.frontmatter.slug, doc.frontmatter])
+    )
+    const withName: Array<string> = []
+    for (const line of catalogEntryLines(txt)) {
+      const slug = /\/services\/([^/]+)\/llms\.txt\): /.exec(line)?.[1]
+      const fm = slug === undefined ? undefined : bySlug.get(slug)
+      expect(fm, line).toBeDefined()
+      const start = line.indexOf("): ") + "): ".length
+      const slot = line.slice(start, line.indexOf(" — ", start))
+      const system = fm!.design_system_name
+      expect(slot, line).toBe(
+        system === undefined ? fm!.category : `${fm!.category} · ${system}`
+      )
+      if (system !== undefined) withName.push(fm!.slug)
+    }
+    // Not a count to maintain: only that the real catalog exercises the
+    // branch at all, so the check above is not vacuously true.
+    expect(withName.length).toBeGreaterThan(0)
   })
 })
 
