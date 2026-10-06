@@ -520,11 +520,19 @@ describe("buildLlmsTxt with real /services/*.md content", () => {
       expect(fm, line).toBeDefined()
       const start = line.indexOf("): ") + "): ".length
       const slot = line.slice(start, line.indexOf(" — ", start))
+      // Written the way the entry writes it — whitespace folded, brackets
+      // escaped as in the name — so a name that merely needs that treatment
+      // passes, and only one the slot cannot hold fails.
       const system = fm!.design_system_name
+        ?.replace(/\s+/g, " ")
+        .trim()
+        .replace(/[[\]]/g, "\\$&")
       expect(slot, line).toBe(
-        system === undefined ? fm!.category : `${fm!.category} · ${system}`
+        system === undefined || system === ""
+          ? fm!.category
+          : `${fm!.category} · ${system}`
       )
-      if (system !== undefined) withName.push(fm!.slug)
+      if (system) withName.push(fm!.slug)
     }
     // Not a count to maintain: only that the real catalog exercises the
     // branch at all, so the check above is not vacuously true.
