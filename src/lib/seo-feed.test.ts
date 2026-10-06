@@ -413,11 +413,7 @@ describe("buildLlmsTxt", () => {
     expect(entryLines).toHaveLength(1)
   })
 
-  // The design-system name rides in the metadata slot, after the category,
-  // whenever the entry publishes one (#466). Its own name is often not the
-  // brand's — class101's system is Vibrant, greeting's is Doodlin UI — and the
-  // tagline names it only by accident, so without it here an agent asked for
-  // the system by name could not find the entry from the index.
+  // One entry with a design-system name (#466; the why is at `buildLlmsTxt`).
   function withSystem(
     designSystemName: string,
     tagline = "태그라인입니다."
