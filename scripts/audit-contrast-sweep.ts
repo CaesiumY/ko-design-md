@@ -374,10 +374,19 @@ export async function measureOne(
     theme: Theme
     width: number
     withHover: boolean
+    /**
+     * A stylesheet added after `NO_TRANSITION`, the same way. The sweep never
+     * passes one; the self-check does, to measure a document as if it had
+     * declared something the catalogue does not, without editing its fixture.
+     */
+    extraStyle?: string
   }
 ): Promise<{ findings: Array<Finding>; collected: Collected; forced: number }> {
   await page.goto(url, { waitUntil: "load" })
   await page.addStyleTag({ content: NO_TRANSITION })
+  if (context_.extraStyle !== undefined) {
+    await page.addStyleTag({ content: context_.extraStyle })
+  }
   await applyTheme(page, context_.theme)
   const collected = await page.evaluate(collectContrast)
   const { slug, theme, width } = context_

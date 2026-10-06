@@ -286,6 +286,45 @@ function describePath(anchor: PathAnchor, found: Finding): string {
   return parts.join(", ")
 }
 
+/**
+ * The same anchors, measured once as the documents stand and once with a
+ * declaration added that the catalogue does not use.
+ *
+ * The collector scrolls an off-screen element into view and reads its rect on
+ * the next line. Left to the document's `scroll-behavior`, a preview that asked
+ * for `smooth` would turn that scroll into an animation the synchronous
+ * collector never waits for, and every reading below the first screen would be
+ * taken from where the page was, not where it went. No preview declares it
+ * (#490), so the default pass alone cannot tell a collector that ignores the
+ * declaration from one that obeys it. The second pass can.
+ *
+ * Expected values are the same records as the default pass — the issue and the
+ * commit, never the default pass's own output — so a collector that broke in
+ * both passes alike would still fail here.
+ *
+ * What it pins is the default-state collection. Every hover anchor is the
+ * accent button on the first screen, which never needs a scroll, so the hover
+ * re-collection is held only because it runs the same `collectContrast` and
+ * the same `bringIntoView`. A scroll of its own would need an anchor below
+ * the fold to be held.
+ */
+interface Pass {
+  name: string
+  /** Added with `measureOne`'s `extraStyle`; the fixture file is not edited. */
+  style?: string
+  /** What the root's computed `scroll-behavior` must be once `style` is in. */
+  scrollBehavior?: string
+}
+
+const PASSES: Array<Pass> = [
+  { name: "default" },
+  {
+    name: "smooth-scroll",
+    style: "* { scroll-behavior: smooth !important; }",
+    scrollBehavior: "smooth",
+  },
+]
+
 interface CheckResult {
   ok: boolean
   lines: Array<string>
@@ -299,9 +338,16 @@ export async function selfCheck(root: string): Promise<CheckResult> {
   const browser = await chromium.launch()
   const lines: Array<string> = []
   let ok = true
-  const note = (pass: boolean, text: string): void => {
-    if (!pass) ok = false
-    lines.push(`${pass ? "ok  " : "FAIL"} ${text}`)
+  // Every line names its pass, so a failure says at once whether it is the
+  // collector itself or only its handling of the injected declaration.
+  let pass: Pass = PASSES[0]
+  const note = (passed: boolean, text: string): void => {
+    if (!passed) ok = false
+    lines.push(`${passed ? "ok  " : "FAIL"} [${pass.name}] ${text}`)
+  }
+  const heading = (text: string): void => {
+    lines.push("")
+    lines.push(`--- [${pass.name}] ${text} ---`)
   }
 
   try {
@@ -331,18 +377,25 @@ export async function selfCheck(root: string): Promise<CheckResult> {
           theme,
           width: ORACLE_WIDTH,
           withHover: true,
+          extraStyle: pass.style,
         })
         out.push(...measured.findings)
+        // Asked after every load, not once per pass: each theme is a fresh
+        // `goto`, and an injection that missed one of them would leave that
+        // half of the pass a silent copy of the default.
+        if (pass.scrollBehavior !== undefined) {
+          const got = await page.evaluate(
+            () => getComputedStyle(document.documentElement).scrollBehavior
+          )
+          note(
+            got === pass.scrollBehavior,
+            `${slug} ${theme} was measured with scroll-behavior ${got}, ` +
+              `expected ${pass.scrollBehavior}`
+          )
+        }
       }
       return out
     }
-
-    const base = `http://127.0.0.1:${server.port}`
-    const before = await collect(`${base}${ORACLE_URL_PATH}`, "oracle")
-    const after = await collect(
-      `${base}/preview/samsung-one-ui/preview.html`,
-      "samsung-one-ui"
-    )
 
     // Ratio and basis are judged together rather than in two passes: a reading
     // that lands on the right number through the wrong boundary is one finding,
@@ -372,106 +425,114 @@ export async function selfCheck(root: string): Promise<CheckResult> {
     }
 
     lines.push(`fixture: ${FIXTURE_FILE} (${fixture.length} bytes)`)
-    lines.push("")
-    lines.push(
-      "--- the defects the fix removed, as the fixture still shows them ---"
-    )
-    for (const anchor of ANCHORS) checkAnchor(before, anchor, anchor.before)
+    const base = `http://127.0.0.1:${server.port}`
+    for (const current of PASSES) {
+      pass = current
+      if (pass.style !== undefined) heading(`with ${pass.style.trim()} added`)
+      const before = await collect(`${base}${ORACLE_URL_PATH}`, "oracle")
+      const after = await collect(
+        `${base}/preview/samsung-one-ui/preview.html`,
+        "samsung-one-ui"
+      )
 
-    lines.push("")
-    lines.push("--- and the same elements on the shipped file ---")
-    for (const anchor of ANCHORS) checkAnchor(after, anchor, anchor.after)
+      heading("the defects the fix removed, as the fixture still shows them")
+      for (const anchor of ANCHORS) checkAnchor(before, anchor, anchor.before)
 
-    lines.push("")
-    lines.push("--- paths a ratio alone does not pin ---")
-    for (const anchor of PATH_ANCHORS) {
-      const found = atAnchor(after, anchor)
-      if (found === undefined) {
-        note(false, `${anchor.id}: not measured at all (${anchor.pathEnds})`)
-        continue
-      }
-      const wrong: Array<string> = []
-      if (anchor.basis !== undefined && found.basis !== anchor.basis) {
-        wrong.push(
-          `basis ${found.basis ?? "neither"}, expected ${anchor.basis}`
+      heading("and the same elements on the shipped file")
+      for (const anchor of ANCHORS) checkAnchor(after, anchor, anchor.after)
+
+      heading("paths a ratio alone does not pin")
+      for (const anchor of PATH_ANCHORS) {
+        const found = atAnchor(after, anchor)
+        if (found === undefined) {
+          note(false, `${anchor.id}: not measured at all (${anchor.pathEnds})`)
+          continue
+        }
+        const wrong: Array<string> = []
+        if (anchor.basis !== undefined && found.basis !== anchor.basis) {
+          wrong.push(
+            `basis ${found.basis ?? "neither"}, expected ${anchor.basis}`
+          )
+        }
+        if (anchor.verdict !== undefined && found.verdict !== anchor.verdict) {
+          wrong.push(`verdict ${found.verdict}, expected ${anchor.verdict}`)
+        }
+        if (anchor.blockers !== undefined) {
+          const got = [...found.blockers].sort().join("+") || "none"
+          const want = [...anchor.blockers].sort().join("+")
+          if (got !== want) wrong.push(`held for ${got}, expected ${want}`)
+        }
+        if (
+          anchor.opacityApprox !== undefined &&
+          found.opacityApprox !== anchor.opacityApprox
+        ) {
+          wrong.push(
+            `opacityApprox ${String(found.opacityApprox)}, expected ${String(anchor.opacityApprox)}`
+          )
+        }
+        note(
+          wrong.length === 0,
+          `${anchor.id}: ${describePath(anchor, found)}` +
+            (wrong.length === 0 ? "" : ` — ${wrong.join("; ")}`)
         )
       }
-      if (anchor.verdict !== undefined && found.verdict !== anchor.verdict) {
-        wrong.push(`verdict ${found.verdict}, expected ${anchor.verdict}`)
-      }
-      if (anchor.blockers !== undefined) {
-        const got = [...found.blockers].sort().join("+") || "none"
-        const want = [...anchor.blockers].sort().join("+")
-        if (got !== want) wrong.push(`held for ${got}, expected ${want}`)
-      }
-      if (
-        anchor.opacityApprox !== undefined &&
-        found.opacityApprox !== anchor.opacityApprox
-      ) {
-        wrong.push(
-          `opacityApprox ${String(found.opacityApprox)}, expected ${String(anchor.opacityApprox)}`
-        )
-      }
+
+      // `CSS.forcePseudoState` is accepted and ignored when it is handed a
+      // node id the document no longer has, so a hover pass can look like it
+      // ran and measure nothing. The fixture's light accent button reads 4.51
+      // at rest and 3.60 hovered; if those come back equal the forcing did not
+      // take, and the anchor checks above would have been comparing the
+      // resting value.
+      lines.push("")
+      const rest = atAnchor(before, {
+        ...ANCHORS[1],
+        state: "default",
+      })
+      const hovered = atAnchor(before, ANCHORS[1])
+      const restText =
+        rest === undefined ? "not measured" : rest.ratio.toFixed(2)
+      const hoverText =
+        hovered === undefined ? "not measured" : hovered.ratio.toFixed(2)
       note(
-        wrong.length === 0,
-        `${anchor.id}: ${describePath(anchor, found)}` +
-          (wrong.length === 0 ? "" : ` — ${wrong.join("; ")}`)
+        rest !== undefined &&
+          hovered !== undefined &&
+          Math.abs(rest.ratio - hovered.ratio) > TOLERANCE,
+        `hover was really forced: at rest ${restText}, hovered ${hoverText}`
+      )
+
+      // Every anchor on the shipped file clears its threshold. This is about
+      // the ten rows the fix moved, not about the file as a whole: "the
+      // catalogue has no failures" is a claim the sweep's report makes, and
+      // wiring it in here would break the self-check every time the sweep found
+      // something new — which it did, the first time hover worked, on a
+      // `.btn-flat:hover` pair issue #359 never listed.
+      const unfixed = ANCHORS.filter((anchor) => {
+        const found = atAnchor(after, anchor)
+        return found === undefined || found.verdict === "fail"
+      })
+      note(
+        unfixed.length === 0,
+        `every anchor clears its threshold on the shipped file` +
+          (unfixed.length === 0
+            ? ""
+            : ` (still failing: ${unfixed.map((a) => a.id).join(", ")})`)
+      )
+      // And the file still carries the one borderline its own guard comment
+      // describes: white on the published primary-dark, a pair that cannot be
+      // moved without changing a published colour.
+      const guarded = atAnchor(after, {
+        ...ANCHORS[1],
+        theme: "light",
+        state: "default",
+      })
+      note(
+        guarded !== undefined && guarded.verdict === "borderline",
+        `the guarded light accent button is still borderline: ` +
+          (guarded === undefined
+            ? "not measured"
+            : `${guarded.ratio.toFixed(2)} (${guarded.verdict})`)
       )
     }
-
-    // `CSS.forcePseudoState` is accepted and ignored when it is handed a node
-    // id the document no longer has, so a hover pass can look like it ran and
-    // measure nothing. The fixture's light accent button reads 4.51 at rest and
-    // 3.60 hovered; if those come back equal the forcing did not take, and the
-    // anchor checks above would have been comparing the resting value.
-    lines.push("")
-    const rest = atAnchor(before, {
-      ...ANCHORS[1],
-      state: "default",
-    })
-    const hovered = atAnchor(before, ANCHORS[1])
-    const restText = rest === undefined ? "not measured" : rest.ratio.toFixed(2)
-    const hoverText =
-      hovered === undefined ? "not measured" : hovered.ratio.toFixed(2)
-    note(
-      rest !== undefined &&
-        hovered !== undefined &&
-        Math.abs(rest.ratio - hovered.ratio) > TOLERANCE,
-      `hover was really forced: at rest ${restText}, hovered ${hoverText}`
-    )
-
-    // Every anchor on the shipped file clears its threshold. This is about the
-    // ten rows the fix moved, not about the file as a whole: "the catalogue has
-    // no failures" is a claim the sweep's report makes, and wiring it in here
-    // would break the self-check every time the sweep found something new —
-    // which it did, the first time hover worked, on a `.btn-flat:hover` pair
-    // issue #359 never listed.
-    const unfixed = ANCHORS.filter((anchor) => {
-      const found = atAnchor(after, anchor)
-      return found === undefined || found.verdict === "fail"
-    })
-    note(
-      unfixed.length === 0,
-      `every anchor clears its threshold on the shipped file` +
-        (unfixed.length === 0
-          ? ""
-          : ` (still failing: ${unfixed.map((a) => a.id).join(", ")})`)
-    )
-    // And the file still carries the one borderline its own guard comment
-    // describes: white on the published primary-dark, a pair that cannot be
-    // moved without changing a published colour.
-    const guarded = atAnchor(after, {
-      ...ANCHORS[1],
-      theme: "light",
-      state: "default",
-    })
-    note(
-      guarded !== undefined && guarded.verdict === "borderline",
-      `the guarded light accent button is still borderline: ` +
-        (guarded === undefined
-          ? "not measured"
-          : `${guarded.ratio.toFixed(2)} (${guarded.verdict})`)
-    )
   } finally {
     await browser.close()
     await server.close()

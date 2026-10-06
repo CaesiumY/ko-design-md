@@ -366,7 +366,16 @@ export function collectContrast(): Collected {
     // empty list and the reading comes back as a `root-transparent` hold.
     // Measured: two of samsung's list rows held for exactly that reason.
     if (r.top < 0 || r.bottom > window.innerHeight) {
-      el.scrollIntoView({ block: "center" })
+      // `instant`, never the default `auto`. `auto` follows the document's
+      // `scroll-behavior`, and under `smooth` the scroll becomes an animation
+      // this synchronous pass never yields to: every rect read after it is the
+      // pre-scroll one, and each element below the first screen drops out as
+      // off-viewport. Neither the reduced-motion reset previews carry nor the
+      // sweep's `NO_TRANSITION` reaches this path — both only touch
+      // `animation` and `transition`. It is an option here and not an injected
+      // `scroll-behavior: auto !important`, which a preview's own `!important`
+      // could outrank. The self-check's smooth-scroll pass holds this (#490).
+      el.scrollIntoView({ block: "center", behavior: "instant" })
     }
   }
 
