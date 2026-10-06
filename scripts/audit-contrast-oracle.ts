@@ -302,13 +302,16 @@ function describePath(anchor: PathAnchor, found: Finding): string {
  * commit, never the default pass's own output — so a collector that broke in
  * both passes alike would still fail here.
  *
- * What it pins is the default-state collection. Every hover anchor is the
- * accent button on the first screen, which never needs a scroll, so the hover
- * re-collection is held only because it runs the same `collectContrast` and
- * the same `bringIntoView`. A scroll of its own would need an anchor below
- * the fold to be held.
+ * What it pins is the default-state collection. The hover re-collection does
+ * scroll — a working default collection leaves the fixture about 1,900px
+ * down, so the accent button every hover anchor names starts above the
+ * viewport — but a collector whose scrolls never land also never leaves the
+ * top of the page, and then that button is on screen anyway. Measured: with
+ * the scroll left to `smooth`, the default collection ended at `scrollY` 0 and
+ * every hover anchor still passed. So the hover re-collection is held only
+ * because it runs the same `collectContrast` and the same `bringIntoView`.
  */
-interface Pass {
+interface Variant {
   name: string
   /** Added with `measureOne`'s `extraStyle`; the fixture file is not edited. */
   style?: string
@@ -316,7 +319,7 @@ interface Pass {
   scrollBehavior?: string
 }
 
-const PASSES: Array<Pass> = [
+const VARIANTS: Array<Variant> = [
   { name: "default" },
   {
     name: "smooth-scroll",
@@ -340,14 +343,14 @@ export async function selfCheck(root: string): Promise<CheckResult> {
   let ok = true
   // Every line names its pass, so a failure says at once whether it is the
   // collector itself or only its handling of the injected declaration.
-  let pass: Pass = PASSES[0]
+  let variant: Variant = VARIANTS[0]
   const note = (passed: boolean, text: string): void => {
     if (!passed) ok = false
-    lines.push(`${passed ? "ok  " : "FAIL"} [${pass.name}] ${text}`)
+    lines.push(`${passed ? "ok  " : "FAIL"} [${variant.name}] ${text}`)
   }
   const heading = (text: string): void => {
     lines.push("")
-    lines.push(`--- [${pass.name}] ${text} ---`)
+    lines.push(`--- [${variant.name}] ${text} ---`)
   }
 
   try {
@@ -377,20 +380,20 @@ export async function selfCheck(root: string): Promise<CheckResult> {
           theme,
           width: ORACLE_WIDTH,
           withHover: true,
-          extraStyle: pass.style,
+          extraStyle: variant.style,
         })
         out.push(...measured.findings)
         // Asked after every load, not once per pass: each theme is a fresh
         // `goto`, and an injection that missed one of them would leave that
         // half of the pass a silent copy of the default.
-        if (pass.scrollBehavior !== undefined) {
+        if (variant.scrollBehavior !== undefined) {
           const got = await page.evaluate(
             () => getComputedStyle(document.documentElement).scrollBehavior
           )
           note(
-            got === pass.scrollBehavior,
+            got === variant.scrollBehavior,
             `${slug} ${theme} was measured with scroll-behavior ${got}, ` +
-              `expected ${pass.scrollBehavior}`
+              `expected ${variant.scrollBehavior}`
           )
         }
       }
@@ -426,9 +429,10 @@ export async function selfCheck(root: string): Promise<CheckResult> {
 
     lines.push(`fixture: ${FIXTURE_FILE} (${fixture.length} bytes)`)
     const base = `http://127.0.0.1:${server.port}`
-    for (const current of PASSES) {
-      pass = current
-      if (pass.style !== undefined) heading(`with ${pass.style.trim()} added`)
+    for (const current of VARIANTS) {
+      variant = current
+      if (variant.style !== undefined)
+        heading(`with ${variant.style.trim()} added`)
       const before = await collect(`${base}${ORACLE_URL_PATH}`, "oracle")
       const after = await collect(
         `${base}/preview/samsung-one-ui/preview.html`,
