@@ -30,6 +30,18 @@ function catalogEntryLines(txt: string): Array<string> {
     .filter((line) => line.startsWith("- ["))
 }
 
+// A catalog line cut the way the consumer skill's endpoints reference tells
+// readers to: the link's end found by structure — the name escapes `[`, `]`
+// and `\`, so the first unescaped `]` closes it and `(url): ` follows — and
+// the metadata slot running from there to the first ` — `. Searching for
+// `): ` instead would cut inside a name that holds it.
+function entryParts(line: string): { url: string; slot: string } | null {
+  const link = /^- \[(?:\\.|[^\\\]])*\]\(([^\s()]+)\): /.exec(line)
+  if (link === null) return null
+  const start = link[0].length
+  return { url: link[1], slot: line.slice(start, line.indexOf(" — ", start)) }
+}
+
 const SITE_URL = "https://ko-design.example/"
 
 function serviceDoc(overrides: {
@@ -476,6 +488,40 @@ describe("buildLlmsTxt", () => {
     )
   })
 
+  it("keeps the metadata slot findable when the name holds `): `, brackets or a backslash", () => {
+    // The endpoints reference finds the slot by the link's structure, so a
+    // name that holds the very text a search would look for still cuts right.
+    // A trailing backslash is the case escaping `\` exists for: unescaped, it
+    // would turn the closing `]` into `\]` and the link would never close.
+    const backslash = String.fromCharCode(92)
+    for (const name of [
+      "토스(Toss): 증권",
+      "a/llms.txt): b",
+      "서비스]X",
+      `Foo${backslash}`,
+      `A${backslash}]B`,
+    ]) {
+      const txt = buildLlmsTxt({
+        siteUrl: SITE_URL,
+        services: [
+          serviceDoc({
+            name,
+            slug: "tricky",
+            lastUpdated: "2026-05-10",
+            body: "body",
+            tagline: "태그라인 — 대시 포함.",
+            designSystemName: "Vibrant",
+          }),
+        ],
+      })
+      const [line] = catalogEntryLines(txt)
+      expect(entryParts(line), name).toEqual({
+        url: "https://ko-design.example/services/tricky/llms.txt",
+        slot: "etc · Vibrant",
+      })
+    }
+  })
+
   it("does not throw and still emits the header for an empty catalog", () => {
     const txt = buildLlmsTxt({ siteUrl: SITE_URL, services: [] })
 
@@ -504,29 +550,34 @@ describe("buildLlmsTxt with real /services/*.md content", () => {
   })
 
   it("puts each entry's design-system name, and only that, in the metadata slot", () => {
-    // The slot runs from `): ` to the FIRST ` — `. Taglines are prose and may
-    // carry ` — ` or ` · ` themselves (bezier's does), so the slot is cut by
-    // position and compared whole rather than searched for a separator. That
-    // also makes this the guard for the one name the slot cannot carry: a
-    // design-system name containing ` — ` would end the slot early, and the
-    // slot would no longer equal `category · name`.
+    // The slot runs from right after the link and its `: ` to the FIRST ` — `
+    // after it, as the consumer skill's endpoints reference tells readers to
+    // cut it. The link's end is found by structure — the name escapes `[`, `]`
+    // and `\`, so the first unescaped `]` closes it, then `(url): ` — because a
+    // name may hold `): ` or even `/llms.txt): `. Taglines
+    // are prose and may carry ` — ` or ` · ` themselves (bezier's does), so the
+    // slot is cut by position and compared whole rather than searched for a
+    // separator. A design-system name holding ` — ` would end the slot early;
+    // the validator blocks it first (`design-system-name-separator`), and this
+    // is what catches one that got past it.
     const bySlug = new Map(
       getAllServices().map((doc) => [doc.frontmatter.slug, doc.frontmatter])
     )
     const withName: Array<string> = []
     for (const line of catalogEntryLines(txt)) {
-      const slug = /\/services\/([^/]+)\/llms\.txt\): /.exec(line)?.[1]
+      const parts = entryParts(line)
+      expect(parts, line).not.toBeNull()
+      const { url, slot } = parts!
+      const slug = /\/services\/([^/]+)\/llms\.txt$/.exec(url)?.[1]
       const fm = slug === undefined ? undefined : bySlug.get(slug)
       expect(fm, line).toBeDefined()
-      const start = line.indexOf("): ") + "): ".length
-      const slot = line.slice(start, line.indexOf(" — ", start))
       // Written the way the entry writes it — whitespace folded, brackets
       // escaped as in the name — so a name that merely needs that treatment
       // passes, and only one the slot cannot hold fails.
       const system = fm!.design_system_name
         ?.replace(/\s+/g, " ")
         .trim()
-        .replace(/[[\]]/g, "\\$&")
+        .replace(/[[\]\\]/g, "\\$&")
       expect(slot, line).toBe(
         system === undefined || system === ""
           ? fm!.category

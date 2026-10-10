@@ -1767,6 +1767,79 @@ function siteFrontmatter(raw: string): Record<string, ReadValue> {
   }
 }
 
+/**
+ * A `design_system_name:` line that both parsers read back as exactly `value`,
+ * or null when no plain form does. Tried bare first, then double-quoted, then
+ * single-quoted: YAML reads escapes inside double quotes and doubled `''`
+ * inside single ones, while the site's parser only strips the outer quotes, so
+ * each form is checked by reading it, not by reasoning about its characters.
+ */
+function lineReadAs(value: string): string | null {
+  const key = "design_system_name"
+  for (const form of [value, `"${value}"`, `'${value}'`]) {
+    const line = `${key}: ${form}`
+    const yaml = parseDocument(line)
+    if (yaml.errors.length > 0) continue
+    let readByYaml: ReadValue
+    try {
+      // An alias to nothing (`*x`) parses but throws on conversion.
+      readByYaml = yaml.toJS()?.[key]
+    } catch {
+      continue
+    }
+    const siteValue = siteFrontmatter(`---\n${line}\n---\n`)[key]
+    if (readByYaml === value && siteValue === value) return line
+  }
+  return null
+}
+
+/** Whether an em dash stands as a word of its own once whitespace is folded
+ *  — where the catalog index would cut a design-system name. */
+function hasStandaloneDash(name: string): boolean {
+  return name.replace(/\s+/g, " ").trim().split(" ").includes("—")
+}
+
+/** The name with every standalone em dash dealt with: one at either end is
+ *  dropped rather than swapped, so the name gains no stray `-`; one inside
+ *  becomes `-`. The result never has a standalone dash, so it is safe to run
+ *  again after anything else edits the name. */
+function withoutStandaloneDashes(name: string): string {
+  const words = name.replace(/\s+/g, " ").trim().split(" ")
+  while (words[0] === "—") words.shift()
+  while (words.at(-1) === "—") words.pop()
+  return words.map((w) => (w === "—" ? "-" : w)).join(" ")
+}
+
+/**
+ * The fix `design-system-name-separator` offers: one the next run accepts.
+ *
+ * A candidate name is offered only when this rule and `bad-design-system-name`
+ * would both pass it — checked, not assumed — and only as a line both parsers
+ * read back as exactly that name (`lineReadAs`). The value here has had its
+ * quotes stripped, and written bare it can break (`Foo: - Bar`), turn into a
+ * list (`- Foo`) or lose a tail to a comment (`Foo - #1`) (#508 review).
+ *
+ * A name that needs quoting yet holds both kinds of quote mark (`[a] "b" 'c'`)
+ * fits no one line — escapes inside double quotes are what the site's parser
+ * does not undo — so the marks and backslashes go, and the dashes are dealt
+ * with again: removing quotes can free one (`"—"` becomes `—`). If nothing is
+ * left to offer, the key may be left out, which is always accepted.
+ */
+function separatorFix(name: string): string {
+  const offered = (candidate: string): string | null =>
+    candidate === "" || isBlankName(candidate) || hasStandaloneDash(candidate)
+      ? null
+      : lineReadAs(candidate)
+  const first = withoutStandaloneDashes(name)
+  const line = offered(first)
+  if (line !== null) return `write it with another separator, as \`${line}\``
+  const plain = offered(withoutStandaloneDashes(first.replace(/["'\\]/g, "")))
+  if (plain !== null) {
+    return `write it with another separator and without its quote marks and backslashes, which no one line can hold here, as \`${plain}\``
+  }
+  return "remove the line"
+}
+
 /** A value YAML cannot expand within its alias limit. */
 const TOO_MANY_ALIASES: unique symbol = Symbol("too many aliases")
 
@@ -2404,6 +2477,30 @@ export function validateDraft(
           `design_system_name must be one line of text with at least one visible character, as \`design_system_name: TDS\`, or no line at all (got ${shownBlankName(systemName)}).`
         )
       )
+    }
+    // The catalog index writes the name as `: category · {name} — tagline`,
+    // whitespace folded, and readers end it at the first ` — ` (#466,
+    // `buildLlmsTxt` and the consumer skill's endpoints reference). The name
+    // sits between ` · ` and ` — `, so in its folded form no em dash may
+    // stand as a word of its own — `Foo —` and `— Foo` are cut as surely as
+    // `Foo — Bar`. A dash without spaces on both sides is not a split point
+    // and stays. Before this rule only the real-catalog test in
+    // `seo-feed.test.ts` noticed, after the pipeline had passed the draft.
+    if (
+      sees("design_system_name") &&
+      typeof systemName === "string" &&
+      !isBlankName(systemName)
+    ) {
+      if (hasStandaloneDash(systemName)) {
+        const fix = separatorFix(systemName)
+        issues.push(
+          block(
+            "design-system-name-separator",
+            "frontmatter",
+            `design_system_name \`${systemName}\` has an em dash standing as a word of its own; the catalog index writes the name between " · " and " — " and ends it at the first " — ", so such a dash, even at either end, cuts it; ${fix}.`
+          )
+        )
+      }
     }
     // `deriveSlug` keeps a list (`slug: [toss]`) as the slug, and a RegExp
     // test coerces it to `toss`, so the form is judged on text only.
