@@ -176,7 +176,7 @@ describe("/design-md machine gates", () => {
     for (const doc of [skill, format]) {
       expect(doc).toMatch(/`CASES`[^\n]*role-reference-rows\.test\.ts/)
     }
-    // Both pointers, and the heading they point at — renaming the section
+    // Every pointer, and the heading they point at — renaming the section
     // must fail here rather than strand the author and the template.
     expect(author).toContain("Role → palette reference rows")
     expect(readRepoFile(DESIGN_MD_REVIEWER_AGENT)).toContain(
