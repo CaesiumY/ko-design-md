@@ -2461,12 +2461,25 @@ export function validateDraft(
         // break (`Foo: - Bar`), turn into a list (`- Foo`) or silently lose
         // a tail to a comment (`Foo - #1`) (#508 review).
         const line = suggested === "" ? null : lineReadAs(suggested)
+        // No line holds a name that needs quoting yet carries both kinds of
+        // quote mark (`[a] "b" 'c'`) — escapes inside double quotes are what
+        // the site's parser does not undo. Then the marks go, and if even that
+        // leaves no line, the key is left out: still a fix the next run takes.
+        const unquoted =
+          suggested === "" || line !== null
+            ? ""
+            : suggested
+                .replace(/["'\\]/g, "")
+                .replace(/\s+/g, " ")
+                .trim()
+        const fallback =
+          unquoted === "" || isBlankName(unquoted) ? null : lineReadAs(unquoted)
         const fix =
-          suggested === ""
-            ? "remove the line"
-            : line === null
-              ? `replace each standalone "—" with another separator, keeping the rest of the name as it is`
-              : `write it with another separator, as \`${line}\``
+          line !== null
+            ? `write it with another separator, as \`${line}\``
+            : fallback !== null
+              ? `write it with another separator and without its quote marks, which no one line can hold here, as \`${fallback}\``
+              : "remove the line"
         issues.push(
           block(
             "design-system-name-separator",

@@ -841,6 +841,9 @@ describe("validateDraft — frontmatter", () => {
       ["— - Foo", 'design_system_name: "- Foo"'],
       ["— [Foo]", 'design_system_name: "[Foo]"'],
       ["— *x", 'design_system_name: "*x"'],
+      // Needs quoting yet holds both kinds of quote mark, so no one line
+      // reads back as it; the marks are dropped instead.
+      [`— [a] "b" 'c'`, 'design_system_name: "[a] b c"'],
       ["—", null],
       // What is left does not show (a zero-width space, a Hangul filler), so
       // offering it as the name would be blocked next as blank.

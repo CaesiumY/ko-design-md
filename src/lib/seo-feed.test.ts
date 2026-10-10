@@ -552,8 +552,8 @@ describe("buildLlmsTxt with real /services/*.md content", () => {
   it("puts each entry's design-system name, and only that, in the metadata slot", () => {
     // The slot runs from right after the link and its `: ` to the FIRST ` — `
     // after it, as the consumer skill's endpoints reference tells readers to
-    // cut it. The link's end is found by structure — the name escapes `[` and
-    // `]`, so the first unescaped `]` closes it, then `(url): ` — because a
+    // cut it. The link's end is found by structure — the name escapes `[`, `]`
+    // and `\`, so the first unescaped `]` closes it, then `(url): ` — because a
     // name may hold `): ` or even `/llms.txt): `. Taglines
     // are prose and may carry ` — ` or ` · ` themselves (bezier's does), so the
     // slot is cut by position and compared whole rather than searched for a
