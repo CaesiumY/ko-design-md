@@ -51,22 +51,29 @@ and each is handled differently:
 - `font-X-src` (a top-level key beside `fonts:`) is where the family `font-X` loads from.
   A `.css` URL is a stylesheet to link; a font file (`.woff`, `.woff2`, …) needs your own
   `@font-face` rule with the family name from `font-X`.
-- A family that may not be redistributed shows up in Known Gaps with its substitute —
-  that rule wins over the stack.
+- Before you load or ship a face, check it may be redistributed. The limit can sit in
+  Known Gaps, the Typography prose, Do's and Don'ts, or the comment on its `fonts:` line.
+  Use the substitute the entry names; with none named, render the stack's fallbacks and
+  don't host the font file.
 
 ### Dark palette
 
-- A token's dark value is marked by a `dark-` prefix (in some entries a `-dark` suffix).
-  Its light pair is the same key without the marker, or with `light-` in its place:
-  `dark-grey-900` ↔ `grey-900`, `dark-gray-00` ↔ `light-gray-00`.
+- A token's dark value is marked by a `dark-` prefix. Its light pair is the same key
+  without the prefix, or with `light-` in its place: `dark-grey-900` ↔ `grey-900`,
+  `dark-gray-00` ↔ `light-gray-00`.
+- A `-dark` *suffix* is usually a darker shade step used in the light theme
+  (`primary-dark`, `positive-dark`), not a dark-theme value. Read the token's comment and
+  the Colors prose when a name is ambiguous — an entry may mark its theme another way.
 - A quoted `"{colors.x}"` value is a reference row: it resolves to key `x` in the same
-  map. Role rows often point at palette steps this way, for light and dark alike.
+  map. Role rows point at palette steps this way, and some entries name a role row's dark
+  pair with a `-dark` suffix (`color-background-canvas-dark: "{colors.dark-canvas}"`).
 - Wire both values to one token name in the target's dark-mode mechanism (a custom-property
   theme block, `prefers-color-scheme`, Tailwind's `dark:` variant, …), so components switch
   without code changes.
 - No dark pair means one of two things. Some tokens are theme-invariant by design (e.g. a
-  `static-*` family). Others simply weren't published, which Known Gaps says. Don't invent
-  a dark value for the second kind and present it as the brand's.
+  `static-*` family). Others simply weren't published — Known Gaps may say so, but not
+  every entry does. A dark value you fill in for those is your inference (SKILL.md "Scope
+  guardrails").
 
 ## 3. OKLCH values
 
