@@ -14,7 +14,7 @@ components; with no token layer at all, add a small variable block at the top sc
 ## 2. Map the DESIGN.md sections
 
 **Read `## Known Gaps` before applying any other section.** Most of its bullets are one of
-three kinds, and each is handled differently (a bullet recording a retracted claim only
+four kinds, and each is handled differently (a bullet recording a retracted claim only
 corrects an earlier version of the entry — nothing to apply):
 
 - **Constraints you must follow.** Example: toss's brand typeface (Toss Product Sans) may
@@ -24,6 +24,9 @@ corrects an earlier version of the entry — nothing to apply):
   pair. Carry the value as published — the entry keeps it on purpose. If your UI needs
   something the brand didn't publish, fill it as *your* inference (SKILL.md "Scope
   guardrails").
+- **Entry values that differ from the brand's.** A bullet may say some of the entry's own
+  values were synthesized or observed and name the brand's published value beside them.
+  Use the published value; if you keep the entry's, mark it as your inference.
 - **Scope disclosures.** Values the catalog recommends rather than the brand publishing them
   (e.g. breakpoints), or areas the sources didn't cover. Use them, but don't present them
   as the brand's spec.
@@ -51,7 +54,7 @@ corrects an earlier version of the entry — nothing to apply):
   JSON token sidecar.
 - `font-X-src` (a top-level key beside `fonts:`) is where the family `font-X` loads from.
   A `.css` URL is a stylesheet to link; a font file (`.woff`, `.woff2`, …) needs your own
-  `@font-face` rule with the family name from `font-X`.
+  `@font-face` rule named after the first family in the `font-X` stack.
 - Before you load or ship a face, check it may be redistributed. The limit can sit in
   Known Gaps, the Typography prose, Do's and Don'ts, or the comment on its `fonts:` line.
   Use the substitute the entry names; with none named, render the stack's fallbacks and
@@ -74,6 +77,8 @@ corrects an earlier version of the entry — nothing to apply):
 - Wire both values to one token name in the target's dark-mode mechanism (a custom-property
   theme block, `prefers-color-scheme`, Tailwind's `dark:` variant, …), so components switch
   without code changes.
+- A dark pair can carry yet another marker (`primary-dark` ↔ `primary-dark-on-dark`).
+  Before deciding a token has none, check same-stem neighbours and their comments.
 - No dark pair means one of two things. Some tokens are theme-invariant by design (e.g. a
   `static-*` family). Others simply weren't published — Known Gaps may say so, but not
   every entry does. A dark value you fill in for those is your inference (SKILL.md "Scope
