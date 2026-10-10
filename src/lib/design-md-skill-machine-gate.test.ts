@@ -818,9 +818,10 @@ describe("/design-md machine gates", () => {
     expect(named).toBeGreaterThan(2)
   })
 
-  // A skipped observation and a clean one both add zero items. If Stage 13
-  // printed them alike, "no Chromium" would read as "nothing fell short".
-  it("reports the render observation's three states distinctly", () => {
+  // A skipped observation, an empty one and a clean one all add zero items.
+  // If Stage 13 printed them alike, "no Chromium" or "collected nothing" would
+  // read as "nothing fell short".
+  it("reports the render observation's four states distinctly", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
     const report = skill.slice(
       skill.indexOf("## Stage 13 —"),
@@ -833,9 +834,9 @@ describe("/design-md machine gates", () => {
       )
 
     const render = outputsOf("render_result")
-    expect(render.length, "three states: ok, warn, skipped").toBe(3)
+    expect(render.length, "four states: ok, warn, empty, skipped").toBe(4)
     expect(render.every((o) => o !== undefined)).toBe(true)
-    expect(new Set(render).size).toBe(3)
+    expect(new Set(render).size).toBe(4)
 
     // Nor may one of them borrow another step's line.
     const others = [

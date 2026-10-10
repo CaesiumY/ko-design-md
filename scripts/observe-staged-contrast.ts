@@ -19,15 +19,20 @@
 // - skipped  → no browser (or the measurement broke), and the report says so
 //   in a shape that cannot be mistaken for a clean run.
 //
-// Exit 2 is a bad invocation, decided before Playwright is even imported — the
-// same split `scripts/audit-contrast.ts` makes, for the same reason: the
-// argument contract can then be tested where no browser is installed.
+// Exit 2 is a bad invocation — the arguments, the staged file, the report to
+// join and the directory the report goes in — decided before Playwright is
+// even imported. That is the split `scripts/audit-contrast.ts` makes, for the
+// same reason: the contract can then be tested where no browser is installed,
+// and a wrong path never costs a full measurement. Only a write that still
+// fails after that check (a full disk, a lock) is caught after measuring, and
+// it exits 2 as well.
 
 import {
   existsSync,
   mkdirSync,
   readFileSync,
   renameSync,
+  rmSync,
   statSync,
   writeFileSync,
 } from "node:fs"
@@ -235,6 +240,22 @@ async function observe(
   })
 }
 
+// Make sure the report's directory exists and takes a file before anything is
+// measured, so an unwritable path fails in milliseconds instead of after every
+// width and theme has been rendered and thrown away.
+function checkWritable(path: string): void {
+  const probe = join(dirname(path), `.observe-staged-${process.pid}.probe`)
+  try {
+    mkdirSync(dirname(path), { recursive: true })
+    writeFileSync(probe, "")
+    rmSync(probe)
+  } catch (e) {
+    fail(
+      `Error: cannot write ${path}, checked before measuring (${(e as Error).message})`
+    )
+  }
+}
+
 // Written beside the target and renamed over it, so a run that dies half way
 // leaves the 9a2 report as it was rather than a truncated file.
 function writeAtomically(path: string, contents: string): void {
@@ -256,6 +277,7 @@ async function main(): Promise<void> {
     )
   }
   const html = readStaged(args.staged)
+  checkWritable(target)
   const result = await observe(args, html)
   const report = mergeIntoMachineReport(existing, result, {
     iteration: args.iteration,

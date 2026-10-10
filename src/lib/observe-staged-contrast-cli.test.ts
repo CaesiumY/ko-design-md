@@ -155,7 +155,8 @@ describe("observe-staged-contrast CLI — arguments", () => {
     () => {
       // The parent of the report path is a file, so no directory can be made
       // for it. That used to escape as an uncaught error with exit 1, which
-      // the skill gives no meaning to.
+      // the skill gives no meaning to — and then only after every width and
+      // theme had been measured and thrown away. It is checked up front now.
       const blocker = join(scratch, "blocker")
       writeFileSync(blocker, "")
       const r = run(
@@ -164,6 +165,7 @@ describe("observe-staged-contrast CLI — arguments", () => {
       )
       expect(r.status).toBe(2)
       expect(r.out).toContain("cannot write")
+      expect(r.out).toContain("before measuring")
     }
   )
 
