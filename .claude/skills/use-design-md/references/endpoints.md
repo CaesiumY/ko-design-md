@@ -16,8 +16,9 @@ llms.txt format — a header plus one markdown link per entry:
 ```
 
 ` · <design system name>` is present only when the entry publishes one. The metadata
-starts after `): ` and ends at the first ` — ` after it: a tagline is prose and may
-contain ` — ` itself, so split there, not at the last one. `[` and `]` in both the name
+starts after `/llms.txt): ` — where the link's URL ends, since a name may itself contain
+`): ` — and ends at the first ` — ` after it: a tagline is prose and may contain ` — `
+itself, so split there, not at the last one. `[` and `]` in both the name
 and the design-system name are backslash-escaped (`\[` `\]`); unescape them before
 comparing with what the user typed.
 

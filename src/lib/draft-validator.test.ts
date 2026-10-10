@@ -795,6 +795,63 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(named, OPTS, "block")).toEqual([])
   })
 
+  // The catalog index writes the name as `: category · {name} — tagline`, and
+  // a reader ends the name at the first ` — ` (#466). A name holding ` — `
+  // there would be cut short — and before this rule only `pnpm test` noticed,
+  // after the pipeline had passed the draft.
+  it("blocks a design_system_name the catalog index would cut at its ` — `", () => {
+    const withName = (value: string): string =>
+      makeDraft().replace(
+        "name: 데모",
+        `name: 데모\ndesign_system_name: ${value}`
+      )
+    for (const value of [
+      "Foo — Bar UI",
+      "Foo —",
+      "— Foo",
+      "Foo  —  Bar",
+      "Foo — — Bar",
+    ]) {
+      expect(rulesOf(withName(value), OPTS, "block"), value).toEqual([
+        "design-system-name-separator",
+      ])
+    }
+    // A dash the index does not split on is the name's own business.
+    for (const value of ["Foo—Bar", "Foo - Bar", "Foo – Bar", "Foo (Bar)"]) {
+      expect(rulesOf(withName(value), OPTS, "block"), value).toEqual([])
+    }
+  })
+
+  // Checked by applying the hint, not by reading it (the convention the list
+  // hints below follow): a leading dash swapped for `-` would hand back
+  // `- Foo`, which YAML reads as a list item.
+  it("tells a cut design_system_name a fix the next run accepts", () => {
+    const cases: Array<[string, string | null]> = [
+      ["Foo — Bar UI", "Foo - Bar UI"],
+      ["— Foo", "Foo"],
+      ["Foo —", "Foo"],
+      ["Foo — — Bar", "Foo - - Bar"],
+      ["—", null],
+    ]
+    for (const [value, expected] of cases) {
+      const line = `design_system_name: ${value}`
+      const raw = makeDraft().replace("name: 데모", `name: 데모\n${line}`)
+      const fix = validateDraft(raw, OPTS).issues.find(
+        (i) => i.rule === "design-system-name-separator"
+      )?.fix
+      const fixed =
+        expected === null
+          ? raw.replace(`\n${line}`, "")
+          : raw.replace(line, `design_system_name: ${expected}`)
+      expect(fix, value).toContain(
+        expected === null
+          ? "remove the line"
+          : `\`design_system_name: ${expected}\``
+      )
+      expect(rulesOf(fixed, OPTS, "block"), value).toEqual([])
+    }
+  })
+
   // Every consumed key holds one value. A list both parsers read alike used to
   // reach each field rule, whose message then contradicted itself: "slug
   // `demo` differs from the expected `demo`", "lang `ko` must be exactly

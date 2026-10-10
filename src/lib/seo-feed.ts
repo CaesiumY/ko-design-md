@@ -181,6 +181,8 @@ export function buildLlmsTxt({ siteUrl, services }: FeedInput): string {
     // here only keeps an unvalidated whitespace-only one from leaving a bare
     // `category ·` behind. The validator's wider notion of blank — zero-width
     // and filler characters — is not repeated here.
+    // Readers end the name at the first ` — `, so a name holding one would be
+    // cut short; the validator blocks that too (`design-system-name-separator`).
     const system = foldWhitespace(design_system_name ?? "")
     const meta =
       system === "" ? category : `${category} · ${escapeBrackets(system)}`

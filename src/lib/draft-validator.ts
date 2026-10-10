@@ -2405,6 +2405,41 @@ export function validateDraft(
         )
       )
     }
+    // The catalog index writes the name as `: category · {name} — tagline`,
+    // whitespace folded, and readers end it at the first ` — ` (#466,
+    // `buildLlmsTxt` and the consumer skill's endpoints reference). The name
+    // sits between ` · ` and ` — `, so in its folded form no em dash may
+    // stand as a word of its own — `Foo —` and `— Foo` are cut as surely as
+    // `Foo — Bar`. A dash without spaces on both sides is not a split point
+    // and stays. Before this rule only the real-catalog test in
+    // `seo-feed.test.ts` noticed, after the pipeline had passed the draft.
+    if (
+      sees("design_system_name") &&
+      typeof systemName === "string" &&
+      !isBlankName(systemName)
+    ) {
+      const words = systemName.replace(/\s+/g, " ").trim().split(" ")
+      if (words.includes("—")) {
+        // The one fix the next run accepts. A dash at either end is dropped,
+        // not swapped: `- Foo` would read as a YAML list item. Dashes inside
+        // become `-`. A name of dashes alone leaves nothing, and the key may
+        // be left out.
+        while (words[0] === "—") words.shift()
+        while (words.at(-1) === "—") words.pop()
+        const suggested = words.map((w) => (w === "—" ? "-" : w)).join(" ")
+        const fix =
+          suggested === ""
+            ? "remove the line"
+            : `write it with another separator, as \`design_system_name: ${suggested}\``
+        issues.push(
+          block(
+            "design-system-name-separator",
+            "frontmatter",
+            `design_system_name \`${systemName}\` contains " — " (an em dash with spaces), where the catalog index ends the name; ${fix}.`
+          )
+        )
+      }
+    }
     // `deriveSlug` keeps a list (`slug: [toss]`) as the slug, and a RegExp
     // test coerces it to `toss`, so the form is judged on text only.
     const slugRead: ReadValue = fm.slug

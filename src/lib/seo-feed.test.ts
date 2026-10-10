@@ -504,12 +504,14 @@ describe("buildLlmsTxt with real /services/*.md content", () => {
   })
 
   it("puts each entry's design-system name, and only that, in the metadata slot", () => {
-    // The slot runs from `): ` to the FIRST ` — `. Taglines are prose and may
-    // carry ` — ` or ` · ` themselves (bezier's does), so the slot is cut by
-    // position and compared whole rather than searched for a separator. That
-    // also makes this the guard for the one name the slot cannot carry: a
-    // design-system name containing ` — ` would end the slot early, and the
-    // slot would no longer equal `category · name`.
+    // The slot runs from `/llms.txt): ` — where the link's URL ends, since a
+    // brand name may itself hold `): ` — to the FIRST ` — ` after it, as the
+    // consumer skill's endpoints reference tells readers to cut it. Taglines
+    // are prose and may carry ` — ` or ` · ` themselves (bezier's does), so the
+    // slot is cut by position and compared whole rather than searched for a
+    // separator. A design-system name holding ` — ` would end the slot early;
+    // the validator blocks it first (`design-system-name-separator`), and this
+    // is what catches one that got past it.
     const bySlug = new Map(
       getAllServices().map((doc) => [doc.frontmatter.slug, doc.frontmatter])
     )
@@ -518,7 +520,7 @@ describe("buildLlmsTxt with real /services/*.md content", () => {
       const slug = /\/services\/([^/]+)\/llms\.txt\): /.exec(line)?.[1]
       const fm = slug === undefined ? undefined : bySlug.get(slug)
       expect(fm, line).toBeDefined()
-      const start = line.indexOf("): ") + "): ".length
+      const start = line.indexOf("/llms.txt): ") + "/llms.txt): ".length
       const slot = line.slice(start, line.indexOf(" — ", start))
       // Written the way the entry writes it — whitespace folded, brackets
       // escaped as in the name — so a name that merely needs that treatment
