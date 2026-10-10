@@ -171,9 +171,10 @@ describe("/design-md machine gates", () => {
     const format = readRepoFile(DESIGN_MD_STITCH_FORMAT)
     const author = readRepoFile(DESIGN_MD_AUTHOR_AGENT)
 
+    // The symbol and its file on one line, so an unrelated "CASES" or a file
+    // path named elsewhere cannot keep this green after the pointer is gone.
     for (const doc of [skill, format]) {
-      expect(doc).toContain("CASES")
-      expect(doc).toContain("role-reference-rows.test.ts")
+      expect(doc).toMatch(/`CASES`[^\n]*role-reference-rows\.test\.ts/)
     }
     expect(author).toContain("Role → palette reference rows")
     expect(readRepoFile("src/lib/role-reference-rows.test.ts")).toContain(
@@ -183,8 +184,10 @@ describe("/design-md machine gates", () => {
 
   it("tells onboarding to record a components map's count", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
-    expect(skill).toContain("COMPONENT_COUNTS")
-    expect(skill).toContain("google-designmd-corpus.test.ts")
+    // Same line: the missing-primary bullet already names this file.
+    expect(skill).toMatch(
+      /`COMPONENT_COUNTS`[^\n]*google-designmd-corpus\.test\.ts/
+    )
     expect(readRepoFile("src/lib/google-designmd-corpus.test.ts")).toContain(
       "COMPONENT_COUNTS"
     )
