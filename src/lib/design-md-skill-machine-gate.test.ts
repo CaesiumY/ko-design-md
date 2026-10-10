@@ -191,6 +191,31 @@ describe("/design-md machine gates", () => {
     )
   })
 
+  // The section said "Four more tables" while listing four, then the list grew
+  // and the word stayed (#448). Count the bullets instead of trusting the word.
+  it("states how many remaining per-slug registries it lists", () => {
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+    const section =
+      /^### The rest of the per-slug rows\n([\s\S]*?)^#{2,3} /m.exec(skill)
+    if (section === null)
+      throw new Error(
+        "SKILL.md must keep its 'The rest of the per-slug rows' section"
+      )
+    const stated = /\b(\w+) more registries remain/.exec(section[1])
+    if (stated === null)
+      throw new Error("the section must state how many registries remain")
+    const expected = NUMBER_WORDS[stated[1].toLowerCase()]
+    if (expected === undefined)
+      throw new Error(
+        `the section says "${stated[1]} more registries" — a count this test cannot read; extend NUMBER_WORDS`
+      )
+    const bullets = section[1].match(/^- \*\*/gm) ?? []
+    expect(
+      bullets.length,
+      `the section says "${stated[1]} more registries" but lists ${bullets.length}`
+    ).toBe(expected)
+  })
+
   it("tells onboarding to record a components map's count", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
     // Same line: the missing-primary bullet already names this file.
