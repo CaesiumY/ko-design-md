@@ -179,6 +179,9 @@ describe("/design-md machine gates", () => {
     // Both pointers, and the heading they point at — renaming the section
     // must fail here rather than strand the author and the template.
     expect(author).toContain("Role → palette reference rows")
+    expect(readRepoFile(DESIGN_MD_REVIEWER_AGENT)).toContain(
+      "Role → palette reference rows"
+    )
     expect(readRepoFile(DESIGN_MD_TEMPLATE)).toContain(
       "Role → palette reference rows"
     )
