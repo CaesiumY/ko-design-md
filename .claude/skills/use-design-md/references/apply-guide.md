@@ -59,15 +59,18 @@ corrects an earlier version of the entry — nothing to apply):
 
 ### Dark palette
 
-- A `dark-` prefix marks a dark-theme value. Its light pair is the same key without the
-  prefix, or with `light-` in its place: `dark-grey-900` ↔ `grey-900`,
+- A `dark-` prefix marks a dark-theme value. Its light pair is usually the same key
+  without the prefix, or with `light-` in its place: `dark-grey-900` ↔ `grey-900`,
   `dark-gray-00` ↔ `light-gray-00`.
 - A `-dark` *suffix* means different things in different entries — a darker shade used in
   the light theme (`positive-dark`, `primary-dark`) or a dark-theme value (`black-dark`,
-  `bg-canvas-dark` ↔ `bg-canvas-light`). Don't decide from the name: the token's trailing
-  comment and the Colors prose say which.
+  `bg-canvas-dark` ↔ `bg-canvas-light`). Don't decide from the name alone. Look at its
+  neighbours: a `-dark` / `-middle` / `-light` ladder under one group label (`  ## …` row)
+  is a shade scale, while `-light` / `-dark` twins of the same role are a theme pair. The
+  token's trailing comment, the Colors prose and Known Gaps confirm it.
 - A quoted `"{colors.x}"` value is a reference row: it resolves to key `x` in the same
-  map. Role rows point at palette steps this way, light and dark alike.
+  map, and `x` may itself be a reference — follow the chain to a literal value. Role rows
+  point at palette steps this way, light and dark alike.
 - Wire both values to one token name in the target's dark-mode mechanism (a custom-property
   theme block, `prefers-color-scheme`, Tailwind's `dark:` variant, …), so components switch
   without code changes.
