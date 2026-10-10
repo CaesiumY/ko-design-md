@@ -26,7 +26,10 @@ corrects an earlier version of the entry — nothing to apply):
   guardrails").
 - **Entry values that differ from the brand's.** A bullet may say some of the entry's own
   values were synthesized or observed and name the brand's published value beside them.
-  Use the published value; if you keep the entry's, mark it as your inference.
+  If the bullet says how to switch (replace the whole ramp, only when building on the
+  brand's own package, …), do exactly that — don't swap just the values it names, or the
+  rest of the ramp falls out of step. With no such instruction, use the published value;
+  if you keep the entry's, mark it as your inference.
 - **Scope disclosures.** Values the catalog recommends rather than the brand publishing them
   (e.g. breakpoints), or areas the sources didn't cover. Use them, but don't present them
   as the brand's spec.
