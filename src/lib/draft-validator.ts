@@ -1793,6 +1793,53 @@ function lineReadAs(value: string): string | null {
   return null
 }
 
+/** Whether an em dash stands as a word of its own once whitespace is folded
+ *  — where the catalog index would cut a design-system name. */
+function hasStandaloneDash(name: string): boolean {
+  return name.replace(/\s+/g, " ").trim().split(" ").includes("—")
+}
+
+/** The name with every standalone em dash dealt with: one at either end is
+ *  dropped rather than swapped, so the name gains no stray `-`; one inside
+ *  becomes `-`. The result never has a standalone dash, so it is safe to run
+ *  again after anything else edits the name. */
+function withoutStandaloneDashes(name: string): string {
+  const words = name.replace(/\s+/g, " ").trim().split(" ")
+  while (words[0] === "—") words.shift()
+  while (words.at(-1) === "—") words.pop()
+  return words.map((w) => (w === "—" ? "-" : w)).join(" ")
+}
+
+/**
+ * The fix `design-system-name-separator` offers: one the next run accepts.
+ *
+ * A candidate name is offered only when this rule and `bad-design-system-name`
+ * would both pass it — checked, not assumed — and only as a line both parsers
+ * read back as exactly that name (`lineReadAs`). The value here has had its
+ * quotes stripped, and written bare it can break (`Foo: - Bar`), turn into a
+ * list (`- Foo`) or lose a tail to a comment (`Foo - #1`) (#508 review).
+ *
+ * A name that needs quoting yet holds both kinds of quote mark (`[a] "b" 'c'`)
+ * fits no one line — escapes inside double quotes are what the site's parser
+ * does not undo — so the marks and backslashes go, and the dashes are dealt
+ * with again: removing quotes can free one (`"—"` becomes `—`). If nothing is
+ * left to offer, the key may be left out, which is always accepted.
+ */
+function separatorFix(name: string): string {
+  const offered = (candidate: string): string | null =>
+    candidate === "" || isBlankName(candidate) || hasStandaloneDash(candidate)
+      ? null
+      : lineReadAs(candidate)
+  const first = withoutStandaloneDashes(name)
+  const line = offered(first)
+  if (line !== null) return `write it with another separator, as \`${line}\``
+  const plain = offered(withoutStandaloneDashes(first.replace(/["'\\]/g, "")))
+  if (plain !== null) {
+    return `write it with another separator and without its quote marks and backslashes, which no one line can hold here, as \`${plain}\``
+  }
+  return "remove the line"
+}
+
 /** A value YAML cannot expand within its alias limit. */
 const TOO_MANY_ALIASES: unique symbol = Symbol("too many aliases")
 
@@ -2444,42 +2491,8 @@ export function validateDraft(
       typeof systemName === "string" &&
       !isBlankName(systemName)
     ) {
-      const words = systemName.replace(/\s+/g, " ").trim().split(" ")
-      if (words.includes("—")) {
-        // A dash at either end is dropped rather than swapped, so the name
-        // does not gain a stray `-`. Dashes inside become `-`. A name of
-        // dashes alone leaves nothing to keep, and neither does one whose
-        // rest does not show (a zero-width space beside the dash), which
-        // `bad-design-system-name` would block next — the key may be left out.
-        while (words[0] === "—") words.shift()
-        while (words.at(-1) === "—") words.pop()
-        const kept = words.map((w) => (w === "—" ? "-" : w)).join(" ")
-        const suggested = isBlankName(kept) ? "" : kept
-        // The hint is the one fix the next run accepts, so the line it
-        // offers is one both parsers read back as exactly that name. The
-        // value here has had its quotes stripped, and written bare it can
-        // break (`Foo: - Bar`), turn into a list (`- Foo`) or silently lose
-        // a tail to a comment (`Foo - #1`) (#508 review).
-        const line = suggested === "" ? null : lineReadAs(suggested)
-        // No line holds a name that needs quoting yet carries both kinds of
-        // quote mark (`[a] "b" 'c'`) — escapes inside double quotes are what
-        // the site's parser does not undo. Then the marks go, and if even that
-        // leaves no line, the key is left out: still a fix the next run takes.
-        const unquoted =
-          suggested === "" || line !== null
-            ? ""
-            : suggested
-                .replace(/["'\\]/g, "")
-                .replace(/\s+/g, " ")
-                .trim()
-        const fallback =
-          unquoted === "" || isBlankName(unquoted) ? null : lineReadAs(unquoted)
-        const fix =
-          line !== null
-            ? `write it with another separator, as \`${line}\``
-            : fallback !== null
-              ? `write it with another separator and without its quote marks, which no one line can hold here, as \`${fallback}\``
-              : "remove the line"
+      if (hasStandaloneDash(systemName)) {
+        const fix = separatorFix(systemName)
         issues.push(
           block(
             "design-system-name-separator",

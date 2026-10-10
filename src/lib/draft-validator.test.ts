@@ -844,6 +844,10 @@ describe("validateDraft — frontmatter", () => {
       // Needs quoting yet holds both kinds of quote mark, so no one line
       // reads back as it; the marks are dropped instead.
       [`— [a] "b" 'c'`, 'design_system_name: "[a] b c"'],
+      // Dropping the marks frees a dash that was quoted; it is dealt with too,
+      // or the offered line would be blocked by this same rule.
+      [`— [a] "—" 'c'`, 'design_system_name: "[a] - c"'],
+      [`— [a] 'b' "—"`, 'design_system_name: "[a] b"'],
       ["—", null],
       // What is left does not show (a zero-width space, a Hangul filler), so
       // offering it as the name would be blocked next as blank.
@@ -873,6 +877,91 @@ describe("validateDraft — frontmatter", () => {
         expect(matter(fixed).data.design_system_name, value).toBe(name)
       }
     }
+  })
+
+  // The cases above are shapes reviews found one round at a time. This holds
+  // the property itself: for any name this rule blocks, applying its hint as
+  // written leaves nothing blocked. Names are drawn, deterministically, as
+  // words YAML and the site's parser treat specially — drawn by word, not by
+  // character, because the shapes that matter (a quoted dash beside both kinds
+  // of quote mark) almost never come out of single characters.
+  it("offers a hint the next run accepts for any name it blocks", () => {
+    const backslash = String.fromCharCode(92)
+    const vocabulary = [
+      "—",
+      "—",
+      "-",
+      "[a]",
+      "{b}",
+      '"—"',
+      "'—'",
+      '"x"',
+      "'y'",
+      "a:",
+      "#1",
+      "*x",
+      "&y",
+      "!t",
+      "|",
+      ">",
+      "@z",
+      `b${backslash}c`,
+      `d${backslash}`,
+      "Foo",
+    ]
+    // mulberry32: 32-bit integer arithmetic throughout. A textbook LCG written
+    // with plain `*` overflows 2^53 here and loses its low bits, and the draws
+    // collapse onto a few values — the first version of this test never once
+    // produced a name with both kinds of quote mark.
+    let seed = 466
+    const next = (n: number): number => {
+      seed = (seed + 0x6d2b79f5) | 0
+      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed)
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+      return ((t ^ (t >>> 14)) >>> 0) % n
+    }
+    let tried = 0
+    let unquoted = 0
+    for (let i = 0; i < 800 && tried < 200; i++) {
+      const words = Array.from(
+        { length: 2 + next(4) },
+        () => vocabulary[next(vocabulary.length)]
+      )
+      // Half the names open with the dash: a draft line is valid YAML only
+      // when the name starts with a plain character, and the shapes the hint
+      // has to rescue — quoting needed, both quote marks present — mostly sit
+      // behind a leading dash.
+      if (next(2) === 0) words.unshift("—")
+      else if (!words.includes("—")) {
+        words.splice(next(words.length + 1), 0, "—")
+      }
+      const line = `design_system_name: ${words.join(" ")}`
+      const raw = makeDraft().replace("name: 데모", `name: 데모\n${line}`)
+      // Only names that reach this rule alone: ones that are invalid YAML or
+      // misread to begin with have their own block and their own fix.
+      const blocked = rulesOf(raw, OPTS, "block")
+      if (blocked.join() !== "design-system-name-separator") continue
+      tried++
+      const fix =
+        validateDraft(raw, OPTS).issues.find(
+          (issue) => issue.rule === "design-system-name-separator"
+        )?.fix ?? ""
+      if (fix.includes("without its quote marks")) unquoted++
+      const offered = /as `(design_system_name: .*)`\.?$/.exec(fix)?.[1]
+      const fixed =
+        offered === undefined
+          ? raw.replace(`\n${line}`, "")
+          : raw.replace(line, offered)
+      if (offered === undefined) expect(fix, line).toContain("remove the line")
+      expect(rulesOf(fixed, OPTS, "block"), `${line}\n→ ${fix}`).toEqual([])
+    }
+    // Not a count to keep: only that enough names reached the rule for the
+    // property to have been exercised.
+    expect(tried).toBeGreaterThan(30)
+    // And the rescue branch — quote marks dropped — was reached too, or the
+    // property would hold only for the easy shapes (#508 review: a quoted dash
+    // freed by that branch was the defect the hand-picked cases missed).
+    expect(unquoted).toBeGreaterThan(3)
   })
 
   // Every consumed key holds one value. A list both parsers read alike used to
