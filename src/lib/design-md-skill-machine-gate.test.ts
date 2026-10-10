@@ -160,6 +160,73 @@ describe("/design-md machine gates", () => {
     )
   })
 
+  // Issue #448: the template invites `{{semantic-alias}}: "{colors.x}"` rows,
+  // and an alias named like a role in the entry's own `## Colors` table trips
+  // the role-reference-rows guard, which wants a hand-written comparison in
+  // CASES. On the skill side the authoring rule lives once, in the format
+  // reference; the author agent only points there, so its pointer is pinned
+  // rather than the rules.
+  it("tells onboarding when role reference rows owe a CASES comparison", () => {
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+    const format = readRepoFile(DESIGN_MD_STITCH_FORMAT)
+    const author = readRepoFile(DESIGN_MD_AUTHOR_AGENT)
+
+    // The symbol and its file on one line, so an unrelated "CASES" or a file
+    // path named elsewhere cannot keep this green after the pointer is gone.
+    for (const doc of [skill, format]) {
+      expect(doc).toMatch(/`CASES`[^\n]*role-reference-rows\.test\.ts/)
+    }
+    // Every pointer, and the heading they point at — renaming the section
+    // must fail here rather than strand the author and the template.
+    expect(author).toContain("Role → palette reference rows")
+    expect(readRepoFile(DESIGN_MD_REVIEWER_AGENT)).toContain(
+      "Role → palette reference rows"
+    )
+    expect(readRepoFile(DESIGN_MD_TEMPLATE)).toContain(
+      "Role → palette reference rows"
+    )
+    expect(format).toMatch(/^### Role → palette reference rows$/m)
+    expect(readRepoFile("src/lib/role-reference-rows.test.ts")).toContain(
+      "const CASES"
+    )
+  })
+
+  // The section said "Four more tables" while listing four, then the list grew
+  // and the word stayed (#448). Count the bullets instead of trusting the word.
+  it("states how many remaining per-slug registries it lists", () => {
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+    const section =
+      /^### The rest of the per-slug rows\n([\s\S]*?)^#{2,3} /m.exec(skill)
+    if (section === null)
+      throw new Error(
+        "SKILL.md must keep its 'The rest of the per-slug rows' section"
+      )
+    const stated = /\b(\w+) more registries remain/.exec(section[1])
+    if (stated === null)
+      throw new Error("the section must state how many registries remain")
+    const expected = NUMBER_WORDS[stated[1].toLowerCase()]
+    if (expected === undefined)
+      throw new Error(
+        `the section says "${stated[1]} more registries" — a count this test cannot read; extend NUMBER_WORDS`
+      )
+    const bullets = section[1].match(/^- \*\*/gm) ?? []
+    expect(
+      bullets.length,
+      `the section says "${stated[1]} more registries" but lists ${bullets.length}`
+    ).toBe(expected)
+  })
+
+  it("tells onboarding to record a components map's count", () => {
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+    // Same line: the missing-primary bullet already names this file.
+    expect(skill).toMatch(
+      /`COMPONENT_COUNTS`[^\n]*google-designmd-corpus\.test\.ts/
+    )
+    expect(readRepoFile("src/lib/google-designmd-corpus.test.ts")).toContain(
+      "COMPONENT_COUNTS"
+    )
+  })
+
   // created_at is the catalog's sort key, but nothing in the pipeline would
   // notice its absence: an entry missing it still renders, just pinned to the
   // bottom of the list. Four entries shipped that way before the field became

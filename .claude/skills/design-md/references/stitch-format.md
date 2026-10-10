@@ -152,6 +152,25 @@ dark-bg-canvas: oklch(0.148 0.004 277)
 
 Measured cost of getting this wrong: `wanted` shipped 21 colliding names, which silenced 22 of its preview comparisons until they were renamed. `validate:catalog` warns on every collision and names the comparison it costs, so you do not have to spot them by eye.
 
+### Role → palette reference rows
+
+When the brand publishes a role layer on top of its palette (`bg-brand-solid` → `carrot-600`), the body's `## Colors` role table can also be carried as frontmatter reference rows. Live example, `services/seed-design.md`:
+
+```yaml
+bg-brand-solid: "{colors.carrot-600}"
+dark-bg-brand-solid: "{colors.dark-carrot-700}"
+dark-bg-overlay: "{colors.static-black-alpha-700}"
+```
+
+Carry a role this way only under these rules:
+
+- **Only a role the upstream points at a single palette token.** A role that goes through an opacity ramp stays out even when the value matches — codeit's `txt-primary` points at `gray-100-opacity-100`, not `gray-100`. Such roles, and pairs where the upstream disagrees with the table, stay in the body table only.
+- **Not under a spec `color_roles` name** (`primary` · `secondary` · `tertiary` · `neutral`). Tools read those as brand roles, so a table role named `secondary` (greeting's text colour) must not be published under it. `primary` is allowed only as the brand-colour alias (`primary: "{colors.x}"`, pointing at the colour the brand publishes as its own). A colour the brand itself publishes under one of these names (remember's `secondary`) is not a table role and is unaffected.
+- **The dark pair takes the `dark-` prefix and points into the dark palette** (`dark-bg-brand-solid` → `dark-carrot-700`). A palette that does not change with the theme (seed-design's `static-*`) has no `dark-` twin, so the dark pair points at the same unprefixed key.
+- **The body table and the reference rows are two copies of one mapping — edit both.** Reference rows are pointers, so they never reach the sidecar and `tokens:check` cannot see the two drift apart.
+
+**This shape owes a hand-written comparison in `CASES`** (`src/lib/role-reference-rows.test.ts`). The guard in that file finds entries by shape: a reference row whose key — less a `dark-` prefix or `-dark` suffix, and with codeit's `text-` / `background-` read as `txt-` / `bg-` — appears as a backticked name in the first cell of a row in the entry's own `## Colors` section. Only rows whose first non-space character is `|` and whose first cell *starts* with a backtick are read (indented tables count), so a role cell like ``배경 `bg-x` `` or a table written without the leading pipe is not seen. Such an entry fails CI until `CASES` holds a function comparing its rows against its table. It is not a one-line row: entries lay out their role tables differently, so each comparison is written for its slug. The `primary` alias above does not count. The test file is outside this skill's write scope; the operator adds the function.
+
 ### Dimension values carry a unit — including zero
 
 Write `0em`, not `0`. A bare zero is valid CSS but not a valid `Dimension` under Google's spec, which accepts only `px`, `em` and `rem`; `pnpm validate:spec` reports it as an error. This applies to `tracking`/`letterSpacing` most often, since zero tracking is common.

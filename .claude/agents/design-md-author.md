@@ -98,7 +98,7 @@ Body sections in this exact order, all as `##` headings:
 
 These are not required by rubric Item 2 (which counts the 10 standard sections only) — adding them does not change your rubric score, but it materially improves the doc's value to downstream LLMs.
 
-Read `references/stitch-format.md` for the canonical section conventions, and `references/design-md-template.md` for a fill-in skeleton of the whole file. When both are supplied, follow `stitch-format.md` on any point where they appear to differ — the template is the shape, that file is the rule.
+Read `references/stitch-format.md` for the canonical section conventions, and `references/design-md-template.md` for a fill-in skeleton of the whole file. When both are supplied, follow `stitch-format.md` on any point where they appear to differ — the template is the shape, that file is the rule. Before writing any `{colors.X}` reference row that names a role from your `## Colors` table, read the "Role → palette reference rows" section of `stitch-format.md` — it says when such rows may be carried and what they owe in CI.
 
 Three token conventions are worth loading before you write the frontmatter token maps, because they are the ones entries most often get wrong:
 
