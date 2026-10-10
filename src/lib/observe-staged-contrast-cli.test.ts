@@ -168,6 +168,55 @@ describe("observe-staged-contrast CLI — arguments", () => {
   )
 
   it(
+    "refuses to join a report from a different iteration",
+    { timeout: CLI_TIMEOUT },
+    () => {
+      // Merging iteration 2's observation into iteration 1's report would
+      // leave the report claiming iteration 1 with nothing to say otherwise.
+      const path = join(scratch, "preview-review-machine-other.json")
+      const gate = JSON.stringify({
+        machine: true,
+        tool: "validate-preview",
+        schema: 1,
+        iteration: 1,
+        issues: [],
+        verdict: "0 block / 0 warn — deterministic preview checks passed",
+      })
+      writeFileSync(path, gate)
+      const r = run(
+        ["--staged", STAGED, "--json-out", path, "--iteration", "2"],
+        { PLAYWRIGHT_BROWSERS_PATH: noBrowsers }
+      )
+      expect(r.status).toBe(2)
+      expect(r.out).toContain("iteration")
+      expect(readFileSync(path, "utf8")).toBe(gate)
+    }
+  )
+
+  it(
+    "refuses a report whose issues are not issue objects",
+    { timeout: CLI_TIMEOUT },
+    () => {
+      // `Array.isArray` alone let `[null]` through to a TypeError — exit 1.
+      const path = join(scratch, "preview-review-machine-null.json")
+      const gate = JSON.stringify({
+        machine: true,
+        tool: "validate-preview",
+        schema: 1,
+        iteration: 1,
+        issues: [null],
+        verdict: "0 block / 0 warn — x",
+      })
+      writeFileSync(path, gate)
+      const r = run(["--staged", STAGED, "--json-out", path], {
+        PLAYWRIGHT_BROWSERS_PATH: noBrowsers,
+      })
+      expect(r.status).toBe(2)
+      expect(readFileSync(path, "utf8")).toBe(gate)
+    }
+  )
+
+  it(
     "will not overwrite a report it cannot read",
     { timeout: CLI_TIMEOUT },
     () => {

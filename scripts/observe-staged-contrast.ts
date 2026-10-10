@@ -5,9 +5,12 @@
 // It is the CI contrast gate's observation harness pointed at a document the
 // gate never sees. The document is served at the self-check's virtual path,
 // on top of the real `public/` tree, so its absolute `/preview/_runtime/*`
-// links resolve exactly as they will once it ships. Widths, themes and the
-// hover pass are the gate's own, so a reading here is the reading CI will take
-// after the entry lands.
+// links resolve exactly as they will once it ships. Widths, themes, the hover
+// pass and the browser context are the gate's own — but the numbers are this
+// machine's, not CI's. CI measures with pinned Noto CJK and its own fontconfig,
+// and a different Korean fallback face breaks lines differently, which moves
+// the lines a verdict rests on. So a reading here can pass where CI's fails or
+// the other way round; the baseline numbers stay CI's (CLAUDE.md).
 //
 // Two outcomes, both exit 0, because the loop must go on to the reviewer
 // either way:
@@ -133,13 +136,28 @@ function readExisting(path: string): MachineReport | null {
     typeof report !== "object" ||
     report.machine !== true ||
     !Array.isArray(report.issues) ||
+    !report.issues.every(isIssue) ||
     typeof report.verdict !== "string"
   ) {
     fail(
-      `Error: ${path} exists but is not a machine report (needs machine: true, an issues list and a verdict)`
+      `Error: ${path} exists but is not a machine report (needs machine: true, a list of issue objects and a verdict)`
     )
   }
   return report as MachineReport
+}
+
+// Each item is read for its `rule` and `severity` when the report is merged,
+// so an item that is not an issue object would fail there — outside every
+// catch, as an exit 1 the skill gives no meaning to.
+function isIssue(item: unknown): boolean {
+  if (item === null || typeof item !== "object") return false
+  const i = item as Record<string, unknown>
+  return (
+    (i.severity === "block" || i.severity === "warn") &&
+    typeof i.rule === "string" &&
+    typeof i.section === "string" &&
+    typeof i.fix === "string"
+  )
 }
 
 // Playwright's launch error runs to a boxed install hint over many lines; the
@@ -230,6 +248,13 @@ async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2))
   const target = resolve(args.jsonOut)
   const existing = readExisting(target)
+  // The report names its iteration, and this run was told which one it
+  // observes. A mismatch is the wrong file, not something to merge quietly.
+  if (existing !== null && existing.iteration !== args.iteration) {
+    fail(
+      `Error: ${args.jsonOut} is iteration ${existing.iteration}, but --iteration is ${args.iteration}`
+    )
+  }
   const html = readStaged(args.staged)
   const result = await observe(args, html)
   const report = mergeIntoMachineReport(existing, result, {
