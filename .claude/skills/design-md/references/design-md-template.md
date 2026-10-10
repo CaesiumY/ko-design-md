@@ -52,7 +52,9 @@ colors:
   {{token-name-2}}: oklch({{L C H}})
   ## {{다크 램프가 있으면 이름을 갈라 쓴다 — 한 이름 두 값은 대조를 꺼 버린다}}
   dark-{{token-name}}: oklch({{L C H}})
+  ## {{참조 행은 조건부다 — 실어도 되는 경우와 CI 등록 의무는 stitch-format.md 「Role → palette reference rows」. 조건에 안 맞으면 이 두 줄을 지운다}}
   {{semantic-alias}}: "{colors.{{token-name}}}"   # 참조는 반드시 인용 — 안 하면 YAML 이 flow mapping 으로 읽어 값이 null 이 된다
+  dark-{{semantic-alias}}: "{colors.dark-{{token-name}}}"
 typography:
   {{style-name}}:
     fontSize: {{56}}px

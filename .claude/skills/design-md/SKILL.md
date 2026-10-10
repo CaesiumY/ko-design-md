@@ -469,7 +469,7 @@ This file is outside the skill's write scope too: the operator makes the edit by
 
 ### The rest of the per-slug rows
 
-Four more tables owe this entry a row, and none is reachable from this stage — each fails in CI on
+Six more tables can owe this entry a row, and none is reachable from this stage — each fails in CI on
 someone who never saw it. `CLAUDE.md` 「카탈로그 정책」 carries the full list; the ones not already
 covered above are:
 
@@ -485,6 +485,11 @@ covered above are:
   a **two-way ratchet** on the slug's error count, so a later silent fix fails it too. Record the
   count; do not flatten the value to satisfy the linter. `validate:draft` warns
   `spec-unrecorded-limitation` with the exact findings, so the count to record is in its output.
+- **`COMPONENT_COUNTS`** (`src/lib/google-designmd-corpus.test.ts`) — only when the frontmatter
+  carries a `components:` map. Exact count of its components.
+- **`CASES`** (`src/lib/role-reference-rows.test.ts`) — only when the body's `## Colors` role table
+  is also carried as frontmatter reference rows. Not a row but a comparison function written for
+  the slug; the shape that triggers it is in `stitch-format.md` → "Role → palette reference rows".
 
 All are outside this skill's write scope: the operator edits them by hand, the same as the two above.
 

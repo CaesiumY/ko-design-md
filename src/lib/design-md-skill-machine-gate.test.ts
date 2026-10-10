@@ -160,6 +160,35 @@ describe("/design-md machine gates", () => {
     )
   })
 
+  // Issue #448: the template invites `{{semantic-alias}}: "{colors.x}"` rows,
+  // and an alias named like a role in the entry's own `## Colors` table trips
+  // the role-reference-rows guard, which wants a hand-written comparison in
+  // CASES. The authoring rule lives once, in the format reference; the author
+  // agent only points there, so its pointer is pinned rather than the rules.
+  it("tells onboarding when role reference rows owe a CASES comparison", () => {
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+    const format = readRepoFile(DESIGN_MD_STITCH_FORMAT)
+    const author = readRepoFile(DESIGN_MD_AUTHOR_AGENT)
+
+    for (const doc of [skill, format]) {
+      expect(doc).toContain("CASES")
+      expect(doc).toContain("role-reference-rows.test.ts")
+    }
+    expect(author).toContain("Role → palette reference rows")
+    expect(readRepoFile("src/lib/role-reference-rows.test.ts")).toContain(
+      "const CASES"
+    )
+  })
+
+  it("tells onboarding to record a components map's count", () => {
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+    expect(skill).toContain("COMPONENT_COUNTS")
+    expect(skill).toContain("google-designmd-corpus.test.ts")
+    expect(readRepoFile("src/lib/google-designmd-corpus.test.ts")).toContain(
+      "COMPONENT_COUNTS"
+    )
+  })
+
   // created_at is the catalog's sort key, but nothing in the pipeline would
   // notice its absence: an entry missing it still renders, just pinned to the
   // bottom of the list. Four entries shipped that way before the field became
