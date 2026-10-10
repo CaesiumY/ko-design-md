@@ -488,10 +488,19 @@ describe("buildLlmsTxt", () => {
     )
   })
 
-  it("keeps the metadata slot findable when the name holds `): ` or brackets", () => {
+  it("keeps the metadata slot findable when the name holds `): `, brackets or a backslash", () => {
     // The endpoints reference finds the slot by the link's structure, so a
     // name that holds the very text a search would look for still cuts right.
-    for (const name of ["토스(Toss): 증권", "a/llms.txt): b", "서비스]X"]) {
+    // A trailing backslash is the case escaping `\` exists for: unescaped, it
+    // would turn the closing `]` into `\]` and the link would never close.
+    const backslash = String.fromCharCode(92)
+    for (const name of [
+      "토스(Toss): 증권",
+      "a/llms.txt): b",
+      "서비스]X",
+      `Foo${backslash}`,
+      `A${backslash}]B`,
+    ]) {
       const txt = buildLlmsTxt({
         siteUrl: SITE_URL,
         services: [
@@ -568,7 +577,7 @@ describe("buildLlmsTxt with real /services/*.md content", () => {
       const system = fm!.design_system_name
         ?.replace(/\s+/g, " ")
         .trim()
-        .replace(/[[\]]/g, "\\$&")
+        .replace(/[[\]\\]/g, "\\$&")
       expect(slot, line).toBe(
         system === undefined || system === ""
           ? fm!.category

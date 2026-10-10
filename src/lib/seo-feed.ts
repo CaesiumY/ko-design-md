@@ -160,10 +160,13 @@ export function buildRssXml({ siteUrl, services }: FeedInput): string {
 export function buildLlmsTxt({ siteUrl, services }: FeedInput): string {
   const origin = normalizeSiteUrl(siteUrl)
   // Escape markdown link-text brackets: a `]` in a brand name would otherwise
-  // close the link text early and corrupt the entry. No current entry hits
-  // this, but the index must stay valid markdown as the catalog grows.
+  // close the link text early and corrupt the entry. The backslash is escaped
+  // too, or a name ending in `\` would turn the closing `]` into `\]` and the
+  // link would never close for a reader who finds its end by structure (the
+  // consumer skill's endpoints reference). No current entry hits either, but
+  // the index must stay valid markdown as the catalog grows.
   const escapeBrackets = (text: string): string =>
-    text.replace(/[[\]]/g, "\\$&")
+    text.replace(/[[\]\\]/g, "\\$&")
   // Every field written into an entry stays on its one line.
   const foldWhitespace = (text: string): string =>
     text.replace(/\s+/g, " ").trim()

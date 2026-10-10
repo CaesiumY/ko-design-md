@@ -2448,10 +2448,13 @@ export function validateDraft(
       if (words.includes("—")) {
         // A dash at either end is dropped rather than swapped, so the name
         // does not gain a stray `-`. Dashes inside become `-`. A name of
-        // dashes alone leaves nothing, and the key may be left out.
+        // dashes alone leaves nothing to keep, and neither does one whose
+        // rest does not show (a zero-width space beside the dash), which
+        // `bad-design-system-name` would block next — the key may be left out.
         while (words[0] === "—") words.shift()
         while (words.at(-1) === "—") words.pop()
-        const suggested = words.map((w) => (w === "—" ? "-" : w)).join(" ")
+        const kept = words.map((w) => (w === "—" ? "-" : w)).join(" ")
+        const suggested = isBlankName(kept) ? "" : kept
         // The hint is the one fix the next run accepts, so the line it
         // offers is one both parsers read back as exactly that name. The
         // value here has had its quotes stripped, and written bare it can

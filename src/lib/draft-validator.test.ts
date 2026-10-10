@@ -842,6 +842,10 @@ describe("validateDraft — frontmatter", () => {
       ["— [Foo]", 'design_system_name: "[Foo]"'],
       ["— *x", 'design_system_name: "*x"'],
       ["—", null],
+      // What is left does not show (a zero-width space, a Hangul filler), so
+      // offering it as the name would be blocked next as blank.
+      [`${String.fromCharCode(0x200b)} —`, null],
+      [`— ${String.fromCharCode(0x3164)}`, null],
     ]
     for (const [value, offered] of cases) {
       const line = `design_system_name: ${value}`

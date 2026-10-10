@@ -20,8 +20,9 @@ starts right after the link and its `: `. Find the link's end by its structure, 
 searching for `): `: `[` and `]` inside the name are escaped (below), so the first
 unescaped `]` closes the name, and `(<url>): ` follows it. The metadata ends at the first
 ` — ` after that: a tagline is prose and may contain ` — ` itself, so split there, not at
-the last one. `[` and `]` in both the name and the design-system name are
-backslash-escaped (`\[` `\]`); unescape them before comparing with what the user typed.
+the last one. `[`, `]` and `\` in both the name and the design-system name are
+backslash-escaped (`\[` `\]` `\\`); unescape them before comparing with what the user
+typed.
 
 Use it to resolve a brand or design-system name to a slug and to browse by category.
 It is generated server-side from the live catalog, so it is always current.
