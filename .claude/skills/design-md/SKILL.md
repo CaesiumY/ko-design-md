@@ -18,7 +18,8 @@ This skill builds a complete catalog entry through a 5-subagent pipeline with on
                                                           ↓ approve
                                                 [WRITE_MD] → [TOKENS]
                                                           ↓
-                                  preview-html-author ⇄ preview-html-reviewer (loop ≤3, non-blocking)
+                                  preview-html-author ⇄ preview-html-reviewer (loop ≤3, non-blocking;
+                                                          machine gate + render contrast before each review)
                                                           ↓
                                                    [WRITE_PREVIEW]
                                                           ↓
@@ -332,9 +333,26 @@ cd "${repo_root}" && pnpm validate:previews \
 
 It hard-checks the structural rubric items (data-theme/lang, absolute runtime paths, foreign scripts, transfer size, hero logo src, catalog disclosure strip) **plus two content rules that used to be reviewer judgment** — a swatch catalog (fill-only elements per theme, Item 2) and a type-scale showcase (design.md typography token names printed as visible text labels, Item 3). Size is weighed in **brotli** bytes, the form Vercel actually serves, with a raw cap kept only as a safety net against runaway generated markup. It also emits warn-level responsive heuristics plus an `oklch coverage` metric (`matched/total` per theme) in `metrics`.
 
-- **Exit 0** → proceed to 9b, passing the machine report path.
+- **Exit 0** → proceed to 9a3, then 9b with the machine report path.
 - **Exit 1** → do NOT dispatch the reviewer. Re-dispatch 9a with `prior_review_path` = the `preview-review-machine-{M}.json`. Machine retries use a sub-counter **K (max 2) and do not increment M**.
-- **K exhausted with blocks remaining** → dispatch 9b anyway; the normal non-blocking loop rules take over.
+- **K exhausted with blocks remaining** → run 9a3 and dispatch 9b anyway; the normal non-blocking loop rules take over.
+
+### 9a3. Render contrast observation
+
+Every check so far read source text; nothing in the loop has rendered the preview yet. Before each 9b dispatch, render the staged file and measure its contrast with the same observation harness the CI contrast job uses — same widths (375/768/976/1440), both themes, hover at 976:
+
+```bash
+cd "${repo_root}" && pnpm audit:contrast:staged \
+  --staged .claude/cache/design-md/{slug}/preview.html \
+  --iteration {M} --json-out "${repo_root}/.claude/cache/design-md/{slug}/preview-review-machine-{M}.json"
+```
+
+It writes into the **same** machine report 9a2 just wrote, so the reviewer and the retrying author keep their one path each. It adds a `render` object and, for each contrast shortfall, a `warn` item in `issues` (dark-theme text first — the only kind the rubric scores — then light-theme text, then non-text, each lowest ratio first, capped; the rest are counted in `render.observed.omitted`). It never adds a `block` and never changes `passed`.
+
+- **Always proceed to 9b** after it, whatever it found. 9a3 is an observation, not a gate: a staged preview has no baseline row, so a shortfall cannot be told apart from two published brand values that simply fall short, and blocking would push the author to discard a published value to get through. Convergence stays with the reviewer's score; drift stays with the CI contrast job.
+- **`render.skipped`** (no Chromium on this machine, or the measurement broke) → note it for Stage 13 as `render_result = skipped` with the `reason`, and proceed. Do **not** install a browser inside the session. A skipped report carries no `observed` key at all, so it can never be read as a clean run.
+- Otherwise, when `render.observed.measured` is 0, record `render_result = empty` — the page rendered but nothing was collected, which is no more a pass than a skip. When `render.observed.fail` is 0, record `render_result = ok` with `render.observed.held` (rows the judge could not decide — a gradient, an overlay); else `render_result = warn` with the fail count.
+- **Exit 2** means the command or a file it names was wrong — an unknown flag, a staged path that is not a readable file, a report path that cannot be written, an existing report from a different iteration than `--iteration`, or an existing report file that is not a machine report (not JSON, or not the 9a2 envelope — a reviewer's `preview-review-{M}.json` named by mistake is refused rather than overwritten). Fix that and rerun; it is not a measurement result. The command has no other failure exit: anything that goes wrong while measuring is the `render.skipped` outcome above.
 
 ### 9b. Dispatch preview-html-reviewer
 
@@ -361,6 +379,13 @@ adopted wholesale on the same rule and mirrored into `issues` as `block`.
 Spend the rest of your review on judgment: Color fidelity semantics (use the
 report's oklch coverage metric as the Item 2 input), Component coverage,
 Typography hierarchy, and dark-mode appropriateness.
+
+The report's `render` object is the one rendered observation in the loop.
+Under `render.observed`, its contrast `warn` items are measured shortfalls:
+score them as the rubric's Item 5 says and mirror each into your `issues`
+as `warn`, so the next author pass sees them. Under `render.skipped`, nothing
+was rendered — say "렌더 관측 없음" in your verdict and judge Item 5 from the
+CSS alone.
 ```
 
 ### 9c. Loop decision (non-blocking)
@@ -625,6 +650,13 @@ Print a summary message containing:
   - `/services/{slug}/llms.txt` — raw `text/plain` design.md (frontmatter + body) for LLMs / agents to fetch directly. Discoverable via `<link rel="alternate" type="text/plain">` on the HTML page.
 - Final review scores: design `{score}/10`, preview `{score}/10`.
 - Screenshots taken during verification (paths or inline).
+- Render contrast (Stage 9a3, from the last iteration's machine report) — pick the line by state:
+  - `render_result = ok` → `렌더 대비: ✅ 미달 없음 — 라이트·다크 × 375/768/976/1440 실측 (판정 보류 {held}건)`
+  - `render_result = warn` → `렌더 대비: ⚠️ 미달 {fail}건 (리뷰어에 warn 으로 전달, 목록 밖 {omitted}건)`
+  - `render_result = empty` → `렌더 대비: ⏭ 잰 행 없음 — 렌더는 됐지만 수집된 텍스트·비텍스트가 0개`
+  - `render_result = skipped` → `렌더 대비: ⏭ 관측 건너뜀 — {reason}`
+
+  Neither the skipped line nor the empty line may read like the ok line: no Chromium, or a run that collected nothing, means nothing was measured, which is not the same fact as nothing falling short. The ok line carries the held count for the same reason — rows on a gradient or under an overlay were measured but not judged. If the Stage 12 responsive auto-fix rewrote the preview after the loop, add `(Stage 12 자동수정 전 파일 기준)` to the line — 9a3 measured the file the loop ended with, not the one that shipped.
 - Responsive verification (Stage 12 sweep) — pick the line by state:
   - `responsive_result = ok` → `반응형: ✅ 375/768/976/1440 가로 오버플로 없음 (자동수정 {attempts}회)`
   - `responsive_result = warn` → `반응형: ⚠️ 잔여 오버플로 — {file} @{width}px {overflowPx}px, 요소 {culprits} (스크린샷 {path}, 자동수정 2회 후 잔존)`
@@ -637,8 +669,8 @@ Print a summary message containing:
 
   **No two of the four may print the same line** — that is what the contract test pins. Three of them are where it actually happens: `discrepancies` carries a ⚠️ and is never mistaken for silence, while the other three all look like nothing-to-see. "보드가 없었다" · "대조했고 어긋난 것이 없었다" · "대조가 아예 안 돌았다" 는 서로 다른 사실이고, 이 저장소에서 반복적으로 같은 침묵으로 보고돼 왔다. 특히 `skipped` 를 침묵으로 처리하면 사람은 초록으로 읽는다.
 - Leftover TODOs:
-  - **Every `warn` in the final preview review, whatever the score.** The rubric's four advisory sections — `Mobile overflow`, `Dummy-data labelling`, `Explanatory prose`, `Reduced motion` — add no points by design, so a preview can carry all of them and still pass 9c's `score >= 8` on the first iteration and exit without the author ever seeing the review. Reporting them only when iteration 3 fell short drops them in exactly the case they exist for: `remember` scored 10/10 with 61% of its rendered text restating the design.md. List each one's `section` and `fix` verbatim. If the list is empty, say so — an absent line reads as "none found" whether or not the check ran.
-- **What is left for the person to look at.** Close the report by saying the loops are already done — the draft gate and review (6a2/6b), the preview gate and review (9a2/9b) and the Stage 12 sweep have all run — and then name what they do not cover, so the user spends their pass on the residue instead of re-checking what a machine just checked. On `remember` every gate was green when the user found four things: the preview was more than half explanatory text, button sizes disagreed between sections, a mobile mock duplicated what the responsive rules already produced at 375px, and a dialog carried an animation nobody wanted. Taste, proportion and redundancy are that residue. **When `board_result` is `ok` or `discrepancies`, say so and drop application site from that list** — the board cross-check just looked at it. When it is either of the `skipped` states, application site is still residue and the closing line must name it, because on `remember` that is where the one real discrepancy was. Do not present the preview as unverified, and do not present it as finished either.
+  - **Every `warn` in the final preview review, whatever the score.** The rubric's four advisory sections — `Mobile overflow`, `Dummy-data labelling`, `Explanatory prose`, `Reduced motion` — add no points by design, so a preview can carry all of them and still pass 9c's `score >= 8` on the first iteration and exit without the author ever seeing the review. Reporting them only when iteration 3 fell short drops them in exactly the case they exist for: `remember` scored 10/10 with 61% of its rendered text restating the design.md. List each one's `section` and `fix` verbatim. If the list is empty, say so — an absent line reads as "none found" whether or not the check ran. The one exception is the render contrast warns the reviewer mirrored from 9a3 (their `section` starts with `contrast —`): the Render contrast line above already reports them, and each carries the same guidance sentence, so list only their element paths under that line instead of repeating every `fix` — twenty copies of one sentence bury the advisory warns this list exists for.
+- **What is left for the person to look at.** Close the report by saying the loops are already done — the draft gate and review (6a2/6b), the preview gate, render contrast observation and review (9a2/9a3/9b) and the Stage 12 sweep have all run — and then name what they do not cover, so the user spends their pass on the residue instead of re-checking what a machine just checked. On `remember` every gate was green when the user found four things: the preview was more than half explanatory text, button sizes disagreed between sections, a mobile mock duplicated what the responsive rules already produced at 375px, and a dialog carried an animation nobody wanted. Taste, proportion and redundancy are that residue. **When `board_result` is `ok` or `discrepancies`, say so and drop application site from that list** — the board cross-check just looked at it. When it is either of the `skipped` states, application site is still residue and the closing line must name it, because on `remember` that is where the one real discrepancy was. Do not present the preview as unverified, and do not present it as finished either.
 
 `AskUserQuestion`: "캐시 정리할까요?"
 - "지금 삭제" → `rm -rf .claude/cache/design-md/{slug}/`
@@ -649,6 +681,7 @@ Print a summary message containing:
 - **WebFetch blocked / paywalled** — research-collector halts with INSUFFICIENT_SOURCES, skill body re-prompts user (Stage 5).
 - **Docs-site crawl yields 0 pages / fails** — Stage 4b surfaces the failure via `AskUserQuestion`; research proceeds from `source_urls` alone with `crawl_corpus_path = "none"`.
 - **Reviewer never reaches 8 in 3 iterations** — checkpoint shows the failing draft and verdict; user decides via AskUserQuestion.
+- **No Chromium for the render observation (Stage 9a3)** — the report says `render.skipped` with a reason; continue to 9b and carry the skip into the Stage 13 line. Never install a browser mid-session to make it run.
 - **Responsive overflow persists after 2 auto-fix attempts (Stage 12 step 11)** — surface it as a ⚠️ in the Stage 13 report (residual `breaks` + screenshot) and finish anyway. Non-blocking, consistent with the preview loop; the placed design.md and OG image are unaffected.
 - **Board cross-check finds a discrepancy (Stage 12, after the responsive sweep)** — surface it as a ⚠️ in the Stage 13 report, one line per finding, and finish anyway. Non-blocking like the responsive residue, but unlike it this one does **not** route back into the Stage 9a loop: the author cannot see the board, so an auto-fix moves a correct value onto a different wrong element instead of repairing anything. The placed design.md, sidecar and OG image are unaffected.
 - **User aborts at checkpoint** — leave cache intact, print resume path. Do not delete partial work.
@@ -669,6 +702,7 @@ Print a summary message containing:
 
 - **Five specialized subagents (vs. one general agent looping)**: author and reviewer are intentionally separated to avoid self-grading bias. Same model in both roles with different prompts produces noticeably stricter reviews. All five agent definitions pin `model: inherit` (the documented default, stated explicitly) so the whole pipeline follows the session model — no stage silently runs on a different tier when the operator switches models.
 - **Machine gates before reviewer dispatches (6a2/9a2)**: every mechanically checkable rule lives in `pnpm validate:draft` / `pnpm validate:previews`, so reviewer quality degrades gracefully with model capability — a weaker reviewer model still receives deterministic findings instead of being trusted to "grep mentally".
+- **One rendered observation inside the loop (9a3)**: no subagent can render, so before 9a3 the first render happened at Stage 12, after the loop had closed. 9a3 runs the CI contrast harness on the staged file and writes into the same machine report, so the reviewer gains a measured input without a second channel. It reports and never blocks — see ADR 0009.
 - **Single mandatory checkpoint at design.md (plus a conditional one upstream of it)**: in this pipeline the preview is built *from* the approved design.md, so the design.md is upstream of everything after the checkpoint. Locking it after one approval gate gives the user maximum control with minimum interruption. This ordering describes what this pipeline produces, not every entry: when an entry's design.md and preview were both transcribed from a Claude Design handoff bundle, the bundle is upstream of both, and the design.md's silence is not evidence against the preview (`.claude/skills/preview-prose-audit/SKILL.md`). **The gate follows the upstream**, which is why Stage 4c exists and why it is conditional: when a board sits above the design.md, approving only the design.md approves a transcription of something the user never saw, and a faithful transcription of a wrong board passes Stage 7 looking entirely consistent.
 - **Stitch v0.1 standard sections**: every catalog entry follows the Stitch v0.1 structure (English headings, OKLCH tokens, citation hygiene). The early `_demo-*.md` fixtures that used Korean editorial headings have been removed; if older entries surface in git history they are superseded.
 - **OKLCH everywhere, never hex**: downstream LLMs (which are the primary audience for design.md) reason about lightness/chroma/hue components more reliably than hex codes.
