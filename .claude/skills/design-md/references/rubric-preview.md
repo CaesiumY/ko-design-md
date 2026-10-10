@@ -73,8 +73,15 @@ The `[data-theme="dark"]` scope uses brand-appropriate dark variants — not a l
 - All component surfaces, text, and accents are updated to dark-mode token values.
 - Text remains comfortably legible (WCAG AA contrast at minimum).
 
+**Render observation (9a3).** When the machine report carries `render.observed`, its contrast `warn` items are shortfalls measured on the rendered file, and they are this item's legibility input. Mirror every one into `issues` as `warn` — that is how the next author pass sees it — but only some count against the score:
+
+- **Counts:** a **dark-theme text** shortfall where a colour is derived — a `color-mix()`, an opacity or alpha, a hardcoded value. Follow the item's element path to the CSS that colours it: the item's hex pair is the rendered result and will not match the design.md's OKLCH text, so compare declarations, not values.
+- **Does not count:** a shortfall between two colours that come straight from design.md tokens (the brand's own limit — both values stay); light-theme shortfalls (this item scores the dark scope); non-text shortfalls; and the shapes the measurement is known to misread — a single separator glyph, a disabled demo drawn only by a class, a state-demo label faded by opacity, a decorative non-text part. A disabled demo should be declared with `:disabled` or `aria-disabled="true"`, which the measurement skips; the others stay as they are.
+
+Render contrast never adds a `block`. Under `render.skipped` nothing was rendered: judge legibility from the CSS alone and say so in this item's notes.
+
 **Pass criteria**:
-- 2 pts: the dark scope shows considered dark adaptation; primary still recognizable but contrast-adjusted; no text below WCAG AA.
+- 2 pts: the dark scope shows considered dark adaptation; primary still recognizable but contrast-adjusted; no text below WCAG AA (of the measured shortfalls, only those **Render observation (9a3)** counts).
 - 1 pt: the dark scope exists and is distinct, but one or two tokens forgotten at light values, or contrast borderline.
 - 0 pts: the dark scope repeats the light one, or just sets `body { background: black; color: white }` without per-token thinking.
 

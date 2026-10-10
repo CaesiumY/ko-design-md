@@ -25,6 +25,7 @@ import {
   mkdirSync,
   readFileSync,
   renameSync,
+  statSync,
   writeFileSync,
 } from "node:fs"
 import { dirname, join, resolve } from "node:path"
@@ -101,6 +102,10 @@ function parseArgs(argv: Array<string>): Required<Args> {
     fail("Error: --json-out <report.json> is required")
   if (!existsSync(args.staged))
     fail(`Error: no staged preview at ${args.staged}`)
+  // A directory passes `existsSync` and would only fail at the read, outside
+  // the observation's catch — exit 1 with a stack trace instead of exit 2.
+  if (!statSync(args.staged).isFile())
+    fail(`Error: --staged ${args.staged} is not a file`)
   return args as Required<Args>
 }
 
@@ -119,15 +124,19 @@ function readExisting(path: string): MachineReport | null {
   } catch (e) {
     fail(`Error: ${path} exists but is not JSON (${(e as Error).message})`)
   }
+  // `machine: true` is the envelope's discriminator. A reviewer report
+  // (preview-review-{M}.json) also has `issues` and `verdict`, and joining it
+  // would overwrite the review with a half machine report.
   const report = parsed as Partial<MachineReport> | null
   if (
     report === null ||
     typeof report !== "object" ||
+    report.machine !== true ||
     !Array.isArray(report.issues) ||
     typeof report.verdict !== "string"
   ) {
     fail(
-      `Error: ${path} exists but is not a machine report (no issues list or verdict)`
+      `Error: ${path} exists but is not a machine report (needs machine: true, an issues list and a verdict)`
     )
   }
   return report as MachineReport

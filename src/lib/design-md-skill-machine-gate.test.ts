@@ -754,6 +754,31 @@ describe("/design-md machine gates", () => {
     )
   })
 
+  // The reviewer reads both its own prompt and the rubric (`rubric_path`), so a
+  // scoring rule written in each drifts into two rules that score the same
+  // measurement in opposite directions — PR #513's first draft did exactly
+  // that. The rule lives once, in the rubric's Item 5; the prompt only points
+  // at it, and this pins that the pointer lands inside Item 5.
+  it("points the reviewer at the rubric's render-observation rule instead of restating it", () => {
+    const reviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
+    const label = /the rubric's \*\*([^*]+)\*\* paragraph under Item 5/.exec(
+      reviewer
+    )?.[1]
+    expect(
+      label,
+      "the reviewer's Item 5 must point at a rubric paragraph"
+    ).toBeDefined()
+
+    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
+    const start = rubric.indexOf("## Item 5")
+    const item5 = rubric.slice(start, rubric.indexOf("\n## ", start + 1))
+    expect(item5, "rubric Item 5 must exist").not.toBe("")
+    expect(
+      item5,
+      `rubric Item 5 has no **${label}** paragraph for the reviewer's pointer to land on`
+    ).toContain(`**${label}.**`)
+  })
+
   // A skipped observation and a clean one both add zero items. If Stage 13
   // printed them alike, "no Chromium" would read as "nothing fell short".
   it("reports the render observation's three states distinctly", () => {

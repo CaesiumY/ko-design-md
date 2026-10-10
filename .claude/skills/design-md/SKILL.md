@@ -382,7 +382,7 @@ Typography hierarchy, and dark-mode appropriateness.
 
 The report's `render` object is the one rendered observation in the loop.
 Under `render.observed`, its contrast `warn` items are measured shortfalls:
-use them as the Item 5 legibility input and mirror each into your `issues`
+score them as the rubric's Item 5 says and mirror each into your `issues`
 as `warn`, so the next author pass sees them. Under `render.skipped`, nothing
 was rendered — say "렌더 관측 없음" in your verdict and judge Item 5 from the
 CSS alone.

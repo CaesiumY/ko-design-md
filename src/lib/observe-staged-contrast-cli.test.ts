@@ -109,6 +109,47 @@ describe("observe-staged-contrast CLI — arguments", () => {
   )
 
   it(
+    "refuses a staged path that is a directory",
+    { timeout: CLI_TIMEOUT },
+    () => {
+      // A cache directory passed instead of its preview.html used to reach
+      // `readFileSync` and die with EISDIR — exit 1 and a stack trace, which
+      // the skill gives no meaning to.
+      const r = run([
+        "--staged",
+        scratch,
+        "--json-out",
+        join(scratch, "e.json"),
+      ])
+      expect(r.status).toBe(2)
+      expect(r.out).toContain("not a file")
+    }
+  )
+
+  it(
+    "will not overwrite a reviewer report named by mistake",
+    { timeout: CLI_TIMEOUT },
+    () => {
+      // preview-review-{M}.json has `issues` and `verdict` too. Only the
+      // machine envelope may be joined; anything else is a wrong path.
+      const path = join(scratch, "preview-review-1.json")
+      const review = JSON.stringify({
+        score: 8,
+        passed: true,
+        iteration: 1,
+        rubric: [],
+        issues: [],
+        verdict: "ok",
+      })
+      writeFileSync(path, review)
+      const r = run(["--staged", STAGED, "--json-out", path])
+      expect(r.status).toBe(2)
+      expect(r.out).toContain("not a machine report")
+      expect(readFileSync(path, "utf8")).toBe(review)
+    }
+  )
+
+  it(
     "will not overwrite a report it cannot read",
     { timeout: CLI_TIMEOUT },
     () => {

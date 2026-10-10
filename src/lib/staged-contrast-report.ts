@@ -92,8 +92,12 @@ const KIND_ORDER: Record<DedupedFinding["kind"], number> = {
 
 // Said once per item rather than once per report, because the reviewer mirrors
 // items one at a time into the review the author reads next.
+//
+// It names the shapes the measurement is known to misread (ADR 0007) so that a
+// warn never talks the author into erasing a disabled demo or darkening a
+// decorative edge to get through — the edit ADR 0009 kept 9a3 at warn to avoid.
 const VALUE_GUIDANCE =
-  "If both colours are published brand values, keep them and note the shortfall instead of inventing a value; if either is derived (a mix, an opacity, a hardcoded colour), adjust that one."
+  'Keep colours that come straight from design.md tokens. If this element demonstrates a disabled state, declare it with `:disabled` or `aria-disabled="true"` instead of raising its contrast; leave decoration, opacity-faded state-demo labels and single separator glyphs as they are. Otherwise adjust only a derived colour (a mix, an opacity, a hardcoded value).'
 
 function toIssue(f: DedupedFinding): MachineIssue {
   const what =
