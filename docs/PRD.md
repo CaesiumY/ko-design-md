@@ -220,7 +220,7 @@ V0 문서의 열린 질문(OQ)과 결정 로그는 이렇게 정리됐다.
 | 기여 절차·DCO | [CONTRIBUTING.md](../CONTRIBUTING.md) |
 | 라이선스 | [LICENSE](../LICENSE) · [LICENSE-CONTENT](../LICENSE-CONTENT) · [NOTICE](../NOTICE) |
 | 삭제 요청 | [TAKEDOWN.md](./TAKEDOWN.md) |
-| 용어 | [CONTEXT.md](../CONTEXT.md) |
+| 용어 | [GLOSSARY.md](../GLOSSARY.md) |
 | 결정 기록 | [docs/adr](./adr/) |
 | 마케팅 관점 요약 | [product-marketing.md](../.agents/product-marketing.md) |
 

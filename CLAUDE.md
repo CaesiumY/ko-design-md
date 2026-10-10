@@ -499,4 +499,4 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
 
 ### Domain docs
 
-single-context — 루트 `CONTEXT.md`(용어집) + `docs/adr/`(결정 기록). 둘 다 `/domain-modeling` 이 갱신한다. 자세한 것은 `docs/agents/domain.md`.
+single-context — 루트 `GLOSSARY.md`(용어집) + `docs/adr/`(결정 기록). 둘 다 `/domain-modeling` 이 갱신한다. 자세한 것은 `docs/agents/domain.md`.
