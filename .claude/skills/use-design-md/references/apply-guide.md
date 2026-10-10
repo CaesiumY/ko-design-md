@@ -21,9 +21,10 @@ corrects an earlier version of the entry — nothing to apply):
   not be redistributed, so the host app substitutes Pretendard. Apply the substitute the
   entry names, even where the prose describes the original face.
 - **Caveats on published values.** A low-contrast pair, or a token with no published dark
-  pair. Carry the value as published — the entry keeps it on purpose. If your UI needs
-  something the brand didn't publish, fill it as *your* inference (SKILL.md "Scope
-  guardrails").
+  pair. Carry the value as published, but don't use it where the caveat says it fails —
+  a pair below 4.5:1 is not body text (keep it to large text or icons, or pick another
+  step and mark that as *your* inference). If your UI needs something the brand didn't
+  publish, fill it as your inference too (SKILL.md "Scope guardrails").
 - **Entry values that differ from the brand's.** A bullet may say some of the entry's own
   values were synthesized or observed and name the brand's published value beside them.
   If the bullet says how to switch (replace the whole ramp, only when building on the
@@ -76,12 +77,17 @@ corrects an earlier version of the entry — nothing to apply):
   token's trailing comment, the Colors prose and Known Gaps confirm it.
 - A quoted `"{colors.x}"` value is a reference row: it resolves to key `x` in the same
   map, and `x` may itself be a reference — follow the chain to a literal value. Role rows
-  point at palette steps this way, light and dark alike.
+  point at palette steps this way, light and dark alike. Like `fonts:`, reference rows
+  live only in the DESIGN.md frontmatter — the JSON token sidecar carries the palette
+  values without them, so build role and dark-pair wiring from the md.
 - Wire both values to one token name in the target's dark-mode mechanism (a custom-property
   theme block, `prefers-color-scheme`, Tailwind's `dark:` variant, …), so components switch
   without code changes.
 - A dark pair can carry yet another marker (`primary-dark` ↔ `primary-dark-on-dark`).
-  Before deciding a token has none, check same-stem neighbours and their comments.
+  Or the two values meet only through a role row and its dark twin
+  (`color-background-canvas` → `color-white`, `color-background-canvas-dark` →
+  `dark-canvas`). Before deciding a token has none, check same-stem neighbours, their
+  comments and the role rows that point at it.
 - No dark pair means one of two things. Some tokens are theme-invariant by design (e.g. a
   `static-*` family). Others simply weren't published — Known Gaps may say so, but not
   every entry does. A dark value you fill in for those is your inference (SKILL.md "Scope
