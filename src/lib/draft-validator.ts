@@ -1767,6 +1767,32 @@ function siteFrontmatter(raw: string): Record<string, ReadValue> {
   }
 }
 
+/**
+ * A `design_system_name:` line that both parsers read back as exactly `value`,
+ * or null when no plain form does. Tried bare first, then double-quoted, then
+ * single-quoted: YAML reads escapes inside double quotes and doubled `''`
+ * inside single ones, while the site's parser only strips the outer quotes, so
+ * each form is checked by reading it, not by reasoning about its characters.
+ */
+function lineReadAs(value: string): string | null {
+  const key = "design_system_name"
+  for (const form of [value, `"${value}"`, `'${value}'`]) {
+    const line = `${key}: ${form}`
+    const yaml = parseDocument(line)
+    if (yaml.errors.length > 0) continue
+    let readByYaml: ReadValue
+    try {
+      // An alias to nothing (`*x`) parses but throws on conversion.
+      readByYaml = yaml.toJS()?.[key]
+    } catch {
+      continue
+    }
+    const siteValue = siteFrontmatter(`---\n${line}\n---\n`)[key]
+    if (readByYaml === value && siteValue === value) return line
+  }
+  return null
+}
+
 /** A value YAML cannot expand within its alias limit. */
 const TOO_MANY_ALIASES: unique symbol = Symbol("too many aliases")
 
@@ -2420,17 +2446,24 @@ export function validateDraft(
     ) {
       const words = systemName.replace(/\s+/g, " ").trim().split(" ")
       if (words.includes("—")) {
-        // The one fix the next run accepts. A dash at either end is dropped,
-        // not swapped: `- Foo` would read as a YAML list item. Dashes inside
-        // become `-`. A name of dashes alone leaves nothing, and the key may
-        // be left out.
+        // A dash at either end is dropped rather than swapped, so the name
+        // does not gain a stray `-`. Dashes inside become `-`. A name of
+        // dashes alone leaves nothing, and the key may be left out.
         while (words[0] === "—") words.shift()
         while (words.at(-1) === "—") words.pop()
         const suggested = words.map((w) => (w === "—" ? "-" : w)).join(" ")
+        // The hint is the one fix the next run accepts, so the line it
+        // offers is one both parsers read back as exactly that name. The
+        // value here has had its quotes stripped, and written bare it can
+        // break (`Foo: - Bar`), turn into a list (`- Foo`) or silently lose
+        // a tail to a comment (`Foo - #1`) (#508 review).
+        const line = suggested === "" ? null : lineReadAs(suggested)
         const fix =
           suggested === ""
             ? "remove the line"
-            : `write it with another separator, as \`design_system_name: ${suggested}\``
+            : line === null
+              ? `replace each " — " with another separator, keeping the rest of the name as it is`
+              : `write it with another separator, as \`${line}\``
         issues.push(
           block(
             "design-system-name-separator",

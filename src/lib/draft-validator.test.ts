@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { REQUIRED_SECTIONS, validateDraft } from "./draft-validator"
+import { matter } from "./content-parser"
 import type { DraftValidationOptions } from "./draft-validator"
 
 // ── fixture ──────────────────────────────────────────────────────────────────
@@ -823,32 +824,47 @@ describe("validateDraft — frontmatter", () => {
   })
 
   // Checked by applying the hint, not by reading it (the convention the list
-  // hints below follow): a leading dash swapped for `-` would hand back
-  // `- Foo`, which YAML reads as a list item.
+  // hints below follow). The hint is built from the value with its quotes
+  // stripped, and written back bare it could be invalid YAML (`Foo: - Bar`), a
+  // list (`- Foo`, `[Foo]`), an alias, or quietly shorter (`Foo - #1` loses
+  // `#1` to a comment and still passes) — so each applied line is also read
+  // back, and must give the whole name (#508 review).
   it("tells a cut design_system_name a fix the next run accepts", () => {
+    // [the value as written in the draft, the line the hint offers]
     const cases: Array<[string, string | null]> = [
-      ["Foo — Bar UI", "Foo - Bar UI"],
-      ["— Foo", "Foo"],
-      ["Foo —", "Foo"],
-      ["Foo — — Bar", "Foo - - Bar"],
+      ["Foo — Bar UI", "design_system_name: Foo - Bar UI"],
+      ["— Foo", "design_system_name: Foo"],
+      ["Foo —", "design_system_name: Foo"],
+      ["Foo — — Bar", "design_system_name: Foo - - Bar"],
+      ['"Foo: — Bar"', 'design_system_name: "Foo: - Bar"'],
+      ['"Foo — #1"', 'design_system_name: "Foo - #1"'],
+      ["— - Foo", 'design_system_name: "- Foo"'],
+      ["— [Foo]", 'design_system_name: "[Foo]"'],
+      ["— *x", 'design_system_name: "*x"'],
       ["—", null],
     ]
-    for (const [value, expected] of cases) {
+    for (const [value, offered] of cases) {
       const line = `design_system_name: ${value}`
       const raw = makeDraft().replace("name: 데모", `name: 데모\n${line}`)
+      expect(rulesOf(raw, OPTS, "block"), value).toEqual([
+        "design-system-name-separator",
+      ])
       const fix = validateDraft(raw, OPTS).issues.find(
         (i) => i.rule === "design-system-name-separator"
       )?.fix
-      const fixed =
-        expected === null
-          ? raw.replace(`\n${line}`, "")
-          : raw.replace(line, `design_system_name: ${expected}`)
       expect(fix, value).toContain(
-        expected === null
-          ? "remove the line"
-          : `\`design_system_name: ${expected}\``
+        offered === null ? "remove the line" : `\`${offered}\``
       )
+      const fixed =
+        offered === null
+          ? raw.replace(`\n${line}`, "")
+          : raw.replace(line, offered)
       expect(rulesOf(fixed, OPTS, "block"), value).toEqual([])
+      // The applied line reads back as the whole name, not a cut one.
+      if (offered !== null) {
+        const name = /^design_system_name: (["']?)(.*)\1$/.exec(offered)?.[2]
+        expect(matter(fixed).data.design_system_name, value).toBe(name)
+      }
     }
   })
 
