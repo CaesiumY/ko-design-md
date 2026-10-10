@@ -419,6 +419,18 @@ export async function measureOne(
 }
 
 /**
+ * The one width a sweep also measures hover at.
+ *
+ * Hover is swept at one width only. It costs a second full collection per
+ * page, and a hover rule that changes colour only at some widths would be a
+ * `@media` block wrapping a `:hover` rule — which no preview has. 976 is the
+ * detail page's embed width, so it is the one to keep if it is being swept.
+ */
+export function hoverWidthOf(widths: Array<number>): number {
+  return widths.includes(976) ? 976 : widths[0]
+}
+
+/**
  * A browser context set up the way every measurement needs it.
  *
  * The sweep, the self-check and the onboarding loop's staged observation all
@@ -493,11 +505,7 @@ export async function sweep(opts: SweepOptions): Promise<SweepResult> {
   const server = await serveStatic(join(opts.root, "public"))
   const browser = await chromium.launch()
   const findings: Array<Finding> = []
-  // Hover is swept at one width only. It costs a second full collection per
-  // page, and a hover rule that changes colour only at some widths would be a
-  // `@media` block wrapping a `:hover` rule — which no preview has. 976 is the
-  // detail page's embed width, so it is the one to keep if it is being swept.
-  const hoverWidth = opts.args.widths.includes(976) ? 976 : opts.args.widths[0]
+  const hoverWidth = hoverWidthOf(opts.args.widths)
 
   try {
     for (const width of opts.args.widths) {

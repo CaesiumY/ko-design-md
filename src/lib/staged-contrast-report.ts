@@ -13,6 +13,7 @@
 // on that would push the author to throw a brand value away to get through.
 
 import type { DedupedFinding, State, Theme } from "./contrast-report"
+import type { ValidationIssue } from "./draft-validator"
 
 export const STAGED_CONTRAST_RULE = "render-contrast-shortfall"
 
@@ -26,12 +27,8 @@ export const STAGED_CONTRAST_TOOL = "observe-staged-contrast"
  */
 export const MAX_RENDER_ISSUES = 20
 
-export interface MachineIssue {
-  severity: "block" | "warn"
-  rule: string
-  section: string
-  fix: string
-}
+/** The item shape 9a2's issues already have — this stage adds more of them. */
+export type MachineIssue = ValidationIssue
 
 export interface SweepShape {
   widths: Array<number>

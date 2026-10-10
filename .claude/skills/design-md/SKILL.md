@@ -352,7 +352,7 @@ It writes into the **same** machine report 9a2 just wrote, so the reviewer and t
 - **Always proceed to 9b** after it, whatever it found. 9a3 is an observation, not a gate: a staged preview has no baseline row, so a shortfall cannot be told apart from two published brand values that simply fall short, and blocking would push the author to discard a published value to get through. Convergence stays with the reviewer's score; drift stays with the CI contrast job.
 - **`render.skipped`** (no Chromium on this machine, or the measurement broke) → note it for Stage 13 as `render_result = skipped` with the `reason`, and proceed. Do **not** install a browser inside the session. A skipped report carries no `observed` key at all, so it can never be read as a clean run.
 - Otherwise record `render_result = ok` when `render.observed.fail` is 0, or `render_result = warn` with that count.
-- **Exit 2** means the command itself was wrong (a path or flag) — fix the invocation and rerun; it is not a measurement result.
+- **Exit 2** means the command or the report it points at was wrong (a path, a flag, or a machine report file that is not valid JSON) — fix that and rerun; it is not a measurement result.
 
 ### 9b. Dispatch preview-html-reviewer
 
@@ -649,7 +649,7 @@ Print a summary message containing:
   - `render_result = warn` → `렌더 대비: ⚠️ 미달 {fail}건 (리뷰어에 warn 으로 전달, 목록 밖 {omitted}건)`
   - `render_result = skipped` → `렌더 대비: ⏭ 관측 건너뜀 — {reason}`
 
-  The skipped line must not read like the ok line: no Chromium means nothing was measured, which is not the same fact as nothing falling short.
+  The skipped line must not read like the ok line: no Chromium means nothing was measured, which is not the same fact as nothing falling short. If the Stage 12 responsive auto-fix rewrote the preview after the loop, add `(Stage 12 자동수정 전 파일 기준)` to the line — 9a3 measured the file the loop ended with, not the one that shipped.
 - Responsive verification (Stage 12 sweep) — pick the line by state:
   - `responsive_result = ok` → `반응형: ✅ 375/768/976/1440 가로 오버플로 없음 (자동수정 {attempts}회)`
   - `responsive_result = warn` → `반응형: ⚠️ 잔여 오버플로 — {file} @{width}px {overflowPx}px, 요소 {culprits} (스크린샷 {path}, 자동수정 2회 후 잔존)`

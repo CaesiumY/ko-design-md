@@ -39,10 +39,13 @@ import {
 // The sweep module imports Playwright for its types only; the browser driver
 // itself is loaded inside `observe`, after the arguments have been accepted.
 import {
+  hoverWidthOf,
   measureOne,
   newMeasuringContext,
   serveStatic,
 } from "./audit-contrast-sweep"
+import type { StaticServer } from "./audit-contrast-sweep"
+import type { Browser } from "playwright"
 import type { Finding, State, Theme } from "../src/lib/contrast-report"
 import type {
   MachineReport,
@@ -54,9 +57,6 @@ const THEMES: Array<Theme> = ["light", "dark"]
 // What the findings are labelled with. The staged file is not a catalogue
 // entry yet, and its slug would only ever be echoed back.
 const SLUG = "staged"
-// The sweep's own rule: hover costs a second collection, so it is taken at the
-// detail page's embed width only.
-const HOVER_WIDTH = 976
 
 interface Args {
   staged?: string
@@ -144,46 +144,51 @@ function reasonOf(e: unknown): string {
 async function observe(args: Required<Args>): Promise<RenderResult> {
   const html = readFileSync(args.staged, "utf8")
   const widths = [...BASELINE_WIDTHS]
-  const hoverWidth = widths.includes(HOVER_WIDTH) ? HOVER_WIDTH : widths[0]
+  const hoverWidth = hoverWidthOf(widths)
   const findings: Array<Finding> = []
+  let hovered = false
+  // Both handles are closed in one `finally`, each on its own, whichever of
+  // them got opened. A browser left running keeps this process alive, and a
+  // 9a3 that never exits stalls the loop it is meant never to stop.
+  let server: StaticServer | undefined
+  let browser: Browser | undefined
   try {
     const { chromium } = await import("playwright")
-    const browser = await chromium.launch()
-    const server = await serveStatic(join(ROOT, "public"))
+    server = await serveStatic(join(ROOT, "public"))
     server.setOracle(html)
+    browser = await chromium.launch()
     const url = `http://127.0.0.1:${server.port}/__oracle/preview.html`
-    try {
-      for (const width of widths) {
-        const context = await newMeasuringContext(browser, {
+    for (const width of widths) {
+      const context = await newMeasuringContext(browser, {
+        width,
+        online: args.online,
+      })
+      const page = await context.newPage()
+      for (const theme of THEMES) {
+        const measured = await measureOne(context, page, url, {
+          slug: SLUG,
+          theme,
           width,
-          online: args.online,
+          withHover: width === hoverWidth,
         })
-        const page = await context.newPage()
-        for (const theme of THEMES) {
-          const measured = await measureOne(context, page, url, {
-            slug: SLUG,
-            theme,
-            width,
-            withHover: width === hoverWidth,
-          })
-          findings.push(...measured.findings)
-          if (args.verbose) {
-            console.log(
-              `  ${theme} @${width} — ${measured.collected.text.length} text, ` +
-                `${measured.collected.nonText.length} non-text`
-            )
-          }
+        findings.push(...measured.findings)
+        if (args.verbose) {
+          console.log(
+            `  ${theme} @${width} — ${measured.collected.text.length} text, ` +
+              `${measured.collected.nonText.length} non-text`
+          )
         }
-        await context.close()
       }
-    } finally {
-      await browser.close()
-      await server.close()
+      if (width === hoverWidth) hovered = true
+      await context.close()
     }
   } catch (e) {
     return skippedRender(reasonOf(e))
+  } finally {
+    await browser?.close().catch(() => undefined)
+    await server?.close().catch(() => undefined)
   }
-  const states: Array<State> = ["default", "hover"]
+  const states: Array<State> = hovered ? ["default", "hover"] : ["default"]
   return observedRender(dedupeFindings(findings), {
     widths,
     themes: THEMES,
@@ -209,7 +214,7 @@ async function main(): Promise<void> {
     iteration: args.iteration,
   })
   writeAtomically(target, `${JSON.stringify(report, null, 2)}\n`)
-  console.log(String(report.verdict))
+  console.log(report.verdict)
   console.log(`machine report → ${args.jsonOut}`)
 }
 
