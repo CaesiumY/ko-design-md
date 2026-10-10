@@ -147,7 +147,7 @@ pnpm build        # OG 이미지 생성 + 사이트 빌드
 
 - [기여 가이드](./CONTRIBUTING.md) · [행동 강령](./CODE_OF_CONDUCT.md) · [보안 정책](./SECURITY.md) · [변경 이력](./CHANGELOG.md)
 - [제품 스펙](./docs/PRD.md) — 문제·해법·사용자 스토리·범위를 정하는 살아있는 문서
-- [용어집](./CONTEXT.md) · [결정 기록(ADR)](./docs/adr/) — 이 저장소가 쓰는 말과, 그렇게 정한 이유
+- [용어집](./GLOSSARY.md) · [결정 기록(ADR)](./docs/adr/) — 이 저장소가 쓰는 말과, 그렇게 정한 이유
 - [GitHub Issues](https://github.com/CaesiumY/ko-design-md/issues)
 
 ---
