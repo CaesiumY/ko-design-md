@@ -54,7 +54,7 @@ colors:
   dark-{{token-name}}: oklch({{L C H}})
   ## {{역할 참조 행 — 키가 본문 역할 표의 이름이면 실어도 되는 조건과 CI 등록 의무는 stitch-format.md 「Role → palette reference rows」. 싣지 않으면 이 줄과 아래 두 줄을 지운다}}
   {{semantic-alias}}: "{colors.{{token-name}}}"   # 참조는 반드시 인용 — 안 하면 YAML 이 flow mapping 으로 읽어 값이 null 이 된다
-  dark-{{semantic-alias}}: "{colors.dark-{{token-name}}}"   # 다크 램프가 없으면 이 줄만 지운다
+  dark-{{semantic-alias}}: "{colors.dark-{{token-name}}}"   # 상류가 다크 짝을 발행하지 않으면 이 줄만 지운다 — 다크 램프가 없어도 테마 불변 팔레트를 가리키는 짝은 남긴다(정본 참조)
 typography:
   {{style-name}}:
     fontSize: {{56}}px
