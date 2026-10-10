@@ -21,6 +21,18 @@ import type { ServiceDoc } from "./content-types"
 // document was enough while the catalog was the only list in llms.txt; it is
 // not now that "Main pages" enumerates the site's other surfaces. Scope to the
 // section these assertions are actually about.
+// A catalog line cut the way the consumer skill's endpoints reference tells
+// readers to: the link's end found by structure — the name escapes `[` and
+// `]`, so the first unescaped `]` closes it and `(url): ` follows — and the
+// metadata slot running from there to the first ` — `. Searching for `): `
+// instead would cut inside a name that holds it.
+function entryParts(line: string): { url: string; slot: string } | null {
+  const link = /^- \[(?:\\.|[^\\\]])*\]\(([^\s()]+)\): /.exec(line)
+  if (link === null) return null
+  const start = link[0].length
+  return { url: link[1], slot: line.slice(start, line.indexOf(" — ", start)) }
+}
+
 function catalogEntryLines(txt: string): Array<string> {
   const start = txt.indexOf("## Catalog")
   const rest = start === -1 ? "" : txt.slice(start + "## Catalog".length)
@@ -476,6 +488,31 @@ describe("buildLlmsTxt", () => {
     )
   })
 
+  it("keeps the metadata slot findable when the name holds `): ` or brackets", () => {
+    // The endpoints reference finds the slot by the link's structure, so a
+    // name that holds the very text a search would look for still cuts right.
+    for (const name of ["토스(Toss): 증권", "a/llms.txt): b", "서비스]X"]) {
+      const txt = buildLlmsTxt({
+        siteUrl: SITE_URL,
+        services: [
+          serviceDoc({
+            name,
+            slug: "tricky",
+            lastUpdated: "2026-05-10",
+            body: "body",
+            tagline: "태그라인 — 대시 포함.",
+            designSystemName: "Vibrant",
+          }),
+        ],
+      })
+      const [line] = catalogEntryLines(txt)
+      expect(entryParts(line), name).toEqual({
+        url: "https://ko-design.example/services/tricky/llms.txt",
+        slot: "etc · Vibrant",
+      })
+    }
+  })
+
   it("does not throw and still emits the header for an empty catalog", () => {
     const txt = buildLlmsTxt({ siteUrl: SITE_URL, services: [] })
 
@@ -504,9 +541,11 @@ describe("buildLlmsTxt with real /services/*.md content", () => {
   })
 
   it("puts each entry's design-system name, and only that, in the metadata slot", () => {
-    // The slot runs from `/llms.txt): ` — where the link's URL ends, since a
-    // brand name may itself hold `): ` — to the FIRST ` — ` after it, as the
-    // consumer skill's endpoints reference tells readers to cut it. Taglines
+    // The slot runs from right after the link and its `: ` to the FIRST ` — `
+    // after it, as the consumer skill's endpoints reference tells readers to
+    // cut it. The link's end is found by structure — the name escapes `[` and
+    // `]`, so the first unescaped `]` closes it, then `(url): ` — because a
+    // name may hold `): ` or even `/llms.txt): `. Taglines
     // are prose and may carry ` — ` or ` · ` themselves (bezier's does), so the
     // slot is cut by position and compared whole rather than searched for a
     // separator. A design-system name holding ` — ` would end the slot early;
@@ -517,11 +556,12 @@ describe("buildLlmsTxt with real /services/*.md content", () => {
     )
     const withName: Array<string> = []
     for (const line of catalogEntryLines(txt)) {
-      const slug = /\/services\/([^/]+)\/llms\.txt\): /.exec(line)?.[1]
+      const parts = entryParts(line)
+      expect(parts, line).not.toBeNull()
+      const { url, slot } = parts!
+      const slug = /\/services\/([^/]+)\/llms\.txt$/.exec(url)?.[1]
       const fm = slug === undefined ? undefined : bySlug.get(slug)
       expect(fm, line).toBeDefined()
-      const start = line.indexOf("/llms.txt): ") + "/llms.txt): ".length
-      const slot = line.slice(start, line.indexOf(" — ", start))
       // Written the way the entry writes it — whitespace folded, brackets
       // escaped as in the name — so a name that merely needs that treatment
       // passes, and only one the slot cannot hold fails.

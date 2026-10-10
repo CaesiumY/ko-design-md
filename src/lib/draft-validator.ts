@@ -2462,13 +2462,13 @@ export function validateDraft(
           suggested === ""
             ? "remove the line"
             : line === null
-              ? `replace each " — " with another separator, keeping the rest of the name as it is`
+              ? `replace each standalone "—" with another separator, keeping the rest of the name as it is`
               : `write it with another separator, as \`${line}\``
         issues.push(
           block(
             "design-system-name-separator",
             "frontmatter",
-            `design_system_name \`${systemName}\` contains " — " (an em dash with spaces), where the catalog index ends the name; ${fix}.`
+            `design_system_name \`${systemName}\` has an em dash standing as a word of its own; the catalog index writes the name between " · " and " — " and ends it at the first " — ", so such a dash, even at either end, cuts it; ${fix}.`
           )
         )
       }

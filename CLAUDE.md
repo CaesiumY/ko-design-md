@@ -85,7 +85,7 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
   문자·숫자·구두점·기호 범주의 글자가 하나라도 있는지로 판정하되, 그 범주 안에서 빈칸으로 그려진다고 **알려진**
   글자 — 한글 채움 문자 4개·점자 공백·악보 null notehead(U+1D159) — 는 뺀다. 이 목록은 증명이 아니라 알려진 목록이라
   새 사례가 나오면 `VISIBLE_CHAR` 에 더한다)은 `bad-name`·
-  `bad-design-system-name`(사이트는 빈 값을 이름으로 남기거나 조용히 버린다). `design_system_name` 은 공백을 접은 값에 앞뒤 공백 낀 ` — ` 가 있어도 block 이다(`design-system-name-separator` — 카탈로그 색인 줄이 이름을 첫 ` — ` 에서 끝내기 때문이다, #466). 명시적 `key: []` 는 사이트에는 맨 `key:`
+  `bad-design-system-name`(사이트는 빈 값을 이름으로 남기거나 조용히 버린다). `design_system_name` 은 공백을 접은 값에서 `—` 가 혼자 단어로 서도 block 이다(`design-system-name-separator` — 양 끝 포함. 카탈로그 색인 줄은 이름을 ` · ` 와 ` — ` 사이에 두고 첫 ` — ` 에서 끝내므로, 양 끝의 `—` 도 바깥 공백과 붙어 잘린다, #466). 명시적 `key: []` 는 사이트에는 맨 `key:`
   와 같지만 YAML 에는 리스트라 아래 리스트 규칙이 막는다. 그 안내는 다음 실행이 받아 주는 수정
   하나를 말한다 — 생략할 수 있는 키(`OMITTABLE_KEYS` — `design_system_name`·`estimated_tokens`)는 "줄을 지우라",
   takedown 슬러그의 `logo` 는 아래 takedown 안내, 나머지 키는 "값을 쓰라" 다. 생략할 수 없는 키가 기계 게이트로
