@@ -163,8 +163,9 @@ describe("/design-md machine gates", () => {
   // Issue #448: the template invites `{{semantic-alias}}: "{colors.x}"` rows,
   // and an alias named like a role in the entry's own `## Colors` table trips
   // the role-reference-rows guard, which wants a hand-written comparison in
-  // CASES. The authoring rule lives once, in the format reference; the author
-  // agent only points there, so its pointer is pinned rather than the rules.
+  // CASES. On the skill side the authoring rule lives once, in the format
+  // reference; the author agent only points there, so its pointer is pinned
+  // rather than the rules.
   it("tells onboarding when role reference rows owe a CASES comparison", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
     const format = readRepoFile(DESIGN_MD_STITCH_FORMAT)

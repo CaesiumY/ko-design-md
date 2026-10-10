@@ -469,7 +469,8 @@ This file is outside the skill's write scope too: the operator makes the edit by
 
 ### The rest of the per-slug rows
 
-Six more tables can owe this entry a row, and none is reachable from this stage — each fails in CI on
+Six more registries remain — `BASELINE_TABLE` always, the rest only under the condition each names —
+and none is reachable from this stage: each fails in CI on
 someone who never saw it. `CLAUDE.md` 「카탈로그 정책」 carries the full list; the ones not already
 covered above are:
 
