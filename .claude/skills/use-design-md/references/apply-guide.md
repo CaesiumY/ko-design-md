@@ -13,15 +13,85 @@ components; with no token layer at all, add a small variable block at the top sc
 
 ## 2. Map the DESIGN.md sections
 
+**Read `## Known Gaps` before applying any other section.** Most of its bullets are one of
+four kinds, and each is handled differently (a bullet recording a retracted claim only
+corrects an earlier version of the entry — nothing to apply):
+
+- **Constraints you must follow.** Example: toss's brand typeface (Toss Product Sans) may
+  not be redistributed, so the host app substitutes Pretendard. Apply the substitute the
+  entry names, even where the prose describes the original face.
+- **Caveats on published values.** A low-contrast pair, or a token with no published dark
+  pair. Carry the value as published, but don't use it where the caveat says it fails —
+  a pair below 4.5:1 is not body text (keep it to large text or icons, or pick another
+  step and mark that as *your* inference). If your UI needs something the brand didn't
+  publish, fill it as your inference too (SKILL.md "Scope guardrails").
+- **Entry values that differ from the brand's.** A bullet may say some of the entry's own
+  values were synthesized or observed and name the brand's published value beside them.
+  If the bullet says how to switch (replace the whole ramp, only when building on the
+  brand's own package, …), do exactly that — don't swap just the values it names, or the
+  rest of the ramp falls out of step. With no such instruction, use the published value;
+  if you keep the entry's, mark it as your inference.
+- **Scope disclosures.** Values the catalog recommends rather than the brand publishing them
+  (e.g. breakpoints), or areas the sources didn't cover. Use them, but don't present them
+  as the brand's spec.
+
 | DESIGN.md section   | Where it lands in the target |
 |---------------------|------------------------------|
-| Colors (OKLCH)      | color tokens / theme palette; keep semantic roles (primary, surface, ink) |
-| Typography          | font-family + size/weight/line-height scale; load webfonts if the md gives a `font-*-src` URL |
+| Brand & Style       | the judgement call wherever tokens are silent — tone, density, what to emphasize |
+| Colors (OKLCH)      | color tokens / theme palette; keep semantic roles (primary, surface, ink). Dark themes: see "Dark palette" below |
+| Typography          | font-family + size/weight/line-height scale. Families and webfont URLs: see "Fonts" below |
 | Spacing             | spacing scale — gap & padding steps |
 | Rounded (radius)    | border-radius scale |
 | Elevation & Depth   | shadow tokens |
+| Shapes              | form language — corner style, border weights, iconography rules (stroke, fill variants) |
 | Components          | reference patterns for buttons, cards, inputs — match structure & states, don't clone pixel-for-pixel |
-| Do's & Don'ts       | hard constraints to honor (e.g. "카드와 패널에 그림자를 추가하지 않는다", "한 화면에 강조색을 둘 이상 사용하지 않는다") |
+| Responsive Behavior | breakpoints, touch-target minimums, how layouts collapse; check whether a breakpoint is the brand's token or the catalog's recommendation |
+| Do's and Don'ts     | hard constraints to honor (e.g. "카드와 패널에 그림자를 추가하지 않는다", "한 화면에 강조색을 둘 이상 사용하지 않는다") |
+| Known Gaps          | read first — see above |
+| References          | where a value or claim comes from; use it to check one, don't carry it into the target |
+
+### Fonts
+
+- `typography:` in the frontmatter is the type scale. `fonts:` is different: font-family
+  stacks published without sizes (a display face, a code face, an emoji face). Use them as
+  family tokens, not as scale steps. They live only in the DESIGN.md frontmatter, not in the
+  JSON token sidecar.
+- `font-X-src` (a top-level key beside `fonts:`) is where the family `font-X` loads from.
+  A `.css` URL is a stylesheet to link; a font file (`.woff`, `.woff2`, …) needs your own
+  `@font-face` rule named after the first family in the `font-X` stack.
+- Before you load or ship a face, check it may be redistributed. The limit can sit in
+  Known Gaps, the Typography prose, Do's and Don'ts, or the comment on its `fonts:` line.
+  Use the substitute the entry names; with none named, render the stack's fallbacks and
+  don't host the font file.
+
+### Dark palette
+
+- A `dark-` prefix marks a dark-theme value. Its light pair is usually the same key
+  without the prefix, or with `light-` in its place: `dark-grey-900` ↔ `grey-900`,
+  `dark-gray-00` ↔ `light-gray-00`.
+- A `-dark` *suffix* means different things in different entries — a darker shade used in
+  the light theme (`positive-dark`, `primary-dark`) or a dark-theme value (`black-dark`,
+  `bg-canvas-dark` ↔ `bg-canvas-light`). Don't decide from the name alone. Look at its
+  neighbours: a `-dark` / `-middle` / `-light` ladder under one group label (`  ## …` row)
+  is a shade scale, while `-light` / `-dark` twins of the same role are a theme pair. The
+  token's trailing comment, the Colors prose and Known Gaps confirm it.
+- A quoted `"{colors.x}"` value is a reference row: it resolves to key `x` in the same
+  map, and `x` may itself be a reference — follow the chain to a literal value. Role rows
+  point at palette steps this way, light and dark alike. Like `fonts:`, reference rows
+  live only in the DESIGN.md frontmatter — the JSON token sidecar carries the palette
+  values without them, so build role and dark-pair wiring from the md.
+- Wire both values to one token name in the target's dark-mode mechanism (a custom-property
+  theme block, `prefers-color-scheme`, Tailwind's `dark:` variant, …), so components switch
+  without code changes.
+- A dark pair can carry yet another marker (`primary-dark` ↔ `primary-dark-on-dark`).
+  Or the two values meet only through a role row and its dark twin
+  (`color-background-canvas` → `color-white`, `color-background-canvas-dark` →
+  `dark-canvas`). Before deciding a token has none, check same-stem neighbours, their
+  comments and the role rows that point at it.
+- No dark pair means one of two things. Some tokens are theme-invariant by design (e.g. a
+  `static-*` family). Others simply weren't published — Known Gaps may say so, but not
+  every entry does. A dark value you fill in for those is your inference (SKILL.md "Scope
+  guardrails").
 
 ## 3. OKLCH values
 
