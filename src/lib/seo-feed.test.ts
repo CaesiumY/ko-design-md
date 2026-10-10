@@ -21,18 +21,6 @@ import type { ServiceDoc } from "./content-types"
 // document was enough while the catalog was the only list in llms.txt; it is
 // not now that "Main pages" enumerates the site's other surfaces. Scope to the
 // section these assertions are actually about.
-// A catalog line cut the way the consumer skill's endpoints reference tells
-// readers to: the link's end found by structure — the name escapes `[` and
-// `]`, so the first unescaped `]` closes it and `(url): ` follows — and the
-// metadata slot running from there to the first ` — `. Searching for `): `
-// instead would cut inside a name that holds it.
-function entryParts(line: string): { url: string; slot: string } | null {
-  const link = /^- \[(?:\\.|[^\\\]])*\]\(([^\s()]+)\): /.exec(line)
-  if (link === null) return null
-  const start = link[0].length
-  return { url: link[1], slot: line.slice(start, line.indexOf(" — ", start)) }
-}
-
 function catalogEntryLines(txt: string): Array<string> {
   const start = txt.indexOf("## Catalog")
   const rest = start === -1 ? "" : txt.slice(start + "## Catalog".length)
@@ -40,6 +28,18 @@ function catalogEntryLines(txt: string): Array<string> {
   return (end === -1 ? rest : rest.slice(0, end))
     .split("\n")
     .filter((line) => line.startsWith("- ["))
+}
+
+// A catalog line cut the way the consumer skill's endpoints reference tells
+// readers to: the link's end found by structure — the name escapes `[`, `]`
+// and `\`, so the first unescaped `]` closes it and `(url): ` follows — and
+// the metadata slot running from there to the first ` — `. Searching for
+// `): ` instead would cut inside a name that holds it.
+function entryParts(line: string): { url: string; slot: string } | null {
+  const link = /^- \[(?:\\.|[^\\\]])*\]\(([^\s()]+)\): /.exec(line)
+  if (link === null) return null
+  const start = link[0].length
+  return { url: link[1], slot: line.slice(start, line.indexOf(" — ", start)) }
 }
 
 const SITE_URL = "https://ko-design.example/"
