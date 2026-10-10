@@ -125,6 +125,20 @@ describe("observedRender", () => {
     expect(issues[0].fix).toContain('text "가입하기"')
   })
 
+  it("hands on dark-theme text shortfalls first, even when light ones fill the cap", () => {
+    // Dark text is the only shortfall the rubric's Item 5 scores, and the
+    // reviewer sees only the items handed on. Ranking light before dark by
+    // ratio would leave the scored rows in `omitted` exactly when the cap fills.
+    const light = Array.from({ length: MAX_RENDER_ISSUES }, (_, i) =>
+      row("fail", 1.5 + i / 100)
+    )
+    const dark = row("fail", 4.2, { theme: "dark" })
+    const { issues } = observedRender([...light, dark], SWEPT)
+    expect(issues).toHaveLength(MAX_RENDER_ISSUES)
+    expect(issues[0].section).toContain("dark")
+    expect(issues[0].fix).toContain("4.20:1")
+  })
+
   it("caps the items it hands on and counts the rest as omitted", () => {
     const many = Array.from({ length: MAX_RENDER_ISSUES + 7 }, (_, i) =>
       row("fail", 1 + i / 100)

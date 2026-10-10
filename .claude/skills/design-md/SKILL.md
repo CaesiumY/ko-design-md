@@ -347,7 +347,7 @@ cd "${repo_root}" && pnpm audit:contrast:staged \
   --iteration {M} --json-out "${repo_root}/.claude/cache/design-md/{slug}/preview-review-machine-{M}.json"
 ```
 
-It writes into the **same** machine report 9a2 just wrote, so the reviewer and the retrying author keep their one path each. It adds a `render` object and, for each contrast shortfall, a `warn` item in `issues` (text shortfalls first, then the lowest ratios, capped — the rest are counted in `render.observed.omitted`). It never adds a `block` and never changes `passed`.
+It writes into the **same** machine report 9a2 just wrote, so the reviewer and the retrying author keep their one path each. It adds a `render` object and, for each contrast shortfall, a `warn` item in `issues` (dark-theme text first — the only kind the rubric scores — then light-theme text, then non-text, each lowest ratio first, capped; the rest are counted in `render.observed.omitted`). It never adds a `block` and never changes `passed`.
 
 - **Always proceed to 9b** after it, whatever it found. 9a3 is an observation, not a gate: a staged preview has no baseline row, so a shortfall cannot be told apart from two published brand values that simply fall short, and blocking would push the author to discard a published value to get through. Convergence stays with the reviewer's score; drift stays with the CI contrast job.
 - **`render.skipped`** (no Chromium on this machine, or the measurement broke) → note it for Stage 13 as `render_result = skipped` with the `reason`, and proceed. Do **not** install a browser inside the session. A skipped report carries no `observed` key at all, so it can never be read as a clean run.

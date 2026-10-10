@@ -85,9 +85,14 @@ export interface MachineReport {
 
 const ratio = (value: number): string => `${value.toFixed(2)}:1`
 
-const KIND_ORDER: Record<DedupedFinding["kind"], number> = {
-  text: 0,
-  "non-text": 1,
+// Which shortfalls go into the capped list first. Dark-theme text leads
+// because it is the only kind the rubric's Item 5 scores (its "Render
+// observation (9a3)" paragraph), and the reviewer sees nothing past the cap.
+// Light text follows — legible text is still the clearer verdict — and
+// non-text comes last.
+function rank(f: DedupedFinding): number {
+  if (f.kind === "non-text") return 2
+  return f.theme === "dark" ? 0 : 1
 }
 
 // Said once per item rather than once per report, because the reviewer mirrors
@@ -119,17 +124,14 @@ export function observedRender(
 ): RenderResult<ObservedRender> {
   const count = (verdict: DedupedFinding["verdict"]): number =>
     deduped.filter((f) => f.verdict === verdict).length
-  // Text before non-text, then worst first. Ratio alone is the wrong key across
-  // the two: a decorative 1.2:1 edge always sorts below a 4.1:1 caption, and on
-  // the samsung fixture it filled every slot. Text is the criterion with the
-  // clearer verdict — the report tables put it first for the same reason.
+  // By rank, then worst first. Ratio alone is the wrong key across ranks: a
+  // decorative 1.2:1 edge always sorts below a 4.1:1 caption, and on the
+  // samsung fixture it filled every slot.
   const failures = deduped
     .filter((f) => f.verdict === "fail")
     .sort(
       (a, b) =>
-        KIND_ORDER[a.kind] - KIND_ORDER[b.kind] ||
-        a.ratio - b.ratio ||
-        a.path.localeCompare(b.path)
+        rank(a) - rank(b) || a.ratio - b.ratio || a.path.localeCompare(b.path)
     )
   const issues = failures.slice(0, max).map(toIssue)
   return {
