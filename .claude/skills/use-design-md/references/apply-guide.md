@@ -13,8 +13,9 @@ components; with no token layer at all, add a small variable block at the top sc
 
 ## 2. Map the DESIGN.md sections
 
-**Read `## Known Gaps` before applying any other section.** Its bullets are of three kinds,
-and each is handled differently:
+**Read `## Known Gaps` before applying any other section.** Most of its bullets are one of
+three kinds, and each is handled differently (a bullet recording a retracted claim only
+corrects an earlier version of the entry — nothing to apply):
 
 - **Constraints you must follow.** Example: toss's brand typeface (Toss Product Sans) may
   not be redistributed, so the host app substitutes Pretendard. Apply the substitute the
@@ -58,15 +59,15 @@ and each is handled differently:
 
 ### Dark palette
 
-- A token's dark value is marked by a `dark-` prefix. Its light pair is the same key
-  without the prefix, or with `light-` in its place: `dark-grey-900` ↔ `grey-900`,
+- A `dark-` prefix marks a dark-theme value. Its light pair is the same key without the
+  prefix, or with `light-` in its place: `dark-grey-900` ↔ `grey-900`,
   `dark-gray-00` ↔ `light-gray-00`.
-- A `-dark` *suffix* is usually a darker shade step used in the light theme
-  (`primary-dark`, `positive-dark`), not a dark-theme value. Read the token's comment and
-  the Colors prose when a name is ambiguous — an entry may mark its theme another way.
+- A `-dark` *suffix* means different things in different entries — a darker shade used in
+  the light theme (`positive-dark`, `primary-dark`) or a dark-theme value (`black-dark`,
+  `bg-canvas-dark` ↔ `bg-canvas-light`). Don't decide from the name: the token's trailing
+  comment and the Colors prose say which.
 - A quoted `"{colors.x}"` value is a reference row: it resolves to key `x` in the same
-  map. Role rows point at palette steps this way, and some entries name a role row's dark
-  pair with a `-dark` suffix (`color-background-canvas-dark: "{colors.dark-canvas}"`).
+  map. Role rows point at palette steps this way, light and dark alike.
 - Wire both values to one token name in the target's dark-mode mechanism (a custom-property
   theme block, `prefers-color-scheme`, Tailwind's `dark:` variant, …), so components switch
   without code changes.
