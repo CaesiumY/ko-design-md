@@ -150,8 +150,20 @@ function reasonOf(e: unknown): string {
   return first.trim().slice(0, 300)
 }
 
-async function observe(args: Required<Args>): Promise<RenderResult> {
-  const html = readFileSync(args.staged, "utf8")
+// Read before any browser work so an unreadable file is a bad invocation
+// (exit 2), not an uncaught error with an exit code the skill never defines.
+function readStaged(path: string): string {
+  try {
+    return readFileSync(path, "utf8")
+  } catch (e) {
+    fail(`Error: cannot read --staged ${path} (${(e as Error).message})`)
+  }
+}
+
+async function observe(
+  args: Required<Args>,
+  html: string
+): Promise<RenderResult> {
   const widths = [...BASELINE_WIDTHS]
   const hoverWidth = hoverWidthOf(widths)
   const findings: Array<Finding> = []
@@ -218,11 +230,18 @@ async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2))
   const target = resolve(args.jsonOut)
   const existing = readExisting(target)
-  const result = await observe(args)
+  const html = readStaged(args.staged)
+  const result = await observe(args, html)
   const report = mergeIntoMachineReport(existing, result, {
     iteration: args.iteration,
   })
-  writeAtomically(target, `${JSON.stringify(report, null, 2)}\n`)
+  // A path that cannot be written is a bad invocation too — exit 2, the code
+  // the skill tells the orchestrator to fix and rerun on.
+  try {
+    writeAtomically(target, `${JSON.stringify(report, null, 2)}\n`)
+  } catch (e) {
+    fail(`Error: cannot write ${args.jsonOut} (${(e as Error).message})`)
+  }
   console.log(report.verdict)
   console.log(`machine report → ${args.jsonOut}`)
 }

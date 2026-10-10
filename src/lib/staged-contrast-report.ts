@@ -52,6 +52,12 @@ export interface ObservedRender {
     reported: number
     /** Failures past the cap — counted, not listed. */
     omitted: number
+    /**
+     * Of `omitted`, the dark-theme text rows — the only kind the rubric
+     * scores. Above 0, scored rows may sit past the cap where the reviewer
+     * cannot see them, so the rubric sends it to the CSS before full marks.
+     */
+    omittedDarkText: number
   }
 }
 
@@ -146,6 +152,8 @@ export function observedRender(
         held: count("indeterminate"),
         reported: issues.length,
         omitted: failures.length - issues.length,
+        omittedDarkText: failures.slice(max).filter((f) => rank(f) === 0)
+          .length,
       },
     },
     issues,

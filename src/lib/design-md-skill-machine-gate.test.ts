@@ -4,7 +4,11 @@ import { describe, expect, it } from "vitest"
 // template behind.
 import { REQUIRED_SECTIONS } from "./draft-validator"
 import { reducedMotionBlock } from "./reduced-motion-block"
-import { STAGED_CONTRAST_RULE } from "./staged-contrast-report"
+import {
+  STAGED_CONTRAST_RULE,
+  observedRender,
+  skippedRender,
+} from "./staged-contrast-report"
 import {
   DESIGN_MD_AGENT_PATHS,
   DESIGN_MD_AUTHOR_AGENT,
@@ -777,6 +781,41 @@ describe("/design-md machine gates", () => {
       item5,
       `rubric Item 5 has no **${label}** paragraph for the reviewer's pointer to land on`
     ).toContain(`**${label}.**`)
+  })
+
+  // The skill, the rubric and both preview agents tell a model to read named
+  // fields of the 9a3 report (`render.observed.omittedDarkText` decides
+  // whether the reviewer goes back to the CSS). A field renamed in code would
+  // leave those instructions pointing at nothing, and the model would read
+  // the absence as zero. Every field the docs name must be one the code emits.
+  it("names only render-report fields the 9a3 report actually carries", () => {
+    const emitted = {
+      observed: Object.keys(
+        observedRender([], { widths: [], themes: [], states: [] }).render
+          .observed
+      ),
+      skipped: Object.keys(skippedRender("x").render.skipped),
+    }
+    const docs = [
+      DESIGN_MD_SKILL,
+      DESIGN_MD_RUBRIC_PREVIEW,
+      PREVIEW_HTML_AUTHOR_AGENT,
+      PREVIEW_HTML_REVIEWER_AGENT,
+    ]
+    let named = 0
+    for (const doc of docs) {
+      const text = readRepoFile(doc)
+      for (const m of text.matchAll(/render\.(observed|skipped)\.(\w+)/g)) {
+        named += 1
+        const outcome = m[1] as keyof typeof emitted
+        expect(
+          emitted[outcome],
+          `${doc} names render.${outcome}.${m[2]}, which the 9a3 report does not carry`
+        ).toContain(m[2])
+      }
+    }
+    // A pattern that matched nothing would make this test vacuous.
+    expect(named).toBeGreaterThan(2)
   })
 
   // A skipped observation and a clean one both add zero items. If Stage 13

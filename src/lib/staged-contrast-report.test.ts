@@ -169,7 +169,20 @@ describe("observedRender", () => {
       held: 1,
       reported: 1,
       omitted: 0,
+      omittedDarkText: 0,
     })
+  })
+
+  it("counts the dark-theme text rows pushed past the cap on their own", () => {
+    // Dark text is what the rubric scores, and the reviewer cannot tell from
+    // a bare `omitted` whether any of it is missing from the list.
+    const dark = Array.from({ length: MAX_RENDER_ISSUES + 3 }, (_, i) =>
+      row("fail", 1 + i / 100, { theme: "dark" })
+    )
+    const light = [row("fail", 2), row("fail", 2.5)]
+    const { render } = observedRender([...dark, ...light], SWEPT)
+    expect(render.observed.omitted).toBe(5)
+    expect(render.observed.omittedDarkText).toBe(3)
   })
 })
 

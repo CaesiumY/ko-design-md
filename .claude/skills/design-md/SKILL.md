@@ -352,7 +352,7 @@ It writes into the **same** machine report 9a2 just wrote, so the reviewer and t
 - **Always proceed to 9b** after it, whatever it found. 9a3 is an observation, not a gate: a staged preview has no baseline row, so a shortfall cannot be told apart from two published brand values that simply fall short, and blocking would push the author to discard a published value to get through. Convergence stays with the reviewer's score; drift stays with the CI contrast job.
 - **`render.skipped`** (no Chromium on this machine, or the measurement broke) → note it for Stage 13 as `render_result = skipped` with the `reason`, and proceed. Do **not** install a browser inside the session. A skipped report carries no `observed` key at all, so it can never be read as a clean run.
 - Otherwise record `render_result = ok` when `render.observed.fail` is 0, or `render_result = warn` with that count.
-- **Exit 2** means the command or the report it points at was wrong (a path, a flag, or a machine report file that is not valid JSON) — fix that and rerun; it is not a measurement result.
+- **Exit 2** means the command or a file it names was wrong — an unknown flag, a staged path that is not a readable file, a report path that cannot be written, or an existing report file that is not a machine report (not JSON, or not the 9a2 envelope — a reviewer's `preview-review-{M}.json` named by mistake is refused rather than overwritten). Fix that and rerun; it is not a measurement result. The command has no other failure exit: anything that goes wrong while measuring is the `render.skipped` outcome above.
 
 ### 9b. Dispatch preview-html-reviewer
 

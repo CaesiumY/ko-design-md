@@ -78,6 +78,8 @@ The `[data-theme="dark"]` scope uses brand-appropriate dark variants — not a l
 - **Counts:** a **dark-theme text** shortfall where a colour is derived — a `color-mix()`, an opacity or alpha, a hardcoded value. Follow the item's element path to the CSS that colours it: the item's hex pair is the rendered result and will not match the design.md's OKLCH text, so compare declarations, not values.
 - **Does not count:** a shortfall between two colours that come straight from design.md tokens (the brand's own limit — both values stay); light-theme shortfalls (this item scores the dark scope); non-text shortfalls; and the shapes the measurement is known to misread — a single separator glyph, a disabled demo drawn only by a class, a state-demo label faded by opacity, a decorative non-text part. A disabled demo should be declared with `:disabled` or `aria-disabled="true"`, which the measurement skips; the others stay as they are.
 
+The list is capped, dark-theme text first. When `render.observed.omittedDarkText` is above 0, dark-theme text shortfalls sit past the cap where you cannot see them — some may be derived — so check the dark scope's text colours in the CSS before giving this item full marks.
+
 Render contrast never adds a `block`. Under `render.skipped` nothing was rendered: judge legibility from the CSS alone and say so in this item's notes.
 
 **Pass criteria**:

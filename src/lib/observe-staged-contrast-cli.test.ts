@@ -150,6 +150,24 @@ describe("observe-staged-contrast CLI — arguments", () => {
   )
 
   it(
+    "ends with exit 2, not a stack trace, when the report cannot be written",
+    { timeout: CLI_TIMEOUT },
+    () => {
+      // The parent of the report path is a file, so no directory can be made
+      // for it. That used to escape as an uncaught error with exit 1, which
+      // the skill gives no meaning to.
+      const blocker = join(scratch, "blocker")
+      writeFileSync(blocker, "")
+      const r = run(
+        ["--staged", STAGED, "--json-out", join(blocker, "report.json")],
+        { PLAYWRIGHT_BROWSERS_PATH: noBrowsers }
+      )
+      expect(r.status).toBe(2)
+      expect(r.out).toContain("cannot write")
+    }
+  )
+
+  it(
     "will not overwrite a report it cannot read",
     { timeout: CLI_TIMEOUT },
     () => {
