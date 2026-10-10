@@ -146,7 +146,6 @@ async function observe(args: Required<Args>): Promise<RenderResult> {
   const widths = [...BASELINE_WIDTHS]
   const hoverWidth = hoverWidthOf(widths)
   const findings: Array<Finding> = []
-  let hovered = false
   // Both handles are closed in one `finally`, each on its own, whichever of
   // them got opened. A browser left running keeps this process alive, and a
   // 9a3 that never exits stalls the loop it is meant never to stop.
@@ -179,7 +178,6 @@ async function observe(args: Required<Args>): Promise<RenderResult> {
           )
         }
       }
-      if (width === hoverWidth) hovered = true
       await context.close()
     }
   } catch (e) {
@@ -188,7 +186,9 @@ async function observe(args: Required<Args>): Promise<RenderResult> {
     await browser?.close().catch(() => undefined)
     await server?.close().catch(() => undefined)
   }
-  const states: Array<State> = hovered ? ["default", "hover"] : ["default"]
+  // `hoverWidthOf` picks one of `widths`, and a run that stops part way is
+  // reported as skipped above, so a returned observation always measured hover.
+  const states: Array<State> = ["default", "hover"]
   return observedRender(dedupeFindings(findings), {
     widths,
     themes: THEMES,

@@ -269,7 +269,7 @@ A preview with CSS motion — `@keyframes`, or any `animation` or `transition` d
 2. `Read` `runtime_tokens_path` — note which CSS variables (`--background`, `--foreground`, `--primary`, etc.) are predefined. Override these in your `<style>` block to brand values; reference them via `var(--name)` in component styles.
 3. `Read` one `demo_html_paths` entry to understand the structural patterns ko-design-md uses (sections separated by `.hairline`, `.text-meta-caps` for metadata labels, `.hangul-idx` for accent numbers).
 4. Cross-check `logo_src_path` against the `design_md_path` frontmatter `logo:` — stripping the `https://getdesign.kr` origin from it must give the same path (e.g. `/logos/toss.png`). Never embed the absolute URL as a preview `<img src>` — that would make dev/staging fetch the production domain.
-5. If `prior_review_path` is provided, `Read` it and address every `severity: block` issue and as many `warn` issues as fit. A contrast `warn` was measured on the rendered file: when both colours it names are published design.md values, keep them — do not swap in an unpublished value to clear it; when either is derived (a `color-mix()`, an opacity, a hardcoded colour), adjust that one.
+5. If `prior_review_path` is provided, `Read` it and address every `severity: block` issue and as many `warn` issues as fit. A contrast `warn` was measured on the rendered file; its hex pair is the rendered result, so find the element by its path and look at the CSS you wrote for it. When both colours come straight from design.md tokens, keep them — do not swap in an unpublished value to clear it; when either is derived (a `color-mix()`, an opacity or alpha, a hardcoded colour), adjust that one.
 6. Write `preview.html` in one `Write` call.
 
 ## Light vs. dark
