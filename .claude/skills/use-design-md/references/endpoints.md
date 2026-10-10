@@ -12,11 +12,17 @@ GET https://www.getdesign.kr/llms.txt
 llms.txt format — a header plus one markdown link per entry:
 
 ```
-- [<name>](https://www.getdesign.kr/services/<slug>/llms.txt): <category> — <tagline>
+- [<name>](https://www.getdesign.kr/services/<slug>/llms.txt): <category>[ · <design system name>] — <tagline>
 ```
 
-Use it to resolve a brand name to a slug and to browse by category. It is generated
-server-side from the live catalog, so it is always current.
+` · <design system name>` is present only when the entry publishes one. The metadata
+starts after `): ` and ends at the first ` — ` after it: a tagline is prose and may
+contain ` — ` itself, so split there, not at the last one. `[` and `]` in both the name
+and the design-system name are backslash-escaped (`\[` `\]`); unescape them before
+comparing with what the user typed.
+
+Use it to resolve a brand or design-system name to a slug and to browse by category.
+It is generated server-side from the live catalog, so it is always current.
 
 ## 2. Single entry (fetch)
 

@@ -49,13 +49,15 @@ catalog — don't report the brand as missing.
 Each entry line looks like:
 
 ```
-- [토스](https://www.getdesign.kr/services/toss/llms.txt): finance — <tagline>
+- [당근](https://www.getdesign.kr/services/seed-design/llms.txt): community · SEED Design — <tagline>
 ```
 
-Match the user's mention against the link text (name) AND the slug in the URL; the
-tagline often names the design system. Most names are Korean and some slugs are
-design-system names (당근 → `seed-design`, 구름 → `vapor-ui`), so translate an English
-brand name to the Korean name first (Karrot → 당근).
+An entry that publishes a design-system name carries it after the category, as above;
+one that doesn't has the category alone (`: finance — <tagline>`). Match the user's
+mention against the link text (name), the design-system name, AND the slug in the URL.
+Most names are Korean and some slugs are design-system names (당근 → `seed-design`,
+구름 → `vapor-ui`), so translate an English brand name to the Korean name first
+(Karrot → 당근).
 
 - **One clear match** → Step 2.
 - **Several plausible matches** → ask which one with `AskUserQuestion`.

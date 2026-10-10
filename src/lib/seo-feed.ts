@@ -159,21 +159,39 @@ export function buildRssXml({ siteUrl, services }: FeedInput): string {
 // — no hand-maintained list to drift.
 export function buildLlmsTxt({ siteUrl, services }: FeedInput): string {
   const origin = normalizeSiteUrl(siteUrl)
+  // Escape markdown link-text brackets: a `]` in a brand name would otherwise
+  // close the link text early and corrupt the entry. No current entry hits
+  // this, but the index must stay valid markdown as the catalog grows.
+  const escapeBrackets = (text: string): string =>
+    text.replace(/[[\]]/g, "\\$&")
+  // Every field written into an entry stays on its one line.
+  const foldWhitespace = (text: string): string =>
+    text.replace(/\s+/g, " ").trim()
   const entries = services.map((doc) => {
-    const { name, slug, category } = doc.frontmatter
+    const { name, slug, category, design_system_name } = doc.frontmatter
     const url = canonicalUrl(origin, `/services/${slug}/llms.txt`)
-    // Escape markdown link-text brackets in the name: a `]` in a brand name would
-    // otherwise close the link text early and corrupt the entry. No current entry
-    // hits this, but the index must stay valid markdown as the catalog grows.
-    const safeName = name.replace(/[[\]]/g, "\\$&")
+    const safeName = escapeBrackets(name)
+    // The design-system name goes after the category, in every entry that
+    // publishes one (#466). It is often not the brand's name — class101's
+    // system is Vibrant — and the tagline names it only when the prose happens
+    // to, so an agent asked for a system by name had nothing to match. It is
+    // written even when the tagline already says it, so a reader looks in one
+    // place. An entry without the field keeps its line byte for byte. A blank
+    // value is blocked by the validator (`bad-design-system-name`); folding
+    // here only keeps an unvalidated whitespace-only one from leaving a bare
+    // `category ·` behind. The validator's wider notion of blank — zero-width
+    // and filler characters — is not repeated here.
+    const system = foldWhitespace(design_system_name ?? "")
+    const meta =
+      system === "" ? category : `${category} · ${escapeBrackets(system)}`
     // Collapse whitespace before truncating: taglines are derived from prose and
     // may contain newlines, which would break the one-line-per-entry list. Clean
     // first, THEN fall back to the brand name — a whitespace-only tagline is
     // truthy, so `doc.tagline || name` alone would let it through and trim to an
     // empty string, leaving a dangling "— " at the end of the entry.
-    const cleaned = (doc.tagline || "").replace(/\s+/g, " ").trim()
+    const cleaned = foldWhitespace(doc.tagline || "")
     const tagline = truncateForMeta(cleaned || name, 160)
-    return `- [${safeName}](${url}): ${category} — ${tagline}`
+    return `- [${safeName}](${url}): ${meta} — ${tagline}`
   })
 
   return [
