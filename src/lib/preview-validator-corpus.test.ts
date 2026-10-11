@@ -289,3 +289,64 @@ describe("dark-swap-anchor — the shipped catalogue", () => {
     ).toEqual([])
   })
 })
+
+// #395: the warn held against the real catalogue. Every shipped preview that
+// moves already carries its block, so the warn is silent across the bulk gate
+// whether or not it can see this catalogue's motion at all. So the block is
+// taken out, and the warn must then fire on every file that carried one.
+//
+// This is per file, not per declaration: a file still fires if ANY of its
+// motion is read. An earlier detector read durations written as tokens
+// (`var(--d-fast)`) as `0s` and this did not catch it, because every preview
+// that writes them also moves some other way. The unit tests pin that shape.
+describe("reduced-motion — the shipped catalogue", () => {
+  const RULE = "reduced-motion-missing"
+
+  /** The file with every `prefers-reduced-motion` @media block cut out. */
+  function withoutReduceBlocks(html: string): string {
+    let out = html
+    for (;;) {
+      const at = out.search(/@media[^{]*prefers-reduced-motion[^{]*\{/)
+      if (at === -1) return out
+      let k = out.indexOf("{", at) + 1
+      // Bounded: an unbalanced file must fail the assertion, not hang the run.
+      for (let depth = 1; depth > 0 && k < out.length; k++) {
+        if (out[k] === "{") depth++
+        else if (out[k] === "}") depth--
+      }
+      out = out.slice(0, at) + out.slice(k)
+    }
+  }
+
+  function fires(slug: string, edit: (html: string) => string): boolean {
+    const halves = halvesOf(slug)
+    return validatePreviewPair({
+      slug,
+      lightRaw: halves.light,
+      darkRaw: halves.dark,
+      lightBytes: halves.lightBytes,
+      darkBytes: halves.darkBytes,
+      served: halves.served.map((d) => ({ ...d, html: edit(d.html) })),
+      variantAnchors: halves.variantAnchors,
+      designMdRaw: readFileSync(join(SERVICES, `${slug}.md`), "utf8"),
+    }).issues.some((i) => i.rule === RULE)
+  }
+
+  const carriers = slugs().filter((slug) =>
+    halvesOf(slug).served.some((d) => d.html.includes("prefers-reduced-motion"))
+  )
+
+  it("finds previews that carry a reduce block", () => {
+    expect(carriers.length).toBeGreaterThan(0)
+  })
+
+  for (const slug of carriers) {
+    it(`${slug}: quiet as shipped, fires once the block is gone`, () => {
+      expect(
+        fires(slug, (html) => html),
+        "as shipped"
+      ).toBe(false)
+      expect(fires(slug, withoutReduceBlocks), "block removed").toBe(true)
+    })
+  }
+})

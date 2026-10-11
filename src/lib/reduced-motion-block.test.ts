@@ -1,9 +1,12 @@
 import { describe, expect, it } from "vitest"
 import {
+  PRESCRIBED_REDUCE_HEAD,
   normalizeCss,
+  reducedMotionBlock,
   reducedMotionMediaBlocks,
   reducedMotionViolations,
 } from "./reduced-motion-block"
+import { PREVIEW_HTML_AUTHOR_AGENT, readRepoFile } from "./skill-asset-paths"
 
 const texts = (css: string) => reducedMotionMediaBlocks(css).map((b) => b.text)
 
@@ -173,5 +176,21 @@ describe("reducedMotionViolations", () => {
     ],
   ])("fails %s", (_, html) => {
     expect(reducedMotionViolations(html, FORM)).not.toEqual([])
+  })
+})
+
+// The preview validator cannot read the author prompt (it stays fs-free), so it
+// carries the block's head as a constant. This holds the constant to the
+// prompt: rewrite the prompt's block and the warn has to follow, or it would
+// accept a head the gate no longer does (#395).
+describe("PRESCRIBED_REDUCE_HEAD", () => {
+  it("is the head of the author prompt's block", () => {
+    const form = normalizeCss(
+      reducedMotionBlock(
+        readRepoFile(PREVIEW_HTML_AUTHOR_AGENT),
+        "preview-html-author.md"
+      )
+    )
+    expect(form.startsWith(`${PRESCRIBED_REDUCE_HEAD}{`)).toBe(true)
   })
 })

@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest"
 import { splitMergedPreview } from "./preview-halves"
 import { validatePreviewPair } from "./preview-validator"
+import {
+  hasCssMotion,
+  normalizeCss,
+  reducedMotionBlock,
+  reducedMotionViolations,
+} from "./reduced-motion-block"
 import { PREVIEW_HTML_AUTHOR_AGENT, readRepoFile } from "./skill-asset-paths"
 import type {
   AnchorSig,
@@ -843,13 +849,12 @@ describe("validatePreviewPair — government identifiers", () => {
     )
 
     const author = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
-    // The three literals the rule keys on, so the author can recognise them…
+    // Two of the literals the rule keys on (the author prompt does not use the
+    // third, `정부상징`), so the author can recognise them…
     expect(author).toContain("대한민국정부")
     expect(author).toContain("공식 전자정부 누리집")
-    // …the containment requirement, which is the whole structural rule…
-    expect(author).toContain("inside the same container as the identifier")
-    // …and the exemption, or an author faced with a true attribution has no
-    // move that is not a falsehood.
+    // …and the exemption class the rule reads, or an author faced with a true
+    // attribution has no move that is not a falsehood.
     expect(author).toContain('class="catalog-attribution"')
   })
 })
@@ -1140,6 +1145,212 @@ describe("validatePreviewPair — responsive heuristics", () => {
   })
 })
 
+// ── reduced motion ───────────────────────────────────────────────────────────
+
+// #395: a preview that moves must carry a reduced-motion block that applies.
+// Motion and "applies" are the shipped-catalogue gate's definitions (#443,
+// `reduced-motion-block.ts`), so a draft the warn passes is one the gate
+// passes, short of the declarations inside the block — the cases that flipped
+// from a first version say why.
+describe("validatePreviewPair — reduced motion", () => {
+  const RULE = "reduced-motion-missing"
+  const RESET =
+    "{ *, *::before, *::after { animation: none !important; transition: none !important; } }"
+  const REDUCE = `@media (prefers-reduced-motion: reduce) ${RESET}`
+  const SPIN =
+    "@keyframes spin { to { transform: rotate(1turn); } } .spinner { animation: spin 1s linear infinite; }"
+  const withStyle = (style: string, body?: string) =>
+    makeInput({ lightRaw: makeHtml({ style, body }) })
+  // The gate's verdict on the same file. Every case below that judges a whole
+  // file asserts the warn agrees with it, so "a draft the warn passes is one
+  // the gate passes" is checked, not just claimed — a first version claimed it
+  // and was wrong. The halves-only case at the end is the exception, and says
+  // why.
+  const FORM = normalizeCss(
+    reducedMotionBlock(
+      readRepoFile(PREVIEW_HTML_AUTHOR_AGENT),
+      "preview-html-author.md"
+    )
+  )
+  const gateBlocks = (html: string) =>
+    hasCssMotion(html) && reducedMotionViolations(html, FORM).length > 0
+  const warns = (style: string, body?: string) => {
+    const warned = rulesOf(withStyle(style, body), "warn").includes(RULE)
+    expect(warned, `warn and gate disagree on: ${style}`).toBe(
+      gateBlocks(makeHtml({ style, body }))
+    )
+    return warned
+  }
+  // The same, for a whole merged file handed over as the served document.
+  const warnsServed = (html: string, label: string) => {
+    const warned = rulesOf(
+      makeInput({
+        served: [
+          { name: "preview.html", html, bytes: Buffer.byteLength(html) },
+        ],
+      }),
+      "warn"
+    ).includes(RULE)
+    expect(warned, `warn and gate disagree on: ${label}`).toBe(gateBlocks(html))
+    return warned
+  }
+
+  it("warns when the page moves and nothing turns the motion off", () => {
+    expect(warns(SPIN)).toBe(true)
+  })
+
+  it("stays quiet once the block is there", () => {
+    expect(warns(`${SPIN} ${REDUCE}`)).toBe(false)
+  })
+
+  it("does not count `none` or a zero time as motion", () => {
+    expect(warns(".a { animation: none; transition: 0s; }")).toBe(false)
+  })
+
+  it("counts @keyframes alone, prefixed or not, and a style attribute", () => {
+    expect(warns("@keyframes pulse { to { opacity: 0.5; } }")).toBe(true)
+    expect(warns("@-webkit-keyframes pulse { to { opacity: 0.5; } }")).toBe(
+      true
+    )
+    const body =
+      '<main class="hero"><img src="/logos/demo.png" alt="데모"><h1 style="transition: color 0.2s">데모</h1></main>'
+    expect(warns(".hero { color: red; }", body)).toBe(true)
+  })
+
+  it("counts a transition whose time comes from a variable", () => {
+    // The catalogue writes durations as tokens (greeting, gs-shop). A time
+    // that cannot be read is not a zero time.
+    expect(warns(".a { transition: background-color var(--d-fast); }")).toBe(
+      true
+    )
+  })
+
+  it("accepts the block's head as the author prompt writes it", () => {
+    // Laid out freely — the gate compares with whitespace collapsed.
+    for (const head of [
+      "@media (prefers-reduced-motion: reduce)",
+      "@media  (prefers-reduced-motion: reduce)\n",
+    ]) {
+      expect(warns(`${SPIN} ${head} ${RESET}`), head).toBe(false)
+    }
+  })
+
+  it("does not take another spelling of the head for the block", () => {
+    // The gate compares the block letter for letter with the author prompt's,
+    // so a head written any other way fails it — even one the browser reads
+    // the same (`screen and`, the boolean form, `not (… no-preference)`). A
+    // first version accepted those three and so passed drafts the gate blocks
+    // (PR #519 review). The last two the browser rejects outright: `only` needs
+    // a media type after it, and `not(` is a function token.
+    for (const prelude of [
+      "screen and (prefers-reduced-motion: reduce)",
+      "(prefers-reduced-motion)",
+      "not (prefers-reduced-motion: no-preference)",
+      "(prefers-reduced-motion:reduce)",
+      "only (prefers-reduced-motion: reduce)",
+      "not(prefers-reduced-motion: no-preference)",
+    ]) {
+      expect(warns(`${SPIN} @media ${prelude} ${RESET}`), prelude).toBe(true)
+    }
+  })
+
+  it("does not take a block that misses some viewers for one", () => {
+    // Each of these stops motion only in some contexts or for some widths —
+    // the gate rejects every one, so the warn must not pass them. A first
+    // version accepted the `@supports` nesting and the `not … and` forms.
+    for (const style of [
+      `@supports (display: grid) { ${REDUCE} }`,
+      `@media print { ${REDUCE} }`,
+      `@media print and (prefers-reduced-motion: reduce) ${RESET}`,
+      `@media not print and (prefers-reduced-motion: reduce) ${RESET}`,
+      `@media (prefers-reduced-motion: reduce) and (min-width: 600px) ${RESET}`,
+      `@media (prefers-reduced-motion: no-preference) and (not (hover: none)) ${RESET}`,
+      `@media (prefers-reduced-motion: no-preference) ${RESET}`,
+    ]) {
+      expect(warns(`${SPIN} ${style}`), style).toBe(true)
+    }
+  })
+
+  it("wants reduced motion handled in one place only", () => {
+    // The gate allows the condition to appear once in the file: a second block,
+    // a no-preference branch beside the block, or a copy in another sheet each
+    // fail it, so each warns here too.
+    for (const style of [
+      `${REDUCE} ${REDUCE}`,
+      `${REDUCE} @supports (display: grid) { ${REDUCE} }`,
+      `${REDUCE} @media (prefers-reduced-motion: no-preference) { .b { transition: opacity 0.2s; } }`,
+    ]) {
+      expect(warns(`${SPIN} ${style}`), style).toBe(true)
+    }
+  })
+
+  it("does not exempt motion behind a no-preference query", () => {
+    // The author prompt allows one way to handle reduced motion — the block —
+    // and the gate holds every moving file to it, opt-in form included.
+    expect(
+      warns(
+        "@keyframes fade { from { opacity: 0; } } @media (prefers-reduced-motion: no-preference) { .b { animation: fade 0.2s; } }"
+      )
+    ).toBe(true)
+  })
+
+  it("reads the block only from the page sheet, and not under a media attribute", () => {
+    const merged = (pageAttrs: string, page: string, dark: string) =>
+      makeHtml({ style: page })
+        .replace("<style>", `<style${pageAttrs}>`)
+        .replace("</head>", `<style>${dark}</style>\n</head>`)
+    const darkWithBlock = `[data-theme="dark"] .hero { color: red; } ${REDUCE}`
+    for (const [label, html] of [
+      ["block only in the dark sheet", merged("", SPIN, darkWithBlock)],
+      [
+        "page sheet under media=print",
+        merged(' media="print"', `${SPIN} ${REDUCE}`, ""),
+      ],
+      [
+        "a second copy in the dark sheet",
+        merged("", `${SPIN} ${REDUCE}`, darkWithBlock),
+      ],
+    ] as const) {
+      expect(warnsServed(html, label), label).toBe(true)
+    }
+  })
+
+  // The merged file is split into halves before most rules run, and the dark
+  // half keeps only the trailing dark sheet — so the page sheet's block is not
+  // in it. The rule must read the document a browser receives.
+  it("judges the served document, not the dark half", () => {
+    const darkSheet = '[data-theme="dark"] .hero { transition: color 0.2s; }'
+    const darkHalf = makeHtml({ theme: "dark", style: darkSheet })
+    const lightHalf = makeHtml({ style: `${SPIN} ${REDUCE}` })
+    const merged = makeHtml({ style: `${SPIN} ${REDUCE}` }).replace(
+      "</head>",
+      `<style>${darkSheet}</style>\n</head>`
+    )
+
+    const served = makeInput({
+      lightRaw: lightHalf,
+      darkRaw: darkHalf,
+      served: [
+        {
+          name: "preview.html",
+          html: merged,
+          bytes: Buffer.byteLength(merged),
+        },
+      ],
+    })
+    expect(rulesOf(served, "warn")).not.toContain(RULE)
+    // The served file is one the gate passes too.
+    expect(gateBlocks(merged)).toBe(false)
+
+    // Without `served` each half is its own document, and this dark half
+    // really does move with nothing to stop it. The gate never sees a half —
+    // it reads the file — so this is the one case with no gate verdict to hold
+    // the warn to.
+    const halvesOnly = makeInput({ lightRaw: lightHalf, darkRaw: darkHalf })
+    expect(rulesOf(halvesOnly, "warn")).toContain(RULE)
+  })
+})
+
 // ── font shorthand ───────────────────────────────────────────────────────────
 
 // A CSS-wide keyword is only valid as the *whole* value. `font: 700 15px/1
@@ -1326,9 +1537,17 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
     ).not.toContain("font-shorthand-invalid")
   })
 
-  it("blocks, and the author prompt it depends on teaches the rule", () => {
-    const author = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
-    expect(author).toContain("font: 700 15px/1 inherit")
+  it("blocks the example the author prompt teaches the rule with", () => {
+    // The prompt's example of the invalid form must be one the gate actually
+    // blocks — a prompt example the gate passes would teach the wrong rule.
+    const example = "font: 700 15px/1 inherit"
+    expect(readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)).toContain(example)
+    expect(
+      rulesOf(
+        makeInput({ lightRaw: makeHtml({ style: `.a { ${example}; }` }) }),
+        "block"
+      )
+    ).toContain("font-shorthand-invalid")
   })
 })
 

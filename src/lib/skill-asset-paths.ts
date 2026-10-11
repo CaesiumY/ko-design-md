@@ -3,10 +3,9 @@ import { join } from "node:path"
 
 // Every repo-relative path under `.claude/` that a test asserts against, plus the
 // one skill-owned asset that deliberately lives outside it (the eval suite), in
-// one place. Deliberately NOT a path builder — the visible literal list is itself the
-// contract, the same way `design-md-skill-single-preview-file.test.ts` keeps its
-// surface list visible. Assembling paths from segments would let a renamed
-// directory slip through as a plausible-looking string; a literal here fails
+// one place. Deliberately NOT a path builder — the visible literal list is itself
+// the contract. Assembling paths from segments would let a renamed directory
+// slip through as a plausible-looking string; a literal here fails
 // `skill-asset-paths.test.ts` on the next run instead.
 //
 // Before this module the same three-line `readRepoFile` helper was copied

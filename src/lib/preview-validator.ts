@@ -1,6 +1,7 @@
 import { brotliCompressSync, constants } from "node:zlib"
 import { buildDoc } from "./content-parser"
 import { bodyOf, isBlankText, walkHtml } from "./html-walk"
+import { hasAppliedReduceBlock, hasCssMotion } from "./reduced-motion-block"
 import { extractTokensFromMarkdown } from "./token-extractor"
 import type { WalkNode } from "./html-walk"
 import type { ValidationIssue } from "./draft-validator"
@@ -1026,6 +1027,47 @@ function scanCss(css: string): FileScan {
   return { bareOneFr, uncollapsedSelectors, invalidFontSites }
 }
 
+// ── reduced motion ───────────────────────────────────────────────────────────
+
+/**
+ * A preview that moves must carry a reduced-motion block, or a viewer who asked
+ * their system for less motion still gets all of it (#395). Nothing caught a
+ * missing one: #393 fixed eight previews by hand, and the count turned up only
+ * in the middle of other work.
+ *
+ * What counts as motion and what counts as an applied block are not decided
+ * here. `hasCssMotion` and `hasAppliedReduceBlock` are the definitions the
+ * shipped-catalogue gate (#443) holds every preview to, so this warn — which
+ * reaches a draft in the skill loop, before it lands — does not pass a file the
+ * gate would block for a missing, misplaced, second or differently headed
+ * block. A first version decided both for itself and did: it accepted a block
+ * nested in `@supports`, motion behind a no-preference query, and heads the
+ * browser reads alike but the gate does not (`screen and …`), all of which #443
+ * rejects (PR #519 review). What is left to the gate alone is the block's body —
+ * whether the declarations inside are the prescribed ones.
+ *
+ * A warn, not a block: leaving the block out breaks no spec, it is policy.
+ * Whether the block actually stops anything takes a render.
+ *
+ * One finding per document a browser receives, like `checkServedSize` — not
+ * per half. The dark half of a merged file keeps only the trailing dark sheet,
+ * and the block belongs in the page sheet, so a per-half check would fire on
+ * every merged preview whose dark sheet carries a transition.
+ */
+function checkReducedMotion(
+  doc: ServedDocument,
+  issues: Array<ValidationIssue>
+): void {
+  if (!hasCssMotion(doc.html) || hasAppliedReduceBlock(doc.html)) return
+  issues.push(
+    warn(
+      "reduced-motion-missing",
+      doc.name,
+      `${doc.name} has CSS motion (\`@keyframes\`, or an \`animation\`/\`transition\` that moves) but no single reduced-motion block that applies, so a viewer who asked their system for less motion may still get it. Put one \`@media (prefers-reduced-motion: reduce)\` block at the top level of the page sheet — the first \`<style>\`, with no \`media\` attribute, not inside another at-rule — setting \`animation: none !important; transition: none !important\` on \`*, *::before, *::after\`, and handle reduced motion nowhere else: no second block, no \`no-preference\` branch, no copy in the dark sheet.`
+    )
+  )
+}
+
 // ── color hygiene ────────────────────────────────────────────────────────────
 
 const ACHROMATIC_HEX = new Set(["#fff", "#ffffff", "#000", "#000000"])
@@ -1630,7 +1672,8 @@ export function validatePreviewPair(
     issues
   )
 
-  // Sizes are per download, not per theme — see `checkServedSize`. The fallback
+  // Sizes and the reduced-motion block are per download, not per theme — see
+  // `checkServedSize` and `checkReducedMotion`. The fallback
   // treats each half as its own file, which is what the split layout is and
   // what every fixture that omits `served` means.
   for (const doc of input.served ?? [
@@ -1638,6 +1681,7 @@ export function validatePreviewPair(
     { name: "the dark half", html: input.darkRaw, bytes: input.darkBytes },
   ]) {
     checkServedSize(doc, issues)
+    checkReducedMotion(doc, issues)
   }
   checkVariantAnchors(input, issues)
 

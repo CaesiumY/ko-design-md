@@ -4,12 +4,7 @@ import { describe, expect, it } from "vitest"
 import { parse } from "yaml"
 import {
   DESIGN_MD_AUTHOR_AGENT,
-  DESIGN_MD_REVIEWER_AGENT,
-  DESIGN_MD_RUBRIC_DESIGN,
-  DESIGN_MD_RUBRIC_PREVIEW,
   DESIGN_MD_SKILL,
-  PREVIEW_HTML_AUTHOR_AGENT,
-  PREVIEW_HTML_REVIEWER_AGENT,
   readRepoFile,
 } from "./skill-asset-paths"
 import { LOGO_TAKEDOWNS, TAKEDOWN_REF } from "./logo-takedowns"
@@ -46,70 +41,48 @@ function readFrontmatter(path: string): string {
 }
 
 describe("/design-md logo policy", () => {
-  it("documents the required logo path through the skill pipeline", () => {
+  // What the skill and the author write about the logo, held to the code that
+  // reads it: the path form the draft gate accepts, the frontmatter line the
+  // author emits and the gate reads, the takedown list and the rule id by the
+  // names they carry in code. Sentences that only have to be present are not
+  // pinned (#424) — the draft gate blocks a missing logo either way.
+  it("names the logo path, key and rule the draft gate actually uses", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
     const author = readRepoFile(DESIGN_MD_AUTHOR_AGENT)
-    const previewAuthor = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
-    const designRubric = readRepoFile(DESIGN_MD_RUBRIC_DESIGN)
-    const previewRubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
 
-    expect(skill).toContain("public/logos/{slug}.{svg,png,webp,avif}")
-    expect(skill).toContain("logo_url")
-    expect(skill).toContain("logo_src_path")
-    expect(skill).toContain("Logo deterministic check")
-    expect(skill).toContain('[ -f "$logo_asset_path" ]')
+    // Every extension list the skill gives for the logo file — the auto-detect
+    // pattern and the edit allow-list — is the set the draft gate's logo URL
+    // pattern accepts, read from the validator source. Only comma lists count:
+    // the copy step's `{slug}.{ext}` is a placeholder, not a list.
+    const accepted =
+      /LOGO_URL_FORM =\s*\/\^https:[^\n]*\(\?:([a-z|]+)\)\$\//.exec(
+        readRepoFile("src/lib/draft-validator.ts")
+      )?.[1]
+    expect(accepted, "draft-validator must keep LOGO_URL_FORM").toBeDefined()
+    const lists = [
+      ...skill.matchAll(/public\/logos\/\{slug\}\.\{([a-z]+(?:,[a-z]+)+)\}/g),
+    ].map((m) => m[1])
+    expect(lists, "SKILL.md must name the logo path's extensions").not.toEqual(
+      []
+    )
+    for (const named of lists)
+      expect(named.split(",").sort()).toEqual(accepted?.split("|").sort())
+    // The frontmatter line the author writes and the gate reads.
     expect(skill).toContain("logo: {logo_url}")
-    expect(skill).not.toContain("${logo_url}")
-    expect(skill).not.toContain("${logo_src_path}")
-    expect(author).toContain("logo_url")
     expect(author).toContain("logo: {logo_url}")
-    expect(previewAuthor).toContain("logo_src_path")
-    // The phrase used to say "both light.html and dark.html". One file carries
-    // both themes now, so what has to survive is that the site-relative form is
-    // the one embedded — not a count of files.
-    expect(previewAuthor).toContain("the site-relative form")
-    expect(designRubric).toContain("Expected logo")
-    expect(previewRubric).toContain("site-relative")
-
-    // A logo is required (#456 decision): intake has no "없음" answer, Stage 4a
-    // does not continue without one, and the draft gate blocks the omission.
-    // The old optional path must not creep back into any layer: the skill,
-    // both authors, both reviewers, both rubrics, or the draft gate.
-    expect(skill).not.toContain("may ship without a logo")
-    expect(skill).not.toContain('{logo_url or "none"}')
-    expect(skill).not.toContain('{logo_src_path or "none"}')
-    expect(skill).toContain("Logo candidates")
-    // Only official assets: the fallback must not ask for a derived image.
-    expect(skill).not.toContain("crop it to the symbol")
-    expect(skill).toContain("Never crop, recolor")
-    // A takedown slug must never have its logo re-fetched by the pipeline.
+    // A takedown slug must never have its logo re-fetched by the pipeline; the
+    // list is checked by its code name. A fully removed entry leaves no row,
+    // and the CHANGELOG Removed line is its record.
     expect(skill).toContain("LOGO_TAKEDOWNS")
-    // A fully removed entry leaves no LOGO_TAKEDOWNS row; the CHANGELOG
-    // Removed line is its record, and the skill must check it too.
     expect(skill).toContain("CHANGELOG.md")
-    expect(skill).not.toContain("`logo_asset_path` (string or empty)")
-    expect(skill).not.toContain("If no logo path was provided")
-    expect(skill).not.toContain("until a file resolves")
+    // The rule id the skill names is one the draft gate emits.
     expect(skill).toContain("missing-logo")
-    expect(author).not.toContain("either `none` or")
-    expect(author).not.toContain("omit the `logo` key")
-    expect(previewAuthor).not.toContain("either `none` or")
-    expect(previewAuthor).not.toContain("If a logo path is present")
-    expect(previewAuthor).not.toContain("`logo_src_path` is `none`")
-    const designReviewer = readRepoFile(DESIGN_MD_REVIEWER_AGENT)
-    const previewReviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
-    expect(designReviewer).not.toContain("either `none` or")
-    expect(previewReviewer).not.toContain("either `none` or")
-    expect(previewReviewer).not.toContain("is not `none`")
-    expect(previewRubric).not.toContain(
-      "If the orchestrator passes `expected_logo_src_path`"
-    )
-    expect(readRepoFile("scripts/validate-draft.ts")).not.toContain(
-      "<url|none>"
-    )
-    expect(designRubric).not.toContain("`logo` remains optional")
     expect(readRepoFile("src/lib/draft-validator.ts")).toContain(
       '"missing-logo"'
+    )
+    // The CLI takes no "none" logo (#456: a logo is required).
+    expect(readRepoFile("scripts/validate-draft.ts")).not.toContain(
+      "<url|none>"
     )
   })
 
