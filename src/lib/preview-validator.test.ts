@@ -1234,6 +1234,22 @@ describe("validatePreviewPair — reduced motion", () => {
     ).toContain(RULE)
   })
 
+  it("counts a transition whose time comes from a variable", () => {
+    // The catalogue writes durations as tokens (greeting, gs-shop). A time the
+    // validator cannot read is not a zero time — read as one, a preview that
+    // moved only this way would pass with no reduce block.
+    for (const decl of [
+      "transition: background-color var(--d-fast) var(--ease)",
+      "transition: var(--transition-btn)",
+      "transition-duration: var(--dur)",
+      "transition: opacity calc(var(--d) * 2)",
+    ]) {
+      expect(rulesOf(withStyle(`.a { ${decl}; }`), "warn"), decl).toContain(
+        RULE
+      )
+    }
+  })
+
   it("lists each moving site once and marks a cut-off list only when one is cut", () => {
     const p = '<p style="transition: color 0.2s">x</p>'
     const body = `<main class="hero"><img src="/logos/demo.png" alt="데모"><h1>데모</h1>${p.repeat(4)}</main>`

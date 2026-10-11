@@ -1099,11 +1099,20 @@ function topLevelItems(value: string): Array<string> {
   return items
 }
 
+// A value computed at runtime. Its time cannot be read here, and an unread time
+// is not a zero time. The catalogue writes durations as tokens — greeting's
+// `var(--d-fast)`, gs-shop's whole `var(--gs-transition-btn)` — and read as
+// `0s`, a new preview that moved only that way would pass with no reduce block.
+const COMPUTED_VALUE = /\b(?:var|calc|env|attr)\(/
+
 /** Does a transition take any time? A duration defaults to `0s`, so an item
- *  with no time at all (`transition: opacity`) moves nothing. */
+ *  with no time at all (`transition: opacity`) moves nothing — unless its time
+ *  is computed, which counts as motion. */
 function transitionTakesTime(value: string): boolean {
   return topLevelItems(value).some(
-    (item) => parseFloat(FIRST_TIME.exec(item)?.[1] ?? "0") > 0
+    (item) =>
+      COMPUTED_VALUE.test(item) ||
+      parseFloat(FIRST_TIME.exec(item)?.[1] ?? "0") > 0
   )
 }
 
