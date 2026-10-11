@@ -469,7 +469,8 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   스스로 "계약 테스트가 고정한다"며 규칙을 맡긴 자리와, #424 트리아지가 남기기로 정한 author
   프롬프트의 면책 띠 문자열(`design-md-preview-disclaimer.test.ts`)이다. 코드 쪽 값이 바뀌면
   프롬프트가 따라가도록 테스트가 깨진다. 다만 배선 대조도 프롬프트에서 값을 뽑을 **기준 문구**
-  (`same widths (…)`·`Capture the answers as:` 같은 문장 꼴)를 쓰므로, 그 꼴을 바꾸면 테스트도
+  (`same widths (…)`·`Capture the answers as:`·`## Stage N —` 헤딩·Stage 12 의
+  `**Design-board cross-check` 단계 제목 같은 문장 꼴)를 쓰므로, 그 꼴을 바꾸면 테스트도
   함께 고친다. 그 밖의 문구 다듬기는 이 테스트를 고칠 필요가 없다. **이 glob 밖에도 프롬프트를
   읽는 테스트가 여럿 있다** — 예: `design-md-preview-disclaimer.test.ts`(위 면책 띠 문자열),
   `preview-validator.test.ts`(검증기 규칙이 키로 삼는 정부 식별자 문자열과 폰트 단축 속성 예시).
