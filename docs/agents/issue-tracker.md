@@ -4,7 +4,7 @@
 
 ## 컨벤션
 
-- **이슈 생성**: `gh issue create --title "..." --body "..."`. 여러 줄 본문은 heredoc 으로 넘긴다 — `CLAUDE.md` 「기여 관례」의 인용 구분자 규칙을 따른다.
+- **이슈 생성**: `gh issue create --title "..." --body "..."`. 여러 줄 본문은 heredoc 으로 넘긴다 — `CLAUDE.md` 「기여 관례」의 인용 구분자 규칙을 따른다. 본문은 쉬운 말 요약 1~3줄로 시작한다(같은 「기여 관례」). 아래의 `Part of #<parent>`·`Blocked by:` 줄을 쓰면 그 줄이 맨 위이고 요약은 바로 다음이다.
 - **이슈 읽기**: `gh issue view <number> --json number,title,body,labels,comments`.
 - **이슈 목록**: `gh issue list --state open --limit 1000 --json number,title,body,labels,comments --jq '[.[] | {number, title, body, labels: [.labels[].name], comments: [.comments[].body]}]'` 에 `--label`·`--state` 필터를 맞춰 붙인다. `--limit` 을 빼면 기본값 30건에서 **아무 표시 없이** 잘린다.
 - **이슈를 부모의 서브이슈로 붙이기**: `gh issue create --parent <parent> ...`, 또는 만든 뒤 `gh issue edit <parent> --add-sub-issue <child>`(`gh` 2.94+). 그보다 낡은 `gh` 는 `gh api --method POST repos/<owner>/<repo>/issues/<parent>/sub_issues -F sub_issue_id=<child-db-id>`(아래 **블로킹**과 같은 database id). 서브이슈를 못 쓰면 자식 본문 맨 위에 `Part of #<parent>` 를 적는다.
