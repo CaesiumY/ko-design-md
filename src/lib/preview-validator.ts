@@ -708,6 +708,11 @@ interface CssRule {
   selector: string
   declarations: string
   inMedia: boolean
+  /** Preludes of the conditional group rules around this one, outermost first
+   *  (`@supports (display: grid)`, `@media (prefers-reduced-motion: reduce)`).
+   *  `inMedia` only says there is one; the reduced-motion rule needs to know
+   *  which (#395). */
+  conditions: Array<string>
 }
 
 function stripCssComments(css: string): string {
@@ -741,7 +746,11 @@ function dropStatementAtRules(prelude: string): string {
   return prelude.slice(cut)
 }
 
-function parseCssRules(css: string, inMedia = false): Array<CssRule> {
+function parseCssRules(
+  css: string,
+  inMedia = false,
+  conditions: Array<string> = []
+): Array<CssRule> {
   const out: Array<CssRule> = []
   let i = 0
   while (i < css.length) {
@@ -769,13 +778,13 @@ function parseCssRules(css: string, inMedia = false): Array<CssRule> {
     }
     const inner = css.slice(open + 1, j - 1)
     if (/^@(media|supports|container)\b/.test(selector)) {
-      out.push(...parseCssRules(inner, true))
+      out.push(...parseCssRules(inner, true, [...conditions, selector]))
     } else if (/^@(layer|scope|starting-style)\b/.test(selector)) {
       // Rule-containing blocks that are not conditions: the browser applies
       // their rules unconditionally, so they keep the enclosing `inMedia`.
-      out.push(...parseCssRules(inner, inMedia))
+      out.push(...parseCssRules(inner, inMedia, conditions))
     } else if (!selector.startsWith("@")) {
-      out.push({ selector, declarations: inner, inMedia })
+      out.push({ selector, declarations: inner, inMedia, conditions })
     }
     i = j
   }
@@ -1024,6 +1033,95 @@ function scanCss(css: string): FileScan {
     (sel) => !mediaRedeclared.has(sel)
   )
   return { bareOneFr, uncollapsedSelectors, invalidFontSites }
+}
+
+// ── reduced motion ───────────────────────────────────────────────────────────
+
+// A preview that moves must carry a `prefers-reduced-motion: reduce` block, or
+// a viewer who asked their system for less motion still gets all of it (#395).
+// Nothing caught a missing one: #393 fixed eight previews by hand, and the
+// count turned up only in the middle of other work. Only the block's PRESENCE
+// is judged — its contents are the skill's to teach and the reviewer's to
+// check, and whether it actually stops anything takes a render. A warn, not a
+// block: leaving it out breaks no spec, it is policy.
+//
+// The boolean form `(prefers-reduced-motion)` matches exactly when the viewer
+// asked for reduce, so it counts too.
+const REDUCE_CONDITION = /prefers-reduced-motion\s*(?::\s*reduce\b|\))/i
+// Motion declared only under this condition is the opt-in form: nothing moves
+// unless the viewer allows it, so there is nothing for a reduce block to stop.
+const OPT_IN_CONDITION = /prefers-reduced-motion\s*:\s*no-preference\b/i
+// The declarations that start motion on their own. Other longhands
+// (`animation-duration`, `transition-property`) tune motion something else
+// starts — except `transition-duration`, which alone transitions `all`.
+const MOTION_DECLARATION =
+  /^(?:-webkit-)?(animation|animation-name|transition|transition-duration)\s*:\s*([\s\S]+)$/i
+
+function motionDeclarations(declarations: string): Array<string> {
+  const out: Array<string> = []
+  for (const part of declarations.split(";")) {
+    const m = MOTION_DECLARATION.exec(part.trim())
+    if (!m) continue
+    const value = m[2]
+      .replace(/!\s*important\s*$/i, "")
+      .trim()
+      .toLowerCase()
+    if (/^(?:none|0m?s)$/.test(value)) continue
+    out.push(`${m[1].toLowerCase()}: ${value}`)
+  }
+  return out
+}
+
+/**
+ * One finding per document a browser receives, like `checkServedSize` — not
+ * per half. The dark half of a merged file keeps only the trailing dark sheet,
+ * and the skill puts the reduce block in the page sheet and nowhere else, so a
+ * per-half check would fire on every merged preview whose dark sheet carries a
+ * transition.
+ */
+function checkReducedMotion(
+  doc: ServedDocument,
+  issues: Array<ValidationIssue>
+): void {
+  const css = stripCssComments(styleContent(doc.html))
+  const rules = parseCssRules(css)
+  if (rules.some((r) => r.conditions.some((c) => REDUCE_CONDITION.test(c)))) {
+    return
+  }
+  // Any motion declaration at all, opt-in included. A `@keyframes` block counts
+  // as motion only when there is none — then it is the only sign the page
+  // moves; otherwise the declarations already said so, and the opt-in form
+  // keeps its keyframes at the top level.
+  let declared = false
+  const moving: Array<string> = []
+  for (const rule of rules) {
+    const found = motionDeclarations(rule.declarations)
+    if (found.length === 0) continue
+    declared = true
+    if (rule.conditions.some((c) => OPT_IN_CONDITION.test(c))) continue
+    moving.push(...found.map((d) => `${rule.selector} (${d})`))
+  }
+  for (const m of doc.html.matchAll(
+    /\sstyle\s*=\s*(?:"([^"]*)"|'([^']*)')/gi
+  )) {
+    const found = motionDeclarations(
+      stripCssComments(decodeQuoteEntities(m.slice(1).join("")))
+    )
+    if (found.length > 0) declared = true
+    moving.push(...found.map((d) => `[style] attribute (${d})`))
+  }
+  if (!declared && /@(?:-webkit-)?keyframes\b/i.test(css)) {
+    moving.push("@keyframes")
+  }
+  if (moving.length === 0) return
+  const list = [...new Set(moving)].slice(0, 3).join(", ")
+  issues.push(
+    warn(
+      "reduced-motion-missing",
+      doc.name,
+      `${doc.name} moves (${list}${moving.length > 3 ? ", …" : ""}) but has no \`@media (prefers-reduced-motion: reduce)\` block, so a viewer who asked their system for less motion still gets it. Add one such block to the page \`<style>\` — not the dark sheet — setting \`animation: none !important; transition: none !important\` on \`*, *::before, *::after\`.`
+    )
+  )
 }
 
 // ── color hygiene ────────────────────────────────────────────────────────────
@@ -1630,7 +1728,8 @@ export function validatePreviewPair(
     issues
   )
 
-  // Sizes are per download, not per theme — see `checkServedSize`. The fallback
+  // Sizes and the reduced-motion block are per download, not per theme — see
+  // `checkServedSize` and `checkReducedMotion`. The fallback
   // treats each half as its own file, which is what the split layout is and
   // what every fixture that omits `served` means.
   for (const doc of input.served ?? [
@@ -1638,6 +1737,7 @@ export function validatePreviewPair(
     { name: "the dark half", html: input.darkRaw, bytes: input.darkBytes },
   ]) {
     checkServedSize(doc, issues)
+    checkReducedMotion(doc, issues)
   }
   checkVariantAnchors(input, issues)
 

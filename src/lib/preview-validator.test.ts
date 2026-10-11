@@ -1140,6 +1140,106 @@ describe("validatePreviewPair — responsive heuristics", () => {
   })
 })
 
+// ── reduced motion ───────────────────────────────────────────────────────────
+
+// #395: a preview that moves must carry a `prefers-reduced-motion: reduce`
+// block. Only the block's presence is judged here; its contents are the
+// skill's to teach and the reviewer's to check.
+describe("validatePreviewPair — reduced motion", () => {
+  const RULE = "reduced-motion-missing"
+  const REDUCE =
+    "@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }"
+  const SPIN =
+    "@keyframes spin { to { transform: rotate(1turn); } } .spinner { animation: spin 1s linear infinite; }"
+  const withStyle = (style: string, body?: string) =>
+    makeInput({ lightRaw: makeHtml({ style, body }) })
+
+  it("warns when the page moves and nothing turns the motion off", () => {
+    expect(rulesOf(withStyle(SPIN), "warn")).toContain(RULE)
+  })
+
+  it("stays quiet once the reduce block is there", () => {
+    expect(rulesOf(withStyle(`${SPIN} ${REDUCE}`), "warn")).not.toContain(RULE)
+  })
+
+  it("does not count `animation: none` as motion", () => {
+    expect(
+      rulesOf(withStyle(".a { animation: none; transition: none; }"), "warn")
+    ).not.toContain(RULE)
+  })
+
+  it("finds a reduce block nested in @supports", () => {
+    expect(
+      rulesOf(
+        withStyle(`${SPIN} @supports (display: grid) { ${REDUCE} }`),
+        "warn"
+      )
+    ).not.toContain(RULE)
+  })
+
+  it("does not take a no-preference block for the reduce one", () => {
+    const optIn =
+      "@media (prefers-reduced-motion: no-preference) { .b { transition: opacity 0.2s; } }"
+    expect(rulesOf(withStyle(`${SPIN} ${optIn}`), "warn")).toContain(RULE)
+  })
+
+  it("does not count motion that only a no-preference block turns on", () => {
+    // The opt-in form: nothing moves unless the viewer allows it, so there is
+    // nothing for a reduce block to stop.
+    const optInOnly =
+      "@keyframes fade { from { opacity: 0; } } @media (prefers-reduced-motion: no-preference) { .b { animation: fade 0.2s; } }"
+    expect(rulesOf(withStyle(optInOnly), "warn")).not.toContain(RULE)
+  })
+
+  it("counts a @keyframes block on its own, prefixed or not", () => {
+    for (const style of [
+      "@keyframes pulse { to { opacity: 0.5; } }",
+      "@-webkit-keyframes pulse { to { opacity: 0.5; } }",
+    ]) {
+      expect(rulesOf(withStyle(style), "warn"), style).toContain(RULE)
+    }
+  })
+
+  it("counts a transition in a style attribute", () => {
+    const body =
+      '<main class="hero"><img src="/logos/demo.png" alt="데모"><h1 style="transition: color 0.2s">데모</h1></main>'
+    expect(rulesOf(withStyle(".hero { color: red; }", body), "warn")).toContain(
+      RULE
+    )
+  })
+
+  // The merged file is split into halves before most rules run, and the dark
+  // half keeps only the trailing dark sheet — so the page sheet's reduce block
+  // is not in it. The rule must read the document a browser receives.
+  it("judges the served document, not the dark half", () => {
+    const darkSheet = '[data-theme="dark"] .hero { transition: color 0.2s; }'
+    const darkHalf = makeHtml({ theme: "dark", style: darkSheet })
+    const lightHalf = makeHtml({ style: `${SPIN} ${REDUCE}` })
+    const merged = makeHtml({ style: `${SPIN} ${REDUCE}` }).replace(
+      "</head>",
+      `<style>${darkSheet}</style>\n</head>`
+    )
+
+    const served = makeInput({
+      lightRaw: lightHalf,
+      darkRaw: darkHalf,
+      served: [
+        {
+          name: "preview.html",
+          html: merged,
+          bytes: Buffer.byteLength(merged),
+        },
+      ],
+    })
+    expect(rulesOf(served, "warn")).not.toContain(RULE)
+
+    // Without `served` each half is its own document, and this dark half
+    // really does move with nothing to stop it.
+    const halvesOnly = makeInput({ lightRaw: lightHalf, darkRaw: darkHalf })
+    expect(rulesOf(halvesOnly, "warn")).toContain(RULE)
+  })
+})
+
 // ── font shorthand ───────────────────────────────────────────────────────────
 
 // A CSS-wide keyword is only valid as the *whole* value. `font: 700 15px/1
