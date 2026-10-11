@@ -182,8 +182,8 @@ so the extractor can read each — `name: oklch(...)` (colors),
 `name: 16px` (spacing/rounded), `name: 0 1px 2px oklch(...)` (elevation). **Typography is the exception — it nests**, as
 shown above: a bare style name, then four-space `fontSize` / `fontWeight` /
 `lineHeight` / `letterSpacing`. The inline `name: { size, weight, … }` and
-`name: 16 / 24 / 700` forms are read only from markdown tables (body fences are
-blocked); in frontmatter they yield **zero** type tokens. Alias rows whose value points at another token
+`name: 16 / 24 / 700` forms are not read anywhere — the extractor reads nothing
+in the body; in frontmatter they yield **zero** type tokens. Alias rows whose value points at another token
 (`fill-brand: "{colors.red}"`) are skipped by the extractor and surface only in
 the prose — intended, since the cards show visually-renderable tokens, not
 pointers. `pnpm tokens:check` compares the regenerated sidecar byte-for-byte, so
