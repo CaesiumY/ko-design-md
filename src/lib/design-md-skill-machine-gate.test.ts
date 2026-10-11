@@ -240,10 +240,10 @@ describe("/design-md machine gates", () => {
     }
   })
 
-  // 976 is the detail page's embed width and the historical blind spot —
-  // overflow hides at the middle multi-column widths. The widths the skill tells
-  // the loop to render are the ones the contrast harness actually sweeps, so
-  // the prose is held to that list rather than to a number written here.
+  // Stage 9a3 tells the loop to render the staged preview at the same widths
+  // the CI contrast job sweeps — 976, the detail page's embed width, among them.
+  // Those widths are a code constant, so the prose is held to it rather than to
+  // a number written here.
   it("names the widths the contrast sweep renders", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
     const stated = /same widths \(([\d/]+)\)/.exec(skill)?.[1]
@@ -469,7 +469,7 @@ describe("/design-md machine gates", () => {
   // which is the exact instruction an intake agent follows — it would skip the
   // last question, leave `design_board_paths` empty, and the gate would never
   // fire while the skill still described it.
-  it("keeps Stage 2's board question wired to the Stage 4c gate", () => {
+  it("keeps Stage 2's question count and the Stage 4c handover honest", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
 
     // The stated count has to equal the list, or following the prose drops a
@@ -538,8 +538,8 @@ describe("/design-md machine gates", () => {
   // application site was "Stage 12's work and a human's", while `## Stage 12`
   // held no such step. Prose naming a stage is the only pointer a reader has;
   // when the stage does not carry it, the reader believes the comparison is
-  // automatic and stops looking. The test above pins the upstream half (Stage 2
-  // asks, Stage 4c gates); this one pins the downstream half.
+  // automatic and stops looking. This pins that Stage 12 holds the step and that
+  // its pointer resolves.
   it("keeps the board cross-check the prose promises inside Stage 12", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
 
@@ -692,6 +692,37 @@ describe("/design-md machine gates", () => {
     }
     // A pattern that matched nothing would make this test vacuous.
     expect(named).toBeGreaterThan(2)
+  })
+
+  // The report is the only place the board cross-check's output reaches a
+  // person, and three of its four states are non-findings that read identically
+  // if they collapse: "no board existed", "compared, nothing disagreed", "never
+  // ran". SKILL.md hands this rule to this test in so many words ("that is what
+  // the contract test pins"), so it stays though it reads the skill alone — with
+  // it gone, nothing would hold the rule the prompt says is held (#424).
+  it("reports the board cross-check's four states distinctly", () => {
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+    const report = skill.slice(
+      skill.indexOf("## Stage 13 —"),
+      skill.indexOf("## Edge cases")
+    )
+    expect(report, "Stage 13 must precede the edge cases").not.toBe("")
+
+    const lines = report.match(/^ {2}- `board_result = [^\n]*$/gm) ?? []
+    expect(
+      lines.length,
+      "four states: ok, discrepancies, skipped (no board), skipped (no preview MCP)"
+    ).toBe(4)
+
+    const outputs = lines.map((line) => /→ `([^`]+)`/.exec(line)?.[1])
+    expect(
+      outputs.filter((o) => o !== undefined).length,
+      "every state must name the line it prints"
+    ).toBe(4)
+    expect(
+      new Set(outputs).size,
+      "two states printing the same line makes a skipped run read as a clean one"
+    ).toBe(4)
   })
 
   // Stage 12 reports every advisory warn because those sections add no points

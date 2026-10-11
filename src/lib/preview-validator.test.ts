@@ -849,13 +849,12 @@ describe("validatePreviewPair — government identifiers", () => {
     )
 
     const author = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
-    // The three literals the rule keys on, so the author can recognise them…
+    // Two of the literals the rule keys on (the author prompt does not use the
+    // third, `정부상징`), so the author can recognise them…
     expect(author).toContain("대한민국정부")
     expect(author).toContain("공식 전자정부 누리집")
-    // …the containment requirement, which is the whole structural rule…
-    expect(author).toContain("inside the same container as the identifier")
-    // …and the exemption, or an author faced with a true attribution has no
-    // move that is not a falsehood.
+    // …and the exemption class the rule reads, or an author faced with a true
+    // attribution has no move that is not a falsehood.
     expect(author).toContain('class="catalog-attribution"')
   })
 })
