@@ -50,8 +50,23 @@ describe("/design-md logo policy", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
     const author = readRepoFile(DESIGN_MD_AUTHOR_AGENT)
 
-    // The extensions the draft gate's logo URL pattern accepts.
-    expect(skill).toContain("public/logos/{slug}.{svg,png,webp,avif}")
+    // Every extension list the skill gives for the logo file — the auto-detect
+    // pattern and the edit allow-list — is the set the draft gate's logo URL
+    // pattern accepts, read from the validator source. Only comma lists count:
+    // the copy step's `{slug}.{ext}` is a placeholder, not a list.
+    const accepted =
+      /LOGO_URL_FORM =\s*\/\^https:[^\n]*\(\?:([a-z|]+)\)\$\//.exec(
+        readRepoFile("src/lib/draft-validator.ts")
+      )?.[1]
+    expect(accepted, "draft-validator must keep LOGO_URL_FORM").toBeDefined()
+    const lists = [
+      ...skill.matchAll(/public\/logos\/\{slug\}\.\{([a-z]+(?:,[a-z]+)+)\}/g),
+    ].map((m) => m[1])
+    expect(lists, "SKILL.md must name the logo path's extensions").not.toEqual(
+      []
+    )
+    for (const named of lists)
+      expect(named.split(",").sort()).toEqual(accepted?.split("|").sort())
     // The frontmatter line the author writes and the gate reads.
     expect(skill).toContain("logo: {logo_url}")
     expect(author).toContain("logo: {logo_url}")

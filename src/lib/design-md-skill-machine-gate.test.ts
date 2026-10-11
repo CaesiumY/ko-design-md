@@ -212,6 +212,23 @@ describe("/design-md machine gates", () => {
     expect(validator).toContain("missing-created-at")
   })
 
+  // The draft gate blocks a `lang` other than the one it accepts, but a draft
+  // with no `lang:` line passes it — only the rubric asks for the key. So the
+  // author template's line is what puts the value in every onboarded entry,
+  // and it has to be the value the gate compares against.
+  it("has the author template emit the lang the draft gate accepts", () => {
+    const author = readRepoFile(DESIGN_MD_AUTHOR_AGENT)
+    const validator = readRepoFile("src/lib/draft-validator.ts")
+    const emitted = /^lang: (\S+)$/m.exec(author)?.[1]
+    expect(emitted, "the author template must emit a lang: line").toBeDefined()
+    const accepted = /sees\("lang"\) && lang !== "([^"]+)"/.exec(validator)?.[1]
+    expect(
+      accepted,
+      "draft-validator must keep its bad-lang check"
+    ).toBeDefined()
+    expect(emitted).toBe(accepted)
+  })
+
   // The fill-in skeleton is only useful if the author subagent is actually
   // handed it. A template nobody is pointed at is a file that rots — the repo
   // carried one such artifact until docs/PRD.md was rewritten: a pre-Stitch
@@ -470,14 +487,12 @@ describe("/design-md machine gates", () => {
     ).toBe(expected)
   })
 
-  // Issue #404. Stage 4c is conditional on one intake variable, so the whole
-  // board checkpoint is reachable only if Stage 2 actually asks for it and the
-  // approved paths actually travel. Both ends broke on the way in: the bullet
-  // was added under a sentence that still said "three follow-up text inputs",
-  // which is the exact instruction an intake agent follows — it would skip the
-  // last question, leave `design_board_paths` empty, and the gate would never
-  // fire while the skill still described it.
-  it("keeps Stage 2's question count and the Stage 4c handover honest", () => {
+  // Issue #404. Two facts the prose states that something else decides: the
+  // number of Stage 2 follow-up questions (an intake agent asks as many as the
+  // sentence says, so a stale count drops the last one — the board question,
+  // when #404 added it), and the research-collector's tool list, which is why
+  // Stage 4c's handover has to expand a directory into files.
+  it("keeps Stage 2's question count and the Stage 4c directory expansion honest", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
 
     // The stated count has to equal the list, or following the prose drops a
