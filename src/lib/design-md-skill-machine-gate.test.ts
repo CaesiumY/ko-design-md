@@ -240,15 +240,23 @@ describe("/design-md machine gates", () => {
     }
   })
 
-  // Stage 9a3 tells the loop to render the staged preview at the same widths
-  // the CI contrast job sweeps — 976, the detail page's embed width, among them.
-  // Those widths are a code constant, so the prose is held to it rather than to
-  // a number written here.
-  it("names the widths the contrast sweep renders", () => {
+  // Two stages render the preview at the catalog's widths — 976, the detail
+  // page's embed width and the historical overflow blind spot, among them:
+  // Stage 9a3 measures contrast with the CI harness, and Stage 12's responsive
+  // sweep probes for overflow by hand. Those widths are a code constant, so both
+  // lists are held to it rather than to numbers written here.
+  it("names the widths the contrast and overflow sweeps render", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
-    const stated = /same widths \(([\d/]+)\)/.exec(skill)?.[1]
-    expect(stated, "SKILL.md must state the sweep's widths").toBeDefined()
-    expect(stated).toBe(BASELINE_WIDTHS.join("/"))
+    const contrast = /same widths \(([\d/]+)\)/.exec(skill)?.[1]
+    expect(contrast, "SKILL.md must state the 9a3 widths").toBeDefined()
+    expect(contrast).toBe(BASELINE_WIDTHS.join("/"))
+
+    // `**375 (mobile) / 768 (tablet) / 976 (…) / 1440 (desktop)**` — each
+    // width is the number before its parenthesised label.
+    const overflow = /\*\*(\d+ \(mobile\)[^*]*)\*\*/.exec(skill)?.[1]
+    expect(overflow, "SKILL.md must state the Stage 12 widths").toBeDefined()
+    const widths = [...(overflow ?? "").matchAll(/(\d+) \(/g)].map((m) => m[1])
+    expect(widths.join("/")).toBe(BASELINE_WIDTHS.join("/"))
   })
 
   // PR #221 moved the preview size gate from raw bytes to brotli. The byte
