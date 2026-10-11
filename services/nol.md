@@ -351,7 +351,7 @@ NOL은 흰 바탕 위에 채도 높은 파랑을 예약·선택·포커스에만
 
 **1rem = 10px 이다.** `html{font-size:62.5%}` 이고 유틸리티는 rem 으로 쓰인다(`1.2rem/1.4rem` = 12/14px) [src:8]. frontmatter 값은 px 로 환산해 적었다.
 
-**스케일은 번들의 `typography-*` 이름 42개다.** 이름이 `분류-크기-굵기[-multiline]` 꼴이고 굵기는 bold·semibold·regular 세 단계, 곧 700·600·400 뿐이다 [src:8][src:9][src:10]. 단일행 스타일은 행간이 크기의 약 1.2배(`{typography.body-12-regular}` 12/14 … `{typography.headline-40-bold}` 40/48), `-multiline` 은 약 1.5배다(`{typography.body-14-regular-multiline}` 14/21) [src:8]. 줄 수를 자르는 `-line-clamp-1/-2` 변형과 같은 값을 px 로 고정해 접근성 글자 확대를 받지 않는 `-fixed` 변형은 별칭이라 키로 세지 않았다 [src:8]. 확인한 위치는 이렇다 — `{typography.subtitle-18-regular-multiline}` 은 홈 번들에 `pc:typography-` 접두로만 있고 [src:8], `{typography.subtitle-18-bold-multiline}` ≈ 은 디자인 보드의 번들 판독에서 왔으며 위치는 다시 확인하지 못했다(공개 출처 없음). `{typography.subtitle-18-semibold}` 는 홈 번들의 `ds-pc:` 접두와 목록 번들에 있다 [src:8][src:9]. `{typography.subtitle-16-semibold-multiline}`·`{typography.body-13-semibold-multiline}` 은 목록 번들 [src:9], `{typography.body-14-bold-multiline}`·`{typography.body-12-bold-multiline}` 은 상세 번들에서 확인했다 [src:10].
+**스케일은 번들에서 확인한 `typography-*` 이름 41개와 보드에서만 읽은 1개(≈ `{typography.subtitle-18-bold-multiline}`)다.** 이름이 `분류-크기-굵기[-multiline]` 꼴이고 굵기는 bold·semibold·regular 세 단계, 곧 700·600·400 뿐이다 [src:8][src:9][src:10]. 단일행 스타일은 행간이 크기의 약 1.2배(`{typography.body-12-regular}` 12/14 … `{typography.headline-40-bold}` 40/48), `-multiline` 은 약 1.5배다(`{typography.body-14-regular-multiline}` 14/21) [src:8]. 줄 수를 자르는 `-line-clamp-1/-2` 변형과 같은 값을 px 로 고정해 접근성 글자 확대를 받지 않는 `-fixed` 변형은 별칭이라 키로 세지 않았다 [src:8]. 확인한 위치는 이렇다 — `{typography.subtitle-18-regular-multiline}` 은 홈 번들에 `pc:typography-` 접두로만 있고 [src:8], `{typography.subtitle-18-bold-multiline}` ≈ 은 디자인 보드의 번들 판독에서 왔으며 위치는 다시 확인하지 못했다(공개 출처 없음). `{typography.subtitle-18-semibold}` 는 홈 번들의 `ds-pc:` 접두와 목록 번들에 있다 [src:8][src:9]. `{typography.subtitle-16-semibold-multiline}`·`{typography.body-13-semibold-multiline}` 은 목록 번들 [src:9], `{typography.body-14-bold-multiline}`·`{typography.body-12-bold-multiline}` 은 상세 번들에서 확인했다 [src:10].
 
 **자간은 `0em` 이다.** 렌더 수집에서 자간은 모든 요소가 normal 이었고, 그래서 42개 스타일의 `letterSpacing` 을 단위 붙은 0으로 적었다(리서치의 렌더 수집값 — 공개 출처로는 다시 열지 못했다).
 
@@ -435,7 +435,7 @@ reduced-motion (번들에서 두 규칙 확인)
 
 **말풍선 배지.** 카테고리 타일 위의 신규오픈·지금예매 배지는 아래로 꼬리가 달린 말풍선 모양으로 얹힌다 [src:5].
 
-**곡선은 CI 의 언어이기도 하다.** 법인 CI 는 즐거움의 확장을 곡선으로 담았다고 서술한다 [src:2]. 로고는 워드마크이고, 에셋 센터의 로고 다운로드 일곱 종은 모두 PNG 이며 SVG 배포는 확인되지 않았다 [src:23]. 금지 항목은 시인성 저해·지정 색 외 사용·요소 간격 조정·아웃라인·그림자·복잡한 도형과 결합·회전/반전·비율/기울기 왜곡·복잡한 배경 위 배치 아홉 가지다 [src:1]. 이 카탈로그의 로고 이미지는 에셋 센터의 앱 아이콘 PNG 다 [src:23].
+**곡선은 CI 의 언어이기도 하다.** 법인 CI 는 즐거움의 확장을 곡선으로 담았다고 서술한다 [src:2]. 로고는 워드마크이고, 에셋 센터의 로고 다운로드 일곱 종은 모두 PNG 이며 SVG 배포는 확인되지 않았다 [src:1]. 금지 항목은 시인성 저해·지정 색 외 사용·요소 간격 조정·아웃라인·그림자·복잡한 도형과 결합·회전/반전·비율/기울기 왜곡·복잡한 배경 위 배치 아홉 가지다 [src:1]. 이 카탈로그의 로고 이미지는 에셋 센터의 앱 아이콘 PNG 다 [src:23].
 
 ## Components
 
