@@ -208,7 +208,13 @@ const PREVIEW_TOKEN_ALIASES: Partial<
     ["ldsg-color-", "ldsg-"],
     ["", "ldsg-"],
   ],
-  nol: [["", "nol-"]],
+  // The published palette already carries the `nol-` prefix (`nol-blue`), and
+  // the catch-all deliberately skips a name that starts with its target — so
+  // the preview's `--nol-nol-blue` needs its own rule ahead of it.
+  nol: [
+    ["nol-", "nol-nol-"],
+    ["", "nol-"],
+  ],
   remember: [["", "rui-"]],
   "seed-design": [["", "seed-"]],
   socar: [["", "sf-"]],
