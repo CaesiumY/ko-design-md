@@ -46,7 +46,7 @@ export const FRONTMATTER_MAP_KEYS: ReadonlyArray<string> = [
   "typography",
   "spacing",
   "rounded",
-  // The spec's component map. Not a sidecar token map either: only the spec
+  // The spec's component map. Not a sidecar token map: only the spec
   // linter reads it, straight from the file (#384).
   "components",
   // Shadows. The spec model has no elevation category, so the linter resolves
