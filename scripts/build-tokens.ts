@@ -4,14 +4,13 @@ import { buildDoc } from "../src/lib/content-parser"
 import { extractTokensFromMarkdown } from "../src/lib/token-extractor"
 import type { ServiceDoc } from "../src/lib/content-types"
 
-// Codegen: DRAFT machine-readable token sidecars (`services/{slug}.tokens.json`)
-// from the human-authored prose YAML in each design.md. The heuristic parser
-// (src/lib/token-extractor.ts) handles the per-entry format variation; its
-// output is a DRAFT meant for human review before commit — the runtime never
-// runs it (see src/lib/content-collection.ts, which only reads the JSON).
+// Codegen: write machine-readable token sidecars (`services/{slug}.tokens.json`)
+// from each design.md's frontmatter token maps (src/lib/token-extractor.ts).
+// The runtime never runs it (see src/lib/content-collection.ts, which only
+// reads the JSON).
 //
-//   pnpm tokens:build           # draft only MISSING sidecars (won't clobber reviewed ones)
-//   pnpm tokens:build toss      # (re)draft a single entry by slug
+//   pnpm tokens:build           # write only MISSING sidecars (won't clobber existing ones)
+//   pnpm tokens:build toss      # (re)write a single entry by slug
 //   pnpm tokens:build --all     # regenerate every sidecar (overwrites)
 //   pnpm tokens:check           # CI gate: fail if any sidecar drifted from its md
 

@@ -15,8 +15,6 @@
 // and a YAML parser normalises exactly that away. So each caller gets the line
 // and decides for itself what the value means.
 
-import { TOKEN_MAP_KEYS } from "./frontmatter-map-table"
-
 export interface MapRow {
   /** The source line, unmodified. */
   line: string
@@ -49,22 +47,15 @@ const ROW = /^(\s+)([^\s:]+):\s*(.*)$/
  * Does this line open the named map?
  *
  * A trailing comment is allowed. YAML permits one, and rejecting it was not a
- * near-miss: the document then matched no map at all, fell back to the legacy
- * body-fence path, and produced ZERO colour tokens — with the OKLCH gate going
- * quiet alongside, because it judges the rows this function yields.
+ * near-miss: the map then read as absent, the extractor produced ZERO colour
+ * tokens, and the OKLCH gate went quiet alongside, because it judges the rows
+ * this function yields.
  *
- * Exported so the callers that ask this question — the row reader and the
- * extractor's frontmatter/body branch — cannot answer it differently. They
- * already did once, over what ends a map (the removed migration script's
- * already-migrated guard was the third).
+ * `mapRows` is the only caller; it is exported so its own tests can pin the
+ * comment rule directly.
  */
 export function opensMap(line: string, mapKey: string): boolean {
   return new RegExp(`^${mapKey}:\\s*(?:#.*)?$`).test(line)
-}
-
-/** Does this line open any of the four token maps? */
-export function opensAnyTokenMap(line: string): boolean {
-  return TOKEN_MAP_KEYS.some((key) => opensMap(line, key))
 }
 
 /**

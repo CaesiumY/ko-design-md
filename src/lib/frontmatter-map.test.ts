@@ -135,10 +135,9 @@ describe("isHeadRow", () => {
 
 describe("opensMap", () => {
   it("accepts a trailing comment on the opening line", () => {
-    // YAML allows one. Rejecting it was not a near-miss: the document then
-    // matched no map, fell back to the legacy body-fence path, and produced
-    // ZERO colour tokens — with the OKLCH gate silent alongside, since it
-    // judges the rows this reader yields.
+    // YAML allows one. Rejecting it was not a near-miss: the map then read as
+    // absent and the extractor produced ZERO colour tokens — with the OKLCH
+    // gate silent alongside, since it judges the rows this reader yields.
     for (const line of [
       "colors:",
       "colors: # 참고",
