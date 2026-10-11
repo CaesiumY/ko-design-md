@@ -673,7 +673,7 @@ describe("/design-md machine gates", () => {
       "research-collector gained Bash — Stage 4c's directory expansion may no longer be load-bearing"
     ).not.toContain("Bash")
     // Scoped to the handover paragraph, not the whole stage: 4c's preflight
-    // already says "a directory is listed and its files read", so a
+    // already says a directory is expanded and its files read, so a
     // stage-wide match stayed green with the handover's own sentence deleted.
     // The mutation that proved it: replacing the paragraph with "Append every
     // approved path to `screenshot_paths`" left all assertions passing.
@@ -683,6 +683,19 @@ describe("/design-md machine gates", () => {
       handover,
       "the handover must say a directory is expanded to files before it is appended"
     ).toMatch(/director(?:y|ies)/)
+    // The handover reuses the preflight's listing, so both must expand a
+    // directory the same way. When only the handover said "recursively", a
+    // bundle's `components/Drawer.jsx` was either never shown for approval or
+    // reached research without having been approved.
+    const preflight = /\*\*Preflight\*\*[\s\S]*?(?=\n\n)/.exec(gate)?.[0] ?? ""
+    expect(
+      preflight,
+      "Stage 4c preflight must expand a directory recursively, as the handover does"
+    ).toContain("expanded recursively")
+    expect(
+      handover,
+      "the handover must expand a directory recursively, as the preflight does"
+    ).toContain("expanded recursively")
 
     // The handover used to append only image files, so a board handed over as
     // text — a handoff bundle's `colors_and_type.css`, a Design artifact's
