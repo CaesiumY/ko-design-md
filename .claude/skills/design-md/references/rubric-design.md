@@ -54,6 +54,8 @@ Inferred-from-screenshots values (when no public design system exists) are accep
 - **primary** ≈ `oklch(0.62 0.18 250)` (값은 공개된 토큰이 없어 캡처에서 추정)
 ```
 
+The same applies to a value research cites as `[src:board:…]` — taken from the design board the user approved, with no public URL behind it. There `≈` marks "no public source" rather than an estimate, and the note says which (`≈ 보드 판독 · 공개 출처 없음`). Either way the claim is acceptable without a `[src:N]`, and it must not be given one.
+
 **Pass criteria**:
 - 2 pts: every claim either cited or marked `≈`; no contradictions with research.md.
 - 1 pt: one or two uncited specifics, or one minor contradiction.

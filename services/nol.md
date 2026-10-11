@@ -343,7 +343,7 @@ NOL은 흰 바탕 위에 채도 높은 파랑을 예약·선택·포커스에만
 
 **그라디언트는 둘이고 `gradients:` 맵에 있다.** `brand-border` 는 하늘색→파랑→보라로 흐르는 네 스톱이고 90deg 와 258deg 변형이 번들 세 종에 모두 있다 [src:8][src:9][src:10]. 보라 끝 스톱은 그라디언트 문자열 안에서만 나오고 단색으로는 쓰이지 않는다 [src:8]. `detail-bg` 는 상세 번들의 `--bg` 에 선언된 다섯 스톱이고, 같은 규칙 묶음에 호버·눌림 `{colors.primary-presshover-strong3}` 와 비활성 `{colors.neutral-weak3}` 가 붙어 있지만 쓰는 요소는 확인하지 못했다 [src:10].
 
-**값이 같은 토큰이 층마다 따로 있는 것은 의도다.** `{colors.nol-blue}`·`{colors.nol-universe-blue}`·`{colors.membership-dia-main}`, `{colors.nol-black}`·`{colors.static-black}`, `{colors.nol-white}`·`{colors.static-white}` 는 값이 같지만 근거(발행/관측)와 역할이 달라 한 이름으로 합치지 않았다. 푸터의 NOL 로고 SVG 채움은 `{colors.neutral-medium}` 과 같은 UI 회색이고 브랜드 색이 아니다 [src:12]. 홈 가입 배너의 연한 하늘색 바탕은 캡처 픽셀값일 뿐 번들 토큰이 아니라 싣지 않았다.
+**값이 같은 토큰이 층마다 따로 있는 것은 의도다.** `{colors.nol-blue}`·`{colors.nol-universe-blue}`·`{colors.membership-dia-main}`, `{colors.nol-black}`·`{colors.static-black}`, `{colors.nol-white}`·`{colors.static-white}` 는 값이 같지만 근거(발행/관측)와 역할이 달라 한 이름으로 합치지 않았다. 푸터의 NOL 로고 SVG 채움은 `{colors.neutral-medium}` 과 같은 UI 회색이고 브랜드 색이 아니다 [src:12]. 홈 가입 배너의 연한 하늘색 바탕은 캡처 픽셀값(≈ 캡처 판독 · 공개 출처 없음)일 뿐 번들 토큰이 아니라 싣지 않았다.
 
 ## Typography
 
