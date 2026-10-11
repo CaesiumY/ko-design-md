@@ -43,14 +43,6 @@ const COMMENT_ROW = /^\s*#/
 const ENDS_MAP = /^[^\s#]/
 const ROW = /^(\s+)([^\s:]+):\s*(.*)$/
 
-/** The four maps whose rows become sidecar tokens. */
-export const TOKEN_MAP_KEYS = [
-  "colors",
-  "typography",
-  "spacing",
-  "rounded",
-] as const
-
 /**
  * Does this line open the named map?
  *
@@ -59,9 +51,8 @@ export const TOKEN_MAP_KEYS = [
  * tokens, and the OKLCH gate went quiet alongside, because it judges the rows
  * this function yields.
  *
- * Exported so every caller that asks this question answers it the same way.
- * Two readers already disagreed once, over what ends a map (the removed
- * migration script's already-migrated guard was the third).
+ * `mapRows` is the only caller; it is exported so its own tests can pin the
+ * comment rule directly.
  */
 export function opensMap(line: string, mapKey: string): boolean {
   return new RegExp(`^${mapKey}:\\s*(?:#.*)?$`).test(line)

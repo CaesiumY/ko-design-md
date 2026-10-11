@@ -40,8 +40,7 @@ export const CONSUMED_KEYS: ReadonlyArray<keyof ServiceFrontmatter> = [
 // The maps are exported on their own: they are also the namespaces a
 // `{map.name}` reference in the body can point into (draft-validator's
 // `unresolved-token-ref`), and a map added here must not be one that rule
-// silently stops checking. Not frontmatter-map's `TOKEN_MAP_KEYS`, which is
-// the four maps whose rows become sidecar tokens.
+// silently stops checking.
 export const FRONTMATTER_MAP_KEYS: ReadonlyArray<string> = [
   "colors",
   "typography",

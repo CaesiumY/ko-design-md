@@ -1277,11 +1277,9 @@ function scanBody(body: string): BodyScan {
       fenceOpenedAt = `${section}: ${line.trim()}`
       fence = /^ya?ml$/i.test(fenceOpen[2]) ? "yaml" : "other"
       sectionHasContent = true
-      // Blocked, not tolerated, and wrong both ways round. With frontmatter
-      // token maps present the extractor ignores the body, so a token written
-      // back here reaches no sidecar and no drift check while every other gate
-      // stays green. With none present — an onboarding draft — the extractor's
-      // fallback reads ONLY this, so the draft ships in the retired shape.
+      // Blocked, not tolerated: the extractor never reads the body (#429), so
+      // a token written back here reaches no sidecar and no drift check while
+      // every other gate stays green.
       if (fence === "yaml" && TOKEN_SECTIONS.has(section)) {
         tokenFenceIssues.push(
           block(

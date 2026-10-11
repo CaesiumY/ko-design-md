@@ -9,8 +9,8 @@ import type { ServiceDoc } from "../src/lib/content-types"
 // The runtime never runs it (see src/lib/content-collection.ts, which only
 // reads the JSON).
 //
-//   pnpm tokens:build           # draft only MISSING sidecars (won't clobber reviewed ones)
-//   pnpm tokens:build toss      # (re)draft a single entry by slug
+//   pnpm tokens:build           # write only MISSING sidecars (won't clobber committed ones)
+//   pnpm tokens:build toss      # (re)write a single entry by slug
 //   pnpm tokens:build --all     # regenerate every sidecar (overwrites)
 //   pnpm tokens:check           # CI gate: fail if any sidecar drifted from its md
 
