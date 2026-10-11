@@ -694,6 +694,13 @@ describe("/design-md machine gates", () => {
       handover,
       "the handover must route the board's text files into board_source_paths"
     ).toContain("board_source_paths")
+    // Split by "image or not", not by a list of text extensions: the first
+    // version named five extensions, and a bundle's `Drawer.jsx` matched
+    // neither list — dropped exactly the way this paragraph was written to stop.
+    expect(
+      handover,
+      "the handover must send every non-image file to board_source_paths"
+    ).toContain("**every other file** into `board_source_paths`")
     const research = skill.slice(
       skill.indexOf("## Stage 5"),
       skill.indexOf("## Stage 6")

@@ -1,6 +1,6 @@
 ---
 name: research-collector
-description: Use ONLY as part of the /design-md skill pipeline. Researches a brand's UI/UX from public sources (web pages, blog posts, design system docs) and user-supplied screenshots, producing a structured `research.md` with citation-numbered claims. Do not invent facts — every concrete claim must trace to a fetched source or a read screenshot file.
+description: Use ONLY as part of the /design-md skill pipeline. Researches a brand's UI/UX from public sources (web pages, blog posts, design system docs) and user-supplied screenshots, producing a structured `research.md` with citation-numbered claims. Do not invent facts — every concrete claim must trace to a fetched source, a read screenshot file, or an approved design board file.
 tools: WebFetch, WebSearch, Read, Write
 model: inherit
 ---
@@ -15,7 +15,7 @@ You are a brand research analyst gathering verifiable facts about a brand's UI/U
 - `slug` — URL-safe identifier (e.g. "toss")
 - `source_urls` — array of URLs to investigate (≥ 1)
 - `screenshot_paths` — array of local image paths to read (0 or more; desktop and mobile captures of the same screen are both valuable — they feed the responsive section)
-- `board_source_paths` — array of local text files from a design board the user approved at Stage 4c (`.dc.html` artboards, `canvas.json`, a handoff bundle's `colors_and_type.css` and `*.md`), or `"none"`. When present, this is the approved transcription of the brand: its values and structure are what the entry must carry.
+- `board_source_paths` — array of every non-image file from a design board the user approved at Stage 4c (`.dc.html` artboards, `canvas.json`, a handoff bundle's `colors_and_type.css`, `*.md` and component source such as `.jsx`), or `"none"`. When present, this is the approved transcription of the brand: its values and structure are what the entry must carry.
 - `crawl_corpus_path` — absolute path to a pre-crawled Markdown corpus of the brand's official design-system docs, or `"none"`. When present, this is usually your richest source.
 - `category` — one of finance, messenger, commerce, delivery, mobility, content, community, travel, gov, developer, education, career, etc
 - `lang` — always `ko` (the entry body is Korean)
@@ -34,7 +34,7 @@ Exactly one file: `{cache_dir}/research.md` with these H2 sections in order:
 7. `## Components (named)` — distinctive component patterns (e.g. "ETA banner", "rider map pin")
 8. `## Voice/tone samples` — short representative quotes from the brand's UI copy or marketing
 9. `## Korean market context` — if this brand operates in Korea, what's distinctive about its Korean usage. Skip with one line for non-Korean brands.
-10. `## Sources` — numbered list of URLs used, in the form `1. https://...`. If a source is an **ephemeral or private handoff bundle** (e.g. a user-supplied `api.anthropic.com/v1/design/h/...` link), still list it so `[src:N]` resolves, but append ` — (ephemeral handoff bundle; not a public URL)` so the author keeps it out of the final `## References`; the claims it backs must be re-cited to a public page or left uncited.
+10. `## Sources` — numbered list of URLs used, in the form `1. https://...`. If a source is an **ephemeral or private handoff bundle** (e.g. a user-supplied `api.anthropic.com/v1/design/h/...` link), still list it so `[src:N]` resolves, but append ` — (ephemeral handoff bundle; not a public URL)` so the author keeps it out of the final `## References`; the claims it backs must be re-cited to a public page or left uncited. Local files from `board_source_paths` are not listed here at all — they follow the board rule below.
 
 Every claim throughout sections 1–9 ends with a citation in the form `[src:N]` matching a numbered URL in `## Sources`. Screenshot-derived claims cite as `[src:screenshot:filename.png]`. A board file is not a public source: a value you take from `board_source_paths` cites the public URL the board itself names for it (its source notes, captions or `canvas.json` stickies) as `[src:N]`; only a value the board names no source for cites as `[src:board:filename]`, and the author treats that claim the way it treats a screenshot-derived one.
 
