@@ -753,6 +753,16 @@ describe("/design-md machine gates", () => {
       research,
       "the Stage 5 dispatch prompt must pass board_source_paths"
     ).toMatch(/^board_source_paths: /m)
+    // The orchestrator fills this placeholder literally. While it still said
+    // "text files", a board approved as frames alone was dispatched as "none"
+    // — and frames no longer go to `screenshot_paths`, so the board reached
+    // research by neither route.
+    const placeholder = /^board_source_paths: (.*)$/m.exec(research)?.[1] ?? ""
+    expect(
+      placeholder,
+      "the Stage 5 placeholder must include the board's frame images"
+    ).toContain("frame images")
+    expect(placeholder).not.toContain("text files")
     expect(
       readRepoFile(RESEARCH_COLLECTOR_AGENT),
       "research-collector must declare the board_source_paths input"

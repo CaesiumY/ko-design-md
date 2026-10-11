@@ -177,7 +177,7 @@ Research the brand "{brand_name}" (slug: {slug}) for ko-design-md catalog onboar
 
 source_urls: {comma-separated URLs}
 screenshot_paths: {comma-separated paths or "none"}
-board_source_paths: {comma-separated text files of the approved board from Stage 4c, or "none"}
+board_source_paths: {comma-separated files of the approved board collected at Stage 4c — source files and frame images — or "none"}
 crawl_corpus_path: {crawl_corpus_path from Stage 4b — absolute path to crawl-corpus.md, or "none"}
 category: {category}
 lang: ko
