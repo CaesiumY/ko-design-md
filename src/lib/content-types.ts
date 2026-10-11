@@ -106,9 +106,8 @@ export interface ElevationToken {
   /** Usage note lifted from the YAML inline comment, when present. */
   note?: string
   // No `group`: only ColorToken carries one, because only ColorBlock renders
-  // grouped. The one grouping convention this section actually uses is a bare
-  // `# On White 배경` comment INSIDE the fence (line-design-system), which
-  // rawLines drops — so a `group` here would be undefined on every entry.
+  // grouped. The extractor drops an `elevation:` map's `  ## label` lines
+  // rather than carry a field no view reads.
 }
 
 export interface ServiceTokens {

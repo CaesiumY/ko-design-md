@@ -22,6 +22,13 @@ function md(...lines: Array<string>): string {
   return lines.join("\n")
 }
 
+/** A document whose frontmatter is `lines`, written as-is — token rows carry
+ *  their own two-space indent. The body is prose only: frontmatter is the one
+ *  place the extractor reads (#429). */
+function fm(...lines: Array<string>): string {
+  return md("---", "name: 데모", ...lines, "---", "", "## Colors", "", "산문.")
+}
+
 describe("extractTokensFromMarkdown — structure", () => {
   it("returns empty arrays when no token sections are present", () => {
     expect(extractTokensFromMarkdown("# Title\n\nNothing here.")).toEqual({
@@ -32,51 +39,63 @@ describe("extractTokensFromMarkdown — structure", () => {
     })
   })
 
-  it("merges multiple yaml fences inside one ## Colors section and tracks ### groups", () => {
+  it("reads nothing from the body — a yaml fence or a type table yields no token", () => {
+    // The body used to be a fallback input whenever frontmatter held no token
+    // map. Both shapes it read are blocked upstream now (`token-fence`, and
+    // `spec-no-typography` for a table-only scale), so the extractor has one
+    // input, and a body-only document is simply empty.
     const body = md(
+      "---",
+      "name: 데모",
+      "---",
+      "",
       "## Colors",
-      "### Brand",
       "```yaml",
-      "blue-500: oklch(0.6 0.1 250)",
+      "ink: oklch(0.2 0 0)",
       "```",
-      "### Greyscale (cool neutrals)",
+      "",
+      "## Typography",
+      "| Token | Size / Line height |",
+      "| --- | --- |",
+      "| body-m | 17px / 1.55 |",
+      "",
+      "## Spacing",
       "```yaml",
-      "grey-900: oklch(0.2 0 0)",
-      "```",
-      "## Spacing"
+      "sp-4: 4px",
+      "```"
     )
-    const { colors } = extractTokensFromMarkdown(body)
+    expect(extractTokensFromMarkdown(body)).toEqual({
+      colors: [],
+      typography: [],
+      spacing: [],
+      radius: [],
+    })
+  })
+
+  it("tracks `  ## label` group lines across one colors map", () => {
+    const doc = fm(
+      "colors:",
+      "  ## Brand",
+      "  blue-500: oklch(0.6 0.1 250)",
+      "  ## Greyscale",
+      "  grey-900: oklch(0.2 0 0)"
+    )
+    const { colors } = extractTokensFromMarkdown(doc)
     expect(colors.map((c) => c.name)).toEqual(["blue-500", "grey-900"])
     expect(colors[0].group).toBe("Brand")
     expect(colors[1].group).toBe("Greyscale")
-  })
-
-  it("ignores prose and non-yaml fences within a section", () => {
-    const body = md(
-      "## Colors",
-      "설명 문장이다.",
-      "```ts",
-      "const skipMe: number = 1",
-      "```",
-      "```yaml",
-      "primary: oklch(0.5 0.1 30)",
-      "```"
-    )
-    expect(extractTokensFromMarkdown(body).colors).toHaveLength(1)
   })
 })
 
 describe("colors", () => {
   it("keeps only real color values; aliases and numeric scalars stay in the md only", () => {
-    const body = md(
-      "## Colors",
-      "```yaml",
-      "primary: oklch(0.5 0.1 30)   # 핵심 CTA",
-      "accent: {colors.primary}",
-      "fill: primary",
-      "op: 0.30",
-      "dark-bg: oklch(0.1 0 0)",
-      "```"
+    const body = fm(
+      "colors:",
+      "  primary: oklch(0.5 0.1 30)   # 핵심 CTA",
+      '  accent: "{colors.primary}"',
+      "  fill: primary",
+      "  op: 0.30",
+      "  dark-bg: oklch(0.1 0 0)"
     )
     const { colors } = extractTokensFromMarkdown(body)
     expect(colors.find((c) => c.name === "primary")).toMatchObject({
@@ -91,17 +110,11 @@ describe("colors", () => {
   })
 
   it("extracts dark-* tokens with their group preserved (full-palette sidecar)", () => {
-    const body = md(
-      "## Colors",
-      "```yaml",
-      "bg: oklch(0.99 0 0)",
-      "```",
-      "",
-      "### 다크 테마",
-      "",
-      "```yaml",
-      "dark-bg: oklch(0.15 0.02 265)",
-      "```"
+    const body = fm(
+      "colors:",
+      "  bg: oklch(0.99 0 0)",
+      "  ## 다크 테마",
+      "  dark-bg: oklch(0.15 0.02 265)"
     )
     const { colors } = extractTokensFromMarkdown(body)
     expect(colors.find((c) => c.name === "dark-bg")).toMatchObject({
@@ -141,18 +154,14 @@ describe("colors", () => {
 
 describe("spacing & radius", () => {
   it("normalizes bare numbers, px, rem, and percent values", () => {
-    const body = md(
-      "## Spacing",
-      "```yaml",
-      "a: 4",
-      "b: 16px",
-      "c: 1.5rem",
-      "```",
-      "## Rounded",
-      "```yaml",
-      "full: 9999",
-      "circle: 50%",
-      "```"
+    const body = fm(
+      "spacing:",
+      "  a: 4",
+      "  b: 16px",
+      "  c: 1.5rem",
+      "rounded:",
+      "  full: 9999",
+      "  circle: 50%"
     )
     const { spacing, radius } = extractTokensFromMarkdown(body)
     expect(spacing.find((s) => s.name === "a")).toMatchObject({
@@ -204,8 +213,12 @@ describe("spacing & radius", () => {
   })
 })
 
-describe("typography", () => {
-  it("parses the inline-object ramp (toss display-1)", () => {
+// Real entries, read through their frontmatter `typography:` maps. The names
+// below once each needed their own body parser (toss inline objects, socar and
+// baemin slash ramps); they are nested frontmatter styles now, and these pin
+// that the values survived the move.
+describe("typography — real entries", () => {
+  it("reads toss display-1", () => {
     const { typography } = extractTokensFromMarkdown(loadRaw("toss"))
     expect(typography.find((t) => t.name === "display-1")).toMatchObject({
       size: "56px",
@@ -215,7 +228,7 @@ describe("typography", () => {
     })
   })
 
-  it("parses the slash ramp with an absolute px line-height (socar display1)", () => {
+  it("keeps an absolute px line-height (socar display1)", () => {
     const { typography } = extractTokensFromMarkdown(loadRaw("socar"))
     expect(typography.find((t) => t.name === "display1")).toMatchObject({
       size: "40px",
@@ -224,7 +237,7 @@ describe("typography", () => {
     })
   })
 
-  it("parses the mixed slash ramp and keeps font info as a note (baemin display-1)", () => {
+  it("carries the head row's comment as a note (baemin display-1)", () => {
     const { typography } = extractTokensFromMarkdown(loadRaw("baemin"))
     const d1 = typography.find((t) => t.name === "display-1")
     expect(d1).toMatchObject({ size: "96px", lineHeight: "1.02", weight: 400 })
@@ -235,97 +248,24 @@ describe("typography", () => {
     const { typography } = extractTokensFromMarkdown(loadRaw("baemin"))
     expect(typography.find((t) => t.name === "price")).toBeUndefined()
   })
-})
 
-describe("typography — format variants (P2 backfill)", () => {
-  it("emits size-only tokens from separate size families (bezier font-size-*)", () => {
-    const body = md(
-      "## Typography",
-      "```yaml",
-      "font-size-11: 1.1rem",
-      "font-size-36: 3.6rem",
-      "weight-700: 700",
-      "line-height-16: 1.6rem",
-      "letter-spacing-1: -0.01rem",
-      "```"
-    )
-    const { typography } = extractTokensFromMarkdown(body)
-    expect(typography.find((t) => t.name === "font-size-11")).toMatchObject({
-      size: "1.1rem",
-    })
-    // weight / line-height / letter-spacing constants are not size tokens
-    expect(typography.map((t) => t.name)).toEqual([
-      "font-size-11",
-      "font-size-36",
-    ])
-  })
-
-  it("reads size from platform keys and named weights (11st android/ios object)", () => {
-    const body = md(
-      "## Typography",
-      "```yaml",
-      "headline-1: { weight: Bold, android: 24, ios: 25 }",
-      "body-1: { weight: Regular, android: 14, ios: 15 }",
-      "```"
-    )
-    const { typography } = extractTokensFromMarkdown(body)
-    expect(typography.find((t) => t.name === "headline-1")).toMatchObject({
-      size: "24px",
-      weight: 700,
-    })
-    expect(typography.find((t) => t.name === "body-1")).toMatchObject({
-      size: "14px",
-      weight: 400,
-    })
-  })
-
-  it("parses a markdown type-scale table (krds-style)", () => {
-    const body = md(
-      "## Typography",
-      "| Token | Size / Line height | 용도 |",
-      "| --- | --- | --- |",
-      "| display-l | 64px / 1.3, -0.02em | 배너 |",
-      "| **body-m** | 17px / 1.55 | 본문 |"
-    )
-    const { typography } = extractTokensFromMarkdown(body)
-    expect(typography.find((t) => t.name === "display-l")).toMatchObject({
-      size: "64px",
-      lineHeight: "1.3",
-      tracking: "-0.02em",
-    })
-    expect(typography.find((t) => t.name === "body-m")).toMatchObject({
-      size: "17px",
-      lineHeight: "1.55",
-    })
-  })
-
-  it("skips font-*-src webfont URL lines (absolute and protocol-relative) so a numeric path segment can't masquerade as a size", () => {
-    const body = md(
-      "## Typography",
-      "```yaml",
-      "display-1: { size: 56, weight: 700, line-height: 1.3 }",
-      "font-display-src: https://fonts.example.com/v2/400/WantedSansVariable.css",
-      "font-sans-src: //cdn.example.com/v9/800/body.css",
-      "```"
-    )
-    const { typography } = extractTokensFromMarkdown(body)
-    // The `/400/` and `/800/` URL path segments would otherwise parse as size
-    // tokens. The `*-src` / URL guard in parseType (covering protocol-relative
-    // `//…` too) keeps webfont sources out of the cards.
-    expect(typography.map((t) => t.name)).toEqual(["display-1"])
+  it("reads a full scale from krds, bezier, and 11st", () => {
+    // Each of these once reached the sidecar only through a body-only parser
+    // (a markdown table, a `font-size-*` family, a platform object).
+    for (const slug of ["krds", "bezier", "11st"]) {
+      expect(
+        extractTokensFromMarkdown(loadRaw(slug)).typography.length,
+        slug
+      ).toBeGreaterThan(8)
+    }
   })
 })
 
-describe("spacing — format variants (P2 backfill)", () => {
-  it("expands a yaml scale array (11st spacing-scale)", () => {
-    const body = md(
-      "## Spacing",
-      "```yaml",
-      "spacing-scale: [2, 4, 8, 16]",
-      "spacing-base: 8",
-      "```"
-    )
-    const pxs = extractTokensFromMarkdown(body).spacing.map((s) => s.px)
+describe("spacing — scale shapes", () => {
+  it("expands a scale array", () => {
+    const pxs = extractTokensFromMarkdown(
+      fm("spacing:", "  spacing-scale: [2, 4, 8, 16]", "  spacing-base: 8")
+    ).spacing.map((s) => s.px)
     expect(pxs).toEqual(expect.arrayContaining([2, 4, 8, 16]))
   })
 
@@ -334,17 +274,12 @@ describe("spacing — format variants (P2 backfill)", () => {
   // the inline comment, so the card must receive it — otherwise a guess renders
   // as an authoritative measurement.
   it("propagates the inline comment as a note on keyed spacing/radius rows", () => {
-    const body = md(
-      "## Spacing",
-      "```yaml",
-      "sp-08: 8px # Core size · ≈ 추정 — 미공개, 네이밍 규칙에서 역산",
-      "sp-16: 16px",
-      "```",
-      "",
-      "## Rounded",
-      "```yaml",
-      "radius-12: 12px # Core size",
-      "```"
+    const body = fm(
+      "spacing:",
+      "  sp-08: 8px # Core size · ≈ 추정 — 미공개, 네이밍 규칙에서 역산",
+      "  sp-16: 16px",
+      "rounded:",
+      "  radius-12: 12px # Core size"
     )
     const { spacing, radius } = extractTokensFromMarkdown(body)
     expect(spacing.find((s) => s.name === "sp-08")).toMatchObject({
@@ -359,29 +294,11 @@ describe("spacing — format variants (P2 backfill)", () => {
   // The array shorthand carries no per-step comment — a note on the row would
   // apply to every expanded step, which would be wrong.
   it("leaves array-shorthand steps without a note", () => {
-    const body = md(
-      "## Spacing",
-      "```yaml",
-      "spacing-scale: [2, 4, 8] # 8pt grid",
-      "```"
+    const { spacing } = extractTokensFromMarkdown(
+      fm("spacing:", "  spacing-scale: [2, 4, 8] # 8pt grid")
     )
-    const { spacing } = extractTokensFromMarkdown(body)
     expect(spacing).toHaveLength(3)
     expect(spacing.every((s) => s.note === undefined)).toBe(true)
-  })
-})
-
-describe("real entries recover a ramp after variant support", () => {
-  it("krds (table), bezier (font-size-*), and 11st (platform obj) all extract typography", () => {
-    expect(
-      extractTokensFromMarkdown(loadRaw("krds")).typography.length
-    ).toBeGreaterThan(8)
-    expect(
-      extractTokensFromMarkdown(loadRaw("bezier")).typography.length
-    ).toBeGreaterThan(8)
-    expect(
-      extractTokensFromMarkdown(loadRaw("11st")).typography.length
-    ).toBeGreaterThan(8)
   })
 })
 
@@ -532,103 +449,25 @@ describe("elevation — frontmatter `elevation:` map", () => {
     )
     expect(t.elevation).toBeUndefined()
   })
-
-  it("does not count as a token map for the frontmatter/body branch", () => {
-    // `elevation:` alone must not flip a body-shaped draft onto the frontmatter
-    // path, where its colours would read as zero.
-    const t = extractTokensFromMarkdown(
-      md(
-        "---",
-        "elevation:",
-        "  s1: 0 1px 2px oklch(0 0 0 / 0.06)",
-        "---",
-        "",
-        "## Colors",
-        "```yaml",
-        "ink: oklch(0.2 0 0)",
-        "```"
-      )
-    )
-    expect(t.colors).toHaveLength(1)
-    expect(t.elevation).toHaveLength(1)
-  })
-})
-
-describe("elevation — shadow-vs-color discrimination", () => {
-  // The offsets must be counted OUTSIDE the color function. A bare color has
-  // digits inside `oklch(...)`/`rgba(...)` that otherwise read as offsets, and
-  // the result would be an offset-less `box-shadow` the browser silently drops
-  // — the same silent-failure mode this category exists to avoid. `scrim` and
-  // `press-overlay` are real catalog token names, so this is not hypothetical.
-  const notShadows = [
-    "scrim: oklch(0 0 0 / .32)",
-    "press-overlay: oklch(0 0 0 / 0.26)",
-    "overlay: rgba(0, 0, 0, 0.4)",
-    "tint: oklch(0.5 0.1 260)",
-    "blend: color-mix(in srgb, #000000 20%, transparent)",
-  ]
-  const shadows = [
-    "shadow-1: 0 1px 2px oklch(0 0 0 / 0.06)",
-    "dock: 0 -4px 8px oklch(0 0 0 / 6%)",
-    "sm: 0px 1px 4px 0px oklch(0 0 0 / 0.078)",
-    "md: 0 4px 10px color-mix(in srgb, #000000 20%, transparent)",
-    "multi: 0 1px 2px oklch(0 0 0 / .04), 0 2px 6px oklch(0 0 0 / .16)",
-    "ring: inset 0 0 0 1px oklch(0.573 0.189 260)",
-    "flat: none",
-  ]
-  const section = (line: string) => withElevation(line)
-
-  it.each(notShadows)("excludes a bare color value: %s", (line) => {
-    expect(extractTokensFromMarkdown(section(line)).elevation).toBeUndefined()
-  })
-
-  it.each(shadows)("keeps a real shadow: %s", (line) => {
-    expect(extractTokensFromMarkdown(section(line)).elevation).toHaveLength(1)
-  })
-
-  // Colors are authored as OKLCH with the source hex in a trailing comment
-  // (seed-design does exactly this), so a bare hex AS the shadow colour is not
-  // a supported form — `splitInlineComment` would read ` #0000001a` as a note.
-  // Pinned so the constraint is visible rather than discovered.
-  it("treats a space-prefixed bare hex as a comment, not a shadow colour", () => {
-    const t = extractTokensFromMarkdown(section("hex: 0 2px 4px #0000001a"))
-    expect(t.elevation).toBeUndefined()
-  })
-
-  it("does not carry a group field (only colours render grouped)", () => {
-    const t = extractTokensFromMarkdown(
-      withElevation("## Surface", "s1: 0 1px 2px oklch(0 0 0 / 0.06)")
-    )
-    expect(t.elevation?.[0]).toEqual({
-      name: "s1",
-      value: "0 1px 2px oklch(0 0 0 / 0.06)",
-    })
-  })
 })
 
 describe("unquote", () => {
   // A greedy `^"(.*)"$` strips the OUTER pair of a two-item quoted value and
   // leaves the inner quotes stranded (`"Foo", "Bar"` → `Foo", "Bar`). Nothing
   // in the catalogue takes that shape today, but this helper sits on the path
-  // EVERY section takes, so a quoted font stack landing in ## Typography later
-  // would be corrupted silently.
+  // every frontmatter token row takes (`splitInlineComment`).
   it("unwraps a value that is a single quoted string", () => {
-    const body = md(
-      "## Colors",
-      "",
-      "```yaml",
-      'brand: "oklch(0.62 0.19 258)"',
-      "```"
-    )
+    // `quoted-token-value` blocks this shape upstream; the reader still must
+    // not publish the quotes if one slips through.
+    const body = fm("colors:", '  brand: "oklch(0.62 0.19 258)"')
     expect(extractTokensFromMarkdown(body).colors[0]?.value).toBe(
       "oklch(0.62 0.19 258)"
     )
   })
 
-  it("leaves a value carrying more than one quoted item untouched", () => {
-    const body = md("## Colors", "", "```yaml", 'stack: "Foo", "Bar"', "```")
-    // Not a colour, so it never reaches the sidecar — the point is that the
-    // value is not mangled on the way through the shared helper.
+  it("leaves a value carrying more than one quoted item out of the sidecar", () => {
+    const body = fm("colors:", '  stack: "Foo", "Bar"')
+    // Not a colour, so it never reaches the sidecar.
     expect(extractTokensFromMarkdown(body).colors).toEqual([])
   })
 })
