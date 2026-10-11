@@ -18,8 +18,9 @@ export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
   forbidOnly: CI,
-  // One retry in CI absorbs a one-off hiccup; the HTML report still lists a test
-  // that passed only on retry as "flaky", so instability stays visible.
+  // One retry in CI absorbs a one-off hiccup; the job log's summary still counts
+  // a test that passed only on retry as "flaky", so instability stays visible.
+  // (The HTML report is uploaded only when the job fails.)
   retries: CI ? 1 : 0,
   reporter: CI ? [["list"], ["html", { open: "never" }]] : "list",
 

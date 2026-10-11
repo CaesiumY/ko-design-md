@@ -296,7 +296,7 @@ jobs:
     # Unpinned like `build`: nothing here measures pixels or fonts, so an OS
     # move cannot shift a recorded number.
     runs-on: ubuntu-latest
-    # A healthy run is about a minute and a half; the cap only ends a stall.
+    # The cap only ends a stall; a healthy run is far below it.
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
