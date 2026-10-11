@@ -464,11 +464,12 @@ describe("/design-md machine gates", () => {
   // the very change that added the sixth.
   it("keeps the rubric's stated static-scan pattern count equal to its bullet count", () => {
     const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
+    // The section runs to the next heading, whichever it is, so a section
+    // inserted after it cannot lend its own bold bullets to the count.
     const start = rubric.indexOf("## Mobile overflow")
-    const end = rubric.indexOf("## Dummy-data labelling")
     expect(start, "the Mobile overflow section must exist").toBeGreaterThan(-1)
-    expect(end, "the Dummy-data section must follow it").toBeGreaterThan(start)
-    const section = rubric.slice(start, end)
+    const next = rubric.indexOf("\n## ", start + 1)
+    const section = rubric.slice(start, next === -1 ? undefined : next)
     const stated = /[Ss]can for these (\w+) patterns/.exec(section)
     if (stated === null)
       throw new Error("the section must state its pattern count")
