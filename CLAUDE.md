@@ -8,7 +8,7 @@ TanStack Start 사이트(getdesign.kr)가 이를 서빙하고, `/design-md` 스�
 
 ```bash
 pnpm typecheck && pnpm lint && pnpm format:check
-pnpm test               # vitest — .claude/{worktrees,cache}/ 만 제외됨
+pnpm test               # vitest — .claude/{worktrees,cache}/ 와 e2e/ 는 제외됨
 pnpm validate:catalog   # services/*.md 전수: frontmatter·섹션 순서·OKLCH·인용 무결성
 pnpm validate:previews  # public/preview/*/ 전수: 구조 block + 반응형·움직임 줄이기 휴리스틱 warn
 pnpm tokens:check       # services/*.tokens.json 이 소스 md 와 일치하는지 (drift 게이트)

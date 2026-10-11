@@ -194,9 +194,9 @@ const config = defineConfig({
     // Stale `git worktree` checkouts under .claude/worktrees/ carry their own
     // src/**/*.test.ts copies; without this exclude a local `pnpm test` runs
     // them against mismatched node_modules and reports false failures
-    // (CI never sees them — it checks out a clean tree). Scoped to the two
-    // generated directories rather than all of .claude/ so the docs-crawler
-    // skill's own unit tests are actually gated.
+    // (CI never sees them — it checks out a clean tree). Within .claude/, scoped
+    // to those two generated directories rather than all of it so the
+    // docs-crawler skill's own unit tests are actually gated.
     //
     // e2e/ holds the Playwright suite (`pnpm test:e2e`). Its `*.spec.ts` files
     // match vitest's default include, and they need a browser and a running
