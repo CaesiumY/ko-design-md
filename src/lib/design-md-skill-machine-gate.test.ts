@@ -72,7 +72,7 @@ const ADVISORY_HEADING =
   /^## (.+?) \(advisory [^)]*emits `warn` issues, does NOT change the 10-point score\)$/gm
 
 describe("/design-md machine gates", () => {
-  it("wires the draft gate (6a2) and preview gate (9a2) into the skill body", () => {
+  it("names the gate commands the skill runs", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
     // The commands the skill runs; the next test holds them to package.json.
     expect(skill).toContain("pnpm validate:draft")
