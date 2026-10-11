@@ -41,10 +41,11 @@ function splitInlineComment(rest: string): { value: string; note?: string } {
 }
 
 // Strip the YAML string quotes an author may wrap a value in (a shadow quoted
-// so its commas don't read as flow syntax — `quoted-token-value` blocks that
-// upstream, but the reader must not publish the quotes if one slips through).
-// Left in, a consumer pasting the value into CSS gets a broken declaration.
-// Only a matching outer pair is removed.
+// so its commas don't read as flow syntax). Left in, a consumer pasting the
+// value into CSS gets a broken declaration. Exactly ONE matching outer pair is
+// removed: a doubly quoted value (`"'0 1px …'"`) keeps its inner pair. Any
+// quoted value is blocked upstream by `quoted-token-value`, so this is a
+// backstop for a single slip, not a normaliser for every quoting style.
 //
 // SHARED, not elevation-only: it is the only quote-stripping on the path every
 // token row value takes (`splitInlineComment`; `frontmatterRows` strips only

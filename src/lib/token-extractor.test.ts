@@ -512,6 +512,15 @@ describe("unquote", () => {
     )
   })
 
+  it("removes one pair only — a doubly quoted value keeps its inner pair", () => {
+    // Pinned so the limit is visible: `quoted-token-value` blocks this shape
+    // upstream, and the reader does not go further than one layer.
+    const t = extractTokensFromMarkdown(
+      fm("elevation:", `  e1: "'0 1px 2px oklch(0 0 0 / 0.1)'"`)
+    ).elevation
+    expect(t?.[0].value).toBe("'0 1px 2px oklch(0 0 0 / 0.1)'")
+  })
+
   it("leaves a value carrying more than one quoted item out of the sidecar", () => {
     const body = fm("colors:", '  stack: "Foo", "Bar"')
     // Not a colour, so it never reaches the sidecar — the reader leaves it as
