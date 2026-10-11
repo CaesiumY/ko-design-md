@@ -730,6 +730,23 @@ describe("/design-md machine gates", () => {
     ).toContain("source files as text")
   })
 
+  it("expects as many research.md sections as research-collector declares", () => {
+    // Stage 5 counts `^## ` lines in research.md to catch a malformed file.
+    // The collector lists ten sections — nine content sections and
+    // `## Sources` — while the skill expected nine, so a well-formed file
+    // never matched the number it was checked against. Derived, not
+    // restated: the expected count is read from the collector's own list.
+    const declared = readRepoFile(
+      ".claude/agents/research-collector.md"
+    ).match(/^\d+\. `## /gm)
+    expect(declared, "research-collector must list its sections").not.toBeNull()
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+    const expected = /Expected output is `(\d+)`/.exec(skill)?.[1]
+    expect(expected, "Stage 5 must state the expected section count").toBe(
+      String(declared?.length)
+    )
+  })
+
   // Issue #404, the other half. The same instruction produced three procedures
   // and the skill absorbed two. The third — comparing the finished preview back
   // against the board — left a mark anyway: 4c's asymmetry note said approving

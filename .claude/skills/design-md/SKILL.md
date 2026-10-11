@@ -188,7 +188,7 @@ Follow your agent definition. If board_source_paths is not "none", read it first
 
 After the agent returns, `Read` `{cache_dir}/research.md`.
 - If the first line of `## Sources` is `INSUFFICIENT_SOURCES`, surface this to the user via `AskUserQuestion` with options: "URL 추가 입력" / "스크린샷 경로 추가" / "취소". On URL/screenshot addition, re-dispatch research-collector with the augmented inputs.
-- **Section sanity check**: `Bash`: `grep -c '^## ' {cache_dir}/research.md`. Expected output is `9` (one per documented H2 section). If less than 9, the agent silently produced a malformed file — re-dispatch with an instruction prefixed: "Your previous research.md was malformed (only N sections found). Produce ALL 9 H2 sections in the documented order, even if some are `(no public evidence found)`."
+- **Section sanity check**: `Bash`: `grep -c '^## ' {cache_dir}/research.md`. Expected output is `10` — the nine content sections plus `## Sources`, one per H2 section research-collector documents. If less than 10, the agent silently produced a malformed file — re-dispatch with an instruction prefixed: "Your previous research.md was malformed (only N sections found). Produce ALL 10 H2 sections in the documented order, including `## Sources`, even if some are `(no public evidence found)`."
 - Otherwise, proceed.
 
 ## Stage 6 — Draft + design.md review loop
