@@ -114,7 +114,7 @@ typography:
     fontWeight: 400
     lineHeight: 22px
     letterSpacing: 0em
-  subtitle-18-bold-multiline: # 보드 번들 판독 · 위치 재확인 못 함
+  subtitle-18-bold-multiline: # ≈ 보드 번들 판독 · 위치 재확인 못 함 · 공개 출처 없음
     fontSize: 18px
     fontWeight: 700
     lineHeight: 27px
@@ -320,7 +320,7 @@ NOL은 흰 바탕 위에 채도 높은 파랑을 예약·선택·포커스에만
 
 **발행 팔레트는 다섯 색이고, 두 절에 따로 실린다.** 에셋 센터는 놀유니버스 > 기업 컬러(법인 CI)에 `{colors.nol-universe-blue}`·`{colors.nol-universe-light-blue}` 두 색을, NOL > 브랜드 컬러(플랫폼 BI)에 `{colors.nol-blue}`·`{colors.nol-black}`·`{colors.nol-white}` 세 색을 싣고, 한 표로 합치지 않는다 [src:1]. 회사소개 페이지에도 기업 컬러 두 색이 같은 값으로 있다 [src:2]. 같은 파랑 `oklch(0.526 0.264 269.0)` 이 두 절에 다른 역할로 실리므로 키를 둘로 두었다. 에셋 센터는 "놀 블루는 놀의 모든 패밀리 브랜드를 대변하는 대표 브랜드 컬러입니다." 라고 쓰고, 이 문장이 명세 대표색 별칭 `{colors.primary}` 가 `{colors.nol-blue}` 를 가리키는 근거다 [src:1]. 규칙 문구는 "브랜드 컬러는 절대 변형할 수 없습니다." 이다 [src:1]. `{colors.nol-universe-light-blue}` 는 NOL 브랜드 컬러에 속하지 않고 NOL 웹 번들에도 나오지 않는다 [src:1][src:8]. NOL BLACK 의 CMYK 'C205' 는 0–100 범위를 벗어난 값으로 원본 HTML 에 그대로 있다 — 오타로 보이지만 정본 값은 알 수 없다 [src:1].
 
-**가장 틀리기 쉬운 자리: 발행 놀 블루와 서비스 프라이머리는 다른 값이다.** `{colors.nol-blue}` `oklch(0.526 0.264 269.0)` 은 발행 대표색이고, 화면의 CTA·선택·포커스 파랑 `{colors.primary-main}` `oklch(0.548 0.250 270.3)` 은 서비스가 출하한 관측값이다 [src:1][src:8]. 명세 역할 `primary` 는 발행값 쪽을 가리킨다. 서비스 UI를 재현할 때는 `{colors.primary-main}` 을, 브랜드 자산·대표색 표현에는 `{colors.nol-blue}` 를 쓴다. 발행값은 서비스 화면에서 멤버십 다이아 글자 `{colors.membership-dia-main}` 과 장식 그라디언트 `brand-border` 의 한 스톱으로만 나온다 [src:8].
+**발행 놀 블루와 서비스 프라이머리는 다른 값이다.** `{colors.nol-blue}` `oklch(0.526 0.264 269.0)` 은 발행 대표색이고, 화면의 CTA·선택·포커스 파랑 `{colors.primary-main}` `oklch(0.548 0.250 270.3)` 은 서비스가 출하한 관측값이다 [src:1][src:8]. 명세 역할 `primary` 는 발행값 쪽을 가리킨다. 서비스 UI를 재현할 때는 `{colors.primary-main}` 을, 브랜드 자산·대표색 표현에는 `{colors.nol-blue}` 를 쓴다. 발행값은 서비스 화면에서 멤버십 다이아 글자 `{colors.membership-dia-main}` 과 장식 그라디언트 `brand-border` 의 한 스톱으로만 나온다 [src:8].
 
 **서비스 UI에는 디자인 토큰 변수가 없다.** 번들의 커스텀 프로퍼티는 swiper·safe-area·Tailwind 내부값 같은 것뿐이고, 색은 `.text-text-primary-main` 같은 Tailwind 유틸리티 규칙 안에 값으로 박혀 있다 [src:8][src:9][src:10]. 한 값에 `fill-`·`text-`·`line-` 별칭이 여러 개 붙으므로, 관측 키는 대부분 유틸리티 이름에서 그 앞말을 뗀 이름 하나로 두고 다른 별칭은 그 토큰 줄 주석에 적었다. 예외는 둘이다 — `{colors.neutral-strong1}` 은 유틸리티가 `text-neutral-sub` 이고, `{colors.neutral-weak4}` 는 기록된 유틸리티가 없다. 두 키 이름은 뉴트럴 사다리에 맞춰 디자인 보드가 붙였다. accent 와 danger 는 같은 값을 공유해 `{colors.accent-main}` 하나로 묶었다 [src:8][src:9][src:10].
 
@@ -351,7 +351,7 @@ NOL은 흰 바탕 위에 채도 높은 파랑을 예약·선택·포커스에만
 
 **1rem = 10px 이다.** `html{font-size:62.5%}` 이고 유틸리티는 rem 으로 쓰인다(`1.2rem/1.4rem` = 12/14px) [src:8]. frontmatter 값은 px 로 환산해 적었다.
 
-**스케일은 번들의 `typography-*` 이름 42개다.** 이름이 `분류-크기-굵기[-multiline]` 꼴이고 굵기는 bold·semibold·regular 세 단계, 곧 700·600·400 뿐이다 [src:8][src:9][src:10]. 단일행 스타일은 행간이 크기의 약 1.2배(`{typography.body-12-regular}` 12/14 … `{typography.headline-40-bold}` 40/48), `-multiline` 은 약 1.5배다(`{typography.body-14-regular-multiline}` 14/21) [src:8]. 줄 수를 자르는 `-line-clamp-1/-2` 변형과 같은 값을 px 로 고정해 접근성 글자 확대를 받지 않는 `-fixed` 변형은 별칭이라 키로 세지 않았다 [src:8]. 확인한 위치는 이렇다 — `{typography.subtitle-18-regular-multiline}` 은 홈 번들에 `pc:typography-` 접두로만 있고 [src:8], `{typography.subtitle-18-bold-multiline}` 은 디자인 보드의 번들 판독에서 왔으며 위치는 다시 확인하지 못했다. `{typography.subtitle-18-semibold}` 는 홈 번들의 `ds-pc:` 접두와 목록 번들에 있다 [src:8][src:9]. `{typography.subtitle-16-semibold-multiline}`·`{typography.body-13-semibold-multiline}` 은 목록 번들 [src:9], `{typography.body-14-bold-multiline}`·`{typography.body-12-bold-multiline}` 은 상세 번들에서 확인했다 [src:10].
+**스케일은 번들의 `typography-*` 이름 42개다.** 이름이 `분류-크기-굵기[-multiline]` 꼴이고 굵기는 bold·semibold·regular 세 단계, 곧 700·600·400 뿐이다 [src:8][src:9][src:10]. 단일행 스타일은 행간이 크기의 약 1.2배(`{typography.body-12-regular}` 12/14 … `{typography.headline-40-bold}` 40/48), `-multiline` 은 약 1.5배다(`{typography.body-14-regular-multiline}` 14/21) [src:8]. 줄 수를 자르는 `-line-clamp-1/-2` 변형과 같은 값을 px 로 고정해 접근성 글자 확대를 받지 않는 `-fixed` 변형은 별칭이라 키로 세지 않았다 [src:8]. 확인한 위치는 이렇다 — `{typography.subtitle-18-regular-multiline}` 은 홈 번들에 `pc:typography-` 접두로만 있고 [src:8], `{typography.subtitle-18-bold-multiline}` ≈ 은 디자인 보드의 번들 판독에서 왔으며 위치는 다시 확인하지 못했다(공개 출처 없음). `{typography.subtitle-18-semibold}` 는 홈 번들의 `ds-pc:` 접두와 목록 번들에 있다 [src:8][src:9]. `{typography.subtitle-16-semibold-multiline}`·`{typography.body-13-semibold-multiline}` 은 목록 번들 [src:9], `{typography.body-14-bold-multiline}`·`{typography.body-12-bold-multiline}` 은 상세 번들에서 확인했다 [src:10].
 
 **자간은 `0em` 이다.** 렌더 수집에서 자간은 모든 요소가 normal 이었고, 그래서 42개 스타일의 `letterSpacing` 을 단위 붙은 0으로 적었다(리서치의 렌더 수집값 — 공개 출처로는 다시 열지 못했다).
 
@@ -393,7 +393,7 @@ NOL은 흰 바탕 위에 채도 높은 파랑을 예약·선택·포커스에만
 **그림자는 떠 있는 컨트롤 전용이다.** 다섯 단계 모두 오프셋 없는 사방 번짐이다 [src:8][src:10].
 
 - `{elevation.shadow-1}` 상세 섹션 상단 구분.
-- `{elevation.shadow-2}` 캐러셀 화살표·하단 내비·모바일 하단 고정바·지도 버튼 — 가장 많이 쓰인다.
+- `{elevation.shadow-2}` 캐러셀 화살표·하단 내비·모바일 하단 고정바·지도 버튼, 네 곳에 쓰인다.
 - `{elevation.shadow-3}` '전체 사진' 버튼·모바일 '지도' 필 버튼.
 - `{elevation.shadow-4}` 상세 번들 선언, 쓰는 요소 미확인.
 - `{elevation.shadow-5}` 번들 선언만 있고 렌더에서 관측하지 못했다.

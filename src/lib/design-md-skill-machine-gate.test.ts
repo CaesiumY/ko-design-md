@@ -706,6 +706,28 @@ describe("/design-md machine gates", () => {
       readRepoFile(".claude/agents/research-collector.md"),
       "research-collector must declare the board_source_paths input"
     ).toMatch(/^- `board_source_paths`/m)
+    // A board value with no public source behind it gets its own citation
+    // form, and the collector hands it on "the way a screenshot-derived one"
+    // is handled. Both ends name the form: without the author's half, the
+    // value reached the draft with neither a `[src:N]` nor its `≈`.
+    expect(
+      readRepoFile(".claude/agents/research-collector.md"),
+      "research-collector must say how a board value with no named source is cited"
+    ).toContain("`[src:board:filename]`")
+    expect(
+      readRepoFile(DESIGN_MD_AUTHOR_AGENT),
+      "design-md-author must say how a [src:board:…] claim is carried"
+    ).toContain("`[src:board:…]`")
+    // The cross-check at the end reads the same board again, and text files
+    // only work there if it reads them as text.
+    const verify = skill.slice(
+      skill.indexOf("## Stage 12"),
+      skill.indexOf("## Stage 13")
+    )
+    expect(
+      verify,
+      "Stage 12 must re-read the board's source files as text"
+    ).toContain("source files as text")
   })
 
   // Issue #404, the other half. The same instruction produced three procedures

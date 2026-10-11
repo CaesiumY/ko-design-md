@@ -132,6 +132,8 @@ Inferred-from-screenshots values (when research.md marked them with `≈`) keep 
 - **primary** ≈ `oklch(0.62 0.18 250)` (값은 공개된 토큰이 없어 캡처에서 추정)
 ```
 
+A research claim cited `[src:screenshot:…]` or `[src:board:…]` has no public source behind it — a capture or an approved design board is not one. Carry its value the same way: keep the `≈` and a short note saying where it came from (for a frontmatter token, both go in its trailing comment), and do not turn the citation into a `## References` entry or a `[src:N]`.
+
 ### Token references in body prose
 
 Within `## Components`, `## Do's and Don'ts`, `## Responsive Behavior`, and other prose sections, reference tokens using `{group.name}` syntax:
