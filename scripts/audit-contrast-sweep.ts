@@ -31,7 +31,7 @@ import type {
 import type { Server, ServerResponse } from "node:http"
 // Type-only: erased at runtime, so the deferred `import("playwright")` in
 // `sweep` is still what actually loads the browser driver.
-import type { BrowserContext, Page } from "playwright"
+import type { Browser, BrowserContext, Page } from "playwright"
 
 export interface SweepArgs {
   slug?: string
@@ -418,6 +418,81 @@ export async function measureOne(
   return { findings, collected, forced }
 }
 
+/**
+ * The one width a sweep also measures hover at.
+ *
+ * Hover is swept at one width only. It costs a second full collection per
+ * page, and a hover rule that changes colour only at some widths would be a
+ * `@media` block wrapping a `:hover` rule — which no preview has. 976 is the
+ * detail page's embed width, so it is the one to keep if it is being swept.
+ */
+export function hoverWidthOf(widths: Array<number>): number {
+  return widths.includes(976) ? 976 : widths[0]
+}
+
+/**
+ * A browser context set up the way every measurement needs it.
+ *
+ * The sweep, the self-check and the onboarding loop's staged observation all
+ * open their contexts here, so a reading taken in one is a reading the others
+ * would take too — a third copy of this setup is how they would drift apart.
+ */
+export async function newMeasuringContext(
+  browser: Browser,
+  opts: { width: number; online: boolean }
+): Promise<BrowserContext> {
+  const context = await browser.newContext({
+    viewport: { width: opts.width, height: VIEWPORT_HEIGHT },
+    // Deterministic where a preview asks to be: several animate `opacity`,
+    // and a `prefers-reduced-motion` branch pins those demos to a fixed
+    // frame.
+    //
+    // This does NOT make the sweep deterministic on its own, because it
+    // relies on the preview carrying such a branch — five of twenty-two
+    // did when this gate was built (#390), and three when the one reading
+    // that moved between runs was found:
+    // toss's `div.loader-3 > span.dot`, whose `tds-pulse` keyframes
+    // nothing in that file responded to.
+    //
+    // The animations are deliberately not paused here. Pinning them would
+    // make every run agree on one frame forever, for every preview, and a
+    // frame that happens to pass would hide a defect for good. The preview
+    // whose animation did move its numbers declares its own reduced-motion
+    // frame instead — a document saying what it renders, which is the same
+    // thing the collector honours in `:disabled` and `[aria-disabled]`.
+    // That declaration now has one form, the global reset the
+    // preview-html-author prompt teaches (#394). It is not the pinning
+    // rejected above: removing the animation measures each element's own
+    // declared style — the frame a reduced-motion reader actually sees —
+    // not whichever keyframe a harness happened to stop on. Since #443
+    // every preview with CSS motion carries it, which
+    // preview-reduced-motion-corpus.test.ts holds — so the branch this
+    // context relies on is no longer something only some previews have.
+    reducedMotion: "reduce",
+  })
+  // Fonts come from jsDelivr, so an offline or slow run would otherwise
+  // measure a half-loaded page. Blocking is the default because colour,
+  // font-size and weight all come from CSS and are unaffected; only line
+  // breaking changes, which moves sample points but not the values.
+  if (!opts.online) {
+    await context.route("**/*", (route) => {
+      const host = new URL(route.request().url()).hostname
+      return host === "127.0.0.1" ? route.continue() : route.abort()
+    })
+  }
+  // tsx transpiles with esbuild's `keepNames`, which wraps every function
+  // declaration in a `__name(fn, "...")` call. `page.evaluate` ships the
+  // collector to the browser as source text, and that helper does not go
+  // with it — without this the first call dies with `__name is not
+  // defined` inside the page. An identity function is all the helper does
+  // that matters here.
+  await context.addInitScript(() => {
+    const g = globalThis as unknown as Record<string, unknown>
+    if (g.__name === undefined) g.__name = (fn: unknown) => fn
+  })
+  return context
+}
+
 /** What the sweep measured, folded once so every reader sees one answer. */
 export interface SweepResult {
   findings: Array<Finding>
@@ -430,62 +505,13 @@ export async function sweep(opts: SweepOptions): Promise<SweepResult> {
   const server = await serveStatic(join(opts.root, "public"))
   const browser = await chromium.launch()
   const findings: Array<Finding> = []
-  // Hover is swept at one width only. It costs a second full collection per
-  // page, and a hover rule that changes colour only at some widths would be a
-  // `@media` block wrapping a `:hover` rule — which no preview has. 976 is the
-  // detail page's embed width, so it is the one to keep if it is being swept.
-  const hoverWidth = opts.args.widths.includes(976) ? 976 : opts.args.widths[0]
+  const hoverWidth = hoverWidthOf(opts.args.widths)
 
   try {
     for (const width of opts.args.widths) {
-      const context = await browser.newContext({
-        viewport: { width, height: VIEWPORT_HEIGHT },
-        // Deterministic where a preview asks to be: several animate `opacity`,
-        // and a `prefers-reduced-motion` branch pins those demos to a fixed
-        // frame.
-        //
-        // This does NOT make the sweep deterministic on its own, because it
-        // relies on the preview carrying such a branch — five of twenty-two
-        // did when this gate was built (#390), and three when the one reading
-        // that moved between runs was found:
-        // toss's `div.loader-3 > span.dot`, whose `tds-pulse` keyframes
-        // nothing in that file responded to.
-        //
-        // The animations are deliberately not paused here. Pinning them would
-        // make every run agree on one frame forever, for every preview, and a
-        // frame that happens to pass would hide a defect for good. The preview
-        // whose animation did move its numbers declares its own reduced-motion
-        // frame instead — a document saying what it renders, which is the same
-        // thing the collector honours in `:disabled` and `[aria-disabled]`.
-        // That declaration now has one form, the global reset the
-        // preview-html-author prompt teaches (#394). It is not the pinning
-        // rejected above: removing the animation measures each element's own
-        // declared style — the frame a reduced-motion reader actually sees —
-        // not whichever keyframe a harness happened to stop on. Since #443
-        // every preview with CSS motion carries it, which
-        // preview-reduced-motion-corpus.test.ts holds — so the branch this
-        // context relies on is no longer something only some previews have.
-        reducedMotion: "reduce",
-      })
-      // Fonts come from jsDelivr, so an offline or slow run would otherwise
-      // measure a half-loaded page. Blocking is the default because colour,
-      // font-size and weight all come from CSS and are unaffected; only line
-      // breaking changes, which moves sample points but not the values.
-      if (!opts.args.online) {
-        await context.route("**/*", (route) => {
-          const host = new URL(route.request().url()).hostname
-          return host === "127.0.0.1" ? route.continue() : route.abort()
-        })
-      }
-      // tsx transpiles with esbuild's `keepNames`, which wraps every function
-      // declaration in a `__name(fn, "...")` call. `page.evaluate` ships the
-      // collector to the browser as source text, and that helper does not go
-      // with it — without this the first call dies with `__name is not
-      // defined` inside the page. An identity function is all the helper does
-      // that matters here.
-      await context.addInitScript(() => {
-        const g = globalThis as unknown as Record<string, unknown>
-        if (g.__name === undefined) g.__name = (fn: unknown) => fn
+      const context = await newMeasuringContext(browser, {
+        width,
+        online: opts.args.online,
       })
       const page = await context.newPage()
       for (const slug of opts.slugs) {

@@ -23,7 +23,11 @@
 
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
-import { measureOne, serveStatic } from "./audit-contrast-sweep"
+import {
+  measureOne,
+  newMeasuringContext,
+  serveStatic,
+} from "./audit-contrast-sweep"
 import type { Blocker } from "../src/lib/contrast"
 import type { Finding, Judgement, Theme } from "../src/lib/contrast-report"
 
@@ -354,18 +358,9 @@ export async function selfCheck(root: string): Promise<CheckResult> {
   }
 
   try {
-    const context = await browser.newContext({
-      viewport: { width: ORACLE_WIDTH, height: 800 },
-      reducedMotion: "reduce",
-    })
-    await context.route("**/*", (route) =>
-      new URL(route.request().url()).hostname === "127.0.0.1"
-        ? route.continue()
-        : route.abort()
-    )
-    await context.addInitScript(() => {
-      const g = globalThis as unknown as Record<string, unknown>
-      if (g.__name === undefined) g.__name = (fn: unknown) => fn
+    const context = await newMeasuringContext(browser, {
+      width: ORACLE_WIDTH,
+      online: false,
     })
     const page = await context.newPage()
 

@@ -5,6 +5,11 @@ import { describe, expect, it } from "vitest"
 import { REQUIRED_SECTIONS } from "./draft-validator"
 import { reducedMotionBlock } from "./reduced-motion-block"
 import {
+  STAGED_CONTRAST_RULE,
+  observedRender,
+  skippedRender,
+} from "./staged-contrast-report"
+import {
   DESIGN_MD_AGENT_PATHS,
   DESIGN_MD_AUTHOR_AGENT,
   DESIGN_MD_REVIEWER_AGENT,
@@ -509,6 +514,10 @@ describe("/design-md machine gates", () => {
           ...validator.matchAll(/(?:block|warn)\(\s*\n?\s*"([a-z0-9-]+)"/g),
         ].map((m) => m[1]),
         ...[...cli.matchAll(/rule: "([a-z0-9-]+)"/g)].map((m) => m[1]),
+        // Stage 9a3 adds its contrast items to the same machine report, so its
+        // id is held to the same rule. Imported, not grepped: the constant is
+        // the one the report is built with.
+        STAGED_CONTRAST_RULE,
       ]),
     ]
     expect(ruleIds).toContain("unreadable-merged-preview")
@@ -760,6 +769,149 @@ describe("/design-md machine gates", () => {
       headingAt > stageAt && (nextStageAt === -1 || headingAt < nextStageAt),
       `the step says "${heading}" is in ${stage}, but that heading sits outside it`
     ).toBe(true)
+  })
+
+  // Issue #442 / ADR 0009: Stage 9a3 renders the staged preview and writes its
+  // contrast observation into the machine report 9a2 just wrote. Each check
+  // here joins the skill's command to something outside the prose — the script
+  // package.json runs, the flags that script parses, the report path the
+  // reviewer is handed — so editing the wording leaves them alone and breaking
+  // the wiring does not.
+  it("wires the render observation (9a3) between the preview gate and the reviewer", () => {
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+    const at9a2 = skill.indexOf("### 9a2.")
+    const at9a3 = skill.indexOf("### 9a3.")
+    const at9b = skill.indexOf("### 9b.")
+    expect(
+      at9a2 < at9a3 && at9a3 < at9b,
+      "9a3 must sit between the preview gate (9a2) and the reviewer dispatch (9b)"
+    ).toBe(true)
+    const gate = skill.slice(at9a2, at9a3)
+    const observe = skill.slice(at9a3, at9b)
+    expect(observe, "Stage 9a3 must exist").not.toBe("")
+
+    // Both ways out of 9a2 that reach the reviewer go through 9a3. A route
+    // that skipped it would hand the reviewer a report with no `render`.
+    for (const route of ["- **Exit 0**", "- **K exhausted"]) {
+      const line = /^.*/.exec(gate.slice(gate.indexOf(route)))?.[0] ?? ""
+      expect(line, `9a2 route ${route}`).not.toBe("")
+      expect(line, `9a2 route ${route} must pass through 9a3`).toContain("9a3")
+    }
+
+    const script = /pnpm ([a-z:-]+)/.exec(observe)?.[1]
+    expect(script, "9a3 must run a pnpm script").toBeDefined()
+    const pkg = JSON.parse(readRepoFile("package.json")) as {
+      scripts: Record<string, string>
+    }
+    const command = pkg.scripts[script as string]
+    expect(command, `package.json has no "${script}" script`).toBeDefined()
+    const source = /scripts\/[\w-]+\.ts/.exec(command)?.[0]
+    expect(source, `"${script}" must run a script under scripts/`).toBeDefined()
+    const cli = readRepoFile(source as string)
+    const flags = [...new Set(observe.match(/--[a-z][a-z-]*/g) ?? [])]
+    expect(flags.length).toBeGreaterThan(0)
+    for (const flag of flags) {
+      expect(cli, `${source} does not parse ${flag}`).toContain(`"${flag}"`)
+    }
+
+    // Same file as 9a2's report, which is the file the reviewer is handed —
+    // that sameness is the whole "no second channel" decision.
+    const reportOf = (text: string): string | undefined =>
+      /--json-out "([^"]+)"/.exec(text)?.[1]
+    expect(reportOf(observe)).toBeDefined()
+    expect(reportOf(observe)).toBe(reportOf(gate))
+    expect(reportOf(observe)?.endsWith("preview-review-machine-{M}.json")).toBe(
+      true
+    )
+  })
+
+  // The reviewer reads both its own prompt and the rubric (`rubric_path`), so a
+  // scoring rule written in each drifts into two rules that score the same
+  // measurement in opposite directions — PR #513's first draft did exactly
+  // that. The rule lives once, in the rubric's Item 5; the prompt only points
+  // at it, and this pins that the pointer lands inside Item 5.
+  it("points the reviewer at the rubric's render-observation rule instead of restating it", () => {
+    const reviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
+    const label = /the rubric's \*\*([^*]+)\*\* paragraph under Item 5/.exec(
+      reviewer
+    )?.[1]
+    expect(
+      label,
+      "the reviewer's Item 5 must point at a rubric paragraph"
+    ).toBeDefined()
+
+    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
+    const start = rubric.indexOf("## Item 5")
+    const item5 = rubric.slice(start, rubric.indexOf("\n## ", start + 1))
+    expect(item5, "rubric Item 5 must exist").not.toBe("")
+    expect(
+      item5,
+      `rubric Item 5 has no **${label}** paragraph for the reviewer's pointer to land on`
+    ).toContain(`**${label}.**`)
+  })
+
+  // The skill, the rubric and both preview agents tell a model to read named
+  // fields of the 9a3 report (`render.observed.omittedDarkText` decides
+  // whether the reviewer goes back to the CSS). A field renamed in code would
+  // leave those instructions pointing at nothing, and the model would read
+  // the absence as zero. Every field the docs name must be one the code emits.
+  it("names only render-report fields the 9a3 report actually carries", () => {
+    const emitted = {
+      observed: Object.keys(
+        observedRender([], { widths: [], themes: [], states: [] }).render
+          .observed
+      ),
+      skipped: Object.keys(skippedRender("x").render.skipped),
+    }
+    const docs = [
+      DESIGN_MD_SKILL,
+      DESIGN_MD_RUBRIC_PREVIEW,
+      PREVIEW_HTML_AUTHOR_AGENT,
+      PREVIEW_HTML_REVIEWER_AGENT,
+    ]
+    let named = 0
+    for (const doc of docs) {
+      const text = readRepoFile(doc)
+      for (const m of text.matchAll(/render\.(observed|skipped)\.(\w+)/g)) {
+        named += 1
+        const outcome = m[1] as keyof typeof emitted
+        expect(
+          emitted[outcome],
+          `${doc} names render.${outcome}.${m[2]}, which the 9a3 report does not carry`
+        ).toContain(m[2])
+      }
+    }
+    // A pattern that matched nothing would make this test vacuous.
+    expect(named).toBeGreaterThan(2)
+  })
+
+  // A skipped observation, an empty one and a clean one all add zero items.
+  // If Stage 13 printed them alike, "no Chromium" or "collected nothing" would
+  // read as "nothing fell short".
+  it("reports the render observation's four states distinctly", () => {
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+    const report = skill.slice(
+      skill.indexOf("## Stage 13 —"),
+      skill.indexOf("## Edge cases")
+    )
+    expect(report, "Stage 13 must precede the edge cases").not.toBe("")
+    const outputsOf = (variable: string): Array<string | undefined> =>
+      (report.match(new RegExp(`^ {2}- \`${variable} = .*$`, "gm")) ?? []).map(
+        (line) => /→ `([^`]+)`/.exec(line)?.[1]
+      )
+
+    const render = outputsOf("render_result")
+    expect(render.length, "four states: ok, warn, empty, skipped").toBe(4)
+    expect(render.every((o) => o !== undefined)).toBe(true)
+    expect(new Set(render).size).toBe(4)
+
+    // Nor may one of them borrow another step's line.
+    const others = [
+      ...outputsOf("responsive_result"),
+      ...outputsOf("board_result"),
+    ]
+    expect(others.length).toBeGreaterThan(0)
+    for (const line of render) expect(others).not.toContain(line)
   })
 
   // The report is the only place this step's output reaches a person, and three

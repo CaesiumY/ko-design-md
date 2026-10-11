@@ -27,9 +27,16 @@ pnpm test:http          # pnpm build 뒤 빌드된 Nitro 서버 HTTP 회귀 검�
 로컬에서 돌리려면 `pnpm exec playwright install chromium` 이 선행돼야 하고, **수치는 CI 가
 정본이다** — 폰트 폴백이 OS 마다 달라 줄바꿈이 달라지고 판정이 기대는 줄이 바뀔 수 있다.
 
+같은 관측 하네스를 스킬 루프 안에서 staged 프리뷰에 돌리는 것이 `pnpm audit:contrast:staged`
+(Stage 9a3, ADR 0009)다. 미달을 9a2 기계 리포트에 **warn** 으로만 합치고 루프를 막지 않는다.
+Chromium 이 없거나 측정이 깨지면 exit 0 으로 `render.skipped` 를 남기는데, 이것은 "미달 없음"이
+아니라 "재지 않음"이다. exit 2 는 호출이나 그 파일이 잘못된 경우뿐이다. 로컬 수치라 CI 와 다를 수
+있고, 기준선과 대조하지 않는다.
+
 단일 파일 검사: `pnpm validate:draft <file.md> [--slug X --expected-logo <url> --lang ko]`,
 `pnpm validate:previews --slug <slug> --verbose`. 스킬 파이프라인은 이 검증기를
-author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행한다.
+author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행하고, 프리뷰 루프는 9a2 뒤에 렌더
+대비 관측(9a3)을 한 번 더 거친다.
 
 ## 카탈로그 정책 (위반은 CI가 block)
 
