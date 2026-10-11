@@ -52,7 +52,7 @@ colors:
   opacity-black-10: oklch(0.000 0.000 0.0 / 0.1)   # #000000 · 알파 0.1 · 관측(미발행) · outline-opacity-black-10 · 캐러셀 화살표 외곽선
   opacity-black-5: oklch(0.000 0.000 0.0 / 0.05)   # #000000 · 알파 0.05 · 관측(미발행) · 하단 내비 상단선·이미지 인셋 외곽
 typography:
-  ## headline — 관측(미발행) · 번들 typography-* 이름에서 typography- 를 뗐다
+  ## headline — 관측(미발행) · 번들 typography-* 이름에서 typography- 를 뗐다 · 자간 ≈ 렌더 판독
   headline-40-bold:
     fontSize: 40px
     fontWeight: 700
@@ -78,7 +78,7 @@ typography:
     fontWeight: 400
     lineHeight: 29px
     letterSpacing: 0em
-  ## subtitle — 관측(미발행)
+  ## subtitle — 관측(미발행) · 자간 ≈ 렌더 판독
   subtitle-20-bold:
     fontSize: 20px
     fontWeight: 700
@@ -154,7 +154,7 @@ typography:
     fontWeight: 400
     lineHeight: 24px
     letterSpacing: 0em
-  ## body — 관측(미발행)
+  ## body — 관측(미발행) · 자간 ≈ 렌더 판독
   body-14-bold:
     fontSize: 14px
     fontWeight: 700
@@ -235,7 +235,7 @@ typography:
     fontWeight: 400
     lineHeight: 18px
     letterSpacing: 0em
-  ## caption · label — 관측(미발행)
+  ## caption · label — 관측(미발행) · 자간 ≈ 렌더 판독
   caption-11-bold:
     fontSize: 11px
     fontWeight: 700
@@ -353,7 +353,7 @@ NOL은 흰 바탕 위에 채도 높은 파랑을 예약·선택·포커스에만
 
 **스케일은 번들에서 확인한 `typography-*` 이름 41개와 보드에서만 읽은 1개(≈ `{typography.subtitle-18-bold-multiline}`)다.** 이름이 `분류-크기-굵기[-multiline]` 꼴이고 굵기는 bold·semibold·regular 세 단계, 곧 700·600·400 뿐이다 [src:8][src:9][src:10]. 단일행 스타일은 행간이 크기의 약 1.2배(`{typography.body-12-regular}` 12/14 … `{typography.headline-40-bold}` 40/48), `-multiline` 은 약 1.5배다(`{typography.body-14-regular-multiline}` 14/21) [src:8]. 줄 수를 자르는 `-line-clamp-1/-2` 변형과 같은 값을 px 로 고정해 접근성 글자 확대를 받지 않는 `-fixed` 변형은 별칭이라 키로 세지 않았다 [src:8]. 확인한 위치는 이렇다 — `{typography.subtitle-18-regular-multiline}` 은 홈 번들에 `pc:typography-` 접두로만 있고 [src:8], `{typography.subtitle-18-bold-multiline}` ≈ 은 디자인 보드의 번들 판독에서 왔으며 위치는 다시 확인하지 못했다(공개 출처 없음). `{typography.subtitle-18-semibold}` 는 홈 번들의 `ds-pc:` 접두와 목록 번들에 있다 [src:8][src:9]. `{typography.subtitle-16-semibold-multiline}`·`{typography.body-13-semibold-multiline}` 은 목록 번들 [src:9], `{typography.body-14-bold-multiline}`·`{typography.body-12-bold-multiline}` 은 상세 번들에서 확인했다 [src:10].
 
-**자간은 `0em` 이다.** 렌더 수집에서 자간은 모든 요소가 normal 이었고, 그래서 42개 스타일의 `letterSpacing` 을 단위 붙은 0으로 적었다(리서치의 렌더 수집값 — 공개 출처로는 다시 열지 못했다).
+**자간은 ≈ `0em` 이다.** 렌더 수집에서 자간은 모든 요소가 normal 이었고, 그래서 42개 스타일의 `letterSpacing` 을 단위 붙은 0으로 적었다(리서치의 렌더 수집값 — 공개 출처로는 다시 열지 못했다).
 
 **모바일에서 PC로 한 단계 이상 커진다.** 같은 요소가 `typography-body-14-regular ds-pc:typography-subtitle-18-regular` 처럼 짝을 이루고, 이 짝이 홈 SSR 에 58번 나온다 [src:5]. 섹션 제목은 `{typography.subtitle-18-bold}` → `{typography.headline-24-bold}`, 기획전 카드 제목은 `{typography.subtitle-20-bold}` → `{typography.headline-32-bold}` 로 커진다 [src:5].
 
