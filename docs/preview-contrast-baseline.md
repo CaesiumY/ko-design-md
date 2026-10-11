@@ -507,6 +507,8 @@ samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다.
 | yeogi | 0 / 5 |
 | zigbang | 3 / 3 |
 
+**"발행 토큰"은 frontmatter `colors:` 전체다.** 절차가 `readDefinitions` 로 읽는 정의를 모두 세므로, 관측(미발행) 값을 토큰으로 싣는 항목은 그 값도 발행 토큰으로 잡힌다. nol 의 6쌍은 모두 관측 토큰끼리(`neutral-strong1`×`neutral-weak1`, `accent-main`×`accent-weak`)라 "고치면 발행값을 버리는" 쌍은 아니다.
+
 **이 수는 하한이다.** `fg` 는 배경 위에 합성된 값이고 `bg` 는 평탄화된 스택이라, 알파나
 `opacity` 가 낀 표면은 **모든 입력이 발행 토큰이어도** 합성 결과가 어떤 단일 토큰과도 맞지
 않는다. samsung 다크의 `#0381fe`(발행 `primary`, d=0.0004) × `#3a3a3a`(최근접
