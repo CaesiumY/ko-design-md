@@ -1162,21 +1162,37 @@ describe("validatePreviewPair — reduced motion", () => {
     "@keyframes spin { to { transform: rotate(1turn); } } .spinner { animation: spin 1s linear infinite; }"
   const withStyle = (style: string, body?: string) =>
     makeInput({ lightRaw: makeHtml({ style, body }) })
-  // The gate's verdict on the same file. Every case below asserts the warn
-  // agrees with it, so "a draft the warn passes is one the gate passes" is
-  // checked, not just claimed — a first version claimed it and was wrong.
+  // The gate's verdict on the same file. Every case below that judges a whole
+  // file asserts the warn agrees with it, so "a draft the warn passes is one
+  // the gate passes" is checked, not just claimed — a first version claimed it
+  // and was wrong. The halves-only case at the end is the exception, and says
+  // why.
   const FORM = normalizeCss(
     reducedMotionBlock(
       readRepoFile(PREVIEW_HTML_AUTHOR_AGENT),
       "preview-html-author.md"
     )
   )
+  const gateBlocks = (html: string) =>
+    hasCssMotion(html) && reducedMotionViolations(html, FORM).length > 0
   const warns = (style: string, body?: string) => {
     const warned = rulesOf(withStyle(style, body), "warn").includes(RULE)
-    const html = makeHtml({ style, body })
-    const gateBlocks =
-      hasCssMotion(html) && reducedMotionViolations(html, FORM).length > 0
-    expect(warned, `warn and gate disagree on: ${style}`).toBe(gateBlocks)
+    expect(warned, `warn and gate disagree on: ${style}`).toBe(
+      gateBlocks(makeHtml({ style, body }))
+    )
+    return warned
+  }
+  // The same, for a whole merged file handed over as the served document.
+  const warnsServed = (html: string, label: string) => {
+    const warned = rulesOf(
+      makeInput({
+        served: [
+          { name: "preview.html", html, bytes: Buffer.byteLength(html) },
+        ],
+      }),
+      "warn"
+    ).includes(RULE)
+    expect(warned, `warn and gate disagree on: ${label}`).toBe(gateBlocks(html))
     return warned
   }
 
@@ -1284,28 +1300,20 @@ describe("validatePreviewPair — reduced motion", () => {
       makeHtml({ style: page })
         .replace("<style>", `<style${pageAttrs}>`)
         .replace("</head>", `<style>${dark}</style>\n</head>`)
-    const served = (html: string) =>
-      makeInput({
-        served: [
-          { name: "preview.html", html, bytes: Buffer.byteLength(html) },
-        ],
-      })
     const darkWithBlock = `[data-theme="dark"] .hero { color: red; } ${REDUCE}`
-    expect(
-      rulesOf(served(merged("", SPIN, darkWithBlock)), "warn"),
-      "block only in the dark sheet"
-    ).toContain(RULE)
-    expect(
-      rulesOf(
-        served(merged(' media="print"', `${SPIN} ${REDUCE}`, "")),
-        "warn"
-      ),
-      "page sheet under media=print"
-    ).toContain(RULE)
-    expect(
-      rulesOf(served(merged("", `${SPIN} ${REDUCE}`, darkWithBlock)), "warn"),
-      "a second copy in the dark sheet"
-    ).toContain(RULE)
+    for (const [label, html] of [
+      ["block only in the dark sheet", merged("", SPIN, darkWithBlock)],
+      [
+        "page sheet under media=print",
+        merged(' media="print"', `${SPIN} ${REDUCE}`, ""),
+      ],
+      [
+        "a second copy in the dark sheet",
+        merged("", `${SPIN} ${REDUCE}`, darkWithBlock),
+      ],
+    ] as const) {
+      expect(warnsServed(html, label), label).toBe(true)
+    }
   })
 
   // The merged file is split into halves before most rules run, and the dark
@@ -1332,9 +1340,13 @@ describe("validatePreviewPair — reduced motion", () => {
       ],
     })
     expect(rulesOf(served, "warn")).not.toContain(RULE)
+    // The served file is one the gate passes too.
+    expect(gateBlocks(merged)).toBe(false)
 
     // Without `served` each half is its own document, and this dark half
-    // really does move with nothing to stop it.
+    // really does move with nothing to stop it. The gate never sees a half —
+    // it reads the file — so this is the one case with no gate verdict to hold
+    // the warn to.
     const halvesOnly = makeInput({ lightRaw: lightHalf, darkRaw: darkHalf })
     expect(rulesOf(halvesOnly, "warn")).toContain(RULE)
   })
