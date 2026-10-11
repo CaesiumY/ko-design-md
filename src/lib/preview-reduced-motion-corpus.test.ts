@@ -3,8 +3,8 @@ import { join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
 import {
+  hasCssMotion,
   normalizeCss,
-  previewSheets,
   reducedMotionBlock,
   reducedMotionViolations,
 } from "./reduced-motion-block"
@@ -32,39 +32,8 @@ function slugs(): Array<string> {
     .sort()
 }
 
-// CSS motion, as the prompt defines the trigger: `@keyframes`, or an
-// `animation` or `transition` declaration — shorthand or longhand — that sets
-// motion. `none` and zero durations set none — which is why the prescribed
-// block, whose declarations are `none !important`, need not be cut out first.
-// Cutting reduced-motion blocks out would also cut a `no-preference` block,
-// whose declarations are motion. Read from every `<style>` in the file (the
-// same set `reducedMotionViolations` judges) and from `style` attributes in
-// either quote, without regard to case, as CSS reads property names: a preview
-// this misses is one the assertion below never looks at.
-function hasCssMotion(html: string): boolean {
-  const css = previewSheets(html).map((s) => s.css)
-  const attrs = [...html.matchAll(/\sstyle\s*=\s*(["'])([\s\S]*?)\1/gi)].map(
-    (m) => m[2]
-  )
-  const text = [...css, ...attrs].join("\n")
-  if (/@(?:-[a-z]+-)?keyframes\b/i.test(text)) return true
-  for (const m of text.matchAll(
-    // A vendor prefix (`-webkit-animation:`) still counts; a custom property
-    // (`--btn-transition:`) does not — it only stores a value. The second
-    // lookbehind keeps `animation` inside a longer word from matching.
-    /(?<!--[\w-]*)(?<!\w)((?:animation|transition)(?:-[a-z-]+)?)\s*:\s*([^;}"']+)/gi
-  )) {
-    const [, property, raw] = m
-    // The shorthand, or the longhands that alone decide whether anything
-    // moves; `-delay`, `-easing` and the rest only shape motion set elsewhere.
-    if (!/^(animation|transition)(-name|-property|-duration)?$/i.test(property))
-      continue
-    const value = raw.replace(/!\s*important/i, "").trim()
-    if (/^none$/i.test(value) || /^0m?s$/i.test(value)) continue
-    return true
-  }
-  return false
-}
+// What counts as motion is `hasCssMotion` — the same definition the preview
+// validator's warn uses (#395), so the two cannot disagree about a file.
 
 describe("preview reduced motion (#443)", () => {
   const form = normalizeCss(
