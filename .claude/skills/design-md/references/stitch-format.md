@@ -29,7 +29,7 @@ Three facts about the spec matter when editing this list:
 - **Its order check ignores headings it does not know.** Catalog-only sections (`Spacing`, `Rounded`, `References`, `Responsive Behavior`, `Known Gaps`) pass through silently, so adding one never breaks conformance.
 - **`Brand & Style` is the spec's own alias for `Overview`.** Do not rename it.
 
-The one place the two structures diverge on purpose: the spec has a single `Layout` section (alias `Layout & Spacing`) where this catalog keeps **`Spacing` and `Rounded` separate**. Keep them separate — tokens are now keyed by the frontmatter `spacing:` / `rounded:` maps, so a merge no longer empties the sidecar (the extractor reads those headings only as a legacy fallback), but the draft gate requires both headings and blocks a merged `Layout`.
+The one place the two structures diverge on purpose: the spec has a single `Layout` section (alias `Layout & Spacing`) where this catalog keeps **`Spacing` and `Rounded` separate**. Keep them separate — tokens are now keyed by the frontmatter `spacing:` / `rounded:` maps, so a merge no longer empties the sidecar (the extractor does not read body headings at all), but the draft gate requires both headings and blocks a merged `Layout`.
 
 The catalog is also, in two places, *more* expressive than the `alpha` schema. Conforming would mean deleting real published values, so the values stay:
 
@@ -182,8 +182,8 @@ so the extractor can read each — `name: oklch(...)` (colors),
 `name: 16px` (spacing/rounded), `name: 0 1px 2px oklch(...)` (elevation). **Typography is the exception — it nests**, as
 shown above: a bare style name, then four-space `fontSize` / `fontWeight` /
 `lineHeight` / `letterSpacing`. The inline `name: { size, weight, … }` and
-`name: 16 / 24 / 700` forms are read only from markdown tables (body fences are
-blocked); in frontmatter they yield **zero** type tokens. Alias rows whose value points at another token
+`name: 16 / 24 / 700` forms are not read anywhere — the extractor reads nothing
+in the body; in frontmatter they yield **zero** type tokens. Alias rows whose value points at another token
 (`fill-brand: "{colors.red}"`) are skipped by the extractor and surface only in
 the prose — intended, since the cards show visually-renderable tokens, not
 pointers. `pnpm tokens:check` compares the regenerated sidecar byte-for-byte, so
@@ -206,7 +206,7 @@ This URL is the single source of truth the **preview-html-author** loads into th
 
 - Point at a **loadable CSS entry point** (`@import`/`<link>`-able), not a demo or marketing page. Prefer a foundry's **dynamic-subset / split** build where one exists (lighter for Korean pages) and a **pinned version** over `@latest` — refresh the pin alongside the catalog entry when the typeface library publishes an update.
 - **Pretendard needs no `-src`** — the preview runtime already imports it. Only faces outside that baseline need a source.
-- The token-card extractor **ignores `*-src` lines and any `http…` value**, so these never appear as bogus type cards.
+- `font-*-src` is a **top-level key, outside every token map**, and the token-card extractor reads only the token maps — that is why it never appears as a bogus type card. Keep it at column 0: written inside `typography:` the extractor drops the line, but the preview validator's `font-display-src` check reads only column-0 keys, so the source goes missing and the webfont `<link>` check never runs.
 
 ## Body language
 
