@@ -20,6 +20,7 @@ import {
   DESIGN_MD_TEMPLATE,
   PREVIEW_HTML_AUTHOR_AGENT,
   PREVIEW_HTML_REVIEWER_AGENT,
+  RESEARCH_COLLECTOR_AGENT,
   readRepoFile,
 } from "./skill-asset-paths"
 
@@ -531,7 +532,7 @@ describe("/design-md machine gates", () => {
     // gains `Bash`, the first fails and whoever added it reads this comment
     // before deciding the prose can relax.
     const collectorTools = /^tools: (.+)$/m.exec(
-      readRepoFile(".claude/agents/research-collector.md")
+      readRepoFile(RESEARCH_COLLECTOR_AGENT)
     )?.[1]
     expect(
       collectorTools,
