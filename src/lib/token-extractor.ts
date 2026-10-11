@@ -12,9 +12,11 @@ import type {
 //
 // It reads one input: the frontmatter token maps (`colors:` / `typography:` /
 // `spacing:` / `rounded:` / `elevation:`). The body is never read (#429) —
-// the body fences and the `## Typography` table it once fell back to are both
-// blocked upstream (`token-fence`, `spec-no-typography`), so a second input
-// would only be a second place to look when an entry reads zero tokens.
+// a token yaml fence in the body is blocked upstream (`token-fence`), and a
+// type scale written only as a body table is blocked by `spec-no-typography`
+// (a table beside a frontmatter `typography:` map is fine — it is prose). A
+// second input would only be a second place to look when an entry reads zero
+// tokens.
 // `scripts/build-tokens.ts` runs this once per entry to write
 // `{slug}.tokens.json`, and the runtime only reads that JSON (see
 // content-collection.ts).
@@ -44,8 +46,9 @@ function splitInlineComment(rest: string): { value: string; note?: string } {
 // Left in, a consumer pasting the value into CSS gets a broken declaration.
 // Only a matching outer pair is removed.
 //
-// SHARED, not elevation-only: it sits on the path every token row takes
-// (`splitInlineComment`). It was added for shadows but applies catalogue-wide —
+// SHARED, not elevation-only: it is the only quote-stripping on the path every
+// token row value takes (`splitInlineComment`; `frontmatterRows` strips only
+// the key). It was added for shadows but applies catalogue-wide —
 // measured when it landed, no existing category moved. Re-measure with
 // `pnpm tokens:build --all` + `git diff` before widening it.
 // `[^"]*` rather than `.*`: a greedy match on a value carrying two quoted
@@ -264,7 +267,7 @@ function frontmatterRows(fm: Array<string>, mapKey: string): Array<RawLine> {
     const { value, note } = splitInlineComment(row.rest)
     out.push({
       key: stripQuotes(row.key),
-      value: stripQuotes(value),
+      value,
       note,
       group: row.group,
     })

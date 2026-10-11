@@ -29,7 +29,7 @@ function makeDesignMd(opts: { fontDisplaySrc?: string; logo?: boolean } = {}) {
     "  primary: oklch(0.62 0.18 250)",
     "  surface: oklch(0.98 0.005 250)",
     "fonts:",
-    '  sans: "Pretendard Variable", sans-serif',
+    "  sans: Pretendard Variable, sans-serif",
     fontSrc.trim(),
     "---",
     "",

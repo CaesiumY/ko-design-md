@@ -514,7 +514,8 @@ describe("unquote", () => {
 
   it("leaves a value carrying more than one quoted item out of the sidecar", () => {
     const body = fm("colors:", '  stack: "Foo", "Bar"')
-    // Not a colour, so it never reaches the sidecar.
+    // Not a colour, so it never reaches the sidecar — the reader leaves it as
+    // authored, but no category's shape check would accept it either way.
     expect(extractTokensFromMarkdown(body).colors).toEqual([])
   })
 })
