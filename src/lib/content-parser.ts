@@ -1,3 +1,4 @@
+import { FRONTMATTER_MAP_KEYS } from "./frontmatter-maps"
 import type { ServiceDoc, ServiceFrontmatter } from "./content-types"
 
 // Minimal frontmatter parser for our schema (string scalars, inline arrays,
@@ -36,30 +37,8 @@ export const CONSUMED_KEYS: ReadonlyArray<keyof ServiceFrontmatter> = [
 // field-by-field so these never reach `ServiceFrontmatter` at all — declaring
 // them on that interface would claim a field the parser demonstrably drops.
 // They are listed so the unknown-key rule stops reporting ~100 false warnings.
-//
-// The maps are exported on their own: they are also the namespaces a
-// `{map.name}` reference in the body can point into (draft-validator's
-// `unresolved-token-ref`), and a map added here must not be one that rule
-// silently stops checking. Not frontmatter-map's `TOKEN_MAP_KEYS`, which is
-// the four maps whose rows become sidecar tokens.
-export const FRONTMATTER_MAP_KEYS: ReadonlyArray<string> = [
-  "colors",
-  "typography",
-  "spacing",
-  "rounded",
-  // The spec's component map. Not a sidecar token map either: only the spec
-  // linter reads it, straight from the file (#384).
-  "components",
-  // Shadows. The spec model has no elevation category, so the linter resolves
-  // nothing from it — but it lints clean, and the sidecar reads it (#421).
-  "elevation",
-  // Catalog-only maps, for values the spec schema has no field for.
-  "gradients",
-  "opacity",
-  "grid",
-  "fonts",
-]
-
+// The maps come from the table in `frontmatter-maps`, which every other reader
+// of them derives its list from too.
 const FILE_ONLY_KEYS: ReadonlyArray<string> = [
   ...FRONTMATTER_MAP_KEYS,
   "preview_css_vars",

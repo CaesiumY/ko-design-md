@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest"
 import { REQUIRED_SECTIONS, validateDraft } from "./draft-validator"
 import { matter } from "./content-parser"
+import { FRONTMATTER_MAPS } from "./frontmatter-maps"
+import type { FrontmatterMapTraits } from "./frontmatter-maps"
 import type { DraftValidationOptions } from "./draft-validator"
 
 // ── fixture ──────────────────────────────────────────────────────────────────
@@ -2666,6 +2668,62 @@ describe("block scalars and nesting, in every token map", () => {
       expect(rulesFor(draft), map).toContain("noncanonical-token-indent")
     }
   })
+})
+
+describe("every map in the table reaches every rule its traits name", () => {
+  // #432: these rules used to keep their own lists of map names, and a map
+  // missing from one was skipped in silence. Driving the cases from the table
+  // means a new map gets them without anyone writing a test for it.
+  const draftWithMap = (map: string, rows: Array<string>, body = "") =>
+    makeDraft({
+      frontmatter: [
+        "---",
+        "name: 데모",
+        "slug: demo",
+        "category: finance",
+        'last_updated: "2026-07-03"',
+        'created_at: "2026-07-03"',
+        "lang: ko",
+        "logo: https://getdesign.kr/logos/demo.png",
+        `${map}:`,
+        ...rows,
+        "---",
+      ].join("\n"),
+      body: (sections) => `${sections}\n\n${body}`,
+    })
+
+  // Widened to the trait interface: a literal `true` would make the `reference`
+  // branch look constant while every map happens to have it.
+  for (const [map, traits] of Object.entries<FrontmatterMapTraits>(
+    FRONTMATTER_MAPS
+  )) {
+    it(`${map}: block scalar ${traits.noBlockScalar ? "blocked" : "left alone"}`, () => {
+      const rules = rulesFor(draftWithMap(map, ["  a: >", "    x"]))
+      if (traits.noBlockScalar)
+        expect(rules).toContain("block-scalar-token-value")
+      else expect(rules).not.toContain("block-scalar-token-value")
+    })
+
+    it(`${map}: nested row ${traits.rowScan ? "blocked" : "left alone"}`, () => {
+      const rules = rulesFor(draftWithMap(map, ["  g:", "    inner: 16px"]))
+      if (traits.rowScan) expect(rules).toContain("noncanonical-token-indent")
+      else expect(rules).not.toContain("noncanonical-token-indent")
+    })
+
+    it(`${map}: not reported as an unknown key`, () => {
+      expect(rulesFor(draftWithMap(map, ["  a: 1"]))).not.toContain(
+        "unknown-frontmatter-key"
+      )
+    })
+
+    if (traits.reference) {
+      it(`${map}: a reference to a missing key is judged`, () => {
+        expect(
+          rulesFor(draftWithMap(map, ["  a: 1"], `\`{${map}.no-such-key}\``))
+        ).toContain("unresolved-token-ref")
+      })
+    }
+  }
 })
 
 describe("working notes never reach a published entry", () => {

@@ -15,6 +15,8 @@
 // and a YAML parser normalises exactly that away. So each caller gets the line
 // and decides for itself what the value means.
 
+import { TOKEN_MAP_KEYS } from "./frontmatter-maps"
+
 export interface MapRow {
   /** The source line, unmodified. */
   line: string
@@ -42,14 +44,6 @@ const COMMENT_ROW = /^\s*#/
  *  (`"notes":`) and handed its rows to the map above (#447 review). */
 const ENDS_MAP = /^[^\s#]/
 const ROW = /^(\s+)([^\s:]+):\s*(.*)$/
-
-/** The four maps whose rows become sidecar tokens. */
-export const TOKEN_MAP_KEYS = [
-  "colors",
-  "typography",
-  "spacing",
-  "rounded",
-] as const
 
 /**
  * Does this line open the named map?

@@ -3,7 +3,6 @@ import { lint } from "@google/design.md/linter"
 import {
   CONSUMED_KEYS,
   FRONTMATTER_KEY_NAME,
-  FRONTMATTER_MAP_KEYS,
   KNOWN_FRONTMATTER_KEYS,
   buildDoc,
   matter,
@@ -11,6 +10,11 @@ import {
   stripQuotes,
 } from "./content-parser"
 import { isHeadRow, mapRows } from "./frontmatter-map"
+import {
+  NO_BLOCK_SCALAR_MAP_KEYS,
+  REFERENCE_MAP_KEYS,
+  ROW_SCAN_MAP_KEYS,
+} from "./frontmatter-maps"
 import { CATEGORIES } from "./content-types"
 import { auditSourceCitations } from "./source-citations"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
@@ -365,9 +369,9 @@ const FENCE_OPEN = /^\s*(`{3,}(?=[^`]*$)|~{3,})\s*(\w*)/
 // close early.
 const FENCE_CLOSE = /^\s*(`{3,}|~{3,})\s*$/
 
-// The frontmatter maps a `{map.name}` reference can point into — the same list
-// the unknown-key rule allows, so a new map cannot drop out of this check.
-const REFERENCE_MAPS: ReadonlySet<string> = new Set(FRONTMATTER_MAP_KEYS)
+// The frontmatter maps a `{map.name}` reference can point into — the
+// `reference` trait in the map table, so a new map cannot drop out of this check.
+const REFERENCE_MAPS: ReadonlySet<string> = new Set(REFERENCE_MAP_KEYS)
 // Namespaces authors reach for that no entry declares as a map. Each was found
 // in the catalog pointing at nothing; the advice says where the value lives.
 const PHANTOM_MAPS: ReadonlyMap<string, (name: string) => string> = new Map([
@@ -1060,14 +1064,7 @@ function checkTokenReferences(
 
 function checkBlockScalars(fm: Array<string>): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
-  for (const mapKey of [
-    "colors",
-    "typography",
-    "spacing",
-    "rounded",
-    "elevation",
-    "components",
-  ]) {
+  for (const mapKey of NO_BLOCK_SCALAR_MAP_KEYS) {
     for (const row of mapRows(fm, mapKey)) {
       // A block header is `>` or `|`, then an indentation digit and a chomping
       // indicator in EITHER order, then optionally a comment. Matching only the
@@ -1097,7 +1094,7 @@ function checkBlockScalars(fm: Array<string>): Array<ValidationIssue> {
  */
 function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
-  // All four maps, not just colours. `frontmatterRows` reads spacing and rounded
+  // Every map with the `rowScan` trait, not just colours. `frontmatterRows` reads spacing and rounded
   // through the same two-space shape, so a nested row there is dropped just as
   // silently — and `referenceRows` would flatten a nested reference into a
   // differently named top-level token.
@@ -1105,7 +1102,7 @@ function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
   // `elevation` joins them because it is read the same way (#421): its rows
   // used to sit in a body fence, where `scanBody` judged them line by line, and
   // moving them into frontmatter must not move them out of reach.
-  for (const mapKey of ["colors", "spacing", "rounded", "elevation"]) {
+  for (const mapKey of ROW_SCAN_MAP_KEYS) {
     for (const row of mapRows(fm, mapKey)) {
       // A head row that only opens a nested map carries no value to judge; the
       // rows beneath it are caught by the indentation rule below.
