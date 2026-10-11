@@ -2,8 +2,8 @@
 name: NOL
 slug: nol
 category: travel
-last_updated: "2026-10-11"
-created_at: "2026-10-11"
+last_updated: "2026-10-12"
+created_at: "2026-10-12"
 lang: ko
 logo: https://getdesign.kr/logos/nol.png
 colors:
