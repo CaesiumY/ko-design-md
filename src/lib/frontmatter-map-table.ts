@@ -13,7 +13,10 @@
 
 export interface FrontmatterMapTraits {
   /** A map the spec schema knows. False is catalog-only — values the spec has
-   *  no field for, which its linter ignores. */
+   *  no field for, which its linter ignores. No reader filters on it yet; it
+   *  stays because #432 asked for it and it tells a contributor what a spec
+   *  tool will see. (The extractor-path trait went instead: its only reader was
+   *  removed with the body fallback, #429.) */
   spec: boolean
   /** A namespace a body `{map.name}` reference can point into
    *  (`unresolved-token-ref`). */
