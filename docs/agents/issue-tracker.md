@@ -4,7 +4,7 @@
 
 ## 컨벤션
 
-- **이슈 생성**: `gh issue create --title "..." --body "..."`. 여러 줄 본문은 heredoc 으로 넘긴다 — `CLAUDE.md` 「기여 관례」의 인용 구분자 규칙을 따른다. 본문은 쉬운 말 요약 1~3줄로 시작한다(같은 「기여 관례」). 아래의 `Part of #<parent>`·`Blocked by:` 줄을 쓰면 그 줄이 맨 위이고 요약은 바로 다음이다.
+- **이슈 생성**: `gh issue create --title "..." --body "..."`. 여러 줄 본문은 heredoc 으로 넘긴다 — `CLAUDE.md` 「기여 관례」의 인용 구분자 규칙을 따른다. 본문은 쉬운 말 요약 1~3줄로 시작한다(같은 「기여 관례」). 아래의 `Part of #<parent>`·`Blocked by:` 줄을 쓰면 그런 줄이 모두 맨 위에 오고, 요약은 그 줄들이 끝난 다음이다.
 - **이슈 읽기**: `gh issue view <number> --json number,title,body,labels,comments`.
 - **이슈 목록**: `gh issue list --state open --limit 1000 --json number,title,body,labels,comments --jq '[.[] | {number, title, body, labels: [.labels[].name], comments: [.comments[].body]}]'` 에 `--label`·`--state` 필터를 맞춰 붙인다. `--limit` 을 빼면 기본값 30건에서 **아무 표시 없이** 잘린다.
 - **이슈를 부모의 서브이슈로 붙이기**: `gh issue create --parent <parent> ...`, 또는 만든 뒤 `gh issue edit <parent> --add-sub-issue <child>`(`gh` 2.94+). 그보다 낡은 `gh` 는 `gh api --method POST repos/<owner>/<repo>/issues/<parent>/sub_issues -F sub_issue_id=<child-db-id>`(아래 **블로킹**과 같은 database id). 서브이슈를 못 쓰면 자식 본문 맨 위에 `Part of #<parent>` 를 적는다.
@@ -40,7 +40,7 @@ GitHub 이슈를 만든다.
 
 `wayfinder:*` 라벨은 아직 이 저장소에 없다. 처음 쓸 때 `gh label create` 로 만들고 `.github/labels.json` 에도 반영한다(`CONTRIBUTING.md` §6).
 
-- **맵**: `wayfinder:map` 라벨이 붙은 이슈 하나. 본문에 Notes / Decisions-so-far / Fog 를 담는다. `gh issue create --label wayfinder:map`.
+- **맵**: `wayfinder:map` 라벨이 붙은 이슈 하나. 본문은 쉬운 말 요약 1~3줄로 시작하고, 그 아래에 Notes / Decisions-so-far / Fog 를 담는다. `gh issue create --label wayfinder:map`.
 - **자식 티켓**: GitHub 서브이슈로 맵에 연결한 이슈(위 **이슈를 부모의 서브이슈로 붙이기** 참고). 서브이슈를 못 쓰면 맵 본문의 태스크 리스트에 넣고 자식 본문 맨 위에 `Part of #<map>` 을 적는다. 라벨은 `wayfinder:<type>` (`research`/`prototype`/`grilling`/`task`). 집으면 그 티켓을 작업자에게 할당한다.
 - **블로킹**: GitHub **네이티브 이슈 의존성** — UI 에 보이는 정본 표현이다. `gh api --method POST repos/<owner>/<repo>/issues/<child>/dependencies/blocked_by -F issue_id=<blocker-db-id>` 로 간선을 추가한다. `<blocker-db-id>` 는 블로커의 숫자 **database id** 다(`gh api repos/<owner>/<repo>/issues/<n> --jq .id` — `#number` 도 `node_id` 도 _아니다_). GitHub 이 `issue_dependencies_summary.blocked_by`(열린 블로커만 — 실시간 게이트)를 보고한다. 의존성을 못 쓰면 자식 본문 맨 위의 `Blocked by: #<n>, #<n>` 줄로 대신한다. 블로커가 전부 닫히면 풀린다.
 - **프런티어 조회**: 맵의 열린 자식을 나열하고(`gh issue list --state open`, 맵의 서브이슈 / 태스크 리스트로 한정) 열린 블로커가 있거나(`issue_dependencies_summary.blocked_by > 0`, 또는 `Blocked by` 줄의 열린 이슈) 담당자가 있는 것을 뺀다. 맵 순서상 첫 번째가 이긴다.
