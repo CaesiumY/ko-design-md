@@ -64,17 +64,21 @@ describe("formatSpecReport", () => {
     expect(out.some((l) => l.includes("[token-summary]"))).toBe(true)
   })
 
-  it("summarizes each severity of a rule on its own line", () => {
+  // An error is what this command exists to diagnose, so one raised under a
+  // summarized rule's name (a linter upgrade could) is listed, not counted.
+  it("always lists an error, even under a summarized rule", () => {
     const mixed = entry("mixed", [
       orphan("a"),
       { ...orphan("b"), severity: "error" },
     ])
     const out = formatSpecReport([mixed], { verbose: false })
+    expect(
+      out.filter((l) => /^ +error +\[orphaned-tokens\] \(colors\.b\)/.test(l))
+    ).toHaveLength(1)
     expect(out.filter((l) => l.includes("[orphaned-tokens] ×1"))).toEqual([
       expect.stringMatching(/^ +warning /),
-      expect.stringMatching(/^ +error /),
     ])
-    expect(out.at(-1)).toMatch(/\(2 orphaned-tokens not listed\)\.$/)
+    expect(out.at(-1)).toMatch(/\(1 orphaned-tokens not listed\)\.$/)
   })
 
   it("adds no summary line to an entry with nothing held back", () => {

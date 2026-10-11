@@ -20,7 +20,7 @@ export interface EntryReport {
   }>
 }
 
-// Rules counted but not listed unless `--verbose` (#388). `orphaned-tokens`
+// Rules whose warnings are counted but not listed unless `--verbose` (#388). `orphaned-tokens`
 // wakes once an entry carries a `components:` map and then warns on every
 // color no component references. The catalog records a brand's whole palette
 // where the linter expects a design system to declare only the colors it uses,
@@ -58,19 +58,19 @@ export function formatSpecReport(
     else if (r.warnings) lines.push(`warn ${label} (${r.warnings} warn)`)
     else lines.push(`ok   ${label}`)
 
-    // Keyed by severity and rule together, so a rule that ever raises both a
-    // warning and an error is summarized as two lines rather than one line
-    // under whichever severity came last.
-    const entryHeld = new Map<
-      string,
-      { severity: string; rule: string; n: number }
-    >()
+    // Only warnings are folded. The case for folding is that the warning is
+    // never a fix to make; an error under the same name (a linter upgrade
+    // could raise one) is exactly what this command exists to diagnose, so it
+    // is always listed.
+    const entryHeld = new Map<string, number>()
     for (const f of r.findings) {
       if (f.severity === "info" && !verbose) continue
-      if (SUMMARIZED_RULES.has(f.rule) && !verbose) {
-        const key = `${f.severity} ${f.rule}`
-        const n = (entryHeld.get(key)?.n ?? 0) + 1
-        entryHeld.set(key, { severity: f.severity, rule: f.rule, n })
+      if (
+        f.severity === "warning" &&
+        SUMMARIZED_RULES.has(f.rule) &&
+        !verbose
+      ) {
+        entryHeld.set(f.rule, (entryHeld.get(f.rule) ?? 0) + 1)
         continue
       }
       const where = f.path ? ` (${f.path})` : ""
@@ -78,9 +78,9 @@ export function formatSpecReport(
         `       ${f.severity.padEnd(7)} [${f.rule}]${where} ${f.message}`
       )
     }
-    for (const { severity, rule, n } of entryHeld.values()) {
+    for (const [rule, n] of entryHeld) {
       lines.push(
-        `       ${severity.padEnd(7)} [${rule}] ×${n} — not listed (${SUMMARIZED_RULES.get(rule)}; --verbose to list)`
+        `       ${"warning".padEnd(7)} [${rule}] ×${n} — not listed (${SUMMARIZED_RULES.get(rule)}; --verbose to list)`
       )
       heldBack.set(rule, (heldBack.get(rule) ?? 0) + n)
     }
