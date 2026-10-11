@@ -5,7 +5,6 @@ import {
   NO_BLOCK_SCALAR_MAP_KEYS,
   REFERENCE_MAP_KEYS,
   ROW_SCAN_MAP_KEYS,
-  TOKEN_MAP_KEYS,
 } from "./frontmatter-map-table"
 
 // The lists every reader used to keep by hand, pinned as literals. Deriving the
@@ -13,15 +12,6 @@ import {
 // are the values the readers held before the table existed (#432), so a trait
 // flipped by accident shows up here as a diff.
 describe("lists derived from the frontmatter map table", () => {
-  it("keeps the four spec token maps that send the extractor to frontmatter", () => {
-    expect(TOKEN_MAP_KEYS).toEqual([
-      "colors",
-      "typography",
-      "spacing",
-      "rounded",
-    ])
-  })
-
   it("allows every map past the unknown-key rule, in the order its advice prints", () => {
     // The order is user-visible: the unknown-key fix lists these keys.
     expect(FRONTMATTER_MAP_KEYS).toEqual([

@@ -5,17 +5,13 @@
 // rule and the row rules). Adding `elevation:` meant editing four of them, and a
 // map missing from one list was skipped in silence: left out of the
 // block-scalar rule, a `>` value dropped its token from the sidecar while every
-// gate passed (#432). Each list is now a filter over this table.
+// gate passed (#432). The extractor's path switch went with its body fallback
+// (#429); the other four lists are now filters over this table.
 //
-// No imports, on purpose: `content-parser` is in the client bundle, and
-// `frontmatter-map`, `content-parser` and `draft-validator` all read this, so
-// it must sit below all three.
+// No imports, on purpose: `content-parser` is in the client bundle, and both
+// it and `draft-validator` read this, so it must sit below them.
 
 export interface FrontmatterMapTraits {
-  /** One of the four spec token maps. Declaring any of them sends the
-   *  extractor down the frontmatter path. Not "becomes sidecar tokens":
-   *  `elevation:` does that too, but must not decide the colours' path. */
-  tokenMap: boolean
   /** A map the spec schema knows. False is catalog-only — values the spec has
    *  no field for, which its linter ignores. */
   spec: boolean
@@ -34,28 +30,24 @@ export interface FrontmatterMapTraits {
 /** Key order is the order the unknown-key advice lists them in. */
 export const FRONTMATTER_MAPS = {
   colors: {
-    tokenMap: true,
     spec: true,
     reference: true,
     noBlockScalar: true,
     rowScan: true,
   },
   typography: {
-    tokenMap: true,
     spec: true,
     reference: true,
     noBlockScalar: true,
     rowScan: false,
   },
   spacing: {
-    tokenMap: true,
     spec: true,
     reference: true,
     noBlockScalar: true,
     rowScan: true,
   },
   rounded: {
-    tokenMap: true,
     spec: true,
     reference: true,
     noBlockScalar: true,
@@ -64,7 +56,6 @@ export const FRONTMATTER_MAPS = {
   // The spec's component map. Not a sidecar token map: only the spec linter
   // reads it, straight from the file (#384).
   components: {
-    tokenMap: false,
     spec: true,
     reference: true,
     noBlockScalar: true,
@@ -75,7 +66,6 @@ export const FRONTMATTER_MAPS = {
   // rows used to sit in a body fence the row rules judged; moving them into
   // frontmatter must not move them out of reach.
   elevation: {
-    tokenMap: false,
     spec: false,
     reference: true,
     noBlockScalar: true,
@@ -83,28 +73,24 @@ export const FRONTMATTER_MAPS = {
   },
   // Catalog-only maps, for values the spec schema has no field for.
   gradients: {
-    tokenMap: false,
     spec: false,
     reference: true,
     noBlockScalar: false,
     rowScan: false,
   },
   opacity: {
-    tokenMap: false,
     spec: false,
     reference: true,
     noBlockScalar: false,
     rowScan: false,
   },
   grid: {
-    tokenMap: false,
     spec: false,
     reference: true,
     noBlockScalar: false,
     rowScan: false,
   },
   fonts: {
-    tokenMap: false,
     spec: false,
     reference: true,
     noBlockScalar: false,
@@ -125,7 +111,6 @@ function mapsWhere(
   return FRONTMATTER_MAP_KEYS.filter((name) => FRONTMATTER_MAPS[name][trait])
 }
 
-export const TOKEN_MAP_KEYS = mapsWhere("tokenMap")
 export const REFERENCE_MAP_KEYS = mapsWhere("reference")
 export const NO_BLOCK_SCALAR_MAP_KEYS = mapsWhere("noBlockScalar")
 export const ROW_SCAN_MAP_KEYS = mapsWhere("rowScan")
