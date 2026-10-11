@@ -132,7 +132,7 @@ Inferred-from-screenshots values (when research.md marked them with `≈`) keep 
 - **primary** ≈ `oklch(0.62 0.18 250)` (값은 공개된 토큰이 없어 캡처에서 추정)
 ```
 
-A research claim cited `[src:screenshot:…]` or `[src:board:…]` has no public source behind it — a capture or an approved design board is not one. Carry its value the same way: keep the `≈` and a short note saying where it came from (for a frontmatter token, both go in its trailing comment). Here `≈` marks "no public source", since the rubric asks every claim to be cited or marked `≈` — it does not by itself mean the value is an estimate, so the note says which: a value copied exactly from a board file reads `≈ 보드 판독 · 공개 출처 없음`, a value read off a capture says it was estimated. Do not turn either citation into a `## References` entry or a `[src:N]`.
+A research claim cited `[src:screenshot:…]` or `[src:board:…]` has no public source behind it — a capture or an approved design board is not one. Carry its value the same way: keep the `≈` and a short note saying where it came from (for a frontmatter token, both go in its trailing comment). Here `≈` marks "no public source", since the rubric asks every claim to be cited or marked `≈` — it does not by itself mean the value is an estimate, so the note says which: a value copied exactly from a board source file reads `≈ 보드 판독 · 공개 출처 없음`, while a value read off a capture or a board frame image says it was estimated. Do not turn either citation into a `## References` entry or a `[src:N]`.
 
 ### Token references in body prose
 

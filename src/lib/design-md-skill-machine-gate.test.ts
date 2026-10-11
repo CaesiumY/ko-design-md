@@ -653,7 +653,27 @@ describe("/design-md machine gates", () => {
     expect(
       gate,
       "Stage 4c must carry the approved board into the research dispatch"
-    ).toContain("screenshot_paths")
+    ).toContain("board_source_paths")
+
+    // A board is read from its source when it has one. The question asks for
+    // the source before the frames and accepts a published artifact link
+    // (which, unlike a handoff link, does not expire), and the preflight
+    // fetches that link's files with the Artifact tool. Frames alone are the
+    // last resort: a picture research can only estimate from.
+    expect(
+      block,
+      "the board question must ask for the source before the frames"
+    ).toContain("Ask for the source before the frames")
+    expect(
+      block,
+      "the board question must accept a published artifact link"
+    ).toContain("claude.ai/artifact/")
+    const preflight = /\*\*Preflight\*\*[\s\S]*?(?=\n\n)/.exec(gate)?.[0] ?? ""
+    expect(
+      preflight,
+      "the preflight must fetch an artifact link's source files"
+    ).toContain("fetch the board's source first")
+    expect(preflight).toContain("`Artifact` tool")
 
     // Stage 2 accepts a directory for convenience, so the handover has to
     // expand it. research-collector has no `Bash` to list a directory and
@@ -688,7 +708,6 @@ describe("/design-md machine gates", () => {
     // directory the same way. When only the handover said "recursively", a
     // bundle's `components/Drawer.jsx` was either never shown for approval or
     // reached research without having been approved.
-    const preflight = /\*\*Preflight\*\*[\s\S]*?(?=\n\n)/.exec(gate)?.[0] ?? ""
     expect(
       preflight,
       "Stage 4c preflight must expand a directory recursively, as the handover does"
@@ -708,13 +727,24 @@ describe("/design-md machine gates", () => {
       handover,
       "the handover must route the board's text files into board_source_paths"
     ).toContain("board_source_paths")
-    // Split by "image or not", not by a list of text extensions: the first
-    // version named five extensions, and a bundle's `Drawer.jsx` matched
-    // neither list — dropped exactly the way this paragraph was written to stop.
+    // Decide by "can it be read", not by a list of extensions: the first
+    // version named five text extensions, and a bundle's `Drawer.jsx` matched
+    // no list — dropped exactly the way this paragraph was written to stop.
     expect(
       handover,
-      "the handover must send every non-image file to board_source_paths"
-    ).toContain("**every other file** into `board_source_paths`")
+      "the handover must send every readable board file to board_source_paths"
+    ).toContain("**Every file research-collector can read goes in**")
+    // Board frames used to go to `screenshot_paths`, where they read as one
+    // more capture of the live service: cited `[src:screenshot:…]`, estimated
+    // from, and free to be overruled — the board rule covered only the text.
+    expect(
+      handover,
+      "the handover must keep board frames out of screenshot_paths"
+    ).toContain("**Board frames do not go into `screenshot_paths`.**")
+    expect(
+      readRepoFile(RESEARCH_COLLECTOR_AGENT),
+      "research-collector must take board frames through board_source_paths"
+    ).toContain("Board frames come here, not in `screenshot_paths`")
     const research = skill.slice(
       skill.indexOf("## Stage 5"),
       skill.indexOf("## Stage 6")
