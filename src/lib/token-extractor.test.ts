@@ -3,14 +3,9 @@ import { describe, expect, it } from "vitest"
 import { DESIGN_MD_TEMPLATE, readRepoFile } from "./skill-asset-paths"
 import { extractTokensFromMarkdown } from "./token-extractor"
 
-// Load the post-frontmatter body of a real catalog entry, exactly as the
-// codegen script will feed it to the extractor.
-/** The whole entry, frontmatter included.
- *
- *  Tokens live in frontmatter now, so handing the extractor only `doc.body`
- *  would exercise the legacy fence path against files that no longer have
- *  fences — every assertion below would read zero and the suite would be
- *  testing nothing. */
+/** A real catalog entry, frontmatter included — exactly what the codegen
+ *  script feeds the extractor. Handing it only `doc.body` would read zero
+ *  tokens, and every assertion below would be testing nothing. */
 function loadRaw(slug: string): string {
   return readFileSync(
     new URL(`../../services/${slug}.md`, import.meta.url),
@@ -429,7 +424,7 @@ describe("elevation — frontmatter `elevation:` map", () => {
         "  shadow-2: 0 4px 12px oklch(0 0 0 / 0.1), 0 1px  2px oklch(0 0 0 / 0.04)"
       )
     )
-    // Same shape as the body path wrote: no `group`, whitespace collapsed.
+    // No `group`, whitespace collapsed.
     expect(t.elevation).toEqual([
       {
         name: "shadow-1",
@@ -443,11 +438,63 @@ describe("elevation — frontmatter `elevation:` map", () => {
     ])
   })
 
-  it("drops rows that are not shadows, as the body path did", () => {
+  it("drops rows that are not shadows", () => {
     const t = extractTokensFromMarkdown(
       doc("  scrim: oklch(0 0 0 / .32)", "  level: 2")
     )
     expect(t.elevation).toBeUndefined()
+  })
+})
+
+describe("elevation — shadow-vs-color discrimination", () => {
+  // The offsets must be counted OUTSIDE the color function. A bare color has
+  // digits inside `oklch(...)`/`rgba(...)` that otherwise read as offsets, and
+  // the result would be an offset-less `box-shadow` the browser silently drops
+  // — the same silent-failure mode this category exists to avoid. `scrim` and
+  // `press-overlay` are real catalog token names, so this is not hypothetical.
+  const notShadows = [
+    "scrim: oklch(0 0 0 / .32)",
+    "press-overlay: oklch(0 0 0 / 0.26)",
+    "overlay: rgba(0, 0, 0, 0.4)",
+    "tint: oklch(0.5 0.1 260)",
+    "blend: color-mix(in srgb, #000000 20%, transparent)",
+  ]
+  const shadows = [
+    "shadow-1: 0 1px 2px oklch(0 0 0 / 0.06)",
+    "dock: 0 -4px 8px oklch(0 0 0 / 6%)",
+    "sm: 0px 1px 4px 0px oklch(0 0 0 / 0.078)",
+    "md: 0 4px 10px color-mix(in srgb, #000000 20%, transparent)",
+    "multi: 0 1px 2px oklch(0 0 0 / .04), 0 2px 6px oklch(0 0 0 / .16)",
+    "ring: inset 0 0 0 1px oklch(0.573 0.189 260)",
+    "flat: none",
+  ]
+  const section = (line: string) => withElevation(line)
+
+  it.each(notShadows)("excludes a bare color value: %s", (line) => {
+    expect(extractTokensFromMarkdown(section(line)).elevation).toBeUndefined()
+  })
+
+  it.each(shadows)("keeps a real shadow: %s", (line) => {
+    expect(extractTokensFromMarkdown(section(line)).elevation).toHaveLength(1)
+  })
+
+  // Colors are authored as OKLCH with the source hex in a trailing comment
+  // (seed-design does exactly this), so a bare hex AS the shadow colour is not
+  // a supported form — `splitInlineComment` would read ` #0000001a` as a note.
+  // Pinned so the constraint is visible rather than discovered.
+  it("treats a space-prefixed bare hex as a comment, not a shadow colour", () => {
+    const t = extractTokensFromMarkdown(section("hex: 0 2px 4px #0000001a"))
+    expect(t.elevation).toBeUndefined()
+  })
+
+  it("does not carry a group field (only colours render grouped)", () => {
+    const t = extractTokensFromMarkdown(
+      withElevation("## Surface", "s1: 0 1px 2px oklch(0 0 0 / 0.06)")
+    )
+    expect(t.elevation?.[0]).toEqual({
+      name: "s1",
+      value: "0 1px 2px oklch(0 0 0 / 0.06)",
+    })
   })
 })
 
@@ -622,7 +669,7 @@ describe("typography shapes that look healthy but are not", () => {
   })
 
   it("normalizes a named font weight instead of storing null", () => {
-    // `bold` is valid and the legacy fence parser has always mapped it to 700.
+    // `bold` is a valid weight keyword, and CSS maps it to 700.
     // `Number("bold")` is NaN, which serialises as `null` in the sidecar and
     // reaches DESIGN.md as `fontWeight: null`.
     expect(

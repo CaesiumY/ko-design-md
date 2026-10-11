@@ -38,10 +38,11 @@ function splitInlineComment(rest: string): { value: string; note?: string } {
   }
 }
 
-// Strip the YAML string quotes an author may wrap a value in (11st quotes its
-// shadow values so the commas don't read as flow syntax). Without this the
-// quotes land in the sidecar and a consumer pasting the value into CSS gets a
-// broken declaration. Only a matching outer pair is removed.
+// Strip the YAML string quotes an author may wrap a value in (a shadow quoted
+// so its commas don't read as flow syntax — `quoted-token-value` blocks that
+// upstream, but the reader must not publish the quotes if one slips through).
+// Left in, a consumer pasting the value into CSS gets a broken declaration.
+// Only a matching outer pair is removed.
 //
 // SHARED, not elevation-only: it sits on the path every token row takes
 // (`splitInlineComment`). It was added for shadows but applies catalogue-wide —
@@ -247,7 +248,7 @@ function clean<T extends Record<string, string | number | undefined>>(
 }
 
 /** One frontmatter token map, read as RawLines so the existing parsers derive
- *  everything (the `px` field, `%` handling, alias skipping) exactly as before.
+ *  everything (the `px` field, `%` handling, alias skipping).
  *
  *  Group and comment are told apart by the hash count: `## Brand` restores the
  *  sidecar's `group`, a single `# …` is commentary the fences used to carry.

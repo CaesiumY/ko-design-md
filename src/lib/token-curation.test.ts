@@ -217,8 +217,8 @@ describe("lightTokensOnly", () => {
   })
 
   it("filters a category that carries no group field at all", () => {
-    // ElevationToken has no `group` — the section's one grouping convention is a
-    // bare comment inside the fence, which rawLines drops. The filter must still
+    // ElevationToken has no `group` — the extractor drops an `elevation:` map's
+    // `  ## label` lines. The filter must still
     // work on that shape: seed-design publishes s1..s3 alongside dark-s1..s3,
     // the dark trio authored at 50–80% black for a dark canvas. Rendering those
     // on the light-fixed card tiles showed six chips for three tokens.
