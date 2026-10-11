@@ -127,6 +127,79 @@ export function previewSheets(html: string): Array<PreviewSheet> {
 }
 
 /**
+ * CSS motion, as the author prompt defines the trigger: `@keyframes`, or an
+ * `animation` or `transition` declaration — shorthand or longhand — that sets
+ * motion. `none` and zero durations set none — which is why the prescribed
+ * block, whose declarations are `none !important`, need not be cut out first.
+ * Cutting reduced-motion blocks out would also cut a `no-preference` block,
+ * whose declarations are motion. Read from every `<style>` in the file (the
+ * same set `reducedMotionViolations` judges) and from `style` attributes in
+ * either quote, without regard to case, as CSS reads property names: a preview
+ * this misses is one the callers never look at.
+ *
+ * One definition for both callers — the shipped-catalogue gate (#443) and the
+ * preview validator's warn (#395) — so the warn a draft gets in the skill loop
+ * cannot disagree with the gate it then meets in CI.
+ */
+export function hasCssMotion(html: string): boolean {
+  const css = previewSheets(html).map((s) => s.css)
+  const attrs = [...html.matchAll(/\sstyle\s*=\s*(["'])([\s\S]*?)\1/gi)].map(
+    (m) => m[2]
+  )
+  const text = [...css, ...attrs].join("\n")
+  if (/@(?:-[a-z]+-)?keyframes\b/i.test(text)) return true
+  for (const m of text.matchAll(
+    // A vendor prefix (`-webkit-animation:`) still counts; a custom property
+    // (`--btn-transition:`) does not — it only stores a value. The second
+    // lookbehind keeps `animation` inside a longer word from matching.
+    /(?<!--[\w-]*)(?<!\w)((?:animation|transition)(?:-[a-z-]+)?)\s*:\s*([^;}"']+)/gi
+  )) {
+    const [, property, raw] = m
+    // The shorthand, or the longhands that alone decide whether anything
+    // moves; `-delay`, `-easing` and the rest only shape motion set elsewhere.
+    if (!/^(animation|transition)(-name|-property|-duration)?$/i.test(property))
+      continue
+    const value = raw.replace(/!\s*important/i, "").trim()
+    if (/^none$/i.test(value) || /^0m?s$/i.test(value)) continue
+    return true
+  }
+  return false
+}
+
+// The queries that hold exactly when the viewer asked for less motion, with
+// nothing else attached: `(prefers-reduced-motion: reduce)`, the boolean
+// `(prefers-reduced-motion)`, and `not (prefers-reduced-motion: no-preference)`,
+// each optionally after `screen and` / `all and` (and an `only` before the
+// type). Anything else — `print and …`, `… and (min-width: 600px)`, `or`, a
+// comma list — is not read as one, so a caller errs towards reporting a missing
+// block. So are two spellings the browser rejects outright: `only` with no
+// media type after it, and `not(` with no space, which is a function token.
+const UNCONDITIONAL_REDUCE =
+  /^@media\s*(?:(?:only\s+)?(?:all|screen)\s+and\s+)?(?:\(\s*prefers-reduced-motion\s*(?::\s*reduce\s*)?\)|not\s+\(\s*prefers-reduced-motion\s*:\s*no-preference\s*\))$/i
+
+/**
+ * Whether the file handles reduced motion the one way the author prompt allows:
+ * a block in the page sheet that applies to every viewer who asked for less
+ * motion — at the sheet's top level (see `reducedMotionMediaBlocks`), in a sheet
+ * with no `media` attribute, under one of the unconditional spellings above —
+ * and `prefers-reduced-motion` nowhere else in the file. These are
+ * `reducedMotionViolations`' conditions short of the block's text: whether the
+ * block is the prescribed one is its to judge.
+ */
+export function hasAppliedReduceBlock(html: string): boolean {
+  if ((html.match(/prefers-reduced-motion/gi)?.length ?? 0) !== 1) return false
+  const sheets = previewSheets(html)
+  if (sheets.length === 0) return false
+  const page = sheets[0]
+  if (/\bmedia\s*=/i.test(page.attrs)) return false
+  return reducedMotionMediaBlocks(page.css).some(
+    (b) =>
+      b.topLevel &&
+      UNCONDITIONAL_REDUCE.test(b.text.slice(0, b.text.indexOf("{")).trim())
+  )
+}
+
+/**
  * What keeps a preview from carrying `form` — the prescribed block,
  * `normalizeCss`'d — as the one place it handles reduced motion; empty when
  * nothing does. Three conditions:

@@ -290,17 +290,15 @@ describe("dark-swap-anchor — the shipped catalogue", () => {
   })
 })
 
-// #395: the motion detector held against the real catalogue. Every shipped
-// preview that moves already carries its reduce block, so the rule returns
-// before it ever reads a motion declaration — the bulk gate's unchanged output
-// says nothing about whether the detector can see this catalogue's motion at
-// all. So the block is taken out and the rule must then fire on every file
-// that carried one.
+// #395: the warn held against the real catalogue. Every shipped preview that
+// moves already carries its block, so the warn is silent across the bulk gate
+// whether or not it can see this catalogue's motion at all. So the block is
+// taken out, and the warn must then fire on every file that carried one.
 //
 // This is per file, not per declaration: a file still fires if ANY of its
-// motion is read. It did not catch durations written as tokens
-// (`var(--d-fast)`) being read as `0s`, because every preview that writes them
-// also moves some other way. The unit tests pin that shape.
+// motion is read. An earlier detector read durations written as tokens
+// (`var(--d-fast)`) as `0s` and this did not catch it, because every preview
+// that writes them also moves some other way. The unit tests pin that shape.
 describe("reduced-motion — the shipped catalogue", () => {
   const RULE = "reduced-motion-missing"
 

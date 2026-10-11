@@ -1142,198 +1142,146 @@ describe("validatePreviewPair — responsive heuristics", () => {
 
 // ── reduced motion ───────────────────────────────────────────────────────────
 
-// #395: a preview that moves must carry a `prefers-reduced-motion: reduce`
-// block. Only the block's presence is judged here; its contents are the
-// skill's to teach and the reviewer's to check.
+// #395: a preview that moves must carry a reduced-motion block that applies.
+// Motion and "applies" are the shipped-catalogue gate's definitions (#443,
+// `reduced-motion-block.ts`), so a draft the warn passes is one the gate
+// passes — the cases that flipped from a first version say why.
 describe("validatePreviewPair — reduced motion", () => {
   const RULE = "reduced-motion-missing"
-  const REDUCE =
-    "@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }"
+  const RESET =
+    "{ *, *::before, *::after { animation: none !important; transition: none !important; } }"
+  const REDUCE = `@media (prefers-reduced-motion: reduce) ${RESET}`
   const SPIN =
     "@keyframes spin { to { transform: rotate(1turn); } } .spinner { animation: spin 1s linear infinite; }"
   const withStyle = (style: string, body?: string) =>
     makeInput({ lightRaw: makeHtml({ style, body }) })
+  const warns = (style: string, body?: string) =>
+    rulesOf(withStyle(style, body), "warn").includes(RULE)
 
   it("warns when the page moves and nothing turns the motion off", () => {
-    expect(rulesOf(withStyle(SPIN), "warn")).toContain(RULE)
+    expect(warns(SPIN)).toBe(true)
   })
 
-  it("stays quiet once the reduce block is there", () => {
-    expect(rulesOf(withStyle(`${SPIN} ${REDUCE}`), "warn")).not.toContain(RULE)
+  it("stays quiet once the block is there", () => {
+    expect(warns(`${SPIN} ${REDUCE}`)).toBe(false)
   })
 
-  it("does not count `animation: none` as motion", () => {
-    expect(
-      rulesOf(withStyle(".a { animation: none; transition: none; }"), "warn")
-    ).not.toContain(RULE)
+  it("does not count `none` or a zero time as motion", () => {
+    expect(warns(".a { animation: none; transition: 0s; }")).toBe(false)
   })
 
-  it("finds a reduce block nested in @supports", () => {
-    expect(
-      rulesOf(
-        withStyle(`${SPIN} @supports (display: grid) { ${REDUCE} }`),
-        "warn"
-      )
-    ).not.toContain(RULE)
-  })
-
-  it("does not take a no-preference block for the reduce one", () => {
-    const optIn =
-      "@media (prefers-reduced-motion: no-preference) { .b { transition: opacity 0.2s; } }"
-    expect(rulesOf(withStyle(`${SPIN} ${optIn}`), "warn")).toContain(RULE)
-  })
-
-  it("does not count motion that only a no-preference block turns on", () => {
-    // The opt-in form: nothing moves unless the viewer allows it, so there is
-    // nothing for a reduce block to stop.
-    const optInOnly =
-      "@keyframes fade { from { opacity: 0; } } @media (prefers-reduced-motion: no-preference) { .b { animation: fade 0.2s; } }"
-    expect(rulesOf(withStyle(optInOnly), "warn")).not.toContain(RULE)
-  })
-
-  it("reads `not` in a media condition", () => {
-    // `not (… reduce)` applies when the viewer did NOT ask for less motion, so
-    // it is no reduce block; `not (… no-preference)` applies exactly when they
-    // did, so it is one.
-    const moving = ".b { transition: opacity 0.2s; }"
-    expect(
-      rulesOf(
-        withStyle(
-          `@media not (prefers-reduced-motion: reduce) { .a { color: red; } } ${moving}`
-        ),
-        "warn"
-      )
-    ).toContain(RULE)
-    expect(
-      rulesOf(
-        withStyle(
-          `@media not (prefers-reduced-motion: no-preference) { * { transition: none !important; } } ${moving}`
-        ),
-        "warn"
-      )
-    ).not.toContain(RULE)
-  })
-
-  it("does not count a transition that takes no time", () => {
-    // A transition's duration defaults to 0s, so one without a time moves
-    // nothing; neither does one whose every time is zero.
-    for (const decl of [
-      "transition: all 0s",
-      "transition: opacity",
-      "transition: opacity 0s, color 0ms",
-      "transition-duration: 0s, 0s",
-      "transition: initial",
-      "animation: initial",
-    ]) {
-      expect(rulesOf(withStyle(`.a { ${decl}; }`), "warn"), decl).not.toContain(
-        RULE
-      )
-    }
-    expect(
-      rulesOf(withStyle(".a { transition: opacity 0s, color 0.2s; }"), "warn")
-    ).toContain(RULE)
+  it("counts @keyframes alone, prefixed or not, and a style attribute", () => {
+    expect(warns("@keyframes pulse { to { opacity: 0.5; } }")).toBe(true)
+    expect(warns("@-webkit-keyframes pulse { to { opacity: 0.5; } }")).toBe(
+      true
+    )
+    const body =
+      '<main class="hero"><img src="/logos/demo.png" alt="데모"><h1 style="transition: color 0.2s">데모</h1></main>'
+    expect(warns(".hero { color: red; }", body)).toBe(true)
   })
 
   it("counts a transition whose time comes from a variable", () => {
-    // The catalogue writes durations as tokens (greeting, gs-shop). A time the
-    // validator cannot read is not a zero time — read as one, a preview that
-    // moved only this way would pass with no reduce block.
-    for (const decl of [
-      "transition: background-color var(--d-fast) var(--ease)",
-      "transition: var(--transition-btn)",
-      "transition-duration: var(--dur)",
-      "transition: opacity calc(var(--d) * 2)",
-    ]) {
-      expect(rulesOf(withStyle(`.a { ${decl}; }`), "warn"), decl).toContain(
-        RULE
-      )
-    }
-  })
-
-  it("scopes `not` to the query or the feature it negates", () => {
-    // `not` inverts a whole query when it leads it, or one parenthesised
-    // feature when it wraps it — never the motion query beside the feature it
-    // wraps. Reading it anywhere in the prelude took an allow-motion block for
-    // a reduce one and let the page through (PR #519 review).
-    const moving = ".b { transition: opacity 0.2s; }"
-    const reset = "{ * { transition: none !important; } }"
-    for (const [prelude, expected] of [
-      // Allow-motion only; the `not` belongs to `(hover: none)`.
-      ["(prefers-reduced-motion: no-preference) and (not (hover: none))", true],
-      // A reduce block whose other feature happens to be negated.
-      ["(prefers-reduced-motion: reduce) and (not (hover: none))", false],
-      // Each comma-separated query stands alone: `not print` does not flip the
-      // reduce query before it.
-      ["(prefers-reduced-motion: reduce), not print", false],
-      ["print, (prefers-reduced-motion: reduce)", false],
-      // A leading `not` negates the whole query: `not (all and no-preference)`
-      // holds exactly when the viewer asked for reduce.
-      ["not all and (prefers-reduced-motion: no-preference)", false],
-    ] as const) {
-      const rules = rulesOf(
-        withStyle(`@media ${prelude} ${reset} ${moving}`),
-        "warn"
-      )
-      if (expected) expect(rules, prelude).toContain(RULE)
-      else expect(rules, prelude).not.toContain(RULE)
-    }
-  })
-
-  it("exempts opt-in motion only when every query in the list is opt-in", () => {
-    // `(min-width: 0)` always holds, so each of these moves for everyone. A
-    // query the check cannot settle — `or`, or a leading `not` over more than
-    // the motion feature — is neither opt-in nor a reduce block.
-    for (const prelude of [
-      "(prefers-reduced-motion: no-preference), (min-width: 0)",
-      "(prefers-reduced-motion: no-preference) or (min-width: 0)",
-      // `not (reduce and wide)` holds for a narrow screen that asked for reduce.
-      "not all and (prefers-reduced-motion: reduce) and (min-width: 600px)",
-    ]) {
-      const style = `@media ${prelude} { .a { transition: opacity 0.2s; } }`
-      expect(rulesOf(withStyle(style), "warn"), prelude).toContain(RULE)
-    }
-  })
-
-  it("lists each moving site once", () => {
-    const sites = (n: number, distinct: boolean) =>
-      Array.from(
-        { length: n },
-        (_, i) =>
-          `<p style="transition: color ${distinct ? i + 1 : 1}00ms">x</p>`
-      ).join("")
-    const fixFor = (body: string) =>
-      validatePreviewPair(
-        withStyle(
-          ".hero { color: red; }",
-          `<main class="hero"><img src="/logos/demo.png" alt="데모"><h1>데모</h1>${body}</main>`
-        )
-      ).issues.find((i) => i.rule === RULE)?.fix ?? ""
-    // Four copies of one declaration are one site, so nothing is cut off…
-    expect(fixFor(sites(4, false))).not.toContain("…")
-    // …and four different ones are four, so the list of three is.
-    expect(fixFor(sites(4, true))).toContain("…")
-  })
-
-  it("counts a @keyframes block on its own, prefixed or not", () => {
-    for (const style of [
-      "@keyframes pulse { to { opacity: 0.5; } }",
-      "@-webkit-keyframes pulse { to { opacity: 0.5; } }",
-    ]) {
-      expect(rulesOf(withStyle(style), "warn"), style).toContain(RULE)
-    }
-  })
-
-  it("counts a transition in a style attribute", () => {
-    const body =
-      '<main class="hero"><img src="/logos/demo.png" alt="데모"><h1 style="transition: color 0.2s">데모</h1></main>'
-    expect(rulesOf(withStyle(".hero { color: red; }", body), "warn")).toContain(
-      RULE
+    // The catalogue writes durations as tokens (greeting, gs-shop). A time
+    // that cannot be read is not a zero time.
+    expect(warns(".a { transition: background-color var(--d-fast); }")).toBe(
+      true
     )
   })
 
+  it("accepts the unconditional spellings of the block", () => {
+    for (const prelude of [
+      "(prefers-reduced-motion: reduce)",
+      "(prefers-reduced-motion)",
+      "screen and (prefers-reduced-motion: reduce)",
+      "not (prefers-reduced-motion: no-preference)",
+    ]) {
+      expect(warns(`${SPIN} @media ${prelude} ${RESET}`), prelude).toBe(false)
+    }
+  })
+
+  it("does not take a block that misses some viewers for one", () => {
+    // Each of these stops motion only in some contexts or for some widths —
+    // the gate rejects every one, so the warn must not pass them. A first
+    // version accepted the `@supports` nesting and the `not … and` forms.
+    for (const style of [
+      `@supports (display: grid) { ${REDUCE} }`,
+      `@media print { ${REDUCE} }`,
+      `@media print and (prefers-reduced-motion: reduce) ${RESET}`,
+      `@media not print and (prefers-reduced-motion: reduce) ${RESET}`,
+      `@media (prefers-reduced-motion: reduce) and (min-width: 600px) ${RESET}`,
+      `@media (prefers-reduced-motion: no-preference) and (not (hover: none)) ${RESET}`,
+      `@media (prefers-reduced-motion: no-preference) ${RESET}`,
+    ]) {
+      expect(warns(`${SPIN} ${style}`), style).toBe(true)
+    }
+  })
+
+  it("does not take a spelling the browser rejects for a block", () => {
+    // `only` needs a media type after it, and `not(` is a function token —
+    // either way the browser drops the whole query and the block never applies.
+    for (const prelude of [
+      "only (prefers-reduced-motion: reduce)",
+      "not(prefers-reduced-motion: no-preference)",
+    ]) {
+      expect(warns(`${SPIN} @media ${prelude} ${RESET}`), prelude).toBe(true)
+    }
+  })
+
+  it("wants reduced motion handled in one place only", () => {
+    // The gate allows the condition to appear once in the file: a second block,
+    // a no-preference branch beside the block, or a copy in another sheet each
+    // fail it, so each warns here too.
+    for (const style of [
+      `${REDUCE} ${REDUCE}`,
+      `${REDUCE} @supports (display: grid) { ${REDUCE} }`,
+      `${REDUCE} @media (prefers-reduced-motion: no-preference) { .b { transition: opacity 0.2s; } }`,
+    ]) {
+      expect(warns(`${SPIN} ${style}`), style).toBe(true)
+    }
+  })
+
+  it("does not exempt motion behind a no-preference query", () => {
+    // The author prompt allows one way to handle reduced motion — the block —
+    // and the gate holds every moving file to it, opt-in form included.
+    expect(
+      warns(
+        "@keyframes fade { from { opacity: 0; } } @media (prefers-reduced-motion: no-preference) { .b { animation: fade 0.2s; } }"
+      )
+    ).toBe(true)
+  })
+
+  it("reads the block only from the page sheet, and not under a media attribute", () => {
+    const merged = (pageAttrs: string, page: string, dark: string) =>
+      makeHtml({ style: page })
+        .replace("<style>", `<style${pageAttrs}>`)
+        .replace("</head>", `<style>${dark}</style>\n</head>`)
+    const served = (html: string) =>
+      makeInput({
+        served: [
+          { name: "preview.html", html, bytes: Buffer.byteLength(html) },
+        ],
+      })
+    const darkWithBlock = `[data-theme="dark"] .hero { color: red; } ${REDUCE}`
+    expect(
+      rulesOf(served(merged("", SPIN, darkWithBlock)), "warn"),
+      "block only in the dark sheet"
+    ).toContain(RULE)
+    expect(
+      rulesOf(
+        served(merged(' media="print"', `${SPIN} ${REDUCE}`, "")),
+        "warn"
+      ),
+      "page sheet under media=print"
+    ).toContain(RULE)
+    expect(
+      rulesOf(served(merged("", `${SPIN} ${REDUCE}`, darkWithBlock)), "warn"),
+      "a second copy in the dark sheet"
+    ).toContain(RULE)
+  })
+
   // The merged file is split into halves before most rules run, and the dark
-  // half keeps only the trailing dark sheet — so the page sheet's reduce block
-  // is not in it. The rule must read the document a browser receives.
+  // half keeps only the trailing dark sheet — so the page sheet's block is not
+  // in it. The rule must read the document a browser receives.
   it("judges the served document, not the dark half", () => {
     const darkSheet = '[data-theme="dark"] .hero { transition: color 0.2s; }'
     const darkHalf = makeHtml({ theme: "dark", style: darkSheet })

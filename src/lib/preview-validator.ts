@@ -1,6 +1,7 @@
 import { brotliCompressSync, constants } from "node:zlib"
 import { buildDoc } from "./content-parser"
 import { bodyOf, isBlankText, walkHtml } from "./html-walk"
+import { hasAppliedReduceBlock, hasCssMotion } from "./reduced-motion-block"
 import { extractTokensFromMarkdown } from "./token-extractor"
 import type { WalkNode } from "./html-walk"
 import type { ValidationIssue } from "./draft-validator"
@@ -708,11 +709,6 @@ interface CssRule {
   selector: string
   declarations: string
   inMedia: boolean
-  /** Preludes of the conditional group rules around this one, outermost first
-   *  (`@supports (display: grid)`, `@media (prefers-reduced-motion: reduce)`).
-   *  `inMedia` only says there is one; the reduced-motion rule needs to know
-   *  which (#395). */
-  conditions: Array<string>
 }
 
 function stripCssComments(css: string): string {
@@ -746,11 +742,7 @@ function dropStatementAtRules(prelude: string): string {
   return prelude.slice(cut)
 }
 
-function parseCssRules(
-  css: string,
-  inMedia = false,
-  conditions: Array<string> = []
-): Array<CssRule> {
+function parseCssRules(css: string, inMedia = false): Array<CssRule> {
   const out: Array<CssRule> = []
   let i = 0
   while (i < css.length) {
@@ -778,13 +770,13 @@ function parseCssRules(
     }
     const inner = css.slice(open + 1, j - 1)
     if (/^@(media|supports|container)\b/.test(selector)) {
-      out.push(...parseCssRules(inner, true, [...conditions, selector]))
+      out.push(...parseCssRules(inner, true))
     } else if (/^@(layer|scope|starting-style)\b/.test(selector)) {
       // Rule-containing blocks that are not conditions: the browser applies
       // their rules unconditionally, so they keep the enclosing `inMedia`.
-      out.push(...parseCssRules(inner, inMedia, conditions))
+      out.push(...parseCssRules(inner, inMedia))
     } else if (!selector.startsWith("@")) {
-      out.push({ selector, declarations: inner, inMedia, conditions })
+      out.push({ selector, declarations: inner, inMedia })
     }
     i = j
   }
@@ -985,21 +977,16 @@ function decodeQuoteEntities(value: string): string {
     .replace(/&amp;/gi, "&")
 }
 
-/** Each `style` attribute's declarations, as the CSS parser receives them. */
-function inlineStyleDeclarations(html: string): Array<string> {
-  return [...html.matchAll(/\sstyle\s*=\s*(?:"([^"]*)"|'([^']*)')/gi)].map(
+function inlineInvalidFonts(html: string): Array<string> {
+  const out: Array<string> = []
+  for (const m of html.matchAll(/\sstyle\s*=\s*(?:"([^"]*)"|'([^']*)')/gi)) {
     // Exactly one of the two quote groups matched; the other is undefined and
     // `join` renders it as "".
     // Decode first, then drop comments: the CSS parser sees the decoded value
     // and treats a comment as whitespace, as it does inside `<style>`.
-    (m) => stripCssComments(decodeQuoteEntities(m.slice(1).join("")))
-  )
-}
-
-function inlineInvalidFonts(html: string): Array<string> {
-  const out: Array<string> = []
-  for (const declarations of inlineStyleDeclarations(html)) {
-    for (const problem of invalidFontDeclarations(declarations)) {
+    for (const problem of invalidFontDeclarations(
+      stripCssComments(decodeQuoteEntities(m.slice(1).join("")))
+    )) {
       out.push(`[style] attribute (${problem})`)
     }
   }
@@ -1042,190 +1029,40 @@ function scanCss(css: string): FileScan {
 
 // ── reduced motion ───────────────────────────────────────────────────────────
 
-// A preview that moves must carry a `prefers-reduced-motion: reduce` block, or
-// a viewer who asked their system for less motion still gets all of it (#395).
-// Nothing caught a missing one: #393 fixed eight previews by hand, and the
-// count turned up only in the middle of other work. Only the block's PRESENCE
-// is judged — its contents are the skill's to teach and the reviewer's to
-// check, and whether it actually stops anything takes a render. A warn, not a
-// block: leaving it out breaks no spec, it is policy.
-//
-// The feature, with a `not` directly in front of it if there is one. The
-// boolean form `(prefers-reduced-motion)` holds exactly when the viewer asked
-// for reduce, so it reads as `reduce`.
-const MOTION_FEATURE =
-  /(?:\bnot\s*)?\(\s*prefers-reduced-motion\s*(?::\s*(?:reduce|no-preference)\s*)?\)/i
-
-type MotionPreference = "reduce" | "no-preference" | null
-
 /**
- * What one media query asks of the viewer's motion setting, `not` applied.
+ * A preview that moves must carry a reduced-motion block, or a viewer who asked
+ * their system for less motion still gets all of it (#395). Nothing caught a
+ * missing one: #393 fixed eight previews by hand, and the count turned up only
+ * in the middle of other work.
  *
- * `not` is scoped the way the grammar scopes it: leading a query it negates
- * the whole query, and in front of a parenthesised feature only that feature.
- * Reading it anywhere in the prelude took `(… no-preference) and (not (hover:
- * none))` for a reduce block and let the page through (PR #519 review).
- */
-function motionPreference(query: string): MotionPreference {
-  const m = MOTION_FEATURE.exec(query)
-  if (!m) return null
-  // `or` joins alternatives the way a comma does, and one that ignores the
-  // motion setting lets the block apply to everyone. Not settled here, so
-  // neither opt-in nor reduce — the rule then errs towards a warn.
-  if (/\bor\b/i.test(query)) return null
-  const asked: MotionPreference = /no-preference/i.test(m[0])
-    ? "no-preference"
-    : "reduce"
-  const featureNot = /^not\b/i.test(m[0])
-  // A leading `not` that is not the feature's own.
-  const queryNot = /^\s*not\b/i.test(query) && m.index > query.search(/\S/)
-  if (queryNot) {
-    // It negates the whole query, so anything else in it — another feature,
-    // a parenthesised group — makes the result more than a motion setting:
-    // `not all and (… reduce) and (min-width: 600px)` holds for a narrow screen
-    // that asked for reduce.
-    const rest = query
-      .replace(m[0], "")
-      .replace(/\b(?:not|only|all|screen|print|and)\b/gi, "")
-    if (/\S/.test(rest)) return null
-  }
-  // Two negations cancel.
-  if (featureNot === queryNot) return asked
-  return asked === "reduce" ? "no-preference" : "reduce"
-}
-
-/** The comma-separated queries of a `@media` prelude; none for other at-rules. */
-function mediaQueries(prelude: string): Array<string> {
-  const m = /^@media\b([\s\S]*)$/i.exec(prelude)
-  return m ? topLevelItems(m[1]) : []
-}
-
-// A block applies under reduce when any one of its queries asks for reduce.
-function isReduceCondition(prelude: string): boolean {
-  return mediaQueries(prelude).some((q) => motionPreference(q) === "reduce")
-}
-
-// Motion declared only under this condition is the opt-in form: nothing moves
-// unless the viewer allows it, so there is nothing for a reduce block to stop.
-// Every query must ask for that — one that does not (`(min-width: 0)`) lets
-// the motion through for everyone it matches.
-function isOptInCondition(prelude: string): boolean {
-  const queries = mediaQueries(prelude)
-  return (
-    queries.length > 0 &&
-    queries.every((q) => motionPreference(q) === "no-preference")
-  )
-}
-
-// The declarations that start motion on their own. Other longhands
-// (`animation-duration`, `transition-property`) tune motion something else
-// starts — except `transition-duration`, which alone transitions `all`.
-const MOTION_DECLARATION =
-  /^(?:-webkit-)?(animation|animation-name|transition|transition-duration)\s*:\s*([\s\S]+)$/i
-// `initial` and `unset` put both properties back to `none` / `0s`.
-const NO_MOTION_KEYWORD = /^(?:none|initial|unset)$/
-// The first time in a transition item is its duration (the second is the
-// delay). Easing arguments carry no unit, so they never match.
-const FIRST_TIME = /(\d*\.?\d+)(m?s)\b/
-
-// Commas inside `cubic-bezier(…)` / `steps(…)` do not separate items.
-function topLevelItems(value: string): Array<string> {
-  const items: Array<string> = []
-  let depth = 0
-  let start = 0
-  for (let k = 0; k < value.length; k++) {
-    if (value[k] === "(") depth++
-    else if (value[k] === ")") depth--
-    else if (value[k] === "," && depth === 0) {
-      items.push(value.slice(start, k))
-      start = k + 1
-    }
-  }
-  items.push(value.slice(start))
-  return items
-}
-
-// A value computed at runtime. Its time cannot be read here, and an unread time
-// is not a zero time. The catalogue writes durations as tokens — greeting's
-// `var(--d-fast)`, gs-shop's whole `var(--gs-transition-btn)` — and read as
-// `0s`, a new preview that moved only that way would pass with no reduce block.
-const COMPUTED_VALUE = /\b(?:var|calc|env|attr)\(/
-
-/** Does a transition take any time? A duration defaults to `0s`, so an item
- *  with no time at all (`transition: opacity`) moves nothing — unless its time
- *  is computed, which counts as motion. */
-function transitionTakesTime(value: string): boolean {
-  return topLevelItems(value).some(
-    (item) =>
-      COMPUTED_VALUE.test(item) ||
-      parseFloat(FIRST_TIME.exec(item)?.[1] ?? "0") > 0
-  )
-}
-
-function motionDeclarations(declarations: string): Array<string> {
-  const out: Array<string> = []
-  for (const part of declarations.split(";")) {
-    const m = MOTION_DECLARATION.exec(part.trim())
-    if (!m) continue
-    const property = m[1].toLowerCase()
-    const value = m[2]
-      .replace(/!\s*important\s*$/i, "")
-      .trim()
-      .toLowerCase()
-    if (NO_MOTION_KEYWORD.test(value)) continue
-    if (property.startsWith("transition") && !transitionTakesTime(value)) {
-      continue
-    }
-    out.push(`${property}: ${value}`)
-  }
-  return out
-}
-
-/**
+ * What counts as motion and what counts as an applied block are not decided
+ * here. `hasCssMotion` and `hasAppliedReduceBlock` are the definitions the
+ * shipped-catalogue gate (#443) holds every preview to, so this warn — which
+ * reaches a draft in the skill loop, before it lands — does not pass a file the
+ * gate would block for a missing, misplaced or second block. A first version
+ * decided both for itself and did: it accepted a block nested in `@supports`
+ * and motion behind a no-preference query, both of which #443 rejects (PR #519
+ * review). What is left to the gate alone is the block's text — whether it is
+ * the prescribed one, spelled as the author prompt spells it.
+ *
+ * A warn, not a block: leaving the block out breaks no spec, it is policy.
+ * Whether the block actually stops anything takes a render.
+ *
  * One finding per document a browser receives, like `checkServedSize` — not
  * per half. The dark half of a merged file keeps only the trailing dark sheet,
- * and the skill puts the reduce block in the page sheet and nowhere else, so a
- * per-half check would fire on every merged preview whose dark sheet carries a
- * transition.
+ * and the block belongs in the page sheet, so a per-half check would fire on
+ * every merged preview whose dark sheet carries a transition.
  */
 function checkReducedMotion(
   doc: ServedDocument,
   issues: Array<ValidationIssue>
 ): void {
-  const css = stripCssComments(styleContent(doc.html))
-  const rules = parseCssRules(css)
-  if (rules.some((r) => r.conditions.some(isReduceCondition))) {
-    return
-  }
-  // Any motion declaration at all, opt-in included. A `@keyframes` block counts
-  // as motion only when there is none — then it is the only sign the page
-  // moves; otherwise the declarations already said so, and the opt-in form
-  // keeps its keyframes at the top level.
-  let declared = false
-  const moving: Array<string> = []
-  for (const rule of rules) {
-    const found = motionDeclarations(rule.declarations)
-    if (found.length === 0) continue
-    declared = true
-    if (rule.conditions.some(isOptInCondition)) continue
-    moving.push(...found.map((d) => `${rule.selector} (${d})`))
-  }
-  for (const declarations of inlineStyleDeclarations(doc.html)) {
-    const found = motionDeclarations(declarations)
-    if (found.length > 0) declared = true
-    moving.push(...found.map((d) => `[style] attribute (${d})`))
-  }
-  if (!declared && /@(?:-webkit-)?keyframes\b/i.test(css)) {
-    moving.push("@keyframes")
-  }
-  if (moving.length === 0) return
-  const sites = [...new Set(moving)]
-  const list = sites.slice(0, 3).join(", ")
+  if (!hasCssMotion(doc.html) || hasAppliedReduceBlock(doc.html)) return
   issues.push(
     warn(
       "reduced-motion-missing",
       doc.name,
-      `${doc.name} moves (${list}${sites.length > 3 ? ", …" : ""}) but has no \`@media (prefers-reduced-motion: reduce)\` block, so a viewer who asked their system for less motion still gets it. Add one such block to this document's \`<style>\` — in a merged preview the page sheet, not the dark sheet — setting \`animation: none !important; transition: none !important\` on \`*, *::before, *::after\`.`
+      `${doc.name} has CSS motion (\`@keyframes\`, or an \`animation\`/\`transition\` that moves) but no single reduced-motion block that applies, so a viewer who asked their system for less motion may still get it. Put one \`@media (prefers-reduced-motion: reduce)\` block at the top level of the page sheet — the first \`<style>\`, with no \`media\` attribute, not inside another at-rule — setting \`animation: none !important; transition: none !important\` on \`*, *::before, *::after\`, and handle reduced motion nowhere else: no second block, no \`no-preference\` branch, no copy in the dark sheet.`
     )
   )
 }
