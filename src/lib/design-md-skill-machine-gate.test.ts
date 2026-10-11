@@ -736,9 +736,9 @@ describe("/design-md machine gates", () => {
     // `## Sources` — while the skill expected nine, so a well-formed file
     // never matched the number it was checked against. Derived, not
     // restated: the expected count is read from the collector's own list.
-    const declared = readRepoFile(
-      ".claude/agents/research-collector.md"
-    ).match(/^\d+\. `## /gm)
+    const declared = readRepoFile(".claude/agents/research-collector.md").match(
+      /^\d+\. `## /gm
+    )
     expect(declared, "research-collector must list its sections").not.toBeNull()
     const skill = readRepoFile(DESIGN_MD_SKILL)
     const expected = /Expected output is `(\d+)`/.exec(skill)?.[1]
