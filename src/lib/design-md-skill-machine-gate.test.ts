@@ -683,6 +683,29 @@ describe("/design-md machine gates", () => {
       handover,
       "the handover must say a directory is expanded to files before it is appended"
     ).toMatch(/director(?:y|ies)/)
+
+    // The handover used to append only image files, so a board handed over as
+    // text — a handoff bundle's `colors_and_type.css`, a Design artifact's
+    // `.dc.html` source — was approved and then dropped before research: the
+    // exact values the user signed off never reached `research.md`. The text
+    // half travels in its own variable, and all three ends are pinned: the
+    // handover fills it, the Stage 5 prompt passes it, the collector reads it.
+    expect(
+      handover,
+      "the handover must route the board's text files into board_source_paths"
+    ).toContain("board_source_paths")
+    const research = skill.slice(
+      skill.indexOf("## Stage 5"),
+      skill.indexOf("## Stage 6")
+    )
+    expect(
+      research,
+      "the Stage 5 dispatch prompt must pass board_source_paths"
+    ).toMatch(/^board_source_paths: /m)
+    expect(
+      readRepoFile(".claude/agents/research-collector.md"),
+      "research-collector must declare the board_source_paths input"
+    ).toMatch(/^- `board_source_paths`/m)
   })
 
   // Issue #404, the other half. The same instruction produced three procedures

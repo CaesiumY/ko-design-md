@@ -71,7 +71,7 @@ Then ask four follow-up text inputs:
   **Optional second asset — wordmark/logotype for the preview hero.** The catalog grid uses the symbol, but the preview HTML hero (`public/preview/{slug}/preview.html`) has room for a richer brand lockup with the brand name visible. If the source provides BOTH a symbol AND a horizontal wordmark/logotype, capture both paths. Stage 4a will place the wordmark at `public/logos/{slug}-logotype.{ext}` (matching the existing `toss-logotype.png` convention), and the preview-html-author renders the wordmark in the hero where there is space. The grid card always uses the symbol; the **wordmark has no frontmatter field** — it stays a site-internal preview-only asset (the design.md's `logo` frontmatter URL still points to the grid logo (the symbol, or its **Logo candidates** fallback) so the file remains portable outside ko-design-md).
 - **디자인 시스템 문서 사이트 URL** (optional) — if the brand publishes its design system as a documentation website (not only Figma), the root URL of that site (e.g. `https://socarframe.socar.kr/`). Stage 4b crawls it into a research corpus. The user can type "없음" to skip.
 
-- **디자인 보드 / 핸드오프 번들 경로** (optional) — comma-separated absolute paths to a Claude Design board's exported frames, or a directory the handoff bundle was already extracted into. The user can type "없음" to skip. This is what makes **Stage 4c** fire; without it there is nothing to approve and the run goes straight from Stage 4b to Stage 5. Ask for it even when the brand has a docs site — the two are different upstreams and an entry can have both. **The link expires.** A Claude Design handoff URL 404s in roughly fifteen minutes, so the user must have already saved it locally; do not accept a URL here.
+- **디자인 보드 / 핸드오프 번들 경로** (optional) — comma-separated absolute paths to a Claude Design board's exported frames, a directory the handoff bundle was already extracted into, or a board's own source files (`.dc.html` artboards and `canvas.json` from a Design artifact, the bundle's `colors_and_type.css` and `*.md`). Source files carry the board's values as exact text, so prefer them over a capture of the same board when both exist. The user can type "없음" to skip. This is what makes **Stage 4c** fire; without it there is nothing to approve and the run goes straight from Stage 4b to Stage 5. Ask for it even when the brand has a docs site — the two are different upstreams and an entry can have both. **The link expires.** A Claude Design handoff URL 404s in roughly fifteen minutes, so the user must have already saved it locally; do not accept a URL here.
 
 Capture the answers as: `brand_name`, `source_urls` (parsed array), `category`, `screenshot_paths` (parsed array, may be empty), `logo_asset_path` (a file path, or empty when `후보 찾기` was answered), `logo_candidates_requested` (true only for `후보 찾기`), `docs_site_url` (string or empty), `design_board_paths` (parsed array, may be empty).
 
@@ -156,11 +156,11 @@ After it returns, verify the corpus landed:
 
 Run this stage when `design_board_paths` from Stage 2 is non-empty; otherwise skip it and go to Stage 5. That variable is the trigger — the condition is not a judgment call.
 
-**Preflight**: for each path, `Bash`: `[ -e "$path" ]`. Surface any missing path and re-prompt, the same as the screenshot preflight. Then `Read` the frames (image paths read as images; a directory is listed and its files read).
+**Preflight**: for each path, `Bash`: `[ -e "$path" ]`. Surface any missing path and re-prompt, the same as the screenshot preflight. Then `Read` the board (image paths read as images, source files read as text; a directory is listed and its files read).
 
 Show what the board settled and what it left open: the palette in both themes, the type scale, the components it laid out, and anything it declined to define. Then `AskUserQuestion`: "디자인 보드를 확인해 주세요 — (a) 승인하고 리서치로 / (b) 보드를 고치고 다시 / (c) 취소". On (b), the user's corrections go back to the board; nothing downstream is generated until it is approved.
 
-**On approval, carry the board forward — the gate is worthless if the values stop here.** Append the approved **image files** to `screenshot_paths` before Stage 5 dispatches, reusing the listing the preflight already produced: a path that was a directory is expanded to the files inside it, and the directory string itself is never appended. research-collector's contract is "an array of local image paths to read" and its tools are `WebFetch, WebSearch, Read, Write` — it has no `Bash` to list a directory, and `Read` cannot open one, so a directory handed over here is a source that silently never gets read. Without this step Stage 5 receives only `source_urls` and the crawl corpus, and the run rebuilds from public research alone while the approval implies otherwise.
+**On approval, carry the board forward — the gate is worthless if the values stop here.** Before Stage 5 dispatches, split the approved board into two lists, reusing the listing the preflight already produced: a path that was a directory is expanded to the files inside it, and the directory string itself is never handed over. Append the **image files** to `screenshot_paths`, and collect the **text files** (`.dc.html`, `.html`, `.css`, `.md`, `.json`) into `board_source_paths`. research-collector's tools are `WebFetch, WebSearch, Read, Write` — it has no `Bash` to list a directory, and `Read` cannot open one, so a directory handed over here is a source that silently never gets read. The text half matters as much as the image half: a handoff bundle's canonical tokens live in `colors_and_type.css`, and a Design artifact's values live in its `.dc.html` source, so appending only images used to drop the board's exact values and leave research to re-read them from pictures. Without this step Stage 5 receives only `source_urls` and the crawl corpus, and the run rebuilds from public research alone while the approval implies otherwise.
 
 This is what puts the board upstream of `research.md`, and through it upstream of the draft, the preview, the sidecar and the OG image.
 
@@ -177,12 +177,13 @@ Research the brand "{brand_name}" (slug: {slug}) for ko-design-md catalog onboar
 
 source_urls: {comma-separated URLs}
 screenshot_paths: {comma-separated paths or "none"}
+board_source_paths: {comma-separated text files of the approved board from Stage 4c, or "none"}
 crawl_corpus_path: {crawl_corpus_path from Stage 4b — absolute path to crawl-corpus.md, or "none"}
 category: {category}
 lang: ko
 cache_dir: {absolute path to .claude/cache/design-md/{slug}/}
 
-Follow your agent definition. If crawl_corpus_path is not "none", read that corpus first as your primary source. Write exactly one file at {cache_dir}/research.md with the cited-claims structure. Halt with INSUFFICIENT_SOURCES only if crawl_corpus_path is "none" AND fewer than 2 URLs return 2xx.
+Follow your agent definition. If board_source_paths is not "none", read it first: it is the board the user approved at Stage 4c. If crawl_corpus_path is not "none", read that corpus next as your primary public source. Write exactly one file at {cache_dir}/research.md with the cited-claims structure. Halt with INSUFFICIENT_SOURCES only if crawl_corpus_path is "none" AND fewer than 2 URLs return 2xx.
 ```
 
 After the agent returns, `Read` `{cache_dir}/research.md`.
@@ -596,7 +597,7 @@ Start the dev server and confirm the new entry renders correctly. This is the st
     **Result**: if `breaks` is empty → `responsive_result = ok` (record the attempt count). If still non-empty after 2 attempts → `preview_screenshot` at the narrowest failing width for evidence and set `responsive_result = warn` with the residual `breaks`. Non-blocking either way (consistent with the non-blocking preview loop). The OG image is derived from design.md, so re-fixed previews do **not** trigger an OG rebuild. (The port-collision path never reaches this step — it returns to Stage 13 at step 1 — so handling for that case lives in the Stage 13 report, not here.)
 12. **Design-board cross-check (conditional)** — run when `design_board_paths` from Stage 2 is non-empty; otherwise set `board_result = skipped (no board)` and go to step 13. Stage 4c approved the board *before* anything was generated; this is the other half of that gate — the finished preview measured back against it. The question is **not whether the values are right**. `pnpm audit:oklch` and the drift gate already answered that, and on `remember` they answered it correctly: the board's twenty role colors reached the preview 20/20 unchanged. The question is **where each value landed**, which no gate in this pipeline asks — see **Preview token alias registration** in Stage 10, where that blind spot is stated against `audit:oklch` and the drift gate.
 
-    `Read` the board frames from `design_board_paths` again. The preview is still loaded top-level from step 11; `preview_resize` back to `1440 × 900` and run this probe once per theme, setting `data-theme` the same way step 11 does:
+    `Read` the board from `design_board_paths` again — frames as images, source files as text. The preview is still loaded top-level from step 11; `preview_resize` back to `1440 × 900` and run this probe once per theme, setting `data-theme` the same way step 11 does:
 
     ```js
     (() => {
