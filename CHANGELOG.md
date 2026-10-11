@@ -23,6 +23,7 @@
 - `preview-prose-audit` 스킬·CLAUDE.md 의 판정 서술과 `.agents/product-marketing.md` 용어표를 용어집(`CONTEXT.md`) 어휘로 — "원본"을 상류·번들로 가르고, "상류 미확인"·"미판정"은 유보로, 산문 전체를 가리키던 "캡션"은 프리뷰 산문으로
 - 테스트가 읽는 `.claude/` 경로를 `src/lib/skill-asset-paths.ts` 레지스트리로 일원화 — 스킬 자산을 읽던 테스트 4곳에 복제돼 있던 `readRepoFile` 헬퍼와 `import.meta.url` 예외 경로 제거 (스킬 밖 파일을 읽는 나머지 2곳은 그대로 둠)
 - `use-design-md` 스킬에서 특정 플러그인(superpowers) 호출 지시를 행동 지시로 교체 — 이 스킬만 설치한 환경에서도 유효
+- `use-design-md` 스킬의 지시를 Claude Code 도구 이름 대신 의도로 — 도구 이름과 그 세부(출력 상한 약 30,000자·`offset`/`limit`·Git Bash 의 `cygpath`)는 괄호 안 예시로만 남겨, skills.sh 로 설치한 다른 에이전트도 따를 수 있게 함
 - `preview-prose-audit` 스킬이 종결된 되돌리기 캠페인의 판정 규칙을 직접 담도록 이관
 - `docs/PRD.md` 를 to-spec 모양의 살아있는 제품 스펙으로 재작성 — 규격 세부는 정본 문서로 넘기고, 다른 문서가 인용하는 User Story 1·primary metric·성공 지표·V1.x 로드맵은 보존
 
