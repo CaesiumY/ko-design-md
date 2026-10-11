@@ -166,25 +166,24 @@ export function hasCssMotion(html: string): boolean {
   return false
 }
 
-// The queries that hold exactly when the viewer asked for less motion, with
-// nothing else attached: `(prefers-reduced-motion: reduce)`, the boolean
-// `(prefers-reduced-motion)`, and `not (prefers-reduced-motion: no-preference)`,
-// each optionally after `screen and` / `all and` (and an `only` before the
-// type). Anything else — `print and …`, `… and (min-width: 600px)`, `or`, a
-// comma list — is not read as one, so a caller errs towards reporting a missing
-// block. So are two spellings the browser rejects outright: `only` with no
-// media type after it, and `not(` with no space, which is a function token.
-const UNCONDITIONAL_REDUCE =
-  /^@media\s*(?:(?:only\s+)?(?:all|screen)\s+and\s+)?(?:\(\s*prefers-reduced-motion\s*(?::\s*reduce\s*)?\)|not\s+\(\s*prefers-reduced-motion\s*:\s*no-preference\s*\))$/i
+/**
+ * The head of the author prompt's block, whitespace-collapsed. The gate
+ * compares a preview's block with the prompt's letter for letter, so this is
+ * the one head a block can have and pass — not `screen and (…)`, the boolean
+ * `(prefers-reduced-motion)` or `not (… no-preference)`, though the browser
+ * reads those the same. A constant rather than read from the prompt because the
+ * preview validator stays fs-free; `reduced-motion-block.test.ts` holds it to
+ * the prompt's fence.
+ */
+export const PRESCRIBED_REDUCE_HEAD = "@media (prefers-reduced-motion: reduce)"
 
 /**
  * Whether the file handles reduced motion the one way the author prompt allows:
- * a block in the page sheet that applies to every viewer who asked for less
- * motion — at the sheet's top level (see `reducedMotionMediaBlocks`), in a sheet
- * with no `media` attribute, under one of the unconditional spellings above —
- * and `prefers-reduced-motion` nowhere else in the file. These are
- * `reducedMotionViolations`' conditions short of the block's text: whether the
- * block is the prescribed one is its to judge.
+ * a block in the page sheet with the prescribed head — at the sheet's top level
+ * (see `reducedMotionMediaBlocks`), in a sheet with no `media` attribute — and
+ * `prefers-reduced-motion` nowhere else in the file. These are
+ * `reducedMotionViolations`' conditions short of the block's body: whether the
+ * declarations inside are the prescribed ones is its to judge.
  */
 export function hasAppliedReduceBlock(html: string): boolean {
   if ((html.match(/prefers-reduced-motion/gi)?.length ?? 0) !== 1) return false
@@ -195,7 +194,8 @@ export function hasAppliedReduceBlock(html: string): boolean {
   return reducedMotionMediaBlocks(page.css).some(
     (b) =>
       b.topLevel &&
-      UNCONDITIONAL_REDUCE.test(b.text.slice(0, b.text.indexOf("{")).trim())
+      normalizeCss(b.text.slice(0, b.text.indexOf("{"))) ===
+        PRESCRIBED_REDUCE_HEAD
   )
 }
 

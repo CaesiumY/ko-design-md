@@ -1039,11 +1039,12 @@ function scanCss(css: string): FileScan {
  * here. `hasCssMotion` and `hasAppliedReduceBlock` are the definitions the
  * shipped-catalogue gate (#443) holds every preview to, so this warn — which
  * reaches a draft in the skill loop, before it lands — does not pass a file the
- * gate would block for a missing, misplaced or second block. A first version
- * decided both for itself and did: it accepted a block nested in `@supports`
- * and motion behind a no-preference query, both of which #443 rejects (PR #519
- * review). What is left to the gate alone is the block's text — whether it is
- * the prescribed one, spelled as the author prompt spells it.
+ * gate would block for a missing, misplaced, second or differently headed
+ * block. A first version decided both for itself and did: it accepted a block
+ * nested in `@supports`, motion behind a no-preference query, and heads the
+ * browser reads alike but the gate does not (`screen and …`), all of which #443
+ * rejects (PR #519 review). What is left to the gate alone is the block's body —
+ * whether the declarations inside are the prescribed ones.
  *
  * A warn, not a block: leaving the block out breaks no spec, it is policy.
  * Whether the block actually stops anything takes a render.

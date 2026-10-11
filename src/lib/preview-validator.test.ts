@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest"
 import { splitMergedPreview } from "./preview-halves"
 import { validatePreviewPair } from "./preview-validator"
+import {
+  hasCssMotion,
+  normalizeCss,
+  reducedMotionBlock,
+  reducedMotionViolations,
+} from "./reduced-motion-block"
 import { PREVIEW_HTML_AUTHOR_AGENT, readRepoFile } from "./skill-asset-paths"
 import type {
   AnchorSig,
@@ -1145,7 +1151,8 @@ describe("validatePreviewPair — responsive heuristics", () => {
 // #395: a preview that moves must carry a reduced-motion block that applies.
 // Motion and "applies" are the shipped-catalogue gate's definitions (#443,
 // `reduced-motion-block.ts`), so a draft the warn passes is one the gate
-// passes — the cases that flipped from a first version say why.
+// passes, short of the declarations inside the block — the cases that flipped
+// from a first version say why.
 describe("validatePreviewPair — reduced motion", () => {
   const RULE = "reduced-motion-missing"
   const RESET =
@@ -1155,8 +1162,23 @@ describe("validatePreviewPair — reduced motion", () => {
     "@keyframes spin { to { transform: rotate(1turn); } } .spinner { animation: spin 1s linear infinite; }"
   const withStyle = (style: string, body?: string) =>
     makeInput({ lightRaw: makeHtml({ style, body }) })
-  const warns = (style: string, body?: string) =>
-    rulesOf(withStyle(style, body), "warn").includes(RULE)
+  // The gate's verdict on the same file. Every case below asserts the warn
+  // agrees with it, so "a draft the warn passes is one the gate passes" is
+  // checked, not just claimed — a first version claimed it and was wrong.
+  const FORM = normalizeCss(
+    reducedMotionBlock(
+      readRepoFile(PREVIEW_HTML_AUTHOR_AGENT),
+      "preview-html-author.md"
+    )
+  )
+  const warns = (style: string, body?: string) => {
+    const warned = rulesOf(withStyle(style, body), "warn").includes(RULE)
+    const html = makeHtml({ style, body })
+    const gateBlocks =
+      hasCssMotion(html) && reducedMotionViolations(html, FORM).length > 0
+    expect(warned, `warn and gate disagree on: ${style}`).toBe(gateBlocks)
+    return warned
+  }
 
   it("warns when the page moves and nothing turns the motion off", () => {
     expect(warns(SPIN)).toBe(true)
@@ -1188,14 +1210,32 @@ describe("validatePreviewPair — reduced motion", () => {
     )
   })
 
-  it("accepts the unconditional spellings of the block", () => {
-    for (const prelude of [
-      "(prefers-reduced-motion: reduce)",
-      "(prefers-reduced-motion)",
-      "screen and (prefers-reduced-motion: reduce)",
-      "not (prefers-reduced-motion: no-preference)",
+  it("accepts the block's head as the author prompt writes it", () => {
+    // Laid out freely — the gate compares with whitespace collapsed.
+    for (const head of [
+      "@media (prefers-reduced-motion: reduce)",
+      "@media  (prefers-reduced-motion: reduce)\n",
     ]) {
-      expect(warns(`${SPIN} @media ${prelude} ${RESET}`), prelude).toBe(false)
+      expect(warns(`${SPIN} ${head} ${RESET}`), head).toBe(false)
+    }
+  })
+
+  it("does not take another spelling of the head for the block", () => {
+    // The gate compares the block letter for letter with the author prompt's,
+    // so a head written any other way fails it — even one the browser reads
+    // the same (`screen and`, the boolean form, `not (… no-preference)`). A
+    // first version accepted those three and so passed drafts the gate blocks
+    // (PR #519 review). The last two the browser rejects outright: `only` needs
+    // a media type after it, and `not(` is a function token.
+    for (const prelude of [
+      "screen and (prefers-reduced-motion: reduce)",
+      "(prefers-reduced-motion)",
+      "not (prefers-reduced-motion: no-preference)",
+      "(prefers-reduced-motion:reduce)",
+      "only (prefers-reduced-motion: reduce)",
+      "not(prefers-reduced-motion: no-preference)",
+    ]) {
+      expect(warns(`${SPIN} @media ${prelude} ${RESET}`), prelude).toBe(true)
     }
   })
 
@@ -1213,17 +1253,6 @@ describe("validatePreviewPair — reduced motion", () => {
       `@media (prefers-reduced-motion: no-preference) ${RESET}`,
     ]) {
       expect(warns(`${SPIN} ${style}`), style).toBe(true)
-    }
-  })
-
-  it("does not take a spelling the browser rejects for a block", () => {
-    // `only` needs a media type after it, and `not(` is a function token —
-    // either way the browser drops the whole query and the block never applies.
-    for (const prelude of [
-      "only (prefers-reduced-motion: reduce)",
-      "not(prefers-reduced-motion: no-preference)",
-    ]) {
-      expect(warns(`${SPIN} @media ${prelude} ${RESET}`), prelude).toBe(true)
     }
   })
 
