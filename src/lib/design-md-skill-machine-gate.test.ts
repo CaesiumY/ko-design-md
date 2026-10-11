@@ -544,7 +544,7 @@ describe("/design-md machine gates", () => {
       "research-collector gained Bash — Stage 4c's directory expansion may no longer be load-bearing"
     ).not.toContain("Bash")
     // Scoped to the handover paragraph, not the whole stage: 4c's preflight
-    // already says "a directory is listed and its files read", so a
+    // already says a directory is expanded and its files read, so a
     // stage-wide match stayed green with the handover's own sentence deleted.
     // The mutation that proved it: replacing the paragraph with "Append every
     // approved path to `screenshot_paths`" left all assertions passing.
@@ -552,8 +552,25 @@ describe("/design-md machine gates", () => {
     expect(handover, "Stage 4c must have an on-approval handover").not.toBe("")
     expect(
       handover,
-      "the handover must say a directory is expanded to files before it is appended"
+      "the handover must say a directory is expanded into its files"
     ).toMatch(/director(?:y|ies)/)
+  })
+
+  it("expects as many research.md sections as research-collector declares", () => {
+    // Stage 5 counts `^## ` lines in research.md to catch a malformed file.
+    // The collector lists ten sections — nine content sections and
+    // `## Sources` — while the skill expected nine, so a well-formed file
+    // never matched the number it was checked against. Derived, not
+    // restated: the expected count is read from the collector's own list.
+    const declared = readRepoFile(RESEARCH_COLLECTOR_AGENT).match(
+      /^\d+\. `## /gm
+    )
+    expect(declared, "research-collector must list its sections").not.toBeNull()
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+    const expected = /Expected output is `(\d+)`/.exec(skill)?.[1]
+    expect(expected, "Stage 5 must state the expected section count").toBe(
+      String(declared?.length)
+    )
   })
 
   // Issue #404, the other half. The same instruction produced three procedures

@@ -99,6 +99,7 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   "lg-electronics": { annotated: 67, judged: 67, drift: 67 },
   likelion: { annotated: 23, judged: 23, drift: 23 },
   "line-design-system": { annotated: 24, judged: 24, drift: 24 },
+  nol: { annotated: 37, judged: 37, drift: 39 },
   remember: { annotated: 76, judged: 76, drift: 76 },
   "samsung-one-ui": { annotated: 7, judged: 7, drift: 7, webfont: true },
   "seed-design": { annotated: 229, judged: 229, drift: 241 },

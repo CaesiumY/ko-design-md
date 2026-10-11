@@ -1,0 +1,680 @@
+{
+  "colors": [
+    {
+      "name": "nol-blue",
+      "value": "oklch(0.526 0.264 269.0)",
+      "note": "#3549FF · 발행 · NOL 브랜드 컬러 '놀 블루'(페이지 표기 NOL UNIVERSE BLUE) · RGB 53 73 255 · CMYK C95 M60 Y0 K0 · PMS 2728C",
+      "group": "발행 팔레트 — NOL 브랜드 컬러 · 놀유니버스 기업 컬러 (nol-universe.com 에셋 센터)"
+    },
+    {
+      "name": "nol-black",
+      "value": "oklch(0.000 0.000 0.0)",
+      "note": "#000000 · 발행 · NOL 브랜드 컬러 NOL BLACK · CMYK 원문 C205 M20 Y0 K100(0–100 범위 밖, 정본 미상) · PMS 없음",
+      "group": "발행 팔레트 — NOL 브랜드 컬러 · 놀유니버스 기업 컬러 (nol-universe.com 에셋 센터)"
+    },
+    {
+      "name": "nol-white",
+      "value": "oklch(1.000 0.000 0.0)",
+      "note": "#FFFFFF · 발행 · NOL 브랜드 컬러 NOL WHITE · CMYK C0 M0 Y0 K0 · PMS 없음",
+      "group": "발행 팔레트 — NOL 브랜드 컬러 · 놀유니버스 기업 컬러 (nol-universe.com 에셋 센터)"
+    },
+    {
+      "name": "nol-universe-blue",
+      "value": "oklch(0.526 0.264 269.0)",
+      "note": "#3549FF · 발행 · 놀유니버스 기업 컬러(법인 CI) NOL UNIVERSE BLUE · nol-blue 와 같은 값, 다른 절 · PMS 2728C",
+      "group": "발행 팔레트 — NOL 브랜드 컬러 · 놀유니버스 기업 컬러 (nol-universe.com 에셋 센터)"
+    },
+    {
+      "name": "nol-universe-light-blue",
+      "value": "oklch(0.643 0.190 264.1)",
+      "note": "#5085FF · 발행 · 놀유니버스 기업 컬러 NOL UNIVERSE LIGHT BLUE · CMYK C65 M30 Y0 K0 · PMS 2727C · NOL 브랜드 컬러가 아니고 NOL 웹 번들에 0건",
+      "group": "발행 팔레트 — NOL 브랜드 컬러 · 놀유니버스 기업 컬러 (nol-universe.com 에셋 센터)"
+    },
+    {
+      "name": "primary-main",
+      "value": "oklch(0.548 0.250 270.3)",
+      "note": "#4154FF · 관측(미발행) · fill-primary-main·text-primary-main·text-brand-main·border-line-primary-main · CTA·선택·포커스·검색창 테두리 · 발행 놀 블루와 다른 값",
+      "group": "서비스 UI 관측(미발행) — 프라이머리 (nol.yanolja.com CSS 번들)"
+    },
+    {
+      "name": "primary-presshover-strong3",
+      "value": "oklch(0.400 0.193 269.5)",
+      "note": "#2432AD · 관측(미발행) · interaction-primary-presshover-strong3 · 프라이머리 호버·눌림",
+      "group": "서비스 UI 관측(미발행) — 프라이머리 (nol.yanolja.com CSS 번들)"
+    },
+    {
+      "name": "primary-weak",
+      "value": "oklch(0.975 0.012 281.1)",
+      "note": "#F5F6FF · 관측(미발행) · fill-primary-weak(= colors-blue-50) · 신규오픈 배지·검색 칩 바탕",
+      "group": "서비스 UI 관측(미발행) — 프라이머리 (nol.yanolja.com CSS 번들)"
+    },
+    {
+      "name": "primary-weak1",
+      "value": "oklch(0.919 0.040 280.9)",
+      "note": "#DFE2FF · 관측(미발행) · line-primary-weak1·interaction-primary-presshover-weak1 · 약한 선·눌림",
+      "group": "서비스 UI 관측(미발행) — 프라이머리 (nol.yanolja.com CSS 번들)"
+    },
+    {
+      "name": "primary-weak2",
+      "value": "oklch(0.808 0.098 278.8)",
+      "note": "#B2BAFF · 관측(미발행) · line-primary-weak2 · 배지 테두리",
+      "group": "서비스 UI 관측(미발행) — 프라이머리 (nol.yanolja.com CSS 번들)"
+    },
+    {
+      "name": "primary-weak3",
+      "value": "oklch(0.728 0.142 277.4)",
+      "note": "#929DFF · 관측(미발행) · fill-primary-weak3 · 화면 쓰임 미확인",
+      "group": "서비스 UI 관측(미발행) — 프라이머리 (nol.yanolja.com CSS 번들)"
+    },
+    {
+      "name": "primary-weak4",
+      "value": "oklch(0.652 0.187 275.2)",
+      "note": "#7280FF · 관측(미발행) · fill-primary-weak4·line-primary-weak4 · 화면 쓰임 미확인",
+      "group": "서비스 UI 관측(미발행) — 프라이머리 (nol.yanolja.com CSS 번들)"
+    },
+    {
+      "name": "accent-main",
+      "value": "oklch(0.579 0.237 28.1)",
+      "note": "#E5000F · 관측(미발행) · fill-accent-main·text-text-accent-main·text-text-accent-medium·fill-danger-main·text-danger-main·border-line-danger-main · 할인율·쿠폰 · accent 와 danger 가 같은 값",
+      "group": "서비스 UI 관측(미발행) — 강조·위험·경고"
+    },
+    {
+      "name": "accent-weak",
+      "value": "oklch(0.977 0.010 17.3)",
+      "note": "#FEF5F5 · 관측(미발행) · fill-accent-weak · 쿠폰 칩 바탕",
+      "group": "서비스 UI 관측(미발행) — 강조·위험·경고"
+    },
+    {
+      "name": "danger-weak2",
+      "value": "oklch(0.788 0.104 15.2)",
+      "note": "#F59EA4 · 관측(미발행) · border-line-danger-weak2 · 위험 약선",
+      "group": "서비스 UI 관측(미발행) — 강조·위험·경고"
+    },
+    {
+      "name": "danger-presshover-strong3",
+      "value": "oklch(0.436 0.178 27.6)",
+      "note": "#9C000A · 관측(미발행) · hover-never:bg-interaction-danger-presshover-strong3 · 번들에만 있고 화면에서 못 봄",
+      "group": "서비스 UI 관측(미발행) — 강조·위험·경고"
+    },
+    {
+      "name": "warning-main",
+      "value": "oklch(0.570 0.185 38.4)",
+      "note": "#CC4100 · 관측(미발행) · text-warning-main · 경고 글자",
+      "group": "서비스 UI 관측(미발행) — 강조·위험·경고"
+    },
+    {
+      "name": "warning-weak",
+      "value": "oklch(0.982 0.010 67.7)",
+      "note": "#FEF8F2 · 관측(미발행) · fill-warning-weak · 경고 약면",
+      "group": "서비스 UI 관측(미발행) — 강조·위험·경고"
+    },
+    {
+      "name": "membership-dia-main",
+      "value": "oklch(0.526 0.264 269.0)",
+      "note": "#3549FF · 관측(미발행) · text-membership-dia-main · 발행 nol-blue 와 같은 값",
+      "group": "서비스 UI 관측(미발행) — 멤버십·별점"
+    },
+    {
+      "name": "membership-gold-main",
+      "value": "oklch(0.549 0.116 73.9)",
+      "note": "#996500 · 관측(미발행) · text-membership-* 계열(정확한 유틸리티 이름 미확인) · 멤버십 골드",
+      "group": "서비스 UI 관측(미발행) — 멤버십·별점"
+    },
+    {
+      "name": "membership-platinum-main",
+      "value": "oklch(0.536 0.109 167.9)",
+      "note": "#008161 · 관측(미발행) · text-membership-* 계열(정확한 유틸리티 이름 미확인) · 멤버십 플래티넘 · 상세 '무료취소' 글자도 이 값",
+      "group": "서비스 UI 관측(미발행) — 멤버십·별점"
+    },
+    {
+      "name": "star",
+      "value": "oklch(0.831 0.156 79.1)",
+      "note": "#FDBA39 · 관측(미발행) · 이름은 이 항목이 붙임 · 별점 SVG 채움(임의 클래스·목록 SSR 별 SVG fill)",
+      "group": "서비스 UI 관측(미발행) — 멤버십·별점"
+    },
+    {
+      "name": "neutral-main",
+      "value": "oklch(0.227 0.006 271.1)",
+      "note": "#1B1C1F · 관측(미발행) · fill/text/border-neutral-main · html 기본 글자색 · 본문 글자·모바일 탭 선택 필·하단 내비 활성",
+      "group": "서비스 UI 관측(미발행) — 뉴트럴"
+    },
+    {
+      "name": "neutral-strong1",
+      "value": "oklch(0.542 0.006 274.9)",
+      "note": "#6E6F73 · 관측(미발행) · 키 이름은 보드 사다리 명명 · 유틸리티는 text-neutral-sub · 보조 글자(장소·카테고리·메타)·비선택 탭·하단 내비 비활성",
+      "group": "서비스 UI 관측(미발행) — 뉴트럴"
+    },
+    {
+      "name": "neutral-medium",
+      "value": "oklch(0.643 0.008 268.5)",
+      "note": "#8B8D92 · 관측(미발행) · text-neutral-medium · 일정·PC 플레이스홀더·마감 객실 글자 · 푸터 로고 SVG 채움과 같은 값",
+      "group": "서비스 UI 관측(미발행) — 뉴트럴"
+    },
+    {
+      "name": "neutral-weak4",
+      "value": "oklch(0.780 0.006 274.9)",
+      "note": "#B6B7BB · 관측(미발행) · 키 이름은 보드 사다리 명명 · 유틸리티 미기록 · 비활성 글자",
+      "group": "서비스 UI 관측(미발행) — 뉴트럴"
+    },
+    {
+      "name": "neutral-weak3",
+      "value": "oklch(0.892 0.006 275.0)",
+      "note": "#DADBDF · 관측(미발행) · line-neutral-weak3·interaction-neutral-disable-main · 입력·필터 테두리·비활성 면",
+      "group": "서비스 UI 관측(미발행) — 뉴트럴"
+    },
+    {
+      "name": "neutral-weak2",
+      "value": "oklch(0.938 0.007 277.2)",
+      "note": "#E9EAEF · 관측(미발행) · line-neutral-weak2 · 검색창 outline·구분선",
+      "group": "서비스 UI 관측(미발행) — 뉴트럴"
+    },
+    {
+      "name": "neutral-weak1",
+      "value": "oklch(0.965 0.005 275.0)",
+      "note": "#F2F3F7 · 관측(미발행) · line-neutral-weak1·interaction-neutral-presshover-weak1·colors-gray-100 · 이미지 자리·카드 구분선·헤더 액션 호버",
+      "group": "서비스 UI 관측(미발행) — 뉴트럴"
+    },
+    {
+      "name": "neutral-weak",
+      "value": "oklch(0.979 0.004 271.4)",
+      "note": "#F7F8FB · 관측(미발행) · fill-neutral-weak · 푸터·공지 줄·비선택 섹션 칩",
+      "group": "서비스 UI 관측(미발행) — 뉴트럴"
+    },
+    {
+      "name": "neutral-veryweak",
+      "value": "oklch(0.988 0.003 264.5)",
+      "note": "#FAFBFD · 관측(미발행) · fill-neutral-veryweak(상세 번들만) · 쿠폰 마감 면",
+      "group": "서비스 UI 관측(미발행) — 뉴트럴"
+    },
+    {
+      "name": "static-white",
+      "value": "oklch(1.000 0.000 0.0)",
+      "note": "#FFFFFF · 관측(미발행) · static-white · 흰 글자·카드·페이지 바탕(body background !important)",
+      "group": "서비스 UI 관측(미발행) — 뉴트럴"
+    },
+    {
+      "name": "static-black",
+      "value": "oklch(0.000 0.000 0.0)",
+      "note": "#000000 · 관측(미발행) · static-black · PC 섹션 칩 선택 바탕",
+      "group": "서비스 UI 관측(미발행) — 뉴트럴"
+    },
+    {
+      "name": "scrim",
+      "value": "oklch(0.000 0.000 0.0 / 0.5)",
+      "note": "#000000 · 알파 0.5 · 관측(미발행) · bg-scrim · 바텀시트 백드롭",
+      "group": "서비스 UI 관측(미발행) — 투명도"
+    },
+    {
+      "name": "opacity-black-60",
+      "value": "oklch(0.000 0.000 0.0 / 0.6)",
+      "note": "#000000 · 알파 0.6 · 관측(미발행) · 이미지 위 카운터 알약",
+      "group": "서비스 UI 관측(미발행) — 투명도"
+    },
+    {
+      "name": "opacity-black-10",
+      "value": "oklch(0.000 0.000 0.0 / 0.1)",
+      "note": "#000000 · 알파 0.1 · 관측(미발행) · outline-opacity-black-10 · 캐러셀 화살표 외곽선",
+      "group": "서비스 UI 관측(미발행) — 투명도"
+    },
+    {
+      "name": "opacity-black-5",
+      "value": "oklch(0.000 0.000 0.0 / 0.05)",
+      "note": "#000000 · 알파 0.05 · 관측(미발행) · 하단 내비 상단선·이미지 인셋 외곽",
+      "group": "서비스 UI 관측(미발행) — 투명도"
+    }
+  ],
+  "typography": [
+    {
+      "name": "headline-40-bold",
+      "size": "40px",
+      "weight": 700,
+      "lineHeight": "48px",
+      "tracking": "0em"
+    },
+    {
+      "name": "headline-32-bold",
+      "size": "32px",
+      "weight": 700,
+      "lineHeight": "38px",
+      "tracking": "0em"
+    },
+    {
+      "name": "headline-32-regular",
+      "size": "32px",
+      "weight": 400,
+      "lineHeight": "38px",
+      "tracking": "0em"
+    },
+    {
+      "name": "headline-24-bold",
+      "size": "24px",
+      "weight": 700,
+      "lineHeight": "29px",
+      "tracking": "0em"
+    },
+    {
+      "name": "headline-24-regular",
+      "size": "24px",
+      "weight": 400,
+      "lineHeight": "29px",
+      "tracking": "0em"
+    },
+    {
+      "name": "subtitle-20-bold",
+      "size": "20px",
+      "weight": 700,
+      "lineHeight": "24px",
+      "tracking": "0em"
+    },
+    {
+      "name": "subtitle-20-semibold",
+      "size": "20px",
+      "weight": 600,
+      "lineHeight": "24px",
+      "tracking": "0em"
+    },
+    {
+      "name": "subtitle-20-regular",
+      "size": "20px",
+      "weight": 400,
+      "lineHeight": "24px",
+      "tracking": "0em"
+    },
+    {
+      "name": "subtitle-20-bold-multiline",
+      "size": "20px",
+      "weight": 700,
+      "lineHeight": "28px",
+      "tracking": "0em"
+    },
+    {
+      "name": "subtitle-18-bold",
+      "size": "18px",
+      "weight": 700,
+      "lineHeight": "22px",
+      "tracking": "0em"
+    },
+    {
+      "name": "subtitle-18-semibold",
+      "size": "18px",
+      "weight": 600,
+      "lineHeight": "22px",
+      "tracking": "0em",
+      "note": "홈 번들 ds-pc: 접두·목록 번들에서 확인"
+    },
+    {
+      "name": "subtitle-18-regular",
+      "size": "18px",
+      "weight": 400,
+      "lineHeight": "22px",
+      "tracking": "0em"
+    },
+    {
+      "name": "subtitle-18-bold-multiline",
+      "size": "18px",
+      "weight": 700,
+      "lineHeight": "27px",
+      "tracking": "0em",
+      "note": "≈ 보드 번들 판독 · 위치 재확인 못 함 · 공개 출처 없음"
+    },
+    {
+      "name": "subtitle-18-regular-multiline",
+      "size": "18px",
+      "weight": 400,
+      "lineHeight": "27px",
+      "tracking": "0em",
+      "note": "홈 번들에 pc:typography- 접두로만 있다"
+    },
+    {
+      "name": "subtitle-16-bold",
+      "size": "16px",
+      "weight": 700,
+      "lineHeight": "19px",
+      "tracking": "0em"
+    },
+    {
+      "name": "subtitle-16-semibold",
+      "size": "16px",
+      "weight": 600,
+      "lineHeight": "19px",
+      "tracking": "0em"
+    },
+    {
+      "name": "subtitle-16-regular",
+      "size": "16px",
+      "weight": 400,
+      "lineHeight": "19px",
+      "tracking": "0em"
+    },
+    {
+      "name": "subtitle-16-bold-multiline",
+      "size": "16px",
+      "weight": 700,
+      "lineHeight": "24px",
+      "tracking": "0em"
+    },
+    {
+      "name": "subtitle-16-semibold-multiline",
+      "size": "16px",
+      "weight": 600,
+      "lineHeight": "24px",
+      "tracking": "0em",
+      "note": "목록 번들에서 확인"
+    },
+    {
+      "name": "subtitle-16-regular-multiline",
+      "size": "16px",
+      "weight": 400,
+      "lineHeight": "24px",
+      "tracking": "0em"
+    },
+    {
+      "name": "body-14-bold",
+      "size": "14px",
+      "weight": 700,
+      "lineHeight": "17px",
+      "tracking": "0em"
+    },
+    {
+      "name": "body-14-semibold",
+      "size": "14px",
+      "weight": 600,
+      "lineHeight": "17px",
+      "tracking": "0em"
+    },
+    {
+      "name": "body-14-regular",
+      "size": "14px",
+      "weight": 400,
+      "lineHeight": "17px",
+      "tracking": "0em"
+    },
+    {
+      "name": "body-14-bold-multiline",
+      "size": "14px",
+      "weight": 700,
+      "lineHeight": "21px",
+      "tracking": "0em",
+      "note": "상세 번들에서 확인"
+    },
+    {
+      "name": "body-14-regular-multiline",
+      "size": "14px",
+      "weight": 400,
+      "lineHeight": "21px",
+      "tracking": "0em"
+    },
+    {
+      "name": "body-13-bold",
+      "size": "13px",
+      "weight": 700,
+      "lineHeight": "16px",
+      "tracking": "0em"
+    },
+    {
+      "name": "body-13-semibold",
+      "size": "13px",
+      "weight": 600,
+      "lineHeight": "16px",
+      "tracking": "0em"
+    },
+    {
+      "name": "body-13-regular",
+      "size": "13px",
+      "weight": 400,
+      "lineHeight": "16px",
+      "tracking": "0em"
+    },
+    {
+      "name": "body-13-bold-multiline",
+      "size": "13px",
+      "weight": 700,
+      "lineHeight": "20px",
+      "tracking": "0em"
+    },
+    {
+      "name": "body-13-semibold-multiline",
+      "size": "13px",
+      "weight": 600,
+      "lineHeight": "20px",
+      "tracking": "0em",
+      "note": "목록 번들에서 확인"
+    },
+    {
+      "name": "body-13-regular-multiline",
+      "size": "13px",
+      "weight": 400,
+      "lineHeight": "20px",
+      "tracking": "0em"
+    },
+    {
+      "name": "body-12-bold",
+      "size": "12px",
+      "weight": 700,
+      "lineHeight": "14px",
+      "tracking": "0em"
+    },
+    {
+      "name": "body-12-semibold",
+      "size": "12px",
+      "weight": 600,
+      "lineHeight": "14px",
+      "tracking": "0em"
+    },
+    {
+      "name": "body-12-regular",
+      "size": "12px",
+      "weight": 400,
+      "lineHeight": "14px",
+      "tracking": "0em"
+    },
+    {
+      "name": "body-12-bold-multiline",
+      "size": "12px",
+      "weight": 700,
+      "lineHeight": "18px",
+      "tracking": "0em",
+      "note": "상세 번들에서 확인"
+    },
+    {
+      "name": "body-12-regular-multiline",
+      "size": "12px",
+      "weight": 400,
+      "lineHeight": "18px",
+      "tracking": "0em"
+    },
+    {
+      "name": "caption-11-bold",
+      "size": "11px",
+      "weight": 700,
+      "lineHeight": "13px",
+      "tracking": "0em"
+    },
+    {
+      "name": "caption-11-regular",
+      "size": "11px",
+      "weight": 400,
+      "lineHeight": "13px",
+      "tracking": "0em"
+    },
+    {
+      "name": "caption-11-regular-multiline",
+      "size": "11px",
+      "weight": 400,
+      "lineHeight": "17px",
+      "tracking": "0em"
+    },
+    {
+      "name": "label-10-bold",
+      "size": "10px",
+      "weight": 700,
+      "lineHeight": "12px",
+      "tracking": "0em"
+    },
+    {
+      "name": "label-10-regular",
+      "size": "10px",
+      "weight": 400,
+      "lineHeight": "12px",
+      "tracking": "0em"
+    },
+    {
+      "name": "label-8-bold",
+      "size": "8px",
+      "weight": 700,
+      "lineHeight": "10px",
+      "tracking": "0em"
+    }
+  ],
+  "spacing": [
+    {
+      "name": "pc-gutter",
+      "value": "40px",
+      "px": 40,
+      "note": "관측(미발행) · px-40 · PC 1320 프레임 좌우(콘텐츠 1240) · 홈·목록 공통"
+    },
+    {
+      "name": "mobile-gutter-home",
+      "value": "20px",
+      "px": 20,
+      "note": "관측(미발행) · 홈 px-20"
+    },
+    {
+      "name": "mobile-gutter",
+      "value": "16px",
+      "px": 16,
+      "note": "관측(미발행) · 목록·상세 모바일 좌우"
+    },
+    {
+      "name": "section-gap",
+      "value": "16px",
+      "px": 16,
+      "note": "관측(미발행) · 홈 gap-16 · 모바일 섹션 사이 · 섹션 pb-16"
+    },
+    {
+      "name": "section-gap-pc",
+      "value": "40px",
+      "px": 40,
+      "note": "관측(미발행) · 홈 ds-pc:gap-40 · PC 섹션 사이"
+    },
+    {
+      "name": "section-title-gap",
+      "value": "24px",
+      "px": 24,
+      "note": "관측(미발행) · 홈 mb-24 · 섹션 제목–탭"
+    },
+    {
+      "name": "card-gap-x",
+      "value": "12px",
+      "px": 12,
+      "note": "관측(미발행) · 호텔 카드 gap-x-12(모바일)"
+    },
+    {
+      "name": "card-gap-y",
+      "value": "16px",
+      "px": 16,
+      "note": "관측(미발행) · 호텔 카드 gap-y-16"
+    },
+    {
+      "name": "card-gap-x-pc",
+      "value": "20px",
+      "px": 20,
+      "note": "관측(미발행) · 호텔 카드 ds-pc:gap-x-20 · 레저 gap-20"
+    },
+    {
+      "name": "card-padding",
+      "value": "16px",
+      "px": 16,
+      "note": "관측(미발행) · 목록 카드 p-16(PC 는 px-0 py-20)"
+    }
+  ],
+  "radius": [
+    {
+      "name": "4",
+      "value": "4px",
+      "px": 4,
+      "note": "관측(미발행) · rounded-4 · '인증' 배지"
+    },
+    {
+      "name": "6",
+      "value": "6px",
+      "px": 6,
+      "note": "관측(미발행) · rounded-6 · 텍스트 배지"
+    },
+    {
+      "name": "8",
+      "value": "8px",
+      "px": 8,
+      "note": "관측(미발행) · ≈ 가입 배너 CTA(캡처 판독 · 공개 출처 없음)"
+    },
+    {
+      "name": "10",
+      "value": "10px",
+      "px": 10,
+      "note": "관측(미발행) · rounded-10 · 화면 쓰임 미확인 · rounded-2xl 도 10px"
+    },
+    {
+      "name": "12",
+      "value": "12px",
+      "px": 12,
+      "note": "관측(미발행) · rounded-12 · 높이 40·44 컨트롤·모바일 공지 줄·목록 카드 이미지"
+    },
+    {
+      "name": "16",
+      "value": "16px",
+      "px": 16,
+      "note": "관측(미발행) · rounded-16 · 높이 48·52 컨트롤·헤더 액션·카드·필터 패널"
+    },
+    {
+      "name": "20",
+      "value": "20px",
+      "px": 20,
+      "note": "관측(미발행) · rounded-20 · 모바일 히어로·상세 모바일 갤러리"
+    },
+    {
+      "name": "24",
+      "value": "24px",
+      "px": 24,
+      "note": "관측(미발행) · rounded-24 · 카테고리 타일"
+    },
+    {
+      "name": "28",
+      "value": "28px",
+      "px": 28,
+      "note": "관측(미발행) · rounded-28 · PC 히어로·배너 이미지·바텀시트 상단"
+    },
+    {
+      "name": "capsule",
+      "value": "9999px",
+      "px": 9999,
+      "note": "관측(미발행) · rounded-full·rounded-capsule · 검색창·칩·공지·신규오픈 배지"
+    }
+  ],
+  "elevation": [
+    {
+      "name": "shadow-1",
+      "value": "0 0 8px oklch(0 0 0 / 0.05)",
+      "note": "관측(미발행) · 상세 섹션 상단 구분"
+    },
+    {
+      "name": "shadow-2",
+      "value": "0 0 8px oklch(0 0 0 / 0.1)",
+      "note": "관측(미발행) · 캐러셀 화살표·하단 내비·모바일 하단 고정바·지도 버튼"
+    },
+    {
+      "name": "shadow-3",
+      "value": "0 0 6px oklch(0 0 0 / 0.2)",
+      "note": "관측(미발행) · '전체 사진' 버튼·모바일 '지도' 필 버튼"
+    },
+    {
+      "name": "shadow-4",
+      "value": "0 0 6px 0 oklch(0 0 0 / 0.4)",
+      "note": "관측(미발행) · 상세 번들 선언 · 쓰는 요소 미확인"
+    },
+    {
+      "name": "shadow-5",
+      "value": "0 0 10px 0 oklch(0 0 0 / 0.4)",
+      "note": "관측(미발행) · 이름은 이 항목이 붙임 · 번들 선언만, 렌더 미관측"
+    }
+  ]
+}
