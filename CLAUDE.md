@@ -471,10 +471,10 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   프롬프트가 따라가도록 테스트가 깨진다. 다만 배선 대조도 프롬프트에서 값을 뽑을 **기준 문구**
   (`same widths (…)`·`Capture the answers as:` 같은 문장 꼴)를 쓰므로, 그 꼴을 바꾸면 테스트도
   함께 고친다. 그 밖의 문구 다듬기는 이 테스트를 고칠 필요가 없다. **이 glob 밖에도 프롬프트를
-  읽는 테스트가 있다** — `design-md-preview-disclaimer.test.ts`(위 면책 띠 문자열)와
-  `preview-validator.test.ts`(검증기 규칙이 키로 삼는 정부 식별자 문자열과 폰트 단축 속성 예시가
-  author 프롬프트에 그대로 있는지)다. 프롬프트를 읽는 테스트는 모두 아래 `skill-asset-paths.ts` 의
-  경로 상수를 import 하므로, 프롬프트를 고치기 전에 그 상수의 사용처를 찾으면 된다. 테스트가
+  읽는 테스트가 여럿 있다** — 예: `design-md-preview-disclaimer.test.ts`(위 면책 띠 문자열),
+  `preview-validator.test.ts`(검증기 규칙이 키로 삼는 정부 식별자 문자열과 폰트 단축 속성 예시).
+  목록은 여기 적지 않는다 — 프롬프트를 읽는 테스트는 모두 아래 `skill-asset-paths.ts` 의 경로
+  상수를 import 하므로, 프롬프트를 고치기 전에 고칠 파일의 상수 사용처를 찾는 것이 정본이다. 테스트가
   읽는 `.claude/` 경로는 전부 `src/lib/skill-asset-paths.ts` 한 곳에 **리터럴 그대로** 모여
   있다(조립기로 바꾸지 말 것 — 목록이 보이는 것 자체가 계약이다). 스킬을 추가하면 같은 파일의
   `PUBLIC_SKILLS`·`INTERNAL_SKILLS` 중 하나에 선언한다 — `skill-distribution.test.ts`가
