@@ -206,7 +206,7 @@ This URL is the single source of truth the **preview-html-author** loads into th
 
 - Point at a **loadable CSS entry point** (`@import`/`<link>`-able), not a demo or marketing page. Prefer a foundry's **dynamic-subset / split** build where one exists (lighter for Korean pages) and a **pinned version** over `@latest` — refresh the pin alongside the catalog entry when the typeface library publishes an update.
 - **Pretendard needs no `-src`** — the preview runtime already imports it. Only faces outside that baseline need a source.
-- The token-card extractor **ignores `*-src` lines and any `http…` value**, so these never appear as bogus type cards.
+- `font-*-src` is a **top-level key, outside every token map**, and the token-card extractor reads only the token maps — that is why it never appears as a bogus type card. Keep it there: the extractor has no URL filter, so a URL written inside `typography:` would land in the sidecar as-is.
 
 ## Body language
 
