@@ -552,7 +552,7 @@ describe("/design-md machine gates", () => {
     expect(handover, "Stage 4c must have an on-approval handover").not.toBe("")
     expect(
       handover,
-      "the handover must say a directory is expanded to files before they are collected into board_source_paths"
+      "the handover must say a directory is expanded into its files"
     ).toMatch(/director(?:y|ies)/)
   })
 
