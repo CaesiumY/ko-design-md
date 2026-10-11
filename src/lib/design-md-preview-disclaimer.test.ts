@@ -1,12 +1,7 @@
 import { readdirSync } from "node:fs"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
-import {
-  DESIGN_MD_RUBRIC_PREVIEW,
-  DESIGN_MD_SKILL,
-  PREVIEW_HTML_AUTHOR_AGENT,
-  readRepoFile,
-} from "./skill-asset-paths"
+import { PREVIEW_HTML_AUTHOR_AGENT, readRepoFile } from "./skill-asset-paths"
 
 const ROOT = process.cwd()
 
@@ -52,36 +47,21 @@ function previewFiles(): Array<string> {
 }
 
 describe("/design-md catalog disclosure wiring", () => {
-  it("teaches the strip everywhere the pipeline could drop it", () => {
+  // The author has to write the strip the validator blocks on, and the class
+  // the validator keys dummy-data captions by — the prompt names what the gate
+  // checks. The rubric's and skill's wording about it is not pinned (#424).
+  it("teaches the author the strip and the classes the validator checks", () => {
     const previewAuthor = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
-    const previewRubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
-    const skill = readRepoFile(DESIGN_MD_SKILL)
     const validator = readRepoFile("src/lib/preview-validator.ts")
     const tokensCss = readRepoFile("public/preview/_runtime/tokens.css")
 
-    // Author: the verbatim strip, both sentences, and the reason it cannot be
-    // injected at runtime (an author that does not know this "helpfully" moves
-    // it into iframe.js).
+    // Author: the verbatim strip and both sentences. Without them the
+    // validator's banner block exhausts the 9a2 retries (#426).
     expect(previewAuthor).toContain(`class="${DISCLAIMER_CLASS}"`)
     expect(previewAuthor).toContain(NON_AFFILIATION)
     expect(previewAuthor).toContain(DUMMY_DATA)
-    expect(previewAuthor).toContain("window.parent === window")
+    // The class the validator reads dummy-data captions by.
     expect(previewAuthor).toContain("catalog-dummy")
-
-    // Rubric: structural check in Item 1, labelling as a score-neutral advisory.
-    expect(previewRubric).toContain(DISCLAIMER_CLASS)
-    expect(previewRubric).toContain("first child of `<body>`")
-    expect(previewRubric).toContain("Dummy-data labelling")
-    expect(previewRubric).toContain("does NOT change the 10-point score")
-
-    // Skill: the Stage 10 sentinels, including the multiline placement check.
-    expect(skill).toContain("Catalog disclosure deterministic check")
-    // The trailing underscore went with the theme suffix: the sentinels used to
-    // be DISCLAIMER_MISSING_${THEME} over a two-file loop, and there is one
-    // file now (issue #235).
-    expect(skill).toContain("DISCLAIMER_MISSING")
-    expect(skill).toContain("DISCLAIMER_MISPLACED")
-    expect(skill).toContain("catalog disclosure strip")
 
     // Validator: all three rule names reachable from the skill's 9a2 gate.
     // They are separate because the fixes are: add the strip / move it / restore

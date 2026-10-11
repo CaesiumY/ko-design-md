@@ -463,9 +463,11 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   main 을 깨뜨렸을 것이다(합본에서 테스트 파일 69→76 · 1187→1327개). "순서를 조율한다"는
   해법이 아니고, **나중에 머지하는 브랜치가 수정을 싣는다.**
 - `.claude/skills/design-md/` 변경은 영향이 크므로 이슈에서 사전 합의. 스킬↔검증기
-  배선은 `src/lib/design-md-skill-*.test.ts` 계약 테스트가 고정한다 — 스킬 프롬프트를
-  수정하면 이 테스트도 함께 갱신. 테스트가 읽는 `.claude/` 경로는 전부
-  `src/lib/skill-asset-paths.ts` 한 곳에 **리터럴 그대로** 모여 있다(조립기로 바꾸지
+  배선은 `src/lib/design-md-skill-*.test.ts` 계약 테스트가 고정한다 — 프롬프트가 말하는
+  임계값·규칙 id·명령·파일 경로·코드 이름을 검증기 소스나 저장소 실물과 대조하는 **배선만**
+  고정하고, 문장이 그대로 있는지는 보지 않는다(#424). 그래서 문구만 다듬는 수정은 이 테스트를
+  고칠 필요가 없고, 코드 쪽 값이 바뀌면 프롬프트가 따라가도록 테스트가 깨진다.
+  테스트가 읽는 `.claude/` 경로는 전부 `src/lib/skill-asset-paths.ts` 한 곳에 **리터럴 그대로** 모여 있다(조립기로 바꾸지
   말 것 — 목록이 보이는 것 자체가 계약이다). 스킬을 추가하면 같은 파일의
   `PUBLIC_SKILLS`·`INTERNAL_SKILLS` 중 하나에 선언한다 — `skill-distribution.test.ts`가
   디렉터리·`metadata.internal`·`marketplace.json`을 대조해 선언이 없으면 막는다.

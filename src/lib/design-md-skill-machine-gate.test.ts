@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest"
 // section gate enforces, so adding a required section can never leave the
 // template behind.
 import { REQUIRED_SECTIONS } from "./draft-validator"
+import { BASELINE_WIDTHS } from "./contrast-baseline"
 import { reducedMotionBlock } from "./reduced-motion-block"
 import {
   STAGED_CONTRAST_RULE,
@@ -12,7 +13,6 @@ import {
 import {
   DESIGN_MD_AGENT_PATHS,
   DESIGN_MD_AUTHOR_AGENT,
-  DESIGN_MD_REVIEWER_AGENT,
   DESIGN_MD_RUBRIC_DESIGN,
   DESIGN_MD_RUBRIC_PREVIEW,
   DESIGN_MD_SKILL,
@@ -20,15 +20,16 @@ import {
   DESIGN_MD_TEMPLATE,
   PREVIEW_HTML_AUTHOR_AGENT,
   PREVIEW_HTML_REVIEWER_AGENT,
-  PREVIEW_PROSE_AUDIT_SKILL,
   readRepoFile,
 } from "./skill-asset-paths"
 
-// Contract tests pinning the /design-md machine-gate wiring. The skill prose
-// IS the pipeline — any editor (human or model) who drops these load-bearing
-// strings silently disconnects the deterministic validators, and nothing else
-// would catch it until the next onboarding run. Pattern follows
-// design-md-skill-logo-policy.test.ts.
+// Contract tests pinning the /design-md machine-gate WIRING: each one holds
+// something the skill prose says — a threshold, a rule id, a command, a file
+// path, a code identifier — against the code or repo fact it names, so a
+// change on the code side makes the prompt follow. Sentences that merely have
+// to be present are not pinned here (#424): rewording a prompt should not
+// break a test, and keeping a rule is the job of the validators and the
+// reviewer agents.
 
 function readFrontmatter(path: string): string {
   const raw = readRepoFile(path)
@@ -66,32 +67,16 @@ function validatorThreshold(source: string, name: string): number {
 }
 
 // Every advisory section of the preview rubric declares itself in this one
-// heading form. Two tests read it: one finds the prose section among them, the
-// other holds SKILL.md's roll call to the whole list.
+// heading form. The roll-call test holds SKILL.md's list to the headings found.
 const ADVISORY_HEADING =
   /^## (.+?) \(advisory [^)]*emits `warn` issues, does NOT change the 10-point score\)$/gm
 
 describe("/design-md machine gates", () => {
   it("wires the draft gate (6a2) and preview gate (9a2) into the skill body", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
-
-    // Draft gate: command, report path, and the retry contract.
+    // The commands the skill runs; the next test holds them to package.json.
     expect(skill).toContain("pnpm validate:draft")
-    expect(skill).toContain("review-machine-{N}.json")
-    expect(skill).toContain(
-      "machine_report_path: {cache_dir}/review-machine-{N}.json"
-    )
-
-    // Preview gate: command, report path, and the reviewer handoff.
     expect(skill).toContain("pnpm validate:previews")
-    expect(skill).toContain("preview-review-machine-{M}.json")
-    expect(skill).toContain(
-      "machine_report_path: {cache_dir}/preview-review-machine-{M}.json"
-    )
-
-    // Machine retries must not consume the semantic-review budget.
-    expect(skill).toContain("do not increment N")
-    expect(skill).toContain("do not increment M")
   })
 
   it("keeps the CLI entrypoints the skill invokes available in package.json", () => {
@@ -101,18 +86,6 @@ describe("/design-md machine gates", () => {
     expect(pkg.scripts["validate:draft"]).toContain("validate-draft")
     expect(pkg.scripts["validate:catalog"]).toContain("--services")
     expect(pkg.scripts["validate:previews"]).toContain("validate-preview")
-  })
-
-  it("hands the machine report to both reviewers and retires mental grepping", () => {
-    const designReviewer = readRepoFile(DESIGN_MD_REVIEWER_AGENT)
-    const previewReviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
-
-    expect(designReviewer).toContain("machine_report_path")
-    expect(previewReviewer).toContain("machine_report_path")
-    // The deterministic validator owns hex/rgba detection now.
-    expect(designReviewer).not.toContain("grep mentally")
-    // PR #105 lesson: citation existence is not citation correctness.
-    expect(designReviewer).toContain("Semantic spot-check")
   })
 
   it("pins model: inherit on every pipeline agent", () => {
@@ -168,29 +141,17 @@ describe("/design-md machine gates", () => {
   // Issue #448: the template invites `{{semantic-alias}}: "{colors.x}"` rows,
   // and an alias named like a role in the entry's own `## Colors` table trips
   // the role-reference-rows guard, which wants a hand-written comparison in
-  // CASES. On the skill side the authoring rule lives once, in the format
-  // reference; the author agent only points there, so its pointer is pinned
-  // rather than the rules.
+  // CASES. Pinned at both ends: the skill and the format reference name the
+  // table and its file, and the table still exists under that name.
   it("tells onboarding when role reference rows owe a CASES comparison", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
     const format = readRepoFile(DESIGN_MD_STITCH_FORMAT)
-    const author = readRepoFile(DESIGN_MD_AUTHOR_AGENT)
 
     // The symbol and its file on one line, so an unrelated "CASES" or a file
     // path named elsewhere cannot keep this green after the pointer is gone.
     for (const doc of [skill, format]) {
       expect(doc).toMatch(/`CASES`[^\n]*role-reference-rows\.test\.ts/)
     }
-    // Every pointer, and the heading they point at — renaming the section
-    // must fail here rather than strand the author and the template.
-    expect(author).toContain("Role → palette reference rows")
-    expect(readRepoFile(DESIGN_MD_REVIEWER_AGENT)).toContain(
-      "Role → palette reference rows"
-    )
-    expect(readRepoFile(DESIGN_MD_TEMPLATE)).toContain(
-      "Role → palette reference rows"
-    )
-    expect(format).toMatch(/^### Role → palette reference rows$/m)
     expect(readRepoFile("src/lib/role-reference-rows.test.ts")).toContain(
       "const CASES"
     )
@@ -239,15 +200,12 @@ describe("/design-md machine gates", () => {
   // assertions pin the three places that have to agree.
   it("wires created_at through the author template, the rubric, and the draft gate", () => {
     const author = readRepoFile(DESIGN_MD_AUTHOR_AGENT)
-    const skill = readRepoFile(DESIGN_MD_SKILL)
     const rubric = readRepoFile(DESIGN_MD_RUBRIC_DESIGN)
     const validator = readRepoFile("src/lib/draft-validator.ts")
 
     // The frontmatter template must emit the field, or every skill-onboarded
     // entry lands undated.
     expect(author).toMatch(/^created_at:/m)
-    // Stage 1 must say ${today} feeds created_at, not only last_updated.
-    expect(skill).toContain("created_at")
     // The reviewer scores against the required-key list, so it must include it.
     expect(rubric).toMatch(/All required keys present:.*created_at/)
     // And the deterministic gate must actually block a draft that omits it.
@@ -282,63 +240,24 @@ describe("/design-md machine gates", () => {
     }
   })
 
-  // The three conventions that produced 28 of the 31 warnings standing when the
-  // catalog was first measured against the published spec. Each is cheap to
-  // follow while authoring and expensive to retrofit — renaming a colliding
-  // token touches the sidecar and the preview, and deleting an uncited source
-  // renumbers every later citation. So the author must be told up front.
-  it("teaches the token conventions that are expensive to retrofit", () => {
-    const author = readRepoFile(DESIGN_MD_AUTHOR_AGENT)
-    const format = readRepoFile(DESIGN_MD_STITCH_FORMAT)
-
-    for (const doc of [author, format]) {
-      // Per-theme palettes get distinct names.
-      expect(doc).toContain("dark-bg-canvas")
-      // Dimensions carry a unit even at zero.
-      expect(doc).toMatch(/0em/)
-      // A new source is cited in the same pass.
-      expect(doc).toMatch(/\[src:N\]/)
-    }
-  })
-
-  it("sweeps the 976px embed width in Stage 12", () => {
+  // 976 is the detail page's embed width and the historical blind spot —
+  // overflow hides at the middle multi-column widths. The widths the skill tells
+  // the loop to render are the ones the contrast harness actually sweeps, so
+  // the prose is held to that list rather than to a number written here.
+  it("names the widths the contrast sweep renders", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
-    expect(skill).toContain("976 (detail-page embed width")
-    expect(skill).toContain("375/768/976/1440")
+    const stated = /same widths \(([\d/]+)\)/.exec(skill)?.[1]
+    expect(stated, "SKILL.md must state the sweep's widths").toBeDefined()
+    expect(stated).toBe(BASELINE_WIDTHS.join("/"))
   })
 
-  // PR #221 moved the preview size gate from raw bytes to brotli. The prompts
-  // ARE the pipeline: an author still told "< 100KB" optimizes against a unit
-  // the gate stopped measuring, and — worse — the number it replaced is one an
-  // LLM writing HTML cannot compute, so the replacement has to be behavioural.
-  it("teaches the brotli size gate everywhere the retired raw cap lived", () => {
+  // PR #221 moved the preview size gate from raw bytes to brotli. The byte
+  // figures the prompts give are read out of the gate, so a recalibration
+  // that leaves a prompt citing the old number fails here.
+  it("states the size gate's own thresholds in the rubric and author prompt", () => {
     const previewAuthor = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
-    const previewReviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
     const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
-    const skill = readRepoFile(DESIGN_MD_SKILL)
     const validator = readRepoFile("src/lib/preview-validator.ts")
-
-    const surfaces = [
-      ["preview-html-author.md", previewAuthor],
-      ["preview-html-reviewer.md", previewReviewer],
-      ["rubric-preview.md", rubric],
-      ["SKILL.md", skill],
-    ] as const
-
-    for (const [name, text] of surfaces) {
-      expect(
-        text,
-        `${name} must not cite the retired raw 100KB cap`
-      ).not.toMatch(/100\s?K(?:B|iB)/i)
-      expect(text, `${name} must name the brotli unit`).toContain("brotli")
-    }
-
-    // The author cannot compute brotli, so what it is given must be a rule it
-    // can follow: inline binary is the only payload that does not compress.
-    expect(previewAuthor).toContain("base64")
-    expect(previewAuthor).toContain("@font-face")
-    // The reviewer's no-machine-report path needs the same eyeball proxy.
-    expect(previewReviewer).toContain("data:")
 
     // The rubric is the surface that states the gate in its real unit, so its
     // three byte figures must be the gate's own. The author deliberately gets
@@ -364,11 +283,9 @@ describe("/design-md machine gates", () => {
   // reviewer maps a machine block onto a rubric item without either side
   // naming a rule id. Reword one side alone and the block stops pointing at a
   // rule the reader can find.
-  it("teaches the swatch-catalog and type-scale blocks to author, rubric, reviewer", () => {
+  it("joins the swatch-catalog and type-scale blocks to the rubric and author", () => {
     const previewAuthor = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
-    const previewReviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
     const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
-    const skill = readRepoFile(DESIGN_MD_SKILL)
     const validator = readRepoFile("src/lib/preview-validator.ts")
 
     // The quoted prose, both sides.
@@ -399,30 +316,6 @@ describe("/design-md machine gates", () => {
         `${labelPercent}% or more`
       )
     }
-
-    // Author: the counts are structural, so a rename does not evade them.
-    expect(previewAuthor).toContain("any token showcase")
-    expect(previewAuthor).toContain("fill-only elements per theme")
-
-    // Rubric: a machine block zeroes the item rather than docking a point.
-    // Counted, not merely contained — adding the paragraph to Item 2 and
-    // forgetting Item 3 is the real failure mode.
-    expect(
-      rubric.match(
-        /\*\*A machine block on this item forces `earned` to 0\.\*\*/g
-      )?.length,
-      "Items 2 and 3 must both carry the adopt-wholesale rule"
-    ).toBe(2)
-
-    // Reviewer: the same instruction on the surface that writes the JSON.
-    expect(previewReviewer).toContain("set Item 2 `earned` to **0**")
-    expect(previewReviewer).toContain("set Item 3 `earned` to **0**")
-
-    // Skill: the 9a2 summary must say the gate owns these two now, or the
-    // orchestrator's retry loop reads as structural-only and a content block
-    // looks like a validator bug rather than a fix the author must apply.
-    expect(skill).toContain("swatch catalog")
-    expect(skill).toContain("type-scale showcase")
 
     expect(validator).toContain("swatch-catalog")
     expect(validator).toContain("type-scale-showcase")
@@ -540,37 +433,6 @@ describe("/design-md machine gates", () => {
     }
   })
 
-  // Issue #322: a wrapped card row whose last item is alone on its row never
-  // overflows, so no sweep and no static rule sees it — the guard is prose on
-  // two surfaces, the author (must not write it) and the reviewer (must flag
-  // it). Fixing one surface alone is the realistic drift, so both are pinned
-  // to the same three facts: the grid form to use, the flex-wrap form it
-  // replaces, and that the failure is not an overflow.
-  it("teaches the orphan-row stretch on both the authoring and the review surface", () => {
-    const author = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
-    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
-    for (const [name, text] of [
-      ["preview-html-author.md", author],
-      ["rubric-preview.md", rubric],
-    ] as const) {
-      // The guard is one bullet line on each surface, and the flex-wrap form is
-      // checked inside that line, not the whole file: both files already said
-      // `flex-wrap` about atomic control groups before this guard existed, so a
-      // file-wide substring stayed green with the guard's own mention deleted.
-      const guard = text
-        .split("\n")
-        .find((line) => line.includes("repeat(auto-fit, minmax("))
-      expect(guard, `${name} must prescribe the grid form`).toBeDefined()
-      expect(
-        guard,
-        `${name} must name the flex-wrap form it replaces, in the same bullet`
-      ).toContain("flex-wrap: wrap")
-      expect(text, `${name} must say the failure does not overflow`).toMatch(
-        /never overflows|not an overflow|does \*\*not\*\* overflow|nothing overflows/
-      )
-    }
-  })
-
   // The rubric states how many static-scan patterns it lists. A bullet added
   // without the count is the drift nobody would notice, and it happened in
   // the very change that added the sixth.
@@ -632,27 +494,11 @@ describe("/design-md machine gates", () => {
       `Stage 2 says "${stated} follow-up text inputs" but lists ${bullets}`
     ).toBe(expected)
 
-    // The variable has to be captured, be what the gate keys on, and reach the
-    // research dispatch. Approving a board that stops at the gate leaves the
-    // run rebuilding from public sources while the approval implies otherwise.
-    expect(block, "the board question must name its variable").toContain(
-      "Stage 4c"
-    )
-    expect(skill, "the capture line must bind the variable").toMatch(
-      /Capture the answers as:[^\n]*design_board_paths/
-    )
     const gate = skill.slice(
       skill.indexOf("### Stage 4c"),
       skill.indexOf("## Stage 5")
     )
     expect(gate, "Stage 4c must exist ahead of Stage 5").not.toBe("")
-    expect(gate, "Stage 4c must key on the intake variable").toContain(
-      "design_board_paths"
-    )
-    expect(
-      gate,
-      "Stage 4c must carry the approved board into the research dispatch"
-    ).toContain("screenshot_paths")
 
     // Stage 2 accepts a directory for convenience, so the handover has to
     // expand it. research-collector has no `Bash` to list a directory and
@@ -697,15 +543,6 @@ describe("/design-md machine gates", () => {
   it("keeps the board cross-check the prose promises inside Stage 12", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
 
-    const gate = skill.slice(
-      skill.indexOf("### Stage 4c"),
-      skill.indexOf("## Stage 5")
-    )
-    expect(
-      gate,
-      "Stage 4c must say where approving the board pays off"
-    ).toContain("Stage 12")
-
     const stage12 = skill.slice(
       skill.indexOf("## Stage 12 —"),
       skill.indexOf("## Stage 13 —")
@@ -722,27 +559,7 @@ describe("/design-md machine gates", () => {
       )?.[0] ?? ""
     expect(step, "the cross-check must be its own numbered step").not.toBe("")
 
-    // The same intake variable as 4c, not a second one: two variables would let
-    // the halves be skipped independently, which is how they drifted apart.
-    expect(
-      step,
-      "the step must key on the intake variable Stage 4c already uses"
-    ).toContain("design_board_paths")
-    expect(
-      step,
-      "the step must set a result the Stage 13 report can read"
-    ).toContain("board_result")
-
-    // What it measures is the whole point. `audit:oklch` and the drift gate
-    // both answered "is this value right?" correctly on remember; the finding
-    // was that a right value sat on six elements where one was observed. A step
-    // that re-checks values would restore the pointer and keep the blind spot.
-    expect(
-      step,
-      "the step must measure where a value landed, not whether it is right"
-    ).toMatch(/audit:oklch/)
-
-    // And its cross-reference has to resolve. The first draft of this sentence
+    // Its cross-reference has to resolve. The first draft of this sentence
     // said the blind spot was noted "under Stage 9"; it is under Stage 10's
     // `### Preview token alias registration`. A pointer naming a stage that
     // does not hold the thing is the exact defect this step exists to end, and
@@ -789,14 +606,6 @@ describe("/design-md machine gates", () => {
     const gate = skill.slice(at9a2, at9a3)
     const observe = skill.slice(at9a3, at9b)
     expect(observe, "Stage 9a3 must exist").not.toBe("")
-
-    // Both ways out of 9a2 that reach the reviewer go through 9a3. A route
-    // that skipped it would hand the reviewer a report with no `render`.
-    for (const route of ["- **Exit 0**", "- **K exhausted"]) {
-      const line = /^.*/.exec(gate.slice(gate.indexOf(route)))?.[0] ?? ""
-      expect(line, `9a2 route ${route}`).not.toBe("")
-      expect(line, `9a2 route ${route} must pass through 9a3`).toContain("9a3")
-    }
 
     const script = /pnpm ([a-z:-]+)/.exec(observe)?.[1]
     expect(script, "9a3 must run a pnpm script").toBeDefined()
@@ -883,263 +692,6 @@ describe("/design-md machine gates", () => {
     }
     // A pattern that matched nothing would make this test vacuous.
     expect(named).toBeGreaterThan(2)
-  })
-
-  // A skipped observation, an empty one and a clean one all add zero items.
-  // If Stage 13 printed them alike, "no Chromium" or "collected nothing" would
-  // read as "nothing fell short".
-  it("reports the render observation's four states distinctly", () => {
-    const skill = readRepoFile(DESIGN_MD_SKILL)
-    const report = skill.slice(
-      skill.indexOf("## Stage 13 —"),
-      skill.indexOf("## Edge cases")
-    )
-    expect(report, "Stage 13 must precede the edge cases").not.toBe("")
-    const outputsOf = (variable: string): Array<string | undefined> =>
-      (report.match(new RegExp(`^ {2}- \`${variable} = .*$`, "gm")) ?? []).map(
-        (line) => /→ `([^`]+)`/.exec(line)?.[1]
-      )
-
-    const render = outputsOf("render_result")
-    expect(render.length, "four states: ok, warn, empty, skipped").toBe(4)
-    expect(render.every((o) => o !== undefined)).toBe(true)
-    expect(new Set(render).size).toBe(4)
-
-    // Nor may one of them borrow another step's line.
-    const others = [
-      ...outputsOf("responsive_result"),
-      ...outputsOf("board_result"),
-    ]
-    expect(others.length).toBeGreaterThan(0)
-    for (const line of render) expect(others).not.toContain(line)
-  })
-
-  // The report is the only place this step's output reaches a person, and three
-  // of its four states are non-findings that read identically if they collapse:
-  // "no board existed", "compared, nothing disagreed", "never ran". Reporting a
-  // skipped run as silence is the repeated failure this repository records.
-  it("reports the board cross-check's four states distinctly", () => {
-    const skill = readRepoFile(DESIGN_MD_SKILL)
-    const report = skill.slice(
-      skill.indexOf("## Stage 13 —"),
-      skill.indexOf("## Edge cases")
-    )
-    expect(report, "Stage 13 must precede the edge cases").not.toBe("")
-
-    const lines = report.match(/^ {2}- `board_result = [^\n]*$/gm) ?? []
-    expect(
-      lines.length,
-      "four states: ok, discrepancies, skipped (no board), skipped (no preview MCP)"
-    ).toBe(4)
-
-    const outputs = lines.map((line) => /→ `([^`]+)`/.exec(line)?.[1])
-    expect(
-      outputs.filter((o) => o !== undefined).length,
-      "every state must name the line it prints"
-    ).toBe(4)
-    expect(
-      new Set(outputs).size,
-      "two states printing the same line makes a skipped run read as a clean one"
-    ).toBe(4)
-
-    // The closing residue paragraph tells the person what the machines did not
-    // check. Once this step runs, application site is no longer residue — and
-    // when it is skipped it still is. A paragraph that never mentions the
-    // result contradicts whichever line the report just printed.
-    const residue =
-      /- \*\*What is left for the person to look at\.\*\*[\s\S]*?(?=\n\n)/.exec(
-        report
-      )?.[0] ?? ""
-    expect(residue, "Stage 13 must close with the residue paragraph").not.toBe(
-      ""
-    )
-    expect(
-      residue,
-      "the residue paragraph must branch on the cross-check's result"
-    ).toContain("board_result")
-  })
-
-  // Issue #396 put a prose axis on three surfaces (write it / score it / emit
-  // it), because all five scored items score what the preview RENDERS: remember
-  // shipped 61% of its rendered text as explanation and scored 10/10. Issue #499
-  // turned the axis from a duplication test into a presence ban. The old
-  // question — "can the design.md say this?" — kept five kinds of sentence the
-  // md has no screen for, and that list is how the captions came back:
-  // lg-electronics carried twelve such notes (which token a demo borrowed, how
-  // the dark theme was read), answered a review asking it to admit an
-  // assumption by extending one of them, and the next round deleted all twelve.
-  // So each surface now carries the same closed list of what may stay, and an
-  // assumption is marked with a short label rather than a sentence. Fixing one
-  // surface and forgetting the others is the drift this pins.
-  it("puts the design-explanation caption ban on the author, the rubric, and the reviewer", () => {
-    const author = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
-    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
-    const reviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
-
-    // The allow-list IS the check — anything outside it is a caption to drop.
-    // A surface that loses one entry starts flagging the element it names, and
-    // one that loses the ban keeps its heading and stops testing anything.
-    const ALLOWED = [
-      "catalog-disclaimer",
-      "catalog-dummy",
-      "catalog-attribution",
-      "component and state labels",
-      // Item 3 asks for two or three scale steps named inside a component
-      // spec; a list without them reads as banning the labels Item 3 scores.
-      "spec and value labels",
-      "interaction hints",
-      "image placeholders",
-    ] as const
-    // Each surface is read only inside its own prose section: the three class
-    // names also appear in the disclosure and dummy-data sections, so a check
-    // over the whole file would pass with the list itself gone.
-    // Ends at whichever end marker comes first: a list item's next sibling,
-    // or — when it is the last item — the blank line before the next heading.
-    const section = (text: string, from: string, ...ends: Array<string>) => {
-      const start = text.indexOf(from)
-      if (start === -1) throw new Error(`section "${from}" not found`)
-      const found = ends
-        .map((to) => text.indexOf(to, start + from.length))
-        .filter((i) => i !== -1)
-      return text.slice(
-        start,
-        found.length > 0 ? Math.min(...found) : undefined
-      )
-    }
-    for (const [name, text, prose] of [
-      [
-        "preview-html-author.md",
-        author,
-        section(author, "**Write no design-explanation caption.**", "\n## "),
-      ],
-      // The halt checklist restates the list, and an author self-checks
-      // against it — an entry missing there is deleted as surely as one
-      // missing from the section above.
-      [
-        "preview-html-author.md (halt condition)",
-        author,
-        section(author, "- No design-explanation caption.", "\n- ", "\n\n"),
-      ],
-      [
-        "rubric-preview.md",
-        rubric,
-        section(rubric, "## Explanatory prose", "\n## "),
-      ],
-      [
-        "preview-html-reviewer.md",
-        reviewer,
-        section(reviewer, "**Explanatory prose", "\n   - **"),
-      ],
-    ] as const) {
-      expect(prose, `${name} must name the ban`).toContain(
-        "design-explanation caption"
-      )
-      // The other half of the boundary: without it the list reads as banning
-      // the hero tagline and the mock's own copy along with the captions.
-      expect(prose, `${name} must exempt the demo's own text`).toContain(
-        "demo's own text"
-      )
-      for (const entry of ALLOWED)
-        expect(prose, `${name} must list "${entry}" as allowed`).toContain(
-          entry
-        )
-      // The answer to "say this is an assumption" — without it the author's
-      // only way to comply with a review is the sentence the ban removes.
-      expect(prose, `${name} must mark assumptions with a label`).toContain(
-        "(가정)"
-      )
-      // The escape hatch #499 closed, checked over the whole file. Its wording
-      // is what a later edit would most likely restore.
-      for (const phrase of ["has no screen for", "Legitimately kept"])
-        expect(
-          text,
-          `${name} reopens the escape hatch #499 closed`
-        ).not.toContain(phrase)
-    }
-
-    // The two Korean copies. CLAUDE.md is the only surface the CI review bot
-    // reads, so a stale list there is how the bot would start asking for notes
-    // again; the audit skill is what a person reads before trimming prose. The
-    // entries are the Korean names of the same list, matched inside each
-    // copy's own paragraph for the same reason as above.
-    const ALLOWED_KO = [
-      "catalog-disclaimer",
-      "catalog-dummy",
-      "catalog-attribution",
-      "컴포넌트·상태 이름표(스펙·값 라벨 포함)",
-      "조작 안내",
-      "이미지 자리 표시",
-    ] as const
-    for (const [name, prose] of [
-      [
-        "CLAUDE.md",
-        section(
-          readRepoFile("CLAUDE.md"),
-          "**디자인 설명 캡션을 쓰지 않는다**",
-          "\n- ",
-          "\n\n"
-        ),
-      ],
-      [
-        "preview-prose-audit/SKILL.md",
-        section(
-          readRepoFile(PREVIEW_PROSE_AUDIT_SKILL),
-          "**닫힌 허용 목록**",
-          "\n\n리멤버가"
-        ),
-      ],
-    ] as const) {
-      expect(prose, `${name} must exempt the demo's own text`).toContain(
-        "시연 자체의 글"
-      )
-      for (const entry of ALLOWED_KO)
-        expect(prose, `${name} must list "${entry}" as allowed`).toContain(
-          entry
-        )
-      expect(prose, `${name} must mark assumptions with a label`).toContain(
-        "(가정)"
-      )
-      // The Korean wording of the escape hatch — the line the audit skill
-      // carried before #499 ("못 하면 남긴다 — md 에는 화면이 없어서 …"). Checked
-      // inside the copy's own paragraph, so the skill's retrospective sentence
-      // ("예전 기준은 …") does not trip it.
-      expect(
-        prose,
-        `${name} reopens the escape hatch #499 closed`
-      ).not.toContain("못 하면 남긴다")
-    }
-
-    // Advisory, like the content checks around it: it appends warns and leaves
-    // the 10-point total alone, so the entries already scored keep their
-    // scores. How many advisory sections there are is not pinned here — the
-    // roll-call test below holds the full list against what SKILL.md reports,
-    // so a new section is one edit there rather than a count in two places.
-    const advisory = [...rubric.matchAll(ADVISORY_HEADING)].map((m) => m[1])
-    expect(
-      advisory,
-      "the prose section must be declared advisory in the same form as the others"
-    ).toContain("Explanatory prose")
-
-    // Placement is load-bearing, not cosmetic: the pattern-count test above
-    // slices the file between `## Mobile overflow` and `## Dummy-data
-    // labelling` and counts every bold bullet in between. Wedging this section
-    // there would add its bullets to that count and fail a test that has
-    // nothing to do with prose.
-    expect(
-      rubric.indexOf("## Explanatory prose"),
-      "the prose section must follow Dummy-data labelling, whose bullet count is sliced by the test above"
-    ).toBeGreaterThan(rubric.indexOf("## Dummy-data labelling"))
-
-    // Author: it has to be told not to write the sentence, or the rubric only
-    // ever catches it after the fact and the loop spends an iteration on it.
-    expect(author).toContain("do not rebuild it in sentences")
-    // Reviewer: the surface that writes the JSON must emit the warn, and must
-    // do it before writing — a step appended after step 5 reaches nothing.
-    expect(reviewer).toContain("Emit one `warn` per caption")
-    expect(
-      reviewer.indexOf("Explanatory prose"),
-      "the prose step must come before the JSON is written"
-    ).toBeLessThan(reviewer.indexOf("Write the JSON"))
   })
 
   // Stage 12 reports every advisory warn because those sections add no points
@@ -1230,22 +782,12 @@ describe("/design-md machine gates", () => {
 
     // The reviewer is sent to the rubric for the conditions, but it is the
     // surface that writes the warn, so it carries the declarations itself —
-    // the line all three surfaces share, as the prose question is above. And
-    // the step must run before the JSON is written, or it reaches nothing.
+    // the ones read out of the author's fence above.
     const reviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
     expect(
       reviewer,
       "the reviewer must check for the author's declarations"
     ).toContain(declarations.join("; "))
-    const step = reviewer.indexOf("**Reduced motion")
-    expect(
-      step,
-      "the reviewer must have a Reduced motion step"
-    ).toBeGreaterThan(-1)
-    expect(
-      step,
-      "the reduced-motion step must come before the JSON is written"
-    ).toBeLessThan(reviewer.indexOf("Write the JSON"))
 
     // The "no exceptions" reason is that the sweep renders under reduce. If
     // the sweep stops doing that, the prompt is defending a rule with a reason

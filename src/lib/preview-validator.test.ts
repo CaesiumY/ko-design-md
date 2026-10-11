@@ -1538,9 +1538,17 @@ describe("validatePreviewPair — font shorthand with a CSS-wide keyword", () =>
     ).not.toContain("font-shorthand-invalid")
   })
 
-  it("blocks, and the author prompt it depends on teaches the rule", () => {
-    const author = readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)
-    expect(author).toContain("font: 700 15px/1 inherit")
+  it("blocks the example the author prompt teaches the rule with", () => {
+    // The prompt's example of the invalid form must be one the gate actually
+    // blocks — a prompt example the gate passes would teach the wrong rule.
+    const example = "font: 700 15px/1 inherit"
+    expect(readRepoFile(PREVIEW_HTML_AUTHOR_AGENT)).toContain(example)
+    expect(
+      rulesOf(
+        makeInput({ lightRaw: makeHtml({ style: `.a { ${example}; }` }) }),
+        "block"
+      )
+    ).toContain("font-shorthand-invalid")
   })
 })
 
