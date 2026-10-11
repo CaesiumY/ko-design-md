@@ -208,6 +208,7 @@ const PREVIEW_TOKEN_ALIASES: Partial<
     ["ldsg-color-", "ldsg-"],
     ["", "ldsg-"],
   ],
+  nol: [["", "nol-"]],
   remember: [["", "rui-"]],
   "seed-design": [["", "seed-"]],
   socar: [["", "sf-"]],

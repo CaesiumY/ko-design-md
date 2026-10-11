@@ -453,6 +453,10 @@ export const BASELINE_TABLE = `\
 | line-design-system | dark | non-text | 41 | 55 | 16 | 0 | 3 |
 | line-design-system | light | text | 106 | 226 | 48 | 12 | 14 |
 | line-design-system | light | non-text | 42 | 56 | 34 | 0 | 3 |
+| nol | dark | text | 196 | 418 | 0 | 0 | 11 |
+| nol | dark | non-text | 17 | 19 | 3 | 4 | 1 |
+| nol | light | text | 196 | 418 | 7 | 6 | 11 |
+| nol | light | non-text | 13 | 15 | 3 | 0 | 1 |
 | remember | dark | text | 98 | 183 | 7 | 1 | 3 |
 | remember | dark | non-text | 3 | 8 | 1 | 0 | 0 |
 | remember | light | text | 98 | 183 | 39 | 0 | 3 |
