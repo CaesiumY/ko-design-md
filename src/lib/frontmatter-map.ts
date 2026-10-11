@@ -15,7 +15,7 @@
 // and a YAML parser normalises exactly that away. So each caller gets the line
 // and decides for itself what the value means.
 
-import { TOKEN_MAP_KEYS } from "./frontmatter-maps"
+import { TOKEN_MAP_KEYS } from "./frontmatter-map-table"
 
 export interface MapRow {
   /** The source line, unmodified. */

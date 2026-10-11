@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest"
 import { REQUIRED_SECTIONS, validateDraft } from "./draft-validator"
 import { matter } from "./content-parser"
-import { FRONTMATTER_MAPS } from "./frontmatter-maps"
-import type { FrontmatterMapTraits } from "./frontmatter-maps"
+import { FRONTMATTER_MAPS } from "./frontmatter-map-table"
+import type { FrontmatterMapTraits } from "./frontmatter-map-table"
 import type { DraftValidationOptions } from "./draft-validator"
 
 // ── fixture ──────────────────────────────────────────────────────────────────
@@ -2452,7 +2452,7 @@ describe("a BOM cannot switch the YAML check off", () => {
 })
 
 describe("token values must be single-line scalars", () => {
-  it("blocks a block scalar in any of the four token maps", () => {
+  it("blocks a block scalar in the colors map", () => {
     // Legal YAML, but every reader of these maps is line-based: writing one into
     // `colors:` dropped the token from the sidecar entirely while
     // `validate:catalog` still printed PASSED.

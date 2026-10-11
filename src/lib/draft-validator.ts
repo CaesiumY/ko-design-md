@@ -14,7 +14,7 @@ import {
   NO_BLOCK_SCALAR_MAP_KEYS,
   REFERENCE_MAP_KEYS,
   ROW_SCAN_MAP_KEYS,
-} from "./frontmatter-maps"
+} from "./frontmatter-map-table"
 import { CATEGORIES } from "./content-types"
 import { auditSourceCitations } from "./source-citations"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
@@ -327,8 +327,8 @@ function checkFrontmatterYaml(fmDoc: FrontmatterDoc): Array<ValidationIssue> {
  * from the sidecar entirely while `validate:catalog` still reports PASSED — the
  * silent loss this whole file exists to stop.
  *
- * Scans all four token maps, not just `colors:`, because the loss does not care
- * which map it happens in.
+ * Scans every map with the `noBlockScalar` trait (see `frontmatter-map-table`),
+ * not just `colors:`, because the loss does not care which map it happens in.
  */
 /**
  * Working notes must not ship.
@@ -1094,14 +1094,10 @@ function checkBlockScalars(fm: Array<string>): Array<ValidationIssue> {
  */
 function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
-  // Every map with the `rowScan` trait, not just colours. `frontmatterRows` reads spacing and rounded
-  // through the same two-space shape, so a nested row there is dropped just as
-  // silently — and `referenceRows` would flatten a nested reference into a
-  // differently named top-level token.
-  //
-  // `elevation` joins them because it is read the same way (#421): its rows
-  // used to sit in a body fence, where `scanBody` judged them line by line, and
-  // moving them into frontmatter must not move them out of reach.
+  // Every map with the `rowScan` trait — the table says why each is in or out.
+  // `frontmatterRows` reads them all through the same two-space shape, so a
+  // nested row is dropped just as silently as in colours — and `referenceRows`
+  // would flatten a nested reference into a differently named top-level token.
   for (const mapKey of ROW_SCAN_MAP_KEYS) {
     for (const row of mapRows(fm, mapKey)) {
       // A head row that only opens a nested map carries no value to judge; the

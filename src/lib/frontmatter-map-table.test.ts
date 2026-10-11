@@ -5,7 +5,7 @@ import {
   REFERENCE_MAP_KEYS,
   ROW_SCAN_MAP_KEYS,
   TOKEN_MAP_KEYS,
-} from "./frontmatter-maps"
+} from "./frontmatter-map-table"
 
 // The lists every reader used to keep by hand, pinned as literals. Deriving the
 // expectation from the table again would agree with any table at all; these

@@ -1,4 +1,4 @@
-import { FRONTMATTER_MAP_KEYS } from "./frontmatter-maps"
+import { FRONTMATTER_MAP_KEYS } from "./frontmatter-map-table"
 import type { ServiceDoc, ServiceFrontmatter } from "./content-types"
 
 // Minimal frontmatter parser for our schema (string scalars, inline arrays,
@@ -37,7 +37,7 @@ export const CONSUMED_KEYS: ReadonlyArray<keyof ServiceFrontmatter> = [
 // field-by-field so these never reach `ServiceFrontmatter` at all — declaring
 // them on that interface would claim a field the parser demonstrably drops.
 // They are listed so the unknown-key rule stops reporting ~100 false warnings.
-// The maps come from the table in `frontmatter-maps`, which every other reader
+// The maps come from the table in `frontmatter-map-table`, which every other reader
 // of them derives its list from too.
 const FILE_ONLY_KEYS: ReadonlyArray<string> = [
   ...FRONTMATTER_MAP_KEYS,
