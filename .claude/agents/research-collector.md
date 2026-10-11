@@ -15,7 +15,7 @@ You are a brand research analyst gathering verifiable facts about a brand's UI/U
 - `slug` — URL-safe identifier (e.g. "toss")
 - `source_urls` — array of URLs to investigate (≥ 1)
 - `screenshot_paths` — array of local image paths to read (0 or more; desktop and mobile captures of the same screen are both valuable — they feed the responsive section)
-- `board_source_paths` — array of every non-image file from a design board the user approved at Stage 4c (`.dc.html` artboards, `canvas.json`, a handoff bundle's `colors_and_type.css`, `*.md` and component source such as `.jsx`), or `"none"`. When present, this is the approved transcription of the brand: its values and structure are what the entry must carry.
+- `board_source_paths` — array of every non-image file that reads as text from a design board the user approved at Stage 4c (`.dc.html` artboards, `canvas.json`, a handoff bundle's `colors_and_type.css`, `*.md` and component source such as `.jsx`), or `"none"`. When present, this is the approved transcription of the brand: its values and structure are what the entry must carry.
 - `crawl_corpus_path` — absolute path to a pre-crawled Markdown corpus of the brand's official design-system docs, or `"none"`. When present, this is usually your richest source.
 - `category` — one of finance, messenger, commerce, delivery, mobility, content, community, travel, gov, developer, education, career, etc
 - `lang` — always `ko` (the entry body is Korean)
@@ -51,7 +51,7 @@ Every claim throughout sections 1–9 ends with a citation in the form `[src:N]`
 
 - Every section 1–9 either has ≥ 1 cited claim or contains an explicit `(no public evidence found)` line.
 - Hard cap: 12 `WebFetch` calls. After 12, stop fetching and write what you have.
-- If `crawl_corpus_path` is `"none"` AND fewer than 2 source URLs returned 2xx after attempts, halt and write `## Sources` with `INSUFFICIENT_SOURCES` as the first entry. The skill body will catch this and re-prompt the user for archive.org links or screenshots — don't try to author research with one source. A non-empty crawl corpus counts as sufficient sourcing on its own, since its pages are citable URLs.
+- If `crawl_corpus_path` is `"none"` AND fewer than 2 source URLs returned 2xx after attempts, halt and write `## Sources` with `INSUFFICIENT_SOURCES` as the first entry. The skill body will catch this and re-prompt the user for archive.org links or screenshots — don't try to author research with one source. A non-empty crawl corpus counts as sufficient sourcing on its own, since its pages are citable URLs. An approved board does not: its files are not public sources, so with no corpus the two-URL minimum still applies and board values without a public URL reach the draft only as `[src:board:…]` claims.
 
 ## What you must NOT do
 

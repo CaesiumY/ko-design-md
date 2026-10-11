@@ -697,7 +697,7 @@ bottom-nav                                                  [src:5][src:8]
 4. https://nol-universe.com/ko — 놀유니버스 홈. 푸터의 법인 정보
 5. https://nol.yanolja.com/ — NOL 소비자 웹 홈. SSR HTML·메타·푸터·유틸리티 클래스
 6. https://nol.yanolja.com/discovery/list/around/PRODUCT_CATEGORY_KOREA_ACCOMMODATION/hotel — NOL 숙소 목록. SSR 카드·필터
-7. https://nol.yanolja.com/stay/domestic/3001564?checkInDate=2026-10-14&checkOutDate=2026-10-15&adultPax=2 — NOL 숙소 상세. 일반 HTTP 클라이언트에는 403 을 돌려주고 브라우저로 열어야 보인다
+7. https://nol.yanolja.com/stay/domestic/3001564?checkInDate=2026-10-14&checkOutDate=2026-10-15&adultPax=2 — NOL 숙소 상세. 날짜 쿼리는 수집 시점의 값이다. 일반 HTTP 클라이언트에는 403 을 돌려주고 브라우저로 열어야 보인다
 8. https://assets.yanolja.com/display-site/c4fbddbfa06e15eb9a7f53bf1dbea28028b11637/_next/static/css/cd6f429d789b43ea.css — NOL 홈 CSS 번들(같은 디렉터리의 CSS 파일들 포함). 해시 경로라 배포마다 바뀔 수 있다
 9. https://assets.yanolja.com/discovery-site/8192eff4dca5b49a3fc27b92810f122a93f652ca/prod/20261007/_next/static/css/4f5d2bf758340f9e.css — NOL 목록 CSS 번들(같은 디렉터리의 CSS 파일들 포함). 해시 경로
 10. https://assets.yanolja.com/stay-site/prod/_next/static/css/fdd4d1a3cbb88275.css — NOL 상세 CSS 번들(같은 디렉터리의 CSS 파일들 포함). 해시 경로
