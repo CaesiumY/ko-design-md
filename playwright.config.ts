@@ -1,12 +1,11 @@
-// Playwright E2E smoke for the site (`pnpm test:e2e`). Scaffolded by the
-// e2e-flow skill (Phase 1) and adapted to this repo — see the E2E paragraph in
-// CLAUDE.md.
+// Playwright E2E smoke for the site (`pnpm test:e2e`). Laid out with the
+// e2e-flow skill's conventions and adapted to this repo — see the E2E paragraph
+// in CLAUDE.md.
 import { defineConfig, devices } from "@playwright/test"
 
 const HOST = "127.0.0.1"
-// 4173 belongs to `pnpm test:http` and the `.claude/launch.json` preview, and a
-// local run reuses whatever server already holds the port — sharing it would
-// attach the suite to a stale server.
+// Kept off 4173, which `pnpm test:http` and the `.claude/launch.json` preview
+// use, so the suite never lands on a server it did not start.
 const PORT = 4174
 
 // E2E_BASE_URL points the suite at an external deployment instead; no local
@@ -26,8 +25,9 @@ export default defineConfig({
 
   use: {
     baseURL: BASE_URL,
-    // Locally there is no retry, so keep the trace of the first failure — the
-    // e2e-flow skill's self-heal phase reads it. CI records it on the retry.
+    // Locally there is no retry, so keep the trace of the first failure
+    // (`pnpm exec playwright show-trace test-results/<test>/trace.zip`). CI
+    // records it on the retry.
     trace: CI ? "on-first-retry" : "retain-on-failure",
     screenshot: "only-on-failure",
     actionTimeout: 10_000,
@@ -53,7 +53,10 @@ export default defineConfig({
         command: "pnpm exec tsx scripts/e2e-server.ts",
         env: { NITRO_HOST: HOST, NITRO_PORT: String(PORT) },
         url: BASE_URL,
-        reuseExistingServer: !CI,
+        // Never reuse a server already on the port, locally either: it would
+        // skip the script's stale-build check and test whatever build that
+        // server happened to load. A busy port fails the run instead.
+        reuseExistingServer: false,
         timeout: 300_000,
         stdout: "pipe",
         stderr: "pipe",

@@ -20,9 +20,21 @@ import { fileURLToPath, pathToFileURL } from "node:url"
 const ROOT = fileURLToPath(new URL("..", import.meta.url))
 const SERVER_ENTRY = join(ROOT, ".output", "server", "index.mjs")
 
-// Everything `pnpm build` reads that a test could observe.
-const SOURCE_DIRS = ["src", "services", "public"]
-const SOURCE_FILES = ["vite.config.ts", "package.json"]
+// The repo inputs of `pnpm build`: the app, the catalog and its public assets,
+// the one file `src/` imports from outside itself (agent-skill-index.ts reads
+// the use-design-md skill with `?raw`), the OG image script, and the build and
+// dependency configuration. A file missing here would let a stale build pass.
+const SOURCE_PATHS = [
+  "src",
+  "services",
+  "public",
+  ".claude/skills/use-design-md/SKILL.md",
+  "scripts/build-og.ts",
+  "vite.config.ts",
+  "tsconfig.json",
+  "package.json",
+  "pnpm-lock.yaml",
+]
 
 function newestMtime(path: string): number {
   const stat = statSync(path)
@@ -37,9 +49,9 @@ function newestMtime(path: string): number {
 function buildIsStale(): boolean {
   if (!existsSync(SERVER_ENTRY)) return true
   const builtAt = statSync(SERVER_ENTRY).mtimeMs
-  const sources = [...SOURCE_DIRS, ...SOURCE_FILES]
-    .map((name) => join(ROOT, name))
-    .filter((path) => existsSync(path))
+  const sources = SOURCE_PATHS.map((name) => join(ROOT, name)).filter((path) =>
+    existsSync(path)
+  )
   return sources.some((path) => newestMtime(path) > builtAt)
 }
 

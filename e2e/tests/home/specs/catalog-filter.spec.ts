@@ -28,21 +28,20 @@ test.describe("홈 카탈로그", () => {
     }
   )
 
-  test("검색어가 이름·슬러그·소개에 걸리는 항목만 남는다", async ({
+  test("브랜드 이름으로 검색하면 이름·디자인 시스템 이름·슬러그·소개에 걸리는 항목만 남는다", async ({
     page,
     form,
     linkList,
     navigation,
-    toggle,
   }) => {
-    const query = bySlug("toss").frontmatter.slug
+    // Searched by the name a visitor would type, not the slug. The expected
+    // rows are every entry the query hits in any searched field, so another
+    // brand that mentions it in its tagline is expected too.
+    const toss = bySlug("toss")
+    const query = toss.frontmatter.name
     const expected = searchMatches(query)
-    expect(expected.map((doc) => doc.frontmatter.slug)).toContain("toss")
-    await 검색하기(
-      { page, form, linkList, navigation, toggle },
-      query,
-      expected
-    )
+    expect(expected).toContain(toss)
+    await 검색하기({ page, form, linkList, navigation }, query, expected)
   })
 
   test("어디에도 걸리지 않는 검색어는 빈 목록 안내를 보인다", async ({
@@ -50,10 +49,9 @@ test.describe("홈 카탈로그", () => {
     form,
     linkList,
     navigation,
-    toggle,
   }) => {
     const query = "e2e-일치하지-않는-검색어"
     expect(searchMatches(query)).toHaveLength(0)
-    await 결과_없음_확인({ page, form, linkList, navigation, toggle }, query)
+    await 결과_없음_확인({ page, form, linkList, navigation }, query)
   })
 })

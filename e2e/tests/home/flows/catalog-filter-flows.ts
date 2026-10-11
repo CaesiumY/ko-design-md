@@ -17,6 +17,16 @@ interface HomeContext {
   toggle: ToggleButtonHelper
 }
 
+// Each flow takes only the helpers it drives.
+type FilterContext = Pick<
+  HomeContext,
+  "page" | "linkList" | "navigation" | "toggle"
+>
+type SearchContext = Pick<
+  HomeContext,
+  "page" | "form" | "linkList" | "navigation"
+>
+
 const SEARCH_LABEL = "Search designs"
 const ALL_CATEGORIES = new RegExp(`^전체 ${catalog.length}$`)
 
@@ -32,13 +42,17 @@ function categories(page: Page) {
   return { within: page.getByRole("navigation", { name: "카테고리" }) }
 }
 
-export async function 전체_목록_확인({ page, linkList, toggle }: HomeContext) {
+export async function 전체_목록_확인({
+  page,
+  linkList,
+  toggle,
+}: Pick<HomeContext, "page" | "linkList" | "toggle">) {
   await toggle.expectPressed(ALL_CATEGORIES, true, categories(page))
   await linkList.expectHrefs(catalog.map(servicePath), rows(page))
 }
 
 export async function 카테고리로_거르기(
-  { page, linkList, navigation, toggle }: HomeContext,
+  { page, linkList, navigation, toggle }: FilterContext,
   facet: CategoryFacet
 ) {
   await toggle.press(facet.buttonName, categories(page))
@@ -51,14 +65,14 @@ export async function 전체로_되돌리기({
   linkList,
   navigation,
   toggle,
-}: HomeContext) {
+}: FilterContext) {
   await toggle.press(ALL_CATEGORIES, categories(page))
   await navigation.expectSearchParam("cat", null)
   await linkList.expectHrefs(catalog.map(servicePath), rows(page))
 }
 
 export async function 검색하기(
-  { page, form, linkList, navigation }: HomeContext,
+  { page, form, linkList, navigation }: SearchContext,
   query: string,
   expected: Array<ServiceDoc>
 ) {
@@ -68,7 +82,7 @@ export async function 검색하기(
 }
 
 export async function 결과_없음_확인(
-  { page, form, linkList, navigation }: HomeContext,
+  { page, form, linkList, navigation }: SearchContext,
   query: string
 ) {
   await form.fillFields({ [SEARCH_LABEL]: query })
