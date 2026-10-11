@@ -985,16 +985,21 @@ function decodeQuoteEntities(value: string): string {
     .replace(/&amp;/gi, "&")
 }
 
-function inlineInvalidFonts(html: string): Array<string> {
-  const out: Array<string> = []
-  for (const m of html.matchAll(/\sstyle\s*=\s*(?:"([^"]*)"|'([^']*)')/gi)) {
+/** Each `style` attribute's declarations, as the CSS parser receives them. */
+function inlineStyleDeclarations(html: string): Array<string> {
+  return [...html.matchAll(/\sstyle\s*=\s*(?:"([^"]*)"|'([^']*)')/gi)].map(
     // Exactly one of the two quote groups matched; the other is undefined and
     // `join` renders it as "".
     // Decode first, then drop comments: the CSS parser sees the decoded value
     // and treats a comment as whitespace, as it does inside `<style>`.
-    for (const problem of invalidFontDeclarations(
-      stripCssComments(decodeQuoteEntities(m.slice(1).join("")))
-    )) {
+    (m) => stripCssComments(decodeQuoteEntities(m.slice(1).join("")))
+  )
+}
+
+function inlineInvalidFonts(html: string): Array<string> {
+  const out: Array<string> = []
+  for (const declarations of inlineStyleDeclarations(html)) {
+    for (const problem of invalidFontDeclarations(declarations)) {
       out.push(`[style] attribute (${problem})`)
     }
   }
@@ -1046,28 +1051,77 @@ function scanCss(css: string): FileScan {
 // block: leaving it out breaks no spec, it is policy.
 //
 // The boolean form `(prefers-reduced-motion)` matches exactly when the viewer
-// asked for reduce, so it counts too.
-const REDUCE_CONDITION = /prefers-reduced-motion\s*(?::\s*reduce\b|\))/i
+// asked for reduce, so it counts too. `not` flips a query: `not (… reduce)` is
+// no reduce block, and `not (… no-preference)` is one.
+const REDUCE_QUERY = /prefers-reduced-motion\s*(?::\s*reduce\b|\))/i
+const NO_PREFERENCE_QUERY = /prefers-reduced-motion\s*:\s*no-preference\b/i
+const NEGATED_QUERY = /\bnot\b/i
+
+function isReduceCondition(prelude: string): boolean {
+  return NEGATED_QUERY.test(prelude)
+    ? NO_PREFERENCE_QUERY.test(prelude)
+    : REDUCE_QUERY.test(prelude)
+}
+
 // Motion declared only under this condition is the opt-in form: nothing moves
 // unless the viewer allows it, so there is nothing for a reduce block to stop.
-const OPT_IN_CONDITION = /prefers-reduced-motion\s*:\s*no-preference\b/i
+function isOptInCondition(prelude: string): boolean {
+  return NEGATED_QUERY.test(prelude)
+    ? REDUCE_QUERY.test(prelude)
+    : NO_PREFERENCE_QUERY.test(prelude)
+}
+
 // The declarations that start motion on their own. Other longhands
 // (`animation-duration`, `transition-property`) tune motion something else
 // starts — except `transition-duration`, which alone transitions `all`.
 const MOTION_DECLARATION =
   /^(?:-webkit-)?(animation|animation-name|transition|transition-duration)\s*:\s*([\s\S]+)$/i
+// `initial` and `unset` put both properties back to `none` / `0s`.
+const NO_MOTION_KEYWORD = /^(?:none|initial|unset)$/
+// The first time in a transition item is its duration (the second is the
+// delay). Easing arguments carry no unit, so they never match.
+const FIRST_TIME = /(\d*\.?\d+)(m?s)\b/
+
+// Commas inside `cubic-bezier(…)` / `steps(…)` do not separate items.
+function topLevelItems(value: string): Array<string> {
+  const items: Array<string> = []
+  let depth = 0
+  let start = 0
+  for (let k = 0; k < value.length; k++) {
+    if (value[k] === "(") depth++
+    else if (value[k] === ")") depth--
+    else if (value[k] === "," && depth === 0) {
+      items.push(value.slice(start, k))
+      start = k + 1
+    }
+  }
+  items.push(value.slice(start))
+  return items
+}
+
+/** Does a transition take any time? A duration defaults to `0s`, so an item
+ *  with no time at all (`transition: opacity`) moves nothing. */
+function transitionTakesTime(value: string): boolean {
+  return topLevelItems(value).some(
+    (item) => parseFloat(FIRST_TIME.exec(item)?.[1] ?? "0") > 0
+  )
+}
 
 function motionDeclarations(declarations: string): Array<string> {
   const out: Array<string> = []
   for (const part of declarations.split(";")) {
     const m = MOTION_DECLARATION.exec(part.trim())
     if (!m) continue
+    const property = m[1].toLowerCase()
     const value = m[2]
       .replace(/!\s*important\s*$/i, "")
       .trim()
       .toLowerCase()
-    if (/^(?:none|0m?s)$/.test(value)) continue
-    out.push(`${m[1].toLowerCase()}: ${value}`)
+    if (NO_MOTION_KEYWORD.test(value)) continue
+    if (property.startsWith("transition") && !transitionTakesTime(value)) {
+      continue
+    }
+    out.push(`${property}: ${value}`)
   }
   return out
 }
@@ -1085,7 +1139,7 @@ function checkReducedMotion(
 ): void {
   const css = stripCssComments(styleContent(doc.html))
   const rules = parseCssRules(css)
-  if (rules.some((r) => r.conditions.some((c) => REDUCE_CONDITION.test(c)))) {
+  if (rules.some((r) => r.conditions.some(isReduceCondition))) {
     return
   }
   // Any motion declaration at all, opt-in included. A `@keyframes` block counts
@@ -1098,15 +1152,11 @@ function checkReducedMotion(
     const found = motionDeclarations(rule.declarations)
     if (found.length === 0) continue
     declared = true
-    if (rule.conditions.some((c) => OPT_IN_CONDITION.test(c))) continue
+    if (rule.conditions.some(isOptInCondition)) continue
     moving.push(...found.map((d) => `${rule.selector} (${d})`))
   }
-  for (const m of doc.html.matchAll(
-    /\sstyle\s*=\s*(?:"([^"]*)"|'([^']*)')/gi
-  )) {
-    const found = motionDeclarations(
-      stripCssComments(decodeQuoteEntities(m.slice(1).join("")))
-    )
+  for (const declarations of inlineStyleDeclarations(doc.html)) {
+    const found = motionDeclarations(declarations)
     if (found.length > 0) declared = true
     moving.push(...found.map((d) => `[style] attribute (${d})`))
   }
@@ -1114,12 +1164,13 @@ function checkReducedMotion(
     moving.push("@keyframes")
   }
   if (moving.length === 0) return
-  const list = [...new Set(moving)].slice(0, 3).join(", ")
+  const sites = [...new Set(moving)]
+  const list = sites.slice(0, 3).join(", ")
   issues.push(
     warn(
       "reduced-motion-missing",
       doc.name,
-      `${doc.name} moves (${list}${moving.length > 3 ? ", …" : ""}) but has no \`@media (prefers-reduced-motion: reduce)\` block, so a viewer who asked their system for less motion still gets it. Add one such block to the page \`<style>\` — not the dark sheet — setting \`animation: none !important; transition: none !important\` on \`*, *::before, *::after\`.`
+      `${doc.name} moves (${list}${sites.length > 3 ? ", …" : ""}) but has no \`@media (prefers-reduced-motion: reduce)\` block, so a viewer who asked their system for less motion still gets it. Add one such block to the page \`<style>\` — not the dark sheet — setting \`animation: none !important; transition: none !important\` on \`*, *::before, *::after\`.`
     )
   )
 }

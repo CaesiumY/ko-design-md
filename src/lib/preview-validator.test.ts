@@ -1191,6 +1191,59 @@ describe("validatePreviewPair — reduced motion", () => {
     expect(rulesOf(withStyle(optInOnly), "warn")).not.toContain(RULE)
   })
 
+  it("reads `not` in a media condition", () => {
+    // `not (… reduce)` applies when the viewer did NOT ask for less motion, so
+    // it is no reduce block; `not (… no-preference)` applies exactly when they
+    // did, so it is one.
+    const moving = ".b { transition: opacity 0.2s; }"
+    expect(
+      rulesOf(
+        withStyle(
+          `@media not (prefers-reduced-motion: reduce) { .a { color: red; } } ${moving}`
+        ),
+        "warn"
+      )
+    ).toContain(RULE)
+    expect(
+      rulesOf(
+        withStyle(
+          `@media not (prefers-reduced-motion: no-preference) { * { transition: none !important; } } ${moving}`
+        ),
+        "warn"
+      )
+    ).not.toContain(RULE)
+  })
+
+  it("does not count a transition that takes no time", () => {
+    // A transition's duration defaults to 0s, so one without a time moves
+    // nothing; neither does one whose every time is zero.
+    for (const decl of [
+      "transition: all 0s",
+      "transition: opacity",
+      "transition: opacity 0s, color 0ms",
+      "transition-duration: 0s, 0s",
+      "transition: initial",
+      "animation: initial",
+    ]) {
+      expect(rulesOf(withStyle(`.a { ${decl}; }`), "warn"), decl).not.toContain(
+        RULE
+      )
+    }
+    expect(
+      rulesOf(withStyle(".a { transition: opacity 0s, color 0.2s; }"), "warn")
+    ).toContain(RULE)
+  })
+
+  it("lists each moving site once and marks a cut-off list only when one is cut", () => {
+    const p = '<p style="transition: color 0.2s">x</p>'
+    const body = `<main class="hero"><img src="/logos/demo.png" alt="데모"><h1>데모</h1>${p.repeat(4)}</main>`
+    const fix = validatePreviewPair(
+      withStyle(".hero { color: red; }", body)
+    ).issues.find((i) => i.rule === RULE)?.fix
+    expect(fix).toBeDefined()
+    expect(fix).not.toContain("…")
+  })
+
   it("counts a @keyframes block on its own, prefixed or not", () => {
     for (const style of [
       "@keyframes pulse { to { opacity: 0.5; } }",

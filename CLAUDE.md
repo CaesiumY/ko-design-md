@@ -10,7 +10,7 @@ TanStack Start 사이트(getdesign.kr)가 이를 서빙하고, `/design-md` 스�
 pnpm typecheck && pnpm lint && pnpm format:check
 pnpm test               # vitest — .claude/{worktrees,cache}/ 만 제외됨
 pnpm validate:catalog   # services/*.md 전수: frontmatter·섹션 순서·OKLCH·인용 무결성
-pnpm validate:previews  # public/preview/*/ 전수: 구조 block + 반응형 휴리스틱 warn
+pnpm validate:previews  # public/preview/*/ 전수: 구조 block + 반응형·움직임 줄이기 휴리스틱 warn
 pnpm tokens:check       # services/*.tokens.json 이 소스 md 와 일치하는지 (drift 게이트)
 pnpm audit:oklch        # OKLCH↔병기 hex 일치 + 프리뷰가 md 정의와 어긋나지 않는지
 pnpm check:last-updated # 이 브랜치가 바꾼 services/*.md 의 last_updated 가 최신인지
