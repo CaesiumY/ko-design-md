@@ -21,6 +21,7 @@ import {
   PREVIEW_HTML_AUTHOR_AGENT,
   PREVIEW_HTML_REVIEWER_AGENT,
   PREVIEW_PROSE_AUDIT_SKILL,
+  RESEARCH_COLLECTOR_AGENT,
   readRepoFile,
 } from "./skill-asset-paths"
 
@@ -662,7 +663,7 @@ describe("/design-md machine gates", () => {
     // gains `Bash`, the first fails and whoever added it reads this comment
     // before deciding the prose can relax.
     const collectorTools = /^tools: (.+)$/m.exec(
-      readRepoFile(".claude/agents/research-collector.md")
+      readRepoFile(RESEARCH_COLLECTOR_AGENT)
     )?.[1]
     expect(
       collectorTools,
@@ -723,7 +724,7 @@ describe("/design-md machine gates", () => {
       "the Stage 5 dispatch prompt must pass board_source_paths"
     ).toMatch(/^board_source_paths: /m)
     expect(
-      readRepoFile(".claude/agents/research-collector.md"),
+      readRepoFile(RESEARCH_COLLECTOR_AGENT),
       "research-collector must declare the board_source_paths input"
     ).toMatch(/^- `board_source_paths`/m)
     // A board value with no public source behind it gets its own citation
@@ -731,7 +732,7 @@ describe("/design-md machine gates", () => {
     // is handled. Both ends name the form: without the author's half, the
     // value reached the draft with neither a `[src:N]` nor its `≈`.
     expect(
-      readRepoFile(".claude/agents/research-collector.md"),
+      readRepoFile(RESEARCH_COLLECTOR_AGENT),
       "research-collector must say how a board value with no named source is cited"
     ).toContain("`[src:board:filename]`")
     expect(
@@ -756,7 +757,7 @@ describe("/design-md machine gates", () => {
     // `## Sources` — while the skill expected nine, so a well-formed file
     // never matched the number it was checked against. Derived, not
     // restated: the expected count is read from the collector's own list.
-    const declared = readRepoFile(".claude/agents/research-collector.md").match(
+    const declared = readRepoFile(RESEARCH_COLLECTOR_AGENT).match(
       /^\d+\. `## /gm
     )
     expect(declared, "research-collector must list its sections").not.toBeNull()
