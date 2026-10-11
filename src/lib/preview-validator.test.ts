@@ -1250,14 +1250,68 @@ describe("validatePreviewPair — reduced motion", () => {
     }
   })
 
-  it("lists each moving site once and marks a cut-off list only when one is cut", () => {
-    const p = '<p style="transition: color 0.2s">x</p>'
-    const body = `<main class="hero"><img src="/logos/demo.png" alt="데모"><h1>데모</h1>${p.repeat(4)}</main>`
-    const fix = validatePreviewPair(
-      withStyle(".hero { color: red; }", body)
-    ).issues.find((i) => i.rule === RULE)?.fix
-    expect(fix).toBeDefined()
-    expect(fix).not.toContain("…")
+  it("scopes `not` to the query or the feature it negates", () => {
+    // `not` inverts a whole query when it leads it, or one parenthesised
+    // feature when it wraps it — never the motion query beside the feature it
+    // wraps. Reading it anywhere in the prelude took an allow-motion block for
+    // a reduce one and let the page through (PR #519 review).
+    const moving = ".b { transition: opacity 0.2s; }"
+    const reset = "{ * { transition: none !important; } }"
+    for (const [prelude, expected] of [
+      // Allow-motion only; the `not` belongs to `(hover: none)`.
+      ["(prefers-reduced-motion: no-preference) and (not (hover: none))", true],
+      // A reduce block whose other feature happens to be negated.
+      ["(prefers-reduced-motion: reduce) and (not (hover: none))", false],
+      // Each comma-separated query stands alone: `not print` does not flip the
+      // reduce query before it.
+      ["(prefers-reduced-motion: reduce), not print", false],
+      ["print, (prefers-reduced-motion: reduce)", false],
+      // A leading `not` negates the whole query: `not (all and no-preference)`
+      // holds exactly when the viewer asked for reduce.
+      ["not all and (prefers-reduced-motion: no-preference)", false],
+    ] as const) {
+      const rules = rulesOf(
+        withStyle(`@media ${prelude} ${reset} ${moving}`),
+        "warn"
+      )
+      if (expected) expect(rules, prelude).toContain(RULE)
+      else expect(rules, prelude).not.toContain(RULE)
+    }
+  })
+
+  it("exempts opt-in motion only when every query in the list is opt-in", () => {
+    // `(min-width: 0)` always holds, so each of these moves for everyone. A
+    // query the check cannot settle — `or`, or a leading `not` over more than
+    // the motion feature — is neither opt-in nor a reduce block.
+    for (const prelude of [
+      "(prefers-reduced-motion: no-preference), (min-width: 0)",
+      "(prefers-reduced-motion: no-preference) or (min-width: 0)",
+      // `not (reduce and wide)` holds for a narrow screen that asked for reduce.
+      "not all and (prefers-reduced-motion: reduce) and (min-width: 600px)",
+    ]) {
+      const style = `@media ${prelude} { .a { transition: opacity 0.2s; } }`
+      expect(rulesOf(withStyle(style), "warn"), prelude).toContain(RULE)
+    }
+  })
+
+  it("lists each moving site once", () => {
+    const sites = (n: number, distinct: boolean) =>
+      Array.from(
+        { length: n },
+        (_, i) =>
+          `<p style="transition: color ${distinct ? i + 1 : 1}00ms">x</p>`
+      ).join("")
+    const fixFor = (body: string) =>
+      validatePreviewPair(
+        withStyle(
+          ".hero { color: red; }",
+          `<main class="hero"><img src="/logos/demo.png" alt="데모"><h1>데모</h1>${body}</main>`
+        )
+      ).issues.find((i) => i.rule === RULE)?.fix ?? ""
+    // Four copies of one declaration are one site, so nothing is cut off…
+    expect(fixFor(sites(4, false))).not.toContain("…")
+    // …and four different ones are four, so the list of three is.
+    expect(fixFor(sites(4, true))).toContain("…")
   })
 
   it("counts a @keyframes block on its own, prefixed or not", () => {

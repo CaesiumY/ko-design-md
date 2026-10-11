@@ -1050,25 +1050,71 @@ function scanCss(css: string): FileScan {
 // check, and whether it actually stops anything takes a render. A warn, not a
 // block: leaving it out breaks no spec, it is policy.
 //
-// The boolean form `(prefers-reduced-motion)` matches exactly when the viewer
-// asked for reduce, so it counts too. `not` flips a query: `not (… reduce)` is
-// no reduce block, and `not (… no-preference)` is one.
-const REDUCE_QUERY = /prefers-reduced-motion\s*(?::\s*reduce\b|\))/i
-const NO_PREFERENCE_QUERY = /prefers-reduced-motion\s*:\s*no-preference\b/i
-const NEGATED_QUERY = /\bnot\b/i
+// The feature, with a `not` directly in front of it if there is one. The
+// boolean form `(prefers-reduced-motion)` holds exactly when the viewer asked
+// for reduce, so it reads as `reduce`.
+const MOTION_FEATURE =
+  /(?:\bnot\s*)?\(\s*prefers-reduced-motion\s*(?::\s*(?:reduce|no-preference)\s*)?\)/i
 
+type MotionPreference = "reduce" | "no-preference" | null
+
+/**
+ * What one media query asks of the viewer's motion setting, `not` applied.
+ *
+ * `not` is scoped the way the grammar scopes it: leading a query it negates
+ * the whole query, and in front of a parenthesised feature only that feature.
+ * Reading it anywhere in the prelude took `(… no-preference) and (not (hover:
+ * none))` for a reduce block and let the page through (PR #519 review).
+ */
+function motionPreference(query: string): MotionPreference {
+  const m = MOTION_FEATURE.exec(query)
+  if (!m) return null
+  // `or` joins alternatives the way a comma does, and one that ignores the
+  // motion setting lets the block apply to everyone. Not settled here, so
+  // neither opt-in nor reduce — the rule then errs towards a warn.
+  if (/\bor\b/i.test(query)) return null
+  const asked: MotionPreference = /no-preference/i.test(m[0])
+    ? "no-preference"
+    : "reduce"
+  const featureNot = /^not\b/i.test(m[0])
+  // A leading `not` that is not the feature's own.
+  const queryNot = /^\s*not\b/i.test(query) && m.index > query.search(/\S/)
+  if (queryNot) {
+    // It negates the whole query, so anything else in it — another feature,
+    // a parenthesised group — makes the result more than a motion setting:
+    // `not all and (… reduce) and (min-width: 600px)` holds for a narrow screen
+    // that asked for reduce.
+    const rest = query
+      .replace(m[0], "")
+      .replace(/\b(?:not|only|all|screen|print|and)\b/gi, "")
+    if (/\S/.test(rest)) return null
+  }
+  // Two negations cancel.
+  if (featureNot === queryNot) return asked
+  return asked === "reduce" ? "no-preference" : "reduce"
+}
+
+/** The comma-separated queries of a `@media` prelude; none for other at-rules. */
+function mediaQueries(prelude: string): Array<string> {
+  const m = /^@media\b([\s\S]*)$/i.exec(prelude)
+  return m ? topLevelItems(m[1]) : []
+}
+
+// A block applies under reduce when any one of its queries asks for reduce.
 function isReduceCondition(prelude: string): boolean {
-  return NEGATED_QUERY.test(prelude)
-    ? NO_PREFERENCE_QUERY.test(prelude)
-    : REDUCE_QUERY.test(prelude)
+  return mediaQueries(prelude).some((q) => motionPreference(q) === "reduce")
 }
 
 // Motion declared only under this condition is the opt-in form: nothing moves
 // unless the viewer allows it, so there is nothing for a reduce block to stop.
+// Every query must ask for that — one that does not (`(min-width: 0)`) lets
+// the motion through for everyone it matches.
 function isOptInCondition(prelude: string): boolean {
-  return NEGATED_QUERY.test(prelude)
-    ? REDUCE_QUERY.test(prelude)
-    : NO_PREFERENCE_QUERY.test(prelude)
+  const queries = mediaQueries(prelude)
+  return (
+    queries.length > 0 &&
+    queries.every((q) => motionPreference(q) === "no-preference")
+  )
 }
 
 // The declarations that start motion on their own. Other longhands
@@ -1179,7 +1225,7 @@ function checkReducedMotion(
     warn(
       "reduced-motion-missing",
       doc.name,
-      `${doc.name} moves (${list}${sites.length > 3 ? ", …" : ""}) but has no \`@media (prefers-reduced-motion: reduce)\` block, so a viewer who asked their system for less motion still gets it. Add one such block to the page \`<style>\` — not the dark sheet — setting \`animation: none !important; transition: none !important\` on \`*, *::before, *::after\`.`
+      `${doc.name} moves (${list}${sites.length > 3 ? ", …" : ""}) but has no \`@media (prefers-reduced-motion: reduce)\` block, so a viewer who asked their system for less motion still gets it. Add one such block to this document's \`<style>\` — in a merged preview the page sheet, not the dark sheet — setting \`animation: none !important; transition: none !important\` on \`*, *::before, *::after\`.`
     )
   )
 }
