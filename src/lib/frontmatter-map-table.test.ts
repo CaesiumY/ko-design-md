@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest"
 import {
+  FRONTMATTER_MAPS,
   FRONTMATTER_MAP_KEYS,
   NO_BLOCK_SCALAR_MAP_KEYS,
   REFERENCE_MAP_KEYS,
@@ -53,6 +54,14 @@ describe("lists derived from the frontmatter map table", () => {
       "components",
       "elevation",
     ])
+  })
+
+  it("marks the maps the spec schema knows — the rest are catalog-only", () => {
+    // No reader filters on this trait yet, so nothing else would notice it
+    // drifting; the pin is the only guard.
+    expect(
+      FRONTMATTER_MAP_KEYS.filter((name) => FRONTMATTER_MAPS[name].spec)
+    ).toEqual(["colors", "typography", "spacing", "rounded", "components"])
   })
 
   it("row-scans the flat maps only — typography and components nest", () => {
