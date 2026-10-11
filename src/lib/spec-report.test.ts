@@ -64,6 +64,19 @@ describe("formatSpecReport", () => {
     expect(out.some((l) => l.includes("[token-summary]"))).toBe(true)
   })
 
+  it("summarizes each severity of a rule on its own line", () => {
+    const mixed = entry("mixed", [
+      orphan("a"),
+      { ...orphan("b"), severity: "error" },
+    ])
+    const out = formatSpecReport([mixed], { verbose: false })
+    expect(out.filter((l) => l.includes("[orphaned-tokens] ×1"))).toEqual([
+      expect.stringMatching(/^ +warning /),
+      expect.stringMatching(/^ +error /),
+    ])
+    expect(out.at(-1)).toMatch(/\(2 orphaned-tokens not listed\)\.$/)
+  })
+
   it("adds no summary line to an entry with nothing held back", () => {
     const plain = entry("plain", [
       {

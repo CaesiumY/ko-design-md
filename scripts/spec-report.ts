@@ -25,10 +25,15 @@ export interface EntryReport {
 // color no component references. The catalog records a brand's whole palette
 // where the linter expects a design system to declare only the colors it uses,
 // so no realistic component map brings it to zero — the warning is a structural
-// difference, never a fix to make. Measured on 2026-10-11: 27 of the run's 44
-// warnings, all from the one entry with components (teamsparta, #384); other
-// entries in experiments raised 60–106 each. The count stays in the entry's
-// status line and the total; `--json-out` keeps every finding.
+// difference, never a fix to make. The count stays in the entry's status line
+// and the total; `--json-out` keeps every finding.
+//
+// The evidence the decision was taken on, as of then (it grows with every
+// entry that adds components): the #384 pilot (teamsparta, PR #422) recorded
+// 27 of the catalog's 41 warnings; at #388 it was 27 of 44, filling 27 of the
+// 77 lines this command printed, and #388 cites 60–106 per entry in
+// experiments on other entries. Revisit if a rule listed here ever starts
+// carrying findings someone has to act on.
 export const SUMMARIZED_RULES: ReadonlyMap<string, string> = new Map([
   ["orphaned-tokens", "colors no component references"],
 ])
@@ -53,12 +58,19 @@ export function formatSpecReport(
     else if (r.warnings) lines.push(`warn ${label} (${r.warnings} warn)`)
     else lines.push(`ok   ${label}`)
 
-    const entryHeld = new Map<string, { severity: string; n: number }>()
+    // Keyed by severity and rule together, so a rule that ever raises both a
+    // warning and an error is summarized as two lines rather than one line
+    // under whichever severity came last.
+    const entryHeld = new Map<
+      string,
+      { severity: string; rule: string; n: number }
+    >()
     for (const f of r.findings) {
       if (f.severity === "info" && !verbose) continue
       if (SUMMARIZED_RULES.has(f.rule) && !verbose) {
-        const seen = entryHeld.get(f.rule)
-        entryHeld.set(f.rule, { severity: f.severity, n: (seen?.n ?? 0) + 1 })
+        const key = `${f.severity} ${f.rule}`
+        const n = (entryHeld.get(key)?.n ?? 0) + 1
+        entryHeld.set(key, { severity: f.severity, rule: f.rule, n })
         continue
       }
       const where = f.path ? ` (${f.path})` : ""
@@ -66,7 +78,7 @@ export function formatSpecReport(
         `       ${f.severity.padEnd(7)} [${f.rule}]${where} ${f.message}`
       )
     }
-    for (const [rule, { severity, n }] of entryHeld) {
+    for (const { severity, rule, n } of entryHeld.values()) {
       lines.push(
         `       ${severity.padEnd(7)} [${rule}] ×${n} — not listed (${SUMMARIZED_RULES.get(rule)}; --verbose to list)`
       )
