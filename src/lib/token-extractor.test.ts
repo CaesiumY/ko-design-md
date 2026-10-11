@@ -649,6 +649,22 @@ describe("empty typography property rows", () => {
   })
 })
 
+describe("a webfont source written inside typography:", () => {
+  it("yields no type token, at either indent", () => {
+    // The old body parser filtered `*-src` keys and URL values so a `/400/`
+    // path segment could not pass as a size. The frontmatter reader needs no
+    // such filter: a two-space `font-display-src:` row is not a style head,
+    // and a four-space one is not one of the four type properties.
+    const doc = fm(
+      "typography:",
+      "  font-display-src: https://fonts.example.com/v2/400/Display.css",
+      "  body:",
+      "    font-sans-src: //cdn.example.com/v9/800/body.css"
+    )
+    expect(extractTokensFromMarkdown(doc).typography).toEqual([])
+  })
+})
+
 describe("typography shapes that look healthy but are not", () => {
   const doc = (typography: string) =>
     [
