@@ -18,7 +18,7 @@ import type { EntryReport } from "./spec-report"
 //   pnpm validate:spec toss wanted     # named entries
 //   pnpm validate:spec --json-out r.json
 //   pnpm validate:spec --verbose       # also list info-level findings and the
-//                                      # rules printed only as a count (#388)
+//                                      # warnings printed only as a count (#388)
 //
 // Exit code follows the official CLI: non-zero only when the spec reports an
 // ERROR. Warnings and infos are reported but do not fail — the spec is at

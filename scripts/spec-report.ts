@@ -20,13 +20,13 @@ export interface EntryReport {
   }>
 }
 
-// Rules whose warnings are counted but not listed unless `--verbose` (#388). `orphaned-tokens`
-// wakes once an entry carries a `components:` map and then warns on every
-// color no component references. The catalog records a brand's whole palette
-// where the linter expects a design system to declare only the colors it uses,
-// so no realistic component map brings it to zero — the warning is a structural
-// difference, never a fix to make. The count stays in the entry's status line
-// and the total; `--json-out` keeps every finding.
+// Rules whose warnings are counted but not listed unless `--verbose` (#388).
+// `orphaned-tokens` wakes once an entry carries a `components:` map and then
+// warns on every color no component references. The catalog records a brand's
+// whole palette where the linter expects a design system to declare only the
+// colors it uses, so no realistic component map brings it to zero — the
+// warning is a structural difference, never a fix to make. The count stays in
+// the entry's status line and the total; `--json-out` keeps every finding.
 //
 // The evidence the decision was taken on, as of then (it grows with every
 // entry that adds components): the #384 pilot (teamsparta, PR #422) recorded
