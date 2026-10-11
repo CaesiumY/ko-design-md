@@ -285,3 +285,56 @@ jobs:
             .claude/cache/contrast-report.md
             .claude/cache/contrast-findings.json
           if-no-files-found: warn
+
+  # The Playwright E2E smoke (`pnpm test:e2e`): the site's main paths — home
+  # search and category filter, the detail tabs, the preview theme switch — in a
+  # real browser against the production build. Its own job, in parallel with the
+  # other two, for the same reason `contrast` is separate: it needs a browser.
+  # Not `needs: build` either — reusing that job's output would run the two in
+  # series and add this job's whole time to every PR's wait.
+  e2e:
+    # Unpinned like `build`: nothing here measures pixels or fonts, so an OS
+    # move cannot shift a recorded number.
+    runs-on: ubuntu-latest
+    # A healthy run is about a minute and a half; the cap only ends a stall.
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: ".nvmrc"
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Without `--with-deps`, as in `contrast`: the runner image ships the
+      # libraries Chromium needs.
+      - name: Install Chromium
+        run: pnpm exec playwright install chromium
+
+      # Built here, before Playwright starts, so the build's own failure reads
+      # as a build failure. scripts/e2e-server.ts then finds fresh output and
+      # serves it as-is.
+      - name: Build
+        env:
+          VITE_SITE_URL: https://getdesign.kr
+        run: pnpm build
+
+      - name: E2E smoke
+        run: pnpm test:e2e
+
+      # Only on failure: the HTML report and, for a test that failed its first
+      # run, the trace recorded on the retry.
+      - name: Upload the Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: warn

@@ -197,10 +197,15 @@ const config = defineConfig({
     // (CI never sees them — it checks out a clean tree). Scoped to the two
     // generated directories rather than all of .claude/ so the docs-crawler
     // skill's own unit tests are actually gated.
+    //
+    // e2e/ holds the Playwright suite (`pnpm test:e2e`). Its `*.spec.ts` files
+    // match vitest's default include, and they need a browser and a running
+    // server that `pnpm test` (and CI's build job) does not have.
     exclude: [
       ...configDefaults.exclude,
       "**/.claude/worktrees/**",
       "**/.claude/cache/**",
+      "e2e/**",
     ],
   },
   plugins: [
