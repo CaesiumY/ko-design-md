@@ -8,6 +8,7 @@ lang: ko
 logo: https://getdesign.kr/logos/codeit.png
 colors:
   ## 브랜드 및 리터럴 토큰
+  primary: "{colors.codeit-violet}"   # 명세의 대표색 역할 — text-purple-primary·background-primary 등 역할 토큰과 다른 축
   codeit-violet: oklch(0.439 0.240 296)   # #6500C3 공식(PANTONE 2090 C); 번들 purple-90은 #6500c2로 1-unit 차이
   codeit-white: oklch(1.000 0.000 0)   # #FFFFFF
   codeit-black: oklch(0.320 0.007 297)   # #333236 — == gray-100 라이트와 정확히 일치

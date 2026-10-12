@@ -106,6 +106,7 @@ colors:
   blue-200: oklch(0.824 0.096 243)   # #8DCDFF
   blue-300: oklch(0.715 0.142 248)   # #51A9F7
   blue-400: oklch(0.669 0.158 252)   # #4198F2
+  primary: "{colors.blue-500}"   # 명세의 대표색 역할 — color-foreground-primary-100·200(blue-600·700)과 다른 값
   blue-500: oklch(0.573 0.189 260)   # #2A72E5 · 브랜드 primary
   blue-600: oklch(0.488 0.189 260)   # #0957C8
   blue-700: oklch(0.428 0.187 261)   # #0043B3
