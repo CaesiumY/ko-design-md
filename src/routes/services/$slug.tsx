@@ -8,6 +8,7 @@ import {
   DetailTabsTab,
 } from "./-components/detail-tabs"
 import { DownloadButton } from "./-components/download-button"
+import { HandoffPromptBox } from "./-components/handoff-prompt-box"
 import { InlineCopyButton } from "./-components/inline-copy-button"
 import { PreviewFrame, PreviewUnavailable } from "./-components/preview-frame"
 import { PreviewThemeToggle } from "./-components/preview-theme-toggle"
@@ -168,6 +169,10 @@ export function ServiceDetailLayout({
         </p>
         <CopyButton raw={doc.raw} slug={doc.frontmatter.slug} />
         <DownloadButton raw={doc.raw} slug={doc.frontmatter.slug} />
+        <HandoffPromptBox
+          name={doc.frontmatter.name}
+          slug={doc.frontmatter.slug}
+        />
         <div
           className="mt-6 border-t pt-5"
           style={{ borderColor: "var(--rule-strong)" }}
