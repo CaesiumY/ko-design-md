@@ -258,7 +258,16 @@ describe("/design-md machine gates", () => {
   // by rule id — the reviewer adopts them instead of judging — so every id they
   // name has to be one the gate actually raises.
   it("names component rule ids the draft gate raises", () => {
-    const validator = readRepoFile("src/lib/draft-validator.ts")
+    // The ids the gate raises, from its `block(`/`warn(` calls — not any
+    // string in the file, which a comment or a set would also satisfy.
+    const raised = new Set(
+      [
+        ...readRepoFile("src/lib/draft-validator.ts").matchAll(
+          /(?:block|warn)\(\s*\n?\s*"([a-z0-9-]+)"/g
+        ),
+      ].map((m) => m[1])
+    )
+    let named = 0
     for (const doc of [
       DESIGN_MD_STITCH_FORMAT,
       DESIGN_MD_TEMPLATE,
@@ -272,11 +281,15 @@ describe("/design-md machine gates", () => {
           .map((m) => m[1])
           .filter((id) => id.split("-").some((p) => p.startsWith("component")))
       )
-      expect(ids.size, `${doc} names a component rule`).toBeGreaterThan(0)
+      named += ids.size
       for (const id of ids) {
-        expect(validator, `${doc} names \`${id}\``).toContain(`"${id}"`)
+        expect(raised.has(id), `${doc} names \`${id}\``).toBe(true)
       }
     }
+    // Guards the extraction, not the prose: a regex that matched nothing
+    // would pass every doc.
+    expect(raised.has("component-value-form")).toBe(true)
+    expect(named).toBeGreaterThan(0)
   })
 
   // created_at is the catalog's sort key, but nothing in the pipeline would

@@ -1197,15 +1197,10 @@ export const COMPONENT_DIMENSION_UNITS: ReadonlyArray<string> = [
   "rem",
 ]
 
-/** The blocks the linter's empty model raises — the result, not the cause,
- *  when a component has no property. */
-const EMPTY_MODEL_RULES: ReadonlySet<string> = new Set([
-  "spec-no-colors",
-  "spec-no-typography",
-])
-
-/** A whole value that is one quoted reference: `"{colors.x}"` or `'{…}'`. */
-const QUOTED_REFERENCE = /^(["'])\{[^{}]+\}\1$/
+/** A whole value that is one quoted reference, with the characters the
+ *  linter's `isTokenReference` allows between the braces — `"{ colors.x }"` or
+ *  `"{colors/x}"` it keeps as raw text. */
+const QUOTED_REFERENCE = /^(["'])\{[a-zA-Z0-9._-]+\}\1$/
 /** A number exactly as the linter's `parseDimensionParts` reads one —
  *  `-1`, `.5`, `1.25`; not `+4` or `48.`, which it keeps as raw text. */
 const SPEC_NUMBER = String.raw`-?\d*\.?\d+`
@@ -1213,6 +1208,17 @@ const SPEC_NUMBER = String.raw`-?\d*\.?\d+`
 const COMPONENT_DIMENSION = new RegExp(
   `^${SPEC_NUMBER}(?:${COMPONENT_DIMENSION_UNITS.join("|")})$`
 )
+/** The linter's `MAX_DIMENSION_LENGTH`: a longer value stays raw text. */
+const MAX_DIMENSION_LENGTH = 64
+
+function isComponentDimension(value: string): boolean {
+  return value.length <= MAX_DIMENSION_LENGTH && COMPONENT_DIMENSION.test(value)
+}
+
+/** A CSS hex colour on its own — the lengths CSS takes, then at most a
+ *  comment. Anything after it (`#2024 redesign`) makes it a note instead. */
+const LONE_HEX =
+  /^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})(?=\s*(?:#.*)?$)/
 
 /** A literal CSS colour — hex or a colour function, OKLCH included. */
 const LITERAL_COLOUR =
@@ -1225,24 +1231,33 @@ function componentValueFix(value: string): string {
     return `quote it (\`"${value}"\`) — unquoted, YAML reads \`{…}\` as a map and standard tools get no value at all`
   }
   const bare = stripQuotes(value)
-  if (bare !== value && COMPONENT_DIMENSION.test(bare)) {
+  if (bare !== value && /^\{.*\}$/.test(bare)) {
+    return 'a reference is one token name between the braces — letters, digits, `.`, `_` and `-`, no spaces (`"{colors.name}"`); anything else standard tools keep as text'
+  }
+  if (bare !== value && isComponentDimension(bare)) {
     return `drop the quotes (\`${bare}\`)`
   }
   if (LITERAL_COLOUR.test(bare)) {
     return 'the map takes no literal colour: point at a declared colour token as a quoted reference (`"{colors.name}"`), or leave the property out and keep the colour in the body spec'
   }
-  if (new RegExp(`^${SPEC_NUMBER}$`).test(bare)) {
-    return `add a unit (\`${bare}px\`; zero is \`0px\`) — a bare number is not a Dimension`
-  }
   const parts = bare.split(/\s+/)
-  if (
-    parts.length > 1 &&
-    parts.every((part) => COMPONENT_DIMENSION.test(part))
-  ) {
+  if (parts.length > 1 && parts.every(isComponentDimension)) {
     return "write one value — a shorthand such as `12px 16px` is not a Dimension, so it stays in the body spec only"
   }
-  if (/^[+-]?[\d.]+[a-zA-Z%]+$/.test(bare)) {
-    return `the spec's Dimension is a plain number in ${COMPONENT_DIMENSION_UNITS.map((u) => `\`${u}\``).join("/")} only — a \`%\`, \`vw\` or other value, or a number written \`+4px\` or \`48.px\`, stays in the body spec`
+  const number = /^([+-]?[\d.]+)([a-zA-Z%]*)$/.exec(bare)
+  if (
+    number &&
+    (number[2] === "" || COMPONENT_DIMENSION_UNITS.includes(number[2]))
+  ) {
+    const plain = `${Number(number[1])}${number[2] || "px"}`
+    if (!Number.isNaN(Number(number[1])) && isComponentDimension(plain)) {
+      return number[2] === ""
+        ? `add a unit (\`${plain}\`; zero is \`0px\`) — a bare number is not a Dimension`
+        : `write the number plainly (\`${plain}\`) — standard tools read no \`+\`, trailing \`.\` or exponent`
+    }
+  }
+  if (number) {
+    return `the spec's Dimension takes ${COMPONENT_DIMENSION_UNITS.map((u) => `\`${u}\``).join("/")} only — a \`%\`, \`vw\` or other unit stays in the body spec`
   }
   return "the map reads nothing else — keep keywords, notes and alternatives in the body spec"
 }
@@ -1267,7 +1282,7 @@ function componentValueFix(value: string): string {
  * A head row with no property under it is YAML `null`, which the linter cannot
  * build a model around: it then resolves no colours and no type scale, and the
  * only blocks left would name maps that are fine. So it is named here, and
- * `validateDraft` holds those blocks back.
+ * `validateDraft` then skips the linter, as it does for unparseable YAML.
  */
 function checkComponentRows(fm: Array<string>): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
@@ -1285,27 +1300,18 @@ function checkComponentRows(fm: Array<string>): Array<ValidationIssue> {
     emptyHead = null
   }
   for (const row of mapRows(fm, "components")) {
+    // `height: #fff` — a space then `#` opens a YAML comment, so the row reads
+    // as a head with no value. It is a property row whose literal colour was
+    // cut off, not a nesting mistake.
+    const hex = row.indent === 4 ? LONE_HEX.exec(row.rest) : null
     const canonical =
       (row.indent === 2 && isHeadRow(row)) ||
-      (row.indent === 4 && !isHeadRow(row))
+      (row.indent === 4 && (!isHeadRow(row) || hex !== null))
     // A row at the head's own depth ends the previous component; any deeper
     // row, misshapen or not, means it was not empty — a misshapen one already
     // has its own block.
     if (row.indent <= 2) flushEmptyHead()
     else emptyHead = null
-    // `height: #fff` — a space then `#` opens a YAML comment, so the row reads
-    // as a head with no value. It is a literal colour, not a nesting mistake.
-    const hex = row.indent === 4 ? /^#[0-9a-fA-F]{3,8}\b/.exec(row.rest) : null
-    if (hex) {
-      issues.push(
-        block(
-          "component-value-form",
-          "tokens",
-          `component property \`${row.key}: ${hex[0]}\` has no value — a space then \`#\` opens a YAML comment, so \`${hex[0]}\` is not part of it. Fix: ${componentValueFix(hex[0])}.`
-        )
-      )
-      continue
-    }
     if (!canonical) {
       issues.push(
         block(
@@ -1330,8 +1336,18 @@ function checkComponentRows(fm: Array<string>): Array<ValidationIssue> {
       )
       continue
     }
+    if (hex) {
+      issues.push(
+        block(
+          "component-value-form",
+          "tokens",
+          `component property \`${row.key}: ${hex[0]}\` has no value — a space then \`#\` opens a YAML comment, so \`${hex[0]}\` is not part of it. Fix: ${componentValueFix(hex[0])}.`
+        )
+      )
+      continue
+    }
     const authored = stripYamlComment(row.rest).trim()
-    if (QUOTED_REFERENCE.test(authored) || COMPONENT_DIMENSION.test(authored)) {
+    if (QUOTED_REFERENCE.test(authored) || isComponentDimension(authored)) {
       continue
     }
     issues.push(
@@ -2507,9 +2523,16 @@ export function validateDraft(
       )
     )
   }
-  // One cause, one message: when the frontmatter does not parse, the linter's
-  // model is empty and would add three wrong instructions to the real one.
-  if (!yamlIssues.some((i) => i.severity === "block")) {
+  // One cause, one message: when the frontmatter does not parse, or a
+  // component is empty (YAML null, which the linter cannot model), the
+  // linter's model is empty and would add wrong instructions to the real one.
+  const componentIssues = checkComponentRows(
+    frontmatterBlock(raw).split(/\r?\n/)
+  )
+  if (
+    !yamlIssues.some((i) => i.severity === "block") &&
+    !componentIssues.some((i) => i.rule === "empty-component")
+  ) {
     const spec = checkSpecLint(raw, entrySlug)
     issues.push(...spec.issues)
     if (spec.resolved) {
@@ -2789,16 +2812,7 @@ export function validateDraft(
   const fmLines = frontmatterBlock(raw).split(/\r?\n/)
   issues.push(...scanFrontmatterTokens(fmLines))
   issues.push(...checkBlockScalars(fmLines))
-  const componentIssues = checkComponentRows(fmLines)
   issues.push(...componentIssues)
-  // One cause, one message: an empty component leaves the linter with no model,
-  // and its "declare the palette / type scale" blocks would blame maps that are
-  // fine.
-  if (componentIssues.some((i) => i.rule === "empty-component")) {
-    for (let n = issues.length - 1; n >= 0; n--) {
-      if (EMPTY_MODEL_RULES.has(issues[n].rule)) issues.splice(n, 1)
-    }
-  }
   issues.push(...checkWorkingMarkers(body))
   issues.push(...scan.yamlTokenIssues)
   issues.push(...scan.fenceIssues)

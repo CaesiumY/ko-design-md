@@ -2608,14 +2608,18 @@ describe("the spec's components map takes only what standard tools read", () => 
     ["a multi-value shorthand", "padding: 12px 16px", "write one value"],
     ["a missing unit", "height: 48", "add a unit"],
     ["prose", "size: 28 또는 32", "keywords, notes"],
-    ["a percentage", "rounded: 50%", "plain number in"],
+    ["a percentage", "rounded: 50%", "other unit"],
+    ["an upper-case unit", "height: 4PX", "other unit"],
     ["a keyword", "width: auto", "keywords, notes"],
-    ["a plus sign the linter does not read", "height: +4px", "plain number in"],
-    [
-      "a trailing point the linter does not read",
-      "height: 48.px",
-      "plain number in",
-    ],
+    // The linter's number shape is `-?\d*\.?\d+`: these it keeps as text.
+    ["a plus sign", "height: +4px", "plainly (`4px`)"],
+    ["a trailing point", "height: 48.px", "plainly (`48px`)"],
+    ["a plus sign with no unit", "height: +4", "add a unit (`4px`"],
+    // Past the linter's 64-character limit a dimension stays raw text.
+    ["an over-long dimension", `height: ${"0".repeat(64)}px`, "plainly"],
+    // The linter's `isTokenReference` takes letters, digits, `.`, `_`, `-`.
+    ["a reference with spaces", 'textColor: "{ colors.brand }"', "no spaces"],
+    ["a reference with a slash", 'textColor: "{colors/brand}"', "no spaces"],
     [
       "an unquoted hex, which YAML cuts as a comment",
       "textColor: #3182F6",
@@ -2638,17 +2642,34 @@ describe("the spec's components map takes only what standard tools read", () => 
     expect(rules).not.toContain("non-oklch-token-value")
   })
 
-  it("blocks a property the spec does not define", () => {
-    const result = validateDraft(
-      withComponents(["  pill:", "    border: 1px"]),
-      OPTS
+  it.each(["border: 1px", "border: #fff"])(
+    "blocks a property the spec does not define (%s)",
+    (row) => {
+      // A cut-off hex under an unknown name names the name first: pointing it
+      // at a colour token would only meet this block on the next run.
+      const result = validateDraft(
+        withComponents(["  pill:", `    ${row}`]),
+        OPTS
+      )
+      const unknown = result.issues.filter(
+        (i) => i.rule === "unknown-component-property"
+      )
+      expect(unknown).toHaveLength(1)
+      expect(unknown[0].severity).toBe("block")
+      expect(unknown[0].fix).toContain("backgroundColor")
+      const rules = result.issues.map((i) => i.rule)
+      expect(rules).not.toContain("component-value-form")
+      expect(rules).not.toContain("noncanonical-component-shape")
+    }
+  )
+
+  it("calls a nested head with a comment a shape problem, not a colour", () => {
+    // `#2024 redesign` is a note, not a cut-off hex.
+    const rules = rulesFor(
+      withComponents(["  pill:", "    height: #2024 redesign"])
     )
-    const unknown = result.issues.filter(
-      (i) => i.rule === "unknown-component-property"
-    )
-    expect(unknown).toHaveLength(1)
-    expect(unknown[0].severity).toBe("block")
-    expect(unknown[0].fix).toContain("backgroundColor")
+    expect(rules).toContain("noncanonical-component-shape")
+    expect(rules).not.toContain("component-value-form")
   })
 
   it.each([
@@ -2682,6 +2703,7 @@ describe("the spec's components map takes only what standard tools read", () => 
     const rules = issues.map((i) => i.rule)
     expect(rules).not.toContain("spec-no-colors")
     expect(rules).not.toContain("spec-no-typography")
+    expect(rules).not.toContain("spec-unrecorded-limitation")
   })
 
   it("still reports missing colours that no empty component explains", () => {
