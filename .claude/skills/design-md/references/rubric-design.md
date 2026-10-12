@@ -40,6 +40,7 @@ Color values are expressed in OKLCH only — declared in the frontmatter `colors
 **Pass criteria**:
 - 2 pts: all colors OKLCH; typography names consistent (e.g. "Pretendard Variable" not also "Pretendard"); spacing/radius numerical (`16px`, not "약간 둥근"); every body component with a value among the spec's eight properties has a `components:` row that agrees with it.
 - 1 pt: one or two minor inconsistencies (e.g. one color in hex, mixed font name spelling); or such components left out of the `components:` map — no machine check catches a missing map yet, so raise it as a `warn` issue naming the components.
+- A `components:` row with an unquoted reference (`backgroundColor: {colors.x}`) or a multi-value dimension (`padding: 12px 16px`) is a `block` issue whatever the score: both pass every machine check and publish a value standard tools cannot read (#525).
 - 0 pts: hex/rgba colors anywhere; contradicting numbers between sections.
 
 **Failure modes**: `## Colors` says primary is `oklch(0.7 0.18 50)` but `## Components` references `#FF8800`; `## Typography` calls it "Pretendard" in one place and "Pretendard Variable" in another.

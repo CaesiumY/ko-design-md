@@ -177,13 +177,16 @@ components:
 - **`letterSpacing`/`tracking` 에 단위 빼먹기.** `0` 은 CSS 로는 유효하지만 명세의
   Dimension 은 px/em/rem 만 받는다. `0em` 으로 쓴다.
 
-`components:` 에서 자주 틀리는 것 셋(#389):
+`components:` 에서 자주 틀리는 것 넷(#389):
 
 - **변형을 중첩하기.** `button-primary:` 아래 `hover:` 를 두면 표준 도구가 자식을 통째로
   버린다. `button-primary-hover` 처럼 평평한 이름으로, 본문 `###` 과 같은 이름을 쓴다.
 - **값에 산문 섞기.** `28 또는 32`·`top-left (10, 10)` 은 토큰이 아니라 노트다. 본문에 쓴다.
 - **치수에 단위 빼먹기.** 컴포넌트의 `height`·`padding` 등도 Dimension 이다. 토큰이 있으면
-  참조, 없으면 `48px` 처럼 단위를 붙인다.
+  참조, 없으면 `48px` 처럼 단위를 붙인다. 값은 하나다 — `padding: 12px 16px` 같은 여러 값
+  단축형은 명세의 Dimension 이 아니라 본문에만 쓴다.
+- **참조를 따옴표 없이 쓰기.** `backgroundColor: {colors.x}` 는 YAML 이 맵으로 읽어 표준 도구에
+  색이 아닌 값으로 남는다. 위 두 실수는 지금 어떤 기계 검사도 막지 않는다(#525).
 
 토큰이 frontmatter 로 옮겨오면서 생긴 함정이 둘 더 있다. 둘 다 **조용히** 틀린다.
 
