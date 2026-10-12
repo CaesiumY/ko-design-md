@@ -9,6 +9,7 @@ lang: ko
 logo: https://getdesign.kr/logos/yeogi.png
 colors:
   # 브랜드 컬러 — 인쇄·매체 겸용, 로고 컬러 [src:5]
+  primary: "{colors.yeogi-red}"   # 명세의 대표색 역할 — 마스터브랜드 컬러 · UI 팔레트의 primary(lively-red-800)와 다른 값
   yeogi-red: oklch(0.635 0.229 23.9)   # #F7323F — Pantone Red 032 C · CMYK 0/89/66/0 · RGB 247/50/63
   secondary-black: oklch(0 0 0)   # #000000 — CMYK 0/0/0/100
   secondary-white: oklch(1 0 0)   # #FFFFFF — CMYK 0/0/0/0

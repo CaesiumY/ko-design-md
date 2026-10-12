@@ -10,6 +10,7 @@ fonts:
   font-sans: '"Pretendard", -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", "Malgun Gothic", helvetica, sans-serif'
 colors:
   ## Brand — Primary (Dynamic Blue)
+  primary: "{colors.primary-default}"   # 명세의 대표색 역할 — content-primary(본문 글자색)·bg-primary(캔버스)와 다른 축
   primary-default: oklch(0.600 0.219 258)   # #0F78FF · 헤더 로고 SVG 6개 path 의 fill 과 같은 값
   primary-middle: oklch(0.640 0.190 256)   # #2C8AFC
   primary-light: oklch(0.964 0.016 254)   # #ECF4FE · 파랑 계열 표면 틴트

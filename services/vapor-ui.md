@@ -106,6 +106,7 @@ colors:
   blue-200: oklch(0.824 0.096 243)   # #8DCDFF
   blue-300: oklch(0.715 0.142 248)   # #51A9F7
   blue-400: oklch(0.669 0.158 252)   # #4198F2
+  primary: "{colors.blue-500}"   # 명세의 대표색 역할 — 시맨틱 color-*-primary-* 별칭이 아니라 팔레트를 직접 가리킨다
   blue-500: oklch(0.573 0.189 260)   # #2A72E5 · 브랜드 primary
   blue-600: oklch(0.488 0.189 260)   # #0957C8
   blue-700: oklch(0.428 0.187 261)   # #0043B3
