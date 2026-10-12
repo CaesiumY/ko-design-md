@@ -21,13 +21,18 @@ function sourceFiles(dir: string): Array<string> {
 }
 
 describe("focus ring opacity", () => {
-  it("declares --ring and --sidebar-ring without an alpha", () => {
+  // An allowlist, not a search for `/`: an alpha has more spellings than a
+  // slash (`#e0402866`, `color-mix(…, transparent)`, `rgb(… / .4)`), and only
+  // a bare three-channel `oklch(L C H)` is certainly opaque.
+  it("declares --ring and --sidebar-ring as opaque oklch(L C H)", () => {
     const decls = [...CSS.matchAll(/--(?:sidebar-)?ring:\s*([^;]+);/g)].map(
       (m) => m[1].trim()
     )
 
     expect(decls.length).toBeGreaterThan(0)
-    for (const value of decls) expect(value).not.toMatch(/\/|color-mix/)
+    for (const value of decls) {
+      expect(value).toMatch(/^oklch\(\s*[\d.]+%?\s+[\d.]+\s+[\d.]+\s*\)$/)
+    }
   })
 
   // The theme mapping is the other place an alpha could be added: a
