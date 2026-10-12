@@ -230,10 +230,9 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행하고, 프리
 
 Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.md`, 버전
 `alpha`, Apache-2.0)를 **공식 린터로** 판정한다. 룰을 재진술하지 않으므로 명세가 바뀌면
-자동 추종된다 — 린터는 정확 버전으로 고정돼 dependabot 주간 PR 로 오고(minor·patch 는 dev-dependencies 그룹, major 는
-개별 PR), 올라오면
-`KNOWN_SPEC_LIMITATIONS` 래칫과 컴포넌트 속성 계약 테스트가 달라진 것을 실패로 알린다(경로와 "왜 안 올라오나"는
-`.github/dependabot.yml` 주석, #383). 명세 자체를 확인할 일이 생기면 `packages/cli/src/linter/spec-config.yaml`
+자동 추종된다 — 린터는 정확 버전으로 고정돼 dependabot 주간 PR 로 오고(minor·patch 는 dev-dependencies
+그룹, major 는 개별 PR), 올라오면 `KNOWN_SPEC_LIMITATIONS` 래칫과 컴포넌트 속성 계약 테스트가 달라진 것을
+실패로 알린다(경로와 "왜 안 올라오나"는 `.github/dependabot.yml` 주석, #383). 명세 자체를 확인할 일이 생기면 `packages/cli/src/linter/spec-config.yaml`
 하나가 단일 진실 원천이고, 산문 요약본들은 서로 어긋나므로 믿지 말 것.
 
 - **본문 섹션 구조는 이미 명세를 만족한다.** 8개 정규 섹션이 전부 optional 이고,
