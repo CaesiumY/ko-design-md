@@ -2969,6 +2969,59 @@ describe("a component the line scan cannot see whole", () => {
     ).issues.find((i) => i.rule === "unknown-component-property")?.fix
     expect(fix).toContain("delete the component's head row")
   })
+
+  const componentIssues = (rows: Array<string>) =>
+    validateDraft(
+      draftWithRawColorRows([
+        "  brand: oklch(0.62 0.19 258)",
+        "components:",
+        ...rows,
+      ]),
+      OPTS
+    ).issues
+
+  it.each([
+    ["width: 50%", "component-value-form"],
+    ["textColor: oklch(0.62 0.19 258)", "component-value-form"],
+    ["width: auto", "component-value-form"],
+  ])(
+    "says to drop the head row wherever a fix moves the only property out (%s)",
+    (row, rule) => {
+      const fix = componentIssues(["  card:", `    ${row}`]).find(
+        (i) => i.rule === rule
+      )?.fix
+      expect(fix).toContain("delete the component's head row")
+    }
+  )
+
+  it("names a misshapen head once, not again from YAML's reading", () => {
+    const shape = componentIssues(["  pill: { height: 48px }"]).filter(
+      (i) => i.rule === "noncanonical-component-shape"
+    )
+    expect(shape).toHaveLength(1)
+  })
+
+  it("does not blame a value for a head it could not read", () => {
+    // `chip :` hands its row to `button` in the line scan; comparing that row
+    // with YAML's `button` (null) would call it a value continued on the next
+    // line — a fix that changes nothing.
+    const rules = componentIssues([
+      "  button:",
+      "    height: 48px",
+      "  chip :",
+      "    height: 40px",
+    ]).map((i) => i.rule)
+    expect(rules).toContain("noncanonical-component-shape")
+    expect(rules).not.toContain("component-value-form")
+  })
+
+  it("tells a quoted property key to go bare, not to the body", () => {
+    const fix = componentIssues(["  card:", '    "height": 48px']).find(
+      (i) => i.rule === "unknown-component-property"
+    )?.fix
+    expect(fix).toContain("write the key bare (`height:`)")
+    expect(fix).not.toContain("body spec")
+  })
 })
 
 describe("block scalars and nesting, in every token map", () => {

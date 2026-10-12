@@ -1241,6 +1241,12 @@ function componentValue(rest: string): string {
   return comment ? yamlTrim(value.slice(0, comment.index)) : value
 }
 
+/** Said wherever a fix moves a property out of the map: removing a
+ *  component's only property leaves an empty head row, itself a block. A
+ *  clause, so it ends whichever sentence carries it. */
+const ONLY_PROPERTY =
+  "if it was the component's only property, delete the component's head row too"
+
 /** What to do about a component value that is neither admissible form — the
  *  likeliest cause first, since each needs a different fix. */
 function componentValueFix(value: string): string {
@@ -1265,11 +1271,11 @@ function componentValueFix(value: string): string {
     return `write the unit in lower case (\`${bare.toLowerCase()}\`) — standard tools read \`px\`, not \`PX\``
   }
   if (LITERAL_COLOUR.test(bare)) {
-    return 'the map takes no literal colour: point at a declared colour token as a quoted reference (`"{colors.name}"`), or leave the property out and keep the colour in the body spec'
+    return `the map takes no literal colour: point at a declared colour token as a quoted reference (\`"{colors.name}"\`), or leave the property out and keep the colour in the body spec — ${ONLY_PROPERTY}`
   }
   const parts = bare.split(/\s+/)
   if (parts.length > 1 && parts.every(isComponentDimension)) {
-    return "write one value — a shorthand such as `12px 16px` is not a Dimension, so it stays in the body spec only"
+    return `write one value — a shorthand such as \`12px 16px\` is not a Dimension, so it stays in the body spec only (${ONLY_PROPERTY})`
   }
   if (COMPONENT_DIMENSION.test(bare)) {
     return `shorten it — standard tools read a dimension of at most ${MAX_DIMENSION_LENGTH} characters`
@@ -1287,15 +1293,10 @@ function componentValueFix(value: string): string {
     }
   }
   if (new RegExp(`^[+-]?[\\d.]+(?!(?:${units})$)[a-zA-Z%]+$`).test(bare)) {
-    return `the spec's Dimension takes ${COMPONENT_DIMENSION_UNITS.map((u) => `\`${u}\``).join("/")} only — a \`%\`, \`vw\` or other unit stays in the body spec`
+    return `the spec's Dimension takes ${COMPONENT_DIMENSION_UNITS.map((u) => `\`${u}\``).join("/")} only — a \`%\`, \`vw\` or other unit stays in the body spec; ${ONLY_PROPERTY}`
   }
-  return "the map reads nothing else — keep keywords, notes and alternatives in the body spec"
+  return `the map reads nothing else — keep keywords, notes and alternatives in the body spec; ${ONLY_PROPERTY}`
 }
-
-/** Said wherever a fix moves a property out of the map: removing a
- *  component's only property leaves an empty head row, itself a block. */
-const ONLY_PROPERTY =
-  "If it was the component's only property, delete the component's head row too."
 
 /**
  * The spec's `components:` map (#384).
@@ -1331,12 +1332,6 @@ function checkComponentRows(
   components: YamlNode | undefined
 ): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
-  const emptyComponent = (name: string) =>
-    block(
-      "empty-component",
-      "tokens",
-      `component \`${name}\` has no property under it — YAML reads it as null and the official linter then builds no design system at all (it reports no colours and no type scale). Give it at least one of the spec's properties, or delete the row and keep the component in the body spec only.`
-    )
   // What the line scan saw: each head, the properties judged under it with
   // the value each was judged on, and the components already blocked.
   const heads: Array<string> = []
@@ -1355,7 +1350,9 @@ function checkComponentRows(
     const canonical =
       (row.indent === 2 && isHeadRow(row)) ||
       (row.indent === 4 && (!isHeadRow(row) || hex !== null))
-    if (row.indent <= 2) current = null
+    // Any row at head depth starts the next component, so a misshapen head's
+    // block is charged to it and the YAML pass does not name it again.
+    if (row.indent <= 2) current = row.indent === 2 ? row.key : null
     if (row.indent === 2 && canonical) {
       current = row.key
       heads.push(row.key)
@@ -1391,11 +1388,15 @@ function checkComponentRows(
       continue
     }
     if (!COMPONENT_PROPERTIES.includes(row.key)) {
+      // `"height": 48px` names a real property; only its quotes are wrong.
+      const bareKey = stripQuotes(row.key)
       fail(
         block(
           "unknown-component-property",
           "tokens",
-          `component property \`${row.key}\` is not one of the spec's eight (${COMPONENT_PROPERTIES.map((p) => `\`${p}\``).join(", ")}). Standard tools ignore it — keep it in the body spec only. ${ONLY_PROPERTY}`
+          COMPONENT_PROPERTIES.includes(bareKey)
+            ? `component property \`${row.key}\` is quoted — write the key bare (\`${bareKey}:\`), as every frontmatter key is written.`
+            : `component property \`${row.key}\` is not one of the spec's eight (${COMPONENT_PROPERTIES.map((p) => `\`${p}\``).join(", ")}). Standard tools ignore it — keep it in the body spec only; ${ONLY_PROPERTY}.`
         )
       )
       continue
@@ -1426,16 +1427,49 @@ function checkComponentRows(
     )
   }
 
-  // Without YAML's reading (the block did not parse — already a block), the
-  // line scan's empty heads are the best answer.
-  if (!isYamlMap(components)) {
-    for (const name of heads) {
-      if (!blocked.has(name) && judged.get(name)?.size === 0) {
-        issues.push(emptyComponent(name))
-      }
-    }
-    return issues
+  return [
+    ...issues,
+    ...crossCheckComponents(components, { heads, judged, blocked }),
+  ]
+}
+
+/**
+ * The line scan's reading of `components:`, checked against YAML's.
+ *
+ * Every component and property YAML sees must be one the scan judged, with
+ * the value it judged; a component YAML reads as null is `empty-component`.
+ * Without YAML's reading (the block did not parse — already a block), the
+ * scan's own empty heads are the best answer.
+ */
+function crossCheckComponents(
+  components: YamlNode | undefined,
+  scan: {
+    heads: ReadonlyArray<string>
+    /** Per component, each property judged admissible and its value. */
+    judged: ReadonlyMap<string, ReadonlyMap<string, string>>
+    /** Components the scan already blocked — one cause, one message. */
+    blocked: ReadonlySet<string>
   }
+): Array<ValidationIssue> {
+  const { heads, judged, blocked } = scan
+  const emptyComponent = (name: string) =>
+    block(
+      "empty-component",
+      "tokens",
+      `component \`${name}\` has no property under it — YAML reads it as null and the official linter then builds no design system at all (it reports no colours and no type scale). Give it at least one of the spec's properties, or delete the row and keep the component in the body spec only.`
+    )
+  if (!isYamlMap(components)) {
+    return heads
+      .filter((name) => !blocked.has(name) && judged.get(name)?.size === 0)
+      .map(emptyComponent)
+  }
+  const issues: Array<ValidationIssue> = []
+  // A head the scan could not read (`  chip :`) hands its rows to the head
+  // above, so no row-level comparison can be trusted until it is fixed: name
+  // the head, and what YAML reads as empty, and stop there.
+  const unseen = Object.keys(components).filter(
+    (name) => !judged.has(name) && !blocked.has(name)
+  )
   for (const [name, value] of Object.entries(components)) {
     if (blocked.has(name)) continue
     if (value === null) {
@@ -1453,6 +1487,7 @@ function checkComponentRows(
       )
       continue
     }
+    if (unseen.length > 0) continue
     for (const [prop, read] of Object.entries(value)) {
       const authored = rows.get(prop)
       if (authored === undefined) {
@@ -1468,7 +1503,7 @@ function checkComponentRows(
           block(
             "component-value-form",
             "tokens",
-            `component property \`${name}.${prop}\` reads as \`${String(read)}\` to YAML, not \`${authored}\` — the value continues on the next line. Keep it on one line, one value: a shorthand or a note stays in the body spec.`
+            `component property \`${name}.${prop}\` reads as \`${String(read)}\` to YAML, not \`${authored}\` — the value continues on the next line. Keep it on one line, one value: a shorthand or a note stays in the body spec; ${ONLY_PROPERTY}.`
           )
         )
       }
