@@ -20,7 +20,7 @@ export function DesignSearch({ value, onChange, className }: Props) {
 
   // External value changes (e.g., back button) should sync into the local state.
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing during render would change when the debounce effect below observes the value; kept as an effect on purpose
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Syncing during render would change when the debounce effect sees it.
     setLocal(value)
   }, [value])
 

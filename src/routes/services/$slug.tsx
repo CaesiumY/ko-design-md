@@ -95,7 +95,7 @@ function ServiceDetailPage() {
   const [previewTheme, setPreviewTheme] = useState<PreviewTheme>("light")
   useEffect(() => {
     const saved = window.localStorage.getItem(PREVIEW_THEME_STORAGE_KEY)
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage exists only after mount; reading it during render would break hydration
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage is readable only after mount.
     if (saved === "light" || saved === "dark") setPreviewTheme(saved)
   }, [])
   function handleThemeChange(next: PreviewTheme) {

@@ -46,7 +46,7 @@ export function ServiceLogo({ name, logo, size = 24, className }: Props) {
   // Reset failure state if the logo path itself changes (e.g., HMR or
   // navigation to a different service).
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- resetting during render or keying on `logo` would change when the reset lands; kept as an effect on purpose
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Resetting during render or keying on logo would move when the reset lands.
     setFailed(false)
   }, [logo])
 

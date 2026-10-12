@@ -77,7 +77,7 @@ function HomePage() {
   // in on the next paint without a hydration warning.
   const [nowMs, setNowMs] = useState<number | null>(null)
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- the post-mount render is the point: SSR and hydration must both render no badge
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- The post-mount render is what keeps SSR and hydration in agreement.
     setNowMs(Date.now())
   }, [])
 

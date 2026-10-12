@@ -215,11 +215,9 @@ const config = defineConfig({
     nitro({ rollupConfig: nitroRollupOptions }),
     tailwindcss(),
     tanstackStart(),
-    // React Compiler, Rust port (oxc-transform-react). It memoizes components
-    // and hooks at build time, so source code does not hand-write useMemo /
-    // useCallback. The port is marked experimental upstream and its 0.x
-    // version must stay inside this plugin's peer range - dependabot moves the
-    // two together (the `react-compiler` group).
+    // React Compiler, Rust port (oxc-transform-react, experimental upstream):
+    // memoizes components and hooks at build time. Its version is pinned to
+    // this plugin's peer range - see the `react-compiler` dependabot group.
     viteReact({ compiler: true }),
   ],
 })
