@@ -48,7 +48,7 @@ export function InlineCopyButton({
         onClick={copy}
         aria-label={accessibleName}
         className={cn(
-          "inline-flex h-8 items-center gap-2 border border-border bg-background/80 px-3 text-xs font-semibold tracking-[0.12em] uppercase backdrop-blur transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30",
+          "inline-flex h-8 items-center gap-2 border border-border bg-background/80 px-3 text-xs font-semibold tracking-[0.12em] uppercase backdrop-blur transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring",
           "hover:bg-foreground hover:text-background",
           copied && "bg-foreground text-background",
           className

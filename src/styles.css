@@ -70,7 +70,12 @@
     --destructive: oklch(0.577 0.245 27.325);
     --border: oklch(0.12 0 0 / 0.15);
     --input: oklch(0.12 0 0 / 0.15);
-    --ring: oklch(0.55 0.22 30 / 0.4);
+    /* Opaque on purpose: this is the keyboard focus indicator, and it has to
+       clear 3:1 against the page (WCAG 1.4.11). With an alpha of 0.4 here,
+       the opacity modifiers its uses added on top thinned it to ~12-20% and it
+       drew at about 1.4:1. Don't reintroduce an alpha here or on its uses —
+       src/lib/focus-ring.test.ts fails on either. */
+    --ring: oklch(0.55 0.22 30);
     --chart-1: oklch(0.55 0.22 30);
     --chart-2: oklch(0.65 0.18 30);
     --chart-3: oklch(0.45 0.20 30);
@@ -84,7 +89,7 @@
     --sidebar-accent: oklch(0.96 0 0);
     --sidebar-accent-foreground: oklch(0.18 0 0);
     --sidebar-border: oklch(0.12 0 0 / 0.15);
-    --sidebar-ring: oklch(0.55 0.22 30 / 0.4);
+    --sidebar-ring: oklch(0.55 0.22 30);
     --accent-glow: oklch(0.55 0.22 30);     /* vermillion brand accent */
     --rule-strong: oklch(0.12 0 0 / 0.30);
     --ghost: oklch(0.94 0 0);
@@ -110,7 +115,7 @@
     --destructive: oklch(0.704 0.191 22.216);
     --border: oklch(0.97 0 0 / 0.15);
     --input: oklch(0.97 0 0 / 0.15);
-    --ring: oklch(0.62 0.22 30 / 0.4);
+    --ring: oklch(0.62 0.22 30);
     --chart-1: oklch(0.62 0.22 30);
     --chart-2: oklch(0.72 0.18 30);
     --chart-3: oklch(0.52 0.20 30);
@@ -123,7 +128,7 @@
     --sidebar-accent: oklch(0.18 0 0);
     --sidebar-accent-foreground: oklch(0.97 0 0);
     --sidebar-border: oklch(0.97 0 0 / 0.15);
-    --sidebar-ring: oklch(0.62 0.22 30 / 0.4);
+    --sidebar-ring: oklch(0.62 0.22 30);
     --accent-glow: oklch(0.62 0.22 30);
     --rule-strong: oklch(0.97 0 0 / 0.30);
     --ghost: oklch(0.18 0 0);
@@ -131,7 +136,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring;
     }
   body {
     @apply bg-background text-foreground break-keep;

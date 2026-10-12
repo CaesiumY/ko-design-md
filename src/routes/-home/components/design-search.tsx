@@ -43,7 +43,7 @@ export function DesignSearch({ value, onChange, className }: Props) {
         onChange={(e) => setLocal(e.target.value)}
         placeholder="Search all designs"
         aria-label="Search designs"
-        className="block w-full border border-border bg-transparent py-2.5 pr-3 pl-10 text-sm transition-colors placeholder:text-muted-foreground/70 focus:border-foreground/50 focus:ring-2 focus:ring-brand/30 focus:outline-none"
+        className="block w-full border border-border bg-transparent py-2.5 pr-3 pl-10 text-sm transition-colors placeholder:text-muted-foreground/70 focus:border-foreground/50 focus:ring-2 focus:ring-ring focus:outline-none"
       />
     </div>
   )

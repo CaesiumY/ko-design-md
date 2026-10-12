@@ -11,7 +11,7 @@ import { useCopyFeedback } from "@/hooks/use-copy-feedback"
 // context on the button does. A <div> never had the problem, so this only
 // matters for as long as the card is a button.
 const CARD_CLASS =
-  "flex w-full cursor-pointer flex-col border text-left transition-colors outline-none hover:border-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30"
+  "flex w-full cursor-pointer flex-col border text-left transition-colors outline-none hover:border-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring"
 
 // The whole card is the copy target: the swatches sit in a dense 2–5 column
 // grid, so a per-card icon would crowd them and a hover-only affordance would

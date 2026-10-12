@@ -42,7 +42,7 @@ export function ContributeDialog() {
   return (
     <Dialog.Root>
       <Dialog.Trigger
-        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-brand focus-visible:text-brand focus-visible:outline-none"
+        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-brand focus-visible:text-brand"
         aria-label="새 항목 제안하기"
       >
         <PlusIcon className="size-4" />
@@ -60,7 +60,7 @@ export function ContributeDialog() {
           style={{ borderColor: "var(--rule-strong)" }}
         >
           <Dialog.Close
-            className="absolute top-4 right-4 inline-flex size-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:text-foreground focus-visible:outline-none"
+            className="absolute top-4 right-4 inline-flex size-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:text-foreground"
             aria-label="닫기"
           >
             <CloseIcon className="size-4" />
@@ -109,7 +109,7 @@ function ChoiceCard({
       rel="noopener noreferrer"
       className={cn(
         "group flex flex-col gap-2 rounded-xl border p-4 transition-colors",
-        "hover:bg-muted focus-visible:bg-muted focus-visible:outline-none"
+        "hover:bg-muted focus-visible:bg-muted"
       )}
       style={{ borderColor: "var(--rule-strong)" }}
     >
