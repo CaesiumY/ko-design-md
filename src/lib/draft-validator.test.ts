@@ -2610,7 +2610,7 @@ describe("the spec's components map takes only what standard tools read", () => 
     ["a missing unit", "height: 48", "add a unit"],
     ["prose", "size: 28 또는 32", "keywords, notes"],
     ["a percentage", "rounded: 50%", "other unit"],
-    ["an upper-case unit", "height: 4PX", "other unit"],
+    ["an upper-case unit", "height: 4PX", "lower case (`4px`)"],
     ["a keyword", "width: auto", "keywords, notes"],
     // The linter's number shape is `-?\d*\.?\d+`: these it keeps as text.
     ["a plus sign", "height: +4px", "plainly (`4px`)"],
@@ -2632,12 +2632,14 @@ describe("the spec's components map takes only what standard tools read", () => 
       'textColor: "{colors/brand}"',
       "between the braces",
     ],
-    // Only colors/typography/rounded/spacing reach the linter's symbol table.
+    // Inside quotes ` #` is text, not a comment: one value, shown whole.
     [
-      "a reference into a catalog-only map",
-      'typography: "{fonts.brand}"',
-      "the maps standard tools resolve",
+      "a note inside the quotes",
+      'textColor: "{colors.brand} # 본문"',
+      '`textColor: "{colors.brand} # 본문"`',
     ],
+    // YAML starts a value only after a space: the row is one string.
+    ["no space after the colon", "height:48px", "Write `height: 48px`"],
     // YAML trims only spaces and tabs; a no-break space stays in the value.
     ["a trailing no-break space", "height: 48px ", "invisible space"],
     ["a leading no-break space", "height:  48px", "invisible space"],
@@ -2782,11 +2784,13 @@ describe("the spec's components map takes only what standard tools read", () => 
 })
 
 describe("every component value the gate admits is one the linter reads", () => {
-  // #525 — three review rounds each found a value the line-based check passed
-  // and the pinned linter kept as raw text (a number shape, a reference
-  // character, a no-break space). This holds the two together: the gate may be
-  // stricter (it blocks a literal colour the linter would read), never looser.
-  const draftWith = (prop: string, value: string) =>
+  // #525 — four review rounds each found a row the line-based check passed and
+  // the pinned linter did not read as a value (a number shape, a reference
+  // character, a no-break space, a missing space after the colon). This holds
+  // the two together: the gate may be stricter (it blocks a literal colour the
+  // linter would read), never looser. Cases are whole rows, so a fault in the
+  // row's own shape can be written down, not only one in its value.
+  const draftWith = (row: string) =>
     makeDraft({
       frontmatter: [
         "---",
@@ -2808,12 +2812,13 @@ describe("every component value the gate admits is one the linter reads", () => 
         "  s: 4px",
         "components:",
         "  pill:",
-        `    ${prop}: ${value}`,
+        `    ${row}`,
         "---",
       ].join("\n"),
     })
-  // Not judged here: whether a reference's KEY exists (`unresolved-token-ref`,
-  // and the linter's own error) and whether it fits its property.
+  // Not judged here: whether a reference's KEY exists, or lands in a map the
+  // linter reads (`unresolved-token-ref`, and the linter's own broken-ref
+  // error), and whether it fits its property.
   const GATE_RULES = new Set([
     "component-value-form",
     "unknown-component-property",
@@ -2821,77 +2826,76 @@ describe("every component value the gate admits is one the linter reads", () => 
     "empty-component",
     "unresolved-token-ref",
   ])
-  const cases: Array<[string, string]> = [
-    ...[
-      '"{colors.primary}"',
-      "'{colors.primary}'",
-      '"{colors.primary}" # c',
-      '"{colors.primary}"\t# c',
-      '"{ colors.primary }"',
-      '"{colors/primary}"',
-      '"{fonts.primary}"',
-      '"{colors.primary}" ',
-      ' "{colors.primary}"',
-      "{colors.primary}",
-      "oklch(0.62 0.19 258)",
-      "#3182F6",
-    ].map((v): [string, string] => ["backgroundColor", v]),
-    ["typography", '"{typography.body}"'],
-    ["rounded", '"{rounded.md}"'],
-    ["padding", '"{spacing.s}"'],
-    ...[
-      "48px",
-      "0px",
-      "-0px",
-      ".5px",
-      "00px",
-      "-.5em",
-      "1.0rem",
-      "48px # n",
-      "48px\t",
-      `${"1".repeat(62)}px`,
-      `${"1".repeat(63)}px`,
-      "+4px",
-      "48.px",
-      "48.",
-      "48",
-      "1e3px",
-      "4PX",
-      "50%",
-      "12px 16px",
-      '"48px"',
-      "48px ",
-      "48px　",
-      " 48px",
-      "auto",
-      "28 또는 32",
-    ].map((v): [string, string] => ["height", v]),
-  ]
-
-  it.each(cases)("%s: %s", (prop, value) => {
-    const draft = draftWith(prop, value)
-    const admitted = !validateDraft(draft, OPTS).issues.some(
+  const admits = (row: string) =>
+    !validateDraft(draftWith(row), OPTS).issues.some(
       (i) => i.severity === "block" && GATE_RULES.has(i.rule)
     )
-    if (!admitted) return
-    const read = lint(draft)
+  // Rows the gate must keep admitting — without them the parity check below
+  // would pass a gate that blocked everything.
+  const WELL_FORMED = [
+    'backgroundColor: "{colors.primary}"',
+    "backgroundColor: '{colors.primary}'",
+    'backgroundColor: "{colors.primary}" # c',
+    'backgroundColor: "{colors.primary}"\t# c',
+    'typography: "{typography.body}"',
+    'rounded: "{rounded.md}"',
+    'padding: "{spacing.s}"',
+    "height: 48px",
+    "height:\t48px",
+    "height: 0px",
+    "height: -0px",
+    "height: .5px",
+    "height: 00px",
+    "height: -.5em",
+    "height: 1.0rem",
+    "height: 48px # n",
+    "height: 48px\t",
+    `height: ${"1".repeat(62)}px`,
+  ]
+  const ROWS = [
+    ...WELL_FORMED,
+    'backgroundColor: "{ colors.primary }"',
+    'backgroundColor: "{colors/primary}"',
+    'backgroundColor: "{colors.primary} # c"',
+    'backgroundColor: "{colors.primary}"\u00a0',
+    'backgroundColor: \u00a0"{colors.primary}"',
+    "backgroundColor: {colors.primary}",
+    'backgroundColor:"{colors.primary}"',
+    "backgroundColor: oklch(0.62 0.19 258)",
+    "backgroundColor: #3182F6",
+    `height: ${"1".repeat(63)}px`,
+    "height:48px",
+    "height: +4px",
+    "height: 48.px",
+    "height: 48.",
+    "height: 48",
+    "height: 1e3px",
+    "height: 4PX",
+    "height: 50%",
+    "height: 12px 16px",
+    'height: "48px"',
+    "height: 48px\u00a0",
+    "height: 48px\u3000",
+    "height: \u00a048px",
+    "height: \u300048px",
+    "height: auto",
+    "height: 28 또는 32",
+  ]
+
+  it.each(WELL_FORMED)("admits %s", (row) => {
+    expect(admits(row)).toBe(true)
+  })
+
+  it.each(ROWS)("%s: admitted only if the linter reads it", (row) => {
+    if (!admits(row)) return
+    const prop = row.slice(0, row.indexOf(":"))
+    const read = lint(draftWith(row))
       .designSystem.components.get("pill")
       ?.properties.get(prop)
     expect(
-      typeof read === "object" && "type" in read,
-      `the gate admits ${JSON.stringify(value)}, the linter reads ${JSON.stringify(read)}`
+      read instanceof Object && "type" in read,
+      `the gate admits ${JSON.stringify(row)}, the linter reads ${JSON.stringify(read)}`
     ).toBe(true)
-  })
-
-  it("admits enough of them to mean something", () => {
-    // A gate that blocked everything would pass the test above vacuously.
-    const admitted = cases.filter(
-      ([prop, value]) =>
-        !validateDraft(draftWith(prop, value), OPTS).issues.some(
-          (i) => i.severity === "block" && GATE_RULES.has(i.rule)
-        )
-    )
-    expect(admitted.length).toBeGreaterThanOrEqual(15)
   })
 })
 

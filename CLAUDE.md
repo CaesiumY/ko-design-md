@@ -302,7 +302,11 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   (`empty-component` — YAML null 이라 린터가 디자인 시스템을 통째로 못 만든다), 값의 형태(`component-value-form`),
   참조가 선언된 키를 가리키는지(`unresolved-token-ref`)를 막는다(#525). 값은 따옴표 친 참조 또는 `px`/`em`/`rem`
   치수 하나만 통과한다 — 따옴표 없는 참조(YAML 이 맵으로 읽는다)·여러 값 단축형·단위 없는 숫자·산문·리터럴 색은
-  공식 린터가 아무 말 없이 받으므로 이 규칙이 유일한 검사다. 검증기의 여덟 속성·단위 목록(`COMPONENT_PROPERTIES`·
+  공식 린터가 아무 말 없이 받으므로 이 규칙이 유일한 검사다. 검증기가 통과시키는 값은 린터도 색·타이포·치수로 읽는다는
+  것을 `draft-validator.test.ts` 의 대조 테스트가 고정한다(검증기는 더 엄격할 수만 있다). 단 참조가 실제로 **풀리는지**는
+  형태가 아니라 해석의 문제라 그 테스트 밖이다 — 없는 키, 네 맵(`colors`·`typography`·`rounded`·`spacing`) 밖을
+  가리키는 참조(`{fonts.x}`), 맵 이름이 빠진 참조(`{blue-500}`)는 린터가 broken-ref 에러로 내고 CI 코퍼스 래칫이
+  막는다(초안 게이트에서는 `spec-unrecorded-limitation` warn). 검증기의 여덟 속성·단위 목록(`COMPONENT_PROPERTIES`·
   `COMPONENT_DIMENSION_UNITS`)도 같은 계약 테스트가 린터의 `spec-config.yaml` 과 대조한다(패키지가 내보내지 않아
   사본을 둔다). 맵이 아예 없거나, 행이 본문 스펙과 다르거나, 참조가 속성에 맞지 않는 것(`height: "{colors.x}"`)은
   리뷰어 루브릭만 본다. 사이드카가 싣지 않으므로 사이트 Tokens 탭과 `use-design-md` 는 못 보고 DESIGN.md 파일의 frontmatter 에만 있다. 본문 스펙 펜스(`text`)는 그대로 남는다(중복 발행 — 두 벌의

@@ -1197,20 +1197,12 @@ export const COMPONENT_DIMENSION_UNITS: ReadonlyArray<string> = [
   "rem",
 ]
 
-/** The maps the linter's symbol table holds — a reference into any other
- *  (`{fonts.x}`, `{elevation.x}`) never resolves, whatever the key. */
-const REFERENCE_NAMESPACES: ReadonlyArray<string> = [
-  "colors",
-  "typography",
-  "rounded",
-  "spacing",
-]
-/** A whole value that is one quoted reference into those maps, with the
- *  characters the linter's `isTokenReference` allows between the braces —
- *  `"{ colors.x }"` or `"{colors/x}"` it keeps as raw text. */
-const QUOTED_REFERENCE = new RegExp(
-  String.raw`^(["'])\{(?:${REFERENCE_NAMESPACES.join("|")})\.[a-zA-Z0-9._-]+\}\1$`
-)
+/** A whole value that is one quoted reference, with the characters the
+ *  linter's `isTokenReference` allows between the braces — `"{ colors.x }"` or
+ *  `"{colors/x}"` it keeps as raw text. Whether it RESOLVES (a declared key,
+ *  in a map the linter reads — not `{fonts.x}`) is not form: the linter
+ *  reports that as a broken reference, which CI's error ratchet blocks. */
+const QUOTED_REFERENCE = /^(["'])\{[a-zA-Z0-9._-]+\}\1$/
 /** A number exactly as the linter's `parseDimensionParts` reads one —
  *  `-1`, `.5`, `1.25`; not `+4` or `48.`, which it keeps as raw text. */
 const SPEC_NUMBER = String.raw`-?\d*\.?\d+`
@@ -1233,15 +1225,20 @@ const LITERAL_COLOUR =
 const LONE_HEX = /^#[0-9a-fA-F]{3,8}(?=[ \t]*(?:#.*)?$)/
 
 /** A property's value as YAML reads the line: a comment opens at a space or
- *  tab then `#`, and only spaces and tabs are trimmed. `stripYamlComment`'s
- *  `\s` would also shed a no-break or ideographic space that YAML keeps —
- *  `48px` followed by U+3000 is raw text to the linter. */
+ *  tab then `#` outside quotes, and only spaces and tabs are trimmed.
+ *  `stripYamlComment`'s `\s` would also shed a no-break or ideographic space
+ *  that YAML keeps — `48px` followed by U+3000 is raw text to the linter. */
 function componentValue(rest: string): string {
-  const comment = /[ \t]+#.*$/.exec(rest)
-  return (comment ? rest.slice(0, comment.index) : rest).replace(
-    /^[ \t]+|[ \t]+$/g,
-    ""
-  )
+  const yamlTrim = (s: string) => s.replace(/^[ \t]+|[ \t]+$/g, "")
+  const value = yamlTrim(rest)
+  // A quoted scalar ends at its closing quote; only what follows can be a
+  // comment, so `"{colors.x} # y"` is one (inadmissible) value, not a cut one.
+  const quoted = /^(["'])(?:(?!\1).)*\1/.exec(value)
+  if (quoted && /^[ \t]*(?:#.*)?$/.test(value.slice(quoted[0].length))) {
+    return quoted[0]
+  }
+  const comment = /[ \t]+#.*$/.exec(value)
+  return comment ? yamlTrim(value.slice(0, comment.index)) : value
 }
 
 /** What to do about a component value that is neither admissible form — the
@@ -1259,10 +1256,13 @@ function componentValueFix(value: string): string {
   }
   const bare = stripQuotes(value)
   if (bare !== value && /^\{.*\}$/.test(bare)) {
-    return `a reference names one token in ${REFERENCE_NAMESPACES.map((m) => `\`${m}:\``).join(", ")} — the maps standard tools resolve — with only letters, digits, \`.\`, \`_\` and \`-\` between the braces (\`"{colors.name}"\`); anything else they keep as text`
+    return 'a reference names one token with only letters, digits, `.`, `_` and `-` between the braces (`"{colors.name}"`) — anything else standard tools keep as text'
   }
   if (bare !== value && isComponentDimension(bare)) {
     return `drop the quotes (\`${bare}\`)`
+  }
+  if (isComponentDimension(bare.toLowerCase())) {
+    return `write the unit in lower case (\`${bare.toLowerCase()}\`) — standard tools read \`px\`, not \`PX\``
   }
   if (LITERAL_COLOUR.test(bare)) {
     return 'the map takes no literal colour: point at a declared colour token as a quoted reference (`"{colors.name}"`), or leave the property out and keep the colour in the body spec'
@@ -1342,6 +1342,24 @@ function checkComponentRows(fm: Array<string>): Array<ValidationIssue> {
     // has its own block.
     if (row.indent <= 2) flushEmptyHead()
     else emptyHead = null
+    // `height:48px` — YAML starts a value only after a space or tab, so the
+    // row is one string and the component's value is that string, with no
+    // property at all. The row splitter here takes `:\s*`, zero spaces too.
+    const afterColon = row.line.charAt(row.line.indexOf(":") + 1)
+    if (
+      row.indent === 4 &&
+      COMPONENT_PROPERTIES.includes(row.key) &&
+      !["", " ", "\t"].includes(afterColon)
+    ) {
+      issues.push(
+        block(
+          "component-value-form",
+          "tokens",
+          `component property \`${row.line.trim()}\` has no space after the colon — YAML reads the whole row as one string, so the component gets no property at all. Write \`${row.key}: ${row.rest}\`.`
+        )
+      )
+      continue
+    }
     if (!canonical) {
       issues.push(
         block(
