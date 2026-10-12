@@ -232,7 +232,7 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
 `alpha`, Apache-2.0)를 **공식 린터로** 판정한다. 룰을 재진술하지 않으므로 명세가 바뀌면
 자동 추종된다 — 린터는 정확 버전으로 고정돼 dependabot 주간 PR 로 오고(minor·patch 는 dev-dependencies
 그룹, major 는 개별 PR), 올라오면 테스트가 고정한 것 — 슬러그별 에러 수(`KNOWN_SPEC_LIMITATIONS` 래칫)·컴포넌트
-수(정확값)·색과 타이포 토큰이 0개가 되는지·스키마 키 규칙·missing-primary 목록·컴포넌트 속성과 단위 목록 — 이 달라질 때만
+수(정확값)·색과 타이포 토큰이 0개가 되는지·스키마 키 규칙·섹션 순서(`section-order` 0건)·missing-primary 목록·컴포넌트 속성과 단위 목록 등 — 이 달라질 때만
 실패로 알린다. **경고 수준의 변화**(새 warning 규칙, `contrast-ratio`·`orphaned-tokens` 판정 변화)와 **0이 아닌 범위의
 색·타이포 토큰 수 변화**(40개 중 35개만 읽혀도 초록이다)는 초록으로 지나가므로, 린터를 올리는 PR 은 `pnpm validate:spec`
 출력(슬러그별 `colors`·`typography` 수 포함)을 이전 버전과 비교해 볼 것(경로와 "왜 안 올라오나"는 `.github/dependabot.yml`
