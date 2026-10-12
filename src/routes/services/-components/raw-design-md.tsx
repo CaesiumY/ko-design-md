@@ -24,11 +24,12 @@ export function RawDesignMd({ shikiHtml, filename, raw }: Props) {
         </span>
       </header>
       {/* Shiki's <pre> takes tabindex=0 so the code can be scrolled by
-          keyboard. It fills this horizontal scroller edge to edge, and the
-          scroller clips anything drawn outside it — so its focus outline is
-          drawn inside instead. */}
+          keyboard, so it is the scroller itself rather than this wrapper:
+          with the wrapper scrolling, the focused <pre> slid sideways with the
+          content and took its focus outline off screen. The outline is drawn
+          inside because the <pre> fills the figure edge to edge. */}
       <div
-        className="raw-design-md overflow-x-auto text-sm leading-relaxed [&>pre]:m-0 [&>pre]:px-5 [&>pre]:py-5 [&>pre:focus-visible]:-outline-offset-3"
+        className="raw-design-md min-w-0 text-sm leading-relaxed [&>pre]:m-0 [&>pre]:overflow-x-auto [&>pre]:px-5 [&>pre]:py-5 [&>pre:focus-visible]:-outline-offset-3"
         // shikiHtml is produced by Shiki's codeToHtml on our own controlled raw .md.
         // No untrusted input flows into this string.
         dangerouslySetInnerHTML={{ __html: shikiHtml }}
