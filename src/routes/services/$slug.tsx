@@ -1,6 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router"
 import { useEffect, useMemo, useState } from "react"
-import { SERVICE_DETAIL_COPY } from "./-copy"
 import { CopyButton } from "./-components/copy-button"
 import {
   DetailTabs,
@@ -147,7 +146,6 @@ export function ServiceDetailLayout({
   searchTab,
   shikiHtml,
 }: ServiceDetailLayoutProps) {
-  const { primaryAction, unofficialNotice } = SERVICE_DETAIL_COPY
   const t = doc.tokens
   const hasTokens =
     !!t &&
@@ -166,11 +164,7 @@ export function ServiceDetailLayout({
 
       <aside className="md:sticky md:top-24 md:col-start-2 md:row-span-2 md:row-start-1 md:max-h-[calc(100svh-6rem)] md:self-start md:overflow-y-auto">
         <p className="text-meta-caps mb-4">
-          {primaryAction.mark}{" "}
-          <span className="font-extrabold text-brand">
-            {primaryAction.emphasis}
-          </span>{" "}
-          {primaryAction.suffix}
+          — <span className="font-extrabold text-brand">Primary</span> Action
         </p>
         <CopyButton raw={doc.raw} slug={doc.frontmatter.slug} />
         <DownloadButton raw={doc.raw} slug={doc.frontmatter.slug} />
@@ -181,11 +175,11 @@ export function ServiceDetailLayout({
           <TokenBadge tokens={doc.estimatedTokens} />
         </div>
         <p className="mt-6 text-xs leading-relaxed text-muted-foreground">
-          {unofficialNotice.prefix}{" "}
+          브랜드의 공식 배포본이 아닙니다. AI 코딩 에이전트와 함께{" "}
           <span className="font-medium text-foreground">
-            {unofficialNotice.emphasis}
+            이 브랜드 스타일의 UI
           </span>
-          {unofficialNotice.suffix}
+          를 만들기 위한 출발점입니다.
         </p>
       </aside>
 
