@@ -1,4 +1,3 @@
-import { useMemo } from "react"
 import { useNavigate, useSearch } from "@tanstack/react-router"
 import type { Category, ServiceSummary } from "@/lib/content-types"
 
@@ -59,33 +58,29 @@ export function useFilteredServices(
     })
   }
 
-  const counts = useMemo(() => {
-    const map = new Map<Category, number>()
-    for (const doc of allServices) {
-      const c = doc.frontmatter.category
-      map.set(c, (map.get(c) ?? 0) + 1)
-    }
-    return Array.from(map.entries())
-      .map(([category, count]): CategoryCount => ({ category, count }))
-      .sort((a, b) => {
-        if (b.count !== a.count) return b.count - a.count
-        return a.category.localeCompare(b.category)
-      })
-  }, [allServices])
-
-  const filtered = useMemo(() => {
-    const lowerQ = query.trim().toLowerCase()
-    return allServices.filter((doc) => {
-      if (activeCategory && doc.frontmatter.category !== activeCategory) {
-        return false
-      }
-      if (lowerQ.length > 0) {
-        const haystack = buildServiceSearchText(doc).toLowerCase()
-        if (!haystack.includes(lowerQ)) return false
-      }
-      return true
+  const categoryTotals = new Map<Category, number>()
+  for (const doc of allServices) {
+    const c = doc.frontmatter.category
+    categoryTotals.set(c, (categoryTotals.get(c) ?? 0) + 1)
+  }
+  const counts = Array.from(categoryTotals.entries())
+    .map(([category, count]): CategoryCount => ({ category, count }))
+    .sort((a, b) => {
+      if (b.count !== a.count) return b.count - a.count
+      return a.category.localeCompare(b.category)
     })
-  }, [allServices, activeCategory, query])
+
+  const lowerQ = query.trim().toLowerCase()
+  const filtered = allServices.filter((doc) => {
+    if (activeCategory && doc.frontmatter.category !== activeCategory) {
+      return false
+    }
+    if (lowerQ.length > 0) {
+      const haystack = buildServiceSearchText(doc).toLowerCase()
+      if (!haystack.includes(lowerQ)) return false
+    }
+    return true
+  })
 
   return {
     filtered,

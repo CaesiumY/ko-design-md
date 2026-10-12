@@ -1,5 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { CopyButton } from "./-components/copy-button"
 import {
   DetailTabs,
@@ -153,9 +153,8 @@ export function ServiceDetailLayout({
     t.colors.length + t.typography.length + t.spacing.length + t.radius.length >
       0
   // Serialize the FULL sidecar (not just the signature cards) so a copy hands AI
-  // prompts / Tailwind themes every token. Memoized on the stable doc.tokens ref
-  // so it stringifies once, not on every tab switch or preview theme toggle.
-  const tokensJson = useMemo(() => (t ? JSON.stringify(t, null, 2) : ""), [t])
+  // prompts / Tailwind themes every token.
+  const tokensJson = t ? JSON.stringify(t, null, 2) : ""
 
   return (
     <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-x-12 gap-y-10 px-8 pt-12 pb-32 md:grid-cols-[minmax(0,1fr)_280px] md:gap-x-20 md:pt-16">
