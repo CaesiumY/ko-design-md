@@ -52,8 +52,10 @@ The same bytes as §2, under the filename Google's published DESIGN.md spec uses
 (`github.com/google-labs-code/design.md`, spec `alpha`). The entry file is itself a
 spec document — `colors` / `typography` / `spacing` / `rounded`
 maps and shadows under `elevation:` in YAML frontmatter, no yaml fence in the body
-(motion tokens and component specs sit in `text` fences, readable but outside the
-token model). Use this URL when a tool expects the standard filename — Stitch, the
+(motion tokens and full component specs sit in `text` fences, readable but outside the
+token model). Newer entries also carry their components in the spec's `components:`
+map — only the spec's eight properties, as references and `px`/`em`/`rem` values — so
+standard tools read that part; the sidecar and the Tokens tab do not carry it. Use this URL when a tool expects the standard filename — Stitch, the
 official `design.md` CLI. The catalog's own frontmatter keys (`slug`, dates,
 `logo`) ride along; the linter ignores them.
 
