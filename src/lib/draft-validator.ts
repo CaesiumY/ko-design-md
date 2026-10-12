@@ -1271,11 +1271,11 @@ function componentValueFix(value: string): string {
     return `write the unit in lower case (\`${bare.toLowerCase()}\`) — standard tools read \`px\`, not \`PX\``
   }
   if (LITERAL_COLOUR.test(bare)) {
-    return `the map takes no literal colour: point at a declared colour token as a quoted reference (\`"{colors.name}"\`), or leave the property out and keep the colour in the body spec — ${ONLY_PROPERTY}`
+    return `the map takes no literal colour: point at a declared colour token as a quoted reference (\`"{colors.name}"\`), or leave the property out and keep the colour in the body spec; ${ONLY_PROPERTY}`
   }
   const parts = bare.split(/\s+/)
   if (parts.length > 1 && parts.every(isComponentDimension)) {
-    return `write one value — a shorthand such as \`12px 16px\` is not a Dimension, so it stays in the body spec only (${ONLY_PROPERTY})`
+    return `write one value — a shorthand such as \`12px 16px\` is not a Dimension, so it stays in the body spec only; ${ONLY_PROPERTY}`
   }
   if (COMPONENT_DIMENSION.test(bare)) {
     return `shorten it — standard tools read a dimension of at most ${MAX_DIMENSION_LENGTH} characters`
@@ -1296,6 +1296,15 @@ function componentValueFix(value: string): string {
     return `the spec's Dimension takes ${COMPONENT_DIMENSION_UNITS.map((u) => `\`${u}\``).join("/")} only — a \`%\`, \`vw\` or other unit stays in the body spec; ${ONLY_PROPERTY}`
   }
   return `the map reads nothing else — keep keywords, notes and alternatives in the body spec; ${ONLY_PROPERTY}`
+}
+
+/** A fix that rewrites a row's key side must also carry its value's fix, or
+ *  the rewritten row meets `component-value-form` on the next run. */
+function rewrittenRow(prop: string, valueText: string): string {
+  const value = componentValue(valueText)
+  return QUOTED_REFERENCE.test(value) || isComponentDimension(value)
+    ? `Write \`${prop}: ${value}\`.`
+    : `Write \`${prop}: …\` — and its value \`${value}\` is not one the map reads either: ${componentValueFix(value)}.`
 }
 
 /**
@@ -1354,7 +1363,6 @@ function checkComponentRows(
     // block is charged to it and the YAML pass does not name it again.
     if (row.indent <= 2) current = row.indent === 2 ? row.key : null
     if (row.indent === 2 && canonical) {
-      current = row.key
       heads.push(row.key)
       judged.set(row.key, new Map())
       continue
@@ -1372,7 +1380,7 @@ function checkComponentRows(
         block(
           "component-value-form",
           "tokens",
-          `component property \`${row.line.trim()}\` has no space after the colon — YAML reads the whole row as one string, so the component gets no property at all. Write \`${row.key}: ${row.rest}\`.`
+          `component property \`${row.line.trim()}\` has no space after the colon — YAML reads the whole row as one string, so the component gets no property at all. ${rewrittenRow(row.key, valueText)}`
         )
       )
       continue
@@ -1395,7 +1403,7 @@ function checkComponentRows(
           "unknown-component-property",
           "tokens",
           COMPONENT_PROPERTIES.includes(bareKey)
-            ? `component property \`${row.key}\` is quoted — write the key bare (\`${bareKey}:\`), as every frontmatter key is written.`
+            ? `component property \`${row.key}\` is quoted — write the key bare, as every frontmatter key is written. ${rewrittenRow(bareKey, valueText)}`
             : `component property \`${row.key}\` is not one of the spec's eight (${COMPONENT_PROPERTIES.map((p) => `\`${p}\``).join(", ")}). Standard tools ignore it — keep it in the body spec only; ${ONLY_PROPERTY}.`
         )
       )
@@ -1482,7 +1490,7 @@ function crossCheckComponents(
         block(
           "noncanonical-component-shape",
           "tokens",
-          `component \`${name}\` is not written as a head row \`  ${name}:\` with one \`property: value\` row per line at four spaces under it, so no gate here read it. Rewrite it in that shape.`
+          `component \`${name}\` is not written as a head row \`  ${name.trim()}:\` with one \`property: value\` row per line at four spaces under it, so no gate here read it. Rewrite it in that shape.`
         )
       )
       continue
@@ -1495,7 +1503,7 @@ function crossCheckComponents(
           block(
             "noncanonical-component-shape",
             "tokens",
-            `component property \`${name}.${prop}\` is not written as one \`${prop}: value\` row at four spaces — a space before the colon, a \`?\` key or a list item hides it from every gate here. Rewrite it as \`    ${prop}: value\`.`
+            `component property \`${name}.${prop}\` is not written as one \`${prop.trim()}: value\` row at four spaces — a space before the colon, a \`?\` key or a list item hides it from every gate here. Rewrite it as \`    ${prop.trim()}: value\`.`
           )
         )
       } else if (read !== stripQuotes(authored)) {

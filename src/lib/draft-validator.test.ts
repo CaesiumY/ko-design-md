@@ -3002,9 +3002,9 @@ describe("a component the line scan cannot see whole", () => {
   })
 
   it("does not blame a value for a head it could not read", () => {
-    // `chip :` hands its row to `button` in the line scan; comparing that row
-    // with YAML's `button` (null) would call it a value continued on the next
-    // line — a fix that changes nothing.
+    // `chip :` hands its `40px` row to `button` in the line scan; comparing
+    // that with YAML's `button.height` (48px) would call it a value continued
+    // on the next line — a fix that changes nothing.
     const rules = componentIssues([
       "  button:",
       "    height: 48px",
@@ -3019,8 +3019,21 @@ describe("a component the line scan cannot see whole", () => {
     const fix = componentIssues(["  card:", '    "height": 48px']).find(
       (i) => i.rule === "unknown-component-property"
     )?.fix
-    expect(fix).toContain("write the key bare (`height:`)")
+    expect(fix).toContain("Write `height: 48px`")
     expect(fix).not.toContain("body spec")
+  })
+
+  it.each([
+    ['    "height": 50%', "unknown-component-property"],
+    ["    width:50%", "component-value-form"],
+  ])("rewrites the row with its value's fix too (%s)", (row, rule) => {
+    // A rewrite that fixed only the key side would meet
+    // `component-value-form` on the next run.
+    const fix = componentIssues(["  card:", row]).find(
+      (i) => i.rule === rule
+    )?.fix
+    expect(fix).toContain("not one the map reads either")
+    expect(fix).toContain("other unit")
   })
 })
 
