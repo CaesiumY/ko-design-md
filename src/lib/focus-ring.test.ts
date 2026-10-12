@@ -59,7 +59,9 @@ describe("focus ring opacity", () => {
     const alpha = "\\/[^\\s\"'`]+"
     const modifier = new RegExp(
       [
-        String.raw`\b(?:ring|outline|border)-(?:sidebar-)?ring`,
+        // Any utility, not just ring/outline/border: `shadow-ring/40` and
+        // `decoration-ring/50` thin the same colour.
+        String.raw`\b[a-z][a-z-]*-(?:sidebar-)?ring`,
         String.raw`\[(?:color:)?var\(${token}\)\]`,
         String.raw`\((?:color:)?${token}\)`,
       ]

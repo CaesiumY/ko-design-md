@@ -93,10 +93,11 @@ function HomePage() {
         ) : (
           <div className="lg:grid lg:grid-cols-[220px_1fr] lg:gap-10">
             {/* Same as the detail sidebar: overflow-y: auto makes overflow-x
-                auto too, which clipped the full-width category buttons' focus
-                outline at both sides. Padding gives it room; the negative
-                margin keeps the 220px column where it was. */}
-            <aside className="mb-4 lg:sticky lg:top-14 lg:-mx-2 lg:mb-0 lg:max-h-[calc(100svh-3.5rem)] lg:self-start lg:overflow-y-auto lg:px-2 lg:pt-8">
+                auto too, so the scroller clipped the category buttons' focus
+                outline at both sides and, on the last button, at the bottom.
+                Padding gives it room on every edge (pt-8 already covers the
+                top); the negative side margin keeps the 220px column in place. */}
+            <aside className="mb-4 lg:sticky lg:top-14 lg:-mx-2 lg:mb-0 lg:max-h-[calc(100svh-3.5rem)] lg:self-start lg:overflow-y-auto lg:px-2 lg:pt-8 lg:pb-2">
               <CategorySidebar
                 totalCount={filter.totalCount}
                 counts={filter.counts}
