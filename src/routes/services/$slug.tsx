@@ -181,11 +181,9 @@ export function ServiceDetailLayout({
           <TokenBadge tokens={doc.estimatedTokens} />
         </div>
         <p className="mt-6 text-xs leading-relaxed text-muted-foreground">
-          {unofficialNotice.prefix} {doc.frontmatter.name}
-          {unofficialNotice.descriptionAfterName}{" "}
+          {unofficialNotice.prefix}{" "}
           <span className="font-medium text-foreground">
-            {doc.frontmatter.name}
-            {unofficialNotice.highlightedSuffix}
+            {unofficialNotice.highlighted}
           </span>
           {unofficialNotice.suffix}
         </p>
