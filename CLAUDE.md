@@ -273,7 +273,8 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   기존 항목은 소급하지 않는다. 저작 규칙(명세의 여덟 속성만 · 평평한 변형 이름 · 여덟 밖은 본문만 · 값에 산문 금지 ·
   색·글꼴은 참조, 치수는 참조 또는 단위 붙은 값)의 정본은 `stitch-format.md` 의 "Component tokens in the frontmatter
   `components:` map" 이고, 스킬이 말하는 여덟 속성은 계약 테스트가 고정된 린터의 목록과 대조한다. 속성 이름·단위는
-  검증기가 아직 보지 않는다(모양과 참조만 막는다). 사이드카가 싣지 않으므로 사이트 Tokens 탭과 `use-design-md` 는
+  검증기가 아직 보지 않는다 — 막는 것은 행의 모양과, 참조가 선언된 키를 가리키는지뿐이다. 따옴표 없이 쓴 참조
+  (`backgroundColor: {colors.x}`)는 YAML 이 맵으로 읽어 린터에 색이 아닌 값으로 남는데도 어느 검사도 막지 않는다. 사이드카가 싣지 않으므로 사이트 Tokens 탭과 `use-design-md` 는
   못 보고 DESIGN.md 파일의 frontmatter 에만 있다. 본문 스펙 펜스(`text`)는 그대로 남는다(중복 발행 — 두 벌의
   어긋남은 리뷰 루브릭이 본다). 컴포넌트가 하나라도 생기면 린터 규칙 둘이 깨어난다 —
   `orphaned-tokens`(참조되지 않은 색마다)와 `contrast-ratio`(컴포넌트의 배경·글자 쌍). 에러가
