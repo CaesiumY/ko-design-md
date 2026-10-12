@@ -53,9 +53,10 @@ updates:
       # PR 이 된다(#408 vitest 4 → 5). 린터가 안 올라오면 먼저 npm 최신을 볼 것 —
       # 2026-10-12 확인 때는 npm 최신 0.4.0 이 upstream main 과 같았고, 명세 확장은
       # 아직 병합되지 않은 upstream PR(docs/* 제안 브랜치·포크 PR)에 있었다(#383).
-      # 린터를 올린 PR 은 코퍼스 래칫(google-designmd-corpus.test.ts —
-      # KNOWN_SPEC_LIMITATIONS 와 정확히 같아야 한다)과 컴포넌트 속성 계약 테스트가
-      # 실패로 알리므로, 그때 기록을 고친다.
+      # 린터를 올린 PR 은 테스트가 고정한 것(슬러그별 에러 수 = KNOWN_SPEC_LIMITATIONS,
+      # 해석된 토큰·컴포넌트 수, 컴포넌트 속성·단위 목록 등)이 달라질 때만 실패하니 그때
+      # 기록을 고친다. 경고 수준의 변화(새 warning 규칙 등)는 초록으로 지나가므로
+      # `pnpm validate:spec` 출력을 이전 버전과 비교해 볼 것.
       dev-dependencies:
         dependency-type: development
         update-types:
