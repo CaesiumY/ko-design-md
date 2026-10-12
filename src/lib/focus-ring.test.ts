@@ -7,8 +7,8 @@ import { describe, expect, it } from "vitest"
 // top, so it drew at 12-20% opacity — about 1.4:1 against the page, under the
 // 3:1 WCAG 1.4.11 asks of a focus indicator. Nothing failed; it was measured in
 // a browser. These checks keep an alpha from creeping back in through the
-// token, its theme mapping, or an opacity modifier on a use — `/30`, `/[0.3]`,
-// `/(--a)`, and the same on `sidebar-ring`, `[var(--ring)]` or `(--ring)`.
+// token, its theme mapping, or any use: all three are allowlists, so a new
+// spelling of an alpha fails instead of slipping past a list of known ones.
 
 const SRC = join(process.cwd(), "src")
 const CSS = readFileSync(join(SRC, "styles.css"), "utf8")
@@ -51,29 +51,39 @@ describe("focus ring opacity", () => {
     })
   })
 
-  it("never thins the ring colour with an opacity modifier", () => {
-    // Three spellings of the same colour: the named utility (`ring-ring`), the
-    // arbitrary value (`[var(--ring)]`) and v4's variable shorthand
-    // (`(--ring)`, `(color:--ring)`), each also via `--color-` or `sidebar-`.
-    const token = String.raw`--(?:color-)?(?:sidebar-)?ring`
-    const alpha = "\\/[^\\s\"'`]+"
-    const modifier = new RegExp(
-      [
-        // Any utility, not just ring/outline/border: `shadow-ring/40` and
-        // `decoration-ring/50` thin the same colour.
-        String.raw`\b[a-z][a-z-]*-(?:sidebar-)?ring`,
-        String.raw`\[(?:color:)?var\(${token}\)\]`,
-        String.raw`\((?:color:)?${token}\)`,
-      ]
-        .map((colour) => colour + alpha)
-        .join("|"),
-      "g"
-    )
-    const offenders = sourceFiles(SRC).flatMap((file) =>
-      [...readFileSync(file, "utf8").matchAll(modifier)].map(
-        (m) => `${file.slice(SRC.length + 1)}: ${m[0]}`
+  // An allowlist again, for the same reason as the token check: chasing alpha
+  // spellings on the use side never ends (`/30`, `/[0.3]`, `(--ring)/30`,
+  // `--alpha(var(--color-ring) / 50%)`, `color-mix(…var(--ring)…)`, …). So
+  // every reference to the ring colour is found, and each must be one of the
+  // few shapes the site actually uses; anything else fails, alpha or not.
+  it("only references the ring colour in its plain, opaque forms", () => {
+    const reference =
+      /--(?:color-)?(?:sidebar-)?ring\b|\b[a-z][a-z-]*-(?:sidebar-)?ring\b/g
+    const isAllowed = (text: string, at: number, ref: string) => {
+      const line = text.slice(
+        text.lastIndexOf("\n", at) + 1,
+        (text.indexOf("\n", at) + 1 || text.length + 1) - 1
       )
-    )
+      const next = text.charAt(at + ref.length)
+      // The token and its theme mapping, whose values the tests above pin.
+      if (/^\s*--(?:color-)?(?:sidebar-)?ring:/.test(line)) return true
+      // The plain utilities, ended by whitespace, a quote or `;` (@apply) —
+      // never `/` (opacity), `-` or `[`.
+      if (/^(?:ring|outline|border)-ring$/.test(ref)) {
+        return next === "" || /[\s"'`;]/.test(next)
+      }
+      // A file name in a comment (`focus-ring.test.ts`), not a utility.
+      return next === "."
+    }
+    const offenders = sourceFiles(SRC).flatMap((file) => {
+      const text = readFileSync(file, "utf8")
+      return [...text.matchAll(reference)]
+        .filter((m) => !isAllowed(text, m.index, m[0]))
+        .map((m) => {
+          const around = text.slice(Math.max(0, m.index - 12), m.index + 24)
+          return `${file.slice(SRC.length + 1)}: …${around.replace(/\s+/g, " ")}…`
+        })
+    })
 
     expect(offenders).toEqual([])
   })
