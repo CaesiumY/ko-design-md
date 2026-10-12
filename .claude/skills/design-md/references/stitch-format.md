@@ -90,7 +90,7 @@ components:
 The details in that block are load-bearing, because they are what the sidecar
 extractor reads:
 
-- **`typography:` is the one map that nests, and its property names are the
+- **`typography:` is the one map the sidecar reads that nests, and its property names are the
   spec's** — `fontSize`, `fontWeight`, `lineHeight`, `letterSpacing`, each on its
   own four-space line under a bare style name. The inline flow form
   (`display-1: { size: 56px, … }`) is NOT read: the extractor wants an empty
@@ -191,11 +191,11 @@ Every new entry carries its components in the spec's `components:` map as well a
 - **Variants are flat names**, the same names as the body's `###` entries: `button-primary`, `button-primary-hover`, `button-primary-disabled`. A nested `hover:` under `button-primary` is read as one opaque value and its children are lost. The draft gate blocks any shape but a two-space name with four-space property rows (`noncanonical-component-shape`).
 - **Everything outside the eight stays in the body** — border, gap, overflow, hover transforms, shadow references. Moving a component to the map never drops a value.
 - **No prose in a value.** `28 또는 32` or `top-left (10, 10)` is a note, not a token; write it in the body.
-- **Colours and type are references to declared tokens**, quoted: `"{colors.primary}"`, `"{typography.label-m}"`. **Dimensions are a reference when a token exists** (`"{rounded.radius-s}"`, `"{spacing.space-4}"`) **and a value with a unit when none does** (`48px`, `0px` — see the next section). If no declared token holds a value, do not invent one to point at: leave that property out of the map and keep it in the body.
+- **Colours and type are references to declared tokens**, quoted: `"{colors.primary}"`, `"{typography.display-1}"`. **Dimensions are a reference when a token exists** (`"{rounded.radius-s}"`, `"{spacing.space-1}"`) **and a value with a unit when none does** (`48px`, `0px` — see the next section). If no declared token holds a value, do not invent one to point at: leave that property out of the map and keep it in the body.
 
-Record the count in `COMPONENT_COUNTS` (Stage 10). Once an entry carries a component, the linter wakes two advisory rules: `orphaned-tokens` warns on every colour no component references — expected, since the catalog records the whole palette, and `pnpm validate:spec` prints it as a count — and `contrast-ratio` warns on a component's background/text pair below 4.5:1, which follows the brand's published values and is not a reason to change them.
+The map's component count owes a `COMPONENT_COUNTS` row (Stage 10's registry list; the test file is outside this skill's write scope, so the operator adds it). Once an entry carries a component, the linter wakes two advisory rules: `orphaned-tokens` warns on every colour no component references — expected, since the catalog records the whole palette, and `pnpm validate:spec` prints it as a count — and `contrast-ratio` warns on a component's background/text pair below 4.5:1, which follows the brand's published values and is not a reason to change them.
 
-These rules come from the first entry to carry the map (#384, `services/teamsparta.md`): ten components fit without loss using `backgroundColor`, `textColor`, `rounded` and `height`, with flat variant names, references and a unit-bearing `56px`. Its base button states, which also carry `border` or `focus`, stayed in the body only. Warnings went from 1 to 28 — 27 of them `orphaned-tokens`.
+These rules come from the first entry to carry the map (#384, `services/teamsparta.md`): ten components fit without loss using `backgroundColor`, `textColor`, `rounded` and `height`, with flat variant names, references and a unit-bearing `56px`. Its base button states, which also carry `border` or `focus`, stayed in the body only. Warnings went from 1 to 28 — 27 of them `orphaned-tokens`. #389 widened that pilot's zero-loss scope: a component with some values outside the eight now gets a row carrying the ones inside, and the rest stays in the body. teamsparta is not rewritten to match.
 
 ### Dimension values carry a unit — including zero
 

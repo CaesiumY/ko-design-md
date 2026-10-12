@@ -217,8 +217,9 @@ describe("/design-md machine gates", () => {
     expect(linter.length).toBeGreaterThan(0)
 
     const stitch = readRepoFile(DESIGN_MD_STITCH_FORMAT)
-    const stated =
-      /\*\*Only the spec's eight properties:\*\* ([^\n]+?)\. /.exec(stitch)?.[1]
+    const stated = /\*\*Only the spec's \w+ properties:\*\* ([^\n]+?)\. /.exec(
+      stitch
+    )?.[1]
     expect(stated, "stitch-format must list the eight properties").toBeDefined()
     const named = [...(stated ?? "").matchAll(/`(\w+)`/g)].map((m) => m[1])
     expect([...named].sort()).toEqual([...linter].sort())
