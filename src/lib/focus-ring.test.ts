@@ -56,29 +56,47 @@ describe("focus ring opacity", () => {
   // `--alpha(var(--color-ring) / 50%)`, `color-mix(…var(--ring)…)`, …). So
   // every reference to the ring colour is found, and each must be one of the
   // few shapes the site actually uses; anything else fails, alpha or not.
+  //
+  // Finding is open-ended too: a list of reference spellings would leak the
+  // same way (`theme(colors.ring / 30%)` matched none of them). Every word
+  // `ring` outside a comment is a candidate; the only ones let through without
+  // being a colour use are the `ring-` utility prefixes (`ring-3`,
+  // `ring-offset-2`, the `ring-` of `ring-ring`, whose colour half is then
+  // checked on its own).
   it("only references the ring colour in its plain, opaque forms", () => {
-    const reference =
-      /--(?:color-)?(?:sidebar-)?ring\b|\b[a-z][a-z-]*-(?:sidebar-)?ring\b/g
-    const isAllowed = (text: string, at: number, ref: string) => {
+    const blank = (s: string) => s.replace(/[^\n]/g, " ")
+    const stripComments = (src: string) =>
+      src
+        .replace(/\/\*[\s\S]*?\*\//g, blank)
+        .replace(
+          /(^|[^:"'`\\])(\/\/[^\n]*)/g,
+          (_, pre: string, c: string) => pre + blank(c)
+        )
+    const isAllowed = (text: string, at: number) => {
       const line = text.slice(
         text.lastIndexOf("\n", at) + 1,
         (text.indexOf("\n", at) + 1 || text.length + 1) - 1
       )
-      const next = text.charAt(at + ref.length)
+      const prev = text.charAt(at - 1)
+      const next = text.charAt(at + 4)
       // The token and its theme mapping, whose values the tests above pin.
       if (/^\s*--(?:color-)?(?:sidebar-)?ring:/.test(line)) return true
-      // The plain utilities, ended by whitespace, a quote or `;` (@apply) —
-      // never `/` (opacity), `-` or `[`.
-      if (/^(?:ring|outline|border)-ring$/.test(ref)) {
-        return next === "" || /[\s"'`;]/.test(next)
-      }
-      // A file name in a comment (`focus-ring.test.ts`), not a utility.
-      return next === "."
+      // A `ring-` utility prefix: width, offset, or a colour checked next.
+      if (next === "-" && !/[-.]/.test(prev)) return true
+      // A path segment (`…/ring`): no colour syntax puts the name after `/`.
+      if (prev === "/") return true
+      // The plain colour utilities, ended by whitespace, a quote or `;`
+      // (@apply) — never `/` (opacity), `-`, `[` or `)`.
+      const before = text.slice(Math.max(0, at - 9), at)
+      return (
+        /(?:^|[^a-z-])(?:ring|outline|border)-$/.test(before) &&
+        (next === "" || /[\s"'`;]/.test(next))
+      )
     }
     const offenders = sourceFiles(SRC).flatMap((file) => {
-      const text = readFileSync(file, "utf8")
-      return [...text.matchAll(reference)]
-        .filter((m) => !isAllowed(text, m.index, m[0]))
+      const text = stripComments(readFileSync(file, "utf8"))
+      return [...text.matchAll(/(?<![A-Za-z0-9_])ring(?![A-Za-z0-9_])/g)]
+        .filter((m) => !isAllowed(text, m.index))
         .map((m) => {
           const around = text.slice(Math.max(0, m.index - 12), m.index + 24)
           return `${file.slice(SRC.length + 1)}: …${around.replace(/\s+/g, " ")}…`
