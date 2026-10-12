@@ -19,9 +19,9 @@ export function HandoffPromptBox({ name, slug }: Props) {
   return (
     <div className="mt-6 min-w-0">
       <div className="mb-3 flex items-center justify-between gap-2">
-        <p className="text-meta-caps">
-          — <span className="font-extrabold text-brand">Handoff</span> Prompt
-        </p>
+        {/* No brand-red word here: that emphasis marks the page's one primary
+            action ("Primary Action" above), and this is a secondary path. */}
+        <p className="text-meta-caps">— Handoff Prompt</p>
         <InlineCopyButton
           raw={prompt}
           filename="핸드오프 프롬프트"
