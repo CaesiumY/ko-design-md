@@ -38,6 +38,15 @@ updates:
         patterns:
           - "playwright"
           - "@playwright/*"
+      # @vitejs/plugin-react 는 React Compiler 의 Rust 판(oxc-transform-react)을
+      # `^0.152.0` 같은 0.x 캐럿 peer 로 요구한다. 0.x 캐럿은 마이너 하나(0.152.x)만
+      # 허용하므로, 컴파일러만 0.153 으로 올리면 플러그인의 범위를 벗어난다. 둘이
+      # 한 PR 에서 함께 움직이게 묶는다. 아래 dev-dependencies 보다 먼저 와야 한다
+      # (dependabot 은 처음 맞는 그룹에 넣는다).
+      react-compiler:
+        patterns:
+          - "@vitejs/plugin-react"
+          - "oxc-transform-react"
       dev-dependencies:
         dependency-type: development
         update-types:
