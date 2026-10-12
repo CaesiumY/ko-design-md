@@ -145,14 +145,15 @@ describe("ServiceDetailLayout", () => {
     const downloadAction = screen.getByRole("button", {
       name: /design\.md 다운로드/i,
     })
-    const promptCopy = screen.getByRole("button", {
-      name: "핸드오프 프롬프트 복사",
-    })
-    const prompt = promptCopy.parentElement?.querySelector("code")?.textContent
+    // InlineCopyButton is mocked above, so the prompt's own text is the anchor.
+    const prompt = screen.getByText(
+      (_, el) =>
+        el?.tagName === "CODE" &&
+        el.textContent === buildHandoffPrompt("Toss", "toss")
+    )
 
-    expect(prompt).toBe(buildHandoffPrompt("Toss", "toss"))
     expect(
-      downloadAction.compareDocumentPosition(promptCopy) &
+      downloadAction.compareDocumentPosition(prompt) &
         Node.DOCUMENT_POSITION_FOLLOWING
     ).toBeTruthy()
   })

@@ -56,21 +56,25 @@ describe("HandoffPromptBox", () => {
     })
   })
 
-  it("announces the copy beside the button, not inside it", async () => {
+  // The labelled button, not an icon: the visible word is part of its name so
+  // voice control can say what it sees, and the name holds still while the
+  // label flips to "복사됨" — the live region beside it carries the result.
+  it("shows a 복사 label that confirms as 복사됨, announced beside the button", async () => {
     stubClipboard()
     render(<HandoffPromptBox name="토스" slug="toss" />)
+    const button = screen.getByRole("button", {
+      name: "복사 — 핸드오프 프롬프트",
+    })
+    expect(button.textContent).toBe("복사")
     expect(screen.getByRole("status").textContent).toBe("")
 
     await clickCopy()
 
+    expect(button.textContent).toBe("복사됨")
+    expect(button.getAttribute("aria-label")).toBe("복사 — 핸드오프 프롬프트")
     expect(screen.getByRole("status").textContent).toBe(
       "핸드오프 프롬프트 복사됨"
     )
-    expect(
-      screen.getByRole("button").querySelector('[role="status"]')
-    ).toBeNull()
-    expect(screen.getByRole("button").getAttribute("aria-label")).toBe(
-      "핸드오프 프롬프트 복사"
-    )
+    expect(button.querySelector('[role="status"]')).toBeNull()
   })
 })
