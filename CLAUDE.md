@@ -178,7 +178,8 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행하고, 프리
 - **새 항목은 슬러그별 표에 자기 줄을 적는다. 아래가 그 전부이고, 다른 곳엔 통합 목록이
   없다** — 스킬(Stage 10 의 등록처 안내)은 아홉 전부를 안다. 템플릿은 `KNOWN_SPEC_LIMITATIONS`
   하나를 이름으로 대고, `CASES` 의무는 저작 명세(`stitch-format.md`)를 가리켜서만 안다.
-  셋은 늘 필요하고 여섯은 조건부다(그중 `PREVIEW_TOKEN_ALIASES` 는 거의 전부에 해당한다).
+  셋은 늘 필요하고 여섯은 조건부다(그중 `PREVIEW_TOKEN_ALIASES` 는 거의 전부에, `COMPONENT_COUNTS` 는 #389 이후
+  새 항목 거의 전부에 해당한다).
 
   | 등록처 | 위치 | 언제 |
   | --- | --- | --- |
