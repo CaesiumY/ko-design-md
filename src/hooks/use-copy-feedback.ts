@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react"
 import { track } from "@vercel/analytics"
 
 /**
- * How long the "복사됨" confirmation stays up. Shared so the four copy
- * affordances — and the tests that advance timers past it — cannot drift apart
+ * How long the "복사됨" confirmation stays up. Shared so every copy
+ * affordance — and the tests that advance timers past it — cannot drift apart
  * on timing. Not a hook parameter: no caller wants a different dwell, and a
  * knob nobody turns is just a wider surface to keep working.
  */
@@ -24,6 +24,7 @@ export type CopySurface =
   | "tokens-json"
   | "color-token"
   | "skill-install"
+  | "handoff-prompt"
 
 export interface CopyEvent {
   surface: CopySurface
@@ -32,18 +33,22 @@ export interface CopyEvent {
 }
 
 /**
- * The two surfaces that hand over a whole design.md.
+ * The three surfaces that hand an entry's design.md to an agent.
  *
- * These carry the conversion `docs/PRD.md` names as the primary metric — counted
- * together with `design_md_download` from the sidebar download button (#336) —
- * and they get an event name of their own for that reason. Under one shared `copy`
- * event the headline total would also count every colour swatch a reader
- * clicks - a session that copies eight swatches and no design.md would read as
- * eight conversions. The `surface` property still splits hero from tab.
+ * Two copy the whole document; `handoff-prompt` copies its address plus one
+ * instruction, which is the same intent - taking the entry to a coding agent -
+ * reached without pasting the body. Together they carry the conversion
+ * `docs/PRD.md` names as the primary metric — counted with `design_md_download`
+ * from the sidebar download button (#336) — and they get an event name of their
+ * own for that reason. Under one shared `copy` event the headline total would
+ * also count every colour swatch a reader clicks - a session that copies eight
+ * swatches and no design.md would read as eight conversions. The `surface`
+ * property still splits hero, tab and prompt.
  */
 const DESIGN_MD_SURFACES: ReadonlySet<CopySurface> = new Set([
   "design-md-hero",
   "design-md-tab",
+  "handoff-prompt",
 ])
 
 /** The two event names the dashboard reads; see `copyEventName`. */
@@ -62,7 +67,7 @@ export function copyEventName(surface: CopySurface): CopyEventName {
  * each had to be found and fixed in three separate components, and the fourth
  * (the home skill hint) still carried the original version of both. Owning the
  * state, the timer and the cleanup in one place is what keeps the next fix from
- * having to be made four times.
+ * having to be made once per affordance.
  *
  * Measurement lives here for the same reason. Every copy affordance raises an
  * event through `copyEventName`, and the project's primary success metric is
