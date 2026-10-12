@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { localLogoPath } from "@/lib/site-config"
 import { cn } from "@/lib/utils"
 
@@ -43,12 +43,16 @@ function FallbackBadge({
 export function ServiceLogo({ name, logo, size = 24, className }: Props) {
   const [failed, setFailed] = useState(false)
 
-  // Reset failure state if the logo path itself changes (e.g., HMR or
-  // navigation to a different service).
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- Resetting during render or keying on logo would move when the reset lands.
+  // A new logo address (HMR, navigation to another service) clears a stale
+  // failure during render, so the first commit already tries the new image —
+  // React's "adjusting state when a prop changes" pattern, with no effect
+  // (#537). Every change retries, including a return to an address that
+  // failed before: the failure may have been transient.
+  const [seenLogo, setSeenLogo] = useState(logo)
+  if (logo !== seenLogo) {
+    setSeenLogo(logo)
     setFailed(false)
-  }, [logo])
+  }
 
   if (logo && !failed) {
     const src = localLogoPath(logo)
