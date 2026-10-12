@@ -49,9 +49,10 @@ updates:
           - "oxc-transform-react"
       # 공식 DESIGN.md 린터(@google/design.md)도 여기로 온다 — 캐럿 없는 정확 버전의
       # 개발 의존인데, 같은 조건의 eslint 가 이 그룹으로 올라왔다(#372). 0.x 의 minor
-      # 올림도 minor 로 묶이고(satori 0.33 → 0.44), 1.0.0 같은 major 만 개별 PR 이 된다.
-      # 린터가 안 올라오면 먼저 npm 최신을 볼 것: 발행은 upstream main 을 바로 따르고,
-      # 명세 확장은 아직 병합되지 않은 docs/* 제안 브랜치에 있다(#383). 린터를 올린 PR 은
+      # 올림도 minor 로 묶이고(#372 의 satori 0.29 → 0.33), 1.0.0 같은 major 만 개별
+      # PR 이 된다(#408 vitest 4 → 5). 린터가 안 올라오면 먼저 npm 최신을 볼 것 —
+      # 2026-10-12 확인 때는 npm 최신 0.4.0 이 upstream main 과 같았고, 명세 확장은
+      # 아직 병합되지 않은 upstream PR(docs/* 제안 브랜치·포크 PR)에 있었다(#383). 린터를 올린 PR 은
       # 코퍼스 래칫(google-designmd-corpus.test.ts — KNOWN_SPEC_LIMITATIONS 와 정확히
       # 같아야 한다)과 컴포넌트 속성 계약 테스트가 실패로 알리므로, 그때 기록을 고친다.
       dev-dependencies:
