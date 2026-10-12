@@ -8,7 +8,7 @@ import { describe, expect, it } from "vitest"
 // 3:1 WCAG 1.4.11 asks of a focus indicator. Nothing failed; it was measured in
 // a browser. These checks keep an alpha from creeping back in through the
 // token, its theme mapping, or an opacity modifier on a use — `/30`, `/[0.3]`,
-// `/(--a)`, and the same on `sidebar-ring` or `[var(--ring)]`.
+// `/(--a)`, and the same on `sidebar-ring`, `[var(--ring)]` or `(--ring)`.
 
 const SRC = join(process.cwd(), "src")
 const CSS = readFileSync(join(SRC, "styles.css"), "utf8")
@@ -52,8 +52,21 @@ describe("focus ring opacity", () => {
   })
 
   it("never thins the ring colour with an opacity modifier", () => {
-    const modifier =
-      /\b(?:ring|outline|border)-(?:sidebar-)?ring\/[^\s"'`]+|\[var\(--(?:sidebar-)?ring\)\]\/[^\s"'`]+/g
+    // Three spellings of the same colour: the named utility (`ring-ring`), the
+    // arbitrary value (`[var(--ring)]`) and v4's variable shorthand
+    // (`(--ring)`, `(color:--ring)`), each also via `--color-` or `sidebar-`.
+    const token = String.raw`--(?:color-)?(?:sidebar-)?ring`
+    const alpha = "\\/[^\\s\"'`]+"
+    const modifier = new RegExp(
+      [
+        String.raw`\b(?:ring|outline|border)-(?:sidebar-)?ring`,
+        String.raw`\[(?:color:)?var\(${token}\)\]`,
+        String.raw`\((?:color:)?${token}\)`,
+      ]
+        .map((colour) => colour + alpha)
+        .join("|"),
+      "g"
+    )
     const offenders = sourceFiles(SRC).flatMap((file) =>
       [...readFileSync(file, "utf8").matchAll(modifier)].map(
         (m) => `${file.slice(SRC.length + 1)}: ${m[0]}`
