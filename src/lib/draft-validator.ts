@@ -1292,6 +1292,11 @@ function componentValueFix(value: string): string {
   return "the map reads nothing else — keep keywords, notes and alternatives in the body spec"
 }
 
+/** Said wherever a fix moves a property out of the map: removing a
+ *  component's only property leaves an empty head row, itself a block. */
+const ONLY_PROPERTY =
+  "If it was the component's only property, delete the component's head row too."
+
 /**
  * The spec's `components:` map (#384).
  *
@@ -1306,28 +1311,41 @@ function componentValueFix(value: string): string {
  * dimension. The linter accepts everything else without a finding — an
  * unquoted reference reaches it as a YAML map, a shorthand or a note as raw
  * text, `48` as a bare number — so this is the only check on the form. Whether
- * a reference resolves is `checkTokenReferences`'s; whether a row matches its
- * body spec is the reviewer's.
+ * a reference resolves is `checkTokenReferences`'s and the linter's; whether a
+ * row matches its body spec is the reviewer's.
  *
- * A head row with no property under it is YAML `null`, which the linter cannot
- * build a model around: it then resolves no colours and no type scale, and the
+ * The rows are read line by line, and a line the row splitter does not match
+ * (`padding : 12px`, `? padding`, `- height: 48px`, a value continued on the
+ * next line) would otherwise go unjudged. So the result is checked against
+ * the map as YAML reads it (`components`, null when the block does not
+ * parse): every property YAML sees must be a row judged here, holding the
+ * value judged here.
+ *
+ * A component that is YAML `null` (a head row with nothing under it) leaves
+ * the linter no model: it then resolves no colours and no type scale, and the
  * only blocks left would name maps that are fine. So it is named here, and
  * `validateDraft` then skips the linter, as it does for unparseable YAML.
  */
-function checkComponentRows(fm: Array<string>): Array<ValidationIssue> {
+function checkComponentRows(
+  fm: Array<string>,
+  components: YamlNode | undefined
+): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
-  // The last head row with no property under it yet.
-  let emptyHead: string | null = null
-  const flushEmptyHead = () => {
-    if (emptyHead === null) return
-    issues.push(
-      block(
-        "empty-component",
-        "tokens",
-        `component \`${emptyHead}\` has no property under it — YAML reads it as null and the official linter then builds no design system at all (it reports no colours and no type scale). Give it at least one of the spec's properties, or delete the row and keep the component in the body spec only.`
-      )
+  const emptyComponent = (name: string) =>
+    block(
+      "empty-component",
+      "tokens",
+      `component \`${name}\` has no property under it — YAML reads it as null and the official linter then builds no design system at all (it reports no colours and no type scale). Give it at least one of the spec's properties, or delete the row and keep the component in the body spec only.`
     )
-    emptyHead = null
+  // What the line scan saw: each head, the properties judged under it with
+  // the value each was judged on, and the components already blocked.
+  const heads: Array<string> = []
+  const judged = new Map<string, Map<string, string>>()
+  const blocked = new Set<string>()
+  let current: string | null = null
+  const fail = (issue: ValidationIssue) => {
+    issues.push(issue)
+    if (current !== null) blocked.add(current)
   }
   for (const row of mapRows(fm, "components")) {
     // `height: #fff` — a space then `#` opens a YAML comment, so the row reads
@@ -1337,21 +1355,23 @@ function checkComponentRows(fm: Array<string>): Array<ValidationIssue> {
     const canonical =
       (row.indent === 2 && isHeadRow(row)) ||
       (row.indent === 4 && (!isHeadRow(row) || hex !== null))
-    // A row at the head's own depth ends the previous component; any deeper
-    // row, misshapen or not, means it was not empty — a misshapen one already
-    // has its own block.
-    if (row.indent <= 2) flushEmptyHead()
-    else emptyHead = null
+    if (row.indent <= 2) current = null
+    if (row.indent === 2 && canonical) {
+      current = row.key
+      heads.push(row.key)
+      judged.set(row.key, new Map())
+      continue
+    }
     // `height:48px` — YAML starts a value only after a space or tab, so the
     // row is one string and the component's value is that string, with no
     // property at all. The row splitter here takes `:\s*`, zero spaces too.
-    const afterColon = row.line.charAt(row.line.indexOf(":") + 1)
+    const valueText = row.line.slice(row.line.indexOf(":") + 1)
     if (
       row.indent === 4 &&
       COMPONENT_PROPERTIES.includes(row.key) &&
-      !["", " ", "\t"].includes(afterColon)
+      !/^(?:[ \t]|$)/.test(valueText)
     ) {
-      issues.push(
+      fail(
         block(
           "component-value-form",
           "tokens",
@@ -1361,7 +1381,7 @@ function checkComponentRows(fm: Array<string>): Array<ValidationIssue> {
       continue
     }
     if (!canonical) {
-      issues.push(
+      fail(
         block(
           "noncanonical-component-shape",
           "tokens",
@@ -1370,22 +1390,18 @@ function checkComponentRows(fm: Array<string>): Array<ValidationIssue> {
       )
       continue
     }
-    if (row.indent === 2) {
-      emptyHead = row.key
-      continue
-    }
     if (!COMPONENT_PROPERTIES.includes(row.key)) {
-      issues.push(
+      fail(
         block(
           "unknown-component-property",
           "tokens",
-          `component property \`${row.key}\` is not one of the spec's eight (${COMPONENT_PROPERTIES.map((p) => `\`${p}\``).join(", ")}). Standard tools ignore it — keep it in the body spec only.`
+          `component property \`${row.key}\` is not one of the spec's eight (${COMPONENT_PROPERTIES.map((p) => `\`${p}\``).join(", ")}). Standard tools ignore it — keep it in the body spec only. ${ONLY_PROPERTY}`
         )
       )
       continue
     }
     if (hex) {
-      issues.push(
+      fail(
         block(
           "component-value-form",
           "tokens",
@@ -1396,11 +1412,12 @@ function checkComponentRows(fm: Array<string>): Array<ValidationIssue> {
     }
     // From the line itself: the row splitter's `\s*` after the colon would
     // already have shed a leading no-break space that YAML keeps.
-    const authored = componentValue(row.line.slice(row.line.indexOf(":") + 1))
+    const authored = componentValue(valueText)
     if (QUOTED_REFERENCE.test(authored) || isComponentDimension(authored)) {
+      if (current !== null) judged.get(current)?.set(row.key, authored)
       continue
     }
-    issues.push(
+    fail(
       block(
         "component-value-form",
         "tokens",
@@ -1408,7 +1425,55 @@ function checkComponentRows(fm: Array<string>): Array<ValidationIssue> {
       )
     )
   }
-  flushEmptyHead()
+
+  // Without YAML's reading (the block did not parse — already a block), the
+  // line scan's empty heads are the best answer.
+  if (!isYamlMap(components)) {
+    for (const name of heads) {
+      if (!blocked.has(name) && judged.get(name)?.size === 0) {
+        issues.push(emptyComponent(name))
+      }
+    }
+    return issues
+  }
+  for (const [name, value] of Object.entries(components)) {
+    if (blocked.has(name)) continue
+    if (value === null) {
+      issues.push(emptyComponent(name))
+      continue
+    }
+    const rows = judged.get(name)
+    if (!rows || !isYamlMap(value)) {
+      issues.push(
+        block(
+          "noncanonical-component-shape",
+          "tokens",
+          `component \`${name}\` is not written as a head row \`  ${name}:\` with one \`property: value\` row per line at four spaces under it, so no gate here read it. Rewrite it in that shape.`
+        )
+      )
+      continue
+    }
+    for (const [prop, read] of Object.entries(value)) {
+      const authored = rows.get(prop)
+      if (authored === undefined) {
+        issues.push(
+          block(
+            "noncanonical-component-shape",
+            "tokens",
+            `component property \`${name}.${prop}\` is not written as one \`${prop}: value\` row at four spaces — a space before the colon, a \`?\` key or a list item hides it from every gate here. Rewrite it as \`    ${prop}: value\`.`
+          )
+        )
+      } else if (read !== stripQuotes(authored)) {
+        issues.push(
+          block(
+            "component-value-form",
+            "tokens",
+            `component property \`${name}.${prop}\` reads as \`${String(read)}\` to YAML, not \`${authored}\` — the value continues on the next line. Keep it on one line, one value: a shorthand or a note stays in the body spec.`
+          )
+        )
+      }
+    }
+  }
   return issues
 }
 
@@ -2577,7 +2642,12 @@ export function validateDraft(
   // component is empty (YAML null, which the linter cannot model), the
   // linter's model is empty and would add wrong instructions to the real one.
   const fmLines = frontmatterBlock(raw).split(/\r?\n/)
-  const componentIssues = checkComponentRows(fmLines)
+  const fmRoot =
+    fmDoc && fmDoc.errors.length === 0 ? rawNode(fmDoc.contents) : undefined
+  const componentIssues = checkComponentRows(
+    fmLines,
+    isYamlMap(fmRoot) ? fmRoot.components : undefined
+  )
   if (
     !yamlIssues.some((i) => i.severity === "block") &&
     !componentIssues.some((i) => i.rule === "empty-component")

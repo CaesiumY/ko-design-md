@@ -2789,8 +2789,14 @@ describe("every component value the gate admits is one the linter reads", () => 
   // character, a no-break space, a missing space after the colon). This holds
   // the two together: the gate may be stricter (it blocks a literal colour the
   // linter would read), never looser. Cases are whole rows, so a fault in the
-  // row's own shape can be written down, not only one in its value.
-  const draftWith = (row: string) =>
+  // row's own shape can be written down, not only one in its value — and a
+  // case may hold several, since a row the line scan skips hides best beside
+  // one it reads.
+  const rowsOf = (c: string | Array<string>) =>
+    (typeof c === "string" ? [c] : c).map((r) =>
+      r.startsWith(" ") ? r : `    ${r}`
+    )
+  const draftWith = (rows: Array<string>) =>
     makeDraft({
       frontmatter: [
         "---",
@@ -2812,7 +2818,7 @@ describe("every component value the gate admits is one the linter reads", () => 
         "  s: 4px",
         "components:",
         "  pill:",
-        `    ${row}`,
+        ...rows,
         "---",
       ].join("\n"),
     })
@@ -2826,8 +2832,8 @@ describe("every component value the gate admits is one the linter reads", () => 
     "empty-component",
     "unresolved-token-ref",
   ])
-  const admits = (row: string) =>
-    !validateDraft(draftWith(row), OPTS).issues.some(
+  const admits = (rows: Array<string>) =>
+    !validateDraft(draftWith(rows), OPTS).issues.some(
       (i) => i.severity === "block" && GATE_RULES.has(i.rule)
     )
   // Rows the gate must keep admitting — without them the parity check below
@@ -2852,8 +2858,20 @@ describe("every component value the gate admits is one the linter reads", () => 
     "height: 48px\t",
     `height: ${"1".repeat(62)}px`,
   ]
-  const ROWS = [
+  const ROWS: Array<string | Array<string>> = [
     ...WELL_FORMED,
+    ["height: 48px", 'backgroundColor: "{colors.primary}"'],
+    // Rows the row splitter does not match, beside one it does.
+    ["height: 48px", "padding : 12px 16px"],
+    ["height: 48px", "textColor : {colors.primary}"],
+    ["height: 48px", "padding\t: 28 또는 32"],
+    ["height: 48px", "? padding", "    : 12px 16px"],
+    ["height: 48px", "height2 : 4px"],
+    ["height: 48px", '"padding": 12px 16px'],
+    // A plain value continued on the next line is one value to YAML.
+    ["padding: 12px", "      16px"],
+    ["height: 48px", "      or 56px"],
+    ["- height: 48px"],
     'backgroundColor: "{ colors.primary }"',
     'backgroundColor: "{colors/primary}"',
     'backgroundColor: "{colors.primary} # c"',
@@ -2883,19 +2901,73 @@ describe("every component value the gate admits is one the linter reads", () => 
   ]
 
   it.each(WELL_FORMED)("admits %s", (row) => {
-    expect(admits(row)).toBe(true)
+    expect(admits(rowsOf(row))).toBe(true)
   })
 
-  it.each(ROWS)("%s: admitted only if the linter reads it", (row) => {
-    if (!admits(row)) return
-    const prop = row.slice(0, row.indexOf(":"))
-    const read = lint(draftWith(row))
-      .designSystem.components.get("pill")
-      ?.properties.get(prop)
-    expect(
-      read instanceof Object && "type" in read,
-      `the gate admits ${JSON.stringify(row)}, the linter reads ${JSON.stringify(read)}`
-    ).toBe(true)
+  it.each(ROWS.map((c) => ({ rows: rowsOf(c) })))(
+    "$rows: admitted only if the linter reads every property",
+    ({ rows }) => {
+      if (!admits(rows)) return
+      const pill = lint(draftWith(rows)).designSystem.components.get("pill")
+      const props = pill ? [...pill.properties] : []
+      expect(
+        props.length,
+        `the linter reads no property from ${JSON.stringify(rows)}`
+      ).toBeGreaterThan(0)
+      for (const [prop, read] of props) {
+        expect(
+          read instanceof Object && "type" in read,
+          `the gate admits ${JSON.stringify(rows)}, the linter reads ${prop} as ${JSON.stringify(read)}`
+        ).toBe(true)
+      }
+    }
+  )
+})
+
+describe("a component the line scan cannot see whole", () => {
+  // The line scan judged what it matched; YAML's reading decides what is
+  // there. A head written `chip :` leaves the head above it with nothing.
+  it("names the component YAML reads as empty, and the head it could not read", () => {
+    const rules = rulesFor(
+      draftWithRawColorRows([
+        "  brand: oklch(0.62 0.19 258)",
+        "components:",
+        "  button:",
+        "  chip :",
+        "    height: 48px",
+      ])
+    )
+    expect(rules).toContain("empty-component")
+    expect(rules).toContain("noncanonical-component-shape")
+  })
+
+  it("does not call a list-item property empty", () => {
+    // `- height: 48px` makes the component a list, not null.
+    const rules = rulesFor(
+      draftWithRawColorRows([
+        "  brand: oklch(0.62 0.19 258)",
+        "components:",
+        "  button:",
+        "    - height: 48px",
+      ])
+    )
+    expect(rules).toContain("noncanonical-component-shape")
+    expect(rules).not.toContain("empty-component")
+  })
+
+  it("tells the author to drop a head row left with nothing under it", () => {
+    // Following "keep it in the body" for a component's only property would
+    // otherwise meet `empty-component` on the next run.
+    const fix = validateDraft(
+      draftWithRawColorRows([
+        "  brand: oklch(0.62 0.19 258)",
+        "components:",
+        "  card:",
+        "    border: 1px",
+      ]),
+      OPTS
+    ).issues.find((i) => i.rule === "unknown-component-property")?.fix
+    expect(fix).toContain("delete the component's head row")
   })
 })
 
