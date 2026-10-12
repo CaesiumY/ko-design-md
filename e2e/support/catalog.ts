@@ -6,10 +6,15 @@
 // Vite's import.meta.glob and cannot run in Playwright's plain Node, so this
 // mirrors scripts/build-tokens.ts: fs + the shared parser.
 //
-// Expectations are derived from the data and the stated rules (a category shows
-// its entries; search matches name, design-system name, slug or tagline), never
-// by importing the site's filter code — a test that reused it would pass along
-// with any regression in it.
+// What is shared with the site and what is not: entries are read with the
+// site's parser (`buildDoc`, which also derives each tagline) and category
+// labels come from the site's `getCategoryStyle` — a regression in either moves
+// these expectations with it, so this suite does not guard them (the parser has
+// its own unit tests). The filtering is NOT shared: the rules below are written
+// from what the home page promises (a category shows its entries; a search
+// lists every entry whose name, design-system name, slug or tagline contains
+// the query), never imported from the site's filter code — a test that reused
+// it would pass along with any regression in it.
 import { readFileSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
@@ -64,7 +69,11 @@ export function largestCategory(): CategoryFacet {
   }
 }
 
-/** Entries a search for `query` should list. */
+/**
+ * Entries a search for `query` should list: those where at least one searched
+ * field contains it, case-insensitively. Checked field by field, as the rule
+ * reads — a query spanning two fields is not a promised match.
+ */
 export function searchMatches(query: string): Array<ServiceDoc> {
   const needle = query.trim().toLowerCase()
   return catalog.filter((doc) =>
@@ -73,10 +82,6 @@ export function searchMatches(query: string): Array<ServiceDoc> {
       doc.frontmatter.design_system_name,
       doc.frontmatter.slug,
       doc.tagline,
-    ]
-      .filter(Boolean)
-      .join(" ")
-      .toLowerCase()
-      .includes(needle)
+    ].some((field) => field?.toLowerCase().includes(needle))
   )
 }
