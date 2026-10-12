@@ -183,7 +183,7 @@ export function ServiceDetailLayout({
         <p className="mt-6 text-xs leading-relaxed text-muted-foreground">
           {unofficialNotice.prefix}{" "}
           <span className="font-medium text-foreground">
-            {unofficialNotice.highlighted}
+            {unofficialNotice.emphasis}
           </span>
           {unofficialNotice.suffix}
         </p>
