@@ -8,10 +8,11 @@ const HOST = "127.0.0.1"
 // use, so the suite never lands on a server it did not start.
 const PORT = 4174
 
-// E2E_BASE_URL points the suite at an external deployment instead; no local
-// server is started then.
-const BASE_URL = process.env.E2E_BASE_URL ?? `http://${HOST}:${PORT}`
-const USE_LOCAL_SERVER = !process.env.E2E_BASE_URL
+// Always the locally built server — there is deliberately no switch to point the
+// suite at a deployment: expectations are computed from this checkout's
+// services/*.md (e2e/support/catalog.ts), so against any other build they would
+// fail on a healthy site.
+const BASE_URL = `http://${HOST}:${PORT}`
 const CI = !!process.env.CI
 
 export default defineConfig({
@@ -49,18 +50,16 @@ export default defineConfig({
   // Always the production build (scripts/e2e-server.ts), locally and in CI: the
   // dev server answers some routes differently. The script rebuilds when the
   // build is missing or older than its sources, hence the long timeout.
-  webServer: USE_LOCAL_SERVER
-    ? {
-        command: "pnpm exec tsx scripts/e2e-server.ts",
-        env: { NITRO_HOST: HOST, NITRO_PORT: String(PORT) },
-        url: BASE_URL,
-        // Never reuse a server already on the port, locally either: it would
-        // skip the script's stale-build check and test whatever build that
-        // server happened to load. A busy port fails the run instead.
-        reuseExistingServer: false,
-        timeout: 300_000,
-        stdout: "pipe",
-        stderr: "pipe",
-      }
-    : undefined,
+  webServer: {
+    command: "pnpm exec tsx scripts/e2e-server.ts",
+    env: { NITRO_HOST: HOST, NITRO_PORT: String(PORT) },
+    url: BASE_URL,
+    // Never reuse a server already on the port, locally either: it would skip
+    // the script's stale-build check and test whatever build that server
+    // happened to load. A busy port fails the run instead.
+    reuseExistingServer: false,
+    timeout: 300_000,
+    stdout: "pipe",
+    stderr: "pipe",
+  },
 })
