@@ -111,10 +111,12 @@ export function CategorySidebar({
         </ul>
       </nav>
 
-      {/* Mobile: horizontal scrollable chip row */}
+      {/* Mobile: horizontal scrollable chip row. The scroll container clips
+          on both axes, so pt-1/-mt-1 leaves room for a chip's focus outline
+          above it without moving the row. */}
       <nav
         aria-label="카테고리"
-        className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 sm:-mx-8 sm:px-8 lg:hidden"
+        className="-mx-4 -mt-1 flex gap-2 overflow-x-auto px-4 pt-1 pb-2 sm:-mx-8 sm:px-8 lg:hidden"
       >
         <CategoryChip
           label={ALL_LABEL}

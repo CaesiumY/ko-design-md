@@ -163,7 +163,11 @@ export function ServiceDetailLayout({
         <ServiceMeta frontmatter={doc.frontmatter} tagline={doc.tagline} />
       </div>
 
-      <aside className="md:sticky md:top-24 md:col-start-2 md:row-span-2 md:row-start-1 md:max-h-[calc(100svh-6rem)] md:self-start md:overflow-y-auto">
+      {/* overflow-y: auto forces overflow-x to auto too, so a full-width
+          button's focus ring (drawn outside it) was clipped at the sidebar's
+          left and right edges. The padding gives the ring room; the matching
+          negative margin keeps the content where it was. */}
+      <aside className="md:sticky md:top-24 md:col-start-2 md:row-span-2 md:row-start-1 md:-mx-2 md:max-h-[calc(100svh-6rem)] md:self-start md:overflow-y-auto md:px-2">
         <p className="text-meta-caps mb-4">
           — <span className="font-extrabold text-brand">Primary</span> Action
         </p>

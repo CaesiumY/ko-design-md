@@ -70,10 +70,7 @@ export function DetailTabsPanel({
     <TabsPrimitive.Panel
       data-slot="detail-tabs-panel"
       keepMounted={keepMounted}
-      className={cn(
-        "mt-8 focus-visible:outline-none data-[hidden]:hidden",
-        className
-      )}
+      className={cn("mt-8 data-[hidden]:hidden", className)}
       {...props}
     />
   )

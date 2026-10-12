@@ -33,7 +33,7 @@ export function UseSkillHint() {
           type="button"
           onClick={copy}
           aria-label="use-design-md 설치 명령 복사"
-          className="inline-flex size-7 shrink-0 items-center justify-center text-muted-foreground transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:ring-3 focus-visible:ring-ring/30 focus-visible:outline-none"
+          className="inline-flex size-7 shrink-0 items-center justify-center text-muted-foreground transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:ring-3 focus-visible:ring-ring focus-visible:outline-none"
         >
           {copied ? (
             <CheckIcon className="size-3.5" />
