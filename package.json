@@ -50,6 +50,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:http": "tsx scripts/test-http.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "lint": "eslint",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx}\"",
@@ -81,6 +83,7 @@
   "devDependencies": {
     "@google/design.md": "0.4.0",
     "@mozilla/readability": "^0.6.0",
+    "@playwright/test": "^1.63.0",
     "@tanstack/devtools-vite": "^0.8.5",
     "@tanstack/eslint-config": "^0.4.0",
     "@testing-library/dom": "^10.4.2",

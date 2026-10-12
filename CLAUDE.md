@@ -8,7 +8,7 @@ TanStack Start 사이트(getdesign.kr)가 이를 서빙하고, `/design-md` 스�
 
 ```bash
 pnpm typecheck && pnpm lint && pnpm format:check
-pnpm test               # vitest — .claude/{worktrees,cache}/ 만 제외됨
+pnpm test               # vitest — .claude/{worktrees,cache}/ 와 e2e/ 는 제외됨
 pnpm validate:catalog   # services/*.md 전수: frontmatter·섹션 순서·OKLCH·인용 무결성
 pnpm validate:previews  # public/preview/*/ 전수: 구조 block + 반응형·움직임 줄이기 휴리스틱 warn
 pnpm tokens:check       # services/*.tokens.json 이 소스 md 와 일치하는지 (drift 게이트)
@@ -18,10 +18,33 @@ pnpm validate:spec      # 로컬 진단용 출력. 실제 게이트는 pnpm test
                         # google-designmd-corpus.test.ts (같은 공식 린터를 vitest 로)
 pnpm build              # build:og + vite build
 pnpm test:http          # pnpm build 뒤 빌드된 Nitro 서버 HTTP 회귀 검사
+pnpm test:e2e           # E2E 스모크 — 빌드된 서버 + Chromium, CI 는 별도 e2e 잡 (아래 단락)
 ```
 
-**`pnpm gate:contrast` 는 위 묶음에 없다** — Chromium 이 필요해 CI 의 **별도 `contrast` 잡**
-에서 돈다(`build` 잡이 아니다). 프리뷰 대비를 라이트·다크 × 4폭으로 전수 재고
+**`pnpm test:e2e` 는 E2E 스모크다**(용어집) — 홈 검색·카테고리, 상세 탭과 `?tab=`, 프리뷰 테마
+토글을 Playwright 로 실제 브라우저에서 돈다. Chromium 이 필요해 CI 에서는 **별도 `e2e` 잡**이
+병렬로 돈다(`contrast` 와 같은 이유). 로컬은 `pnpm exec playwright install chromium` 이 선행이다.
+- **dev 서버가 아니라 빌드된 서버(포트 4174)를 상대한다** — dev 는 일부 라우트가 다르게 답한다
+  (아래 `.md` 404 항). `scripts/e2e-server.ts` 가 `.output/` 이 없거나 `src/`·`services/`·`public/`
+  등 빌드 입력보다 낡았으면 `pnpm build` 부터 한다. 포트에 이미 떠 있는 서버는 로컬에서도 재사용하지
+  않는다 — 재사용하면 이 낡음 검사를 건너뛴다. 4174 가 차 있으면 실행이 실패하니 그 서버를 끄면 된다
+  (4173 은 `test:http` 와 미리보기 몫이다).
+- **기대값은 `services/*.md` 에서 계산한다**(`e2e/support/catalog.ts`) — 항목 수·순서·카테고리를
+  테스트에 적지 않으므로 새 항목이 E2E 를 깨지 않는다. 고정 기준점은 `toss` 하나다. 사이트의 필터
+  코드를 가져다 기대값을 만들지 말 것 — 함께 틀려 늘 통과한다. 다만 파서(`buildDoc` — 소개 문구 포함)와
+  카테고리 라벨은 사이트 것을 그대로 쓰므로, 그 둘이 틀리는 회귀는 이 묶음이 잡지 못한다(파서는 단위 테스트 몫).
+- **`e2e/` 는 vitest 에서 제외돼 있다**(`vite.config.ts` 의 `test.exclude`) — `*.spec.ts` 가 vitest
+  기본 수집 패턴에 걸려 `pnpm test` 가 브라우저 없이 그것을 돌리려 들기 때문이다.
+- 구조는 e2e-flow 스킬의 관례를 따른다(스킬은 저장소 밖 도구다 — 없어도 이 구조만 따르면 된다).
+  `e2e/tests/{도메인}/specs`(사용자 행동)·`flows`(그 구현)·`e2e/helpers`(화면 부품별 조작). 스킬
+  템플릿 9종에 더해 이 사이트용 `ToggleButtonHelper`·`LinkListHelper`·`FrameHelper` 가 있다. 9종 중
+  지금 쓰지 않는 것도 스킬이 셋업 완료를 그 9개 이름으로 판정하므로 남겨 둔다. 테스트의 `@smoke`
+  표시는 스킬의 실행 범위 나누기용인데, 이 저장소는 범위를 나누지 않고 묶음 전체를 돌아 효과가 없다.
+- `@playwright/test` 와 `playwright` 는 같은 버전이어야 한다(다르면 Chromium 이 두 벌 깔린다 —
+  dependabot 이 둘을 한 그룹으로 묶는다).
+
+**`pnpm gate:contrast` 는 위 묶음에 없다** — 측정 수치를 기준선과 대조하는 게이트인데 그 수치의
+정본이 CI 라(아래) 로컬 묶음에 넣지 않고, CI 의 **별도 `contrast` 잡**에서 돈다(`build` 잡이 아니다). 프리뷰 대비를 라이트·다크 × 4폭으로 전수 재고
 `docs/preview-contrast-baseline.md` 의 총계 표와 대조한다. 개별 미달은 막지 않고 **그 수가
 움직였는지**만 막는다(어긋남 = exit 3, 측정기 고장 = `--self-check` 의 exit 1, 인자 오류 = 2).
 로컬에서 돌리려면 `pnpm exec playwright install chromium` 이 선행돼야 하고, **수치는 CI 가
