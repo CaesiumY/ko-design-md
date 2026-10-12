@@ -2058,7 +2058,8 @@ const SCHEMA_KEY_RULES: ReadonlySet<string> = new Set([
  * here moves those verdicts into the skill's machine gate, so a draft does not
  * pass Stage 6a2 and then fail on its PR. Only what CI would block, or what a
  * reviewer must act on, becomes an issue — `missing-primary` is a semantic call
- * the corpus test pins by list, and the component-pilot warnings are advisory.
+ * the corpus test pins by list, and the warnings a `components:` map wakes are
+ * advisory.
  */
 function checkSpecLint(
   raw: string,

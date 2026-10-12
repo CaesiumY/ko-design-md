@@ -19,6 +19,11 @@ todos.json
 # `claude plugin eval` 실행 결과(리포트·aggregate-result.json). 기준 점수는 이슈 코멘트에 남긴다.
 evals/**/results/
 .playwright-mcp/
+# `pnpm test:e2e` 산출물(실패 trace·스크린샷·HTML 리포트).
+test-results/
+playwright-report/
+playwright/.cache/
+e2e/.auth/
 public/og/*.png
 .gstack/
 

@@ -8,7 +8,7 @@ TanStack Start 사이트(getdesign.kr)가 이를 서빙하고, `/design-md` 스�
 
 ```bash
 pnpm typecheck && pnpm lint && pnpm format:check
-pnpm test               # vitest — .claude/{worktrees,cache}/ 만 제외됨
+pnpm test               # vitest — .claude/{worktrees,cache}/ 와 e2e/ 는 제외됨
 pnpm validate:catalog   # services/*.md 전수: frontmatter·섹션 순서·OKLCH·인용 무결성
 pnpm validate:previews  # public/preview/*/ 전수: 구조 block + 반응형·움직임 줄이기 휴리스틱 warn
 pnpm tokens:check       # services/*.tokens.json 이 소스 md 와 일치하는지 (drift 게이트)
@@ -18,10 +18,33 @@ pnpm validate:spec      # 로컬 진단용 출력. 실제 게이트는 pnpm test
                         # google-designmd-corpus.test.ts (같은 공식 린터를 vitest 로)
 pnpm build              # build:og + vite build
 pnpm test:http          # pnpm build 뒤 빌드된 Nitro 서버 HTTP 회귀 검사
+pnpm test:e2e           # E2E 스모크 — 빌드된 서버 + Chromium, CI 는 별도 e2e 잡 (아래 단락)
 ```
 
-**`pnpm gate:contrast` 는 위 묶음에 없다** — Chromium 이 필요해 CI 의 **별도 `contrast` 잡**
-에서 돈다(`build` 잡이 아니다). 프리뷰 대비를 라이트·다크 × 4폭으로 전수 재고
+**`pnpm test:e2e` 는 E2E 스모크다**(용어집) — 홈 검색·카테고리, 상세 탭과 `?tab=`, 프리뷰 테마
+토글을 Playwright 로 실제 브라우저에서 돈다. Chromium 이 필요해 CI 에서는 **별도 `e2e` 잡**이
+병렬로 돈다(`contrast` 와 같은 이유). 로컬은 `pnpm exec playwright install chromium` 이 선행이다.
+- **dev 서버가 아니라 빌드된 서버(포트 4174)를 상대한다** — dev 는 일부 라우트가 다르게 답한다
+  (아래 `.md` 404 항). `scripts/e2e-server.ts` 가 `.output/` 이 없거나 `src/`·`services/`·`public/`
+  등 빌드 입력보다 낡았으면 `pnpm build` 부터 한다. 포트에 이미 떠 있는 서버는 로컬에서도 재사용하지
+  않는다 — 재사용하면 이 낡음 검사를 건너뛴다. 4174 가 차 있으면 실행이 실패하니 그 서버를 끄면 된다
+  (4173 은 `test:http` 와 미리보기 몫이다).
+- **기대값은 `services/*.md` 에서 계산한다**(`e2e/support/catalog.ts`) — 항목 수·순서·카테고리를
+  테스트에 적지 않으므로 새 항목이 E2E 를 깨지 않는다. 고정 기준점은 `toss` 하나다. 사이트의 필터
+  코드를 가져다 기대값을 만들지 말 것 — 함께 틀려 늘 통과한다. 다만 파서(`buildDoc` — 소개 문구 포함)와
+  카테고리 라벨은 사이트 것을 그대로 쓰므로, 그 둘이 틀리는 회귀는 이 묶음이 잡지 못한다(파서는 단위 테스트 몫).
+- **`e2e/` 는 vitest 에서 제외돼 있다**(`vite.config.ts` 의 `test.exclude`) — `*.spec.ts` 가 vitest
+  기본 수집 패턴에 걸려 `pnpm test` 가 브라우저 없이 그것을 돌리려 들기 때문이다.
+- 구조는 e2e-flow 스킬의 관례를 따른다(스킬은 저장소 밖 도구다 — 없어도 이 구조만 따르면 된다).
+  `e2e/tests/{도메인}/specs`(사용자 행동)·`flows`(그 구현)·`e2e/helpers`(화면 부품별 조작). 스킬
+  템플릿 9종에 더해 이 사이트용 `ToggleButtonHelper`·`LinkListHelper`·`FrameHelper` 가 있다. 9종 중
+  지금 쓰지 않는 것도 스킬이 셋업 완료를 그 9개 이름으로 판정하므로 남겨 둔다. 테스트의 `@smoke`
+  표시는 스킬의 실행 범위 나누기용인데, 이 저장소는 범위를 나누지 않고 묶음 전체를 돌아 효과가 없다.
+- `@playwright/test` 와 `playwright` 는 같은 버전이어야 한다(다르면 Chromium 이 두 벌 깔린다 —
+  dependabot 이 둘을 한 그룹으로 묶는다).
+
+**`pnpm gate:contrast` 는 위 묶음에 없다** — 측정 수치를 기준선과 대조하는 게이트인데 그 수치의
+정본이 CI 라(아래) 로컬 묶음에 넣지 않고, CI 의 **별도 `contrast` 잡**에서 돈다(`build` 잡이 아니다). 프리뷰 대비를 라이트·다크 × 4폭으로 전수 재고
 `docs/preview-contrast-baseline.md` 의 총계 표와 대조한다. 개별 미달은 막지 않고 **그 수가
 움직였는지**만 막는다(어긋남 = exit 3, 측정기 고장 = `--self-check` 의 exit 1, 인자 오류 = 2).
 로컬에서 돌리려면 `pnpm exec playwright install chromium` 이 선행돼야 하고, **수치는 CI 가
@@ -60,7 +83,7 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행하고, 프리
     (`## Elevation & Depth` 아래 6 · `## Motion` 2), `## Components` 의 스펙 16개, 그림자가
     아닌 elevation 표 2개(bezier 용도 라벨 · class101 z-index). 독자에게는 값이 닿고 린터는
     읽지 않는다. 컴포넌트 스펙은 스펙의 `components:` 맵이 8속성만 담으므로 펜스가 남는다
-    (아래 표준 절의 파일럿 항).
+    (아래 표준 절의 `components:` 항).
 - **색상 토큰 값은 OKLCH만.** frontmatter `colors:` 맵의 `name: oklch(...)` 형식. 브랜드 hex는
   `# #FAFAFA` 트레일링 주석이나 같은 줄 `(≈ oklch(...))` 병기로만 기록.
 - **값을 인용하지 말 것 — 이제 block 이다**(`quoted-token-value`). 인용하면
@@ -178,7 +201,8 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행하고, 프리
 - **새 항목은 슬러그별 표에 자기 줄을 적는다. 아래가 그 전부이고, 다른 곳엔 통합 목록이
   없다** — 스킬(Stage 10 의 등록처 안내)은 아홉 전부를 안다. 템플릿은 `KNOWN_SPEC_LIMITATIONS`
   하나를 이름으로 대고, `CASES` 의무는 저작 명세(`stitch-format.md`)를 가리켜서만 안다.
-  셋은 늘 필요하고 여섯은 조건부다(그중 `PREVIEW_TOKEN_ALIASES` 는 거의 전부에 해당한다).
+  셋은 늘 필요하고 여섯은 조건부다(그중 `PREVIEW_TOKEN_ALIASES` 는 거의 전부에, `COMPONENT_COUNTS` 는 #389 이후
+  새 항목 거의 전부에 해당한다).
 
   | 등록처 | 위치 | 언제 |
   | --- | --- | --- |
@@ -189,7 +213,7 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행하고, 프리
   | `NOTICE` 자산 인벤토리 | `NOTICE` | `public/logos/` 에 새 파일을 놓을 때 (로고 필수라 사실상 늘 — 기존 파일을 재사용할 때만 빠진다) |
   | missing-primary 배열 | `google-designmd-corpus.test.ts` | `primary` 라는 이름의 토큰이 **없을 때** |
   | `KNOWN_SPEC_LIMITATIONS` | `src/lib/spec-limitations.ts` | `%` radius 를 쓸 때 |
-  | `COMPONENT_COUNTS` | `google-designmd-corpus.test.ts` | frontmatter `components:` 를 쓸 때 (정확값) |
+  | `COMPONENT_COUNTS` | `google-designmd-corpus.test.ts` | frontmatter `components:` 를 쓸 때 (정확값 — 새 항목은 #389 로 사실상 늘) |
   | 역할 표 대조 함수 (`CASES`) | `role-reference-rows.test.ts` | 본문 역할 표를 frontmatter 참조 행으로도 실을 때 (양방향 · 누락은 가드가 막는다) |
 
   **`PREVIEW_TOKEN_ALIASES` 를 빠뜨리면 조용히 0건 비교가 된다** — 드리프트 게이트가 이름을
@@ -269,13 +293,20 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
     것은 missing-primary 배열 하나다. 그래서 **사이트 Tokens 탭과 `use-design-md` 는
     이 별칭을 못 본다**(DESIGN.md 파일의 frontmatter 에만 있다).
   - `last_updated` 는 올리지 않고 `Skip-Last-Updated` 트레일러를 단다(아래 날짜 항).
-- **명세의 `components:` 맵은 파일럿 단계다(#384, teamsparta 만).** 사이드카가 싣지 않으므로
-  사이트 Tokens 탭과 `use-design-md` 는 못 보고 DESIGN.md 파일의 frontmatter 에만 있다. 본문
-  스펙 펜스(`text`)는 그대로 남는다(중복 발행). 컴포넌트가 하나라도 생기면 린터 규칙 둘이 깨어난다 —
+- **새 항목은 컴포넌트를 명세의 `components:` 맵에도 싣는다(#389).** 첫 사례는 #384 파일럿(teamsparta)이고,
+  기존 항목은 소급하지 않는다. 저작 규칙(명세의 여덟 속성만 · 평평한 변형 이름 · 여덟 밖은 본문만 · 값에 산문 금지 ·
+  색·글꼴은 참조, 치수는 참조 또는 단위 붙은 값)의 정본은 `stitch-format.md` 의 "Component tokens in the frontmatter
+  `components:` map" 이고, 스킬이 말하는 여덟 속성은 계약 테스트가 고정된 린터의 목록과 대조한다. 속성 이름·단위는
+  검증기가 아직 보지 않는다 — 막는 것은 행의 모양(`noncanonical-component-shape`), 참조가 아닌 값의 인용
+  (`quoted-token-value`), OKLCH 가 아닌 리터럴 색(`non-oklch-token-value`), 참조가 선언된 키를 가리키는지
+  (`unresolved-token-ref`)다. 맵이 아예 없거나 행이 본문 스펙과 다른 것은 리뷰어 루브릭만 본다. 따옴표 없이 쓴 참조
+  (`backgroundColor: {colors.x}`)는 YAML 이 맵으로 읽어 린터에 색이 아닌 값으로 남는데도 어느 검사도 막지 않는다
+  (#525). 사이드카가 싣지 않으므로 사이트 Tokens 탭과 `use-design-md` 는 못 보고 DESIGN.md 파일의 frontmatter 에만 있다. 본문 스펙 펜스(`text`)는 그대로 남는다(중복 발행 — 두 벌의
+  어긋남은 리뷰 루브릭이 본다). 컴포넌트가 하나라도 생기면 린터 규칙 둘이 깨어난다 —
   `orphaned-tokens`(참조되지 않은 색마다)와 `contrast-ratio`(컴포넌트의 배경·글자 쌍). 에러가
   아니라 경고라 게이트는 막지 않는다. `orphaned-tokens` 는 카탈로그가 팔레트 전체를 싣는 한 0 이
   될 수 없어서, `pnpm validate:spec` 은 그 목록을 찍지 않고 건수만 요약한다(`--verbose` 면 목록,
-  `--json-out` 은 전부 — #388). 저작 규칙은 #389 가 정한다.
+  `--json-out` 은 전부 — #388).
 - **브랜드가 발행한 역할→팔레트 계층은 frontmatter 참조 행으로 싣는다(#435 — greeting ·
   seed-design · codeit).** 형식은 `bg-brand-solid: "{colors.carrot-600}"` 이고, 다크 짝은
   `dark-` 접두로 다크 팔레트를 가리킨다(`dark-bg-brand-solid`). 단 테마를 타지 않는 팔레트(seed-design

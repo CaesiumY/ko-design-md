@@ -194,6 +194,51 @@ describe("/design-md machine gates", () => {
     )
   })
 
+  // #389. The authoring spec names the properties a `components:` row may
+  // carry; the pinned linter decides which it reads — any other is reported
+  // as "not a recognized component sub-token" and dropped by standard tools.
+  // Read from the linter's own spec config, so an upgrade that changes the
+  // list fails here until the prompt follows. The examples the template and
+  // the spec show must stay inside it too.
+  it("names the component properties the pinned linter reads", () => {
+    const specConfig = readRepoFile(
+      "node_modules/@google/design.md/dist/linter/spec-config.yaml"
+    )
+    const block = /^component_sub_tokens:\r?\n((?:[ \t]+.*\r?\n)+)/m.exec(
+      specConfig
+    )?.[1]
+    expect(
+      block,
+      "the linter config must list component_sub_tokens"
+    ).toBeDefined()
+    const linter = [...(block ?? "").matchAll(/- name: (\w+)/g)].map(
+      (m) => m[1]
+    )
+    expect(linter.length).toBeGreaterThan(0)
+
+    const stitch = readRepoFile(DESIGN_MD_STITCH_FORMAT)
+    const stated = /\*\*Only the spec's \w+ properties:\*\* ([^\n]+?)\. /.exec(
+      stitch
+    )?.[1]
+    expect(stated, "stitch-format must list the eight properties").toBeDefined()
+    const named = [...(stated ?? "").matchAll(/`(\w+)`/g)].map((m) => m[1])
+    expect([...named].sort()).toEqual([...linter].sort())
+
+    // Every property an example `components:` block uses is one of them.
+    for (const [doc, text] of [
+      [DESIGN_MD_STITCH_FORMAT, stitch],
+      [DESIGN_MD_TEMPLATE, readRepoFile(DESIGN_MD_TEMPLATE)],
+    ] as const) {
+      const example = /^components:\r?\n((?: {2}.*\r?\n)+)/m.exec(text)?.[1]
+      expect(example, `${doc} must show a components: example`).toBeDefined()
+      const used = [...(example ?? "").matchAll(/^ {4}(\w+):/gm)].map(
+        (m) => m[1]
+      )
+      expect(used.length).toBeGreaterThan(0)
+      for (const p of used) expect(linter, `${doc} uses ${p}`).toContain(p)
+    }
+  })
+
   // created_at is the catalog's sort key, but nothing in the pipeline would
   // notice its absence: an entry missing it still renders, just pinned to the
   // bottom of the list. Four entries shipped that way before the field became

@@ -29,8 +29,10 @@
 `elevation:` 에 쓴다. **본문에는 ```yaml 펜스를 두지 않는다** — 섹션을 가리지 않고
 `validate:draft` 가 block 한다(`token-fence` · `body-yaml-fence`). 이 파일이 변환 없이
 그대로 `/services/{slug}/DESIGN.md` 로 발행되고, 공식 린터는 본문 yaml 펜스를 최상위
-스키마 키로 읽기 때문이다. frontmatter 에 자리가 없는 값(모션 이징·duration, 컴포넌트
-스펙)은 본문 ```` ```text ```` 펜스에 적는다 — 독자에게는 닿고 린터는 읽지 않는다.
+스키마 키로 읽기 때문이다. frontmatter 에 자리가 없는 값(모션 이징·duration)은 본문
+```` ```text ```` 펜스에 적는다 — 독자에게는 닿고 린터는 읽지 않는다. 컴포넌트는 두 곳에
+쓴다 — 명세의 여덟 속성은 frontmatter `components:` 에, 전체 스펙은 본문 펜스에(규칙은
+`stitch-format.md` 의 "Component tokens in the frontmatter `components:` map").
 
 ## 스켈레톤
 
@@ -68,6 +70,14 @@ rounded:
   {{radius-s}}: {{8px}}
 elevation:
   {{shadow-name}}: 0 {{1}}px {{2}}px oklch({{L C H}} / {{0.06}})   # {{용도}} ← 한 줄에 하나, 인용하지 않는다. 다중 레이어는 콤마로 잇는다
+components:
+  {{component-name}}:
+    backgroundColor: "{colors.{{token}}}"
+    textColor: "{colors.{{token}}}"
+    rounded: "{rounded.{{token}}}"
+    height: {{48}}px
+  {{component-name}}-hover:
+    backgroundColor: "{colors.{{token}}}"
 ---
 
 # {{브랜드명}} — design.md
@@ -166,6 +176,21 @@ elevation:
   사이드카 이름(`size`·`weight`)이 아니다.
 - **`letterSpacing`/`tracking` 에 단위 빼먹기.** `0` 은 CSS 로는 유효하지만 명세의
   Dimension 은 px/em/rem 만 받는다. `0em` 으로 쓴다.
+
+`components:` 에서 자주 틀리는 것 넷(#389):
+
+- **변형을 중첩하기.** `button-primary:` 아래 `hover:` 를 두면 표준 도구가 자식을 통째로
+  버린다. `button-primary-hover` 처럼 평평한 이름으로, 본문 `###` 과 같은 이름을 쓴다.
+- **값에 산문 섞기.** `28 또는 32`·`top-left (10, 10)` 은 토큰이 아니라 노트다. 본문에 쓴다.
+- **치수에 단위 빼먹기.** 컴포넌트의 `height`·`padding` 등도 Dimension 이다. 토큰이 있으면
+  참조, 없으면 `48px` 처럼 `px`·`em`·`rem` 을 붙인다(`%`·`vw` 는 명세의 Dimension 이 아니라 본문에만). 값은 하나다 — `padding: 12px 16px` 같은 여러 값
+  단축형은 명세의 Dimension 이 아니라 본문에만 쓴다.
+- **참조를 따옴표 없이 쓰기.** `backgroundColor: {colors.x}` 는 YAML 이 맵으로 읽어 표준 도구에
+  색이 아닌 값으로 남는다.
+
+이 넷 중 기계 검사가 막는 것은 **중첩뿐**이다(`noncanonical-component-shape`. 그 밖에 검사기가 이 행에서 막는 것 — 참조가 아닌 값의 인용·OKLCH 아닌 리터럴 색·없는 키를 가리키는 참조 — 은 `stitch-format.md` 의 같은 소절). 산문·단위 없는 치수·여러 값
+단축형·따옴표 없는 참조는 어떤 검사도 막지 않는다(#525). 그래서 값은 둘 중 하나여야 한다 — **따옴표 친 참조**,
+또는 **`px`/`em`/`rem` 치수 하나**.
 
 토큰이 frontmatter 로 옮겨오면서 생긴 함정이 둘 더 있다. 둘 다 **조용히** 틀린다.
 

@@ -30,6 +30,14 @@ updates:
         patterns:
           - "tailwindcss"
           - "@tailwindcss/*"
+      # @playwright/test 는 playwright 를 정확 버전으로 의존한다(1.63.0 → playwright
+      # 1.63.0). 한쪽만 올리면 playwright 가 두 벌 깔리고, 대비 게이트(playwright)와
+      # E2E(@playwright/test)가 서로 다른 Chromium 을 받는다. 아래 dev-dependencies
+      # 그룹은 major 를 묶지 않으므로 major 에서 갈라질 수 있어 따로 묶는다.
+      playwright:
+        patterns:
+          - "playwright"
+          - "@playwright/*"
       dev-dependencies:
         dependency-type: development
         update-types:
