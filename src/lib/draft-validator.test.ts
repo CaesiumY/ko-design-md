@@ -2580,7 +2580,7 @@ describe("the elevation map is held to the token rules", () => {
   })
 })
 
-describe("the spec's components map is held to the token rules", () => {
+describe("the spec's components map takes only what standard tools read", () => {
   // #384 — no catalog gate read this map, so a quoted hex in a component slid
   // past the OKLCH-only policy while validate:catalog and audit:oklch passed.
   const withComponents = (rows: Array<string>) =>
@@ -2607,7 +2607,20 @@ describe("the spec's components map is held to the token rules", () => {
     ["an unquoted reference", "backgroundColor: {colors.brand}", "YAML reads"],
     ["a multi-value shorthand", "padding: 12px 16px", "write one value"],
     ["a missing unit", "height: 48", "add a unit"],
-    ["prose", "size: 28 또는 32", "other prose"],
+    ["prose", "size: 28 또는 32", "keywords, notes"],
+    ["a percentage", "rounded: 50%", "plain number in"],
+    ["a keyword", "width: auto", "keywords, notes"],
+    ["a plus sign the linter does not read", "height: +4px", "plain number in"],
+    [
+      "a trailing point the linter does not read",
+      "height: 48.px",
+      "plain number in",
+    ],
+    [
+      "an unquoted hex, which YAML cuts as a comment",
+      "textColor: #3182F6",
+      "literal colour",
+    ],
     ["a literal colour", "textColor: oklch(0.62 0.19 258)", "literal colour"],
     ["a quoted literal colour", 'textColor: "#FF0038"', "literal colour"],
     ["a quoted dimension", 'height: "48px"', "drop the quotes"],
@@ -2659,13 +2672,26 @@ describe("the spec's components map is held to the token rules", () => {
     ["before a flow map", ["  card:", '  pill: { height: "48px" }'], "card"],
   ])("names a component with no property (%s)", (_, rows, name) => {
     // YAML null: the linter builds no model, so the only other blocks would
-    // say the colours and the type scale are missing.
-    const empty = validateDraft(withComponents(rows), OPTS).issues.filter(
-      (i) => i.rule === "empty-component"
-    )
+    // say the colours and the type scale are missing — held back, since the
+    // maps are fine.
+    const { issues } = validateDraft(withComponents(rows), OPTS)
+    const empty = issues.filter((i) => i.rule === "empty-component")
     expect(empty).toHaveLength(1)
     expect(empty[0].severity).toBe("block")
     expect(empty[0].fix).toContain(`\`${name}\``)
+    const rules = issues.map((i) => i.rule)
+    expect(rules).not.toContain("spec-no-colors")
+    expect(rules).not.toContain("spec-no-typography")
+  })
+
+  it("still reports missing colours that no empty component explains", () => {
+    // The hold-back is tied to its cause: with a well-formed map and an empty
+    // palette, the linter's verdict stands.
+    const rules = rulesFor(
+      draftWithRawColorRows(["components:", "  pill:", "    height: 48px"])
+    )
+    expect(rules).not.toContain("empty-component")
+    expect(rules).toContain("spec-no-colors")
   })
 
   it("does not call a misshapen component empty", () => {

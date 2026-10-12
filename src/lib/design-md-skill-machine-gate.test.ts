@@ -17,6 +17,7 @@ import {
 import {
   DESIGN_MD_AGENT_PATHS,
   DESIGN_MD_AUTHOR_AGENT,
+  DESIGN_MD_REVIEWER_AGENT,
   DESIGN_MD_RUBRIC_DESIGN,
   DESIGN_MD_RUBRIC_PREVIEW,
   DESIGN_MD_SKILL,
@@ -250,6 +251,31 @@ describe("/design-md machine gates", () => {
       )
       expect(used.length).toBeGreaterThan(0)
       for (const p of used) expect(linter, `${doc} uses ${p}`).toContain(p)
+    }
+  })
+
+  // #525. The prompts hand the components map's form checks to the draft gate
+  // by rule id — the reviewer adopts them instead of judging — so every id they
+  // name has to be one the gate actually raises.
+  it("names component rule ids the draft gate raises", () => {
+    const validator = readRepoFile("src/lib/draft-validator.ts")
+    for (const doc of [
+      DESIGN_MD_STITCH_FORMAT,
+      DESIGN_MD_TEMPLATE,
+      DESIGN_MD_RUBRIC_DESIGN,
+      DESIGN_MD_REVIEWER_AGENT,
+    ]) {
+      // Any kebab id with a `component…` part — loose on purpose, so a
+      // misspelling (`empty-components`) is caught rather than skipped.
+      const ids = new Set(
+        [...readRepoFile(doc).matchAll(/`([a-z]+(?:-[a-z]+)+)`/g)]
+          .map((m) => m[1])
+          .filter((id) => id.split("-").some((p) => p.startsWith("component")))
+      )
+      expect(ids.size, `${doc} names a component rule`).toBeGreaterThan(0)
+      for (const id of ids) {
+        expect(validator, `${doc} names \`${id}\``).toContain(`"${id}"`)
+      }
     }
   })
 

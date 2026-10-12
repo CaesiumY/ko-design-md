@@ -1197,11 +1197,21 @@ export const COMPONENT_DIMENSION_UNITS: ReadonlyArray<string> = [
   "rem",
 ]
 
+/** The blocks the linter's empty model raises — the result, not the cause,
+ *  when a component has no property. */
+const EMPTY_MODEL_RULES: ReadonlySet<string> = new Set([
+  "spec-no-colors",
+  "spec-no-typography",
+])
+
 /** A whole value that is one quoted reference: `"{colors.x}"` or `'{…}'`. */
 const QUOTED_REFERENCE = /^(["'])\{[^{}]+\}\1$/
-/** One dimension — the number shape of the linter's `parseDimensionParts`. */
+/** A number exactly as the linter's `parseDimensionParts` reads one —
+ *  `-1`, `.5`, `1.25`; not `+4` or `48.`, which it keeps as raw text. */
+const SPEC_NUMBER = String.raw`-?\d*\.?\d+`
+/** One dimension a standard tool reads. */
 const COMPONENT_DIMENSION = new RegExp(
-  `^[+-]?(?:\\d+\\.?\\d*|\\.\\d+)(?:${COMPONENT_DIMENSION_UNITS.join("|")})$`
+  `^${SPEC_NUMBER}(?:${COMPONENT_DIMENSION_UNITS.join("|")})$`
 )
 
 /** A literal CSS colour — hex or a colour function, OKLCH included. */
@@ -1221,7 +1231,7 @@ function componentValueFix(value: string): string {
   if (LITERAL_COLOUR.test(bare)) {
     return 'the map takes no literal colour: point at a declared colour token as a quoted reference (`"{colors.name}"`), or leave the property out and keep the colour in the body spec'
   }
-  if (/^[+-]?(?:\d+\.?\d*|\.\d+)$/.test(bare)) {
+  if (new RegExp(`^${SPEC_NUMBER}$`).test(bare)) {
     return `add a unit (\`${bare}px\`; zero is \`0px\`) — a bare number is not a Dimension`
   }
   const parts = bare.split(/\s+/)
@@ -1231,11 +1241,14 @@ function componentValueFix(value: string): string {
   ) {
     return "write one value — a shorthand such as `12px 16px` is not a Dimension, so it stays in the body spec only"
   }
-  return "keep notes, alternatives and other prose in the body spec — the map takes only the value"
+  if (/^[+-]?[\d.]+[a-zA-Z%]+$/.test(bare)) {
+    return `the spec's Dimension is a plain number in ${COMPONENT_DIMENSION_UNITS.map((u) => `\`${u}\``).join("/")} only — a \`%\`, \`vw\` or other value, or a number written \`+4px\` or \`48.px\`, stays in the body spec`
+  }
+  return "the map reads nothing else — keep keywords, notes and alternatives in the body spec"
 }
 
 /**
- * The spec's `components:` map, held to the same rules as the token maps (#384).
+ * The spec's `components:` map (#384).
  *
  * Its shape is exactly two levels — a component head row, then one property per
  * four-space row — because that is what every line-based gate here can read.
@@ -1253,7 +1266,8 @@ function componentValueFix(value: string): string {
  *
  * A head row with no property under it is YAML `null`, which the linter cannot
  * build a model around: it then resolves no colours and no type scale, and the
- * only blocks left name maps that are fine. So it is named here.
+ * only blocks left would name maps that are fine. So it is named here, and
+ * `validateDraft` holds those blocks back.
  */
 function checkComponentRows(fm: Array<string>): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
@@ -1279,6 +1293,19 @@ function checkComponentRows(fm: Array<string>): Array<ValidationIssue> {
     // has its own block.
     if (row.indent <= 2) flushEmptyHead()
     else emptyHead = null
+    // `height: #fff` — a space then `#` opens a YAML comment, so the row reads
+    // as a head with no value. It is a literal colour, not a nesting mistake.
+    const hex = row.indent === 4 ? /^#[0-9a-fA-F]{3,8}\b/.exec(row.rest) : null
+    if (hex) {
+      issues.push(
+        block(
+          "component-value-form",
+          "tokens",
+          `component property \`${row.key}: ${hex[0]}\` has no value — a space then \`#\` opens a YAML comment, so \`${hex[0]}\` is not part of it. Fix: ${componentValueFix(hex[0])}.`
+        )
+      )
+      continue
+    }
     if (!canonical) {
       issues.push(
         block(
@@ -2762,7 +2789,16 @@ export function validateDraft(
   const fmLines = frontmatterBlock(raw).split(/\r?\n/)
   issues.push(...scanFrontmatterTokens(fmLines))
   issues.push(...checkBlockScalars(fmLines))
-  issues.push(...checkComponentRows(fmLines))
+  const componentIssues = checkComponentRows(fmLines)
+  issues.push(...componentIssues)
+  // One cause, one message: an empty component leaves the linter with no model,
+  // and its "declare the palette / type scale" blocks would blame maps that are
+  // fine.
+  if (componentIssues.some((i) => i.rule === "empty-component")) {
+    for (let n = issues.length - 1; n >= 0; n--) {
+      if (EMPTY_MODEL_RULES.has(issues[n].rule)) issues.splice(n, 1)
+    }
+  }
   issues.push(...checkWorkingMarkers(body))
   issues.push(...scan.yamlTokenIssues)
   issues.push(...scan.fenceIssues)
