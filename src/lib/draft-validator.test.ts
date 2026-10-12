@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest"
+import { lint } from "@google/design.md/linter"
 import { REQUIRED_SECTIONS, validateDraft } from "./draft-validator"
 import { matter } from "./content-parser"
 import { FRONTMATTER_MAPS } from "./frontmatter-map-table"
@@ -2777,6 +2778,120 @@ describe("the spec's components map takes only what standard tools read", () => 
     expect(
       rulesFor(withComponents(["  card:", "    padding: >", "      12px 16px"]))
     ).toContain("block-scalar-token-value")
+  })
+})
+
+describe("every component value the gate admits is one the linter reads", () => {
+  // #525 — three review rounds each found a value the line-based check passed
+  // and the pinned linter kept as raw text (a number shape, a reference
+  // character, a no-break space). This holds the two together: the gate may be
+  // stricter (it blocks a literal colour the linter would read), never looser.
+  const draftWith = (prop: string, value: string) =>
+    makeDraft({
+      frontmatter: [
+        "---",
+        "name: 데모",
+        "slug: demo",
+        "category: finance",
+        'last_updated: "2026-07-03"',
+        'created_at: "2026-07-03"',
+        "lang: ko",
+        "logo: https://getdesign.kr/logos/demo.png",
+        "colors:",
+        "  primary: oklch(0.62 0.19 258)",
+        "typography:",
+        "  body:",
+        "    fontSize: 16px",
+        "rounded:",
+        "  md: 8px",
+        "spacing:",
+        "  s: 4px",
+        "components:",
+        "  pill:",
+        `    ${prop}: ${value}`,
+        "---",
+      ].join("\n"),
+    })
+  // Not judged here: whether a reference's KEY exists (`unresolved-token-ref`,
+  // and the linter's own error) and whether it fits its property.
+  const GATE_RULES = new Set([
+    "component-value-form",
+    "unknown-component-property",
+    "noncanonical-component-shape",
+    "empty-component",
+    "unresolved-token-ref",
+  ])
+  const cases: Array<[string, string]> = [
+    ...[
+      '"{colors.primary}"',
+      "'{colors.primary}'",
+      '"{colors.primary}" # c',
+      '"{colors.primary}"\t# c',
+      '"{ colors.primary }"',
+      '"{colors/primary}"',
+      '"{fonts.primary}"',
+      '"{colors.primary}" ',
+      ' "{colors.primary}"',
+      "{colors.primary}",
+      "oklch(0.62 0.19 258)",
+      "#3182F6",
+    ].map((v): [string, string] => ["backgroundColor", v]),
+    ["typography", '"{typography.body}"'],
+    ["rounded", '"{rounded.md}"'],
+    ["padding", '"{spacing.s}"'],
+    ...[
+      "48px",
+      "0px",
+      "-0px",
+      ".5px",
+      "00px",
+      "-.5em",
+      "1.0rem",
+      "48px # n",
+      "48px\t",
+      `${"1".repeat(62)}px`,
+      `${"1".repeat(63)}px`,
+      "+4px",
+      "48.px",
+      "48.",
+      "48",
+      "1e3px",
+      "4PX",
+      "50%",
+      "12px 16px",
+      '"48px"',
+      "48px ",
+      "48px　",
+      " 48px",
+      "auto",
+      "28 또는 32",
+    ].map((v): [string, string] => ["height", v]),
+  ]
+
+  it.each(cases)("%s: %s", (prop, value) => {
+    const draft = draftWith(prop, value)
+    const admitted = !validateDraft(draft, OPTS).issues.some(
+      (i) => i.severity === "block" && GATE_RULES.has(i.rule)
+    )
+    if (!admitted) return
+    const read = lint(draft)
+      .designSystem.components.get("pill")
+      ?.properties.get(prop)
+    expect(
+      typeof read === "object" && "type" in read,
+      `the gate admits ${JSON.stringify(value)}, the linter reads ${JSON.stringify(read)}`
+    ).toBe(true)
+  })
+
+  it("admits enough of them to mean something", () => {
+    // A gate that blocked everything would pass the test above vacuously.
+    const admitted = cases.filter(
+      ([prop, value]) =>
+        !validateDraft(draftWith(prop, value), OPTS).issues.some(
+          (i) => i.severity === "block" && GATE_RULES.has(i.rule)
+        )
+    )
+    expect(admitted.length).toBeGreaterThanOrEqual(15)
   })
 })
 
