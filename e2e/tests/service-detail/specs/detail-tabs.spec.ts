@@ -11,19 +11,17 @@ test.describe("서비스 상세 탭", () => {
   test(
     "탭을 바꾸면 패널과 주소의 tab 값이 함께 바뀐다",
     { tag: ["@smoke"] },
-    async ({ navigation }) => {
-      await navigation.open(TOSS)
-      await 탭_상태_확인({ navigation }, PREVIEW)
-      await 탭_전환({ navigation }, TOKENS)
-      await 탭_전환({ navigation }, MARKDOWN)
-      await 탭_전환({ navigation }, PREVIEW)
+    async ({ ui }) => {
+      await ui.navigation.open(TOSS)
+      await 탭_상태_확인(ui, PREVIEW)
+      await 탭_전환(ui, TOKENS)
+      await 탭_전환(ui, MARKDOWN)
+      await 탭_전환(ui, PREVIEW)
     }
   )
 
-  test("tab 값을 단 주소로 들어오면 그 탭이 열려 있다", async ({
-    navigation,
-  }) => {
-    await navigation.open(`${TOSS}?tab=${MARKDOWN.param}`)
-    await 탭_상태_확인({ navigation }, MARKDOWN)
+  test("tab 값을 단 주소로 들어오면 그 탭이 열려 있다", async ({ ui }) => {
+    await ui.navigation.open(`${TOSS}?tab=${MARKDOWN.param}`)
+    await 탭_상태_확인(ui, MARKDOWN)
   })
 })

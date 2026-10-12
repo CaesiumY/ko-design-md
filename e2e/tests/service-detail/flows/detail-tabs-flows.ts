@@ -1,11 +1,9 @@
 // Service detail: the Live Preview / Tokens / DESIGN.md tabs, and the `?tab=`
 // search param that makes each one linkable. Live Preview is the default and
 // carries no param at all (a `tab` param marks the page noindex).
-import type { NavigationHelper } from "../../../helpers/NavigationHelper"
+import type { Ui } from "../../../fixtures"
 
-interface DetailContext {
-  navigation: NavigationHelper
-}
+type DetailContext = Pick<Ui, "navigation">
 
 /** Each tab, the value it writes to `?tab=` (null = no param). */
 export const DETAIL_TABS = [

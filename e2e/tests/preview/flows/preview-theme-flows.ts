@@ -1,14 +1,8 @@
 // Live preview theme: the Light / Dark switch re-themes the preview iframe in
 // place (the iframe's <html data-theme>) and the choice survives a reload.
-import type { FrameHelper } from "../../../helpers/FrameHelper"
-import type { NavigationHelper } from "../../../helpers/NavigationHelper"
-import type { ToggleButtonHelper } from "../../../helpers/ToggleButtonHelper"
+import type { Ui } from "../../../fixtures"
 
-interface PreviewContext {
-  frame: FrameHelper
-  navigation: NavigationHelper
-  toggle: ToggleButtonHelper
-}
+type PreviewContext = Pick<Ui, "frame" | "navigation" | "toggle">
 
 export type PreviewTheme = "light" | "dark"
 

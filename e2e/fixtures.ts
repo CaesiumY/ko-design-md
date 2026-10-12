@@ -15,6 +15,7 @@ import { ToggleButtonHelper } from "./helpers/ToggleButtonHelper"
 import { LinkListHelper } from "./helpers/LinkListHelper"
 import { FrameHelper } from "./helpers/FrameHelper"
 import { apiMockHandlers } from "./mocks/apiMockHandlers"
+import type { Page } from "@playwright/test"
 import type { MockHandler } from "./mocks/apiMockHandlers"
 
 interface Helpers {
@@ -32,12 +33,19 @@ interface Helpers {
   frame: FrameHelper
 }
 
+/**
+ * The page plus every helper, as one object. A spec passes `ui` to its flows
+ * instead of re-assembling `{ page, form, … }` by hand; each flow declares the
+ * part it drives as `Pick<Ui, …>`, so its dependencies stay in its signature.
+ */
+export type Ui = Helpers & { page: Page }
+
 interface MockFixture {
   /** 테스트 단위로 API 모킹 등록. beforeEach에서 호출 권장. */
   setMocks: (handlers: Array<MockHandler>) => Promise<void>
 }
 
-export const test = base.extend<Helpers & MockFixture>({
+export const test = base.extend<Helpers & MockFixture & { ui: Ui }>({
   dialog: async ({ page }, use) => use(new DialogHelper(page)),
   form: async ({ page }, use) => use(new FormHelper(page)),
   select: async ({ page }, use) => use(new SelectHelper(page)),
@@ -50,6 +58,40 @@ export const test = base.extend<Helpers & MockFixture>({
   toggle: async ({ page }, use) => use(new ToggleButtonHelper(page)),
   linkList: async ({ page }, use) => use(new LinkListHelper(page)),
   frame: async ({ page }, use) => use(new FrameHelper(page)),
+
+  ui: async (
+    {
+      page,
+      dialog,
+      form,
+      select,
+      table,
+      navigation,
+      toast,
+      checkbox,
+      radioGroup,
+      fileUpload,
+      toggle,
+      linkList,
+      frame,
+    },
+    use
+  ) =>
+    use({
+      page,
+      dialog,
+      form,
+      select,
+      table,
+      navigation,
+      toast,
+      checkbox,
+      radioGroup,
+      fileUpload,
+      toggle,
+      linkList,
+      frame,
+    }),
 
   setMocks: async ({ page }, use) => {
     await use(async (handlers) => {

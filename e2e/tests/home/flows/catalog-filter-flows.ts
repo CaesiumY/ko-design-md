@@ -2,30 +2,14 @@
 // narrow the list. Expected rows always come from e2e/support/catalog.ts.
 import { catalog, servicePath } from "../../../support/catalog"
 import type { Page } from "@playwright/test"
-import type { FormHelper } from "../../../helpers/FormHelper"
-import type { LinkListHelper } from "../../../helpers/LinkListHelper"
-import type { NavigationHelper } from "../../../helpers/NavigationHelper"
-import type { ToggleButtonHelper } from "../../../helpers/ToggleButtonHelper"
+import type { Ui } from "../../../fixtures"
 import type { CategoryFacet } from "../../../support/catalog"
 import type { ServiceDoc } from "../../../../src/lib/content-types"
 
-interface HomeContext {
-  page: Page
-  form: FormHelper
-  linkList: LinkListHelper
-  navigation: NavigationHelper
-  toggle: ToggleButtonHelper
-}
-
-// Each flow takes only the helpers it drives.
-type FilterContext = Pick<
-  HomeContext,
-  "page" | "linkList" | "navigation" | "toggle"
->
-type SearchContext = Pick<
-  HomeContext,
-  "page" | "form" | "linkList" | "navigation"
->
+// Each flow takes only the part of `ui` it drives.
+type ListContext = Pick<Ui, "page" | "linkList" | "toggle">
+type FilterContext = Pick<Ui, "page" | "linkList" | "navigation" | "toggle">
+type SearchContext = Pick<Ui, "page" | "form" | "linkList" | "navigation">
 
 const SEARCH_LABEL = "Search designs"
 const ALL_CATEGORIES = new RegExp(`^전체 ${catalog.length}$`)
@@ -42,11 +26,7 @@ function categories(page: Page) {
   return { within: page.getByRole("navigation", { name: "카테고리" }) }
 }
 
-export async function 전체_목록_확인({
-  page,
-  linkList,
-  toggle,
-}: Pick<HomeContext, "page" | "linkList" | "toggle">) {
+export async function 전체_목록_확인({ page, linkList, toggle }: ListContext) {
   await toggle.expectPressed(ALL_CATEGORIES, true, categories(page))
   await linkList.expectHrefs(catalog.map(servicePath), rows(page))
 }
