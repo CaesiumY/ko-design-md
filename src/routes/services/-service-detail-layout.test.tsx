@@ -6,6 +6,7 @@ import { ServiceDetailLayout } from "./$slug"
 
 import type { ReactNode } from "react"
 import type { ServiceDoc } from "@/lib/content-types"
+import { buildHandoffPrompt } from "@/lib/handoff-prompt"
 
 vi.mock("./-components/copy-button", () => ({
   CopyButton: () => <button type="button">DESIGN.md 전체 복사</button>,
@@ -95,6 +96,8 @@ describe("ServiceDetailLayout", () => {
 
   // The sidebar is for people: it offers the file to keep, not the agent
   // endpoint. llms.txt stays reachable through the head's alternate link.
+  // The handoff prompt below is not an exception: it shows the DESIGN.md
+  // address as text to paste, never as a link to follow.
   it("offers a design.md download after the copy action, not an llms.txt link", () => {
     const { container } = render(
       <ServiceDetailLayout
@@ -121,5 +124,36 @@ describe("ServiceDetailLayout", () => {
         Node.DOCUMENT_POSITION_FOLLOWING
     ).toBeTruthy()
     expect(container.querySelector('a[href*="llms.txt"]')).toBeNull()
+  })
+
+  // The handoff prompt is built from the entry's own name and slug — a
+  // hand-written label would name design systems brands never published.
+  it("shows the entry's handoff prompt after the download action", () => {
+    render(
+      <ServiceDetailLayout
+        doc={doc}
+        filename="toss.md"
+        onTabChange={() => {}}
+        onThemeChange={() => {}}
+        previewAvailable={false}
+        previewTheme="dark"
+        searchTab="preview"
+        shikiHtml="<pre><code># Toss</code></pre>"
+      />
+    )
+
+    const downloadAction = screen.getByRole("button", {
+      name: /design\.md 다운로드/i,
+    })
+    const promptCopy = screen.getByRole("button", {
+      name: "핸드오프 프롬프트 복사",
+    })
+    const prompt = promptCopy.parentElement?.querySelector("code")?.textContent
+
+    expect(prompt).toBe(buildHandoffPrompt("Toss", "toss"))
+    expect(
+      downloadAction.compareDocumentPosition(promptCopy) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy()
   })
 })

@@ -203,9 +203,10 @@ describe("copy measurement", () => {
 // shared name a session that copies eight swatches and no design.md would read
 // as eight conversions.
 describe("copyEventName", () => {
-  it("names only the two design.md surfaces as the conversion", () => {
+  it("names only the three design.md hand-over surfaces as the conversion", () => {
     expect(copyEventName("design-md-hero")).toBe("design_md_copy")
     expect(copyEventName("design-md-tab")).toBe("design_md_copy")
+    expect(copyEventName("handoff-prompt")).toBe("design_md_copy")
   })
 
   it("keeps auxiliary copies out of the conversion count", () => {
