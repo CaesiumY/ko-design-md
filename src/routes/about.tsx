@@ -67,7 +67,7 @@ function AboutPage() {
           다만 명세가 아직 담지 못하는 값이 있습니다. 명세의 치수 단위는
           px·em·rem 뿐이라 <code className="font-mono">%</code> 로 적은 라운드는
           공식 린터가 오류로 보고합니다. 그래도 명세의 단위로 옮기지 않는 것은
-          뜻이 달라지기 때문입니다 —<code className="font-mono">50%</code> 는
+          뜻이 달라지기 때문입니다 — <code className="font-mono">50%</code> 는
           직사각형을 타원으로, <code className="font-mono">9999px</code> 는 알약
           모양으로 깎습니다. 또 그라디언트·그림자·크기 없이 발행된 폰트
           패밀리처럼 명세의 토큰 맵에 자리가 없는 값은 명세가 모르는 별도 키(
