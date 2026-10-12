@@ -6,9 +6,12 @@ import { describe, expect, it } from "vitest"
 // `outline-ring`. It once carried `/ 0.4` and its uses added `/30` or `/50` on
 // top, so it drew at 12-20% opacity — about 1.4:1 against the page, under the
 // 3:1 WCAG 1.4.11 asks of a focus indicator. Nothing failed; it was measured in
-// a browser. These checks keep an alpha from creeping back in through the
-// token, its theme mapping, or any use: all three are allowlists, so a new
-// spelling of an alpha fails instead of slipping past a list of known ones.
+// a browser.
+//
+// These checks are allowlists over the source text, not a CSS parser: they
+// catch the ways this codebase could plausibly reintroduce an alpha (on the
+// token, its theme mapping, or a use, in any Tailwind or CSS spelling), not
+// every string a determined author could write.
 
 const SRC = join(process.cwd(), "src")
 const CSS = readFileSync(join(SRC, "styles.css"), "utf8")
@@ -20,14 +23,28 @@ function sourceFiles(dir: string): Array<string> {
     .map((e) => join(e.parentPath, e.name))
 }
 
+// The only two line shapes allowed to name the ring colour outside a utility:
+// the opaque token itself, and the theme mapping that passes it straight on.
+// Whole-line, so nothing can ride along after the `;`.
+const TOKEN_LINE =
+  /^\s*--(?:sidebar-)?ring:\s*oklch\(\s*[\d.]+%?\s+[\d.]+\s+[\d.]+\s*\);\s*$/
+const MAPPING_LINE = /^\s*--color-(sidebar-)?ring:\s*var\(--\1ring\);\s*$/
+
 describe("focus ring opacity", () => {
   // An allowlist, not a search for `/`: an alpha has more spellings than a
   // slash (`#e0402866`, `color-mix(…, transparent)`, `rgb(… / .4)`), and only
-  // a bare three-channel `oklch(L C H)` is certainly opaque.
+  // a bare three-channel `oklch(L C H)` is certainly opaque. Every stylesheet
+  // under src/, not just styles.css, so a second sheet can't redeclare it.
   it("declares --ring and --sidebar-ring as opaque oklch(L C H)", () => {
-    const decls = [...CSS.matchAll(/--(?:sidebar-)?ring:\s*([^;]+);/g)].map(
-      (m) => m[1].trim()
-    )
+    const decls = sourceFiles(SRC)
+      .filter((f) => f.endsWith(".css"))
+      .flatMap((f) =>
+        [
+          ...readFileSync(f, "utf8").matchAll(
+            /--(?:sidebar-)?ring:\s*([^;]+);/g
+          ),
+        ].map((m) => m[1].trim())
+      )
 
     expect(decls.length).toBeGreaterThan(0)
     for (const value of decls) {
@@ -51,25 +68,24 @@ describe("focus ring opacity", () => {
     })
   })
 
-  // An allowlist again, for the same reason as the token check: chasing alpha
-  // spellings on the use side never ends (`/30`, `/[0.3]`, `(--ring)/30`,
-  // `--alpha(var(--color-ring) / 50%)`, `color-mix(…var(--ring)…)`, …). So
-  // every reference to the ring colour is found, and each must be one of the
-  // few shapes the site actually uses; anything else fails, alpha or not.
-  //
-  // Finding is open-ended too: a list of reference spellings would leak the
-  // same way (`theme(colors.ring / 30%)` matched none of them). Every word
-  // `ring` outside a comment is a candidate; the only ones let through without
-  // being a colour use are the `ring-` utility prefixes (`ring-3`,
-  // `ring-offset-2`, the `ring-` of `ring-ring`, whose colour half is then
-  // checked on its own).
+  // Every word `ring` outside a comment is a candidate — a list of reference
+  // spellings would leak (`theme(colors.ring / 30%)` matched none of an
+  // earlier list) — and each must be one of the few shapes the site uses.
+  // Let through without being a colour use: the `ring-` utility prefixes
+  // (`ring-3`, `ring-offset-2`, the `ring-` of `ring-ring`, whose colour half
+  // is then checked on its own) and a URL path segment.
   it("only references the ring colour in its plain, opaque forms", () => {
     const blank = (s: string) => s.replace(/[^\n]/g, " ")
+    // Only comments that start a line or follow whitespace (or `{` for JSX),
+    // so `url(//cdn…)` or a `/*` inside a string isn't read as one.
     const stripComments = (src: string) =>
       src
-        .replace(/\/\*[\s\S]*?\*\//g, blank)
         .replace(
-          /(^|[^:"'`\\])(\/\/[^\n]*)/g,
+          /(^|[\s{])(\/\*[\s\S]*?\*\/)/g,
+          (_, pre: string, c: string) => pre + blank(c)
+        )
+        .replace(
+          /(^|\s)(\/\/[^\n]*)/gm,
           (_, pre: string, c: string) => pre + blank(c)
         )
     const isAllowed = (text: string, at: number) => {
@@ -79,8 +95,7 @@ describe("focus ring opacity", () => {
       )
       const prev = text.charAt(at - 1)
       const next = text.charAt(at + 4)
-      // The token and its theme mapping, whose values the tests above pin.
-      if (/^\s*--(?:color-)?(?:sidebar-)?ring:/.test(line)) return true
+      if (TOKEN_LINE.test(line) || MAPPING_LINE.test(line)) return true
       // A `ring-` utility prefix: width, offset, or a colour checked next.
       if (next === "-" && !/[-.]/.test(prev)) return true
       // A path segment (`…/ring`): no colour syntax puts the name after `/`.

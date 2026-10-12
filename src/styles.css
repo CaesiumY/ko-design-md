@@ -73,8 +73,8 @@
     /* Opaque on purpose: this is the keyboard focus indicator, and it has to
        clear 3:1 against the page (WCAG 1.4.11). With an alpha of 0.4 here,
        the opacity modifiers its uses added on top thinned it to ~12-20% and it
-       drew at about 1.4:1. Don't reintroduce an alpha here or on its uses —
-       src/lib/focus-ring.test.ts fails on either. */
+       drew at about 1.4:1. Don't reintroduce an alpha here or on its uses;
+       src/lib/focus-ring.test.ts checks both for the usual spellings. */
     --ring: oklch(0.55 0.22 30);
     --chart-1: oklch(0.55 0.22 30);
     --chart-2: oklch(0.65 0.18 30);
