@@ -18,7 +18,7 @@ pnpm validate:spec      # 로컬 진단용 출력. 실제 게이트는 pnpm test
                         # google-designmd-corpus.test.ts (같은 공식 린터를 vitest 로)
 pnpm build              # build:og + vite build
 pnpm test:http          # pnpm build 뒤 빌드된 Nitro 서버 HTTP 회귀 검사
-pnpm test:e2e           # E2E 스모크 — 빌드된 서버 + Chromium (아래 단락)
+pnpm test:e2e           # E2E 스모크 — 빌드된 서버 + Chromium, CI 는 별도 e2e 잡 (아래 단락)
 ```
 
 **`pnpm test:e2e` 는 E2E 스모크다**(용어집) — 홈 검색·카테고리, 상세 탭과 `?tab=`, 프리뷰 테마
@@ -42,8 +42,8 @@ pnpm test:e2e           # E2E 스모크 — 빌드된 서버 + Chromium (아래 
 - `@playwright/test` 와 `playwright` 는 같은 버전이어야 한다(다르면 Chromium 이 두 벌 깔린다 —
   dependabot 이 둘을 한 그룹으로 묶는다).
 
-**`pnpm gate:contrast` 는 위 묶음에 없다** — Chromium 이 필요해 CI 의 **별도 `contrast` 잡**
-에서 돈다(`build` 잡이 아니다). 프리뷰 대비를 라이트·다크 × 4폭으로 전수 재고
+**`pnpm gate:contrast` 는 위 묶음에 없다** — 측정 수치를 기준선과 대조하는 게이트인데 그 수치의
+정본이 CI 라(아래) 로컬 묶음에 넣지 않고, CI 의 **별도 `contrast` 잡**에서 돈다(`build` 잡이 아니다). 프리뷰 대비를 라이트·다크 × 4폭으로 전수 재고
 `docs/preview-contrast-baseline.md` 의 총계 표와 대조한다. 개별 미달은 막지 않고 **그 수가
 움직였는지**만 막는다(어긋남 = exit 3, 측정기 고장 = `--self-check` 의 exit 1, 인자 오류 = 2).
 로컬에서 돌리려면 `pnpm exec playwright install chromium` 이 선행돼야 하고, **수치는 CI 가

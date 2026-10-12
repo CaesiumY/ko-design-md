@@ -22,8 +22,9 @@ const SERVER_ENTRY = join(ROOT, ".output", "server", "index.mjs")
 
 // The repo inputs of `pnpm build`: the app, the catalog and its public assets,
 // the one file `src/` imports from outside itself (agent-skill-index.ts reads
-// the use-design-md skill with `?raw`), the OG image script, and the build and
-// dependency configuration. A file missing here would let a stale build pass.
+// the use-design-md skill with `?raw`), the OG image script, the build and
+// dependency configuration, and the env files Vite loads for a production
+// build. A file missing here would let a stale build pass.
 const SOURCE_PATHS = [
   "src",
   "services",
@@ -34,6 +35,10 @@ const SOURCE_PATHS = [
   "tsconfig.json",
   "package.json",
   "pnpm-lock.yaml",
+  ".env",
+  ".env.local",
+  ".env.production",
+  ".env.production.local",
 ]
 
 function newestMtime(path: string): number {
