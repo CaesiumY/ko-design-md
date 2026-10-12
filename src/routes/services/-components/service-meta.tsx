@@ -18,8 +18,8 @@ export function ServiceMeta({ frontmatter, tagline }: Props) {
       {/* Logo + massive title — flex-wrap keeps a narrow viewport safe by
           letting the H1 drop to its own line under the 80px mark instead of
           overflowing. The mark uses the shared ServiceLogo, which already
-          handles onError → initial badge fallback (HMR-safe via the
-          useEffect-reset failed state). */}
+          handles onError → initial badge fallback (HMR-safe: a new logo
+          address clears the failed state during render). */}
       <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4">
         <ServiceLogo
           name={frontmatter.name}

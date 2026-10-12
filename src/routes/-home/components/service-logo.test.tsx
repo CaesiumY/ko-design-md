@@ -59,7 +59,9 @@ describe("ServiceLogo", () => {
     )
   })
 
-  it("remembers which address failed if it comes back", () => {
+  // A failure may have been transient, so every address change retries — the
+  // same as when an effect reset the flag.
+  it("retries an address that failed before when it comes back", () => {
     const { container, rerender } = render(<Subject logo={A} />)
     fireEvent.error(container.querySelector("img")!)
     rerender(<Subject logo={B} />)
@@ -67,7 +69,19 @@ describe("ServiceLogo", () => {
 
     rerender(<Subject logo={A} />)
 
-    expect(frames[0]).toBe("badge")
+    expect(frames[0]).toBe("img")
+    expect(container.querySelector("img")?.getAttribute("src")).toContain(
+      "a.svg"
+    )
+  })
+
+  it("keeps the badge while the same failed address stays", () => {
+    const { container, rerender } = render(<Subject logo={A} />)
+    fireEvent.error(container.querySelector("img")!)
+
+    rerender(<Subject logo={A} />)
+
     expect(container.querySelector("img")).toBeNull()
+    expect(container.textContent).toBe("T")
   })
 })
