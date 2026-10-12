@@ -215,7 +215,10 @@ const config = defineConfig({
     nitro({ rollupConfig: nitroRollupOptions }),
     tailwindcss(),
     tanstackStart(),
-    viteReact(),
+    // React Compiler, Rust port (oxc-transform-react, experimental upstream):
+    // memoizes components and hooks at build time. Its version is pinned to
+    // this plugin's peer range - see the `react-compiler` dependabot group.
+    viteReact({ compiler: true }),
   ],
 })
 

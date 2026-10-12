@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { track } from "@vercel/analytics"
 
 /**
@@ -88,7 +88,7 @@ export function useCopyFeedback(text: string, event: CopyEvent) {
 
   useEffect(() => () => window.clearTimeout(revertTimer.current), [])
 
-  const copy = useCallback(async () => {
+  const copy = async () => {
     try {
       await navigator.clipboard.writeText(text)
     } catch {
@@ -114,16 +114,12 @@ export function useCopyFeedback(text: string, event: CopyEvent) {
     // wire `copy` straight to onClick without awaiting, so it would surface as
     // an unhandled rejection. Swallowing is right here: a dropped analytics
     // event is not something the reader can act on.
-    //
-    // `surface` and `slug` rather than the `event` object in the dependency
-    // list: callers pass an object literal, which is a new identity every
-    // render, and `copy` would be rebuilt on each one.
     try {
       track(copyEventName(surface), slug ? { surface, slug } : { surface })
     } catch {
       // Measurement is best-effort.
     }
-  }, [text, surface, slug])
+  }
 
   return { copied, copy }
 }

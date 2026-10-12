@@ -44,6 +44,31 @@ describe("useCopyFeedback", () => {
     expect(result.current.copied).toBe(true)
   })
 
+  // `copy` carries no hand-written useCallback; the React Compiler memoizes it.
+  // vitest runs the same vite.config, so this checks the compiled hook: a fresh
+  // `event` literal each render (what every caller passes) must not rebuild
+  // `copy`, while a new `text` must - or it would copy the stale value.
+  it("keeps `copy` stable across renders until the text changes", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    stubClipboard(writeText)
+
+    const { result, rerender } = renderHook(
+      ({ text }) => useCopyFeedback(text, { ...EVENT }),
+      { initialProps: { text: "a" } }
+    )
+    const first = result.current.copy
+
+    rerender({ text: "a" })
+    expect(result.current.copy).toBe(first)
+
+    rerender({ text: "b" })
+    expect(result.current.copy).not.toBe(first)
+    await act(async () => {
+      await result.current.copy()
+    })
+    expect(writeText).toHaveBeenCalledWith("b")
+  })
+
   it("drops the confirmation once the dwell elapses", async () => {
     stubClipboard(vi.fn().mockResolvedValue(undefined))
 
