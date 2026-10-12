@@ -513,8 +513,9 @@ covered above are:
   count; do not flatten the value to satisfy the linter. `validate:draft` warns
   `spec-unrecorded-limitation` with the exact findings, so the count to record is in its output.
 - **`COMPONENT_COUNTS`** (`src/lib/google-designmd-corpus.test.ts`) — whenever the frontmatter
-  carries a `components:` map, which a new entry does as soon as one component has a value among the
-  spec's eight properties (`stitch-format.md`, "Component tokens in the frontmatter `components:` map").
+  carries a `components:` map, which a new entry does as soon as one component has a value the map
+  admits (among the spec's eight properties, a quoted reference or one unit-bearing dimension —
+  `stitch-format.md`, "Component tokens in the frontmatter `components:` map").
   Exact count of its components.
 - **`CASES`** (`src/lib/role-reference-rows.test.ts`) — only when the body's `## Colors` role table
   is also carried as frontmatter reference rows. Not a row but a comparison function written for
