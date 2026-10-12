@@ -296,12 +296,15 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
 - **새 항목은 컴포넌트를 명세의 `components:` 맵에도 싣는다(#389).** 첫 사례는 #384 파일럿(teamsparta)이고,
   기존 항목은 소급하지 않는다. 저작 규칙(명세의 여덟 속성만 · 평평한 변형 이름 · 여덟 밖은 본문만 · 값에 산문 금지 ·
   색·글꼴은 참조, 치수는 참조 또는 단위 붙은 값)의 정본은 `stitch-format.md` 의 "Component tokens in the frontmatter
-  `components:` map" 이고, 스킬이 말하는 여덟 속성은 계약 테스트가 고정된 린터의 목록과 대조한다. 속성 이름·단위는
-  검증기가 아직 보지 않는다 — 막는 것은 행의 모양(`noncanonical-component-shape`), 참조가 아닌 값의 인용
-  (`quoted-token-value`), OKLCH 가 아닌 리터럴 색(`non-oklch-token-value`), 참조가 선언된 키를 가리키는지
-  (`unresolved-token-ref`)다. 맵이 아예 없거나 행이 본문 스펙과 다른 것은 리뷰어 루브릭만 본다. 따옴표 없이 쓴 참조
-  (`backgroundColor: {colors.x}`)는 YAML 이 맵으로 읽어 린터에 색이 아닌 값으로 남는데도 어느 검사도 막지 않는다
-  (#525). 사이드카가 싣지 않으므로 사이트 Tokens 탭과 `use-design-md` 는 못 보고 DESIGN.md 파일의 frontmatter 에만 있다. 본문 스펙 펜스(`text`)는 그대로 남는다(중복 발행 — 두 벌의
+  `components:` map" 이고, 스킬이 말하는 여덟 속성은 계약 테스트가 고정된 린터의 목록과 대조한다. 검증기는 행마다
+  모양(`noncanonical-component-shape`), 여덟 밖 속성(`unknown-component-property`), 속성 없는 머리 행
+  (`empty-component` — YAML null 이라 린터가 디자인 시스템을 통째로 못 만든다), 값의 형태(`component-value-form`),
+  참조가 선언된 키를 가리키는지(`unresolved-token-ref`)를 막는다(#525). 값은 따옴표 친 참조 또는 `px`/`em`/`rem`
+  치수 하나만 통과한다 — 따옴표 없는 참조(YAML 이 맵으로 읽는다)·여러 값 단축형·단위 없는 숫자·산문·리터럴 색은
+  공식 린터가 아무 말 없이 받으므로 이 규칙이 유일한 검사다. 검증기의 여덟 속성·단위 목록(`COMPONENT_PROPERTIES`·
+  `COMPONENT_DIMENSION_UNITS`)도 같은 계약 테스트가 린터의 `spec-config.yaml` 과 대조한다(패키지가 내보내지 않아
+  사본을 둔다). 맵이 아예 없거나, 행이 본문 스펙과 다르거나, 참조가 속성에 맞지 않는 것(`height: "{colors.x}"`)은
+  리뷰어 루브릭만 본다. 사이드카가 싣지 않으므로 사이트 Tokens 탭과 `use-design-md` 는 못 보고 DESIGN.md 파일의 frontmatter 에만 있다. 본문 스펙 펜스(`text`)는 그대로 남는다(중복 발행 — 두 벌의
   어긋남은 리뷰 루브릭이 본다). 컴포넌트가 하나라도 생기면 린터 규칙 둘이 깨어난다 —
   `orphaned-tokens`(참조되지 않은 색마다)와 `contrast-ratio`(컴포넌트의 배경·글자 쌍). 에러가
   아니라 경고라 게이트는 막지 않는다. `orphaned-tokens` 는 카탈로그가 팔레트 전체를 싣는 한 0 이

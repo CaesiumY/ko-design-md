@@ -2591,11 +2591,90 @@ describe("the spec's components map is held to the token rules", () => {
     ])
 
   it("blocks a quoted literal colour in a component property", () => {
+    // One rule, one fix: a component colour is a reference, so "write it bare"
+    // and "make it OKLCH" would both be wrong advice here.
     const rules = rulesFor(
       withComponents(["  pill:", '    backgroundColor: "#FF0038"'])
     )
-    expect(rules).toContain("quoted-token-value")
-    expect(rules).toContain("non-oklch-token-value")
+    expect(rules).toContain("component-value-form")
+    expect(rules).not.toContain("quoted-token-value")
+    expect(rules).not.toContain("non-oklch-token-value")
+  })
+
+  // #525 — each of these passed every gate: the linter keeps the value as raw
+  // text, a bare number or (unquoted reference) a YAML map, with no finding.
+  it.each([
+    ["an unquoted reference", "backgroundColor: {colors.brand}", "YAML reads"],
+    ["a multi-value shorthand", "padding: 12px 16px", "write one value"],
+    ["a missing unit", "height: 48", "add a unit"],
+    ["prose", "size: 28 또는 32", "other prose"],
+    ["a literal colour", "textColor: oklch(0.62 0.19 258)", "literal colour"],
+    ["a quoted literal colour", 'textColor: "#FF0038"', "literal colour"],
+    ["a quoted dimension", 'height: "48px"', "drop the quotes"],
+  ])("blocks %s as a component value", (_, row, hint) => {
+    const result = validateDraft(
+      withComponents(["  pill:", `    ${row}`]),
+      OPTS
+    )
+    const form = result.issues.filter((i) => i.rule === "component-value-form")
+    expect(form).toHaveLength(1)
+    expect(form[0].severity).toBe("block")
+    expect(form[0].fix).toContain(hint)
+    const rules = result.issues.map((i) => i.rule)
+    expect(rules).not.toContain("quoted-token-value")
+    expect(rules).not.toContain("non-oklch-token-value")
+  })
+
+  it("blocks a property the spec does not define", () => {
+    const result = validateDraft(
+      withComponents(["  pill:", "    border: 1px"]),
+      OPTS
+    )
+    const unknown = result.issues.filter(
+      (i) => i.rule === "unknown-component-property"
+    )
+    expect(unknown).toHaveLength(1)
+    expect(unknown[0].severity).toBe("block")
+    expect(unknown[0].fix).toContain("backgroundColor")
+  })
+
+  it.each([
+    '"{colors.brand}"',
+    "'{colors.brand}'",
+    '"{colors.brand}"   # 주석',
+    "48px",
+    ".5rem",
+    "1.25em",
+    "0px",
+    "-1px",
+  ])("admits %s as a component value", (value) => {
+    const rules = rulesFor(withComponents(["  pill:", `    height: ${value}`]))
+    expect(rules).not.toContain("component-value-form")
+    expect(rules).not.toContain("unknown-component-property")
+  })
+
+  it.each([
+    ["last", ["  pill:", "    height: 48px", "  card:"], "card"],
+    ["between two", ["  card:", "  pill:", "    height: 48px"], "card"],
+    ["before a flow map", ["  card:", '  pill: { height: "48px" }'], "card"],
+  ])("names a component with no property (%s)", (_, rows, name) => {
+    // YAML null: the linter builds no model, so the only other blocks would
+    // say the colours and the type scale are missing.
+    const empty = validateDraft(withComponents(rows), OPTS).issues.filter(
+      (i) => i.rule === "empty-component"
+    )
+    expect(empty).toHaveLength(1)
+    expect(empty[0].severity).toBe("block")
+    expect(empty[0].fix).toContain(`\`${name}\``)
+  })
+
+  it("does not call a misshapen component empty", () => {
+    // The nested row has its own block; one cause, one message.
+    const rules = rulesFor(
+      withComponents(["  button:", "    states:", "      hover: darker"])
+    )
+    expect(rules).toContain("noncanonical-component-shape")
+    expect(rules).not.toContain("empty-component")
   })
 
   it("allows a reference and a bare dimension", () => {

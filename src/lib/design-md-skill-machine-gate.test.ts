@@ -2,7 +2,11 @@ import { describe, expect, it } from "vitest"
 // Derived, not restated: the skeleton is checked against the same list the
 // section gate enforces, so adding a required section can never leave the
 // template behind.
-import { REQUIRED_SECTIONS } from "./draft-validator"
+import {
+  COMPONENT_DIMENSION_UNITS,
+  COMPONENT_PROPERTIES,
+  REQUIRED_SECTIONS,
+} from "./draft-validator"
 import { BASELINE_WIDTHS } from "./contrast-baseline"
 import { reducedMotionBlock } from "./reduced-motion-block"
 import {
@@ -199,7 +203,9 @@ describe("/design-md machine gates", () => {
   // as "not a recognized component sub-token" and dropped by standard tools.
   // Read from the linter's own spec config, so an upgrade that changes the
   // list fails here until the prompt follows. The examples the template and
-  // the spec show must stay inside it too.
+  // the spec show must stay inside it too. The draft gate holds its own copy of
+  // the list and of the Dimension units (#525 — the package exports neither),
+  // pinned to the same file so the gate and the prompt cannot part.
   it("names the component properties the pinned linter reads", () => {
     const specConfig = readRepoFile(
       "node_modules/@google/design.md/dist/linter/spec-config.yaml"
@@ -215,6 +221,14 @@ describe("/design-md machine gates", () => {
       (m) => m[1]
     )
     expect(linter.length).toBeGreaterThan(0)
+    expect([...COMPONENT_PROPERTIES].sort()).toEqual([...linter].sort())
+
+    const unitBlock = /^units:\r?\n((?:[ \t]+- .*\r?\n)+)/m.exec(
+      specConfig
+    )?.[1]
+    expect(unitBlock, "the linter config must list units").toBeDefined()
+    const units = [...(unitBlock ?? "").matchAll(/- (\w+)/g)].map((m) => m[1])
+    expect([...COMPONENT_DIMENSION_UNITS].sort()).toEqual([...units].sort())
 
     const stitch = readRepoFile(DESIGN_MD_STITCH_FORMAT)
     const stated = /\*\*Only the spec's \w+ properties:\*\* ([^\n]+?)\. /.exec(

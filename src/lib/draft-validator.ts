@@ -1175,6 +1175,65 @@ function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
   return issues
 }
 
+/** The spec's component properties — `component_sub_tokens` in the pinned
+ *  linter's `spec-config.yaml`, which the package does not export. A contract
+ *  test compares the two, so a linter upgrade that changes the list fails until
+ *  this follows. */
+export const COMPONENT_PROPERTIES: ReadonlyArray<string> = [
+  "backgroundColor",
+  "textColor",
+  "typography",
+  "rounded",
+  "padding",
+  "size",
+  "height",
+  "width",
+]
+
+/** The spec's Dimension units — `units:` in the same file, pinned the same way. */
+export const COMPONENT_DIMENSION_UNITS: ReadonlyArray<string> = [
+  "px",
+  "em",
+  "rem",
+]
+
+/** A whole value that is one quoted reference: `"{colors.x}"` or `'{…}'`. */
+const QUOTED_REFERENCE = /^(["'])\{[^{}]+\}\1$/
+/** One dimension — the number shape of the linter's `parseDimensionParts`. */
+const COMPONENT_DIMENSION = new RegExp(
+  `^[+-]?(?:\\d+\\.?\\d*|\\.\\d+)(?:${COMPONENT_DIMENSION_UNITS.join("|")})$`
+)
+
+/** A literal CSS colour — hex or a colour function, OKLCH included. */
+const LITERAL_COLOUR =
+  /^(?:#[0-9a-fA-F]{3,8}\b|(?:rgba?|hsla?|hwb|oklch|oklab|lch|lab|color-mix)\s*\()/i
+
+/** What to do about a component value that is neither admissible form — the
+ *  likeliest cause first, since each needs a different fix. */
+function componentValueFix(value: string): string {
+  if (/^\{.*\}$/.test(value)) {
+    return `quote it (\`"${value}"\`) — unquoted, YAML reads \`{…}\` as a map and standard tools get no value at all`
+  }
+  const bare = stripQuotes(value)
+  if (bare !== value && COMPONENT_DIMENSION.test(bare)) {
+    return `drop the quotes (\`${bare}\`)`
+  }
+  if (LITERAL_COLOUR.test(bare)) {
+    return 'the map takes no literal colour: point at a declared colour token as a quoted reference (`"{colors.name}"`), or leave the property out and keep the colour in the body spec'
+  }
+  if (/^[+-]?(?:\d+\.?\d*|\.\d+)$/.test(bare)) {
+    return `add a unit (\`${bare}px\`; zero is \`0px\`) — a bare number is not a Dimension`
+  }
+  const parts = bare.split(/\s+/)
+  if (
+    parts.length > 1 &&
+    parts.every((part) => COMPONENT_DIMENSION.test(part))
+  ) {
+    return "write one value — a shorthand such as `12px 16px` is not a Dimension, so it stays in the body spec only"
+  }
+  return "keep notes, alternatives and other prose in the body spec — the map takes only the value"
+}
+
 /**
  * The spec's `components:` map, held to the same rules as the token maps (#384).
  *
@@ -1184,16 +1243,42 @@ function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
  * reach the published document without
  * any gate seeing them; a deeper row is not a spec property at all.
  *
- * Property values are judged like colour tokens: a reference must be quoted,
- * anything else must not be, and a literal colour must be OKLCH. Without this a
- * quoted hex in a component passed `validate:catalog` and `audit:oklch` alike.
+ * Each property is one of the spec's eight, and its value one of the two forms
+ * a standard tool reads (#525): a quoted reference, or one `px`/`em`/`rem`
+ * dimension. The linter accepts everything else without a finding — an
+ * unquoted reference reaches it as a YAML map, a shorthand or a note as raw
+ * text, `48` as a bare number — so this is the only check on the form. Whether
+ * a reference resolves is `checkTokenReferences`'s; whether a row matches its
+ * body spec is the reviewer's.
+ *
+ * A head row with no property under it is YAML `null`, which the linter cannot
+ * build a model around: it then resolves no colours and no type scale, and the
+ * only blocks left name maps that are fine. So it is named here.
  */
 function checkComponentRows(fm: Array<string>): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
+  // The last head row with no property under it yet.
+  let emptyHead: string | null = null
+  const flushEmptyHead = () => {
+    if (emptyHead === null) return
+    issues.push(
+      block(
+        "empty-component",
+        "tokens",
+        `component \`${emptyHead}\` has no property under it — YAML reads it as null and the official linter then builds no design system at all (it reports no colours and no type scale). Give it at least one of the spec's properties, or delete the row and keep the component in the body spec only.`
+      )
+    )
+    emptyHead = null
+  }
   for (const row of mapRows(fm, "components")) {
     const canonical =
       (row.indent === 2 && isHeadRow(row)) ||
       (row.indent === 4 && !isHeadRow(row))
+    // A row at the head's own depth ends the previous component; any deeper
+    // row, misshapen or not, means it was not empty — a misshapen one already
+    // has its own block.
+    if (row.indent <= 2) flushEmptyHead()
+    else emptyHead = null
     if (!canonical) {
       issues.push(
         block(
@@ -1204,21 +1289,33 @@ function checkComponentRows(fm: Array<string>): Array<ValidationIssue> {
       )
       continue
     }
-    if (row.indent !== 4) continue
-    const authored = stripYamlComment(row.rest).trim()
-    if (/^["']?\{/.test(authored)) continue
-    const value = stripQuotes(authored)
-    if (value !== authored) {
+    if (row.indent === 2) {
+      emptyHead = row.key
+      continue
+    }
+    if (!COMPONENT_PROPERTIES.includes(row.key)) {
       issues.push(
         block(
-          "quoted-token-value",
+          "unknown-component-property",
           "tokens",
-          `component property \`${row.key}\` wraps its value in quotes (${authored}) — write it bare (\`${value}\`). Quote only a reference such as \`"{colors.name}"\`.`
+          `component property \`${row.key}\` is not one of the spec's eight (${COMPONENT_PROPERTIES.map((p) => `\`${p}\``).join(", ")}). Standard tools ignore it — keep it in the body spec only.`
         )
       )
+      continue
     }
-    issues.push(...tokenLineIssues(row.key, value, row.line))
+    const authored = stripYamlComment(row.rest).trim()
+    if (QUOTED_REFERENCE.test(authored) || COMPONENT_DIMENSION.test(authored)) {
+      continue
+    }
+    issues.push(
+      block(
+        "component-value-form",
+        "tokens",
+        `component property \`${row.key}: ${authored}\` is neither a quoted reference (\`"{colors.name}"\`) nor one ${COMPONENT_DIMENSION_UNITS.map((u) => `\`${u}\``).join("/")} dimension (\`48px\`), the two forms the spec's \`components:\` map reads — ${componentValueFix(authored)}.`
+      )
+    )
   }
+  flushEmptyHead()
   return issues
 }
 
