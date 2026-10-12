@@ -31,8 +31,9 @@ const NO_TYPE_SCALE: Record<string, string> = {}
  * component map that failed to resolve reads as 0 and a new one appearing on an
  * entry nobody meant to touch should be a deliberate edit too.
  *
- * teamsparta is the pilot (#384): its ten components that fit the spec's eight
- * properties without dropping a row. The body spec fences stay as `text`.
+ * teamsparta was the first (#384): its ten components that fit the spec's eight
+ * properties without dropping a row. The body spec fences stay as `text`. New
+ * entries carry the map under #389's rules, so each owes a row here.
  */
 const COMPONENT_COUNTS: Record<string, number> = {
   teamsparta: 10,

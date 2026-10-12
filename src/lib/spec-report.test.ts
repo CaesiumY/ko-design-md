@@ -96,7 +96,7 @@ describe("formatSpecReport", () => {
 
   // The filter keys on the linter's rule names. If the pinned linter renames
   // one, the filter would switch itself off silently; this fails instead. The
-  // entry is the components pilot (#384), the one that wakes the rule.
+  // entry is the first to carry components (#384), which wakes the rule.
   it("summarizes only rules the pinned linter actually raises", () => {
     const raw = readFileSync(
       join(process.cwd(), "services/teamsparta.md"),

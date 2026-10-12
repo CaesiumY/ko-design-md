@@ -512,8 +512,10 @@ covered above are:
   a **two-way ratchet** on the slug's error count, so a later silent fix fails it too. Record the
   count; do not flatten the value to satisfy the linter. `validate:draft` warns
   `spec-unrecorded-limitation` with the exact findings, so the count to record is in its output.
-- **`COMPONENT_COUNTS`** (`src/lib/google-designmd-corpus.test.ts`) — only when the frontmatter
-  carries a `components:` map. Exact count of its components.
+- **`COMPONENT_COUNTS`** (`src/lib/google-designmd-corpus.test.ts`) — whenever the frontmatter
+  carries a `components:` map, which a new entry does as soon as one component has a value among the
+  spec's eight properties (`stitch-format.md`, "Component tokens in the frontmatter `components:` map").
+  Exact count of its components.
 - **`CASES`** (`src/lib/role-reference-rows.test.ts`) — only when the body's `## Colors` role table
   is also carried as frontmatter reference rows. Not a row but a comparison function written for
   the slug; the shape that triggers it is in `stitch-format.md` → "Role → palette reference rows".

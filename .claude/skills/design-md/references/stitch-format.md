@@ -52,8 +52,10 @@ four token sections, `body-yaml-fence` everywhere else).
 carry tokens in body ```yaml fences, and every entry was migrated. If you are
 looking at an older draft or an outside example that fences its tokens, that form
 is legacy and the draft gate blocks it. Values the frontmatter has no slot for —
-motion easing and durations, component specs — go in a body ```` ```text ````
-fence, which readers see and the linter does not.
+motion easing and durations — go in a body ```` ```text ```` fence, which readers
+see and the linter does not. Component specs go in both places: the properties
+the spec has a slot for in `components:` (see **Component tokens in the
+frontmatter `components:` map** below), and the full spec in the body fence.
 
 ```yaml
 colors:
@@ -75,6 +77,14 @@ rounded:
   radius-s: 8px
 elevation:
   shadow-1: 0 1px 2px oklch(0.2 0 0 / 0.06), 0 1px 1px oklch(0.2 0 0 / 0.04)   # card
+components:
+  button-primary:
+    backgroundColor: "{colors.primary}"
+    textColor: "{colors.primary-foreground}"
+    rounded: "{rounded.radius-s}"
+    height: 48px
+  button-primary-hover:
+    backgroundColor: "{colors.text}"
 ```
 
 The details in that block are load-bearing, because they are what the sidecar
@@ -100,6 +110,8 @@ extractor reads:
   that reaches machine consumers — the sidecar carries it, and both the Tokens tab
   and the `use-design-md` skill read it. Put per-token caveats here, not only in
   the section's prose.
+- **`components:` nests too, but the sidecar does not read it.** It reaches
+  standard tools through the published DESIGN.md only; its rules are below.
 
 ### Values may be quoted only when YAML would misread them
 
@@ -170,6 +182,20 @@ Carry a role this way only under these rules:
 - **The body table and the reference rows are two copies of one mapping — edit both.** Reference rows are pointers, so they never reach the sidecar and `tokens:check` cannot see the two drift apart.
 
 **This shape owes a hand-written comparison in `CASES`** (`src/lib/role-reference-rows.test.ts`). The guard in that file finds entries by shape: a reference row whose key — less a `dark-` prefix or `-dark` suffix, and with codeit's `text-` / `background-` read as `txt-` / `bg-` — appears as a backticked name in the first cell of a row in the entry's own `## Colors` section. Only rows whose first non-space character is `|` and whose first cell *starts* with a backtick are read (indented tables count), so a role cell like ``배경 `bg-x` `` or a table written without the leading pipe is not seen. Such an entry fails CI until `CASES` holds a function comparing its rows against its table. It is not a one-line row: entries lay out their role tables differently, so each comparison is written for its slug. The `primary` alias above does not count. The test file is outside this skill's write scope; the operator adds the function.
+
+### Component tokens in the frontmatter `components:` map
+
+Every new entry carries its components in the spec's `components:` map as well as in the body (#389). The body's `## Components` section keeps the full spec — the `text` fence readers follow, borders, focus rings and all — and the map carries the part standard tools can read. They are two copies of one spec: edit both.
+
+- **Only the spec's eight properties:** `backgroundColor` · `textColor` · `typography` · `rounded` · `padding` · `size` · `height` · `width`. The pinned linter reads no others — one more is reported as "not a recognized component sub-token". A component whose values are all outside the eight stays in the body only.
+- **Variants are flat names**, the same names as the body's `###` entries: `button-primary`, `button-primary-hover`, `button-primary-disabled`. A nested `hover:` under `button-primary` is read as one opaque value and its children are lost. The draft gate blocks any shape but a two-space name with four-space property rows (`noncanonical-component-shape`).
+- **Everything outside the eight stays in the body** — border, gap, overflow, hover transforms, shadow references. Moving a component to the map never drops a value.
+- **No prose in a value.** `28 또는 32` or `top-left (10, 10)` is a note, not a token; write it in the body.
+- **Colours and type are references to declared tokens**, quoted: `"{colors.primary}"`, `"{typography.label-m}"`. **Dimensions are a reference when a token exists** (`"{rounded.radius-s}"`, `"{spacing.space-4}"`) **and a value with a unit when none does** (`48px`, `0px` — see the next section). If no declared token holds a value, do not invent one to point at: leave that property out of the map and keep it in the body.
+
+Record the count in `COMPONENT_COUNTS` (Stage 10). Once an entry carries a component, the linter wakes two advisory rules: `orphaned-tokens` warns on every colour no component references — expected, since the catalog records the whole palette, and `pnpm validate:spec` prints it as a count — and `contrast-ratio` warns on a component's background/text pair below 4.5:1, which follows the brand's published values and is not a reason to change them.
+
+These rules come from the first entry to carry the map (#384, `services/teamsparta.md`): ten components fit without loss using `backgroundColor`, `textColor`, `rounded` and `height`, with flat variant names, references and a unit-bearing `56px`. Its base button states, which also carry `border` or `focus`, stayed in the body only. Warnings went from 1 to 28 — 27 of them `orphaned-tokens`.
 
 ### Dimension values carry a unit — including zero
 
@@ -246,6 +272,8 @@ When to decompose:
 - Singular components (SearchBar, Pagination, Breadcrumb) with no variant branching → keep as one `###`.
 
 State variants (`-active`, `-focus`, `-disabled`) also live as their own entries when they have distinct token references (e.g. `button-primary-active` shifts to `{colors.primary-60}` fill).
+
+Use the same names in the frontmatter `components:` map, so a `###` entry and its map row are found by one name.
 
 ## Optional sections (recommended)
 
