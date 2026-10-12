@@ -257,7 +257,8 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   별칭이 있는 항목은 두 수가 원래 다르다. 카탈로그 전용 맵(`grid:`·`opacity:` 등)에 `16px`·`40%` 같은 CSS 치수나 hex 가
   있으면 린터가 그 맵을 "무시되는 토큰 맵"으로 보고하므로 `spec-token-like-map` 으로 block
   한다(치수는 `spacing:`/`rounded:` 로, 불투명도는 단위 없는 수로). frontmatter 가 파스되지
-  않으면 이 판정들은 건너뛴다. 모델 에러 수가 `KNOWN_SPEC_LIMITATIONS` 의 기록과 다르면
+  않거나 속성 없는 컴포넌트가 있으면(`empty-component` — YAML null 이라 린터가 모델을 못 만든다) 이
+  판정들은 건너뛴다. 모델 에러 수가 `KNOWN_SPEC_LIMITATIONS` 의 기록과 다르면
   (`spec-unrecorded-limitation`) warn 이다 — CI 코퍼스 테스트가 막는 것을 파이프라인 단계에서
   미리 알린다. 기록과 같은 수는 조용하므로 카탈로그 전수 검사에 소음을 더하지 않는다.
   `validate:catalog` 도 같은 `validateDraft` 라 타입 스케일 block 에는 예외 경로가 없다 — 코퍼스

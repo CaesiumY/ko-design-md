@@ -1197,10 +1197,20 @@ export const COMPONENT_DIMENSION_UNITS: ReadonlyArray<string> = [
   "rem",
 ]
 
-/** A whole value that is one quoted reference, with the characters the
- *  linter's `isTokenReference` allows between the braces — `"{ colors.x }"` or
- *  `"{colors/x}"` it keeps as raw text. */
-const QUOTED_REFERENCE = /^(["'])\{[a-zA-Z0-9._-]+\}\1$/
+/** The maps the linter's symbol table holds — a reference into any other
+ *  (`{fonts.x}`, `{elevation.x}`) never resolves, whatever the key. */
+const REFERENCE_NAMESPACES: ReadonlyArray<string> = [
+  "colors",
+  "typography",
+  "rounded",
+  "spacing",
+]
+/** A whole value that is one quoted reference into those maps, with the
+ *  characters the linter's `isTokenReference` allows between the braces —
+ *  `"{ colors.x }"` or `"{colors/x}"` it keeps as raw text. */
+const QUOTED_REFERENCE = new RegExp(
+  String.raw`^(["'])\{(?:${REFERENCE_NAMESPACES.join("|")})\.[a-zA-Z0-9._-]+\}\1$`
+)
 /** A number exactly as the linter's `parseDimensionParts` reads one —
  *  `-1`, `.5`, `1.25`; not `+4` or `48.`, which it keeps as raw text. */
 const SPEC_NUMBER = String.raw`-?\d*\.?\d+`
@@ -1215,14 +1225,24 @@ function isComponentDimension(value: string): boolean {
   return value.length <= MAX_DIMENSION_LENGTH && COMPONENT_DIMENSION.test(value)
 }
 
-/** A CSS hex colour on its own — the lengths CSS takes, then at most a
- *  comment. Anything after it (`#2024 redesign`) makes it a note instead. */
-const LONE_HEX =
-  /^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})(?=\s*(?:#.*)?$)/
-
 /** A literal CSS colour — hex or a colour function, OKLCH included. */
 const LITERAL_COLOUR =
   /^(?:#[0-9a-fA-F]{3,8}\b|(?:rgba?|hsla?|hwb|oklch|oklab|lch|lab|color-mix)\s*\()/i
+/** The same hex on its own, then at most a comment. Anything after it
+ *  (`#2024 redesign`) makes it a note instead. */
+const LONE_HEX = /^#[0-9a-fA-F]{3,8}(?=[ \t]*(?:#.*)?$)/
+
+/** A property's value as YAML reads the line: a comment opens at a space or
+ *  tab then `#`, and only spaces and tabs are trimmed. `stripYamlComment`'s
+ *  `\s` would also shed a no-break or ideographic space that YAML keeps —
+ *  `48px` followed by U+3000 is raw text to the linter. */
+function componentValue(rest: string): string {
+  const comment = /[ \t]+#.*$/.exec(rest)
+  return (comment ? rest.slice(0, comment.index) : rest).replace(
+    /^[ \t]+|[ \t]+$/g,
+    ""
+  )
+}
 
 /** What to do about a component value that is neither admissible form — the
  *  likeliest cause first, since each needs a different fix. */
@@ -1230,9 +1250,16 @@ function componentValueFix(value: string): string {
   if (/^\{.*\}$/.test(value)) {
     return `quote it (\`"${value}"\`) — unquoted, YAML reads \`{…}\` as a map and standard tools get no value at all`
   }
+  const trimmed = value.trim()
+  if (
+    trimmed !== value &&
+    (QUOTED_REFERENCE.test(trimmed) || isComponentDimension(trimmed))
+  ) {
+    return `delete the invisible space around \`${trimmed}\` — YAML trims only spaces and tabs, so a no-break or full-width space stays part of the value and standard tools read it as text`
+  }
   const bare = stripQuotes(value)
   if (bare !== value && /^\{.*\}$/.test(bare)) {
-    return 'a reference is one token name between the braces — letters, digits, `.`, `_` and `-`, no spaces (`"{colors.name}"`); anything else standard tools keep as text'
+    return `a reference names one token in ${REFERENCE_NAMESPACES.map((m) => `\`${m}:\``).join(", ")} — the maps standard tools resolve — with only letters, digits, \`.\`, \`_\` and \`-\` between the braces (\`"{colors.name}"\`); anything else they keep as text`
   }
   if (bare !== value && isComponentDimension(bare)) {
     return `drop the quotes (\`${bare}\`)`
@@ -1244,19 +1271,22 @@ function componentValueFix(value: string): string {
   if (parts.length > 1 && parts.every(isComponentDimension)) {
     return "write one value — a shorthand such as `12px 16px` is not a Dimension, so it stays in the body spec only"
   }
-  const number = /^([+-]?[\d.]+)([a-zA-Z%]*)$/.exec(bare)
-  if (
-    number &&
-    (number[2] === "" || COMPONENT_DIMENSION_UNITS.includes(number[2]))
-  ) {
-    const plain = `${Number(number[1])}${number[2] || "px"}`
-    if (!Number.isNaN(Number(number[1])) && isComponentDimension(plain)) {
-      return number[2] === ""
-        ? `add a unit (\`${plain}\`; zero is \`0px\`) — a bare number is not a Dimension`
-        : `write the number plainly (\`${plain}\`) — standard tools read no \`+\`, trailing \`.\` or exponent`
+  if (COMPONENT_DIMENSION.test(bare)) {
+    return `shorten it — standard tools read a dimension of at most ${MAX_DIMENSION_LENGTH} characters`
+  }
+  const units = COMPONENT_DIMENSION_UNITS.join("|")
+  if (new RegExp(`^[+-]?[\\d.]+(?:${units})?$`).test(bare)) {
+    // Edit the text rather than reparse the number, so the value is kept to
+    // the digit: drop a leading `+` and a `.` with no digits after it.
+    const plain = bare.replace(/^\+/, "").replace(/\.(?=[a-z]*$)/, "")
+    const withUnit = /[a-z]$/.test(plain) ? plain : `${plain}px`
+    if (isComponentDimension(withUnit)) {
+      return /[a-z]$/.test(bare)
+        ? `write the number plainly (\`${withUnit}\`) — standard tools read no leading \`+\` or trailing \`.\``
+        : `add a unit (\`${withUnit}\`; zero is \`0px\`) — a bare number is not a Dimension`
     }
   }
-  if (number) {
+  if (new RegExp(`^[+-]?[\\d.]+(?!(?:${units})$)[a-zA-Z%]+$`).test(bare)) {
     return `the spec's Dimension takes ${COMPONENT_DIMENSION_UNITS.map((u) => `\`${u}\``).join("/")} only — a \`%\`, \`vw\` or other unit stays in the body spec`
   }
   return "the map reads nothing else — keep keywords, notes and alternatives in the body spec"
@@ -1346,7 +1376,9 @@ function checkComponentRows(fm: Array<string>): Array<ValidationIssue> {
       )
       continue
     }
-    const authored = stripYamlComment(row.rest).trim()
+    // From the line itself: the row splitter's `\s*` after the colon would
+    // already have shed a leading no-break space that YAML keeps.
+    const authored = componentValue(row.line.slice(row.line.indexOf(":") + 1))
     if (QUOTED_REFERENCE.test(authored) || isComponentDimension(authored)) {
       continue
     }
@@ -2526,9 +2558,8 @@ export function validateDraft(
   // One cause, one message: when the frontmatter does not parse, or a
   // component is empty (YAML null, which the linter cannot model), the
   // linter's model is empty and would add wrong instructions to the real one.
-  const componentIssues = checkComponentRows(
-    frontmatterBlock(raw).split(/\r?\n/)
-  )
+  const fmLines = frontmatterBlock(raw).split(/\r?\n/)
+  const componentIssues = checkComponentRows(fmLines)
   if (
     !yamlIssues.some((i) => i.severity === "block") &&
     !componentIssues.some((i) => i.rule === "empty-component")
@@ -2809,7 +2840,6 @@ export function validateDraft(
       : sectionIssues)
   )
   issues.push(...checkDuplicateTokens(raw, body))
-  const fmLines = frontmatterBlock(raw).split(/\r?\n/)
   issues.push(...scanFrontmatterTokens(fmLines))
   issues.push(...checkBlockScalars(fmLines))
   issues.push(...componentIssues)

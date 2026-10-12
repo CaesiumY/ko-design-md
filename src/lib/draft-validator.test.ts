@@ -2616,10 +2616,30 @@ describe("the spec's components map takes only what standard tools read", () => 
     ["a trailing point", "height: 48.px", "plainly (`48px`)"],
     ["a plus sign with no unit", "height: +4", "add a unit (`4px`"],
     // Past the linter's 64-character limit a dimension stays raw text.
-    ["an over-long dimension", `height: ${"0".repeat(64)}px`, "plainly"],
+    ["an over-long dimension", `height: ${"0".repeat(64)}px`, "at most 64"],
+    ["a trailing point with no unit", "height: 48.", "add a unit (`48px`"],
+    // Two points is not a number at all — not "another unit" either.
+    ["two decimal points", "height: 1.2.3px", "keywords, notes"],
     // The linter's `isTokenReference` takes letters, digits, `.`, `_`, `-`.
-    ["a reference with spaces", 'textColor: "{ colors.brand }"', "no spaces"],
-    ["a reference with a slash", 'textColor: "{colors/brand}"', "no spaces"],
+    [
+      "a reference with spaces",
+      'textColor: "{ colors.brand }"',
+      "between the braces",
+    ],
+    [
+      "a reference with a slash",
+      'textColor: "{colors/brand}"',
+      "between the braces",
+    ],
+    // Only colors/typography/rounded/spacing reach the linter's symbol table.
+    [
+      "a reference into a catalog-only map",
+      'typography: "{fonts.brand}"',
+      "the maps standard tools resolve",
+    ],
+    // YAML trims only spaces and tabs; a no-break space stays in the value.
+    ["a trailing no-break space", "height: 48px ", "invisible space"],
+    ["a leading no-break space", "height:  48px", "invisible space"],
     [
       "an unquoted hex, which YAML cuts as a comment",
       "textColor: #3182F6",
