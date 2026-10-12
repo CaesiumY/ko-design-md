@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { localLogoPath } from "@/lib/site-config"
 import { cn } from "@/lib/utils"
 
@@ -41,16 +41,12 @@ function FallbackBadge({
 }
 
 export function ServiceLogo({ name, logo, size = 24, className }: Props) {
-  const [failed, setFailed] = useState(false)
+  // Remember WHICH address failed rather than a flag to reset: when the logo
+  // changes (HMR, navigation to another service) the new one is drawn from the
+  // first render, with no effect to clear a stale failure (#537).
+  const [failedLogo, setFailedLogo] = useState<string | undefined>()
 
-  // Reset failure state if the logo path itself changes (e.g., HMR or
-  // navigation to a different service).
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- Resetting during render or keying on logo would move when the reset lands.
-    setFailed(false)
-  }, [logo])
-
-  if (logo && !failed) {
+  if (logo && logo !== failedLogo) {
     const src = localLogoPath(logo)
     return (
       <img
@@ -61,7 +57,7 @@ export function ServiceLogo({ name, logo, size = 24, className }: Props) {
           if (typeof console !== "undefined") {
             console.warn(`[ServiceLogo] failed to load "${logo}", falling back`)
           }
-          setFailed(true)
+          setFailedLogo(logo)
         }}
         className={cn("shrink-0 object-contain select-none", className)}
         style={{ width: size, height: size }}

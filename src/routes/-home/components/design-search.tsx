@@ -18,11 +18,16 @@ export function DesignSearch({ value, onChange, className }: Props) {
     onChangeRef.current = onChange
   })
 
-  // External value changes (e.g., back button) should sync into the local state.
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- Syncing during render would change when the debounce effect sees it.
+  // An outside change (e.g., the header link clearing `?q=`) replaces the local
+  // text during render, so the first commit already shows it and the debounce
+  // below never arms a timer for the old text — React's "adjusting state when
+  // a prop changes" pattern (#537). An outside change wins over a pending
+  // keystroke, as it did when this sync ran in an effect.
+  const [seenValue, setSeenValue] = useState(value)
+  if (value !== seenValue) {
+    setSeenValue(value)
     setLocal(value)
-  }, [value])
+  }
 
   useEffect(() => {
     if (local === value) return
