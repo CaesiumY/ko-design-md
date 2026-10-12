@@ -2,7 +2,9 @@ import fs from "node:fs"
 import path from "node:path"
 import { lint } from "@google/design.md/linter"
 import { buildDoc } from "../src/lib/content-parser"
+import { formatSpecReport } from "./spec-report"
 import type { ServiceDoc } from "../src/lib/content-types"
+import type { EntryReport } from "./spec-report"
 
 // Conformance gate against the PUBLISHED Google DESIGN.md spec, using the
 // official linter (`@google/design.md`, pinned) rather than a re-implementation
@@ -15,7 +17,8 @@ import type { ServiceDoc } from "../src/lib/content-types"
 //   pnpm validate:spec                 # every entry
 //   pnpm validate:spec toss wanted     # named entries
 //   pnpm validate:spec --json-out r.json
-//   pnpm validate:spec --verbose       # print info-level findings too
+//   pnpm validate:spec --verbose       # also list info-level findings and the
+//                                      # warnings printed only as a count (#388)
 //
 // Exit code follows the official CLI: non-zero only when the spec reports an
 // ERROR. Warnings and infos are reported but do not fail — the spec is at
@@ -23,25 +26,6 @@ import type { ServiceDoc } from "../src/lib/content-types"
 
 const cwd = process.cwd()
 const SERVICES_DIR = path.resolve(cwd, "services")
-
-interface EntryReport {
-  slug: string
-  errors: number
-  warnings: number
-  infos: number
-  tokens: {
-    colors: number
-    typography: number
-    spacing: number
-    rounded: number
-  }
-  findings: Array<{
-    severity: string
-    rule: string
-    path?: string
-    message: string
-  }>
-}
 
 function collectDocs(): Array<ServiceDoc> {
   return fs
@@ -111,33 +95,8 @@ function main() {
   }
 
   const reports = docs.map(inspect)
-  let totalErrors = 0
-  let totalWarnings = 0
-
-  for (const r of reports) {
-    totalErrors += r.errors
-    totalWarnings += r.warnings
-    const t = r.tokens
-    const counts = `${t.colors}c/${t.typography}t/${t.spacing}s/${t.rounded}r`
-    const label = `${r.slug.padEnd(20)} ${counts.padEnd(18)}`
-    if (r.errors)
-      console.log(`FAIL ${label} (${r.errors} error, ${r.warnings} warn)`)
-    else if (r.warnings) console.log(`warn ${label} (${r.warnings} warn)`)
-    else console.log(`ok   ${label}`)
-
-    for (const f of r.findings) {
-      if (f.severity === "info" && !verbose) continue
-      const where = f.path ? ` (${f.path})` : ""
-      console.log(
-        `       ${f.severity.padEnd(7)} [${f.rule}]${where} ${f.message}`
-      )
-    }
-  }
-
-  console.log(
-    `\n[spec] ${reports.length} entr${reports.length === 1 ? "y" : "ies"} — ` +
-      `${totalErrors} error, ${totalWarnings} warning finding(s).`
-  )
+  const totalErrors = reports.reduce((n, r) => n + r.errors, 0)
+  for (const line of formatSpecReport(reports, { verbose })) console.log(line)
 
   if (jsonOut) {
     fs.writeFileSync(

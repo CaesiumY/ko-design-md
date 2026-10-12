@@ -273,7 +273,9 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   사이트 Tokens 탭과 `use-design-md` 는 못 보고 DESIGN.md 파일의 frontmatter 에만 있다. 본문
   스펙 펜스(`text`)는 그대로 남는다(중복 발행). 컴포넌트가 하나라도 생기면 린터 규칙 둘이 깨어난다 —
   `orphaned-tokens`(참조되지 않은 색마다)와 `contrast-ratio`(컴포넌트의 배경·글자 쌍). 에러가
-  아니라 경고라 게이트는 막지 않는다. 저작 규칙은 #389 가 정한다.
+  아니라 경고라 게이트는 막지 않는다. `orphaned-tokens` 는 카탈로그가 팔레트 전체를 싣는 한 0 이
+  될 수 없어서, `pnpm validate:spec` 은 그 목록을 찍지 않고 건수만 요약한다(`--verbose` 면 목록,
+  `--json-out` 은 전부 — #388). 저작 규칙은 #389 가 정한다.
 - **브랜드가 발행한 역할→팔레트 계층은 frontmatter 참조 행으로 싣는다(#435 — greeting ·
   seed-design · codeit).** 형식은 `bg-brand-solid: "{colors.carrot-600}"` 이고, 다크 짝은
   `dark-` 접두로 다크 팔레트를 가리킨다(`dark-bg-brand-solid`). 단 테마를 타지 않는 팔레트(seed-design

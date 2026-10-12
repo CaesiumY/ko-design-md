@@ -21,7 +21,7 @@ A fill-in skeleton for all of the above lives at [`design-md-template.md`](./des
 
 ### Relationship to Google's published DESIGN.md spec
 
-Google Labs published the DESIGN.md format spec (`github.com/google-labs-code/design.md`, version `alpha`, Apache-2.0) after this catalog adopted the Stitch section structure. The two agree, and the ordering above already satisfies the spec — verified by running the official linter (`@google/design.md`) over every entry: `src/lib/google-designmd-corpus.test.ts` runs it inside `pnpm test` (the CI gate), and `pnpm validate:spec` prints the same findings for local diagnosis.
+Google Labs published the DESIGN.md format spec (`github.com/google-labs-code/design.md`, version `alpha`, Apache-2.0) after this catalog adopted the Stitch section structure. The two agree, and the ordering above already satisfies the spec — verified by running the official linter (`@google/design.md`) over every entry: `src/lib/google-designmd-corpus.test.ts` runs it inside `pnpm test` (the CI gate), and `pnpm validate:spec` prints the same findings for local diagnosis (warnings of some rules — `orphaned-tokens` — only as a count unless `--verbose`).
 
 Three facts about the spec matter when editing this list:
 
