@@ -38,8 +38,8 @@ All 10 standard sections present in order: `## Brand & Style`, `## Colors`, `## 
 Color values are expressed in OKLCH only — declared in the frontmatter `colors:` map, referenced inside backticks in prose. The brand's published hex may appear only as a trailing `#` comment on the token's own line. Typography references match across all mentions of the same role. Radius and spacing values are concrete numbers, not vague descriptors. The frontmatter `components:` map and the body's `## Components` spec are two copies of one spec (stitch-format.md, "Component tokens in the frontmatter `components:` map"): every map row must agree with the `###` entry of the same name, and a body component with any value among the spec's eight properties should have its row, carrying those of its values the map's rules admit (a value with no declared token to point at stays in the body) — a mismatch is a contradicting number between sections.
 
 **Pass criteria**:
-- 2 pts: all colors OKLCH; typography names consistent (e.g. "Pretendard Variable" not also "Pretendard"); spacing/radius numerical (`16px`, not "약간 둥근").
-- 1 pt: one or two minor inconsistencies (e.g. one color in hex, mixed font name spelling).
+- 2 pts: all colors OKLCH; typography names consistent (e.g. "Pretendard Variable" not also "Pretendard"); spacing/radius numerical (`16px`, not "약간 둥근"); every body component with a value among the spec's eight properties has a `components:` row that agrees with it.
+- 1 pt: one or two minor inconsistencies (e.g. one color in hex, mixed font name spelling); or such components left out of the `components:` map — no machine check catches a missing map yet, so raise it as a `warn` issue naming the components.
 - 0 pts: hex/rgba colors anywhere; contradicting numbers between sections.
 
 **Failure modes**: `## Colors` says primary is `oklch(0.7 0.18 50)` but `## Components` references `#FF8800`; `## Typography` calls it "Pretendard" in one place and "Pretendard Variable" in another.
