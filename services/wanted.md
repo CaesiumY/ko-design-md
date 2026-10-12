@@ -8,6 +8,7 @@ lang: ko
 logo: https://getdesign.kr/logos/wanted.png
 colors:
   ## Brand
+  primary: "{colors.blue-800}"
   blue-800: oklch(0.563 0.241 261)   # core Wanted Blue (#0066FF), 단일 primary
   blue-700: oklch(0.607 0.225 257)   # hover step
   blue-850: oklch(0.529 0.220 258)

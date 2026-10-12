@@ -130,11 +130,8 @@ describe("catalog md, linted as the standard DESIGN.md", () => {
       "gmarket",
       "greeting",
       "gs-retail",
-      "kyobobook",
       "lg-electronics",
-      "line-design-system",
       "seed-design",
-      "wanted",
       "zigbang",
     ])
   })
