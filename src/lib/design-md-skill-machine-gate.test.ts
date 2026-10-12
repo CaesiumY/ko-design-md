@@ -2,7 +2,11 @@ import { describe, expect, it } from "vitest"
 // Derived, not restated: the skeleton is checked against the same list the
 // section gate enforces, so adding a required section can never leave the
 // template behind.
-import { REQUIRED_SECTIONS } from "./draft-validator"
+import {
+  COMPONENT_DIMENSION_UNITS,
+  COMPONENT_PROPERTIES,
+  REQUIRED_SECTIONS,
+} from "./draft-validator"
 import { BASELINE_WIDTHS } from "./contrast-baseline"
 import { reducedMotionBlock } from "./reduced-motion-block"
 import {
@@ -13,6 +17,7 @@ import {
 import {
   DESIGN_MD_AGENT_PATHS,
   DESIGN_MD_AUTHOR_AGENT,
+  DESIGN_MD_REVIEWER_AGENT,
   DESIGN_MD_RUBRIC_DESIGN,
   DESIGN_MD_RUBRIC_PREVIEW,
   DESIGN_MD_SKILL,
@@ -199,7 +204,9 @@ describe("/design-md machine gates", () => {
   // as "not a recognized component sub-token" and dropped by standard tools.
   // Read from the linter's own spec config, so an upgrade that changes the
   // list fails here until the prompt follows. The examples the template and
-  // the spec show must stay inside it too.
+  // the spec show must stay inside it too. The draft gate holds its own copy of
+  // the list and of the Dimension units (#525 — the package exports neither),
+  // pinned to the same file so the gate and the prompt cannot part.
   it("names the component properties the pinned linter reads", () => {
     const specConfig = readRepoFile(
       "node_modules/@google/design.md/dist/linter/spec-config.yaml"
@@ -215,6 +222,14 @@ describe("/design-md machine gates", () => {
       (m) => m[1]
     )
     expect(linter.length).toBeGreaterThan(0)
+    expect([...COMPONENT_PROPERTIES].sort()).toEqual([...linter].sort())
+
+    const unitBlock = /^units:\r?\n((?:[ \t]+- .*\r?\n)+)/m.exec(
+      specConfig
+    )?.[1]
+    expect(unitBlock, "the linter config must list units").toBeDefined()
+    const units = [...(unitBlock ?? "").matchAll(/- (\w+)/g)].map((m) => m[1])
+    expect([...COMPONENT_DIMENSION_UNITS].sort()).toEqual([...units].sort())
 
     const stitch = readRepoFile(DESIGN_MD_STITCH_FORMAT)
     const stated = /\*\*Only the spec's \w+ properties:\*\* ([^\n]+?)\. /.exec(
@@ -237,6 +252,44 @@ describe("/design-md machine gates", () => {
       expect(used.length).toBeGreaterThan(0)
       for (const p of used) expect(linter, `${doc} uses ${p}`).toContain(p)
     }
+  })
+
+  // #525. The prompts hand the components map's form checks to the draft gate
+  // by rule id — the reviewer adopts them instead of judging — so every id they
+  // name has to be one the gate actually raises.
+  it("names component rule ids the draft gate raises", () => {
+    // The ids the gate raises, from its `block(`/`warn(` calls — not any
+    // string in the file, which a comment or a set would also satisfy.
+    const raised = new Set(
+      [
+        ...readRepoFile("src/lib/draft-validator.ts").matchAll(
+          /(?:block|warn)\(\s*\n?\s*"([a-z0-9-]+)"/g
+        ),
+      ].map((m) => m[1])
+    )
+    let named = 0
+    for (const doc of [
+      DESIGN_MD_STITCH_FORMAT,
+      DESIGN_MD_TEMPLATE,
+      DESIGN_MD_RUBRIC_DESIGN,
+      DESIGN_MD_REVIEWER_AGENT,
+    ]) {
+      // Any kebab id with a `component…` part — loose on purpose, so a
+      // misspelling (`empty-components`) is caught rather than skipped.
+      const ids = new Set(
+        [...readRepoFile(doc).matchAll(/`([a-z]+(?:-[a-z]+)+)`/g)]
+          .map((m) => m[1])
+          .filter((id) => id.split("-").some((p) => p.startsWith("component")))
+      )
+      named += ids.size
+      for (const id of ids) {
+        expect(raised.has(id), `${doc} names \`${id}\``).toBe(true)
+      }
+    }
+    // Guards the extraction, not the prose: a regex that matched nothing
+    // would pass every doc.
+    expect(raised.has("component-value-form")).toBe(true)
+    expect(named).toBeGreaterThan(0)
   })
 
   // created_at is the catalog's sort key, but nothing in the pipeline would

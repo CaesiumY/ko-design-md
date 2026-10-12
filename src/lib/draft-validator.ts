@@ -1175,8 +1175,140 @@ function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
   return issues
 }
 
+/** The spec's component properties — `component_sub_tokens` in the pinned
+ *  linter's `spec-config.yaml`, which the package does not export. A contract
+ *  test compares the two, so a linter upgrade that changes the list fails until
+ *  this follows. */
+export const COMPONENT_PROPERTIES: ReadonlyArray<string> = [
+  "backgroundColor",
+  "textColor",
+  "typography",
+  "rounded",
+  "padding",
+  "size",
+  "height",
+  "width",
+]
+
+/** The spec's Dimension units — `units:` in the same file, pinned the same way. */
+export const COMPONENT_DIMENSION_UNITS: ReadonlyArray<string> = [
+  "px",
+  "em",
+  "rem",
+]
+
+/** A whole value that is one quoted reference, with the characters the
+ *  linter's `isTokenReference` allows between the braces — `"{ colors.x }"` or
+ *  `"{colors/x}"` it keeps as raw text. Whether it RESOLVES (a declared key,
+ *  in a map the linter reads — not `{fonts.x}`) is not form: the linter
+ *  reports that as a broken reference, which CI's error ratchet blocks. */
+const QUOTED_REFERENCE = /^(["'])\{[a-zA-Z0-9._-]+\}\1$/
+/** A number exactly as the linter's `parseDimensionParts` reads one —
+ *  `-1`, `.5`, `1.25`; not `+4` or `48.`, which it keeps as raw text. */
+const SPEC_NUMBER = String.raw`-?\d*\.?\d+`
+/** One dimension a standard tool reads. */
+const COMPONENT_DIMENSION = new RegExp(
+  `^${SPEC_NUMBER}(?:${COMPONENT_DIMENSION_UNITS.join("|")})$`
+)
+/** The linter's `MAX_DIMENSION_LENGTH`: a longer value stays raw text. */
+const MAX_DIMENSION_LENGTH = 64
+
+function isComponentDimension(value: string): boolean {
+  return value.length <= MAX_DIMENSION_LENGTH && COMPONENT_DIMENSION.test(value)
+}
+
+/** A literal CSS colour — hex or a colour function, OKLCH included. */
+const LITERAL_COLOUR =
+  /^(?:#[0-9a-fA-F]{3,8}\b|(?:rgba?|hsla?|hwb|oklch|oklab|lch|lab|color-mix)\s*\()/i
+/** The same hex on its own, then at most a comment. Anything after it
+ *  (`#2024 redesign`) makes it a note instead. */
+const LONE_HEX = /^#[0-9a-fA-F]{3,8}(?=[ \t]*(?:#.*)?$)/
+
+/** A property's value as YAML reads the line: a comment opens at a space or
+ *  tab then `#` outside quotes, and only spaces and tabs are trimmed.
+ *  `stripYamlComment`'s `\s` would also shed a no-break or ideographic space
+ *  that YAML keeps — `48px` followed by U+3000 is raw text to the linter. */
+function componentValue(rest: string): string {
+  const yamlTrim = (s: string) => s.replace(/^[ \t]+|[ \t]+$/g, "")
+  const value = yamlTrim(rest)
+  // A quoted scalar ends at its closing quote; only what follows can be a
+  // comment, so `"{colors.x} # y"` is one (inadmissible) value, not a cut one.
+  const quoted = /^(["'])(?:(?!\1).)*\1/.exec(value)
+  if (quoted && /^[ \t]*(?:#.*)?$/.test(value.slice(quoted[0].length))) {
+    return quoted[0]
+  }
+  const comment = /[ \t]+#.*$/.exec(value)
+  return comment ? yamlTrim(value.slice(0, comment.index)) : value
+}
+
+/** Said wherever a fix moves a property out of the map: removing a
+ *  component's only property leaves an empty head row, itself a block. A
+ *  clause, so it ends whichever sentence carries it. */
+const ONLY_PROPERTY =
+  "if it was the component's only property, delete the component's head row too"
+
+/** What to do about a component value that is neither admissible form — the
+ *  likeliest cause first, since each needs a different fix. */
+function componentValueFix(value: string): string {
+  if (/^\{.*\}$/.test(value)) {
+    return `quote it (\`"${value}"\`) — unquoted, YAML reads \`{…}\` as a map and standard tools get no value at all`
+  }
+  const trimmed = value.trim()
+  if (
+    trimmed !== value &&
+    (QUOTED_REFERENCE.test(trimmed) || isComponentDimension(trimmed))
+  ) {
+    return `delete the invisible space around \`${trimmed}\` — YAML trims only spaces and tabs, so a no-break or full-width space stays part of the value and standard tools read it as text`
+  }
+  const bare = stripQuotes(value)
+  if (bare !== value && /^\{.*\}$/.test(bare)) {
+    return 'a reference names one token with only letters, digits, `.`, `_` and `-` between the braces (`"{colors.name}"`) — anything else standard tools keep as text'
+  }
+  if (bare !== value && isComponentDimension(bare)) {
+    return `drop the quotes (\`${bare}\`)`
+  }
+  if (isComponentDimension(bare.toLowerCase())) {
+    return `write the unit in lower case (\`${bare.toLowerCase()}\`) — standard tools read \`px\`, not \`PX\``
+  }
+  if (LITERAL_COLOUR.test(bare)) {
+    return `the map takes no literal colour: point at a declared colour token as a quoted reference (\`"{colors.name}"\`), or leave the property out and keep the colour in the body spec; ${ONLY_PROPERTY}`
+  }
+  const parts = bare.split(/\s+/)
+  if (parts.length > 1 && parts.every(isComponentDimension)) {
+    return `write one value — a shorthand such as \`12px 16px\` is not a Dimension, so it stays in the body spec only; ${ONLY_PROPERTY}`
+  }
+  if (COMPONENT_DIMENSION.test(bare)) {
+    return `shorten it — standard tools read a dimension of at most ${MAX_DIMENSION_LENGTH} characters`
+  }
+  const units = COMPONENT_DIMENSION_UNITS.join("|")
+  if (new RegExp(`^[+-]?[\\d.]+(?:${units})?$`).test(bare)) {
+    // Edit the text rather than reparse the number, so the value is kept to
+    // the digit: drop a leading `+` and a `.` with no digits after it.
+    const plain = bare.replace(/^\+/, "").replace(/\.(?=[a-z]*$)/, "")
+    const withUnit = /[a-z]$/.test(plain) ? plain : `${plain}px`
+    if (isComponentDimension(withUnit)) {
+      return /[a-z]$/.test(bare)
+        ? `write the number plainly (\`${withUnit}\`) — standard tools read no leading \`+\` or trailing \`.\``
+        : `add a unit (\`${withUnit}\`; zero is \`0px\`) — a bare number is not a Dimension`
+    }
+  }
+  if (new RegExp(`^[+-]?[\\d.]+(?!(?:${units})$)[a-zA-Z%]+$`).test(bare)) {
+    return `the spec's Dimension takes ${COMPONENT_DIMENSION_UNITS.map((u) => `\`${u}\``).join("/")} only — a \`%\`, \`vw\` or other unit stays in the body spec; ${ONLY_PROPERTY}`
+  }
+  return `the map reads nothing else — keep keywords, notes and alternatives in the body spec; ${ONLY_PROPERTY}`
+}
+
+/** A fix that rewrites a row's key side must also carry its value's fix, or
+ *  the rewritten row meets `component-value-form` on the next run. */
+function rewrittenRow(prop: string, valueText: string): string {
+  const value = componentValue(valueText)
+  return QUOTED_REFERENCE.test(value) || isComponentDimension(value)
+    ? `Write \`${prop}: ${value}\`.`
+    : `Write \`${prop}: …\` — and its value \`${value}\` is not one the map reads either: ${componentValueFix(value)}.`
+}
+
 /**
- * The spec's `components:` map, held to the same rules as the token maps (#384).
+ * The spec's `components:` map (#384).
  *
  * Its shape is exactly two levels — a component head row, then one property per
  * four-space row — because that is what every line-based gate here can read.
@@ -1184,18 +1316,77 @@ function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
  * reach the published document without
  * any gate seeing them; a deeper row is not a spec property at all.
  *
- * Property values are judged like colour tokens: a reference must be quoted,
- * anything else must not be, and a literal colour must be OKLCH. Without this a
- * quoted hex in a component passed `validate:catalog` and `audit:oklch` alike.
+ * Each property is one of the spec's eight, and its value one of the two forms
+ * a standard tool reads (#525): a quoted reference, or one `px`/`em`/`rem`
+ * dimension. The linter accepts everything else without a finding — an
+ * unquoted reference reaches it as a YAML map, a shorthand or a note as raw
+ * text, `48` as a bare number — so this is the only check on the form. Whether
+ * a reference resolves is `checkTokenReferences`'s and the linter's; whether a
+ * row matches its body spec is the reviewer's.
+ *
+ * The rows are read line by line, and a line the row splitter does not match
+ * (`padding : 12px`, `? padding`, `- height: 48px`, a value continued on the
+ * next line) would otherwise go unjudged. So the result is checked against
+ * the map as YAML reads it (`components`, null when the block does not
+ * parse): every property YAML sees must be a row judged here, holding the
+ * value judged here.
+ *
+ * A component that is YAML `null` (a head row with nothing under it) leaves
+ * the linter no model: it then resolves no colours and no type scale, and the
+ * only blocks left would name maps that are fine. So it is named here, and
+ * `validateDraft` then skips the linter, as it does for unparseable YAML.
  */
-function checkComponentRows(fm: Array<string>): Array<ValidationIssue> {
+function checkComponentRows(
+  fm: Array<string>,
+  components: YamlNode | undefined
+): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
+  // What the line scan saw: each head, the properties judged under it with
+  // the value each was judged on, and the components already blocked.
+  const heads: Array<string> = []
+  const judged = new Map<string, Map<string, string>>()
+  const blocked = new Set<string>()
+  let current: string | null = null
+  const fail = (issue: ValidationIssue) => {
+    issues.push(issue)
+    if (current !== null) blocked.add(current)
+  }
   for (const row of mapRows(fm, "components")) {
+    // `height: #fff` — a space then `#` opens a YAML comment, so the row reads
+    // as a head with no value. It is a property row whose literal colour was
+    // cut off, not a nesting mistake.
+    const hex = row.indent === 4 ? LONE_HEX.exec(row.rest) : null
     const canonical =
       (row.indent === 2 && isHeadRow(row)) ||
-      (row.indent === 4 && !isHeadRow(row))
+      (row.indent === 4 && (!isHeadRow(row) || hex !== null))
+    // Any row at head depth starts the next component, so a misshapen head's
+    // block is charged to it and the YAML pass does not name it again.
+    if (row.indent <= 2) current = row.indent === 2 ? row.key : null
+    if (row.indent === 2 && canonical) {
+      heads.push(row.key)
+      judged.set(row.key, new Map())
+      continue
+    }
+    // `height:48px` — YAML starts a value only after a space or tab, so the
+    // row is one string and the component's value is that string, with no
+    // property at all. The row splitter here takes `:\s*`, zero spaces too.
+    const valueText = row.line.slice(row.line.indexOf(":") + 1)
+    if (
+      row.indent === 4 &&
+      COMPONENT_PROPERTIES.includes(row.key) &&
+      !/^(?:[ \t]|$)/.test(valueText)
+    ) {
+      fail(
+        block(
+          "component-value-form",
+          "tokens",
+          `component property \`${row.line.trim()}\` has no space after the colon — YAML reads the whole row as one string, so the component gets no property at all. ${rewrittenRow(row.key, valueText)}`
+        )
+      )
+      continue
+    }
     if (!canonical) {
-      issues.push(
+      fail(
         block(
           "noncanonical-component-shape",
           "tokens",
@@ -1204,20 +1395,127 @@ function checkComponentRows(fm: Array<string>): Array<ValidationIssue> {
       )
       continue
     }
-    if (row.indent !== 4) continue
-    const authored = stripYamlComment(row.rest).trim()
-    if (/^["']?\{/.test(authored)) continue
-    const value = stripQuotes(authored)
-    if (value !== authored) {
-      issues.push(
+    if (!COMPONENT_PROPERTIES.includes(row.key)) {
+      // `"height": 48px` names a real property; only its quotes are wrong.
+      const bareKey = stripQuotes(row.key)
+      fail(
         block(
-          "quoted-token-value",
+          "unknown-component-property",
           "tokens",
-          `component property \`${row.key}\` wraps its value in quotes (${authored}) — write it bare (\`${value}\`). Quote only a reference such as \`"{colors.name}"\`.`
+          COMPONENT_PROPERTIES.includes(bareKey)
+            ? `component property \`${row.key}\` is quoted — write the key bare, as every frontmatter key is written. ${rewrittenRow(bareKey, valueText)}`
+            : `component property \`${row.key}\` is not one of the spec's eight (${COMPONENT_PROPERTIES.map((p) => `\`${p}\``).join(", ")}). Standard tools ignore it — keep it in the body spec only; ${ONLY_PROPERTY}.`
         )
       )
+      continue
     }
-    issues.push(...tokenLineIssues(row.key, value, row.line))
+    if (hex) {
+      fail(
+        block(
+          "component-value-form",
+          "tokens",
+          `component property \`${row.key}: ${hex[0]}\` has no value — a space then \`#\` opens a YAML comment, so \`${hex[0]}\` is not part of it. Fix: ${componentValueFix(hex[0])}.`
+        )
+      )
+      continue
+    }
+    // From the line itself: the row splitter's `\s*` after the colon would
+    // already have shed a leading no-break space that YAML keeps.
+    const authored = componentValue(valueText)
+    if (QUOTED_REFERENCE.test(authored) || isComponentDimension(authored)) {
+      if (current !== null) judged.get(current)?.set(row.key, authored)
+      continue
+    }
+    fail(
+      block(
+        "component-value-form",
+        "tokens",
+        `component property \`${row.key}: ${authored}\` is neither a quoted reference (\`"{colors.name}"\`) nor one ${COMPONENT_DIMENSION_UNITS.map((u) => `\`${u}\``).join("/")} dimension (\`48px\`), the two forms the spec's \`components:\` map reads — ${componentValueFix(authored)}.`
+      )
+    )
+  }
+
+  return [
+    ...issues,
+    ...crossCheckComponents(components, { heads, judged, blocked }),
+  ]
+}
+
+/**
+ * The line scan's reading of `components:`, checked against YAML's.
+ *
+ * Every component and property YAML sees must be one the scan judged, with
+ * the value it judged; a component YAML reads as null is `empty-component`.
+ * Without YAML's reading (the block did not parse — already a block), the
+ * scan's own empty heads are the best answer.
+ */
+function crossCheckComponents(
+  components: YamlNode | undefined,
+  scan: {
+    heads: ReadonlyArray<string>
+    /** Per component, each property judged admissible and its value. */
+    judged: ReadonlyMap<string, ReadonlyMap<string, string>>
+    /** Components the scan already blocked — one cause, one message. */
+    blocked: ReadonlySet<string>
+  }
+): Array<ValidationIssue> {
+  const { heads, judged, blocked } = scan
+  const emptyComponent = (name: string) =>
+    block(
+      "empty-component",
+      "tokens",
+      `component \`${name}\` has no property under it — YAML reads it as null and the official linter then builds no design system at all (it reports no colours and no type scale). Give it at least one of the spec's properties, or delete the row and keep the component in the body spec only.`
+    )
+  if (!isYamlMap(components)) {
+    return heads
+      .filter((name) => !blocked.has(name) && judged.get(name)?.size === 0)
+      .map(emptyComponent)
+  }
+  const issues: Array<ValidationIssue> = []
+  // A head the scan could not read (`  chip :`) hands its rows to the head
+  // above, so no row-level comparison can be trusted until it is fixed: name
+  // the head, and what YAML reads as empty, and stop there.
+  const unseen = Object.keys(components).filter(
+    (name) => !judged.has(name) && !blocked.has(name)
+  )
+  for (const [name, value] of Object.entries(components)) {
+    if (blocked.has(name)) continue
+    if (value === null) {
+      issues.push(emptyComponent(name))
+      continue
+    }
+    const rows = judged.get(name)
+    if (!rows || !isYamlMap(value)) {
+      issues.push(
+        block(
+          "noncanonical-component-shape",
+          "tokens",
+          `component \`${name}\` is not written as a head row \`  ${name.trim()}:\` with one \`property: value\` row per line at four spaces under it, so no gate here read it. Rewrite it in that shape.`
+        )
+      )
+      continue
+    }
+    if (unseen.length > 0) continue
+    for (const [prop, read] of Object.entries(value)) {
+      const authored = rows.get(prop)
+      if (authored === undefined) {
+        issues.push(
+          block(
+            "noncanonical-component-shape",
+            "tokens",
+            `component property \`${name}.${prop}\` is not written as one \`${prop.trim()}: value\` row at four spaces — a space before the colon, a \`?\` key or a list item hides it from every gate here. Rewrite it as \`    ${prop.trim()}: value\`.`
+          )
+        )
+      } else if (read !== stripQuotes(authored)) {
+        issues.push(
+          block(
+            "component-value-form",
+            "tokens",
+            `component property \`${name}.${prop}\` reads as \`${String(read)}\` to YAML, not \`${authored}\` — the value continues on the next line. Keep it on one line, one value: a shorthand or a note stays in the body spec; ${ONLY_PROPERTY}.`
+          )
+        )
+      }
+    }
   }
   return issues
 }
@@ -2383,9 +2681,20 @@ export function validateDraft(
       )
     )
   }
-  // One cause, one message: when the frontmatter does not parse, the linter's
-  // model is empty and would add three wrong instructions to the real one.
-  if (!yamlIssues.some((i) => i.severity === "block")) {
+  // One cause, one message: when the frontmatter does not parse, or a
+  // component is empty (YAML null, which the linter cannot model), the
+  // linter's model is empty and would add wrong instructions to the real one.
+  const fmLines = frontmatterBlock(raw).split(/\r?\n/)
+  const fmRoot =
+    fmDoc && fmDoc.errors.length === 0 ? rawNode(fmDoc.contents) : undefined
+  const componentIssues = checkComponentRows(
+    fmLines,
+    isYamlMap(fmRoot) ? fmRoot.components : undefined
+  )
+  if (
+    !yamlIssues.some((i) => i.severity === "block") &&
+    !componentIssues.some((i) => i.rule === "empty-component")
+  ) {
     const spec = checkSpecLint(raw, entrySlug)
     issues.push(...spec.issues)
     if (spec.resolved) {
@@ -2662,10 +2971,9 @@ export function validateDraft(
       : sectionIssues)
   )
   issues.push(...checkDuplicateTokens(raw, body))
-  const fmLines = frontmatterBlock(raw).split(/\r?\n/)
   issues.push(...scanFrontmatterTokens(fmLines))
   issues.push(...checkBlockScalars(fmLines))
-  issues.push(...checkComponentRows(fmLines))
+  issues.push(...componentIssues)
   issues.push(...checkWorkingMarkers(body))
   issues.push(...scan.yamlTokenIssues)
   issues.push(...scan.fenceIssues)

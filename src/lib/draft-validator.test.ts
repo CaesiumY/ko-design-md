@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest"
+import { lint } from "@google/design.md/linter"
 import { REQUIRED_SECTIONS, validateDraft } from "./draft-validator"
 import { matter } from "./content-parser"
 import { FRONTMATTER_MAPS } from "./frontmatter-map-table"
@@ -2580,7 +2581,7 @@ describe("the elevation map is held to the token rules", () => {
   })
 })
 
-describe("the spec's components map is held to the token rules", () => {
+describe("the spec's components map takes only what standard tools read", () => {
   // #384 — no catalog gate read this map, so a quoted hex in a component slid
   // past the OKLCH-only policy while validate:catalog and audit:oklch passed.
   const withComponents = (rows: Array<string>) =>
@@ -2591,11 +2592,160 @@ describe("the spec's components map is held to the token rules", () => {
     ])
 
   it("blocks a quoted literal colour in a component property", () => {
+    // One rule, one fix: a component colour is a reference, so "write it bare"
+    // and "make it OKLCH" would both be wrong advice here.
     const rules = rulesFor(
       withComponents(["  pill:", '    backgroundColor: "#FF0038"'])
     )
-    expect(rules).toContain("quoted-token-value")
-    expect(rules).toContain("non-oklch-token-value")
+    expect(rules).toContain("component-value-form")
+    expect(rules).not.toContain("quoted-token-value")
+    expect(rules).not.toContain("non-oklch-token-value")
+  })
+
+  // #525 — each of these passed every gate: the linter keeps the value as raw
+  // text, a bare number or (unquoted reference) a YAML map, with no finding.
+  it.each([
+    ["an unquoted reference", "backgroundColor: {colors.brand}", "YAML reads"],
+    ["a multi-value shorthand", "padding: 12px 16px", "write one value"],
+    ["a missing unit", "height: 48", "add a unit"],
+    ["prose", "size: 28 또는 32", "keywords, notes"],
+    ["a percentage", "rounded: 50%", "other unit"],
+    ["an upper-case unit", "height: 4PX", "lower case (`4px`)"],
+    ["a keyword", "width: auto", "keywords, notes"],
+    // The linter's number shape is `-?\d*\.?\d+`: these it keeps as text.
+    ["a plus sign", "height: +4px", "plainly (`4px`)"],
+    ["a trailing point", "height: 48.px", "plainly (`48px`)"],
+    ["a plus sign with no unit", "height: +4", "add a unit (`4px`"],
+    // Past the linter's 64-character limit a dimension stays raw text.
+    ["an over-long dimension", `height: ${"0".repeat(64)}px`, "at most 64"],
+    ["a trailing point with no unit", "height: 48.", "add a unit (`48px`"],
+    // Two points is not a number at all — not "another unit" either.
+    ["two decimal points", "height: 1.2.3px", "keywords, notes"],
+    // The linter's `isTokenReference` takes letters, digits, `.`, `_`, `-`.
+    [
+      "a reference with spaces",
+      'textColor: "{ colors.brand }"',
+      "between the braces",
+    ],
+    [
+      "a reference with a slash",
+      'textColor: "{colors/brand}"',
+      "between the braces",
+    ],
+    // Inside quotes ` #` is text, not a comment: one value, shown whole.
+    [
+      "a note inside the quotes",
+      'textColor: "{colors.brand} # 본문"',
+      '`textColor: "{colors.brand} # 본문"`',
+    ],
+    // YAML starts a value only after a space: the row is one string.
+    ["no space after the colon", "height:48px", "Write `height: 48px`"],
+    // YAML trims only spaces and tabs; a no-break space stays in the value.
+    ["a trailing no-break space", "height: 48px ", "invisible space"],
+    ["a leading no-break space", "height:  48px", "invisible space"],
+    [
+      "an unquoted hex, which YAML cuts as a comment",
+      "textColor: #3182F6",
+      "literal colour",
+    ],
+    ["a literal colour", "textColor: oklch(0.62 0.19 258)", "literal colour"],
+    ["a quoted literal colour", 'textColor: "#FF0038"', "literal colour"],
+    ["a quoted dimension", 'height: "48px"', "drop the quotes"],
+  ])("blocks %s as a component value", (_, row, hint) => {
+    const result = validateDraft(
+      withComponents(["  pill:", `    ${row}`]),
+      OPTS
+    )
+    const form = result.issues.filter((i) => i.rule === "component-value-form")
+    expect(form).toHaveLength(1)
+    expect(form[0].severity).toBe("block")
+    expect(form[0].fix).toContain(hint)
+    const rules = result.issues.map((i) => i.rule)
+    expect(rules).not.toContain("quoted-token-value")
+    expect(rules).not.toContain("non-oklch-token-value")
+  })
+
+  it.each(["border: 1px", "border: #fff"])(
+    "blocks a property the spec does not define (%s)",
+    (row) => {
+      // A cut-off hex under an unknown name names the name first: pointing it
+      // at a colour token would only meet this block on the next run.
+      const result = validateDraft(
+        withComponents(["  pill:", `    ${row}`]),
+        OPTS
+      )
+      const unknown = result.issues.filter(
+        (i) => i.rule === "unknown-component-property"
+      )
+      expect(unknown).toHaveLength(1)
+      expect(unknown[0].severity).toBe("block")
+      expect(unknown[0].fix).toContain("backgroundColor")
+      const rules = result.issues.map((i) => i.rule)
+      expect(rules).not.toContain("component-value-form")
+      expect(rules).not.toContain("noncanonical-component-shape")
+    }
+  )
+
+  it("calls a nested head with a comment a shape problem, not a colour", () => {
+    // `#2024 redesign` is a note, not a cut-off hex.
+    const rules = rulesFor(
+      withComponents(["  pill:", "    height: #2024 redesign"])
+    )
+    expect(rules).toContain("noncanonical-component-shape")
+    expect(rules).not.toContain("component-value-form")
+  })
+
+  it.each([
+    '"{colors.brand}"',
+    "'{colors.brand}'",
+    '"{colors.brand}"   # 주석',
+    "48px",
+    ".5rem",
+    "1.25em",
+    "0px",
+    "-1px",
+  ])("admits %s as a component value", (value) => {
+    const rules = rulesFor(withComponents(["  pill:", `    height: ${value}`]))
+    expect(rules).not.toContain("component-value-form")
+    expect(rules).not.toContain("unknown-component-property")
+  })
+
+  it.each([
+    ["last", ["  pill:", "    height: 48px", "  card:"], "card"],
+    ["between two", ["  card:", "  pill:", "    height: 48px"], "card"],
+    ["before a flow map", ["  card:", '  pill: { height: "48px" }'], "card"],
+  ])("names a component with no property (%s)", (_, rows, name) => {
+    // YAML null: the linter builds no model, so the only other blocks would
+    // say the colours and the type scale are missing — held back, since the
+    // maps are fine.
+    const { issues } = validateDraft(withComponents(rows), OPTS)
+    const empty = issues.filter((i) => i.rule === "empty-component")
+    expect(empty).toHaveLength(1)
+    expect(empty[0].severity).toBe("block")
+    expect(empty[0].fix).toContain(`\`${name}\``)
+    const rules = issues.map((i) => i.rule)
+    expect(rules).not.toContain("spec-no-colors")
+    expect(rules).not.toContain("spec-no-typography")
+    expect(rules).not.toContain("spec-unrecorded-limitation")
+  })
+
+  it("still reports missing colours that no empty component explains", () => {
+    // The hold-back is tied to its cause: with a well-formed map and an empty
+    // palette, the linter's verdict stands.
+    const rules = rulesFor(
+      draftWithRawColorRows(["components:", "  pill:", "    height: 48px"])
+    )
+    expect(rules).not.toContain("empty-component")
+    expect(rules).toContain("spec-no-colors")
+  })
+
+  it("does not call a misshapen component empty", () => {
+    // The nested row has its own block; one cause, one message.
+    const rules = rulesFor(
+      withComponents(["  button:", "    states:", "      hover: darker"])
+    )
+    expect(rules).toContain("noncanonical-component-shape")
+    expect(rules).not.toContain("empty-component")
   })
 
   it("allows a reference and a bare dimension", () => {
@@ -2630,6 +2780,260 @@ describe("the spec's components map is held to the token rules", () => {
     expect(
       rulesFor(withComponents(["  card:", "    padding: >", "      12px 16px"]))
     ).toContain("block-scalar-token-value")
+  })
+})
+
+describe("every component value the gate admits is one the linter reads", () => {
+  // #525 — four review rounds each found a row the line-based check passed and
+  // the pinned linter did not read as a value (a number shape, a reference
+  // character, a no-break space, a missing space after the colon). This holds
+  // the two together: the gate may be stricter (it blocks a literal colour the
+  // linter would read), never looser. Cases are whole rows, so a fault in the
+  // row's own shape can be written down, not only one in its value — and a
+  // case may hold several, since a row the line scan skips hides best beside
+  // one it reads.
+  const rowsOf = (c: string | Array<string>) =>
+    (typeof c === "string" ? [c] : c).map((r) =>
+      r.startsWith(" ") ? r : `    ${r}`
+    )
+  const draftWith = (rows: Array<string>) =>
+    makeDraft({
+      frontmatter: [
+        "---",
+        "name: 데모",
+        "slug: demo",
+        "category: finance",
+        'last_updated: "2026-07-03"',
+        'created_at: "2026-07-03"',
+        "lang: ko",
+        "logo: https://getdesign.kr/logos/demo.png",
+        "colors:",
+        "  primary: oklch(0.62 0.19 258)",
+        "typography:",
+        "  body:",
+        "    fontSize: 16px",
+        "rounded:",
+        "  md: 8px",
+        "spacing:",
+        "  s: 4px",
+        "components:",
+        "  pill:",
+        ...rows,
+        "---",
+      ].join("\n"),
+    })
+  // Not judged here: whether a reference's KEY exists, or lands in a map the
+  // linter reads (`unresolved-token-ref`, and the linter's own broken-ref
+  // error), and whether it fits its property.
+  const GATE_RULES = new Set([
+    "component-value-form",
+    "unknown-component-property",
+    "noncanonical-component-shape",
+    "empty-component",
+    "unresolved-token-ref",
+  ])
+  const admits = (rows: Array<string>) =>
+    !validateDraft(draftWith(rows), OPTS).issues.some(
+      (i) => i.severity === "block" && GATE_RULES.has(i.rule)
+    )
+  // Rows the gate must keep admitting — without them the parity check below
+  // would pass a gate that blocked everything.
+  const WELL_FORMED = [
+    'backgroundColor: "{colors.primary}"',
+    "backgroundColor: '{colors.primary}'",
+    'backgroundColor: "{colors.primary}" # c',
+    'backgroundColor: "{colors.primary}"\t# c',
+    'typography: "{typography.body}"',
+    'rounded: "{rounded.md}"',
+    'padding: "{spacing.s}"',
+    "height: 48px",
+    "height:\t48px",
+    "height: 0px",
+    "height: -0px",
+    "height: .5px",
+    "height: 00px",
+    "height: -.5em",
+    "height: 1.0rem",
+    "height: 48px # n",
+    "height: 48px\t",
+    `height: ${"1".repeat(62)}px`,
+  ]
+  const ROWS: Array<string | Array<string>> = [
+    ...WELL_FORMED,
+    ["height: 48px", 'backgroundColor: "{colors.primary}"'],
+    // Rows the row splitter does not match, beside one it does.
+    ["height: 48px", "padding : 12px 16px"],
+    ["height: 48px", "textColor : {colors.primary}"],
+    ["height: 48px", "padding\t: 28 또는 32"],
+    ["height: 48px", "? padding", "    : 12px 16px"],
+    ["height: 48px", "height2 : 4px"],
+    ["height: 48px", '"padding": 12px 16px'],
+    // A plain value continued on the next line is one value to YAML.
+    ["padding: 12px", "      16px"],
+    ["height: 48px", "      or 56px"],
+    ["- height: 48px"],
+    'backgroundColor: "{ colors.primary }"',
+    'backgroundColor: "{colors/primary}"',
+    'backgroundColor: "{colors.primary} # c"',
+    'backgroundColor: "{colors.primary}"\u00a0',
+    'backgroundColor: \u00a0"{colors.primary}"',
+    "backgroundColor: {colors.primary}",
+    'backgroundColor:"{colors.primary}"',
+    "backgroundColor: oklch(0.62 0.19 258)",
+    "backgroundColor: #3182F6",
+    `height: ${"1".repeat(63)}px`,
+    "height:48px",
+    "height: +4px",
+    "height: 48.px",
+    "height: 48.",
+    "height: 48",
+    "height: 1e3px",
+    "height: 4PX",
+    "height: 50%",
+    "height: 12px 16px",
+    'height: "48px"',
+    "height: 48px\u00a0",
+    "height: 48px\u3000",
+    "height: \u00a048px",
+    "height: \u300048px",
+    "height: auto",
+    "height: 28 또는 32",
+  ]
+
+  it.each(WELL_FORMED)("admits %s", (row) => {
+    expect(admits(rowsOf(row))).toBe(true)
+  })
+
+  it.each(ROWS.map((c) => ({ rows: rowsOf(c) })))(
+    "$rows: admitted only if the linter reads every property",
+    ({ rows }) => {
+      if (!admits(rows)) return
+      const pill = lint(draftWith(rows)).designSystem.components.get("pill")
+      const props = pill ? [...pill.properties] : []
+      expect(
+        props.length,
+        `the linter reads no property from ${JSON.stringify(rows)}`
+      ).toBeGreaterThan(0)
+      for (const [prop, read] of props) {
+        expect(
+          read instanceof Object && "type" in read,
+          `the gate admits ${JSON.stringify(rows)}, the linter reads ${prop} as ${JSON.stringify(read)}`
+        ).toBe(true)
+      }
+    }
+  )
+})
+
+describe("a component the line scan cannot see whole", () => {
+  // The line scan judged what it matched; YAML's reading decides what is
+  // there. A head written `chip :` leaves the head above it with nothing.
+  it("names the component YAML reads as empty, and the head it could not read", () => {
+    const rules = rulesFor(
+      draftWithRawColorRows([
+        "  brand: oklch(0.62 0.19 258)",
+        "components:",
+        "  button:",
+        "  chip :",
+        "    height: 48px",
+      ])
+    )
+    expect(rules).toContain("empty-component")
+    expect(rules).toContain("noncanonical-component-shape")
+  })
+
+  it("does not call a list-item property empty", () => {
+    // `- height: 48px` makes the component a list, not null.
+    const rules = rulesFor(
+      draftWithRawColorRows([
+        "  brand: oklch(0.62 0.19 258)",
+        "components:",
+        "  button:",
+        "    - height: 48px",
+      ])
+    )
+    expect(rules).toContain("noncanonical-component-shape")
+    expect(rules).not.toContain("empty-component")
+  })
+
+  it("tells the author to drop a head row left with nothing under it", () => {
+    // Following "keep it in the body" for a component's only property would
+    // otherwise meet `empty-component` on the next run.
+    const fix = validateDraft(
+      draftWithRawColorRows([
+        "  brand: oklch(0.62 0.19 258)",
+        "components:",
+        "  card:",
+        "    border: 1px",
+      ]),
+      OPTS
+    ).issues.find((i) => i.rule === "unknown-component-property")?.fix
+    expect(fix).toContain("delete the component's head row")
+  })
+
+  const componentIssues = (rows: Array<string>) =>
+    validateDraft(
+      draftWithRawColorRows([
+        "  brand: oklch(0.62 0.19 258)",
+        "components:",
+        ...rows,
+      ]),
+      OPTS
+    ).issues
+
+  it.each([
+    ["width: 50%", "component-value-form"],
+    ["textColor: oklch(0.62 0.19 258)", "component-value-form"],
+    ["width: auto", "component-value-form"],
+  ])(
+    "says to drop the head row wherever a fix moves the only property out (%s)",
+    (row, rule) => {
+      const fix = componentIssues(["  card:", `    ${row}`]).find(
+        (i) => i.rule === rule
+      )?.fix
+      expect(fix).toContain("delete the component's head row")
+    }
+  )
+
+  it("names a misshapen head once, not again from YAML's reading", () => {
+    const shape = componentIssues(["  pill: { height: 48px }"]).filter(
+      (i) => i.rule === "noncanonical-component-shape"
+    )
+    expect(shape).toHaveLength(1)
+  })
+
+  it("does not blame a value for a head it could not read", () => {
+    // `chip :` hands its `40px` row to `button` in the line scan; comparing
+    // that with YAML's `button.height` (48px) would call it a value continued
+    // on the next line — a fix that changes nothing.
+    const rules = componentIssues([
+      "  button:",
+      "    height: 48px",
+      "  chip :",
+      "    height: 40px",
+    ]).map((i) => i.rule)
+    expect(rules).toContain("noncanonical-component-shape")
+    expect(rules).not.toContain("component-value-form")
+  })
+
+  it("tells a quoted property key to go bare, not to the body", () => {
+    const fix = componentIssues(["  card:", '    "height": 48px']).find(
+      (i) => i.rule === "unknown-component-property"
+    )?.fix
+    expect(fix).toContain("Write `height: 48px`")
+    expect(fix).not.toContain("body spec")
+  })
+
+  it.each([
+    ['    "height": 50%', "unknown-component-property"],
+    ["    width:50%", "component-value-form"],
+  ])("rewrites the row with its value's fix too (%s)", (row, rule) => {
+    // A rewrite that fixed only the key side would meet
+    // `component-value-form` on the next run.
+    const fix = componentIssues(["  card:", row]).find(
+      (i) => i.rule === rule
+    )?.fix
+    expect(fix).toContain("not one the map reads either")
+    expect(fix).toContain("other unit")
   })
 })
 
