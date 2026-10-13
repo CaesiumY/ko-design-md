@@ -872,9 +872,9 @@ describe("controlTextSample — the text a form control shows", () => {
   })
 
   it("does not read a select that shows a list rather than one closed choice", () => {
-    // A `multiple` or `size > 1` select lays its options out as text on the
-    // page, where the text pass already measures them; read here as well,
-    // the chosen option would be counted twice.
+    // A `multiple` or `size > 1` select shows every option at once, the chosen
+    // one on a highlight; one reading in the select's colours would not
+    // describe it. Not measured, and recorded as a Known gap.
     expect(
       controlTextSample(
         control({

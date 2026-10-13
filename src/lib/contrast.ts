@@ -305,8 +305,10 @@ export interface RawControl {
   selectedText: string
   /**
    * A select that lays its options out as a list (`multiple`, or `size` over
-   * 1) rather than showing one closed choice. Its options are then text on the
-   * page, which the text pass already measures.
+   * 1) rather than showing one closed choice. Not measured by any path: its
+   * options' text nodes have no client rects in Chromium, as a closed
+   * select's do not, so the text pass skips them too — a Known gap in
+   * `docs/preview-contrast-baseline.md`, with none in the catalogue today.
    */
   listbox: boolean
   own: RawControlStyle
@@ -365,8 +367,9 @@ export function controlTextSample(raw: RawControl): ControlText | null {
       : raw.blockers,
   })
 
-  // A style faded out entirely paints nothing — `::placeholder { opacity: 0 }`
-  // is the floating-label idiom — so there is no text there to judge.
+  // A style at opacity 0 paints nothing — `::placeholder { opacity: 0 }` is the
+  // floating-label idiom — so there is no text there to judge. A transparent
+  // COLOUR is not caught here; it reads 1:1, as it does on the text path.
   const shown = (
     source: ControlTextSource,
     text: string,
@@ -375,8 +378,9 @@ export function controlTextSample(raw: RawControl): ControlText | null {
     style.fg.opacity === 0 ? null : { source, text, sample: sampleFor(style) }
 
   if (raw.tag === "select") {
-    // A listbox's options are text nodes laid out on the page; the text pass
-    // measures them, and reading the chosen one here would count it twice.
+    // A listbox shows every option at once, the chosen one on a highlight, so
+    // one reading of the chosen option in the select's colours would stand
+    // for a list it does not describe. Left unmeasured and recorded as a gap.
     if (raw.listbox || raw.selectedText.trim() === "") return null
     return shown("option", raw.selectedText.trim(), raw.own)
   }
