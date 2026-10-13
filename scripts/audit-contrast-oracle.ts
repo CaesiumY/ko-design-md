@@ -10,16 +10,22 @@
 // because "3.01 turned up somewhere among a few hundred readings" is not a
 // check anything can fail.
 //
-// WHAT THIS FIXTURE CANNOT COVER. One branch of the collector has no anchor and
-// cannot get one here: the `paintBlockers` run over the layers BEHIND a
+// WHAT THIS FIXTURE CANNOT COVER, AND WHAT DOES. One branch of the collector
+// cannot get an anchor here: the `paintBlockers` run over the layers BEHIND a
 // non-text surface, which is where a filtered ancestor's pre-filter
 // `background-color` was once judged as though it were the colour on screen.
 // Reaching it needs a `filter` or a wide inset `box-shadow` on something behind
 // a measured surface, and samsung's file has neither. Adding one would end the
 // fixture's only claim to authority — that it is a file whose defects are
-// already known, unedited — so the gap is recorded instead. Covering it needs a
-// second committed fixture from a preview that does filter, and toss, which
-// hovers every button with `filter: brightness(0.96)`, is the candidate.
+// already known, unedited.
+//
+// No shipped preview has the shape either. Six of them declare `filter` and
+// none puts it behind a small text-free surface — toss filters its buttons,
+// which carry their own label, so its filter is caught on the TEXT path. So
+// the branch is covered by a second, synthetic fixture (#399), written for
+// this check alone. Its authority is of a different kind and the two are kept
+// apart: nothing in it is a record of a past defect, and every expectation on
+// it is derived from its CSS by hand, next to the anchor that claims it.
 
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
@@ -43,6 +49,11 @@ const FIXTURE_FILE = join(
   "scripts",
   "fixtures",
   "samsung-one-ui-2ead71d-parent.html"
+)
+const SYNTHETIC_FILE = join(
+  "scripts",
+  "fixtures",
+  "nontext-behind-paint-blockers.html"
 )
 const ORACLE_URL_PATH = "/__oracle/preview.html"
 const ORACLE_WIDTH = 976
@@ -210,6 +221,11 @@ interface PathAnchor {
   verdict?: Judgement
   blockers?: Array<Blocker>
   opacityApprox?: boolean
+  /**
+   * A ratio, claimed only where it is derived by hand from the document's own
+   * CSS — the derivation sits next to the anchor that claims it.
+   */
+  ratio?: number
 }
 
 const PATH_ANCHORS: Array<PathAnchor> = [
@@ -256,6 +272,57 @@ const PATH_ANCHORS: Array<PathAnchor> = [
 ]
 
 /**
+ * The synthetic fixture's claims (#399): the same dot over three panels, and
+ * only the panel differs.
+ *
+ * The control is there so the other two cannot pass by the dot not being
+ * measured in the way they assume. It claims a ratio, derived by hand: an
+ * achromatic OKLCH colour has relative luminance Y = L³, so the dot at
+ * `oklch(0.6 0 0)` is 0.6³ = 0.216 and the white panel is 1, giving
+ * (1 + 0.05) / (0.216 + 0.05) = 3.947. Quantised to 8 bits the dot is 0x80,
+ * Y 0.2159, and the ratio still rounds to 3.95. Over 3:1, so it passes.
+ *
+ * The other two claim the path and no number, for the reason the samsung path
+ * anchors give: what they assert is that the verdict is WITHHELD, and the
+ * ratio a withheld reading still carries is computed from the pre-filter
+ * colour nobody sees. The blocker each panel must produce is its CSS — a
+ * `filter: brightness(0.5)`, and an inset shadow with a 999px spread against a
+ * 120px-tall box, past the half-height the collector requires.
+ */
+const SYNTHETIC_ANCHORS: Array<PathAnchor> = [
+  {
+    id: "dot on a plain panel (control)",
+    pathEnds: "div.plain > span.dot",
+    theme: "light",
+    state: "default",
+    kind: "non-text",
+    basis: "fill",
+    verdict: "pass",
+    blockers: [],
+    opacityApprox: false,
+    ratio: 3.95,
+  },
+  {
+    id: "dot on a filtered panel",
+    pathEnds: "div.filtered > span.dot",
+    theme: "light",
+    state: "default",
+    kind: "non-text",
+    verdict: "indeterminate",
+    blockers: ["filter"],
+  },
+  {
+    id: "dot on a panel an inset shadow paints over",
+    pathEnds: "div.shadowed > span.dot",
+    theme: "light",
+    state: "default",
+    kind: "non-text",
+    verdict: "indeterminate",
+    blockers: ["inset-shadow"],
+  },
+]
+
+/**
  * The weakest reading at an anchor.
  *
  * An anchor names a kind of element, not one node: samsung renders the accent
@@ -279,6 +346,7 @@ function atAnchor(
 /** What a path anchor claims, in the words the check would print. */
 function describePath(anchor: PathAnchor, found: Finding): string {
   const parts: Array<string> = []
+  if (anchor.ratio !== undefined) parts.push(found.ratio.toFixed(2))
   if (anchor.basis !== undefined) parts.push(`carried by ${found.basis}`)
   if (anchor.verdict !== undefined) parts.push(found.verdict)
   if (anchor.blockers !== undefined) {
@@ -340,8 +408,8 @@ interface CheckResult {
 export async function selfCheck(root: string): Promise<CheckResult> {
   const { chromium } = await import("playwright")
   const fixture = readFileSync(join(root, FIXTURE_FILE), "utf8")
+  const syntheticFixture = readFileSync(join(root, SYNTHETIC_FILE), "utf8")
   const server = await serveStatic(`${root}/public`)
-  server.setOracle(fixture)
   const browser = await chromium.launch()
   const lines: Array<string> = []
   let ok = true
@@ -364,10 +432,20 @@ export async function selfCheck(root: string): Promise<CheckResult> {
     })
     const page = await context.newPage()
 
+    // The two fixtures take turns at the one virtual path, so every collection
+    // says what must be served there — the document, or `null` for a page under
+    // `public/` that does not use the path. It is required and always set —
+    // `null` empties the path, which then answers 404 — so a call cannot
+    // measure whichever fixture the previous one left behind. Each fixture also
+    // gets its own query string, which the server ignores: nothing here sends
+    // caching headers, so this only guards against a cache keeping one document
+    // under the other's URL.
     const collect = async (
       url: string,
-      slug: string
+      slug: string,
+      oracle: string | null
     ): Promise<Array<Finding>> => {
+      server.setOracle(oracle)
       const out: Array<Finding> = []
       for (const theme of ["light", "dark"] as const) {
         const measured = await measureOne(context, page, url, {
@@ -422,16 +500,69 @@ export async function selfCheck(root: string): Promise<CheckResult> {
       )
     }
 
+    const checkPath = (findings: Array<Finding>, anchor: PathAnchor): void => {
+      const found = atAnchor(findings, anchor)
+      if (found === undefined) {
+        note(false, `${anchor.id}: not measured at all (${anchor.pathEnds})`)
+        return
+      }
+      const wrong: Array<string> = []
+      if (anchor.ratio !== undefined) {
+        const delta = Math.abs(found.ratio - anchor.ratio)
+        if (delta > TOLERANCE) {
+          wrong.push(
+            `${found.ratio.toFixed(2)} vs ${anchor.ratio} expected (off by ${delta.toFixed(2)})`
+          )
+        }
+      }
+      if (anchor.basis !== undefined && found.basis !== anchor.basis) {
+        wrong.push(
+          `basis ${found.basis ?? "neither"}, expected ${anchor.basis}`
+        )
+      }
+      if (anchor.verdict !== undefined && found.verdict !== anchor.verdict) {
+        wrong.push(`verdict ${found.verdict}, expected ${anchor.verdict}`)
+      }
+      if (anchor.blockers !== undefined) {
+        // Both sides spell an empty set `none`: the control claims one, and
+        // `""` against `"none"` would fail an anchor that is right.
+        const got = [...found.blockers].sort().join("+") || "none"
+        const want = [...anchor.blockers].sort().join("+") || "none"
+        if (got !== want) wrong.push(`held for ${got}, expected ${want}`)
+      }
+      if (
+        anchor.opacityApprox !== undefined &&
+        found.opacityApprox !== anchor.opacityApprox
+      ) {
+        wrong.push(
+          `opacityApprox ${String(found.opacityApprox)}, expected ${String(anchor.opacityApprox)}`
+        )
+      }
+      note(
+        wrong.length === 0,
+        `${anchor.id}: ${describePath(anchor, found)}` +
+          (wrong.length === 0 ? "" : ` — ${wrong.join("; ")}`)
+      )
+    }
+
     lines.push(`fixture: ${FIXTURE_FILE} (${fixture.length} bytes)`)
+    lines.push(
+      `fixture: ${SYNTHETIC_FILE} (${syntheticFixture.length} bytes, synthetic)`
+    )
     const base = `http://127.0.0.1:${server.port}`
     for (const current of VARIANTS) {
       variant = current
       if (variant.style !== undefined)
         heading(`with ${variant.style.trim()} added`)
-      const before = await collect(`${base}${ORACLE_URL_PATH}`, "oracle")
+      const before = await collect(
+        `${base}${ORACLE_URL_PATH}?fixture=samsung`,
+        "oracle",
+        fixture
+      )
       const after = await collect(
         `${base}/preview/samsung-one-ui/preview.html`,
-        "samsung-one-ui"
+        "samsung-one-ui",
+        null
       )
 
       heading("the defects the fix removed, as the fixture still shows them")
@@ -441,40 +572,17 @@ export async function selfCheck(root: string): Promise<CheckResult> {
       for (const anchor of ANCHORS) checkAnchor(after, anchor, anchor.after)
 
       heading("paths a ratio alone does not pin")
-      for (const anchor of PATH_ANCHORS) {
-        const found = atAnchor(after, anchor)
-        if (found === undefined) {
-          note(false, `${anchor.id}: not measured at all (${anchor.pathEnds})`)
-          continue
-        }
-        const wrong: Array<string> = []
-        if (anchor.basis !== undefined && found.basis !== anchor.basis) {
-          wrong.push(
-            `basis ${found.basis ?? "neither"}, expected ${anchor.basis}`
-          )
-        }
-        if (anchor.verdict !== undefined && found.verdict !== anchor.verdict) {
-          wrong.push(`verdict ${found.verdict}, expected ${anchor.verdict}`)
-        }
-        if (anchor.blockers !== undefined) {
-          const got = [...found.blockers].sort().join("+") || "none"
-          const want = [...anchor.blockers].sort().join("+")
-          if (got !== want) wrong.push(`held for ${got}, expected ${want}`)
-        }
-        if (
-          anchor.opacityApprox !== undefined &&
-          found.opacityApprox !== anchor.opacityApprox
-        ) {
-          wrong.push(
-            `opacityApprox ${String(found.opacityApprox)}, expected ${String(anchor.opacityApprox)}`
-          )
-        }
-        note(
-          wrong.length === 0,
-          `${anchor.id}: ${describePath(anchor, found)}` +
-            (wrong.length === 0 ? "" : ` — ${wrong.join("; ")}`)
-        )
-      }
+      for (const anchor of PATH_ANCHORS) checkPath(after, anchor)
+
+      heading(
+        "a layer behind a non-text surface that paints over its own colour"
+      )
+      const synthetic = await collect(
+        `${base}${ORACLE_URL_PATH}?fixture=synthetic`,
+        "oracle-synthetic",
+        syntheticFixture
+      )
+      for (const anchor of SYNTHETIC_ANCHORS) checkPath(synthetic, anchor)
 
       // `CSS.forcePseudoState` is accepted and ignored when it is handed a
       // node id the document no longer has, so a hover pass can look like it
