@@ -348,6 +348,9 @@ const SYNTHETIC_ANCHORS: Array<PathAnchor> = [
  *   field itself stays 16px: only the pseudo-element's size can move the bar.
  * - the value and the select's first option, `oklch(0.5 0 0)`: L³ = 0.125 →
  *   6.000, and 6.008 after the round to 0x63.
+ * - the second select's only option has no text, only a `label` attribute,
+ *   which is what a closed select shows — the same colour, so 6.00 again. It
+ *   is what tells an option read by `label` from one read by its empty text.
  * - the empty field has neither, and must produce no reading at all.
  * - the faded field shows its placeholder at `opacity: 0` — the floating-label
  *   idiom — so nothing is on screen and it too must produce no reading. It is
@@ -390,6 +393,17 @@ const FORM_ANCHORS: Array<PathAnchor> = [
   {
     id: "closed select, its chosen option",
     pathEnds: "select.opt",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    source: "option",
+    ratio: 6.0,
+    verdict: "pass",
+    blockers: [],
+  },
+  {
+    id: "closed select, an option shown by its label attribute",
+    pathEnds: "select.opt-label",
     theme: "light",
     state: "default",
     kind: "text",

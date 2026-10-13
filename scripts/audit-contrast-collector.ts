@@ -525,7 +525,9 @@ export function collectContrast(): Collected {
       value: select === null ? field.value : "",
       placeholder: select === null ? field.placeholder : "",
       placeholderShown: el.matches(":placeholder-shown"),
-      selectedText: select?.selectedOptions[0]?.text ?? "",
+      // `label`, not `text`: a closed select shows an option's `label`
+      // attribute when it has one, and `label` falls back to the text.
+      selectedText: select?.selectedOptions[0]?.label ?? "",
       listbox: select !== null && (select.multiple || select.size > 1),
       own: styleOf(cs, opacityOf(el)),
       // The pseudo-element's own `opacity` multiplies in: a browser may fade

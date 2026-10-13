@@ -371,12 +371,16 @@ export function controlTextSample(raw: RawControl): ControlText | null {
   // A style at opacity 0 paints nothing — `::placeholder { opacity: 0 }` is the
   // floating-label idiom — so there is no text there to judge. A transparent
   // COLOUR is not caught here; it reads 1:1, as it does on the text path.
+  // Emoji-only text is dropped for the text path's reason: colour emoji are
+  // not painted with `color`, so a reading of it would measure nothing real.
   const shown = (
     source: ControlTextSource,
     text: string,
     style: RawControlStyle
   ): ControlText | null =>
-    style.fg.opacity === 0 ? null : { source, text, sample: sampleFor(style) }
+    style.fg.opacity === 0 || isEmojiOnly(text)
+      ? null
+      : { source, text, sample: sampleFor(style) }
 
   if (raw.tag === "select") {
     // A listbox shows every option at once, the chosen one on a highlight, so

@@ -887,6 +887,24 @@ describe("controlTextSample — the text a form control shows", () => {
     ).toBeNull()
   })
 
+  it("does not read a control whose text is emoji only", () => {
+    // Colour emoji are not painted with `color`, so the text pass skips an
+    // emoji-only run (`isEmojiOnly`); a control's text gets the same test.
+    expect(
+      controlTextSample(control({ placeholder: "🔍", placeholderShown: true }))
+    ).toBeNull()
+    expect(
+      controlTextSample(
+        control({ tag: "select", type: "", selectedText: "🇰🇷" })
+      )
+    ).toBeNull()
+    expect(
+      controlTextSample(
+        control({ placeholder: "🔍 검색", placeholderShown: true })
+      )?.source
+    ).toBe("placeholder")
+  })
+
   it("has nothing to read in a value of spaces only", () => {
     // The text pass skips a whitespace-only node; a field showing only
     // spaces shows no glyph either.
