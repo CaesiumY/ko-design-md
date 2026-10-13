@@ -560,7 +560,7 @@ export async function selfCheck(root: string): Promise<CheckResult> {
     })
     const page = await context.newPage()
 
-    // The two fixtures take turns at the one virtual path, so every collection
+    // The fixtures take turns at the one virtual path, so every collection
     // says what must be served there — the document, or `null` for a page under
     // `public/` that does not use the path. It is required and always set —
     // `null` empties the path, which then answers 404 — so a call cannot

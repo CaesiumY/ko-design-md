@@ -110,10 +110,21 @@ function rank(f: DedupedFinding): number {
 const VALUE_GUIDANCE =
   'Keep colours that come straight from design.md tokens. If this element demonstrates a disabled state, declare it with `:disabled` or `aria-disabled="true"` instead of raising its contrast; leave decoration, opacity-faded state-demo labels and single separator glyphs as they are. Otherwise adjust only a derived colour (a mix, an opacity, a hardcoded value).'
 
+// A form control's text is named by where it came from (#400): the colour to
+// change for a placeholder is `::placeholder`'s, not the field's `color`, and
+// an issue that called it plain text would send the author looking for a text
+// node that is not there.
+const SOURCE_WORDING = {
+  placeholder: { name: "placeholder", note: "painted by `::placeholder`; " },
+  value: { name: "input value", note: "" },
+  option: { name: "selected option", note: "" },
+} as const
+
 function toIssue(f: DedupedFinding): MachineIssue {
+  const source = f.source === undefined ? undefined : SOURCE_WORDING[f.source]
   const what =
     f.kind === "text"
-      ? `text "${f.sample ?? ""}" (${f.fg} on ${f.bg})`
+      ? `${source?.name ?? "text"} "${f.sample ?? ""}" (${source?.note ?? ""}${f.fg} on ${f.bg})`
       : `${f.basis ?? "non-text"} edge ${f.fg} against ${f.bg}`
   return {
     severity: "warn",

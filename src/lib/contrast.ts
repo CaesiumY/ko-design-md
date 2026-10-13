@@ -332,10 +332,13 @@ export interface ControlText {
 }
 
 /**
- * The input types that show text a reader reads. A checkbox's `value` is form
- * data, not something on screen, and a range or a button has no field.
- * `date`, `time` and `color` are left out too: what they show is drawn by the
- * browser's own widget, not from `value` as written.
+ * The input types this path measures: the ones whose text is a field a user
+ * types into. A checkbox's or a radio's `value` is form data, not something on
+ * screen. A button-shaped input (`submit`, `button`, `reset`) does show its
+ * `value` as a label, but is not measured here — a Known gap in
+ * `docs/preview-contrast-baseline.md`, with none in the catalogue today. The
+ * date, time, colour and file widgets are left out because what they show is
+ * drawn by the browser, not from `value` as written.
  */
 const TEXT_INPUT_TYPES = new Set([
   "",
