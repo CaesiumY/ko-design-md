@@ -504,6 +504,10 @@ export function collectContrast(): Collected {
     if (read.occluded) continue
 
     const ph = getComputedStyle(el, "::placeholder")
+    const placeholderOpacity = (s: CSSStyleDeclaration): number => {
+      const raw = Number.parseFloat(s.opacity)
+      return Number.isFinite(raw) ? raw : 1
+    }
     const styleOf = (s: CSSStyleDeclaration, opacity: number) => ({
       fg: { ...readColour(s.color), opacity },
       fontSizePx: Number.parseFloat(s.fontSize),
@@ -521,13 +525,13 @@ export function collectContrast(): Collected {
       placeholder: select === null ? field.placeholder : "",
       placeholderShown: el.matches(":placeholder-shown"),
       selectedText: select?.selectedOptions[0]?.text ?? "",
+      listbox: select !== null && (select.multiple || select.size > 1),
       own: styleOf(cs, opacityOf(el)),
       // The pseudo-element's own `opacity` multiplies in: a browser may fade
-      // a placeholder that way rather than through its colour.
-      placeholderStyle: styleOf(
-        ph,
-        opacityOf(el) * (Number.parseFloat(ph.opacity) || 1)
-      ),
+      // a placeholder that way rather than through its colour. Tested for a
+      // number, not for truthiness, for the reason `opacityOf` gives — `0` is
+      // the floating-label idiom, and `|| 1` would make it opaque.
+      placeholderStyle: styleOf(ph, opacityOf(el) * placeholderOpacity(ph)),
       lines: [{ stack: read.stack, blockers: [...read.blockers] }],
       blockers: paintBlockers(cs, rect),
     })

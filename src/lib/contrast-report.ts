@@ -388,7 +388,9 @@ export function renderFindingsTable(
         f.slug,
         f.theme,
         f.state,
-        f.basis === undefined ? f.kind : `${f.kind}:${f.basis}`,
+        // A non-text row names its basis and a form control's text row its
+        // source, so a reader sees why two rows on one path are two rows.
+        `${f.kind}${f.basis === undefined ? "" : `:${f.basis}`}${f.source === undefined ? "" : `:${f.source}`}`,
         cell(f.path),
         String(f.occurrences),
         f.sample === null ? "—" : cell(f.sample.slice(0, SAMPLE_LIMIT)),

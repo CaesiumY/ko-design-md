@@ -756,6 +756,7 @@ describe("controlTextSample — the text a form control shows", () => {
     placeholder: "",
     placeholderShown: false,
     selectedText: "",
+    listbox: false,
     own: { fg: ink, fontSizePx: 16, fontWeight: 400, textFill: false },
     placeholderStyle: {
       fg: grey,
@@ -868,6 +869,48 @@ describe("controlTextSample — the text a form control shows", () => {
     )
     expect(small && evaluateText(small.sample).threshold).toBe(4.5)
     expect(large && evaluateText(large.sample).threshold).toBe(3)
+  })
+
+  it("does not read a select that shows a list rather than one closed choice", () => {
+    // A `multiple` or `size > 1` select lays its options out as text on the
+    // page, where the text pass already measures them; read here as well,
+    // the chosen option would be counted twice.
+    expect(
+      controlTextSample(
+        control({
+          tag: "select",
+          type: "",
+          selectedText: "서울",
+          listbox: true,
+        })
+      )
+    ).toBeNull()
+  })
+
+  it("has nothing to read in a value of spaces only", () => {
+    // The text pass skips a whitespace-only node; a field showing only
+    // spaces shows no glyph either.
+    expect(controlTextSample(control({ value: "   " }))).toBeNull()
+  })
+
+  it("does not read a placeholder faded out entirely", () => {
+    // `::placeholder { opacity: 0 }` is the floating-label idiom: the hint is
+    // there in the DOM and nowhere on screen.
+    const hidden = { ...grey, opacity: 0 }
+    expect(
+      controlTextSample(
+        control({
+          placeholder: "x",
+          placeholderShown: true,
+          placeholderStyle: {
+            fg: hidden,
+            fontSizePx: 16,
+            fontWeight: 400,
+            textFill: false,
+          },
+        })
+      )
+    ).toBeNull()
   })
 
   it("holds the reading when the text it reads is painted by fill colour", () => {

@@ -303,6 +303,12 @@ export interface RawControl {
   placeholderShown: boolean
   /** A select's chosen option as it reads; empty for anything else. */
   selectedText: string
+  /**
+   * A select that lays its options out as a list (`multiple`, or `size` over
+   * 1) rather than showing one closed choice. Its options are then text on the
+   * page, which the text pass already measures.
+   */
+  listbox: boolean
   own: RawControlStyle
   /** The `::placeholder` pseudo-element's computed style. */
   placeholderStyle: RawControlStyle
@@ -359,31 +365,36 @@ export function controlTextSample(raw: RawControl): ControlText | null {
       : raw.blockers,
   })
 
+  // A style faded out entirely paints nothing — `::placeholder { opacity: 0 }`
+  // is the floating-label idiom — so there is no text there to judge.
+  const shown = (
+    source: ControlTextSource,
+    text: string,
+    style: RawControlStyle
+  ): ControlText | null =>
+    style.fg.opacity === 0 ? null : { source, text, sample: sampleFor(style) }
+
   if (raw.tag === "select") {
-    if (raw.selectedText.trim() === "") return null
-    return {
-      source: "option",
-      text: raw.selectedText.trim(),
-      sample: sampleFor(raw.own),
-    }
+    // A listbox's options are text nodes laid out on the page; the text pass
+    // measures them, and reading the chosen one here would count it twice.
+    if (raw.listbox || raw.selectedText.trim() === "") return null
+    return shown("option", raw.selectedText.trim(), raw.own)
   }
   if (raw.tag !== "textarea") {
     if (raw.tag !== "input" || !TEXT_INPUT_TYPES.has(raw.type)) return null
   }
-  if (raw.value !== "") {
-    return {
-      source: "value",
+  // Trimmed for the same reason the text pass skips a whitespace-only node:
+  // spaces are not a glyph anyone reads.
+  if (raw.value.trim() !== "") {
+    return shown(
+      "value",
       // Never the value itself: it would put a password into the report.
-      text: raw.type === "password" ? "•".repeat(raw.value.length) : raw.value,
-      sample: sampleFor(raw.own),
-    }
+      raw.type === "password" ? "•".repeat(raw.value.length) : raw.value,
+      raw.own
+    )
   }
   if (raw.placeholderShown && raw.placeholder.trim() !== "") {
-    return {
-      source: "placeholder",
-      text: raw.placeholder.trim(),
-      sample: sampleFor(raw.placeholderStyle),
-    }
+    return shown("placeholder", raw.placeholder.trim(), raw.placeholderStyle)
   }
   return null
 }

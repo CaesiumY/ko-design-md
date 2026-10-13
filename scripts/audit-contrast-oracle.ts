@@ -348,6 +348,9 @@ const SYNTHETIC_ANCHORS: Array<PathAnchor> = [
  * - the value and the select's first option, `oklch(0.5 0 0)`: L³ = 0.125 →
  *   6.000, and 6.008 after the round to 0x63.
  * - the empty field has neither, and must produce no reading at all.
+ * - the faded field shows its placeholder at `opacity: 0` — the floating-label
+ *   idiom — so nothing is on screen and it too must produce no reading. It is
+ *   what tells an opacity read as `parseFloat(…) || 1` from one that keeps 0.
  */
 const FORM_ANCHORS: Array<PathAnchor> = [
   {
@@ -370,6 +373,7 @@ const FORM_ANCHORS: Array<PathAnchor> = [
     source: "placeholder",
     ratio: 3.95,
     verdict: "pass",
+    blockers: [],
   },
   {
     id: "value",
@@ -380,6 +384,7 @@ const FORM_ANCHORS: Array<PathAnchor> = [
     source: "value",
     ratio: 6.0,
     verdict: "pass",
+    blockers: [],
   },
   {
     id: "closed select, its chosen option",
@@ -390,10 +395,19 @@ const FORM_ANCHORS: Array<PathAnchor> = [
     source: "option",
     ratio: 6.0,
     verdict: "pass",
+    blockers: [],
   },
   {
     id: "empty field",
     pathEnds: "input.empty",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    absent: true,
+  },
+  {
+    id: "placeholder faded out by its own opacity",
+    pathEnds: "input.ph-hidden",
     theme: "light",
     state: "default",
     kind: "text",

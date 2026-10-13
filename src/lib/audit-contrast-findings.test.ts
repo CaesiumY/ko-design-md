@@ -99,6 +99,7 @@ describe("toFindings — the text a form control shows", () => {
         placeholder: "이메일",
         placeholderShown: true,
         selectedText: "",
+        listbox: false,
         own: { fg: black, fontSizePx: 16, fontWeight: 400, textFill: false },
         placeholderStyle: {
           fg: grey,

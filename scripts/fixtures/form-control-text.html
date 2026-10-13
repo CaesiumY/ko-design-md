@@ -41,6 +41,9 @@
       input.ph-large::placeholder {
         font-size: 24px;
       }
+      input.ph-hidden::placeholder {
+        opacity: 0;
+      }
     </style>
   </head>
   <body>
@@ -52,5 +55,6 @@
       <option>second option</option>
     </select>
     <input class="empty" type="text" />
+    <input class="ph-hidden" type="text" placeholder="faded out" />
   </body>
 </html>

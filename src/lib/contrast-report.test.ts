@@ -547,3 +547,14 @@ describe("dedupeFindings — a form control's text is its own row", () => {
     expect(dedupeFindings([node, placeholder])).toHaveLength(2)
   })
 })
+
+describe("renderFindingsTable — a form control's text says where it came from", () => {
+  it("names the source beside the kind, as a non-text row names its basis", () => {
+    const out = renderFindingsTable(
+      dedupeFindings([
+        at(976, { path: "div.f > input", source: "placeholder" }),
+      ])
+    )
+    expect(out).toContain("text:placeholder")
+  })
+})
