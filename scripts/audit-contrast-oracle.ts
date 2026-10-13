@@ -351,6 +351,9 @@ const SYNTHETIC_ANCHORS: Array<PathAnchor> = [
  * - the second select's only option has no text, only a `label` attribute,
  *   which is what a closed select shows — the same colour, so 6.00 again. It
  *   is what tells an option read by `label` from one read by its empty text.
+ * - the third select's option has text under an EMPTY `label=""`, which a
+ *   closed select does not show — it shows the text. Same colour, 6.00, and
+ *   it is what tells a read of `label || text` from a read of `label` alone.
  * - the empty field has neither, and must produce no reading at all.
  * - the faded field shows its placeholder at `opacity: 0` — the floating-label
  *   idiom — so nothing is on screen and it too must produce no reading. It is
@@ -404,6 +407,17 @@ const FORM_ANCHORS: Array<PathAnchor> = [
   {
     id: "closed select, an option shown by its label attribute",
     pathEnds: "select.opt-label",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    source: "option",
+    ratio: 6.0,
+    verdict: "pass",
+    blockers: [],
+  },
+  {
+    id: "closed select, an empty label attribute falling back to the text",
+    pathEnds: "select.opt-empty-label",
     theme: "light",
     state: "default",
     kind: "text",

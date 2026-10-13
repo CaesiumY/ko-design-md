@@ -504,6 +504,10 @@ export function collectContrast(): Collected {
     const read = backdropAt(cx, cy, el)
     if (read.occluded) continue
 
+    const shownOption = (s: HTMLSelectElement | null): string => {
+      const option = s?.selectedOptions[0]
+      return option === undefined ? "" : option.label || option.text
+    }
     const ph = getComputedStyle(el, "::placeholder")
     const placeholderOpacity = (s: CSSStyleDeclaration): number => {
       const raw = Number.parseFloat(s.opacity)
@@ -525,9 +529,11 @@ export function collectContrast(): Collected {
       value: select === null ? field.value : "",
       placeholder: select === null ? field.placeholder : "",
       placeholderShown: el.matches(":placeholder-shown"),
-      // `label`, not `text`: a closed select shows an option's `label`
-      // attribute when it has one, and `label` falls back to the text.
-      selectedText: select?.selectedOptions[0]?.label ?? "",
+      // What a closed select shows: the option's `label` attribute when it is
+      // non-empty, otherwise its text. `label` alone is not that — it returns
+      // the attribute as written, so `label=""` reads as nothing while the
+      // option's text is on screen; `text` alone ignores the attribute.
+      selectedText: shownOption(select),
       listbox: select !== null && (select.multiple || select.size > 1),
       own: styleOf(cs, opacityOf(el)),
       // The pseudo-element's own `opacity` multiplies in: a browser may fade
