@@ -38,6 +38,7 @@ colors:
   blue200: oklch(0.850 0.086 236.2)   # #96D7FF
   blue300: oklch(0.779 0.124 242.1)   # #69C0FF
   blue400: oklch(0.714 0.158 247.3)   # #40A9FF
+  primary: "{colors.blue500}"   # 명세의 대표색 역할 — SystemColor brand 와 같은 값 · 본문 표의 텍스트 역할 primary(neutral600)와 다르다
   blue500: oklch(0.651 0.191 252.8)   # #1890FF
   blue600: oklch(0.548 0.185 256.3)   # #096DD9
   blue700: oklch(0.454 0.171 258.4)   # #0050B3
