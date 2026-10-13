@@ -337,8 +337,9 @@ export interface ControlText {
  * screen. A button-shaped input (`submit`, `button`, `reset`) does show its
  * `value` as a label, but is not measured here — a Known gap in
  * `docs/preview-contrast-baseline.md`, with none in the catalogue today. The
- * date, time, colour and file widgets are left out because what they show is
- * drawn by the browser, not from `value` as written.
+ * date, time, week, month, datetime-local, colour and file widgets are left
+ * out because what they show is drawn by the browser, not from `value` as
+ * written.
  */
 const TEXT_INPUT_TYPES = new Set([
   "",
