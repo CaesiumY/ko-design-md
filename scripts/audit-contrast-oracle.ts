@@ -432,15 +432,19 @@ export async function selfCheck(root: string): Promise<CheckResult> {
     })
     const page = await context.newPage()
 
-    // The two fixtures take turns at the one virtual path, so a collection
-    // names the document it expects there. Each also gets its own query string:
-    // the server ignores it, but it keeps the two apart in the browser's cache.
+    // The two fixtures take turns at the one virtual path, so every collection
+    // says what must be served there — the document, or `null` for a page under
+    // `public/` that does not use the path. Required rather than optional, so a
+    // call cannot measure whichever fixture the previous one left behind. Each
+    // fixture also gets its own query string, which the server ignores: nothing
+    // here sends caching headers, so this only guards against a cache keeping
+    // one document under the other's URL.
     const collect = async (
       url: string,
       slug: string,
-      oracle?: string
+      oracle: string | null
     ): Promise<Array<Finding>> => {
-      if (oracle !== undefined) server.setOracle(oracle)
+      if (oracle !== null) server.setOracle(oracle)
       const out: Array<Finding> = []
       for (const theme of ["light", "dark"] as const) {
         const measured = await measureOne(context, page, url, {
@@ -556,7 +560,8 @@ export async function selfCheck(root: string): Promise<CheckResult> {
       )
       const after = await collect(
         `${base}/preview/samsung-one-ui/preview.html`,
-        "samsung-one-ui"
+        "samsung-one-ui",
+        null
       )
 
       heading("the defects the fix removed, as the fixture still shows them")
