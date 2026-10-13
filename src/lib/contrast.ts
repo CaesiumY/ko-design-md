@@ -306,10 +306,10 @@ export interface RawControl {
   selectedText: string
   /**
    * A select that lays its options out as a list (`multiple`, or `size` over
-   * 1) rather than showing one closed choice. Not measured by any path: its
-   * options' text nodes have no client rects in Chromium — just as a closed
-   * select's have none — so the text pass skips them too — a Known gap in
-   * `docs/preview-contrast-baseline.md`, with none in the catalogue today.
+   * 1) rather than showing one closed choice. No path measures it. Its options'
+   * text nodes have no client rects in Chromium, just as a closed select's
+   * have none, so the text pass skips them too. Recorded as a Known gap in
+   * `docs/preview-contrast-baseline.md`; the catalogue has none today.
    */
   listbox: boolean
   own: RawControlStyle

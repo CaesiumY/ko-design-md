@@ -729,9 +729,9 @@ describe("the colour pair a non-text measurement reports", () => {
 })
 
 describe("controlTextSample — the text a form control shows", () => {
-  // A form control's text is not a text node: a placeholder and a value are
-  // attributes and form state, and a closed <select> paints its chosen option
-  // itself. The collector reads all of it raw and this decides which, if any,
+  // The text pass does not measure a form control's text: a placeholder and a
+  // value are attributes and form state, and a select's option text node has
+  // no client rects. The collector reads all of it raw and this decides which, if any,
   // is on screen and in which colour — the same split as `isEmojiOnly`.
   const grey: RawColor = {
     onWhite: { r: 128, g: 128, b: 128 },

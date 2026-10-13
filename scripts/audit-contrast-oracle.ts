@@ -331,8 +331,9 @@ const SYNTHETIC_ANCHORS: Array<PathAnchor> = [
 ]
 
 /**
- * The form-control fixture's claims (#400): text that is on screen but is not
- * a text node, so the collector has to read it from the control.
+ * The form-control fixture's claims (#400): text that is on screen but that
+ * the text pass does not measure, so the collector has to read it from the
+ * control.
  *
  * Every control has a white surface on the white page, and every colour is an
  * achromatic OKLCH, whose relative luminance is L³ — so each ratio is derived

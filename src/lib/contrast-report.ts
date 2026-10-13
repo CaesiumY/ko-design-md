@@ -30,8 +30,9 @@ export interface Finding {
   /** Which boundary carries a non-text ratio. */
   basis?: "fill" | "border"
   /**
-   * Where a text reading's text came from when it is not a text node: a form
-   * control's placeholder, its value, or a closed select's option. Absent for
+   * Where a text reading's text came from when the collector read it from a
+   * form control rather than the text pass: its placeholder, its value, or a
+   * closed select's option. Absent for
    * an ordinary text node, so every reading that existed before #400 keeps the
    * key it had.
    */
