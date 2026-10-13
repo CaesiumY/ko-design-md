@@ -699,7 +699,7 @@ export async function selfCheck(root: string): Promise<CheckResult> {
       )
       for (const anchor of SYNTHETIC_ANCHORS) checkPath(synthetic, anchor)
 
-      heading("text a form control shows without a text node")
+      heading("text a form control shows that the text pass does not measure")
       const form = await collect(
         `${base}${ORACLE_URL_PATH}?fixture=form`,
         "oracle-form",

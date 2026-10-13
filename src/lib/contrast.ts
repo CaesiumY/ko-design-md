@@ -285,9 +285,10 @@ export interface RawControlStyle {
 /**
  * An `<input>`, `<textarea>` or `<select>` as the collector reads it — raw.
  *
- * Its text is not a text node: a placeholder and a value are an attribute and
- * form state, and a closed select paints its chosen option itself, so none of
- * it reaches the text pass's walker. The collector hands every candidate back
+ * None of its text is measured by the text pass. A placeholder and a value are
+ * an attribute and form state, not text nodes at all; a select's options ARE
+ * text nodes, but in Chromium they have no client rects, so the pass reaches
+ * them and drops them. The collector hands every candidate back
  * with all of it, and `controlTextSample` decides what is on screen — the
  * collector cannot import, so a decision made there could not be tested.
  */
@@ -306,8 +307,8 @@ export interface RawControl {
   /**
    * A select that lays its options out as a list (`multiple`, or `size` over
    * 1) rather than showing one closed choice. Not measured by any path: its
-   * options' text nodes have no client rects in Chromium, as a closed
-   * select's do not, so the text pass skips them too — a Known gap in
+   * options' text nodes have no client rects in Chromium — just as a closed
+   * select's have none — so the text pass skips them too — a Known gap in
    * `docs/preview-contrast-baseline.md`, with none in the catalogue today.
    */
   listbox: boolean

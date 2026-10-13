@@ -49,7 +49,7 @@ export interface Collected {
   text: Array<CollectedText>
   nonText: Array<CollectedNonText>
   /**
-   * Form controls whose text is not a text node (#400). Optional so a
+   * Form controls, whose text the text pass does not measure (#400). Optional so a
    * collection built without it — #412 asked that `Collected` be extended,
    * never replaced — still reads as before.
    */
@@ -477,13 +477,14 @@ export function collectContrast(): Collected {
   // ---- Form-control text (#400) ----------------------------------------------
   //
   // A placeholder, a typed value and a closed select's option are on screen as
-  // text but are not text nodes, so the walker above never reaches them — and
+  // text the walker above does not measure — the first two are not text nodes,
+  // and an option's text node has no client rects, so it is dropped — and
   // the placeholder is the one text designers make faint on purpose. Every
   // candidate is read raw; which text is showing, and in which style, is
   // decided by `controlTextSample` (src/lib/contrast.ts), because a decision
   // made in here could not be reached by a test.
   //
-  // The same exclusions as the text pass: hidden, fully transparent, inactive
+  // The same exclusions as the text pass: hidden, at opacity 0, inactive
   // (SC 1.4.3 exempts a disabled control's text), or clipped to the `.sr-only`
   // pixel. `readonly` is not excluded — its text is on screen to be read.
   const controls: Array<RawControl> = []

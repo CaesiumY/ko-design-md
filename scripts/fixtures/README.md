@@ -42,9 +42,10 @@ that would turn the check into a test that the measurer agrees with itself.
 ## `form-control-text.html`
 
 A second synthetic document under the same rule as the one above (#400). It
-covers text that is on screen but is not a text node — a placeholder, a typed
-value, a closed `<select>`'s chosen option — which the collector reads from the
-control itself. No previous fixture has a form control, and the samsung file
+covers text that is on screen but that the text pass does not measure — a
+placeholder and a typed value, which are not text nodes, and a closed
+`<select>`'s chosen option, whose text node has no client rects — which the
+collector reads from the control itself. No previous fixture has a form control, and the samsung file
 cannot gain one.
 
 Every expectation on it is derived by hand in `FORM_ANCHORS`
