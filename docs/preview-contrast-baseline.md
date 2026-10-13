@@ -506,7 +506,9 @@ samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다.
 
 **결과: 284행 중 210행이 두 색 모두 발행 토큰인 쌍이다**(nol 은 관측 토큰 쌍을 뺀 수 — 아래 nol 문단).
 #400 이 입력창 안내 문구를 재기 시작하며 더해진 6행(krds 4 — `gray-60` on 흰색, lg-electronics 2 —
-`kr-storm-grey` on 흰색)도 같은 절차로 갈랐고 모두 발행색 쌍이다.
+`kr-storm-grey` on 흰색)도 같은 절차로 갈랐고 모두 frontmatter 정의끼리의 쌍으로 세어진다. 다만
+lg-electronics 의 `kr-*` 는 문서로 발행된 값이 아니라 운영 CSS 에서 관측한 이름이다 — 아래 nol 문단의
+예외를 적용하지 않는 항목이라 정의 전체 기준으로 셌다.
 
 | slug | 발행색 쌍 / borderline |
 | --- | --- |
