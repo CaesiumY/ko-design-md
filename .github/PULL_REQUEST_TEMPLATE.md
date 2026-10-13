@@ -22,6 +22,7 @@
 
 - [ ] `pnpm typecheck && pnpm lint && pnpm format:check && pnpm test && pnpm build` 통과 (카탈로그 변경 시 `pnpm validate:catalog`·`validate:previews`·`tokens:check`·`audit:oklch`·`check:last-updated` 도)
 - [ ] 머지 직전 `origin/main`을 합쳐 본 상태에서 게이트 재실행 (`git merge origin/main --no-commit --no-ff` → 게이트 → `git merge --abort`). PR 단위 CI 는 각 브랜치를 자기 base 에서 돌리므로 둘 다 green 인데 합치면 깨지는 경우를 못 잡는다
+- [ ] 로컬 2축 리뷰(Standards × Spec)가 **마지막 커밋까지** 결함 없음 — 리뷰 지적을 반영한 커밋도 다시 리뷰 ([CODING_STANDARDS.md](https://github.com/CaesiumY/ko-design-md/blob/main/CODING_STANDARDS.md))
 - [ ] DCO 서명 (`git commit -s`)
 - [ ] [CONTRIBUTING.md](https://github.com/CaesiumY/ko-design-md/blob/main/CONTRIBUTING.md) 가이드라인 준수
 
