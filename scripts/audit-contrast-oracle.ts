@@ -34,7 +34,7 @@ import {
   newMeasuringContext,
   serveStatic,
 } from "./audit-contrast-sweep"
-import type { Blocker } from "../src/lib/contrast"
+import type { Blocker, ControlTextSource } from "../src/lib/contrast"
 import type { Finding, Judgement, Theme } from "../src/lib/contrast-report"
 
 // The fixture is a committed file, not a `git show` of history.
@@ -55,6 +55,7 @@ const SYNTHETIC_FILE = join(
   "fixtures",
   "nontext-behind-paint-blockers.html"
 )
+const FORM_FILE = join("scripts", "fixtures", "form-control-text.html")
 const ORACLE_URL_PATH = "/__oracle/preview.html"
 const ORACLE_WIDTH = 976
 /** Wide enough to absorb 8-bit quantisation, tight enough to catch a drift. */
@@ -226,6 +227,13 @@ interface PathAnchor {
    * CSS — the derivation sits next to the anchor that claims it.
    */
   ratio?: number
+  /** Where a text reading's text came from (#400); see `Finding.source`. */
+  source?: ControlTextSource
+  /**
+   * The claim is that NO reading of this kind exists at the path — an empty
+   * field shows no text, and a reading there would be text nobody can see.
+   */
+  absent?: true
 }
 
 const PATH_ANCHORS: Array<PathAnchor> = [
@@ -323,6 +331,120 @@ const SYNTHETIC_ANCHORS: Array<PathAnchor> = [
 ]
 
 /**
+ * The form-control fixture's claims (#400): text that is on screen but that
+ * the text pass does not measure, so the collector has to read it from the
+ * control.
+ *
+ * Every control has a white surface on the white page, and every colour is an
+ * achromatic OKLCH, whose relative luminance is L³ — so each ratio is derived
+ * by hand, as (1 + 0.05) / (L³ + 0.05):
+ *
+ * - the placeholder, `oklch(0.6 0 0)`: L³ = 0.216 → 3.947, and 3.949 after the
+ *   8-bit round to 0x80. Under 4.5 at 16px, so it fails; the value it is
+ *   painted in is the field's `oklch(0.5 0 0)` if the `::placeholder` colour
+ *   is ignored, which reads 6.00 and passes — the anchor tells the two apart.
+ * - the large placeholder: the same colour at a `::placeholder` font-size of
+ *   24px, large text at any weight, so the bar is 3:1 and 3.95 passes. The
+ *   field itself stays 16px: only the pseudo-element's size can move the bar.
+ * - the value and the select's first option, `oklch(0.5 0 0)`: L³ = 0.125 →
+ *   6.000, and 6.008 after the round to 0x63.
+ * - the second select's only option has no text, only a `label` attribute,
+ *   which is what a closed select shows — the same colour, so 6.00 again. It
+ *   is what tells an option read by `label` from one read by its empty text.
+ * - the third select's option has text under an EMPTY `label=""`, which a
+ *   closed select does not show — it shows the text. Same colour, 6.00, and
+ *   it is what tells a read of `label || text` from a read of `label` alone.
+ * - the empty field has neither, and must produce no reading at all.
+ * - the faded field shows its placeholder at `opacity: 0` — the floating-label
+ *   idiom — so nothing is on screen and it too must produce no reading. It is
+ *   what tells an opacity read as `parseFloat(…) || 1` from one that keeps 0.
+ */
+const FORM_ANCHORS: Array<PathAnchor> = [
+  {
+    id: "placeholder, in the ::placeholder colour",
+    pathEnds: "input.ph",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    source: "placeholder",
+    ratio: 3.95,
+    verdict: "fail",
+    blockers: [],
+  },
+  {
+    id: "large placeholder, judged on its own size",
+    pathEnds: "input.ph-large",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    source: "placeholder",
+    ratio: 3.95,
+    verdict: "pass",
+    blockers: [],
+  },
+  {
+    id: "value",
+    pathEnds: "input.val",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    source: "value",
+    ratio: 6.0,
+    verdict: "pass",
+    blockers: [],
+  },
+  {
+    id: "closed select, its chosen option",
+    pathEnds: "select.opt",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    source: "option",
+    ratio: 6.0,
+    verdict: "pass",
+    blockers: [],
+  },
+  {
+    id: "closed select, an option shown by its label attribute",
+    pathEnds: "select.opt-label",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    source: "option",
+    ratio: 6.0,
+    verdict: "pass",
+    blockers: [],
+  },
+  {
+    id: "closed select, an empty label attribute falling back to the text",
+    pathEnds: "select.opt-empty-label",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    source: "option",
+    ratio: 6.0,
+    verdict: "pass",
+    blockers: [],
+  },
+  {
+    id: "empty field",
+    pathEnds: "input.empty",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    absent: true,
+  },
+  {
+    id: "placeholder faded out by its own opacity",
+    pathEnds: "input.ph-hidden",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    absent: true,
+  },
+]
+
+/**
  * The weakest reading at an anchor.
  *
  * An anchor names a kind of element, not one node: samsung renders the accent
@@ -331,14 +453,17 @@ const SYNTHETIC_ANCHORS: Array<PathAnchor> = [
  */
 function atAnchor(
   findings: Array<Finding>,
-  anchor: Pick<Anchor, "kind" | "theme" | "state" | "pathEnds">
+  anchor: Pick<Anchor, "kind" | "theme" | "state" | "pathEnds"> & {
+    source?: ControlTextSource
+  }
 ): Finding | undefined {
   const matches = findings.filter(
     (f) =>
       f.kind === anchor.kind &&
       f.theme === anchor.theme &&
       f.state === anchor.state &&
-      f.path.endsWith(anchor.pathEnds)
+      f.path.endsWith(anchor.pathEnds) &&
+      (anchor.source === undefined || f.source === anchor.source)
   )
   return matches.sort((a, b) => a.ratio - b.ratio).at(0)
 }
@@ -346,6 +471,8 @@ function atAnchor(
 /** What a path anchor claims, in the words the check would print. */
 function describePath(anchor: PathAnchor, found: Finding): string {
   const parts: Array<string> = []
+  if (anchor.source !== undefined)
+    parts.push(`from ${found.source ?? "a text node"}`)
   if (anchor.ratio !== undefined) parts.push(found.ratio.toFixed(2))
   if (anchor.basis !== undefined) parts.push(`carried by ${found.basis}`)
   if (anchor.verdict !== undefined) parts.push(found.verdict)
@@ -409,6 +536,7 @@ export async function selfCheck(root: string): Promise<CheckResult> {
   const { chromium } = await import("playwright")
   const fixture = readFileSync(join(root, FIXTURE_FILE), "utf8")
   const syntheticFixture = readFileSync(join(root, SYNTHETIC_FILE), "utf8")
+  const formFixture = readFileSync(join(root, FORM_FILE), "utf8")
   const server = await serveStatic(`${root}/public`)
   const browser = await chromium.launch()
   const lines: Array<string> = []
@@ -432,7 +560,7 @@ export async function selfCheck(root: string): Promise<CheckResult> {
     })
     const page = await context.newPage()
 
-    // The two fixtures take turns at the one virtual path, so every collection
+    // The fixtures take turns at the one virtual path, so every collection
     // says what must be served there — the document, or `null` for a page under
     // `public/` that does not use the path. It is required and always set —
     // `null` empties the path, which then answers 404 — so a call cannot
@@ -502,11 +630,26 @@ export async function selfCheck(root: string): Promise<CheckResult> {
 
     const checkPath = (findings: Array<Finding>, anchor: PathAnchor): void => {
       const found = atAnchor(findings, anchor)
+      if (anchor.absent === true) {
+        note(
+          found === undefined,
+          `${anchor.id}: ` +
+            (found === undefined
+              ? "no reading, as expected"
+              : `read as ${found.source ?? "text"} "${found.sample}", expected none`)
+        )
+        return
+      }
       if (found === undefined) {
         note(false, `${anchor.id}: not measured at all (${anchor.pathEnds})`)
         return
       }
       const wrong: Array<string> = []
+      if (anchor.source !== undefined && found.source !== anchor.source) {
+        wrong.push(
+          `source ${found.source ?? "text node"}, expected ${anchor.source}`
+        )
+      }
       if (anchor.ratio !== undefined) {
         const delta = Math.abs(found.ratio - anchor.ratio)
         if (delta > TOLERANCE) {
@@ -549,6 +692,7 @@ export async function selfCheck(root: string): Promise<CheckResult> {
     lines.push(
       `fixture: ${SYNTHETIC_FILE} (${syntheticFixture.length} bytes, synthetic)`
     )
+    lines.push(`fixture: ${FORM_FILE} (${formFixture.length} bytes, synthetic)`)
     const base = `http://127.0.0.1:${server.port}`
     for (const current of VARIANTS) {
       variant = current
@@ -583,6 +727,14 @@ export async function selfCheck(root: string): Promise<CheckResult> {
         syntheticFixture
       )
       for (const anchor of SYNTHETIC_ANCHORS) checkPath(synthetic, anchor)
+
+      heading("text a form control shows that the text pass does not measure")
+      const form = await collect(
+        `${base}${ORACLE_URL_PATH}?fixture=form`,
+        "oracle-form",
+        formFixture
+      )
+      for (const anchor of FORM_ANCHORS) checkPath(form, anchor)
 
       // `CSS.forcePseudoState` is accepted and ignored when it is handed a
       // node id the document no longer has, so a hover pass can look like it

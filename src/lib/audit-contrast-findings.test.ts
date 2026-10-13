@@ -79,3 +79,68 @@ describe("toFindings — the measured colour pair", () => {
     expect(f.bg).toBe("#ffffff")
   })
 })
+
+describe("toFindings — the text a form control shows", () => {
+  const grey = {
+    onWhite: { r: 128, g: 128, b: 128 },
+    onBlack: { r: 128, g: 128, b: 128 },
+    opacity: 1,
+  }
+  const field = (over: object): Collected => ({
+    text: [],
+    nonText: [],
+    overlayCandidates: 0,
+    controls: [
+      {
+        path: "div.field > input",
+        tag: "input",
+        type: "text",
+        value: "",
+        placeholder: "이메일",
+        placeholderShown: true,
+        selectedText: "",
+        listbox: false,
+        own: { fg: black, fontSizePx: 16, fontWeight: 400, textFill: false },
+        placeholderStyle: {
+          fg: grey,
+          fontSizePx: 16,
+          fontWeight: 400,
+          textFill: false,
+        },
+        lines: [{ stack: [white], blockers: [] }],
+        blockers: [],
+        ...over,
+      },
+    ],
+  })
+  const runControls = (c: Collected) =>
+    toFindings(c, {
+      slug: "toss",
+      theme: "light",
+      width: 976,
+      state: "default",
+    })
+
+  it("reports a shown placeholder as a text row that names its source", () => {
+    const [f, ...rest] = runControls(field({}))
+    expect(rest).toHaveLength(0)
+    expect(f.kind).toBe("text")
+    expect(f.source).toBe("placeholder")
+    expect(f.sample).toBe("이메일")
+    // #808080 on white: the placeholder colour, not the field's black.
+    expect(f.fg).toBe("#808080")
+    expect(f.verdict).toBe("fail")
+  })
+
+  it("reports nothing for an empty field", () => {
+    expect(
+      runControls(field({ placeholder: "", placeholderShown: false }))
+    ).toHaveLength(0)
+  })
+
+  it("leaves a collection without controls as it was", () => {
+    // `controls` is optional — the collections other callers build without it
+    // still turn into the same findings.
+    expect(run("결제 수단")[0].source).toBeUndefined()
+  })
+})

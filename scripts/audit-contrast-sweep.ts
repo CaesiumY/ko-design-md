@@ -15,7 +15,12 @@ import {
   renderTotalsTable,
   totalsBySlug,
 } from "../src/lib/contrast-report"
-import { evaluateNonText, evaluateText, isEmojiOnly } from "../src/lib/contrast"
+import {
+  controlTextSample,
+  evaluateNonText,
+  evaluateText,
+  isEmojiOnly,
+} from "../src/lib/contrast"
 import {
   collectContrast,
   collectHoverSelectors,
@@ -226,6 +231,7 @@ export function hoverDelta(
       f.verdict,
       [...f.blockers].sort().join("+"),
       f.opacityApprox ? "approx" : "",
+      f.source ?? "",
     ].join("|")
   const seen = new Set(defaults.map(keyOf))
   return hovered.filter((f) => !seen.has(keyOf(f)))
@@ -264,6 +270,31 @@ export function toFindings(
       kind: "text",
       path: t.path,
       sample: t.text.slice(0, SAMPLE_LIMIT),
+      ratio: m.ratio,
+      threshold: m.threshold,
+      verdict: m.verdict,
+      blockers: m.blockers,
+      opacityApprox: m.opacityApprox,
+      fg: m.fg,
+      bg: m.bg,
+    })
+  }
+  // A form control's text — placeholder, value, or a closed select's option.
+  // Which of them is on screen, and in which style, is decided by
+  // `controlTextSample` for the same reason the emoji test is made here: the
+  // collector only reads. The rows are `text` rows, judged by the same bar as
+  // any other text; `source` keeps them apart from a text node on the same
+  // path.
+  for (const c of collected.controls ?? []) {
+    const shown = controlTextSample(c)
+    if (shown === null) continue
+    const m = evaluateText(shown.sample)
+    out.push({
+      ...context,
+      kind: "text",
+      path: c.path,
+      sample: shown.text.slice(0, SAMPLE_LIMIT),
+      source: shown.source,
       ratio: m.ratio,
       threshold: m.threshold,
       verdict: m.verdict,

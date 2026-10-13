@@ -273,6 +273,145 @@ export interface RawTextSample {
   lines: Array<RawTextLine>
 }
 
+/** How one of a control's two text styles paints: its own, or its placeholder's. */
+export interface RawControlStyle {
+  fg: RawColor
+  fontSizePx: number
+  fontWeight: number
+  /** `-webkit-text-fill-color` or `background-clip: text` paints the glyphs. */
+  textFill: boolean
+}
+
+/**
+ * An `<input>`, `<textarea>` or `<select>` as the collector reads it — raw.
+ *
+ * None of its text is measured by the text pass. A placeholder and a value are
+ * an attribute and form state, not text nodes at all; a select's options ARE
+ * text nodes, but in Chromium they have no client rects, so the pass reaches
+ * them and drops them. The collector hands every candidate back
+ * with all of it, and `controlTextSample` decides what is on screen — the
+ * collector cannot import, so a decision made there could not be tested.
+ */
+export interface RawControl {
+  path: string
+  /** Lower-case tag name. */
+  tag: string
+  /** Lower-case `type` of an input; empty for a textarea or a select. */
+  type: string
+  value: string
+  placeholder: string
+  /** The browser's own `:placeholder-shown`. */
+  placeholderShown: boolean
+  /** A select's chosen option as it reads; empty for anything else. */
+  selectedText: string
+  /**
+   * A select that lays its options out as a list (`multiple`, or `size` over
+   * 1) rather than showing one closed choice. No path measures it. Its options'
+   * text nodes have no client rects in Chromium, just as a closed select's
+   * have none, so the text pass skips them too. Recorded as a Known gap in
+   * `docs/preview-contrast-baseline.md`; the catalogue has none today.
+   */
+  listbox: boolean
+  own: RawControlStyle
+  /** The `::placeholder` pseudo-element's computed style. */
+  placeholderStyle: RawControlStyle
+  /** Read at the control's centre, starting from the control's own surface. */
+  lines: Array<RawTextLine>
+  /** Reasons that hold whichever text is shown — a filter on the control. */
+  blockers: Array<Blocker>
+}
+
+/** Which of a control's texts a reading measured. */
+export type ControlTextSource = "placeholder" | "value" | "option"
+
+export interface ControlText {
+  source: ControlTextSource
+  /** What a reader sees: a password's value comes back as its dots. */
+  text: string
+  sample: RawTextSample
+}
+
+/**
+ * The input types this path measures: the ones whose text is a field a user
+ * types into. A checkbox's or a radio's `value` is form data, not something on
+ * screen. A button-shaped input (`submit`, `button`, `reset`) does show its
+ * `value` as a label, but is not measured here — a Known gap in
+ * `docs/preview-contrast-baseline.md`, with none in the catalogue today. The
+ * date, time, week, month, datetime-local, colour and file widgets are left
+ * out because what they show is drawn by the browser, not from `value` as
+ * written.
+ */
+const TEXT_INPUT_TYPES = new Set([
+  "",
+  "text",
+  "search",
+  "email",
+  "password",
+  "tel",
+  "url",
+  "number",
+])
+
+/**
+ * The text a form control shows, and the style it is painted in — or null
+ * when it shows none.
+ *
+ * A value wins over a placeholder, because the browser shows one or the other
+ * and the value is what it shows once there is one. The placeholder is read in
+ * ITS colour and size, which a preview sets apart on purpose: it is the one
+ * text designers make faint, which is why it is worth measuring at all.
+ */
+export function controlTextSample(raw: RawControl): ControlText | null {
+  const sampleFor = (style: RawControlStyle): RawTextSample => ({
+    fontSizePx: style.fontSizePx,
+    fontWeight: style.fontWeight,
+    fg: style.fg,
+    lines: raw.lines,
+    blockers: style.textFill
+      ? [...raw.blockers, "text-fill" as const]
+      : raw.blockers,
+  })
+
+  // A style at opacity 0 paints nothing — `::placeholder { opacity: 0 }` is the
+  // floating-label idiom — so there is no text there to judge. A transparent
+  // COLOUR is not caught here; it reads 1:1, as it does on the text path.
+  // Emoji-only text is dropped for the text path's reason: colour emoji are
+  // not painted with `color`, so a reading of it would measure nothing real.
+  const shown = (
+    source: ControlTextSource,
+    text: string,
+    style: RawControlStyle
+  ): ControlText | null =>
+    style.fg.opacity === 0 || isEmojiOnly(text)
+      ? null
+      : { source, text, sample: sampleFor(style) }
+
+  if (raw.tag === "select") {
+    // A listbox shows every option at once, the chosen one on a highlight, so
+    // one reading of the chosen option in the select's colours would stand
+    // for a list it does not describe. Left unmeasured and recorded as a gap.
+    if (raw.listbox || raw.selectedText.trim() === "") return null
+    return shown("option", raw.selectedText.trim(), raw.own)
+  }
+  if (raw.tag !== "textarea") {
+    if (raw.tag !== "input" || !TEXT_INPUT_TYPES.has(raw.type)) return null
+  }
+  // Trimmed for the same reason the text pass skips a whitespace-only node:
+  // spaces are not a glyph anyone reads.
+  if (raw.value.trim() !== "") {
+    return shown(
+      "value",
+      // Never the value itself: it would put a password into the report.
+      raw.type === "password" ? "•".repeat(raw.value.length) : raw.value,
+      raw.own
+    )
+  }
+  if (raw.placeholderShown && raw.placeholder.trim() !== "") {
+    return shown("placeholder", raw.placeholder.trim(), raw.placeholderStyle)
+  }
+  return null
+}
+
 export interface Measurement {
   ratio: number
   threshold: number

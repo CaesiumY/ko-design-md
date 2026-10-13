@@ -5,7 +5,7 @@
 // `contrast.ts` is: the script needs a browser, so anything it owns cannot be
 // covered by `pnpm test`.
 
-import type { Blocker, Verdict } from "./contrast"
+import type { Blocker, ControlTextSource, Verdict } from "./contrast"
 
 export type Theme = "light" | "dark"
 export type State = "default" | "hover"
@@ -29,6 +29,14 @@ export interface Finding {
   opacityApprox: boolean
   /** Which boundary carries a non-text ratio. */
   basis?: "fill" | "border"
+  /**
+   * Where a text reading's text came from when the collector read it from a
+   * form control rather than the text pass: its placeholder, its value, or a
+   * closed select's option. Absent for
+   * an ordinary text node, so every reading that existed before #400 keeps the
+   * key it had.
+   */
+  source?: ControlTextSource
   /** The composed pair this ratio was taken between; see `Measurement`. */
   fg: string
   bg: string
@@ -108,6 +116,7 @@ const keyOf = (f: Finding | DedupedFinding): string =>
     [...f.blockers].sort().join("+"),
     f.opacityApprox ? "approx" : "",
     f.basis ?? "",
+    f.source ?? "",
   ].join("|")
 
 // Worst first. A reader opening the report wants the failures, and the next
@@ -380,7 +389,9 @@ export function renderFindingsTable(
         f.slug,
         f.theme,
         f.state,
-        f.basis === undefined ? f.kind : `${f.kind}:${f.basis}`,
+        // A non-text row names its basis and a form control's text row its
+        // source, so a reader sees why two rows on one path are two rows.
+        `${f.kind}${f.basis === undefined ? "" : `:${f.basis}`}${f.source === undefined ? "" : `:${f.source}`}`,
         cell(f.path),
         String(f.occurrences),
         f.sample === null ? "—" : cell(f.sample.slice(0, SAMPLE_LIMIT)),
