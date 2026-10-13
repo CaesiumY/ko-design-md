@@ -434,17 +434,18 @@ export async function selfCheck(root: string): Promise<CheckResult> {
 
     // The two fixtures take turns at the one virtual path, so every collection
     // says what must be served there — the document, or `null` for a page under
-    // `public/` that does not use the path. Required rather than optional, so a
-    // call cannot measure whichever fixture the previous one left behind. Each
-    // fixture also gets its own query string, which the server ignores: nothing
-    // here sends caching headers, so this only guards against a cache keeping
-    // one document under the other's URL.
+    // `public/` that does not use the path. It is required and always set —
+    // `null` empties the path, which then answers 404 — so a call cannot
+    // measure whichever fixture the previous one left behind. Each fixture also
+    // gets its own query string, which the server ignores: nothing here sends
+    // caching headers, so this only guards against a cache keeping one document
+    // under the other's URL.
     const collect = async (
       url: string,
       slug: string,
       oracle: string | null
     ): Promise<Array<Finding>> => {
-      if (oracle !== null) server.setOracle(oracle)
+      server.setOracle(oracle)
       const out: Array<Finding> = []
       for (const theme of ["light", "dark"] as const) {
         const measured = await measureOne(context, page, url, {
