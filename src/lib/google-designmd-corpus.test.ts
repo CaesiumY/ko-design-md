@@ -128,7 +128,6 @@ describe("catalog md, linted as the standard DESIGN.md", () => {
     expect(missing).toEqual([
       "bezier",
       "gmarket",
-      "greeting",
       "gs-retail",
       "lg-electronics",
       "seed-design",
