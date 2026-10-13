@@ -534,3 +534,16 @@ describe("totalsBySlug, told what the sweep covered", () => {
     expect(totalsBySlug(dedupeFindings([at(375)]))).toHaveLength(1)
   })
 })
+
+describe("dedupeFindings — a form control's text is its own row", () => {
+  it("does not fold a placeholder reading into a text-node reading on the same path", () => {
+    // Every other field of the two agrees; only where the text came from does
+    // not. Folding them would count one reading where the audit made two.
+    const node = at(976, { path: "div.f > input" })
+    const placeholder = at(976, {
+      path: "div.f > input",
+      source: "placeholder",
+    })
+    expect(dedupeFindings([node, placeholder])).toHaveLength(2)
+  })
+})

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>text a form control shows without a text node</title>
+    <!--
+      Synthetic, written for scripts/audit-contrast-oracle.ts (#400). See
+      scripts/fixtures/README.md: the expectations are derived from this CSS by
+      hand, so a change here changes the derivation in the oracle too.
+
+      Every control sits on the white page with a white surface of its own, so
+      the backdrop behind its text is white. Only achromatic OKLCH is used:
+      relative luminance is then L³, and the oracle's comment derives each
+      ratio from it.
+    -->
+    <style>
+      body {
+        margin: 0;
+        padding: 24px;
+        background: oklch(1 0 0);
+        font-family: sans-serif;
+      }
+      input,
+      select {
+        display: block;
+        width: 280px;
+        height: 40px;
+        margin-bottom: 24px;
+        padding: 0 12px;
+        box-sizing: border-box;
+        border: 1px solid oklch(0 0 0);
+        background: oklch(1 0 0);
+        font-size: 16px;
+        font-weight: 400;
+        color: oklch(0.5 0 0);
+      }
+      input::placeholder {
+        color: oklch(0.6 0 0);
+        opacity: 1;
+      }
+      input.ph-large::placeholder {
+        font-size: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <input class="ph" type="text" placeholder="placeholder only" />
+    <input class="ph-large" type="text" placeholder="large placeholder" />
+    <input class="val" type="text" value="value only" />
+    <select class="opt">
+      <option>first option</option>
+      <option>second option</option>
+    </select>
+    <input class="empty" type="text" />
+  </body>
+</html>

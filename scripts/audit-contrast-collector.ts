@@ -7,7 +7,7 @@
 // readings back, leaving `src/lib/contrast.ts` the only place that arithmetic
 // lives. A second copy in here could not be reached by `pnpm test`.
 
-import type { Blocker, RawColor } from "../src/lib/contrast"
+import type { Blocker, RawColor, RawControl } from "../src/lib/contrast"
 
 export interface CollectedText {
   path: string
@@ -42,9 +42,18 @@ export interface CollectedNonText {
   blockers: Array<Blocker>
 }
 
+/** A form control, read raw; see `RawControl` for why nothing is decided here. */
+export type CollectedControl = RawControl
+
 export interface Collected {
   text: Array<CollectedText>
   nonText: Array<CollectedNonText>
+  /**
+   * Form controls whose text is not a text node (#400). Optional so a
+   * collection built without it — #412 asked that `Collected` be extended,
+   * never replaced — still reads as before.
+   */
+  controls?: Array<CollectedControl>
   /** How many candidate overlays the page carries, for the run's own report. */
   overlayCandidates: number
 }
@@ -465,6 +474,65 @@ export function collectContrast(): Collected {
     })
   }
 
+  // ---- Form-control text (#400) ----------------------------------------------
+  //
+  // A placeholder, a typed value and a closed select's option are on screen as
+  // text but are not text nodes, so the walker above never reaches them — and
+  // the placeholder is the one text designers make faint on purpose. Every
+  // candidate is read raw; which text is showing, and in which style, is
+  // decided by `controlTextSample` (src/lib/contrast.ts), because a decision
+  // made in here could not be reached by a test.
+  //
+  // The same exclusions as the text pass: hidden, fully transparent, inactive
+  // (SC 1.4.3 exempts a disabled control's text), or clipped to the `.sr-only`
+  // pixel. `readonly` is not excluded — its text is on screen to be read.
+  const controls: Array<RawControl> = []
+  for (const el of document.querySelectorAll("input, textarea, select")) {
+    const cs = getComputedStyle(el)
+    if (cs.visibility === "hidden" || cs.display === "none") continue
+    if (opacityOf(el) === 0) continue
+    if (el.closest(":disabled, [aria-disabled='true']") !== null) continue
+    bringIntoView(el)
+    const rect = el.getBoundingClientRect()
+    if (rect.width <= 1 || rect.height <= 1) continue
+    const cx = rect.left + rect.width / 2
+    const cy = rect.top + rect.height / 2
+    if (!inViewport(cx, cy)) continue
+    // Starting at the control itself: its own background is the first layer
+    // behind its text, exactly as a text node's parent is in the text pass.
+    const read = backdropAt(cx, cy, el)
+    if (read.occluded) continue
+
+    const ph = getComputedStyle(el, "::placeholder")
+    const styleOf = (s: CSSStyleDeclaration, opacity: number) => ({
+      fg: { ...readColour(s.color), opacity },
+      fontSizePx: Number.parseFloat(s.fontSize),
+      fontWeight: Number.parseFloat(s.fontWeight) || 400,
+      textFill:
+        s.backgroundClip === "text" || s.webkitTextFillColor !== s.color,
+    })
+    const field = el as HTMLInputElement | HTMLTextAreaElement
+    const select = el instanceof HTMLSelectElement ? el : null
+    controls.push({
+      path: pathOf(el),
+      tag: el.localName,
+      type: el instanceof HTMLInputElement ? el.type.toLowerCase() : "",
+      value: select === null ? field.value : "",
+      placeholder: select === null ? field.placeholder : "",
+      placeholderShown: el.matches(":placeholder-shown"),
+      selectedText: select?.selectedOptions[0]?.text ?? "",
+      own: styleOf(cs, opacityOf(el)),
+      // The pseudo-element's own `opacity` multiplies in: a browser may fade
+      // a placeholder that way rather than through its colour.
+      placeholderStyle: styleOf(
+        ph,
+        opacityOf(el) * (Number.parseFloat(ph.opacity) || 1)
+      ),
+      lines: [{ stack: read.stack, blockers: [...read.blockers] }],
+      blockers: paintBlockers(cs, rect),
+    })
+  }
+
   // ---- Non-text surfaces (WCAG 2.x SC 1.4.11) --------------------------------
   //
   // The obvious selector — interactive elements and their descendants — is the
@@ -612,5 +680,10 @@ export function collectContrast(): Collected {
     })
   }
 
-  return { text, nonText, overlayCandidates: overlayCandidates.length }
+  return {
+    text,
+    nonText,
+    controls,
+    overlayCandidates: overlayCandidates.length,
+  }
 }

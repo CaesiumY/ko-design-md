@@ -38,3 +38,16 @@ from its CSS by hand. The derivations sit next to the anchors in
 `scripts/audit-contrast-oracle.ts` (`SYNTHETIC_ANCHORS`). Editing this file
 means re-deriving those, never copying the measurer's new output into them —
 that would turn the check into a test that the measurer agrees with itself.
+
+## `form-control-text.html`
+
+A second synthetic document under the same rule as the one above (#400). It
+covers text that is on screen but is not a text node — a placeholder, a typed
+value, a closed `<select>`'s chosen option — which the collector reads from the
+control itself. No previous fixture has a form control, and the samsung file
+cannot gain one.
+
+Every expectation on it is derived by hand in `FORM_ANCHORS`
+(`scripts/audit-contrast-oracle.ts`) from achromatic OKLCH, whose relative
+luminance is L³. The same condition holds: edit this file, and re-derive
+those; never paste the measurer's new output into them.

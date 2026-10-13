@@ -273,6 +273,121 @@ export interface RawTextSample {
   lines: Array<RawTextLine>
 }
 
+/** How one of a control's two text styles paints: its own, or its placeholder's. */
+export interface RawControlStyle {
+  fg: RawColor
+  fontSizePx: number
+  fontWeight: number
+  /** `-webkit-text-fill-color` or `background-clip: text` paints the glyphs. */
+  textFill: boolean
+}
+
+/**
+ * An `<input>`, `<textarea>` or `<select>` as the collector reads it — raw.
+ *
+ * Its text is not a text node: a placeholder and a value are an attribute and
+ * form state, and a closed select paints its chosen option itself, so none of
+ * it reaches the text pass's walker. The collector hands every candidate back
+ * with all of it, and `controlTextSample` decides what is on screen — the
+ * collector cannot import, so a decision made there could not be tested.
+ */
+export interface RawControl {
+  path: string
+  /** Lower-case tag name. */
+  tag: string
+  /** Lower-case `type` of an input; empty for a textarea or a select. */
+  type: string
+  value: string
+  placeholder: string
+  /** The browser's own `:placeholder-shown`. */
+  placeholderShown: boolean
+  /** A select's chosen option as it reads; empty for anything else. */
+  selectedText: string
+  own: RawControlStyle
+  /** The `::placeholder` pseudo-element's computed style. */
+  placeholderStyle: RawControlStyle
+  /** Read at the control's centre, starting from the control's own surface. */
+  lines: Array<RawTextLine>
+  /** Reasons that hold whichever text is shown — a filter on the control. */
+  blockers: Array<Blocker>
+}
+
+/** Which of a control's texts a reading measured. */
+export type ControlTextSource = "placeholder" | "value" | "option"
+
+export interface ControlText {
+  source: ControlTextSource
+  /** What a reader sees: a password's value comes back as its dots. */
+  text: string
+  sample: RawTextSample
+}
+
+/**
+ * The input types that show text a reader reads. A checkbox's `value` is form
+ * data, not something on screen, and a range or a button has no field.
+ * `date`, `time` and `color` are left out too: what they show is drawn by the
+ * browser's own widget, not from `value` as written.
+ */
+const TEXT_INPUT_TYPES = new Set([
+  "",
+  "text",
+  "search",
+  "email",
+  "password",
+  "tel",
+  "url",
+  "number",
+])
+
+/**
+ * The text a form control shows, and the style it is painted in — or null
+ * when it shows none.
+ *
+ * A value wins over a placeholder, because the browser shows one or the other
+ * and the value is what it shows once there is one. The placeholder is read in
+ * ITS colour and size, which a preview sets apart on purpose: it is the one
+ * text designers make faint, which is why it is worth measuring at all.
+ */
+export function controlTextSample(raw: RawControl): ControlText | null {
+  const sampleFor = (style: RawControlStyle): RawTextSample => ({
+    fontSizePx: style.fontSizePx,
+    fontWeight: style.fontWeight,
+    fg: style.fg,
+    lines: raw.lines,
+    blockers: style.textFill
+      ? [...raw.blockers, "text-fill" as const]
+      : raw.blockers,
+  })
+
+  if (raw.tag === "select") {
+    if (raw.selectedText.trim() === "") return null
+    return {
+      source: "option",
+      text: raw.selectedText.trim(),
+      sample: sampleFor(raw.own),
+    }
+  }
+  if (raw.tag !== "textarea") {
+    if (raw.tag !== "input" || !TEXT_INPUT_TYPES.has(raw.type)) return null
+  }
+  if (raw.value !== "") {
+    return {
+      source: "value",
+      // Never the value itself: it would put a password into the report.
+      text: raw.type === "password" ? "•".repeat(raw.value.length) : raw.value,
+      sample: sampleFor(raw.own),
+    }
+  }
+  if (raw.placeholderShown && raw.placeholder.trim() !== "") {
+    return {
+      source: "placeholder",
+      text: raw.placeholder.trim(),
+      sample: sampleFor(raw.placeholderStyle),
+    }
+  }
+  return null
+}
+
 export interface Measurement {
   ratio: number
   threshold: number

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 import {
   compositeOver,
   contrastRatio,
+  controlTextSample,
   evaluateNonText,
   evaluateText,
   flattenStack,
@@ -10,6 +11,7 @@ import {
   recoverAlpha,
   textThreshold,
 } from "./contrast"
+import type { RawColor, RawControl } from "./contrast"
 
 const WHITE = { r: 255, g: 255, b: 255 }
 const BLACK = { r: 0, g: 0, b: 0 }
@@ -723,5 +725,177 @@ describe("the colour pair a non-text measurement reports", () => {
     expect(got?.basis).toBe("border")
     expect(got?.fg).toBe("#ffffff")
     expect(got?.bg).toBe("#000000")
+  })
+})
+
+describe("controlTextSample — the text a form control shows", () => {
+  // A form control's text is not a text node: a placeholder and a value are
+  // attributes and form state, and a closed <select> paints its chosen option
+  // itself. The collector reads all of it raw and this decides which, if any,
+  // is on screen and in which colour — the same split as `isEmojiOnly`.
+  const grey: RawColor = {
+    onWhite: { r: 128, g: 128, b: 128 },
+    onBlack: { r: 128, g: 128, b: 128 },
+    opacity: 1,
+  }
+  const ink: RawColor = {
+    onWhite: { r: 20, g: 20, b: 20 },
+    onBlack: { r: 20, g: 20, b: 20 },
+    opacity: 1,
+  }
+  const paper: RawColor = {
+    onWhite: { r: 255, g: 255, b: 255 },
+    onBlack: { r: 255, g: 255, b: 255 },
+    opacity: 1,
+  }
+  const control = (over: Partial<RawControl>): RawControl => ({
+    path: "div.field > input",
+    tag: "input",
+    type: "text",
+    value: "",
+    placeholder: "",
+    placeholderShown: false,
+    selectedText: "",
+    own: { fg: ink, fontSizePx: 16, fontWeight: 400, textFill: false },
+    placeholderStyle: {
+      fg: grey,
+      fontSizePx: 16,
+      fontWeight: 400,
+      textFill: false,
+    },
+    lines: [{ stack: [paper], blockers: [] }],
+    blockers: [],
+    ...over,
+  })
+
+  it("reads a shown placeholder in the ::placeholder colour, not the field's", () => {
+    const got = controlTextSample(
+      control({ placeholder: "이메일", placeholderShown: true })
+    )
+    expect(got?.source).toBe("placeholder")
+    expect(got?.text).toBe("이메일")
+    expect(got?.sample.fg).toBe(grey)
+  })
+
+  it("reads the value once there is one, whatever the placeholder says", () => {
+    const got = controlTextSample(
+      control({ value: "홍길동", placeholder: "이름", placeholderShown: false })
+    )
+    expect(got?.source).toBe("value")
+    expect(got?.text).toBe("홍길동")
+    expect(got?.sample.fg).toBe(ink)
+  })
+
+  it("has nothing to read in an empty field without a placeholder", () => {
+    expect(controlTextSample(control({}))).toBeNull()
+  })
+
+  it("does not read a placeholder the browser is not showing", () => {
+    // `placeholderShown` is the browser's own answer; a placeholder attribute
+    // on a field it hides (a textarea with content) is not on screen.
+    expect(
+      controlTextSample(
+        control({ placeholder: "메모", placeholderShown: false })
+      )
+    ).toBeNull()
+  })
+
+  it("has no text to read in a checkbox, a radio or a range", () => {
+    for (const type of ["checkbox", "radio", "range", "button", "submit"]) {
+      expect(
+        controlTextSample(
+          control({
+            type,
+            value: "on",
+            placeholder: "x",
+            placeholderShown: true,
+          })
+        ),
+        type
+      ).toBeNull()
+    }
+  })
+
+  it("reads a password as the dots it shows, never the value", () => {
+    const got = controlTextSample(
+      control({ type: "password", value: "hunter2" })
+    )
+    expect(got?.source).toBe("value")
+    expect(got?.text).toBe("•••••••")
+    expect(got?.text).not.toContain("hunter2")
+  })
+
+  it("reads a closed select's chosen option in the select's own colour", () => {
+    const got = controlTextSample(
+      control({ tag: "select", type: "", selectedText: "서울특별시" })
+    )
+    expect(got?.source).toBe("option")
+    expect(got?.text).toBe("서울특별시")
+    expect(got?.sample.fg).toBe(ink)
+  })
+
+  it("reads a textarea by the same rule as an input", () => {
+    expect(
+      controlTextSample(
+        control({
+          tag: "textarea",
+          type: "",
+          placeholder: "내용",
+          placeholderShown: true,
+        })
+      )?.source
+    ).toBe("placeholder")
+  })
+
+  it("judges a large placeholder against the large-text bar", () => {
+    // 24px is large text at any weight, so the bar is 3:1 — and it is the
+    // PLACEHOLDER's size that counts, which can differ from the field's.
+    const small = controlTextSample(
+      control({ placeholder: "검색", placeholderShown: true })
+    )
+    const large = controlTextSample(
+      control({
+        placeholder: "검색",
+        placeholderShown: true,
+        own: { fg: ink, fontSizePx: 16, fontWeight: 400, textFill: false },
+        placeholderStyle: {
+          fg: grey,
+          fontSizePx: 24,
+          fontWeight: 400,
+          textFill: false,
+        },
+      })
+    )
+    expect(small && evaluateText(small.sample).threshold).toBe(4.5)
+    expect(large && evaluateText(large.sample).threshold).toBe(3)
+  })
+
+  it("holds the reading when the text it reads is painted by fill colour", () => {
+    const got = controlTextSample(
+      control({
+        placeholder: "x",
+        placeholderShown: true,
+        placeholderStyle: {
+          fg: grey,
+          fontSizePx: 16,
+          fontWeight: 400,
+          textFill: true,
+        },
+      })
+    )
+    expect(got?.sample.blockers).toContain("text-fill")
+    // The field's own fill does not reach the placeholder it is not drawing.
+    const value = controlTextSample(
+      control({
+        value: "a",
+        placeholderStyle: {
+          fg: grey,
+          fontSizePx: 16,
+          fontWeight: 400,
+          textFill: true,
+        },
+      })
+    )
+    expect(value?.sample.blockers).not.toContain("text-fill")
   })
 })
