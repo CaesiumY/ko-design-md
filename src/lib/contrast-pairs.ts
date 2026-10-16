@@ -2,8 +2,9 @@
 //
 // A preview's colours come from the brand's own values, so a `fail` or a
 // `borderline` row is not always something the preview can fix: when both
-// sides of the pair are colours the brand published, moving either one means
-// dropping a published value. samsung's light emphasis button (4.51:1, white on
+// sides of the pair are colours the brand published, a fix either drops a
+// published value or swaps in a token the brand did not use there — a role
+// judgement this does not make. samsung's light emphasis button (4.51:1, white on
 // the published `primary-dark`) is that case, and it was left alone with a
 // guard comment rather than recoloured.
 //
@@ -32,8 +33,9 @@ import type { DedupedFinding, Finding, Judgement } from "./contrast-report"
  *
  * The `fail` readings do NOT leave that band empty (the section of the
  * document that classifies them records how many sit in it). It is kept
- * anyway — #397 fixed it — and it errs in the direction the section's other
- * caveat already does: a stricter match counts fewer pairs as published.
+ * anyway — #397 fixed it — and it errs in the same direction as compositing
+ * does (one of the two errors the document's caveat names): a stricter match
+ * counts fewer pairs as published.
  */
 export const PUBLISHED_PAIR_TOLERANCE = 0.002
 
@@ -212,8 +214,9 @@ export type PairClass =
 
 /**
  * Four ways a pair can sit against the entry's palette. Only the first says
- * a fix would drop published values; `observed-pair` is kept apart so a
- * reader can put the observed values on whichever side they believe.
+ * a fix cannot keep both published values as they are; `observed-pair` is
+ * kept apart so a reader can put the observed values on whichever side they
+ * believe.
  */
 export function pairClass(
   fg: string,

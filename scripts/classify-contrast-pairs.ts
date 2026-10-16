@@ -77,20 +77,34 @@ function readFindings(path: string): Array<Finding> {
   // Checked here rather than left to fail inside the maths: an artifact from
   // before the colour pair was reported has no `fg`/`bg`, and that should read
   // as the wrong input (exit 2), not as a crash.
-  const bad = (parsed as Array<Record<string, unknown>>).findIndex(
-    (f) =>
-      typeof f.slug !== "string" ||
-      typeof f.kind !== "string" ||
-      typeof f.verdict !== "string" ||
-      typeof f.fg !== "string" ||
-      typeof f.bg !== "string"
+  const bad = (parsed as Array<unknown>).findIndex(
+    (item) =>
+      typeof item !== "object" ||
+      item === null ||
+      !isFinding(item as Record<string, unknown>)
   )
   if (bad !== -1) {
     fail(
-      `Error: ${path} item ${bad} lacks slug/kind/verdict/fg/bg — is it a contrast-findings.json from a run that reports colour pairs?`
+      `Error: ${path} item ${bad} is not a finding with slug/kind/verdict/fg/bg/blockers — is it a contrast-findings.json from a run that reports colour pairs?`
     )
   }
   return parsed as Array<Finding>
+}
+
+// Every field `keyOf` and the classifier read, so a malformed item stops here
+// with exit 2 instead of throwing deeper in with exit 1, which this script
+// keeps for split colour pairs alone.
+function isFinding(f: Record<string, unknown>): boolean {
+  return (
+    typeof f.slug === "string" &&
+    typeof f.kind === "string" &&
+    typeof f.verdict === "string" &&
+    typeof f.ratio === "number" &&
+    typeof f.width === "number" &&
+    Array.isArray(f.blockers) &&
+    typeof f.fg === "string" &&
+    typeof f.bg === "string"
+  )
 }
 
 const totals = (tally: Array<PairTally>) =>
