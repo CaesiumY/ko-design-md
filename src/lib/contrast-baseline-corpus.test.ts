@@ -132,9 +132,13 @@ describe("the published-pair tables against the recorded totals", () => {
   // this is the machine that holds them to it, because a reviewer catching it
   // a fourth time is not a process.
   //
-  // Each table is tied to the recorded totals row by row (#397), so a PR that
-  // moves a `borderline` or `fail` count of a classified entry cannot land with
-  // a classification of the rows that were there before it.
+  // Each table is tied to the recorded totals row by row (#397). For TEXT rows
+  // that is a tie to the gate — their counts are exact in the recorded table —
+  // so a PR that moves a text `borderline` or `fail` count of a classified
+  // entry cannot land with a classification of the rows that were there before
+  // it. Non-text `fail`/`borderline` are reference columns the gate only warns
+  // about (`compareToBaseline`), so a non-text row here matches the recorded
+  // column and goes stale with it.
   const doc = read(DOC)
 
   /** The pair table inside the section that opens with `heading`. */
