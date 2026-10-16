@@ -353,8 +353,10 @@ export function renderPairTable(tally: Array<PairTally>): string {
 }
 
 /**
- * A table `renderPairTable` wrote, read back. The header is checked and every
- * row must add up, so a hand edit to one cell is an error here rather than a
+ * A table `renderPairTable` wrote, read back. The header is checked, every row
+ * must have its seven cells, a known kind, and add up, and no slug and kind may
+ * appear twice — a merge that kept an old row beside its replacement would
+ * otherwise be read as one of them. A hand edit is an error here rather than a
  * number the corpus test compares in good faith.
  */
 export function parsePairTable(table: string): Array<PairTally> {
@@ -373,8 +375,24 @@ export function parsePairTable(table: string): Array<PairTally> {
       `pair table header is ${JSON.stringify(header)}, expected ${JSON.stringify(PAIR_COLUMNS)}`
     )
   }
+  const seen = new Set<string>()
   return lines.slice(2).map((l) => {
     const c = cellsOf(l)
+    if (c.length !== PAIR_COLUMNS.length) {
+      throw new Error(
+        `pair table row ${JSON.stringify(l)} has ${c.length} cells, expected ${PAIR_COLUMNS.length}`
+      )
+    }
+    if (c[1] !== "text" && c[1] !== "non-text") {
+      throw new Error(
+        `pair table row for ${c[0]} has kind ${JSON.stringify(c[1])}, expected text or non-text`
+      )
+    }
+    const key = `${c[0]} ${c[1]}`
+    if (seen.has(key)) {
+      throw new Error(`pair table row for ${key} is written twice`)
+    }
+    seen.add(key)
     const count = (i: number): number => {
       const n = Number(c[i])
       if (!Number.isInteger(n) || n < 0) {
@@ -386,7 +404,7 @@ export function parsePairTable(table: string): Array<PairTally> {
     }
     const t: PairTally = {
       slug: c[0],
-      kind: c[1] as PairTally["kind"],
+      kind: c[1],
       bothPublished: count(2),
       observedPair: count(3),
       oneToken: count(4),

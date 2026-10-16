@@ -321,6 +321,26 @@ describe("the pair table", () => {
     expect(() => parsePairTable(bad)).toThrow(/toss text/)
   })
 
+  it("refuses a slug and kind written twice", () => {
+    // A merge that keeps both the old and the new row: folded into a map, the
+    // last one would win and the totals check would compare only it.
+    const twice = `${renderPairTable(tally)}\n| toss | text | 1 | 0 | 0 | 0 | 1 |`
+    expect(() => parsePairTable(twice)).toThrow(/toss text.*twice/)
+  })
+
+  it("refuses a kind that is not text or non-text", () => {
+    const bad = renderPairTable(tally).replace(
+      "| toss | text |",
+      "| toss | txt |"
+    )
+    expect(() => parsePairTable(bad)).toThrow(/kind/)
+  })
+
+  it("refuses a row with the wrong number of cells", () => {
+    const bad = renderPairTable(tally).replace("| 4 |", "| 4 | 9 |")
+    expect(() => parsePairTable(bad)).toThrow(/cells/)
+  })
+
   it("refuses a header it does not know", () => {
     const bad = renderPairTable(tally).replace("one-token", "one")
     expect(() => parsePairTable(bad)).toThrow(/header/)

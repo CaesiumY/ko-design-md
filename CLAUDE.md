@@ -50,6 +50,14 @@ pnpm test:e2e           # E2E 스모크 — 빌드된 서버 + Chromium, CI 는 
 로컬에서 돌리려면 `pnpm exec playwright install chromium` 이 선행돼야 하고, **수치는 CI 가
 정본이다** — 폰트 폴백이 OS 마다 달라 줄바꿈이 달라지고 판정이 기대는 줄이 바뀔 수 있다.
 
+**총계 표를 갱신하는 PR 은 발행색 분류표도 함께 다시 낸다**(#397). 같은 문서의 두 분류표(미달·경계선 행을
+발행 토큰 쌍인지로 가른 표)는 슬러그·종류별 합이 총계 표와 같아야 해서, 이미 분류된 항목의 **텍스트**
+`fail`·`borderline` 을 움직이면 `pnpm test` 가 막는다. 총계 표를 갱신할 때 받은 같은 CI 아티팩트
+(`contrast-report`)로 `pnpm audit:contrast:pairs --findings <contrast-findings.json>` 를 돌려 두 표와
+테스트의 `CLASSIFIED_RUN`·문서의 run 번호를 함께 바꾼다(실패 메시지가 단계를 말한다). 새 항목은 다음
+재집계까지 면제되므로 온보딩의 등록처는 늘지 않는다. 비텍스트 행은 게이트가 warn 만 내는 참고 열과
+묶여 강제되지 않는다.
+
 같은 관측 하네스를 스킬 루프 안에서 staged 프리뷰에 돌리는 것이 `pnpm audit:contrast:staged`
 (Stage 9a3, ADR 0009)다. 미달을 9a2 기계 리포트에 **warn** 으로만 합치고 루프를 막지 않는다.
 Chromium 이 없거나 측정이 깨지면 exit 0 으로 `render.skipped` 를 남기는데, 이것은 "미달 없음"이
