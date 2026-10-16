@@ -408,6 +408,20 @@ describe("toleranceBand", () => {
     )
     expect(got).toEqual({ readings: 4, inBand: 0, compositeInBand: 1 })
   })
+
+  it("decides which readings no token matches with the band's own lower edge", () => {
+    // `#808080` is 0.0015 from `grey` here and 0.00338 from the veil over
+    // white. With the band at 0.002 the token matches it, so neither count
+    // takes it; with the band at 0.001 it is in both.
+    const p: Palette = {
+      ...palette(entry("white", 1), entry("grey", greyLab.L + 0.0015)),
+      translucent: [VEIL],
+    }
+    const band = (lo: number) =>
+      toleranceBand([row({})], () => p, "fail", [lo, 0.005])
+    expect(band(0.002)).toEqual({ readings: 2, inBand: 0, compositeInBand: 0 })
+    expect(band(0.001)).toEqual({ readings: 2, inBand: 1, compositeInBand: 1 })
+  })
 })
 
 describe("the pair table", () => {
