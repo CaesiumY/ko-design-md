@@ -193,7 +193,9 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 
 **참고 열은 갱신이 강제되지 않으므로 낡을 수 있다.** 마지막으로 전수 갱신한 것은
 2026-10-02 이다. 게이트는 warn 행에도 붙여넣을 줄을 출력하므로, 낡은 것을 보면 그 줄로
-갱신하면 된다.
+갱신하면 된다. 이미 분류된 항목의 `fail`·`borderline` 을 바꾸면(텍스트·비텍스트 모두) 같은 아티팩트로
+`pnpm audit:contrast:pairs` 를 돌려 아래 두 분류표와 테스트의 `CLASSIFIED_RUN` 도 함께 바꾼다(「게이트는
+이것을 어떻게 다루나」).
 
 새 항목은 자기 네 줄(라이트·다크 × 텍스트·비텍스트)을 여기와 `BASELINE_TABLE` 양쪽에
 슬러그 순서대로 적는다. **수치는 CI 가 만든다** — `pnpm gate:contrast` 가 기록에 없는
@@ -489,69 +491,194 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 `[aria-disabled="true"]` 를 이미 제외하므로, 클래스로만 그린 비활성 시연을 그렇게 선언하면
 래칫이 내려가고 게이트가 그 줄을 갱신하라고 말한다. 그게 래칫이 작동하는 모습이다.
 
-## 발행색끼리의 경계선 (2026-09-27)
+## 발행색끼리의 경계선 (2026-09-27 · 재집계 2026-10-16)
 
 `borderline` 은 두 가지를 한 이름으로 담는다 — 고치면 되는 것과, 색을 옮기면 **발행값을
 버리게 되는** 것. 후자의 사례가 samsung 의 라이트 강조 버튼(4.51:1, 발행 `primary-dark`
 위 흰 글자)이고, 그 파일은 값을 고치지 않고 가드 주석을 달았다.
 
-전수의 `borderline` 284행을 `services/{slug}.md` frontmatter `colors:` 와 대조했다. 측정된
-색 쌍이 이제 모든 읽기에 실리므로(`--json-out` 의 `fg`/`bg`, 리포트 표의 `색` 열) 기계로
+분류한 `borderline` 284행을 `services/{slug}.md` frontmatter `colors:` 와 대조했다. 측정된
+색 쌍이 모든 읽기에 실리므로(`--json-out` 의 `fg`/`bg`, 리포트 표의 `색` 열) 기계로
 가를 수 있다 — `readDefinitions` 로 발행 OKLCH 를 읽고 측정 hex 를 `hexToOklab` 으로
-옮겨 `deltaE` 로 잰다. **아래 수치는 CI 의 `contrast` 잡이 올린 아티팩트(JSON · 리포트 표)에서
-나왔다** — 로컬 sweep 으로 답하면 기록된 표가 서술하는 것과 다른 렌더에 대해 답하게 된다.
-재도출은 그 아티팩트를 내려받아 같은 절차를 돌리면 된다.
+옮겨 `deltaE` 로 잰다. 그 절차가 `src/lib/contrast-pairs.ts` 이고, 이 절과 다음 절의 표는
+**CI 의 `contrast` 잡이 올린 아티팩트**에 그것을 돌린 출력이다 — 로컬 sweep 으로 답하면 기록된
+표가 서술하는 것과 다른 렌더에 대해 답하게 된다. 입력은 run `38463871450`(main `d7ade61`)이다.
+그 뒤에 더해진 항목은 다음 재집계 때 두 표에 들어가고, 그전까지는 표에 없다(아래 「게이트는 이것을 어떻게 다루나」). 미달과
+경계선이 모두 0 인 항목도 표에 없다.
+
+```bash
+gh run download <run id> -n contrast-report -D <폴더>
+pnpm audit:contrast:pairs --findings <폴더>/contrast-findings.json
+```
 
 **허용폭은 고르지 않고 데이터에서 읽었다.** 이 절을 처음 쓸 때(borderline 258행)의 514개 색 읽기의 최근접 토큰 거리는 366개가
 `d ≤ 0.002` 에 몰려 있고 **0.002와 0.005 사이가 정확히 비어 있다.** 그 아래가 8비트 양자화
 폭 안의 토큰 일치이고 위는 토큰 근처이되 그 토큰이 아닌 색이다. 0.01로 느슨하게 잡으면
-samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다.
+samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다. 2026-10-16 재집계의
+`borderline` 읽기에서도 그 구간은 비어 있었다(미달 읽기에서는 아니었다 — 다음 절). 그 구간에 든 읽기의
+수는 위 명령이 표마다 `readings …` 줄로 낸다.
 
-**결과: 284행 중 210행이 두 색 모두 발행 토큰인 쌍이다**(nol 은 관측 토큰 쌍을 뺀 수 — 아래 nol 문단).
-#400 이 입력창 안내 문구를 재기 시작하며 더해진 6행(krds 4 — `gray-60` on 흰색, lg-electronics 2 —
-`kr-storm-grey` on 흰색)도 같은 절차로 갈랐고 모두 frontmatter 정의끼리의 쌍으로 세어진다. 다만
-lg-electronics 의 `kr-*` 는 문서로 발행된 값이 아니라 운영 CSS 에서 관측한 이름이다 — 아래 nol 문단의
-예외를 적용하지 않는 항목이라 정의 전체 기준으로 셌다.
+**행은 네 칸으로 가른다.**
 
-| slug | 발행색 쌍 / borderline |
+| 칸 | 뜻 |
 | --- | --- |
-| 11st | 18 / 18 |
-| baemin | 3 / 4 |
-| bezier | 20 / 33 |
-| class101 | 7 / 7 |
-| codeit | 5 / 7 |
-| greeting | 5 / 39 |
-| gs-shop | 2 / 2 |
-| krds | 29 / 29 |
-| kyobobook | 3 / 3 |
-| lg-electronics | 39 / 39 |
-| likelion | 7 / 7 |
-| line-design-system | 12 / 12 |
-| nol | 0 / 10 |
-| remember | 1 / 1 |
-| samsung-one-ui | 2 / 9 |
-| seed-design | 11 / 11 |
-| teamsparta | 16 / 16 |
-| toss | 10 / 11 |
-| vapor-ui | 15 / 15 |
-| wanted | 2 / 3 |
-| yeogi | 0 / 5 |
-| zigbang | 3 / 3 |
+| `both-published` | 두 색 모두 발행 토큰 — 고치려면 발행값을 버리거나, 브랜드가 그 자리에 쓰지 않은 다른 토큰으로 바꿔야 한다(어느 역할에 어느 토큰이 맞는지는 이 표가 가르지 않는다) |
+| `observed-pair` | 두 색 모두 토큰이지만 하나 이상이 운영 사이트에서 관측한(문서로 발행되지 않은) 값 — 고치면 브랜드가 실제로 쓰는 색과 달라진다 |
+| `one-token` | 한쪽만 토큰 — 다른 쪽(파생색)을 옮겨 고칠 수 있다 |
+| `no-token` | 둘 다 토큰이 아니다 |
 
-**nol 행만 관측(미발행) 토큰끼리의 쌍을 빼고 셌다.** 절차가 `readDefinitions` 로 읽는 정의에는 관측값 토큰도 들어 있지만, 이 절이 가르려는 것은 "고치면 발행값을 버리는" 경계선이다. 그래서 nol 은 발행 팔레트(`nol-*`) 쌍만 세어 `0 / 10` 이다 — 10행 중 6행은 관측 토큰끼리(`neutral-strong1`×`neutral-weak1`, `accent-main`×`accent-weak`)이고, 나머지 4행은 한쪽이 토큰이 아닌 혼합색이다(다크 캐러셀 화살표 면). 이 예외는 nol 에만 적용했다 — 관측 토큰을 싣는 다른 항목(lg-electronics 의 `us-*` 등)은 처음 셀 때의 기준(frontmatter 정의 전체) 그대로이고, 다시 세려면 CI 아티팩트가 필요하다.
+관측값을 어느 쪽으로 볼지는 읽는 사람이 정하도록 따로 센다. 관측값은 항목 파일이 스스로 그렇게 적은
+것을 `OBSERVED_COLOURS`(`src/lib/contrast-pairs.ts`)에 원문 그대로 옮겨 고른다 — 그룹 단위로는 lg-electronics
+의 (b) lg.com/us 관측값과 (c) 국내 운영 CSS 이름, nol 의 "서비스 UI 관측(미발행)" 그룹들이고, 토큰 단위로는
+gs-shop 이 "라이브 실측 · 공식 문서와 불일치"·"공식 문서에 없는 신규 토큰"으로 적은 토큰들이다. 제목이나
+토큰 이름이 바뀌면 스크립트와 테스트가 멈추고, 조용히 발행으로 되돌아가지 않는다. 같은 값이 발행·관측 양쪽에 있으면 발행으로
+센다(nol 의 `membership-dia-main` 은 발행 `nol-blue` 와 같은 값이다). 반투명 토큰은 합성된 읽기와 같을 수
+없으므로 대조에서 뺀다.
 
-**이 수는 하한이다.** `fg` 는 배경 위에 합성된 값이고 `bg` 는 평탄화된 스택이라, 알파나
+**처음 셀 때(2026-09-27)는 관측값을 nol 에서만 뺐다.** lg-electronics 의 관측값은 발행으로 셌는데,
+2026-10-16 재집계에서 그 행들은 전부 `observed-pair` 로 옮겨 갔다. 옛 규칙(관측값을 nol 의 그룹에만 두고
+`observed-pair` 칸 없이)으로 같은 아티팩트를 돌리면 옛 표가 슬러그마다 그대로 나온다 — 이 스크립트가 그
+절차를 구현한다는 근거다.
+
+**결과: `borderline` 284행 중 170행이 두 색 모두 발행 토큰인 쌍이다.**
+
+**이 수에는 두 방향의 오차가 있다.** `fg` 는 배경 위에 합성된 값이고 `bg` 는 평탄화된 스택이라, 알파나
 `opacity` 가 낀 표면은 **모든 입력이 발행 토큰이어도** 합성 결과가 어떤 단일 토큰과도 맞지
 않는다. samsung 다크의 `#0381fe`(발행 `primary`, d=0.0004) × `#3a3a3a`(최근접
-`black-dark` 가 d=0.2145로 멀다)가 그 모양이고, greeting 이 39행 중 5행인 것도 같은
-이유로 보인다. 평면 집계로 "284행 중 210행이 못 고치는 것"이라 읽지 말 것.
+`black-dark` 가 d=0.2145로 멀다)가 그 모양이고, greeting 이 대부분 `one-token` 인 것도 같은
+이유로 보인다. 다른 하나는 반대 방향이다 — 대조는 역할을 보지 않고 항목의 `colors:` 토큰 전부와
+하므로, 파생색이 우연히 어떤 토큰의 허용폭 안에 떨어지면 토큰으로 센다. 합성 쪽이 큰 오차로 보이지만
+어느 쪽도 행마다 확인한 것은 아니다. `one-token`·`no-token` 칸을 "고칠 수 있는 것"의 수로 평면 집계하지 말 것.
+
+| slug | kind | both-published | observed-pair | one-token | no-token | total |
+| --- | --- | --- | --- | --- | --- | --- |
+| 11st | text | 18 | 0 | 0 | 0 | 18 |
+| baemin | text | 3 | 0 | 1 | 0 | 4 |
+| bezier | text | 7 | 0 | 13 | 0 | 20 |
+| bezier | non-text | 13 | 0 | 0 | 0 | 13 |
+| class101 | text | 3 | 0 | 0 | 0 | 3 |
+| class101 | non-text | 4 | 0 | 0 | 0 | 4 |
+| codeit | text | 2 | 0 | 0 | 0 | 2 |
+| codeit | non-text | 3 | 0 | 2 | 0 | 5 |
+| greeting | text | 1 | 0 | 31 | 3 | 35 |
+| greeting | non-text | 4 | 0 | 0 | 0 | 4 |
+| gs-shop | text | 1 | 1 | 0 | 0 | 2 |
+| krds | text | 29 | 0 | 0 | 0 | 29 |
+| kyobobook | non-text | 3 | 0 | 0 | 0 | 3 |
+| lg-electronics | text | 0 | 39 | 0 | 0 | 39 |
+| likelion | non-text | 7 | 0 | 0 | 0 | 7 |
+| line-design-system | text | 12 | 0 | 0 | 0 | 12 |
+| nol | text | 0 | 6 | 0 | 0 | 6 |
+| nol | non-text | 0 | 0 | 4 | 0 | 4 |
+| remember | text | 1 | 0 | 0 | 0 | 1 |
+| samsung-one-ui | text | 2 | 0 | 0 | 0 | 2 |
+| samsung-one-ui | non-text | 0 | 0 | 7 | 0 | 7 |
+| seed-design | text | 2 | 0 | 0 | 0 | 2 |
+| seed-design | non-text | 9 | 0 | 0 | 0 | 9 |
+| teamsparta | text | 16 | 0 | 0 | 0 | 16 |
+| toss | text | 2 | 0 | 1 | 0 | 3 |
+| toss | non-text | 8 | 0 | 0 | 0 | 8 |
+| vapor-ui | text | 14 | 0 | 0 | 0 | 14 |
+| vapor-ui | non-text | 1 | 0 | 0 | 0 | 1 |
+| wanted | text | 2 | 0 | 1 | 0 | 3 |
+| yeogi | text | 0 | 0 | 1 | 4 | 5 |
+| zigbang | non-text | 3 | 0 | 0 | 0 | 3 |
 
 ### 게이트는 이것을 어떻게 다루나 — 면제 목록을 만들지 않는다
 
 `borderline` 은 애초에 막히지 않는다. 그리고 텍스트의 `borderline` 수는 이미 양방향
 정확값으로 고정돼 있어, 발행색 쌍이든 아니든 그 수가 움직이면 표를 갱신해야 한다.
 그러므로 코드에 별도 면제 목록을 두면 **아무것도 막지 않는 것에 대한 예외 목록**이 된다.
-판정은 이 절의 기록으로 남고, 재현 방법은 위 문단이 전부다.
+판정은 이 절과 다음 절의 기록으로 남고, 재현은 위 명령이 한다.
+
+**두 표는 기록된 총계 표와 묶여 있다.** 슬러그·종류마다 이 절 표의 `total` 은 총계 표의 `borderline` 을,
+다음 절 표의 `total` 은 `fail` 을 두 테마 합으로 같아야 한다(`contrast-baseline-corpus.test.ts`). 텍스트 수를
+움직이는 PR 은 총계 표를 갱신할 때 받은 같은 아티팩트로 위 명령을 다시 돌려 두 표를 함께 바꾼다 — 텍스트
+`fail`·`borderline` 은 게이트가 정확값으로 강제하므로, 갱신하지 않으면 게이트나 이 테스트 중 하나가 막는다.
+**비텍스트 행은 그렇지 않다.** 비텍스트 `fail`·`borderline` 은 총계 표의 참고 열(「슬러그별 총계」 절의 열별 게이트 표 — 어긋나면
+warn 만)이라 갱신이 강제되지 않고, 두 분류표의 비텍스트 행은 그 참고 열과 같게만 묶여 있어 그 열과 함께 낡을
+수 있다. 참고 열을 갱신할 때 두 표의 비텍스트 행도 같은 명령으로 다시 낸다. 재집계
+뒤에 더해진 새 항목은 이 대조에서 빠진다 — 새 항목이 총계 표 4행에 더해 이 분류까지 해야 하면 온보딩 스킬이
+모르는 등록처가 하나 더 생기기 때문이다. 다음에 누가 위 명령을 돌릴 때 함께 들어간다. 어느 항목이 이미
+분류됐는지는 테스트(`CLASSIFIED_RUN`)가 재집계한 run 의 슬러그 전체로 적어 두므로, 그 항목들은 표에서 행을
+지워도 대조를 피하지 못한다. 재집계할 때는 그 목록을 위 명령이 출력하는 `classified run` 줄로 통째로 바꾼다 —
+테스트가 그 run 번호를 이 절의 입력 run 번호와 대조한다.
+
+## 미달의 발행색 분류 (2026-10-16)
+
+이슈 #397. `fail` 행을 위 절과 같은 절차·같은 네 칸·같은 아티팩트로 가른 것이다. 미달을 줄이는 작업을
+슬러그별로 시작하기 전에, 그 수정이 발행값끼리의 쌍을 건드리는 것인지를 먼저 갈라 두려는 표다.
+
+**허용폭의 빈 띠가 여기서는 비어 있지 않았다.** 0.002 는 `borderline` 읽기에서 0.002~0.005 가 비어 있어서
+읽은 값인데, 2026-10-16 재집계의 `fail` 색 읽기에는 그 구간에 든 것이 있었다. 이슈가 허용폭을 고정했으므로
+바꾸지 않았다. 0.002 는 엄한 쪽이라 `both-published` 를 적게 센다 — 0.005 로 넓히면 그 칸이 는다. 아래
+caveat 의 합성 오차와 같은 방향이다. 그 구간의 읽기 수와 0.005 에서의 `both-published` 는 위 명령이 표와 함께
+`readings …` 줄로 낸다.
+
+**결과: `fail` 1883행 중 1139행이 두 색 모두 발행 토큰인 쌍이다.**
+
+**이 수도 위 절과 같은 두 방향의 오차를 진다.** 알파·`opacity` 가 낀 표면은 입력이 모두 발행 토큰이어도
+`one-token`·`no-token` 칸에 들어가고(발행 쌍을 적게 센다), 우연히 토큰 근처에 떨어진 파생색은 토큰으로
+세어진다(많이 센다). 그래서 `one-token`·`no-token` 칸은 "고칠 수 있는 것"의 후보 목록이지 그 수가 아니다.
+비텍스트 행은 게이트가 갱신을 강제하지 않는 참고 열과 묶여 있어 낡을 수 있다(위 「게이트는 이것을 어떻게 다루나」 문단).
+
+| slug | kind | both-published | observed-pair | one-token | no-token | total |
+| --- | --- | --- | --- | --- | --- | --- |
+| 11st | text | 26 | 0 | 8 | 4 | 38 |
+| 11st | non-text | 8 | 0 | 1 | 8 | 17 |
+| baemin | text | 9 | 0 | 16 | 3 | 28 |
+| baemin | non-text | 1 | 0 | 0 | 3 | 4 |
+| bezier | text | 32 | 0 | 72 | 4 | 108 |
+| bezier | non-text | 8 | 0 | 20 | 0 | 28 |
+| class101 | text | 40 | 0 | 18 | 8 | 66 |
+| class101 | non-text | 0 | 0 | 8 | 6 | 14 |
+| codeit | text | 19 | 0 | 29 | 0 | 48 |
+| codeit | non-text | 15 | 0 | 20 | 2 | 37 |
+| gmarket | text | 42 | 0 | 1 | 21 | 64 |
+| gmarket | non-text | 6 | 0 | 0 | 4 | 10 |
+| greeting | text | 46 | 0 | 30 | 13 | 89 |
+| greeting | non-text | 41 | 0 | 75 | 20 | 136 |
+| gs-retail | text | 4 | 0 | 14 | 4 | 22 |
+| gs-retail | non-text | 2 | 0 | 9 | 12 | 23 |
+| gs-shop | text | 25 | 7 | 0 | 2 | 34 |
+| gs-shop | non-text | 6 | 1 | 0 | 3 | 10 |
+| krds | text | 6 | 0 | 8 | 1 | 15 |
+| krds | non-text | 4 | 0 | 2 | 6 | 12 |
+| kyobobook | text | 23 | 0 | 0 | 0 | 23 |
+| kyobobook | non-text | 5 | 0 | 0 | 5 | 10 |
+| lg-electronics | text | 13 | 17 | 0 | 0 | 30 |
+| lg-electronics | non-text | 5 | 20 | 0 | 0 | 25 |
+| likelion | text | 36 | 0 | 2 | 4 | 42 |
+| likelion | non-text | 14 | 0 | 1 | 15 | 30 |
+| line-design-system | text | 38 | 0 | 10 | 13 | 61 |
+| line-design-system | non-text | 34 | 0 | 0 | 16 | 50 |
+| nol | text | 0 | 9 | 0 | 0 | 9 |
+| nol | non-text | 2 | 0 | 4 | 0 | 6 |
+| remember | text | 47 | 0 | 0 | 0 | 47 |
+| remember | non-text | 3 | 0 | 0 | 0 | 3 |
+| samsung-one-ui | non-text | 0 | 0 | 13 | 14 | 27 |
+| seed-design | text | 70 | 0 | 0 | 0 | 70 |
+| seed-design | non-text | 22 | 0 | 8 | 1 | 31 |
+| socar | text | 115 | 0 | 0 | 0 | 115 |
+| socar | non-text | 14 | 0 | 0 | 0 | 14 |
+| teamsparta | text | 25 | 0 | 7 | 1 | 33 |
+| teamsparta | non-text | 3 | 0 | 3 | 0 | 6 |
+| toss | text | 65 | 0 | 21 | 1 | 87 |
+| toss | non-text | 21 | 0 | 0 | 0 | 21 |
+| vapor-ui | text | 14 | 0 | 3 | 1 | 18 |
+| vapor-ui | non-text | 26 | 0 | 2 | 0 | 28 |
+| wanted | text | 10 | 0 | 47 | 7 | 64 |
+| wanted | non-text | 5 | 0 | 8 | 0 | 13 |
+| yeogi | text | 29 | 0 | 7 | 10 | 46 |
+| yeogi | non-text | 4 | 0 | 2 | 7 | 13 |
+| zigbang | text | 123 | 0 | 0 | 2 | 125 |
+| zigbang | non-text | 33 | 0 | 0 | 0 | 33 |
+
+**어느 슬러그부터 (2026-10-16 재집계 기준).** 고칠 수 있는 칸(`one-token`·`no-token`)이 큰 쪽은
+greeting(특히 비텍스트) · bezier 텍스트 · wanted 텍스트이고, samsung-one-ui 비텍스트는 미달 전부가 이 두
+칸이다. 반대로 socar · zigbang · remember · kyobobook 텍스트 · seed-design 텍스트의 미달은 거의 전부
+`both-published` 라, 고치기보다 samsung 처럼 값을 두고 가드 주석을 다는 대상이다. lg-electronics 와 nol 은
+미달 대부분이 `observed-pair` 다. 위 caveat 때문에, 고칠 수 있는 칸에서 시작하더라도 행마다 합성 경로를 먼저 본다.
 
 ## Known gaps
 

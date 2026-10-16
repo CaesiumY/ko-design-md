@@ -3,13 +3,15 @@ import path from "node:path"
 import { describe, expect, it } from "vitest"
 import { readPreviewSlugs } from "../../scripts/audit-contrast-slugs"
 import { BASELINE_TABLE, CONTRAST_BASELINE } from "./contrast-baseline"
+import { OBSERVED_COLOURS, paletteOf, parsePairTable } from "./contrast-pairs"
 import { renderTotalsTable } from "./contrast-report"
+import type { PairTally } from "./contrast-pairs"
 
 // The recorded contrast baseline against the repository it describes.
 //
 // WHY THIS FILE EXISTS. `contrast-baseline.ts` holds the table the gate
 // compares against, and `docs/preview-contrast-baseline.md` holds the table a
-// reader is told is the record. Two copies of the same 84 rows go stale
+// reader is told is the record. Two copies of the same rows go stale
 // separately unless something reads both, and a document that calls itself the
 // record while disagreeing with the gate is worse than no document: the gate
 // says nothing about the doc, so nothing would ever surface the disagreement.
@@ -52,7 +54,7 @@ describe("the recorded table", () => {
     // Cut out of the document and compared whole, rather than looked for
     // inside it. `toContain` is satisfied by a PREFIX: measured here by
     // deleting the last row from the constant, which left it a prefix of the
-    // published table and passed. The document holds four other tables, so the
+    // published table and passed. The document holds other tables too, so the
     // block is found by this one's header, which no other shares.
     expect(tableInDoc()).toBe(BASELINE_TABLE)
   })
@@ -123,37 +125,176 @@ describe("the recorded table against public/preview/", () => {
   })
 })
 
-describe("the published-pair section against its own table", () => {
+describe("the published-pair tables against the recorded totals", () => {
   // Three times in one branch, a number written into prose went stale when the
   // table beside it changed — the CI run count, the catalogue size, and these
   // two. The document already tells its authors not to copy counts into prose;
   // this is the machine that holds them to it, because a reviewer catching it
   // a fourth time is not a process.
+  //
+  // Each table is tied to the recorded totals row by row (#397). For TEXT rows
+  // that is a tie to the gate — their counts are exact in the recorded table —
+  // so a PR that moves a text `borderline` or `fail` count of a classified
+  // entry cannot land with a classification of the rows that were there before
+  // it. Non-text `fail`/`borderline` are reference columns the gate only warns
+  // about (`compareToBaseline`), so a non-text row here matches the recorded
+  // column and goes stale with it.
   const doc = read(DOC)
 
-  const tableSums = (): { pairs: number; borderline: number } => {
-    let pairs = 0
-    let borderline = 0
-    for (const line of doc.split("\n")) {
-      const m = /^\| [a-z0-9-]+ \| (\d+) \/ (\d+) \|$/.exec(line.trim())
-      if (m === null) continue
-      pairs += Number(m[1])
-      borderline += Number(m[2])
+  /** The pair table inside the section that opens with `heading`. */
+  const section = (heading: string): string => {
+    const start = doc.indexOf(`\n${heading}`)
+    if (start === -1) return `(no section "${heading}" in the document)`
+    const rest = doc.slice(start + 1)
+    const next = rest.indexOf("\n## ", 1)
+    return next === -1 ? rest : rest.slice(0, next)
+  }
+  const tableIn = (heading: string): Array<PairTally> => {
+    const lines = section(heading).split("\n")
+    const start = lines.findIndex((l) => l.startsWith("| slug | kind |"))
+    // Said by name: handing an empty string on would surface as a "header"
+    // error that points at the parser rather than at the missing section.
+    if (start === -1) {
+      throw new Error(`no pair table under "${heading}" in ${DOC}`)
     }
-    return { pairs, borderline }
+    let end = start
+    while (end + 1 < lines.length && lines[end + 1].startsWith("|")) end += 1
+    return parsePairTable(lines.slice(start, end + 1).join("\n"))
   }
 
-  it("sums to the borderline count the recorded table carries", () => {
-    expect(tableSums().borderline).toBe(
-      CONTRAST_BASELINE.reduce((n, r) => n + r.borderline, 0)
-    )
+  const HOW =
+    "rerun `pnpm audit:contrast:pairs --findings <contrast-findings.json>` on the contrast-report artifact of the CI run the totals came from, and in docs/preview-contrast-baseline.md's published-pair sections paste both tables and replace CLASSIFIED_RUN in this test with the 'classified run' line the command prints (then `pnpm format`), write the run id in both CLASSIFIED_RUN.run and the borderline section's '입력은 run' line, and update what the tests here do not hold: the commit, and the dated observations and 'which slug first' paragraph beside the tables"
+
+  const cases = [
+    {
+      verdict: "borderline",
+      heading: "## 발행색끼리의 경계선",
+    },
+    { verdict: "fail", heading: "## 미달의 발행색 분류" },
+  ] as const
+
+  // The run the tables were last classified from, and every slug its artifact
+  // measured. Those slugs are held exactly whether or not they still have rows
+  // — so deleting an entry's rows from both tables, or a rerun in which its
+  // counts reach zero, cannot exempt it — together with any slug on a table.
+  //
+  // A slug in neither set is an entry added after that run, and is left out
+  // rather than failed: a new entry adds its baseline rows from CI's gate
+  // output, and making it also rerun this classification would add one more
+  // per-slug registry the onboarding skill does not know about. Whoever reruns
+  // REPLACES this whole object with the `classified run` line the command
+  // prints — it is a record of one artifact, not a list to edit — and the test
+  // below holds its run id to the one the document names, and every slug on a
+  // table to this list. A rerun that keeps the old slugs is still caught when
+  // a newly measured entry has rows; one whose new entries all have no rows
+  // yet is not — the rerun step above is what keeps the list whole.
+  const CLASSIFIED_RUN = {
+    run: "38463871450",
+    slugs: [
+      "11st",
+      "baemin",
+      "bezier",
+      "class101",
+      "codeit",
+      "gmarket",
+      "greeting",
+      "gs-retail",
+      "gs-shop",
+      "krds",
+      "kyobobook",
+      "lg-electronics",
+      "likelion",
+      "line-design-system",
+      "nol",
+      "remember",
+      "samsung-one-ui",
+      "seed-design",
+      "socar",
+      "teamsparta",
+      "toss",
+      "vapor-ui",
+      "wanted",
+      "yeogi",
+      "zigbang",
+    ],
+  }
+  const classified = (): Set<string> =>
+    new Set([
+      ...CLASSIFIED_RUN.slugs,
+      ...[...tableIn(cases[0].heading), ...tableIn(cases[1].heading)].map(
+        (t) => t.slug
+      ),
+    ])
+
+  it("names the run its pinned slug list came from", () => {
+    expect(
+      section(cases[0].heading),
+      `the pinned slug list records run ${CLASSIFIED_RUN.run} but the document names another — ${HOW}`
+    ).toContain(`입력은 run \`${CLASSIFIED_RUN.run}\``)
   })
 
-  it("states in prose the totals its own table adds up to", () => {
-    const { pairs, borderline } = tableSums()
-    expect(doc).toContain(
-      `${borderline}행 중 ${pairs}행이 두 색 모두 발행 토큰`
-    )
-    expect(doc).toContain(`전수의 \`borderline\` ${borderline}행을`)
+  it("pins every slug either table classifies", () => {
+    // Both come from one artifact, so a slug on a table and missing here is a
+    // list left over from an earlier run.
+    const pinned = new Set(CLASSIFIED_RUN.slugs)
+    const unpinned = [
+      ...tableIn(cases[0].heading),
+      ...tableIn(cases[1].heading),
+    ]
+      .map((t) => t.slug)
+      .filter((slug) => !pinned.has(slug))
+    expect(
+      [...new Set(unpinned)],
+      `slugs on a pair table but not in CLASSIFIED_RUN — ${HOW}`
+    ).toEqual([])
   })
+
+  for (const { verdict, heading } of cases) {
+    describe(verdict, () => {
+      it("adds up, slug by slug and kind by kind, to the recorded totals", () => {
+        const slugs = classified()
+        const recorded = new Map<string, number>()
+        for (const r of CONTRAST_BASELINE) {
+          if (r[verdict] === 0 || !slugs.has(r.slug)) continue
+          const key = `${r.slug} ${r.kind}`
+          recorded.set(key, (recorded.get(key) ?? 0) + r[verdict])
+        }
+        const published = new Map(
+          tableIn(heading).map((t) => [`${t.slug} ${t.kind}`, t.total])
+        )
+        expect(
+          Object.fromEntries(published),
+          `the ${verdict} classification no longer matches the recorded totals — ${HOW}`
+        ).toEqual(Object.fromEntries(recorded))
+      })
+
+      it("states in prose the totals its own table adds up to", () => {
+        const table = tableIn(heading)
+        const total = table.reduce((n, t) => n + t.total, 0)
+        const both = table.reduce((n, t) => n + t.bothPublished, 0)
+        expect(section(heading)).toContain(
+          `\`${verdict}\` ${total}행 중 ${both}행이 두 색 모두 발행 토큰`
+        )
+      })
+    })
+  }
+
+  it("names in the borderline section the row count its table adds up to", () => {
+    const total = tableIn(cases[0].heading).reduce((n, t) => n + t.total, 0)
+    expect(section(cases[0].heading)).toContain(
+      `분류한 \`borderline\` ${total}행을`
+    )
+  })
+})
+
+describe("the observed colours", () => {
+  // `paletteOf` throws on a heading or token it cannot find, but only when the
+  // script runs — which is when someone already has an artifact in hand. Read
+  // here, a renamed heading or token fails the PR that renamed it.
+  for (const [slug, observed] of Object.entries(OBSERVED_COLOURS)) {
+    it(`are headings or tokens in ${slug}'s colors map`, () => {
+      const md = read(path.join(ROOT, "services", `${slug}.md`))
+      expect(() => paletteOf(md, observed)).not.toThrow()
+    })
+  }
 })

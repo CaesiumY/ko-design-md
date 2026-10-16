@@ -425,11 +425,14 @@ export interface Measurement {
    * `borderline` between two published token values is a different thing from
    * one between colours nobody chose, and only the pair can tell them apart.
    *
-   * Carried for display only. It is deliberately absent from the dedupe key in
-   * `contrast-report.ts`, where the ratio already stands in for the pair: two
-   * colour pairs reaching the same ratio on the same element are the same
-   * reading, and splitting on the pair would move the recorded baseline for
-   * reasons that are not about contrast at all.
+   * Carried for display, and read by `contrast-pairs.ts` to classify a row
+   * against the entry's tokens (#397) — never to judge it. It is deliberately
+   * absent from the dedupe key in `contrast-report.ts`, where the ratio
+   * already stands in for the pair: two colour pairs reaching the same ratio
+   * on the same element are the same reading, and splitting on the pair would
+   * move the recorded baseline for reasons that are not about contrast at all.
+   * The classifier refuses to run on a folded row whose widths disagree about
+   * the pair, so the fold cannot hand it a pair at random.
    */
   fg: string
   bg: string

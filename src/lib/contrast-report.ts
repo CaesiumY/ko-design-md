@@ -71,7 +71,10 @@ export interface SlugTotals {
    * not be ratcheted for one without ratcheting it for the other.
    */
   kind: "text" | "non-text"
-  /** Rows — distinct (element shape x colour pair) readings. */
+  /**
+   * Rows — distinct (element shape x ratio) readings. The colour pair is not
+   * part of the fold; see the comment on `keyOf`.
+   */
   measured: number
   /** Elements those rows stand for; see `DedupedFinding.occurrences`. */
   elements: number
@@ -103,7 +106,10 @@ export interface SlugTotals {
 //   about contrast. Held by "does not split a row when only the reported
 //   colour pair differs" in the tests next door, and by the matching
 //   assertion on `hoverDelta`, whose own key has to agree about this.
-const keyOf = (f: Finding | DedupedFinding): string =>
+//
+// Exported for `contrast-pairs.ts`, which classifies a folded row by its colour
+// pair and so has to know when the widths a row folds read different pairs.
+export const keyOf = (f: Finding | DedupedFinding): string =>
   [
     f.slug,
     f.theme,

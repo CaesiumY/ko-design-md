@@ -69,6 +69,32 @@ export const lchToOklab = (L: number, C: number, H: number): Oklab => ({
 })
 
 /**
+ * An authored `oklch(L C H)` value → Oklab, plus the alpha written after a `/`
+ * (`5%` or `0.05`) when there is one. `null` for anything else — `none`, a
+ * percentage lightness (the catalogue writes none), or not OKLCH at all —
+ * so a caller can name what it could not read instead of guessing.
+ */
+export function parseOklch(
+  value: string
+): { lab: Oklab; alpha: number | null } | null {
+  const m =
+    /^oklch\(\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)\s*(?:\/\s*([\d.]+)(%?)\s*)?\)$/.exec(
+      value.trim()
+    )
+  if (!m) return null
+  const [L, C, H] = [m[1], m[2], m[3]].map(Number)
+  if (![L, C, H].every(Number.isFinite)) return null
+  // An optional group the input skipped is `undefined` at run time, whatever
+  // `RegExpExecArray`'s element type says.
+  const alphaText = m[4] as string | undefined
+  const alpha =
+    alphaText === undefined
+      ? null
+      : Number(alphaText) / (m[5] === "%" ? 100 : 1)
+  return { lab: lchToOklab(L, C, H), alpha }
+}
+
+/**
  * ΔE — plain Euclidean distance, which is what Oklab was built to make
  * meaningful. Per-component L/C/H bounds mis-scale with chroma; see
  * `./oklch-tolerance` for the calibrated threshold.
