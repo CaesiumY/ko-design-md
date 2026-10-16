@@ -44,8 +44,9 @@ import type { DedupedFinding, Finding, Judgement } from "./contrast-report"
  *
  * The `fail` readings did NOT leave that band empty when they were first
  * classified (2026-10-16); the classifier prints how many sit in it beside
- * each table, on its `readings …` line — distances to opaque tokens only;
- * composites of translucent ones are not counted there. It is kept
+ * each table, on its `readings …` line — distances to opaque tokens as
+ * `nearest token in`, and translucent composites separately as
+ * `nearest composite there` (`toleranceBand`). It is kept
  * anyway — #397 fixed it — and it errs in the same direction as compositing
  * does (one of the two errors the document's caveat names): a stricter match
  * counts fewer pairs as published.
