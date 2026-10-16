@@ -8,6 +8,7 @@ import {
   renderPairTable,
   splitColourPairs,
   tallyPairs,
+  toleranceBand,
 } from "./contrast-pairs"
 import { hexToOklab, parseOklch } from "./oklch-convert"
 import type { PairTally, Palette } from "./contrast-pairs"
@@ -104,6 +105,29 @@ describe("paletteOf", () => {
   it("names a definition it could not read instead of dropping it", () => {
     const odd = md.replace("oklch(0.4 0 0)", "oklch(none 0 0)")
     expect(paletteOf(odd, []).unreadable).toEqual(["muted"])
+  })
+
+  it("reads only the colors map, not a gradient's first stop elsewhere", () => {
+    // `readDefinitions` matches any `name: oklch(` line in the frontmatter, and
+    // a `gradients:` row starts with one — nol's are observed CSS values the
+    // colors map never declared.
+    const withGradient = md.replace(
+      "typography:",
+      "gradients:\n  sheen: oklch(0.3 0 0) 0%, oklch(0.9 0 0) 100%\ntypography:"
+    )
+    expect(paletteOf(withGradient, []).entries.map((e) => e.name)).toEqual([
+      "ink",
+      "muted",
+    ])
+  })
+
+  it("reads a CRLF checkout the same as an LF one", () => {
+    // CLAUDE.md records `w/crlf` working trees on Windows; a heading regex
+    // anchored at `$` would keep the `\r` and miss every listed group.
+    const crlf = md.replace(/\n/g, "\r\n")
+    expect(paletteOf(crlf, ["관측(미발행)"])).toEqual(
+      paletteOf(md, ["관측(미발행)"])
+    )
   })
 })
 
@@ -235,6 +259,29 @@ describe("tallyPairs", () => {
         total: 1,
       },
     ])
+  })
+})
+
+describe("toleranceBand", () => {
+  const p = palette(entry("grey", greyLab.L))
+
+  it("counts the readings of one verdict and those whose nearest token sits in the band", () => {
+    const near = palette(entry("grey", greyLab.L + 0.003))
+    const got = toleranceBand(
+      [row({}), row({ verdict: "borderline" })],
+      () => near,
+      "fail",
+      [0.002, 0.005]
+    )
+    // One fail row, two readings: #808080 at 0.003 (in), #ffffff far (out).
+    expect(got).toEqual({ readings: 2, inBand: 1 })
+  })
+
+  it("leaves out a reading that matches a token, and one with no token near", () => {
+    expect(toleranceBand([row({})], () => p, "fail", [0.002, 0.005])).toEqual({
+      readings: 2,
+      inBand: 0,
+    })
   })
 })
 

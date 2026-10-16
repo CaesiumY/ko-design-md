@@ -152,13 +152,18 @@ describe("the published-pair tables against the recorded totals", () => {
   const tableIn = (heading: string): Array<PairTally> => {
     const lines = section(heading).split("\n")
     const start = lines.findIndex((l) => l.startsWith("| slug | kind |"))
+    // Said by name: handing an empty string on would surface as a "header"
+    // error that points at the parser rather than at the missing section.
+    if (start === -1) {
+      throw new Error(`no pair table under "${heading}" in ${DOC}`)
+    }
     let end = start
     while (end + 1 < lines.length && lines[end + 1].startsWith("|")) end += 1
     return parsePairTable(lines.slice(start, end + 1).join("\n"))
   }
 
   const HOW =
-    "rerun `pnpm audit:contrast:pairs --findings <contrast-findings.json>` on the contrast-report artifact of the CI run the totals came from, and paste both tables (docs/preview-contrast-baseline.md, the published-pair sections)"
+    "rerun `pnpm audit:contrast:pairs --findings <contrast-findings.json>` on the contrast-report artifact of the CI run the totals came from, and in docs/preview-contrast-baseline.md's published-pair sections paste both tables and update what the tests here do not hold: the run id and commit, the tolerance-band figures the command prints, and the 'which slug first' paragraph"
 
   const cases = [
     {

@@ -82,10 +82,13 @@ const GROUP = /^\s+## (.*)$/
 const DEFINITION = /^\s+([a-z][\w-]*):\s+oklch\(/
 
 /**
- * The entry's colour tokens, each marked published or observed.
+ * The entry's `colors:` tokens, each marked published or observed.
  *
  * Values come from `readDefinitions`, so a name the entry defines twice with
- * different values is left out here exactly as it is everywhere else. A
+ * different values is left out here exactly as it is everywhere else. That
+ * function reads every `name: oklch(` line in the frontmatter, which includes
+ * a `gradients:` row's first stop — not a colour the entry declared — so only
+ * names whose first definition sits in the `colors:` map are kept. A
  * translucent token is left out too: a measured reading is already composited
  * onto what is behind it, so matching its opaque colour to `oklch(0 0 0 / 5%)`
  * would call a shadow tint "black".
@@ -94,14 +97,19 @@ export function paletteOf(
   markdown: string,
   observedGroups: ReadonlyArray<string>
 ): Palette {
-  const front = frontmatterBlock(markdown)
+  // Split on `\r?\n`: a `w/crlf` checkout (CLAUDE.md, Windows) would otherwise
+  // leave a `\r` on every heading and no listed group would ever match.
+  const lines = frontmatterBlock(markdown).split(/\r?\n/)
   // Where each definition sits: which top-level map, under which heading. A
   // heading belongs to the map it is written in, so a new map clears it.
-  const groupOf = new Map<string, string | null>()
+  const placeOf = new Map<
+    string,
+    { map: string | null; group: string | null }
+  >()
   const colourGroups = new Set<string>()
   let map: string | null = null
   let group: string | null = null
-  for (const line of front.split("\n")) {
+  for (const line of lines) {
     const key = MAP_KEY.exec(line)
     if (key) {
       map = key[1]
@@ -115,9 +123,7 @@ export function paletteOf(
       continue
     }
     const def = DEFINITION.exec(line)
-    if (def && !groupOf.has(def[1])) {
-      groupOf.set(def[1], map === "colors" ? group : null)
-    }
+    if (def && !placeOf.has(def[1])) placeOf.set(def[1], { map, group })
   }
   const missing = observedGroups.filter((g) => !colourGroups.has(g))
   if (missing.length > 0) {
@@ -129,20 +135,55 @@ export function paletteOf(
   const entries: Array<PaletteEntry> = []
   const unreadable: Array<string> = []
   for (const [name, value] of readDefinitions(markdown)) {
+    const place = placeOf.get(name)
+    if (place?.map !== "colors") continue
     const parsed = parseOklch(value)
     if (parsed === null) {
       unreadable.push(name)
       continue
     }
     if (parsed.alpha !== null && parsed.alpha < 1) continue
-    const g = groupOf.get(name) ?? null
     entries.push({
       name,
       lab: parsed.lab,
-      observed: g !== null && observedGroups.includes(g),
+      observed: place.group !== null && observedGroups.includes(place.group),
     })
   }
   return { entries, unreadable }
+}
+
+/** Distance from a measured colour to the nearest token; Infinity for none. */
+function nearestDistance(hex: string, palette: Palette): number {
+  const lab = hexToOklab(hex)?.lab
+  if (lab === undefined) return Infinity
+  return Math.min(Infinity, ...palette.entries.map((e) => deltaE(lab, e.lab)))
+}
+
+/**
+ * How many colour readings of one verdict's rows there are, and how many have
+ * their nearest token at a distance in `(lo, hi]`.
+ *
+ * The tolerance was read off an empty `(0.002, 0.005]` band, and whether that
+ * band stays empty is the thing to look at again when the numbers move — the
+ * document records the count, and this is how it is produced.
+ */
+export function toleranceBand(
+  rows: Array<DedupedFinding>,
+  paletteFor: (slug: string) => Palette,
+  verdict: Judgement,
+  [lo, hi]: [number, number]
+): { readings: number; inBand: number } {
+  let readings = 0
+  let inBand = 0
+  for (const r of rows) {
+    if (r.verdict !== verdict) continue
+    for (const hex of [r.fg, r.bg]) {
+      readings++
+      const d = nearestDistance(hex, paletteFor(r.slug))
+      if (d > lo && d <= hi) inBand++
+    }
+  }
+  return { readings, inBand }
 }
 
 /**
@@ -199,7 +240,9 @@ export interface PairTally {
   total: number
 }
 
-const FIELD: Record<PairClass, keyof PairTally> = {
+type PairCount = Exclude<keyof PairTally, "slug" | "kind" | "total">
+
+const FIELD: Record<PairClass, PairCount> = {
   "both-published": "bothPublished",
   "observed-pair": "observedPair",
   "one-token": "oneToken",
@@ -237,7 +280,7 @@ export function tallyPairs(
       byKey.set(key, t)
     }
     const field = FIELD[pairClass(r.fg, r.bg, paletteFor(r.slug), tolerance)]
-    ;(t[field] as number)++
+    t[field]++
     t.total++
   }
   return [...byKey.values()].sort(
@@ -331,8 +374,9 @@ export function parsePairTable(table: string): Array<PairTally> {
  * Folded rows whose widths read DIFFERENT colour pairs, by fold key.
  *
  * `keyOf` leaves the pair out — the ratio stands in for it — so such a row
- * would be classified by whichever width came first. None do in the artifact
- * this was written against; the classifier refuses to run if one appears.
+ * would be classified by whichever width came first. No `borderline` or
+ * `fail` row does in CI run 38463871450; the classifier refuses to run if one
+ * appears.
  */
 export function splitColourPairs(findings: Array<Finding>): Array<string> {
   const pairs = new Map<string, Set<string>>()

@@ -71,7 +71,10 @@ export interface SlugTotals {
    * not be ratcheted for one without ratcheting it for the other.
    */
   kind: "text" | "non-text"
-  /** Rows — distinct (element shape x colour pair) readings. */
+  /**
+   * Rows — distinct (element shape x ratio) readings. The colour pair is not
+   * part of the fold; see the comment on `keyOf`.
+   */
   measured: number
   /** Elements those rows stand for; see `DedupedFinding.occurrences`. */
   elements: number
