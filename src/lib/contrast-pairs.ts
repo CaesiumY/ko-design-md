@@ -31,8 +31,9 @@ import type { DedupedFinding, Finding, Judgement } from "./contrast-report"
  * 8-bit quantisation below, a nearby-but-different colour above. 0.01 would
  * glue samsung's `#fdfdfd` to `white` (#fafafa).
  *
- * The `fail` readings do NOT leave that band empty (the section of the
- * document that classifies them records how many sit in it). It is kept
+ * The `fail` readings did NOT leave that band empty when they were first
+ * classified (2026-10-16); the classifier prints how many sit in it beside
+ * each table, on its `readings …` line. It is kept
  * anyway — #397 fixed it — and it errs in the same direction as compositing
  * does (one of the two errors the document's caveat names): a stricter match
  * counts fewer pairs as published.
