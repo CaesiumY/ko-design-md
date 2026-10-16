@@ -21,7 +21,7 @@ import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
 import {
-  OBSERVED_COLOUR_GROUPS,
+  OBSERVED_COLOURS,
   PUBLISHED_PAIR_TOLERANCE,
   paletteOf,
   renderPairTable,
@@ -85,15 +85,21 @@ function readFindings(path: string): Array<Finding> {
   )
   if (bad !== -1) {
     fail(
-      `Error: ${path} item ${bad} is not a finding (slug, theme, state, kind, path, ratio, width, verdict, blockers, fg, bg) — is it a contrast-findings.json from a run that reports colour pairs?`
+      `Error: ${path} item ${bad} is not a finding (slug, theme, state, kind, path, verdict, ratio, threshold, width, blockers, opacityApprox, basis?, source?, fg, bg) — is it a contrast-findings.json from a run that reports colour pairs?`
     )
   }
   return parsed as Array<Finding>
 }
 
-// The fields the fold (`keyOf`, `dedupeFindings`' sort) and the classifier
-// depend on, so a malformed item stops here with exit 2 instead of throwing
-// deeper in with exit 1, which this script keeps for split colour pairs alone.
+// Every field the fold (`keyOf`, `dedupeFindings`' sort) and the classifier
+// read, with the type the sweep writes. A missing one either throws deeper in
+// — exit 1, which this script keeps for split colour pairs alone — or, worse,
+// folds rows differently from the sweep that produced them (an `undefined`
+// threshold, a truthy non-boolean `opacityApprox`) and exits 0 with a wrong
+// table. Either way it is the wrong input, exit 2.
+const optionalString = (v: unknown): boolean =>
+  v === undefined || typeof v === "string"
+
 function isFinding(f: Record<string, unknown>): boolean {
   return (
     typeof f.slug === "string" &&
@@ -103,8 +109,13 @@ function isFinding(f: Record<string, unknown>): boolean {
     typeof f.path === "string" &&
     typeof f.verdict === "string" &&
     typeof f.ratio === "number" &&
+    typeof f.threshold === "number" &&
     typeof f.width === "number" &&
     Array.isArray(f.blockers) &&
+    f.blockers.every((b) => typeof b === "string") &&
+    typeof f.opacityApprox === "boolean" &&
+    optionalString(f.basis) &&
+    optionalString(f.source) &&
     typeof f.fg === "string" &&
     typeof f.bg === "string"
   )
@@ -149,7 +160,7 @@ function main(): void {
       // for this checkout — exit 2 with the reason, not a stack trace.
       try {
         const md = readFileSync(join(ROOT, "services", `${slug}.md`), "utf8")
-        p = paletteOf(md, OBSERVED_COLOUR_GROUPS[slug] ?? [])
+        p = paletteOf(md, OBSERVED_COLOURS[slug] ?? {})
       } catch (e) {
         fail(`Error: ${slug}: ${(e as Error).message}`)
       }

@@ -79,7 +79,7 @@ describe("paletteOf", () => {
   ].join("\n")
 
   it("marks the tokens under a listed group as observed and the rest as published", () => {
-    const got = paletteOf(md, ["관측(미발행)"])
+    const got = paletteOf(md, { groups: ["관측(미발행)"] })
     expect(got.entries.map((e) => [e.name, e.observed])).toEqual([
       ["ink", false],
       ["muted", true],
@@ -87,24 +87,38 @@ describe("paletteOf", () => {
   })
 
   it("leaves out a translucent token, which no composited reading can equal", () => {
-    expect(paletteOf(md, []).entries.map((e) => e.name)).not.toContain("veil")
+    expect(paletteOf(md, {}).entries.map((e) => e.name)).not.toContain("veil")
   })
 
   it("does not carry a group from another map into colors", () => {
     // `spacing:` opens with the same group title; `ink` sits under its own.
-    const got = paletteOf(md, ["관측(미발행)"])
+    const got = paletteOf(md, { groups: ["관측(미발행)"] })
     expect(got.entries.find((e) => e.name === "ink")?.observed).toBe(false)
   })
 
   it("throws when a listed group is not in the colors map", () => {
     // A renamed heading would otherwise reclassify every token under it in
     // silence — the observed column would just shrink.
-    expect(() => paletteOf(md, ["없는 그룹"])).toThrow(/없는 그룹/)
+    expect(() => paletteOf(md, { groups: ["없는 그룹"] })).toThrow(/없는 그룹/)
+  })
+
+  it("marks a listed token as observed wherever its group says otherwise", () => {
+    // gs-shop marks single tokens — "라이브 실측 · 공식 문서와 불일치" —
+    // inside groups that are otherwise published.
+    const got = paletteOf(md, { tokens: ["ink"] })
+    expect(got.entries.map((e) => [e.name, e.observed])).toEqual([
+      ["ink", true],
+      ["muted", false],
+    ])
+  })
+
+  it("throws when a listed token is not in the colors map", () => {
+    expect(() => paletteOf(md, { tokens: ["gap"] })).toThrow(/gap/)
   })
 
   it("names a definition it could not read instead of dropping it", () => {
     const odd = md.replace("oklch(0.4 0 0)", "oklch(none 0 0)")
-    expect(paletteOf(odd, []).unreadable).toEqual(["muted"])
+    expect(paletteOf(odd, {}).unreadable).toEqual(["muted"])
   })
 
   it("reads only the colors map, not a gradient's first stop elsewhere", () => {
@@ -115,7 +129,7 @@ describe("paletteOf", () => {
       "typography:",
       "gradients:\n  sheen: oklch(0.3 0 0) 0%, oklch(0.9 0 0) 100%\ntypography:"
     )
-    expect(paletteOf(withGradient, []).entries.map((e) => e.name)).toEqual([
+    expect(paletteOf(withGradient, {}).entries.map((e) => e.name)).toEqual([
       "ink",
       "muted",
     ])
@@ -125,8 +139,8 @@ describe("paletteOf", () => {
     // CLAUDE.md records `w/crlf` working trees on Windows; a heading regex
     // anchored at `$` would keep the `\r` and miss every listed group.
     const crlf = md.replace(/\n/g, "\r\n")
-    expect(paletteOf(crlf, ["관측(미발행)"])).toEqual(
-      paletteOf(md, ["관측(미발행)"])
+    expect(paletteOf(crlf, { groups: ["관측(미발행)"] })).toEqual(
+      paletteOf(md, { groups: ["관측(미발행)"] })
     )
   })
 })

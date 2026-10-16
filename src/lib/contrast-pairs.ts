@@ -39,37 +39,58 @@ import type { DedupedFinding, Finding, Judgement } from "./contrast-report"
  */
 export const PUBLISHED_PAIR_TOLERANCE = 0.002
 
+/** Where an entry says its values were OBSERVED rather than published. */
+export interface ObservedColours {
+  /** `## …` headings in the `colors:` map, written exactly as the entry does. */
+  groups?: ReadonlyArray<string>
+  /** Single tokens the entry marks observed inside an otherwise published group. */
+  tokens?: ReadonlyArray<string>
+}
+
 /**
- * Colour groups whose values the entry OBSERVED on the brand's live site rather
- * than found published, by the group's `## …` heading in the `colors:` map,
- * written exactly as the entry writes it.
+ * Colours each entry OBSERVED on the brand's live site rather than found
+ * published — whole `colors:` groups, or single tokens.
  *
  * Listed by hand because "published" is the entry's claim, not a pattern: lg's
  * domestic group says "운영 CSS 이름" and never "미발행", while the document
- * still treats those names as observed. A heading renamed in the entry makes
- * `paletteOf` throw rather than quietly move its tokens back to published,
- * and the corpus test reads every heading here against its entry.
+ * still treats those names as observed; gs-shop marks five tokens one by one
+ * ("라이브 실측 · 공식 문서와 불일치", "공식 문서에 없는 신규 토큰") inside
+ * groups that are otherwise published. A heading or token renamed in the entry
+ * makes `paletteOf` throw rather than quietly move it back to published, and
+ * the corpus test reads every name here against its entry.
  */
-export const OBSERVED_COLOUR_GROUPS: Readonly<
-  Record<string, ReadonlyArray<string>>
-> = Object.freeze({
-  "lg-electronics": [
-    "(b) EI 커머스 — lg.com/us 관측(미발행)",
-    "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)",
-  ],
-  nol: [
-    "서비스 UI 관측(미발행) — 프라이머리 (nol.yanolja.com CSS 번들)",
-    "서비스 UI 관측(미발행) — 강조·위험·경고",
-    "서비스 UI 관측(미발행) — 멤버십·별점",
-    "서비스 UI 관측(미발행) — 뉴트럴",
-    "서비스 UI 관측(미발행) — 투명도",
-  ],
-})
+export const OBSERVED_COLOURS: Readonly<Record<string, ObservedColours>> =
+  Object.freeze({
+    "gs-shop": {
+      tokens: [
+        "notice-dark",
+        "notice-middle",
+        "notice-light",
+        "content-tertiary",
+        "content-accent",
+      ],
+    },
+    "lg-electronics": {
+      groups: [
+        "(b) EI 커머스 — lg.com/us 관측(미발행)",
+        "(c) 국내 — lge.co.kr :root --color-set--* (국내 운영 CSS 이름)",
+      ],
+    },
+    nol: {
+      groups: [
+        "서비스 UI 관측(미발행) — 프라이머리 (nol.yanolja.com CSS 번들)",
+        "서비스 UI 관측(미발행) — 강조·위험·경고",
+        "서비스 UI 관측(미발행) — 멤버십·별점",
+        "서비스 UI 관측(미발행) — 뉴트럴",
+        "서비스 UI 관측(미발행) — 투명도",
+      ],
+    },
+  })
 
 export interface PaletteEntry {
   name: string
   lab: Oklab
-  /** Defined under one of the entry's `OBSERVED_COLOUR_GROUPS`. */
+  /** Listed for the entry in `OBSERVED_COLOURS`, by group or by name. */
   observed: boolean
 }
 
@@ -97,8 +118,10 @@ const DEFINITION = /^\s+([a-z][\w-]*):\s+oklch\(/
  */
 export function paletteOf(
   markdown: string,
-  observedGroups: ReadonlyArray<string>
+  observed: ObservedColours
 ): Palette {
+  const observedGroups = observed.groups ?? []
+  const observedTokens = observed.tokens ?? []
   // Split on `\r?\n`: a `w/crlf` checkout (CLAUDE.md, Windows) would otherwise
   // leave a `\r` on every heading and no listed group would ever match.
   const lines = frontmatterBlock(markdown).split(/\r?\n/)
@@ -127,10 +150,13 @@ export function paletteOf(
     const def = DEFINITION.exec(line)
     if (def && !placeOf.has(def[1])) placeOf.set(def[1], { map, group })
   }
-  const missing = observedGroups.filter((g) => !colourGroups.has(g))
+  const missing = [
+    ...observedGroups.filter((g) => !colourGroups.has(g)),
+    ...observedTokens.filter((t) => placeOf.get(t)?.map !== "colors"),
+  ]
   if (missing.length > 0) {
     throw new Error(
-      `observed colour groups not found in the colors map: ${missing.map((g) => JSON.stringify(g)).join(", ")}`
+      `observed colour groups or tokens not found in the colors map: ${missing.map((g) => JSON.stringify(g)).join(", ")}`
     )
   }
 
@@ -148,7 +174,9 @@ export function paletteOf(
     entries.push({
       name,
       lab: parsed.lab,
-      observed: place.group !== null && observedGroups.includes(place.group),
+      observed:
+        observedTokens.includes(name) ||
+        (place.group !== null && observedGroups.includes(place.group)),
     })
   }
   return { entries, unreadable }

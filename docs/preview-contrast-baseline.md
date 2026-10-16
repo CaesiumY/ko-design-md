@@ -495,12 +495,14 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 버리게 되는** 것. 후자의 사례가 samsung 의 라이트 강조 버튼(4.51:1, 발행 `primary-dark`
 위 흰 글자)이고, 그 파일은 값을 고치지 않고 가드 주석을 달았다.
 
-전수의 `borderline` 284행을 `services/{slug}.md` frontmatter `colors:` 와 대조했다. 측정된
+분류한 `borderline` 284행을 `services/{slug}.md` frontmatter `colors:` 와 대조했다. 측정된
 색 쌍이 모든 읽기에 실리므로(`--json-out` 의 `fg`/`bg`, 리포트 표의 `색` 열) 기계로
 가를 수 있다 — `readDefinitions` 로 발행 OKLCH 를 읽고 측정 hex 를 `hexToOklab` 으로
 옮겨 `deltaE` 로 잰다. 그 절차가 `src/lib/contrast-pairs.ts` 이고, 이 절과 다음 절의 표는
 **CI 의 `contrast` 잡이 올린 아티팩트**에 그것을 돌린 출력이다 — 로컬 sweep 으로 답하면 기록된
 표가 서술하는 것과 다른 렌더에 대해 답하게 된다. 입력은 run `38463871450`(main `d7ade61`)이다.
+그 뒤에 더해진 항목은 다음 재집계 때 두 표에 들어간다 — 두 표 어디에도 없는 슬러그는 아직 분류하지 않은
+항목이다(아래 「게이트」 문단).
 
 ```bash
 gh run download <run id> -n contrast-report -D <폴더>
@@ -510,8 +512,9 @@ pnpm audit:contrast:pairs --findings <폴더>/contrast-findings.json
 **허용폭은 고르지 않고 데이터에서 읽었다.** 이 절을 처음 쓸 때(borderline 258행)의 514개 색 읽기의 최근접 토큰 거리는 366개가
 `d ≤ 0.002` 에 몰려 있고 **0.002와 0.005 사이가 정확히 비어 있다.** 그 아래가 8비트 양자화
 폭 안의 토큰 일치이고 위는 토큰 근처이되 그 토큰이 아닌 색이다. 0.01로 느슨하게 잡으면
-samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다. 재집계한 아티팩트의
-`borderline` 읽기에서도 그 구간은 비어 있다(미달 읽기에서는 아니다 — 다음 절).
+samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다. 2026-10-16 재집계의
+`borderline` 읽기에서도 그 구간은 비어 있었다(미달 읽기에서는 아니었다 — 다음 절). 그 구간에 든 읽기의
+수는 위 명령이 표마다 `readings …` 줄로 낸다.
 
 **행은 네 칸으로 가른다.**
 
@@ -522,19 +525,20 @@ samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다. �
 | `one-token` | 한쪽만 토큰 — 다른 쪽(파생색)을 옮겨 고칠 수 있다 |
 | `no-token` | 둘 다 토큰이 아니다 |
 
-관측값을 어느 쪽으로 볼지는 읽는 사람이 정하도록 따로 센다. 관측 그룹은 항목 파일의 `colors:` 그룹
-제목을 `OBSERVED_COLOUR_GROUPS`(`src/lib/contrast-pairs.ts`)에 그대로 적어 고른다 — lg-electronics 의
-(b) lg.com/us 관측값과 (c) 국내 운영 CSS 이름, nol 의 "서비스 UI 관측(미발행)" 그룹들이다. 제목이 바뀌면
-스크립트와 테스트가 멈추고, 조용히 발행으로 되돌아가지 않는다. 같은 값이 발행·관측 양쪽에 있으면 발행으로
+관측값을 어느 쪽으로 볼지는 읽는 사람이 정하도록 따로 센다. 관측값은 항목 파일이 스스로 그렇게 적은
+것을 `OBSERVED_COLOURS`(`src/lib/contrast-pairs.ts`)에 원문 그대로 옮겨 고른다 — 그룹 단위로는 lg-electronics
+의 (b) lg.com/us 관측값과 (c) 국내 운영 CSS 이름, nol 의 "서비스 UI 관측(미발행)" 그룹들이고, 토큰 단위로는
+gs-shop 이 "라이브 실측 · 공식 문서와 불일치"·"공식 문서에 없는 신규 토큰"으로 적은 다섯 토큰이다. 제목이나
+토큰 이름이 바뀌면 스크립트와 테스트가 멈추고, 조용히 발행으로 되돌아가지 않는다. 같은 값이 발행·관측 양쪽에 있으면 발행으로
 센다(nol 의 `membership-dia-main` 은 발행 `nol-blue` 와 같은 값이다). 반투명 토큰은 합성된 읽기와 같을 수
 없으므로 대조에서 뺀다.
 
-**처음 셀 때(2026-09-27)는 관측값을 nol 에서만 뺐다.** lg-electronics 의 관측값은 발행으로 세어 `39 / 39`
-였는데, 같은 규칙으로 다시 세면 그 39행은 전부 `observed-pair` 다. 옛 규칙(관측 그룹을 nol 에만 두고
+**처음 셀 때(2026-09-27)는 관측값을 nol 에서만 뺐다.** lg-electronics 의 관측값은 발행으로 셌는데,
+2026-10-16 재집계에서 그 행들은 전부 `observed-pair` 로 옮겨 갔다. 옛 규칙(관측값을 nol 의 그룹에만 두고
 `observed-pair` 칸 없이)으로 같은 아티팩트를 돌리면 옛 표가 슬러그마다 그대로 나온다 — 이 스크립트가 그
 절차를 구현한다는 근거다.
 
-**결과: `borderline` 284행 중 171행이 두 색 모두 발행 토큰인 쌍이다.**
+**결과: `borderline` 284행 중 170행이 두 색 모두 발행 토큰인 쌍이다.**
 
 **이 수에는 두 방향의 오차가 있다.** `fg` 는 배경 위에 합성된 값이고 `bg` 는 평탄화된 스택이라, 알파나
 `opacity` 가 낀 표면은 **모든 입력이 발행 토큰이어도** 합성 결과가 어떤 단일 토큰과도 맞지
@@ -556,7 +560,7 @@ samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다. �
 | codeit | non-text | 3 | 0 | 2 | 0 | 5 |
 | greeting | text | 1 | 0 | 31 | 3 | 35 |
 | greeting | non-text | 4 | 0 | 0 | 0 | 4 |
-| gs-shop | text | 2 | 0 | 0 | 0 | 2 |
+| gs-shop | text | 1 | 1 | 0 | 0 | 2 |
 | krds | text | 29 | 0 | 0 | 0 | 29 |
 | kyobobook | non-text | 3 | 0 | 0 | 0 | 3 |
 | lg-electronics | text | 0 | 39 | 0 | 0 | 39 |
@@ -587,20 +591,23 @@ samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다. �
 
 **두 표는 기록된 총계 표와 묶여 있다.** 슬러그·종류마다 이 절 표의 `total` 은 총계 표의 `borderline` 을,
 다음 절 표의 `total` 은 `fail` 을 두 테마 합으로 같아야 한다(`contrast-baseline-corpus.test.ts`). 그 수를
-움직이는 PR 은 총계 표를 갱신할 때 받은 같은 아티팩트로 위 명령을 다시 돌려 두 표를 함께 바꾼다.
+움직이는 PR 은 총계 표를 갱신할 때 받은 같은 아티팩트로 위 명령을 다시 돌려 두 표를 함께 바꾼다. 두 표
+어디에도 없는 슬러그(재집계 뒤에 더해진 새 항목)는 이 대조에서 빠진다 — 새 항목이 총계 표 4행에 더해 이
+분류까지 해야 하면 온보딩 스킬이 모르는 등록처가 하나 더 생기기 때문이다. 다음에 누가 위 명령을 돌릴 때 함께
+들어간다.
 
 ## 미달의 발행색 분류 (2026-10-16)
 
 이슈 #397. `fail` 행을 위 절과 같은 절차·같은 네 칸·같은 아티팩트로 가른 것이다. 미달을 줄이는 작업을
 슬러그별로 시작하기 전에, 그 수정이 발행값끼리의 쌍을 건드리는 것인지를 먼저 갈라 두려는 표다.
 
-**허용폭의 빈 띠가 여기서는 비어 있지 않다.** 0.002 는 `borderline` 읽기에서 0.002~0.005 가 비어 있어서
-읽은 값인데, 이 아티팩트의 `fail` 색 읽기 3,766개 중 71개가 그 구간에 있다. 이슈가 허용폭을 고정했으므로
-바꾸지 않았다. 0.002 는 엄한 쪽이라 `both-published` 를 적게 센다 — 이 아티팩트에서 0.005 로 넓히면 그
-칸이 1182행이 된다. 아래 caveat 의 합성 오차와 같은 방향이다. 이 수치는 위 명령이 표와 함께
-출력한다(`readings …, nearest token in (0.002, 0.005] …` 줄).
+**허용폭의 빈 띠가 여기서는 비어 있지 않았다.** 0.002 는 `borderline` 읽기에서 0.002~0.005 가 비어 있어서
+읽은 값인데, 2026-10-16 재집계의 `fail` 색 읽기에는 그 구간에 든 것이 있었다. 이슈가 허용폭을 고정했으므로
+바꾸지 않았다. 0.002 는 엄한 쪽이라 `both-published` 를 적게 센다 — 0.005 로 넓히면 그 칸이 는다. 아래
+caveat 의 합성 오차와 같은 방향이다. 그 구간의 읽기 수와 0.005 에서의 `both-published` 는 위 명령이 표와 함께
+`readings …` 줄로 낸다.
 
-**결과: `fail` 1883행 중 1147행이 두 색 모두 발행 토큰인 쌍이다.**
+**결과: `fail` 1883행 중 1139행이 두 색 모두 발행 토큰인 쌍이다.**
 
 **이 수도 위 절과 같은 두 방향의 오차를 진다.** 알파·`opacity` 가 낀 표면은 입력이 모두 발행 토큰이어도
 `one-token`·`no-token` 칸에 들어가고(발행 쌍을 적게 센다), 우연히 토큰 근처에 떨어진 파생색은 토큰으로
@@ -624,8 +631,8 @@ samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다. �
 | greeting | non-text | 41 | 0 | 75 | 20 | 136 |
 | gs-retail | text | 4 | 0 | 14 | 4 | 22 |
 | gs-retail | non-text | 2 | 0 | 9 | 12 | 23 |
-| gs-shop | text | 32 | 0 | 0 | 2 | 34 |
-| gs-shop | non-text | 7 | 0 | 0 | 3 | 10 |
+| gs-shop | text | 25 | 7 | 0 | 2 | 34 |
+| gs-shop | non-text | 6 | 1 | 0 | 3 | 10 |
 | krds | text | 6 | 0 | 8 | 1 | 15 |
 | krds | non-text | 4 | 0 | 2 | 6 | 12 |
 | kyobobook | text | 23 | 0 | 0 | 0 | 23 |
@@ -658,11 +665,11 @@ samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다. �
 | zigbang | text | 123 | 0 | 0 | 2 | 125 |
 | zigbang | non-text | 33 | 0 | 0 | 0 | 33 |
 
-**어느 슬러그부터.** 고칠 수 있는 칸(`one-token`·`no-token`)이 큰 쪽은 greeting(특히 비텍스트) ·
-bezier 텍스트 · wanted 텍스트이고, samsung-one-ui 비텍스트는 미달 전부가 이 두 칸이다. 반대로 socar ·
-zigbang · remember · kyobobook 텍스트 · gs-shop 텍스트 · seed-design 텍스트의 미달은 거의 전부 `both-published`
-라, 고치기보다 samsung 처럼 값을 두고 가드 주석을 다는 대상이다. lg-electronics 와 nol 은 미달 대부분이
-`observed-pair` 다. 위 caveat 때문에, 고칠 수 있는 칸에서 시작하더라도 행마다 합성 경로를 먼저 본다.
+**어느 슬러그부터 (2026-10-16 재집계 기준).** 고칠 수 있는 칸(`one-token`·`no-token`)이 큰 쪽은
+greeting(특히 비텍스트) · bezier 텍스트 · wanted 텍스트이고, samsung-one-ui 비텍스트는 미달 전부가 이 두
+칸이다. 반대로 socar · zigbang · remember · kyobobook 텍스트 · seed-design 텍스트의 미달은 거의 전부
+`both-published` 라, 고치기보다 samsung 처럼 값을 두고 가드 주석을 다는 대상이다. lg-electronics 와 nol 은
+미달 대부분이 `observed-pair` 다. 위 caveat 때문에, 고칠 수 있는 칸에서 시작하더라도 행마다 합성 경로를 먼저 본다.
 
 ## Known gaps
 

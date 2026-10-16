@@ -3,11 +3,7 @@ import path from "node:path"
 import { describe, expect, it } from "vitest"
 import { readPreviewSlugs } from "../../scripts/audit-contrast-slugs"
 import { BASELINE_TABLE, CONTRAST_BASELINE } from "./contrast-baseline"
-import {
-  OBSERVED_COLOUR_GROUPS,
-  paletteOf,
-  parsePairTable,
-} from "./contrast-pairs"
+import { OBSERVED_COLOURS, paletteOf, parsePairTable } from "./contrast-pairs"
 import { renderTotalsTable } from "./contrast-report"
 import type { PairTally } from "./contrast-pairs"
 
@@ -163,7 +159,7 @@ describe("the published-pair tables against the recorded totals", () => {
   }
 
   const HOW =
-    "rerun `pnpm audit:contrast:pairs --findings <contrast-findings.json>` on the contrast-report artifact of the CI run the totals came from, and in docs/preview-contrast-baseline.md's published-pair sections paste both tables and update what the tests here do not hold: the run id and commit, the tolerance-band figures the command prints, and the 'which slug first' paragraph"
+    "rerun `pnpm audit:contrast:pairs --findings <contrast-findings.json>` on the contrast-report artifact of the CI run the totals came from, and in docs/preview-contrast-baseline.md's published-pair sections paste both tables and update what the tests here do not hold: the run id and commit, and the dated observations and 'which slug first' paragraph beside the tables"
 
   const cases = [
     {
@@ -173,12 +169,26 @@ describe("the published-pair tables against the recorded totals", () => {
     { verdict: "fail", heading: "## 미달의 발행색 분류" },
   ] as const
 
+  // A slug on NEITHER table is an entry added since the tables were last
+  // rerun. It is left out rather than failed: a new entry adds its baseline
+  // rows from CI's gate output, and making it also rerun this classification
+  // would add a tenth per-slug registry the onboarding skill does not know
+  // about. A slug on either table is held exactly, so a PR that moves the
+  // counts of a classified entry (#401, #402) cannot leave its rows behind.
+  const classified = (): Set<string> =>
+    new Set(
+      [...tableIn(cases[0].heading), ...tableIn(cases[1].heading)].map(
+        (t) => t.slug
+      )
+    )
+
   for (const { verdict, heading } of cases) {
     describe(verdict, () => {
       it("adds up, slug by slug and kind by kind, to the recorded totals", () => {
+        const slugs = classified()
         const recorded = new Map<string, number>()
         for (const r of CONTRAST_BASELINE) {
-          if (r[verdict] === 0) continue
+          if (r[verdict] === 0 || !slugs.has(r.slug)) continue
           const key = `${r.slug} ${r.kind}`
           recorded.set(key, (recorded.get(key) ?? 0) + r[verdict])
         }
@@ -205,19 +215,19 @@ describe("the published-pair tables against the recorded totals", () => {
   it("names in the borderline section the row count its table adds up to", () => {
     const total = tableIn(cases[0].heading).reduce((n, t) => n + t.total, 0)
     expect(section(cases[0].heading)).toContain(
-      `전수의 \`borderline\` ${total}행을`
+      `분류한 \`borderline\` ${total}행을`
     )
   })
 })
 
-describe("the observed colour groups", () => {
-  // `paletteOf` throws on a heading it cannot find, but only when the script
-  // runs — which is when someone already has an artifact in hand. Read here,
-  // a renamed heading fails the PR that renamed it.
-  for (const [slug, groups] of Object.entries(OBSERVED_COLOUR_GROUPS)) {
-    it(`are headings in ${slug}'s colors map`, () => {
+describe("the observed colours", () => {
+  // `paletteOf` throws on a heading or token it cannot find, but only when the
+  // script runs — which is when someone already has an artifact in hand. Read
+  // here, a renamed heading or token fails the PR that renamed it.
+  for (const [slug, observed] of Object.entries(OBSERVED_COLOURS)) {
+    it(`are headings or tokens in ${slug}'s colors map`, () => {
       const md = read(path.join(ROOT, "services", `${slug}.md`))
-      expect(() => paletteOf(md, groups)).not.toThrow()
+      expect(() => paletteOf(md, observed)).not.toThrow()
     })
   }
 })
