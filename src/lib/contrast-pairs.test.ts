@@ -283,10 +283,14 @@ describe("pairClass with a translucent token", () => {
   })
 
   it("holds the composite to the same tolerance as a direct match", () => {
-    // `#808080` sits one unit off the composite `#7f7f7f` — about 0.003 in
-    // Oklab, outside 0.002 and inside 0.004.
+    // `#808080` sits one unit off the composite `#7f7f7f`: 0.003381… in Oklab
+    // (lightness only, both grey). Outside the default 0.002, and the line
+    // falls between 0.00338 and 0.00339.
     expect(pairClass("#808080", "#ffffff", withVeil())).toBe("one-token")
-    expect(pairClass("#808080", "#ffffff", withVeil(), 0.004)).toBe(
+    expect(pairClass("#808080", "#ffffff", withVeil(), 0.00338)).toBe(
+      "one-token"
+    )
+    expect(pairClass("#808080", "#ffffff", withVeil(), 0.00339)).toBe(
       "both-published"
     )
   })

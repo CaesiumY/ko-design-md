@@ -23,6 +23,7 @@ import { keyOf } from "./contrast-report"
 import {
   deltaE,
   hexToOklab,
+  hexToRgb,
   oklabToRgb,
   parseOklch,
   rgbToOklab,
@@ -221,17 +222,6 @@ function paintOf(lab: Oklab): Rgb {
   return { r: Math.round(r), g: Math.round(g), b: Math.round(b) }
 }
 
-/** `#rrggbb`, the spelling `toHex` writes every reading in, back to channels. */
-function rgbOf(hex: string): Rgb | null {
-  const m = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex)
-  if (!m) return null
-  return {
-    r: parseInt(m[1], 16),
-    g: parseInt(m[2], 16),
-    b: parseInt(m[3], 16),
-  }
-}
-
 /** Distance from a measured colour to the nearest token; Infinity for none. */
 function nearestDistance(hex: string, palette: Palette): number {
   const lab = hexToOklab(hex)?.lab
@@ -292,8 +282,25 @@ export type PairClass =
 
 type ReadingClass = ReturnType<typeof readingClass>
 
+type Base = { rgb: Rgb; observed: boolean }
+
+// Every opaque token as paint, once per palette rather than once per row: a
+// background reading is tried against all of them.
+const basesOf = new WeakMap<Palette, Array<Base>>()
+function opaqueBases(palette: Palette): Array<Base> {
+  let bases = basesOf.get(palette)
+  if (bases === undefined) {
+    bases = palette.entries.map((e) => ({
+      rgb: paintOf(e.lab),
+      observed: e.observed,
+    }))
+    basesOf.set(palette, bases)
+  }
+  return bases
+}
+
 /** Published over observed over nothing — the more the brand vouches for. */
-const better = (x: ReadingClass, y: ReadingClass): ReadingClass =>
+const strongerClass = (x: ReadingClass, y: ReadingClass): ReadingClass =>
   x === "published" || y === "published" ? "published" : (x ?? y)
 
 /**
@@ -303,15 +310,16 @@ const better = (x: ReadingClass, y: ReadingClass): ReadingClass =>
  *
  * The composite is compared in the reals, NOT rounded with `toHex` first. The
  * reading was already rounded once, after an alpha the collector recovered by
- * averaging; rounding the prediction too stacks a second half-unit on that,
- * and in CI run 38463871450 it pushed 9 of wanted's `fg-secondary`·
- * `fg-tertiary` text rows past the tolerance that the unrounded composite
- * keeps them inside.
+ * averaging; rounding the prediction too stacks a second half-unit on that.
+ * When this was written (2026-10-16, CI run 38463871450) that pushed 9 of
+ * wanted's `fg-secondary`·`fg-tertiary` text rows past the tolerance the
+ * unrounded composite keeps them inside — a one-off check, not something the
+ * classifier prints.
  */
 function compositeClass(
   hex: string,
   palette: Palette,
-  bases: Array<{ rgb: Rgb; observed: boolean }>,
+  bases: Array<Base>,
   tolerance: number
 ): ReadingClass {
   const lab = hexToOklab(hex)?.lab
@@ -353,15 +361,15 @@ export function pairClass(
   const viaComposite = (
     hex: string,
     direct: ReadingClass,
-    bases: () => Array<{ rgb: Rgb; observed: boolean }>
+    bases: () => Array<Base>
   ): ReadingClass =>
     direct === "published"
       ? direct
-      : better(direct, compositeClass(hex, palette, bases(), tolerance))
+      : strongerClass(direct, compositeClass(hex, palette, bases(), tolerance))
   const b = viaComposite(bg, readingClass(bg, palette, tolerance), () =>
-    palette.entries.map((e) => ({ rgb: paintOf(e.lab), observed: e.observed }))
+    opaqueBases(palette)
   )
-  const bgRgb = rgbOf(bg)
+  const bgRgb = hexToRgb(bg)
   const a = viaComposite(fg, readingClass(fg, palette, tolerance), () =>
     b === null || bgRgb === null
       ? []

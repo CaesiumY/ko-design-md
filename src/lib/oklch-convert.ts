@@ -36,14 +36,24 @@ export function hexToOklab(
   if (h.length === 8) h = h.slice(0, 6)
   if (h.length !== 6 || /[^0-9a-fA-F]/.test(h)) return null
 
-  return {
-    lab: rgbToOklab({
-      r: parseInt(h.slice(0, 2), 16),
-      g: parseInt(h.slice(2, 4), 16),
-      b: parseInt(h.slice(4, 6), 16),
-    }),
-    alpha,
-  }
+  return { lab: rgbToOklab(channelsOf(h)), alpha }
+}
+
+const channelsOf = (h: string): { r: number; g: number; b: number } => ({
+  r: parseInt(h.slice(0, 2), 16),
+  g: parseInt(h.slice(2, 4), 16),
+  b: parseInt(h.slice(4, 6), 16),
+})
+
+/**
+ * `#rrggbb` → its three 8-bit channels; `null` for any other spelling. The
+ * contrast collector writes every reading this way (`toHex`).
+ */
+export function hexToRgb(
+  hex: string
+): { r: number; g: number; b: number } | null {
+  const h = /^#([0-9a-f]{6})$/i.exec(hex)?.[1]
+  return h === undefined ? null : channelsOf(h)
 }
 
 /**

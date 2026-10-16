@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 import {
   deltaE,
   hexToOklab,
+  hexToRgb,
   lchToOklab,
   oklabToLch,
   oklabToRgb,
@@ -136,5 +137,17 @@ describe("rgbToOklab", () => {
     const L = rgbToOklab({ r: 127.5, g: 127.5, b: 127.5 }).L
     expect(L).toBeGreaterThan(hexToOklab("#7f7f7f")!.lab.L)
     expect(L).toBeLessThan(hexToOklab("#808080")!.lab.L)
+  })
+})
+
+describe("hexToRgb", () => {
+  it("reads the six-digit spelling a reading is written in", () => {
+    expect(hexToRgb("#3182F6")).toEqual({ r: 49, g: 130, b: 246 })
+  })
+
+  it("refuses any other spelling", () => {
+    for (const hex of ["#fff", "#3182f6ff", "3182f6", "#3182g6"]) {
+      expect(hexToRgb(hex)).toBeNull()
+    }
   })
 })
