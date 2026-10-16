@@ -12,7 +12,7 @@
 // tables describe CI's rendering, and fonts fall back differently elsewhere.
 //
 // Exit 2 for a bad invocation, unreadable input, or input this checkout cannot
-// classify (a slug with no entry, a listed observed heading gone from its
+// classify (a slug with no entry, a listed observed heading or token gone from its
 // entry); exit 1 when a folded `borderline` or `fail` row read different
 // colour pairs at different widths, because then the row has no one pair to
 // classify and picking the first width's would be a guess.
@@ -156,7 +156,7 @@ function main(): void {
     let p = palettes.get(slug)
     if (p === undefined) {
       // A slug the artifact names but this checkout has no entry for, or a
-      // listed observed heading the entry no longer has, is the wrong input
+      // listed observed heading or token the entry no longer has, is the wrong input
       // for this checkout — exit 2 with the reason, not a stack trace.
       try {
         const md = readFileSync(join(ROOT, "services", `${slug}.md`), "utf8")
@@ -183,8 +183,9 @@ function main(): void {
     console.log(
       `\ntotal ${t.total}: both-published ${t.bothPublished} · observed-pair ${t.observedPair} · one-token ${t.oneToken} · no-token ${t.noToken}`
     )
-    // The figures the document's tolerance paragraphs quote, printed so the
-    // same command that refreshes the tables refreshes them too.
+    // What the document's tolerance paragraphs describe without a number —
+    // the band the tolerance was read off, and how much a wider one would
+    // move — printed so whoever reruns this sees whether that still holds.
     const band = toleranceBand(rows, paletteFor, verdict, [
       PUBLISHED_PAIR_TOLERANCE,
       WIDER_TOLERANCE,

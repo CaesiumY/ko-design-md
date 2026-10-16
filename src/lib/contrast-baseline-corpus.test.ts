@@ -133,8 +133,8 @@ describe("the published-pair tables against the recorded totals", () => {
   // a fourth time is not a process.
   //
   // Each table is tied to the recorded totals row by row (#397), so a PR that
-  // moves a `borderline` or `fail` count cannot land with a classification of
-  // the rows that were there before it.
+  // moves a `borderline` or `fail` count of a classified entry cannot land with
+  // a classification of the rows that were there before it.
   const doc = read(DOC)
 
   /** The pair table inside the section that opens with `heading`. */
@@ -169,18 +169,50 @@ describe("the published-pair tables against the recorded totals", () => {
     { verdict: "fail", heading: "## 미달의 발행색 분류" },
   ] as const
 
-  // A slug on NEITHER table is an entry added since the tables were last
-  // rerun. It is left out rather than failed: a new entry adds its baseline
-  // rows from CI's gate output, and making it also rerun this classification
-  // would add a tenth per-slug registry the onboarding skill does not know
-  // about. A slug on either table is held exactly, so a PR that moves the
-  // counts of a classified entry (#401, #402) cannot leave its rows behind.
+  // The slugs classified when the tables were written (CI run 38463871450).
+  // Held exactly whether or not they still have rows — so deleting an entry's
+  // rows from both tables, or a rerun in which its counts reach zero, cannot
+  // exempt it — together with any slug a later rerun put on a table.
+  //
+  // A slug in neither set is an entry added since the last rerun, and is left
+  // out rather than failed: a new entry adds its baseline rows from CI's gate
+  // output, and making it also rerun this classification would add one more
+  // per-slug registry the onboarding skill does not know about. The next rerun
+  // takes it in. This list is never extended by hand — it records a run.
+  const CLASSIFIED_AT_38463871450 = [
+    "11st",
+    "baemin",
+    "bezier",
+    "class101",
+    "codeit",
+    "gmarket",
+    "greeting",
+    "gs-retail",
+    "gs-shop",
+    "krds",
+    "kyobobook",
+    "lg-electronics",
+    "likelion",
+    "line-design-system",
+    "nol",
+    "remember",
+    "samsung-one-ui",
+    "seed-design",
+    "socar",
+    "teamsparta",
+    "toss",
+    "vapor-ui",
+    "wanted",
+    "yeogi",
+    "zigbang",
+  ]
   const classified = (): Set<string> =>
-    new Set(
-      [...tableIn(cases[0].heading), ...tableIn(cases[1].heading)].map(
+    new Set([
+      ...CLASSIFIED_AT_38463871450,
+      ...[...tableIn(cases[0].heading), ...tableIn(cases[1].heading)].map(
         (t) => t.slug
-      )
-    )
+      ),
+    ])
 
   for (const { verdict, heading } of cases) {
     describe(verdict, () => {

@@ -53,7 +53,7 @@ export interface ObservedColours {
  *
  * Listed by hand because "published" is the entry's claim, not a pattern: lg's
  * domestic group says "운영 CSS 이름" and never "미발행", while the document
- * still treats those names as observed; gs-shop marks five tokens one by one
+ * still treats those names as observed; gs-shop marks tokens one by one
  * ("라이브 실측 · 공식 문서와 불일치", "공식 문서에 없는 신규 토큰") inside
  * groups that are otherwise published. A heading or token renamed in the entry
  * makes `paletteOf` throw rather than quietly move it back to published, and
@@ -195,7 +195,7 @@ function nearestDistance(hex: string, palette: Palette): number {
  *
  * The tolerance was read off an empty `(0.002, 0.005]` band, and whether that
  * band stays empty is the thing to look at again when the numbers move — the
- * document records the count, and this is how it is produced.
+ * CLI prints the count beside the tables, and this is how it is produced.
  */
 export function toleranceBand(
   rows: Array<DedupedFinding>,
