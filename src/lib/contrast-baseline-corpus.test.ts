@@ -159,7 +159,7 @@ describe("the published-pair tables against the recorded totals", () => {
   }
 
   const HOW =
-    "rerun `pnpm audit:contrast:pairs --findings <contrast-findings.json>` on the contrast-report artifact of the CI run the totals came from, and in docs/preview-contrast-baseline.md's published-pair sections paste both tables and replace CLASSIFIED_RUN in this test with the 'classified run' line the command prints, and update what the tests here do not hold: the commit, and the dated observations and 'which slug first' paragraph beside the tables"
+    "rerun `pnpm audit:contrast:pairs --findings <contrast-findings.json>` on the contrast-report artifact of the CI run the totals came from, and in docs/preview-contrast-baseline.md's published-pair sections paste both tables and replace CLASSIFIED_RUN in this test with the 'classified run' line the command prints (then `pnpm format`), write the run id in both CLASSIFIED_RUN.run and the borderline section's '입력은 run' line, and update what the tests here do not hold: the commit, and the dated observations and 'which slug first' paragraph beside the tables"
 
   const cases = [
     {
@@ -180,8 +180,10 @@ describe("the published-pair tables against the recorded totals", () => {
   // per-slug registry the onboarding skill does not know about. Whoever reruns
   // REPLACES this whole object with the `classified run` line the command
   // prints — it is a record of one artifact, not a list to edit — and the test
-  // below holds its run id to the one the document names, so the tables and
-  // this list cannot describe different runs.
+  // below holds its run id to the one the document names, and every slug on a
+  // table to this list. A rerun that keeps the old slugs is still caught when
+  // a newly measured entry has rows; one whose new entries all have no rows
+  // yet is not — the rerun step above is what keeps the list whole.
   const CLASSIFIED_RUN = {
     run: "38463871450",
     slugs: [
@@ -225,6 +227,22 @@ describe("the published-pair tables against the recorded totals", () => {
       section(cases[0].heading),
       `the pinned slug list records run ${CLASSIFIED_RUN.run} but the document names another — ${HOW}`
     ).toContain(`입력은 run \`${CLASSIFIED_RUN.run}\``)
+  })
+
+  it("pins every slug either table classifies", () => {
+    // Both come from one artifact, so a slug on a table and missing here is a
+    // list left over from an earlier run.
+    const pinned = new Set(CLASSIFIED_RUN.slugs)
+    const unpinned = [
+      ...tableIn(cases[0].heading),
+      ...tableIn(cases[1].heading),
+    ]
+      .map((t) => t.slug)
+      .filter((slug) => !pinned.has(slug))
+    expect(
+      [...new Set(unpinned)],
+      `slugs on a pair table but not in CLASSIFIED_RUN — ${HOW}`
+    ).toEqual([])
   })
 
   for (const { verdict, heading } of cases) {
