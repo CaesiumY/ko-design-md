@@ -45,8 +45,9 @@ import type { DedupedFinding, Finding, Judgement } from "./contrast-report"
  * The `fail` readings did NOT leave that band empty when they were first
  * classified (2026-10-16); the classifier prints how many sit in it beside
  * each table, on its `readings …` line — distances to opaque tokens as
- * `nearest token in`, and translucent composites separately as
- * `nearest composite there` (`toleranceBand`). It is kept
+ * `nearest token in`, and, for the readings no token matches directly,
+ * translucent composites as `nearest composite there` (`toleranceBand`).
+ * It is kept
  * anyway — #397 fixed it — and it errs in the same direction as compositing
  * does (one of the two errors the document's caveat names): a stricter match
  * counts fewer pairs as published.
@@ -375,7 +376,7 @@ interface Reading {
 
 /**
  * Both readings of a pair, by the rule `pairClass` describes. The background
- * is read first because the text's composite rests on it.
+ * is read first because the front reading's composite rests on it.
  */
 function readPair(
   fg: string,
@@ -414,8 +415,8 @@ function readPair(
  * A reading is a token when it matches one directly, or when it is one of the
  * entry's translucent tokens composited over what the collector composited it
  * over (#551). For the pair's front reading — text, a border, or a non-text
- * row's fill (`evaluateNonText` composites each over the colour it reports as
- * `bg`) — that is the pair's own background, and only when that background
+ * row's fill (the collector — `evaluateText`, `evaluateNonText` — composites
+ * each over the colour it reports as `bg`) — that is the pair's own background, and only when that background
  * is itself a token: a published translucent over the preview's own fill is
  * not a colour the brand chose. For the background it is the layer beneath,
  * which the reading does not name, so any opaque token of the entry.
