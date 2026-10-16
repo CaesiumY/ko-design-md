@@ -394,7 +394,8 @@ export function parsePairTable(table: string): Array<PairTally> {
     }
     seen.add(key)
     const count = (i: number): number => {
-      const n = Number(c[i])
+      // `Number("")` is 0, so a blank cell is refused by shape, not by value.
+      const n = /^\d+$/.test(c[i]) ? Number(c[i]) : NaN
       if (!Number.isInteger(n) || n < 0) {
         throw new Error(
           `pair table row for ${c[0]} ${c[1]} has ${PAIR_COLUMNS[i]} = ${JSON.stringify(c[i])}, expected a whole number`

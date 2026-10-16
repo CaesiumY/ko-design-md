@@ -336,6 +336,14 @@ describe("the pair table", () => {
     expect(() => parsePairTable(bad)).toThrow(/kind/)
   })
 
+  it("refuses a blank count rather than reading it as zero", () => {
+    const bad = renderPairTable(tally).replace(
+      "| toss | text | 2 |",
+      "| toss | text |  |"
+    )
+    expect(() => parsePairTable(bad)).toThrow(/whole number/)
+  })
+
   it("refuses a row with the wrong number of cells", () => {
     const bad = renderPairTable(tally).replace("| 4 |", "| 4 | 9 |")
     expect(() => parsePairTable(bad)).toThrow(/cells/)
