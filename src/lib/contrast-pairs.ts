@@ -413,15 +413,16 @@ function readPair(
  *
  * A reading is a token when it matches one directly, or when it is one of the
  * entry's translucent tokens composited over what the collector composited it
- * over (#551). For the text or border colour that is the pair's own
- * background, and only when that background is itself a token — a published
- * translucent over the preview's own fill is not a colour the brand chose.
- * For the background it is the layer beneath, which the reading does not
- * name, so any opaque token of the entry.
+ * over (#551). For the pair's front reading — text, a border, or a non-text
+ * row's fill (`evaluateNonText` composites each over the colour it reports as
+ * `bg`) — that is the pair's own background, and only when that background
+ * is itself a token: a published translucent over the preview's own fill is
+ * not a colour the brand chose. For the background it is the layer beneath,
+ * which the reading does not name, so any opaque token of the entry.
  *
  * The two sides differ because what is known differs. The collector
- * composites text over the backdrop it recorded, so the text's base is that
- * reading and nothing else — any other token would be a colour the collector
+ * composites the front reading over the backdrop it recorded, so its base is
+ * that reading and nothing else — any other token would be a colour the collector
  * could not have produced, and trying them all only adds chances to land near
  * a grey by accident. A background's base is not recorded, so every opaque
  * token is a candidate; that is a wider net, and it was sized: shifting every
