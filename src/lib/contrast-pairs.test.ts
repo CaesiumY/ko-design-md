@@ -380,14 +380,32 @@ describe("toleranceBand", () => {
       [0.002, 0.005]
     )
     // One fail row, two readings: #808080 at 0.003 (in), #ffffff far (out).
-    expect(got).toEqual({ readings: 2, inBand: 1 })
+    expect(got).toEqual({ readings: 2, inBand: 1, compositeInBand: 0 })
   })
 
   it("leaves out a reading that matches a token, and one with no token near", () => {
     expect(toleranceBand([row({})], () => p, "fail", [0.002, 0.005])).toEqual({
       readings: 2,
       inBand: 0,
+      compositeInBand: 0,
     })
+  })
+
+  it("counts a reading whose nearest translucent composite sits in the band", () => {
+    // The veil over white is `#7f7f7f`; `#808080` is 0.00338 from it (see the
+    // composite tolerance test above) and matches no opaque token here. A
+    // reading the composite does match (`#7f7f7f`) is not in the band.
+    const veiled: Palette = {
+      ...palette(entry("white", 1)),
+      translucent: [VEIL],
+    }
+    const got = toleranceBand(
+      [row({ fg: "#808080" }), row({ fg: "#7f7f7f" })],
+      () => veiled,
+      "fail",
+      [0.002, 0.005]
+    )
+    expect(got).toEqual({ readings: 4, inBand: 0, compositeInBand: 1 })
   })
 })
 
