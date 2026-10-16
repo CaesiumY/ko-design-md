@@ -13,12 +13,22 @@
 // for `fail` and asked again when the numbers move: read the entry's OKLCH
 // definitions (`readDefinitions`), carry each measured hex into Oklab
 // (`hexToOklab`), and call it a token when the nearest one is within
-// `PUBLISHED_PAIR_TOLERANCE`. Run over the artifact CI uploads, never a local
-// sweep — the recorded tables describe CI's rendering.
+// `PUBLISHED_PAIR_TOLERANCE` — or, for a translucent token, when laying it over
+// what the collector laid it over lands within that distance (#551). Run over
+// the artifact CI uploads, never a local sweep — the recorded tables describe
+// CI's rendering.
 
+import { compositeOver } from "./contrast"
 import { keyOf } from "./contrast-report"
-import { deltaE, hexToOklab, parseOklch } from "./oklch-convert"
+import {
+  deltaE,
+  hexToOklab,
+  oklabToRgb,
+  parseOklch,
+  rgbToOklab,
+} from "./oklch-convert"
 import { frontmatterBlock, readDefinitions } from "./oklch-drift"
+import type { Rgb, Rgba } from "./contrast"
 import type { Oklab } from "./oklch-convert"
 import type { DedupedFinding, Finding, Judgement } from "./contrast-report"
 
@@ -33,7 +43,8 @@ import type { DedupedFinding, Finding, Judgement } from "./contrast-report"
  *
  * The `fail` readings did NOT leave that band empty when they were first
  * classified (2026-10-16); the classifier prints how many sit in it beside
- * each table, on its `readings …` line. It is kept
+ * each table, on its `readings …` line — distances to opaque tokens only;
+ * composites of translucent ones are not counted there. It is kept
  * anyway — #397 fixed it — and it errs in the same direction as compositing
  * does (one of the two errors the document's caveat names): a stricter match
  * counts fewer pairs as published.
@@ -95,8 +106,22 @@ export interface PaletteEntry {
   observed: boolean
 }
 
+/**
+ * A translucent token, held as the paint the browser lays down for it: 8-bit
+ * channels and an alpha in 255ths. Never matched to a reading directly — a
+ * reading is already composited onto what is behind it — only composited the
+ * way the collector composites one (see `pairClass`).
+ */
+export interface TranslucentEntry {
+  name: string
+  paint: Rgba
+  observed: boolean
+}
+
 export interface Palette {
+  /** Opaque tokens, matched to a reading directly. */
   entries: Array<PaletteEntry>
+  translucent: Array<TranslucentEntry>
   /** Definitions `parseOklch` could not read — said, not dropped. */
   unreadable: Array<string>
 }
@@ -113,9 +138,9 @@ const DEFINITION = /^\s+([a-z][\w-]*):\s+oklch\(/
  * function reads every `name: oklch(` line in the frontmatter, which includes
  * a `gradients:` row's first stop — not a colour the entry declared — so only
  * names whose first definition sits in the `colors:` map are kept. A
- * translucent token is left out too: a measured reading is already composited
- * onto what is behind it, so matching its opaque colour to `oklch(0 0 0 / 5%)`
- * would call a shadow tint "black".
+ * translucent token goes to `translucent`, not `entries`: a measured reading is
+ * already composited onto what is behind it, so matching it to
+ * `oklch(0 0 0 / 5%)` directly would call a shadow tint "black".
  */
 export function paletteOf(
   markdown: string,
@@ -162,6 +187,7 @@ export function paletteOf(
   }
 
   const entries: Array<PaletteEntry> = []
+  const translucent: Array<TranslucentEntry> = []
   const unreadable: Array<string> = []
   for (const [name, value] of readDefinitions(markdown)) {
     const place = placeOf.get(name)
@@ -171,16 +197,39 @@ export function paletteOf(
       unreadable.push(name)
       continue
     }
-    if (parsed.alpha !== null && parsed.alpha < 1) continue
-    entries.push({
-      name,
-      lab: parsed.lab,
-      observed:
-        observedTokens.includes(name) ||
-        (place.group !== null && observedGroups.includes(place.group)),
-    })
+    const seen =
+      observedTokens.includes(name) ||
+      (place.group !== null && observedGroups.includes(place.group))
+    if (parsed.alpha !== null && parsed.alpha < 1) {
+      // Fully transparent paint leaves whatever is behind it unchanged; it
+      // would "explain" every reading that is already a token.
+      const a = Math.round(parsed.alpha * 255) / 255
+      if (a > 0) {
+        const { r, g, b } = paintOf(parsed.lab)
+        translucent.push({ name, paint: { r, g, b, a }, observed: seen })
+      }
+      continue
+    }
+    entries.push({ name, lab: parsed.lab, observed: seen })
   }
-  return { entries, unreadable }
+  return { entries, translucent, unreadable }
+}
+
+/** A token's colour as the browser paints it: 8-bit sRGB channels. */
+function paintOf(lab: Oklab): Rgb {
+  const { r, g, b } = oklabToRgb(lab)
+  return { r: Math.round(r), g: Math.round(g), b: Math.round(b) }
+}
+
+/** `#rrggbb`, the spelling `toHex` writes every reading in, back to channels. */
+function rgbOf(hex: string): Rgb | null {
+  const m = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex)
+  if (!m) return null
+  return {
+    r: parseInt(m[1], 16),
+    g: parseInt(m[2], 16),
+    b: parseInt(m[3], 16),
+  }
 }
 
 /** Distance from a measured colour to the nearest token; Infinity for none. */
@@ -241,11 +290,59 @@ export function readingClass(
 export type PairClass =
   "both-published" | "observed-pair" | "one-token" | "no-token"
 
+type ReadingClass = ReturnType<typeof readingClass>
+
+/** Published over observed over nothing — the more the brand vouches for. */
+const better = (x: ReadingClass, y: ReadingClass): ReadingClass =>
+  x === "published" || y === "published" ? "published" : (x ?? y)
+
+/**
+ * Whether a reading is one of the entry's translucent tokens laid over one of
+ * `bases`, composited the way the collector does it (`compositeOver`).
+ * Observed when the token or the base is.
+ *
+ * The composite is compared in the reals, NOT rounded with `toHex` first. The
+ * reading was already rounded once, after an alpha the collector recovered by
+ * averaging; rounding the prediction too stacks a second half-unit on that,
+ * and in CI run 38463871450 it pushed 9 of wanted's `fg-secondary`·
+ * `fg-tertiary` text rows past the tolerance that the unrounded composite
+ * keeps them inside.
+ */
+function compositeClass(
+  hex: string,
+  palette: Palette,
+  bases: Array<{ rgb: Rgb; observed: boolean }>,
+  tolerance: number
+): ReadingClass {
+  const lab = hexToOklab(hex)?.lab
+  if (lab === undefined) return null
+  let found: ReadingClass = null
+  for (const t of palette.translucent) {
+    for (const base of bases) {
+      const seen = rgbToOklab(compositeOver(t.paint, base.rgb))
+      if (deltaE(lab, seen) > tolerance) continue
+      if (!t.observed && !base.observed) return "published"
+      found = "observed"
+    }
+  }
+  return found
+}
+
 /**
  * Four ways a pair can sit against the entry's palette. Only the first says
  * a fix cannot keep both published values as they are; `observed-pair` is
  * kept apart so a reader can put the observed values on whichever side they
  * believe.
+ *
+ * A reading is a token when it matches one directly, or when it is one of the
+ * entry's translucent tokens composited over what the collector composited it
+ * over (#551). For the text or border colour that is the pair's own
+ * background, and only when that background is itself a token — a published
+ * translucent over the preview's own fill is not a colour the brand chose.
+ * For the background it is the layer beneath, which the reading does not
+ * name, so any opaque token of the entry. Text is never composited over a
+ * token other than its own background: with dozens of translucent tokens and
+ * a hundred opaque ones, some combination lands near almost any grey.
  */
 export function pairClass(
   fg: string,
@@ -253,8 +350,23 @@ export function pairClass(
   palette: Palette,
   tolerance = PUBLISHED_PAIR_TOLERANCE
 ): PairClass {
-  const a = readingClass(fg, palette, tolerance)
-  const b = readingClass(bg, palette, tolerance)
+  const viaComposite = (
+    hex: string,
+    direct: ReadingClass,
+    bases: () => Array<{ rgb: Rgb; observed: boolean }>
+  ): ReadingClass =>
+    direct === "published"
+      ? direct
+      : better(direct, compositeClass(hex, palette, bases(), tolerance))
+  const b = viaComposite(bg, readingClass(bg, palette, tolerance), () =>
+    palette.entries.map((e) => ({ rgb: paintOf(e.lab), observed: e.observed }))
+  )
+  const bgRgb = rgbOf(bg)
+  const a = viaComposite(fg, readingClass(fg, palette, tolerance), () =>
+    b === null || bgRgb === null
+      ? []
+      : [{ rgb: bgRgb, observed: b === "observed" }]
+  )
   if (a === null && b === null) return "no-token"
   if (a === null || b === null) return "one-token"
   return a === "published" && b === "published"
