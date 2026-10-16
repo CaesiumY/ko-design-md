@@ -3,13 +3,19 @@ import path from "node:path"
 import { describe, expect, it } from "vitest"
 import { readPreviewSlugs } from "../../scripts/audit-contrast-slugs"
 import { BASELINE_TABLE, CONTRAST_BASELINE } from "./contrast-baseline"
+import {
+  OBSERVED_COLOUR_GROUPS,
+  paletteOf,
+  parsePairTable,
+} from "./contrast-pairs"
 import { renderTotalsTable } from "./contrast-report"
+import type { PairTally } from "./contrast-pairs"
 
 // The recorded contrast baseline against the repository it describes.
 //
 // WHY THIS FILE EXISTS. `contrast-baseline.ts` holds the table the gate
 // compares against, and `docs/preview-contrast-baseline.md` holds the table a
-// reader is told is the record. Two copies of the same 84 rows go stale
+// reader is told is the record. Two copies of the same rows go stale
 // separately unless something reads both, and a document that calls itself the
 // record while disagreeing with the gate is worse than no document: the gate
 // says nothing about the doc, so nothing would ever surface the disagreement.
@@ -52,7 +58,7 @@ describe("the recorded table", () => {
     // Cut out of the document and compared whole, rather than looked for
     // inside it. `toContain` is satisfied by a PREFIX: measured here by
     // deleting the last row from the constant, which left it a prefix of the
-    // published table and passed. The document holds four other tables, so the
+    // published table and passed. The document holds other tables too, so the
     // block is found by this one's header, which no other shares.
     expect(tableInDoc()).toBe(BASELINE_TABLE)
   })
@@ -123,37 +129,90 @@ describe("the recorded table against public/preview/", () => {
   })
 })
 
-describe("the published-pair section against its own table", () => {
+describe("the published-pair tables against the recorded totals", () => {
   // Three times in one branch, a number written into prose went stale when the
   // table beside it changed — the CI run count, the catalogue size, and these
   // two. The document already tells its authors not to copy counts into prose;
   // this is the machine that holds them to it, because a reviewer catching it
   // a fourth time is not a process.
+  //
+  // Each table is tied to the recorded totals row by row (#397), so a PR that
+  // moves a `borderline` or `fail` count cannot land with a classification of
+  // the rows that were there before it.
   const doc = read(DOC)
 
-  const tableSums = (): { pairs: number; borderline: number } => {
-    let pairs = 0
-    let borderline = 0
-    for (const line of doc.split("\n")) {
-      const m = /^\| [a-z0-9-]+ \| (\d+) \/ (\d+) \|$/.exec(line.trim())
-      if (m === null) continue
-      pairs += Number(m[1])
-      borderline += Number(m[2])
-    }
-    return { pairs, borderline }
+  /** The pair table inside the section that opens with `heading`. */
+  const section = (heading: string): string => {
+    const start = doc.indexOf(`\n${heading}`)
+    if (start === -1) return `(no section "${heading}" in the document)`
+    const rest = doc.slice(start + 1)
+    const next = rest.indexOf("\n## ", 1)
+    return next === -1 ? rest : rest.slice(0, next)
+  }
+  const tableIn = (heading: string): Array<PairTally> => {
+    const lines = section(heading).split("\n")
+    const start = lines.findIndex((l) => l.startsWith("| slug | kind |"))
+    let end = start
+    while (end + 1 < lines.length && lines[end + 1].startsWith("|")) end += 1
+    return parsePairTable(lines.slice(start, end + 1).join("\n"))
   }
 
-  it("sums to the borderline count the recorded table carries", () => {
-    expect(tableSums().borderline).toBe(
-      CONTRAST_BASELINE.reduce((n, r) => n + r.borderline, 0)
-    )
-  })
+  const HOW =
+    "rerun `pnpm audit:contrast:pairs --findings <contrast-findings.json>` on the contrast-report artifact of the CI run the totals came from, and paste both tables (docs/preview-contrast-baseline.md, the published-pair sections)"
 
-  it("states in prose the totals its own table adds up to", () => {
-    const { pairs, borderline } = tableSums()
-    expect(doc).toContain(
-      `${borderline}행 중 ${pairs}행이 두 색 모두 발행 토큰`
+  const cases = [
+    {
+      verdict: "borderline",
+      heading: "## 발행색끼리의 경계선",
+    },
+    { verdict: "fail", heading: "## 미달의 발행색 분류" },
+  ] as const
+
+  for (const { verdict, heading } of cases) {
+    describe(verdict, () => {
+      it("adds up, slug by slug and kind by kind, to the recorded totals", () => {
+        const recorded = new Map<string, number>()
+        for (const r of CONTRAST_BASELINE) {
+          if (r[verdict] === 0) continue
+          const key = `${r.slug} ${r.kind}`
+          recorded.set(key, (recorded.get(key) ?? 0) + r[verdict])
+        }
+        const published = new Map(
+          tableIn(heading).map((t) => [`${t.slug} ${t.kind}`, t.total])
+        )
+        expect(
+          Object.fromEntries(published),
+          `the ${verdict} classification no longer matches the recorded totals — ${HOW}`
+        ).toEqual(Object.fromEntries(recorded))
+      })
+
+      it("states in prose the totals its own table adds up to", () => {
+        const table = tableIn(heading)
+        const total = table.reduce((n, t) => n + t.total, 0)
+        const both = table.reduce((n, t) => n + t.bothPublished, 0)
+        expect(section(heading)).toContain(
+          `\`${verdict}\` ${total}행 중 ${both}행이 두 색 모두 발행 토큰`
+        )
+      })
+    })
+  }
+
+  it("names in the borderline section the row count its table adds up to", () => {
+    const total = tableIn(cases[0].heading).reduce((n, t) => n + t.total, 0)
+    expect(section(cases[0].heading)).toContain(
+      `전수의 \`borderline\` ${total}행을`
     )
-    expect(doc).toContain(`전수의 \`borderline\` ${borderline}행을`)
   })
+})
+
+describe("the observed colour groups", () => {
+  // `paletteOf` throws on a heading it cannot find, but only when the script
+  // runs — which is when someone already has an artifact in hand. Read here,
+  // a renamed heading fails the PR that renamed it.
+  for (const [slug, groups] of Object.entries(OBSERVED_COLOUR_GROUPS)) {
+    it(`are headings in ${slug}'s colors map`, () => {
+      const md = read(path.join(ROOT, "services", `${slug}.md`))
+      expect(() => paletteOf(md, groups)).not.toThrow()
+    })
+  }
 })
