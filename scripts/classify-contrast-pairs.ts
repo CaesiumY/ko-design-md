@@ -85,19 +85,22 @@ function readFindings(path: string): Array<Finding> {
   )
   if (bad !== -1) {
     fail(
-      `Error: ${path} item ${bad} is not a finding with slug/kind/verdict/fg/bg/blockers — is it a contrast-findings.json from a run that reports colour pairs?`
+      `Error: ${path} item ${bad} is not a finding (slug, theme, state, kind, path, ratio, width, verdict, blockers, fg, bg) — is it a contrast-findings.json from a run that reports colour pairs?`
     )
   }
   return parsed as Array<Finding>
 }
 
-// Every field `keyOf` and the classifier read, so a malformed item stops here
-// with exit 2 instead of throwing deeper in with exit 1, which this script
-// keeps for split colour pairs alone.
+// The fields the fold (`keyOf`, `dedupeFindings`' sort) and the classifier
+// depend on, so a malformed item stops here with exit 2 instead of throwing
+// deeper in with exit 1, which this script keeps for split colour pairs alone.
 function isFinding(f: Record<string, unknown>): boolean {
   return (
     typeof f.slug === "string" &&
+    typeof f.theme === "string" &&
+    typeof f.state === "string" &&
     typeof f.kind === "string" &&
+    typeof f.path === "string" &&
     typeof f.verdict === "string" &&
     typeof f.ratio === "number" &&
     typeof f.width === "number" &&
