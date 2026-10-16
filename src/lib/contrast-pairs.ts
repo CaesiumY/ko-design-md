@@ -235,7 +235,9 @@ function nearestDistance(hex: string, palette: Palette): number {
  * How many colour readings of one verdict's rows there are, how many have
  * their nearest token at a distance in `(lo, hi]`, and how many of the
  * readings no token matches directly have their nearest translucent composite
- * (the candidates `pairClass` tries, at the published tolerance) in that band.
+ * (the candidates `pairClass` tries, with `lo` as the tolerance — so "no
+ * token matches directly" means the same thing as `inBand`'s lower edge) in
+ * that band.
  *
  * The tolerance was read off an empty `(0.002, 0.005]` band, and whether that
  * band stays empty is the thing to look at again when the numbers move — the
@@ -260,7 +262,7 @@ export function toleranceBand(
       readings++
       if (within(nearestDistance(hex, palette))) inBand++
     }
-    const read = readPair(r.fg, r.bg, palette, PUBLISHED_PAIR_TOLERANCE)
+    const read = readPair(r.fg, r.bg, palette, lo)
     for (const side of [read.fg, read.bg]) {
       if (side.direct === null && within(side.composite.any)) compositeInBand++
     }

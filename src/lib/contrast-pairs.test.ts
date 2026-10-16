@@ -238,8 +238,9 @@ describe("pairClass with a translucent token", () => {
   })
 
   it("counts text painted in a published translucent token over a published background as published", () => {
-    // toss's input placeholder: the published `fg-quaternary` (navy-900 at
-    // 28%) laid over the input's published fill, read as one opaque grey.
+    // The shape of toss's input placeholder — a published translucent text
+    // colour (there `fg-quaternary`, navy-900 at 28%) laid over a published
+    // fill and read as one opaque colour — with a plain 50% black here.
     expect(pairClass("#7f7f7f", "#ffffff", withVeil())).toBe("both-published")
   })
 
