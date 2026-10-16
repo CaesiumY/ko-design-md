@@ -159,7 +159,7 @@ describe("the published-pair tables against the recorded totals", () => {
   }
 
   const HOW =
-    "rerun `pnpm audit:contrast:pairs --findings <contrast-findings.json>` on the contrast-report artifact of the CI run the totals came from, and in docs/preview-contrast-baseline.md's published-pair sections paste both tables and update what the tests here do not hold: the run id and commit, and the dated observations and 'which slug first' paragraph beside the tables"
+    "rerun `pnpm audit:contrast:pairs --findings <contrast-findings.json>` on the contrast-report artifact of the CI run the totals came from, and in docs/preview-contrast-baseline.md's published-pair sections paste both tables and replace CLASSIFIED_RUN in this test with the 'classified run' line the command prints, and update what the tests here do not hold: the commit, and the dated observations and 'which slug first' paragraph beside the tables"
 
   const cases = [
     {
@@ -169,50 +169,63 @@ describe("the published-pair tables against the recorded totals", () => {
     { verdict: "fail", heading: "## 미달의 발행색 분류" },
   ] as const
 
-  // The slugs classified when the tables were written (CI run 38463871450).
-  // Held exactly whether or not they still have rows — so deleting an entry's
-  // rows from both tables, or a rerun in which its counts reach zero, cannot
-  // exempt it — together with any slug a later rerun put on a table.
+  // The run the tables were last classified from, and every slug its artifact
+  // measured. Those slugs are held exactly whether or not they still have rows
+  // — so deleting an entry's rows from both tables, or a rerun in which its
+  // counts reach zero, cannot exempt it — together with any slug on a table.
   //
-  // A slug in neither set is an entry added since the last rerun, and is left
-  // out rather than failed: a new entry adds its baseline rows from CI's gate
+  // A slug in neither set is an entry added after that run, and is left out
+  // rather than failed: a new entry adds its baseline rows from CI's gate
   // output, and making it also rerun this classification would add one more
-  // per-slug registry the onboarding skill does not know about. The next rerun
-  // takes it in. This list is never extended by hand — it records a run.
-  const CLASSIFIED_AT_38463871450 = [
-    "11st",
-    "baemin",
-    "bezier",
-    "class101",
-    "codeit",
-    "gmarket",
-    "greeting",
-    "gs-retail",
-    "gs-shop",
-    "krds",
-    "kyobobook",
-    "lg-electronics",
-    "likelion",
-    "line-design-system",
-    "nol",
-    "remember",
-    "samsung-one-ui",
-    "seed-design",
-    "socar",
-    "teamsparta",
-    "toss",
-    "vapor-ui",
-    "wanted",
-    "yeogi",
-    "zigbang",
-  ]
+  // per-slug registry the onboarding skill does not know about. Whoever reruns
+  // REPLACES this whole object with the `classified run` line the command
+  // prints — it is a record of one artifact, not a list to edit — and the test
+  // below holds its run id to the one the document names, so the tables and
+  // this list cannot describe different runs.
+  const CLASSIFIED_RUN = {
+    run: "38463871450",
+    slugs: [
+      "11st",
+      "baemin",
+      "bezier",
+      "class101",
+      "codeit",
+      "gmarket",
+      "greeting",
+      "gs-retail",
+      "gs-shop",
+      "krds",
+      "kyobobook",
+      "lg-electronics",
+      "likelion",
+      "line-design-system",
+      "nol",
+      "remember",
+      "samsung-one-ui",
+      "seed-design",
+      "socar",
+      "teamsparta",
+      "toss",
+      "vapor-ui",
+      "wanted",
+      "yeogi",
+      "zigbang",
+    ],
+  }
   const classified = (): Set<string> =>
     new Set([
-      ...CLASSIFIED_AT_38463871450,
+      ...CLASSIFIED_RUN.slugs,
       ...[...tableIn(cases[0].heading), ...tableIn(cases[1].heading)].map(
         (t) => t.slug
       ),
     ])
+
+  it("names the run its pinned slug list came from", () => {
+    expect(
+      section(cases[0].heading),
+      `the pinned slug list records run ${CLASSIFIED_RUN.run} but the document names another — ${HOW}`
+    ).toContain(`입력은 run \`${CLASSIFIED_RUN.run}\``)
+  })
 
   for (const { verdict, heading } of cases) {
     describe(verdict, () => {

@@ -175,6 +175,14 @@ function main(): void {
   }
 
   const rows = dedupeFindings(raw)
+  // Every slug the artifact measured, for the corpus test's `CLASSIFIED_RUN`:
+  // the entries classified by this run, held from then on even when their rows
+  // later leave both tables. The run id is not in the findings, so it is left
+  // for whoever pastes this to fill in.
+  const slugs = [...new Set(raw.map((f) => f.slug))].sort()
+  console.log(
+    `classified run: { run: "<run id>", slugs: ${JSON.stringify(slugs)} }\n`
+  )
   for (const verdict of VERDICTS) {
     const tally = tallyPairs(rows, paletteFor, verdict)
     const t = totals(tally)
