@@ -108,7 +108,7 @@ function rank(f: DedupedFinding): number {
 // warn never talks the author into erasing a disabled demo or darkening a
 // decorative edge to get through — the edit ADR 0009 kept 9a3 at warn to avoid.
 const VALUE_GUIDANCE =
-  'Keep colours that come straight from design.md tokens. If this element demonstrates a disabled state, declare it with `aria-disabled="true"` (the `disabled` attribute only works on a form control) instead of raising its contrast; leave decoration, opacity-faded state-demo labels and single separator glyphs as they are. Otherwise adjust only a derived colour (a mix, an opacity, a hardcoded value).'
+  'Keep colours that come straight from design.md tokens. If this element demonstrates a disabled state, declare it with `aria-disabled="true"` (the `disabled` attribute only works on a form control) instead of raising its contrast; leave decoration, opacity-faded state-demo labels and single separator glyphs as they are. Otherwise adjust only a colour the preview made — a derived colour (a mix, or an opacity the preview added) or one it picked itself (a hardcoded value).'
 
 // A form control's text is named by where it came from (#400): the colour to
 // change for a placeholder is `::placeholder`'s, not the field's `color`, and
