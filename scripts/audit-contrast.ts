@@ -3,8 +3,9 @@
 //
 // Why a browser (issue #359): a preview's colours are OKLCH, `color-mix()` and
 // `var()` chains, and Chromium reports a resolved `color-mix(in oklab, ...)` as
-// an `oklab()` string. The catalogue has no OKLCH-to-sRGB transform to parse
-// that with — `src/lib/oklch-convert.ts` only goes hex to Oklab — and jsdom
+// an `oklab()` string. The catalogue does not resolve that itself —
+// `src/lib/oklch-convert.ts`'s `oklabToRgb` paints a single token, and parses
+// no computed `oklab()` string, `color-mix()` or `var()` chain — and jsdom
 // resolves neither the cascade nor `var()`. So the page is really rendered and
 // each computed colour is painted onto a canvas and read back as sRGB bytes.
 //

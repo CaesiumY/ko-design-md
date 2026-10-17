@@ -194,13 +194,15 @@ function main(): void {
     // What the document's tolerance paragraphs describe without a number —
     // the band the tolerance was read off, and how much a wider one would
     // move — printed so whoever reruns this sees whether that still holds.
+    // The composite count is the same band for the second way a reading can
+    // match (#551): a translucent token over what the collector laid it on.
     const band = toleranceBand(rows, paletteFor, verdict, [
       PUBLISHED_PAIR_TOLERANCE,
       WIDER_TOLERANCE,
     ])
     const wider = totals(tallyPairs(rows, paletteFor, verdict, WIDER_TOLERANCE))
     console.log(
-      `readings ${band.readings}, nearest token in (${PUBLISHED_PAIR_TOLERANCE}, ${WIDER_TOLERANCE}]: ${band.inBand} · both-published at ${WIDER_TOLERANCE}: ${wider.bothPublished}\n`
+      `readings ${band.readings}, nearest token in (${PUBLISHED_PAIR_TOLERANCE}, ${WIDER_TOLERANCE}]: ${band.inBand} · nearest composite there, no token matched: ${band.compositeInBand} · both-published at ${WIDER_TOLERANCE}: ${wider.bothPublished}\n`
     )
   }
 }

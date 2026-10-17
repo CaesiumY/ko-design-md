@@ -32,8 +32,18 @@ const entry = (
 
 const palette = (...entries: Palette["entries"]): Palette => ({
   entries,
+  translucent: [],
   unreadable: [],
 })
+
+// Black at 128/255 — what the browser paints for `oklch(0 0 0 / 50%)` — over
+// white is 255 × (1 − 128/255) = 127 per channel: `#7f7f7f`. Over `#eeeeee`
+// it is 238 × 127/255 = 118.5…, which rounds to `#777777`.
+const VEIL: Palette["translucent"][number] = {
+  name: "veil",
+  paint: { r: 0, g: 0, b: 0, a: 128 / 255 },
+  observed: false,
+}
 
 describe("parseOklch", () => {
   it("reads lightness, chroma and hue into Oklab", () => {
@@ -86,8 +96,20 @@ describe("paletteOf", () => {
     ])
   })
 
-  it("leaves out a translucent token, which no composited reading can equal", () => {
-    expect(paletteOf(md, {}).entries.map((e) => e.name)).not.toContain("veil")
+  it("keeps a translucent token as paint, not as a colour to match directly", () => {
+    // A reading is already composited onto what is behind it, so matching it
+    // to `oklch(0 0 0 / 5%)` itself would call a shadow tint "black". The
+    // token is carried the way the browser paints it — 8-bit channels and an
+    // alpha of 5% × 255 = 12.75, rounded to 13/255.
+    const got = paletteOf(md, { groups: ["관측(미발행)"] })
+    expect(got.entries.map((e) => e.name)).not.toContain("veil")
+    expect(got.translucent).toEqual([
+      {
+        name: "veil",
+        paint: { r: 0, g: 0, b: 0, a: 13 / 255 },
+        observed: true,
+      },
+    ])
   })
 
   it("does not carry a group from another map into colors", () => {
@@ -209,6 +231,77 @@ describe("pairClass", () => {
   })
 })
 
+describe("pairClass with a translucent token", () => {
+  const withVeil = (veil = VEIL, ...entries: Palette["entries"]): Palette => ({
+    ...palette(entry("white", 1), ...entries),
+    translucent: [veil],
+  })
+
+  it("counts text painted in a published translucent token over a published background as published", () => {
+    // The shape of toss's input placeholder — a published translucent text
+    // colour (there `fg-quaternary`, navy-900 at 28%) laid over a published
+    // fill and read as one opaque colour — with a plain 50% black here.
+    expect(pairClass("#7f7f7f", "#ffffff", withVeil())).toBe("both-published")
+  })
+
+  it("counts a translucent token the entry observed as observed", () => {
+    expect(
+      pairClass("#7f7f7f", "#ffffff", withVeil({ ...VEIL, observed: true }))
+    ).toBe("observed-pair")
+  })
+
+  it("counts an observed background under a published token as observed", () => {
+    const p: Palette = {
+      ...palette(entry("seen", 1, true)),
+      translucent: [VEIL],
+    }
+    expect(pairClass("#7f7f7f", "#ffffff", p)).toBe("observed-pair")
+  })
+
+  it("leaves a mix the palette cannot explain derived", () => {
+    // Black at some other alpha — a preview's own `opacity` or `color-mix`.
+    expect(pairClass("#999999", "#ffffff", withVeil())).toBe("one-token")
+  })
+
+  it("does not lift text over a background that is not a token", () => {
+    // The translucent token over `#eeeeee` is exactly `#777777`, but `#eeeeee`
+    // is the preview's own colour: the reading is not the brand's.
+    expect(pairClass("#777777", "#eeeeee", withVeil())).toBe("no-token")
+  })
+
+  it("composites a background over an opaque token of the palette", () => {
+    // A translucent fill has no reading behind it in the pair, so what it
+    // was laid over can only be one of the entry's opaque tokens.
+    expect(pairClass("#ffffff", "#7f7f7f", withVeil())).toBe("both-published")
+  })
+
+  it("does not composite text over a palette token other than its own background", () => {
+    // The collector composites text over the backdrop it read, nothing else.
+    // `#777777` is the veil over `#eeeeee`, a published token here, but the
+    // text sits on the published white, where the veil reads `#7f7f7f`.
+    const p = withVeil(VEIL, entry("mist", hexToOklab("#eeeeee")!.lab.L))
+    expect(pairClass("#777777", "#ffffff", p)).toBe("one-token")
+  })
+
+  it("holds the composite to the same tolerance as a direct match", () => {
+    // `#808080` sits one unit off the composite `#7f7f7f`: 0.003381… in Oklab
+    // (lightness only, both grey). Outside the default 0.002, and the line
+    // falls between 0.00338 and 0.00339.
+    expect(pairClass("#808080", "#ffffff", withVeil())).toBe("one-token")
+    expect(pairClass("#808080", "#ffffff", withVeil(), 0.00338)).toBe(
+      "one-token"
+    )
+    expect(pairClass("#808080", "#ffffff", withVeil(), 0.00339)).toBe(
+      "both-published"
+    )
+  })
+
+  it("prefers published when a reading is an observed token and a published composite", () => {
+    const p = withVeil(VEIL, entry("seen", hexToOklab("#7f7f7f")!.lab.L, true))
+    expect(pairClass("#7f7f7f", "#ffffff", p)).toBe("both-published")
+  })
+})
+
 const row = (over: Partial<DedupedFinding>): DedupedFinding => ({
   slug: "toss",
   theme: "light",
@@ -288,14 +381,46 @@ describe("toleranceBand", () => {
       [0.002, 0.005]
     )
     // One fail row, two readings: #808080 at 0.003 (in), #ffffff far (out).
-    expect(got).toEqual({ readings: 2, inBand: 1 })
+    expect(got).toEqual({ readings: 2, inBand: 1, compositeInBand: 0 })
   })
 
   it("leaves out a reading that matches a token, and one with no token near", () => {
     expect(toleranceBand([row({})], () => p, "fail", [0.002, 0.005])).toEqual({
       readings: 2,
       inBand: 0,
+      compositeInBand: 0,
     })
+  })
+
+  it("counts a reading whose nearest translucent composite sits in the band", () => {
+    // The veil over white is `#7f7f7f`; `#808080` is 0.00338 from it (see the
+    // composite tolerance test above) and matches no opaque token here. A
+    // reading the composite does match (`#7f7f7f`) is not in the band.
+    const veiled: Palette = {
+      ...palette(entry("white", 1)),
+      translucent: [VEIL],
+    }
+    const got = toleranceBand(
+      [row({ fg: "#808080" }), row({ fg: "#7f7f7f" })],
+      () => veiled,
+      "fail",
+      [0.002, 0.005]
+    )
+    expect(got).toEqual({ readings: 4, inBand: 0, compositeInBand: 1 })
+  })
+
+  it("decides which readings no token matches with the band's own lower edge", () => {
+    // `#808080` is 0.0015 from `grey` here and 0.00338 from the veil over
+    // white. With the band at 0.002 the token matches it, so neither count
+    // takes it; with the band at 0.001 it is in both.
+    const nearGrey: Palette = {
+      ...palette(entry("white", 1), entry("grey", greyLab.L + 0.0015)),
+      translucent: [VEIL],
+    }
+    const band = (lo: number) =>
+      toleranceBand([row({})], () => nearGrey, "fail", [lo, 0.005])
+    expect(band(0.002)).toEqual({ readings: 2, inBand: 0, compositeInBand: 0 })
+    expect(band(0.001)).toEqual({ readings: 2, inBand: 1, compositeInBand: 1 })
   })
 })
 

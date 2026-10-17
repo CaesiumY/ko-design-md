@@ -36,20 +36,66 @@ export function hexToOklab(
   if (h.length === 8) h = h.slice(0, 6)
   if (h.length !== 6 || /[^0-9a-fA-F]/.test(h)) return null
 
-  const r = srgbToLinear(parseInt(h.slice(0, 2), 16) / 255)
-  const g = srgbToLinear(parseInt(h.slice(2, 4), 16) / 255)
-  const b = srgbToLinear(parseInt(h.slice(4, 6), 16) / 255)
+  return { lab: rgbToOklab(channelsOf(h)), alpha }
+}
+
+const channelsOf = (h: string): { r: number; g: number; b: number } => ({
+  r: parseInt(h.slice(0, 2), 16),
+  g: parseInt(h.slice(2, 4), 16),
+  b: parseInt(h.slice(4, 6), 16),
+})
+
+/**
+ * `#rrggbb` → its three 8-bit channels; `null` for any other spelling. The
+ * contrast collector writes every reading this way (`toHex`).
+ */
+export function hexToRgb(
+  hex: string
+): { r: number; g: number; b: number } | null {
+  const h = /^#([0-9a-f]{6})$/i.exec(hex)?.[1]
+  return h === undefined ? null : channelsOf(h)
+}
+
+/**
+ * sRGB channels on [0, 255] → Oklab. Channels need not be whole numbers: a
+ * composite computed in the reals can be compared before it is rounded.
+ */
+export function rgbToOklab(c: { r: number; g: number; b: number }): Oklab {
+  const r = srgbToLinear(c.r / 255)
+  const g = srgbToLinear(c.g / 255)
+  const b = srgbToLinear(c.b / 255)
   // Linear sRGB → LMS → cube root → Oklab (Björn Ottosson's D65 matrices).
   const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b)
   const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b)
   const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b)
   return {
-    lab: {
-      L: 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
-      a: 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
-      b: 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
-    },
-    alpha,
+    L: 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
+    a: 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
+    b: 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
+  }
+}
+
+/** The sRGB gamma encoding, `srgbToLinear` run backwards. */
+const linearToSrgb = (c: number): number =>
+  c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055
+
+/**
+ * Oklab → sRGB channels on [0, 255], unrounded — the inverse of `hexToOklab`'s
+ * transform. A colour outside sRGB is clipped to the cube, the way the browser
+ * paints it, rather than gamut-mapped. Used to composite a translucent token
+ * the same way the contrast collector composites a reading
+ * (`contrast-pairs.ts`).
+ */
+export function oklabToRgb(lab: Oklab): { r: number; g: number; b: number } {
+  const l = (lab.L + 0.3963377774 * lab.a + 0.2158037573 * lab.b) ** 3
+  const m = (lab.L - 0.1055613458 * lab.a - 0.0638541728 * lab.b) ** 3
+  const s = (lab.L - 0.0894841775 * lab.a - 1.291485548 * lab.b) ** 3
+  const channel = (v: number): number =>
+    255 * linearToSrgb(Math.min(1, Math.max(0, v)))
+  return {
+    r: channel(4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s),
+    g: channel(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s),
+    b: channel(-0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s),
   }
 }
 

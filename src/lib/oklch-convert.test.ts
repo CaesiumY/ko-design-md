@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest"
-import { deltaE, hexToOklab, lchToOklab, oklabToLch } from "./oklch-convert"
+import {
+  deltaE,
+  hexToOklab,
+  hexToRgb,
+  lchToOklab,
+  oklabToLch,
+  oklabToRgb,
+  rgbToOklab,
+} from "./oklch-convert"
 import { DELTA_E_TOLERANCE } from "./oklch-tolerance"
 
 /** Round-trip a hex to the `oklch(L C H)` form tokens are written in. */
@@ -80,5 +88,66 @@ describe("deltaE", () => {
     expect(
       deltaE(lchToOklab(0.5, 0.21, 0), lchToOklab(0.5, 0.21, 180))
     ).toBeGreaterThan(0.4)
+  })
+})
+
+describe("oklabToRgb", () => {
+  // The inverse of `hexToOklab`. A wrong constant in either matrix would move
+  // every composited colour the pair classifier computes, so the claim is the
+  // round trip: hex → Oklab → back to the same 8-bit channels.
+  it("undoes hexToOklab to the same 8-bit channels", () => {
+    const hexes = [
+      "#000000",
+      "#ffffff",
+      "#808080",
+      "#06c755",
+      "#3182f6",
+      "#ff0038",
+      "#f2f4f6",
+      "#191f28",
+    ]
+    for (const hex of hexes) {
+      const rgb = oklabToRgb(hexToOklab(hex)!.lab)
+      const back = [rgb.r, rgb.g, rgb.b]
+        .map((v) => Math.round(v).toString(16).padStart(2, "0"))
+        .join("")
+      expect(`#${back}`).toBe(hex)
+    }
+  })
+
+  it("clips a colour outside sRGB to the cube", () => {
+    // Fully saturated OKLCH green is outside sRGB; the browser paints it clipped.
+    const rgb = oklabToRgb(lchToOklab(0.8, 0.4, 145))
+    for (const v of [rgb.r, rgb.g, rgb.b]) {
+      expect(v).toBeGreaterThanOrEqual(0)
+      expect(v).toBeLessThanOrEqual(255)
+    }
+  })
+})
+
+describe("rgbToOklab", () => {
+  it("is hexToOklab for whole channels", () => {
+    expect(rgbToOklab({ r: 49, g: 130, b: 246 })).toEqual(
+      hexToOklab("#3182f6")!.lab
+    )
+  })
+
+  it("reads channels between two 8-bit values", () => {
+    // Half a unit of grey sits between its two neighbours in lightness.
+    const L = rgbToOklab({ r: 127.5, g: 127.5, b: 127.5 }).L
+    expect(L).toBeGreaterThan(hexToOklab("#7f7f7f")!.lab.L)
+    expect(L).toBeLessThan(hexToOklab("#808080")!.lab.L)
+  })
+})
+
+describe("hexToRgb", () => {
+  it("reads the six-digit spelling a reading is written in", () => {
+    expect(hexToRgb("#3182F6")).toEqual({ r: 49, g: 130, b: 246 })
+  })
+
+  it("refuses any other spelling", () => {
+    for (const hex of ["#fff", "#3182f6ff", "3182f6", "#3182g6"]) {
+      expect(hexToRgb(hex)).toBeNull()
+    }
   })
 })

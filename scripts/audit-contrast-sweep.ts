@@ -490,7 +490,7 @@ export async function newMeasuringContext(
     // frame that happens to pass would hide a defect for good. The preview
     // whose animation did move its numbers declares its own reduced-motion
     // frame instead — a document saying what it renders, which is the same
-    // thing the collector honours in `:disabled` and `[aria-disabled]`.
+    // thing the collector honours in `:disabled` and `[aria-disabled="true"]`.
     // That declaration now has one form, the global reset the
     // preview-html-author prompt teaches (#394). It is not the pinning
     // rejected above: removing the animation measures each element's own

@@ -13,12 +13,23 @@
 // for `fail` and asked again when the numbers move: read the entry's OKLCH
 // definitions (`readDefinitions`), carry each measured hex into Oklab
 // (`hexToOklab`), and call it a token when the nearest one is within
-// `PUBLISHED_PAIR_TOLERANCE`. Run over the artifact CI uploads, never a local
-// sweep — the recorded tables describe CI's rendering.
+// `PUBLISHED_PAIR_TOLERANCE` — or, for a translucent token, when laying it over
+// what the collector laid it over lands within that distance (#551). Run over
+// the artifact CI uploads, never a local sweep — the recorded tables describe
+// CI's rendering.
 
+import { compositeOver } from "./contrast"
 import { keyOf } from "./contrast-report"
-import { deltaE, hexToOklab, parseOklch } from "./oklch-convert"
+import {
+  deltaE,
+  hexToOklab,
+  hexToRgb,
+  oklabToRgb,
+  parseOklch,
+  rgbToOklab,
+} from "./oklch-convert"
 import { frontmatterBlock, readDefinitions } from "./oklch-drift"
+import type { Rgb, Rgba } from "./contrast"
 import type { Oklab } from "./oklch-convert"
 import type { DedupedFinding, Finding, Judgement } from "./contrast-report"
 
@@ -33,7 +44,10 @@ import type { DedupedFinding, Finding, Judgement } from "./contrast-report"
  *
  * The `fail` readings did NOT leave that band empty when they were first
  * classified (2026-10-16); the classifier prints how many sit in it beside
- * each table, on its `readings …` line. It is kept
+ * each table, on its `readings …` line — distances to opaque tokens as
+ * `nearest token in`, and, for the readings no token matches directly,
+ * translucent composites as `nearest composite there` (`toleranceBand`).
+ * It is kept
  * anyway — #397 fixed it — and it errs in the same direction as compositing
  * does (one of the two errors the document's caveat names): a stricter match
  * counts fewer pairs as published.
@@ -95,8 +109,22 @@ export interface PaletteEntry {
   observed: boolean
 }
 
+/**
+ * A translucent token, held as the paint the browser lays down for it: 8-bit
+ * channels and an alpha in 255ths. Never matched to a reading directly — a
+ * reading is already composited onto what is behind it — only composited the
+ * way the collector composites one (see `pairClass`).
+ */
+export interface TranslucentEntry {
+  name: string
+  paint: Rgba
+  observed: boolean
+}
+
 export interface Palette {
+  /** Opaque tokens, matched to a reading directly. */
   entries: Array<PaletteEntry>
+  translucent: Array<TranslucentEntry>
   /** Definitions `parseOklch` could not read — said, not dropped. */
   unreadable: Array<string>
 }
@@ -113,9 +141,9 @@ const DEFINITION = /^\s+([a-z][\w-]*):\s+oklch\(/
  * function reads every `name: oklch(` line in the frontmatter, which includes
  * a `gradients:` row's first stop — not a colour the entry declared — so only
  * names whose first definition sits in the `colors:` map are kept. A
- * translucent token is left out too: a measured reading is already composited
- * onto what is behind it, so matching its opaque colour to `oklch(0 0 0 / 5%)`
- * would call a shadow tint "black".
+ * translucent token goes to `translucent`, not `entries`: a measured reading is
+ * already composited onto what is behind it, so matching it to
+ * `oklch(0 0 0 / 5%)` directly would call a shadow tint "black".
  */
 export function paletteOf(
   markdown: string,
@@ -162,6 +190,7 @@ export function paletteOf(
   }
 
   const entries: Array<PaletteEntry> = []
+  const translucent: Array<TranslucentEntry> = []
   const unreadable: Array<string> = []
   for (const [name, value] of readDefinitions(markdown)) {
     const place = placeOf.get(name)
@@ -171,16 +200,28 @@ export function paletteOf(
       unreadable.push(name)
       continue
     }
-    if (parsed.alpha !== null && parsed.alpha < 1) continue
-    entries.push({
-      name,
-      lab: parsed.lab,
-      observed:
-        observedTokens.includes(name) ||
-        (place.group !== null && observedGroups.includes(place.group)),
-    })
+    const seen =
+      observedTokens.includes(name) ||
+      (place.group !== null && observedGroups.includes(place.group))
+    if (parsed.alpha !== null && parsed.alpha < 1) {
+      // Fully transparent paint leaves whatever is behind it unchanged; it
+      // would "explain" every reading that is already a token.
+      const a = Math.round(parsed.alpha * 255) / 255
+      if (a > 0) {
+        const { r, g, b } = paintOf(parsed.lab)
+        translucent.push({ name, paint: { r, g, b, a }, observed: seen })
+      }
+      continue
+    }
+    entries.push({ name, lab: parsed.lab, observed: seen })
   }
-  return { entries, unreadable }
+  return { entries, translucent, unreadable }
+}
+
+/** A token's colour as the browser paints it: 8-bit sRGB channels. */
+function paintOf(lab: Oklab): Rgb {
+  const { r, g, b } = oklabToRgb(lab)
+  return { r: Math.round(r), g: Math.round(g), b: Math.round(b) }
 }
 
 /** Distance from a measured colour to the nearest token; Infinity for none. */
@@ -191,30 +232,42 @@ function nearestDistance(hex: string, palette: Palette): number {
 }
 
 /**
- * How many colour readings of one verdict's rows there are, and how many have
- * their nearest token at a distance in `(lo, hi]`.
+ * How many colour readings of one verdict's rows there are, how many have
+ * their nearest token at a distance in `(lo, hi]`, and how many of the
+ * readings no token matches directly have their nearest translucent composite
+ * (the candidates `pairClass` tries, with `lo` as the tolerance — so "no
+ * token matches directly" means the same thing as `inBand`'s lower edge) in
+ * that band.
  *
  * The tolerance was read off an empty `(0.002, 0.005]` band, and whether that
  * band stays empty is the thing to look at again when the numbers move — the
- * CLI prints the count beside the tables, and this is how it is produced.
+ * CLI prints the counts beside the tables, and this is how they are produced.
+ * The composite count is separate because it is a second way to match (#551):
+ * readings bunching just outside it would be a reason to look again too.
  */
 export function toleranceBand(
   rows: Array<DedupedFinding>,
   paletteFor: (slug: string) => Palette,
   verdict: Judgement,
   [lo, hi]: [number, number]
-): { readings: number; inBand: number } {
+): { readings: number; inBand: number; compositeInBand: number } {
   let readings = 0
   let inBand = 0
+  let compositeInBand = 0
+  const within = (d: number): boolean => d > lo && d <= hi
   for (const r of rows) {
     if (r.verdict !== verdict) continue
+    const palette = paletteFor(r.slug)
     for (const hex of [r.fg, r.bg]) {
       readings++
-      const d = nearestDistance(hex, paletteFor(r.slug))
-      if (d > lo && d <= hi) inBand++
+      if (within(nearestDistance(hex, palette))) inBand++
+    }
+    const read = readPair(r.fg, r.bg, palette, lo)
+    for (const side of [read.fg, read.bg]) {
+      if (side.direct === null && within(side.composite.any)) compositeInBand++
     }
   }
-  return { readings, inBand }
+  return { readings, inBand, compositeInBand }
 }
 
 /**
@@ -241,11 +294,145 @@ export function readingClass(
 export type PairClass =
   "both-published" | "observed-pair" | "one-token" | "no-token"
 
+type ReadingClass = ReturnType<typeof readingClass>
+
+type Base = { rgb: Rgb; observed: boolean }
+
+// Every opaque token as paint, once per palette rather than once per row: a
+// background reading is tried against all of them.
+const basesOf = new WeakMap<Palette, Array<Base>>()
+function opaqueBases(palette: Palette): Array<Base> {
+  let bases = basesOf.get(palette)
+  if (bases === undefined) {
+    bases = palette.entries.map((e) => ({
+      rgb: paintOf(e.lab),
+      observed: e.observed,
+    }))
+    basesOf.set(palette, bases)
+  }
+  return bases
+}
+
+/** Published over observed over nothing — the more the brand vouches for. */
+const strongerClass = (x: ReadingClass, y: ReadingClass): ReadingClass =>
+  x === "published" || y === "published" ? "published" : (x ?? y)
+
+/**
+ * How close a reading comes to one of the entry's translucent tokens laid
+ * over one of `bases`, composited the way the collector does it
+ * (`compositeOver`): the nearest such composite of any kind, and the nearest
+ * whose token and base are both published. Infinity when there is none.
+ *
+ * The composite is compared in the reals, NOT rounded with `toHex` first. The
+ * reading was already rounded once, after an alpha the collector recovered by
+ * averaging; rounding the prediction too stacks a second half-unit on that.
+ * When this was written (2026-10-16, CI run 38463871450) that pushed 9 of
+ * wanted's `fg-secondary`·`fg-tertiary` text rows past the tolerance the
+ * unrounded composite keeps them inside — a one-off check, not something the
+ * classifier prints.
+ */
+function compositeDistance(
+  hex: string,
+  palette: Palette,
+  bases: Array<Base>
+): CompositeDistance {
+  const lab = hexToOklab(hex)?.lab
+  if (lab === undefined) return NO_COMPOSITE
+  let any = Infinity
+  let published = Infinity
+  for (const t of palette.translucent) {
+    for (const base of bases) {
+      const d = deltaE(lab, rgbToOklab(compositeOver(t.paint, base.rgb)))
+      any = Math.min(any, d)
+      if (!t.observed && !base.observed) published = Math.min(published, d)
+    }
+  }
+  return { any, published }
+}
+
+interface CompositeDistance {
+  any: number
+  published: number
+}
+
+const NO_COMPOSITE: CompositeDistance = { any: Infinity, published: Infinity }
+
+/** A composite's class: published if a published one is close enough. */
+const compositeClass = (
+  d: CompositeDistance,
+  tolerance: number
+): ReadingClass =>
+  d.published <= tolerance
+    ? "published"
+    : d.any <= tolerance
+      ? "observed"
+      : null
+
+interface Reading {
+  /** Matched to an opaque token directly. */
+  direct: ReadingClass
+  /** Nearest composites; not looked for when `direct` is already published. */
+  composite: CompositeDistance
+  class: ReadingClass
+}
+
+/**
+ * Both readings of a pair, by the rule `pairClass` describes. The background
+ * is read first because the front reading's composite rests on it.
+ */
+function readPair(
+  fg: string,
+  bg: string,
+  palette: Palette,
+  tolerance: number
+): { fg: Reading; bg: Reading } {
+  const read = (hex: string, bases: () => Array<Base>): Reading => {
+    const direct = readingClass(hex, palette, tolerance)
+    if (direct === "published") {
+      return { direct, composite: NO_COMPOSITE, class: direct }
+    }
+    const composite = compositeDistance(hex, palette, bases())
+    return {
+      direct,
+      composite,
+      class: strongerClass(direct, compositeClass(composite, tolerance)),
+    }
+  }
+  const back = read(bg, () => opaqueBases(palette))
+  const bgRgb = hexToRgb(bg)
+  const front = read(fg, () =>
+    back.class === null || bgRgb === null
+      ? []
+      : [{ rgb: bgRgb, observed: back.class === "observed" }]
+  )
+  return { fg: front, bg: back }
+}
+
 /**
  * Four ways a pair can sit against the entry's palette. Only the first says
  * a fix cannot keep both published values as they are; `observed-pair` is
  * kept apart so a reader can put the observed values on whichever side they
  * believe.
+ *
+ * A reading is a token when it matches one directly, or when it is one of the
+ * entry's translucent tokens composited over what the collector composited it
+ * over (#551). For the pair's front reading — text, a border, or a non-text
+ * row's fill (the collector — `evaluateText`, `evaluateNonText` — composites
+ * each over the colour it reports as `bg`) — that is the pair's own background, and only when that background
+ * is itself a token: a published translucent over the preview's own fill is
+ * not a colour the brand chose. For the background it is the layer beneath,
+ * which the reading does not name, so any opaque token of the entry.
+ *
+ * The two sides differ because what is known differs. The collector
+ * composites the front reading over the backdrop it recorded, so its base is
+ * that reading and nothing else — any other token would be a colour the collector
+ * could not have produced, and trying them all only adds chances to land near
+ * a grey by accident. A background's base is not recorded, so every opaque
+ * token is a candidate; that is a wider net, and it was sized: shifting every
+ * translucent token's alpha by ±0.03 or ±0.06, which keeps the same token ×
+ * base combinations but breaks the real ones, moved at most 4 `fail`
+ * non-text rows into a token class where the true alphas moved 63 (CI run
+ * 38463871450, a one-off check recorded in the baseline document).
  */
 export function pairClass(
   fg: string,
@@ -253,8 +440,9 @@ export function pairClass(
   palette: Palette,
   tolerance = PUBLISHED_PAIR_TOLERANCE
 ): PairClass {
-  const a = readingClass(fg, palette, tolerance)
-  const b = readingClass(bg, palette, tolerance)
+  const read = readPair(fg, bg, palette, tolerance)
+  const a = read.fg.class
+  const b = read.bg.class
   if (a === null && b === null) return "no-token"
   if (a === null || b === null) return "one-token"
   return a === "published" && b === "published"
