@@ -421,10 +421,10 @@ export const BASELINE_TABLE = `\
 | gmarket | dark | non-text | 11 | 15 | 4 | 0 | 3 |
 | gmarket | light | text | 131 | 207 | 44 | 0 | 9 |
 | gmarket | light | non-text | 11 | 15 | 6 | 0 | 3 |
-| greeting | dark | text | 204 | 483 | 28 | 26 | 0 |
-| greeting | dark | non-text | 99 | 156 | 59 | 0 | 0 |
-| greeting | light | text | 205 | 484 | 61 | 9 | 0 |
-| greeting | light | non-text | 99 | 156 | 77 | 4 | 0 |
+| greeting | dark | text | 200 | 479 | 24 | 26 | 0 |
+| greeting | dark | non-text | 95 | 152 | 55 | 0 | 0 |
+| greeting | light | text | 200 | 479 | 56 | 9 | 0 |
+| greeting | light | non-text | 95 | 152 | 73 | 4 | 0 |
 | gs-retail | dark | text | 77 | 144 | 6 | 0 | 0 |
 | gs-retail | dark | non-text | 16 | 32 | 9 | 0 | 0 |
 | gs-retail | light | text | 77 | 144 | 16 | 0 | 0 |
