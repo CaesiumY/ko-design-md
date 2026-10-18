@@ -534,20 +534,24 @@
     --icon-neutral-heavier:rgba(255,255,255,.90);
 
     /* ── Fills (white-alpha on dark) ───────────────────────────────────────── */
-    /* md 토큰 아님 — 상류 beta `fill-neutral-light` 다크 = white-8(#552). */
+    /* md 토큰 아님 — 상류 bezier-tokens 0.6.0 beta 다크 사다리: `color-fill-neutral-light` white-8,
+       `color-fill-neutral` white-12, `-heavy` white-20, `-heavier` white-40, `-heaviest` white-100
+       (라이트 쪽 black-5·8·15·40·85 는 이미 상류와 같다). md 에 실리거나 상류가 바뀌면 대비를 다시 잰다(#552). */
     --fill-neutral-light:rgba(255,255,255,.08);
-    --fill-neutral-normal:rgba(255,255,255,.08);
-    --fill-neutral-heavy:rgba(255,255,255,.15);
+    --fill-neutral-normal:rgba(255,255,255,.12);
+    --fill-neutral-heavy:rgba(255,255,255,.20);
     --fill-neutral-heavier:rgba(255,255,255,.40);
-    --fill-neutral-heaviest:rgba(255,255,255,.90);
+    --fill-neutral-heaviest:#ffffff;
     --fill-grey:var(--c-grey-800);
     --fill-grey-light:var(--c-grey-750);
     --fill-grey-heavy:var(--c-grey-850);
 
     /* accent fills: lift link/icon text to 300-tier.
        md 토큰 아님 — 상류 bezier-tokens 0.6.0 beta 다크 사다리: 라이트의 20% 틴트(`fill-accent-*-heavy`)는
-       다크에서 {hue}-300 30%, 라이트의 10%(`fill-accent-blue`)는 blue-300 18%, hover 는
-       `fill-accent-blue-heavy-hovered`(#8184ff 30%). md 에 실리거나 상류가 바뀌면 대비를 다시 잰다(#552). */
+       다크에서 `color-{hue}-300-30`, 라이트의 10%(`fill-accent-blue`)는 `color-blue-300-18`, hover 는
+       `fill-accent-blue-heavy-hovered`(#8184ff4d). 이 반투명 값들의 기준 RGB 는 md 의 300 색과 다르다
+       (blue 는 #8082ff 가 아니라 #6b6eff) — md 값의 30% 로 다시 계산하지 말 것.
+       md 에 실리거나 상류가 바뀌면 대비를 다시 잰다(#552). */
     --txt-accent-blue:var(--c-blue-300);
     --fill-accent-blue:rgba(107,110,255,.30);   --fill-accent-blue-normal:rgba(107,110,255,.18);
     --fill-accent-cobalt:rgba(92,173,239,.30);
