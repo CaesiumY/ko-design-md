@@ -219,10 +219,10 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | class101 | dark | non-text | 16 | 18 | 7 | 1 | 4 |
 | class101 | light | text | 97 | 160 | 38 | 2 | 7 |
 | class101 | light | non-text | 15 | 18 | 7 | 3 | 3 |
-| codeit | dark | text | 150 | 229 | 4 | 1 | 0 |
-| codeit | dark | non-text | 31 | 42 | 18 | 4 | 0 |
-| codeit | light | text | 150 | 229 | 44 | 1 | 0 |
-| codeit | light | non-text | 31 | 42 | 19 | 1 | 0 |
+| codeit | dark | text | 147 | 224 | 1 | 1 | 0 |
+| codeit | dark | non-text | 27 | 38 | 14 | 4 | 0 |
+| codeit | light | text | 147 | 224 | 41 | 1 | 0 |
+| codeit | light | non-text | 27 | 38 | 15 | 1 | 0 |
 | gmarket | dark | text | 131 | 207 | 20 | 0 | 9 |
 | gmarket | dark | non-text | 11 | 15 | 4 | 0 | 3 |
 | gmarket | light | text | 131 | 207 | 44 | 0 | 9 |
@@ -503,7 +503,7 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 가를 수 있다 — `readDefinitions` 로 발행 OKLCH 를 읽고 측정 hex 를 `hexToOklab` 으로
 옮겨 `deltaE` 로 잰다. 그 절차가 `src/lib/contrast-pairs.ts` 이고, 이 절과 다음 절의 표는
 **CI 의 `contrast` 잡이 올린 아티팩트**에 그것을 돌린 출력이다 — 로컬 sweep 으로 답하면 기록된
-표가 서술하는 것과 다른 렌더에 대해 답하게 된다. 입력은 run `39116068802`(#568 의 head `4478bf6` — bezier 프리뷰 수정을 실은 재집계)다.
+표가 서술하는 것과 다른 렌더에 대해 답하게 된다. 입력은 run `39118711978`(#572 의 head `7aa686e` — codeit 프리뷰 수정을 실은 재집계)다.
 그 뒤에 더해진 항목은 다음 재집계 때 두 표에 들어가고, 그전까지는 표에 없다(아래 「게이트는 이것을 어떻게 다루나」). 미달과
 경계선이 모두 0 인 항목도 표에 없다.
 
@@ -653,7 +653,7 @@ warn 만)이라 갱신이 강제되지 않고, 두 분류표의 비텍스트 행
 caveat 의 합성 오차와 같은 방향이다. 그 구간의 읽기 수와 0.005 에서의 `both-published` 는 위 명령이 표와 함께
 `readings …` 줄로 낸다.
 
-**결과: `fail` 1889행 중 1270행이 두 색 모두 발행 토큰인 쌍이다.**
+**결과: `fail` 1875행 중 1270행이 두 색 모두 발행 토큰인 쌍이다.**
 
 **이 수도 위 절과 같은 두 방향의 오차를 진다.** 겹친 반투명 층·`opacity` 가 낀 표면은 입력이 모두 발행
 토큰이어도 `one-token`·`no-token` 칸에 들어가고(발행 쌍을 적게 센다), 우연히 토큰이나 합성 근처에 떨어진
@@ -670,8 +670,8 @@ caveat 의 합성 오차와 같은 방향이다. 그 구간의 읽기 수와 0.0
 | bezier | non-text | 12 | 0 | 17 | 0 | 29 |
 | class101 | text | 41 | 0 | 17 | 8 | 66 |
 | class101 | non-text | 7 | 0 | 1 | 6 | 14 |
-| codeit | text | 19 | 0 | 29 | 0 | 48 |
-| codeit | non-text | 15 | 0 | 20 | 2 | 37 |
+| codeit | text | 19 | 0 | 23 | 0 | 42 |
+| codeit | non-text | 15 | 0 | 14 | 0 | 29 |
 | gmarket | text | 42 | 0 | 1 | 21 | 64 |
 | gmarket | non-text | 6 | 0 | 0 | 4 | 10 |
 | greeting | text | 61 | 0 | 28 | 0 | 89 |
@@ -713,8 +713,9 @@ caveat 의 합성 오차와 같은 방향이다. 그 구간의 읽기 수와 0.0
 | zigbang | non-text | 33 | 0 | 0 | 0 | 33 |
 
 **어느 슬러그부터 (2026-10-18 재집계 기준).** 고칠 수 있는 칸(`one-token`·`no-token`)이 큰 쪽은
-텍스트에서는 bezier 이고 codeit · greeting 이 뒤따른다. 단 bezier 의 그 칸은 #568 에서 행마다 처리를 마친 뒤의
-남은 행이다. 쓰인 색이 상류 발행값인데도 그 칸에 남는 이유는 둘이다 — 라이트 `{hue}-400` 20% 틴트·다크 `{hue}-300` 30%
+텍스트에서는 bezier 이고 greeting · class101 이 뒤따른다. 단 bezier(#568)와 codeit(#572)의 그 칸은 행마다 처리를 마친
+뒤의 남은 행이다. codeit 은 md 가 글자 위계 불투명도 램프(`gray-100` 60%·50%)를 본문 표에만 두어서다(#571).
+bezier 는 쓰인 색이 상류 발행값인데도 그 칸에 남는데, 이유는 둘이다 — 라이트 `{hue}-400` 20% 틴트·다크 `{hue}-300` 30%
 틴트·`white-40`·`pink-300` 같은 상류 값이 md 에 없거나, 반투명 층이 두 겹 쌓여(`black-5` 바닥 위 `black-40` 글자 등) 한 겹만
 합성해 보는 분류기가 풀지 못해서다. md 에 실리면(#569) 앞의 행들은 옮겨 간다. 비텍스트에서는 greeting 이 가장 크고, samsung-one-ui
 비텍스트는 미달 전부가 이 두 칸이다. 반대로 socar · zigbang · remember · kyobobook 텍스트 · seed-design 텍스트의 미달은 거의 전부
