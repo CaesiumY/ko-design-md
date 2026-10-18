@@ -255,9 +255,9 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | likelion | dark | non-text | 22 | 22 | 15 | 0 | 0 |
 | likelion | light | text | 94 | 196 | 38 | 0 | 0 |
 | likelion | light | non-text | 22 | 22 | 15 | 7 | 0 |
-| line-design-system | dark | text | 107 | 228 | 13 | 0 | 14 |
+| line-design-system | dark | text | 103 | 224 | 11 | 0 | 14 |
 | line-design-system | dark | non-text | 41 | 55 | 16 | 0 | 3 |
-| line-design-system | light | text | 107 | 228 | 48 | 12 | 14 |
+| line-design-system | light | text | 103 | 224 | 43 | 12 | 14 |
 | line-design-system | light | non-text | 42 | 56 | 34 | 0 | 3 |
 | nol | dark | text | 198 | 420 | 0 | 0 | 11 |
 | nol | dark | non-text | 17 | 19 | 3 | 4 | 1 |
@@ -503,7 +503,7 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 가를 수 있다 — `readDefinitions` 로 발행 OKLCH 를 읽고 측정 hex 를 `hexToOklab` 으로
 옮겨 `deltaE` 로 잰다. 그 절차가 `src/lib/contrast-pairs.ts` 이고, 이 절과 다음 절의 표는
 **CI 의 `contrast` 잡이 올린 아티팩트**에 그것을 돌린 출력이다 — 로컬 sweep 으로 답하면 기록된
-표가 서술하는 것과 다른 렌더에 대해 답하게 된다. 입력은 run `39152070937`(#577 의 head `d23d1bd` — class101 프리뷰 수정을 실은 재집계)다.
+표가 서술하는 것과 다른 렌더에 대해 답하게 된다. 입력은 run `39157002588`(#579 의 head `b0f24ee` — line-design-system 프리뷰 수정을 실은 재집계)다.
 그 뒤에 더해진 항목은 다음 재집계 때 두 표에 들어가고, 그전까지는 표에 없다(아래 「게이트는 이것을 어떻게 다루나」). 미달과
 경계선이 모두 0 인 항목도 표에 없다.
 
@@ -653,7 +653,7 @@ warn 만)이라 갱신이 강제되지 않고, 두 분류표의 비텍스트 행
 caveat 의 합성 오차와 같은 방향이다. 그 구간의 읽기 수와 0.005 에서의 `both-published` 는 위 명령이 표와 함께
 `readings …` 줄로 낸다.
 
-**결과: `fail` 1848행 중 1261행이 두 색 모두 발행 토큰인 쌍이다.**
+**결과: `fail` 1841행 중 1260행이 두 색 모두 발행 토큰인 쌍이다.**
 
 **이 수도 위 절과 같은 두 방향의 오차를 진다.** 겹친 반투명 층·`opacity` 가 낀 표면은 입력이 모두 발행
 토큰이어도 `one-token`·`no-token` 칸에 들어가고(발행 쌍을 적게 센다), 우연히 토큰이나 합성 근처에 떨어진
@@ -688,7 +688,7 @@ caveat 의 합성 오차와 같은 방향이다. 그 구간의 읽기 수와 0.0
 | lg-electronics | non-text | 5 | 20 | 0 | 0 | 25 |
 | likelion | text | 36 | 0 | 2 | 4 | 42 |
 | likelion | non-text | 14 | 0 | 1 | 15 | 30 |
-| line-design-system | text | 38 | 0 | 10 | 13 | 61 |
+| line-design-system | text | 37 | 0 | 6 | 11 | 54 |
 | line-design-system | non-text | 34 | 0 | 0 | 16 | 50 |
 | nol | text | 0 | 9 | 0 | 0 | 9 |
 | nol | non-text | 2 | 1 | 3 | 0 | 6 |
@@ -713,7 +713,7 @@ caveat 의 합성 오차와 같은 방향이다. 그 구간의 읽기 수와 0.0
 | zigbang | non-text | 33 | 0 | 0 | 0 | 33 |
 
 **어느 슬러그부터 (2026-10-19 재집계 기준).** 고칠 수 있는 칸(`one-token`·`no-token`)이 큰 쪽은
-텍스트에서는 bezier 이고 greeting, 그다음 line-design-system · codeit 이 뒤따른다. 단 #550 의 슬러그 티켓으로 이미 처리한 슬러그는, 텍스트
+텍스트에서는 bezier 이고 greeting · codeit, 그다음 wanted · gmarket 이 뒤따른다. 단 #550 의 슬러그 티켓으로 이미 처리한 슬러그는, 텍스트
 칸이 행마다 처리를 마친 뒤의 남은 행일 수 있다 — 무엇으로 처리했는지는 그 티켓의 PR 본문에 있고, 이 문단에는 쌓지
 않는다(비텍스트 칸은 그 티켓들이 따로 다루지 않았다 — 선언으로 함께 빠진 행은 있다). 비텍스트에서는 greeting 이 가장 크고, samsung-one-ui
 비텍스트는 미달 전부가 이 두 칸이다. 반대로 socar · zigbang · remember · kyobobook 텍스트 · seed-design 텍스트의 미달은 거의 전부
