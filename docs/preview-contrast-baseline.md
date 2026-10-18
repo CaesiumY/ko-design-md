@@ -714,7 +714,9 @@ caveat 의 합성 오차와 같은 방향이다. 그 구간의 읽기 수와 0.0
 
 **어느 슬러그부터 (2026-10-18 재집계 기준).** 고칠 수 있는 칸(`one-token`·`no-token`)이 큰 쪽은
 텍스트에서는 bezier 이고 codeit · greeting 이 뒤따른다. 단 bezier 의 그 칸은 #568 에서 행마다 처리를 마친 뒤의
-남은 행이다 — 상류 값으로 맞춘 다크 틴트·`white-40` 이 md 에 없어 분류기가 발행으로 못 알아볼 뿐이고, md 에 실리면(#569) 옮겨 간다. 비텍스트에서는 greeting 이 가장 크고, samsung-one-ui
+남은 행이다. 쓰인 색이 상류 발행값인데도 그 칸에 남는 이유는 둘이다 — 라이트 `{hue}-400` 20% 틴트·다크 `{hue}-300` 30%
+틴트·`white-40`·`pink-300` 같은 상류 값이 md 에 없거나, 반투명 층이 두 겹 쌓여(`black-40` 위 `black-5` 등) 한 겹만
+합성해 보는 분류기가 풀지 못해서다. md 에 실리면(#569) 앞의 행들은 옮겨 간다. 비텍스트에서는 greeting 이 가장 크고, samsung-one-ui
 비텍스트는 미달 전부가 이 두 칸이다. 반대로 socar · zigbang · remember · kyobobook 텍스트 · seed-design 텍스트의 미달은 거의 전부
 `both-published` 라, 고치지 않고 두는 대상이다(아래 「미달을 고칠 때」). lg-electronics 와 nol 은
 미달 대부분이 `observed-pair` 다. 위 caveat 때문에, 고칠 수 있는 칸에서 시작하더라도 행마다 합성 경로를 먼저 본다.
