@@ -9,6 +9,7 @@ import {
 } from "./-components/detail-tabs"
 import { DownloadButton } from "./-components/download-button"
 import { InlineCopyButton } from "./-components/inline-copy-button"
+import { PasteGuide } from "./-components/paste-guide"
 import { PreviewFrame, PreviewUnavailable } from "./-components/preview-frame"
 import { PreviewThemeToggle } from "./-components/preview-theme-toggle"
 import { RawDesignMd } from "./-components/raw-design-md"
@@ -172,6 +173,7 @@ export function ServiceDetailLayout({
         </p>
         <CopyButton raw={doc.raw} slug={doc.frontmatter.slug} />
         <DownloadButton raw={doc.raw} slug={doc.frontmatter.slug} />
+        <PasteGuide />
         <div
           className="mt-6 border-t pt-5"
           style={{ borderColor: "var(--rule-strong)" }}

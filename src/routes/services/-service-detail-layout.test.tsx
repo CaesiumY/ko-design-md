@@ -122,4 +122,30 @@ describe("ServiceDetailLayout", () => {
     ).toBeTruthy()
     expect(container.querySelector('a[href*="llms.txt"]')).toBeNull()
   })
+
+  // The paste guide explains the two buttons, so it sits right under them.
+  it("puts the paste guide after the download action", () => {
+    render(
+      <ServiceDetailLayout
+        doc={doc}
+        filename="toss.md"
+        onTabChange={() => {}}
+        onThemeChange={() => {}}
+        previewAvailable={false}
+        previewTheme="dark"
+        searchTab="preview"
+        shikiHtml="<pre><code># Toss</code></pre>"
+      />
+    )
+
+    const downloadAction = screen.getByRole("button", {
+      name: /design\.md 다운로드/i,
+    })
+    const guide = screen.getByText("어떻게 붙여 넣나요?")
+
+    expect(
+      downloadAction.compareDocumentPosition(guide) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy()
+  })
 })
