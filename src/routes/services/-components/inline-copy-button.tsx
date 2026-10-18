@@ -8,9 +8,8 @@ interface Props {
   filename: string
   /**
    * Which copy this is. Required and caller-supplied because this component is
-   * used more than once on the same page for different payloads - the md, the
-   * token sidecar, the handoff prompt - and a shared default would merge them
-   * into one number.
+   * used more than once on the same page for different payloads - the md and the
+   * token sidecar - and a shared default would merge them into one number.
    */
   surface: CopySurface
   slug: string
