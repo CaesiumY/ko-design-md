@@ -413,10 +413,10 @@ export const BASELINE_TABLE = `\
 | class101 | dark | non-text | 16 | 18 | 7 | 1 | 4 |
 | class101 | light | text | 97 | 160 | 38 | 2 | 7 |
 | class101 | light | non-text | 15 | 18 | 7 | 3 | 3 |
-| codeit | dark | text | 150 | 229 | 4 | 1 | 0 |
-| codeit | dark | non-text | 31 | 42 | 18 | 4 | 0 |
-| codeit | light | text | 150 | 229 | 44 | 1 | 0 |
-| codeit | light | non-text | 31 | 42 | 19 | 1 | 0 |
+| codeit | dark | text | 147 | 224 | 1 | 1 | 0 |
+| codeit | dark | non-text | 27 | 38 | 14 | 4 | 0 |
+| codeit | light | text | 147 | 224 | 41 | 1 | 0 |
+| codeit | light | non-text | 27 | 38 | 15 | 1 | 0 |
 | gmarket | dark | text | 131 | 207 | 20 | 0 | 9 |
 | gmarket | dark | non-text | 11 | 15 | 4 | 0 | 3 |
 | gmarket | light | text | 131 | 207 | 44 | 0 | 9 |
