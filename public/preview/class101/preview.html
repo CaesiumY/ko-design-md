@@ -707,6 +707,7 @@
       color: var(--c101-on-primary);
       cursor: pointer;
     }
+    /* .btn-primary:hover 와 같은 섞기지만 아이콘만이라 비텍스트 기준(3:1)을 이미 넘는다(4.00) — 84% 로 맞추지 않는다. */
     .fab:hover { background: color-mix(in oklab, var(--c101-primary) 90%, black); }
     .bottombar {
       display: flex;
@@ -1446,6 +1447,7 @@
       color: var(--c101-on-primary);
       cursor: pointer;
     }
+/* .btn-primary:hover 와 같은 섞기지만 아이콘만이라 비텍스트 기준(3:1)을 이미 넘는다(4.00) — 84% 로 맞추지 않는다. */
 [data-theme="dark"] .fab:hover { background: color-mix(in oklab, var(--c101-primary) 90%, black); }
 [data-theme="dark"] .bottombar {
       display: flex;
