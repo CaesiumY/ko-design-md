@@ -1648,7 +1648,7 @@
       border-radius: 50%;
       background: var(--ldsg-role-negative-dark);
     }
-/* 다크 보강색(role-negative-dark) 대신 발행 role-negative — 보강색 위 흰 숫자는 3.44, 발행값은 4.21(라이트와 같음). 다크 토큰이 생기면(md Known Gaps 의 「다크 모드」) 다시 잰다. 점 배지(.badge.dot)는 글자가 없어 보강색을 그대로 둔다. */
+/* 다크 보강색(role-negative-dark) 대신 발행 role-negative — 보강색 위 흰 숫자는 3.44, 발행값은 4.21(라이트와 같음). 다크 토큰이 생기면(md Known Gaps 의 「다크 모드」) 다시 잰다. 하단 탭 아이콘 배지(다크 템플릿의 인라인 span)도 같은 이유로 발행값이다. 점 배지(.badge.dot)는 글자가 없어 보강색을 그대로 둔다. */
 [data-theme="dark"] .badge.num {
       min-width: 18px; height: 18px;
       padding: 0 5px;
@@ -2745,7 +2745,8 @@
               <p style="font-size: 13px; line-height: 1.5; color: var(--d-ink-600); text-align: center; margin: 0 0 16px;" class="korean">나가기를 하면 채팅 내용이 모두 삭제돼요.</p>
               <div style="display: grid; gap: 8px;">
                 <button class="btn contained" style="height: 40px; width: 100%; min-width: 0;">나가기</button>
-                <button class="btn ghost" style="height: 40px; width: 100%; min-width: 0; color: var(--d-ink-600);">취소</button>
+                <!-- md 토큰 아님 · 파생색 — d-ink-600 은 hover(md 의 70% 투명도)에서 4.02 라 d-ink-700(5.44). 다크 회색 사다리가 바뀌면 다시 잰다. -->
+                <button class="btn ghost" style="height: 40px; width: 100%; min-width: 0; color: var(--d-ink-700);">취소</button>
               </div>
             </div>
           </div></template>
