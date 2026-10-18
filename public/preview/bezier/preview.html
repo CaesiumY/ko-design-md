@@ -515,7 +515,9 @@
     --c-olive-300:#b7c427; --c-olive-400:#a9b110;
     --c-teal-300:#40d3c5; --c-teal-400:#09b2ac; --c-teal-500:#068e95;
     --c-navy-400:#424fab; --c-purple-400:#8e57e7; --c-purple-500:#6735b6;
-    --c-pink-400:#d64bb5; --c-pink-500:#b0369e;
+    /* md 토큰 아님 — 상류 bezier-tokens 0.6.0 beta `color-pink-300`(다크 `text-accent-pink`). 다크 분홍 틴트 위 글자에만 쓴다.
+       md 에 실리거나 상류가 바뀌면 대비를 다시 잰다(#552). */
+    --c-pink-300:#ec6fd3; --c-pink-400:#d64bb5; --c-pink-500:#b0369e;
 
     --c-grey-25:#fdfdff; --c-grey-50:#fbfbfb; --c-grey-100:#f7f7f8;
     --c-grey-200:#efeff0; --c-grey-300:#e2e2e4; --c-grey-400:#cfcfd1;
@@ -1334,7 +1336,7 @@
             <span class="tag" style="background:var(--fill-accent-blue);color:var(--c-blue-400)">VIP</span><template data-theme-variant="dark" data-theme-op="swap"><span class="tag" style="background:var(--fill-accent-blue);color:var(--c-blue-300)">VIP</span></template>
             <span class="tag" style="background:var(--fill-accent-green);color:var(--c-green-400)">결제완료</span><template data-theme-variant="dark" data-theme-op="swap"><span class="tag" style="background:var(--fill-accent-green);color:var(--c-green-300)">결제완료</span></template>
             <span class="tag" style="background:var(--fill-accent-orange);color:var(--c-orange-400)">대기중</span><template data-theme-variant="dark" data-theme-op="swap"><span class="tag" style="background:var(--fill-accent-orange);color:var(--c-orange-300)">대기중</span></template>
-            <span class="tag" style="background:var(--fill-accent-pink);color:var(--c-pink-400)">신규</span>
+            <span class="tag" style="background:var(--fill-accent-pink);color:var(--c-pink-400)">신규</span><template data-theme-variant="dark" data-theme-op="swap"><span class="tag" style="background:var(--fill-accent-pink);color:var(--c-pink-300)">신규</span></template>
           </div>
         </div>
         <div class="cell span2">
