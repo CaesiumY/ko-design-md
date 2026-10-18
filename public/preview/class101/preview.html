@@ -175,7 +175,8 @@
     .btn-md { height: 40px; padding: 0 16px; font-size: 14px; }
     .btn-sm { height: 32px; padding: 0 12px; font-size: 13px; }
     .btn-primary { background: var(--c101-primary); color: var(--c101-on-primary); }
-    .btn-primary:hover { background: color-mix(in oklab, var(--c101-primary) 90%, black); }
+    /* md 토큰 아님 · 파생색 — primary 를 검정 쪽으로 16% 옮긴 hover(흰 라벨 4.73:1, 90% 는 4.00). primary·onPrimary 가 바뀌면 다시 잰다. */
+    .btn-primary:hover { background: color-mix(in oklab, var(--c101-primary) 84%, black); }
     .btn-secondary { background: var(--c101-inverse-surface); color: var(--c101-on-inverse-surface); }
     .btn-secondary:hover { background: color-mix(in oklab, var(--c101-inverse-surface) 88%, var(--c101-bg)); }
     .btn-tertiary { background: var(--c101-surface1); color: var(--c101-onview1); }
@@ -924,7 +925,8 @@
 [data-theme="dark"] .btn-md { height: 40px; padding: 0 16px; font-size: 14px; }
 [data-theme="dark"] .btn-sm { height: 32px; padding: 0 12px; font-size: 13px; }
 [data-theme="dark"] .btn-primary { background: var(--c101-primary); color: var(--c101-on-primary); }
-[data-theme="dark"] .btn-primary:hover { background: color-mix(in oklab, var(--c101-primary) 90%, black); }
+/* md 토큰 아님 · 파생색 — primary 를 검정 쪽으로 16% 옮긴 hover(흰 라벨 4.73:1, 90% 는 4.00). primary·onPrimary 가 바뀌면 다시 잰다. */
+[data-theme="dark"] .btn-primary:hover { background: color-mix(in oklab, var(--c101-primary) 84%, black); }
 [data-theme="dark"] .btn-secondary { background: var(--c101-inverse-surface); color: var(--c101-on-inverse-surface); }
 [data-theme="dark"] .btn-secondary:hover { background: color-mix(in oklab, var(--c101-inverse-surface) 88%, var(--c101-bg)); }
 [data-theme="dark"] .btn-tertiary { background: var(--c101-surface1); color: var(--c101-onview1); }
