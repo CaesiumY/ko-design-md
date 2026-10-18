@@ -1648,7 +1648,7 @@
       border-radius: 50%;
       background: var(--ldsg-role-negative-dark);
     }
-/* 다크 보강색(role-negative-dark) 대신 발행 role-negative — 보강색 위 흰 숫자는 3.44, 발행값은 4.21(라이트와 같음). 다크 토큰이 생기면(md 573) 다시 잰다. */
+/* 다크 보강색(role-negative-dark) 대신 발행 role-negative — 보강색 위 흰 숫자는 3.44, 발행값은 4.21(라이트와 같음). 다크 토큰이 생기면(md Known Gaps 의 「다크 모드」) 다시 잰다. 점 배지(.badge.dot)는 글자가 없어 보강색을 그대로 둔다. */
 [data-theme="dark"] .badge.num {
       min-width: 18px; height: 18px;
       padding: 0 5px;
@@ -2452,7 +2452,7 @@
           <div>
             <div style="font-size: 11px; color: var(--shell-muted); margin-bottom: 6px;">M · 46px (기본)</div>
             <div class="stepper">
-              <button class="stepper-btn disabled">−</button>
+              <button class="stepper-btn disabled" aria-disabled="true">−</button>
               <input class="stepper-input" value="1" readonly="">
               <button class="stepper-btn">+</button>
             </div>
@@ -2709,7 +2709,7 @@
               <div class="pdmenu-item korean"><span class="avatar">김</span><span class="txt">프로필 보기</span><span class="right">›</span></div>
               <div class="pdmenu-divider"></div>
               <div class="pdmenu-item korean"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9M4.6 9a1.7 1.7 0 0 0-.3-1.9"></path></svg><span class="txt">설정</span></div>
-              <div class="pdmenu-item disabled korean"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18l6-6-6-6"></path></svg><span class="txt">관리자 (비활성)</span></div>
+              <div class="pdmenu-item disabled korean" aria-disabled="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18l6-6-6-6"></path></svg><span class="txt">관리자 (비활성)</span></div>
             </div>
           </div>
         </div>
