@@ -215,9 +215,9 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | bezier | dark | non-text | 42 | 45 | 11 | 4 | 1 |
 | bezier | light | text | 175 | 349 | 54 | 9 | 11 |
 | bezier | light | non-text | 41 | 44 | 18 | 9 | 1 |
-| class101 | dark | text | 97 | 160 | 28 | 1 | 7 |
+| class101 | dark | text | 97 | 160 | 23 | 1 | 7 |
 | class101 | dark | non-text | 16 | 18 | 7 | 1 | 4 |
-| class101 | light | text | 97 | 160 | 38 | 2 | 7 |
+| class101 | light | text | 97 | 160 | 33 | 2 | 7 |
 | class101 | light | non-text | 15 | 18 | 7 | 3 | 3 |
 | codeit | dark | text | 147 | 224 | 1 | 1 | 0 |
 | codeit | dark | non-text | 27 | 38 | 14 | 4 | 0 |
@@ -503,7 +503,7 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 가를 수 있다 — `readDefinitions` 로 발행 OKLCH 를 읽고 측정 hex 를 `hexToOklab` 으로
 옮겨 `deltaE` 로 잰다. 그 절차가 `src/lib/contrast-pairs.ts` 이고, 이 절과 다음 절의 표는
 **CI 의 `contrast` 잡이 올린 아티팩트**에 그것을 돌린 출력이다 — 로컬 sweep 으로 답하면 기록된
-표가 서술하는 것과 다른 렌더에 대해 답하게 된다. 입력은 run `39148352644`(#575 의 head `8b88b7d` — greeting 프리뷰 수정을 실은 재집계)다.
+표가 서술하는 것과 다른 렌더에 대해 답하게 된다. 입력은 run `39152070937`(#577 의 head `d23d1bd` — class101 프리뷰 수정을 실은 재집계)다.
 그 뒤에 더해진 항목은 다음 재집계 때 두 표에 들어가고, 그전까지는 표에 없다(아래 「게이트는 이것을 어떻게 다루나」). 미달과
 경계선이 모두 0 인 항목도 표에 없다.
 
@@ -653,7 +653,7 @@ warn 만)이라 갱신이 강제되지 않고, 두 분류표의 비텍스트 행
 caveat 의 합성 오차와 같은 방향이다. 그 구간의 읽기 수와 0.005 에서의 `both-published` 는 위 명령이 표와 함께
 `readings …` 줄로 낸다.
 
-**결과: `fail` 1858행 중 1261행이 두 색 모두 발행 토큰인 쌍이다.**
+**결과: `fail` 1848행 중 1261행이 두 색 모두 발행 토큰인 쌍이다.**
 
 **이 수도 위 절과 같은 두 방향의 오차를 진다.** 겹친 반투명 층·`opacity` 가 낀 표면은 입력이 모두 발행
 토큰이어도 `one-token`·`no-token` 칸에 들어가고(발행 쌍을 적게 센다), 우연히 토큰이나 합성 근처에 떨어진
@@ -668,7 +668,7 @@ caveat 의 합성 오차와 같은 방향이다. 그 구간의 읽기 수와 0.0
 | baemin | non-text | 1 | 0 | 0 | 3 | 4 |
 | bezier | text | 47 | 0 | 62 | 4 | 113 |
 | bezier | non-text | 12 | 0 | 17 | 0 | 29 |
-| class101 | text | 41 | 0 | 17 | 8 | 66 |
+| class101 | text | 41 | 0 | 7 | 8 | 56 |
 | class101 | non-text | 7 | 0 | 1 | 6 | 14 |
 | codeit | text | 19 | 0 | 23 | 0 | 42 |
 | codeit | non-text | 15 | 0 | 14 | 0 | 29 |
@@ -713,7 +713,7 @@ caveat 의 합성 오차와 같은 방향이다. 그 구간의 읽기 수와 0.0
 | zigbang | non-text | 33 | 0 | 0 | 0 | 33 |
 
 **어느 슬러그부터 (2026-10-19 재집계 기준).** 고칠 수 있는 칸(`one-token`·`no-token`)이 큰 쪽은
-텍스트에서는 bezier 이고 class101 · greeting 이 뒤따른다. 단 #550 의 슬러그 티켓으로 이미 처리한 슬러그는, 텍스트
+텍스트에서는 bezier 이고 greeting, 그다음 line-design-system · codeit 이 뒤따른다. 단 #550 의 슬러그 티켓으로 이미 처리한 슬러그는, 텍스트
 칸이 행마다 처리를 마친 뒤의 남은 행일 수 있다 — 무엇으로 처리했는지는 그 티켓의 PR 본문에 있고, 이 문단에는 쌓지
 않는다(비텍스트 칸은 그 티켓들이 따로 다루지 않았다 — 선언으로 함께 빠진 행은 있다). 비텍스트에서는 greeting 이 가장 크고, samsung-one-ui
 비텍스트는 미달 전부가 이 두 칸이다. 반대로 socar · zigbang · remember · kyobobook 텍스트 · seed-design 텍스트의 미달은 거의 전부
