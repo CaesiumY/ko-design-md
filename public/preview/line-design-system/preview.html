@@ -254,8 +254,9 @@
       letter-spacing: -0.02em;
       margin: 0;
     }
+    /* 카탈로그 셸 부제 — 셸 바닥(#FAFAFA) 위 gray-600 은 4.29 라 gray-700(7.14). 셸 바닥이 바뀌면 다시 잰다. */
     .section-sub {
-      color: var(--shell-muted);
+      color: var(--ldsg-gray-700);
       font-size: 13px;
       margin-left: auto;
     }
@@ -1647,11 +1648,12 @@
       border-radius: 50%;
       background: var(--ldsg-role-negative-dark);
     }
+/* 다크 보강색(role-negative-dark) 대신 발행 role-negative — 보강색 위 흰 숫자는 3.44, 발행값은 4.21(라이트와 같음). 다크 토큰이 생기면(md 573) 다시 잰다. */
 [data-theme="dark"] .badge.num {
       min-width: 18px; height: 18px;
       padding: 0 5px;
       border-radius: 999px;
-      background: var(--ldsg-role-negative-dark);
+      background: var(--ldsg-role-negative);
       color: var(--ldsg-white);
       font-size: 10px;
       font-weight: 700;
@@ -2402,7 +2404,7 @@
             <span class="chip">카페</span>
             <span class="chip">맛집</span>
             <span class="chip">쇼핑</span>
-            <span class="chip disabled">휴무</span>
+            <span class="chip disabled" aria-disabled="true">휴무</span>
           </div>
           <div class="chip-row">
             <span class="chip selected" style="height: 36px; padding: 0 16px;">Medium 선택</span>
@@ -2876,7 +2878,7 @@
             <div class="bnav-tab" style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; color: var(--ldsg-gray-600); min-width: 0;">
               <div class="bnav-ic" style="width: 24px; height: 24px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8.5" r="3.5"></circle><path d="M5 20c1-3.5 4-5.5 7-5.5s6 2 7 5.5"></path></svg></div>친구
             </div>
-            <div class="bnav-tab" style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; color: var(--ldsg-disabled-gray); min-width: 0;">
+            <div class="bnav-tab" aria-disabled="true" style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; color: var(--ldsg-disabled-gray); min-width: 0;">
               <div class="bnav-ic" style="width: 24px; height: 24px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8"></path></svg></div>설정
             </div>
           </div><template data-theme-variant="dark" data-theme-op="swap"><div class="bnav" style="background: var(--shell-card-elev); border-radius: var(--ldsg-radius-300); box-shadow: var(--ldsg-shadow-on-gray-200); display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); padding: 10px 0 14px; border: 1px solid var(--shell-line);">
@@ -2887,12 +2889,12 @@
               <div class="bnav-ic" style="width: 24px; height: 24px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 11.5a8.5 8.5 0 1 1-17 0 8.5 8.5 0 0 1 17 0z"></path><path d="m21 21-4.3-4.3"></path></svg></div>검색
             </div>
             <div class="bnav-tab" style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; color: var(--d-ink-600); min-width: 0;">
-              <div class="bnav-ic" style="width: 24px; height: 24px; position: relative;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6.5h16v11H8L4 21V6.5z"></path></svg><span style="position: absolute; top: -4px; right: -6px; background: var(--ldsg-role-negative-dark); color: var(--ldsg-white); font-size: 9px; font-weight: 700; border-radius: 999px; min-width: 14px; height: 14px; padding: 0 3px; display: grid; place-items: center; box-shadow: 0 0 0 2px var(--shell-card-elev);">5</span></div>채팅
+              <div class="bnav-ic" style="width: 24px; height: 24px; position: relative;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6.5h16v11H8L4 21V6.5z"></path></svg><span style="position: absolute; top: -4px; right: -6px; background: var(--ldsg-role-negative); color: var(--ldsg-white); font-size: 9px; font-weight: 700; border-radius: 999px; min-width: 14px; height: 14px; padding: 0 3px; display: grid; place-items: center; box-shadow: 0 0 0 2px var(--shell-card-elev);">5</span></div>채팅
             </div>
             <div class="bnav-tab" style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; color: var(--d-ink-600); min-width: 0;">
               <div class="bnav-ic" style="width: 24px; height: 24px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8.5" r="3.5"></circle><path d="M5 20c1-3.5 4-5.5 7-5.5s6 2 7 5.5"></path></svg></div>친구
             </div>
-            <div class="bnav-tab" style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; color: var(--d-surface-200); min-width: 0;">
+            <div class="bnav-tab" aria-disabled="true" style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; color: var(--d-surface-200); min-width: 0;">
               <div class="bnav-ic" style="width: 24px; height: 24px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8"></path></svg></div>설정
             </div>
           </div></template>
