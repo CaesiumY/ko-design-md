@@ -715,7 +715,7 @@ caveat 의 합성 오차와 같은 방향이다. 그 구간의 읽기 수와 0.0
 **어느 슬러그부터 (2026-10-18 재집계 기준).** 고칠 수 있는 칸(`one-token`·`no-token`)이 큰 쪽은
 텍스트에서는 bezier 이고 greeting · class101 이 뒤따른다. 단 #550 의 슬러그 티켓으로 이미 처리한 슬러그는, 텍스트
 칸이 행마다 처리를 마친 뒤의 남은 행일 수 있다 — 무엇으로 처리했는지는 그 티켓의 PR 본문에 있고, 이 문단에는 쌓지
-않는다(비텍스트 칸은 그 티켓들이 다루지 않았다). 비텍스트에서는 greeting 이 가장 크고, samsung-one-ui
+않는다(비텍스트 칸은 그 티켓들이 따로 다루지 않았다 — 선언으로 함께 빠진 행은 있다). 비텍스트에서는 greeting 이 가장 크고, samsung-one-ui
 비텍스트는 미달 전부가 이 두 칸이다. 반대로 socar · zigbang · remember · kyobobook 텍스트 · seed-design 텍스트의 미달은 거의 전부
 `both-published` 라, 고치지 않고 두는 대상이다(아래 「미달을 고칠 때」). lg-electronics 와 nol 은
 미달 대부분이 `observed-pair` 다. 위 caveat 때문에, 고칠 수 있는 칸에서 시작하더라도 행마다 합성 경로를 먼저 본다.
