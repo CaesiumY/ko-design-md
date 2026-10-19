@@ -368,8 +368,8 @@ describe("elevation", () => {
   })
 
   it("strips YAML quotes an author wraps a value in", () => {
-    // `quoted-token-value` blocks this shape upstream; the reader still must
-    // not publish the quotes if one slips through.
+    // Quoting a token value is allowed (#589); the sidecar carries the value
+    // YAML reads, never the quotes.
     const t = extractTokensFromMarkdown(
       withElevation('shadow-toast: "0 4px 16px oklch(0 0 0 / 0.16)"')
     ).elevation
@@ -498,14 +498,13 @@ describe("elevation — shadow-vs-color discrimination", () => {
   })
 })
 
-describe("unquote", () => {
-  // A greedy `^"(.*)"$` strips the OUTER pair of a two-item quoted value and
-  // leaves the inner quotes stranded (`"Foo", "Bar"` → `Foo", "Bar`). Nothing
-  // in the catalogue takes that shape today, but this helper sits on the path
-  // every frontmatter token row takes (`splitInlineComment`).
+describe("quoted token values", () => {
+  // A greedy `^"(.*)"$` once stripped the OUTER pair of a two-item quoted
+  // value and left the inner quotes stranded (`"Foo", "Bar"` → `Foo", "Bar`).
+  // The value is YAML's now, so quoting is undone exactly as YAML undoes it.
   it("unwraps a value that is a single quoted string", () => {
-    // `quoted-token-value` blocks this shape upstream; the reader still must
-    // not publish the quotes if one slips through.
+    // Quoting a token value is allowed (#589); the sidecar carries the value
+    // YAML reads, never the quotes.
     const body = fm("colors:", '  brand: "oklch(0.62 0.19 258)"')
     expect(extractTokensFromMarkdown(body).colors[0]?.value).toBe(
       "oklch(0.62 0.19 258)"
@@ -513,8 +512,8 @@ describe("unquote", () => {
   })
 
   it("removes one pair only — a doubly quoted value keeps its inner pair", () => {
-    // Pinned so the limit is visible: `quoted-token-value` blocks this shape
-    // upstream, and the reader does not go further than one layer.
+    // Pinned so the limit is visible: YAML undoes one layer of quoting, and
+    // the inner pair is part of the value.
     const t = extractTokensFromMarkdown(
       fm("elevation:", `  e1: "'0 1px 2px oklch(0 0 0 / 0.1)'"`)
     ).elevation

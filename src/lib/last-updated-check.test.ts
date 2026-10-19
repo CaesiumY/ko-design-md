@@ -229,8 +229,8 @@ describe("checkLastUpdated", () => {
     const judge = (raw: string, baseRaw: string | null = null) =>
       checkLastUpdated({ file: FILE, raw, baseRaw, changedOn: "2026-08-02" })
 
-    // YAML ends a value at ` #`, and the site's parser strips the comment too,
-    // so `last_updated: 2026-01-01 # synced` is a date to every other reader.
+    // YAML ends a value at ` #`, so `last_updated: 2026-01-01 # synced` is a
+    // date to every other reader.
     // The regex used to be anchored at the line end, read it as absent, and
     // let a stale date through the one gate that blocks on it.
     it("reads a date that carries a trailing comment", () => {

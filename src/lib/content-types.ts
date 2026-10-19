@@ -35,9 +35,9 @@ export interface ServiceFrontmatter {
    * never reshuffles the list. `last_updated` is a separate signal — it drives
    * the "Updated" badge and the RSS feed's own ordering, nothing else.
    *
-   * Required. `buildDoc` leaves it "" when absent rather than throwing (so a
-   * malformed contribution can't take the site down), and the
-   * `missing-created-at` rule in draft-validator blocks it in CI.
+   * Required. The site leaves it "" when the key is absent, and the
+   * `missing-created-at` rule in draft-validator blocks that in CI; written
+   * with no value, it fails the site's build (`site-frontmatter.ts`).
    */
   created_at: string
   lang: Lang

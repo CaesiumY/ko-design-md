@@ -3,8 +3,7 @@ import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
 import { isNode, isScalar, parseDocument } from "yaml"
-import { splitFrontmatter } from "./content-parser"
-import { readFrontmatter } from "./frontmatter"
+import { readFrontmatter, splitFrontmatter } from "./frontmatter"
 import type { Node } from "yaml"
 import type { FrontmatterEntryRow, FrontmatterKey } from "./frontmatter"
 import type { ServiceTokens } from "./content-types"
@@ -165,14 +164,14 @@ describe("readFrontmatter on the catalogue", () => {
   })
 
   it.each(SLUGS)(
-    "%s: top-level keys and values match the validator's YAML reading",
+    "%s: top-level keys and values match an independent YAML reading",
     (slug) => {
       const raw = readFileSync(join(SERVICES, `${slug}.md`), "utf8")
       const yamlDoc = parseDocument(splitFrontmatter(raw)?.frontmatter ?? "")
       const items = (yamlDoc.contents as { items: Array<{ key: Node }> }).items
       const expected = items.map(({ key }) => {
         const name = isScalar(key) ? String(key.value) : String(key)
-        // As the validator's `yamlValue` reads one key: the node, converted.
+        // One key as YAML reads it on its own: the node, converted.
         const node = yamlDoc.get(name, true)
         return [name, isNode(node) ? node.toJS(yamlDoc) : null]
       })

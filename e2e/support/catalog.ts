@@ -4,13 +4,13 @@
 //
 // The site's own module (src/lib/content-collection.ts) loads entries through
 // Vite's import.meta.glob and cannot run in Playwright's plain Node, so this
-// mirrors scripts/build-tokens.ts: fs + the shared parser.
+// mirrors scripts/build-tokens.ts: fs + the site's own reading.
 //
-// What is shared with the site and what is not: entries are read with the
-// site's parser (`buildDoc`, which also derives each tagline) and category
+// What is shared with the site and what is not: entries are read as the site
+// reads them (`buildDoc`, which also derives each tagline) and category
 // labels come from the site's `getCategoryStyle` — a regression in either moves
-// these expectations with it, so this suite does not guard them (the parser has
-// its own unit tests). The filtering is NOT shared: the rules below are written
+// these expectations with it, so this suite does not guard them (the reading
+// has its own unit tests). The filtering is NOT shared: the rules below are written
 // from what the home page promises (a category shows its entries; a search
 // lists every entry whose name, design-system name, slug or tagline contains
 // the query), never imported from the site's filter code — a test that reused
@@ -18,7 +18,7 @@
 import { readFileSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
-import { buildDoc } from "../../src/lib/content-parser"
+import { buildDoc } from "../../src/lib/site-frontmatter"
 import { getCategoryStyle } from "../../src/lib/category-style"
 import type { ServiceDoc } from "../../src/lib/content-types"
 

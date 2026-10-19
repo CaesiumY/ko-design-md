@@ -28,7 +28,9 @@ import {
   parseOklch,
   rgbToOklab,
 } from "./oklch-convert"
-import { frontmatterBlock, readDefinitions } from "./oklch-drift"
+import { readFrontmatter } from "./frontmatter"
+import { readDefinitions } from "./oklch-drift"
+import type { FrontmatterRow } from "./frontmatter"
 import type { Rgb, Rgba } from "./contrast"
 import type { Oklab } from "./oklch-convert"
 import type { DedupedFinding, Finding, Judgement } from "./contrast-report"
@@ -129,9 +131,8 @@ export interface Palette {
   unreadable: Array<string>
 }
 
-const MAP_KEY = /^([a-z][\w-]*):/
-const GROUP = /^\s+## (.*)$/
-const DEFINITION = /^\s+([a-z][\w-]*):\s+oklch\(/
+/** A token name the colour readers consider (see `oklchEntries`). */
+const TOKEN_NAME = /^[a-z][\w-]*$/
 
 /**
  * The entry's `colors:` tokens, each marked published or observed.
@@ -151,33 +152,39 @@ export function paletteOf(
 ): Palette {
   const observedGroups = observed.groups ?? []
   const observedTokens = observed.tokens ?? []
-  // Split on `\r?\n`: a `w/crlf` checkout (CLAUDE.md, Windows) would otherwise
-  // leave a `\r` on every heading and no listed group would ever match.
-  const lines = frontmatterBlock(markdown).split(/\r?\n/)
-  // Where each definition sits: which top-level map, under which heading. A
-  // heading belongs to the map it is written in, so a new map clears it.
+  // Where each definition sits: which top-level map, under which `## Label`
+  // heading — as the one frontmatter reader reads it (docs/adr/0011). A
+  // heading belongs to the map it is written in.
   const placeOf = new Map<
     string,
     { map: string | null; group: string | null }
   >()
   const colourGroups = new Set<string>()
-  let map: string | null = null
-  let group: string | null = null
-  for (const line of lines) {
-    const key = MAP_KEY.exec(line)
-    if (key) {
-      map = key[1]
-      group = null
-      continue
+  const read = readFrontmatter(markdown)
+  const walk = (
+    map: string,
+    rows: ReadonlyArray<FrontmatterRow>,
+    outer: string | null
+  ): void => {
+    for (const row of rows) {
+      if (row.kind === "group") {
+        if (map === "colors") colourGroups.add(row.label)
+        continue
+      }
+      const group = row.group ?? outer
+      if (
+        typeof row.value === "string" &&
+        row.value.startsWith("oklch(") &&
+        TOKEN_NAME.test(row.key) &&
+        !placeOf.has(row.key)
+      ) {
+        placeOf.set(row.key, { map, group })
+      }
+      if (row.rows) walk(map, row.rows, group)
     }
-    const heading = GROUP.exec(line)
-    if (heading) {
-      group = heading[1].trim()
-      if (map === "colors") colourGroups.add(group)
-      continue
-    }
-    const def = DEFINITION.exec(line)
-    if (def && !placeOf.has(def[1])) placeOf.set(def[1], { map, group })
+  }
+  for (const top of read.ok ? read.keys : []) {
+    if (top.rows) walk(top.key, top.rows, null)
   }
   const missing = [
     ...observedGroups.filter((g) => !colourGroups.has(g)),

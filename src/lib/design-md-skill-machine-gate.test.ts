@@ -320,7 +320,9 @@ describe("/design-md machine gates", () => {
     const validator = readRepoFile("src/lib/draft-validator.ts")
     const emitted = /^lang: (\S+)$/m.exec(author)?.[1]
     expect(emitted, "the author template must emit a lang: line").toBeDefined()
-    const accepted = /sees\("lang"\) && lang !== "([^"]+)"/.exec(validator)?.[1]
+    const accepted = /single\.has\("lang"\) && lang !== "([^"]+)"/.exec(
+      validator
+    )?.[1]
     expect(
       accepted,
       "draft-validator must keep its bad-lang check"

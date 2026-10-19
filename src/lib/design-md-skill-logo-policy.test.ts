@@ -1,13 +1,14 @@
 import { existsSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
-import { parse } from "yaml"
 import {
   DESIGN_MD_AUTHOR_AGENT,
   DESIGN_MD_SKILL,
   readRepoFile,
 } from "./skill-asset-paths"
 import { LOGO_TAKEDOWNS, TAKEDOWN_REF } from "./logo-takedowns"
+import { readFrontmatter as readEntryFrontmatter } from "./frontmatter"
+import type { FrontmatterValue } from "./frontmatter"
 
 const ROOT = process.cwd()
 
@@ -16,29 +17,28 @@ const ROOT = process.cwd()
 // referenced as an <img src> and must not trip the orphan/inventory guards.
 const LOGO_IMAGE_EXTENSIONS = /\.(?:png|svg|webp|avif)$/
 
-// The frontmatter's `logo` as a YAML reader sees it, so a trailing comment
-// (`logo: https://… # note`) is stripped the way `buildDoc` strips it rather
-// than making the value unreadable and the logo look missing.
-function logoOf(frontmatter: string): string | undefined {
-  // Catalog frontmatter is a YAML map (`frontmatter-yaml-invalid` blocks
-  // anything else), so the only shape question left is the value's type.
-  const data = parse(frontmatter) as { logo?: string | number | null } | null
-  return typeof data?.logo === "string" ? data.logo : undefined
+// An entry's frontmatter keys, as the one frontmatter reader reads them
+// (docs/adr/0011) — so a trailing comment (`logo: https://… # note`) is not
+// part of the value. Catalog frontmatter reads (`frontmatter-yaml-invalid`
+// blocks anything else), so the only shape question left is the value's type.
+function keysOf(markdown: string): Map<string, FrontmatterValue> {
+  const read = readEntryFrontmatter(markdown)
+  return new Map(read.ok ? read.keys.map((k) => [k.key, k.value]) : [])
+}
+
+function logoOf(markdown: string): string | undefined {
+  const logo = keysOf(markdown).get("logo")
+  return typeof logo === "string" ? logo : undefined
 }
 
 // Whether the frontmatter has a `logo` key at all, whatever its value. A
-// takedown entry must have none: an empty `logo:` reads as `null` here but as
-// `[]` in the site parser, which crashes the logo renderer.
-function hasLogoKey(frontmatter: string): boolean {
-  const data = parse(frontmatter) as Record<string, string | null> | null
-  return data !== null && Object.hasOwn(data, "logo")
+// takedown entry must have none, and the site's build refuses an empty one.
+function hasLogoKey(markdown: string): boolean {
+  return keysOf(markdown).has("logo")
 }
 
-function readFrontmatter(path: string): string {
-  const raw = readRepoFile(path)
-  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)
-  return match?.[1] ?? ""
-}
+const block = (...lines: Array<string>) =>
+  ["---", ...lines, "---", ""].join("\n")
 
 describe("/design-md logo policy", () => {
   // What the skill and the author write about the logo, held to the code that
@@ -120,19 +120,17 @@ describe("/design-md logo policy", () => {
   })
 
   it("sees an empty `logo:` line as a present key", () => {
-    expect(hasLogoKey(["slug: demo", "logo:"].join("\n"))).toBe(true)
-    expect(hasLogoKey("slug: demo")).toBe(false)
+    expect(hasLogoKey(block("slug: demo", "logo:"))).toBe(true)
+    expect(hasLogoKey(block("slug: demo"))).toBe(false)
   })
 
   it("reads a logo that carries a trailing comment", () => {
     expect(
       logoOf(
-        ["slug: demo", "logo: https://getdesign.kr/logos/demo.png # note"].join(
-          "\n"
-        )
+        block("slug: demo", "logo: https://getdesign.kr/logos/demo.png # note")
       )
     ).toBe("https://getdesign.kr/logos/demo.png")
-    expect(logoOf("slug: demo")).toBeUndefined()
+    expect(logoOf(block("slug: demo"))).toBeUndefined()
   })
 
   it("keeps every service logo asset present and visible in both previews", () => {
@@ -143,7 +141,7 @@ describe("/design-md logo policy", () => {
     expect(servicePaths.length).toBeGreaterThan(0)
 
     for (const servicePath of servicePaths) {
-      const frontmatter = readFrontmatter(servicePath)
+      const frontmatter = readRepoFile(servicePath)
       const slug = servicePath.match(/services\/(.+)\.md$/)?.[1]
       const logo = logoOf(frontmatter)
 

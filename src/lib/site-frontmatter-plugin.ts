@@ -1,12 +1,6 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs"
 import { join, posix } from "node:path"
-import {
-  CONSUMED_KEYS,
-  KNOWN_FRONTMATTER_KEYS,
-  coerceNumberField,
-  normalizeDateField,
-} from "./content-parser"
-import { readFrontmatter } from "./frontmatter"
+import { siteFrontmatterOf } from "./site-frontmatter"
 import type { SiteFrontmatter } from "./content-types"
 import type { Plugin } from "vite"
 
@@ -18,31 +12,13 @@ import type { Plugin } from "vite"
 // frontmatter reader and hands the site only the keys it consumes, as JSON —
 // the same build-time pattern as `virtual:preview-slugs`.
 //
-// The field checks the site used to run in the browser (real ISO dates, a
-// numeric token count) run here too, so a bad value fails the build and the
-// browser receives values it can use as they are.
-//
-// A consumed key written with no value (`name:`, or YAML's `name: ~`) fails the
-// build here instead of falling back to a default on the site, which turned an
-// empty name into the slug without anyone noticing. A key left out entirely
-// keeps the site's existing derivation (slug from the file name, token
-// estimate from the text, and so on).
-//
-// The exception is `FALLBACK_KEYS`, whose value has always come from another
-// source when missing: written empty, they are left out like an absent key.
+// What the site accepts — and the build failure for an empty value, a value
+// that is not text, a date that is not a real day — is decided once in
+// `site-frontmatter.ts`, which the Node tools and the draft validator share.
 
 export const SITE_FRONTMATTER_MODULE_ID = "virtual:site-frontmatter"
 
-/** Keys that derive from another source when missing — the slug from the file
- *  name, the token count from the text. Spec #582 keeps that rule for an empty
- *  value too, and the draft validator accepts both written empty (#488), so a
- *  build failure here would break the site for a file that passed the gate. */
-const FALLBACK_KEYS: ReadonlyArray<string> = ["slug", "estimated_tokens"]
 const RESOLVED_ID = `\0${SITE_FRONTMATTER_MODULE_ID}`
-
-/** Keys whose value is one line of text. `estimated_tokens` is the only
- *  number; the site coerces it as before. */
-const TEXT_KEYS = CONSUMED_KEYS.filter((key) => key !== "estimated_tokens")
 
 function servicesDir(root: string): string {
   return join(root, "services")
@@ -67,51 +43,6 @@ function isEntryFile(root: string, file: string): boolean {
   )
 }
 
-/** One entry's consumed keys, or a message naming what is wrong with it. */
-function readEntry(
-  globPath: string,
-  raw: string,
-  warn: (message: string) => void
-): SiteFrontmatter {
-  const result = readFrontmatter(raw)
-  if (!result.ok) {
-    const [first] = result.errors
-    throw new Error(
-      `[site-frontmatter] ${globPath}:${first.line}: frontmatter does not read as YAML — ${first.message}`
-    )
-  }
-  const out: Record<string, string | number> = {}
-  for (const { key, value, line } of result.keys) {
-    if (!KNOWN_FRONTMATTER_KEYS.includes(key)) {
-      warn(
-        `[site-frontmatter] Unknown frontmatter key "${key}" in ${globPath} (ignored)`
-      )
-      continue
-    }
-    if (!(CONSUMED_KEYS as ReadonlyArray<string>).includes(key)) continue
-    const where = `${globPath}:${line}`
-    if (value === null && FALLBACK_KEYS.includes(key)) continue
-    if (value === null) {
-      throw new Error(
-        `[site-frontmatter] ${where}: \`${key}\` has no value. Write its value, or delete the line if the key is optional.`
-      )
-    }
-    const isText = (TEXT_KEYS as ReadonlyArray<string>).includes(key)
-    if (typeof value !== "string" && (isText || typeof value !== "number")) {
-      throw new Error(
-        `[site-frontmatter] ${where}: \`${key}\` must be ${isText ? "one line of text — quote it if YAML reads it as something else" : "a number"}, got ${JSON.stringify(value)}`
-      )
-    }
-    out[key] =
-      key === "estimated_tokens"
-        ? (coerceNumberField(value, key, where) as number)
-        : key === "last_updated" || key === "created_at"
-          ? normalizeDateField(value, where, key)
-          : value
-  }
-  return out
-}
-
 export function siteFrontmatterPlugin(): Plugin {
   let root = process.cwd()
 
@@ -131,7 +62,7 @@ export function siteFrontmatterPlugin(): Plugin {
         this.addWatchFile(path)
         const globPath = `/services/${file}`
         try {
-          byPath[globPath] = readEntry(
+          byPath[globPath] = siteFrontmatterOf(
             globPath,
             readFileSync(path, "utf8"),
             (message) => this.warn(message)

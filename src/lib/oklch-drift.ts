@@ -1,5 +1,4 @@
-import { splitFrontmatter } from "./content-parser"
-import { readFrontmatter } from "./frontmatter"
+import { readFrontmatter, splitFrontmatter } from "./frontmatter"
 import { oklchEntries } from "./oklch-sync"
 // Detect preview CSS that no longer agrees with the design.md it was built from.
 //
@@ -93,22 +92,6 @@ export function readDefinitions(markdown: string): Map<string, string> {
   }
   for (const name of conflictsIn(defs).keys()) out.delete(name)
   return out
-}
-
-/**
- * The frontmatter block, or the whole document when there is none.
- *
- * Token definitions live in frontmatter now, indented two spaces under a
- * `colors:` map. Relaxing the anchor to `^\s*` without also narrowing the search
- * would reach into body fences that were never token definitions — `wanted`'s
- * `## Components` block has nested `bg:` / `fg:` rows that would then register
- * as colours and manufacture duplicate-name conflicts the catalog does not have
- * (measured: 0 conflicts today). Scope first, then relax.
- */
-export function frontmatterBlock(markdown: string): string {
-  // Falls back to the WHOLE input on purpose: callers hand this either a full
-  // document or a bare body, and a body has no frontmatter to slice.
-  return splitFrontmatter(markdown)?.frontmatter ?? markdown
 }
 
 /** The leading literal of a value: a gradient's first stop is still a colour. */

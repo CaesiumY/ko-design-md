@@ -162,7 +162,7 @@ describe("site frontmatter plugin", () => {
       )
     )
 
-    expect(() => load()).toThrow(/last_updated.*services\/toss\.md/)
+    expect(() => load()).toThrow(/services\/toss\.md.*`last_updated`/)
   })
 
   // In dev, an edited, added or removed entry must reach the next page load in

@@ -5,7 +5,8 @@ import {
   getServiceBySlug,
   truncateForMeta,
 } from "./content-collection"
-import { buildDoc, deriveTagline } from "./content-parser"
+import { deriveTagline } from "./content-parser"
+import { CONSUMED_KEYS, readFrontmatter, splitFrontmatter } from "./frontmatter"
 
 describe("content-collection", () => {
   it("loads at least one service from /services/*.md", () => {
@@ -80,42 +81,31 @@ describe("content-collection", () => {
     expect(getServiceBySlug("bezier")?.tokens?.elevation).toBeUndefined()
   })
 
-  // The site now takes its frontmatter from the build (`virtual:site-frontmatter`)
-  // rather than the hand parser. Every entry must come out exactly as the hand
-  // parser read it — the two readers are independent, so agreement on the
-  // whole catalog is the evidence that the switch changed nothing a visitor
-  // sees (#585).
-  it("reads every entry the same as the hand parser did", () => {
+  // The site takes its frontmatter from the build (`virtual:site-frontmatter`).
+  // What it shows must be what YAML reads in the file — the value every other
+  // consumer of the published DESIGN.md gets — key for key, and the body must
+  // be the file after its frontmatter (docs/adr/0011, #589).
+  it("shows every entry's frontmatter as YAML reads it", () => {
     const dir = new URL("../../services/", import.meta.url)
     const files = readdirSync(dir).filter((file) => file.endsWith(".md"))
-    const byHand = files.map((file) => {
-      const doc = buildDoc(
-        `/services/${file}`,
-        readFileSync(new URL(file, dir), "utf8")
-      )
-      return [doc.filePath, doc] as const
-    })
-
     const site = new Map(getAllServices().map((doc) => [doc.filePath, doc]))
-    expect([...site.keys()].sort()).toEqual(byHand.map(([path]) => path).sort())
-    for (const [path, expected] of byHand) {
-      const actual = site.get(path)
-      expect(
-        {
-          frontmatter: actual?.frontmatter,
-          raw: actual?.raw,
-          body: actual?.body,
-          tagline: actual?.tagline,
-          estimatedTokens: actual?.estimatedTokens,
-        },
-        path
-      ).toEqual({
-        frontmatter: expected.frontmatter,
-        raw: expected.raw,
-        body: expected.body,
-        tagline: expected.tagline,
-        estimatedTokens: expected.estimatedTokens,
-      })
+    expect([...site.keys()].sort()).toEqual(
+      files.map((file) => `/services/${file}`).sort()
+    )
+    const consumed = new Set<string>(CONSUMED_KEYS)
+    for (const file of files) {
+      const raw = readFileSync(new URL(file, dir), "utf8")
+      const read = readFrontmatter(raw)
+      if (!read.ok) throw new Error(`${file}: ${read.errors[0].message}`)
+      const doc = site.get(`/services/${file}`)
+      const written = Object.fromEntries(
+        read.keys
+          .filter((k) => consumed.has(k.key))
+          .map((k) => [k.key, k.value])
+      )
+      expect(doc?.frontmatter, file).toMatchObject(written)
+      expect(doc?.raw, file).toBe(raw)
+      expect(doc?.body, file).toBe(splitFrontmatter(raw)?.body)
     }
   })
 

@@ -1,29 +1,30 @@
-import { isAlias, isMap, isNode, isScalar, isSeq, parseDocument } from "yaml"
 import { lint } from "@google/design.md/linter"
+import { buildSiteDoc } from "./content-parser"
 import {
   CONSUMED_KEYS,
-  FRONTMATTER_KEY_NAME,
   KNOWN_FRONTMATTER_KEYS,
-  buildDoc,
-  matter,
+  readFrontmatter,
   splitFrontmatter,
-  stripQuotes,
-} from "./content-parser"
-import { isHeadRow, mapRows } from "./frontmatter-map"
-import {
-  NO_BLOCK_SCALAR_MAP_KEYS,
-  REFERENCE_MAP_KEYS,
-  ROW_SCAN_MAP_KEYS,
-} from "./frontmatter-map-table"
+  tokenText,
+} from "./frontmatter"
+import { siteFrontmatterOf, siteValue } from "./site-frontmatter"
+import { REFERENCE_MAP_KEYS, ROW_SCAN_MAP_KEYS } from "./frontmatter-map-table"
 import { CATEGORIES } from "./content-types"
 import { auditSourceCitations } from "./source-citations"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
 import { deltaE, hexToOklab, lchToOklab, oklabToLch } from "./oklch-convert"
 import { matchDefinition } from "./oklch-sync"
-import { conflictingDefinitions, frontmatterBlock } from "./oklch-drift"
+import { conflictingDefinitions } from "./oklch-drift"
 import { KNOWN_SPEC_LIMITATIONS } from "./spec-limitations"
 import { LOGO_TAKEDOWNS } from "./logo-takedowns"
-import { extractTokensFromMarkdown, isShadowValue } from "./token-extractor"
+import { isShadowValue } from "./token-extractor"
+import type {
+  FrontmatterEntryRow,
+  FrontmatterKey,
+  FrontmatterRead,
+  FrontmatterReadFailure,
+  FrontmatterValue,
+} from "./frontmatter"
 import type { ServiceDoc } from "./content-types"
 
 // Deterministic validator for design.md drafts — CODEGEN/CI ONLY, never
@@ -278,58 +279,31 @@ function tokenLineIssues(
   return issues
 }
 
-/** The frontmatter as YAML reads it, or null when the file has none. */
-type FrontmatterDoc = ReturnType<typeof parseDocument> | null
-
 /**
- * Parsed once and handed to every check that needs the YAML view, so they all
- * judge the same reading of the block.
+ * The one read gate: the frontmatter as `readFrontmatter` reads it, or the one
+ * block that says why it cannot be read (docs/adr/0011).
  *
- * BOM handling lives in `splitFrontmatter`. It used to live in the YAML check,
- * and not in the other four copies of this regex — which is how a BOM-prefixed
- * file switched that check off without a word.
+ * Every frontmatter rule below judges this reading, the one the site, the
+ * token extractor and the colour checks also use — so no rule has to ask
+ * whether some other reader sees the file differently. When the block cannot
+ * be read there is nothing to judge, and this block is the only frontmatter
+ * finding: a guess at a broken block would only add messages built on a
+ * misreading.
  */
-function parseFrontmatter(raw: string): FrontmatterDoc {
-  const split = splitFrontmatter(raw)
-  return split ? parseDocument(split.frontmatter) : null
-}
-
-/**
- * Does the frontmatter actually parse as YAML?
- *
- * Nothing else in this repo asks. `buildDoc` uses a hand-rolled subset parser
- * that, by its own comment, "silently degrades on malformed input by design",
- * and every other gate regexes over the raw text. That was harmless while
- * tokens lived in body fences — nobody parsed those as YAML — but the migration
- * made this block real YAML, and one unquoted font stack can take a whole
- * document down to zero tokens with every gate still reporting success.
- *
- * Structural errors only. Whether a VALUE is sane is the token rules' job; this
- * asks the one question none of them can.
- */
-function checkFrontmatterYaml(fmDoc: FrontmatterDoc): Array<ValidationIssue> {
-  if (!fmDoc) return []
-  return fmDoc.errors.map((e) =>
-    block(
-      "frontmatter-yaml-invalid",
-      "frontmatter",
-      `frontmatter is not valid YAML: ${e.message.split("\n")[0]}. A standard YAML reader — which is what a consumer of the Google DESIGN.md format uses — cannot read this file's tokens at all.`
-    )
+function frontmatterReadIssue(
+  failure: FrontmatterReadFailure
+): ValidationIssue {
+  const [first, ...rest] = failure.errors
+  const more = rest.length > 0 ? ` (and ${rest.length} more after it)` : ""
+  return block(
+    "frontmatter-yaml-invalid",
+    "frontmatter",
+    failure.reason === "missing"
+      ? `line ${first.line}: ${first.message}. Nothing in the frontmatter can be checked until it is there.`
+      : `frontmatter is not valid YAML at line ${first.line}${more}: ${first.message}. A standard YAML reader — which is what a consumer of the Google DESIGN.md format uses — cannot read this file's tokens at all, and neither can the site's build.`
   )
 }
 
-/**
- * Token values have to be single-line scalars.
- *
- * A block scalar (`primary: >` with the value on following lines) is legal YAML
- * but every reader here is line-based, so the token either vanishes or arrives
- * as the literal `">"`. Measured: writing one into `colors:` drops that token
- * from the sidecar entirely while `validate:catalog` still reports PASSED — the
- * silent loss this whole file exists to stop.
- *
- * Scans every map with the `noBlockScalar` trait (see `frontmatter-map-table`),
- * not just `colors:`, because the loss does not care which map it happens in.
- */
 /**
  * Working notes must not ship.
  *
@@ -456,13 +430,7 @@ const WHOLE_FENCE_LANGUAGES: ReadonlySet<string> = new Set([
 ])
 
 // A frontmatter node as the reference check reads it.
-type YamlNode =
-  | string
-  | number
-  | boolean
-  | null
-  | Array<YamlNode>
-  | { [key: string]: YamlNode }
+type YamlNode = FrontmatterValue
 
 function isYamlMap(
   node: YamlNode | undefined
@@ -470,34 +438,27 @@ function isYamlMap(
   return typeof node === "object" && node !== null && !Array.isArray(node)
 }
 
+/** A map row's entries, its `## Label` group rows left out. */
+function entriesOf(key: FrontmatterKey): Array<FrontmatterEntryRow> {
+  return (key.rows ?? []).filter(
+    (row): row is FrontmatterEntryRow => row.kind === "entry"
+  )
+}
+
 /**
- * The frontmatter as written. `toJS()` normalises numeric keys (`1.0` becomes
- * `1`, `010` becomes `10`), so a declared `{spacing.1.0}` would miss and an
- * undeclared `{spacing.1}` would hit. Keys keep their source spelling here.
- * An alias or any other node reads as null.
+ * The frontmatter as written. YAML's value normalises numeric keys (`1.0`
+ * becomes `1`, `010` becomes `10`), so a declared `{spacing.1.0}` would miss
+ * and an undeclared `{spacing.1}` would hit. A map's keys keep their source
+ * spelling here, as the reader gives them.
  */
-// eslint-disable-next-line no-restricted-syntax -- YAML AST nodes are untyped at the parse boundary.
-function rawNode(node: unknown): YamlNode {
-  if (isMap(node)) {
-    const out: { [key: string]: YamlNode } = {}
-    for (const item of node.items) {
-      const key = isScalar(item.key)
-        ? String(item.key.source ?? item.key.value)
-        : String(item.key)
-      out[key] = rawNode(item.value)
-    }
-    return out
+function writtenTree(keys: ReadonlyArray<FrontmatterKey>): {
+  [key: string]: YamlNode
+} {
+  const out: { [key: string]: YamlNode } = {}
+  for (const entry of keys) {
+    out[entry.key] = entry.rows ? writtenTree(entriesOf(entry)) : entry.value
   }
-  if (isSeq(node)) return node.items.map((item) => rawNode(item))
-  if (isScalar(node)) {
-    const v = node.value
-    return typeof v === "string" ||
-      typeof v === "number" ||
-      typeof v === "boolean"
-      ? v
-      : null
-  }
-  return null
+  return out
 }
 
 // A standalone `{word}`: not glued, on either side, to an ASCII identifier
@@ -835,13 +796,9 @@ function segmentPattern(pattern: string): RegExp {
  */
 function checkTokenReferences(
   raw: string,
-  fmDoc: FrontmatterDoc
+  read: FrontmatterRead
 ): Array<ValidationIssue> {
-  // An unparseable block already blocks as `frontmatter-yaml-invalid`; judging
-  // references against a half-read map would only add noise to that finding.
-  if (!fmDoc || fmDoc.errors.length > 0) return []
-  const root = rawNode(fmDoc.contents)
-  const maps = isYamlMap(root) ? root : {}
+  const maps = writtenTree(read.keys)
   // A key with no value (`brand:` and nothing after it) resolves to nothing.
   const resolves = (map: YamlNode | undefined, name: string): boolean => {
     if (!isYamlMap(map)) return false
@@ -1062,28 +1019,25 @@ function checkTokenReferences(
   return issues
 }
 
-function checkBlockScalars(fm: Array<string>): Array<ValidationIssue> {
-  const issues: Array<ValidationIssue> = []
-  for (const mapKey of NO_BLOCK_SCALAR_MAP_KEYS) {
-    for (const row of mapRows(fm, mapKey)) {
-      // A block header is `>` or `|`, then an indentation digit and a chomping
-      // indicator in EITHER order, then optionally a comment. Matching only the
-      // tidy spellings left `> # note` and `|2-` sailing through the check.
-      if (!/^[>|][0-9+-]*\s*(?:#.*)?$/.test(row.rest.trim())) continue
-      issues.push(
-        block(
-          "block-scalar-token-value",
-          "tokens",
-          `token \`${row.key}\` in \`${mapKey}:\` opens a block scalar (${row.rest.trim()}) — write token values on one line. Every reader of these maps is line-based, so a block scalar makes the token disappear from the sidecar without any gate noticing.`
-        )
-      )
-    }
-  }
-  return issues
+/** A comment that is one hex colour, alone or before another comment:
+ *  `#FFF` and `# #0000001A` as the reader gives them (`FFF`, `#0000001A`).
+ *  A word or number that merely looks like hex (`fade-in`, `200 level`) is
+ *  a note, not a colour cut off by the comment. */
+const COMMENT_HEX = /^#?([0-9a-fA-F]{3,8})(?=\s*$|\s+#)/
+
+/** The hex a row's line-end comment holds, when that is all it holds. */
+function commentHex(row: FrontmatterKey): string | undefined {
+  return row.comment === undefined
+    ? undefined
+    : COMMENT_HEX.exec(row.comment)?.[1]
 }
 
 /**
- * Token rules over the frontmatter maps, which is where tokens live.
+ * Token rules over the frontmatter maps, which is where tokens live — every
+ * map with the `rowScan` trait (see `frontmatter-map-table`), read as
+ * `readFrontmatter` reads them. A value is judged as `tokenText` gives it,
+ * the text the sidecar publishes, so quoting, indentation and block scalars
+ * neither hide a token from these rules nor block one by themselves.
  *
  * Without this the catalog's central policy checks nothing: a `#3182F6` or an
  * `rgba(…)` written into `colors:` passes `validate:catalog` outright — verified
@@ -1092,83 +1046,68 @@ function checkBlockScalars(fm: Array<string>): Array<ValidationIssue> {
  * Colour VALUES only. `typography:` holds font stacks and sizes that the OKLCH
  * rule has no business judging, and a reference (`{colors.x}`) is not a literal.
  */
-function scanFrontmatterTokens(fm: Array<string>): Array<ValidationIssue> {
+function scanFrontmatterTokens(read: FrontmatterRead): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
-  // Every map with the `rowScan` trait — the table says why each is in or out.
-  // `frontmatterRows` reads them all through the same two-space shape, so a
-  // nested row is dropped just as silently as in colours — and `referenceRows`
-  // would flatten a nested reference into a differently named top-level token.
   for (const mapKey of ROW_SCAN_MAP_KEYS) {
-    for (const row of mapRows(fm, mapKey)) {
-      // A head row that only opens a nested map carries no value to judge; the
-      // rows beneath it are caught by the indentation rule below.
-      if (row.rest.trim() === "") continue
-      // Two spaces is the shape the extractor reads. Anything deeper is a token
-      // it drops without a word, so the value being VALID does not save it.
-      if (row.indent !== 2) {
+    const map = read.keys.find((k) => k.key === mapKey)
+    if (!map) continue
+    for (const row of entriesOf(map)) {
+      // These maps are flat: a token is one `name: value` row. A map under a
+      // row renames every token in it (`{colors.brand.primary}`, not
+      // `{colors.primary}`), which neither the sidecar nor a reference to the
+      // flat name follows. An unquoted reference is one too: YAML reads
+      // `{colors.x}` as a map.
+      if (row.rows) {
         issues.push(
           block(
             "noncanonical-token-indent",
             "tokens",
-            `token \`${row.key}\` is indented ${row.indent} spaces — the \`${mapKey}:\` map is flat and its rows carry exactly two. The extractor reads only the two-space shape, so this token would vanish from the sidecar (and from the site's Tokens tab) while every gate still reported success. Nesting also renames the token, which breaks its \`{${mapKey}.${row.key}}\` references.`
+            `token \`${row.key}\` in \`${mapKey}:\` holds a nested map — the map is flat, one \`name: value\` row per token. Nesting renames the tokens under it (\`{${mapKey}.${row.key}.…}\`), which the sidecar and every \`{${mapKey}.name}\` reference miss: write each as its own row. A reference must be quoted (\`"{${mapKey}.name}"\`) — unquoted, YAML reads \`{…}\` as a map.`
           )
         )
+        continue
       }
-      const authored = stripYamlComment(row.rest).trim()
-      // A reference resolves elsewhere, so it is not judged as a literal — and it
-      // MUST carry quotes, because bare `{...}` is a YAML flow mapping.
-      if (/^["']?\{/.test(authored)) continue
-      const value = stripQuotes(authored)
-      if (value !== authored) {
+      const hex = commentHex(row)
+      if (row.value === null && hex !== undefined) {
+        // `primary: #3182F6` — a space then `#` opens a YAML comment, so the
+        // token has no value at all, and no other rule would say so.
         issues.push(
           block(
-            "quoted-token-value",
+            mapKey === "elevation"
+              ? "elevation-not-shadow"
+              : "non-oklch-token-value",
             "tokens",
-            `token \`${row.key}\` wraps its value in quotes (${authored}) — write colour values bare (\`${value}\`). A quoted value is invisible to \`audit:oklch\` and the drift check, which then pass without judging this token. Quote only a reference such as \`"{colors.name}"\`, which YAML would otherwise read as a flow mapping.`
+            `token \`${row.key}\` has no value: \`#${hex}\` after a space is a YAML comment, not part of it. Express the colour as \`oklch(L C H)\` and keep the hex in the trailing comment.`
           )
         )
+        continue
       }
-      issues.push(...tokenLineIssues(row.key, value, row.line))
+      const value = tokenText(row)
+      if (value === undefined) continue
+      // A reference resolves elsewhere, so it is not judged as a literal.
+      if (value.startsWith("{")) continue
+      // The row as YAML read it, in the one shape the shared OKLCH↔hex rule
+      // judges — the same string `audit:oklch` builds.
+      const line =
+        `${row.key}: ${value}` +
+        (row.comment === undefined ? "" : ` #${row.comment}`)
+      issues.push(...tokenLineIssues(row.key, value, line))
       // The extractor keeps only rows shaped like a shadow, so anything else in
       // `elevation:` vanishes from the sidecar while the file still publishes
       // it. The common way in is a bare hex colour: ` #0000001A` opens a YAML
       // comment, and what remains is a colourless `0 1px 2px`.
-      if (mapKey === "elevation") {
-        const quoted = /^["']/.test(authored)
-        if (quoted && value === authored) {
-          // A quote that never closed on this line: the line reader cut the
-          // value at a ` #` INSIDE the quotes. YAML keeps it intact, so the
-          // fault to report is the quoting, not a lost colour.
-          issues.push(
-            block(
-              "quoted-token-value",
-              "tokens",
-              `shadow \`${row.key}\` is quoted (${row.rest.trim()}) — write it bare, with the colour as \`oklch(L C H / alpha)\` and any hex in the trailing comment. Quoted, the value is invisible to the line-based gates.`
-            )
+      if (mapKey === "elevation" && !isShadowValue(value)) {
+        // Blame the comment only when the hex is what the shadow is missing.
+        const cutColour = hex !== undefined && isShadowValue(`${value} #${hex}`)
+        issues.push(
+          block(
+            "elevation-not-shadow",
+            "tokens",
+            cutColour
+              ? `shadow \`${row.key}\` ends where its colour should be — \`${value}\` — because a space followed by \`#\` opens a YAML comment, so the hex after it is not part of the value. Write the colour as \`oklch(L C H / alpha)\` (the catalog's colour form) and keep the hex in the trailing comment.`
+              : `\`${row.key}: ${value}\` in \`elevation:\` is not a box-shadow (it needs two offsets and a colour, or \`none\`), so the sidecar drops it. Move motion tokens, z-indices and usage labels to a \`\`\`text fence under \`## Elevation & Depth\`.`
           )
-        } else if (
-          !quoted &&
-          !/^[>|][0-9+-]*$/.test(value) &&
-          !isShadowValue(value)
-        ) {
-          // `#HEX` right after the value, or a `# #HEX` note — not a word or number
-          // that happens to be hex-shaped (`# fade-in`, `# 200 level`).
-          const hex = row.rest.match(
-            /\s+#(?:\s?#)?([0-9a-fA-F]{3,8})(?![\w-])/
-          )?.[1]
-          // Blame the comment only when the hex is what the shadow is missing.
-          const cutColour =
-            hex !== undefined && isShadowValue(`${value} #${hex}`)
-          issues.push(
-            block(
-              "elevation-not-shadow",
-              "tokens",
-              cutColour
-                ? `shadow \`${row.key}\` ends where its colour should be — \`${value}\` — because a space followed by \`#\` opens a YAML comment, so the hex after it is not part of the value. Write the colour as \`oklch(L C H / alpha)\` (the catalog's colour form) and keep the hex in the trailing comment.`
-                : `\`${row.key}: ${value}\` in \`elevation:\` is not a box-shadow (it needs two offsets and a colour, or \`none\`), so the sidecar drops it. Move motion tokens, z-indices and usage labels to a \`\`\`text fence under \`## Elevation & Depth\`.`
-            )
-          )
-        }
+        )
       }
     }
   }
@@ -1220,25 +1159,20 @@ function isComponentDimension(value: string): boolean {
 /** A literal CSS colour — hex or a colour function, OKLCH included. */
 const LITERAL_COLOUR =
   /^(?:#[0-9a-fA-F]{3,8}\b|(?:rgba?|hsla?|hwb|oklch|oklab|lch|lab|color-mix)\s*\()/i
-/** The same hex on its own, then at most a comment. Anything after it
- *  (`#2024 redesign`) makes it a note instead. */
-const LONE_HEX = /^#[0-9a-fA-F]{3,8}(?=[ \t]*(?:#.*)?$)/
-
-/** A property's value as YAML reads the line: a comment opens at a space or
- *  tab then `#` outside quotes, and only spaces and tabs are trimmed.
- *  `stripYamlComment`'s `\s` would also shed a no-break or ideographic space
- *  that YAML keeps — `48px` followed by U+3000 is raw text to the linter. */
-function componentValue(rest: string): string {
-  const yamlTrim = (s: string) => s.replace(/^[ \t]+|[ \t]+$/g, "")
-  const value = yamlTrim(rest)
-  // A quoted scalar ends at its closing quote; only what follows can be a
-  // comment, so `"{colors.x} # y"` is one (inadmissible) value, not a cut one.
-  const quoted = /^(["'])(?:(?!\1).)*\1/.exec(value)
-  if (quoted && /^[ \t]*(?:#.*)?$/.test(value.slice(quoted[0].length))) {
-    return quoted[0]
+/**
+ * Strip a MATCHING surrounding quote pair, either style; leave anything else
+ * alone so a value that merely contains a quote is not mangled. Only for the
+ * advice below, which reads a component value's text as written.
+ */
+function stripQuotes(value: string): string {
+  if (value.length >= 2) {
+    const first = value[0]
+    const last = value[value.length - 1]
+    if ((first === '"' && last === '"') || (first === "'" && last === "'")) {
+      return value.slice(1, -1)
+    }
   }
-  const comment = /[ \t]+#.*$/.exec(value)
-  return comment ? yamlTrim(value.slice(0, comment.index)) : value
+  return value
 }
 
 /** Said wherever a fix moves a property out of the map: removing a
@@ -1300,221 +1234,126 @@ function componentValueFix(value: string): string {
 
 /** A fix that rewrites a row's key side must also carry its value's fix, or
  *  the rewritten row meets `component-value-form` on the next run. */
-function rewrittenRow(prop: string, valueText: string): string {
-  const value = componentValue(valueText)
+function rewrittenRow(prop: string, value: string): string {
   return QUOTED_REFERENCE.test(value) || isComponentDimension(value)
     ? `Write \`${prop}: ${value}\`.`
     : `Write \`${prop}: …\` — and its value \`${value}\` is not one the map reads either: ${componentValueFix(value)}.`
 }
 
+/** A component property's value as written: the scalar's own text, so the
+ *  quotes the admissible forms turn on are still there. A value YAML joined
+ *  from several lines, or a block scalar, is judged as YAML reads it. */
+function componentText(prop: FrontmatterEntryRow): string {
+  const { source, value } = prop
+  if (source !== undefined && !/^[|>]/.test(source) && !source.includes("\n"))
+    return source
+  return typeof value === "string" ? value.trim() : String(value)
+}
+
+/** `height:48px` — a property written with no space after its colon. */
+const GLUED_PROPERTY = /^([A-Za-z]+):(\S.*)$/
+
 /**
- * The spec's `components:` map (#384).
+ * The spec's `components:` map (#384), as `readFrontmatter` reads it.
  *
- * Its shape is exactly two levels — a component head row, then one property per
- * four-space row — because that is what every line-based gate here can read.
- * A one-line flow map is legal YAML the linter resolves, but its values would
- * reach the published document without
- * any gate seeing them; a deeper row is not a spec property at all.
- *
- * Each property is one of the spec's eight, and its value one of the two forms
- * a standard tool reads (#525): a quoted reference, or one `px`/`em`/`rem`
+ * Its shape is two levels — a component, then its properties — and each
+ * property is one of the spec's eight, its value one of the two forms a
+ * standard tool reads (#525): a quoted reference, or one `px`/`em`/`rem`
  * dimension. The linter accepts everything else without a finding — an
  * unquoted reference reaches it as a YAML map, a shorthand or a note as raw
  * text, `48` as a bare number — so this is the only check on the form. Whether
  * a reference resolves is `checkTokenReferences`'s and the linter's; whether a
  * row matches its body spec is the reviewer's.
  *
- * The rows are read line by line, and a line the row splitter does not match
- * (`padding : 12px`, `? padding`, `- height: 48px`, a value continued on the
- * next line) would otherwise go unjudged. So the result is checked against
- * the map as YAML reads it (`components`, null when the block does not
- * parse): every property YAML sees must be a row judged here, holding the
- * value judged here.
- *
  * A component that is YAML `null` (a head row with nothing under it) leaves
  * the linter no model: it then resolves no colours and no type scale, and the
  * only blocks left would name maps that are fine. So it is named here, and
- * `validateDraft` then skips the linter, as it does for unparseable YAML.
+ * `validateDraft` then skips the linter.
  */
-function checkComponentRows(
-  fm: Array<string>,
-  components: YamlNode | undefined
-): Array<ValidationIssue> {
+function checkComponents(read: FrontmatterRead): Array<ValidationIssue> {
+  const map = read.keys.find((k) => k.key === "components")
+  if (!map) return []
   const issues: Array<ValidationIssue> = []
-  // What the line scan saw: each head, the properties judged under it with
-  // the value each was judged on, and the components already blocked.
-  const heads: Array<string> = []
-  const judged = new Map<string, Map<string, string>>()
-  const blocked = new Set<string>()
-  let current: string | null = null
-  const fail = (issue: ValidationIssue) => {
-    issues.push(issue)
-    if (current !== null) blocked.add(current)
-  }
-  for (const row of mapRows(fm, "components")) {
-    // `height: #fff` — a space then `#` opens a YAML comment, so the row reads
-    // as a head with no value. It is a property row whose literal colour was
-    // cut off, not a nesting mistake.
-    const hex = row.indent === 4 ? LONE_HEX.exec(row.rest) : null
-    const canonical =
-      (row.indent === 2 && isHeadRow(row)) ||
-      (row.indent === 4 && (!isHeadRow(row) || hex !== null))
-    // Any row at head depth starts the next component, so a misshapen head's
-    // block is charged to it and the YAML pass does not name it again.
-    if (row.indent <= 2) current = row.indent === 2 ? row.key : null
-    if (row.indent === 2 && canonical) {
-      heads.push(row.key)
-      judged.set(row.key, new Map())
-      continue
-    }
-    // `height:48px` — YAML starts a value only after a space or tab, so the
-    // row is one string and the component's value is that string, with no
-    // property at all. The row splitter here takes `:\s*`, zero spaces too.
-    const valueText = row.line.slice(row.line.indexOf(":") + 1)
-    if (
-      row.indent === 4 &&
-      COMPONENT_PROPERTIES.includes(row.key) &&
-      !/^(?:[ \t]|$)/.test(valueText)
-    ) {
-      fail(
-        block(
-          "component-value-form",
-          "tokens",
-          `component property \`${row.line.trim()}\` has no space after the colon — YAML reads the whole row as one string, so the component gets no property at all. ${rewrittenRow(row.key, valueText)}`
-        )
-      )
-      continue
-    }
-    if (!canonical) {
-      fail(
-        block(
-          "noncanonical-component-shape",
-          "tokens",
-          `component row \`${row.key}\` (indent ${row.indent}) is not the two-level shape \`components:\` takes — a component head row at two spaces, then one property per row at four. A one-line \`{ ... }\` map or a deeper row is read by no gate here, so its values reach the published DESIGN.md unchecked.`
-        )
-      )
-      continue
-    }
-    if (!COMPONENT_PROPERTIES.includes(row.key)) {
-      // `"height": 48px` names a real property; only its quotes are wrong.
-      const bareKey = stripQuotes(row.key)
-      fail(
-        block(
-          "unknown-component-property",
-          "tokens",
-          COMPONENT_PROPERTIES.includes(bareKey)
-            ? `component property \`${row.key}\` is quoted — write the key bare, as every frontmatter key is written. ${rewrittenRow(bareKey, valueText)}`
-            : `component property \`${row.key}\` is not one of the spec's eight (${COMPONENT_PROPERTIES.map((p) => `\`${p}\``).join(", ")}). Standard tools ignore it — keep it in the body spec only; ${ONLY_PROPERTY}.`
-        )
-      )
-      continue
-    }
-    if (hex) {
-      fail(
-        block(
-          "component-value-form",
-          "tokens",
-          `component property \`${row.key}: ${hex[0]}\` has no value — a space then \`#\` opens a YAML comment, so \`${hex[0]}\` is not part of it. Fix: ${componentValueFix(hex[0])}.`
-        )
-      )
-      continue
-    }
-    // From the line itself: the row splitter's `\s*` after the colon would
-    // already have shed a leading no-break space that YAML keeps.
-    const authored = componentValue(valueText)
-    if (QUOTED_REFERENCE.test(authored) || isComponentDimension(authored)) {
-      if (current !== null) judged.get(current)?.set(row.key, authored)
-      continue
-    }
-    fail(
-      block(
-        "component-value-form",
-        "tokens",
-        `component property \`${row.key}: ${authored}\` is neither a quoted reference (\`"{colors.name}"\`) nor one ${COMPONENT_DIMENSION_UNITS.map((u) => `\`${u}\``).join("/")} dimension (\`48px\`), the two forms the spec's \`components:\` map reads — ${componentValueFix(authored)}.`
-      )
-    )
-  }
-
-  return [
-    ...issues,
-    ...crossCheckComponents(components, { heads, judged, blocked }),
-  ]
-}
-
-/**
- * The line scan's reading of `components:`, checked against YAML's.
- *
- * Every component and property YAML sees must be one the scan judged, with
- * the value it judged; a component YAML reads as null is `empty-component`.
- * Without YAML's reading (the block did not parse — already a block), the
- * scan's own empty heads are the best answer.
- */
-function crossCheckComponents(
-  components: YamlNode | undefined,
-  scan: {
-    heads: ReadonlyArray<string>
-    /** Per component, each property judged admissible and its value. */
-    judged: ReadonlyMap<string, ReadonlyMap<string, string>>
-    /** Components the scan already blocked — one cause, one message. */
-    blocked: ReadonlySet<string>
-  }
-): Array<ValidationIssue> {
-  const { heads, judged, blocked } = scan
-  const emptyComponent = (name: string) =>
-    block(
-      "empty-component",
-      "tokens",
-      `component \`${name}\` has no property under it — YAML reads it as null and the official linter then builds no design system at all (it reports no colours and no type scale). Give it at least one of the spec's properties, or delete the row and keep the component in the body spec only.`
-    )
-  if (!isYamlMap(components)) {
-    return heads
-      .filter((name) => !blocked.has(name) && judged.get(name)?.size === 0)
-      .map(emptyComponent)
-  }
-  const issues: Array<ValidationIssue> = []
-  // A head the scan could not read (`  chip :`) hands its rows to the head
-  // above, so no row-level comparison can be trusted until it is fixed: name
-  // the head, and what YAML reads as empty, and stop there.
-  const unseen = Object.keys(components).filter(
-    (name) => !judged.has(name) && !blocked.has(name)
-  )
-  for (const [name, value] of Object.entries(components)) {
-    if (blocked.has(name)) continue
-    if (value === null) {
-      issues.push(emptyComponent(name))
-      continue
-    }
-    const rows = judged.get(name)
-    if (!rows || !isYamlMap(value)) {
+  const shape = (fix: string) =>
+    issues.push(block("noncanonical-component-shape", "tokens", fix))
+  const form = (fix: string) =>
+    issues.push(block("component-value-form", "tokens", fix))
+  for (const component of entriesOf(map)) {
+    const name = component.key
+    if (component.value === null) {
       issues.push(
         block(
-          "noncanonical-component-shape",
+          "empty-component",
           "tokens",
-          `component \`${name}\` is not written as a head row \`  ${name.trim()}:\` with one \`property: value\` row per line at four spaces under it, so no gate here read it. Rewrite it in that shape.`
+          `component \`${name}\` has no property under it — YAML reads it as null and the official linter then builds no design system at all (it reports no colours and no type scale). Give it at least one of the spec's properties, or delete the row and keep the component in the body spec only.`
         )
       )
       continue
     }
-    if (unseen.length > 0) continue
-    for (const [prop, read] of Object.entries(value)) {
-      const authored = rows.get(prop)
-      if (authored === undefined) {
-        issues.push(
-          block(
-            "noncanonical-component-shape",
-            "tokens",
-            `component property \`${name}.${prop}\` is not written as one \`${prop.trim()}: value\` row at four spaces — a space before the colon, a \`?\` key or a list item hides it from every gate here. Rewrite it as \`    ${prop.trim()}: value\`.`
-          )
+    if (!component.rows) {
+      // `height:48px` — YAML starts a value only after a space or tab, so the
+      // row is one string and the component's value is that string, with no
+      // property at all.
+      const glued =
+        typeof component.value === "string"
+          ? GLUED_PROPERTY.exec(component.value)
+          : null
+      if (glued && COMPONENT_PROPERTIES.includes(glued[1])) {
+        form(
+          `component property \`${component.value as string}\` has no space after the colon — YAML reads the whole row as one string, so the component gets no property at all. ${rewrittenRow(glued[1], glued[2])}`
         )
-      } else if (read !== stripQuotes(authored)) {
-        issues.push(
-          block(
-            "component-value-form",
-            "tokens",
-            `component property \`${name}.${prop}\` reads as \`${String(read)}\` to YAML, not \`${authored}\` — the value continues on the next line. Keep it on one line, one value: a shorthand or a note stays in the body spec; ${ONLY_PROPERTY}.`
-          )
+      } else {
+        shape(
+          `component \`${name}\` is not a map of properties — write it as a head row \`  ${name}:\` with one \`property: value\` row under it per property.`
         )
       }
+      continue
+    }
+    for (const prop of entriesOf(component)) {
+      // An unquoted reference: YAML reads `{colors.x}` as a map of one key.
+      const inner = prop.rows ? entriesOf(prop) : []
+      const unquotedReference = inner.length === 1 && inner[0].value === null
+      if ((prop.rows && !unquotedReference) || Array.isArray(prop.value)) {
+        shape(
+          `component property \`${name}.${prop.key}\` holds a ${prop.rows ? "map" : "list"}, not one value — \`components:\` is two levels, a component and its properties. Keep a state or an alternative in the body spec; ${ONLY_PROPERTY}.`
+        )
+        continue
+      }
+      if (!COMPONENT_PROPERTIES.includes(prop.key)) {
+        issues.push(
+          block(
+            "unknown-component-property",
+            "tokens",
+            `component property \`${prop.key}\` is not one of the spec's eight (${COMPONENT_PROPERTIES.map((p) => `\`${p}\``).join(", ")}). Standard tools ignore it — keep it in the body spec only; ${ONLY_PROPERTY}.`
+          )
+        )
+        continue
+      }
+      const hex = commentHex(prop)
+      if (prop.value === null) {
+        if (hex !== undefined) {
+          form(
+            `component property \`${prop.key}: #${hex}\` has no value — a space then \`#\` opens a YAML comment, so \`#${hex}\` is not part of it. Fix: ${componentValueFix(`#${hex}`)}.`
+          )
+        } else {
+          shape(
+            `component property \`${name}.${prop.key}\` has no value. Write one, or remove the row; ${ONLY_PROPERTY}.`
+          )
+        }
+        continue
+      }
+      if (unquotedReference) {
+        form(
+          `component property \`${prop.key}\` — ${componentValueFix(`{${inner[0].key}}`)}.`
+        )
+        continue
+      }
+      const authored = componentText(prop)
+      if (QUOTED_REFERENCE.test(authored) || isComponentDimension(authored))
+        continue
+      form(
+        `component property \`${prop.key}: ${authored}\` is neither a quoted reference (\`"{colors.name}"\`) nor one ${COMPONENT_DIMENSION_UNITS.map((u) => `\`${u}\``).join("/")} dimension (\`48px\`), the two forms the spec's \`components:\` map reads — ${componentValueFix(authored)}.`
+      )
     }
   }
   return issues
@@ -1764,112 +1603,8 @@ const RETIRED_FRONTMATTER_KEYS: ReadonlyMap<string, string> = new Map([
   ],
 ])
 
-/** A top-level key as the site's own parser reads it — its one pattern,
- *  `FRONTMATTER_KEY_NAME`, at column 0 and straight into the colon. */
-const SITE_KEY = new RegExp(`^(${FRONTMATTER_KEY_NAME.source}):`, "gm")
-const SITE_KEY_NAME = new RegExp(`^${FRONTMATTER_KEY_NAME.source}$`)
-/** A YAML key the site would cut at a colon inside it (`name:` from `name::`). */
-const SITE_CUT_KEY = new RegExp(`^(${FRONTMATTER_KEY_NAME.source}):`)
-
-/** Does this key read as the site's parser reads one — a bare name starting
- *  its line, straight into the colon? */
-function isSiteKey(
-  text: string,
-  range: readonly [number, number, number] | null | undefined
-): boolean {
-  if (!range) return false
-  const [start, end] = range
-  return (
-    (start === 0 || text[start - 1] === "\n") &&
-    SITE_KEY_NAME.test(text.slice(start, end)) &&
-    text[end] === ":"
-  )
-}
-
-/**
- * Known keys this repo's readers drop (#449 review).
- *
- * `"lang": ko`, `'slug': x` and `lang : ko` are valid YAML, but the line-based
- * readers here find a key only as a bare `key:` — the site's parser for its
- * fields, the token extractor for the token maps, the validator's regex checks
- * for the rest — so the value silently goes missing to them (the YAML-based
- * readers, such as the spec linter, still see it), and for most keys no other gate
- * noticed. Only the key's spelling is judged; a value the site's parser reads
- * differently from YAML is another matter. Judged only on a block YAML parses cleanly:
- * on a broken one the parser's recovery invents keys, and
- * `frontmatter-yaml-invalid` is already the one message.
- */
-function siteDroppedKnownKeys(
-  raw: string,
-  fmDoc: FrontmatterDoc
-): ReadonlySet<string> {
-  const dropped = new Set<string>()
-  if (!fmDoc || fmDoc.errors.length > 0 || !isMap(fmDoc.contents)) {
-    return dropped
-  }
-  const fmText = splitFrontmatter(raw)?.frontmatter ?? ""
-  // Each item is judged by its own key's source — not by whether some line in
-  // the block looks bare — and an alias key (`? *k`) by what it resolves to;
-  // it is never bare, so a known key reached through one is dropped (#453).
-  for (const item of fmDoc.contents.items) {
-    const node = isAlias(item.key) ? item.key.resolve(fmDoc) : item.key
-    if (!isScalar(node)) continue
-    const key = String(node.value)
-    if (!KNOWN_FRONTMATTER_KEYS.includes(key)) continue
-    if (!isScalar(item.key) || !isSiteKey(fmText, item.key.range)) {
-      dropped.add(key)
-    }
-  }
-  return dropped
-}
-
-/** A frontmatter value as one of the two parsers read it — author input,
- *  typed by neither. */
-// eslint-disable-next-line no-restricted-syntax -- Frontmatter values are author-provided YAML; this compares two untyped readings of them.
-type ReadValue = unknown
-
-/** No value: YAML's `null`, or the site parser's empty list for a key with no
- *  inline value. The one equivalence the two readings share across types —
- *  the site treats an empty list as no value (`slug` falls back to the file
- *  name, `estimated_tokens` to the estimate) or a field rule blocks it
- *  (`bad-name`, `bad-design-system-name`, `missing-logo`, `bad-lang`, …). */
-function isNothing(value: ReadValue): boolean {
-  return (
-    value === null ||
-    value === undefined ||
-    (Array.isArray(value) && value.length === 0)
-  )
-}
-
-/** Is this a value YAML reads as something other than text — a number,
- *  boolean or map? The site's parser reads only text and lists of text. */
-function isNonText(value: ReadValue): boolean {
-  return (
-    typeof value === "number" ||
-    typeof value === "boolean" ||
-    (typeof value === "object" && value !== null && !Array.isArray(value))
-  )
-}
-
-/** Do YAML and the site read the same text, or the same list of it? Compared
- *  by type, not by how the two print: `name: {}` is a map to YAML and the
- *  text `{}` to the site, and `name: [true]` a list of one boolean to YAML.
- *  The site's lists hold only text, so a cyclic YAML value (`&x [*x]`) stops
- *  one level down, where an item meets the site's text. */
-function sameText(yaml: ReadValue, site: ReadValue): boolean {
-  if (isNothing(yaml) || isNothing(site)) {
-    return isNothing(yaml) && isNothing(site)
-  }
-  if (Array.isArray(yaml) || Array.isArray(site)) {
-    return (
-      Array.isArray(yaml) &&
-      Array.isArray(site) &&
-      yaml.length === site.length &&
-      yaml.every((item, i) => sameText(item, site[i]))
-    )
-  }
-  return typeof yaml === "string" && yaml === site
-}
+/** A frontmatter value as YAML reads it — author input, typed by nothing. */
+type ReadValue = FrontmatterValue | undefined
 
 /** A read value as a message shows it — a number as written, not as JSON
  *  (which turns `Infinity` into `null`), and a cyclic YAML value
@@ -1935,31 +1670,6 @@ function emptyListFix(
   return `YAML reads \`${key}: []\` as an empty list, not as a value, and every entry gives \`${key}\` one. Write it on one line as \`${key}: ${value}\`.`
 }
 
-/** The keys `buildDoc` turns into a number (content-parser's
- *  `coerceNumberField`); every other key the site reads stays text. */
-const SITE_NUMBER_KEYS: ReadonlySet<string> = new Set(["estimated_tokens"])
-
-/** Text the site turns into a number, as `coerceNumberField` does. */
-function siteNumber(site: ReadValue): number | undefined {
-  if (typeof site !== "string" || site === "") return undefined
-  const n = Number(site)
-  return Number.isFinite(n) ? n : undefined
-}
-
-/** Does YAML read a key the site keeps as text as a number, boolean or map?
- *  `name: 1.50` is the number 1.5 to YAML and the text `1.50` to the site;
- *  quoting makes both read the text. */
-function readsAsNonText(key: string, yaml: ReadValue): boolean {
-  return !SITE_NUMBER_KEYS.has(key) && isNonText(yaml)
-}
-
-/** A list with something in it — never a fix for a key that holds one value,
- *  so a misread that involves one is told what `list-frontmatter-value`
- *  would say, not how to quote the list. */
-function isFilledList(value: ReadValue): boolean {
-  return Array.isArray(value) && value.length > 0
-}
-
 /** A character a card or title shows: a letter, digit, punctuation or symbol
  *  (`\p{L}`·`\p{N}`·`\p{P}`·`\p{S}`), less the characters in those categories
  *  known to render blank — the four Hangul fillers (letters), the blank
@@ -1990,94 +1700,22 @@ function shownBlankName(value: ReadValue): string {
   return `"${shown}"`
 }
 
-/** Does YAML read text the site turns into a number? `estimated_tokens: "1200"`
- *  and `0b101` are text to YAML and the numbers 1200 and 5 to the site. */
-function readsAsSiteOnlyNumber(
-  key: string,
-  yaml: ReadValue,
-  site: ReadValue
-): boolean {
-  return (
-    SITE_NUMBER_KEYS.has(key) &&
-    typeof yaml !== "number" &&
-    siteNumber(site) !== undefined
-  )
-}
-
-/** Do YAML and the site's parser read one value alike? A key the site turns
- *  into a number is compared as a number (`1.0e3` is `1000`); every other key
- *  as text or a list of text, by type rather than by how the two print. */
-function sameReading(key: string, yaml: ReadValue, site: ReadValue): boolean {
-  if (SITE_NUMBER_KEYS.has(key)) {
-    if (typeof yaml === "number") return siteNumber(site) === yaml
-    if (readsAsSiteOnlyNumber(key, yaml, site)) return false
-  }
-  return sameText(yaml, site)
-}
-
-/** A consumed key as the two parsers read it. `cutAs` is set when the site
- *  read the value from a line it cut at a colon YAML keeps in the key — that
- *  line's YAML key as spelled (`name:x` from `name:x: y`). */
-interface Misread {
-  yaml: ReadValue
-  site: ReadValue
-  cutAs: string | undefined
-}
-
 /**
- * The YAML key of the line the site last read `key` from, when the site cut
- * that line at a colon inside YAML's key: `name:x: y` is the key `name:x` to
- * YAML and `name` to the site, `name:: 토스` the key `name:`. Undefined when
- * that line is an ordinary `key: …`. The site reads every `key:` line at
- * column 0 and keeps the last, so the last such line is the one it read.
- */
-function siteCutLine(fmText: string, key: string): string | undefined {
-  let last: string | undefined
-  for (const line of fmText.split(/\r?\n/)) {
-    const m = SITE_CUT_KEY.exec(line)
-    if (m && m[1] === key) last = line
-  }
-  if (last === undefined) return undefined
-  const after = last.slice(key.length + 1)
-  if (after === "" || /^\s/.test(after)) return undefined
-  // A plain YAML key runs to the first colon followed by a space or line end.
-  // Spaces before that colon are not part of the key (`name:x  : y`).
-  const sep = /:(?=\s|$)/.exec(after)
-  return `${key}:${sep ? after.slice(0, sep.index) : after}`.trimEnd()
-}
-
-/** The frontmatter as the site's parser reads it, before `buildDoc` falls back
- *  or drops a field; empty where it cannot read the file at all. */
-function siteFrontmatter(raw: string): Record<string, ReadValue> {
-  try {
-    return matter(raw).data
-  } catch {
-    return {}
-  }
-}
-
-/**
- * A `design_system_name:` line that both parsers read back as exactly `value`,
- * or null when no plain form does. Tried bare first, then double-quoted, then
+ * A `design_system_name:` line that YAML reads back as exactly `value`, or
+ * null when no plain form does. Tried bare first, then double-quoted, then
  * single-quoted: YAML reads escapes inside double quotes and doubled `''`
- * inside single ones, while the site's parser only strips the outer quotes, so
- * each form is checked by reading it, not by reasoning about its characters.
+ * inside single ones, so each form is checked by reading it with the one
+ * reader, not by reasoning about its characters.
  */
 function lineReadAs(value: string): string | null {
   const key = "design_system_name"
   for (const form of [value, `"${value}"`, `'${value}'`]) {
     const line = `${key}: ${form}`
-    const yaml = parseDocument(line)
-    if (yaml.errors.length > 0) continue
-    let readByYaml: ReadValue
-    try {
-      // An alias to nothing (`*x`) parses but throws on conversion.
-      readByYaml = yaml.toJS()?.[key]
-    } catch {
-      continue
-    }
-    const siteValue = siteFrontmatter(`---\n${line}\n---\n`)[key]
-    if (readByYaml === value && siteValue === value) return line
+    const read = readFrontmatter(`---\n${line}\n---\n`)
+    if (!read.ok) continue
+    const [only] = read.keys
+    if (read.keys.length === 1 && only.key === key && only.value === value)
+      return line
   }
   return null
 }
@@ -2103,14 +1741,14 @@ function withoutStandaloneDashes(name: string): string {
  * The fix `design-system-name-separator` offers: one the next run accepts.
  *
  * A candidate name is offered only when this rule and `bad-design-system-name`
- * would both pass it — checked, not assumed — and only as a line both parsers
- * read back as exactly that name (`lineReadAs`). The value here has had its
+ * would both pass it — checked, not assumed — and only as a line YAML reads
+ * back as exactly that name (`lineReadAs`). The value here has had its
  * quotes stripped, and written bare it can break (`Foo: - Bar`), turn into a
  * list (`- Foo`) or lose a tail to a comment (`Foo - #1`) (#508 review).
  *
  * A name that needs quoting yet holds both kinds of quote mark (`[a] "b" 'c'`)
- * fits no one line — escapes inside double quotes are what the site's parser
- * does not undo — so the marks and backslashes go, and the dashes are dealt
+ * fits no one line — a quote mark inside quotes of its kind would need an
+ * escape, which changes the name — so the marks and backslashes go, and the dashes are dealt
  * with again: removing quotes can free one (`"—"` becomes `—`). If nothing is
  * left to offer, the key may be left out, which is always accepted.
  */
@@ -2129,167 +1767,275 @@ function separatorFix(name: string): string {
   return "remove the line"
 }
 
-/** A value YAML cannot expand within its alias limit. */
-const TOO_MANY_ALIASES: unique symbol = Symbol("too many aliases")
-
-/**
- * One key's value as YAML reads it. Converted key by key, not as a whole
- * document: `toJS` throws past its alias limit (100), and one alias-heavy map
- * the site never reads (`grid:`) would otherwise switch off every comparison.
- * A consumed key that is itself past the limit reads as `TOO_MANY_ALIASES`,
- * which matches no reading the site has.
- */
-function yamlValue(fmDoc: NonNullable<FrontmatterDoc>, key: string): ReadValue {
-  const node = fmDoc.get(key, true)
-  if (!isNode(node)) return node
-  try {
-    return node.toJS(fmDoc)
-  } catch {
-    return TOO_MANY_ALIASES
-  }
-}
-
-/** What to tell the author about a misread value, by its cause. */
-function misreadFix(key: string, { yaml, site, cutAs }: Misread): string {
-  if (yaml === TOO_MANY_ALIASES) {
-    return `YAML cannot expand \`${key}\` within its alias limit, while the site's frontmatter parser reads it as ${shownValue(site)}. Write the value itself, with no anchors or aliases.`
-  }
-  if (cutAs !== undefined) {
-    return `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)} from the line YAML reads as the key \`${cutAs}\`: the site cuts a key at its first colon, YAML only at a colon followed by a space. Write \`${key}: …\` — one colon, then a space — or remove that line.`
-  }
-  if (yaml === undefined) {
-    return `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)} from a \`${key}:\` line that YAML reads as part of another key's value — a quoted or multi-line value running on to it. Keep each value on its own key's line.`
-  }
-  // A count YAML does not read as a number — text the site turns into one
-  // (`"1200"`, `0b101`), or a value neither can (`true`, `{}`, `[1200]`):
-  // the fix is the same, and naming it saves a second run that would only
-  // then report `buildDoc`'s "must be a number".
-  if (SITE_NUMBER_KEYS.has(key) && typeof yaml !== "number") {
-    const asNumber = siteNumber(site)
-    return `YAML reads \`${key}\` as ${shownValue(yaml)}${asNumber === undefined ? "" : `, but the site's frontmatter parser turns it into the number ${shownValue(asNumber)}`}. It must be a plain decimal number, unquoted — \`${key}: 1200\`.`
-  }
-  if (isFilledList(yaml) || isFilledList(site)) {
-    return `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)} and YAML as ${shownValue(yaml)} — a list, where it holds one value. Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
-  }
-  if (readsAsNonText(key, yaml)) {
-    return `YAML reads \`${key}\` as ${shownValue(yaml)}, which is not text, but the site's frontmatter parser reads it as ${shownValue(site)}. Quote the value so both read the same text.`
-  }
-  return `The site's frontmatter parser reads \`${key}\` as ${shownValue(site)}, but YAML reads it as ${shownValue(yaml)}. The site takes a value only from the key's own line: write \`${key}: …\` on one line, quote it only if it holds \`: \` or \` #\`, use no escapes inside the quotes, put no comment after a quoted value, and write no YAML-only value (\`~\`, \`null\`, \`.inf\`) or syntax — tag (\`!!str\`), anchor (\`&a\`), alias (\`*a\`), block scalar (\`|\`, \`>\`) — the site reads those as text.`
-}
-
-/**
- * Keys the site reads, whose value its parser reads differently from YAML.
- *
- * `parseYamlSubset` takes a value only from the key's own line. A value on the
- * next line (`name:` then `  토스`) comes back as an empty list, one that runs
- * on to a second line keeps only the first, and a quoted value keeps its
- * escapes — all valid YAML, all read silently wrong; `name` passed every gate.
- * Only the keys the site reads (`CONSUMED_KEYS`) are compared, only on a block
- * YAML parses cleanly, and not a key `nonbare-frontmatter-key` already dropped.
- */
-function siteMisreadValues(
-  raw: string,
-  fmDoc: FrontmatterDoc,
-  dropped: ReadonlySet<string>
-): ReadonlyMap<string, Misread> {
-  const misread = new Map<string, Misread>()
-  if (!fmDoc || fmDoc.errors.length > 0 || !isMap(fmDoc.contents)) {
-    return misread
-  }
-  const siteData = siteFrontmatter(raw)
-  const fmText = splitFrontmatter(raw)?.frontmatter ?? ""
-  for (const key of CONSUMED_KEYS) {
-    // A key YAML lacks is still compared when the site read it: the site cuts
-    // a key at its first colon, YAML only at one followed by a space, so
-    // `name:: 토스` is the key `name:` to YAML and `name` to the site.
-    if (dropped.has(key) || (!fmDoc.has(key) && !(key in siteData))) continue
-    const yaml = yamlValue(fmDoc, key)
-    const site = siteData[key]
-    if (!sameReading(key, yaml, site)) {
-      misread.set(key, { yaml, site, cutAs: siteCutLine(fmText, key) })
-    }
-  }
-  return misread
-}
-
-/** Is this YAML key, as spelled in the file, the line a misread came from?
- *  The site read it — it is not ignored — and the misread already names it,
- *  so an unknown-key warn would say the opposite. A cut line the site did not
- *  read its value from (a later `name:` line won) is a stray key only the warn
- *  names, so it keeps the warn. */
-function isMisreadLine(
-  spelled: string,
-  misread: ReadonlyMap<string, Misread>
-): boolean {
-  return [...misread.values()].some((m) => m.cutAs === spelled)
-}
-
-function checkFrontmatterKeys(
-  raw: string,
-  fmDoc: FrontmatterDoc,
-  misread: ReadonlyMap<string, Misread>
-): Array<ValidationIssue> {
-  // Strip a UTF-8 BOM the same way content-parser's matter() does, so the
-  // `^---` anchor still finds the frontmatter fence.
-  const withoutBom = raw.charCodeAt(0) === 0xfeff ? raw.slice(1) : raw
-  const fmBlock = withoutBom.match(/^---\r?\n([\s\S]*?)\r?\n---/)
-  if (!fmBlock) return []
+function checkFrontmatterKeys(read: FrontmatterRead): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
-  // Retired keys are judged on the keys YAML itself resolves, not on how they
-  // are spelled: bare, quoted and escaped (`"sources"`) spellings all
-  // resolve to `sources`, and review found them one at a time. The site's own
-  // parser ignores every non-bare spelling, so none of them would otherwise
-  // surface. The bare scan is kept for a block YAML cannot parse (that block
-  // already fails `frontmatter-yaml-invalid`, but should still name the key).
-  // Resolved key → the spelling in the file. Rules judge the resolved key;
-  // messages name the spelling too, since `True:` resolves to `true` and
-  // `0x1F:` to `31` — strings the author cannot find by searching the file.
-  const keys = new Map<string, string>()
-  if (fmDoc) {
-    const contents = fmDoc.contents
-    const text = splitFrontmatter(raw)?.frontmatter ?? ""
-    if (isMap(contents)) {
-      for (const item of contents.items) {
-        if (!isScalar(item.key)) continue
-        const key = String(item.key.value)
-        const range = item.key.range
-        if (!keys.has(key)) {
-          keys.set(key, range ? text.slice(range[0], range[1]).trim() : key)
-        }
-      }
-    }
-  }
-  // Only where YAML failed: on a clean block the bare scan adds nothing true,
-  // and a key YAML resolves to another spelling (`True:` → `true`) would be
-  // named twice.
-  if (!fmDoc || fmDoc.errors.length > 0) {
-    // Skip what YAML already found, by resolved key or by spelling — `True`
-    // is already here as the spelling of `true`.
-    const spelled = new Set(keys.values())
-    for (const m of fmBlock[1].matchAll(SITE_KEY)) {
-      if (!keys.has(m[1]) && !spelled.has(m[1])) keys.set(m[1], m[1])
-    }
-  }
-  // Both rules judge the same resolved keys. The unknown-key warn used to run
-  // its own bare scan, so a quoted `"notes":` — valid YAML the site parser
-  // ignores — was never compared at all (the blind spot #447 closed in
-  // `mapRows`).
-  for (const [key, spelled] of keys) {
+  // Judged on the keys as YAML reads them, so a quoted or escaped spelling
+  // (`"sources"`, `"sour\u0063es"`) is the key it reads as.
+  for (const { key } of read.keys) {
     const retired = RETIRED_FRONTMATTER_KEYS.get(key)
     if (retired) {
       issues.push(block("retired-frontmatter-key", "frontmatter", retired))
-    } else if (
-      !KNOWN_FRONTMATTER_KEYS.includes(key) &&
-      !isMisreadLine(spelled, misread)
-    ) {
+    } else if (!KNOWN_FRONTMATTER_KEYS.includes(key)) {
       issues.push(
         warn(
           "unknown-frontmatter-key",
           "frontmatter",
-          `Unknown frontmatter key \`${spelled}\` (${spelled === key ? "" : `YAML reads it as \`${key}\`; `}ignored by the site) — likely a typo for one of: ${KNOWN_FRONTMATTER_KEYS.join(", ")}.`
+          `Unknown frontmatter key \`${key}\` (ignored by the site) — likely a typo for one of: ${KNOWN_FRONTMATTER_KEYS.join(", ")}.`
         )
       )
     }
+  }
+  return issues
+}
+
+/**
+ * The keys the site reads, judged as `readFrontmatter` reads them — the reading
+ * the site's build, the token extractor and every DESIGN.md consumer share.
+ *
+ * Each key holds one value, so a list in any of them is one block
+ * (`list-frontmatter-value`) and no field rule judges it as well. A taken-down
+ * entry's `logo` is the takedown's one block, whatever the line holds.
+ */
+function checkFields(
+  read: FrontmatterRead,
+  opts: DraftValidationOptions,
+  entrySlug: string,
+  fileSlug: string
+): Array<ValidationIssue> {
+  const issues: Array<ValidationIssue> = []
+  const written = new Map(read.keys.map((k) => [k.key, k]))
+  const takedowns = opts.logoTakedowns ?? LOGO_TAKEDOWNS
+  // Which entry is taken down is the caller's expected slug when it gives one:
+  // the written slug answers to it (`slug-arg-mismatch`), so a wrong slug line
+  // neither hides the takedown nor takes another entry's logo away.
+  const takenDown = takedowns.has(opts.expectedSlug ?? entrySlug)
+
+  // A taken-down entry has no `logo` key (docs/TAKEDOWN.md). Whatever the line
+  // holds — a URL, nothing, a list — the fix is the same, and each form's own
+  // fix ("write a value", "one line") would bring the logo back.
+  if (takenDown) {
+    const logoWritten = written.has("logo")
+    if (logoWritten || opts.expectedLogoUrl) {
+      issues.push(
+        block(
+          logoWritten ? "takedown-logo-declared" : "expected-logo-mismatch",
+          "frontmatter",
+          takedownLogoFix(opts.expectedLogoUrl, logoWritten)
+        )
+      )
+    }
+  }
+
+  /** The key's value when it holds one value; undefined when absent. */
+  const single = new Map<string, FrontmatterKey>()
+  for (const key of CONSUMED_KEYS) {
+    const entry = written.get(key)
+    if (!entry) continue
+    if (!Array.isArray(entry.value)) {
+      single.set(key, entry)
+      continue
+    }
+    if (key === "logo" && takenDown) continue
+    issues.push(
+      block(
+        "list-frontmatter-value",
+        "frontmatter",
+        entry.value.length > 0
+          ? `YAML reads \`${key}\` as the list ${shownValue(entry.value)}, but it holds one value. Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
+          : emptyListFix(key, opts.expectedLogoUrl)
+      )
+    )
+  }
+  const value = (key: string): ReadValue => single.get(key)?.value
+
+  // The values no field rule below judges — a date's form, the token count —
+  // are judged by the site's own check, so a value this passes is one the
+  // site's build takes.
+  for (const key of ["last_updated", "created_at", "estimated_tokens"]) {
+    const entry = single.get(key)
+    if (!entry || entry.value === null) continue
+    try {
+      siteValue(entry, `line ${entry.line}`)
+    } catch (e) {
+      issues.push(
+        block(
+          "frontmatter-parse",
+          "frontmatter",
+          `The site's build refuses this value — ${e instanceof Error ? e.message : String(e)}`
+        )
+      )
+    }
+  }
+
+  const category = value("category")
+  if (
+    single.has("category") &&
+    (typeof category !== "string" ||
+      !(CATEGORIES as ReadonlyArray<string>).includes(category))
+  ) {
+    issues.push(
+      block(
+        "bad-category",
+        "frontmatter",
+        `category ${shownValue(category)} is not in the CATEGORIES enum (${CATEGORIES.join(", ")}).`
+      )
+    )
+  }
+  // The catalog sorts, titles and feeds by the name as text. Blank includes
+  // whitespace alone, which the card shows as nothing; a bare `name:` (YAML's
+  // null) or a value YAML reads as a number is no name either. Without a
+  // `name` key the site names the entry by its slug.
+  const name = value("name")
+  if (single.has("name") && isBlankName(name)) {
+    issues.push(
+      block(
+        "bad-name",
+        "frontmatter",
+        `name must be one line of text with at least one visible character, as \`name: 토스\` (got ${shownBlankName(name)}).`
+      )
+    )
+  }
+  const systemName = value("design_system_name")
+  if (single.has("design_system_name") && isBlankName(systemName)) {
+    issues.push(
+      block(
+        "bad-design-system-name",
+        "frontmatter",
+        `design_system_name must be one line of text with at least one visible character, as \`design_system_name: TDS\`, or no line at all (got ${shownBlankName(systemName)}).`
+      )
+    )
+  }
+  // The catalog index writes the name as `: category · {name} — tagline`,
+  // whitespace folded, and readers end it at the first ` — ` (#466,
+  // `buildLlmsTxt` and the consumer skill's endpoints reference). The name
+  // sits between ` · ` and ` — `, so in its folded form no em dash may
+  // stand as a word of its own — `Foo —` and `— Foo` are cut as surely as
+  // `Foo — Bar`. A dash without spaces on both sides is not a split point
+  // and stays.
+  if (
+    typeof systemName === "string" &&
+    !isBlankName(systemName) &&
+    hasStandaloneDash(systemName)
+  ) {
+    issues.push(
+      block(
+        "design-system-name-separator",
+        "frontmatter",
+        `design_system_name \`${systemName}\` has an em dash standing as a word of its own; the catalog index writes the name between " · " and " — " and ends it at the first " — ", so such a dash, even at either end, cuts it; ${separatorFix(systemName)}.`
+      )
+    )
+  }
+  // A slug written empty falls back to the file name, as an absent one does —
+  // so in the pipeline, which validates `draft.md`, it reads as `draft`.
+  const slugValue = value("slug")
+  const slug =
+    slugValue === undefined || slugValue === null ? fileSlug : slugValue
+  if (!single.has("slug") && written.has("slug")) {
+    // A list — `list-frontmatter-value` already said so.
+  } else if (typeof slug !== "string" || !SLUG_FORM.test(slug)) {
+    issues.push(
+      block(
+        "bad-slug",
+        "frontmatter",
+        `slug ${shownValue(slug)} must be one line of text matching ^[a-z0-9-]+$.`
+      )
+    )
+  } else if (opts.expectedSlug && slug !== opts.expectedSlug) {
+    issues.push(
+      block(
+        "slug-arg-mismatch",
+        "frontmatter",
+        `frontmatter slug \`${slug}\` differs from the expected slug \`${opts.expectedSlug}\`.`
+      )
+    )
+  }
+  const lastUpdated = value("last_updated")
+  const createdAt = value("created_at")
+  if (!written.has("last_updated") || lastUpdated === null) {
+    issues.push(
+      block(
+        "missing-last-updated",
+        "frontmatter",
+        "last_updated is missing — set it to today's date as YYYY-MM-DD."
+      )
+    )
+  }
+  // The catalog list, llms.txt, sitemap and OG build are all ordered by
+  // created_at, so an entry without one sinks to the bottom regardless of
+  // when it was actually added. Blocking here is what stops the skill from
+  // shipping another undated entry.
+  if (!written.has("created_at") || createdAt === null) {
+    issues.push(
+      block(
+        "missing-created-at",
+        "frontmatter",
+        "created_at is missing — set it to the date this entry first lands in the catalog as YYYY-MM-DD (today's date for a new entry)."
+      )
+    )
+  }
+  // An entry cannot be added after the last time it was synced. The #194
+  // backfill relied on exactly this invariant to pick created_at for four
+  // undated entries, so encode it rather than leave it in a commit message.
+  // Warn, not block: it flags a likely typo in one of the two dates, and a
+  // genuine historical oddity should not stop a contribution.
+  if (
+    typeof createdAt === "string" &&
+    typeof lastUpdated === "string" &&
+    createdAt > lastUpdated
+  ) {
+    issues.push(
+      warn(
+        "created-at-after-last-updated",
+        "frontmatter",
+        `created_at (${createdAt}) is later than last_updated (${lastUpdated}) — an entry cannot be added after it was last synced. Check which of the two dates is wrong.`
+      )
+    )
+  }
+  // This rule is what enforces docs/adr/0001-korean-design-md-only.md: an
+  // entry is one Korean file. Without a `lang` key the site reads `ko`.
+  const lang = value("lang")
+  if (single.has("lang") && lang !== "ko") {
+    issues.push(
+      block(
+        "bad-lang",
+        "frontmatter",
+        `lang ${shownValue(lang)} must be exactly \`ko\` — an entry is one Korean design.md, with no second-language companion.`
+      )
+    )
+  }
+  // Every entry carries a logo: without one the catalog grid card falls back
+  // to a first-letter badge and the OG image to text only, and the /design-md
+  // skill no longer lets intake skip it. The one exemption is a recorded
+  // takedown (docs/TAKEDOWN.md, ./logo-takedowns), judged above.
+  const logo = value("logo")
+  if (takenDown || (written.has("logo") && !single.has("logo"))) {
+    // The takedown's block, or the list's.
+  } else if (typeof logo !== "string" || logo === "") {
+    issues.push(
+      block(
+        "missing-logo",
+        "frontmatter",
+        `frontmatter \`logo\` is missing — every entry needs a logo (symbol preferred; app icon or confirmed wordmark as the /design-md fallbacks) as ${opts.expectedLogoUrl ? `\`logo: ${opts.expectedLogoUrl}\`` : "`logo: https://getdesign.kr/logos/{slug}.{svg,png,webp,avif}`"}.`
+      )
+    )
+  } else if (opts.expectedLogoUrl) {
+    if (logo !== opts.expectedLogoUrl) {
+      issues.push(
+        block(
+          "expected-logo-mismatch",
+          "frontmatter",
+          `frontmatter \`logo\` must be exactly \`${opts.expectedLogoUrl}\` (got \`${logo}\`) — the absolute URL form, never a site-relative shortcut.`
+        )
+      )
+    }
+  } else if (!LOGO_URL_FORM.test(logo)) {
+    issues.push(
+      block(
+        "logo-url-form",
+        "frontmatter",
+        `frontmatter \`logo\` \`${logo}\` must be a fully-qualified https://getdesign.kr/logos/*.{svg,png,webp,avif} URL.`
+      )
+    )
   }
   return issues
 }
@@ -2362,26 +2108,18 @@ const SCHEMA_KEY_RULES: ReadonlySet<string> = new Set([
 function checkSpecLint(
   raw: string,
   slug: string | undefined
-): {
-  issues: Array<ValidationIssue>
-  /** The token names the linter resolved per required map — null when it
-   *  threw. */
-  resolved: Record<RequiredTokenMap, ReadonlyArray<string>> | null
-} {
+): Array<ValidationIssue> {
   let report: ReturnType<typeof lint>
   try {
     report = lint(raw)
   } catch (e) {
-    return {
-      issues: [
-        block(
-          "spec-lint-crash",
-          "spec",
-          `The official DESIGN.md linter threw on this document: ${e instanceof Error ? e.message : String(e)}`
-        ),
-      ],
-      resolved: null,
-    }
+    return [
+      block(
+        "spec-lint-crash",
+        "spec",
+        `The official DESIGN.md linter threw on this document: ${e instanceof Error ? e.message : String(e)}`
+      ),
+    ]
   }
   const issues: Array<ValidationIssue> = []
   const ds = report.designSystem
@@ -2447,112 +2185,7 @@ function checkSpecLint(
       warn("spec-unrecorded-limitation", "spec", `${found} ${advice}`)
     )
   }
-  return {
-    issues,
-    resolved: {
-      colors: [...ds.colors.keys()],
-      typography: [...ds.typography.keys()],
-    },
-  }
-}
-
-/** The two token maps every entry must publish (#428). `spacing:` and
- *  `rounded:` are not required: a brand may publish neither, and requiring them
- *  would press an author to invent values. */
-type RequiredTokenMap = "colors" | "typography"
-
-const REQUIRED_TOKEN_MAPS: ReadonlyArray<{
-  map: RequiredTokenMap
-  /** Whether the extractor must read every token the linter resolves, not
-   *  just one. Colours may not: the linter resolves alias rows (`{colors.x}`,
-   *  `primary:`) that the sidecar leaves out by design, so an entry with
-   *  aliases reads fewer colours than it resolves. The catalog publishes no
-   *  typography aliases, so a shortfall there is a style gone missing. */
-  mustReadAll: boolean
-  howTo: string
-}> = [
-  {
-    map: "colors",
-    mustReadAll: false,
-    howTo:
-      "Write each colour as `name: oklch(...)` on its own line; alias rows (`{colors.x}`) are not tokens to it.",
-  },
-  {
-    map: "typography",
-    mustReadAll: true,
-    howTo:
-      "The extractor reads a style only when at least one of four-space `fontSize` / `fontWeight` / `lineHeight` / `letterSpacing` is nested under its name on its own line — the inline `name: { size, … }` and `name: 16 / 24 / 700` forms and a whole-style alias (`{typography.x}`) read as zero. A font family the brand publishes with no size is not a type style: move it to the catalog-only `fonts:` map rather than inventing a size.",
-  },
-]
-
-/**
- * The token extractor's verdict on the required maps (#428).
- *
- * The linter is one reader of the frontmatter; the extractor is the other — it
- * builds the sidecar behind the Tokens tab and `use-design-md`. A map the
- * linter resolves but the extractor reads nothing from would ship an empty
- * sidecar with every other gate green; a type scale it reads only part of
- * would ship with styles silently missing. A map the linter resolved nothing
- * from is left to `checkSpecLint`, which already gives that cause its one
- * message.
- */
-function checkExtractedTokens(
-  raw: string,
-  resolved: Record<RequiredTokenMap, ReadonlyArray<string>>,
-  /** Maps whose key the site's parser drops — already one block each. */
-  dropped: ReadonlySet<string>
-): Array<ValidationIssue> {
-  // The extractor reads through the shared reader (ADR 0011), which refuses a
-  // document past YAML's alias limit even when this validator's own reading
-  // goes on comparing (#454). That read failure is the cause, reported by the
-  // rules that read the same keys; a second message here would only restate it.
-  let extracted: ReturnType<typeof extractTokensFromMarkdown>
-  try {
-    extracted = extractTokensFromMarkdown(raw)
-  } catch {
-    return []
-  }
-  const issues: Array<ValidationIssue> = []
-  for (const { map, mustReadAll, howTo } of REQUIRED_TOKEN_MAPS) {
-    const want = resolved[map].length
-    if (want === 0 || dropped.has(map)) continue
-    const readNames = new Set(extracted[map].map((t) => sameKey(t.name)))
-    const read = readNames.size
-    // By name, not count, where every token must read: a row the extractor
-    // picks up from outside the map would otherwise stand in for a style it
-    // failed to read (#447 review). A colour shortfall is mostly alias rows,
-    // which are meant to be missing, so colours only need one.
-    const unread = mustReadAll
-      ? resolved[map].filter((name) => !readNames.has(sameKey(name)))
-      : []
-    if (mustReadAll ? unread.length === 0 : read > 0) continue
-    // Of the tokens the linter resolved, how many the sidecar will carry — one
-    // number for both the count and the empty/partial wording.
-    const carried = mustReadAll ? want - unread.length : read
-    const which =
-      unread.length > 0
-        ? ` Unread: ${unread
-            .slice(0, 8)
-            .map((n) => `\`${n}\``)
-            .join(", ")}${unread.length > 8 ? ", …" : ""}.`
-        : ""
-    issues.push(
-      block(
-        "unreadable-token-map",
-        "tokens",
-        `The official linter resolves ${want} token(s) in \`${map}:\`, but the token extractor reads ${carried} of ${want} — the sidecar behind the Tokens tab and \`use-design-md\` would ship ${carried === 0 ? "empty" : "without the rest"}.${which} ${howTo}`
-      )
-    )
-  }
   return issues
-}
-
-/** A token name as both readers agree on it. The linter's names are YAML
- *  keys, which the parser normalises (`1.0:` → `1`); the extractor's are the
- *  source text. Numbers are the only such case a type scale meets. */
-function sameKey(name: string): string {
-  const n = Number(name)
-  return name.trim() !== "" && Number.isFinite(n) ? String(n) : name
 }
 
 export function validateDraft(
@@ -2561,22 +2194,12 @@ export function validateDraft(
 ): DraftValidationResult {
   const issues: Array<ValidationIssue> = []
 
-  let doc: ServiceDoc | null = null
-  // Reported once the misread values are known: the site's reading of a
-  // misread date or count is what makes `buildDoc` throw, and that value
-  // already has its one block.
-  let buildError: string | null = null
-  try {
-    doc = buildDoc(opts.filePath, raw)
-  } catch (e) {
-    buildError = e instanceof Error ? e.message : String(e)
-  }
-
   // The site's content collection loads every services/*.md, `_`-prefixed or
   // not, but the catalog checks used to skip `_` files as demo fixtures — so
   // such a file was published without ever being validated. The fixtures are
   // gone; the prefix now blocks instead of exempting.
   const fileName = opts.filePath.split("/").pop() ?? ""
+  const fileSlug = fileName.replace(/\.md$/, "")
   if (fileName.startsWith("_")) {
     issues.push(
       block(
@@ -2586,376 +2209,60 @@ export function validateDraft(
       )
     )
   }
-  const fmDoc = parseFrontmatter(raw)
-  const yamlIssues = checkFrontmatterYaml(fmDoc)
-  issues.push(...yamlIssues)
-  // A dropped key is one cause, so its consequences — every field rule that
-  // would judge the default or nothing the site sees in its place, and a
-  // token map the extractor reads nothing from — are silenced below, so the
-  // author is told to unquote, not to fix what is already there.
-  const dropped = siteDroppedKnownKeys(raw, fmDoc)
-  const misread = siteMisreadValues(raw, fmDoc, dropped)
-  issues.push(...checkFrontmatterKeys(raw, fmDoc, misread))
-  // What the site's parser read, before `buildDoc` falls back or drops.
-  const siteRead = siteFrontmatter(raw)
-  // Where YAML cannot read the block, only the site's reading is known — the
-  // message must not claim YAML's.
-  const yamlRead =
-    fmDoc !== null && fmDoc.errors.length === 0 && isMap(fmDoc.contents)
-  // A consumed key holds one value. A list both parsers read alike is one
-  // cause, and each field rule's message about it would contradict itself
-  // (`lang \`ko\` must be exactly \`ko\``) or call it missing. An explicit
-  // `[]` is a list too: the site reads it as it reads a bare `key:`, but YAML
-  // reads a list, not null — so it is judged by YAML's reading, which keeps
-  // the two apart (`estimated_tokens: []` would otherwise pass as no count).
-  const listed = CONSUMED_KEYS.filter((key) => {
-    if (dropped.has(key) || misread.has(key)) return false
-    return (
-      isFilledList(siteRead[key]) ||
-      (yamlRead && Array.isArray(yamlValue(fmDoc, key)))
-    )
-  })
-  // Keys whose field the site does not see as written — dropped, misread, or
-  // a list where one value belongs.
-  const unseen = new Set<string>([...dropped, ...misread.keys(), ...listed])
-  // `buildDoc`'s field errors open with the field's name.
-  const buildBlocked = buildError
-  if (
-    buildBlocked !== null &&
-    ![...unseen].some((key) => buildBlocked.startsWith(`${key} `))
-  ) {
-    issues.push(
-      block(
-        "frontmatter-parse",
-        "frontmatter",
-        `Frontmatter does not round-trip through buildDoc(): ${buildBlocked}`
-      )
-    )
-  }
+
+  const body = splitFrontmatter(raw)?.body ?? raw
+  const read = readFrontmatter(raw)
   // The entry's slug for lookups keyed by it (recorded limitations, logo
-  // takedowns). A dropped or misread slug reads as the file name (`draft` in
-  // the pipeline) or a fragment, not the entry's — so it falls back to what
-  // the caller expects, then the file name, as does a slug that is not text
-  // or a document `buildDoc` rejects.
-  const siteSlug: ReadValue = doc?.frontmatter.slug
+  // takedowns, citations): the written slug, else the caller's, else the
+  // file name.
+  const slugEntry = read.ok
+    ? read.keys.find((k) => k.key === "slug")
+    : undefined
   const entrySlug =
-    (!unseen.has("slug") && typeof siteSlug === "string"
-      ? siteSlug
+    (typeof slugEntry?.value === "string" && slugEntry.value !== ""
+      ? slugEntry.value
       : undefined) ??
     opts.expectedSlug ??
-    (opts.filePath.split("/").pop() ?? "").replace(/\.md$/, "")
-  const takedowns = opts.logoTakedowns ?? LOGO_TAKEDOWNS
-  // A taken-down entry that writes `logo` in any form gets the takedown's
-  // fix from whichever rule judges the line: each form's own fix ("write it
-  // bare", "on one line", "quote it") would bring the logo back. Which entry
-  // that is, is the caller's expected slug when it gives one: the written
-  // slug answers to it (`slug-arg-mismatch`), so a wrong slug line neither
-  // hides the takedown for a run nor takes another entry's logo away.
-  const takenDown = takedowns.has(opts.expectedSlug ?? entrySlug)
-  const fixFor = (key: string, fix: string): string =>
-    key === "logo" && takenDown ? takedownLogoFix(opts.expectedLogoUrl) : fix
-  for (const key of dropped) {
-    issues.push(
-      block(
-        "nonbare-frontmatter-key",
-        "frontmatter",
-        fixFor(
-          key,
-          `This repo's line-based readers of the frontmatter — the site's parser, the token extractor and the validator's regex checks — find a key only as a plain \`${key}:\` starting its line, so this way of writing \`${key}\` is valid YAML they silently skip. Write it as \`${key}:\` at column 0 — no quotes, indentation, anchor or tag, \`?\` key, alias or flow map, and no space before the colon.`
-        )
-      )
-    )
-  }
-  for (const [key, read] of misread) {
-    issues.push(
-      block(
-        "misread-frontmatter-value",
-        "frontmatter",
-        fixFor(key, misreadFix(key, read))
-      )
-    )
-  }
-  for (const key of listed) {
-    const filled = isFilledList(siteRead[key])
-    issues.push(
-      block(
-        "list-frontmatter-value",
-        "frontmatter",
-        fixFor(
-          key,
-          filled
-            ? `${yamlRead ? "Both the site's frontmatter parser and YAML read" : "The site's frontmatter parser reads"} \`${key}\` as the list ${shownValue(siteRead[key])}, but it holds one value. Write it on one line, \`${key}: …\`, with no brackets or \`- \` items.`
-            : emptyListFix(key, opts.expectedLogoUrl)
-        )
-      )
-    )
-  }
-  // One cause, one message: when the frontmatter does not parse, or a
-  // component is empty (YAML null, which the linter cannot model), the
-  // linter's model is empty and would add wrong instructions to the real one.
-  const fmLines = frontmatterBlock(raw).split(/\r?\n/)
-  const fmRoot =
-    fmDoc && fmDoc.errors.length === 0 ? rawNode(fmDoc.contents) : undefined
-  const componentIssues = checkComponentRows(
-    fmLines,
-    isYamlMap(fmRoot) ? fmRoot.components : undefined
-  )
-  if (
-    !yamlIssues.some((i) => i.severity === "block") &&
-    !componentIssues.some((i) => i.rule === "empty-component")
-  ) {
-    const spec = checkSpecLint(raw, entrySlug)
-    issues.push(...spec.issues)
-    if (spec.resolved) {
-      issues.push(...checkExtractedTokens(raw, spec.resolved, dropped))
-    }
-  }
-  issues.push(...checkTokenReferences(raw, fmDoc))
+    fileSlug
 
-  // A takedown's entry has no `logo:` line (docs/TAKEDOWN.md), and any line
-  // left there — empty or not — gets the takedown's one fix. It is judged from
-  // what the site read, so a `buildDoc` failure elsewhere does not hide it for
-  // a run; the logo-policy test would block a declared one only in CI. (An
-  // empty `logo:` reads as `[]`, which the site's logo renderer takes for a
-  // logo and crashes on.) A dropped, misread or listed logo already has its
-  // one block.
-  if (takenDown && !unseen.has("logo")) {
-    const siteLogo = siteRead.logo
-    if (siteLogo !== undefined || opts.expectedLogoUrl) {
-      issues.push(
-        block(
-          siteLogo === undefined
-            ? "expected-logo-mismatch"
-            : typeof siteLogo !== "string" || siteLogo === ""
-              ? "missing-logo"
-              : "takedown-logo-declared",
-          "frontmatter",
-          takedownLogoFix(opts.expectedLogoUrl, siteLogo !== undefined)
-        )
+  let doc: ServiceDoc | null = null
+  if (!read.ok) {
+    issues.push(frontmatterReadIssue(read))
+  } else {
+    issues.push(...checkFrontmatterKeys(read))
+    issues.push(...checkFields(read, opts, entrySlug, fileSlug))
+    const componentIssues = checkComponents(read)
+    // One cause, one message: a component that is empty (YAML null, which the
+    // linter cannot model) leaves the linter's model empty, and its verdict
+    // would add wrong instructions to the real one.
+    if (!componentIssues.some((i) => i.rule === "empty-component")) {
+      issues.push(...checkSpecLint(raw, entrySlug))
+    }
+    issues.push(...checkTokenReferences(raw, read))
+    issues.push(...scanFrontmatterTokens(read))
+    issues.push(...componentIssues)
+    // The document the site builds, for callers that want it; null when the
+    // site's build would refuse a value (a field rule above says which).
+    try {
+      doc = buildSiteDoc(
+        opts.filePath,
+        raw,
+        siteFrontmatterOf(opts.filePath, raw, () => {})
       )
+    } catch {
+      doc = null
     }
   }
 
-  if (doc) {
-    const fm = doc.frontmatter
-    // A dropped key already has its one block; the site sees its default or
-    // nothing, and judging that would tell the author to fix a value that is
-    // already in the file.
-    const sees = (key: string): boolean => !unseen.has(key)
-    if (
-      sees("category") &&
-      !(CATEGORIES as ReadonlyArray<string>).includes(fm.category)
-    ) {
-      issues.push(
-        block(
-          "bad-category",
-          "frontmatter",
-          `category \`${fm.category}\` is not in the CATEGORIES enum (${CATEGORIES.join(", ")}).`
-        )
-      )
-    }
-    // ServiceFrontmatter types name as a string, but `buildDoc` keeps whatever
-    // the site's parser read — a bare `name:` (`[]`) or blank text passes
-    // `?? slug` — and the catalog sorts, titles and feeds by it as text. Blank
-    // includes whitespace alone, which both parsers read alike and the card
-    // shows as nothing. Judged only where the site read a `name:` line:
-    // without one `buildDoc` names the entry by its slug, and a bad slug has
-    // its own block.
-    const name: ReadValue = fm.name
-    if (sees("name") && "name" in siteRead && isBlankName(name)) {
-      issues.push(
-        block(
-          "bad-name",
-          "frontmatter",
-          `name must be one line of text with at least one visible character, as \`name: 토스\` (got ${shownBlankName(name)}).`
-        )
-      )
-    }
-    // `buildDoc` drops a design_system_name that is not text and keeps blank
-    // text, so the site shows no name while YAML consumers get null or blank
-    // text. Judged on the site parser's own reading, which keeps both.
-    const systemName: ReadValue = siteRead.design_system_name
-    if (
-      sees("design_system_name") &&
-      systemName !== undefined &&
-      isBlankName(systemName)
-    ) {
-      issues.push(
-        block(
-          "bad-design-system-name",
-          "frontmatter",
-          `design_system_name must be one line of text with at least one visible character, as \`design_system_name: TDS\`, or no line at all (got ${shownBlankName(systemName)}).`
-        )
-      )
-    }
-    // The catalog index writes the name as `: category · {name} — tagline`,
-    // whitespace folded, and readers end it at the first ` — ` (#466,
-    // `buildLlmsTxt` and the consumer skill's endpoints reference). The name
-    // sits between ` · ` and ` — `, so in its folded form no em dash may
-    // stand as a word of its own — `Foo —` and `— Foo` are cut as surely as
-    // `Foo — Bar`. A dash without spaces on both sides is not a split point
-    // and stays. Before this rule only the real-catalog test in
-    // `seo-feed.test.ts` noticed, after the pipeline had passed the draft.
-    if (
-      sees("design_system_name") &&
-      typeof systemName === "string" &&
-      !isBlankName(systemName)
-    ) {
-      if (hasStandaloneDash(systemName)) {
-        const fix = separatorFix(systemName)
-        issues.push(
-          block(
-            "design-system-name-separator",
-            "frontmatter",
-            `design_system_name \`${systemName}\` has an em dash standing as a word of its own; the catalog index writes the name between " · " and " — " and ends it at the first " — ", so such a dash, even at either end, cuts it; ${fix}.`
-          )
-        )
-      }
-    }
-    // `deriveSlug` keeps a list (`slug: [toss]`) as the slug, and a RegExp
-    // test coerces it to `toss`, so the form is judged on text only.
-    const slugRead: ReadValue = fm.slug
-    if (
-      sees("slug") &&
-      (typeof slugRead !== "string" || !SLUG_FORM.test(slugRead))
-    ) {
-      issues.push(
-        block(
-          "bad-slug",
-          "frontmatter",
-          `slug ${shownValue(slugRead)} must be one line of text matching ^[a-z0-9-]+$.`
-        )
-      )
-    }
-    if (
-      sees("slug") &&
-      typeof slugRead === "string" &&
-      opts.expectedSlug &&
-      slugRead !== opts.expectedSlug
-    ) {
-      issues.push(
-        block(
-          "slug-arg-mismatch",
-          "frontmatter",
-          `frontmatter slug \`${fm.slug}\` differs from the expected slug \`${opts.expectedSlug}\`.`
-        )
-      )
-    }
-    if (sees("last_updated") && fm.last_updated === "") {
-      issues.push(
-        block(
-          "missing-last-updated",
-          "frontmatter",
-          "last_updated is missing — set it to today's date as YYYY-MM-DD."
-        )
-      )
-    }
-    // The catalog list, llms.txt, sitemap and OG build are all ordered by
-    // created_at, so an entry without one sinks to the bottom regardless of
-    // when it was actually added. Blocking here is what stops the skill from
-    // shipping another undated entry.
-    if (sees("created_at") && fm.created_at === "") {
-      issues.push(
-        block(
-          "missing-created-at",
-          "frontmatter",
-          "created_at is missing — set it to the date this entry first lands in the catalog as YYYY-MM-DD (today's date for a new entry)."
-        )
-      )
-    }
-    // An entry cannot be added after the last time it was synced. The #194
-    // backfill relied on exactly this invariant to pick created_at for four
-    // undated entries, so encode it rather than leave it in a commit message.
-    // Warn, not block: it flags a likely typo in one of the two dates, and a
-    // genuine historical oddity should not stop a contribution.
-    // A misread date already has its one block; the site's reading in its
-    // place is not the date the author wrote.
-    if (
-      sees("created_at") &&
-      sees("last_updated") &&
-      fm.created_at !== "" &&
-      fm.last_updated !== "" &&
-      fm.created_at > fm.last_updated
-    ) {
-      issues.push(
-        warn(
-          "created-at-after-last-updated",
-          "frontmatter",
-          `created_at (${fm.created_at}) is later than last_updated (${fm.last_updated}) — an entry cannot be added after it was last synced. Check which of the two dates is wrong.`
-        )
-      )
-    }
-    // ServiceFrontmatter types lang as "ko", but buildDoc never validates it —
-    // a draft can carry any string at runtime. Widen before comparing so the
-    // check survives the type-level narrowing. This rule is what enforces
-    // docs/adr/0001-korean-design-md-only.md: an entry is one Korean file.
-    // It replaced `lang-arg-mismatch`, which compared against an expected lang
-    // the caller passed — with one allowed value there is nothing to pass.
-    const lang: string = fm.lang
-    if (sees("lang") && lang !== "ko") {
-      issues.push(
-        block(
-          "bad-lang",
-          "frontmatter",
-          `lang \`${lang}\` must be exactly \`ko\` — an entry is one Korean design.md, with no second-language companion.`
-        )
-      )
-    }
-    // Every entry carries a logo: without one the catalog grid card falls back
-    // to a first-letter badge and the OG image to text only, and the /design-md skill no longer lets intake
-    // skip it. A dropped, misread or listed logo already has its one block, so
-    // `sees` keeps the logo rules from judging what the site read in its place.
-    // The one exemption is a recorded takedown (docs/TAKEDOWN.md, ./logo-takedowns).
-    // `buildDoc` reads a bare `logo:` as an empty list, so "missing" is
-    // anything that is not a non-empty string — not just `undefined`.
-    const logoMissing = typeof fm.logo !== "string" || fm.logo === ""
-    if (takenDown) {
-      // Judged before the document is built, above.
-    } else if (sees("logo") && logoMissing) {
-      issues.push(
-        block(
-          "missing-logo",
-          "frontmatter",
-          `frontmatter \`logo\` is missing — every entry needs a logo (symbol preferred; app icon or confirmed wordmark as the /design-md fallbacks) as ${opts.expectedLogoUrl ? `\`logo: ${opts.expectedLogoUrl}\`` : "`logo: https://getdesign.kr/logos/{slug}.{svg,png,webp,avif}`"}.`
-        )
-      )
-    } else if (opts.expectedLogoUrl) {
-      if (sees("logo") && fm.logo !== opts.expectedLogoUrl) {
-        issues.push(
-          block(
-            "expected-logo-mismatch",
-            "frontmatter",
-            `frontmatter \`logo\` must be exactly \`${opts.expectedLogoUrl}\` (got \`${fm.logo ?? "nothing"}\`) — the absolute URL form, never a site-relative shortcut.`
-          )
-        )
-      }
-    } else if (
-      sees("logo") &&
-      // Takedowns end in the branch above and an empty logo in `missing-logo`,
-      // so what reaches here is a present value.
-      typeof fm.logo === "string" &&
-      !LOGO_URL_FORM.test(fm.logo)
-    ) {
-      issues.push(
-        block(
-          "logo-url-form",
-          "frontmatter",
-          `frontmatter \`logo\` \`${fm.logo}\` must be a fully-qualified https://getdesign.kr/logos/*.{svg,png,webp,avif} URL.`
-        )
-      )
-    }
-
-    for (const c of auditSourceCitations(entrySlug, doc.body)) {
-      issues.push({
-        severity: c.severity,
-        rule: c.rule,
-        section: "citations",
-        fix: c.message,
-      })
-    }
+  for (const c of auditSourceCitations(entrySlug, body)) {
+    issues.push({
+      severity: c.severity,
+      rule: c.rule,
+      section: "citations",
+      fix: c.message,
+    })
   }
 
-  const body = doc ? doc.body : raw
   const scan = scanBody(body)
   // With a fence left open the heading list stops where the fence opened. What
   // was read before it is complete, so duplicate, order and missing-section
@@ -2980,9 +2287,6 @@ export function validateDraft(
       : sectionIssues)
   )
   issues.push(...checkDuplicateTokens(raw, body))
-  issues.push(...scanFrontmatterTokens(fmLines))
-  issues.push(...checkBlockScalars(fmLines))
-  issues.push(...componentIssues)
   issues.push(...checkWorkingMarkers(body))
   issues.push(...scan.yamlTokenIssues)
   issues.push(...scan.fenceIssues)

@@ -1,4 +1,4 @@
-import { FRONTMATTER_MAP_KEYS } from "./frontmatter-map-table"
+import { splitFrontmatter } from "./frontmatter-fence"
 import type {
   Category,
   Lang,
@@ -7,222 +7,11 @@ import type {
   SiteFrontmatter,
 } from "./content-types"
 
-// Minimal frontmatter parser for our schema (string scalars, inline arrays,
-// block arrays). It replaced gray-matter, which pulled in Node's Buffer global
-// (undefined in the browser bundle) and blocked hydration when the route module
-// was imported on the client.
-//
-// Guard layer: see buildDoc + matter. The parser silently degrades on malformed
-// input by design (skip unrecognized lines), so we layer fence/BOM checks and
-// a typed validation pass on top to fail loudly when a contributor's frontmatter
-// would otherwise parse to defaults.
-interface MatterResult {
-  // eslint-disable-next-line no-restricted-syntax -- Frontmatter parsed from author-provided YAML is untyped.
-  data: Record<string, unknown>
-  content: string
-}
-
-// Keys the site actually parses into `ServiceFrontmatter`. Typed against the
-// interface so a typo here is a compile error. Exported for the draft
-// validator, which checks the site reads these the way YAML does.
-export const CONSUMED_KEYS: ReadonlyArray<keyof ServiceFrontmatter> = [
-  "name",
-  "design_system_name",
-  "slug",
-  "category",
-  "last_updated",
-  "created_at",
-  "lang",
-  "estimated_tokens",
-  "logo",
-]
-
-// Keys that are valid in the file but that the site never reads. Tokens live
-// here in the Google DESIGN.md shape; the site takes them from the
-// `{slug}.tokens.json` sidecar instead, and `buildDoc` builds its result
-// field-by-field so these never reach `ServiceFrontmatter` at all — declaring
-// them on that interface would claim a field the parser demonstrably drops.
-// They are listed so the unknown-key rule stops reporting ~100 false warnings.
-// The maps come from the table in `frontmatter-map-table`, which every other
-// reader of them derives its list from too.
-const FILE_ONLY_KEYS: ReadonlyArray<string> = [
-  ...FRONTMATTER_MAP_KEYS,
-  "preview_css_vars",
-  // Both spellings the skill docs name. `font-sans-src` has no catalog entry yet,
-  // but leaving it out would warn on the first one that needs it — the allowlist
-  // and the authoring docs have to agree or the warning is just noise.
-  "font-display-src",
-  "font-sans-src",
-]
-
-export const KNOWN_FRONTMATTER_KEYS: ReadonlyArray<string> = [
-  ...CONSUMED_KEYS,
-  ...FILE_ONLY_KEYS,
-]
-
-/**
- * The frontmatter block and the body that follows it, or null when the document
- * has no frontmatter.
- *
- * One definition because five places kept their own copy of this regex and they
- * did not agree: `checkFrontmatterYaml` returned nothing at all for a
- * BOM-prefixed file, so the YAML check it performs switched itself off for
- * anyone whose editor emits one. Found in review, and the sort of divergence
- * that only shows up once someone writes the odd file.
- *
- * The boundary is the FIRST standalone `---`, which is also where YAML itself
- * ends the document — a column-0 `---` closes even an open block scalar, so a
- * long prose value cannot smuggle one past this.
- */
-export function splitFrontmatter(
-  raw: string
-): { frontmatter: string; body: string } | null {
-  const source = raw.charCodeAt(0) === 0xfeff ? raw.slice(1) : raw
-  const m = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/)
-  return m ? { frontmatter: m[1], body: m[2] } : null
-}
-
-/**
- * Strip a MATCHING surrounding quote pair, either style; leave anything else
- * alone so a value that merely contains a quote is not mangled.
- *
- * Exported because three separate places need the same answer, and a private
- * copy already cost this repo once: the token rules tested the raw scalar
- * INCLUDING its quotes against a `^`-anchored colour pattern, so a quoted hex
- * passed a gate whose entire purpose was to reject hexes. Keep one definition.
- */
-export function stripQuotes(value: string): string {
-  if (value.length >= 2) {
-    const first = value[0]
-    const last = value[value.length - 1]
-    if ((first === '"' && last === '"') || (first === "'" && last === "'")) {
-      return value.slice(1, -1)
-    }
-  }
-  return value
-}
-
-// Strip a trailing YAML-style `# comment` from an unquoted scalar. The `#` only
-// counts as a comment when preceded by whitespace, so URL fragments
-// (`https://x.com/page#frag`) are preserved.
-function stripInlineComment(value: string): string {
-  if (value.startsWith('"') || value.startsWith("'")) return value
-  return value.replace(/\s+#.*$/, "")
-}
-
-// Comma-split that respects single/double quotes so values like
-// `["a,b", "c"]` stay as 2 items rather than splitting at every comma.
-function splitOutsideQuotes(text: string): Array<string> {
-  const out: Array<string> = []
-  let buf = ""
-  let quote: '"' | "'" | null = null
-  for (const ch of text) {
-    if (quote) {
-      buf += ch
-      if (ch === quote) quote = null
-    } else if (ch === '"' || ch === "'") {
-      quote = ch
-      buf += ch
-    } else if (ch === ",") {
-      const trimmed = buf.trim()
-      if (trimmed.length > 0) out.push(trimmed)
-      buf = ""
-    } else {
-      buf += ch
-    }
-  }
-  const tail = buf.trim()
-  if (tail.length > 0) out.push(tail)
-  return out
-}
-
-/**
- * A top-level key's name as `parseYamlSubset` reads it: bare, at column 0,
- * straight into the colon. Exported because the draft validator judges which
- * keys this parser can see (`nonbare-frontmatter-key`); one pattern keeps the
- * two from drifting apart.
- */
-export const FRONTMATTER_KEY_NAME = /[A-Za-z_][\w-]*/
-const KEY_LINE = new RegExp(`^(${FRONTMATTER_KEY_NAME.source}):\\s*(.*)$`)
-
-// eslint-disable-next-line no-restricted-syntax -- YAML parsing starts from untyped scalar values.
-function parseYamlSubset(text: string): Record<string, unknown> {
-  const lines = text.split(/\r?\n/)
-  // eslint-disable-next-line no-restricted-syntax -- YAML output is validated by downstream field coercion.
-  const out: Record<string, unknown> = {}
-  let i = 0
-  while (i < lines.length) {
-    const line = lines[i]
-    const trimmed = line.trim()
-    if (trimmed === "" || trimmed.startsWith("#")) {
-      i++
-      continue
-    }
-    const m = line.match(KEY_LINE)
-    if (!m) {
-      i++
-      continue
-    }
-    const key = m[1]
-    const rest = m[2].trim()
-    if (rest === "") {
-      const items: Array<string> = []
-      let j = i + 1
-      while (j < lines.length) {
-        const next = lines[j]
-        const nextTrimmed = next.trim()
-        if (nextTrimmed === "" || nextTrimmed.startsWith("#")) {
-          j++
-          continue
-        }
-        // Allow zero-indent items too (`- foo` at column 0). YAML is permissive
-        // here; the human-friendly form is indented but un-indented is legal.
-        const itemMatch = next.match(/^\s*-\s+(.*)$/)
-        if (!itemMatch) break
-        items.push(stripQuotes(stripInlineComment(itemMatch[1].trim())))
-        j++
-      }
-      out[key] = items
-      i = j
-    } else if (rest.startsWith("[") && rest.endsWith("]")) {
-      const inner = rest.slice(1, -1).trim()
-      out[key] =
-        inner === "" ? [] : splitOutsideQuotes(inner).map((s) => stripQuotes(s))
-      i++
-    } else {
-      out[key] = stripQuotes(stripInlineComment(rest))
-      i++
-    }
-  }
-  return out
-}
-
-// Exported for the draft validator, which compares this parser's reading with
-// YAML's (`misread-frontmatter-value`, `list-frontmatter-value`) — a change to
-// `parseYamlSubset` changes what those rules block. Also for its unit tests:
-// no `ServiceFrontmatter` field is an array any more (frontmatter `sources` was
-// removed, docs/adr/0004), so the array forms can no longer be exercised
-// through `buildDoc` — but the parser still meets them in any file that
-// carries a list, and must not mis-split it.
-export function matter(raw: string): MatterResult {
-  // Strip UTF-8 BOM. Editors like Windows Notepad emit it, and an unstripped BOM
-  // makes the `^---` anchor miss → entire frontmatter silently lost.
-  let source = raw
-  if (source.charCodeAt(0) === 0xfeff) source = source.slice(1)
-
-  const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/)
-  if (match) return { data: parseYamlSubset(match[1]), content: match[2] }
-
-  // If the file starts with `---` but the closing fence is missing or
-  // malformed, fail loudly rather than render with all defaults.
-  if (source.trimStart().startsWith("---")) {
-    throw new Error(
-      "Frontmatter block is malformed: expected a closing '---' line. Got: " +
-        JSON.stringify(source.slice(0, 80))
-    )
-  }
-  return { data: {}, content: source }
-}
+// An entry's body, as the site shows it: the tagline, the meta description and
+// the catalog's orderings. In the browser bundle, so it reads no frontmatter —
+// the build reads that once, with the one reader (docs/adr/0011), and hands the
+// site the values (`virtual:site-frontmatter`; `buildDoc` in
+// `site-frontmatter.ts` for the Node tools).
 
 export function deriveSlug(
   filePath: string,
@@ -231,57 +20,6 @@ export function deriveSlug(
   if (frontmatterSlug && frontmatterSlug.length > 0) return frontmatterSlug
   const fileName = filePath.split("/").pop() ?? ""
   return fileName.replace(/\.md$/, "")
-}
-
-// The hand parser above hands dates over as strings, but a YAML-parsed object
-// (what gray-matter used to return) carries ISO dates (`2026-05-07`) as JS Date
-// objects, and rendering `{frontmatter.last_updated}` in JSX then throws
-// "Objects are not valid as a React child (found: [object Date])" — so a Date
-// is still normalized rather than trusted.
-// We also reject non-ISO strings so a typo like `2026/05/07` doesn't quietly
-// produce broken NEW-badge / sort behavior.
-// The digit pattern alone accepts impossible dates (`2026-02-30`, `2026-99-99`),
-// and downstream those are worse than a parse error: the catalog compares
-// created_at as a plain string, so an out-of-range month sorts above every real
-// date and pins the entry to the top of the list. Round-tripping through Date
-// rejects them — JS rolls overflow into the next month/year, so any field that
-// changes was out of range — and gets leap years right for free.
-//
-// Corner case worth naming: a 0–99 year such as "0099-01-01" is also rejected,
-// but by JS's legacy two-digit-year rule rather than by calendar arithmetic
-// (`Date.UTC(99, …)` means 1999, so the round-trip mismatches). Rejecting is the
-// outcome we want either way — no catalog entry predates the web — but it is not
-// the reason the rest of this function gives, so don't read it as a bug.
-function isRealIsoDate(value: string): boolean {
-  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value)
-  if (!match) return false
-  const [year, month, day] = match.slice(1).map(Number)
-  const parsed = new Date(Date.UTC(year, month - 1, day))
-  return (
-    parsed.getUTCFullYear() === year &&
-    parsed.getUTCMonth() === month - 1 &&
-    parsed.getUTCDate() === day
-  )
-}
-
-export function normalizeDateField(
-  // eslint-disable-next-line no-restricted-syntax -- Frontmatter field values are untyped at the parse boundary.
-  value: unknown,
-  context = "",
-  field = "last_updated"
-): string {
-  if (value === undefined || value === null) return ""
-  if (value instanceof Date) return value.toISOString().slice(0, 10)
-  if (typeof value === "string") {
-    if (value === "") return ""
-    if (!isRealIsoDate(value)) {
-      throw new Error(
-        `${field} must be a real calendar date in ISO YYYY-MM-DD form${context ? ` (${context})` : ""}, got "${value}"`
-      )
-    }
-    return value
-  }
-  return ""
 }
 
 // Bibliographic markup that should never reach a human — only authoring tools.
@@ -347,56 +85,13 @@ function estimateTokens(raw: string): number {
   )
 }
 
-export function coerceNumberField(
-  // eslint-disable-next-line no-restricted-syntax -- Frontmatter field values are untyped at the parse boundary.
-  value: unknown,
-  field: string,
-  context: string
-): number | undefined {
-  if (value === undefined || value === null) return undefined
-  // A key with no inline value (`estimated_tokens:`) reads as an empty list
-  // here and as null to YAML — no count either way, not a malformed one.
-  if (Array.isArray(value) && value.length === 0) return undefined
-  if (typeof value === "number")
-    return Number.isFinite(value) ? value : undefined
-  if (typeof value === "string") {
-    if (value === "") return undefined
-    const n = Number(value)
-    if (!Number.isFinite(n)) {
-      throw new Error(
-        `${field} must be a number${context ? ` (${context})` : ""}, got "${value}"`
-      )
-    }
-    return n
-  }
-  throw new Error(
-    `${field} must be a number${context ? ` (${context})` : ""}, got ${typeof value}`
-  )
-}
-
-export function buildDoc(filePath: string, raw: string): ServiceDoc {
-  const parsed = matter(raw)
-  const data = parsed.data
-
-  // Surface unknown frontmatter keys so a typo like `last-updated:` (instead of
-  // `last_updated:`) doesn't silently fall back to the empty-string default.
-  for (const key of Object.keys(data)) {
-    if (!KNOWN_FRONTMATTER_KEYS.includes(key)) {
-      console.warn(
-        `[content-parser] Unknown frontmatter key "${key}" in ${filePath} (ignored)`
-      )
-    }
-  }
-
-  return assembleDoc(filePath, raw, data, parsed.content)
-}
-
 /**
  * The site's doc for an entry whose frontmatter the build already read and
  * checked (`virtual:site-frontmatter`, #585): dates are real ISO dates and the
  * token count a number by the time they get here. Only the body is split in
  * this path and nothing re-validates, so neither a parser nor the field checks
- * reach the browser bundle. Missing keys derive as `buildDoc` derives them.
+ * reach the browser bundle. A missing key derives a default: the slug from the
+ * file name, the name from the slug, the token count from the text.
  */
 export function buildSiteDoc(
   filePath: string,
@@ -437,37 +132,6 @@ function docFrom(
     filePath,
     estimatedTokens: frontmatter.estimated_tokens ?? estimateTokens(raw),
   }
-}
-
-function assembleDoc(
-  filePath: string,
-  raw: string,
-  // eslint-disable-next-line no-restricted-syntax -- Frontmatter field values are untyped at the parse boundary.
-  data: Record<string, unknown>,
-  body: string
-): ServiceDoc {
-  const context = filePath
-  const fm = data as Partial<ServiceFrontmatter>
-  const slug = deriveSlug(filePath, fm.slug)
-  const frontmatter: ServiceFrontmatter = {
-    name: fm.name ?? slug,
-    design_system_name:
-      typeof fm.design_system_name === "string"
-        ? fm.design_system_name
-        : undefined,
-    slug,
-    category: fm.category ?? "etc",
-    last_updated: normalizeDateField(fm.last_updated, context),
-    created_at: normalizeDateField(fm.created_at, context, "created_at"),
-    lang: fm.lang ?? "ko",
-    estimated_tokens: coerceNumberField(
-      fm.estimated_tokens,
-      "estimated_tokens",
-      context
-    ),
-    logo: fm.logo,
-  }
-  return docFrom(frontmatter, filePath, raw, body)
 }
 
 // ISO 8601 dates (YYYY-MM-DD) sort lexicographically the same as chronologically,

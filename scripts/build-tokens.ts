@@ -1,6 +1,6 @@
 import fs from "node:fs"
 import path from "node:path"
-import { buildDoc } from "../src/lib/content-parser"
+import { buildDoc } from "../src/lib/site-frontmatter"
 import { extractTokensFromMarkdown } from "../src/lib/token-extractor"
 import type { ServiceDoc } from "../src/lib/content-types"
 

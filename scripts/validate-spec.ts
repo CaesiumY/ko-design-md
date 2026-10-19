@@ -1,7 +1,7 @@
 import fs from "node:fs"
 import path from "node:path"
 import { lint } from "@google/design.md/linter"
-import { buildDoc } from "../src/lib/content-parser"
+import { buildDoc } from "../src/lib/site-frontmatter"
 import { formatSpecReport } from "./spec-report"
 import type { ServiceDoc } from "../src/lib/content-types"
 import type { EntryReport } from "./spec-report"

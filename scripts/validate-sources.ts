@@ -1,6 +1,6 @@
 // CI guard: audits source-citation integrity across every services/*.md.
 //
-// Reuses buildDoc() (frontmatter + body parsing) and auditSourceCitations()
+// Reuses buildDoc() (the site's reading of an entry) and auditSourceCitations()
 // (the rule engine) so the check matches exactly what the unit tests cover.
 // Run with `pnpm validate:sources`. Exits 1 if any blocking issue is found.
 //
@@ -12,7 +12,7 @@
 import { readFileSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
-import { buildDoc } from "../src/lib/content-parser"
+import { buildDoc } from "../src/lib/site-frontmatter"
 import { auditSourceCitations } from "../src/lib/source-citations"
 
 const SERVICES_DIR = fileURLToPath(new URL("../services", import.meta.url))
