@@ -67,9 +67,6 @@ describe("UsageGuide", () => {
     const codes = [...folderStep.querySelectorAll("code")].map(
       (code) => code.textContent
     )
-    expect(codes).toEqual([
-      downloadFilename("toss"),
-      downloadFilename("toss"),
-    ])
+    expect(codes).toEqual([downloadFilename("toss"), downloadFilename("toss")])
   })
 })
