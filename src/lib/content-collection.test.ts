@@ -1,11 +1,11 @@
-import { readFileSync } from "node:fs"
+import { readFileSync, readdirSync } from "node:fs"
 import { describe, expect, it } from "vitest"
 import {
   getAllServices,
   getServiceBySlug,
   truncateForMeta,
 } from "./content-collection"
-import { deriveTagline } from "./content-parser"
+import { buildDoc, deriveTagline } from "./content-parser"
 
 describe("content-collection", () => {
   it("loads at least one service from /services/*.md", () => {
@@ -78,6 +78,45 @@ describe("content-collection", () => {
   // substituting [] — the card view keys its "render this block" test off it.
   it("preserves an absent elevation key rather than inventing an empty array", () => {
     expect(getServiceBySlug("bezier")?.tokens?.elevation).toBeUndefined()
+  })
+
+  // The site now takes its frontmatter from the build (`virtual:site-frontmatter`)
+  // rather than the hand parser. Every entry must come out exactly as the hand
+  // parser read it — the two readers are independent, so agreement on the
+  // whole catalog is the evidence that the switch changed nothing a visitor
+  // sees (#585).
+  it("reads every entry the same as the hand parser did", () => {
+    const dir = new URL("../../services/", import.meta.url)
+    const files = readdirSync(dir).filter((file) => file.endsWith(".md"))
+    const byHand = files.map((file) => {
+      const doc = buildDoc(
+        `/services/${file}`,
+        readFileSync(new URL(file, dir), "utf8")
+      )
+      return [doc.filePath, doc] as const
+    })
+
+    const site = new Map(getAllServices().map((doc) => [doc.filePath, doc]))
+    expect([...site.keys()].sort()).toEqual(byHand.map(([path]) => path).sort())
+    for (const [path, expected] of byHand) {
+      const actual = site.get(path)
+      expect(
+        {
+          frontmatter: actual?.frontmatter,
+          raw: actual?.raw,
+          body: actual?.body,
+          tagline: actual?.tagline,
+          estimatedTokens: actual?.estimatedTokens,
+        },
+        path
+      ).toEqual({
+        frontmatter: expected.frontmatter,
+        raw: expected.raw,
+        body: expected.body,
+        tagline: expected.tagline,
+        estimatedTokens: expected.estimatedTokens,
+      })
+    }
   })
 
   it("does not import preview HTML through public-directory URLs", () => {

@@ -52,6 +52,18 @@ export interface ServiceFrontmatter {
 }
 
 /**
+ * The frontmatter keys the site reads, as the build hands them over
+ * (`virtual:site-frontmatter`, #585): each present only when the entry writes
+ * it. The site derives what is missing exactly as it always has.
+ */
+export type SiteFrontmatter = Partial<
+  Omit<ServiceFrontmatter, "category" | "lang"> & {
+    category: string
+    lang: string
+  }
+>
+
+/**
  * A single design token row, normalized from a service's prose YAML into the
  * machine-readable sidecar (`services/{slug}.tokens.json`). The sidecar is a
  * derived artifact — the human-curated md prose stays the source of record.

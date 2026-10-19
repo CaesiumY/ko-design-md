@@ -1,5 +1,11 @@
 import { FRONTMATTER_MAP_KEYS } from "./frontmatter-map-table"
-import type { ServiceDoc, ServiceFrontmatter } from "./content-types"
+import type {
+  Category,
+  Lang,
+  ServiceDoc,
+  ServiceFrontmatter,
+  SiteFrontmatter,
+} from "./content-types"
 
 // Minimal frontmatter parser for our schema (string scalars, inline arrays,
 // block arrays). It replaced gray-matter, which pulled in Node's Buffer global
@@ -341,7 +347,7 @@ function estimateTokens(raw: string): number {
   )
 }
 
-function coerceNumberField(
+export function coerceNumberField(
   // eslint-disable-next-line no-restricted-syntax -- Frontmatter field values are untyped at the parse boundary.
   value: unknown,
   field: string,
@@ -371,18 +377,76 @@ function coerceNumberField(
 export function buildDoc(filePath: string, raw: string): ServiceDoc {
   const parsed = matter(raw)
   const data = parsed.data
-  const context = filePath
 
   // Surface unknown frontmatter keys so a typo like `last-updated:` (instead of
   // `last_updated:`) doesn't silently fall back to the empty-string default.
   for (const key of Object.keys(data)) {
     if (!KNOWN_FRONTMATTER_KEYS.includes(key)) {
       console.warn(
-        `[content-parser] Unknown frontmatter key "${key}" in ${context} (ignored)`
+        `[content-parser] Unknown frontmatter key "${key}" in ${filePath} (ignored)`
       )
     }
   }
 
+  return assembleDoc(filePath, raw, data, parsed.content)
+}
+
+/**
+ * The site's doc for an entry whose frontmatter the build already read and
+ * checked (`virtual:site-frontmatter`, #585): dates are real ISO dates and the
+ * token count a number by the time they get here. Only the body is split in
+ * this path and nothing re-validates, so neither a parser nor the field checks
+ * reach the browser bundle. Missing keys derive as `buildDoc` derives them.
+ */
+export function buildSiteDoc(
+  filePath: string,
+  raw: string,
+  fm: SiteFrontmatter
+): ServiceDoc {
+  const body = splitFrontmatter(raw)?.body ?? raw
+  const slug = deriveSlug(filePath, fm.slug)
+  return docFrom(
+    {
+      name: fm.name ?? slug,
+      design_system_name: fm.design_system_name,
+      slug,
+      category: (fm.category ?? "etc") as Category,
+      last_updated: fm.last_updated ?? "",
+      created_at: fm.created_at ?? "",
+      lang: (fm.lang ?? "ko") as Lang,
+      estimated_tokens: fm.estimated_tokens,
+      logo: fm.logo,
+    },
+    filePath,
+    raw,
+    body
+  )
+}
+
+function docFrom(
+  frontmatter: ServiceFrontmatter,
+  filePath: string,
+  raw: string,
+  body: string
+): ServiceDoc {
+  return {
+    frontmatter,
+    raw,
+    body,
+    tagline: deriveTagline(body),
+    filePath,
+    estimatedTokens: frontmatter.estimated_tokens ?? estimateTokens(raw),
+  }
+}
+
+function assembleDoc(
+  filePath: string,
+  raw: string,
+  // eslint-disable-next-line no-restricted-syntax -- Frontmatter field values are untyped at the parse boundary.
+  data: Record<string, unknown>,
+  body: string
+): ServiceDoc {
+  const context = filePath
   const fm = data as Partial<ServiceFrontmatter>
   const slug = deriveSlug(filePath, fm.slug)
   const frontmatter: ServiceFrontmatter = {
@@ -403,15 +467,7 @@ export function buildDoc(filePath: string, raw: string): ServiceDoc {
     ),
     logo: fm.logo,
   }
-  const estimatedTokens = frontmatter.estimated_tokens ?? estimateTokens(raw)
-  return {
-    frontmatter,
-    raw,
-    body: parsed.content,
-    tagline: deriveTagline(parsed.content),
-    filePath,
-    estimatedTokens,
-  }
+  return docFrom(frontmatter, filePath, raw, body)
 }
 
 // ISO 8601 dates (YYYY-MM-DD) sort lexicographically the same as chronologically,
