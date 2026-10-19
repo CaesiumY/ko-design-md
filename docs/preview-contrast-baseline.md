@@ -267,9 +267,9 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | remember | dark | non-text | 3 | 8 | 1 | 0 | 0 |
 | remember | light | text | 99 | 184 | 40 | 0 | 3 |
 | remember | light | non-text | 3 | 8 | 2 | 0 | 0 |
-| ridi | dark | text | 193 | 508 | 64 | 0 | 46 |
+| ridi | dark | text | 194 | 512 | 64 | 0 | 47 |
 | ridi | dark | non-text | 20 | 25 | 14 | 0 | 6 |
-| ridi | light | text | 193 | 508 | 39 | 31 | 46 |
+| ridi | light | text | 194 | 512 | 39 | 31 | 47 |
 | ridi | light | non-text | 19 | 24 | 11 | 0 | 6 |
 | samsung-one-ui | dark | text | 52 | 108 | 0 | 0 | 1 |
 | samsung-one-ui | dark | non-text | 25 | 29 | 9 | 6 | 3 |
