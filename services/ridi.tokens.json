@@ -4,91 +4,91 @@
       "name": "neutral-25",
       "value": "oklch(0.985 0.000 0.0)",
       "note": "#FAFAFA — 렌더 상세 정보 박스 바탕과 같은 값",
-      "group": "neutral — 무채색 원시 (S2 --ridi-color-*)"
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
     },
     {
       "name": "neutral-50",
       "value": "oklch(0.970 0.000 0.0)",
       "note": "#F5F5F5 — 렌더 검색창·바로가기 원 바탕과 같은 값",
-      "group": "neutral — 무채색 원시 (S2 --ridi-color-*)"
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
     },
     {
       "name": "neutral-100",
       "value": "oklch(0.925 0.000 0.0)",
       "note": "#E6E6E6 — 렌더 테두리와 같은 값",
-      "group": "neutral — 무채색 원시 (S2 --ridi-color-*)"
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
     },
     {
       "name": "neutral-200",
       "value": "oklch(0.845 0.000 0.0)",
       "note": "#CCCCCC",
-      "group": "neutral — 무채색 원시 (S2 --ridi-color-*)"
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
     },
     {
       "name": "neutral-300",
       "value": "oklch(0.722 0.000 0.0)",
       "note": "#A5A5A5 — 렌더 보조 글자와 같은 값",
-      "group": "neutral — 무채색 원시 (S2 --ridi-color-*)"
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
     },
     {
       "name": "neutral-400",
       "value": "oklch(0.573 0.000 0.0)",
       "note": "#787878 — 렌더 회색 보조 글자(홈 1440 최다)와 같은 값",
-      "group": "neutral — 무채색 원시 (S2 --ridi-color-*)"
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
     },
     {
       "name": "neutral-500",
       "value": "oklch(0.510 0.000 0.0)",
       "note": "#666666",
-      "group": "neutral — 무채색 원시 (S2 --ridi-color-*)"
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
     },
     {
       "name": "neutral-600",
       "value": "oklch(0.431 0.000 0.0)",
       "note": "#505050",
-      "group": "neutral — 무채색 원시 (S2 --ridi-color-*)"
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
     },
     {
       "name": "neutral-700",
       "value": "oklch(0.337 0.000 0.0)",
       "note": "#373737",
-      "group": "neutral — 무채색 원시 (S2 --ridi-color-*)"
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
     },
     {
       "name": "neutral-750",
       "value": "oklch(0.293 0.000 0.0)",
       "note": "#2C2C2C — 규칙 밖 단계",
-      "group": "neutral — 무채색 원시 (S2 --ridi-color-*)"
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
     },
     {
       "name": "neutral-800",
       "value": "oklch(0.244 0.000 0.0)",
       "note": "#202020",
-      "group": "neutral — 무채색 원시 (S2 --ridi-color-*)"
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
     },
     {
       "name": "neutral-850",
       "value": "oklch(0.222 0.000 0.0)",
       "note": "#1B1B1B — 규칙 밖 단계",
-      "group": "neutral — 무채색 원시 (S2 --ridi-color-*)"
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
     },
     {
       "name": "neutral-900",
       "value": "oklch(0.191 0.000 0.0)",
       "note": "#141414 — 렌더 기본 글자와 같은 값",
-      "group": "neutral — 무채색 원시 (S2 --ridi-color-*)"
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
     },
     {
       "name": "neutral-white",
       "value": "oklch(1.000 0.000 0.0)",
       "note": "#FFFFFF — red-25 와 같은 값",
-      "group": "neutral — 무채색 원시 (S2 --ridi-color-*)"
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
     },
     {
       "name": "neutral-black",
       "value": "oklch(0.000 0.000 0.0)",
       "note": "#000000",
-      "group": "neutral — 무채색 원시 (S2 --ridi-color-*)"
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
     },
     {
       "name": "coolgray-25",
@@ -825,32 +825,32 @@
     {
       "name": "emotion-blue",
       "value": "oklch(0.683 0.176 248.3)",
-      "note": "#1E9EFF — S3 lightTheme blue · 공개 글의 최종 리디 블루 · 현재 탭·선택 알약·구매 버튼·워드마크",
-      "group": "emotion 테마 (S3) — 화면이 실제로 칠하는 이름 붙은 값"
+      "note": "#1E9EFF — 층 B lightTheme blue · 공개 글의 최종 리디 블루 · 현재 탭·선택 알약·구매 버튼·워드마크",
+      "group": "emotion 테마 (층 B) — 화면이 실제로 칠하는 이름 붙은 값"
     },
     {
       "name": "dark-emotion-blue",
       "value": "oklch(0.649 0.156 244.3)",
-      "note": "#1496E6 — S3 darkTheme blue",
-      "group": "emotion 테마 (S3) — 화면이 실제로 칠하는 이름 붙은 값"
+      "note": "#1496E6 — 층 B darkTheme blue",
+      "group": "emotion 테마 (층 B) — 화면이 실제로 칠하는 이름 붙은 값"
     },
     {
       "name": "emotion-grey200",
       "value": "oklch(0.955 0.000 0.0)",
-      "note": "#F0F0F0 — S3 grey200 · 홈 구분선·테두리 · 층 A 에 없는 값",
-      "group": "emotion 테마 (S3) — 화면이 실제로 칠하는 이름 붙은 값"
+      "note": "#F0F0F0 — 층 B grey200 · 홈 구분선·테두리 · 층 A 에 없는 값",
+      "group": "emotion 테마 (층 B) — 화면이 실제로 칠하는 이름 붙은 값"
     },
     {
       "name": "emotion-grey550",
       "value": "oklch(0.450 0.000 0.0)",
-      "note": "#555555 — S3 grey550 · 상세 보조 글자 · darkTheme 에 키 없음",
-      "group": "emotion 테마 (S3) — 화면이 실제로 칠하는 이름 붙은 값"
+      "note": "#555555 — 층 B grey550 · 상세 보조 글자 · darkTheme 에 키 없음",
+      "group": "emotion 테마 (층 B) — 화면이 실제로 칠하는 이름 붙은 값"
     },
     {
       "name": "emotion-dim-thumb",
       "value": "oklch(0.000 0.000 0 / 0.04)",
-      "note": "rgba(0, 0, 0, 0.04) — S3 dimThumb · 표지 덧칠·외곽선 · 다크도 같은 값",
-      "group": "emotion 테마 (S3) — 화면이 실제로 칠하는 이름 붙은 값"
+      "note": "rgba(0, 0, 0, 0.04) — 층 B dimThumb · 표지 덧칠·외곽선 · 다크도 같은 값",
+      "group": "emotion 테마 (층 B) — 화면이 실제로 칠하는 이름 붙은 값"
     }
   ],
   "typography": [

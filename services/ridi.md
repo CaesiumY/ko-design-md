@@ -7,7 +7,7 @@ created_at: "2026-10-19"
 lang: ko
 logo: https://getdesign.kr/logos/ridi.png
 colors:
-  ## neutral — 무채색 원시 (S2 --ridi-color-*)
+  ## neutral — 무채색 원시 (층 A --ridi-color-*)
   neutral-25: oklch(0.985 0.000 0.0) # #FAFAFA — 렌더 상세 정보 박스 바탕과 같은 값
   neutral-50: oklch(0.970 0.000 0.0) # #F5F5F5 — 렌더 검색창·바로가기 원 바탕과 같은 값
   neutral-100: oklch(0.925 0.000 0.0) # #E6E6E6 — 렌더 테두리와 같은 값
@@ -157,14 +157,14 @@ colors:
   gold-700: oklch(0.601 0.064 97.2) # #8B8154
   gold-800: oklch(0.502 0.052 96.8) # #6C6441
   gold-900: oklch(0.415 0.041 96.7) # #524C32
-  ## emotion 테마 (S3) — 화면이 실제로 칠하는 이름 붙은 값
+  ## emotion 테마 (층 B) — 화면이 실제로 칠하는 이름 붙은 값
   primary: "{colors.emotion-blue}"
-  emotion-blue: oklch(0.683 0.176 248.3) # #1E9EFF — S3 lightTheme blue · 공개 글의 최종 리디 블루 · 현재 탭·선택 알약·구매 버튼·워드마크
-  dark-emotion-blue: oklch(0.649 0.156 244.3) # #1496E6 — S3 darkTheme blue
-  emotion-grey200: oklch(0.955 0.000 0.0) # #F0F0F0 — S3 grey200 · 홈 구분선·테두리 · 층 A 에 없는 값
-  emotion-grey550: oklch(0.450 0.000 0.0) # #555555 — S3 grey550 · 상세 보조 글자 · darkTheme 에 키 없음
-  emotion-dim-thumb: oklch(0.000 0.000 0 / 0.04) # rgba(0, 0, 0, 0.04) — S3 dimThumb · 표지 덧칠·외곽선 · 다크도 같은 값
-  ## 시맨틱 background·surface (S2) — dark- 행은 발행된 다크 짝이나 웹 브라우저에서 켜지는 경로는 미확인
+  emotion-blue: oklch(0.683 0.176 248.3) # #1E9EFF — 층 B lightTheme blue · 공개 글의 최종 리디 블루 · 현재 탭·선택 알약·구매 버튼·워드마크
+  dark-emotion-blue: oklch(0.649 0.156 244.3) # #1496E6 — 층 B darkTheme blue
+  emotion-grey200: oklch(0.955 0.000 0.0) # #F0F0F0 — 층 B grey200 · 홈 구분선·테두리 · 층 A 에 없는 값
+  emotion-grey550: oklch(0.450 0.000 0.0) # #555555 — 층 B grey550 · 상세 보조 글자 · darkTheme 에 키 없음
+  emotion-dim-thumb: oklch(0.000 0.000 0 / 0.04) # rgba(0, 0, 0, 0.04) — 층 B dimThumb · 표지 덧칠·외곽선 · 다크도 같은 값
+  ## 시맨틱 background·surface (층 A) — dark- 행은 발행된 다크 짝이나 웹 브라우저에서 켜지는 경로는 미확인
   background-neutral-default: "{colors.neutral-white}"
   dark-background-neutral-default: "{colors.neutral-900}"
   background-neutral-subtle: "{colors.neutral-50}"
@@ -201,7 +201,7 @@ colors:
   dark-surface-success-300: "{colors.green-700}"
   surface-success-500: "{colors.green-500}"
   dark-surface-success-500: "{colors.green-600}"
-  ## 시맨틱 surface-general (S2) — dark- 행은 발행된 다크 짝이나 웹 브라우저에서 켜지는 경로는 미확인
+  ## 시맨틱 surface-general (층 A) — dark- 행은 발행된 다크 짝이나 웹 브라우저에서 켜지는 경로는 미확인
   surface-general-white-default: "{colors.neutral-white}"
   dark-surface-general-white-default: "{colors.neutral-900}"
   surface-general-white-subtle: "{colors.neutral-white}"
@@ -284,7 +284,7 @@ colors:
   dark-surface-general-gold-300: "{colors.gold-700}"
   surface-general-gold-500: "{colors.gold-500}"
   dark-surface-general-gold-500: "{colors.gold-600}"
-  ## 시맨틱 border (S2) — dark- 행은 발행된 다크 짝이나 웹 브라우저에서 켜지는 경로는 미확인
+  ## 시맨틱 border (층 A) — dark- 행은 발행된 다크 짝이나 웹 브라우저에서 켜지는 경로는 미확인
   border-default: "{colors.neutral-100}"
   dark-border-default: "{colors.neutral-700}"
   border-inverse: "{colors.neutral-700}"
@@ -311,7 +311,7 @@ colors:
   dark-border-selected-white: "{colors.neutral-600}"
   border-selected-black: "{colors.neutral-900}"
   dark-border-selected-black: "{colors.neutral-50}"
-  ## 시맨틱 text (S2) — dark- 행은 발행된 다크 짝이나 웹 브라우저에서 켜지는 경로는 미확인
+  ## 시맨틱 text (층 A) — dark- 행은 발행된 다크 짝이나 웹 브라우저에서 켜지는 경로는 미확인
   text-primary: "{colors.neutral-900}"
   dark-text-primary: "{colors.neutral-50}"
   text-primary-static: "{colors.neutral-900}"
@@ -348,7 +348,7 @@ colors:
   dark-text-selected-white: "{colors.neutral-600}"
   text-selected-black: "{colors.neutral-900}"
   dark-text-selected-black: "{colors.neutral-50}"
-  ## 시맨틱 icon (S2) — dark- 행은 발행된 다크 짝이나 웹 브라우저에서 켜지는 경로는 미확인
+  ## 시맨틱 icon (층 A) — dark- 행은 발행된 다크 짝이나 웹 브라우저에서 켜지는 경로는 미확인
   icon-primary: "{colors.neutral-900}"
   dark-icon-primary: "{colors.neutral-50}"
   icon-inverse: "{colors.neutral-50}"
@@ -601,7 +601,7 @@ components:
 
 ### emotion 층 그룹
 
-| 키 | S3 키 | 화면 자리 |
+| 키 | 층 B 키 | 화면 자리 |
 | --- | --- | --- |
 | `{colors.emotion-blue}` | `blue` | 현재 탭 글자 · 선택 알약 · 구매 버튼 · `+ 관심` · `선택 대여` · 가격 글자 · 워드마크 — 값은 [src:3][src:5], 쓰이는 자리는 렌더 관찰(≈ 보드 판독 · 공개 출처 없음) |
 | `{colors.dark-emotion-blue}` | `blue`(darkTheme) | 다크 테마의 같은 자리 [src:3] |

@@ -88,9 +88,9 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행하고, 프리
     block 이다. 사이드카 `elevation` 은 이 맵만 읽고, 그림자 모양이 아닌 값(모션·z-index)
     은 걸러 내므로 그런 행은 `elevation-not-shadow` 로 block 한다 — 가장 흔한 경로는 bare hex
     색(` #0000001A` 는 YAML 주석이라 값이 색 없는 `0 1px 2px` 가 된다)이다. 스펙 모델에 elevation 범주는 없지만 린터는 이 키를 문제 삼지 않는다.
-  - **모션과 컴포넌트 스펙은 본문 ```` ```text ```` 펜스다.** 26개가 있다 — 모션 8개
-    (`## Elevation & Depth` 아래 6 · `## Motion` 2), `## Components` 의 스펙 16개, 그림자가
-    아닌 elevation 표 2개(bezier 용도 라벨 · class101 z-index). 독자에게는 값이 닿고 린터는
+  - **모션과 컴포넌트 스펙은 본문 ```` ```text ```` 펜스다.** 모션 값(`## Elevation & Depth`
+    · `## Motion` 아래), `## Components` 의 스펙, 그림자가 아닌 elevation 표(용도 라벨 ·
+    z-index · 필터), `## Spacing` 의 치수 표가 여기 산다. 독자에게는 값이 닿고 린터는
     읽지 않는다. 컴포넌트 스펙은 스펙의 `components:` 맵이 8속성만 담으므로 펜스가 남는다
     (아래 표준 절의 `components:` 항).
 - **색상 토큰 값은 OKLCH만.** frontmatter `colors:` 맵의 `name: oklch(...)` 형식. 브랜드 hex는
