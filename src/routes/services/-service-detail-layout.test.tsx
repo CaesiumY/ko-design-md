@@ -141,7 +141,7 @@ describe("ServiceDetailLayout", () => {
     const downloadAction = screen.getByRole("button", {
       name: /design\.md 다운로드/i,
     })
-    const guide = screen.getByText("어떻게 붙여 넣나요?")
+    const guide = screen.getByText("어떻게 사용하나요?")
 
     expect(
       downloadAction.compareDocumentPosition(guide) &

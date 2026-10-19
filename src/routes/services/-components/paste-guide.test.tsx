@@ -13,7 +13,7 @@ describe("PasteGuide", () => {
     const { container } = render(<PasteGuide slug="toss" />)
 
     expect(
-      screen.getByText("어떻게 붙여 넣나요?").closest("summary")
+      screen.getByText("어떻게 사용하나요?").closest("summary")
     ).not.toBeNull()
     expect(container.querySelector("details")?.open).toBe(false)
   })

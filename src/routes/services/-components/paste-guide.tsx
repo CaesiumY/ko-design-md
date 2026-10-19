@@ -14,10 +14,16 @@ export function PasteGuide({ slug }: { slug: string }) {
   return (
     <details className="group/guide mt-4">
       <summary
-        className="flex w-full cursor-pointer list-none items-center justify-between gap-2 border px-3.5 py-2.5 text-sm font-medium tracking-tight text-muted-foreground transition-colors outline-none hover:bg-ghost hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring [&::-webkit-details-marker]:hidden"
+        className="flex h-10 w-full cursor-pointer list-none items-center justify-between gap-2 border px-4 text-sm font-medium tracking-tight text-muted-foreground transition-colors outline-none hover:bg-ghost hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring [&::-webkit-details-marker]:hidden"
         style={{ borderColor: "var(--rule-strong)" }}
       >
-        어떻게 붙여 넣나요?
+        {/* Same height, padding, icon size and gap as the copy and download
+            buttons above, so the three labels start on one line. The chevron
+            stays where they have an arrow: this opens, it does not act. */}
+        <span className="inline-flex items-center gap-2.5">
+          <BookIcon className="size-4" />
+          어떻게 사용하나요?
+        </span>
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -55,6 +61,24 @@ export function PasteGuide({ slug }: { slug: string }) {
         </Step>
       </ol>
     </details>
+  )
+}
+
+function BookIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <path d="M12 7v14" />
+      <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
+    </svg>
   )
 }
 
