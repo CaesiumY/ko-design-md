@@ -1643,12 +1643,12 @@
       top: -4px; right: -4px;
       box-shadow: 0 0 0 2px var(--shell-card);
     }
+/* 파생색 되돌림 · 발행값 — 배지 바닥은 다크 보강색(role-negative-dark) 대신 발행 role-negative. 보강색 위 흰 숫자는 3.44, 발행값은 4.21(라이트와 같음). 점 배지와 하단 탭 아이콘 배지(다크 템플릿의 인라인 span)도 같은 빨강으로 맞춘다. 다크 바닥 위 빨강 글자·테두리는 보강색 그대로다. 다크 토큰이 생기면(md Known Gaps 의 「다크 모드」) 다시 잰다. */
 [data-theme="dark"] .badge.dot {
       width: 10px; height: 10px;
       border-radius: 50%;
-      background: var(--ldsg-role-negative-dark);
+      background: var(--ldsg-role-negative);
     }
-/* 다크 보강색(role-negative-dark) 대신 발행 role-negative — 보강색 위 흰 숫자는 3.44, 발행값은 4.21(라이트와 같음). 다크 토큰이 생기면(md Known Gaps 의 「다크 모드」) 다시 잰다. 하단 탭 아이콘 배지(다크 템플릿의 인라인 span)도 같은 이유로 발행값이다. 점 배지(.badge.dot)는 글자가 없어 보강색을 그대로 둔다. */
 [data-theme="dark"] .badge.num {
       min-width: 18px; height: 18px;
       padding: 0 5px;
