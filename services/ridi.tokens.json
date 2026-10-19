@@ -1106,5 +1106,22 @@
       "value": "9999px",
       "px": 9999
     }
+  ],
+  "elevation": [
+    {
+      "name": "carousel-arrow",
+      "value": "2px 4px 8px 0 oklch(0.000 0.000 0.0 / 0.06)",
+      "note": "캐러셀 화살표 원 · 컴포넌트 코드의 값(이름 붙은 그림자 토큰 아님)"
+    },
+    {
+      "name": "floating-box",
+      "value": "5px 5px 10px 0 oklch(0.000 0.000 0.0 / 0.08)",
+      "note": "떠 있는 상자(1440 만) · 컴포넌트 코드의 값(이름 붙은 그림자 토큰 아님)"
+    },
+    {
+      "name": "legacy-button",
+      "value": "0 1px 1px 0 oklch(0.871 0.007 247.9 / 0.3)",
+      "note": "상세 rui_ 버튼(옛 층) · 레거시 CSS 의 값"
+    }
   ]
 }

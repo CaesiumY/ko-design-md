@@ -2,7 +2,7 @@
 name: 리디
 slug: ridi
 category: content
-last_updated: "2026-10-19"
+last_updated: "2026-10-20"
 created_at: "2026-10-19"
 lang: ko
 logo: https://getdesign.kr/logos/ridi.png
@@ -525,6 +525,10 @@ rounded:
   radius-50: 2px
   radius-100: 4px
   radius-full: 9999px
+elevation:
+  carousel-arrow: 2px 4px 8px 0 oklch(0.000 0.000 0.0 / 0.06)   # 캐러셀 화살표 원 · 컴포넌트 코드의 값(이름 붙은 그림자 토큰 아님)
+  floating-box: 5px 5px 10px 0 oklch(0.000 0.000 0.0 / 0.08)   # 떠 있는 상자(1440 만) · 컴포넌트 코드의 값(이름 붙은 그림자 토큰 아님)
+  legacy-button: 0 1px 1px 0 oklch(0.871 0.007 247.9 / 0.3)   # 상세 rui_ 버튼(옛 층) · 레거시 CSS 의 값
 components:
   gnb-tab:
     textColor: "{colors.neutral-900}"
@@ -857,15 +861,9 @@ components:
 
 ## Elevation & Depth
 
-**그림자 값 토큰은 0개다.** 층 A 에는 클래스마다 값을 박은 Tailwind 임의값 그림자 6개가 있을 뿐 이름 붙은 그림자가 없고 [src:2], emotion 테마에도 없다 [src:3]. 그래서 frontmatter 에 `elevation:` 맵을 두지 않고, 관찰된 그림자를 아래에 값으로 남긴다. 구분은 그림자보다 `{colors.emotion-grey200}` · `{colors.neutral-100}` 의 얇은 선과 `{colors.neutral-50}` 면으로 한다(렌더 관찰 ≈). 렌더 테두리 두께가 소스의 `1px` 이 아니라 `0.888889px` 로 나오는데 원인은 확인되지 않았다(≈).
+**브랜드가 이름 붙인 그림자 토큰은 0개다.** 층 A 에는 클래스마다 값을 박은 Tailwind 임의값 그림자 6개가 있을 뿐 이름 붙은 그림자가 없고 [src:2], emotion 테마에도 없다 [src:3]. 그래서 frontmatter `elevation:` 맵에는 컴포넌트 코드가 값을 박아 둔 그림자 셋을 관찰값으로 싣는다(브랜드가 붙인 이름이 없어 키는 쓰이는 자리로 지었다) — 캐러셀 화살표 원 `carousel-arrow` [src:14], 1440 에서만 뜨는 상자 `floating-box`(테두리 `{colors.emotion-grey200}` · 반경 8px) [src:21], 상세 옛 층 `rui_` 버튼 `legacy-button` [src:25]. 히어로 작은 칩의 `0 1px 1px 0` 검정 15% 그림자는 출처 없는 보드 판독이라 맵에 싣지 않는다(≈ 보드 판독 · 공개 출처 없음). 구분은 그림자보다 `{colors.emotion-grey200}` · `{colors.neutral-100}` 의 얇은 선과 `{colors.neutral-50}` 면으로 한다(렌더 관찰 ≈). 렌더 테두리 두께가 소스의 `1px` 이 아니라 `0.888889px` 로 나오는데 원인은 확인되지 않았다(≈).
 
 ```text
-shadows (관찰 — 토큰 아님):
-  carousel-arrow     2px 4px 8px 0 oklch(0.000 0.000 0.0 / 0.06)      캐러셀 화살표 원        [src:14]
-  floating-box       5px 5px 10px 0 oklch(0.000 0.000 0.0 / 0.08)     떠 있는 상자(1440 만, 테두리 {colors.emotion-grey200} · 반경 8px)  [src:21]
-  hero-chip          0 1px 1px 0 oklch(0.000 0.000 0.0 / 0.15)        히어로 작은 칩          ≈ 보드 판독 · 공개 출처 없음
-  legacy-button      0 1px 1px 0 oklch(0.871 0.007 247.9 / 0.3)       상세 rui_ 버튼(옛 층)   [src:25]
-
 filters (레거시 키 객체 — 그림자가 아니라 drop-shadow 필터):
   logoFilter         drop-shadow(0 0 1px oklch(0.000 0.000 0.0 / 0.3))   [src:3]
   logoFilter2        drop-shadow(0 1px 1px oklch(0.000 0.000 0.0 / 0.2)) [src:3]
