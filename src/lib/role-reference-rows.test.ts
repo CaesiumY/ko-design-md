@@ -15,7 +15,8 @@ import { describe, expect, it } from "vitest"
 // A re-audit that fixes one copy and not the other would pass every other gate.
 //
 // Pinned in both directions: every table role that maps to a single declared
-// palette token has its row(s), and no row exists without a table role behind it.
+// palette token has its row(s) — save one under a spec colour-role name, which
+// stays in the table — and no row exists without a table role behind it.
 
 const SERVICES = join(
   fileURLToPath(new URL("../..", import.meta.url)),
@@ -88,21 +89,22 @@ function expectRowsToMatch(
   refs: Map<string, string>,
   literals: Set<string>
 ): void {
-  // A table with nothing parsed would make every assertion below vacuous.
-  expect(expected.size, `${slug}: no table roles parsed`).toBeGreaterThan(0)
   for (const target of expected.values()) {
     expect(
       literals.has(target),
       `${slug}: ${target} is not a palette key`
     ).toBe(true)
   }
+  // A table role under a spec colour-role name stays in the table only
+  // (CLAUDE.md), so it is dropped from what the rows must match. Left in, it
+  // would demand the very row refused below.
+  const owed = [...expected].filter(([key]) => !SPEC_COLOR_ROLES.has(bare(key)))
+  // A table with nothing left to compare would make the assertions vacuous.
+  expect(owed.length, `${slug}: no table roles parsed`).toBeGreaterThan(0)
   // The #381 brand alias (`primary: "{colors.blue500}"`) points at the brand
   // colour, not at a table role, so it is not compared. The other spec role
-  // names have no such procedure, and are refused here rather than left to
-  // the comparison below: a table role that happens to carry one of those
-  // names would put it in `expected` and so demand the very row the spec
-  // reads as a brand role. `dark-primary` is refused too — the alias has no
-  // dark twin.
+  // names have no such procedure, and a row under one is refused here.
+  // `dark-primary` is refused too — the alias has no dark twin.
   const roleRows = [...refs].filter(([key]) => key !== "primary")
   const specNamed = roleRows
     .map(([key]) => key)
@@ -111,9 +113,7 @@ function expectRowsToMatch(
     specNamed,
     `${slug}: reference rows under a spec colour-role name`
   ).toEqual([])
-  expect(Object.fromEntries(roleRows), slug).toEqual(
-    Object.fromEntries(expected)
-  )
+  expect(Object.fromEntries(roleRows), slug).toEqual(Object.fromEntries(owed))
 }
 
 // One comparison per entry that publishes its role table twice. Registering
@@ -140,7 +140,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
     },
   },
   greeting: {
-    title: "light only, no text role under a spec colour-role name",
+    title: "light only, brand alias off the text ladder",
     check: () => {
       const { literals, refs, tableRows } = load("greeting")
       const expected = new Map<string, string>()
@@ -163,7 +163,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
         if (roles.length !== palette.length) continue
         if (!palette.every((p) => literals.has(p))) continue
         roles.forEach((role, i) => {
-          if (!SPEC_COLOR_ROLES.has(role)) expected.set(role, palette[i])
+          expected.set(role, palette[i])
           if (TEXT_ROLES.has(role)) textColours.add(palette[i])
         })
       }
@@ -232,6 +232,23 @@ describe("role reference rows agree with the body role tables", () => {
   for (const [slug, { title, check }] of Object.entries(CASES)) {
     it(`${slug} — ${title}`, check)
   }
+
+  it("passes a spec-named table role kept in the table, refuses its row", () => {
+    // greeting keeps such roles in its table and so guards the first half;
+    // no entry has carried such a row, so the refusal needs a fixture.
+    const literals = new Set(["gray-500", "gray-600", "blue-500"])
+    const expected = new Map([
+      ["secondary", "gray-500"],
+      ["dark-secondary", "gray-600"],
+      ["bg-brand", "blue-500"],
+    ])
+    const tableOnly = new Map([["bg-brand", "blue-500"]])
+    expectRowsToMatch("fixture", expected, tableOnly, literals)
+    const withRow = new Map([...tableOnly, ["secondary", "gray-500"]])
+    expect(() =>
+      expectRowsToMatch("fixture", expected, withRow, literals)
+    ).toThrow(/spec colour-role name/)
+  })
 
   it("has a case for every entry whose reference rows alias its role table", () => {
     // Detected by shape, not by listing: a reference row whose key — less a
