@@ -27,8 +27,17 @@ import type { Plugin } from "vite"
 // empty name into the slug without anyone noticing. A key left out entirely
 // keeps the site's existing derivation (slug from the file name, token
 // estimate from the text, and so on).
+//
+// The exception is `FALLBACK_KEYS`, whose value has always come from another
+// source when missing: written empty, they are left out like an absent key.
 
 export const SITE_FRONTMATTER_MODULE_ID = "virtual:site-frontmatter"
+
+/** Keys that derive from another source when missing — the slug from the file
+ *  name, the token count from the text. Spec #582 keeps that rule for an empty
+ *  value too, and the draft validator accepts both written empty (#488), so a
+ *  build failure here would break the site for a file that passed the gate. */
+const FALLBACK_KEYS: ReadonlyArray<string> = ["slug", "estimated_tokens"]
 const RESOLVED_ID = `\0${SITE_FRONTMATTER_MODULE_ID}`
 
 /** Keys whose value is one line of text. `estimated_tokens` is the only
@@ -81,6 +90,7 @@ function readEntry(
     }
     if (!(CONSUMED_KEYS as ReadonlyArray<string>).includes(key)) continue
     const where = `${globPath}:${line}`
+    if (value === null && FALLBACK_KEYS.includes(key)) continue
     if (value === null) {
       throw new Error(
         `[site-frontmatter] ${where}: \`${key}\` has no value. Write its value, or delete the line if the key is optional.`

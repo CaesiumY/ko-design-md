@@ -137,6 +137,22 @@ describe("site frontmatter plugin", () => {
     expect(() => load()).toThrow(/services\/toss\.md.*`lang`/)
   })
 
+  // `slug` and `estimated_tokens` already fall back to another source when
+  // absent (the file name, the estimate). Written empty, they fall back the
+  // same way — the draft validator accepts both (#488), so failing the build
+  // would let a file pass the gate and then break the site.
+  it.each(["slug:", "slug: ~", "estimated_tokens:", "estimated_tokens: null"])(
+    "leaves `%s` out so the site derives it, as when the key is absent",
+    async (line) => {
+      entry("toss.md", ...VALID.filter((l) => !l.startsWith("slug:")), line)
+
+      const fm = (await exported(load().code))["/services/toss.md"]
+      expect(fm).not.toHaveProperty("slug")
+      expect(fm).not.toHaveProperty("estimated_tokens")
+      expect(fm).toMatchObject({ name: "토스", category: "finance" })
+    }
+  )
+
   // The date check used to run in the browser; it runs in the build now.
   it("fails the build on a date that is not a real calendar date", () => {
     entry(
