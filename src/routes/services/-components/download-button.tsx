@@ -47,8 +47,10 @@ function saveAs(raw: string, filename: string) {
   window.setTimeout(() => URL.revokeObjectURL(url), 40_000)
 }
 
-// The name the browser saves the file under. Exported because the sidebar's
-// paste guide tells the reader to hand over this exact file.
+// The name the browser is asked to save the file under - a suggestion, so a
+// second download can land as `toss (1).md`. Exported because the sidebar's
+// paste guide names the file by it; the reader sees the real name when moving
+// it into a project, so the guide stays one line rather than covering renames.
 export function downloadFilename(slug: string): string {
   return `${slug}.md`
 }
