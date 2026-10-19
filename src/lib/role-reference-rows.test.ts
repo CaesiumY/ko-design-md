@@ -74,6 +74,11 @@ const SPEC_COLOR_ROLES = new Set([
   "neutral",
 ])
 
+// A reference row's key less its theme marking: the `dark-` prefix this form
+// uses, or the `-dark` suffix vapor-ui's older aliases use.
+const bare = (key: string): string =>
+  key.replace(/^dark-/, "").replace(/-dark$/, "")
+
 const spans = (cell: string): Array<string> =>
   [...cell.matchAll(/`([^`]+)`/g)].map((m) => m[1])
 
@@ -93,8 +98,19 @@ function expectRowsToMatch(
   }
   // The #381 brand alias (`primary: "{colors.blue500}"`) points at the brand
   // colour, not at a table role, so it is not compared. The other spec role
-  // names have no such procedure: any row under them fails as unexpected.
+  // names have no such procedure, and are refused here rather than left to
+  // the comparison below: a table role that happens to carry one of those
+  // names would put it in `expected` and so demand the very row the spec
+  // reads as a brand role. `dark-primary` is refused too — the alias has no
+  // dark twin.
   const roleRows = [...refs].filter(([key]) => key !== "primary")
+  const specNamed = roleRows
+    .map(([key]) => key)
+    .filter((key) => SPEC_COLOR_ROLES.has(bare(key)))
+  expect(
+    specNamed,
+    `${slug}: reference rows under a spec colour-role name`
+  ).toEqual([])
   expect(Object.fromEntries(roleRows), slug).toEqual(
     Object.fromEntries(expected)
   )
@@ -225,8 +241,6 @@ describe("role reference rows agree with the body role tables", () => {
     // aliases) name no table role and are not caught. A role table written
     // without backticks, or with the role outside the first column, is not
     // seen either — CLAUDE.md states that shape.
-    const bare = (key: string): string =>
-      key.replace(/^dark-/, "").replace(/-dark$/, "")
     const docsName = (key: string): string =>
       bare(key)
         .replace(/^text-/, "txt-")
