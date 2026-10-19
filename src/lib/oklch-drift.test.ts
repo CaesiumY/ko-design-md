@@ -111,6 +111,84 @@ brand: oklch(0.62 0.24 27)
   })
 })
 
+// The frontmatter is read by `readFrontmatter` (docs/adr/0011), as YAML reads
+// it — not by a line regex of this file's own. What YAML calls a token value is
+// what the gate compares, whatever its quoting or indentation, and text that
+// YAML does not read as a `key: value` row is not a definition.
+describe("readDefinitions — frontmatter as YAML reads it", () => {
+  it("reads a token however deep it is indented", () => {
+    const doc = `---
+colors:
+    brand: oklch(0.62 0.24 27) # #FF0038
+---
+# 본문
+`
+    expect(readDefinitions(doc).get("brand")).toBe("oklch(0.62 0.24 27)")
+  })
+
+  it("reads a quoted token value as the value YAML reads", () => {
+    const doc = `---
+colors:
+  brand: "oklch(0.62 0.24 27)"
+---
+`
+    expect(readDefinitions(doc).get("brand")).toBe("oklch(0.62 0.24 27)")
+  })
+
+  it("does not read a definition-shaped line inside a block scalar", () => {
+    // The text inside `|` is one string value of `note`, not a row.
+    const doc = `---
+note: |
+  fake: oklch(0.1 0 0)
+colors:
+  brand: oklch(0.62 0.24 27)
+---
+`
+    const defs = readDefinitions(doc)
+    expect(defs.has("fake")).toBe(false)
+    expect(defs.get("brand")).toBe("oklch(0.62 0.24 27)")
+  })
+
+  it("drops a name that two maps define with different values", () => {
+    const doc = `---
+colors:
+  bg-canvas: oklch(1 0 0)
+dark:
+  bg-canvas: oklch(0.148 0.004 277)
+---
+`
+    expect(readDefinitions(doc).has("bg-canvas")).toBe(false)
+    expect([...conflictingDefinitions(doc)]).toEqual([
+      ["bg-canvas", ["oklch(1 0 0)", "oklch(0.148 0.004 277)"]],
+    ])
+  })
+
+  it("reads nothing from a frontmatter YAML cannot read", () => {
+    // The validator's `frontmatter-yaml-invalid` names the one cause; a regex
+    // guess at a broken block would only add findings built on a misreading.
+    const doc = `---
+colors:
+  brand: oklch(0.62 0.24 27)
+  brand: oklch(0.5 0 0)
+---
+`
+    expect(readDefinitions(doc).size).toBe(0)
+    expect(conflictingDefinitions(doc).size).toBe(0)
+  })
+
+  it("does not read the body of a document that has a frontmatter", () => {
+    const doc = `---
+colors:
+  brand: oklch(0.62 0.24 27)
+---
+\`\`\`text
+fg: oklch(0.2 0 0)
+\`\`\`
+`
+    expect([...readDefinitions(doc).keys()]).toEqual(["brand"])
+  })
+})
+
 describe("alignToPreviewNames", () => {
   const defs = (entries: Record<string, string>): Map<string, string> =>
     new Map(Object.entries(entries))

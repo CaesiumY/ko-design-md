@@ -1,10 +1,7 @@
 import { describe, expect, it } from "vitest"
 import {
-  applyDefinition,
-  countDefinitions,
   indexCorrections,
   matchDefinition,
-  rebuildDefinition,
   syncOklchLiterals,
 } from "./oklch-sync"
 import type { OklchCorrections } from "./oklch-sync"
@@ -237,69 +234,6 @@ describe("indented definitions", () => {
   })
 })
 
-// `audit:oklch` cannot distinguish "clean catalog" from "regex matched nothing"
-// — both print `0 token(s) mismatched` and exit 0. That is exactly how 102
-// annotated pairs went unjudged while the gate stayed green. Coverage has to be
-// reported and floored, not inferred from the absence of findings.
-describe("countDefinitions", () => {
-  it("separates annotated definitions from judgeable ones", () => {
-    const text = [
-      "blue-800: oklch(0.563 0.241 261)   # ≈ #0066FF",
-      "pink-600: oklch(0.673 0.279 339)   # ≈ #F553DA (mid는 #FF53C0)",
-      "neutral:  oklch(0.5 0 0)           # 주석에 hex 없음",
-      "  --derived: oklch(0.5 0 0);",
-    ].join("\n")
-
-    expect(countDefinitions(text)).toEqual({ annotated: 2, judged: 1 })
-  })
-
-  it("counts nothing in text with no definitions", () => {
-    expect(countDefinitions("# 제목\n산문 한 줄.")).toEqual({
-      annotated: 0,
-      judged: 0,
-    })
-  })
-})
-
-// `--fix` rebuilds a definition line from its capture groups so only the numbers
-// move in the diff. That reconstruction lives in `scripts/`, which has no tests
-// at all — a refactor that renumbers or drops the whitespace-preserving groups
-// silently reformats every corrected line and the whole suite stays green.
-// Round-trip is the invariant: rebuilding with the SAME values must be a no-op.
-describe("rebuildDefinition", () => {
-  // The invariant as the caller actually uses it: the match ends at the hex, so
-  // splice the rebuild back over that span and the whole line must be unchanged.
-  const rebuild = (line: string) => {
-    const d = matchDefinition(line)
-    if (!d) throw new Error(`not a definition: ${line}`)
-    return applyDefinition(line, d, [d.L, d.C, d.H], d.tail)
-  }
-
-  it("is byte-identical when the value does not change", () => {
-    const line =
-      "blue-800:  oklch(0.563 0.241 261)   # core Wanted Blue (#0066FF)"
-    expect(rebuild(line)).toBe(line)
-  })
-
-  it("preserves an alpha tail", () => {
-    const line = "border-subtle: oklch(0.556 0.014 271 / 0.08)  # #70737C14"
-    expect(rebuild(line)).toBe(line)
-  })
-
-  it("preserves leading indentation", () => {
-    const line = "  nested-token:  oklch(0.5 0.1 200)   # ≈ #00A0B0"
-    expect(rebuild(line)).toBe(line)
-  })
-
-  it("moves only the numbers when the value changes", () => {
-    const line = "lime-600:   oklch(0.758 0.213 131)   # ≈ #58CF04"
-    const d = matchDefinition(line)!
-    expect(applyDefinition(line, d, ["0.756", "0.232", "138"], d.tail)).toBe(
-      "lime-600:   oklch(0.756 0.232 138)   # ≈ #58CF04"
-    )
-  })
-})
-
 // Positional capture indices were a contract three files read by number, pinned
 // only by one test asserting five of the eleven. The four whitespace groups the
 // `--fix` reconstruction replays were pinned by nothing at all. `matchDefinition`
@@ -330,35 +264,5 @@ describe("matchDefinition", () => {
       )
     ).toBeNull()
     expect(matchDefinition("  --derived: oklch(0.5 0 0);")).toBeNull()
-  })
-
-  it("round-trips through applyDefinition", () => {
-    const line = "lime-600:   oklch(0.758 0.213 131)   # ≈ #58CF04"
-    const d = matchDefinition(line)!
-    expect(applyDefinition(line, d, [d.L, d.C, d.H], d.tail)).toBe(line)
-  })
-})
-
-// `String.replace` with a STRING replacement interprets `$&`, `$$`, `$1` and
-// `$<name>` as substitution patterns. The rebuilt line carries the author's
-// free-form comment verbatim, so a literal `$` in it would corrupt the rewrite.
-// No catalog comment contains one today; the guard costs nothing and this is
-// exactly the line that just shipped an indentation bug.
-describe("rebuildDefinition — replacement safety", () => {
-  it("survives a dollar sign in the comment", () => {
-    const line = "sale-badge: oklch(0.5 0.1 200)   # 세일 $10 배지 (#0066FF)"
-    const d = matchDefinition(line)!
-    expect(applyDefinition(line, d, [d.L, d.C, d.H], d.tail)).toBe(line)
-  })
-
-  // Demonstrates why `applyDefinition` exists rather than leaving the splice to
-  // the caller: the naive string form mangles the very same input.
-  it("would corrupt the line if the splice used a string replacement", () => {
-    const line = "sale-badge: oklch(0.5 0.1 200)   # 세일 $& 배지 (#0066FF)"
-    const d = matchDefinition(line)!
-    const rebuilt = rebuildDefinition(d, [d.L, d.C, d.H], d.tail)
-
-    expect(line.replace(d.matched, rebuilt)).not.toBe(line)
-    expect(applyDefinition(line, d, [d.L, d.C, d.H], d.tail)).toBe(line)
   })
 })
