@@ -293,7 +293,7 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | vapor-ui | light | non-text | 22 | 31 | 11 | 1 | 0 |
 | wanted | dark | text | 136 | 236 | 18 | 0 | 7 |
 | wanted | dark | non-text | 18 | 18 | 5 | 0 | 2 |
-| wanted | light | text | 136 | 236 | 46 | 3 | 7 |
+| wanted | light | text | 136 | 236 | 46 | 2 | 7 |
 | wanted | light | non-text | 18 | 18 | 8 | 0 | 2 |
 | yeogi | dark | text | 70 | 94 | 11 | 4 | 3 |
 | yeogi | dark | non-text | 14 | 14 | 7 | 0 | 2 |
@@ -498,12 +498,12 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 버리게 되는** 것. 후자의 사례가 samsung 의 라이트 강조 버튼(4.51:1, 발행 `primary-dark`
 위 흰 글자)이고, 그 파일은 값을 고치지 않고 가드 주석을 달았다.
 
-분류한 `borderline` 283행을 `services/{slug}.md` frontmatter `colors:` 와 대조했다. 측정된
+분류한 `borderline` 282행을 `services/{slug}.md` frontmatter `colors:` 와 대조했다. 측정된
 색 쌍이 모든 읽기에 실리므로(`--json-out` 의 `fg`/`bg`, 리포트 표의 `색` 열) 기계로
 가를 수 있다 — `readDefinitions` 로 발행 OKLCH 를 읽고 측정 hex 를 `hexToOklab` 으로
 옮겨 `deltaE` 로 잰다. 그 절차가 `src/lib/contrast-pairs.ts` 이고, 이 절과 다음 절의 표는
 **CI 의 `contrast` 잡이 올린 아티팩트**에 그것을 돌린 출력이다 — 로컬 sweep 으로 답하면 기록된
-표가 서술하는 것과 다른 렌더에 대해 답하게 된다. 입력은 run `39236185595`(#583 의 head `8550ef3` — gmarket 프리뷰 수정을 실은 재집계)다.
+표가 서술하는 것과 다른 렌더에 대해 답하게 된다. 입력은 run `39303180224`(#594 의 head `88b6a1a` — wanted 프리뷰 수정을 실은 재집계)다.
 그 뒤에 더해진 항목은 다음 재집계 때 두 표에 들어가고, 그전까지는 표에 없다(아래 「게이트는 이것을 어떻게 다루나」). 미달과
 경계선이 모두 0 인 항목도 표에 없다.
 
@@ -579,7 +579,7 @@ gs-shop 이 "라이브 실측 · 공식 문서와 불일치"·"공식 문서에 
 `observed-pair` 칸 없이)으로 같은 아티팩트를 돌리면 옛 표가 슬러그마다 그대로 나온다 — 이 스크립트가 그
 절차를 구현한다는 근거다.
 
-**결과: `borderline` 283행 중 177행이 두 색 모두 발행 토큰인 쌍이다.**
+**결과: `borderline` 282행 중 177행이 두 색 모두 발행 토큰인 쌍이다.**
 
 **이 수에는 두 방향의 오차가 있다.** 위 합성 대조는 반투명 토큰 **하나를** 불투명 색 하나 위에 얹은 경우만
 알아본다. 반투명 층이 둘 이상 겹친 배경, 프리뷰가 `opacity` 를 얹은 표면, 아래 색이 토큰이 아닌 합성은 **모든
@@ -618,7 +618,7 @@ gs-shop 이 "라이브 실측 · 공식 문서와 불일치"·"공식 문서에 
 | toss | non-text | 8 | 0 | 0 | 0 | 8 |
 | vapor-ui | text | 14 | 0 | 0 | 0 | 14 |
 | vapor-ui | non-text | 1 | 0 | 0 | 0 | 1 |
-| wanted | text | 2 | 0 | 1 | 0 | 3 |
+| wanted | text | 2 | 0 | 0 | 0 | 2 |
 | yeogi | text | 0 | 0 | 1 | 4 | 5 |
 | zigbang | non-text | 3 | 0 | 0 | 0 | 3 |
 
