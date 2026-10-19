@@ -47,9 +47,15 @@ function saveAs(raw: string, filename: string) {
   window.setTimeout(() => URL.revokeObjectURL(url), 40_000)
 }
 
+// The name the browser saves the file under. Exported because the sidebar's
+// paste guide tells the reader to hand over this exact file.
+export function downloadFilename(slug: string): string {
+  return `${slug}.md`
+}
+
 export function DownloadButton({ raw, slug }: Props) {
   function download() {
-    saveAs(raw, `${slug}.md`)
+    saveAs(raw, downloadFilename(slug))
 
     // Its own event rather than `design_md_copy`. The primary metric counts
     // copies and downloads together (#336); a separate name keeps the split

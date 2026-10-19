@@ -1,3 +1,4 @@
+import { downloadFilename } from "./download-button"
 import type { ReactNode } from "react"
 
 // How to hand the copied or downloaded DESIGN.md to an AI. It names no tools -
@@ -7,7 +8,9 @@ import type { ReactNode } from "react"
 // the token sections' `MoreDetails`, so it needs no client JS. The example
 // request has no copy button on purpose: a paste-this prompt is what the sidebar
 // dropped (ADR 0010).
-export function PasteGuide() {
+export function PasteGuide({ slug }: { slug: string }) {
+  const file = downloadFilename(slug)
+
   return (
     <details className="group/guide mt-4">
       <summary
@@ -47,8 +50,8 @@ export function PasteGuide() {
           </span>
         </Step>
         <Step label="2-B">
-          프로젝트 폴더에서 작업하는 AI 라면, 파일을 프로젝트에 넣고 &ldquo;이
-          DESIGN.md 대로 구현해 줘&rdquo; 라고 요청합니다.
+          프로젝트 폴더에서 작업하는 AI 라면, 다운로드한 {file} 를 프로젝트에
+          넣고 &ldquo;이 {file} 대로 구현해 줘&rdquo; 라고 요청합니다.
         </Step>
       </ol>
     </details>
