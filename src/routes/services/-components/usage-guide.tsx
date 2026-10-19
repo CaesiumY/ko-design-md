@@ -49,7 +49,13 @@ export function UsageGuide({ slug }: { slug: string }) {
         <Step label="2-A">
           AI 대화창에 요청 한 줄을 쓰고, 복사한 내용을 붙여 넣거나 파일을
           첨부합니다.
-          {/* Darker than the step text: it is the line the reader types. */}
+          {/* Darker than the step text: it is the line the reader types.
+              Unlike 2-B it says "DESIGN.md", not the downloaded name, on
+              purpose: in a chat the pasted text or attachment is already in
+              front of the model, so the words name the kind of document, not a
+              file to look up - a folder-working AI does look one up by name.
+              The sentence is a maintainer decision (the main scene is a chat
+              that already has a screen, like a canvas); keep it as written. */}
           <span className="mt-1.5 block text-foreground">
             예: 아래 DESIGN.md 대로 지금 화면을 다시 디자인해 줘. 기능은 그대로
             둬.
