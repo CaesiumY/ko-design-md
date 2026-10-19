@@ -390,10 +390,10 @@
   .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; line-height: 1; font-family: inherit; padding: 5px 8px; border-radius: 6px; }
   .badge.brand   { background: var(--w-bg-brand-subtle); color: var(--w-fg-brand); }
   .badge.solid   { background: var(--w-bg-brand); color: var(--w-fg-on-brand); }
-  .badge.danger  { background: color-mix(in oklab, var(--w-fg-danger) 16%, var(--w-bg-surface)); color: var(--w-fg-danger); }
-  /* md 지정 · 발행 토큰 — md 612 의 subtle 바탕, color-mix 16% 대신(대비 2.37 → 2.53 · 3.14 → 3.42, 발행색끼리). 시맨틱 fg·subtle 토큰이 바뀌면 다시 잰다. */
-  .badge.success { background: var(--w-bg-success-subtle); color: var(--w-fg-success); }
-  .badge.warning { background: var(--w-bg-warning-subtle); color: var(--w-fg-warning); }
+  /* md 토큰 아님 · 파생색 — 몽타주 ContentBadge 는 accent 색 opacity[8] 을 바탕으로 깐다(packages/core/src/components/content-badge/style.ts). oklab 16% 에서 sRGB 8% 로 옮겼다. 시맨틱 fg·surface 가 바뀌면 다시 잰다. */
+  .badge.danger  { background: color-mix(in srgb, var(--w-fg-danger) 8%, var(--w-bg-surface)); color: var(--w-fg-danger); }
+  .badge.success { background: color-mix(in srgb, var(--w-fg-success) 8%, var(--w-bg-surface)); color: var(--w-fg-success); }
+  .badge.warning { background: color-mix(in srgb, var(--w-fg-warning) 8%, var(--w-bg-surface)); color: var(--w-fg-warning); }
   .badge.neutral { background: var(--w-bg-muted); color: var(--w-fg-default); }
   .badge.dot::before { content:""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
   .badge.count { min-width: 18px; height: 18px; padding: 0 5px; justify-content: center; border-radius: 9999px; background: var(--w-red-700); color: oklch(1 0 0); font-size: 11px; }
@@ -452,10 +452,10 @@
   .walert { display: flex; gap: 10px; padding: 14px 16px; border-radius: 12px; align-items: flex-start; font-size: 13px; font-weight: 500; line-height: 1.5; font-family: inherit; }
   .walert b { font-size: 14px; font-weight: 600; line-height: 1.4; font-family: inherit; display: block; margin-bottom: 2px; }
   .walert.info    { background: var(--w-bg-brand-subtle);   color: var(--w-fg-brand); }
-  .walert.danger  { background: color-mix(in oklab, var(--w-fg-danger) 12%, var(--w-bg-surface));  color: var(--w-fg-danger); }
-  /* md 지정 · 발행 토큰 — md 813 의 subtle 바탕, color-mix 12% 대신(대비 2.46 → 2.53 · 3.27 → 3.42, 발행색끼리). 시맨틱 fg·subtle 토큰이 바뀌면 다시 잰다. */
-  .walert.success { background: var(--w-bg-success-subtle); color: var(--w-fg-success); }
-  .walert.warning { background: var(--w-bg-warning-subtle); color: var(--w-fg-warning); }
+  /* md 토큰 아님 · 파생색 — 몽타주 SectionMessage 는 시맨틱 fg 색 opacity[5] 를 바탕으로 깐다(packages/core/src/components/section-message/style.ts). oklab 12% 에서 sRGB 5% 로 옮겼다. 시맨틱 fg·surface 가 바뀌면 다시 잰다. */
+  .walert.danger { background: color-mix(in srgb, var(--w-fg-danger) 5%, var(--w-bg-surface)); color: var(--w-fg-danger); }
+  .walert.success { background: color-mix(in srgb, var(--w-fg-success) 5%, var(--w-bg-surface)); color: var(--w-fg-success); }
+  .walert.warning { background: color-mix(in srgb, var(--w-fg-warning) 5%, var(--w-bg-surface)); color: var(--w-fg-warning); }
 
   .wscrim { background: oklch(0 0 0 / 0.5); border-radius: 16px; padding: 28px; display: flex; align-items: center; justify-content: center; min-height: 220px; }
   .wmodal { background: var(--w-bg-elevated); border-radius: 20px; width: 100%; max-width: 320px; padding: 24px 20px 18px; box-shadow: var(--w-shadow-4); }
@@ -691,8 +691,7 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .btn-lg { height: 48px; padding: 0 28px; font-size: 16px; border-radius: 12px; }
 [data-theme="dark"] .btn-xl { height: 56px; padding: 0 32px; font-size: 17px; border-radius: 14px; }
 [data-theme="dark"] .btn-primary { background: var(--w-bg-brand); color: var(--w-fg-on-brand); }
-/* md 지정 · 발행 토큰 — md 528·480 의 hover darken(blue-900, 라이트와 같음). blue-700 위 흰 글자는 3.98 이라 blue-900(6.56). fg-on-brand·blue-900 이 바뀌면 다시 잰다. */
-[data-theme="dark"] .btn-primary:hover { background: var(--w-blue-900); }
+[data-theme="dark"] .btn-primary:hover { background: var(--w-blue-700); }
 [data-theme="dark"] .btn-secondary { background: transparent; border-color: var(--w-border-default); color: var(--w-fg-brand); }
 [data-theme="dark"] .btn-secondary:hover { background: var(--w-bg-muted); }
 [data-theme="dark"] .btn-tertiary { background: color-mix(in oklab, oklch(1 0 0) 10%, transparent); color: var(--w-fg-default); }
@@ -876,9 +875,10 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; line-height: 1; font-family: inherit; padding: 5px 8px; border-radius: 6px; }
 [data-theme="dark"] .badge.brand { background: var(--w-bg-brand-subtle); color: var(--w-fg-brand); }
 [data-theme="dark"] .badge.solid { background: var(--w-bg-brand); color: var(--w-fg-on-brand); }
-[data-theme="dark"] .badge.danger { background: color-mix(in oklab, var(--w-fg-danger) 16%, var(--w-bg-surface)); color: var(--w-fg-danger); }
-[data-theme="dark"] .badge.success { background: color-mix(in oklab, var(--w-fg-success) 16%, var(--w-bg-surface)); color: var(--w-fg-success); }
-[data-theme="dark"] .badge.warning { background: color-mix(in oklab, var(--w-fg-warning) 16%, var(--w-bg-surface)); color: var(--w-fg-warning); }
+/* md 토큰 아님 · 파생색 — 라이트와 같은 몽타주 ContentBadge opacity[8]. 다크 시맨틱 fg·surface 가 바뀌면 다시 잰다. */
+[data-theme="dark"] .badge.danger { background: color-mix(in srgb, var(--w-fg-danger) 8%, var(--w-bg-surface)); color: var(--w-fg-danger); }
+[data-theme="dark"] .badge.success { background: color-mix(in srgb, var(--w-fg-success) 8%, var(--w-bg-surface)); color: var(--w-fg-success); }
+[data-theme="dark"] .badge.warning { background: color-mix(in srgb, var(--w-fg-warning) 8%, var(--w-bg-surface)); color: var(--w-fg-warning); }
 [data-theme="dark"] .badge.neutral { background: var(--w-bg-muted); color: var(--w-fg-default); }
 [data-theme="dark"] .badge.dot::before { content:""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 [data-theme="dark"] .badge.count { min-width: 18px; height: 18px; padding: 0 5px; justify-content: center; border-radius: 9999px; background: var(--w-red-700); color: oklch(1 0 0); font-size: 11px; }
@@ -925,9 +925,10 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .walert { display: flex; gap: 10px; padding: 14px 16px; border-radius: 12px; align-items: flex-start; font-size: 13px; font-weight: 500; line-height: 1.5; font-family: inherit; }
 [data-theme="dark"] .walert b { font-size: 14px; font-weight: 600; line-height: 1.4; font-family: inherit; display: block; margin-bottom: 2px; }
 [data-theme="dark"] .walert.info { background: var(--w-bg-brand-subtle);   color: var(--w-fg-brand); }
-[data-theme="dark"] .walert.danger { background: color-mix(in oklab, var(--w-fg-danger) 12%, var(--w-bg-surface));  color: var(--w-fg-danger); }
-[data-theme="dark"] .walert.success { background: color-mix(in oklab, var(--w-fg-success) 12%, var(--w-bg-surface)); color: var(--w-fg-success); }
-[data-theme="dark"] .walert.warning { background: color-mix(in oklab, var(--w-fg-warning) 12%, var(--w-bg-surface)); color: var(--w-fg-warning); }
+/* md 토큰 아님 · 파생색 — 라이트와 같은 몽타주 SectionMessage opacity[5]. 다크 시맨틱 fg·surface 가 바뀌면 다시 잰다. */
+[data-theme="dark"] .walert.danger { background: color-mix(in srgb, var(--w-fg-danger) 5%, var(--w-bg-surface)); color: var(--w-fg-danger); }
+[data-theme="dark"] .walert.success { background: color-mix(in srgb, var(--w-fg-success) 5%, var(--w-bg-surface)); color: var(--w-fg-success); }
+[data-theme="dark"] .walert.warning { background: color-mix(in srgb, var(--w-fg-warning) 5%, var(--w-bg-surface)); color: var(--w-fg-warning); }
 [data-theme="dark"] .wscrim { background: oklch(0 0 0 / 0.5); border-radius: 16px; padding: 28px; display: flex; align-items: center; justify-content: center; min-height: 220px; }
 [data-theme="dark"] .wmodal { background: var(--w-bg-elevated); border-radius: 20px; width: 100%; max-width: 320px; padding: 24px 20px 18px; box-shadow: var(--w-shadow-4); }
 [data-theme="dark"] .wmodal-ti { font-size: 20px; font-weight: 700; line-height: 1.4; font-family: inherit; letter-spacing: -0.012em; color: var(--w-fg-strong); text-align: center; }
