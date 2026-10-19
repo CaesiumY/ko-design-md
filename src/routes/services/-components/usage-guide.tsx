@@ -62,7 +62,10 @@ export function UsageGuide() {
             although it is saved under the brand's name (`toss.md`): the step
             then reads the same on every brand's page. A folder-working agent
             told "이 DESIGN.md" still found the saved file in a sample project
-            (2026-10-20, two models - one asked to confirm first). A
+            (2026-10-20, two models - one asked to confirm first). That
+            project held one Markdown file. Not measured, and the known risk:
+            a project that already has its own DESIGN.md, or several brands'
+            files, where the agent may take the wrong one without asking. A
             maintainer decision; keep it as written. */}
         <Step label="2-B">
           프로젝트 폴더에서 작업하는 AI 라면, 다운로드한 DESIGN.md 를 프로젝트에
