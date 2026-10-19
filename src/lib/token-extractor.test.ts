@@ -521,11 +521,11 @@ describe("unquote", () => {
     expect(t?.[0].value).toBe("'0 1px 2px oklch(0 0 0 / 0.1)'")
   })
 
-  it("leaves a value carrying more than one quoted item out of the sidecar", () => {
+  it("refuses a value carrying more than one quoted item", () => {
+    // `"Foo", "Bar"` is not one YAML scalar but invalid YAML, so no row reaches
+    // `unquote` — the read fails, naming the row's file line (1 is `---`).
     const body = fm("colors:", '  stack: "Foo", "Bar"')
-    // Not a colour, so it never reaches the sidecar — the reader leaves it as
-    // authored, but no category's shape check would accept it either way.
-    expect(extractTokensFromMarkdown(body).colors).toEqual([])
+    expect(() => extractTokensFromMarkdown(body)).toThrow(/\(line 4\)/)
   })
 })
 
@@ -568,7 +568,11 @@ describe("frontmatter shapes the docs prescribe", () => {
     const bounded = doc(
       "  a:\n    fontSize: 16px\nlang: ko\n  b:\n    fontSize: 20px"
     )
-    expect(extractTokensFromMarkdown(bounded).typography).toHaveLength(1)
+    // Rows indented under `lang: ko` are not typography — and not valid YAML
+    // under a scalar, so the read fails rather than guessing where they belong.
+    expect(() => extractTokensFromMarkdown(bounded)).toThrow(/line \d+/)
+    const closed = doc("  a:\n    fontSize: 16px\nlang: ko")
+    expect(extractTokensFromMarkdown(closed).typography).toHaveLength(1)
   })
 })
 
@@ -703,5 +707,60 @@ describe("typography shapes that look healthy but are not", () => {
         doc("  a:\n    fontSize: 16px\n    fontWeight: bold")
       ).typography[0]
     ).toEqual({ name: "a", size: "16px", weight: 700 })
+  })
+})
+
+describe("reads the token maps as YAML reads them (ADR 0011)", () => {
+  // The extractor reads the frontmatter through the one shared reader, so a
+  // row YAML reads is a row the sidecar gets, whatever its spelling.
+  it("reads token rows indented by four spaces", () => {
+    const body = fm("colors:", "    brand: oklch(0.62 0.19 258) # #3182F6")
+    expect(extractTokensFromMarkdown(body).colors).toEqual([
+      { name: "brand", value: "oklch(0.62 0.19 258)", note: "#3182F6" },
+    ])
+  })
+
+  it("reads a quoted key as its name", () => {
+    const body = fm("colors:", '  "brand": oklch(0.62 0.19 258)')
+    expect(extractTokensFromMarkdown(body).colors[0]?.name).toBe("brand")
+  })
+
+  it("keeps a number's written spelling — `1.50` stays `1.50`", () => {
+    // YAML resolves `1.50` to the number 1.5; the committed sidecars carry the
+    // text as written, so the extractor must not round-trip through the number.
+    const body = fm(
+      "typography:",
+      "  body:",
+      "    fontSize: 16px",
+      "    lineHeight: 1.50"
+    )
+    expect(extractTokensFromMarkdown(body).typography[0]?.lineHeight).toBe(
+      "1.50"
+    )
+  })
+
+  it("does not read a style written as an inline map", () => {
+    // Pinned until `unreadable-token-map` is retired (#589): the validator
+    // still tells the author to rewrite this shape as a nested block.
+    const body = fm(
+      "typography:",
+      "  body: { fontSize: 16px, fontWeight: 400 }"
+    )
+    expect(extractTokensFromMarkdown(body).typography).toEqual([])
+  })
+
+  it("reads no tokens from a block that never closes", () => {
+    // No block is not a broken block: the validator reports the missing fence
+    // as `frontmatter-parse`, and the extractor has no maps to read.
+    const unclosed = md("---", "name: 데모", "colors:", "  a: oklch(0.5 0 0)")
+    expect(extractTokensFromMarkdown(unclosed).colors).toEqual([])
+  })
+
+  it("throws, naming the line, when the frontmatter is not valid YAML", () => {
+    // A reader that guessed at broken YAML could publish a partial sidecar
+    // that `tokens:check` then confirms. Failing loudly sends the author to
+    // `frontmatter-yaml-invalid` instead.
+    const body = fm("colors:", "  a: oklch(0.5 0 0)", "  b: : :")
+    expect(() => extractTokensFromMarkdown(body)).toThrow(/line \d+/)
   })
 })

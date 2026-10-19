@@ -1,4 +1,6 @@
 import { splitFrontmatter } from "./content-parser"
+import { readFrontmatter } from "./frontmatter"
+import { oklchEntries } from "./oklch-sync"
 // Detect preview CSS that no longer agrees with the design.md it was built from.
 //
 // This exists because the gates added alongside it could not see their own
@@ -109,13 +111,38 @@ export function frontmatterBlock(markdown: string): string {
   return splitFrontmatter(markdown)?.frontmatter ?? markdown
 }
 
-/** Every `name: oklch(…)` definition in the frontmatter token maps, in document
- *  order, duplicates included. */
+/** The leading literal of a value: a gradient's first stop is still a colour. */
+const LEADING_OKLCH = /^oklch\([^)]*\)/
+
+/**
+ * Every `name: oklch(…)` definition, in document order, duplicates included.
+ *
+ * A document with a frontmatter is read through `readFrontmatter` — the one
+ * reader every consumer shares (docs/adr/0011) — so a quoted or deeply indented
+ * value counts as YAML reads it, and a block scalar's text does not count at
+ * all. A frontmatter YAML cannot read yields nothing: `frontmatter-yaml-invalid`
+ * names that cause, and a guess at a broken block would only add findings built
+ * on a misreading. The body is never read when a frontmatter exists.
+ *
+ * Text with no frontmatter block is read as a body: the validator hands this a
+ * document's body to warn on pre-migration token fences, and such text has no
+ * frontmatter to read. That path is a line scan by necessity — it is not
+ * frontmatter.
+ */
 function allDefinitions(markdown: string): Array<[string, string]> {
+  if (splitFrontmatter(markdown) === null) return bodyDefinitions(markdown)
+  const read = readFrontmatter(markdown)
+  if (!read.ok) return []
+  return oklchEntries(read.keys).flatMap((entry) => {
+    const literal = entry.value.match(LEADING_OKLCH)
+    return literal ? [[entry.key, normalise(literal[0])]] : []
+  })
+}
+
+/** `name: oklch(…)` lines in text that has no frontmatter. */
+function bodyDefinitions(text: string): Array<[string, string]> {
   return [
-    ...frontmatterBlock(markdown).matchAll(
-      /^[ \t]*([a-z][\w-]*):[ \t]+(oklch\([^)]*\))/gm
-    ),
+    ...text.matchAll(/^[ \t]*([a-z][\w-]*):[ \t]+(oklch\([^)]*\))/gm),
   ].map((m) => [m[1], normalise(m[2])])
 }
 

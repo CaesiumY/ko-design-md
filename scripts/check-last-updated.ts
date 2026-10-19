@@ -183,7 +183,12 @@ function main(): void {
     // otherwise let new working-tree changes ride in on the sweep's exemption.
     // No in-range commits at all is the same case — nothing marked stands
     // behind the edit.
+    //
+    // An unreadable frontmatter is never exempted: the trailer waives a date a
+    // sweep left alone, and here no date was judged at all. A sweep that broke
+    // the YAML is exactly what should stop.
     const covered =
+      issue.rule !== "unreadable-frontmatter" &&
       !dirty &&
       touching.length > 0 &&
       touching.every(([sha]) => marked.has(sha))

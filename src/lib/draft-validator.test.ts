@@ -2203,14 +2203,30 @@ describe("token rules read the frontmatter maps", () => {
   })
 
   it("warns when one token name carries two different values", () => {
+    // In two maps: YAML reads both, and the drift gate drops the name.
     expect(
       rulesFor(
         draftWithFrontmatterColors([
-          "bg-canvas: oklch(1 0 0)",
-          "bg-canvas: oklch(0.148 0.004 277)",
+          "light:",
+          "  bg-canvas: oklch(1 0 0)",
+          "dark:",
+          "  bg-canvas: oklch(0.148 0.004 277)",
         ])
       )
     ).toContain("duplicate-token-value")
+  })
+
+  it("blocks one token name written twice in the same map as unreadable YAML", () => {
+    // YAML refuses a repeated key, so the colour readers read nothing from the
+    // block (docs/adr/0011) and the one cause is the YAML error.
+    const rules = rulesFor(
+      draftWithFrontmatterColors([
+        "bg-canvas: oklch(1 0 0)",
+        "bg-canvas: oklch(0.148 0.004 277)",
+      ])
+    )
+    expect(rules).toContain("frontmatter-yaml-invalid")
+    expect(rules).not.toContain("duplicate-token-value")
   })
 
   it("leaves a reference alone rather than judging it as a literal", () => {

@@ -1,8 +1,46 @@
+import type { FrontmatterKey } from "./frontmatter"
+
 // Propagating a corrected OKLCH primitive into the places that copied it —
 // semantic aliases, gradients, prose, preview CSS. Extracted from
 // `scripts/audit-oklch.ts` so the substitution itself can be tested: applying
 // corrections as sequential passes silently corrupted committed data, and only a
 // test pins the fix down.
+
+/** The token names the colour readers consider. Lowercase-first, so a numeric
+ *  step key (`500:`) or a capitalised label is not a colour definition. */
+const TOKEN_NAME = /^[a-z][\w-]*$/
+
+/**
+ * Every frontmatter row whose value is written as an `oklch(…)` literal, at
+ * any depth of map nesting, in document order — as `readFrontmatter` read it
+ * (docs/adr/0011). Shared by the drift gate and `audit:oklch`, so the two
+ * cannot disagree about which rows are colour definitions.
+ *
+ * Only maps are walked. A list item is not a named token, and the text of a
+ * block scalar is one string value, not rows.
+ */
+export function oklchEntries(
+  keys: ReadonlyArray<FrontmatterKey>
+): Array<FrontmatterKey & { value: string }> {
+  const out: Array<FrontmatterKey & { value: string }> = []
+  const walk = (rows: ReadonlyArray<FrontmatterKey>): void => {
+    for (const row of rows) {
+      const { value } = row
+      if (
+        typeof value === "string" &&
+        value.startsWith("oklch(") &&
+        TOKEN_NAME.test(row.key)
+      ) {
+        out.push({ ...row, value })
+      }
+      if (row.rows) {
+        walk(row.rows.flatMap((r) => (r.kind === "entry" ? [r] : [])))
+      }
+    }
+  }
+  walk(keys)
+  return out
+}
 
 /**
  * `token: oklch(L C H[ / a])  # …#hex` — a definition whose trailing comment
@@ -108,75 +146,6 @@ export const OKLCH_ANNOTATED_DEFINITION =
 
 /** Any oklch literal, whatever follows the triple (`)`, ` / 30%)`). */
 const OKLCH_LITERAL = /(oklch\(\s*)([\d.]+)(\s+)([\d.]+)(\s+)([\d.]+)(\s*[/)])/g
-
-/**
- * How many annotated definitions exist, and how many of them the audit can
- * actually judge.
- *
- * `audit:oklch` reports findings, and "no findings" is indistinguishable from
- * "matched nothing" — same output, same exit code. That ambiguity is not
- * hypothetical: `OKLCH_DEFINITION` once skipped 102 annotated pairs across
- * `services/` (66 of them genuinely wrong) while the gate reported a clean
- * catalog. Coverage has to be counted and asserted, never inferred from silence.
- */
-export function countDefinitions(text: string): {
-  annotated: number
-  judged: number
-} {
-  let annotated = 0
-  let judged = 0
-  for (const line of text.split(/\r?\n/)) {
-    if (!OKLCH_ANNOTATED_DEFINITION.test(line)) continue
-    annotated++
-    if (OKLCH_DEFINITION.test(line)) judged++
-  }
-  return { annotated, judged }
-}
-
-/**
- * Rebuild a definition line from its own match, swapping in a new triple.
- *
- * Every separator the author wrote — indentation, the gap after the colon, the
- * spaces between L/C/H, the run before the comment — is replayed from the
- * capture groups so a correction moves the numbers and nothing else. The
- * invariant is round-trip: rebuilding with the values already on the line must
- * return that line byte-for-byte.
- *
- * This lives here rather than in `scripts/audit-oklch.ts` because `scripts/`
- * has no test coverage, and an unverified reconstruction quietly reformats
- * every line it touches.
- */
-export function rebuildDefinition(
-  d: DefinitionMatch,
-  triple: [string, string, string],
-  alphaTail: string
-): string {
-  return (
-    `${d.indent}${d.token}:${d.afterColon}oklch(` +
-    `${triple[0]}${d.sepLC}${triple[1]}${d.sepCH}${triple[2]}${alphaTail})` +
-    `${d.comment}${d.hex}`
-  )
-}
-
-/**
- * Splice a rebuilt definition back over the span it came from.
- *
- * The splice is here, not at the call site, because `String.replace` with a
- * STRING replacement treats `$&`, `$$`, `$1` and `$<name>` as substitution
- * patterns — and the rebuilt line carries the author's free-form comment
- * verbatim. A single literal `$` in a comment would silently corrupt the
- * rewrite. Passing a callback opts out of that parsing entirely, so the only
- * way to get it wrong is to not use this function.
- */
-export function applyDefinition(
-  line: string,
-  d: DefinitionMatch,
-  triple: [string, string, string],
-  alphaTail: string
-): string {
-  const rebuilt = rebuildDefinition(d, triple, alphaTail)
-  return line.replace(d.matched, () => rebuilt)
-}
 
 /** `"0.65 0 0"` → the replacement triple. */
 export type OklchCorrections = Map<string, [string, string, string]>
