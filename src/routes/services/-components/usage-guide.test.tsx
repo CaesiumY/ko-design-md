@@ -56,4 +56,20 @@ describe("UsageGuide", () => {
     )
     expect(folderStep).not.toContain("DESIGN.md")
   })
+
+  // The file name is something the reader types or looks for as written, so it
+  // is set as code - the site keeps monospace for literal text only, which is
+  // why the step labels are not.
+  it("sets the downloaded file name as code", () => {
+    render(<UsageGuide slug="toss" />)
+
+    const folderStep = screen.getAllByRole("listitem")[2]
+    const codes = [...folderStep.querySelectorAll("code")].map(
+      (code) => code.textContent
+    )
+    expect(codes).toEqual([
+      downloadFilename("toss"),
+      downloadFilename("toss"),
+    ])
+  })
 })

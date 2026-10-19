@@ -14,7 +14,7 @@ export function UsageGuide({ slug }: { slug: string }) {
   return (
     <details className="group/guide mt-4">
       <summary
-        className="flex h-10 w-full cursor-pointer list-none items-center justify-between gap-2 border px-4 text-sm font-medium tracking-tight text-muted-foreground transition-colors outline-none hover:bg-ghost hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring [&::-webkit-details-marker]:hidden"
+        className="flex h-10 w-full cursor-pointer list-none items-center justify-between gap-2 border px-4 text-sm font-medium tracking-tight text-muted-foreground transition-colors outline-none group-open/guide:text-foreground hover:bg-ghost hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring [&::-webkit-details-marker]:hidden"
         style={{ borderColor: "var(--rule-strong)" }}
       >
         {/* Same height, padding, icon size and gap as the copy and download
@@ -62,8 +62,10 @@ export function UsageGuide({ slug }: { slug: string }) {
           </span>
         </Step>
         <Step label="2-B">
-          프로젝트 폴더에서 작업하는 AI 라면, 다운로드한 {file} 를 프로젝트에
-          넣고 &ldquo;이 {file} 대로 구현해 줘&rdquo; 라고 요청합니다.
+          프로젝트 폴더에서 작업하는 AI 라면, 다운로드한{" "}
+          <code className="font-mono">{file}</code> 를 프로젝트에 넣고 &ldquo;이{" "}
+          <code className="font-mono">{file}</code> 대로 구현해 줘&rdquo; 라고
+          요청합니다.
         </Step>
       </ol>
     </details>
@@ -91,7 +93,7 @@ function BookIcon({ className }: { className?: string }) {
 function Step({ label, children }: { label: string; children: ReactNode }) {
   return (
     <li className="flex gap-2.5">
-      <span className="w-6 shrink-0 font-mono font-semibold text-foreground">
+      <span className="w-6 shrink-0 font-semibold text-foreground">
         {label}
       </span>{" "}
       {/* Invisible in the flex row, but it keeps "1" and the text apart when
