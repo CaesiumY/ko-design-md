@@ -101,6 +101,7 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   "line-design-system": { annotated: 24, judged: 24, drift: 24 },
   nol: { annotated: 37, judged: 37, drift: 39 },
   remember: { annotated: 76, judged: 76, drift: 76 },
+  ridi: { annotated: 141, judged: 141, drift: 142 },
   "samsung-one-ui": { annotated: 7, judged: 7, drift: 7, webfont: true },
   "seed-design": { annotated: 229, judged: 229, drift: 241 },
   socar: { annotated: 56, judged: 56, drift: 59 },

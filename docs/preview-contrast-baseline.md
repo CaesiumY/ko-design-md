@@ -238,6 +238,10 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | remember | dark | non-text | 3 | 8 | 1 | 0 | 0 |
 | remember | light | text | 98 | 183 | 39 | 0 | 3 |
 | remember | light | non-text | 3 | 8 | 2 | 0 | 0 |
+| ridi | dark | text | 158 | 342 | 61 | 0 | 32 |
+| ridi | dark | non-text | 8 | 11 | 6 | 0 | 2 |
+| ridi | light | text | 158 | 342 | 38 | 28 | 32 |
+| ridi | light | non-text | 8 | 11 | 6 | 0 | 2 |
 | samsung-one-ui | dark | text | 52 | 108 | 0 | 0 | 1 |
 | samsung-one-ui | dark | non-text | 25 | 29 | 9 | 6 | 3 |
 | samsung-one-ui | light | text | 52 | 108 | 0 | 2 | 1 |
@@ -468,7 +472,7 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 버리게 되는** 것. 후자의 사례가 samsung 의 라이트 강조 버튼(4.51:1, 발행 `primary-dark`
 위 흰 글자)이고, 그 파일은 값을 고치지 않고 가드 주석을 달았다.
 
-전수의 `borderline` 278행을 `services/{slug}.md` frontmatter `colors:` 와 대조했다. 측정된
+전수의 `borderline` 306행을 `services/{slug}.md` frontmatter `colors:` 와 대조했다. 측정된
 색 쌍이 이제 모든 읽기에 실리므로(`--json-out` 의 `fg`/`bg`, 리포트 표의 `색` 열) 기계로
 가를 수 있다 — `readDefinitions` 로 발행 OKLCH 를 읽고 측정 hex 를 `hexToOklab` 으로
 옮겨 `deltaE` 로 잰다. **아래 수치는 CI 의 `contrast` 잡이 올린 아티팩트(JSON · 리포트 표)에서
@@ -480,7 +484,7 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 폭 안의 토큰 일치이고 위는 토큰 근처이되 그 토큰이 아닌 색이다. 0.01로 느슨하게 잡으면
 samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다.
 
-**결과: 278행 중 204행이 두 색 모두 발행 토큰인 쌍이다**(nol 은 관측 토큰 쌍을 뺀 수 — 아래 nol 문단).
+**결과: 306행 중 231행이 두 색 모두 발행 토큰인 쌍이다**(nol 은 관측 토큰 쌍을 뺀 수 — 아래 nol 문단).
 
 | slug | 발행색 쌍 / borderline |
 | --- | --- |
@@ -498,6 +502,7 @@ samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다.
 | line-design-system | 12 / 12 |
 | nol | 0 / 10 |
 | remember | 1 / 1 |
+| ridi | 27 / 28 |
 | samsung-one-ui | 2 / 9 |
 | seed-design | 11 / 11 |
 | teamsparta | 16 / 16 |

@@ -183,6 +183,30 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       expectRowsToMatch("codeit", expected, refs, literals)
     },
   },
+  ridi: {
+    title: "single-reference roles, light and `dark-` twin",
+    check: () => {
+      const { literals, refs, tableRows } = load("ridi")
+      // A cell that is exactly one `{colors.x}` reference. color-mix and the dark
+      // literal (`surface-disabled`) carry prose and fall out here — they live in
+      // the table only.
+      const single = (cell: string): string | undefined =>
+        /^`\{colors\.([^}]+)\}`$/.exec(cell)?.[1]
+      const expected = new Map<string, string>()
+      for (const [roleCell, light = "", dark = ""] of tableRows) {
+        const [name] = spans(roleCell)
+        // The emotion-group table leads with a `{colors.x}` key, not a role.
+        if (!name || !/^[a-z]+(?:-[a-z0-9]+)+$/.test(name)) continue
+        const l = single(light)
+        const d = single(dark)
+        if (l) expected.set(name, l)
+        // Primitives do not change with the theme, so the dark twin points at an
+        // unprefixed palette key.
+        if (d) expected.set(`dark-${name}`, d)
+      }
+      expectRowsToMatch("ridi", expected, refs, literals)
+    },
+  },
 }
 
 describe("role reference rows agree with the body role tables", () => {

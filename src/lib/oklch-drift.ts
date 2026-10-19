@@ -216,6 +216,7 @@ const PREVIEW_TOKEN_ALIASES: Partial<
     ["", "nol-"],
   ],
   remember: [["", "rui-"]],
+  ridi: [["", "ridi-"]],
   "seed-design": [["", "seed-"]],
   socar: [["", "sf-"]],
   teamsparta: [
