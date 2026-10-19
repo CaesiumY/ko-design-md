@@ -7,7 +7,7 @@ import {
   DetailTabsPanel,
   DetailTabsTab,
 } from "./-components/detail-tabs"
-import { DownloadButton } from "./-components/download-button"
+import { DownloadButton, downloadFilename } from "./-components/download-button"
 import { InlineCopyButton } from "./-components/inline-copy-button"
 import { PasteGuide } from "./-components/paste-guide"
 import { PreviewFrame, PreviewUnavailable } from "./-components/preview-frame"
@@ -78,7 +78,7 @@ function ServiceDetailPage() {
   const { doc, shikiHtml, previewAvailable } = Route.useLoaderData()
   const search = Route.useSearch()
   const navigate = Route.useNavigate()
-  const filename = `${doc.frontmatter.slug}.md`
+  const filename = downloadFilename(doc.frontmatter.slug)
   const activeTab = parseTab(search.tab) ?? "preview"
 
   // Preview theme is independent of the site theme (which is locked to light).
