@@ -48,9 +48,10 @@ function saveAs(raw: string, filename: string) {
 }
 
 // The name the browser is asked to save the file under - a suggestion, so a
-// second download can land as `toss (1).md`. Exported because the sidebar's
-// paste guide names the file by it; the reader sees the real name when moving
-// it into a project, so the guide stays one line rather than covering renames.
+// second download can land as `toss (1).md`. Exported so that everything which
+// shows or names the downloaded file uses this one name. The paste guide names
+// it too; the reader sees the real name when moving the file into a project, so
+// the guide stays one line rather than covering renames.
 export function downloadFilename(slug: string): string {
   return `${slug}.md`
 }
