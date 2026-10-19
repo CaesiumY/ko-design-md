@@ -18,6 +18,7 @@ colors:
   blue-400: oklch(0.669 0.096 281)   # interpolated
   blue-500: oklch(0.586 0.117 280)   # interpolated
   blue-600: oklch(0.531 0.134 278)   # interpolated
+  primary: "{colors.blue-700}"   # 명세의 대표색 역할 — 로고 전용 brand-navy·brand-green 과 다르고, 핫트랙스 primary(red-700)와도 다른 축
   blue-700: oklch(0.494 0.144 277)   # #5055B1 CORE — UI 기본 액션 / Informative / Accent
   blue-800: oklch(0.423 0.126 277)   # #3F4391
   blue-900: oklch(0.339 0.096 278)   # #2D3068

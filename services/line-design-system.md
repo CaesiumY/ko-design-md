@@ -9,6 +9,7 @@ lang: ko
 logo: https://getdesign.kr/logos/line-design-system.png
 colors:
   # Messenger Primary Palette
+  primary: "{colors.ldsg-color-linegreen}"   # 명세의 대표색 역할 — 서비스가 재정의하는 ldsg-color-brand-primary·검정 본문색 ldsg-color-role-primarytext 와 다른 축
   ldsg-color-linegreen: oklch(0.72 0.205 149)   # #06C755 · 공식 공개값. LDSG 기본 Primary
   ldsg-color-black: oklch(0 0 0)   # #000000 · 공식 공개값. 본문 텍스트·아이콘 스트로크
   ldsg-color-disabled-gray: oklch(0.92 0 0)   # #E4E4E4 · 공식 공개값. 비활성 컨텐츠/라벨

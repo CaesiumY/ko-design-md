@@ -64,7 +64,9 @@
     --fill-accent-navy:rgba(66,79,171,.20);
     --fill-accent-olive:rgba(169,177,16,.20);
 
-    --fill-accent-blue-hovered:rgba(97,87,234,.28);
+    /* md 토큰 아님 — 상류 bezier-tokens 0.6.0 beta `fill-accent-blue-heavy-hovered`(#5146e4 30%).
+       md 에 실리거나 상류가 바뀌면 대비를 다시 잰다(#552). */
+    --fill-accent-blue-hovered:rgba(81,70,228,.30);
     --fill-accent-blue-heavier-hovered:#5648cf;
 
     /* ── Surfaces ──────────────────────────────────────────────────────────── */
@@ -157,7 +159,7 @@
   .hero-chat .hc-head{ background:var(--c-blue-400); color:#fff; padding:18px 18px 22px; display:flex; align-items:center; gap:11px; }
   .hero-chat .hc-head .hc-av{ width:40px; height:40px; border-radius:42%; background:rgba(255,255,255,.2); display:flex; align-items:center; justify-content:center; flex:none; }
   .hero-chat .hc-head .hc-nm{ font-weight:700; font-size:15px; line-height:1.3; }
-  .hero-chat .hc-head .hc-st{ font-size:12px; opacity:.85; display:flex; align-items:center; gap:5px; margin-top:1px; }
+  .hero-chat .hc-head .hc-st{ font-size:12px; display:flex; align-items:center; gap:5px; margin-top:1px; }
   .hero-chat .hc-head .hc-st .pip{ width:7px; height:7px; border-radius:50%; background:var(--c-green-300); }
   .hero-chat .hc-body{ padding:16px; display:flex; flex-direction:column; gap:10px; background:var(--c-grey-50); }
   .hc-bubble{ max-width:80%; padding:9px 13px; border-radius:16px; font-size:13.5px; line-height:1.45; box-shadow:var(--elevation-1); }
@@ -513,7 +515,9 @@
     --c-olive-300:#b7c427; --c-olive-400:#a9b110;
     --c-teal-300:#40d3c5; --c-teal-400:#09b2ac; --c-teal-500:#068e95;
     --c-navy-400:#424fab; --c-purple-400:#8e57e7; --c-purple-500:#6735b6;
-    --c-pink-400:#d64bb5; --c-pink-500:#b0369e;
+    /* md 토큰 아님 — 상류 bezier-tokens 0.6.0 beta `color-pink-300`(다크 `text-accent-pink`). 다크 분홍 틴트 위 글자에만 쓴다.
+       md 에 실리거나 상류가 바뀌면 대비를 다시 잰다(#552). */
+    --c-pink-300:#ec6fd3; --c-pink-400:#d64bb5; --c-pink-500:#b0369e;
 
     --c-grey-25:#fdfdff; --c-grey-50:#fbfbfb; --c-grey-100:#f7f7f8;
     --c-grey-200:#efeff0; --c-grey-300:#e2e2e4; --c-grey-400:#cfcfd1;
@@ -532,30 +536,38 @@
     --icon-neutral-heavier:rgba(255,255,255,.90);
 
     /* ── Fills (white-alpha on dark) ───────────────────────────────────────── */
-    --fill-neutral-light:rgba(255,255,255,.05);
-    --fill-neutral-normal:rgba(255,255,255,.08);
-    --fill-neutral-heavy:rgba(255,255,255,.15);
+    /* md 토큰 아님 — 상류 bezier-tokens 0.6.0 beta 다크 사다리: `color-fill-neutral-light` white-8,
+       `color-fill-neutral` white-12, `-heavy` white-20, `-heavier` white-40, `-heaviest` white-100
+       (라이트 쪽 black-5·8·15·40·85 는 이미 상류와 같다). md 에 실리거나 상류가 바뀌면 대비를 다시 잰다(#552). */
+    --fill-neutral-light:rgba(255,255,255,.08);
+    --fill-neutral-normal:rgba(255,255,255,.12);
+    --fill-neutral-heavy:rgba(255,255,255,.20);
     --fill-neutral-heavier:rgba(255,255,255,.40);
-    --fill-neutral-heaviest:rgba(255,255,255,.90);
+    --fill-neutral-heaviest:#ffffff;
     --fill-grey:var(--c-grey-800);
     --fill-grey-light:var(--c-grey-750);
     --fill-grey-heavy:var(--c-grey-850);
 
-    /* accent fills: lift link/icon text to 300-tier; 20%/10% tints read on dark */
+    /* accent fills: lift link/icon text to 300-tier.
+       md 토큰 아님 — 상류 bezier-tokens 0.6.0 beta 다크 사다리: 라이트의 20% 틴트(`fill-accent-*-heavy`)는
+       다크에서 `color-{hue}-300-30`, 라이트의 10%(`fill-accent-blue`)는 `color-blue-300-18`, hover 는
+       `fill-accent-blue-heavy-hovered`(#8184ff4d). blue·green·red 는 이 반투명 값의 기준 RGB 가 md 의 300 색과
+       다르다(blue 는 #8082ff 가 아니라 #6b6eff) — md 값의 30% 로 다시 계산하지 말고 상류 토큰 값을 옮길 것.
+       md 에 실리거나 상류가 바뀌면 대비를 다시 잰다(#552). */
     --txt-accent-blue:var(--c-blue-300);
-    --fill-accent-blue:rgba(97,87,234,.22);   --fill-accent-blue-normal:rgba(97,87,234,.14);
-    --fill-accent-cobalt:rgba(50,146,227,.22);
-    --fill-accent-green:rgba(32,171,85,.22);
-    --fill-accent-red:rgba(225,83,93,.22);
-    --fill-accent-orange:rgba(230,127,43,.22);
-    --fill-accent-yellow:rgba(237,174,13,.22);
-    --fill-accent-purple:rgba(142,87,231,.22);
-    --fill-accent-pink:rgba(214,75,181,.22);
-    --fill-accent-teal:rgba(9,178,172,.22);
-    --fill-accent-navy:rgba(66,79,171,.22);
-    --fill-accent-olive:rgba(169,177,16,.22);
+    --fill-accent-blue:rgba(107,110,255,.30);   --fill-accent-blue-normal:rgba(107,110,255,.18);
+    --fill-accent-cobalt:rgba(92,173,239,.30);
+    --fill-accent-green:rgba(75,193,108,.30);
+    --fill-accent-red:rgba(242,96,96,.30);
+    --fill-accent-orange:rgba(247,152,71,.30);
+    --fill-accent-yellow:rgba(240,190,39,.30);
+    --fill-accent-purple:rgba(169,112,255,.30);
+    --fill-accent-pink:rgba(236,111,211,.30);
+    --fill-accent-teal:rgba(64,211,197,.30);
+    --fill-accent-navy:rgba(111,123,200,.30);
+    --fill-accent-olive:rgba(183,196,39,.30);
 
-    --fill-accent-blue-hovered:rgba(97,87,234,.32);
+    --fill-accent-blue-hovered:rgba(129,132,255,.30);
     --fill-accent-blue-heavier-hovered:#6f64f0;
 
     /* ── Surfaces (grey-900 ladder) ────────────────────────────────────────── */
@@ -645,7 +657,7 @@
 [data-theme="dark"] .hero-chat .hc-head { background:var(--c-blue-400); color:#fff; padding:18px 18px 22px; display:flex; align-items:center; gap:11px; }
 [data-theme="dark"] .hero-chat .hc-head .hc-av { width:40px; height:40px; border-radius:42%; background:rgba(255,255,255,.2); display:flex; align-items:center; justify-content:center; flex:none; }
 [data-theme="dark"] .hero-chat .hc-head .hc-nm { font-weight:700; font-size:15px; line-height:1.3; }
-[data-theme="dark"] .hero-chat .hc-head .hc-st { font-size:12px; opacity:.85; display:flex; align-items:center; gap:5px; margin-top:1px; }
+[data-theme="dark"] .hero-chat .hc-head .hc-st { font-size:12px; display:flex; align-items:center; gap:5px; margin-top:1px; }
 [data-theme="dark"] .hero-chat .hc-head .hc-st .pip { width:7px; height:7px; border-radius:50%; background:var(--c-green-300); }
 [data-theme="dark"] .hero-chat .hc-body { padding:16px; display:flex; flex-direction:column; gap:10px; background:var(--c-grey-900); }
 [data-theme="dark"] .hc-bubble { max-width:80%; padding:9px 13px; border-radius:16px; font-size:13.5px; line-height:1.45; box-shadow:var(--elevation-1); }
@@ -1319,12 +1331,12 @@
           </div>
         </div>
         <div class="cell">
-          <span class="cell-name">Tag<span class="var">20% tint + solid text</span></span>
+          <span class="cell-name">Tag<span class="var">20% tint + solid text</span></span><template data-theme-variant="dark" data-theme-op="swap"><span class="cell-name">Tag<span class="var">color-*-300-30 tint + 300 text</span></span></template>
           <div class="cell-body">
             <span class="tag" style="background:var(--fill-accent-blue);color:var(--c-blue-400)">VIP</span><template data-theme-variant="dark" data-theme-op="swap"><span class="tag" style="background:var(--fill-accent-blue);color:var(--c-blue-300)">VIP</span></template>
             <span class="tag" style="background:var(--fill-accent-green);color:var(--c-green-400)">결제완료</span><template data-theme-variant="dark" data-theme-op="swap"><span class="tag" style="background:var(--fill-accent-green);color:var(--c-green-300)">결제완료</span></template>
             <span class="tag" style="background:var(--fill-accent-orange);color:var(--c-orange-400)">대기중</span><template data-theme-variant="dark" data-theme-op="swap"><span class="tag" style="background:var(--fill-accent-orange);color:var(--c-orange-300)">대기중</span></template>
-            <span class="tag" style="background:var(--fill-accent-pink);color:var(--c-pink-400)">신규</span>
+            <span class="tag" style="background:var(--fill-accent-pink);color:var(--c-pink-400)">신규</span><template data-theme-variant="dark" data-theme-op="swap"><span class="tag" style="background:var(--fill-accent-pink);color:var(--c-pink-300)">신규</span></template>
           </div>
         </div>
         <div class="cell span2">
@@ -1360,7 +1372,7 @@
       <div class="fam-head"><span class="fh-no">6</span><h3>Feedback / Status</h3></div>
       <div class="cell-grid">
         <div class="cell span2">
-          <span class="cell-name">Banner<span class="var">accent 20% tint + leading filled icon + bold lead + close X · radius-12</span></span>
+          <span class="cell-name">Banner<span class="var">accent 20% tint + leading filled icon + bold lead + close X · radius-12</span></span><template data-theme-variant="dark" data-theme-op="swap"><span class="cell-name">Banner<span class="var">accent color-*-300-30 tint + leading filled icon + bold lead + close X · radius-12</span></span></template>
           <div class="cell-body col" style="gap:9px">
             <div class="banner blue"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M12 2c5.515 0 10 4.486 10 10s-4.485 10-10 10S2 17.514 2 12 6.486 2 12 2m-.05 8.5a1.1 1.1 0 0 0-1.1 1.1v4.8a1.1 1.1 0 0 0 2.2 0v-4.8a1.1 1.1 0 0 0-1.1-1.1m0-4a1.251 1.251 0 0 0 0 2.5 1.25 1.25 0 0 0 0-2.5" clip-rule="evenodd"></path></svg></span><span><b>새 기능</b> · ALF AI가 첫 응답을 도와드려요.</span><span class="bx"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M16.95 8.464a1 1 0 1 0-1.414-1.414L12 10.586 8.465 7.051A1 1 0 0 0 7.05 8.464L10.586 12 7.05 15.535a1 1 0 1 0 1.414 1.414L12 13.414l3.536 3.536a1 1 0 0 0 1.414-1.415L13.414 12z" clip-rule="evenodd"></path></svg></span></span></div>
             <div class="banner green"><span class="ic" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="m10.404 13.898-2.32-2.227a1 1 0 0 0-1.385 1.443l2.985 2.866c.395.38 1.017.383 1.416.008l6.121-5.752a1 1 0 1 0-1.369-1.457zM12 2C6.486 2 2 6.486 2 12c0 5.513 4.486 10 10 10s10-4.487 10-10c0-5.514-4.486-10-10-10" clip-rule="evenodd"></path></svg></span><span>설정이 저장되었어요.</span></div>

@@ -254,8 +254,9 @@
       letter-spacing: -0.02em;
       margin: 0;
     }
+    /* 결정 · 발행 토큰 교체 — 카탈로그 셸 부제. 셸 바닥(#FAFAFA) 위 gray-600 은 4.29 라 gray-700(7.14). 셸 바닥이 바뀌면 다시 잰다. */
     .section-sub {
-      color: var(--shell-muted);
+      color: var(--ldsg-gray-700);
       font-size: 13px;
       margin-left: auto;
     }
@@ -1642,16 +1643,17 @@
       top: -4px; right: -4px;
       box-shadow: 0 0 0 2px var(--shell-card);
     }
+/* 파생색 되돌림 · 발행값 — 배지 바닥은 다크 보강색(role-negative-dark) 대신 발행 role-negative. 보강색 위 흰 숫자는 3.44, 발행값은 4.21(라이트와 같음). 하단 탭 아이콘 배지(다크 템플릿의 인라인 span)도 같다. 점 배지는 글자가 없는 그림 요소라 이 대비 조건 밖이고(5.23 → 4.29, 3:1 통과), 같은 줄의 배지가 두 빨강으로 보이지 않게 맞춘다. 다크 바닥 위 빨강 글자·테두리는 보강색 그대로다. 다크 토큰이 생기면(md Known Gaps 의 「다크 모드」) 다시 잰다. */
 [data-theme="dark"] .badge.dot {
       width: 10px; height: 10px;
       border-radius: 50%;
-      background: var(--ldsg-role-negative-dark);
+      background: var(--ldsg-role-negative);
     }
 [data-theme="dark"] .badge.num {
       min-width: 18px; height: 18px;
       padding: 0 5px;
       border-radius: 999px;
-      background: var(--ldsg-role-negative-dark);
+      background: var(--ldsg-role-negative);
       color: var(--ldsg-white);
       font-size: 10px;
       font-weight: 700;
@@ -2402,7 +2404,7 @@
             <span class="chip">카페</span>
             <span class="chip">맛집</span>
             <span class="chip">쇼핑</span>
-            <span class="chip disabled">휴무</span>
+            <span class="chip disabled" aria-disabled="true">휴무</span>
           </div>
           <div class="chip-row">
             <span class="chip selected" style="height: 36px; padding: 0 16px;">Medium 선택</span>
@@ -2450,7 +2452,7 @@
           <div>
             <div style="font-size: 11px; color: var(--shell-muted); margin-bottom: 6px;">M · 46px (기본)</div>
             <div class="stepper">
-              <button class="stepper-btn disabled">−</button>
+              <button class="stepper-btn disabled" aria-disabled="true">−</button>
               <input class="stepper-input" value="1" readonly="">
               <button class="stepper-btn">+</button>
             </div>
@@ -2707,7 +2709,7 @@
               <div class="pdmenu-item korean"><span class="avatar">김</span><span class="txt">프로필 보기</span><span class="right">›</span></div>
               <div class="pdmenu-divider"></div>
               <div class="pdmenu-item korean"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9M4.6 9a1.7 1.7 0 0 0-.3-1.9"></path></svg><span class="txt">설정</span></div>
-              <div class="pdmenu-item disabled korean"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18l6-6-6-6"></path></svg><span class="txt">관리자 (비활성)</span></div>
+              <div class="pdmenu-item disabled korean" aria-disabled="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18l6-6-6-6"></path></svg><span class="txt">관리자 (비활성)</span></div>
             </div>
           </div>
         </div>
@@ -2743,7 +2745,8 @@
               <p style="font-size: 13px; line-height: 1.5; color: var(--d-ink-600); text-align: center; margin: 0 0 16px;" class="korean">나가기를 하면 채팅 내용이 모두 삭제돼요.</p>
               <div style="display: grid; gap: 8px;">
                 <button class="btn contained" style="height: 40px; width: 100%; min-width: 0;">나가기</button>
-                <button class="btn ghost" style="height: 40px; width: 100%; min-width: 0; color: var(--d-ink-600);">취소</button>
+                <!-- md 토큰 아님 · 파생색 — d-ink-600 은 hover(md 의 70% 투명도)에서 4.02 라 d-ink-700(5.46). 다크 회색 사다리가 바뀌면 다시 잰다. -->
+                <button class="btn ghost" style="height: 40px; width: 100%; min-width: 0; color: var(--d-ink-700);">취소</button>
               </div>
             </div>
           </div></template>
@@ -2876,7 +2879,7 @@
             <div class="bnav-tab" style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; color: var(--ldsg-gray-600); min-width: 0;">
               <div class="bnav-ic" style="width: 24px; height: 24px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8.5" r="3.5"></circle><path d="M5 20c1-3.5 4-5.5 7-5.5s6 2 7 5.5"></path></svg></div>친구
             </div>
-            <div class="bnav-tab" style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; color: var(--ldsg-disabled-gray); min-width: 0;">
+            <div class="bnav-tab" aria-disabled="true" style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; color: var(--ldsg-disabled-gray); min-width: 0;">
               <div class="bnav-ic" style="width: 24px; height: 24px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8"></path></svg></div>설정
             </div>
           </div><template data-theme-variant="dark" data-theme-op="swap"><div class="bnav" style="background: var(--shell-card-elev); border-radius: var(--ldsg-radius-300); box-shadow: var(--ldsg-shadow-on-gray-200); display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); padding: 10px 0 14px; border: 1px solid var(--shell-line);">
@@ -2887,12 +2890,12 @@
               <div class="bnav-ic" style="width: 24px; height: 24px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 11.5a8.5 8.5 0 1 1-17 0 8.5 8.5 0 0 1 17 0z"></path><path d="m21 21-4.3-4.3"></path></svg></div>검색
             </div>
             <div class="bnav-tab" style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; color: var(--d-ink-600); min-width: 0;">
-              <div class="bnav-ic" style="width: 24px; height: 24px; position: relative;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6.5h16v11H8L4 21V6.5z"></path></svg><span style="position: absolute; top: -4px; right: -6px; background: var(--ldsg-role-negative-dark); color: var(--ldsg-white); font-size: 9px; font-weight: 700; border-radius: 999px; min-width: 14px; height: 14px; padding: 0 3px; display: grid; place-items: center; box-shadow: 0 0 0 2px var(--shell-card-elev);">5</span></div>채팅
+              <div class="bnav-ic" style="width: 24px; height: 24px; position: relative;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6.5h16v11H8L4 21V6.5z"></path></svg><span style="position: absolute; top: -4px; right: -6px; background: var(--ldsg-role-negative); color: var(--ldsg-white); font-size: 9px; font-weight: 700; border-radius: 999px; min-width: 14px; height: 14px; padding: 0 3px; display: grid; place-items: center; box-shadow: 0 0 0 2px var(--shell-card-elev);">5</span></div>채팅
             </div>
             <div class="bnav-tab" style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; color: var(--d-ink-600); min-width: 0;">
               <div class="bnav-ic" style="width: 24px; height: 24px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8.5" r="3.5"></circle><path d="M5 20c1-3.5 4-5.5 7-5.5s6 2 7 5.5"></path></svg></div>친구
             </div>
-            <div class="bnav-tab" style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; color: var(--d-surface-200); min-width: 0;">
+            <div class="bnav-tab" aria-disabled="true" style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; color: var(--d-surface-200); min-width: 0;">
               <div class="bnav-ic" style="width: 24px; height: 24px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8"></path></svg></div>설정
             </div>
           </div></template>

@@ -288,3 +288,22 @@ describe("mergeIntoMachineReport", () => {
     expect(report.issues).toHaveLength(1)
   })
 })
+
+describe("observedRender — a form control's text says where it came from", () => {
+  it("names a placeholder as one, so the author edits ::placeholder", () => {
+    // The colour an author must change for a placeholder is `::placeholder`'s,
+    // not the field's `color`; an issue that called it plain text sends them
+    // looking for a text node "이메일" that does not exist.
+    const { issues } = observedRender(
+      [row("fail", 1.91, { sample: "이메일", source: "placeholder" })],
+      SWEPT
+    )
+    expect(issues[0].fix).toContain('placeholder "이메일"')
+    expect(issues[0].fix).toContain("::placeholder")
+  })
+
+  it("leaves an ordinary text node's wording as it was", () => {
+    const { issues } = observedRender([row("fail", 4.1)], SWEPT)
+    expect(issues[0].fix).toContain('text "가입하기"')
+  })
+})

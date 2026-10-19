@@ -24,7 +24,6 @@ export type CopySurface =
   | "tokens-json"
   | "color-token"
   | "skill-install"
-  | "handoff-prompt"
 
 export interface CopyEvent {
   surface: CopySurface
@@ -33,22 +32,18 @@ export interface CopyEvent {
 }
 
 /**
- * The three surfaces that hand an entry's design.md to an agent.
+ * The two surfaces that hand over a whole design.md.
  *
- * Two copy the whole document; `handoff-prompt` copies its address plus one
- * instruction, which is the same intent - taking the entry to a coding agent -
- * reached without pasting the body. Together they carry the conversion
- * `docs/PRD.md` names as the primary metric — counted with `design_md_download`
- * from the sidebar download button (#336) — and they get an event name of their
- * own for that reason. Under one shared `copy` event the headline total would
- * also count every colour swatch a reader clicks - a session that copies eight
- * swatches and no design.md would read as eight conversions. The `surface`
- * property still splits hero, tab and prompt.
+ * These carry the conversion `docs/PRD.md` names as the primary metric — counted
+ * together with `design_md_download` from the sidebar download button (#336) —
+ * and they get an event name of their own for that reason. Under one shared `copy`
+ * event the headline total would also count every colour swatch a reader
+ * clicks - a session that copies eight swatches and no design.md would read as
+ * eight conversions. The `surface` property still splits hero from tab.
  */
 const DESIGN_MD_SURFACES: ReadonlySet<CopySurface> = new Set([
   "design-md-hero",
   "design-md-tab",
-  "handoff-prompt",
 ])
 
 /** The two event names the dashboard reads; see `copyEventName`. */

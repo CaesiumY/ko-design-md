@@ -128,19 +128,10 @@ describe("catalog md, linted as the standard DESIGN.md", () => {
       .map((d) => d.slug)
     expect(missing).toEqual([
       "bezier",
-      "codeit",
       "gmarket",
-      "greeting",
       "gs-retail",
-      "gs-shop",
-      "kyobobook",
       "lg-electronics",
-      "likelion",
-      "line-design-system",
       "seed-design",
-      "vapor-ui",
-      "wanted",
-      "yeogi",
       "zigbang",
     ])
   })

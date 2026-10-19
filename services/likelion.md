@@ -14,6 +14,7 @@ colors:
   primary-200: oklch(0.85 0.089 53)   # #FFBF99
   primary-300: oklch(0.79 0.135 51)   # #FFA066
   primary-400: oklch(0.73 0.177 48)   # #FF8033
+  primary: "{colors.primary-500}"
   primary-500: oklch(0.69 0.209 42)   # #FF6000 브랜드 시그니처
   primary-600: oklch(0.58 0.175 42)   # #CC4D00
   primary-700: oklch(0.48 0.139 44)   # #993A00

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>non-text surface over a layer that paints over its own colour</title>
+    <!--
+      Synthetic, written for scripts/audit-contrast-oracle.ts. See
+      scripts/fixtures/README.md: the expectations are derived from this CSS by
+      hand, so a change here changes the derivation in the oracle too.
+
+      One small dot, three panels. The dot qualifies for the non-text pass
+      (no text, 12x12 = 144px² under 1% of the 976x800 viewport, no children,
+      a fill); each panel is 300x120, over 1%, so only the dot is measured.
+      `filter` is not inherited, so the dot's own computed filter is `none` and
+      only the walk over the layers BEHIND it can report the panel's.
+    -->
+    <style>
+      body {
+        margin: 0;
+        padding: 24px;
+        background: oklch(1 0 0);
+      }
+      .plain,
+      .filtered,
+      .shadowed {
+        width: 300px;
+        height: 120px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: oklch(1 0 0);
+      }
+      .filtered {
+        filter: brightness(0.5);
+      }
+      .shadowed {
+        box-shadow: inset 0 0 0 999px oklch(0 0 0 / 0.5);
+      }
+      .dot {
+        display: block;
+        width: 12px;
+        height: 12px;
+        background: oklch(0.6 0 0);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="plain"><span class="dot"></span></div>
+    <div class="filtered"><span class="dot"></span></div>
+    <div class="shadowed"><span class="dot"></span></div>
+  </body>
+</html>
