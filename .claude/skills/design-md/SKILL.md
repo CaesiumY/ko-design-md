@@ -43,7 +43,7 @@ This skill builds a complete catalog entry through a 5-subagent pipeline with on
 Verify the working environment before doing anything user-visible.
 
 1. `Bash`: `pwd` to capture the absolute repo root. Hold this value as `${repo_root}` in your reasoning and substitute it literally into every later Bash command and dispatch prompt that touches a repo path. The shell preserves cwd across calls, but pinning the absolute path makes Stage 8/10/11 robust to any inadvertent `cd`.
-2. `Bash`: `date +%Y-%m-%d` to capture today's date. Hold this value as `${today}` in your reasoning. Stage 6a passes this to the author for **both** the `last_updated` and `created_at` frontmatter fields — a brand-new entry is added and last-updated on the same day. The project's date validator at `src/lib/content-parser.ts` rejects any other format, and `missing-created-at` in `src/lib/draft-validator.ts` blocks a draft that omits `created_at`.
+2. `Bash`: `date +%Y-%m-%d` to capture today's date. Hold this value as `${today}` in your reasoning. Stage 6a passes this to the author for **both** the `last_updated` and `created_at` frontmatter fields — a brand-new entry is added and last-updated on the same day. The site's build (`src/lib/site-frontmatter.ts`) rejects any other format, and `missing-created-at` in `src/lib/draft-validator.ts` blocks a draft that omits `created_at`.
 3. `Read` `${repo_root}/package.json`. If `"name"` is not exactly `"ko-design-md"`, abort with: "이 스킬은 ko-design-md 레포 안에서만 동작합니다. 현재 디렉터리: ${repo_root}". Do not proceed.
 4. Verify `${repo_root}/src/lib/content-types.ts` is readable. If not, abort.
 5. `Read` `${repo_root}/src/lib/content-types.ts` and extract the live `CATEGORIES` const. Use this as the source of truth for the intake category picker (do NOT hardcode the enum from memory — it can drift).
@@ -222,7 +222,7 @@ After return, verify `{cache_dir}/draft.md` exists and is non-empty. If missing,
 
 ### 6a2. Deterministic draft gate (machine validation)
 
-Before spending a reviewer dispatch, run the draft validator — it covers every mechanically checkable rubric item (frontmatter round-trip, section presence/order, OKLCH-only token values, `[src:N]`/References integrity, expected logo) so the reviewer model never has to "grep mentally":
+Before spending a reviewer dispatch, run the draft validator — it covers every mechanically checkable rubric item (frontmatter read and field values, section presence/order, OKLCH-only token values, `[src:N]`/References integrity, expected logo) so the reviewer model never has to "grep mentally":
 
 ```bash
 cd "${repo_root}" && pnpm validate:draft .claude/cache/design-md/{slug}/draft.md \
@@ -254,7 +254,7 @@ output_path: {cache_dir}/review-{N}.json
 Follow your agent definition. Write exactly one file at output_path.
 
 The machine report has already verified the deterministically checkable items
-(frontmatter round-trip, section presence/order, hex/rgba token scan,
+(frontmatter read and field values, section presence/order, hex/rgba token scan,
 [src:N]/References integrity, expected logo). Do not re-verify those — spend
 your review on judgment items: Brand fidelity semantics against research.md,
 Voice/tone, and cross-section token contradictions.
@@ -531,7 +531,7 @@ cd "${repo_root}" && pnpm build:og
 
 After the command:
 
-**If exit non-zero**: capture stderr. Likely cause is frontmatter that `buildDoc` in `src/lib/content-parser.ts` rejects after slipping past the 6a2 gate (e.g. a hand edit at the Stage 7 checkpoint): a `last_updated` / `created_at` that is not a real `YYYY-MM-DD` date, or an `estimated_tokens` that is not a number. An off-enum category does not fail `build:og` (`buildDoc` falls back to `etc`); once the draft is past 6a2, only `pnpm validate:catalog` catches it, so run it before finishing. Surface stderr via text. Offer via `AskUserQuestion`: "frontmatter 직접 수정 후 재시도" (open `${repo_root}/services/{slug}.md` for editing; on user confirmation that they've edited, re-run `pnpm build:og` and re-validate — loop up to 3 retries), "취소 (파일 유지)" (partial state is acceptable since the index works without an OG image — the route falls back per `build-og.ts`). Do NOT auto-rollback the placed .md. After 3 failed retries, fall through to "취소" with a diagnostic message.
+**If exit non-zero**: capture stderr. Likely cause is frontmatter that the site's reading (`buildDoc` in `src/lib/site-frontmatter.ts`) rejects after slipping past the 6a2 gate (e.g. a hand edit at the Stage 7 checkpoint): a `last_updated` / `created_at` that is not a real `YYYY-MM-DD` date, or an `estimated_tokens` that is not a number. An off-enum category does not fail `build:og` (the site's reading does not judge the enum); once the draft is past 6a2, only `pnpm validate:catalog` catches it, so run it before finishing. Surface stderr via text. Offer via `AskUserQuestion`: "frontmatter 직접 수정 후 재시도" (open `${repo_root}/services/{slug}.md` for editing; on user confirmation that they've edited, re-run `pnpm build:og` and re-validate — loop up to 3 retries), "취소 (파일 유지)" (partial state is acceptable since the index works without an OG image — the route falls back per `build-og.ts`). Do NOT auto-rollback the placed .md. After 3 failed retries, fall through to "취소" with a diagnostic message.
 
 **If exit zero**: validate the OG output (catches the corrupt-PNG silent failure mode that happens on satori panic):
 

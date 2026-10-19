@@ -91,21 +91,22 @@ The details in that block are load-bearing, because they are what the sidecar
 extractor reads:
 
 - **`typography:` is the one map the sidecar reads that nests, and its property names are the
-  spec's** — `fontSize`, `fontWeight`, `lineHeight`, `letterSpacing`, each on its
-  own four-space line under a bare style name. The inline flow form
-  (`display-1: { size: 56px, … }`) is NOT read: the extractor wants an empty
-  head line, so that shape yields **zero** type tokens, and `tokens:check` then
-  agrees with the empty sidecar it just generated.
-- **Names stay flat.** Do not nest a group as a sub-map. `brand.primary` would
-  rename the token and break every `{colors.X}` prose reference and the
-  preview's CSS-variable mapping along with them.
+  spec's** — `fontSize`, `fontWeight`, `lineHeight`, `letterSpacing`, one per line
+  under a bare style name, as above. A style that sets none of the four
+  (`display-1: { size: 56px }`, or only a `fontFamily`) yields **no** type token,
+  and no gate says so: the official linter still counts it, and `tokens:check`
+  agrees with the sidecar that lacks it. A family with no published size goes in
+  the catalog-only `fonts:` map instead.
+- **Names stay flat.** Do not nest a group as a sub-map — the validator blocks a
+  map under a row of `colors:`, `spacing:`, `rounded:` or `elevation:`.
+  `brand.primary` would rename the token and break every `{colors.X}` prose
+  reference and the preview's CSS-variable mapping along with them.
 - **A `## Heading` comment row opens a group.** It becomes the sidecar's `group`
   field, which the site's Tokens tab renders as a section label.
-- **`elevation:` holds one shadow per line, bare.** A multi-layer shadow joins its
-  layers with commas on that one line; a `>` block scalar or a quoted value is
-  blocked, because the extractor is line-based and would drop it. Rows whose value
-  is not a shadow (an easing curve, a z-index) are filtered out of the sidecar —
-  put those in a `text` fence instead.
+- **`elevation:` holds one shadow per row.** A multi-layer shadow joins its
+  layers with commas in that one value. Rows whose value is not a shadow (an
+  easing curve, a z-index) are filtered out of the sidecar and blocked — put
+  those in a `text` fence instead.
 - **A trailing `# comment` becomes the token's `note`.** That is the only channel
   that reaches machine consumers — the sidecar carries it, and both the Tokens tab
   and the `use-design-md` skill read it. Put per-token caveats here, not only in
@@ -113,17 +114,15 @@ extractor reads:
 - **`components:` nests too, but the sidecar does not read it.** It reaches
   standard tools through the published DESIGN.md only; its rules are below.
 
-### Values may be quoted only when YAML would misread them
+### Every reader reads the frontmatter as YAML does
 
-Write `primary: oklch(0.64 0.19 40)` bare. Quoting a colour value hides it from
-`audit:oklch` and the drift check — both regex over the raw text, and both report
-success while matching nothing, so the failure looks exactly like a pass.
-**`validate:catalog` now blocks a quoted colour literal** rather than leaving this
-to discipline, and it unquotes before judging, so a quoted `"#FF0038"` is rejected
-as non-OKLCH like the bare form. That matters more than it sounds: bare
-`primary: #FF0038` is not even valid YAML — the `#` opens a comment — so quoting
-was the only way to actually write a hex, and therefore the one spelling the rule
-had to catch.
+One module reads the frontmatter for the site, the validator, the token
+extractor and the colour checks (docs/adr/0011), so a value means what YAML
+reads it as — quoted or bare, indented two spaces or four. Write values bare by
+habit (`primary: oklch(0.64 0.19 40)`); a quoted one is judged the same, so a
+quoted `"#FF0038"` is still rejected as non-OKLCH. Bare `primary: #FF0038` is
+not a value at all — the `#` opens a comment — and is blocked as a colour cut
+off by it.
 
 Two value shapes DO need quoting, because unquoted they are not the scalar you
 meant:
@@ -132,10 +131,10 @@ meant:
   flow mapping and the value resolves to null.
 - A font stack that starts with a quote:
   `fontFamily: '"Noto Sans KR", Roboto, sans-serif'`. Bare, the leading quote
-  makes YAML fail to parse the whole frontmatter. **That is now a block too** —
-  the validator parses the frontmatter with a real YAML reader, which is what a
-  consumer of this format uses. Seven entries once dropped to zero tokens on
-  exactly this shape with every gate still green.
+  makes YAML fail to parse the whole frontmatter, and the validator then reports
+  that one cause and nothing else — the site's build fails on it too. Seven
+  entries once dropped to zero tokens on exactly this shape with every gate
+  still green.
 
 ### Prose still uses inline backticks
 
@@ -206,10 +205,10 @@ The frontmatter token maps feed the **token-card sidecar**
 loaded as `doc.tokens` for the detail page's card view). Keep one token per line
 so the extractor can read each — `name: oklch(...)` (colors),
 `name: 16px` (spacing/rounded), `name: 0 1px 2px oklch(...)` (elevation). **Typography is the exception — it nests**, as
-shown above: a bare style name, then four-space `fontSize` / `fontWeight` /
-`lineHeight` / `letterSpacing`. The inline `name: { size, weight, … }` and
-`name: 16 / 24 / 700` forms are not read anywhere — the extractor reads nothing
-in the body; in frontmatter they yield **zero** type tokens. Alias rows whose value points at another token
+shown above: a bare style name, then `fontSize` / `fontWeight` /
+`lineHeight` / `letterSpacing` under it. Forms that set none of those four —
+`name: { size, weight, … }`, `name: 16 / 24 / 700`, a whole-style alias — yield
+**zero** type tokens, and the extractor reads nothing in the body. Alias rows whose value points at another token
 (`fill-brand: "{colors.red}"`) are skipped by the extractor and surface only in
 the prose — intended, since the cards show visually-renderable tokens, not
 pointers. `pnpm tokens:check` compares the regenerated sidecar byte-for-byte, so
@@ -225,14 +224,14 @@ fonts:
 font-display-src: https://cdn.jsdelivr.net/npm/wanted-sans@1.0.3/fonts/webfonts/variable/split/WantedSansVariable.css
 ```
 
-The stack is quoted because it begins with a quote character — see "Values may be
-quoted only when YAML would misread them" above.
+The stack is quoted because it begins with a quote character — see "Every
+reader reads the frontmatter as YAML does" above.
 
 This URL is the single source of truth the **preview-html-author** loads into the preview `<head>`. Without it a brand-specific display face has no webfont to load and silently falls back to Pretendard in the preview (the gap that shipped on the wanted entry). Rules:
 
 - Point at a **loadable CSS entry point** (`@import`/`<link>`-able), not a demo or marketing page. Prefer a foundry's **dynamic-subset / split** build where one exists (lighter for Korean pages) and a **pinned version** over `@latest` — refresh the pin alongside the catalog entry when the typeface library publishes an update.
 - **Pretendard needs no `-src`** — the preview runtime already imports it. Only faces outside that baseline need a source.
-- `font-*-src` is a **top-level key, outside every token map**, and the token-card extractor reads only the token maps — that is why it never appears as a bogus type card. Keep it at column 0: written inside `typography:` the extractor drops the line, but the preview validator's `font-display-src` check reads only column-0 keys, so the source goes missing and the webfont `<link>` check never runs.
+- `font-*-src` is a **top-level key, outside every token map**, and the token-card extractor reads only the token maps — that is why it never appears as a bogus type card. Keep it top-level: written inside `typography:` it is not the key the preview validator's `font-display-src` check reads, so the source goes missing and the webfont `<link>` check never runs.
 
 ## Body language
 

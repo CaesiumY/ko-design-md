@@ -31,8 +31,8 @@ pnpm test:e2e           # E2E 스모크 — 빌드된 서버 + Chromium, CI 는 
   (4173 은 `test:http` 와 미리보기 몫이다).
 - **기대값은 `services/*.md` 에서 계산한다**(`e2e/support/catalog.ts`) — 항목 수·순서·카테고리를
   테스트에 적지 않으므로 새 항목이 E2E 를 깨지 않는다. 고정 기준점은 `toss` 하나다. 사이트의 필터
-  코드를 가져다 기대값을 만들지 말 것 — 함께 틀려 늘 통과한다. 다만 파서(`buildDoc` — 소개 문구 포함)와
-  카테고리 라벨은 사이트 것을 그대로 쓰므로, 그 둘이 틀리는 회귀는 이 묶음이 잡지 못한다(파서는 단위 테스트 몫).
+  코드를 가져다 기대값을 만들지 말 것 — 함께 틀려 늘 통과한다. 다만 항목 읽기(`buildDoc` — 소개 문구 포함)와
+  카테고리 라벨은 사이트 것을 그대로 쓰므로, 그 둘이 틀리는 회귀는 이 묶음이 잡지 못한다(읽기는 단위 테스트 몫).
 - **`e2e/` 는 vitest 에서 제외돼 있다**(`vite.config.ts` 의 `test.exclude`) — `*.spec.ts` 가 vitest
   기본 수집 패턴에 걸려 `pnpm test` 가 브라우저 없이 그것을 돌리려 들기 때문이다.
 - 구조는 e2e-flow 스킬의 관례를 따른다(스킬은 저장소 밖 도구다 — 없어도 이 구조만 따르면 된다).
@@ -83,9 +83,9 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행하고, 프리
   네 토큰 섹션 안은 위의 `token-fence`). 항목 파일이 그대로 표준 DESIGN.md 로 발행되고,
   공식 린터는 본문 yaml 펜스를 frontmatter 와 한 네임스페이스로 병합해 행마다 최상위 키로
   읽기 때문이다(`wanted` 는 펜스 사이 키 7개 충돌로 문서 전체가 0토큰이 됐었다). 그래서:
-  - **그림자는 frontmatter `elevation:` 맵에 산다.** 한 줄에 하나, 인용 없이, 다중 레이어는
-    콤마로 잇고 단서는 트레일링 주석으로 — 블록 스칼라·인용값·중첩 행은 토큰 맵과 같이
-    block 이다. 사이드카 `elevation` 은 이 맵만 읽고, 그림자 모양이 아닌 값(모션·z-index)
+  - **그림자는 frontmatter `elevation:` 맵에 산다.** 행 하나에 그림자 하나, 다중 레이어는
+    콤마로 잇고 단서는 트레일링 주석으로 — 중첩 행은 토큰 맵과 같이 block 이다. 사이드카
+    `elevation` 은 이 맵만 읽고, 그림자 모양이 아닌 값(모션·z-index)
     은 걸러 내므로 그런 행은 `elevation-not-shadow` 로 block 한다 — 가장 흔한 경로는 bare hex
     색(` #0000001A` 는 YAML 주석이라 값이 색 없는 `0 1px 2px` 가 된다)이다. 스펙 모델에 elevation 범주는 없지만 린터는 이 키를 문제 삼지 않는다.
   - **모션과 컴포넌트 스펙은 본문 ```` ```text ```` 펜스다.** 26개가 있다 — 모션 8개
@@ -95,51 +95,40 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행하고, 프리
     (아래 표준 절의 `components:` 항).
 - **색상 토큰 값은 OKLCH만.** frontmatter `colors:` 맵의 `name: oklch(...)` 형식. 브랜드 hex는
   `# #FAFAFA` 트레일링 주석이나 같은 줄 `(≈ oklch(...))` 병기로만 기록.
-- **값을 인용하지 말 것 — 이제 block 이다**(`quoted-token-value`). 인용하면
-  `audit:oklch` 와 드리프트 검사가 그 토큰을 못 보고 둘 다 통과를 보고한다. 벌거벗은
-  `#FF0038` 은 YAML 이 주석으로 읽어 애초에 무효라, **인용형이 hex 를 쓸 수 있는 유일한
-  철자였고 그래서 정확히 그것이 잡혀야 했다.** 참조(`"{colors.x}"`)와 따옴표로 시작하는
-  폰트 스택만 인용한다.
-- **frontmatter 는 진짜 YAML 파서를 통과해야 한다**(`frontmatter-yaml-invalid`, block).
-  `buildDoc` 의 손수 만든 파서는 스스로 밝히듯 무효 입력에서 조용히 열화하고 나머지
-  게이트는 정규식이라, 인용 없는 폰트 스택 하나가 문서 전체를 0토큰으로 만들어도
-  아무도 몰랐다(실제로 7개 항목에서 났다).
-  반대 방향도 막는다 — **알려진 키는 bare 로 쓴다**(`nonbare-frontmatter-key`, block).
-  `"lang": ko`·`'slug': x`·`lang : ko` 는 유효한 YAML 이지만, 줄 단위로 읽는 소비자는 0열의
-  bare `key:` 로만 키를 찾아 그 값을 조용히 놓친다(사이트 파서는 필드를, 토큰 추출기는 토큰 맵을,
-  검증기의 정규식 검사는 나머지 맵을). YAML 로 읽는 소비자(공식 린터 등)는 그대로 본다.
-  키 이름 패턴은 `FRONTMATTER_KEY_NAME`(content-parser) 하나다. 이 규칙은 **키의 형태**(0열의 plain
-  `key:` 인가 — 인용·들여쓰기·앵커/태그·`?` 명시 키·별칭·flow 맵·콜론 앞 공백이 아닌가)만 판정한다.
-  **값도 사이트 파서가 YAML 과 같게 읽어야 한다**(`misread-frontmatter-value`, block). 사이트가 읽는 키
-  (`CONSUMED_KEYS`)마다 두 파서의 값을 대조한다. 사이트 파서는 키와 같은 줄의 값만 읽으므로, 다음 줄의 값
-  (`name:` 뒤 `  토스` → 빈 목록), 여러 줄로 이어진 값(첫 줄만), 인용 안의 이스케이프(`\"` 를 그대로),
-  인용 값 뒤의 주석(`"ko" # x` 를 통째로), YAML 전용 값(`~`·`null`·`.inf` 를 글자로), 공백 없는 두 번째
-  콜론(`name:: 토스` — 사이트는 첫 콜론에서 키를 잘라 `name` 을, YAML 은 키 `name:` 을 읽는다. YAML 에 그 키가
-  없어도 사이트가 읽었으면 대조한다. 사이트가 같은 키를 여러 줄에서 읽으면 마지막 줄을 쓰므로, 판정은 키가 아니라 **그
-  줄** 단위다 — 잘린 줄에서 읽은 misread 는 그 줄을 지목하고 그 줄의 unknown-key warn 은 내지 않으며, 사이트가 값을
-  읽지 않은 잘린 줄은 warn 이 그대로 지목한다)은 조용히 다르게 읽힌다. 사이트는 값을 글자나 글자 리스트로 두고 `estimated_tokens` 만 수로 바꾸므로, 대조는 출력 모양이
-  아니라 **형**으로 한다 — 빈 값(맨 `key:` 는 YAML 에 `null`, 사이트에 빈 리스트)만 형을 넘어 같다고 본다. 그
-  빈 값은 사이트가 없는 값으로 다루거나(`slug` 는 파일명으로, `estimated_tokens` 는 추정치로 떨어진다) 필드 규칙이
-  막는다 — 빈 `name`·`design_system_name`(보이는 글자가 없는 값 — 공백·영폭 문자·한글 채움 문자·점자 공백 — 포함.
-  문자·숫자·구두점·기호 범주의 글자가 하나라도 있는지로 판정하되, 그 범주 안에서 빈칸으로 그려진다고 **알려진**
-  글자 — 한글 채움 문자 4개·점자 공백·악보 null notehead(U+1D159) — 는 뺀다. 이 목록은 증명이 아니라 알려진 목록이라
-  새 사례가 나오면 `VISIBLE_CHAR` 에 더한다)은 `bad-name`·
-  `bad-design-system-name`(사이트는 빈 값을 이름으로 남기거나 조용히 버린다). 명시적 `key: []` 는 사이트에는 맨 `key:`
-  와 같지만 YAML 에는 리스트라 아래 리스트 규칙이 막는다. 그 안내는 다음 실행이 받아 주는 수정
-  하나를 말한다 — 생략할 수 있는 키(`OMITTABLE_KEYS` — `design_system_name`·`estimated_tokens`)는 "줄을 지우라",
-  takedown 슬러그의 `logo` 는 아래 takedown 안내, 나머지 키는 "값을 쓰라" 다. 생략할 수 없는 키가 기계 게이트로
-  막히는 것은 아니다 — 지운 `slug`·날짜·`logo` 는 다음 실행이 다시 막지만(파이프라인에서 지운 `slug` 는 파일명
-  `draft` 로 읽혀 `slug-arg-mismatch`), `name`·`category`·`lang` 은 지워도 게이트가 기본값을 받아 주고 스킬
-  루브릭(`rubric-design.md`)만 필수로 요구한다. 테스트는 안내대로 고친 초안을 다시 돌려 고정한다 — 생략 가능 키는 줄을
-  지운 초안이, 필수 키는 값을 되쓴 기본 초안이 통과하는지를 같은 파이프라인 옵션으로 보고, 필수 키 안내의 문구("값을 쓰라")도
-  함께 단언한다. 값이 비지 않아도 `design_system_name` 은 공백을 접은 값에서 `—` 가 혼자 단어로 서면 block 이다(`design-system-name-separator` — 양 끝 포함. 카탈로그 색인 줄은 이름을 ` · ` 와 ` — ` 사이에 두고 첫 ` — ` 에서 끝내므로 양 끝의 `—` 도 바깥 공백과 붙어 잘린다, #466). 이 규칙의 안내는 위의 "줄을 지우라" 가 아니라 이름을 살리는 줄이 먼저다 — 구분자를 바꾼 줄, 그게 어느 한 줄로도 담기지 않으면 따옴표·백슬래시를 뺀 줄, 둘 다 안 될 때만 줄 삭제 순이고, 각 줄은 두 파서가 그 이름 그대로 읽는지 되읽어 고른다. 두 파서가 **같게** 읽는 비지 않은 리스트(`lang: [ko]`)는
-  `list-frontmatter-value` 하나로 막는다 — 사이트가 읽는 키는 전부 값 하나를 담고, 필드 규칙에 맡기면 메시지가
-  자기모순이 된다("lang `ko` must be exactly `ko`"). 다른 키에서 YAML 이 수·불리언·맵으로
-  읽는 값(`name: 1.50` 은 YAML 에 `1.5`, `name: {}` 는 맵)은 인용해야 하고(리스트가 끼면 안내는 인용이 아니라 한 줄
-  값이다 — 인용한 리스트는 `list-frontmatter-value` 에 다시 걸린다), `estimated_tokens` 는
-  YAML 도 수로 읽어야 한다(`"1200"`·`0b101` 은 YAML 에 글자다). 아래 세 규칙 중 하나에 걸린 키(버려지거나 · 잘못 읽히거나 · 리스트인 키)의 값이 `buildDoc` 을 throw 시키면 `frontmatter-parse` 는 그 필드에 대해 내지 않는다. 세 규칙(`nonbare-frontmatter-key`·`misread-frontmatter-value`·`list-frontmatter-value`) 모두 같은 원인의 결과 메시지 — 그 필드를 판정하는 규칙
-  전부(`bad-name`·`missing-last-updated`·`slug-arg-mismatch`·`expected-logo-mismatch` 등)와 토큰
-  맵이면 `unreadable-token-map` — 는 그 키에 대해 내지 않는다.
+- **frontmatter 는 한 모듈이 진짜 YAML 로 한 번 읽는다**(`src/lib/frontmatter.ts` 의 `readFrontmatter`,
+  ADR 0011). 사이트 빌드·초안 검사기·토큰 추출기·색 어긋남 검사·`audit:oklch`·날짜 검사가 모두 그 결과를
+  쓴다(공식 린터만 따로 읽지만 같은 `yaml` 라이브러리다). 그래서 키나 값의 따옴표, 들여쓰기 칸 수, 블록
+  스칼라, 다음 줄로 넘긴 값은 YAML 이 읽는 대로 같은 값이고 그것만으로 막히지 않는다 — 따옴표 친 hex
+  (`"#FF0038"`)는 값이 hex 라서 `non-oklch-token-value` 가 막는다. 참조(`"{colors.x}"`)와 따옴표로 시작하는
+  폰트 스택은 따옴표가 있어야 YAML 이 그 값으로 읽는다. **"사이트와 YAML 이 다르게 읽는 경우"를 막는 규칙은 다시
+  만들지 않는다** — 그런 경우가 보이면 이 모듈을 거치지 않는 독자를 고친다.
+- **frontmatter 가 YAML 로 읽히지 않으면 `frontmatter-yaml-invalid` 하나만 낸다**(block — 닫는 `---` 가
+  없는 것 포함). 그 문서의 다른 frontmatter 판정은 내지 않는다. 인용 없는 폰트 스택 하나가 문서 전체를
+  0토큰으로 만들어도 아무도 몰랐던 일(7개 항목)을 막는 관문이다. 사이트 빌드도 같은 원인으로 실패한다.
+- **사이트가 읽는 키(`CONSUMED_KEYS`)를 값 없이 쓰면 사이트 빌드가 실패한다**(`site-frontmatter.ts`) —
+  맨 `name:` 이나 `name: ~` 가 기본값(슬러그)으로 조용히 바뀌지 않게 하려는 것이다. 키를 아예 안 쓰면 지금처럼
+  기본값으로 떨어지고, `slug`·`estimated_tokens` 는 빈 값도 그렇다(파일명·추정치). 초안 검사기는 같은 값을 필드
+  규칙으로 막는다 — 빈 `name`·`design_system_name`(보이는 글자가 없는 값 — 공백·영폭 문자·한글 채움 문자·점자
+  공백 — 포함. 문자·숫자·구두점·기호 범주의 글자가 하나라도 있는지로 판정하되, 빈칸으로 그려진다고 **알려진**
+  글자 — 한글 채움 문자 4개·점자 공백·악보 null notehead(U+1D159) — 는 뺀다. 새 사례가 나오면 `VISIBLE_CHAR` 에
+  더한다)과 YAML 이 글자가 아닌 것으로 읽는 값(`name: 1.50`·`name: {}` — 인용하면 글자다)은 `bad-name`·
+  `bad-design-system-name`, 그 밖의 키는 `bad-slug`·`bad-category`·`bad-lang`·`missing-last-updated`·`missing-logo`
+  가 막는다. 날짜가 실제 `YYYY-MM-DD` 날이 아니거나 `estimated_tokens` 를 YAML 이 수로 읽지 않으면(`"1200"`·
+  `0b101`) `frontmatter-parse` 다 — 판정은 사이트 빌드와 같은 함수(`siteValue`)가 한다. 값 하나를 담는 키에
+  리스트(`lang: [ko]`·`key: []`)가 오면 `list-frontmatter-value` 하나로 막고 그 키의 필드 규칙은 내지 않는다. 그
+  안내는 다음 실행이 받아 주는 수정 하나를 말한다 — 생략할 수 있는 키(`OMITTABLE_KEYS` —
+  `design_system_name`·`estimated_tokens`)는 "줄을 지우라", 나머지 키는 "값을 쓰라" 다. `name`·`category`·`lang`
+  은 지워도 게이트가 기본값을 받아 주고 스킬 루브릭(`rubric-design.md`)만 필수로 요구한다. 값이 비지 않아도
+  `design_system_name` 은 공백을 접은 값에서 `—` 가 혼자 단어로 서면 block 이다(`design-system-name-separator` —
+  양 끝 포함. 카탈로그 색인 줄은 이름을 ` · ` 와 ` — ` 사이에 두고 첫 ` — ` 에서 끝내므로 양 끝의 `—` 도 바깥
+  공백과 붙어 잘린다, #466). 이 규칙의 안내는 이름을 살리는 줄이 먼저다 — 구분자를 바꾼 줄, 그게 어느 한 줄로도
+  담기지 않으면 따옴표·백슬래시를 뺀 줄, 둘 다 안 될 때만 줄 삭제 순이고, 각 줄은 YAML 이 그 이름 그대로 읽는지
+  되읽어 고른다.
+- **토큰 맵(`colors:`·`spacing:`·`rounded:`·`elevation:`) 아래에 또 맵을 두면 막는다**
+  (`noncanonical-token-indent`). 중첩하면 토큰 이름이 `{colors.blue.500}` 로 바뀌어 사이드카·참조와 어긋난다.
+  따옴표 없는 참조(`brand: {colors.x}`)도 YAML 에는 맵이라 여기 걸린다. `typography:` 처럼 원래 한 단계 중첩하는
+  맵은 제외다 — 단 크기·굵기·행간·자간 중 하나도 없는 스타일(`fontFamily` 만 · `{ size: … }`)은 린터는 세지만
+  사이드카에는 실리지 않고, 그것을 막는 규칙은 없다(크기 없는 폰트 패밀리는 `fonts:` 로).
 - **출처 목록은 `## References` 한 곳이다.** frontmatter `sources` 는 References 와의 중복이라
   걷어냈다(ADR 0004) — 되살리지 말 것. 인용은 `[src:N]` 정수 인덱스.
 - **인용은 존재가 아니라 내용 일치.** `[src:N]`이 가리키는 소스가 실제로 그 주장을
@@ -150,13 +139,10 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행하고, 프리
   그것도 없으면 온보딩을 멈춘다. `LOGO_TAKEDOWNS` 에 오른 슬러그는 스킬이 로고를 다시 찾지 않고 멈춘다(그 항목은 스킬로 갱신하지 않고 손으로 재감사한다). 로고 없이 남는
   항목은 권리자 요청으로 로고만 뺀 경우뿐이다. 그 슬러그는 요청 참조(공개 이슈 `#N` 또는 비공개 advisory `GHSA-…`)와 함께 `src/lib/logo-takedowns.ts` 의
   `LOGO_TAKEDOWNS` 에 적는다(docs/TAKEDOWN.md — 목록에 있는데 로고가 있으면 테스트가 막는다).
-  **takedown 슬러그에 `logo:` 줄이 어떤 형태로든 남으면 검증기도 막고, 그 줄을 판정하는 규칙은 모두 같은 안내 하나를
-  낸다**(`takedownLogoFix`) — 값이 있으면 `takedown-logo-declared`, 빈 `logo:` 는 `missing-logo`, 인용 키·잘못 읽힌 값·
-  리스트는 각자의 규칙이 형태별 수정("bare 로 쓰라"·"한 줄로 쓰라") 대신 이 안내를 낸다. 형태별 수정은 내려간 로고를
-  되살리기 때문이다. 안내는 "키와 값의 모든 줄을 지우라" 다(로고 복원은 관리자 몫 — `logo:` 줄만 지우면 블록 리스트의 `  - url` 이 남아 윗줄 값의 연속으로 읽힌다). 단 호출자가 기대 로고를 넘겼으면 복원이 결정된
+  **takedown 슬러그에 `logo` 키가 어떤 값으로든 남으면 검증기는 `takedown-logo-declared` 하나로 막는다**
+  (`takedownLogoFix` — 빈 값·리스트·인용 키도 같다. 형태별 수정은 내려간 로고를 되살리기 때문이다). 안내는 "키와 값의 모든 줄을 지우라" 다(로고 복원은 관리자 몫 — `logo:` 줄만 지우면 블록 리스트의 `  - url` 이 남아 윗줄 값의 연속으로 읽힌다). 단 호출자가 기대 로고를 넘겼으면 복원이 결정된
   것이라 그 값을 쓰고 `LOGO_TAKEDOWNS` 에서 슬러그를 빼라고 안내한다 — 줄이 없어도 그렇다(`expected-logo-mismatch`). CI 의 로고 정책 테스트도 같은 수정을 말한다. 어느 항목이 takedown 인지는 호출자가 넘긴 기대 slug 가
-  있으면 그것으로 판정하고(쓰인 `slug` 는 `slug-arg-mismatch` 가 그 값에 맞춘다), 남은 줄은 `buildDoc` 이 아니라
-  사이트 파서가 읽은 값으로 판정한다 — 다른 필드 때문에 문서가 만들어지지 않아도 그 실행에서 함께 알린다.
+  있으면 그것으로 판정한다(쓰인 `slug` 는 `slug-arg-mismatch` 가 그 값에 맞춘다).
   값은 `https://getdesign.kr/logos/*.{svg,png,webp,avif}` 절대 URL (파일이 사이트
   밖으로 복사돼도 유효해야 함). 프리뷰 HTML 안에서는 반대로 site-relative `/logos/...`.
 - 10개 Stitch 표준 섹션은 상대 순서 유지 (사이 비표준 섹션 추가는 허용).
@@ -262,14 +248,10 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   해석되지 않으면(`spec-no-colors`), 타입 스케일이 하나도 해석되지 않으면(`spec-no-typography`),
   린터가 스키마로 읽는 모르는 키가 있으면(`spec-schema-key`) block 이다. `colors:`·`typography:`
   는 필수 맵이고 `spacing:`·`rounded:` 는 아니다(#428 — 브랜드가 발행하지 않았을 수 있어, 필수로
-  하면 값을 지어내라는 압력이 된다). 이 두 맵에서 린터가 해석한 토큰을 **토큰 추출기**가 못 읽으면
-  `unreadable-token-map` 으로 block 한다 — 사이드카가 비거나 빠진 채로 Tokens 탭과
-  `use-design-md` 에 실리기 때문이다(인라인 `name: { size, … }` typography 가 그 모양이다).
-  `typography:` 는 한 스타일이라도 못 읽으면 막는다. 추출기는 `fontSize`·`fontWeight`·`lineHeight`·
-  `letterSpacing` 중 하나가 중첩된 스타일만 읽으므로, 크기 없이 발행된 폰트 패밀리(`fontFamily` 만)는
-  스타일이 아니라 카탈로그 전용 `fonts:` 맵에 둔다 — 통과하려고 크기를 지어내지 말 것. `colors:` 는
-  0개일 때만 막는다 — 린터가 해석하는 별칭 행(`{colors.x}`·`primary:`)을 사이드카는 설계상 빼서,
-  별칭이 있는 항목은 두 수가 원래 다르다. 카탈로그 전용 맵(`grid:`·`opacity:` 등)에 `16px`·`40%` 같은 CSS 치수나 hex 가
+  하면 값을 지어내라는 압력이 된다). 추출기는 `fontSize`·`fontWeight`·`lineHeight`·`letterSpacing`
+  중 하나가 있는 스타일만 읽으므로, 크기 없이 발행된 폰트 패밀리(`fontFamily` 만)는 스타일이 아니라
+  카탈로그 전용 `fonts:` 맵에 둔다 — 통과하려고 크기를 지어내지 말 것(이것을 막는 기계 규칙은 없다 — 린터와
+  추출기가 같은 YAML 을 읽으므로 둘을 대조하던 규칙은 #589 에서 걷었다). 카탈로그 전용 맵(`grid:`·`opacity:` 등)에 `16px`·`40%` 같은 CSS 치수나 hex 가
   있으면 린터가 그 맵을 "무시되는 토큰 맵"으로 보고하므로 `spec-token-like-map` 으로 block
   한다(치수는 `spacing:`/`rounded:` 로, 불투명도는 단위 없는 수로). frontmatter 가 파스되지
   않거나 속성 없는 컴포넌트가 있으면(`empty-component` — YAML null 이라 린터가 모델을 못 만든다) 이
@@ -317,8 +299,9 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   (`empty-component` — YAML null 이라 린터가 디자인 시스템을 통째로 못 만든다), 값의 형태(`component-value-form`),
   참조가 선언된 키를 가리키는지(`unresolved-token-ref`)를 막는다(#525). 값은 따옴표 친 참조 또는 `px`/`em`/`rem`
   치수 하나만 통과한다 — 따옴표 없는 참조(YAML 이 맵으로 읽는다)·여러 값 단축형·단위 없는 숫자·산문·리터럴 색은
-  공식 린터가 아무 말 없이 받으므로 이 규칙이 유일한 검사다. 행은 줄 단위로 읽고, 그 결과를 YAML 이 읽은 `components:`
-  와 대조해 줄 분리기가 놓친 속성(콜론 앞 공백·`?` 키·목록 항목·다음 줄로 이어진 값)도 막는다. 검증기가 통과시키는 값은
+  공식 린터가 아무 말 없이 받으므로 이 규칙이 유일한 검사다. 맵은 읽기 모듈이 읽은 그대로 판정한다 — 인라인
+  `{ … }` 컴포넌트·인용 키·콜론 앞 공백은 YAML 이 같은 속성으로 읽으므로 그 값으로 판정되고, 다음 줄로 이어진
+  값은 YAML 이 이어 붙인 한 값으로 판정된다. 검증기가 통과시키는 값은
   린터도 색·타이포·치수로 읽는다는 것을 `draft-validator.test.ts` 의 대조 테스트가 고정한다(검증기는 더 엄격할 수만
   있다). 단 참조가 실제로 **풀리는지**는 형태가 아니라 해석의 문제라 그 테스트 밖이다 — 없는 키는 `unresolved-token-ref`
   가 막고, 네 맵(`colors`·`typography`·`rounded`·`spacing`) 밖을 가리키는 참조(`{fonts.x}`)와 맵 이름이 빠진

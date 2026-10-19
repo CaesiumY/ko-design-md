@@ -559,6 +559,42 @@ describe("/design-md machine gates", () => {
     }
   })
 
+  // The draft gate's frontmatter is read by one module now (docs/adr/0011,
+  // #589), and the rules that reconciled two readers are gone. A prompt that
+  // still teaches one would send the author after a block that never comes —
+  // or, worse, to re-quote and re-indent a file that was fine.
+  it("names none of the draft-gate rules #589 retired", () => {
+    const retired = [
+      "misread-frontmatter-value",
+      "nonbare-frontmatter-key",
+      "quoted-token-value",
+      "unreadable-token-map",
+      "block-scalar-token-value",
+    ]
+    const validator = readRepoFile("src/lib/draft-validator.ts")
+    const raised = new Set(
+      [...validator.matchAll(/(?:block|warn)\(\s*\n?\s*"([a-z0-9-]+)"/g)].map(
+        (m) => m[1]
+      )
+    )
+    expect(raised.size, "the rule-id scan matched nothing").toBeGreaterThan(10)
+    // A rule raised again is a decision to revisit with this list, not a slip.
+    expect(retired.filter((id) => raised.has(id))).toEqual([])
+    for (const doc of [
+      DESIGN_MD_SKILL,
+      DESIGN_MD_TEMPLATE,
+      DESIGN_MD_RUBRIC_DESIGN,
+      DESIGN_MD_STITCH_FORMAT,
+      ...DESIGN_MD_AGENT_PATHS,
+    ]) {
+      const text = readRepoFile(doc)
+      expect(
+        retired.filter((id) => text.includes(id)),
+        `${doc} still names a retired draft-gate rule`
+      ).toEqual([])
+    }
+  })
+
   // The rubric states how many static-scan patterns it lists. A bullet added
   // without the count is the drift nobody would notice, and it happened in
   // the very change that added the sixth.
