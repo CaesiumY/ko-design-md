@@ -2502,7 +2502,16 @@ function checkExtractedTokens(
   /** Maps whose key the site's parser drops — already one block each. */
   dropped: ReadonlySet<string>
 ): Array<ValidationIssue> {
-  const extracted = extractTokensFromMarkdown(raw)
+  // The extractor reads through the shared reader (ADR 0011), which refuses a
+  // document past YAML's alias limit even when this validator's own reading
+  // goes on comparing (#454). That read failure is the cause, reported by the
+  // rules that read the same keys; a second message here would only restate it.
+  let extracted: ReturnType<typeof extractTokensFromMarkdown>
+  try {
+    extracted = extractTokensFromMarkdown(raw)
+  } catch {
+    return []
+  }
   const issues: Array<ValidationIssue> = []
   for (const { map, mustReadAll, howTo } of REQUIRED_TOKEN_MAPS) {
     const want = resolved[map].length

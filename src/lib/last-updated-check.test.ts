@@ -264,6 +264,37 @@ describe("checkLastUpdated", () => {
       }
     })
 
+    it("fails, at the line, a frontmatter YAML cannot read rather than skipping it", () => {
+      // A quote that never closes is a YAML error. Reading it as "no date" let
+      // the one gate that blocks on the date pass a file it never judged.
+      const raw = withLine('last_updated: "2026-08-02')
+      const r = judge(raw)
+      expect(r?.rule).toBe("unreadable-frontmatter")
+      expect(r?.warn).toBeUndefined()
+      expect(r?.message).toContain("could not be read as YAML")
+      expect(r?.message).toMatch(/\bline \d+\b/)
+    })
+
+    it("reads a CRLF checkout the same as LF, not as unreadable", () => {
+      // Windows working trees can come out `w/crlf` (CLAUDE.md); the date is
+      // still the date.
+      const raw = withLine("last_updated: 2026-01-01 # synced").replace(
+        /\n/g,
+        "\r\n"
+      )
+      expect(judge(raw)?.rule).toBe("stale-last-updated")
+    })
+
+    it("judges the change even when the base side's frontmatter is broken", () => {
+      // A broken past commit is not this change's to fix; the base just reads
+      // as having no date.
+      const r = judge(
+        withLine("last_updated: 2026-01-01"),
+        withLine('last_updated: "2026-08-10')
+      )
+      expect(r?.rule).toBe("stale-last-updated")
+    })
+
     it("reads only the frontmatter, not a line in the body", () => {
       // A body example such as a template excerpt is not the entry's date.
       const raw = `${doc(null)}\n\`\`\`text\nlast_updated: 2026-01-01 # 예시\n\`\`\`\n`
