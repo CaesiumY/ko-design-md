@@ -1,6 +1,17 @@
-import { LineCounter, Parser, isMap, isScalar, parseDocument } from "yaml"
-import { splitFrontmatter } from "./content-parser"
+import {
+  LineCounter,
+  Parser,
+  isAlias,
+  isMap,
+  isScalar,
+  parseDocument,
+} from "yaml"
+import { FRONTMATTER_MAP_KEYS } from "./frontmatter-map-table"
+import { splitFrontmatter } from "./frontmatter-fence"
+import type { ServiceFrontmatter } from "./content-types"
 import type { Document, Node, YAMLMap } from "yaml"
+
+export { splitFrontmatter } from "./frontmatter-fence"
 
 // The frontmatter, read ONCE, as YAML reads it (docs/adr/0011).
 //
@@ -8,7 +19,8 @@ import type { Document, Node, YAMLMap } from "yaml"
 // hand parser, the draft validator's YAML, the token extractor's line regexes,
 // the drift check, `audit:oklch` and the date check — and the validator grew a
 // rule for every shape on which they disagreed. This module is the one reader
-// they move onto, ticket by ticket (#582). Nothing imports it yet.
+// they all use now (#582). A reader that goes around it is the bug to fix, not
+// a reason for a new validator rule (docs/adr/0011).
 //
 // It uses `yaml` with its default schema (YAML 1.2 core), the library and
 // schema the official DESIGN.md linter uses, so a date stays the text written
@@ -74,6 +86,9 @@ export interface FrontmatterError {
 
 export interface FrontmatterReadFailure {
   ok: false
+  /** `missing`: no block at all — no opening or no closing `---`. `yaml`: the
+   *  block is there but does not read as a map of keys. */
+  reason: "missing" | "yaml"
   errors: Array<FrontmatterError>
 }
 
@@ -179,6 +194,12 @@ class Reading {
    *  `1.0:` stays `1.0` (YAML's value is the number 1); a quoted key is its
    *  string. */
   private keyName(keyNode: Node): string {
+    // An alias key (`? *k`) is the key it points at, to YAML and to every
+    // consumer of the file.
+    if (isAlias(keyNode)) {
+      const target = keyNode.resolve(this.doc)
+      return isScalar(target) ? String(target.value) : String(keyNode)
+    }
     if (!isScalar(keyNode)) return String(keyNode)
     if (keyNode.type === "PLAIN" && keyNode.range) {
       return this.text.slice(keyNode.range[0], keyNode.range[1])
@@ -233,8 +254,12 @@ class Reading {
   }
 }
 
-function failure(message: string, line: number): FrontmatterReadFailure {
-  return { ok: false, errors: [{ message, line }] }
+function failure(
+  message: string,
+  line: number,
+  reason: FrontmatterReadFailure["reason"] = "yaml"
+): FrontmatterReadFailure {
+  return { ok: false, reason, errors: [{ message, line }] }
 }
 
 export function readFrontmatter(raw: string): FrontmatterResult {
@@ -242,7 +267,8 @@ export function readFrontmatter(raw: string): FrontmatterResult {
   if (!split) {
     return failure(
       "no frontmatter block: the file must open with a `---` line and close the block with another",
-      1
+      1,
+      "missing"
     )
   }
   const lineCounter = new LineCounter()
@@ -251,6 +277,7 @@ export function readFrontmatter(raw: string): FrontmatterResult {
   if (doc.errors.length > 0) {
     return {
       ok: false,
+      reason: "yaml",
       errors: doc.errors.map((e) => ({
         message: e.message.split("\n")[0],
         line: reading.fileLine(e.pos[0]),
@@ -283,3 +310,60 @@ export function readFrontmatter(raw: string): FrontmatterResult {
   }
   return { ok: true, keys }
 }
+
+/**
+ * A token value as text: what YAML reads for a string (quotes and escapes
+ * undone, a block scalar folded, its closing line breaks dropped), and the
+ * spelling as written for a number or boolean — YAML reads `lineHeight: 1.50`
+ * as 1.5, and the sidecar carries `1.50`. Undefined for no value, a map or a
+ * list.
+ *
+ * Shared by the token extractor and the draft validator's token rules, so the
+ * value a rule judges is the value the sidecar publishes.
+ */
+export function tokenText(entry: FrontmatterKey): string | undefined {
+  const { value, source } = entry
+  if (typeof value === "string") {
+    return source !== undefined && /^[|>]/.test(source)
+      ? value.replace(/\n+$/, "")
+      : value
+  }
+  if (typeof value === "number" || typeof value === "boolean") return source
+  return undefined
+}
+
+// The keys the site reads into `ServiceFrontmatter`. Typed against the
+// interface so a typo here is a compile error. The build reads exactly these
+// (`site-frontmatter.ts`), and the draft validator judges them.
+export const CONSUMED_KEYS: ReadonlyArray<keyof ServiceFrontmatter> = [
+  "name",
+  "design_system_name",
+  "slug",
+  "category",
+  "last_updated",
+  "created_at",
+  "lang",
+  "estimated_tokens",
+  "logo",
+]
+
+// Keys that are valid in the file but that the site never reads. Tokens live
+// here in the Google DESIGN.md shape; the site takes them from the
+// `{slug}.tokens.json` sidecar instead. They are listed so the unknown-key rule
+// stops reporting ~100 false warnings. The maps come from the table in
+// `frontmatter-map-table`, which every other reader of them derives its list
+// from too.
+const FILE_ONLY_KEYS: ReadonlyArray<string> = [
+  ...FRONTMATTER_MAP_KEYS,
+  "preview_css_vars",
+  // Both spellings the skill docs name. `font-sans-src` has no catalog entry yet,
+  // but leaving it out would warn on the first one that needs it — the allowlist
+  // and the authoring docs have to agree or the warning is just noise.
+  "font-display-src",
+  "font-sans-src",
+]
+
+export const KNOWN_FRONTMATTER_KEYS: ReadonlyArray<string> = [
+  ...CONSUMED_KEYS,
+  ...FILE_ONLY_KEYS,
+]

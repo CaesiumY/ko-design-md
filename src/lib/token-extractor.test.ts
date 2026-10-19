@@ -739,14 +739,32 @@ describe("reads the token maps as YAML reads them (ADR 0011)", () => {
     )
   })
 
-  it("does not read a style written as an inline map", () => {
-    // Pinned until `unreadable-token-map` is retired (#589): the validator
-    // still tells the author to rewrite this shape as a nested block.
+  it("reads a style written as an inline map", () => {
+    // YAML reads `{ fontSize: … }` as the same style the nested block is, so
+    // the sidecar gets it too (#589 retired the rule that asked for a block).
     const body = fm(
       "typography:",
       "  body: { fontSize: 16px, fontWeight: 400 }"
     )
-    expect(extractTokensFromMarkdown(body).typography).toEqual([])
+    expect(extractTokensFromMarkdown(body).typography).toEqual([
+      { name: "body", size: "16px", weight: 400 },
+    ])
+  })
+
+  it("reads a value written as a block scalar, as YAML reads it", () => {
+    // The scalar's text starts with `>`; YAML's value is the colour. Reading
+    // the text dropped the token from the sidecar without a word.
+    const body = fm("colors:", "  brand: >", "    oklch(0.62 0.19 258)")
+    expect(extractTokensFromMarkdown(body).colors).toEqual([
+      { name: "brand", value: "oklch(0.62 0.19 258)" },
+    ])
+  })
+
+  it("reads a quoted value as YAML unescapes it", () => {
+    const body = fm("elevation:", `  e1: '0 1px 2px oklch(0 0 0 / 0.1)'`)
+    expect(extractTokensFromMarkdown(body).elevation?.[0].value).toBe(
+      "0 1px 2px oklch(0 0 0 / 0.1)"
+    )
   })
 
   it("reads no tokens from a block that never closes", () => {

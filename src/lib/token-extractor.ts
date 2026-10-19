@@ -1,5 +1,4 @@
-import { splitFrontmatter } from "./content-parser"
-import { readFrontmatter } from "./frontmatter"
+import { readFrontmatter, tokenText } from "./frontmatter"
 import type { FrontmatterEntryRow, FrontmatterKey } from "./frontmatter"
 import type {
   ColorToken,
@@ -24,10 +23,10 @@ import type {
 //
 // The frontmatter is read by the shared reader (`readFrontmatter`, ADR 0011),
 // never by line patterns here: a row YAML reads is a row the sidecar gets,
-// whatever its indent or key quoting. What the extractor keeps of its own is
-// the TEXT of each value — a scalar's `source`, not YAML's resolved value —
-// because YAML turns `lineHeight: 1.50` into the number 1.5 while the sidecar
-// carries `"1.50"` as written.
+// whatever its indent or key quoting. A value is read as `tokenText` gives it:
+// YAML's string for text (quotes undone, a block scalar folded), the spelling
+// as written for a number, because YAML turns `lineHeight: 1.50` into the
+// number 1.5 while the sidecar carries `"1.50"` as written.
 
 interface RawLine {
   key: string
@@ -36,28 +35,6 @@ interface RawLine {
   items?: Array<string>
   note?: string
   group?: string
-}
-
-// Strip the YAML string quotes an author may wrap a value in (a shadow quoted
-// so its commas don't read as flow syntax). Left in, a consumer pasting the
-// value into CSS gets a broken declaration. Exactly ONE matching outer pair is
-// removed: a doubly quoted value (`"'0 1px …'"`) keeps its inner pair. Any
-// quoted value is blocked upstream by `quoted-token-value`, so this is a
-// backstop for a single slip, not a normaliser for every quoting style.
-//
-// SHARED, not elevation-only: it is the only quote-stripping on the path every
-// token row value takes (`valueText`). It was added for shadows but applies
-// catalogue-wide — measured when it landed, no existing category moved.
-// Re-measure with `pnpm tokens:build --all` + `git diff` before widening it.
-// Its input is one YAML scalar's source, so a value carrying two quoted items
-// (`"Foo", "Bar"`) never reaches it — that is invalid YAML, and the extractor
-// throws before reading any row.
-function unquote(value: string): string {
-  const double = value.match(/^"([^"]*)"$/)
-  if (double) return double[1]
-  const single = value.match(/^'([^']*)'$/)
-  if (single) return single[1]
-  return value
 }
 
 // ── Colors ────────────────────────────────────────────────────────────────
@@ -245,13 +222,13 @@ function clean<T extends Record<string, string | number | undefined>>(
   return obj
 }
 
-/** A scalar value's text as written, one pair of quotes removed. Undefined for
- *  a map, a list or an empty value (`key:`), which carry no text to read. The
+/** A row's value as the sidecar carries it (`tokenText`). Undefined for a
+ *  map, a list or an empty value (`key:`), which carry no text to read. The
  *  trailing comment is already apart (`comment`), so a property copied from
  *  the skeleton — which annotates these lines — never lands in the sidecar as
  *  `56px   # 속성명은 …`. */
 function valueText(entry: FrontmatterKey): string | undefined {
-  return entry.source === undefined ? undefined : unquote(entry.source.trim())
+  return tokenText(entry)?.trim()
 }
 
 /** The rows of one top-level token map, entries only. */
@@ -305,13 +282,9 @@ function frontmatterTypography(keys: Array<FrontmatterKey>): Array<TypeToken> {
     const properties = (head.rows ?? []).filter(
       (row): row is FrontmatterEntryRow => row.kind === "entry"
     )
-    // A style is a nested block map. The inline flow form
-    // (`display-1: { fontSize: … }`) is deliberately NOT read: its properties
-    // sit on the head's own line. `unreadable-token-map` still tells the author
-    // to rewrite that shape as a block, so reading it here would silence the
-    // rule's message for a shape the skill docs must not show (#589 retires both
-    // together).
-    if (properties.length === 0 || properties[0].line === head.line) continue
+    // A style is a nested map, written as a block or inline
+    // (`display-1: { fontSize: … }`) — YAML reads both alike.
+    if (properties.length === 0) continue
     const current: TypeToken = { name: head.key }
     let read = false
     for (const row of properties) {
@@ -350,20 +323,18 @@ function frontmatterTypography(keys: Array<FrontmatterKey>): Array<TypeToken> {
  *
  * Accepts a whole document; a document without a frontmatter block (no
  * opening or no closing `---`) yields empty arrays — the draft validator
- * reports that as `frontmatter-parse`. The body is not read — see the note at
- * the top of this file.
+ * reports that as `frontmatter-yaml-invalid`. The body is not read — see the
+ * note at the top of this file.
  *
  * Throws when the frontmatter is not valid YAML, naming the line: a partial
  * read would be a sidecar `tokens:check` then confirms. The draft validator
  * reports the same input as `frontmatter-yaml-invalid`.
  */
 export function extractTokensFromMarkdown(text: string): ServiceTokens {
-  // Where the block starts and ends is the reader's own rule (it splits with
-  // the same function), asked first only to tell "no block" from "broken".
-  if (!splitFrontmatter(text)) {
+  const read = readFrontmatter(text)
+  if (!read.ok && read.reason === "missing") {
     return { colors: [], typography: [], spacing: [], radius: [] }
   }
-  const read = readFrontmatter(text)
   if (!read.ok) {
     const [first] = read.errors
     // YAML's own position counts from the block, not the file; `line` is the

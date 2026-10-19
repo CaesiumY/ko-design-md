@@ -191,13 +191,34 @@ describe("readFrontmatter", () => {
     ).toEqual(["1.0", "050"])
   })
 
+  it("names a key written through an alias by the key it resolves to", () => {
+    // `? *k` is the key `lang` to YAML and to every consumer of the file.
+    const fm = readOk(doc("other: &k lang", "? *k", ": ko"))
+
+    expect(fm.keys.map((k) => [k.key, k.value])).toEqual([
+      ["other", "lang"],
+      ["lang", "ko"],
+    ])
+  })
+
   it("fails, at line 1, a document with no frontmatter block", () => {
     const result = readFrontmatter("# Just a body\n")
 
     expect(result).toEqual({
       ok: false,
+      reason: "missing",
       errors: [{ message: expect.stringContaining("frontmatter"), line: 1 }],
     })
+  })
+
+  it("tells a block that never closes from one YAML cannot read", () => {
+    // The token extractor reads no tokens from the first and refuses the
+    // second; both are one failure to the draft validator.
+    const unclosed = readFrontmatter(["---", "name: 토스", ""].join("\n"))
+    const broken = readFrontmatter(doc("name: [토스"))
+
+    expect(unclosed.ok ? null : unclosed.reason).toBe("missing")
+    expect(broken.ok ? null : broken.reason).toBe("yaml")
   })
 
   it("fails a block that is not a map of keys", () => {
@@ -205,6 +226,7 @@ describe("readFrontmatter", () => {
 
     expect(result).toEqual({
       ok: false,
+      reason: "yaml",
       errors: [{ message: expect.stringContaining("map"), line: 2 }],
     })
   })
@@ -227,6 +249,7 @@ describe("readFrontmatter", () => {
 
     expect(result).toEqual({
       ok: false,
+      reason: "yaml",
       errors: [{ message: expect.stringContaining("alias"), line: 4 }],
     })
   })
