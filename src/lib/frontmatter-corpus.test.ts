@@ -1,5 +1,5 @@
-import { readFileSync, readdirSync } from "node:fs"
-import { join } from "node:path"
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs"
+import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
 import { isNode, isScalar, parseDocument } from "yaml"
@@ -87,7 +87,7 @@ function prop(row: FrontmatterEntryRow | undefined, name: string) {
   )
 }
 
-/** Every non-test source file under `src/`. */
+/** Every non-test source file under `dir`. */
 function sourceFiles(dir: string): Array<string> {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const path = join(dir, entry.name)
@@ -98,20 +98,63 @@ function sourceFiles(dir: string): Array<string> {
   })
 }
 
+/** The `src/` file an import specifier names, or null for a package. */
+function resolveImport(from: string, specifier: string): string | null {
+  const bare = specifier.replace(/\?.*$/, "")
+  let base: string
+  if (bare.startsWith("@/")) base = join(ROOT, "src", bare.slice(2))
+  else if (bare.startsWith(".")) base = join(dirname(from), bare)
+  else return null
+  for (const candidate of [
+    base,
+    `${base}.ts`,
+    `${base}.tsx`,
+    join(base, "index.ts"),
+    join(base, "index.tsx"),
+  ]) {
+    if (existsSync(candidate) && statSync(candidate).isFile()) return candidate
+  }
+  return null
+}
+
+/** Every `src/` file the site's entry points reach through their imports. */
+function siteReachable(): Set<string> {
+  const SRC = join(ROOT, "src")
+  const seen = new Set<string>()
+  const queue = [
+    join(SRC, "router.tsx"),
+    join(SRC, "start.ts"),
+    ...sourceFiles(join(SRC, "routes")),
+  ]
+  while (queue.length > 0) {
+    const file = queue.pop() as string
+    if (seen.has(file)) continue
+    seen.add(file)
+    const text = readFileSync(file, "utf8")
+    for (const m of text.matchAll(
+      /(?:\bfrom\s+|\bimport\s*\(\s*|\bimport\s+)["']([^"']+)["']/g
+    )) {
+      const target = resolveImport(file, m[1])
+      if (target && !seen.has(target)) queue.push(target)
+    }
+  }
+  return seen
+}
+
 describe("the frontmatter module's place", () => {
   // The site reads frontmatter in the browser too, and `yaml` costs ~29KB
   // gzip there (2026-10-03). The module runs at build time and in the tools;
   // the site gets its results, never the parser.
-  it("is not imported by site code", () => {
-    const importers = sourceFiles(join(ROOT, "src"))
-      .filter((path) =>
-        /from\s+["'](?:\.{1,2}\/(?:[\w.-]+\/)*|@\/lib\/)frontmatter["']/.test(
-          readFileSync(path, "utf8")
-        )
-      )
-      .map((path) => path.slice(ROOT.length))
-
-    expect(importers).toEqual([])
+  //
+  // "Site code" is what the site's entry points reach, not everything under
+  // `src/`: the CI-only checks that move onto this module (the date check,
+  // #588) live in `src/lib` too, and only `scripts/` imports them.
+  it("is not reached from the site's entry points", () => {
+    const reached = [...siteReachable()].map((path) =>
+      path.slice(ROOT.length).replace(/\\/g, "/")
+    )
+    expect(reached).toContain("src/lib/content-parser.ts")
+    expect(reached).not.toContain("src/lib/frontmatter.ts")
   })
 })
 
