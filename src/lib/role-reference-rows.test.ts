@@ -197,7 +197,9 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       for (const [roleCell, light = "", dark = ""] of tableRows) {
         const [name] = spans(roleCell)
         // The emotion-group table leads with a `{colors.x}` key, not a role.
-        if (!name || !/^[a-z]+(?:-[a-z0-9]+)+$/.test(name)) continue
+        // Skip by that shape, not by what a role name looks like — a name
+        // filter would also drop a role whose name it did not foresee.
+        if (!name || name.startsWith("{colors.")) continue
         const l = single(light)
         const d = single(dark)
         if (l) expected.set(name, l)
