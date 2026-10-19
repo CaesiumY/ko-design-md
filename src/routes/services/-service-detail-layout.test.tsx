@@ -123,8 +123,10 @@ describe("ServiceDetailLayout", () => {
     expect(container.querySelector('a[href*="llms.txt"]')).toBeNull()
   })
 
-  // The usage guide explains the two buttons, so it sits right under them.
-  it("puts the usage guide after the download action", () => {
+  // The usage guide explains the buttons above it, so it sits right under the
+  // download action - not just somewhere after it, such as below the
+  // disclaimer at the sidebar's end.
+  it("puts the usage guide right after the download action", () => {
     render(
       <ServiceDetailLayout
         doc={doc}
@@ -143,9 +145,6 @@ describe("ServiceDetailLayout", () => {
     })
     const guide = screen.getByText("어떻게 사용하나요?")
 
-    expect(
-      downloadAction.compareDocumentPosition(guide) &
-        Node.DOCUMENT_POSITION_FOLLOWING
-    ).toBeTruthy()
+    expect(downloadAction.nextElementSibling?.contains(guide)).toBe(true)
   })
 })

@@ -3,7 +3,7 @@ import type { ReactNode } from "react"
 // How to hand the copied or downloaded DESIGN.md to an AI. It names no tools -
 // the steps are told by where the reader works (a chat box or a project
 // folder), which stays true whatever the reader uses. Closed by default so the
-// sidebar still opens on the two buttons above it, and a native <details> like
+// sidebar still opens on the buttons above it, and a native <details> like
 // the token sections' `MoreDetails`, so it needs no client JS. The example
 // request has no copy button on purpose: a paste-this prompt is what the sidebar
 // dropped (ADR 0010).
@@ -15,7 +15,7 @@ export function UsageGuide() {
         style={{ borderColor: "var(--rule-strong)" }}
       >
         {/* Same height, padding, icon size and gap as the copy and download
-            buttons above, so the three labels start on one line. The chevron
+            buttons above, so all their labels start on one line. The chevron
             stays where they have an arrow: this opens, it does not act. */}
         <span className="inline-flex items-center gap-2.5">
           <BookIcon className="size-4" />

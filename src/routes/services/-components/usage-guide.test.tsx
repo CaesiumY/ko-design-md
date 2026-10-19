@@ -6,8 +6,8 @@ import { UsageGuide } from "./usage-guide"
 afterEach(cleanup)
 
 describe("UsageGuide", () => {
-  // Help a reader opens on purpose: the sidebar's first view stays the two
-  // buttons above it.
+  // Help a reader opens on purpose: the sidebar's first view stays the buttons
+  // above it.
   it("starts closed under its summary line", () => {
     const { container } = render(<UsageGuide />)
 
