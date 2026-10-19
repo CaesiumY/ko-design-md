@@ -49,9 +49,9 @@ function saveAs(raw: string, filename: string) {
 
 // The name the browser is asked to save the file under - a suggestion, so a
 // second download can land as `toss (1).md`. Exported so that everything which
-// shows or names the downloaded file uses this one name. The usage guide names
-// it too; the reader sees the real name when moving the file into a project, so
-// the guide stays one line rather than covering renames.
+// shows or names the downloaded file uses this one name. The usage guide
+// deliberately does not: it reads the same on every brand's page and asks the
+// reader for the name they saved, which also covers a renamed second download.
 export function downloadFilename(slug: string): string {
   return `${slug}.md`
 }

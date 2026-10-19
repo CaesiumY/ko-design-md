@@ -173,7 +173,7 @@ export function ServiceDetailLayout({
         </p>
         <CopyButton raw={doc.raw} slug={doc.frontmatter.slug} />
         <DownloadButton raw={doc.raw} slug={doc.frontmatter.slug} />
-        <UsageGuide slug={doc.frontmatter.slug} />
+        <UsageGuide />
         <div
           className="mt-6 border-t pt-5"
           style={{ borderColor: "var(--rule-strong)" }}

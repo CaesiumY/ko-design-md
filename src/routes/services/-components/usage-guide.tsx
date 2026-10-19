@@ -1,4 +1,3 @@
-import { downloadFilename } from "./download-button"
 import type { ReactNode } from "react"
 
 // How to hand the copied or downloaded DESIGN.md to an AI. It names no tools -
@@ -8,9 +7,7 @@ import type { ReactNode } from "react"
 // the token sections' `MoreDetails`, so it needs no client JS. The example
 // request has no copy button on purpose: a paste-this prompt is what the sidebar
 // dropped (ADR 0010).
-export function UsageGuide({ slug }: { slug: string }) {
-  const file = downloadFilename(slug)
-
+export function UsageGuide() {
   return (
     <details className="group/guide mt-4">
       <summary
@@ -50,22 +47,24 @@ export function UsageGuide({ slug }: { slug: string }) {
           AI 대화창에 요청 한 줄을 쓰고, 복사한 내용을 붙여 넣거나 파일을
           첨부합니다.
           {/* Darker than the step text: it is the line the reader types.
-              Unlike 2-B it says "DESIGN.md", not the downloaded name, on
-              purpose: in a chat the pasted text or attachment is already in
-              front of the model, so the words name the kind of document, not a
-              file to look up - a folder-working AI does look one up by name.
-              The sentence is a maintainer decision (the main scene is a chat
-              that already has a screen, like a canvas); keep it as written. */}
+              It says "DESIGN.md", not the downloaded name, on purpose: in a
+              chat the pasted text or attachment is already in front of the
+              model, so the words name the kind of document, not a file to
+              look up. The sentence is a maintainer decision (the main scene is
+              a chat that already has a screen, like a canvas); keep it as
+              written. */}
           <span className="mt-1.5 block text-foreground">
             예: 아래 DESIGN.md 대로 지금 화면을 다시 디자인해 줘. 기능은 그대로
             둬.
           </span>
         </Step>
+        {/* Names no file: the download is saved under the brand's name, so
+            "DESIGN.md" would send a folder-working AI to a file that is not
+            there, and the brand's name would make this step differ per page.
+            The reader gives the name they saved. */}
         <Step label="2-B">
-          프로젝트 폴더에서 작업하는 AI 라면, 다운로드한{" "}
-          <code className="font-mono">{file}</code> 를 프로젝트에 넣고 &ldquo;이{" "}
-          <code className="font-mono">{file}</code> 대로 구현해 줘&rdquo; 라고
-          요청합니다.
+          프로젝트 폴더에서 작업하는 AI 라면, 다운로드한 파일을 프로젝트에 넣고
+          파일 이름을 대며 구현해 달라고 요청합니다.
         </Step>
       </ol>
     </details>
