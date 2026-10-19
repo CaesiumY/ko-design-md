@@ -391,8 +391,9 @@
   .badge.brand   { background: var(--w-bg-brand-subtle); color: var(--w-fg-brand); }
   .badge.solid   { background: var(--w-bg-brand); color: var(--w-fg-on-brand); }
   .badge.danger  { background: color-mix(in oklab, var(--w-fg-danger) 16%, var(--w-bg-surface)); color: var(--w-fg-danger); }
-  .badge.success { background: color-mix(in oklab, var(--w-fg-success) 16%, var(--w-bg-surface)); color: var(--w-fg-success); }
-  .badge.warning { background: color-mix(in oklab, var(--w-fg-warning) 16%, var(--w-bg-surface)); color: var(--w-fg-warning); }
+  /* md 612 의 subtle 바탕 토큰 — color-mix 16% 대신(대비 2.37 → 2.53 · 3.14 → 3.42, 발행색끼리). 시맨틱 fg·subtle 토큰이 바뀌면 다시 잰다. */
+  .badge.success { background: var(--w-bg-success-subtle); color: var(--w-fg-success); }
+  .badge.warning { background: var(--w-bg-warning-subtle); color: var(--w-fg-warning); }
   .badge.neutral { background: var(--w-bg-muted); color: var(--w-fg-default); }
   .badge.dot::before { content:""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
   .badge.count { min-width: 18px; height: 18px; padding: 0 5px; justify-content: center; border-radius: 9999px; background: var(--w-red-700); color: oklch(1 0 0); font-size: 11px; }
@@ -452,8 +453,9 @@
   .walert b { font-size: 14px; font-weight: 600; line-height: 1.4; font-family: inherit; display: block; margin-bottom: 2px; }
   .walert.info    { background: var(--w-bg-brand-subtle);   color: var(--w-fg-brand); }
   .walert.danger  { background: color-mix(in oklab, var(--w-fg-danger) 12%, var(--w-bg-surface));  color: var(--w-fg-danger); }
-  .walert.success { background: color-mix(in oklab, var(--w-fg-success) 12%, var(--w-bg-surface)); color: var(--w-fg-success); }
-  .walert.warning { background: color-mix(in oklab, var(--w-fg-warning) 12%, var(--w-bg-surface)); color: var(--w-fg-warning); }
+  /* md 813 의 subtle 바탕 토큰 — color-mix 12% 대신(대비 2.46 → 2.53 · 3.27 → 3.42, 발행색끼리). 시맨틱 fg·subtle 토큰이 바뀌면 다시 잰다. */
+  .walert.success { background: var(--w-bg-success-subtle); color: var(--w-fg-success); }
+  .walert.warning { background: var(--w-bg-warning-subtle); color: var(--w-fg-warning); }
 
   .wscrim { background: oklch(0 0 0 / 0.5); border-radius: 16px; padding: 28px; display: flex; align-items: center; justify-content: center; min-height: 220px; }
   .wmodal { background: var(--w-bg-elevated); border-radius: 20px; width: 100%; max-width: 320px; padding: 24px 20px 18px; box-shadow: var(--w-shadow-4); }
@@ -689,7 +691,8 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .btn-lg { height: 48px; padding: 0 28px; font-size: 16px; border-radius: 12px; }
 [data-theme="dark"] .btn-xl { height: 56px; padding: 0 32px; font-size: 17px; border-radius: 14px; }
 [data-theme="dark"] .btn-primary { background: var(--w-bg-brand); color: var(--w-fg-on-brand); }
-[data-theme="dark"] .btn-primary:hover { background: var(--w-blue-700); }
+/* md 528·480 — hover 는 blue-900 으로 darken(라이트와 같음). blue-700 위 흰 글자는 3.98 이라 blue-900(6.56). */
+[data-theme="dark"] .btn-primary:hover { background: var(--w-blue-900); }
 [data-theme="dark"] .btn-secondary { background: transparent; border-color: var(--w-border-default); color: var(--w-fg-brand); }
 [data-theme="dark"] .btn-secondary:hover { background: var(--w-bg-muted); }
 [data-theme="dark"] .btn-tertiary { background: color-mix(in oklab, oklch(1 0 0) 10%, transparent); color: var(--w-fg-default); }
