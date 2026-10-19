@@ -418,6 +418,22 @@ describe("validateDraft — frontmatter", () => {
     expect(blocks).toContain("takedown-logo-declared")
   })
 
+  it("finds a takedown when the slug key is cut at a doubled colon", () => {
+    // `slug:: demo` is the unknown key `slug:` to YAML, so the entry's slug
+    // is its file name — still `demo`, still taken down, and the absent logo
+    // is the takedown itself. The cut key only warns (#589).
+    const raw = makeDraft()
+      .replace("logo: https://getdesign.kr/logos/demo.png\n", "")
+      .replace("slug: demo", "slug:: demo")
+    const opts = {
+      ...OPTS,
+      expectedLogoUrl: undefined,
+      logoTakedowns: new Set(["demo"]),
+    }
+    expect(rulesOf(raw, opts, "block")).toEqual([])
+    expect(rulesOf(raw, opts, "warn")).toContain("unknown-frontmatter-key")
+  })
+
   it("blocks a malformed logo URL even without an expected logo", () => {
     const raw = makeDraft().replace(
       "logo: https://getdesign.kr/logos/demo.png",
