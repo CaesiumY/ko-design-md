@@ -449,7 +449,7 @@ export const BASELINE_TABLE = `\
 | likelion | dark | non-text | 22 | 22 | 15 | 0 | 0 |
 | likelion | light | text | 94 | 196 | 38 | 0 | 0 |
 | likelion | light | non-text | 22 | 22 | 15 | 7 | 0 |
-| line-design-system | dark | text | 103 | 224 | 11 | 0 | 14 |
+| line-design-system | dark | text | 103 | 224 | 10 | 0 | 14 |
 | line-design-system | dark | non-text | 41 | 55 | 16 | 0 | 3 |
 | line-design-system | light | text | 103 | 224 | 43 | 12 | 14 |
 | line-design-system | light | non-text | 42 | 56 | 34 | 0 | 3 |
