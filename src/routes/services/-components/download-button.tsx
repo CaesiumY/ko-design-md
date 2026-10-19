@@ -48,8 +48,10 @@ function saveAs(raw: string, filename: string) {
 }
 
 // The name the browser is asked to save the file under - a suggestion, so a
-// second download can land as `toss (1).md`. Exported so that everything which
-// shows or names the downloaded file uses this one name.
+// second download can land as `toss (1).md`. Exported so that what saves the
+// file and what shows its saved name (the DESIGN.md tab's file label and copy
+// confirmation) use this one name. The usage guide deliberately calls the file
+// DESIGN.md instead - see usage-guide.tsx.
 export function downloadFilename(slug: string): string {
   return `${slug}.md`
 }
