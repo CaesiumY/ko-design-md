@@ -43,15 +43,14 @@ describe("UsageGuide", () => {
     expect(container.querySelector("button")).toBeNull()
   })
 
-  // The download is saved under the brand's name (`toss.md`), so "DESIGN.md"
-  // would point a folder-working AI at a file that is not there - and naming
-  // the brand's file made the step read differently on every page. The step
-  // names no file and asks the reader to give the name they saved.
-  it("asks for the saved file's name without naming a file itself", () => {
+  // The folder branch calls the file DESIGN.md, as the download button's label
+  // does, so the step reads the same on every brand's page - not by the
+  // brand's saved name (`toss.md`).
+  it("calls the downloaded file DESIGN.md in the project-folder step", () => {
     render(<UsageGuide />)
 
     const folderStep = screen.getAllByRole("listitem")[2].textContent
-    expect(folderStep).toContain("파일 이름을 대며")
-    expect(folderStep).not.toMatch(/\.md/)
+    expect(folderStep).toContain("다운로드한 DESIGN.md 를 프로젝트에 넣고")
+    expect(folderStep).toContain("“이 DESIGN.md 대로 구현해 줘”")
   })
 })

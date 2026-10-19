@@ -58,13 +58,15 @@ export function UsageGuide() {
             둬.
           </span>
         </Step>
-        {/* Names no file: the download is saved under the brand's name, so
-            "DESIGN.md" would send a folder-working AI to a file that is not
-            there, and the brand's name would make this step differ per page.
-            The reader gives the name they saved. */}
+        {/* Calls the file DESIGN.md, as the download button's label does,
+            although it is saved under the brand's name (`toss.md`): the step
+            then reads the same on every brand's page. A folder-working agent
+            told "이 DESIGN.md" still found the saved file in a sample project
+            (2026-10-20, two models - one asked to confirm first). A
+            maintainer decision; keep it as written. */}
         <Step label="2-B">
-          프로젝트 폴더에서 작업하는 AI 라면, 다운로드한 파일을 프로젝트에 넣고
-          파일 이름을 대며 구현해 달라고 요청합니다.
+          프로젝트 폴더에서 작업하는 AI 라면, 다운로드한 DESIGN.md 를 프로젝트에
+          넣고 &ldquo;이 DESIGN.md 대로 구현해 줘&rdquo; 라고 요청합니다.
         </Step>
       </ol>
     </details>
