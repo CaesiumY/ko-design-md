@@ -123,8 +123,8 @@ describe("ServiceDetailLayout", () => {
     expect(container.querySelector('a[href*="llms.txt"]')).toBeNull()
   })
 
-  // The paste guide explains the two buttons, so it sits right under them.
-  it("puts the paste guide after the download action", () => {
+  // The usage guide explains the two buttons, so it sits right under them.
+  it("puts the usage guide after the download action", () => {
     render(
       <ServiceDetailLayout
         doc={doc}

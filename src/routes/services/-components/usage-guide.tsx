@@ -8,7 +8,7 @@ import type { ReactNode } from "react"
 // the token sections' `MoreDetails`, so it needs no client JS. The example
 // request has no copy button on purpose: a paste-this prompt is what the sidebar
 // dropped (ADR 0010).
-export function PasteGuide({ slug }: { slug: string }) {
+export function UsageGuide({ slug }: { slug: string }) {
   const file = downloadFilename(slug)
 
   return (
