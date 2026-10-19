@@ -390,7 +390,7 @@
   .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; line-height: 1; font-family: inherit; padding: 5px 8px; border-radius: 6px; }
   .badge.brand   { background: var(--w-bg-brand-subtle); color: var(--w-fg-brand); }
   .badge.solid   { background: var(--w-bg-brand); color: var(--w-fg-on-brand); }
-  /* md 토큰 아님 · 파생색 — 몽타주 ContentBadge 는 accent 색 opacity[8] 을 바탕으로 깐다(wanteddev/montage-web packages/core/src/components/content-badge/style.ts). 그 비율만 빌려 oklab 16% 에서 sRGB 8% 로 옮겼다 — 몽타주의 positive·cautionary 색은 md 의 fg 와 달라(#595) 값은 파생색이다. 시맨틱 fg·surface 가 바뀌면 다시 잰다. */
+  /* md 토큰 아님 · 파생색 — 몽타주 ContentBadge 는 accent 색 opacity[8] 을 바탕으로 깐다(wanteddev/montage-web packages/core/src/components/content-badge/style.ts). 그 비율만 빌려 oklab 16% 에서 sRGB 8% 로 옮겼다 — 몽타주의 positive·cautionary·negative 색은 md 의 fg 와 달라(#595) 값은 파생색이다. 시맨틱 fg·surface 가 바뀌면 다시 잰다. */
   .badge.danger  { background: color-mix(in srgb, var(--w-fg-danger) 8%, var(--w-bg-surface)); color: var(--w-fg-danger); }
   .badge.success { background: color-mix(in srgb, var(--w-fg-success) 8%, var(--w-bg-surface)); color: var(--w-fg-success); }
   .badge.warning { background: color-mix(in srgb, var(--w-fg-warning) 8%, var(--w-bg-surface)); color: var(--w-fg-warning); }
