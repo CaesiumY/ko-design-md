@@ -1047,6 +1047,18 @@ describe("where the retired rules' inputs go (#589)", () => {
       [],
     ],
     [
+      "D1 an alias key that repeats a key's name",
+      DATE,
+      `holder: &k last_updated\n${DATE}\n? *k\n: "2026-01-01"`,
+      ["frontmatter-yaml-invalid"],
+    ],
+    [
+      "D2 a number key and its quoted spelling in one map",
+      COLOUR_ROW,
+      `${COLOUR_ROW}\n  500: oklch(0.5 0.1 10)\n  "500": oklch(0.6 0.1 10)`,
+      ["frontmatter-yaml-invalid"],
+    ],
+    [
       "N7 a quoted key with its value on the next line",
       "name: 데모",
       '"name":\n  데모',

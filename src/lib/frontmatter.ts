@@ -91,7 +91,7 @@ export interface FrontmatterError {
 export interface FrontmatterReadFailure {
   ok: false
   /** `missing`: no block at all — no opening or no closing `---`. `yaml`: the
-   *  block is there but does not read as a map of keys. */
+   *  block is there but does not read as a map of keys, each named once. */
   reason: "missing" | "yaml"
   errors: Array<FrontmatterError>
 }
@@ -308,6 +308,35 @@ function failure(
   return { ok: false, reason, errors: [{ message, line }] }
 }
 
+/**
+ * Every key that repeats a name an earlier key of the same map already has —
+ * the top level, or the rows of any map below it. YAML refuses two equal
+ * scalar keys itself, but not two keys that only read as the same name here:
+ * an alias key (`? *k`) that resolves to a key written beside it, or `500:`
+ * beside `"500":` (a number and a string to YAML, both `500` to `keyName`).
+ * Readers then disagree on the value: `findKey` and the token readers take the
+ * first, the site build, the validator's field checks and the linter (`toJS`)
+ * the last. Refusing the block keeps one value per name for all of them.
+ */
+function duplicateKeys(
+  entries: ReadonlyArray<FrontmatterKey>
+): Array<FrontmatterError> {
+  const out: Array<FrontmatterError> = []
+  const seen = new Map<string, number>()
+  for (const entry of entries) {
+    const first = seen.get(entry.key)
+    if (first === undefined) seen.set(entry.key, entry.line)
+    else {
+      out.push({
+        message: `the key \`${entry.key}\` is written twice in one map (line ${first} and line ${entry.line}) — an alias key (\`? *k\`) or a number and its quoted spelling (\`500:\` and \`"500":\`) name the same key here. YAML keeps the last value and the token readers the first, so they would publish different values. Write the key once.`,
+        line: entry.line,
+      })
+    }
+    out.push(...duplicateKeys(entriesOf(entry)))
+  }
+  return out
+}
+
 export function readFrontmatter(raw: string): FrontmatterResult {
   const split = splitFrontmatter(raw)
   if (!split) {
@@ -352,6 +381,14 @@ export function readFrontmatter(raw: string): FrontmatterResult {
         `YAML cannot expand this value within its alias limit (${why}). Write the value itself, with no anchors or aliases.`,
         reading.fileLine(keyNode.range?.[0] ?? 0)
       )
+    }
+  }
+  const duplicates = duplicateKeys(keys)
+  if (duplicates.length > 0) {
+    return {
+      ok: false,
+      reason: "yaml",
+      errors: duplicates.sort((a, b) => a.line - b.line),
     }
   }
   return { ok: true, keys }

@@ -300,6 +300,57 @@ describe("readFrontmatter", () => {
     ])
   })
 
+  it("fails, at its second line, an alias key that repeats a key's name", () => {
+    // YAML's own duplicate check compares scalar keys only, so `? *k` beside
+    // `last_updated:` reads. The date check would take the first date and the
+    // site the last; the block is refused instead.
+    const result = readFrontmatter(
+      doc(
+        "holder: &k last_updated",
+        "last_updated: 2026-10-20",
+        "? *k",
+        ": 2026-01-01"
+      )
+    )
+
+    expect(result).toEqual({
+      ok: false,
+      reason: "yaml",
+      errors: [{ message: expect.stringContaining("`last_updated`"), line: 4 }],
+    })
+  })
+
+  it("fails a number key and its quoted spelling in one map, at any depth", () => {
+    // `500` and `"500"` are two keys to YAML and one name to every reader here.
+    const top = readFrontmatter(
+      doc("colors:", "  500: oklch(0.5 0.1 10)", '  "500": oklch(0.6 0.1 10)')
+    )
+    const nested = readFrontmatter(
+      doc("typography:", "  body:", "    500: 16px", '    "500": 18px')
+    )
+    const flow = readFrontmatter(doc('rounded: { true: 4px, "true": 8px }'))
+
+    expect(top).toEqual({
+      ok: false,
+      reason: "yaml",
+      errors: [{ message: expect.stringContaining("`500`"), line: 4 }],
+    })
+    expect(nested.ok ? null : nested.errors).toEqual([
+      { message: expect.stringContaining("`500`"), line: 5 },
+    ])
+    expect(flow.ok ? null : flow.errors).toEqual([
+      { message: expect.stringContaining("`true`"), line: 2 },
+    ])
+  })
+
+  it("reads the same name in two different maps", () => {
+    const fm = readOk(
+      doc("spacing:", "  sm: 4px", "rounded:", "  sm: 4px", "  '050': 2px")
+    )
+
+    expect(fm.keys.map((k) => k.key)).toEqual(["spacing", "rounded"])
+  })
+
   it("fails, at line 1, a document with no frontmatter block", () => {
     const result = readFrontmatter("# Just a body\n")
 

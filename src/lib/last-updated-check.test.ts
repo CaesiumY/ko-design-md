@@ -275,6 +275,17 @@ describe("checkLastUpdated", () => {
       expect(r?.message).toMatch(/\bline \d+\b/)
     })
 
+    it("fails a second date written through an alias key rather than judging the first", () => {
+      // `? *k` names `last_updated` again: this check would read 2026-08-02
+      // and pass while the site published 2026-01-01.
+      const raw = withLine(
+        "holder: &k last_updated\nlast_updated: 2026-08-02\n? *k\n: 2026-01-01"
+      )
+      const r = judge(raw)
+      expect(r?.rule).toBe("unreadable-frontmatter")
+      expect(r?.message).toContain("`last_updated`")
+    })
+
     it("reads a CRLF checkout the same as LF, not as unreadable", () => {
       // Windows working trees can come out `w/crlf` (CLAUDE.md); the date is
       // still the date.
