@@ -49,6 +49,10 @@ export interface FrontmatterKey {
   /** The first and last file lines `source` spans. A block scalar's first is
    *  its `>`/`|` header line, the key's. Present with `source`. */
   sourceLines?: [number, number]
+  /** The column, from 0, where `source` starts on its first line. Present with
+   *  `source`. A flow map can hold the same text twice on one line, so this,
+   *  not a search of the line, says which is the value. */
+  sourceColumn?: number
   line: number
   /** Nothing written after the colon (`key:`). `key: ~` and `key: []` are
    *  written values, so not empty. */
@@ -181,6 +185,12 @@ class Reading {
     return this.lineCounter.linePos(offset).line + 1
   }
 
+  /** Column of an offset on its line, counted from 0. */
+  column(offset: number): number {
+    const { line } = this.lineCounter.linePos(offset)
+    return offset - this.lineCounter.lineStarts[line - 1]
+  }
+
   /** Last file line a node's content reaches, trailing comments excluded. */
   private endLine(node: Node | null, keyLine: number): number {
     if (node === null) return keyLine
@@ -264,7 +274,9 @@ class Reading {
     return {
       key: this.keyName(keyNode),
       value: valueNode?.toJS(this.doc) ?? null,
-      ...(source === undefined ? {} : { source, sourceLines }),
+      ...(source === undefined || !range
+        ? {}
+        : { source, sourceLines, sourceColumn: this.column(range[0]) }),
       line,
       empty,
       ...(comment === undefined ? {} : { comment }),

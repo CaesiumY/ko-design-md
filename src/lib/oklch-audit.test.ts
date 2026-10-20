@@ -240,6 +240,26 @@ describe("auditOklch — --fix", () => {
     expect(lines[5]).not.toBe(md.split("\n")[5])
   })
 
+  it("rewrites the judged pair's literal, not an earlier pair's same literal on its line", () => {
+    // Only `b` owns the comment, so only `b` is judged; `a` holds the same
+    // literal first on the line and must keep it.
+    const md = [
+      "---",
+      "colors: {",
+      "  a: oklch(0.500 0.100 200), b: oklch(0.500 0.100 200),  # #ff0000",
+      "}",
+      "---",
+      "",
+    ].join("\n")
+    const { text, findings, unfixed } = auditOklch(md, { fix: true })
+    expect(findings.map((f) => f.token)).toEqual(["b"])
+    expect(unfixed).toEqual([])
+    expect(text.split("\n")[2]).toMatch(
+      /^ {2}a: oklch\(0\.500 0\.100 200\), b: oklch\([\d.]+ [\d.]+ \d+\), {2}# #ff0000$/
+    )
+    expect(auditOklch(text, { fix: false }).findings).toEqual([])
+  })
+
   it("reports nothing unfixed when not fixing", () => {
     const md = doc(['split: "oklch(0.900', '    0.020 90)"   # #3182F6'])
     expect(auditOklch(md, { fix: false }).unfixed).toEqual([])

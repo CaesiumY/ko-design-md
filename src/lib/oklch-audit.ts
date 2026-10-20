@@ -99,19 +99,24 @@ function rebuildLiteral(
  * The literal starts the value, so it is found where the value starts, not on
  * the key's line: a block scalar's text starts on the line after its `>`/`|`
  * header, as the first thing on its first line with text; any other value
- * starts with it, after an opening quote and blanks, on the value's first line
- * — where its first occurrence is the
- * value, since a key cannot contain `oklch(` and a comment follows the value. A
- * value whose literal runs onto the next line, or is written with escapes, does
- * not start with the literal and is left alone.
+ * starts with it, after an opening quote and blanks, at the column the reading
+ * module gives — not where the line first holds the literal, since a flow map
+ * can write the same literal for an earlier pair on that line. A value whose
+ * literal runs onto the next line, or is written with escapes, does not start
+ * with the literal and is left alone.
  */
 function locate(
   parts: ReadonlyArray<string>,
   entry: FrontmatterKey,
   literal: string
 ): { index: number; at: number } | null {
-  const { source, sourceLines } = entry
-  if (source === undefined || sourceLines === undefined) return null
+  const { source, sourceLines, sourceColumn } = entry
+  if (
+    source === undefined ||
+    sourceLines === undefined ||
+    sourceColumn === undefined
+  )
+    return null
   if (/^[|>]/.test(source)) {
     // The first line after the header with text on it.
     for (let line = sourceLines[0] + 1; line <= sourceLines[1]; line++) {
@@ -126,8 +131,8 @@ function locate(
   const lead = /^["']?[ \t]*/.exec(source)?.[0].length ?? 0
   if (!source.startsWith(literal, lead)) return null
   const index = (sourceLines[0] - 1) * 2
-  const at = parts[index].indexOf(literal)
-  return at < 0 ? null : { index, at }
+  const at = sourceColumn + lead
+  return parts[index].startsWith(literal, at) ? { index, at } : null
 }
 
 interface Judgement {
