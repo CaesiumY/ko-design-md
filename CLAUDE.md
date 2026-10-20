@@ -88,9 +88,9 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행하고, 프리
     block 이다. 사이드카 `elevation` 은 이 맵만 읽고, 그림자 모양이 아닌 값(모션·z-index)
     은 걸러 내므로 그런 행은 `elevation-not-shadow` 로 block 한다 — 가장 흔한 경로는 bare hex
     색(` #0000001A` 는 YAML 주석이라 값이 색 없는 `0 1px 2px` 가 된다)이다. 스펙 모델에 elevation 범주는 없지만 린터는 이 키를 문제 삼지 않는다.
-  - **모션과 컴포넌트 스펙은 본문 ```` ```text ```` 펜스다.** 26개가 있다 — 모션 8개
-    (`## Elevation & Depth` 아래 6 · `## Motion` 2), `## Components` 의 스펙 16개, 그림자가
-    아닌 elevation 표 2개(bezier 용도 라벨 · class101 z-index). 독자에게는 값이 닿고 린터는
+  - **모션과 컴포넌트 스펙은 본문 ```` ```text ```` 펜스다.** 모션 값(`## Elevation & Depth`
+    · `## Motion` 아래), `## Components` 의 스펙, 그림자가 아닌 elevation 표(용도 라벨 ·
+    z-index · 필터), `## Spacing` 의 치수 표가 여기 산다. 독자에게는 값이 닿고 린터는
     읽지 않는다. 컴포넌트 스펙은 스펙의 `components:` 맵이 8속성만 담으므로 펜스가 남는다
     (아래 표준 절의 `components:` 항).
 - **색상 토큰 값은 OKLCH만.** frontmatter `colors:` 맵의 `name: oklch(...)` 형식. 브랜드 hex는
@@ -346,12 +346,12 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
     `primary` 만은 위 #381 형식의 브랜드 대표색 별칭으로 둘 수 있다(greeting 에서 텍스트 사다리 `primary`~`disabled`
     의 팔레트 중 하나를 가리키면 대조 테스트가 막는다 — 다른 항목에는 그 검사가 없다). 이 금지는 **본문 역할 표의 역할을
     그 이름으로 싣는 경우**에 한한다 — remember 의 `secondary` 처럼 브랜드가 그 이름으로 발행한 색은 해당하지 않는다.
-    기계로 막는 곳은 대조 테스트의 세 항목뿐이다.
+    기계로 막는 곳은 대조 테스트의 `CASES` 에 등록된 항목뿐이다.
   - **본문 표와 참조 행은 같은 대응의 두 벌이다.** 한쪽을 고치면 다른 쪽도 고친다.
-    `role-reference-rows.test.ts` 가 세 항목에서 둘을 양방향으로 대조한다. 참조 행은
+    `role-reference-rows.test.ts` 가 `CASES` 에 등록된 항목마다 둘을 양방향으로 대조한다. 참조 행은
     `primary` 별칭처럼 사이드카에 실리지 않으므로 `tokens:check` 로는 어긋남을 못 잡는다.
 
-  **적용 범위(설명).** 대조 테스트의 `CASES` 맵에는 위 세 항목의 대조 함수가 있다. 새 항목이 이 형식을 쓰면(참조 행의
+  **적용 범위(설명).** 대조 테스트의 `CASES` 맵에는 이 형식을 쓰는 항목마다 대조 함수가 있다. 새 항목이 이 형식을 쓰면(참조 행의
     키가 자기 `## Colors` 표의 역할 이름이면) 그 맵에 대조 함수를 더해야 한다 — **빠뜨리면 같은 파일의 가드가
     실패한다.** 가드는 탐지한 항목을 맵의 키와 비교하므로 슬러그만 올리고 대조를 빠뜨릴 수 없다. 가드가
     보는 모양은 `## Colors` 표 **첫 열의 백틱 스팬**이고, 키에서 `dark-` 접두 · `-dark` 접미와 codeit 식
