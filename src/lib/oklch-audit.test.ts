@@ -165,6 +165,27 @@ describe("auditOklch — --fix", () => {
     expect(auditOklch(text, { fix: false }).findings).toEqual([])
   })
 
+  it("judges and fixes a colour whose value opens with blanks, as the sidecar publishes it", () => {
+    const md = doc([
+      'quoted: "  oklch(0.900 0.020 90)"   # #3182F6',
+      "block: |   # #3182F6",
+      "",
+      "    oklch(0.900 0.020 90)",
+    ])
+    const { text, findings, unfixed, annotated } = auditOklch(md, {
+      fix: true,
+    })
+    expect(annotated).toBe(2)
+    expect(findings.map((f) => f.token)).toEqual(["quoted", "block"])
+    expect(unfixed).toEqual([])
+    const lines = text.split("\n")
+    expect(lines[3]).toMatch(
+      /^ {2}quoted: " {2}oklch\([\d.]+ [\d.]+ \d+\)" {3}# #3182F6$/
+    )
+    expect(lines[6]).toMatch(/^ {6}oklch\([\d.]+ [\d.]+ \d+\)$/)
+    expect(auditOklch(text, { fix: false }).findings).toEqual([])
+  })
+
   it("reports, and leaves as written, a value it cannot find whole on one line", () => {
     // The literal runs across two lines, so no one line holds it to rewrite.
     // A throw here once stopped the catalogue walk half-way through.

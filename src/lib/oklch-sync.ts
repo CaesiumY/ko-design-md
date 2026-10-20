@@ -1,4 +1,4 @@
-import { entriesOf } from "./frontmatter"
+import { entriesOf, tokenText } from "./frontmatter"
 import type { FrontmatterKey } from "./frontmatter"
 
 // Propagating a corrected OKLCH primitive into the places that copied it —
@@ -23,6 +23,10 @@ export const LEADING_OKLCH = /^oklch\([^)]*\)/
  *
  * Only maps are walked. A list item is not a named token, and the text of a
  * block scalar is one string value, not rows.
+ *
+ * `value` is the row's `tokenText` — the text the sidecar publishes — so a
+ * value the sidecar carries as a colour (`"  oklch(…)"`, a block scalar that
+ * opens on a blank line) is a value these readers judge.
  */
 export function oklchEntries(
   keys: ReadonlyArray<FrontmatterKey>
@@ -30,9 +34,9 @@ export function oklchEntries(
   const out: Array<FrontmatterKey & { value: string }> = []
   const walk = (rows: ReadonlyArray<FrontmatterKey>): void => {
     for (const row of rows) {
-      const { value } = row
+      const value = tokenText(row)
       if (
-        typeof value === "string" &&
+        value !== undefined &&
         value.startsWith("oklch(") &&
         TOKEN_NAME.test(row.key)
       ) {

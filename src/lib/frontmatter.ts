@@ -340,21 +340,19 @@ export function entriesOf(
 
 /**
  * A token value as text: what YAML reads for a string (quotes and escapes
- * undone, a block scalar folded, its closing line breaks dropped), and the
- * spelling as written for a number or boolean — YAML reads `lineHeight: 1.50`
- * as 1.5, and the sidecar carries `1.50`. Undefined for no value, a map or a
- * list.
+ * undone, a block scalar folded), trimmed — so `"  oklch(…)"` and a block
+ * scalar that opens on a blank line read as the `oklch(…)` they publish — and
+ * the spelling as written for a number or boolean — YAML reads
+ * `lineHeight: 1.50` as 1.5, and the sidecar carries `1.50`. Undefined for no
+ * value, a map or a list.
  *
- * Shared by the token extractor and the draft validator's token rules, so the
- * value a rule judges is the value the sidecar publishes.
+ * Shared by the token extractor, the draft validator's token rules and the
+ * colour readers (`oklchEntries`: the drift check and `audit:oklch`), so the
+ * value a rule judges or audits is the value the sidecar publishes.
  */
 export function tokenText(entry: FrontmatterKey): string | undefined {
   const { value, source } = entry
-  if (typeof value === "string") {
-    return source !== undefined && /^[|>]/.test(source)
-      ? value.replace(/\n+$/, "")
-      : value
-  }
+  if (typeof value === "string") return value.trim()
   if (typeof value === "number" || typeof value === "boolean") return source
   return undefined
 }

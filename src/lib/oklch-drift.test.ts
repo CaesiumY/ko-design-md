@@ -135,6 +135,20 @@ colors:
     expect(readDefinitions(doc).get("brand")).toBe("oklch(0.62 0.24 27)")
   })
 
+  it("reads a colour whose value opens with blanks, as the sidecar publishes it", () => {
+    const doc = `---
+colors:
+  quoted: "  oklch(0.62 0.24 27)"
+  block: |
+
+    oklch(0.5 0 0)
+---
+`
+    const defs = readDefinitions(doc)
+    expect(defs.get("quoted")).toBe("oklch(0.62 0.24 27)")
+    expect(defs.get("block")).toBe("oklch(0.5 0 0)")
+  })
+
   it("does not read a definition-shaped line inside a block scalar", () => {
     // The text inside `|` is one string value of `note`, not a row.
     const doc = `---

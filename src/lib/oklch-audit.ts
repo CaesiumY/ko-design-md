@@ -100,8 +100,9 @@ function rebuildLiteral(
  *
  * The literal starts the value, so it is found where the value starts, not on
  * the key's line: a block scalar's text starts on the line after its `>`/`|`
- * header, as the first thing on it; any other value starts with it, after an
- * opening quote, on the value's first line — where its first occurrence is the
+ * header, as the first thing on its first line with text; any other value
+ * starts with it, after an opening quote and blanks, on the value's first line
+ * — where its first occurrence is the
  * value, since a key cannot contain `oklch(` and a comment follows the value. A
  * value whose literal runs onto the next line, or is written with escapes, does
  * not start with the literal and is left alone.
@@ -114,16 +115,18 @@ function locate(
   const { source, sourceLines } = entry
   if (source === undefined || sourceLines === undefined) return null
   if (/^[|>]/.test(source)) {
-    const line = sourceLines[0] + 1
-    if (line > sourceLines[1]) return null
-    const index = (line - 1) * 2
-    const at = parts[index].search(/\S/)
-    return at >= 0 && parts[index].startsWith(literal, at)
-      ? { index, at }
-      : null
+    // The first line after the header with text on it.
+    for (let line = sourceLines[0] + 1; line <= sourceLines[1]; line++) {
+      const index = (line - 1) * 2
+      const at = parts[index].search(/\S/)
+      if (at < 0) continue
+      return parts[index].startsWith(literal, at) ? { index, at } : null
+    }
+    return null
   }
-  const quoted = /^["']/.test(source) ? 1 : 0
-  if (!source.startsWith(literal, quoted)) return null
+  // An opening quote, and the blanks `tokenText` trims inside it.
+  const lead = /^["']?[ \t]*/.exec(source)?.[0].length ?? 0
+  if (!source.startsWith(literal, lead)) return null
   const index = (sourceLines[0] - 1) * 2
   const at = parts[index].indexOf(literal)
   return at < 0 ? null : { index, at }

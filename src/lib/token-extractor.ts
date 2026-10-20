@@ -228,7 +228,7 @@ function clean<T extends Record<string, string | number | undefined>>(
  *  the skeleton — which annotates these lines — never lands in the sidecar as
  *  `56px   # 속성명은 …`. */
 function valueText(entry: FrontmatterKey): string | undefined {
-  return tokenText(entry)?.trim()
+  return tokenText(entry)
 }
 
 /** One frontmatter token map, read as RawLines so the existing parsers derive
