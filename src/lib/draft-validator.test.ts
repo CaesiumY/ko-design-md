@@ -2306,6 +2306,38 @@ describe("token rules read the frontmatter maps", () => {
     for (const fix of fixes) expect(fix).not.toMatch(/\{colors\.[ab]\}/)
   })
 
+  it("blocks a colour row with no value or a list for a value", () => {
+    // Neither is a string, so the sidecar drops the row while another colour
+    // keeps `unreadable-colors` quiet.
+    for (const row of [
+      "surface:",
+      "surface:   # 표면",
+      "surface: ~",
+      "surface: []",
+      "surface: [white]",
+    ]) {
+      expect(
+        rulesFor(
+          draftWithFrontmatterColors(["brand: oklch(0.62 0.19 258)", row])
+        ),
+        row
+      ).toContain("non-oklch-token-value")
+    }
+  })
+
+  it("leaves a row that aliases a map to its own rule", () => {
+    // `aliased-map-value` names it; a second block on the row would say the
+    // same thing, and call the map a list.
+    const rules = rulesFor(
+      draftWithFrontmatterColors([
+        "brand: oklch(0.62 0.19 258)",
+        "surface: *a",
+      ]).replace("colors:\n", "grid: &a\n  x: 1\ncolors:\n")
+    )
+    expect(rules).toContain("aliased-map-value")
+    expect(rules).not.toContain("non-oklch-token-value")
+  })
+
   it("blocks a value that only opens like a reference", () => {
     // Skipped as a reference, it was found by no reference check and dropped
     // by the sidecar.

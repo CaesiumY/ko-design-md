@@ -1108,7 +1108,20 @@ function scanFrontmatterTokens(read: FrontmatterRead): Array<ValidationIssue> {
         continue
       }
       const value = tokenText(row)
-      if (value === undefined) continue
+      if (value === undefined) {
+        // No value, or a list: the sidecar keeps neither, so in `colors:` the
+        // colour would vanish from it without a word (#597). A row aliasing a
+        // map is `aliased-map-value`'s to name.
+        if (colours && !isAliasedMap(row))
+          issues.push(
+            block(
+              "non-oklch-token-value",
+              "tokens",
+              `token \`${row.key}\` in \`colors:\` holds ${Array.isArray(row.value) ? "a list" : "no value"} — write one colour as \`oklch(L C H)\`, or point at another colour as \`"{colors.name}"\`.`
+            )
+          )
+        continue
+      }
       // A reference resolves elsewhere, so it is not judged as a literal. In
       // `colors:` only a whole one is: `"{not-a-reference"` would otherwise be
       // skipped here, found by no reference check and dropped by the sidecar.
