@@ -1176,6 +1176,28 @@ describe("where the retired rules' inputs go (#589)", () => {
       `typography:\n  title: { fontSize: 24px\n${broken}`,
       ["frontmatter-yaml-invalid"],
     ],
+    // Its colours half — the linter resolves a colour the extractor drops.
+    // Only an empty colour sidecar is blocked, as before: alias rows make the
+    // two counts differ in a sound entry, so one dropped colour beside a kept
+    // one (U11) passes.
+    [
+      "U9 a palette of named colours only",
+      COLOUR_ROW,
+      "  primary: white\n  surface: transparent",
+      ["unreadable-colors"],
+    ],
+    [
+      "U10 a colour written as an upper-case function",
+      COLOUR_ROW,
+      "  primary: OKLCH(0.62 0.19 258)",
+      ["unreadable-colors"],
+    ],
+    [
+      "U11 a named colour beside an OKLCH one",
+      COLOUR_ROW,
+      `${COLOUR_ROW}\n  surface: white`,
+      [],
+    ],
     // noncanonical-token-indent — now "no map under a token map".
     ["I1 a colour map indented four spaces", COLOUR_ROW, `  ${COLOUR_ROW}`, []],
     [
@@ -1585,6 +1607,22 @@ describe("validateDraft — official spec linter", () => {
   it("blocks a document the linter resolves no colours from", () => {
     const raw = makeDraft().replace(/colors:\n {2}primary: [^\n]*\n/, "")
     expect(rulesOf(raw, OPTS, "block")).toContain("spec-no-colors")
+  })
+
+  it("blocks colours the linter resolves and the sidecar would carry none of", () => {
+    // A named colour or an upper-case function reads as a colour to the
+    // linter, so `spec-no-colors` stays quiet, while the extractor keeps
+    // neither — the Tokens tab would ship with no colour.
+    const raw = makeDraft().replace(
+      /colors:\n {2}primary: [^\n]*\n/,
+      "colors:\n  primary: white\n  accent: RGB(49 130 246)\n"
+    )
+    const issues = validateDraft(raw, OPTS).issues
+    expect(issues.map((i) => i.rule)).not.toContain("spec-no-colors")
+    const fix = issues.find((i) => i.rule === "unreadable-colors")
+    expect(fix?.severity).toBe("block")
+    expect(fix?.fix).toContain("`primary`, `accent`")
+    expect(fix?.fix).toContain("`name: oklch(L C H)`")
   })
 
   it("blocks a document with no type scale", () => {
@@ -2710,6 +2748,26 @@ describe("the spec's components map takes only what standard tools read", () => 
     ).issues.find((i) => i.rule === "component-value-form")?.fix
     expect(fix).toContain("write one value")
   })
+
+  it.each([
+    [
+      ["    backgroundColor: |-", '      "{colors.primary}"'],
+      '"{colors.primary}"',
+    ],
+    [["    height: |", "      48px"], "48px"],
+  ])(
+    "sends a block-scalar value the linter reads as text to the key's line (%j)",
+    (rows, oneLine) => {
+      // The quotes inside `|-`, and the newline a bare `|` keeps, are part of
+      // the value — the one-line spelling is the fix.
+      const fix = validateDraft(
+        withComponents(["  card:", ...rows]),
+        OPTS
+      ).issues.find((i) => i.rule === "component-value-form")?.fix
+      expect(fix).toContain(`on the key's line as \``)
+      expect(fix).toContain(`: ${oneLine}\``)
+    }
+  )
 })
 
 describe("every component value the gate admits is one the linter reads", () => {
@@ -2789,8 +2847,36 @@ describe("every component value the gate admits is one the linter reads", () => 
     "height: 48px\t",
     `height: ${"1".repeat(62)}px`,
   ]
+  // A block scalar has no quotes of its own: its value is the exact string
+  // YAML yields, and that string is what the linter tests (#589 review). So a
+  // reference is bare braces inside it, and quotes written inside stay in the
+  // value — the linter reads `"{colors.primary}"` as text, not a reference.
+  // A `|` or `>` header without `-` keeps a trailing newline, text again.
+  const BLOCK_SCALAR_READ = [
+    ["backgroundColor: |-", "      {colors.primary}"],
+    ["backgroundColor: >-", "      {colors.primary}"],
+    ["typography: |-", "      {typography.body}"],
+    ["typography: >-", "      {typography.body}"],
+    ["height: |-", "      48px"],
+    ["height: >-", "      48px"],
+  ]
+  const BLOCK_SCALAR_TEXT = [
+    ["backgroundColor: |-", '      "{colors.primary}"'],
+    ["backgroundColor: >-", '      "{colors.primary}"'],
+    ["backgroundColor: |-", "      '{colors.primary}'"],
+    ["typography: |-", '      "{typography.body}"'],
+    ["typography: >-", '      "{typography.body}"'],
+    ["height: |-", '      "48px"'],
+    ["height: >-", '      "48px"'],
+    ["backgroundColor: |", "      {colors.primary}"],
+    ["backgroundColor: >", "      {colors.primary}"],
+    ["height: |", "      48px"],
+    ["height: >", "      48px"],
+  ]
   const ROWS: Array<string | Array<string>> = [
     ...WELL_FORMED,
+    ...BLOCK_SCALAR_READ,
+    ...BLOCK_SCALAR_TEXT,
     ["height: 48px", 'backgroundColor: "{colors.primary}"'],
     // Rows the row splitter does not match, beside one it does.
     ["height: 48px", "padding : 12px 16px"],
@@ -2834,6 +2920,25 @@ describe("every component value the gate admits is one the linter reads", () => 
   it.each(WELL_FORMED)("admits %s", (row) => {
     expect(admits(rowsOf(row))).toBe(true)
   })
+
+  const asCase = (rows: Array<string>) => ({
+    rows,
+    shown: rows.map((r) => r.trim()).join(" + "),
+  })
+
+  it.each(BLOCK_SCALAR_READ.map(asCase))(
+    "admits the block scalar $shown, a value the linter reads",
+    ({ rows }) => {
+      expect(admits(rowsOf(rows))).toBe(true)
+    }
+  )
+
+  it.each(BLOCK_SCALAR_TEXT.map(asCase))(
+    "blocks the block scalar $shown, which the linter reads as text",
+    ({ rows }) => {
+      expect(admits(rowsOf(rows))).toBe(false)
+    }
+  )
 
   it.each(ROWS.map((c) => ({ rows: rowsOf(c) })))(
     "$rows: admitted only if the linter reads every property",

@@ -21,6 +21,7 @@ import { KNOWN_SPEC_LIMITATIONS } from "./spec-limitations"
 import { LOGO_TAKEDOWNS } from "./logo-takedowns"
 import {
   TYPE_STYLE_PROPERTIES,
+  extractTokensFromMarkdown,
   isShadowValue,
   stylePropertyValue,
 } from "./token-extractor"
@@ -1334,14 +1335,53 @@ function rewrittenRow(prop: string, value: string): string {
     : `Write \`${prop}: …\` — and its value \`${value}\` is not one the map reads either: ${componentValueFix(value)}.`
 }
 
-/** A component property's value as written: the scalar's own text, so the
- *  quotes the admissible forms turn on are still there. A value YAML joined
- *  from several lines, or a block scalar, is judged as YAML reads it. */
-function componentText(prop: FrontmatterEntryRow): string {
+/** The linter's `isTokenReference`, as it tests the string YAML hands it. */
+const BARE_REFERENCE = /^\{[a-zA-Z0-9._-]+\}$/
+
+/**
+ * A component property's value, and whether a standard tool reads it.
+ *
+ * A one-line scalar is judged as written, so the quotes the reference form
+ * turns on are still there. A block scalar or a value YAML joined from several
+ * lines has no such text: it is judged as the exact string YAML yields, which
+ * is what the linter tests — so the quotes inside `|-` + `"{colors.x}"` are
+ * part of the value (raw text to the linter), and so is the newline a `|` or
+ * `>` header keeps at the end.
+ */
+function componentValue(prop: FrontmatterEntryRow): {
+  text: string
+  admitted: boolean
+  /** Not on the key's line as one scalar — a block scalar or a joined value. */
+  spread: boolean
+} {
   const { source, value } = prop
   if (source !== undefined && !/^[|>]/.test(source) && !source.includes("\n"))
-    return source
-  return typeof value === "string" ? value.trim() : String(value)
+    return {
+      text: source,
+      admitted: QUOTED_REFERENCE.test(source) || isComponentDimension(source),
+      spread: false,
+    }
+  const text = typeof value === "string" ? value : String(value)
+  return {
+    text,
+    admitted:
+      typeof value === "string" &&
+      (BARE_REFERENCE.test(value) || isComponentDimension(value)),
+    spread: true,
+  }
+}
+
+/** The fix for a spread value whose one-line spelling would be admitted:
+ *  `|-` + `"{colors.x}"` keeps its quotes as text, `|` + `48px` its newline. */
+function spreadValueFix(prop: string, value: string): string | undefined {
+  const bare = stripQuotes(value.trim())
+  const oneLine = BARE_REFERENCE.test(bare)
+    ? `"${bare}"`
+    : isComponentDimension(bare)
+      ? bare
+      : undefined
+  if (oneLine === undefined) return undefined
+  return `write it on the key's line as \`${prop}: ${oneLine}\` — in a block scalar (\`|\`/\`>\`) every character is the value, so quotes stay in it as text and a \`|\` or \`>\` header without \`-\` keeps a trailing newline, and standard tools read either as text, not a reference or a dimension`
 }
 
 /** `height:48px` — a property written with no space after its colon. */
@@ -1444,11 +1484,14 @@ function checkComponents(read: FrontmatterRead): Array<ValidationIssue> {
         )
         continue
       }
-      const authored = componentText(prop)
-      if (QUOTED_REFERENCE.test(authored) || isComponentDimension(authored))
-        continue
+      const { text, admitted, spread } = componentValue(prop)
+      if (admitted) continue
+      const shown = spread ? text.trim() : text
+      const fix =
+        (spread ? spreadValueFix(prop.key, text) : undefined) ??
+        componentValueFix(shown)
       form(
-        `component property \`${prop.key}: ${authored}\` is neither a quoted reference (\`"{colors.name}"\`) nor one ${COMPONENT_DIMENSION_UNITS.map((u) => `\`${u}\``).join("/")} dimension (\`48px\`), the two forms the spec's \`components:\` map reads — ${componentValueFix(authored)}.`
+        `component property \`${prop.key}: ${shown}\` is neither a quoted reference (\`"{colors.name}"\`) nor one ${COMPONENT_DIMENSION_UNITS.map((u) => `\`${u}\``).join("/")} dimension (\`48px\`), the two forms the spec's \`components:\` map reads — ${fix}.`
       )
     }
   }
@@ -2206,6 +2249,56 @@ const SCHEMA_KEY_RULES: ReadonlySet<string> = new Set([
 ])
 
 /**
+ * The colours the linter resolves, against the ones the sidecar would carry.
+ *
+ * `colors:` is a required map, and the extractor behind the Tokens tab and
+ * `use-design-md` keeps only a hex or a lower-case colour function. The
+ * linter also reads a named colour (`white`, `transparent`) and an upper-case
+ * function (`OKLCH(…)`, `RGB(…)`), which no other rule blocks — so a palette
+ * written only that way would ship an empty colour sidecar with every other
+ * gate green. Only the empty case: alias rows the linter resolves are left
+ * out of the sidecar by design, so the two counts differ in a sound entry.
+ *
+ * A map whose shape already blocks — a row holding a map
+ * (`noncanonical-token-indent`), or the map or a row written as an alias
+ * (`aliased-map-value`) — is that rule's to name: one cause, one message.
+ */
+function checkSidecarColours(
+  raw: string,
+  /** The names of the colours the linter resolved. */
+  names: ReadonlyArray<string>,
+  colours: FrontmatterKey | undefined
+): Array<ValidationIssue> {
+  if (
+    !colours ||
+    isAliasedMap(colours) ||
+    entriesOf(colours).some(
+      (row) => row.rows !== undefined || isAliasedMap(row)
+    )
+  )
+    return []
+  let carried: number
+  try {
+    carried = extractTokensFromMarkdown(raw).colors.length
+  } catch {
+    // A frontmatter the shared reader refuses is the read gate's to name.
+    return []
+  }
+  if (carried > 0) return []
+  const listed = `${names
+    .slice(0, 8)
+    .map((n) => `\`${n}\``)
+    .join(", ")}${names.length > 8 ? ", …" : ""}`
+  return [
+    block(
+      "unreadable-colors",
+      "tokens",
+      `The official linter resolves ${names.length} colour(s) in \`colors:\` (${listed}), but the token extractor keeps none of them — the sidecar behind the Tokens tab and \`use-design-md\` would ship with no colour. It keeps a lower-case colour function or a hex, not a named colour (\`white\`, \`transparent\`) or an upper-case function name (\`OKLCH(…)\`): write each colour as \`name: oklch(L C H)\`.`
+    ),
+  ]
+}
+
+/**
  * The official DESIGN.md linter's verdict, as draft issues (#421).
  *
  * The entry file is published verbatim as the standard DESIGN.md, and CI's
@@ -2218,7 +2311,8 @@ const SCHEMA_KEY_RULES: ReadonlySet<string> = new Set([
  */
 function checkSpecLint(
   raw: string,
-  slug: string | undefined
+  slug: string | undefined,
+  keys: ReadonlyArray<FrontmatterKey>
 ): Array<ValidationIssue> {
   let report: ReturnType<typeof lint>
   try {
@@ -2245,6 +2339,14 @@ function checkSpecLint(
       )
     )
   }
+  if (ds.colors.size > 0)
+    issues.push(
+      ...checkSidecarColours(
+        raw,
+        [...ds.colors.keys()],
+        findKey(keys, "colors")
+      )
+    )
   if (ds.typography.size === 0) {
     issues.push(
       block(
@@ -2346,7 +2448,7 @@ export function validateDraft(
     // linter cannot model) leaves the linter's model empty, and its verdict
     // would add wrong instructions to the real one.
     if (!componentIssues.some((i) => i.rule === "empty-component")) {
-      issues.push(...checkSpecLint(raw, entrySlug))
+      issues.push(...checkSpecLint(raw, entrySlug, read.keys))
     }
     issues.push(...checkTokenReferences(raw, read))
     issues.push(...scanFrontmatterTokens(read))
