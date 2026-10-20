@@ -273,7 +273,7 @@ function tokenLineIssues(
 ): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
   // A map-less `{word}` meant the colour `word`.
-  const target = /^\{([a-zA-Z0-9._-]+)\}$/.exec(value)?.[1] ?? value
+  const target = BARE_REFERENCE.test(value) ? value.slice(1, -1) : value
   const fix = colours
     ? !OKLCH_COLOUR.test(value) &&
       // Only a reference that would resolve and pass: to a row that holds a
@@ -990,7 +990,8 @@ function checkTokenReferences(
   // `{ease-out}` and wanted's `{typography}` were both this shape.
   const fenceNames = proseFenceKeys(raw)
   // A map-less `{word}` written as a `colors:` value is blocked by the OKLCH
-  // rule, which names the fix; a warning here would repeat it (#600).
+  // rule, which names the fix; a warning here would repeat it (#600). Matched
+  // by text, so the same `{word}` in prose is quiet until that row is fixed.
   const colorsKey = findKey(read.keys, "colors")
   const colourValues = new Set(
     colorsKey ? entriesOf(colorsKey).map((row) => tokenText(row)) : []
@@ -1134,8 +1135,7 @@ function scanFrontmatterTokens(read: FrontmatterRead): Array<ValidationIssue> {
       // A reference resolves elsewhere, so it is not judged as a literal. In
       // `colors:` only a whole one is: `"{not-a-reference"` would otherwise be
       // skipped here, found by no reference check and dropped by the sidecar.
-      if (colours ? DOTTED_REFERENCE.test(value) : value.startsWith("{"))
-        continue
+      if (colours ? isColourReference(value) : value.startsWith("{")) continue
       // The row as YAML read it, in the one shape the shared OKLCH↔hex rule
       // judges — the same string `audit:oklch` builds.
       const line = definitionRow(row.key, value, row.comment)
@@ -1279,9 +1279,13 @@ export const COMPONENT_DIMENSION_UNITS: ReadonlyArray<string> = [
  *  Copied because the package does not export it; the machine-gate contract
  *  test pins it to the pinned linter's own source. */
 export const BARE_REFERENCE = /^\{[a-zA-Z0-9._-]+\}$/
-// A reference that names its map: in `colors:` only this is skipped as one, as
-// the linter drops a map-less `{word}` there without a word (#600).
-const DOTTED_REFERENCE = /^\{[a-zA-Z0-9_-]+\.[a-zA-Z0-9._-]+\}$/
+/** A `colors:` value skipped as a reference: one into `colors:` itself, which
+ *  the reference check resolves. The linter drops any other reference there
+ *  without a word — a map-less `{word}`, `{fonts.x}`, an unknown `{zzz.x}` —
+ *  so those are the OKLCH rule's to block (#600). Built on `BARE_REFERENCE`. */
+function isColourReference(value: string): boolean {
+  return BARE_REFERENCE.test(value) && value.startsWith("{colors.")
+}
 /** A whole value that is one quoted reference, with the characters the
  *  linter's `isTokenReference` allows between the braces — `"{ colors.x }"` or
  *  `"{colors/x}"` it keeps as raw text. Whether it RESOLVES (a declared key,

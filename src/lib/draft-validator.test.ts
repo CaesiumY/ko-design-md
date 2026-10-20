@@ -2362,15 +2362,31 @@ describe("token rules read the frontmatter maps", () => {
     expect(issues[0].fix).toContain('`fill-brand: "{colors.brand}"`')
   })
 
-  it("leaves a dotted reference to the reference check", () => {
+  it("leaves a colour reference to the reference check", () => {
     const rules = rulesFor(
       draftWithFrontmatterColors([
         "brand: oklch(0.62 0.19 258)",
-        'surface: "{fonts.sans}"',
+        'surface: "{colors.nope}"',
       ])
     )
     expect(rules).toContain("unresolved-token-ref")
     expect(rules).not.toContain("non-oklch-token-value")
+  })
+
+  it("blocks a colour that points outside `colors:`", () => {
+    // The linter drops such a row without a word; a colour points into
+    // `colors:`. `{Palette.x}` is a namespace the reference check leaves.
+    for (const value of ['"{zzz.x}"', '"{fonts.sans}"', '"{Palette.x}"']) {
+      expect(
+        rulesFor(
+          draftWithFrontmatterColors([
+            "brand: oklch(0.62 0.19 258)",
+            `surface: ${value}`,
+          ])
+        ),
+        value
+      ).toContain("non-oklch-token-value")
+    }
   })
 
   it("blocks a value that only opens like a reference", () => {
