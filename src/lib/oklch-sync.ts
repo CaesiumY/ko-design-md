@@ -17,6 +17,22 @@ export const TOKEN_NAME = /^[a-z][\w-]*$/
 export const LEADING_OKLCH = /^oklch\([^)]*\)/
 
 /**
+ * A row's value as a colour definition: its `tokenText` when that opens with
+ * `oklch(` and the row's name is a token name, else undefined. The one
+ * selection every colour reader shares — `oklchEntries` below (the drift
+ * check, `audit:oklch`) and the contrast palette (`paletteOf`) — so a value the
+ * sidecar publishes as a colour is one each of them places.
+ */
+export function oklchValue(row: FrontmatterKey): string | undefined {
+  const value = tokenText(row)
+  return value !== undefined &&
+    value.startsWith("oklch(") &&
+    TOKEN_NAME.test(row.key)
+    ? value
+    : undefined
+}
+
+/**
  * Every frontmatter row whose value is written as an `oklch(…)` literal, at
  * any depth of map nesting, in document order — as `readFrontmatter` read it
  * (docs/adr/0011). Shared by the drift gate and `audit:oklch`, so the two
@@ -35,14 +51,8 @@ export function oklchEntries(
   const out: Array<FrontmatterKey & { value: string }> = []
   const walk = (rows: ReadonlyArray<FrontmatterKey>): void => {
     for (const row of rows) {
-      const value = tokenText(row)
-      if (
-        value !== undefined &&
-        value.startsWith("oklch(") &&
-        TOKEN_NAME.test(row.key)
-      ) {
-        out.push({ ...row, value })
-      }
+      const value = oklchValue(row)
+      if (value !== undefined) out.push({ ...row, value })
       if (row.rows) walk(entriesOf(row))
     }
   }

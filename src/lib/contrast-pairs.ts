@@ -30,7 +30,7 @@ import {
 } from "./oklch-convert"
 import { readFrontmatter } from "./frontmatter"
 import { readDefinitions } from "./oklch-drift"
-import { TOKEN_NAME } from "./oklch-sync"
+import { oklchValue } from "./oklch-sync"
 import type { FrontmatterRow } from "./frontmatter"
 import type { Rgb, Rgba } from "./contrast"
 import type { Oklab } from "./oklch-convert"
@@ -170,12 +170,9 @@ export function paletteOf(
         continue
       }
       const group = row.group ?? outer
-      if (
-        typeof row.value === "string" &&
-        row.value.startsWith("oklch(") &&
-        TOKEN_NAME.test(row.key) &&
-        !placeOf.has(row.key)
-      ) {
+      // The colour readers' one selection, so a value that opens with blanks
+      // (`"  oklch(…)"`) is placed as `readDefinitions` reads it.
+      if (oklchValue(row) !== undefined && !placeOf.has(row.key)) {
         placeOf.set(row.key, { map, group })
       }
       if (row.rows) walk(map, row.rows, group)
