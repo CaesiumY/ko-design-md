@@ -1142,7 +1142,7 @@ function checkTypographyStyles(read: FrontmatterRead): Array<ValidationIssue> {
         block(
           "typography-style-shape",
           "tokens",
-          `style \`${style.key}\` in \`typography:\` holds a nested map (\`${nested.key}:\`) — a style is one name with \`fontSize\` / \`fontWeight\` / \`lineHeight\` / \`letterSpacing\` one level below it, and the sidecar reads nothing deeper. Write each variant as its own flat style (\`${style.key}-${nested.key}:\`).`
+          `style \`${style.key}\` in \`typography:\` holds a nested map (\`${nested.key}:\`) — a style is one name with \`fontSize\` / \`fontWeight\` / \`lineHeight\` / \`letterSpacing\` one level below it, and the sidecar reads nothing deeper. To group styles, put a \`  ## ${style.key}\` comment row above them and write each one flat (\`${nested.key}:\`); a variant of a style is its own flat style (\`${style.key}-${nested.key}:\`).`
         )
       )
       continue

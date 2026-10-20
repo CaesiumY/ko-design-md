@@ -1303,6 +1303,22 @@ describe("where the retired rules' inputs go (#589)", () => {
       expect(fix).toContain("do not invent a size")
     }
   })
+
+  it("tells a nested style both ways out: a group comment row, or a flat variant (I4, I5)", () => {
+    const fixFor = (scale: string) =>
+      validateDraft(makeDraft().replace(TYPE_SCALE, scale), OPTS).issues.find(
+        (i) => i.rule === "typography-style-shape"
+      )?.fix
+    const group = fixFor(
+      "typography:\n  body:\n    fontSize: 16px\n  group:\n    caption:\n      fontSize: 12px\n"
+    )
+    expect(group).toContain("`  ## group` comment row")
+    expect(group).toContain("(`caption:`)")
+    const variant = fixFor(
+      "typography:\n  title:\n    fontSize: 24px\n    mobile:\n      fontSize: 20px\n"
+    )
+    expect(variant).toContain("(`title-mobile:`)")
+  })
 })
 
 // ── section structure rules ──────────────────────────────────────────────────
