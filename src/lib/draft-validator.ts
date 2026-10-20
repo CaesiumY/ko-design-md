@@ -269,25 +269,14 @@ function tokenLineIssues(
   colours?: ReadonlySet<string>
 ): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
-  if (colours && !LEADING_OKLCH.test(value)) {
-    issues.push(
-      block(
-        "non-oklch-token-value",
-        "tokens",
-        colours.has(value)
-          ? `token \`${name}: ${value}\` names another colour without a reference — write \`${name}: "{colors.${value}}"\`.`
-          : `token \`${name}: ${value}\` is not OKLCH — express color token values as \`oklch(L C H)\`, in lower case: the sidecar drops a named colour (\`white\`) or an upper-case function (\`RGB(…)\`) although the linter reads it. Keep the original as a trailing \`# ${value}\` comment if useful, and point at another colour as \`"{colors.name}"\`.`
-      )
-    )
-  } else if (!colours && NON_OKLCH_VALUE.test(value)) {
-    issues.push(
-      block(
-        "non-oklch-token-value",
-        "tokens",
-        `token \`${name}: ${value}\` is not OKLCH — express color token values as \`oklch(L C H)\` (keep the original as a trailing \`# ${value}\` comment if useful).`
-      )
-    )
-  }
+  const fix = colours
+    ? !LEADING_OKLCH.test(value) &&
+      (colours.has(value)
+        ? `token \`${name}: ${value}\` names another colour without a reference — write \`${name}: "{colors.${value}}"\`.`
+        : `token \`${name}: ${value}\` is not OKLCH — express color token values as \`oklch(L C H)\`, in lower case: the sidecar drops a named colour (\`white\`) or an upper-case function (\`RGB(…)\`) although the linter reads it. Keep the original as a trailing \`# ${value}\` comment if useful, and point at another colour as \`"{colors.name}"\`.`)
+    : NON_OKLCH_VALUE.test(value) &&
+      `token \`${name}: ${value}\` is not OKLCH — express color token values as \`oklch(L C H)\` (keep the original as a trailing \`# ${value}\` comment if useful).`
+  if (fix) issues.push(block("non-oklch-token-value", "tokens", fix))
   // Warn (not block): the hex comment is a reference value, and a brand may
   // legitimately annotate an approximation. But a real mismatch means a
   // consumer copying the token renders the wrong colour.
