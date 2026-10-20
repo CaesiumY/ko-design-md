@@ -481,7 +481,7 @@ export const BASELINE_TABLE = `\
 | teamsparta | dark | non-text | 12 | 14 | 3 | 0 | 3 |
 | teamsparta | light | text | 83 | 115 | 21 | 16 | 0 |
 | teamsparta | light | non-text | 12 | 14 | 3 | 0 | 3 |
-| toss | dark | text | 197 | 388 | 33 | 2 | 16 |
+| toss | dark | text | 197 | 388 | 25 | 2 | 16 |
 | toss | dark | non-text | 23 | 33 | 10 | 4 | 0 |
 | toss | light | text | 197 | 388 | 54 | 1 | 16 |
 | toss | light | non-text | 23 | 33 | 11 | 4 | 0 |

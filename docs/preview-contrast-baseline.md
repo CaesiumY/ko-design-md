@@ -287,7 +287,7 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | teamsparta | dark | non-text | 12 | 14 | 3 | 0 | 3 |
 | teamsparta | light | text | 83 | 115 | 21 | 16 | 0 |
 | teamsparta | light | non-text | 12 | 14 | 3 | 0 | 3 |
-| toss | dark | text | 197 | 388 | 33 | 2 | 16 |
+| toss | dark | text | 197 | 388 | 25 | 2 | 16 |
 | toss | dark | non-text | 23 | 33 | 10 | 4 | 0 |
 | toss | light | text | 197 | 388 | 54 | 1 | 16 |
 | toss | light | non-text | 23 | 33 | 11 | 4 | 0 |
@@ -507,7 +507,7 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 가를 수 있다 — `readDefinitions` 로 발행 OKLCH 를 읽고 측정 hex 를 `hexToOklab` 으로
 옮겨 `deltaE` 로 잰다. 그 절차가 `src/lib/contrast-pairs.ts` 이고, 이 절과 다음 절의 표는
 **CI 의 `contrast` 잡이 올린 아티팩트**에 그것을 돌린 출력이다 — 로컬 sweep 으로 답하면 기록된
-표가 서술하는 것과 다른 렌더에 대해 답하게 된다. 입력은 run `39303180224`(#594 의 head `88b6a1a` — wanted 프리뷰 수정을 실은 재집계)다.
+표가 서술하는 것과 다른 렌더에 대해 답하게 된다. 입력은 run `39402859064`(#596 의 head `d79f125` — toss 프리뷰 수정을 실은 재집계)다.
 그 뒤에 더해진 항목은 다음 재집계 때 두 표에 들어가고, 그전까지는 표에 없다(아래 「게이트는 이것을 어떻게 다루나」). 미달과
 경계선이 모두 0 인 항목도 표에 없다.
 
@@ -584,7 +584,7 @@ gs-shop 이 "라이브 실측 · 공식 문서와 불일치"·"공식 문서에 
 `observed-pair` 칸 없이)으로 같은 아티팩트를 돌리면 옛 표가 슬러그마다 그대로 나온다 — 이 스크립트가 그
 절차를 구현한다는 근거다.
 
-**결과: `borderline` 282행 중 177행이 두 색 모두 발행 토큰인 쌍이다.**
+**결과: `borderline` 313행 중 207행이 두 색 모두 발행 토큰인 쌍이다.**
 
 **이 수에는 두 방향의 오차가 있다.** 위 합성 대조는 반투명 토큰 **하나를** 불투명 색 하나 위에 얹은 경우만
 알아본다. 반투명 층이 둘 이상 겹친 배경, 프리뷰가 `opacity` 를 얹은 표면, 아래 색이 토큰이 아닌 합성은 **모든
@@ -614,6 +614,7 @@ gs-shop 이 "라이브 실측 · 공식 문서와 불일치"·"공식 문서에 
 | nol | text | 0 | 6 | 0 | 0 | 6 |
 | nol | non-text | 0 | 0 | 4 | 0 | 4 |
 | remember | text | 1 | 0 | 0 | 0 | 1 |
+| ridi | text | 30 | 0 | 0 | 1 | 31 |
 | samsung-one-ui | text | 2 | 0 | 0 | 0 | 2 |
 | samsung-one-ui | non-text | 0 | 0 | 7 | 0 | 7 |
 | seed-design | text | 2 | 0 | 0 | 0 | 2 |
@@ -658,7 +659,7 @@ warn 만)이라 갱신이 강제되지 않고, 두 분류표의 비텍스트 행
 아래 caveat 의 합성 오차와 같은 방향이다. 그 구간의 읽기 수와 0.005 에서의 `both-published` 는 위 명령이 표와 함께
 `readings …` 줄로 낸다.
 
-**결과: `fail` 1819행 중 1260행이 두 색 모두 발행 토큰인 쌍이다.**
+**결과: `fail` 1939행 중 1374행이 두 색 모두 발행 토큰인 쌍이다.**
 
 **이 수도 위 절과 같은 두 방향의 오차를 진다.** 겹친 반투명 층·`opacity` 가 낀 표면은 입력이 모두 발행
 토큰이어도 `one-token`·`no-token` 칸에 들어가고(발행 쌍을 적게 센다), 우연히 토큰이나 합성 근처에 떨어진
@@ -699,6 +700,8 @@ warn 만)이라 갱신이 강제되지 않고, 두 분류표의 비텍스트 행
 | nol | non-text | 2 | 1 | 3 | 0 | 6 |
 | remember | text | 47 | 0 | 0 | 0 | 47 |
 | remember | non-text | 3 | 0 | 0 | 0 | 3 |
+| ridi | text | 91 | 0 | 8 | 4 | 103 |
+| ridi | non-text | 23 | 0 | 2 | 0 | 25 |
 | samsung-one-ui | non-text | 0 | 0 | 13 | 14 | 27 |
 | seed-design | text | 70 | 0 | 0 | 0 | 70 |
 | seed-design | non-text | 31 | 0 | 0 | 0 | 31 |
@@ -706,7 +709,7 @@ warn 만)이라 갱신이 강제되지 않고, 두 분류표의 비텍스트 행
 | socar | non-text | 14 | 0 | 0 | 0 | 14 |
 | teamsparta | text | 25 | 0 | 7 | 1 | 33 |
 | teamsparta | non-text | 3 | 0 | 3 | 0 | 6 |
-| toss | text | 68 | 0 | 18 | 1 | 87 |
+| toss | text | 68 | 0 | 11 | 0 | 79 |
 | toss | non-text | 21 | 0 | 0 | 0 | 21 |
 | vapor-ui | text | 14 | 0 | 3 | 1 | 18 |
 | vapor-ui | non-text | 26 | 0 | 2 | 0 | 28 |
@@ -718,7 +721,7 @@ warn 만)이라 갱신이 강제되지 않고, 두 분류표의 비텍스트 행
 | zigbang | non-text | 33 | 0 | 0 | 0 | 33 |
 
 **어느 슬러그부터 (2026-10-20 재집계 기준).** 고칠 수 있는 칸(`one-token`·`no-token`)이 큰 쪽은
-텍스트에서는 bezier 이고 greeting · codeit, 그다음 wanted, toss · baemin 이 뒤따른다. 단 #550 의 슬러그 티켓으로 이미 처리한 슬러그는, 텍스트
+텍스트에서는 bezier 이고 greeting · codeit, 그다음 wanted · baemin · gs-retail 이 뒤따른다. 단 #550 의 슬러그 티켓으로 이미 처리한 슬러그는, 텍스트
 칸이 행마다 처리를 마친 뒤의 남은 행일 수 있다 — 무엇으로 처리했는지는 그 티켓의 PR 본문에 있고, 이 문단에는 쌓지
 않는다(비텍스트 칸은 그 티켓들이 따로 다루지 않았다 — 선언으로 함께 빠진 행은 있다). 비텍스트에서는 greeting 이 가장 크고, samsung-one-ui
 비텍스트는 미달 전부가 이 두 칸이다. 반대로 socar · zigbang · remember · kyobobook 텍스트 · seed-design 텍스트의 미달은 거의 전부

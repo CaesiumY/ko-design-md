@@ -189,7 +189,7 @@ describe("the published-pair tables against the recorded totals", () => {
   // a newly measured entry has rows; one whose new entries all have no rows
   // yet is not — the rerun step above is what keeps the list whole.
   const CLASSIFIED_RUN = {
-    run: "39303180224",
+    run: "39402859064",
     slugs: [
       "11st",
       "baemin",
@@ -207,6 +207,7 @@ describe("the published-pair tables against the recorded totals", () => {
       "line-design-system",
       "nol",
       "remember",
+      "ridi",
       "samsung-one-ui",
       "seed-design",
       "socar",
