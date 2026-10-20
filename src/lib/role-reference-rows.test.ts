@@ -2,7 +2,7 @@ import { readFileSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
-import { readFrontmatter } from "./frontmatter"
+import { findKey, readFrontmatter } from "./frontmatter"
 import { splitFrontmatter } from "./frontmatter-fence"
 
 // Three entries publish a semantic role layer twice (#435): as a Markdown table
@@ -38,7 +38,7 @@ function load(slug: string): {
   const body = splitFrontmatter(raw)?.body ?? ""
   const read = readFrontmatter(raw)
   const colors = (
-    read.ok ? (read.keys.find((k) => k.key === "colors")?.value ?? {}) : {}
+    read.ok ? (findKey(read.keys, "colors")?.value ?? {}) : {}
   ) as Record<string, string>
   const literals = new Set<string>()
   const refs = new Map<string, string>()

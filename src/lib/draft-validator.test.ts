@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest"
 import { lint } from "@google/design.md/linter"
 import { REQUIRED_SECTIONS, validateDraft } from "./draft-validator"
-import { readFrontmatter } from "./frontmatter"
+import { findKey, readFrontmatter } from "./frontmatter"
 import { FRONTMATTER_MAPS } from "./frontmatter-map-table"
 import type { FrontmatterMapTraits } from "./frontmatter-map-table"
 import type { DraftValidationOptions } from "./draft-validator"
@@ -591,7 +591,7 @@ describe("validateDraft — frontmatter", () => {
         const name = /^design_system_name: (["']?)(.*)\1$/.exec(offered)?.[2]
         const read = readFrontmatter(fixed)
         const written = read.ok
-          ? read.keys.find((k) => k.key === "design_system_name")?.value
+          ? findKey(read.keys, "design_system_name")?.value
           : undefined
         expect(written, value).toBe(name)
       }
