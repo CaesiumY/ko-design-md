@@ -19,7 +19,11 @@ import { definitionRow, matchDefinition } from "./oklch-sync"
 import { conflictingDefinitions } from "./oklch-drift"
 import { KNOWN_SPEC_LIMITATIONS } from "./spec-limitations"
 import { LOGO_TAKEDOWNS } from "./logo-takedowns"
-import { isShadowValue } from "./token-extractor"
+import {
+  TYPE_STYLE_PROPERTIES,
+  isShadowValue,
+  stylePropertyValue,
+} from "./token-extractor"
 import type {
   FrontmatterEntryRow,
   FrontmatterKey,
@@ -1113,14 +1117,10 @@ function scanFrontmatterTokens(read: FrontmatterRead): Array<ValidationIssue> {
   return issues
 }
 
-/** The style properties the token extractor reads — a style with none of
- *  them is not a type token in the sidecar. */
-const TYPE_STYLE_PROPERTIES: ReadonlyArray<string> = [
-  "fontSize",
-  "fontWeight",
-  "lineHeight",
-  "letterSpacing",
-]
+/** `TYPE_STYLE_PROPERTIES` as the rule's messages name them. */
+const STYLE_PROPERTY_NAMES = TYPE_STYLE_PROPERTIES.map((p) => `\`${p}\``).join(
+  " / "
+)
 
 /**
  * The `typography:` map's one allowed shape: every row is a style, a map that
@@ -1142,22 +1142,20 @@ function checkTypographyStyles(read: FrontmatterRead): Array<ValidationIssue> {
         block(
           "typography-style-shape",
           "tokens",
-          `style \`${style.key}\` in \`typography:\` holds a nested map (\`${nested.key}:\`) — a style is one name with \`fontSize\` / \`fontWeight\` / \`lineHeight\` / \`letterSpacing\` one level below it, and the sidecar reads nothing deeper. To group styles, put a \`  ## ${style.key}\` comment row above them and write each one flat (\`${nested.key}:\`); a variant of a style is its own flat style (\`${style.key}-${nested.key}:\`).`
+          `style \`${style.key}\` in \`typography:\` holds a nested map (\`${nested.key}:\`) — a style is one name with ${STYLE_PROPERTY_NAMES} one level below it, and the sidecar reads nothing deeper. To group styles, put a \`  ## ${style.key}\` comment row above them and write each one flat (\`${nested.key}:\`); a variant of a style is its own flat style (\`${style.key}-${nested.key}:\`).`
         )
       )
       continue
     }
     const sized = entriesOf(style).some(
-      (p) =>
-        TYPE_STYLE_PROPERTIES.includes(p.key) &&
-        (tokenText(p)?.trim() ?? "") !== ""
+      (p) => stylePropertyValue(p) !== undefined
     )
     if (sized) continue
     issues.push(
       block(
         "typography-style-shape",
         "tokens",
-        `style \`${style.key}\` in \`typography:\` sets none of \`fontSize\` / \`fontWeight\` / \`lineHeight\` / \`letterSpacing\`, so the sidecar carries no type token for it while the linter still counts it. A style is one name with those properties one level below it (four-space indent, as in the template). A font family published with no size belongs in the catalog-only \`fonts:\` map — do not invent a size to make it pass.`
+        `style \`${style.key}\` in \`typography:\` sets none of ${STYLE_PROPERTY_NAMES}, so the sidecar carries no type token for it while the linter still counts it. A style is one name with those properties one level below it (four-space indent, as in the template). A font family published with no size belongs in the catalog-only \`fonts:\` map — do not invent a size to make it pass.`
       )
     )
   }

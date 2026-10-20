@@ -263,6 +263,44 @@ function frontmatterRows(
   return out
 }
 
+/** Each typography style property the sidecar reads, and where its value
+ *  lands in the token. `fontFamily` is not one: the sidecar has never carried
+ *  it. */
+const STYLE_PROPERTY_FIELDS: Record<
+  string,
+  (token: TypeToken, raw: string) => void
+> = {
+  fontSize: (token, raw) => {
+    token.size = raw
+  },
+  fontWeight: (token, raw) => {
+    token.weight = parseWeight(raw)
+  },
+  lineHeight: (token, raw) => {
+    token.lineHeight = raw
+  },
+  letterSpacing: (token, raw) => {
+    token.tracking = raw
+  },
+}
+
+/** The style properties the sidecar reads — a style that sets none of them is
+ *  not a type token. The draft validator's `typography-style-shape` judges a
+ *  style by the same list. */
+export const TYPE_STYLE_PROPERTIES: ReadonlyArray<string> = Object.keys(
+  STYLE_PROPERTY_FIELDS
+)
+
+/** The text a style property row carries into the sidecar: undefined when the
+ *  row is not one of `TYPE_STYLE_PROPERTIES` or sets no value. An empty row
+ *  counts as unset, or `Number("")` would become a `fontWeight: 0` the spec
+ *  linter then waves through. */
+export function stylePropertyValue(row: FrontmatterKey): string | undefined {
+  if (!Object.hasOwn(STYLE_PROPERTY_FIELDS, row.key)) return undefined
+  const raw = valueText(row)
+  return raw === undefined || raw === "" ? undefined : raw
+}
+
 /** Typography is nested, so it is assembled here rather than from
  *  `frontmatterRows` — one style spans several lines. */
 function frontmatterTypography(keys: Array<FrontmatterKey>): Array<TypeToken> {
@@ -275,20 +313,13 @@ function frontmatterTypography(keys: Array<FrontmatterKey>): Array<TypeToken> {
     const current: TypeToken = { name: head.key }
     let read = false
     for (const row of properties) {
-      // An empty property row carries no value; without this guard
-      // `Number("")` becomes a `fontWeight: 0` the spec linter then waves
-      // through.
-      const raw = valueText(row)
-      if (raw === undefined || raw === "") continue
-      if (row.key === "fontSize") current.size = raw
-      else if (row.key === "fontWeight") current.weight = parseWeight(raw)
-      else if (row.key === "lineHeight") current.lineHeight = raw
-      else if (row.key === "letterSpacing") current.tracking = raw
-      else continue
-      read = true
       // fontFamily is repeated on every entry because the spec has no
       // cross-group reference; the sidecar has never carried it, so it is read
       // and discarded rather than added to the shape the site consumes.
+      const raw = stylePropertyValue(row)
+      if (raw === undefined) continue
+      STYLE_PROPERTY_FIELDS[row.key](current, raw)
+      read = true
     }
     // Only a style with a readable property becomes a token. Counting the head
     // made an unreadable shape — a nested group, a style with only
