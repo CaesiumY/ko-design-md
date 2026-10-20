@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs"
 import { join, posix } from "node:path"
-import { siteFrontmatterOf } from "./site-frontmatter"
+import { readSiteFrontmatter } from "./site-frontmatter"
 import type { SiteFrontmatter } from "./content-types"
 import type { Plugin } from "vite"
 
@@ -62,7 +62,7 @@ export function siteFrontmatterPlugin(): Plugin {
         this.addWatchFile(path)
         const globPath = `/services/${file}`
         try {
-          byPath[globPath] = siteFrontmatterOf(
+          byPath[globPath] = readSiteFrontmatter(
             globPath,
             readFileSync(path, "utf8"),
             (message) => this.warn(message)

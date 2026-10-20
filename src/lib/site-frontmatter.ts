@@ -101,10 +101,11 @@ export function siteValue(
   return value
 }
 
-/** One entry's consumed keys as the site takes them. Throws for a block YAML
- *  cannot read and for any value `siteValue` refuses; warns on a key the
- *  catalog does not know. `path` names the file in every message. */
-export function siteFrontmatterOf(
+/** Reads one entry's raw markdown and returns its consumed keys as the site
+ *  takes them. Throws for a block YAML cannot read and for any value
+ *  `siteValue` refuses; warns on a key the catalog does not know. `path` names
+ *  the file in every message. */
+export function readSiteFrontmatter(
   path: string,
   raw: string,
   warn: (message: string) => void
@@ -119,8 +120,9 @@ export function siteFrontmatterOf(
   return siteFrontmatterFrom(path, result, warn)
 }
 
-/** `siteFrontmatterOf` for a block already read — the draft validator reads
- *  once and asks this what the site would take. */
+/** `readSiteFrontmatter` from a block already read (`readFrontmatter`'s
+ *  result), so nothing is read twice — the draft validator reads once and asks
+ *  this what the site would take. */
 export function siteFrontmatterFrom(
   path: string,
   read: FrontmatterRead,
@@ -150,6 +152,6 @@ export function buildDoc(filePath: string, raw: string): ServiceDoc {
   return buildSiteDoc(
     filePath,
     raw,
-    siteFrontmatterOf(filePath, raw, (message) => console.warn(message))
+    readSiteFrontmatter(filePath, raw, (message) => console.warn(message))
   )
 }
