@@ -43,9 +43,7 @@ describe("UsageGuide", () => {
     expect(container.querySelector("button")).toBeNull()
   })
 
-  // The folder branch calls the file DESIGN.md, as the download button's label
-  // does, so the step reads the same on every brand's page - not by the
-  // brand's saved name (`toss.md`).
+  // Not by the brand's saved name - why is in usage-guide.tsx at step 2-B.
   it("calls the downloaded file DESIGN.md in the project-folder step", () => {
     render(<UsageGuide />)
 

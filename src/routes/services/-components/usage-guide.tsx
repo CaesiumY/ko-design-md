@@ -10,13 +10,13 @@ import type { ReactNode } from "react"
 export function UsageGuide() {
   return (
     <details className="group/guide mt-4">
-      <summary
-        className="flex h-10 w-full cursor-pointer list-none items-center justify-between gap-2 border px-4 text-sm font-medium tracking-tight text-muted-foreground transition-colors outline-none group-open/guide:text-foreground hover:bg-ghost hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring [&::-webkit-details-marker]:hidden"
-        style={{ borderColor: "var(--rule-strong)" }}
-      >
-        {/* Same height, padding, icon size and gap as the copy and download
-            buttons above, so all their labels start on one line. The chevron
-            stays where they have an arrow: this opens, it does not act. */}
+      <summary className="flex h-10 w-full cursor-pointer list-none items-center justify-between gap-2 border border-rule-strong px-4 text-sm font-medium tracking-tight text-muted-foreground transition-colors outline-none group-open/guide:text-foreground hover:bg-ghost hover:text-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
+        {/* Same height, padding, icon size and icon-to-label gap as the copy
+            and download buttons above, so all their labels start on one line,
+            and the same keyboard focus (the border turns the ring colour too -
+            so the border colour is a class, not an inline style that would
+            win). The chevron stays where they have an arrow: this opens, it
+            does not act. */}
         <span className="inline-flex items-center gap-2.5">
           <BookIcon className="size-4" />
           어떻게 사용하나요?
