@@ -69,6 +69,22 @@ describe("auditOklch — judging", () => {
     ])
   })
 
+  it("does not give a flow map's comment, and its hex, to each colour in it", () => {
+    // The `# #3182F6` ends the map, not `a` or `b`: judging either against it
+    // would "fix" a colour nobody annotated.
+    const md = [
+      "---",
+      "colors: { a: oklch(0.9 0.02 90), b: oklch(0.5 0 0) } # #3182F6",
+      "---",
+      "",
+    ].join("\n")
+    expect(auditOklch(md, { fix: true })).toMatchObject({
+      annotated: 0,
+      findings: [],
+      text: md,
+    })
+  })
+
   it("does not judge a definition-shaped line outside the frontmatter rows", () => {
     const md = [
       "---",

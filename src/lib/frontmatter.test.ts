@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { readFrontmatter } from "./frontmatter"
+import type { FrontmatterKey, FrontmatterRow } from "./frontmatter"
 
 /** A document whose frontmatter is `lines`, so a line index in the test reads
  *  as a file line: `---` is line 1 and `lines[0]` is line 2. */
@@ -115,6 +116,38 @@ describe("readFrontmatter", () => {
     // A map's last line is its last row's, and that comment stays the row's.
     expect(rows("typography")).toEqual([
       ["body", { fontSize: "16px" }, undefined, undefined],
+    ])
+  })
+
+  it("gives a comment ending a flow map's line to the map, not to each pair", () => {
+    // One line, several keys: the comment is the node's that ends right
+    // before it — here the map's, after its `}`.
+    const fm = readOk(
+      doc(
+        "colors: { a: oklch(0.5 0 0), b: oklch(0.6 0 0) } # #3182F6",
+        "typography:",
+        "  title: { fontSize: 24px, lineHeight: 1.3 } # hero",
+        "slug: toss"
+      )
+    )
+    const comments = (key: FrontmatterKey | FrontmatterRow | undefined) =>
+      key && "rows" in key
+        ? key.rows?.map((r) =>
+            r.kind === "entry" ? [r.key, r.comment] : r.label
+          )
+        : undefined
+    const colors = fm.keys.find((k) => k.key === "colors")
+    const title = fm.keys.find((k) => k.key === "typography")?.rows?.[0]
+
+    expect(colors?.comment).toBe("#3182F6")
+    expect(comments(colors)).toEqual([
+      ["a", undefined],
+      ["b", undefined],
+    ])
+    expect(title?.kind === "entry" ? title.comment : undefined).toBe("hero")
+    expect(comments(title)).toEqual([
+      ["fontSize", undefined],
+      ["lineHeight", undefined],
     ])
   })
 

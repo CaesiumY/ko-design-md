@@ -146,8 +146,12 @@ const GROUP_HEADING = /^##\s+(.*)$/
 
 /** One parsed block, with the line facts every reader needs. */
 class Reading {
-  /** Comments that END a line (something precedes them on it), by file line. */
-  private readonly lineEndComments = new Map<number, string>()
+  /** Comments that END a line (something precedes them on it), by file line,
+   *  with where they start in the block. */
+  private readonly lineEndComments = new Map<
+    number,
+    { offset: number; text: string }
+  >()
   /** Indented `## Label` comments alone on their line, by file line. */
   private readonly groupHeadings = new Map<number, string>()
 
@@ -160,7 +164,10 @@ class Reading {
       const { line, col } = lineCounter.linePos(offset)
       const before = text.slice(lineCounter.lineStarts[line - 1], offset)
       if (before.trim() !== "") {
-        this.lineEndComments.set(line + 1, source.replace(/^#/, "").trim())
+        this.lineEndComments.set(line + 1, {
+          offset,
+          text: source.replace(/^#/, "").trim(),
+        })
         continue
       }
       const heading = source.match(GROUP_HEADING)
@@ -211,6 +218,32 @@ class Reading {
     return String(keyNode.value)
   }
 
+  /**
+   * The comment ending `line`, if it is this key's. One line can hold several
+   * keys (`colors: { a: …, b: … } # note`), and the comment is the node's that
+   * ends right before it: the key's when only blanks separate its value's end
+   * from the `#`, or when its value runs past the comment — a block scalar's
+   * header comment, `key: # note` above a value, a map whose rows follow. Not
+   * a pair's inside a flow map, which a `,` or `}` separates from it.
+   */
+  private ownComment(
+    line: number,
+    keyNode: Node,
+    valueNode: Node | null
+  ): string | undefined {
+    const comment = this.lineEndComments.get(line)
+    if (!comment) return undefined
+    const end = valueNode?.range?.[1]
+    if (end === undefined || end > comment.offset) {
+      return (keyNode.range?.[1] ?? 0) <= comment.offset
+        ? comment.text
+        : undefined
+    }
+    return this.text.slice(end, comment.offset).trim() === ""
+      ? comment.text
+      : undefined
+  }
+
   entry(keyNode: Node, valueNode: Node | null): FrontmatterKey {
     const line = this.keyLine(keyNode)
     const empty = isEmpty(valueNode)
@@ -222,8 +255,10 @@ class Reading {
     // Only a scalar's last line: a map's is its last row's, whose comment is
     // that row's own.
     const comment =
-      this.lineEndComments.get(line) ??
-      (sourceLines ? this.lineEndComments.get(sourceLines[1]) : undefined)
+      this.ownComment(line, keyNode, valueNode) ??
+      (sourceLines
+        ? this.ownComment(sourceLines[1], keyNode, valueNode)
+        : undefined)
     return {
       key: this.keyName(keyNode),
       value: valueNode?.toJS(this.doc) ?? null,

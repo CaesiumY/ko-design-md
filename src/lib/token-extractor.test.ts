@@ -733,6 +733,20 @@ describe("reads the token maps as YAML reads them (ADR 0011)", () => {
     ])
   })
 
+  it("gives a one-line map's comment to the map, not to each token in it", () => {
+    const body = fm(
+      "colors: { a: oklch(0.62 0.19 258), b: oklch(0.5 0 0) } # #3182F6",
+      "typography:",
+      "  title: { fontSize: 24px } # hero"
+    )
+    const tokens = extractTokensFromMarkdown(body)
+    expect(tokens.colors).toEqual([
+      { name: "a", value: "oklch(0.62 0.19 258)" },
+      { name: "b", value: "oklch(0.5 0 0)" },
+    ])
+    expect(tokens.typography[0]).toMatchObject({ name: "title", note: "hero" })
+  })
+
   it("reads a quoted key as its name", () => {
     const body = fm("colors:", '  "brand": oklch(0.62 0.19 258)')
     expect(extractTokensFromMarkdown(body).colors[0]?.name).toBe("brand")
