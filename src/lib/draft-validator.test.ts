@@ -2282,6 +2282,17 @@ describe("token rules read the frontmatter maps", () => {
     expect(issue?.fix).toContain("`oklch(L C H)`")
   })
 
+  it("does not offer a reference the reference check would refuse", () => {
+    // A Korean key is valid YAML, but `{colors.빨강}` is not reference-shaped,
+    // so following that hint would block the row again.
+    const issue = validateDraft(
+      draftWithFrontmatterColors(["빨강: oklch(0.6 0.2 25)", "accent: 빨강"]),
+      OPTS
+    ).issues.find((i) => i.rule === "non-oklch-token-value")
+    expect(issue?.fix).not.toContain("{colors.빨강}")
+    expect(issue?.fix).toContain("`oklch(L C H)`")
+  })
+
   it("blocks a value that only opens like a reference", () => {
     // Skipped as a reference, it was found by no reference check and dropped
     // by the sidecar.

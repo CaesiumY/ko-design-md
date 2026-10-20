@@ -274,8 +274,12 @@ function tokenLineIssues(
   const issues: Array<ValidationIssue> = []
   const fix = colours
     ? !OKLCH_COLOUR.test(value) &&
-      // Not its own name: `brand: "{colors.brand}"` would pass and never resolve.
-      (colours.has(value) && value !== name
+      // Only a reference that would pass: not its own name (`brand:
+      // "{colors.brand}"` never resolves), and reference-shaped — a key such
+      // as `빨강` is valid YAML, but `{colors.빨강}` is blocked again.
+      (colours.has(value) &&
+      value !== name &&
+      BARE_REFERENCE.test(`{colors.${value}}`)
         ? `token \`${name}: ${value}\` names another colour without a reference — write \`${name}: "{colors.${value}}"\`.`
         : `token \`${name}: ${value}\` is not OKLCH — express color token values as \`oklch(L C H)\`, in lower case: the sidecar drops a named colour (\`white\`) or an upper-case function (\`RGB(…)\`) although the linter reads it. Keep the original as a trailing \`# ${value}\` comment if useful, and point at another colour as \`"{colors.name}"\`.`)
     : NON_OKLCH_VALUE.test(value) &&
