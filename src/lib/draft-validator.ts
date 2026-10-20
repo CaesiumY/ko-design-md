@@ -86,8 +86,10 @@ export const REQUIRED_SECTIONS = [
 const LOGO_URL_FORM =
   /^https:\/\/getdesign\.kr\/logos\/[a-z0-9.-]+\.(?:svg|png|webp|avif)$/
 const SLUG_FORM = /^[a-z0-9-]+$/
-// Colour notations rejected in the values of the token maps that are not
-// `colors:` — a colour there is a mistake in any case. In `colors:` itself
+// A value that opens with a hex or an `rgb(`/`hsl(` colour is not OKLCH. Judged
+// for the token maps other than `colors:` and for a body yaml fence row that
+// survives (the fence itself is `token-fence`'s); only the value's start is
+// read, so `elevation:`'s `0 1px 2px oklch(…)` is not caught. In `colors:`
 // anything but `oklch(…)` is rejected (`tokenLineIssues`).
 const NON_OKLCH_VALUE = /^(?:#[0-9a-f]{3,8}\b|(?:rgba?|hsla?)\s*\()/i
 // A `colors:` value: one `oklch(…)` and nothing after it — the sidecar carries
