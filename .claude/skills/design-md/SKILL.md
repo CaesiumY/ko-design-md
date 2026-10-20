@@ -254,7 +254,7 @@ output_path: {cache_dir}/review-{N}.json
 Follow your agent definition. Write exactly one file at output_path.
 
 The machine report has already verified the deterministically checkable items
-(frontmatter read and field values, section presence/order, hex/rgba token scan,
+(frontmatter read and field values, section presence/order, OKLCH-only token scan,
 [src:N]/References integrity, expected logo). Do not re-verify those — spend
 your review on judgment items: Brand fidelity semantics against research.md,
 Voice/tone, and cross-section token contradictions.
