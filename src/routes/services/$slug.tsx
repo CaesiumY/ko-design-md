@@ -7,7 +7,7 @@ import {
   DetailTabsPanel,
   DetailTabsTab,
 } from "./-components/detail-tabs"
-import { DownloadButton } from "./-components/download-button"
+import { DownloadButton, downloadFilename } from "./-components/download-button"
 import { InlineCopyButton } from "./-components/inline-copy-button"
 import { PreviewFrame, PreviewUnavailable } from "./-components/preview-frame"
 import { PreviewThemeToggle } from "./-components/preview-theme-toggle"
@@ -15,6 +15,7 @@ import { RawDesignMd } from "./-components/raw-design-md"
 import { ServiceMeta } from "./-components/service-meta"
 import { TokenBadge } from "./-components/token-badge"
 import { TokenCardSection } from "./-components/token-card-section"
+import { UsageGuide } from "./-components/usage-guide"
 import type { PreviewTheme } from "./-components/preview-theme-toggle"
 import type { ServiceDoc } from "@/lib/content-types"
 import { getServiceBySlug, hasPreview } from "@/lib/content-collection"
@@ -77,7 +78,7 @@ function ServiceDetailPage() {
   const { doc, shikiHtml, previewAvailable } = Route.useLoaderData()
   const search = Route.useSearch()
   const navigate = Route.useNavigate()
-  const filename = `${doc.frontmatter.slug}.md`
+  const filename = downloadFilename(doc.frontmatter.slug)
   const activeTab = parseTab(search.tab) ?? "preview"
 
   // Preview theme is independent of the site theme (which is locked to light).
@@ -172,6 +173,7 @@ export function ServiceDetailLayout({
         </p>
         <CopyButton raw={doc.raw} slug={doc.frontmatter.slug} />
         <DownloadButton raw={doc.raw} slug={doc.frontmatter.slug} />
+        <UsageGuide />
         <div
           className="mt-6 border-t pt-5"
           style={{ borderColor: "var(--rule-strong)" }}
