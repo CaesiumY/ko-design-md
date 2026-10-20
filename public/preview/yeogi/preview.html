@@ -194,8 +194,10 @@
         --marker-surface: oklch(0.285 0.008 40);
         --marker-surface-viewed: oklch(0.235 0.006 40);
         --marker-ink: oklch(0.97 0.003 60);
-        --marker-ink-viewed: oklch(0.64 0.004 60);
-        --marker-ink-sold: oklch(0.55 0.004 60);
+        /* md 토큰 아님 · 파생색 — 다크 열람·랭킹 하위 마커 글자를 L 0.64 → 0.67 로 밝혔다(랭킹 하위 마커 위 4.29 → 4.81, 열람 마커 위 4.99 → 5.60). --marker-surface · --marker-surface-viewed 다크 값이 바뀌면 다시 잰다. */
+        --marker-ink-viewed: oklch(0.67 0.004 60);
+        /* md 토큰 아님 · 파생색 — 다크 판매 완료 마커 글자를 L 0.55 → 0.63 으로 밝혔다(3.44 → 4.79). 열람 마커 글자(0.67)보다는 어둡게 둔다. --marker-surface-viewed 다크 값이 바뀌면 다시 잰다. */
+        --marker-ink-sold: oklch(0.63 0.004 60);
         --marker-border: oklch(0.42 0.008 40);
         --marker-border-sold: oklch(0.36 0.006 40);
         --marker-selected: oklch(0.7 0.16 252);
@@ -210,7 +212,8 @@
         --mem-grad-b: oklch(0.5 0.2 282);
         --tier1-bg: color-mix(in oklab, var(--yg-violet-400) 30%, var(--card));
         --tier1-ink: oklch(0.85 0.09 290);
-        --tier2-bg: oklch(0.64 0.21 285);
+        /* md 토큰 아님 · 파생색 — 다크 멤버십 2단계 배지 바탕을 같은 색상각·채도 비율로 L 0.64 → 0.565 로 어둡게 했다(흰 글자 3.54 → 4.72). violet-600 되돌림은 4.52 라 경계선이다. --on-accent 가 바뀌면 다시 잰다. */
+        --tier2-bg: oklch(0.565 0.185 285);
         --tier3-bg: oklch(0.55 0.205 283);
 
         --field-bg: oklch(0.2 0.006 35);
@@ -1293,8 +1296,10 @@
         --marker-surface: oklch(0.285 0.008 40);
         --marker-surface-viewed: oklch(0.235 0.006 40);
         --marker-ink: oklch(0.97 0.003 60);
-        --marker-ink-viewed: oklch(0.64 0.004 60);
-        --marker-ink-sold: oklch(0.55 0.004 60);
+        /* md 토큰 아님 · 파생색 — 다크 열람·랭킹 하위 마커 글자를 L 0.64 → 0.67 로 밝혔다(랭킹 하위 마커 위 4.29 → 4.81, 열람 마커 위 4.99 → 5.60). --marker-surface · --marker-surface-viewed 다크 값이 바뀌면 다시 잰다. */
+        --marker-ink-viewed: oklch(0.67 0.004 60);
+        /* md 토큰 아님 · 파생색 — 다크 판매 완료 마커 글자를 L 0.55 → 0.63 으로 밝혔다(3.44 → 4.79). 열람 마커 글자(0.67)보다는 어둡게 둔다. --marker-surface-viewed 다크 값이 바뀌면 다시 잰다. */
+        --marker-ink-sold: oklch(0.63 0.004 60);
         --marker-border: oklch(0.42 0.008 40);
         --marker-border-sold: oklch(0.36 0.006 40);
         --marker-selected: oklch(0.7 0.16 252);
@@ -1309,7 +1314,8 @@
         --mem-grad-b: oklch(0.5 0.2 282);
         --tier1-bg: color-mix(in oklab, var(--yg-violet-400) 30%, var(--card));
         --tier1-ink: oklch(0.85 0.09 290);
-        --tier2-bg: oklch(0.64 0.21 285);
+        /* md 토큰 아님 · 파생색 — 다크 멤버십 2단계 배지 바탕을 같은 색상각·채도 비율로 L 0.64 → 0.565 로 어둡게 했다(흰 글자 3.54 → 4.72). violet-600 되돌림은 4.52 라 경계선이다. --on-accent 가 바뀌면 다시 잰다. */
+        --tier2-bg: oklch(0.565 0.185 285);
         --tier3-bg: oklch(0.55 0.205 283);
 
         --field-bg: oklch(0.2 0.006 35);
