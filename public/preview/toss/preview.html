@@ -1719,8 +1719,10 @@
     font-weight: 700;
     letter-spacing: -0.005em;
   }
-[data-theme="dark"] .b-red { background: oklch(0.320 0.090 18); color: var(--tds-red-500); }
-[data-theme="dark"] .b-green { background: oklch(0.300 0.070 154); color: var(--tds-green-500); }
+/* md 토큰 아님 · 파생색 — 다크 wash 바탕. md 의 badge 절은 라이트 wash 만 적어, 다크 값은 프리뷰가 만든 것이다. 같은 색상각·
+   채도 비율로 어둡게 옮겨 빨강 3.52 → 4.71, 초록 3.85 → 4.71. 다크 red-500·green-500 이 바뀌면 다시 잰다. */
+[data-theme="dark"] .b-red { background: oklch(0.220 0.062 18); color: var(--tds-red-500); }
+[data-theme="dark"] .b-green { background: oklch(0.240 0.056 154); color: var(--tds-green-500); }
 [data-theme="dark"] .b-blue { background: var(--tds-blue-50); color: var(--tds-blue-500); }
 [data-theme="dark"] .b-grey { background: var(--tds-grey-100); color: var(--tds-fg-secondary); }
 /* === INPUT === */
@@ -1739,7 +1741,10 @@
     background: var(--tds-grey-100);
     letter-spacing: -0.005em;
   }
-[data-theme="dark"] .input::placeholder { color: var(--tds-fg-quaternary); }
+/* md 토큰 아님 · 파생색 — 다크 안내 문구. md 는 fg-quaternary(placeholder)를 라이트로만 발행하고, 다크의 흰색 28% 는
+   프리뷰가 만든 값이라 grey-100 위 2.45 였다. 흰색 50% 로 옮겨 4.66(측정). 비활성 글자는 변수(28%)를 그대로 쓴다.
+   다크 grey-100 이나 입력 바탕이 바뀌면 다시 잰다. */
+[data-theme="dark"] .input::placeholder { color: oklch(1 0 0 / 0.50); }
 [data-theme="dark"] .input.focused {
     background: var(--tds-near-black);
     border: 1.5px solid var(--tds-blue-500);
@@ -1969,7 +1974,9 @@
     color: var(--tds-fg-primary);
     letter-spacing: -0.005em;
   }
-[data-theme="dark"] .search-field input::placeholder { color: var(--tds-fg-quaternary); }
+/* md 토큰 아님 · 파생색 — 위 .input::placeholder 와 같은 다크 안내 문구 값(흰색 50%, grey-100 위 4.66).
+   다크 grey-100 이나 검색창 바탕이 바뀌면 다시 잰다. */
+[data-theme="dark"] .search-field input::placeholder { color: oklch(1 0 0 / 0.50); }
 [data-theme="dark"] .search-field.focus {
     background: var(--tds-near-black);
     border: 1.5px solid var(--tds-blue-500);
@@ -1980,7 +1987,9 @@
     width: 20px; height: 20px;
     border-radius: 999px;
     background: var(--tds-grey-400);
-    color: var(--tds-near-black);
+    /* 결정 · 발행 토큰 교체 — 메인테이너 결정 (다). 다크만 라이트 .clear-x 의 흰 글자를 파생 near-black 으로 덮어써
+       3.37 이었다. 라이트와 같은 white 로 — dark-grey-400 위 6.02. 다크 grey-400 이 바뀌면 다시 잰다. */
+    color: var(--tds-white);
     display: flex; align-items: center; justify-content: center;
     font-size: 13px; font-weight: 700;
     cursor: pointer;
@@ -2329,7 +2338,9 @@
     display: inline-flex; align-items: center; align-self: center;
     border: 1px solid var(--tds-border-secondary);
     border-radius: 999px;
-    background: var(--tds-grey-150);
+    /* md 토큰 아님 · 파생색 — md 의 numeric-spinner 절이 정한 흰 캡슐을 다크에서 파생 grey-150 으로 옮겼었고, 그 위 파란 ± 가 3.44 였다.
+       타일(grey-100)보다 어두운 캡슐로 옮겨 dark-blue-500 이 4.74(측정). 다크 blue-500 이 바뀌면 다시 잰다. */
+    background: oklch(0.230 0.012 285);
     overflow: hidden;
   }
 [data-theme="dark"] .num-spin button {
@@ -2381,7 +2392,8 @@
     align-self: center;
     border: 1px solid var(--tds-border-secondary);
     border-radius: 12px;
-    background: var(--tds-grey-150);
+    /* md 토큰 아님 · 파생색 — 위 .num-spin 과 같은 다크 캡슐(dark-blue-500 4.74). 다크 blue-500 이 바뀌면 다시 잰다. */
+    background: oklch(0.230 0.012 285);
     overflow: hidden;
   }
 [data-theme="dark"] .v-step button {
