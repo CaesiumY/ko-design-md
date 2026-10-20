@@ -187,8 +187,7 @@ class Reading {
 
   /** Column of an offset on its line, counted from 0. */
   column(offset: number): number {
-    const { line } = this.lineCounter.linePos(offset)
-    return offset - this.lineCounter.lineStarts[line - 1]
+    return this.lineCounter.linePos(offset).col - 1
   }
 
   /** Last file line a node's content reaches, trailing comments excluded. */
@@ -264,6 +263,7 @@ class Reading {
     const sourceLines: [number, number] | undefined = range
       ? [this.fileLine(range[0]), this.endLine(valueNode, line)]
       : undefined
+    const sourceColumn = range ? this.column(range[0]) : undefined
     // Only a scalar's last line: a map's is its last row's, whose comment is
     // that row's own.
     const comment =
@@ -274,9 +274,7 @@ class Reading {
     return {
       key: this.keyName(keyNode),
       value: valueNode?.toJS(this.doc) ?? null,
-      ...(source === undefined || !range
-        ? {}
-        : { source, sourceLines, sourceColumn: this.column(range[0]) }),
+      ...(source === undefined ? {} : { source, sourceLines, sourceColumn }),
       line,
       empty,
       ...(comment === undefined ? {} : { comment }),

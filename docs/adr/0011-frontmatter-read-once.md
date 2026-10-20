@@ -4,7 +4,7 @@
 
 독자가 여럿이니 같은 줄을 서로 다르게 읽는 모양이 계속 나왔다. 검증기는 그 모양을 하나씩 찾아 막는 규칙으로 대응했다. `misread-frontmatter-value`·`nonbare-frontmatter-key`·`list-frontmatter-value`·`quoted-token-value`·`unreadable-token-map`·`block-scalar-token-value`·`noncanonical-token-indent` 와, 원인 하나에 메시지 하나만 내도록 이들을 서로 억제하는 장치다. 2026-10-19 기준으로 이 부분이 `draft-validator.ts` 의 약 4분의 1, 그 테스트의 약 30% 를 차지했다. 같은 시기 검증기 커밋 일곱 개(#447·#449·#453·#454·#488·#492·#494)가 전부 이 화해 작업이었고, #454 는 리뷰 다섯 라운드 동안 매번 새 모양을 찾아냈다.
 
-그래서 독자를 하나로 모은다. `src/lib/frontmatter.ts` 의 `readFrontmatter` 가 `yaml`(공식 린터와 같은 라이브러리) 로 한 번 읽는다. 키마다 값, 줄 위치, 줄 끝 주석, 그리고 "비어 있음" 표시를 돌려준다. 사이트는 빌드할 때 Vite 가상 모듈로 그 결과를 JSON 으로 받는다(`virtual:preview-slugs` 와 같은 방식). 그러면 브라우저 번들에 파서가 들어가지 않으므로 손 파서를 둔 이유가 사라진다. 토큰 추출기·색 어긋남 검사·`audit:oklch`·날짜 검사·검증기도 이 모듈만 쓴다. 다르게 읽힐 자리가 없어지므로 위의 화해 규칙들은 지운다. 다만 두 규칙은 이름을 그대로 두고 범위를 줄여 남긴다. `list-frontmatter-value` 는 값 하나를 담는 키에 리스트가 온 경우를, `noncanonical-token-indent` 는 토큰 맵 아래에 또 맵이 온 경우(아래 결과 항)를 막는다. 둘 다 이제 두 독자가 다르게 읽는 경우가 아니라, 모두가 같게 읽어도 쓸 수 없는 값의 모양을 막는다.
+그래서 독자를 하나로 모은다. `src/lib/frontmatter.ts` 의 `readFrontmatter` 가 `yaml`(공식 린터와 같은 라이브러리) 로 한 번 읽는다. 키마다 값, 줄 위치, 줄 끝 주석, 그리고 "비어 있음" 표시를 돌려준다. 사이트는 빌드할 때 Vite 가상 모듈로 그 결과를 JSON 으로 받는다(`virtual:preview-slugs` 와 같은 방식). 그러면 브라우저 번들에 파서가 들어가지 않으므로 손 파서를 둔 이유가 사라진다. 토큰 추출기·색 어긋남 검사·`audit:oklch`·날짜 검사·검증기도 이 모듈만 쓴다. 다르게 읽힐 자리가 없어지므로 위의 화해 규칙 일곱 가운데 다섯과 억제 장치는 지우고, 두 규칙은 이름을 그대로 두고 범위를 줄여 남긴다. `list-frontmatter-value` 는 값 하나를 담는 키에 리스트가 온 경우를, `noncanonical-token-indent` 는 토큰 맵 아래에 또 맵이 온 경우(아래 결과 항)를 막는다. 둘 다 이제 두 독자가 다르게 읽는 경우가 아니라, 모두가 같게 읽어도 쓸 수 없는 값의 모양을 막는다.
 
 ## Considered Options
 

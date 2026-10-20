@@ -151,6 +151,31 @@ describe("readFrontmatter", () => {
     ])
   })
 
+  it("gives the column a value starts at, so two pairs on one line stay apart", () => {
+    const fm = readOk(
+      doc(
+        "colors: {",
+        "  b: oklch(0.5 0 0), c: oklch(0.5 0 0),",
+        "}",
+        'quoted: "  x"',
+        "block: |",
+        "  x",
+        "slug: toss"
+      )
+    )
+    const at = (key: string) => fm.keys.find((k) => k.key === key)?.sourceColumn
+    const rows = fm.keys.find((k) => k.key === "colors")?.rows ?? []
+
+    expect(
+      rows.map((r) => (r.kind === "entry" ? [r.key, r.sourceColumn] : r))
+    ).toEqual([
+      ["b", 5],
+      ["c", 24],
+    ])
+    // The quote, and a block scalar's `|` header, open the value.
+    expect([at("quoted"), at("block")]).toEqual([8, 7])
+  })
+
   it("gives a comment after a pair's separating comma to that pair, in a flow map over several lines", () => {
     // The `,` only separates `a` from the next pair: the comment is still the
     // one that ends `a`'s line, as YAML reads it. A later pair on the line
