@@ -776,7 +776,7 @@ function segmentPattern(pattern: string): RegExp {
  *   • A standalone `{word}` naming a map this entry declares (blocks), or
  *     another map, a phantom, a declared key or a text-fence row used in prose
  *     (warns — see the dotless pass below). A whole `colors:` value of that
- *     shape is skipped on its own line: the OKLCH rule blocks it and names
+ *     shape is skipped inside that value: the OKLCH rule blocks it and names
  *     the fix (#600). The same word in prose is judged as ever.
  *   • Prose and stylesheet fences are read in full; data fences (json) are
  *     not read at all (see DATA_FENCE_LANGUAGES). In a source-code fence,
@@ -990,26 +990,32 @@ function checkTokenReferences(
   // defines: a map, a declared key, or a row of a text fence. baemin's
   // `{ease-out}` and wanted's `{typography}` were both this shape.
   const fenceNames = proseFenceKeys(raw)
-  // A map-less `{word}` written as a `colors:` value is blocked by the OKLCH
-  // rule, which names the fix; a finding here would repeat it (#600). Only on
-  // that row's line: the same `{word}` in prose is judged as ever.
+  // A `colors:` value that is a reference outside `colors:` (`"{brand}"`) is
+  // blocked by the OKLCH rule, which names the fix; a finding here would
+  // repeat it (#600). Only inside that value: its row's comment, a sound
+  // `{colors.…}` row and the same `{word}` in prose are judged as ever.
+  const lineStarts = [0]
+  for (const nl of raw.matchAll(/\n/g)) lineStarts.push(nl.index + 1)
   const colorsKey = findKey(read.keys, "colors")
-  const colourRefLines = new Set(
-    (colorsKey ? entriesOf(colorsKey) : [])
-      .filter((row) => BARE_REFERENCE.test(tokenText(row) ?? ""))
-      .flatMap((row) => {
-        // Every line the value spans: a block scalar's text is below its key.
-        const [first, last] = row.sourceLines ?? [row.line, row.line]
-        return Array.from({ length: last - first + 1 }, (_, i) => first + i)
-      })
+  const blockedRefValues = (colorsKey ? entriesOf(colorsKey) : []).flatMap(
+    (row) => {
+      const value = tokenText(row) ?? ""
+      const { source, sourceLines, sourceColumn } = row
+      if (!BARE_REFERENCE.test(value) || isColourReference(value)) return []
+      if (source === undefined || !sourceLines || sourceColumn === undefined)
+        return []
+      const start = lineStarts[sourceLines[0] - 1] + sourceColumn
+      return [[start, start + source.length] as const]
+    }
   )
-  const lineOf = (index: number) => raw.slice(0, index).split("\n").length
+  const inBlockedValue = (index: number) =>
+    blockedRefValues.some(([start, end]) => index >= start && index < end)
   for (const hit of text.matchAll(DOTLESS_REFERENCE)) {
     const [ref, word] = hit
     // Inside a source-code string it is someone else's placeholder — an i18n
     // key (`t("{title}")`) or another token system — as for dotted references.
     if (!withoutSourceStrings.startsWith(ref, hit.index)) continue
-    if (colourRefLines.has(lineOf(hit.index))) continue
+    if (inBlockedValue(hit.index)) continue
     if (reported.has(ref)) continue
     const lower = word.toLowerCase()
     const holders = [...REFERENCE_MAPS].filter((m) => resolves(maps[m], word))

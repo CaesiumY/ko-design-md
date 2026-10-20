@@ -151,7 +151,8 @@ Every form must use OKLCH. Hex and rgba are rejected — `non-oklch-token-value`
 a **block**, checked against the frontmatter maps — because downstream LLMs cannot
 reason about them the way they can about explicit lightness, chroma and hue. In
 `colors:` the rule rejects anything but one lower-case `oklch(…)` or a quoted
-reference, so a named colour or another token's bare name too. Keep
+reference into `colors:` (`"{colors.x}"`), so a named colour, another token's bare
+name, `"{brand}"` with no map name or `"{fonts.x}"` too. Keep
 the brand's published hex as the trailing comment; that is what it is for.
 
 ### Per-theme palettes need distinct names

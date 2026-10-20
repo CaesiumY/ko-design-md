@@ -2374,6 +2374,29 @@ describe("token rules read the frontmatter maps", () => {
     expect(issues.map((i) => i.rule)).toEqual(["non-oklch-token-value"])
   })
 
+  it("still judges a map-less word in the comment of a colour reference row", () => {
+    // The row is a sound reference, so nothing else blocks the stray
+    // `{typography}` its note carries to the sidecar.
+    const rules = rulesFor(
+      draftWithFrontmatterColors([
+        "brand: oklch(0.62 0.19 258)",
+        'fill-brand: "{colors.brand}"  # {typography} 와 혼동 금지',
+      ])
+    )
+    expect(rules).toContain("unresolved-token-ref")
+  })
+
+  it("still judges a map-less word after a blocked row's value", () => {
+    const issues = validateDraft(
+      draftWithFrontmatterColors([
+        "brand: oklch(0.62 0.19 258)",
+        'fill-brand: "{brand}"  # {typography} 참고',
+      ]),
+      OPTS
+    ).issues.filter((i) => i.fix.includes("{typography}"))
+    expect(issues.map((i) => i.rule)).toEqual(["unresolved-token-ref"])
+  })
+
   it("still judges the same map-less word in prose", () => {
     // Only the colour row is the OKLCH rule's; the prose line keeps its own
     // finding.
