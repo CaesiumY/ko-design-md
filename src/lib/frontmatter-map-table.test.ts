@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest"
 import {
   FRONTMATTER_MAPS,
   FRONTMATTER_MAP_KEYS,
-  NO_BLOCK_SCALAR_MAP_KEYS,
   REFERENCE_MAP_KEYS,
   ROW_SCAN_MAP_KEYS,
 } from "./frontmatter-map-table"
@@ -30,20 +29,6 @@ describe("lists derived from the frontmatter map table", () => {
 
   it("lets a reference point into every map", () => {
     expect(REFERENCE_MAP_KEYS).toEqual(FRONTMATTER_MAP_KEYS)
-  })
-
-  it("blocks block scalars in the token maps, elevation and components", () => {
-    // Before the table this list ran elevation → components. The table follows
-    // the unknown-key order instead, which only reorders the two issues when a
-    // draft has a block scalar in both maps.
-    expect(NO_BLOCK_SCALAR_MAP_KEYS).toEqual([
-      "colors",
-      "typography",
-      "spacing",
-      "rounded",
-      "components",
-      "elevation",
-    ])
   })
 
   it("marks the maps the spec schema knows — the rest are catalog-only", () => {

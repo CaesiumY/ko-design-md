@@ -157,6 +157,25 @@ describe("paletteOf", () => {
     ])
   })
 
+  it("places a colour whose value opens with blanks, as the sidecar publishes it", () => {
+    // `"  oklch(…)"` is the colour `oklch(…)` to the sidecar, the drift check
+    // and `audit:oklch`; the palette places it the same, under its group.
+    const padded = md.replace("ink: oklch(0.6 0 0)", 'ink: "  oklch(0.6 0 0)"')
+    const groups = { groups: ["관측(미발행)"] }
+    expect(paletteOf(padded, groups).entries).toEqual(
+      paletteOf(md, groups).entries
+    )
+    expect(
+      paletteOf(padded, { tokens: ["ink"] }).entries.map((e) => [
+        e.name,
+        e.observed,
+      ])
+    ).toEqual([
+      ["ink", true],
+      ["muted", false],
+    ])
+  })
+
   it("reads a CRLF checkout the same as an LF one", () => {
     // CLAUDE.md records `w/crlf` working trees on Windows; a heading regex
     // anchored at `$` would keep the `\r` and miss every listed group.

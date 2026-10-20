@@ -61,18 +61,18 @@ Rules for the token maps — each one is a gate, not a preference:
 - **OKLCH only for colour values.** `non-oklch-token-value` blocks a hex or
   `rgba()`. The brand's published hex goes in the trailing comment.
 - **Names stay flat.** Never nest a group as a sub-map — that renames the token
-  and breaks every `{colors.X}` prose reference to it.
-- **Do not quote a colour value.** A quoted value is invisible to `audit:oklch`
-  and the drift check, and both then report success while checking nothing.
-  Quote only a reference (`fill-brand: "{colors.primary}"`) or a font stack that
-  starts with a quote character — unquoted, YAML misreads both.
+  and breaks every `{colors.X}` prose reference to it, and the draft gate blocks
+  it.
+- **Write values bare.** Every reader takes the value YAML reads, so quoting
+  changes nothing — but a reference (`fill-brand: "{colors.primary}"`) and a font
+  stack that starts with a quote character must be quoted, or YAML misreads both.
 - **One name, one value.** For a per-theme palette prefix the dark scale
   (`bg-canvas` / `dark-bg-canvas`).
 - **Dimension zero still carries a unit** — `tracking: 0em`, never `0`.
 - **No ```yaml fence anywhere in the body.** The file is published as-is as the
   standard DESIGN.md, and the official linter reads a body yaml fence as
   top-level schema keys — `token-fence` / `body-yaml-fence` block it. Shadows go
-  in `elevation:` (one line each, bare, no `>` block scalar); motion tokens the
+  in `elevation:` (one shadow per row); motion tokens the
   frontmatter has no slot for go in a ```` ```text ```` fence. Components go in
   both: the full spec in the body fence, and the spec's eight properties in a
   frontmatter `components:` map (rules: `references/stitch-format.md`,

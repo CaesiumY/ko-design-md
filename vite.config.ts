@@ -9,6 +9,7 @@ import viteReact from "@vitejs/plugin-react"
 import tailwindcss from "@tailwindcss/vite"
 import { nitro } from "nitro/vite"
 import { lightScopeFile, resolvePreviewLayout } from "./src/lib/preview-layout"
+import { siteFrontmatterPlugin } from "./src/lib/site-frontmatter-plugin"
 import type { Plugin, UserConfig } from "vite"
 
 const IGNORED_ROLLUP_WARNING_CODES = new Set([
@@ -210,6 +211,7 @@ const config = defineConfig({
   },
   plugins: [
     previewSlugsPlugin(),
+    siteFrontmatterPlugin(),
     previewCacheHeadersPlugin(),
     devtools(),
     nitro({ rollupConfig: nitroRollupOptions }),

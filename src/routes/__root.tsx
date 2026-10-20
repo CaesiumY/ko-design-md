@@ -122,7 +122,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
         {/* No window.Buffer stub here. One used to exist for gray-matter, which
-            the hand-written parser in content-parser.ts replaced. The only
+            the site no longer runs in the browser — the build reads the
+            frontmatter (virtual:site-frontmatter). The only
             client code that still looks for Buffer is @tanstack/router-core's
             RawStream serializer, and it feature-detects it and falls back to
             atob/btoa - a stub whose `from` returns its input defeated that

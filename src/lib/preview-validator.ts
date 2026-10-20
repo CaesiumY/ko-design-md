@@ -1,5 +1,6 @@
 import { brotliCompressSync, constants } from "node:zlib"
-import { buildDoc } from "./content-parser"
+import { readFrontmatter } from "./frontmatter"
+import { buildDoc } from "./site-frontmatter"
 import { bodyOf, isBlankText, walkHtml } from "./html-walk"
 import { hasAppliedReduceBlock, hasCssMotion } from "./reduced-motion-block"
 import { extractTokensFromMarkdown } from "./token-extractor"
@@ -1138,12 +1139,18 @@ function hasAttrValue(
  *  function stopped matching — the preview would silently fall back to
  *  Pretendard with every gate green. */
 export function findFontDisplaySrc(raw: string): string | null {
-  // The webfont URL is a top-level frontmatter key now — the spec's schema has
-  // no field for it, and the catalog needs it where this validator can reach it.
-  // Anchored at column 0 so a `font-display-src` written inside a token map (a
-  // shape nothing produces, but an easy mistake) does not read as the real one.
-  const m = raw.match(/^font-\w+-src:[ \t]+(\S+)/m)
-  return m ? m[1] : null
+  // The webfont URL is a top-level frontmatter key — the spec's schema has no
+  // field for it, and the catalog needs it where this validator can reach it.
+  // Read with the one frontmatter reader (docs/adr/0011), so a
+  // `font-display-src` written inside a token map does not read as the real
+  // one, and a quoted URL is the URL.
+  const read = readFrontmatter(raw)
+  if (!read.ok) return null
+  for (const { key, value } of read.keys) {
+    if (/^font-\w+-src$/.test(key) && typeof value === "string" && value !== "")
+      return value
+  }
+  return null
 }
 
 function coverage(html: string, values: Array<string>): CoverageMetric {
