@@ -15,7 +15,7 @@ import { CATEGORIES } from "./content-types"
 import { auditSourceCitations } from "./source-citations"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
 import { deltaE, hexToOklab, lchToOklab, oklabToLch } from "./oklch-convert"
-import { definitionRow, matchDefinition } from "./oklch-sync"
+import { LEADING_OKLCH, definitionRow, matchDefinition } from "./oklch-sync"
 import { conflictingDefinitions } from "./oklch-drift"
 import { KNOWN_SPEC_LIMITATIONS } from "./spec-limitations"
 import { LOGO_TAKEDOWNS } from "./logo-takedowns"
@@ -86,9 +86,10 @@ export const REQUIRED_SECTIONS = [
 const LOGO_URL_FORM =
   /^https:\/\/getdesign\.kr\/logos\/[a-z0-9.-]+\.(?:svg|png|webp|avif)$/
 const SLUG_FORM = /^[a-z0-9-]+$/
-// Non-OKLCH color notations rejected in yaml token *values*. `oklab`/`lch` etc.
-// are also off-catalog but have never appeared; hex/rgb/hsl are the real risks.
-const NON_OKLCH_VALUE = /^(?:#[0-9a-fA-F]{3,8}\b|(?:rgba?|hsla?)\s*\()/
+// Colour notations rejected in the values of the token maps that are not
+// `colors:` — a colour there is a mistake in any case. In `colors:` itself
+// anything but `oklch(…)` is rejected (`tokenLineIssues`).
+const NON_OKLCH_VALUE = /^(?:#[0-9a-f]{3,8}\b|(?:rgba?|hsla?)\s*\()/i
 // Prose hex: 3-8 hex digits after `#`, not preceded by URL/fragment/heading
 // characters. URLs are masked before matching.
 const PROSE_HEX = /(?<![\w&#/])#[0-9a-fA-F]{3,8}\b/
@@ -254,14 +255,31 @@ interface BodyScan {
 /** The OKLCH-only rule and its hex cross-check, for one `name: value` line.
  *
  *  Shared by the frontmatter scan and the legacy fence scan so the two cannot
- *  drift into disagreeing about what a valid token value is. */
+ *  drift into disagreeing about what a valid token value is.
+ *
+ *  `colours` is the `colors:` map's declared names, given for a row of that
+ *  map: there a value must be `oklch(…)`. The linter also reads a named colour
+ *  (`white`) or an upper-case function (`RGB(…)`) as a colour, but the sidecar
+ *  keeps neither, so one mixed into an OKLCH palette would leave it silently
+ *  (#597). */
 function tokenLineIssues(
   name: string,
   value: string,
-  line: string
+  line: string,
+  colours?: ReadonlySet<string>
 ): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
-  if (NON_OKLCH_VALUE.test(value)) {
+  if (colours && !LEADING_OKLCH.test(value)) {
+    issues.push(
+      block(
+        "non-oklch-token-value",
+        "tokens",
+        colours.has(value)
+          ? `token \`${name}: ${value}\` names another colour without a reference — write \`${name}: "{colors.${value}}"\`.`
+          : `token \`${name}: ${value}\` is not OKLCH — express color token values as \`oklch(L C H)\`, in lower case: the sidecar drops a named colour (\`white\`) or an upper-case function (\`RGB(…)\`) although the linter reads it. Keep the original as a trailing \`# ${value}\` comment if useful, and point at another colour as \`"{colors.name}"\`.`
+      )
+    )
+  } else if (!colours && NON_OKLCH_VALUE.test(value)) {
     issues.push(
       block(
         "non-oklch-token-value",
@@ -1057,6 +1075,10 @@ function scanFrontmatterTokens(read: FrontmatterRead): Array<ValidationIssue> {
   for (const mapKey of ROW_SCAN_MAP_KEYS) {
     const map = findKey(read.keys, mapKey)
     if (!map) continue
+    const colours =
+      mapKey === "colors"
+        ? new Set(entriesOf(map).map((row) => row.key))
+        : undefined
     for (const row of entriesOf(map)) {
       // These maps are flat: a token is one `name: value` row. A map under a
       // row renames every token in it (`{colors.brand.primary}`, not
@@ -1095,7 +1117,7 @@ function scanFrontmatterTokens(read: FrontmatterRead): Array<ValidationIssue> {
       // The row as YAML read it, in the one shape the shared OKLCH↔hex rule
       // judges — the same string `audit:oklch` builds.
       const line = definitionRow(row.key, value, row.comment)
-      issues.push(...tokenLineIssues(row.key, value, line))
+      issues.push(...tokenLineIssues(row.key, value, line, colours))
       // The extractor keeps only rows shaped like a shadow, so anything else in
       // `elevation:` vanishes from the sidecar while the file still publishes
       // it. The common way in is a bare hex colour: ` #0000001A` opens a YAML
@@ -2339,7 +2361,7 @@ function checkSpecLint(
       block(
         "spec-no-colors",
         "spec",
-        "The official DESIGN.md linter resolves no colours from this document. Declare the palette in the frontmatter `colors:` map (one `name: oklch(...)` per line) — this file is published as the standard DESIGN.md, and a tool reading it would see an empty design system."
+        "The official DESIGN.md linter resolves no colours from this document. Declare the palette in the frontmatter `colors:` map (a `name: oklch(L C H)` row for each colour) — this file is published as the standard DESIGN.md, and a tool reading it would see an empty design system."
       )
     )
   }

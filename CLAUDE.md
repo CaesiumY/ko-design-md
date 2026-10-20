@@ -94,7 +94,11 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행하고, 프리
     읽지 않는다. 컴포넌트 스펙은 스펙의 `components:` 맵이 8속성만 담으므로 펜스가 남는다
     (아래 표준 절의 `components:` 항).
 - **색상 토큰 값은 OKLCH만.** frontmatter `colors:` 맵의 `name: oklch(...)` 형식. 브랜드 hex는
-  `# #FAFAFA` 트레일링 주석이나 같은 줄 `(≈ oklch(...))` 병기로만 기록.
+  `# #FAFAFA` 트레일링 주석이나 같은 줄 `(≈ oklch(...))` 병기로만 기록. `colors:` 값이 소문자 `oklch(` 로
+  시작하지도, 따옴표 친 참조(`"{colors.x}"`)도 아니면 `non-oklch-token-value` 로 block 이다 — hex·`rgb()` 뿐
+  아니라 이름 색(`white`)·대문자 함수(`RGB(…)`·`OKLCH(…)`)·`oklab(` 같은 다른 표기·다른 토큰 이름을 그냥 쓴
+  값까지. 린터는 이름 색과 대문자 함수도 색으로 읽지만 사이드카는 싣지 않아, 하나만 섞여도 그 색이 Tokens 탭에서
+  조용히 빠졌다(#597).
 - **frontmatter 는 한 모듈이 진짜 YAML 로 한 번 읽는다**(`src/lib/frontmatter.ts` 의 `readFrontmatter`,
   ADR 0011). 사이트 빌드·초안 검사기·토큰 추출기·색 어긋남 검사·`audit:oklch`·날짜 검사가 모두 그 결과를
   쓴다(공식 린터만 따로 읽지만 같은 `yaml` 라이브러리다). 그래서 키나 값의 따옴표, 들여쓰기 칸 수, 블록
@@ -266,9 +270,9 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   카탈로그 전용 `fonts:` 맵에 둔다 — 통과하려고 크기를 지어내지 말 것(그런 스타일은 `typography-style-shape`
   가 막는다 — 린터와 추출기를 대조하던 규칙은 #589 에서 걷었고, 그 자리를 스타일 모양 규칙 하나가 맡는다). 색은 린터가 하나 이상 해석했는데 추출기가 하나도 싣지
   못하면 `unreadable-colors` 로 block 이다 — 린터는 이름 색(`white`·`transparent`)과 대문자 함수(`OKLCH(…)`·
-  `RGB(…)`)도 색으로 읽지만 추출기는 소문자 색 함수와 hex 만 싣고, 다른 규칙은 그 둘을 막지 않는다. 0개일
-  때만 막는다 — 린터가 해석하는 별칭 행을 사이드카는 설계상 빼서 두 수가 원래 다르므로, `oklch(…)` 사이에
-  섞인 이름 색 하나는 통과하고 사이드카에서만 빠진다. 카탈로그 전용 맵(`grid:`·`opacity:` 등)에 `16px`·`40%` 같은 CSS 치수나 hex 가
+  `RGB(…)`)도 색으로 읽지만 추출기는 소문자 색 함수와 hex 만 싣는다. 그런 행은 하나만 섞여도 행마다
+  `non-oklch-token-value` 가 막으므로(#597), 이 규칙은 0개일 때 두 독자의 실측 수를 대조하는 안전망으로 함께
+  난다 — 린터가 해석하는 별칭 행을 사이드카는 설계상 빼서 두 수가 원래 다르므로 0개일 때만 막는다. 카탈로그 전용 맵(`grid:`·`opacity:` 등)에 `16px`·`40%` 같은 CSS 치수나 hex 가
   있으면 린터가 그 맵을 "무시되는 토큰 맵"으로 보고하므로 `spec-token-like-map` 으로 block
   한다(치수는 `spacing:`/`rounded:` 로, 불투명도는 단위 없는 수로). frontmatter 가 파스되지
   않거나 속성 없는 컴포넌트가 있으면(`empty-component` — YAML null 이라 린터가 모델을 못 만든다) 이

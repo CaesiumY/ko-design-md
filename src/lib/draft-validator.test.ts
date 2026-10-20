@@ -1189,26 +1189,26 @@ describe("where the retired rules' inputs go (#589)", () => {
       ["frontmatter-yaml-invalid"],
     ],
     // Its colours half — the linter resolves a colour the extractor drops.
-    // Only an empty colour sidecar is blocked, as before: alias rows make the
-    // two counts differ in a sound entry, so one dropped colour beside a kept
-    // one (U11) passes.
+    // Each such row is not OKLCH, so it is blocked where it is written (#597);
+    // a palette of nothing else also leaves the sidecar empty, which the
+    // linter-against-extractor count names as well.
     [
       "U9 a palette of named colours only",
       COLOUR_ROW,
       "  primary: white\n  surface: transparent",
-      ["unreadable-colors"],
+      ["unreadable-colors", "non-oklch-token-value", "non-oklch-token-value"],
     ],
     [
       "U10 a colour written as an upper-case function",
       COLOUR_ROW,
       "  primary: OKLCH(0.62 0.19 258)",
-      ["unreadable-colors"],
+      ["unreadable-colors", "non-oklch-token-value"],
     ],
     [
       "U11 a named colour beside an OKLCH one",
       COLOUR_ROW,
       `${COLOUR_ROW}\n  surface: white`,
-      [],
+      ["non-oklch-token-value"],
     ],
     // noncanonical-token-indent — now "no map under a token map".
     ["I1 a colour map indented four spaces", COLOUR_ROW, `  ${COLOUR_ROW}`, []],
@@ -2218,10 +2218,64 @@ describe("token rules read the frontmatter maps", () => {
     }
   })
 
-  it("accepts an OKLCH value", () => {
+  it("blocks a colour the sidecar would drop, even beside an OKLCH one", () => {
+    // The linter reads a named colour or an upper-case function as a colour
+    // and the extractor keeps neither, so one mixed into an OKLCH palette left
+    // the sidecar while the gate passed (#597).
+    for (const value of [
+      "white",
+      "transparent",
+      "RGB(49 130 246)",
+      "OKLCH(0.62 0.19 258)",
+      "oklab(0.62 -0.03 -0.18)",
+      "0.4",
+    ]) {
+      expect(
+        rulesFor(
+          draftWithFrontmatterColors([
+            "brand: oklch(0.62 0.19 258)",
+            `surface: ${value}`,
+          ])
+        ),
+        value
+      ).toContain("non-oklch-token-value")
+    }
+  })
+
+  it("offers the reference spelling for a bare token name", () => {
+    const issue = validateDraft(
+      draftWithFrontmatterColors([
+        "brand: oklch(0.62 0.19 258)",
+        "fill-brand: brand",
+      ]),
+      OPTS
+    ).issues.find((i) => i.rule === "non-oklch-token-value")
+    expect(issue?.fix).toContain('`fill-brand: "{colors.brand}"`')
+  })
+
+  it("blocks an upper-case colour function in the other token maps", () => {
     expect(
-      rulesFor(draftWithFrontmatterColors(["brand: oklch(0.62 0.19 258)"]))
-    ).not.toContain("non-oklch-token-value")
+      rulesFor(
+        draftWithRawColorRows([
+          "  brand: oklch(0.62 0.19 258)",
+          "rounded:",
+          "  card: RGB(0 0 0)",
+        ])
+      )
+    ).toContain("non-oklch-token-value")
+  })
+
+  it("accepts an OKLCH value, quoted or not", () => {
+    for (const value of [
+      "oklch(0.62 0.19 258)",
+      '"oklch(0.62 0.19 258)"',
+      "oklch(0.62 0.19 258 / 40%)",
+    ]) {
+      expect(
+        rulesFor(draftWithFrontmatterColors([`brand: ${value}`])),
+        value
+      ).not.toContain("non-oklch-token-value")
+    }
   })
 
   it("warns when the OKLCH does not decode to its annotated hex", () => {
