@@ -272,15 +272,17 @@ function tokenLineIssues(
   colours?: ReadonlyMap<string, string | undefined>
 ): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
+  // A map-less `{word}` meant the colour `word`.
+  const target = /^\{([a-zA-Z0-9._-]+)\}$/.exec(value)?.[1] ?? value
   const fix = colours
     ? !OKLCH_COLOUR.test(value) &&
       // Only a reference that would resolve and pass: to a row that holds a
       // colour (not this row, not a cycle such as `a: b` + `b: a`), and
       // reference-shaped — `빨강` is a valid key, but `{colors.빨강}` is
       // blocked again.
-      (OKLCH_COLOUR.test(colours.get(value) ?? "") &&
-      BARE_REFERENCE.test(`{colors.${value}}`)
-        ? `token \`${name}: ${value}\` names another colour without a reference — write \`${name}: "{colors.${value}}"\`.`
+      (OKLCH_COLOUR.test(colours.get(target) ?? "") &&
+      BARE_REFERENCE.test(`{colors.${target}}`)
+        ? `token \`${name}: ${value}\` names another colour without a full reference — write \`${name}: "{colors.${target}}"\`.`
         : `token \`${name}: ${value}\` is not OKLCH — express color token values as \`oklch(L C H)\`, in lower case: the sidecar drops a named colour (\`white\`) or an upper-case function (\`RGB(…)\`) although the linter reads it. Keep the original as a trailing \`# ${value}\` comment if useful, and point at another colour as \`"{colors.name}"\`.`)
     : NON_OKLCH_VALUE.test(value) &&
       `token \`${name}: ${value}\` is not OKLCH — express color token values as \`oklch(L C H)\` (keep the original as a trailing \`# ${value}\` comment if useful).`
@@ -986,12 +988,18 @@ function checkTokenReferences(
   // defines: a map, a declared key, or a row of a text fence. baemin's
   // `{ease-out}` and wanted's `{typography}` were both this shape.
   const fenceNames = proseFenceKeys(raw)
+  // A map-less `{word}` written as a `colors:` value is blocked by the OKLCH
+  // rule, which names the fix; a warning here would repeat it (#600).
+  const colorsKey = findKey(read.keys, "colors")
+  const colourValues = new Set(
+    colorsKey ? entriesOf(colorsKey).map((row) => tokenText(row)) : []
+  )
   for (const hit of text.matchAll(DOTLESS_REFERENCE)) {
     const [ref, word] = hit
     // Inside a source-code string it is someone else's placeholder — an i18n
     // key (`t("{title}")`) or another token system — as for dotted references.
     if (!withoutSourceStrings.startsWith(ref, hit.index)) continue
-    if (reported.has(ref)) continue
+    if (reported.has(ref) || colourValues.has(ref)) continue
     const lower = word.toLowerCase()
     const holders = [...REFERENCE_MAPS].filter((m) => resolves(maps[m], word))
     let advice: string
@@ -1125,7 +1133,8 @@ function scanFrontmatterTokens(read: FrontmatterRead): Array<ValidationIssue> {
       // A reference resolves elsewhere, so it is not judged as a literal. In
       // `colors:` only a whole one is: `"{not-a-reference"` would otherwise be
       // skipped here, found by no reference check and dropped by the sidecar.
-      if (colours ? BARE_REFERENCE.test(value) : value.startsWith("{")) continue
+      if (colours ? DOTTED_REFERENCE.test(value) : value.startsWith("{"))
+        continue
       // The row as YAML read it, in the one shape the shared OKLCH↔hex rule
       // judges — the same string `audit:oklch` builds.
       const line = definitionRow(row.key, value, row.comment)
@@ -1269,6 +1278,9 @@ export const COMPONENT_DIMENSION_UNITS: ReadonlyArray<string> = [
  *  Copied because the package does not export it; the machine-gate contract
  *  test pins it to the pinned linter's own source. */
 export const BARE_REFERENCE = /^\{[a-zA-Z0-9._-]+\}$/
+// A reference that names its map: in `colors:` only this is skipped as one, as
+// the linter drops a map-less `{word}` there without a word (#600).
+const DOTTED_REFERENCE = /^\{[a-zA-Z0-9_-]+\.[a-zA-Z0-9._-]+\}$/
 /** A whole value that is one quoted reference, with the characters the
  *  linter's `isTokenReference` allows between the braces — `"{ colors.x }"` or
  *  `"{colors/x}"` it keeps as raw text. Whether it RESOLVES (a declared key,

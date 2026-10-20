@@ -2338,6 +2338,41 @@ describe("token rules read the frontmatter maps", () => {
     expect(rules).not.toContain("non-oklch-token-value")
   })
 
+  it("blocks a colour reference with no map name", () => {
+    // The linter drops it without a word, so nothing else would (#600).
+    expect(
+      rulesFor(
+        draftWithFrontmatterColors([
+          "brand: oklch(0.62 0.19 258)",
+          'surface: "{nokey}"',
+        ])
+      )
+    ).toContain("non-oklch-token-value")
+  })
+
+  it("names the colour a map-less reference meant, in one message", () => {
+    const issues = validateDraft(
+      draftWithFrontmatterColors([
+        "brand: oklch(0.62 0.19 258)",
+        'fill-brand: "{brand}"',
+      ]),
+      OPTS
+    ).issues.filter((i) => i.fix.includes("{brand}"))
+    expect(issues.map((i) => i.rule)).toEqual(["non-oklch-token-value"])
+    expect(issues[0].fix).toContain('`fill-brand: "{colors.brand}"`')
+  })
+
+  it("leaves a dotted reference to the reference check", () => {
+    const rules = rulesFor(
+      draftWithFrontmatterColors([
+        "brand: oklch(0.62 0.19 258)",
+        'surface: "{fonts.sans}"',
+      ])
+    )
+    expect(rules).toContain("unresolved-token-ref")
+    expect(rules).not.toContain("non-oklch-token-value")
+  })
+
   it("blocks a value that only opens like a reference", () => {
     // Skipped as a reference, it was found by no reference check and dropped
     // by the sidecar.
