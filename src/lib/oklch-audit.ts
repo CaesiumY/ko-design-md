@@ -8,6 +8,7 @@ import {
 } from "./oklch-sync"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
 import { deltaE, hexToOklab, lchToOklab, oklabToLch } from "./oklch-convert"
+import type { FrontmatterKey } from "./frontmatter"
 import type { DefinitionMatch } from "./oklch-sync"
 import type { Oklab } from "./oklch-convert"
 
@@ -49,6 +50,11 @@ export interface OklchAudit {
   /** The subset with exactly one hex, which the audit compares. */
   judged: number
   findings: Array<OklchFinding>
+  /** Findings `fix` left as written, because the value's literal is not whole
+   *  on one line where it can be found without a guess (a value split across
+   *  lines). The subset of `findings` the caller must fix by hand; empty when
+   *  not fixing. */
+  unfixed: Array<OklchFinding>
   /** The document after `fix`: only the corrected values differ, every other
    *  byte — line endings included — is the input's. The input itself when not
    *  fixing. */
@@ -85,6 +91,42 @@ function rebuildLiteral(
   alphaTail: string
 ): string {
   return `oklch(${triple[0]}${d.sepLC}${triple[1]}${d.sepCH}${triple[2]}${alphaTail})`
+}
+
+/**
+ * Where `--fix` rewrites a row's literal: the index into the line/ending
+ * `parts` of the one file line that holds it whole, and its column there. Null
+ * when the value is not written so the literal can be found without a guess.
+ *
+ * The literal starts the value, so it is found where the value starts, not on
+ * the key's line: a block scalar's text starts on the line after its `>`/`|`
+ * header, as the first thing on it; any other value starts with it, after an
+ * opening quote, on the value's first line — where its first occurrence is the
+ * value, since a key cannot contain `oklch(` and a comment follows the value. A
+ * value whose literal runs onto the next line, or is written with escapes, does
+ * not start with the literal and is left alone.
+ */
+function locate(
+  parts: ReadonlyArray<string>,
+  entry: FrontmatterKey,
+  literal: string
+): { index: number; at: number } | null {
+  const { source, sourceLines } = entry
+  if (source === undefined || sourceLines === undefined) return null
+  if (/^[|>]/.test(source)) {
+    const line = sourceLines[0] + 1
+    if (line > sourceLines[1]) return null
+    const index = (line - 1) * 2
+    const at = parts[index].search(/\S/)
+    return at >= 0 && parts[index].startsWith(literal, at)
+      ? { index, at }
+      : null
+  }
+  const quoted = /^["']/.test(source) ? 1 : 0
+  if (!source.startsWith(literal, quoted)) return null
+  const index = (sourceLines[0] - 1) * 2
+  const at = parts[index].indexOf(literal)
+  return at < 0 ? null : { index, at }
 }
 
 interface Judgement {
@@ -160,6 +202,7 @@ export function auditOklch(
     annotated: 0,
     judged: 0,
     findings: [],
+    unfixed: [],
     text: markdown,
   }
   if (!read.ok) return result
@@ -182,23 +225,21 @@ export function auditOklch(
     result.findings.push(judged.finding)
     if (!options.fix) continue
 
-    const literal = entry.value.match(LEADING_OKLCH)
-    const index = (entry.line - 1) * 2
-    const fileLine = parts[index]
-    // The literal is the row's value, so its first occurrence on the row's line
-    // is that value: a key cannot contain `oklch(`, and the comment follows it.
-    const at = literal ? fileLine.indexOf(literal[0]) : -1
-    if (!literal || at < 0) {
-      throw new Error(
-        `audit:oklch --fix: cannot find the value of \`${entry.key}\` on line ${entry.line}.`
-      )
+    const literal = entry.value.match(LEADING_OKLCH)?.[0]
+    const spot = literal === undefined ? null : locate(parts, entry, literal)
+    if (literal === undefined || spot === null) {
+      // Not thrown: the script walks the whole catalogue, and a throw here
+      // left the slugs before this one rewritten and the ones after untouched.
+      result.unfixed.push(judged.finding)
+      continue
     }
+    const fileLine = parts[spot.index]
     // Spliced by position, not `String.replace`: a replacement string would
     // read a `$&` or `$1` in the author's comment as a substitution pattern.
-    parts[index] =
-      fileLine.slice(0, at) +
+    parts[spot.index] =
+      fileLine.slice(0, spot.at) +
       rebuildLiteral(d, judged.finding.to, judged.alphaTo) +
-      fileLine.slice(at + literal[0].length)
+      fileLine.slice(spot.at + literal.length)
     changed = true
   }
 

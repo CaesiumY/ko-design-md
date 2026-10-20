@@ -79,6 +79,9 @@ let syncCount = 0
 // collected so one slug's ambiguity does not abort the rest of the catalogue.
 const unsynced: Array<{ slug: string; conflicts: Array<CorrectionConflict> }> =
   []
+// Mismatches `--fix` could not rewrite — the value is not whole on one line —
+// collected the same way, and left exactly as written.
+const unfixed: Array<Finding> = []
 
 // Coverage, not just findings. "No mismatches" and "matched nothing" produce
 // identical output otherwise — the failure mode that let 102 annotated pairs go
@@ -92,10 +95,12 @@ for (const slug of slugs) {
   coverage.annotated += audit.annotated
   coverage.judged += audit.judged
   for (const f of audit.findings) findings.push({ slug, ...f })
+  for (const f of audit.unfixed) unfixed.push({ slug, ...f })
   // Only a changed triple can be propagated — an alpha-only edit has no
-  // old→new pair for --sync to search for.
+  // old→new pair for --sync to search for. Nor can a definition left as
+  // written: its copies must keep agreeing with it.
   const corrections = audit.findings
-    .filter((f) => f.colourOff)
+    .filter((f) => f.colourOff && !audit.unfixed.includes(f))
     .map((f) => ({ old: f.from, neu: f.to }))
 
   // `auditOklch` rewrites only the corrected values, on the lines the
@@ -173,7 +178,7 @@ console.log(
       : "")
 )
 console.log(
-  `${findings.length} token(s) ${verb}` +
+  `${findings.length - unfixed.length} token(s) ${verb}` +
     (sync ? `, ${syncCount} derived literal(s) synced` : "") +
     (findings.length && !fix ? " — re-run with --fix to rewrite" : "")
 )
@@ -219,6 +224,24 @@ if (unsynced.length > 0) {
     `\n  Their md definitions are fixed; only the derived literals (aliases,\n` +
       `  gradients, prose, preview CSS) are ambiguous — update those by hand.\n` +
       `  Every other slug was processed normally.`
+  )
+}
+
+if (unfixed.length > 0) {
+  console.error(
+    `
+${unfixed.length} mismatched token(s) NOT corrected — the value is not ` +
+      `written whole on one line, so --fix left it as written:`
+  )
+  for (const f of unfixed) {
+    console.error(
+      `  ${f.slug}  L${f.line}  ${f.token}  ${f.from.join(" ")}  →  ${f.to.join(" ")}`
+    )
+  }
+  console.error(
+    `
+  Write each value on one line, or correct it by hand. Every other ` +
+      `token was processed normally.`
   )
 }
 
@@ -287,8 +310,10 @@ if (drift > 0) {
 
 // Report-only mode is a check: non-zero exit lets CI or a pre-commit hook gate on it.
 // An unsynced slug fails in either mode — it means the tree is now half-updated.
+// So does a token `--fix` could not rewrite: the run left a mismatch behind.
 // A dead pattern fails in either mode too: with nothing judged, a `--fix` run
 // that "corrected" nothing is not a success, it is a no-op on a broken tool.
 if (patternDead) process.exit(1)
 if (unsynced.length > 0) process.exit(1)
+if (unfixed.length > 0) process.exit(1)
 if (!fix && (findings.length > 0 || drift > 0)) process.exit(1)

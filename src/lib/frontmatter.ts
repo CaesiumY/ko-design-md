@@ -46,12 +46,18 @@ export interface FrontmatterKey {
   /** A scalar value's exact text in the file, quotes included. Absent for a
    *  map, a list or an empty value. */
   source?: string
+  /** The first and last file lines `source` spans. A block scalar's first is
+   *  its `>`/`|` header line, the key's. Present with `source`. */
+  sourceLines?: [number, number]
   line: number
   /** Nothing written after the colon (`key:`). `key: ~` and `key: []` are
    *  written values, so not empty. */
   empty: boolean
   /** The comment that ends the key's line, `#` and surrounding space removed.
-   *  This is what the token sidecar calls a `note`. */
+   *  When the key's line has none and a scalar value ends on a later line
+   *  (`primary:` + `  oklch(…)  # #3182F6`), the comment that ends that line:
+   *  YAML reads it as the value's, and so does every reader here. This is what
+   *  the token sidecar calls a `note`. */
   comment?: string
   /** A map value's rows, in source order. */
   rows?: Array<FrontmatterRow>
@@ -207,16 +213,21 @@ class Reading {
 
   entry(keyNode: Node, valueNode: Node | null): FrontmatterKey {
     const line = this.keyLine(keyNode)
-    const comment = this.lineEndComments.get(line)
     const empty = isEmpty(valueNode)
-    const source =
-      !empty && isScalar(valueNode) && valueNode.range
-        ? this.text.slice(valueNode.range[0], valueNode.range[1])
-        : undefined
+    const range = !empty && isScalar(valueNode) ? valueNode.range : undefined
+    const source = range ? this.text.slice(range[0], range[1]) : undefined
+    const sourceLines: [number, number] | undefined = range
+      ? [this.fileLine(range[0]), this.endLine(valueNode, line)]
+      : undefined
+    // Only a scalar's last line: a map's is its last row's, whose comment is
+    // that row's own.
+    const comment =
+      this.lineEndComments.get(line) ??
+      (sourceLines ? this.lineEndComments.get(sourceLines[1]) : undefined)
     return {
       key: this.keyName(keyNode),
       value: valueNode?.toJS(this.doc) ?? null,
-      ...(source === undefined ? {} : { source }),
+      ...(source === undefined ? {} : { source, sourceLines }),
       line,
       empty,
       ...(comment === undefined ? {} : { comment }),

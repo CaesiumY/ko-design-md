@@ -82,6 +82,42 @@ describe("readFrontmatter", () => {
     expect(fm.keys.find((k) => k.key === "tagline")?.value).toBe("a # b")
   })
 
+  it("reads the comment on a value's own line when the value sits below its key", () => {
+    // YAML reads `# #3182F6` as the value's comment wherever the value ends,
+    // so the hex check, the audit and the sidecar note must all see it.
+    const fm = readOk(
+      doc(
+        "colors:",
+        "  next-line:",
+        "    oklch(0.90 0.02 30)  # #3182F6",
+        '  two-lines: "oklch(0.90',
+        '    0.02 30)"  # #3182F6',
+        "  key-wins: # on the key",
+        "    oklch(0.90 0.02 30)  # on the value",
+        "typography:",
+        "  body:",
+        "    fontSize: 16px # last row's own",
+        "slug: toss"
+      )
+    )
+    const rows = (key: string) =>
+      fm.keys
+        .find((k) => k.key === key)
+        ?.rows?.map((r) =>
+          r.kind === "entry" ? [r.key, r.value, r.comment, r.sourceLines] : r
+        )
+
+    expect(rows("colors")).toEqual([
+      ["next-line", "oklch(0.90 0.02 30)", "#3182F6", [4, 4]],
+      ["two-lines", "oklch(0.90 0.02 30)", "#3182F6", [5, 6]],
+      ["key-wins", "oklch(0.90 0.02 30)", "on the key", [8, 8]],
+    ])
+    // A map's last line is its last row's, and that comment stays the row's.
+    expect(rows("typography")).toEqual([
+      ["body", { fontSize: "16px" }, undefined, undefined],
+    ])
+  })
+
   it("returns a token map's rows in source order, with the `## label` rows that open groups", () => {
     const fm = readOk(
       doc(
@@ -105,6 +141,7 @@ describe("readFrontmatter", () => {
         key: "blue-500",
         value: "oklch(0.620 0.191 258)",
         source: "oklch(0.620 0.191 258)",
+        sourceLines: [4, 4],
         line: 4,
         empty: false,
         comment: "#3182F6",
@@ -115,6 +152,7 @@ describe("readFrontmatter", () => {
         key: "blue-600",
         value: "oklch(0.522 0.176 257)",
         source: '"oklch(0.522 0.176 257)"',
+        sourceLines: [6, 6],
         line: 6,
         empty: false,
         group: "Brand",
@@ -125,6 +163,7 @@ describe("readFrontmatter", () => {
         key: "gray-50",
         value: "oklch(0.980 0 0)",
         source: "oklch(0.980 0 0)",
+        sourceLines: [9, 9],
         line: 9,
         empty: false,
         group: "Gray",

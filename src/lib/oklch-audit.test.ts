@@ -52,6 +52,23 @@ describe("auditOklch — judging", () => {
     expect(findings.map((f) => f.token)).toEqual(["deep", "quoted"])
   })
 
+  it("judges a value written below its key by the hex on the value's line", () => {
+    const md = doc([
+      "next-line:",
+      "    oklch(0.9 0.02 90)   # #3182F6",
+      "matching:",
+      "    oklch(0.620 0.191 258)   # #3182F6",
+    ])
+    const audit = auditOklch(md, { fix: false })
+    expect({ annotated: audit.annotated, judged: audit.judged }).toEqual({
+      annotated: 2,
+      judged: 2,
+    })
+    expect(audit.findings.map((f) => [f.line, f.token])).toEqual([
+      [4, "next-line"],
+    ])
+  })
+
   it("does not judge a definition-shaped line outside the frontmatter rows", () => {
     const md = [
       "---",
@@ -120,6 +137,53 @@ describe("auditOklch — --fix", () => {
     expect(text.split("\n")[3]).toBe(
       "  border-subtle: oklch(0.556 0.014 271 / 0.078)  # #70737C14"
     )
+  })
+
+  it("rewrites a block scalar's value on its own line, not the header's", () => {
+    const md = doc(
+      [
+        "before: oklch(0.5 0 0)",
+        "brand: >-   # #3182F6",
+        "    oklch(0.900 0.020 90)",
+        "next-line:   # #3182F6",
+        "    oklch(0.900 0.020 90)",
+        "after: oklch(0.5 0 0)",
+      ],
+      "\r\n"
+    )
+    const { text, findings, unfixed } = auditOklch(md, { fix: true })
+    expect(findings.map((f) => f.token)).toEqual(["brand", "next-line"])
+    expect(unfixed).toEqual([])
+
+    const before = md.split("\r\n")
+    const after = text.split("\r\n")
+    expect(after).toHaveLength(before.length)
+    const changed = before.flatMap((line, i) => (line === after[i] ? [] : [i]))
+    expect(changed).toEqual([5, 7])
+    expect(after[5]).toMatch(/^ {6}oklch\([\d.]+ [\d.]+ \d+\)$/)
+    expect(after[7]).toMatch(/^ {6}oklch\([\d.]+ [\d.]+ \d+\)$/)
+    expect(auditOklch(text, { fix: false }).findings).toEqual([])
+  })
+
+  it("reports, and leaves as written, a value it cannot find whole on one line", () => {
+    // The literal runs across two lines, so no one line holds it to rewrite.
+    // A throw here once stopped the catalogue walk half-way through.
+    const md = doc([
+      'split: "oklch(0.900',
+      '    0.020 90)"   # #3182F6',
+      "brand: oklch(0.900 0.020 90)   # #3182F6",
+    ])
+    const { text, findings, unfixed } = auditOklch(md, { fix: true })
+    expect(findings.map((f) => f.token)).toEqual(["split", "brand"])
+    expect(unfixed.map((f) => [f.line, f.token])).toEqual([[4, "split"]])
+    const lines = text.split("\n")
+    expect(lines.slice(3, 5)).toEqual(md.split("\n").slice(3, 5))
+    expect(lines[5]).not.toBe(md.split("\n")[5])
+  })
+
+  it("reports nothing unfixed when not fixing", () => {
+    const md = doc(['split: "oklch(0.900', '    0.020 90)"   # #3182F6'])
+    expect(auditOklch(md, { fix: false }).unfixed).toEqual([])
   })
 
   it("returns the input unchanged when not fixing", () => {

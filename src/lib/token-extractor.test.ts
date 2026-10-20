@@ -719,6 +719,20 @@ describe("reads the token maps as YAML reads them (ADR 0011)", () => {
     ])
   })
 
+  it("keeps the note on a value written below its key", () => {
+    const body = fm(
+      "colors:",
+      "  brand:",
+      "    oklch(0.62 0.19 258) # #3182F6",
+      '  split: "oklch(0.62',
+      '    0.19 258)" # #3182F6'
+    )
+    expect(extractTokensFromMarkdown(body).colors).toEqual([
+      { name: "brand", value: "oklch(0.62 0.19 258)", note: "#3182F6" },
+      { name: "split", value: "oklch(0.62 0.19 258)", note: "#3182F6" },
+    ])
+  })
+
   it("reads a quoted key as its name", () => {
     const body = fm("colors:", '  "brand": oklch(0.62 0.19 258)')
     expect(extractTokensFromMarkdown(body).colors[0]?.name).toBe("brand")

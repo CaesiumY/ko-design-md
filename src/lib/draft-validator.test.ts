@@ -1242,6 +1242,23 @@ describe("where the retired rules' inputs go (#589)", () => {
     ).toBe(1200)
   })
 
+  it("judges a colour written below its key by the hex on the value's line (C1)", () => {
+    // YAML reads the comment that ends the value's line as the value's, so the
+    // hex there is the one the check pairs it with — on the next line or after
+    // a quoted value split over two.
+    const warns = (to: string) =>
+      rulesOf(makeDraft().replace(COLOUR_ROW, to), OPTS, "warn")
+    expect(warns("  primary:\n    oklch(0.42 0.18 254)   # #3182F6")).toContain(
+      "oklch-hex-mismatch"
+    )
+    expect(
+      warns('  primary: "oklch(0.42\n    0.18 254)"   # #3182F6')
+    ).toContain("oklch-hex-mismatch")
+    expect(
+      warns("  primary:\n    oklch(0.62 0.19 258)   # #3182F6")
+    ).not.toContain("oklch-hex-mismatch")
+  })
+
   it("blocks a known key cut at a colon, naming the key meant (M33, M34)", () => {
     // `name:: 토스` is the key `name:` to YAML and `design_system_name:x: y`
     // the key `design_system_name:x`: the site reads neither, so the value
