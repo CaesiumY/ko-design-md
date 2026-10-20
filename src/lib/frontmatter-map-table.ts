@@ -22,7 +22,8 @@ export interface FrontmatterMapTraits {
   reference: boolean
   /** Flat map: each row is one token, judged by the OKLCH rules, and a map
    *  under a row is blocked (`scanFrontmatterTokens`). Typography and
-   *  components nest, so they are judged elsewhere. */
+   *  components nest one level, so each has its own shape rule
+   *  (`checkTypographyStyles`, `checkComponents`). */
   rowScan: boolean
 }
 

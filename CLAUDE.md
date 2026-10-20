@@ -126,9 +126,12 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행하고, 프리
   되읽어 고른다.
 - **토큰 맵(`colors:`·`spacing:`·`rounded:`·`elevation:`) 아래에 또 맵을 두면 막는다**
   (`noncanonical-token-indent`). 중첩하면 토큰 이름이 `{colors.blue.500}` 로 바뀌어 사이드카·참조와 어긋난다.
-  따옴표 없는 참조(`brand: {colors.x}`)도 YAML 에는 맵이라 여기 걸린다. `typography:` 처럼 원래 한 단계 중첩하는
-  맵은 제외다 — 단 크기·굵기·행간·자간 중 하나도 없는 스타일(`fontFamily` 만 · `{ size: … }`)은 린터는 세지만
-  사이드카에는 실리지 않고, 그것을 막는 규칙은 없다(크기 없는 폰트 패밀리는 `fonts:` 로).
+  따옴표 없는 참조(`brand: {colors.x}`)도 YAML 에는 맵이라 여기 걸린다. `typography:` 는 원래 한 단계 중첩하는
+  맵이라 이 규칙 밖이고, 자기 형태 규칙이 따로 있다(`typography-style-shape`, block) — 행마다 스타일 이름 아래
+  `fontSize`·`fontWeight`·`lineHeight`·`letterSpacing` 중 하나 이상을 둔 맵이어야 하고, 그 아래 또 맵을 두면
+  막는다. 크기·굵기·행간·자간이 하나도 없는 스타일(`fontFamily` 만 · `{ size: … }`)과 한 값·통째 별칭으로 쓴
+  스타일(`x: 16px` · `x: "{typography.y}"`)은 린터는 세지만 사이드카에는 실리지 않기 때문이다(크기 없는 폰트
+  패밀리는 `fonts:` 로).
 - **출처 목록은 `## References` 한 곳이다.** frontmatter `sources` 는 References 와의 중복이라
   걷어냈다(ADR 0004) — 되살리지 말 것. 인용은 `[src:N]` 정수 인덱스.
 - **인용은 존재가 아니라 내용 일치.** `[src:N]`이 가리키는 소스가 실제로 그 주장을
@@ -250,8 +253,8 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   는 필수 맵이고 `spacing:`·`rounded:` 는 아니다(#428 — 브랜드가 발행하지 않았을 수 있어, 필수로
   하면 값을 지어내라는 압력이 된다). 추출기는 `fontSize`·`fontWeight`·`lineHeight`·`letterSpacing`
   중 하나가 있는 스타일만 읽으므로, 크기 없이 발행된 폰트 패밀리(`fontFamily` 만)는 스타일이 아니라
-  카탈로그 전용 `fonts:` 맵에 둔다 — 통과하려고 크기를 지어내지 말 것(이것을 막는 기계 규칙은 없다 — 린터와
-  추출기가 같은 YAML 을 읽으므로 둘을 대조하던 규칙은 #589 에서 걷었다). 카탈로그 전용 맵(`grid:`·`opacity:` 등)에 `16px`·`40%` 같은 CSS 치수나 hex 가
+  카탈로그 전용 `fonts:` 맵에 둔다 — 통과하려고 크기를 지어내지 말 것(그런 스타일은 `typography-style-shape`
+  가 막는다 — 린터와 추출기를 대조하던 규칙은 #589 에서 걷었고, 그 자리를 스타일 모양 규칙 하나가 맡는다). 카탈로그 전용 맵(`grid:`·`opacity:` 등)에 `16px`·`40%` 같은 CSS 치수나 hex 가
   있으면 린터가 그 맵을 "무시되는 토큰 맵"으로 보고하므로 `spec-token-like-map` 으로 block
   한다(치수는 `spacing:`/`rounded:` 로, 불투명도는 단위 없는 수로). frontmatter 가 파스되지
   않거나 속성 없는 컴포넌트가 있으면(`empty-component` — YAML null 이라 린터가 모델을 못 만든다) 이
@@ -384,7 +387,9 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   실패한다. 값을 비교하므로 같은 날 후속 편집(이미 그 날짜면)은 통과하고,
   반대로 "올리긴 했는데 이틀 어긋난 날짜"는 잡힌다 — 히스토리 재생에서 둘 다
   실제로 나왔다. 카탈로그 전수가 아니라 **바꾼 파일만** 보므로, 손대지 않은
-  항목의 낡은 날짜가 무관한 PR을 막지 않는다. 카탈로그 전반을 훑는 기계적 편집
+  항목의 낡은 날짜가 무관한 PR을 막지 않는다. 바꾼 파일의 frontmatter 가 YAML 로 읽히지 않으면 날짜를
+  판정하지 못한 채 넘기지 않고 막는다(`unreadable-frontmatter`) — 이 발견은 아래 트레일러로도 면제되지 않는다.
+  카탈로그 전반을 훑는 기계적 편집
   (가드레일 문구 삽입 같은)은 커밋 메시지에 `Skip-Last-Updated: <이유>` 트레일러로
   면제한다(DCO 서명과 같은 형식) — 그런 편집으로 전 항목을 RSS 상단에 올리는 건
   잘못된 신호다. **값을 바꾸지 않는 명세 역할 별칭 추가**(`primary` 참조 행)도 같은
@@ -432,8 +437,9 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
 `validate:catalog` 전체의 warn 목록이 아니다** — 검증기는 그 밖에도
 `oklch-hex-mismatch` · `hex-in-prose` · `duplicate-token-value` 등을 낸다.
 `check:last-updated`는 별도 게이트이고 warn이 아니라 **block**이다
-(위 "날짜는 조회해서 쓴다" 항). 막지 않는 경우는 둘이다 — `Skip-Last-Updated` 트레일러로 면제된
-발견(출력만 한다)과, base 에서 물려받아 PR 이 옮기지 않은 날짜(미래 판정 없음 — 오늘+1일을 넘을 때만
+(위 "날짜는 조회해서 쓴다" 항). frontmatter 가 YAML 로 읽히지 않는 파일도 막는다(`unreadable-frontmatter`).
+막지 않는 경우는 둘이다 — `Skip-Last-Updated` 트레일러로 면제된
+발견(출력만 한다 — 단 `unreadable-frontmatter` 는 트레일러로 면제되지 않는다)과, base 에서 물려받아 PR 이 옮기지 않은 날짜(미래 판정 없음 — 오늘+1일을 넘을 때만
 `carried-future-last-updated` warn, 그 안이면 무판정)다. stale 판정은 물려받은 날짜에도 돈다.
 
 **린트는 메모를 형태로 인식한다** — `> **<라벨>(YYYY-MM-DD).**`에 맞는 줄만

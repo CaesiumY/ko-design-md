@@ -1127,6 +1127,8 @@ describe("where the retired rules' inputs go (#589)", () => {
       ["elevation-not-shadow"],
     ],
     // unreadable-token-map — the linter read a style the extractor did not.
+    // A style that is not a map with one of the four sized properties is now
+    // one shape rule's (`typography-style-shape`).
     [
       "U1 an inline style",
       "typography:",
@@ -1137,13 +1139,13 @@ describe("where the retired rules' inputs go (#589)", () => {
       "U2 an inline style with names the scale does not use",
       "typography:",
       "typography:\n  title: { size: 24px }",
-      [],
+      ["typography-style-shape"],
     ],
     [
       "U3 a font family with no size",
       "typography:",
       "typography:\n  code:\n    fontFamily: D2Coding",
-      [],
+      ["typography-style-shape"],
     ],
     [
       "U4 a numeric style name",
@@ -1156,6 +1158,18 @@ describe("where the retired rules' inputs go (#589)", () => {
       COLOUR_ROW,
       `${COLOUR_ROW}\n  brand: "{colors.primary}"`,
       [],
+    ],
+    [
+      "U7 a whole style written as an alias",
+      "typography:",
+      'typography:\n  hero: "{typography.body}"',
+      ["typography-style-shape"],
+    ],
+    [
+      "U8 a style written as one value",
+      "typography:",
+      "typography:\n  caption: 16px",
+      ["typography-style-shape"],
     ],
     [
       "U6 an inline style YAML cannot read",
@@ -1181,7 +1195,13 @@ describe("where the retired rules' inputs go (#589)", () => {
       "I4 a type style nested under a group",
       "typography:",
       "typography:\n  group:\n    caption:\n      fontSize: 12px",
-      [],
+      ["typography-style-shape"],
+    ],
+    [
+      "I5 a map under a sized style",
+      "typography:",
+      "typography:\n  title:\n    fontSize: 24px\n    mobile:\n      fontSize: 20px",
+      ["typography-style-shape"],
     ],
     // frontmatter-parse — the fence it used to report is the read gate's now.
     [
@@ -1189,6 +1209,13 @@ describe("where the retired rules' inputs go (#589)", () => {
       "\n---\n",
       "\n",
       ["frontmatter-yaml-invalid"],
+    ],
+    // …and what it still reports: a value the site's build refuses.
+    [
+      "P2 a date that is not a real day",
+      DATE,
+      'last_updated: "2026-02-30"',
+      ["frontmatter-parse"],
     ],
   ]
 
@@ -1256,15 +1283,25 @@ describe("where the retired rules' inputs go (#589)", () => {
     ).not.toContain("spec-unrecorded-limitation")
   })
 
-  it("leaves a sized style beside an unsized one in the sidecar only (U2, U3)", () => {
+  it("blocks each unsized style beside a sized one and sends a bare family to `fonts:` (U2, U3)", () => {
     // The linter counts `title` and `code` as styles; the sidecar carries
     // neither, since neither sets a size, weight, line height or tracking.
-    // No rule says so any more — the skill's authoring docs are the guard.
+    // `body` is a style both read, so it is not named.
     const raw = makeDraft().replace(
       TYPE_SCALE,
       "typography:\n  body:\n    fontSize: 16px\n  title: { size: 24px }\n  code:\n    fontFamily: D2Coding\n"
     )
-    expect(rulesOf(raw, OPTS, "block")).toEqual([])
+    const shape = validateDraft(raw, OPTS).issues.filter(
+      (i) => i.rule === "typography-style-shape"
+    )
+    expect(shape.map((i) => i.fix.match(/^style `([^`]+)`/)?.[1])).toEqual([
+      "title",
+      "code",
+    ])
+    for (const { fix } of shape) {
+      expect(fix).toContain("catalog-only `fonts:` map")
+      expect(fix).toContain("do not invent a size")
+    }
   })
 })
 

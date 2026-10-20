@@ -1114,6 +1114,57 @@ function scanFrontmatterTokens(read: FrontmatterRead): Array<ValidationIssue> {
   return issues
 }
 
+/** The style properties the token extractor reads — a style with none of
+ *  them is not a type token in the sidecar. */
+const TYPE_STYLE_PROPERTIES: ReadonlyArray<string> = [
+  "fontSize",
+  "fontWeight",
+  "lineHeight",
+  "letterSpacing",
+]
+
+/**
+ * The `typography:` map's one allowed shape: every row is a style, a map that
+ * sets at least one of `TYPE_STYLE_PROPERTIES`. The official linter counts a
+ * style the sidecar drops — one with only a `fontFamily`, or properties under
+ * other names — so without this the Tokens tab and `use-design-md` lose it
+ * while every gate passes.
+ */
+function checkTypographyStyles(read: FrontmatterRead): Array<ValidationIssue> {
+  const map = read.keys.find((k) => k.key === "typography")
+  if (!map) return []
+  const issues: Array<ValidationIssue> = []
+  for (const style of entriesOf(map)) {
+    // One level only: a map under a style is a group the sidecar does not
+    // read as a style (`{typography.title.mobile}` names nothing it carries).
+    const nested = entriesOf(style).find((p) => p.rows)
+    if (nested) {
+      issues.push(
+        block(
+          "typography-style-shape",
+          "tokens",
+          `style \`${style.key}\` in \`typography:\` holds a nested map (\`${nested.key}:\`) — a style is one name with \`fontSize\` / \`fontWeight\` / \`lineHeight\` / \`letterSpacing\` one level below it, and the sidecar reads nothing deeper. Write each variant as its own flat style (\`${style.key}-${nested.key}:\`).`
+        )
+      )
+      continue
+    }
+    const sized = entriesOf(style).some(
+      (p) =>
+        TYPE_STYLE_PROPERTIES.includes(p.key) &&
+        (tokenText(p)?.trim() ?? "") !== ""
+    )
+    if (sized) continue
+    issues.push(
+      block(
+        "typography-style-shape",
+        "tokens",
+        `style \`${style.key}\` in \`typography:\` sets none of \`fontSize\` / \`fontWeight\` / \`lineHeight\` / \`letterSpacing\`, so the sidecar carries no type token for it while the linter still counts it. A style is one name with those properties one level below it (four-space indent, as in the template). A font family published with no size belongs in the catalog-only \`fonts:\` map — do not invent a size to make it pass.`
+      )
+    )
+  }
+  return issues
+}
+
 /** The spec's component properties — `component_sub_tokens` in the pinned
  *  linter's `spec-config.yaml`, which the package does not export. A contract
  *  test compares the two, so a linter upgrade that changes the list fails until
@@ -2240,6 +2291,7 @@ export function validateDraft(
     }
     issues.push(...checkTokenReferences(raw, read))
     issues.push(...scanFrontmatterTokens(read))
+    issues.push(...checkTypographyStyles(read))
     issues.push(...componentIssues)
     // The document the site builds, for callers that want it; null when the
     // site's build would refuse a value (a field rule above says which).

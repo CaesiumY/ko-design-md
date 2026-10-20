@@ -93,12 +93,14 @@ extractor reads:
 - **`typography:` is the one map the sidecar reads that nests, and its property names are the
   spec's** — `fontSize`, `fontWeight`, `lineHeight`, `letterSpacing`, one per line
   under a bare style name, as above. A style that sets none of the four
-  (`display-1: { size: 56px }`, or only a `fontFamily`) yields **no** type token,
-  and no gate says so: the official linter still counts it, and `tokens:check`
-  agrees with the sidecar that lacks it. A family with no published size goes in
-  the catalog-only `fonts:` map instead.
+  (`display-1: { size: 56px }`, or only a `fontFamily`) yields **no** type token
+  while the official linter still counts it, so the draft gate blocks it — and
+  a style written as one value or as a whole-style alias (`hero: "{typography.x}"`)
+  the same way. A family with no published size goes in the catalog-only
+  `fonts:` map instead; do not invent a size to get past the gate.
 - **Names stay flat.** Do not nest a group as a sub-map — the validator blocks a
-  map under a row of `colors:`, `spacing:`, `rounded:` or `elevation:`.
+  map under a row of `colors:`, `spacing:`, `rounded:` or `elevation:`, and a
+  map under a typography style (one level of nesting is the style itself).
   `brand.primary` would rename the token and break every `{colors.X}` prose
   reference and the preview's CSS-variable mapping along with them.
 - **A `## Heading` comment row opens a group.** It becomes the sidecar's `group`
@@ -208,7 +210,7 @@ so the extractor can read each — `name: oklch(...)` (colors),
 shown above: a bare style name, then `fontSize` / `fontWeight` /
 `lineHeight` / `letterSpacing` under it. Forms that set none of those four —
 `name: { size, weight, … }`, `name: 16 / 24 / 700`, a whole-style alias — yield
-**zero** type tokens, and the extractor reads nothing in the body. Alias rows whose value points at another token
+**zero** type tokens and are blocked by the draft gate, and the extractor reads nothing in the body. Alias rows whose value points at another token
 (`fill-brand: "{colors.red}"`) are skipped by the extractor and surface only in
 the prose — intended, since the cards show visually-renderable tokens, not
 pointers. `pnpm tokens:check` compares the regenerated sidecar byte-for-byte, so
