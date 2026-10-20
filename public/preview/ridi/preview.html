@@ -1,0 +1,1272 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>리디 preview</title>
+  <link rel="stylesheet" href="/preview/_runtime/tokens.css">
+  <script src="/preview/_runtime/iframe.js" defer></script>
+  <style>
+    :root {
+      /* neutral */
+      --ridi-neutral-25: oklch(0.985 0.000 0.0);
+      --ridi-neutral-50: oklch(0.970 0.000 0.0);
+      --ridi-neutral-100: oklch(0.925 0.000 0.0);
+      --ridi-neutral-200: oklch(0.845 0.000 0.0);
+      --ridi-neutral-300: oklch(0.722 0.000 0.0);
+      --ridi-neutral-400: oklch(0.573 0.000 0.0);
+      --ridi-neutral-500: oklch(0.510 0.000 0.0);
+      --ridi-neutral-600: oklch(0.431 0.000 0.0);
+      --ridi-neutral-700: oklch(0.337 0.000 0.0);
+      --ridi-neutral-750: oklch(0.293 0.000 0.0);
+      --ridi-neutral-800: oklch(0.244 0.000 0.0);
+      --ridi-neutral-850: oklch(0.222 0.000 0.0);
+      --ridi-neutral-900: oklch(0.191 0.000 0.0);
+      --ridi-neutral-white: oklch(1.000 0.000 0.0);
+      --ridi-neutral-black: oklch(0.000 0.000 0.0);
+      /* coolgray */
+      --ridi-coolgray-25: oklch(0.982 0.002 247.8);
+      --ridi-coolgray-50: oklch(0.966 0.003 228.8);
+      --ridi-coolgray-100: oklch(0.930 0.005 258.3);
+      --ridi-coolgray-200: oklch(0.871 0.007 247.9);
+      --ridi-coolgray-300: oklch(0.723 0.013 236.7);
+      --ridi-coolgray-400: oklch(0.625 0.016 244.8);
+      --ridi-coolgray-500: oklch(0.526 0.016 241.2);
+      --ridi-coolgray-600: oklch(0.394 0.014 244.0);
+      --ridi-coolgray-700: oklch(0.325 0.009 233.9);
+      --ridi-coolgray-800: oklch(0.266 0.008 240.2);
+      --ridi-coolgray-900: oklch(0.212 0.005 248.1);
+      /* blue */
+      --ridi-blue-50: oklch(0.964 0.019 243.0);
+      --ridi-blue-100: oklch(0.892 0.058 241.4);
+      --ridi-blue-200: oklch(0.840 0.087 242.4);
+      --ridi-blue-300: oklch(0.774 0.125 243.5);
+      --ridi-blue-400: oklch(0.735 0.147 245.2);
+      --ridi-blue-500: oklch(0.683 0.176 248.4);
+      --ridi-blue-600: oklch(0.637 0.163 248.1);
+      --ridi-blue-660: oklch(0.569 0.174 252.7);
+      --ridi-blue-700: oklch(0.531 0.134 248.0);
+      --ridi-blue-800: oklch(0.444 0.109 247.3);
+      --ridi-blue-900: oklch(0.369 0.088 247.3);
+      /* deepblue */
+      --ridi-deepblue-25: oklch(0.970 0.010 267.4);
+      --ridi-deepblue-50: oklch(0.951 0.020 264.5);
+      --ridi-deepblue-100: oklch(0.846 0.066 267.0);
+      --ridi-deepblue-200: oklch(0.773 0.100 265.8);
+      --ridi-deepblue-300: oklch(0.673 0.150 264.5);
+      --ridi-deepblue-400: oklch(0.613 0.181 263.5);
+      --ridi-deepblue-500: oklch(0.531 0.225 262.9);
+      --ridi-deepblue-600: oklch(0.497 0.208 262.9);
+      --ridi-deepblue-650: oklch(0.500 0.236 262.2);
+      --ridi-deepblue-700: oklch(0.416 0.171 263.1);
+      --ridi-deepblue-800: oklch(0.351 0.138 262.8);
+      --ridi-deepblue-900: oklch(0.295 0.111 263.1);
+      /* darknavy */
+      --ridi-darknavy-25: oklch(0.973 0.002 247.8);
+      --ridi-darknavy-50: oklch(0.943 0.003 264.5);
+      --ridi-darknavy-100: oklch(0.818 0.010 252.8);
+      --ridi-darknavy-200: oklch(0.729 0.015 254.6);
+      --ridi-darknavy-300: oklch(0.596 0.023 255.0);
+      --ridi-darknavy-400: oklch(0.510 0.029 255.7);
+      --ridi-darknavy-500: oklch(0.371 0.040 255.8);
+      --ridi-darknavy-600: oklch(0.349 0.036 256.6);
+      --ridi-darknavy-700: oklch(0.298 0.029 256.8);
+      --ridi-darknavy-800: oklch(0.258 0.024 256.4);
+      --ridi-darknavy-900: oklch(0.220 0.020 258.3);
+      /* red */
+      --ridi-red-25: oklch(1.000 0.000 0.0);
+      --ridi-red-50: oklch(0.954 0.019 17.5);
+      --ridi-red-100: oklch(0.852 0.061 18.4);
+      --ridi-red-200: oklch(0.785 0.093 19.4);
+      --ridi-red-300: oklch(0.697 0.142 21.4);
+      --ridi-red-400: oklch(0.647 0.170 23.1);
+      --ridi-red-500: oklch(0.587 0.206 26.4);
+      --ridi-red-600: oklch(0.547 0.191 26.2);
+      --ridi-red-700: oklch(0.458 0.156 25.9);
+      --ridi-red-800: oklch(0.383 0.128 25.6);
+      --ridi-red-900: oklch(0.318 0.103 25.2);
+      /* yellow */
+      --ridi-yellow-25: oklch(0.993 0.011 95.2);
+      --ridi-yellow-50: oklch(0.987 0.021 95.3);
+      --ridi-yellow-100: oklch(0.957 0.065 94.0);
+      --ridi-yellow-200: oklch(0.938 0.094 94.0);
+      --ridi-yellow-300: oklch(0.913 0.131 94.0);
+      --ridi-yellow-400: oklch(0.899 0.148 93.3);
+      --ridi-yellow-500: oklch(0.878 0.168 91.7);
+      --ridi-yellow-600: oklch(0.818 0.156 91.7);
+      --ridi-yellow-700: oklch(0.680 0.128 91.9);
+      --ridi-yellow-800: oklch(0.566 0.106 92.7);
+      --ridi-yellow-900: oklch(0.467 0.086 92.3);
+      /* green */
+      --ridi-green-25: oklch(0.979 0.009 161.4);
+      --ridi-green-50: oklch(0.970 0.018 161.1);
+      --ridi-green-100: oklch(0.905 0.053 160.6);
+      --ridi-green-200: oklch(0.861 0.080 159.4);
+      --ridi-green-300: oklch(0.800 0.113 158.2);
+      --ridi-green-400: oklch(0.766 0.133 156.7);
+      --ridi-green-500: oklch(0.715 0.158 154.2);
+      --ridi-green-600: oklch(0.668 0.147 154.4);
+      --ridi-green-700: oklch(0.558 0.122 154.3);
+      --ridi-green-800: oklch(0.464 0.098 154.9);
+      --ridi-green-900: oklch(0.386 0.079 155.4);
+      /* purple */
+      --ridi-purple-25: oklch(0.979 0.008 293.9);
+      --ridi-purple-50: oklch(0.957 0.017 293.1);
+      --ridi-purple-100: oklch(0.865 0.058 293.9);
+      --ridi-purple-200: oklch(0.798 0.088 293.2);
+      --ridi-purple-300: oklch(0.705 0.131 291.2);
+      --ridi-purple-400: oklch(0.650 0.157 289.8);
+      --ridi-purple-500: oklch(0.566 0.196 286.8);
+      --ridi-purple-600: oklch(0.529 0.182 287.0);
+      --ridi-purple-700: oklch(0.445 0.149 287.3);
+      --ridi-purple-800: oklch(0.374 0.121 287.1);
+      --ridi-purple-900: oklch(0.314 0.097 287.5);
+      /* orange */
+      --ridi-orange-25: oklch(0.983 0.010 58.2);
+      --ridi-orange-50: oklch(0.966 0.021 60.8);
+      --ridi-orange-100: oklch(0.892 0.066 60.1);
+      --ridi-orange-200: oklch(0.844 0.099 58.5);
+      --ridi-orange-300: oklch(0.781 0.143 56.7);
+      --ridi-orange-400: oklch(0.746 0.166 54.0);
+      --ridi-orange-500: oklch(0.699 0.194 46.9);
+      --ridi-orange-600: oklch(0.652 0.180 47.1);
+      --ridi-orange-700: oklch(0.544 0.149 47.8);
+      --ridi-orange-800: oklch(0.455 0.122 49.3);
+      --ridi-orange-900: oklch(0.376 0.099 50.4);
+      /* mint */
+      --ridi-mint-25: oklch(0.978 0.010 197.0);
+      --ridi-mint-50: oklch(0.973 0.018 196.9);
+      --ridi-mint-100: oklch(0.918 0.056 196.2);
+      --ridi-mint-200: oklch(0.880 0.078 195.8);
+      --ridi-mint-300: oklch(0.833 0.106 195.3);
+      --ridi-mint-400: oklch(0.806 0.118 195.1);
+      --ridi-mint-500: oklch(0.770 0.127 194.8);
+      --ridi-mint-600: oklch(0.719 0.119 194.8);
+      --ridi-mint-700: oklch(0.599 0.098 194.8);
+      --ridi-mint-800: oklch(0.499 0.081 194.9);
+      --ridi-mint-900: oklch(0.412 0.066 194.9);
+      /* gold */
+      --ridi-gold-25: oklch(0.982 0.004 91.4);
+      --ridi-gold-50: oklch(0.978 0.009 100.0);
+      --ridi-gold-100: oklch(0.930 0.026 94.7);
+      --ridi-gold-200: oklch(0.896 0.039 95.9);
+      --ridi-gold-300: oklch(0.848 0.058 97.6);
+      --ridi-gold-400: oklch(0.820 0.070 97.6);
+      --ridi-gold-500: oklch(0.773 0.085 97.3);
+      --ridi-gold-600: oklch(0.722 0.080 98.1);
+      --ridi-gold-700: oklch(0.601 0.064 97.2);
+      --ridi-gold-800: oklch(0.502 0.052 96.8);
+      --ridi-gold-900: oklch(0.415 0.041 96.7);
+      /* emotion */
+      --ridi-emotion-blue: oklch(0.683 0.176 248.3);
+      --ridi-dark-emotion-blue: oklch(0.649 0.156 244.3);
+      --ridi-emotion-grey200: oklch(0.955 0.000 0.0);
+      --ridi-emotion-grey550: oklch(0.450 0.000 0.0);
+      --ridi-emotion-dim-thumb: oklch(0.000 0.000 0 / 0.04);
+
+      /* semantic — light */
+      --ridi-background-neutral-default: var(--ridi-neutral-white);
+      --ridi-background-neutral-subtle: var(--ridi-neutral-50);
+      --ridi-surface-elevated: var(--ridi-neutral-white);
+      --ridi-surface-disabled: var(--ridi-neutral-50);
+      --ridi-surface-general-white-default: var(--ridi-neutral-white);
+      --ridi-surface-general-gray-25: var(--ridi-neutral-25);
+      --ridi-surface-general-gray-50: var(--ridi-neutral-50);
+      --ridi-surface-general-gray-100: var(--ridi-neutral-100);
+      --ridi-surface-general-blue-50: var(--ridi-blue-50);
+      --ridi-surface-general-blue-300: var(--ridi-blue-300);
+      --ridi-surface-general-deepblue-300: var(--ridi-deepblue-300);
+      --ridi-surface-general-darknavy-300: var(--ridi-darknavy-300);
+      --ridi-surface-general-darknavy-500: var(--ridi-darknavy-500);
+      --ridi-surface-general-red-300: var(--ridi-red-300);
+      --ridi-surface-general-red-500: var(--ridi-red-500);
+      --ridi-surface-general-green-300: var(--ridi-green-300);
+      --ridi-surface-general-purple-300: var(--ridi-purple-300);
+      --ridi-surface-general-orange-300: var(--ridi-orange-300);
+      --ridi-surface-general-mint-500: var(--ridi-mint-500);
+      --ridi-border-default: var(--ridi-neutral-100);
+      --ridi-border-strong: var(--ridi-neutral-200);
+      --ridi-border-divider-default: var(--ridi-neutral-50);
+      --ridi-border-divider-strong: var(--ridi-neutral-100);
+      --ridi-text-primary: var(--ridi-neutral-900);
+      --ridi-text-secondary: var(--ridi-neutral-400);
+      --ridi-text-tertiary: var(--ridi-neutral-300);
+      --ridi-text-disabled: var(--ridi-neutral-200);
+      --ridi-text-rating: var(--ridi-red-500);
+      --ridi-text-danger: var(--ridi-red-500);
+      --ridi-icon-primary: var(--ridi-neutral-900);
+      --ridi-icon-secondary: var(--ridi-neutral-400);
+
+      /* fonts · spacing · radius */
+      --ridi-font-sans: "Pretendard Variable", "Pretendard Std Variable", "Pretendard JP Variable", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+      --ridi-font-sans-detail: "Pretendard Variable", "Pretendard Std Variable", "Pretendard JP Variable", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+      --ridi-ds-50: 2px;
+      --ridi-ds-100: 4px;
+      --ridi-ds-150: 6px;
+      --ridi-ds-200: 8px;
+      --ridi-ds-250: 10px;
+      --ridi-ds-300: 12px;
+      --ridi-ds-400: 16px;
+      --ridi-ds-500: 20px;
+      --ridi-ds-600: 24px;
+      --ridi-ds-700: 28px;
+      --ridi-ds-750: 30px;
+      --ridi-ds-900: 36px;
+      --ridi-ds-1000: 40px;
+      --ridi-radius-50: 2px;
+      --ridi-radius-100: 4px;
+      --ridi-radius-full: 9999px;
+
+      /* observed values without a token name */
+      --shadow-arrow: 2px 4px 8px 0 oklch(0.000 0.000 0.0 / 0.06);
+      --shadow-hero-chip: 0 1px 1px 0 oklch(0.000 0.000 0.0 / 0.15);
+      --shadow-legacy: 0 1px 1px 0 oklch(0.871 0.007 247.9 / 0.3);
+      --hero-chip-bg: oklch(1.000 0.000 0.0 / 0.87);
+      --hero-chip-fg: oklch(0.000 0.000 0.0 / 0.8);
+      --carousel-num-bg: oklch(0.191 0.000 0.0 / 0.2);
+      --ronly-bg: oklch(0.000 0.000 0.0 / 0.7);
+      --totop-bg: oklch(1.000 0.000 0.0 / 0.9);
+      --chip-serial-bg: oklch(0.942 0.017 248.0);
+      --chip-serial-fg: oklch(0.601 0.038 261.9);
+      --chip-event-bg: oklch(0.913 0.019 295.8);
+      --chip-event-fg: oklch(0.517 0.129 283.6);
+      --chip-only-bg: var(--ridi-neutral-100);
+      --chip-only-fg: var(--ridi-emotion-grey550);
+      --chip-wait-bg: oklch(0.967 0.016 239.1);
+      --chip-wait-fg: oklch(0.628 0.164 249.6);
+      --chip-rec-bg: oklch(0.948 0.016 262.8);
+      --chip-rec-fg: oklch(0.504 0.013 252.2);
+      --legacy-tab-top: var(--ridi-neutral-500);
+      --legacy-tab-off: oklch(0.967 0.000 0.0);
+      --legacy-check: oklch(0.795 0.009 264.5);
+      --legacy-gray-10: oklch(0.922 0.000 0.0);
+      --legacy-btn-line: var(--ridi-coolgray-200);
+      --legacy-row-line: var(--ridi-coolgray-50);
+      --legacy-title: var(--ridi-neutral-black);
+      --legacy-sub: var(--ridi-coolgray-400);
+
+      /* roles */
+      --bg: var(--ridi-background-neutral-default);
+      --fav-hover-bg: var(--ridi-surface-general-blue-50);
+      --fg: var(--ridi-text-primary);
+      --brand: var(--ridi-emotion-blue);
+      --line: var(--ridi-emotion-grey200);
+      --sub: var(--ridi-emotion-grey550);
+
+      /* runtime overrides */
+      --background: var(--ridi-background-neutral-default);
+      --foreground: var(--ridi-text-primary);
+      --card: var(--ridi-surface-elevated);
+      --card-foreground: var(--ridi-text-primary);
+      --primary: var(--ridi-emotion-blue);
+      --primary-foreground: var(--ridi-neutral-white);
+      --muted: var(--ridi-background-neutral-subtle);
+      --muted-foreground: var(--ridi-text-secondary);
+      --border: var(--ridi-border-default);
+      --accent-glow: var(--ridi-emotion-blue);
+      --rule-strong: var(--ridi-border-strong);
+    }
+
+    body {
+      font-family: var(--ridi-font-sans);
+      font-size: 14px;
+      letter-spacing: -0.01em;
+      background: var(--bg);
+      color: var(--fg);
+    }
+    a { color: inherit; }
+    .sr {
+      position: absolute; width: 1px; height: 1px; overflow: hidden;
+      clip: rect(0 0 0 0); white-space: nowrap;
+    }
+    .wrap { max-width: 1170px; margin: 0 auto; padding: 0 var(--ridi-ds-750); }
+
+    /* ── hero ── */
+    .hero { padding: 40px 0 56px; border-bottom: 1px solid var(--line); }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 364px);
+      gap: 48px;
+      align-items: center;
+    }
+    .hero-copy { min-width: 0; }
+    .lockup img { display: block; height: 30px; width: auto; }
+    .hero-kicker {
+      margin: 32px 0 0; font-size: 15px; line-height: 22px; font-weight: 600;
+      color: var(--ridi-text-secondary);
+    }
+    .hero h1 {
+      margin: 8px 0 0; font-size: 42px; line-height: 1.2; font-weight: 900;
+      letter-spacing: -0.42px;
+    }
+    .hero-tagline {
+      margin: 12px 0 0; font-size: 18px; line-height: 28px; font-weight: 500;
+      color: var(--ridi-text-secondary);
+    }
+    .hero-ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 32px; }
+    .hero-visual { min-width: 0; display: flex; flex-direction: column; align-items: flex-end; }
+    .hero-stage { position: relative; width: min(100%, 364px); }
+
+    .hero-card {
+      position: relative; display: flex; flex-direction: column; justify-content: flex-end;
+      align-items: center; text-align: center; width: 100%; aspect-ratio: 364 / 414;
+      border-radius: 20px; overflow: hidden; padding: 0 24px 12px;
+      color: var(--ridi-neutral-white); text-decoration: none;
+    }
+    .hc-a { background: linear-gradient(165deg, var(--ridi-darknavy-500) 0%, var(--ridi-darknavy-900) 100%); }
+    .hc-b { background: linear-gradient(165deg, var(--ridi-purple-700) 0%, var(--ridi-darknavy-900) 100%); }
+    .hc-c { background: var(--ridi-darknavy-500); }
+    .hero-chips { position: absolute; top: 12px; left: 12px; display: flex; gap: 4px; }
+    .hero-chip {
+      font-size: 13px; line-height: 16px; font-weight: 700; letter-spacing: -0.39px;
+      padding: 2px 4px; border-radius: 3px; background: var(--hero-chip-bg);
+      color: var(--hero-chip-fg); box-shadow: var(--shadow-hero-chip);
+    }
+    .hero-art {
+      position: absolute; left: 0; right: 0; top: 38%; font-size: 13px;
+      color: var(--ridi-neutral-white); opacity: 0.7;
+    }
+    .hero-title { font-size: 22px; line-height: 32px; font-weight: 900; letter-spacing: -0.22px; }
+    .hero-sub { margin-top: 8px; font-size: 16px; line-height: 24px; font-weight: 500; }
+    .hero-copyright { margin-top: 22px; font-size: 8px; line-height: 11px; font-weight: 400; opacity: 0.8; }
+    .hero-stage .arrow, .dh-stage > .arrow { position: absolute; top: calc(50% - 20px); }
+    .hero-stage .arrow.prev, .dh-stage > .arrow.prev { left: -19px; }
+    .hero-stage .arrow.next, .dh-stage > .arrow.next { right: -19px; }
+
+    /* ── buttons & pills ── */
+    .btn-buy {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 226px; max-width: 100%; min-width: 0; height: 52px; padding: 0 12px;
+      border: 0; border-radius: 6px; background: var(--brand); color: var(--primary-foreground);
+      font-family: inherit; font-size: 18px; line-height: 22px; font-weight: 600;
+      letter-spacing: -0.18px; text-decoration: none; cursor: pointer;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .btn-buy[aria-disabled="true"] {
+      background: var(--ridi-surface-disabled); color: var(--ridi-text-disabled); cursor: not-allowed;
+    }
+    .buy-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .buy-row .btn-buy { flex: 1 1 160px; }
+
+    .pill-fav {
+      display: inline-flex; align-items: center; justify-content: center; gap: 3px;
+      height: 34px; padding: 0 14px; border: 1px solid var(--brand); border-radius: 30px;
+      background: var(--ridi-surface-general-white-default); color: var(--brand);
+      font-family: inherit; font-size: 14px; font-weight: 500; text-decoration: none;
+      cursor: pointer; transition: background-color 0.2s ease;
+    }
+    .pill-fav svg { flex: 0 0 auto; }
+    .pill-fav.is-hover { background: var(--fav-hover-bg); }
+    @media (hover: hover) and (pointer: fine) {
+      .pill-fav:hover { background: var(--fav-hover-bg); }
+    }
+
+    .arrow {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px; padding: 0; border-radius: 50%;
+      background: var(--ridi-surface-elevated); border: 1px solid var(--line);
+      box-shadow: var(--shadow-arrow); color: var(--ridi-icon-primary); cursor: pointer;
+      transition: opacity 0.2s ease, color 0.2s ease;
+    }
+    .arrow[aria-disabled="true"] { opacity: 0.3; pointer-events: none; }
+    .totop {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 58px; height: 58px; border-radius: 29px; padding: 0;
+      background: var(--totop-bg); border: 1px solid var(--ridi-border-default);
+      color: var(--ridi-icon-primary); cursor: pointer;
+    }
+
+    /* ── sections & cells ── */
+    .sec { padding: 56px 0 0; }
+    .sec:last-of-type { padding-bottom: 80px; }
+    .sec-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; }
+    .sec-idx { font-size: 13px; line-height: 20px; font-weight: 700; color: var(--ridi-text-secondary); }
+    .sec-head h2 { margin: 0; font-size: 22px; line-height: 26px; font-weight: 700; letter-spacing: -0.22px; }
+    .cells { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+    .cell {
+      min-width: 0; display: flex; flex-direction: column; gap: 16px; padding: 20px;
+      border: 1px solid var(--line); border-radius: var(--ridi-radius-100);
+      background: var(--bg);
+    }
+    .cell.wide { grid-column: 1 / -1; }
+    .kicker { font-size: 12px; line-height: 18px; font-weight: 600; color: var(--ridi-text-secondary); letter-spacing: 0; }
+    .specs { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+    .spec, .hint { font-size: 12px; line-height: 18px; color: var(--ridi-text-secondary); letter-spacing: 0; }
+    .states { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 24px; }
+    .state { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; min-width: 0; max-width: 100%; }
+    .state-label { font-size: 12px; line-height: 18px; color: var(--ridi-text-secondary); }
+
+    /* ── gnb ── */
+    .gnb-bar {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+      gap: 0 16px; border-bottom: 1px solid var(--line);
+    }
+    .gnb {
+      display: flex; gap: 22px; flex: 1 1 320px; max-width: 100%; min-width: 0;
+      overflow-x: auto; white-space: nowrap; scrollbar-width: none; padding-right: 8px;
+    }
+    .state > .gnb { flex: 0 0 auto; }
+    .gnb-tab {
+      position: relative; flex: 0 0 auto; display: inline-flex; align-items: center; gap: 3px;
+      padding: 12px 0; border: 0; background: none; color: var(--ridi-text-primary);
+      font-family: inherit; font-size: 16px; line-height: 18px; font-weight: 600;
+      letter-spacing: -0.16px; cursor: pointer;
+    }
+    .gnb-tab[aria-current="page"], .gnb-tab.is-cur { color: var(--brand); font-weight: 700; }
+    .gnb-new {
+      position: absolute; top: 5px; right: -7px; font-size: 9px; line-height: 9px;
+      font-weight: 700; color: var(--ridi-text-danger);
+    }
+    .gnb.is-detail .gnb-tab { color: var(--ridi-text-secondary); cursor: default; }
+    .gnb-aux { display: flex; gap: 22px; font-size: 15px; font-weight: 600; padding: 12px 0; flex-wrap: wrap; }
+    .gnb-aux span { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+
+    /* ── genre pills ── */
+    .pills { display: flex; flex-wrap: wrap; gap: 4px; }
+    .pill {
+      border: 0; background: transparent; border-radius: 99px; padding: 7px 10px 8px;
+      color: var(--ridi-text-primary); font-family: inherit; font-size: 16px; line-height: 19px;
+      font-weight: 600; letter-spacing: -0.16px; cursor: pointer; white-space: nowrap;
+      transition: all 0.2s ease-in-out;
+    }
+    .pill[aria-pressed="true"], .pill.is-on { background: var(--brand); color: var(--primary-foreground); font-weight: 700; }
+    .pill.is-hover { opacity: 0.4; }
+    @media (hover: hover) and (pointer: fine) {
+      .pill:not(.is-on):not([aria-pressed="true"]):hover { opacity: 0.4; }
+    }
+
+    /* ── search & shortcuts ── */
+    .search {
+      display: flex; align-items: center; gap: 8px; width: min(100%, 260px); height: 40px;
+      padding: 0 12px; border-radius: 8px; background: var(--ridi-surface-general-gray-50);
+      color: var(--ridi-icon-secondary);
+    }
+    .search input {
+      flex: 1 1 auto; min-width: 0; height: 40px; border: 0; background: transparent;
+      font: inherit; color: var(--ridi-text-primary); outline-offset: 2px;
+    }
+    .shortcuts { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 16px 8px; }
+    .sc { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; }
+    .sc-ic {
+      display: flex; align-items: center; justify-content: center; width: 70px; height: 70px;
+      border-radius: 50%; overflow: hidden; background: var(--ridi-surface-general-gray-50);
+      font-size: 13px; font-weight: 700; color: var(--ridi-text-primary);
+    }
+    .sc-ic img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .sc-label { font-size: 13px; line-height: 16px; font-weight: 500; text-align: center; white-space: nowrap; }
+
+    /* ── covers & book cards ── */
+    .cover {
+      position: relative; display: flex; align-items: center; justify-content: center;
+      aspect-ratio: 180 / 260; border-radius: var(--ridi-radius-100); overflow: hidden;
+      color: var(--ridi-text-primary); font-size: 12px; font-weight: 500;
+    }
+    .cover::after {
+      content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+      outline: 1px solid var(--ridi-emotion-dim-thumb); outline-offset: -1px;
+      background: var(--ridi-emotion-dim-thumb);
+    }
+    .cv-blue { background: var(--ridi-surface-general-blue-300); }
+    .cv-deep { background: var(--ridi-surface-general-deepblue-300); }
+    .cv-navy { background: var(--ridi-surface-general-darknavy-300); }
+    .cv-red { background: var(--ridi-surface-general-red-300); }
+    .cv-green { background: var(--ridi-surface-general-green-300); }
+    .cv-purple { background: var(--ridi-surface-general-purple-300); }
+    .cv-orange { background: var(--ridi-surface-general-orange-300); }
+    .cv-plain { background: var(--ridi-surface-general-gray-100); }
+    .cover-badges { position: absolute; left: 0; bottom: 0; z-index: 1; display: flex; border-radius: 0 4px 0 0; overflow: hidden; }
+    .cbadge {
+      display: inline-flex; align-items: center; justify-content: center; min-width: 23px; height: 23px;
+      padding: 0 5px; font-size: 11px; font-weight: 700; letter-spacing: -0.02em;
+      color: var(--ridi-neutral-white);
+    }
+    .b-sale { background: var(--ridi-surface-general-red-500); }
+    .b-free { background: var(--ridi-surface-general-darknavy-500); }
+    .b-rent { background: var(--ridi-icon-secondary); }
+    .b-up { background: var(--ridi-surface-general-mint-500); }
+    .ronly {
+      position: absolute; top: 0; left: 0; z-index: 1; display: flex; align-items: center; justify-content: center;
+      width: 61px; height: 30px; border-radius: 4px 0; background: var(--ronly-bg);
+      color: var(--ridi-neutral-white); font-size: 11px; font-weight: 800; letter-spacing: -0.02em;
+    }
+    .badge-row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 20px; }
+    .badge-row .cover-badges, .badge-row .ronly { position: static; }
+
+    .books { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 18px 6px; }
+    .book { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .book-title {
+      font-size: 16px; line-height: 19px; font-weight: 500;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .book-author { font-size: 14px; line-height: 17px; color: var(--ridi-text-secondary); }
+    .rating { font-size: 13px; line-height: 16px; color: var(--ridi-text-rating); }
+    .rating .count { color: var(--ridi-text-secondary); }
+
+    .ranks {
+      list-style: none; margin: 0; padding: 0; display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: 12px 24px;
+    }
+    .rank { display: grid; grid-template-columns: 80px 28px minmax(0, 1fr); gap: 14px; align-items: center; }
+    .rank .cover { aspect-ratio: 80 / 116; font-size: 11px; }
+    .rank-no { font-size: 18px; line-height: 21px; font-weight: 500; text-align: center; }
+    .rank-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+
+    /* ── info chips ── */
+    .info-rows { display: flex; flex-direction: column; border-top: 1px solid var(--ridi-border-default); }
+    .info-row {
+      display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; align-items: center;
+      gap: 0 6px; min-height: 40px; padding: 6px 0; border-bottom: 1px solid var(--ridi-border-default);
+    }
+    .info-row.flush { border-bottom: 0; }
+    .chip {
+      display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 18px;
+      border-radius: var(--ridi-radius-50); font-size: 11px; line-height: 13px; font-weight: 700;
+      letter-spacing: -0.02em; white-space: nowrap;
+    }
+    .chip-serial { background: var(--chip-serial-bg); color: var(--chip-serial-fg); }
+    .chip-event { background: var(--chip-event-bg); color: var(--chip-event-fg); }
+    .chip-only { background: var(--chip-only-bg); color: var(--chip-only-fg); }
+    .chip-wait { background: var(--chip-wait-bg); color: var(--chip-wait-fg); }
+    .chip-rec { background: var(--chip-rec-bg); color: var(--chip-rec-fg); }
+    .info-text { display: flex; align-items: center; gap: 4px; min-width: 0; font-size: 15px; font-weight: 600; overflow-wrap: anywhere; }
+    .info-text.more { font-size: 13px; font-weight: 400; color: var(--ridi-text-secondary); }
+    .info-end { font-size: 13px; color: var(--brand); white-space: nowrap; }
+    .chev { color: var(--sub); flex: 0 0 auto; }
+
+    /* ── desktop mocks ── */
+    .screen-desk {
+      min-width: 0; border: 1px solid var(--ridi-border-default); border-radius: var(--ridi-radius-100);
+      overflow: hidden; background: var(--bg); font-family: var(--ridi-font-sans-detail);
+    }
+    .dk-head { display: flex; align-items: center; gap: 24px; padding: 12px 24px 0; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+    .dk-head img { display: block; height: 20px; width: auto; }
+    .dk-head .gnb { flex: 1 1 260px; }
+    .dk-body { padding: 28px 24px 24px; }
+    .dk-cols { display: grid; grid-template-columns: minmax(0, 1fr) 174px; gap: 30px; }
+    .dk-main { min-width: 0; padding-right: 30px; border-right: 1px solid var(--ridi-border-divider-default); }
+    .dk-aside { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+    .best-h { font-size: 14px; line-height: 20px; font-weight: 700; }
+    .best { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+    .best li { display: grid; grid-template-columns: 28px minmax(0, 1fr); font-size: 14px; line-height: 20px; }
+    .best b { color: var(--ridi-text-rating); font-weight: 700; }
+    .best span { min-width: 0; color: var(--sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .dt-top { display: grid; grid-template-columns: 204px minmax(0, 1fr); gap: 30px; }
+    .dt-cover { width: 100%; aspect-ratio: 204 / 296; }
+    .dt-info { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .dt-crumb { font-size: 14px; line-height: 17px; font-weight: 600; color: var(--sub); }
+    .dt-title { margin: 4px 0; font-size: 32px; line-height: 38px; font-weight: 700; letter-spacing: -0.32px; }
+    .dt-line { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 14px; line-height: 20px; }
+    .vbar { width: 1px; height: 11px; background: var(--ridi-border-default); }
+    .dt-score { color: var(--ridi-text-rating); font-weight: 700; }
+    .dt-score-n { color: var(--sub); font-weight: 700; }
+    .dt-muted { color: var(--ridi-text-secondary); }
+    .dt-role { color: var(--ridi-text-tertiary); }
+    .dt-sub { font-size: 14px; line-height: 20px; color: var(--sub); }
+    .dt-fav { align-self: flex-start; margin-top: 10px; }
+    .dt-rows { margin-top: 18px; }
+    .dt-buy { display: flex; justify-content: flex-end; margin-top: 24px; }
+    .dt-box {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 16px; margin-top: 40px;
+      padding: 24px; border: 1px solid var(--line); border-radius: var(--ridi-radius-100);
+      background: var(--ridi-surface-general-gray-25); font-size: 14px; line-height: 20px;
+    }
+    .kv { display: flex; gap: 8px; min-width: 0; }
+    .kv b { flex: 0 0 88px; font-weight: 700; }
+    .kv span { min-width: 0; color: var(--ridi-text-secondary); overflow-wrap: anywhere; }
+    .kv .off { color: var(--ridi-text-disabled); }
+
+    .ep { margin-top: 40px; }
+    .ep-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 2px solid var(--legacy-tab-top); }
+    .ep-tab { display: flex; align-items: center; justify-content: center; height: 51px; font-size: 15px; font-weight: 700; }
+    .ep-tab.off { background: var(--legacy-tab-off); border-left: 1px solid var(--ridi-border-strong); border-bottom: 1px solid var(--ridi-border-strong); }
+    .ep-bar {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px;
+      padding: 8px 6px; border-bottom: 1px dashed var(--legacy-btn-line);
+    }
+    .ep-group { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; }
+    .check {
+      flex: 0 0 auto; width: 18px; height: 18px; border: 1px solid var(--legacy-check);
+      border-radius: 2px; box-shadow: inset 0 1px 0 0 var(--legacy-gray-10);
+    }
+    .ep-strong { font-size: 13px; font-weight: 700; }
+    .ep-money { color: var(--brand); }
+    .lbtn {
+      display: inline-flex; align-items: center; padding: 5px 8px; border: 1px solid var(--legacy-btn-line);
+      border-radius: 3px; background: var(--bg);
+      font-size: 12px; line-height: 14px; color: var(--sub); white-space: nowrap;
+    }
+    .lbtn.blue { padding: 6px 10px; border-color: transparent; background: var(--brand); color: var(--primary-foreground); font-weight: 700; }
+    .lbtn.view { padding: 8px 14px; font-size: 13px; line-height: 13px; font-weight: 700; box-shadow: var(--shadow-legacy); }
+    .ep-row {
+      display: grid; grid-template-columns: 18px 40px minmax(0, 1fr) auto; align-items: center; gap: 12px;
+      padding: 10px 6px; border-bottom: 1px solid var(--legacy-row-line);
+    }
+    .ep-row .cover { aspect-ratio: 40 / 60; font-size: 10px; }
+    .ep-main { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+    .ep-titleline { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+    .ep-free {
+      padding: 1px 4px; border-radius: 2px; background: var(--ridi-surface-general-darknavy-500);
+      color: var(--ridi-neutral-white); font-size: 11px; font-weight: 700;
+    }
+    .ep-title { font-size: 13px; line-height: 16px; font-weight: 700; color: var(--legacy-title); }
+    .ep-sub { font-size: 12px; line-height: 16px; color: var(--legacy-sub); }
+
+    /* home mock */
+    .dh-head { display: flex; flex-direction: column; gap: 14px; padding: 16px 24px 0; border-bottom: 1px solid var(--line); }
+    .dh-head .gnb-bar { border-bottom: 0; }
+    .dh-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 16px; }
+    .dh-top img { display: block; height: 22px; width: auto; }
+    .dh-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; min-width: 0; }
+    .dh-acts .search { flex: 0 1 260px; }
+    .dh-login { font-size: 14px; line-height: 18px; font-weight: 600; color: var(--ridi-text-secondary); white-space: nowrap; }
+    .dk-body.dh-body { padding-top: 14px; }
+    .dh-stage { position: relative; }
+    .dh-heroes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 9px; margin-top: 14px; }
+    .dh-sc { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-top: 31px; }
+    .dh-sc .sc { flex: 0 0 70px; }
+    .dh-h { margin: 48px 0 16px; font-size: 22px; line-height: 26px; font-weight: 700; letter-spacing: -0.22px; }
+    .dh-ranks { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(3, auto); grid-auto-flow: column; gap: 8px 24px; }
+    .dh-ranks .rank { grid-template-columns: 80px 32px minmax(0, 1fr); gap: 16px; }
+
+    /* ── phone mock ── */
+    .phone {
+      width: min(100%, 410px); margin: 0 auto; padding: 10px; border-radius: 28px;
+      border: 1px solid var(--ridi-border-default); background: var(--ridi-surface-general-gray-50);
+    }
+    .phone .screen { border-radius: 20px; overflow: hidden; background: var(--bg); padding-bottom: 18px; }
+    .m-head { display: flex; flex-direction: column; gap: 8px; padding: 4px 16px 0; color: var(--ridi-icon-primary); }
+    .m-row { display: flex; align-items: center; justify-content: space-between; height: 30px; }
+    .m-row img { display: block; height: 18px; width: auto; }
+    .m-login {
+      font-size: 13px; line-height: 17px; font-weight: 600; color: var(--ridi-text-secondary);
+      border: 1px solid var(--line); border-radius: 99px; padding: 5px 11px;
+    }
+    .search.m-search { width: 100%; }
+    .m-nav { display: flex; align-items: center; margin-top: -2px; border-bottom: 1px solid var(--line); }
+    .m-gnb { position: relative; flex: 1 1 auto; min-width: 0; display: flex; overflow: hidden; white-space: nowrap; margin-left: -9px; }
+    .m-gnb::after {
+      content: ""; position: absolute; top: 0; right: 0; width: 36px; height: 100%;
+      background: linear-gradient(to right, transparent, var(--bg)); pointer-events: none;
+    }
+    .m-tab { position: relative; flex: 0 0 auto; padding: 13px 9px 11px; font-size: 15px; line-height: 20px; font-weight: 600; letter-spacing: -0.15px; }
+    .m-tab.cur { color: var(--brand); font-weight: 700; }
+    .m-tab .gnb-new { top: 8px; right: 1px; }
+    .m-burger { flex: none; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-right: -10px; }
+    .m-pills { display: flex; gap: 4px; overflow-x: auto; white-space: nowrap; scrollbar-width: none; padding: 10px 16px 0; }
+    .m-pill { flex: 0 0 auto; border-radius: 99px; padding: 7px 10px 6px; font-size: 14px; line-height: 17px; font-weight: 600; }
+    .m-pill.on { background: var(--brand); color: var(--primary-foreground); font-weight: 700; }
+    .m-hero { display: grid; grid-template-columns: 10px minmax(0, 1fr) 10px; gap: 8px; margin-top: 12px; }
+    .m-peek { border-radius: 0 12px 12px 0; }
+    .m-peek.r { border-radius: 12px 0 0 12px; }
+    .m-hero .hero-card { aspect-ratio: 300 / 340; }
+    .m-hero .hero-title { font-size: 20px; line-height: 28px; }
+    .m-num {
+      position: absolute; top: 12px; right: 12px; padding: 2px 8px; border-radius: 99px;
+      background: var(--carousel-num-bg); color: var(--ridi-neutral-white); font-size: 12px; line-height: 18px; font-weight: 500;
+    }
+    .m-sc { position: relative; display: flex; gap: 10px; overflow: hidden; padding: 18px 16px 0; }
+    .m-sc .sc { flex: 0 0 56px; gap: 6px; }
+    .m-sc .sc-ic { width: 56px; height: 56px; font-size: 11px; }
+    .m-sc .sc-label { font-size: 11px; line-height: 13px; }
+    .m-more { position: absolute; top: 26px; right: 14px; }
+    .m-sec { margin: 26px 16px 12px; font-size: 18px; line-height: 22px; font-weight: 700; letter-spacing: -0.18px; }
+    .m-covers { position: relative; display: flex; gap: 8px; overflow: hidden; padding-left: 16px; }
+    .m-covers .cover { flex: 0 0 130px; }
+    .m-covers .m-more { top: 74px; }
+
+    /* ── price table ── */
+    .price { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 20px; }
+    .price th, .price td { padding: 10px 8px; border-bottom: 1px solid var(--ridi-border-default); text-align: left; font-weight: 500; }
+    .price thead th { font-size: 13px; color: var(--ridi-text-secondary); font-weight: 600; border-bottom-color: var(--ridi-border-strong); }
+    .price tbody th { font-weight: 700; }
+    .price .num { text-align: right; white-space: nowrap; }
+    .price .disc, .price .sale { color: var(--brand); font-weight: 700; }
+
+    @media (max-width: 960px) {
+      .dk-cols { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+      .dk-main { padding-right: 0; border-right: 0; }
+      .dk-aside { padding-top: 24px; border-top: 1px solid var(--ridi-border-divider-default); }
+    }
+    @media (max-width: 900px) {
+      .dh-ranks { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; grid-auto-flow: row; }
+    }
+    @media (max-width: 820px) {
+      .dt-top { grid-template-columns: 140px minmax(0, 1fr); gap: 20px; }
+      .dt-title { font-size: 26px; line-height: 32px; }
+    }
+    @media (max-width: 767px) {
+      .wrap { padding: 0 var(--ridi-ds-400); }
+      .hero-stage .arrow.prev, .dh-stage > .arrow.prev { left: -8px; }
+      .hero-stage .arrow.next, .dh-stage > .arrow.next { right: -8px; }
+      .ronly { width: 47px; height: 24px; }
+    }
+    @media (max-width: 720px) {
+      .hero { padding: 28px 0 40px; }
+      .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+      .hero-visual { align-items: center; }
+      .hero h1 { font-size: 34px; letter-spacing: -0.34px; }
+      .cells { grid-template-columns: minmax(0, 1fr); }
+      .cell { padding: 16px; }
+      .books { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .ranks { grid-template-columns: minmax(0, 1fr); }
+      .rank { grid-template-columns: 72px 24px minmax(0, 1fr); gap: 12px; }
+      .shortcuts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .info-row { grid-template-columns: 52px minmax(0, 1fr) auto; }
+      .m-hero { grid-template-columns: 8px minmax(0, 1fr) 8px; }
+      .dk-body { padding: 20px 16px; }
+      .dh-head { padding: 12px 16px 0; }
+      .dt-top { grid-template-columns: minmax(0, 1fr); }
+      .dt-cover { width: 160px; }
+      .dt-title { font-size: 24px; line-height: 30px; }
+      .dt-box { grid-template-columns: minmax(0, 1fr); padding: 16px; }
+      .ep-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .ep-row { grid-template-columns: 18px 36px minmax(0, 1fr) auto; gap: 8px; padding: 10px 4px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+  <style>
+    [data-theme="dark"] {
+      --ridi-background-neutral-default: var(--ridi-neutral-900);
+      --ridi-background-neutral-subtle: var(--ridi-neutral-900);
+      --ridi-surface-elevated: var(--ridi-neutral-800);
+      --ridi-surface-disabled: oklch(0.431 0.000 0.0);
+      --ridi-surface-general-white-default: var(--ridi-neutral-900);
+      --ridi-surface-general-gray-25: var(--ridi-neutral-850);
+      --ridi-surface-general-gray-50: var(--ridi-neutral-800);
+      --ridi-surface-general-gray-100: var(--ridi-neutral-700);
+      --ridi-surface-general-blue-50: var(--ridi-blue-800);
+      --ridi-surface-general-blue-300: var(--ridi-blue-700);
+      --ridi-surface-general-deepblue-300: var(--ridi-deepblue-700);
+      --ridi-surface-general-darknavy-300: var(--ridi-darknavy-700);
+      --ridi-surface-general-darknavy-500: var(--ridi-darknavy-600);
+      --ridi-surface-general-red-300: var(--ridi-red-700);
+      --ridi-surface-general-red-500: var(--ridi-red-600);
+      --ridi-surface-general-green-300: var(--ridi-green-700);
+      --ridi-surface-general-purple-300: var(--ridi-purple-700);
+      --ridi-surface-general-orange-300: var(--ridi-orange-700);
+      --ridi-surface-general-mint-500: var(--ridi-mint-600);
+      --ridi-border-default: var(--ridi-neutral-700);
+      --ridi-border-strong: var(--ridi-neutral-600);
+      --ridi-border-divider-default: var(--ridi-neutral-750);
+      --ridi-border-divider-strong: var(--ridi-neutral-600);
+      --ridi-text-primary: var(--ridi-neutral-50);
+      --ridi-text-secondary: var(--ridi-neutral-500);
+      --ridi-text-tertiary: var(--ridi-neutral-600);
+      --ridi-text-disabled: var(--ridi-neutral-700);
+      --ridi-text-rating: var(--ridi-red-600);
+      --ridi-text-danger: var(--ridi-red-600);
+      --ridi-icon-primary: var(--ridi-neutral-50);
+      --ridi-icon-secondary: var(--ridi-neutral-500);
+
+      --totop-bg: color-mix(in oklab, var(--ridi-neutral-800) 90%, transparent);
+      --chip-serial-bg: var(--ridi-darknavy-800);
+      --chip-serial-fg: var(--ridi-darknavy-100);
+      --chip-event-bg: var(--ridi-purple-800);
+      --chip-event-fg: var(--ridi-purple-100);
+      --chip-only-bg: var(--ridi-neutral-700);
+      --chip-only-fg: var(--ridi-neutral-200);
+      --chip-wait-bg: var(--ridi-blue-800);
+      --chip-wait-fg: var(--ridi-blue-100);
+      --chip-rec-bg: var(--ridi-deepblue-800);
+      --chip-rec-fg: var(--ridi-deepblue-100);
+      --legacy-tab-top: var(--ridi-neutral-600);
+      --legacy-tab-off: var(--ridi-neutral-800);
+      --legacy-check: var(--ridi-neutral-600);
+      --legacy-gray-10: var(--ridi-neutral-750);
+      --legacy-btn-line: var(--ridi-neutral-700);
+      --legacy-row-line: var(--ridi-neutral-750);
+      --legacy-title: var(--ridi-text-primary);
+      --legacy-sub: var(--ridi-neutral-500);
+      --shadow-legacy: none;
+
+      --bg: var(--ridi-background-neutral-default);
+      --fav-hover-bg: var(--ridi-surface-general-gray-50);
+      --fg: var(--ridi-text-primary);
+      --brand: var(--ridi-dark-emotion-blue);
+      --line: var(--ridi-border-divider-default);
+      --sub: var(--ridi-text-secondary);
+
+      --background: var(--ridi-background-neutral-default);
+      --foreground: var(--ridi-text-primary);
+      --card: var(--ridi-surface-elevated);
+      --card-foreground: var(--ridi-text-primary);
+      --primary: var(--ridi-dark-emotion-blue);
+      --primary-foreground: var(--ridi-neutral-white);
+      --muted: var(--ridi-background-neutral-subtle);
+      --muted-foreground: var(--ridi-text-secondary);
+      --border: var(--ridi-border-default);
+      --accent-glow: var(--ridi-dark-emotion-blue);
+      --rule-strong: var(--ridi-border-strong);
+    }
+  </style>
+</head>
+<body>
+<div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
+
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <div class="lockup"><img src="/logos/ridi-logotype.svg" alt="RIDI"></div>
+        <p class="hero-kicker">만화 · 웹툰 · 웹소설 · 도서 · 셀렉트</p>
+        <h1>리디, 모두의 취향</h1>
+        <p class="hero-tagline">For All Tastes</p>
+        <div class="hero-ctas">
+          <a class="btn-buy" href="#">첫화보기</a>
+          <a class="pill-fav" href="#"><svg width="11" height="11" viewBox="0 0 11 11" aria-hidden="true"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.3"/></svg>관심</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <p class="catalog-dummy">더미 데이터 — 배너의 UP·↓30% 배지와 할인율, 작품 문구는 레이아웃 시연용이며 실제 작품·프로모션 정보가 아닙니다.</p>
+        <div class="hero-stage">
+          <a class="hero-card hc-a" href="#">
+            <span class="hero-chips"><span class="hero-chip">UP</span><span class="hero-chip">↓30%</span></span>
+            <span class="hero-art">[작품 일러스트 자리]</span>
+            <span class="hero-title">[홍보 문구]<br>[두 줄]</span>
+            <span class="hero-sub">&lt;[작품명]&gt; UP+세트</span>
+            <span class="hero-copyright">©[저작권 표기]</span>
+          </a>
+          <button class="arrow prev" type="button" aria-label="이전 배너"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.6" fill="none"/></svg></button>
+          <button class="arrow next" type="button" aria-label="다음 배너"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" fill="none"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="sec" aria-labelledby="s1">
+      <div class="sec-head"><span class="sec-idx">01</span><h2 id="s1">탐색</h2></div>
+      <div class="cells">
+        <div class="cell wide">
+          <span class="kicker">gnb-tab · gnb-tab-current</span>
+          <div class="gnb-bar">
+            <nav class="gnb" aria-label="대분류">
+              <button class="gnb-tab" type="button" aria-current="page">만화</button>
+              <button class="gnb-tab" type="button">웹툰</button>
+              <button class="gnb-tab" type="button">웹소설</button>
+              <button class="gnb-tab" type="button">도서</button>
+              <button class="gnb-tab" type="button">리디샵<span class="gnb-new" aria-hidden="true">N</span></button>
+              <button class="gnb-tab" type="button">셀렉트<svg width="13" height="13" viewBox="0 0 13 13" aria-hidden="true"><path d="M5 2H2v9h9V8M7 2h4v4M11 2L6 7" stroke="currentColor" stroke-width="1.3" fill="none"/></svg></button>
+            </nav>
+            <div class="gnb-aux">
+              <span><svg width="18" height="14" viewBox="0 0 18 14" aria-hidden="true"><path d="M1 1h16M1 7h16M1 13h16" stroke="currentColor" stroke-width="1.5"/></svg>전체 카테고리</span>
+              <span><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="7.5" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M11.5 6.5a3.2 3.2 0 1 0 0 5" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>캐시충전</span>
+            </div>
+          </div>
+          <div class="specs">
+            <span class="spec">기본 · 16 / 18 / 600 · gap 22</span>
+            <span class="spec">현재 · 글자 emotion-blue · 16 / 18 / 700 · 밑줄 없음</span>
+            <template data-theme-variant="dark"><span class="spec">현재 · 글자 dark-emotion-blue · 16 / 18 / 700 · 밑줄 없음</span></template>
+          </div>
+          <div class="state">
+            <span class="state-label">상세 화면 · 현재 표시 없음</span>
+            <div class="gnb is-detail" aria-hidden="true">
+              <span class="gnb-tab">만화</span><span class="gnb-tab">웹툰</span><span class="gnb-tab">웹소설</span><span class="gnb-tab">도서</span><span class="gnb-tab">리디샵<span class="gnb-new">N</span></span><span class="gnb-tab">셀렉트</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cell">
+          <span class="kicker">genre-pill · genre-pill-selected</span>
+          <div class="pills" role="group" aria-label="장르">
+            <button class="pill" type="button" aria-pressed="true">추천</button>
+            <button class="pill" type="button" aria-pressed="false">베스트</button>
+            <button class="pill" type="button" aria-pressed="false">신작</button>
+            <button class="pill" type="button" aria-pressed="false">BL</button>
+            <button class="pill" type="button" aria-pressed="false">라노벨</button>
+            <button class="pill" type="button" aria-pressed="false">판타지/SF</button>
+            <button class="pill" type="button" aria-pressed="false">해외 순정</button>
+            <button class="pill" type="button" aria-pressed="false">드라마</button>
+          </div>
+          <div class="states">
+            <div class="state"><span class="state-label">선택</span><span class="pill is-on">추천</span></div>
+            <div class="state"><span class="state-label">기본</span><span class="pill">베스트</span></div>
+            <div class="state"><span class="state-label">hover · opacity 0.4</span><span class="pill is-hover">신작</span></div>
+          </div>
+          <div class="specs">
+            <span class="spec">선택 채움 emotion-blue · 99px · 7 10 8</span>
+            <template data-theme-variant="dark"><span class="spec">선택 채움 dark-emotion-blue · 99px · 7 10 8</span></template>
+            <span class="hint">알약에 마우스를 올려 보세요</span>
+          </div>
+        </div>
+
+        <div class="cell">
+          <span class="kicker">검색창 · 바로가기 원형 아이콘</span>
+          <label class="search"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.8"/></svg><span class="sr">검색</span><input type="search"></label>
+          <div class="shortcuts">
+            <div class="sc"><span class="sc-ic"><img src="/logos/ridi.png" alt=""></span><span class="sc-label">리디만화학과</span></div>
+            <div class="sc"><span class="sc-ic">무료</span><span class="sc-label">무료</span></div>
+            <div class="sc"><span class="sc-ic">★</span><span class="sc-label">이벤트</span></div>
+            <div class="sc"><span class="sc-ic">ONLY</span><span class="sc-label">리디온리</span></div>
+          </div>
+          <div class="specs"><span class="spec">검색 260 × 40 · 8px</span><span class="spec">원 70 · 라벨 13 / 500</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" aria-labelledby="s2">
+      <div class="sec-head"><span class="sec-idx">02</span><h2 id="s2">표지와 카드</h2></div>
+      <div class="cells">
+        <div class="cell wide">
+          <span class="kicker">book-card · cover-badge</span>
+          <p class="catalog-dummy">더미 데이터 — 별점·평가 수, 10%·1권무·대여·UP 배지와 R ONLY(독점) 표기는 레이아웃 시연용이며 실제 작품 정보가 아닙니다.</p>
+          <div class="books">
+            <div class="book">
+              <div class="cover cv-blue">[표지]<span class="cover-badges"><span class="cbadge b-sale">10%</span></span></div>
+              <div class="book-title">[작품명]</div><div class="book-author">[작가]</div>
+              <div class="rating">★4.9<span class="count">(129)</span></div>
+            </div>
+            <div class="book">
+              <div class="cover cv-purple"><span class="ronly">R ONLY</span>[표지]<span class="cover-badges"><span class="cbadge b-free">1권무</span></span></div>
+              <div class="book-title">[작품명]</div><div class="book-author">[작가]</div>
+              <div class="rating">★4.8<span class="count">(3,745)</span></div>
+            </div>
+            <div class="book">
+              <div class="cover cv-navy">[표지]<span class="cover-badges"><span class="cbadge b-rent">대여</span></span></div>
+              <div class="book-title">[작품명]</div><div class="book-author">[작가]</div>
+              <div class="rating">★4.9<span class="count">(1,782)</span></div>
+            </div>
+            <div class="book">
+              <div class="cover cv-green">[표지]<span class="cover-badges"><span class="cbadge b-up">UP</span></span></div>
+              <div class="book-title">[작품명]</div><div class="book-author">[작가]</div>
+              <div class="rating">★4.7<span class="count">(980)</span></div>
+            </div>
+            <div class="book">
+              <div class="cover cv-red">[표지]<span class="cover-badges"><span class="cbadge b-sale">10%</span><span class="cbadge b-free">1권무</span></span></div>
+              <div class="book-title">[작품명]</div><div class="book-author">[작가]</div>
+              <div class="rating">★5.0<span class="count">(612)</span></div>
+            </div>
+            <div class="book">
+              <div class="cover cv-deep">[표지]<span class="cover-badges"><span class="cbadge b-rent">대여</span></span></div>
+              <div class="book-title">[작품명]</div><div class="book-author">[작가]</div>
+              <div class="rating">★4.6<span class="count">(240)</span></div>
+            </div>
+          </div>
+          <div class="specs"><span class="spec">표지 4px · 안쪽 외곽선 dim-thumb</span><span class="spec">제목 16 / 19 / 500 · 작가 14 / 17</span><span class="spec">배지 높이 23 · 0 4px 0 0</span></div>
+        </div>
+
+        <div class="cell wide">
+          <span class="kicker">랭킹 리스트 · 지금 많이 읽고 있는 만화</span>
+          <p class="catalog-dummy">더미 데이터 — 순위·별점·평가 수와 1권 무료 표기는 레이아웃 시연용이며 실제 리디 순위가 아닙니다.</p>
+          <ol class="ranks">
+            <li class="rank"><div class="cover cv-orange">[표지]</div><div class="rank-no">1</div><div class="rank-body"><div class="book-title">[작품명]</div><div class="book-author">[작가] · 1권 무료</div><div class="rating">★4.9<span class="count">(1,782)</span></div></div></li>
+            <li class="rank"><div class="cover cv-blue">[표지]</div><div class="rank-no">2</div><div class="rank-body"><div class="book-title">[작품명]</div><div class="book-author">[작가]</div><div class="rating">★4.8<span class="count">(902)</span></div></div></li>
+            <li class="rank"><div class="cover cv-purple">[표지]</div><div class="rank-no">3</div><div class="rank-body"><div class="book-title">[작품명]</div><div class="book-author">[작가] · 1권 무료</div><div class="rating">★4.9<span class="count">(2,410)</span></div></div></li>
+            <li class="rank"><div class="cover cv-navy">[표지]</div><div class="rank-no">4</div><div class="rank-body"><div class="book-title">[작품명]</div><div class="book-author">[작가]</div><div class="rating">★4.7<span class="count">(515)</span></div></div></li>
+            <li class="rank"><div class="cover cv-green">[표지]</div><div class="rank-no">5</div><div class="rank-body"><div class="book-title">[작품명]</div><div class="book-author">[작가]</div><div class="rating">★5.0<span class="count">(88)</span></div></div></li>
+            <li class="rank"><div class="cover cv-red">[표지]</div><div class="rank-no">6</div><div class="rank-body"><div class="book-title">[작품명]</div><div class="book-author">[작가] · 1권 무료</div><div class="rating">★4.8<span class="count">(1,203)</span></div></div></li>
+          </ol>
+        </div>
+
+        <div class="cell">
+          <span class="kicker">cover-badge 변형</span>
+          <div class="badge-row">
+            <div class="state"><span class="state-label">할인</span><span class="cover-badges"><span class="cbadge b-sale">10%</span></span></div>
+            <div class="state"><span class="state-label">1권 무료</span><span class="cover-badges"><span class="cbadge b-free">1권무</span></span></div>
+            <div class="state"><span class="state-label">대여</span><span class="cover-badges"><span class="cbadge b-rent">대여</span></span></div>
+            <div class="state"><span class="state-label">업데이트</span><span class="cover-badges"><span class="cbadge b-up">UP</span></span></div>
+            <div class="state"><span class="state-label">좌상단 · 4px 0</span><span class="ronly">R ONLY</span></div>
+          </div>
+          <div class="specs"><span class="spec">11px / 700 · 최소 23 × 23</span><span class="spec">R ONLY 61 × 30</span></div>
+        </div>
+
+        <div class="cell">
+          <span class="kicker">carousel-arrow · 맨 위로 버튼</span>
+          <div class="states">
+            <div class="state"><span class="state-label">이전</span><button class="arrow" type="button" aria-label="이전"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.6" fill="none"/></svg></button></div>
+            <div class="state"><span class="state-label">다음</span><button class="arrow" type="button" aria-label="다음"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" fill="none"/></svg></button></div>
+            <div class="state"><span class="state-label">끝 · 비활성 (가정)</span><button class="arrow" type="button" aria-label="다음" aria-disabled="true"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" fill="none"/></svg></button></div>
+            <div class="state"><span class="state-label">맨 위로 · 29px</span><button class="totop" type="button" aria-label="맨 위로"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M11 19V3M4 10l7-7 7 7" stroke="currentColor" stroke-width="1.6" fill="none"/></svg></button></div>
+          </div>
+          <div class="specs">
+            <span class="spec">채움 neutral-white · 40 × 40 · 50%</span>
+            <template data-theme-variant="dark"><span class="spec">채움 neutral-800 (가정) · 40 × 40 · 50%</span></template>
+            <span class="spec">그림자 2px 4px 8px 0 / 0.06</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" aria-labelledby="s3">
+      <div class="sec-head"><span class="sec-idx">03</span><h2 id="s3">구매 · 관심 · 정보</h2></div>
+      <div class="cells">
+        <div class="cell">
+          <span class="kicker">purchase-button</span>
+          <div class="state">
+            <span class="state-label">만화 상세 · 두 버튼</span>
+            <div class="buy-row"><a class="btn-buy" href="#">전권 대여</a><a class="btn-buy" href="#">전권 할인 소장</a></div>
+          </div>
+          <div class="states">
+            <div class="state"><span class="state-label">웹툰 상세 · 하나</span><a class="btn-buy" href="#">첫화보기</a></div>
+            <div class="state"><span class="state-label">비활성 (가정)</span><a class="btn-buy" aria-disabled="true">첫화보기</a></div>
+          </div>
+          <div class="specs">
+            <span class="spec">채움 emotion-blue · 글자 neutral-white · 6px · 18 / 22 / 600</span>
+            <template data-theme-variant="dark"><span class="spec">채움 dark-emotion-blue · 글자 neutral-white · 6px · 18 / 22 / 600</span></template>
+          </div>
+        </div>
+
+        <div class="cell">
+          <span class="kicker">favorite-pill</span>
+          <div class="states">
+            <div class="state"><span class="state-label">기본</span><a class="pill-fav" href="#"><svg width="11" height="11" viewBox="0 0 11 11" aria-hidden="true"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.3"/></svg>관심</a></div>
+            <div class="state"><span class="state-label">hover (가정)</span><span class="pill-fav is-hover"><svg width="11" height="11" viewBox="0 0 11 11" aria-hidden="true"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.3"/></svg>관심</span></div>
+          </div>
+          <div class="specs">
+            <span class="spec">테두리·글자 emotion-blue · 30px · 14 / 500</span>
+            <template data-theme-variant="dark"><span class="spec">테두리·글자 dark-emotion-blue · 30px · 14 / 500</span></template>
+          </div>
+        </div>
+
+        <div class="cell wide">
+          <span class="kicker">info-chip · 상세 정보 라벨 칩</span>
+          <template data-theme-variant="dark"><span class="kicker">info-chip · 상세 정보 라벨 칩 · 다크 색 (가정)</span></template>
+          <p class="catalog-dummy">더미 데이터 — 연재 요일, 이벤트 문구·할인율, 독점(RIDI ONLY)·리다무 적용, 추천 작품 수는 레이아웃 시연용이며 실제 작품 정보가 아닙니다.</p>
+          <div class="info-rows">
+            <div class="info-row"><span class="chip chip-serial">연재</span><span class="info-text">매주 일 연재</span><span></span></div>
+            <div class="info-row flush"><span class="chip chip-event">이벤트</span><span class="info-text">[30%▼] [이벤트 문구]</span><svg class="chev" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.4" fill="none"/></svg></div>
+            <div class="info-row"><span></span><span class="info-text more">이벤트 더보기</span><span></span></div>
+            <div class="info-row"><span class="chip chip-only">독점</span><span class="info-text">독점 작품 감상은 [RIDI ONLY 작품관]</span><svg class="chev" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.4" fill="none"/></svg></div>
+            <div class="info-row"><span class="chip chip-wait">리다무</span><span class="info-text">1일마다 1편 기다리면 무료<svg width="15" height="15" viewBox="0 0 15 15" aria-hidden="true"><circle cx="7.5" cy="7.5" r="6.5" stroke="currentColor" stroke-width="1.1" fill="none"/><path d="M7.5 6.5v4M7.5 4.2v.1" stroke="currentColor" stroke-width="1.3"/></svg></span><span></span></div>
+            <div class="info-row"><span class="chip chip-rec">추천</span><span class="info-text">이 작품 다양하게 즐기기</span><span class="info-end">3작품</span></div>
+          </div>
+          <div class="specs">
+            <span class="spec">40 × 18 · 2px · 11 / 13 / 700</span>
+            <span class="spec">행 구분선 neutral-100</span>
+            <template data-theme-variant="dark"><span class="spec">행 구분선 neutral-700</span></template>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" aria-labelledby="s4">
+      <div class="sec-head"><span class="sec-idx">04</span><h2 id="s4">화면</h2></div>
+      <div class="cells">
+        <div class="cell wide">
+          <span class="kicker">만화 홈 · 데스크톱</span>
+          <p class="catalog-dummy">더미 데이터 — 배너의 UP·R ONLY(독점)·↓30%·↓10% 배지와 홍보 문구, 표지의 10%·1권무·대여·UP 배지, 별점·평가 수, 순위와 1권 무료 표기는 레이아웃 시연용이며 실제 리디 편성·순위·작품 정보가 아닙니다.</p>
+          <div class="screen-desk">
+            <div class="dh-head">
+              <div class="dh-top">
+                <img src="/logos/ridi-logotype.svg" alt="RIDI">
+                <div class="dh-acts">
+                  <span class="search" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.8"/></svg></span>
+                  <span class="dh-login">로그인 / 회원가입</span>
+                </div>
+              </div>
+              <div class="gnb-bar" aria-hidden="true">
+                <div class="gnb"><span class="gnb-tab is-cur">만화</span><span class="gnb-tab">웹툰</span><span class="gnb-tab">웹소설</span><span class="gnb-tab">도서</span><span class="gnb-tab">리디샵<span class="gnb-new">N</span></span><span class="gnb-tab">셀렉트<svg width="13" height="13" viewBox="0 0 13 13"><path d="M5 2H2v9h9V8M7 2h4v4M11 2L6 7" stroke="currentColor" stroke-width="1.3" fill="none"/></svg></span></div>
+                <div class="gnb-aux">
+                  <span><svg width="18" height="14" viewBox="0 0 18 14"><path d="M1 1h16M1 7h16M1 13h16" stroke="currentColor" stroke-width="1.5"/></svg>전체 카테고리</span>
+                  <span><svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="7.5" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M11.5 6.5a3.2 3.2 0 1 0 0 5" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>캐시충전</span>
+                </div>
+              </div>
+            </div>
+            <div class="dk-body dh-body">
+              <div class="pills" aria-hidden="true"><span class="pill is-on">추천</span><span class="pill">베스트</span><span class="pill">신작</span><span class="pill">BL</span><span class="pill">라노벨</span><span class="pill">판타지/SF</span><span class="pill">해외 순정</span><span class="pill">드라마</span><span class="pill">액션</span><span class="pill">코믹</span></div>
+              <div class="dh-stage">
+                <div class="dh-heroes">
+                  <span class="hero-card hc-a">
+                    <span class="hero-chips"><span class="hero-chip">UP</span><span class="hero-chip">↓30%</span></span>
+                    <span class="hero-art">[작품 일러스트 자리]</span>
+                    <span class="hero-title">[홍보 문구]<br>[두 줄]</span>
+                    <span class="hero-sub">&lt;[작품명]&gt; UP+세트</span>
+                    <span class="hero-copyright">©[저작권 표기]</span>
+                  </span>
+                  <span class="hero-card hc-c">
+                    <span class="hero-chips"><span class="hero-chip">R ONLY</span><span class="hero-chip">↓10%</span></span>
+                    <span class="hero-art">[작품 일러스트 자리]</span>
+                    <span class="hero-title">[홍보 문구]<br>[두 줄]</span>
+                    <span class="hero-sub">&lt;[작품명]&gt; 후속!</span>
+                    <span class="hero-copyright">©[저작권 표기]</span>
+                  </span>
+                  <span class="hero-card hc-b">
+                    <span class="hero-chips"><span class="hero-chip">UP</span><span class="hero-chip">↓30%</span></span>
+                    <span class="hero-art">[작품 일러스트 자리]</span>
+                    <span class="hero-title">[홍보 문구]<br>[두 줄]</span>
+                    <span class="hero-sub">&lt;[작품명]&gt; 완결권!</span>
+                    <span class="hero-copyright">©[저작권 표기]</span>
+                  </span>
+                </div>
+                <span class="arrow prev" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.6" fill="none"/></svg></span>
+                <span class="arrow next" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" fill="none"/></svg></span>
+              </div>
+              <div class="dh-sc">
+                <div class="sc"><span class="sc-ic"><img src="/logos/ridi.png" alt=""></span><span class="sc-label">리디만화학과</span></div>
+                <div class="sc"><span class="sc-ic">뷔페</span><span class="sc-label">만화무료뷔페</span></div>
+                <div class="sc"><span class="sc-ic">무료</span><span class="sc-label">무료</span></div>
+                <div class="sc"><span class="sc-ic">★</span><span class="sc-label">이벤트</span></div>
+                <div class="sc"><span class="sc-ic">SET</span><span class="sc-label">최저가 세트</span></div>
+                <div class="sc"><span class="sc-ic">달력</span><span class="sc-label">월간 캘린더</span></div>
+                <div class="sc"><span class="sc-ic">ONLY</span><span class="sc-label">리디온리</span></div>
+                <div class="sc"><span class="sc-ic">▶</span><span class="sc-label">애니 원작관</span></div>
+              </div>
+              <h3 class="dh-h">방금 본 작품과 비슷한</h3>
+              <div class="dh-stage">
+                <div class="books">
+                  <div class="book"><div class="cover cv-plain">[표지]<span class="cover-badges"><span class="cbadge b-sale">10%</span></span></div><div class="book-title">[작품명]</div><div class="book-author">[작가]</div><div class="rating">★4.9<span class="count">(129)</span></div></div>
+                  <div class="book"><div class="cover cv-plain">[표지]<span class="cover-badges"><span class="cbadge b-free">1권무</span></span></div><div class="book-title">[작품명]</div><div class="book-author">[작가]</div><div class="rating">★4.8<span class="count">(3,745)</span></div></div>
+                  <div class="book"><div class="cover cv-plain">[표지]<span class="cover-badges"><span class="cbadge b-rent">대여</span></span></div><div class="book-title">[작품명]</div><div class="book-author">[작가]</div><div class="rating">★4.9<span class="count">(1,782)</span></div></div>
+                  <div class="book"><div class="cover cv-plain">[표지]<span class="cover-badges"><span class="cbadge b-up">UP</span></span></div><div class="book-title">[작품명]</div><div class="book-author">[작가]</div><div class="rating">★4.7<span class="count">(980)</span></div></div>
+                  <div class="book"><div class="cover cv-plain">[표지]<span class="cover-badges"><span class="cbadge b-sale">10%</span></span></div><div class="book-title">[작품명]</div><div class="book-author">[작가]</div><div class="rating">★5.0<span class="count">(612)</span></div></div>
+                  <div class="book"><div class="cover cv-plain">[표지]<span class="cover-badges"><span class="cbadge b-rent">대여</span></span></div><div class="book-title">[작품명]</div><div class="book-author">[작가]</div><div class="rating">★4.6<span class="count">(240)</span></div></div>
+                </div>
+                <span class="arrow next" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" fill="none"/></svg></span>
+              </div>
+              <h3 class="dh-h">지금 많이 읽고 있는 만화</h3>
+              <div class="dh-stage">
+                <ol class="ranks dh-ranks">
+                  <li class="rank"><div class="cover cv-plain">[표지]</div><div class="rank-no">1</div><div class="rank-body"><div class="book-title">[작품명]</div><div class="book-author">[작가] · 1권 무료</div><div class="rating">★4.9<span class="count">(1,782)</span></div></div></li>
+                  <li class="rank"><div class="cover cv-plain">[표지]</div><div class="rank-no">2</div><div class="rank-body"><div class="book-title">[작품명]</div><div class="book-author">[작가] · 1권 무료</div><div class="rating">★4.9<span class="count">(1,782)</span></div></div></li>
+                  <li class="rank"><div class="cover cv-plain">[표지]</div><div class="rank-no">3</div><div class="rank-body"><div class="book-title">[작품명]</div><div class="book-author">[작가] · 1권 무료</div><div class="rating">★4.9<span class="count">(1,782)</span></div></div></li>
+                  <li class="rank"><div class="cover cv-plain">[표지]</div><div class="rank-no">4</div><div class="rank-body"><div class="book-title">[작품명]</div><div class="book-author">[작가] · 1권 무료</div><div class="rating">★4.9<span class="count">(1,782)</span></div></div></li>
+                  <li class="rank"><div class="cover cv-plain">[표지]</div><div class="rank-no">5</div><div class="rank-body"><div class="book-title">[작품명]</div><div class="book-author">[작가] · 1권 무료</div><div class="rating">★4.9<span class="count">(1,782)</span></div></div></li>
+                  <li class="rank"><div class="cover cv-plain">[표지]</div><div class="rank-no">6</div><div class="rank-body"><div class="book-title">[작품명]</div><div class="book-author">[작가] · 1권 무료</div><div class="rating">★4.9<span class="count">(1,782)</span></div></div></li>
+                  <li class="rank"><div class="cover cv-plain">[표지]</div><div class="rank-no">7</div><div class="rank-body"><div class="book-title">[작품명]</div><div class="book-author">[작가] · 1권 무료</div><div class="rating">★4.9<span class="count">(1,782)</span></div></div></li>
+                  <li class="rank"><div class="cover cv-plain">[표지]</div><div class="rank-no">8</div><div class="rank-body"><div class="book-title">[작품명]</div><div class="book-author">[작가] · 1권 무료</div><div class="rating">★4.9<span class="count">(1,782)</span></div></div></li>
+                  <li class="rank"><div class="cover cv-plain">[표지]</div><div class="rank-no">9</div><div class="rank-body"><div class="book-title">[작품명]</div><div class="book-author">[작가] · 1권 무료</div><div class="rating">★4.9<span class="count">(1,782)</span></div></div></li>
+                </ol>
+                <span class="arrow next" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" fill="none"/></svg></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cell wide">
+          <span class="kicker">웹툰 상세 · 데스크톱</span>
+          <template data-theme-variant="dark"><span class="kicker">웹툰 상세 · 데스크톱 · 칩·회차 리스트 다크 색 (가정)</span></template>
+          <p class="catalog-dummy">더미 데이터 — 별점·평가 수·관심 수·총 회차 수, 연재 요일·이벤트·할인율, R ONLY(독점)·리다무·무료 회차 표기, 업데이트·출간·파일 정보, 듣기 기능 미지원·지원 환경(PC뷰어·PAPER) 표기와 금액, 로판 베스트 순위는 레이아웃 시연용이며 실제 작품 정보가 아닙니다.</p>
+          <div class="screen-desk">
+            <div class="dk-head">
+              <img src="/logos/ridi-logotype.svg" alt="RIDI">
+              <div class="gnb is-detail" aria-hidden="true"><span class="gnb-tab">만화</span><span class="gnb-tab">웹툰</span><span class="gnb-tab">웹소설</span><span class="gnb-tab">도서</span><span class="gnb-tab">리디샵<span class="gnb-new">N</span></span><span class="gnb-tab">셀렉트</span></div>
+            </div>
+            <div class="dk-body">
+              <div class="dk-cols">
+                <div class="dk-main">
+                  <div class="dt-top">
+                    <div class="cover dt-cover cv-purple"><span class="ronly">R ONLY</span>[표지]</div>
+                    <div class="dt-info">
+                      <div class="dt-crumb">웹툰 › 로판</div>
+                      <div class="dt-title" role="heading" aria-level="3">[작품 제목]</div>
+                      <div class="dt-line"><span><span class="dt-score">★ 4.9점</span><span class="dt-score-n">(53,798)</span></span><span class="vbar"></span><span class="dt-muted">관심 218,381</span></div>
+                      <div class="dt-line"><span><b>[그림]</b> <span class="dt-role">그림</span></span><span class="vbar"></span><span><b>[글]</b> <span class="dt-role">글</span></span><span class="vbar"></span><span><b>[원작]</b> <span class="dt-role">원작</span></span></div>
+                      <div class="dt-sub">[출판사] 출판</div>
+                      <div class="dt-sub">총 171화</div>
+                      <span class="pill-fav dt-fav"><svg width="11" height="11" viewBox="0 0 11 11" aria-hidden="true"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.3"/></svg>관심</span>
+                      <div class="info-rows dt-rows">
+                        <div class="info-row"><span class="chip chip-serial">연재</span><span class="info-text">매주 일 연재</span><span></span></div>
+                        <div class="info-row"><span class="chip chip-only">독점</span><span class="info-text">독점 작품 감상은 [RIDI ONLY 작품관]</span><svg class="chev" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.4" fill="none"/></svg></div>
+                        <div class="info-row"><span class="chip chip-wait">리다무</span><span class="info-text">1일마다 1편 기다리면 무료</span><span></span></div>
+                      </div>
+                      <div class="dt-buy"><span class="btn-buy">첫화보기</span></div>
+                    </div>
+                  </div>
+
+                  <div class="dt-box">
+                    <div class="kv"><b>업데이트</b><span>[날짜] 업데이트</span></div>
+                    <div class="kv"><b>출간 정보</b><span>[날짜] 출간</span></div>
+                    <div class="kv"><b>파일 정보</b><span>평균 [용량]</span></div>
+                    <div class="kv"><b>듣기 기능</b><span class="off">TTS(듣기) 미지원</span></div>
+                    <div class="kv"><b>ISBN</b><span>[번호]</span></div>
+                    <div class="kv"><b>지원 환경</b><span>앱 · 웹 <span class="off">· PC뷰어 · PAPER</span></span></div>
+                  </div>
+
+                  <div class="ep">
+                    <div class="ep-tabs"><div class="ep-tab">대여하기</div><div class="ep-tab off">소장하기</div></div>
+                    <div class="ep-bar">
+                      <div class="ep-group"><span class="check"></span><span class="ep-strong">전체 선택</span><span class="lbtn">↑↓ 신간부터</span></div>
+                      <div class="ep-group"><span class="ep-strong">총 0화 <span class="ep-money">0원</span></span><span class="lbtn">카트</span><span class="lbtn blue">선택 대여</span></div>
+                    </div>
+                    <div class="ep-row"><span class="check"></span><div class="cover cv-blue">표지</div><div class="ep-main"><div class="ep-titleline"><span class="ep-free">무료</span><span class="ep-title">[작품명] 1화</span></div><span class="ep-sub">[날짜], [용량]</span></div><span class="lbtn view">보기</span></div>
+                    <div class="ep-row"><span class="check"></span><div class="cover cv-deep">표지</div><div class="ep-main"><div class="ep-titleline"><span class="ep-free">무료</span><span class="ep-title">[작품명] 2화</span></div><span class="ep-sub">[날짜], [용량]</span></div><span class="lbtn view">보기</span></div>
+                    <div class="ep-row"><span class="check"></span><div class="cover cv-navy">표지</div><div class="ep-main"><div class="ep-titleline"><span class="ep-title">[작품명] 3화</span></div><span class="ep-sub">[날짜], [용량]</span></div><span class="lbtn view">보기</span></div>
+                  </div>
+                </div>
+                <div class="dk-aside">
+                  <div class="best-h">로판 베스트 ›</div>
+                  <ol class="best">
+                    <li><b>1</b><span>[작품명]</span></li>
+                    <li><b>2</b><span>[작품명]</span></li>
+                    <li><b>3</b><span>[작품명]</span></li>
+                    <li><b>4</b><span>[작품명]</span></li>
+                    <li><b>5</b><span>[작품명]</span></li>
+                    <li><b>6</b><span>[작품명]</span></li>
+                    <li><b>7</b><span>[작품명]</span></li>
+                    <li><b>8</b><span>[작품명]</span></li>
+                    <li><b>9</b><span>[작품명]</span></li>
+                    <li><b>10</b><span>[작품명]</span></li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cell">
+          <span class="kicker">만화 홈 · 모바일 390</span>
+          <p class="catalog-dummy">더미 데이터 — 배너의 UP·↓30% 배지와 쪽 번호는 레이아웃 시연용이며 실제 리디 편성이 아닙니다.</p>
+          <div class="phone">
+            <div class="screen">
+              <div class="m-head">
+                <div class="m-row"><img src="/logos/ridi-logotype.svg" alt="RIDI"><span class="m-login">로그인</span></div>
+                <span class="search m-search" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.8"/></svg></span>
+                <div class="m-nav">
+                  <div class="m-gnb"><span class="m-tab cur">만화</span><span class="m-tab">웹툰</span><span class="m-tab">웹소설</span><span class="m-tab">도서</span><span class="m-tab">리디샵<span class="gnb-new" aria-hidden="true">N</span></span><span class="m-tab">셀렉트</span></div>
+                  <span class="m-burger" aria-hidden="true"><svg width="20" height="16" viewBox="0 0 20 16"><path d="M1 2h18M1 8h18M1 14h18" stroke="currentColor" stroke-width="1.6"/></svg></span>
+                </div>
+              </div>
+              <div class="m-pills"><span class="m-pill on">추천</span><span class="m-pill">베스트</span><span class="m-pill">신작</span><span class="m-pill">BL</span><span class="m-pill">라노벨</span><span class="m-pill">판타지/SF</span></div>
+              <div class="m-hero">
+                <span class="m-peek hc-b"></span>
+                <span class="hero-card hc-a">
+                  <span class="hero-chips"><span class="hero-chip">UP</span><span class="hero-chip">↓30%</span></span>
+                  <span class="m-num">2 / 20</span>
+                  <span class="hero-art">[작품 일러스트 자리]</span>
+                  <span class="hero-title">[홍보 문구]<br>[두 줄]</span>
+                  <span class="hero-sub">&lt;[작품명]&gt;</span>
+                  <span class="hero-copyright">©[저작권 표기]</span>
+                </span>
+                <span class="m-peek r hc-b"></span>
+              </div>
+              <div class="m-sc">
+                <div class="sc"><span class="sc-ic"><img src="/logos/ridi.png" alt=""></span><span class="sc-label">리디만화학과</span></div>
+                <div class="sc"><span class="sc-ic">뷔페</span><span class="sc-label">만화무료뷔페</span></div>
+                <div class="sc"><span class="sc-ic">무료</span><span class="sc-label">무료</span></div>
+                <div class="sc"><span class="sc-ic">★</span><span class="sc-label">이벤트</span></div>
+                <div class="sc"><span class="sc-ic">SET</span><span class="sc-label">최저가 세트</span></div>
+                <span class="arrow m-more" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" fill="none"/></svg></span>
+              </div>
+              <div class="m-sec">방금 본 작품과 비슷한</div>
+              <div class="m-covers">
+                <div class="cover cv-plain">[표지]</div>
+                <div class="cover cv-plain">[표지]</div>
+                <div class="cover cv-plain">[표지]</div>
+                <span class="arrow m-more" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" fill="none"/></svg></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cell">
+          <span class="kicker">가격 표 · 만화 상세</span>
+          <table class="price">
+            <caption class="catalog-dummy">더미 데이터 — 권 수·정가·판매가·할인율은 레이아웃 시연용이며 실제 판매 가격이 아닙니다.</caption>
+            <thead><tr><th scope="col">소장</th><th scope="col" class="num">정가</th><th scope="col" class="num">판매가</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">단권</th><td class="num">5,000원</td><td class="num"><span class="disc">10%↓</span> <span class="sale">4,500원</span></td></tr>
+              <tr><th scope="row">전권 (12권)</th><td class="num">60,000원</td><td class="num"><span class="disc">10%↓</span> <span class="sale">54,000원</span></td></tr>
+            </tbody>
+          </table>
+          <div class="buy-row"><a class="btn-buy" href="#">전권 대여</a><a class="btn-buy" href="#">전권 할인 소장</a></div>
+          <div class="specs">
+            <span class="spec">할인율·판매가 emotion-blue · 정가 text-primary</span>
+            <template data-theme-variant="dark"><span class="spec">할인율·판매가 dark-emotion-blue · 정가 text-primary</span></template>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

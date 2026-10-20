@@ -1,0 +1,1127 @@
+{
+  "colors": [
+    {
+      "name": "neutral-25",
+      "value": "oklch(0.985 0.000 0.0)",
+      "note": "#FAFAFA — 렌더 상세 정보 박스 바탕과 같은 값",
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
+    },
+    {
+      "name": "neutral-50",
+      "value": "oklch(0.970 0.000 0.0)",
+      "note": "#F5F5F5 — 렌더 검색창·바로가기 원 바탕과 같은 값",
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
+    },
+    {
+      "name": "neutral-100",
+      "value": "oklch(0.925 0.000 0.0)",
+      "note": "#E6E6E6 — 렌더 테두리와 같은 값",
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
+    },
+    {
+      "name": "neutral-200",
+      "value": "oklch(0.845 0.000 0.0)",
+      "note": "#CCCCCC",
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
+    },
+    {
+      "name": "neutral-300",
+      "value": "oklch(0.722 0.000 0.0)",
+      "note": "#A5A5A5 — 렌더 보조 글자와 같은 값",
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
+    },
+    {
+      "name": "neutral-400",
+      "value": "oklch(0.573 0.000 0.0)",
+      "note": "#787878 — 렌더 회색 보조 글자(홈 1440 최다)와 같은 값",
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
+    },
+    {
+      "name": "neutral-500",
+      "value": "oklch(0.510 0.000 0.0)",
+      "note": "#666666",
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
+    },
+    {
+      "name": "neutral-600",
+      "value": "oklch(0.431 0.000 0.0)",
+      "note": "#505050",
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
+    },
+    {
+      "name": "neutral-700",
+      "value": "oklch(0.337 0.000 0.0)",
+      "note": "#373737",
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
+    },
+    {
+      "name": "neutral-750",
+      "value": "oklch(0.293 0.000 0.0)",
+      "note": "#2C2C2C — 규칙 밖 단계",
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
+    },
+    {
+      "name": "neutral-800",
+      "value": "oklch(0.244 0.000 0.0)",
+      "note": "#202020",
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
+    },
+    {
+      "name": "neutral-850",
+      "value": "oklch(0.222 0.000 0.0)",
+      "note": "#1B1B1B — 규칙 밖 단계",
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
+    },
+    {
+      "name": "neutral-900",
+      "value": "oklch(0.191 0.000 0.0)",
+      "note": "#141414 — 렌더 기본 글자와 같은 값",
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
+    },
+    {
+      "name": "neutral-white",
+      "value": "oklch(1.000 0.000 0.0)",
+      "note": "#FFFFFF — red-25 와 같은 값",
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
+    },
+    {
+      "name": "neutral-black",
+      "value": "oklch(0.000 0.000 0.0)",
+      "note": "#000000",
+      "group": "neutral — 무채색 원시 (층 A --ridi-color-*)"
+    },
+    {
+      "name": "coolgray-25",
+      "value": "oklch(0.982 0.002 247.8)",
+      "note": "#F8F9FA",
+      "group": "coolgray — 푸른 기 회색 원시"
+    },
+    {
+      "name": "coolgray-50",
+      "value": "oklch(0.966 0.003 228.8)",
+      "note": "#F2F4F5 — 렌더 회차 행 구분선과 같은 값",
+      "group": "coolgray — 푸른 기 회색 원시"
+    },
+    {
+      "name": "coolgray-100",
+      "value": "oklch(0.930 0.005 258.3)",
+      "note": "#E6E8EB",
+      "group": "coolgray — 푸른 기 회색 원시"
+    },
+    {
+      "name": "coolgray-200",
+      "value": "oklch(0.871 0.007 247.9)",
+      "note": "#D1D5D9 — 렌더 보기 버튼 테두리와 같은 값",
+      "group": "coolgray — 푸른 기 회색 원시"
+    },
+    {
+      "name": "coolgray-300",
+      "value": "oklch(0.723 0.013 236.7)",
+      "note": "#9EA7AD",
+      "group": "coolgray — 푸른 기 회색 원시"
+    },
+    {
+      "name": "coolgray-400",
+      "value": "oklch(0.625 0.016 244.8)",
+      "note": "#808991",
+      "group": "coolgray — 푸른 기 회색 원시"
+    },
+    {
+      "name": "coolgray-500",
+      "value": "oklch(0.526 0.016 241.2)",
+      "note": "#636C73",
+      "group": "coolgray — 푸른 기 회색 원시"
+    },
+    {
+      "name": "coolgray-600",
+      "value": "oklch(0.394 0.014 244.0)",
+      "note": "#40474D",
+      "group": "coolgray — 푸른 기 회색 원시"
+    },
+    {
+      "name": "coolgray-700",
+      "value": "oklch(0.325 0.009 233.9)",
+      "note": "#303538",
+      "group": "coolgray — 푸른 기 회색 원시"
+    },
+    {
+      "name": "coolgray-800",
+      "value": "oklch(0.266 0.008 240.2)",
+      "note": "#222629",
+      "group": "coolgray — 푸른 기 회색 원시"
+    },
+    {
+      "name": "coolgray-900",
+      "value": "oklch(0.212 0.005 248.1)",
+      "note": "#17191B",
+      "group": "coolgray — 푸른 기 회색 원시"
+    },
+    {
+      "name": "blue-50",
+      "value": "oklch(0.964 0.019 243.0)",
+      "note": "#E9F5FF",
+      "group": "blue — 원시 블루 램프"
+    },
+    {
+      "name": "blue-100",
+      "value": "oklch(0.892 0.058 241.4)",
+      "note": "#BAE1FF",
+      "group": "blue — 원시 블루 램프"
+    },
+    {
+      "name": "blue-200",
+      "value": "oklch(0.840 0.087 242.4)",
+      "note": "#98D2FF",
+      "group": "blue — 원시 블루 램프"
+    },
+    {
+      "name": "blue-300",
+      "value": "oklch(0.774 0.125 243.5)",
+      "note": "#69BEFF",
+      "group": "blue — 원시 블루 램프"
+    },
+    {
+      "name": "blue-400",
+      "value": "oklch(0.735 0.147 245.2)",
+      "note": "#4CB1FF",
+      "group": "blue — 원시 블루 램프"
+    },
+    {
+      "name": "blue-500",
+      "value": "oklch(0.683 0.176 248.4)",
+      "note": "#1F9EFF — 토큰 원시값 · 대표색은 emotion-blue",
+      "group": "blue — 원시 블루 램프"
+    },
+    {
+      "name": "blue-600",
+      "value": "oklch(0.637 0.163 248.1)",
+      "note": "#1C90E8",
+      "group": "blue — 원시 블루 램프"
+    },
+    {
+      "name": "blue-660",
+      "value": "oklch(0.569 0.174 252.7)",
+      "note": "#0077D9 — 규칙 밖 단계",
+      "group": "blue — 원시 블루 램프"
+    },
+    {
+      "name": "blue-700",
+      "value": "oklch(0.531 0.134 248.0)",
+      "note": "#1670B5",
+      "group": "blue — 원시 블루 램프"
+    },
+    {
+      "name": "blue-800",
+      "value": "oklch(0.444 0.109 247.3)",
+      "note": "#11578C",
+      "group": "blue — 원시 블루 램프"
+    },
+    {
+      "name": "blue-900",
+      "value": "oklch(0.369 0.088 247.3)",
+      "note": "#0D426B",
+      "group": "blue — 원시 블루 램프"
+    },
+    {
+      "name": "deepblue-25",
+      "value": "oklch(0.970 0.010 267.4)",
+      "note": "#F2F5FC",
+      "group": "deepblue — 짙은 청색 원시"
+    },
+    {
+      "name": "deepblue-50",
+      "value": "oklch(0.951 0.020 264.5)",
+      "note": "#E8EFFD",
+      "group": "deepblue — 짙은 청색 원시"
+    },
+    {
+      "name": "deepblue-100",
+      "value": "oklch(0.846 0.066 267.0)",
+      "note": "#B9CCF9",
+      "group": "deepblue — 짙은 청색 원시"
+    },
+    {
+      "name": "deepblue-200",
+      "value": "oklch(0.773 0.100 265.8)",
+      "note": "#97B4F6",
+      "group": "deepblue — 짙은 청색 원시"
+    },
+    {
+      "name": "deepblue-300",
+      "value": "oklch(0.673 0.150 264.5)",
+      "note": "#6792F2",
+      "group": "deepblue — 짙은 청색 원시"
+    },
+    {
+      "name": "deepblue-400",
+      "value": "oklch(0.613 0.181 263.5)",
+      "note": "#497DEF",
+      "group": "deepblue — 짙은 청색 원시"
+    },
+    {
+      "name": "deepblue-500",
+      "value": "oklch(0.531 0.225 262.9)",
+      "note": "#1C5CEB",
+      "group": "deepblue — 짙은 청색 원시"
+    },
+    {
+      "name": "deepblue-600",
+      "value": "oklch(0.497 0.208 262.9)",
+      "note": "#1954D6",
+      "group": "deepblue — 짙은 청색 원시"
+    },
+    {
+      "name": "deepblue-650",
+      "value": "oklch(0.500 0.236 262.2)",
+      "note": "#0050E6 — 규칙 밖 단계",
+      "group": "deepblue — 짙은 청색 원시"
+    },
+    {
+      "name": "deepblue-700",
+      "value": "oklch(0.416 0.171 263.1)",
+      "note": "#1441A7",
+      "group": "deepblue — 짙은 청색 원시"
+    },
+    {
+      "name": "deepblue-800",
+      "value": "oklch(0.351 0.138 262.8)",
+      "note": "#0F3381",
+      "group": "deepblue — 짙은 청색 원시"
+    },
+    {
+      "name": "deepblue-900",
+      "value": "oklch(0.295 0.111 263.1)",
+      "note": "#0C2763",
+      "group": "deepblue — 짙은 청색 원시"
+    },
+    {
+      "name": "darknavy-25",
+      "value": "oklch(0.973 0.002 247.8)",
+      "note": "#F5F6F7",
+      "group": "darknavy — 남색 회색 원시"
+    },
+    {
+      "name": "darknavy-50",
+      "value": "oklch(0.943 0.003 264.5)",
+      "note": "#EBECEE",
+      "group": "darknavy — 남색 회색 원시"
+    },
+    {
+      "name": "darknavy-100",
+      "value": "oklch(0.818 0.010 252.8)",
+      "note": "#BFC4CA",
+      "group": "darknavy — 남색 회색 원시"
+    },
+    {
+      "name": "darknavy-200",
+      "value": "oklch(0.729 0.015 254.6)",
+      "note": "#A1A8B1",
+      "group": "darknavy — 남색 회색 원시"
+    },
+    {
+      "name": "darknavy-300",
+      "value": "oklch(0.596 0.023 255.0)",
+      "note": "#76808D",
+      "group": "darknavy — 남색 회색 원시"
+    },
+    {
+      "name": "darknavy-400",
+      "value": "oklch(0.510 0.029 255.7)",
+      "note": "#5B6777",
+      "group": "darknavy — 남색 회색 원시"
+    },
+    {
+      "name": "darknavy-500",
+      "value": "oklch(0.371 0.040 255.8)",
+      "note": "#324155 — 렌더 1권무·무료 배지 바탕과 같은 값",
+      "group": "darknavy — 남색 회색 원시"
+    },
+    {
+      "name": "darknavy-600",
+      "value": "oklch(0.349 0.036 256.6)",
+      "note": "#2E3B4D",
+      "group": "darknavy — 남색 회색 원시"
+    },
+    {
+      "name": "darknavy-700",
+      "value": "oklch(0.298 0.029 256.8)",
+      "note": "#242E3C",
+      "group": "darknavy — 남색 회색 원시"
+    },
+    {
+      "name": "darknavy-800",
+      "value": "oklch(0.258 0.024 256.4)",
+      "note": "#1C242F",
+      "group": "darknavy — 남색 회색 원시"
+    },
+    {
+      "name": "darknavy-900",
+      "value": "oklch(0.220 0.020 258.3)",
+      "note": "#151B24",
+      "group": "darknavy — 남색 회색 원시"
+    },
+    {
+      "name": "red-25",
+      "value": "oklch(1.000 0.000 0.0)",
+      "note": "#FFFFFF — neutral-white 와 같은 값(상류 중복을 그대로 둔다)",
+      "group": "red — 원시 레드 램프"
+    },
+    {
+      "name": "red-50",
+      "value": "oklch(0.954 0.019 17.5)",
+      "note": "#FCEBEB",
+      "group": "red — 원시 레드 램프"
+    },
+    {
+      "name": "red-100",
+      "value": "oklch(0.852 0.061 18.4)",
+      "note": "#F4BFBF",
+      "group": "red — 원시 레드 램프"
+    },
+    {
+      "name": "red-200",
+      "value": "oklch(0.785 0.093 19.4)",
+      "note": "#EFA1A1",
+      "group": "red — 원시 레드 램프"
+    },
+    {
+      "name": "red-300",
+      "value": "oklch(0.697 0.142 21.4)",
+      "note": "#E87676",
+      "group": "red — 원시 레드 램프"
+    },
+    {
+      "name": "red-400",
+      "value": "oklch(0.647 0.170 23.1)",
+      "note": "#E35B5B",
+      "group": "red — 원시 레드 램프"
+    },
+    {
+      "name": "red-500",
+      "value": "oklch(0.587 0.206 26.4)",
+      "note": "#DC3232 — 렌더 별점·할인 배지와 같은 값",
+      "group": "red — 원시 레드 램프"
+    },
+    {
+      "name": "red-600",
+      "value": "oklch(0.547 0.191 26.2)",
+      "note": "#C82E2E",
+      "group": "red — 원시 레드 램프"
+    },
+    {
+      "name": "red-700",
+      "value": "oklch(0.458 0.156 25.9)",
+      "note": "#9C2424",
+      "group": "red — 원시 레드 램프"
+    },
+    {
+      "name": "red-800",
+      "value": "oklch(0.383 0.128 25.6)",
+      "note": "#791C1C",
+      "group": "red — 원시 레드 램프"
+    },
+    {
+      "name": "red-900",
+      "value": "oklch(0.318 0.103 25.2)",
+      "note": "#5C1515",
+      "group": "red — 원시 레드 램프"
+    },
+    {
+      "name": "yellow-25",
+      "value": "oklch(0.993 0.011 95.2)",
+      "note": "#FFFDF5",
+      "group": "yellow — 원시 옐로 램프"
+    },
+    {
+      "name": "yellow-50",
+      "value": "oklch(0.987 0.021 95.3)",
+      "note": "#FFFBEB",
+      "group": "yellow — 원시 옐로 램프"
+    },
+    {
+      "name": "yellow-100",
+      "value": "oklch(0.957 0.065 94.0)",
+      "note": "#FFF1C0",
+      "group": "yellow — 원시 옐로 램프"
+    },
+    {
+      "name": "yellow-200",
+      "value": "oklch(0.938 0.094 94.0)",
+      "note": "#FFEAA1",
+      "group": "yellow — 원시 옐로 램프"
+    },
+    {
+      "name": "yellow-300",
+      "value": "oklch(0.913 0.131 94.0)",
+      "note": "#FFE176",
+      "group": "yellow — 원시 옐로 램프"
+    },
+    {
+      "name": "yellow-400",
+      "value": "oklch(0.899 0.148 93.3)",
+      "note": "#FFDB5C",
+      "group": "yellow — 원시 옐로 램프"
+    },
+    {
+      "name": "yellow-500",
+      "value": "oklch(0.878 0.168 91.7)",
+      "note": "#FFD233",
+      "group": "yellow — 원시 옐로 램프"
+    },
+    {
+      "name": "yellow-600",
+      "value": "oklch(0.818 0.156 91.7)",
+      "note": "#E8BF2E",
+      "group": "yellow — 원시 옐로 램프"
+    },
+    {
+      "name": "yellow-700",
+      "value": "oklch(0.680 0.128 91.9)",
+      "note": "#B59524",
+      "group": "yellow — 원시 옐로 램프"
+    },
+    {
+      "name": "yellow-800",
+      "value": "oklch(0.566 0.106 92.7)",
+      "note": "#8C741C",
+      "group": "yellow — 원시 옐로 램프"
+    },
+    {
+      "name": "yellow-900",
+      "value": "oklch(0.467 0.086 92.3)",
+      "note": "#6B5815",
+      "group": "yellow — 원시 옐로 램프"
+    },
+    {
+      "name": "green-25",
+      "value": "oklch(0.979 0.009 161.4)",
+      "note": "#F3FAF6",
+      "group": "green — 원시 그린 램프"
+    },
+    {
+      "name": "green-50",
+      "value": "oklch(0.970 0.018 161.1)",
+      "note": "#EBF9F1",
+      "group": "green — 원시 그린 램프"
+    },
+    {
+      "name": "green-100",
+      "value": "oklch(0.905 0.053 160.6)",
+      "note": "#C2EBD4",
+      "group": "green — 원시 그린 램프"
+    },
+    {
+      "name": "green-200",
+      "value": "oklch(0.861 0.080 159.4)",
+      "note": "#A4E2BF",
+      "group": "green — 원시 그린 램프"
+    },
+    {
+      "name": "green-300",
+      "value": "oklch(0.800 0.113 158.2)",
+      "note": "#7AD4A2",
+      "group": "green — 원시 그린 램프"
+    },
+    {
+      "name": "green-400",
+      "value": "oklch(0.766 0.133 156.7)",
+      "note": "#61CC90",
+      "group": "green — 원시 그린 램프"
+    },
+    {
+      "name": "green-500",
+      "value": "oklch(0.715 0.158 154.2)",
+      "note": "#39BF74",
+      "group": "green — 원시 그린 램프"
+    },
+    {
+      "name": "green-600",
+      "value": "oklch(0.668 0.147 154.4)",
+      "note": "#34AE6A",
+      "group": "green — 원시 그린 램프"
+    },
+    {
+      "name": "green-700",
+      "value": "oklch(0.558 0.122 154.3)",
+      "note": "#288852",
+      "group": "green — 원시 그린 램프"
+    },
+    {
+      "name": "green-800",
+      "value": "oklch(0.464 0.098 154.9)",
+      "note": "#1F6940",
+      "group": "green — 원시 그린 램프"
+    },
+    {
+      "name": "green-900",
+      "value": "oklch(0.386 0.079 155.4)",
+      "note": "#185031",
+      "group": "green — 원시 그린 램프"
+    },
+    {
+      "name": "purple-25",
+      "value": "oklch(0.979 0.008 293.9)",
+      "note": "#F8F7FD",
+      "group": "purple — 원시 퍼플 램프"
+    },
+    {
+      "name": "purple-50",
+      "value": "oklch(0.957 0.017 293.1)",
+      "note": "#F1EFFC",
+      "group": "purple — 원시 퍼플 램프"
+    },
+    {
+      "name": "purple-100",
+      "value": "oklch(0.865 0.058 293.9)",
+      "note": "#D4CCF6",
+      "group": "purple — 원시 퍼플 램프"
+    },
+    {
+      "name": "purple-200",
+      "value": "oklch(0.798 0.088 293.2)",
+      "note": "#BFB3F1",
+      "group": "purple — 원시 퍼플 램프"
+    },
+    {
+      "name": "purple-300",
+      "value": "oklch(0.705 0.131 291.2)",
+      "note": "#A190EB",
+      "group": "purple — 원시 퍼플 램프"
+    },
+    {
+      "name": "purple-400",
+      "value": "oklch(0.650 0.157 289.8)",
+      "note": "#8F7BE7",
+      "group": "purple — 원시 퍼플 램프"
+    },
+    {
+      "name": "purple-500",
+      "value": "oklch(0.566 0.196 286.8)",
+      "note": "#735AE1",
+      "group": "purple — 원시 퍼플 램프"
+    },
+    {
+      "name": "purple-600",
+      "value": "oklch(0.529 0.182 287.0)",
+      "note": "#6952CD",
+      "group": "purple — 원시 퍼플 램프"
+    },
+    {
+      "name": "purple-700",
+      "value": "oklch(0.445 0.149 287.3)",
+      "note": "#5240A0",
+      "group": "purple — 원시 퍼플 램프"
+    },
+    {
+      "name": "purple-800",
+      "value": "oklch(0.374 0.121 287.1)",
+      "note": "#3F327C",
+      "group": "purple — 원시 퍼플 램프"
+    },
+    {
+      "name": "purple-900",
+      "value": "oklch(0.314 0.097 287.5)",
+      "note": "#30265F",
+      "group": "purple — 원시 퍼플 램프"
+    },
+    {
+      "name": "orange-25",
+      "value": "oklch(0.983 0.010 58.2)",
+      "note": "#FFF8F3",
+      "group": "orange — 원시 오렌지 램프"
+    },
+    {
+      "name": "orange-50",
+      "value": "oklch(0.966 0.021 60.8)",
+      "note": "#FFF1E6",
+      "group": "orange — 원시 오렌지 램프"
+    },
+    {
+      "name": "orange-100",
+      "value": "oklch(0.892 0.066 60.1)",
+      "note": "#FDD2B0",
+      "group": "orange — 원시 오렌지 램프"
+    },
+    {
+      "name": "orange-200",
+      "value": "oklch(0.844 0.099 58.5)",
+      "note": "#FDBC8A",
+      "group": "orange — 원시 오렌지 램프"
+    },
+    {
+      "name": "orange-300",
+      "value": "oklch(0.781 0.143 56.7)",
+      "note": "#FC9E54",
+      "group": "orange — 원시 오렌지 램프"
+    },
+    {
+      "name": "orange-400",
+      "value": "oklch(0.746 0.166 54.0)",
+      "note": "#FB8B33",
+      "group": "orange — 원시 오렌지 램프"
+    },
+    {
+      "name": "orange-500",
+      "value": "oklch(0.699 0.194 46.9)",
+      "note": "#FA6E00",
+      "group": "orange — 원시 오렌지 램프"
+    },
+    {
+      "name": "orange-600",
+      "value": "oklch(0.652 0.180 47.1)",
+      "note": "#E46400",
+      "group": "orange — 원시 오렌지 램프"
+    },
+    {
+      "name": "orange-700",
+      "value": "oklch(0.544 0.149 47.8)",
+      "note": "#B24E00",
+      "group": "orange — 원시 오렌지 램프"
+    },
+    {
+      "name": "orange-800",
+      "value": "oklch(0.455 0.122 49.3)",
+      "note": "#8A3D00",
+      "group": "orange — 원시 오렌지 램프"
+    },
+    {
+      "name": "orange-900",
+      "value": "oklch(0.376 0.099 50.4)",
+      "note": "#692E00",
+      "group": "orange — 원시 오렌지 램프"
+    },
+    {
+      "name": "mint-25",
+      "value": "oklch(0.978 0.010 197.0)",
+      "note": "#F1FAFA",
+      "group": "mint — 원시 민트 램프"
+    },
+    {
+      "name": "mint-50",
+      "value": "oklch(0.973 0.018 196.9)",
+      "note": "#E9FAFA",
+      "group": "mint — 원시 민트 램프"
+    },
+    {
+      "name": "mint-100",
+      "value": "oklch(0.918 0.056 196.2)",
+      "note": "#B9F0F0",
+      "group": "mint — 원시 민트 램프"
+    },
+    {
+      "name": "mint-200",
+      "value": "oklch(0.880 0.078 195.8)",
+      "note": "#98E8E8",
+      "group": "mint — 원시 민트 램프"
+    },
+    {
+      "name": "mint-300",
+      "value": "oklch(0.833 0.106 195.3)",
+      "note": "#68DEDE",
+      "group": "mint — 원시 민트 램프"
+    },
+    {
+      "name": "mint-400",
+      "value": "oklch(0.806 0.118 195.1)",
+      "note": "#4BD7D7",
+      "group": "mint — 원시 민트 램프"
+    },
+    {
+      "name": "mint-500",
+      "value": "oklch(0.770 0.127 194.8)",
+      "note": "#1ECDCD — 렌더 UP 배지 바탕과 같은 값",
+      "group": "mint — 원시 민트 램프"
+    },
+    {
+      "name": "mint-600",
+      "value": "oklch(0.719 0.119 194.8)",
+      "note": "#1BBBBB",
+      "group": "mint — 원시 민트 램프"
+    },
+    {
+      "name": "mint-700",
+      "value": "oklch(0.599 0.098 194.8)",
+      "note": "#159292",
+      "group": "mint — 원시 민트 램프"
+    },
+    {
+      "name": "mint-800",
+      "value": "oklch(0.499 0.081 194.9)",
+      "note": "#117171",
+      "group": "mint — 원시 민트 램프"
+    },
+    {
+      "name": "mint-900",
+      "value": "oklch(0.412 0.066 194.9)",
+      "note": "#0D5656",
+      "group": "mint — 원시 민트 램프"
+    },
+    {
+      "name": "gold-25",
+      "value": "oklch(0.982 0.004 91.4)",
+      "note": "#FAF9F6",
+      "group": "gold — 원시 골드 램프"
+    },
+    {
+      "name": "gold-50",
+      "value": "oklch(0.978 0.009 100.0)",
+      "note": "#F9F8F1",
+      "group": "gold — 원시 골드 램프"
+    },
+    {
+      "name": "gold-100",
+      "value": "oklch(0.930 0.026 94.7)",
+      "note": "#EDE8D5",
+      "group": "gold — 원시 골드 램프"
+    },
+    {
+      "name": "gold-200",
+      "value": "oklch(0.896 0.039 95.9)",
+      "note": "#E4DDC0",
+      "group": "gold — 원시 골드 램프"
+    },
+    {
+      "name": "gold-300",
+      "value": "oklch(0.848 0.058 97.6)",
+      "note": "#D7CEA3",
+      "group": "gold — 원시 골드 램프"
+    },
+    {
+      "name": "gold-400",
+      "value": "oklch(0.820 0.070 97.6)",
+      "note": "#D0C591",
+      "group": "gold — 원시 골드 램프"
+    },
+    {
+      "name": "gold-500",
+      "value": "oklch(0.773 0.085 97.3)",
+      "note": "#C4B676",
+      "group": "gold — 원시 골드 램프"
+    },
+    {
+      "name": "gold-600",
+      "value": "oklch(0.722 0.080 98.1)",
+      "note": "#B2A66B",
+      "group": "gold — 원시 골드 램프"
+    },
+    {
+      "name": "gold-700",
+      "value": "oklch(0.601 0.064 97.2)",
+      "note": "#8B8154",
+      "group": "gold — 원시 골드 램프"
+    },
+    {
+      "name": "gold-800",
+      "value": "oklch(0.502 0.052 96.8)",
+      "note": "#6C6441",
+      "group": "gold — 원시 골드 램프"
+    },
+    {
+      "name": "gold-900",
+      "value": "oklch(0.415 0.041 96.7)",
+      "note": "#524C32",
+      "group": "gold — 원시 골드 램프"
+    },
+    {
+      "name": "emotion-blue",
+      "value": "oklch(0.683 0.176 248.3)",
+      "note": "#1E9EFF — 층 B lightTheme blue · 공개 글의 최종 리디 블루 · 현재 탭·선택 알약·구매 버튼·워드마크",
+      "group": "emotion 테마 (층 B) — 화면이 실제로 칠하는 이름 붙은 값"
+    },
+    {
+      "name": "dark-emotion-blue",
+      "value": "oklch(0.649 0.156 244.3)",
+      "note": "#1496E6 — 층 B darkTheme blue",
+      "group": "emotion 테마 (층 B) — 화면이 실제로 칠하는 이름 붙은 값"
+    },
+    {
+      "name": "emotion-grey200",
+      "value": "oklch(0.955 0.000 0.0)",
+      "note": "#F0F0F0 — 층 B grey200 · 홈 구분선·테두리 · 층 A 에 없는 값",
+      "group": "emotion 테마 (층 B) — 화면이 실제로 칠하는 이름 붙은 값"
+    },
+    {
+      "name": "emotion-grey550",
+      "value": "oklch(0.450 0.000 0.0)",
+      "note": "#555555 — 층 B grey550 · 상세 보조 글자 · darkTheme 에 키 없음",
+      "group": "emotion 테마 (층 B) — 화면이 실제로 칠하는 이름 붙은 값"
+    },
+    {
+      "name": "emotion-dim-thumb",
+      "value": "oklch(0.000 0.000 0 / 0.04)",
+      "note": "rgba(0, 0, 0, 0.04) — 층 B dimThumb · 표지 덧칠·외곽선 · 다크도 같은 값",
+      "group": "emotion 테마 (층 B) — 화면이 실제로 칠하는 이름 붙은 값"
+    }
+  ],
+  "typography": [
+    {
+      "name": "body-LSemibold",
+      "size": "16px",
+      "weight": 600,
+      "lineHeight": "24px",
+      "tracking": "-0.16px",
+      "note": "--text-body-LSemibold"
+    },
+    {
+      "name": "body-mBold",
+      "size": "15px",
+      "weight": 700,
+      "lineHeight": "22px",
+      "tracking": "-0.15px",
+      "note": "--text-body-mBold"
+    },
+    {
+      "name": "body-mSemibold",
+      "size": "15px",
+      "weight": 600,
+      "lineHeight": "22px",
+      "tracking": "-0.15px",
+      "note": "--text-body-mSemibold"
+    },
+    {
+      "name": "body-mMedium",
+      "size": "15px",
+      "weight": 500,
+      "lineHeight": "22px",
+      "tracking": "-0.15px",
+      "note": "--text-body-mMedium"
+    },
+    {
+      "name": "body-sSemibold",
+      "size": "14px",
+      "weight": 600,
+      "lineHeight": "22px",
+      "tracking": "-0.14px",
+      "note": "--text-body-sSemibold"
+    },
+    {
+      "name": "body-sRegular",
+      "size": "14px",
+      "weight": 400,
+      "lineHeight": "22px",
+      "tracking": "-0.14px",
+      "note": "--text-body-sRegular"
+    },
+    {
+      "name": "body-xsSemibold",
+      "size": "13px",
+      "weight": 600,
+      "lineHeight": "20px",
+      "tracking": "-0.13px",
+      "note": "--text-body-xsSemibold"
+    },
+    {
+      "name": "body-xsRegular",
+      "size": "13px",
+      "weight": 400,
+      "lineHeight": "20px",
+      "tracking": "-0.13px",
+      "note": "--text-body-xsRegular"
+    },
+    {
+      "name": "caption-mMedium",
+      "size": "12px",
+      "weight": 500,
+      "lineHeight": "18px",
+      "tracking": "-0.12px",
+      "note": "--text-caption-mMedium"
+    },
+    {
+      "name": "scale-01",
+      "size": "7px",
+      "tracking": "-0.07px",
+      "note": "fontSize-01 · letterSpacing-01"
+    },
+    {
+      "name": "scale-02",
+      "size": "8px",
+      "tracking": "-0.08px",
+      "note": "fontSize-02 · letterSpacing-02"
+    },
+    {
+      "name": "scale-03",
+      "size": "9px",
+      "tracking": "-0.09px",
+      "note": "fontSize-03 · letterSpacing-03"
+    },
+    {
+      "name": "scale-04",
+      "size": "11px",
+      "tracking": "-0.11px",
+      "note": "fontSize-04 · letterSpacing-04"
+    },
+    {
+      "name": "scale-05",
+      "size": "12px",
+      "tracking": "-0.12px",
+      "note": "fontSize-05 · letterSpacing-05"
+    },
+    {
+      "name": "scale-06",
+      "size": "13px",
+      "tracking": "-0.13px",
+      "note": "fontSize-06 · letterSpacing-06"
+    },
+    {
+      "name": "scale-07",
+      "size": "14px",
+      "tracking": "-0.14px",
+      "note": "fontSize-07 · letterSpacing-07"
+    },
+    {
+      "name": "scale-08",
+      "size": "15px",
+      "tracking": "-0.15px",
+      "note": "fontSize-08 · letterSpacing-08"
+    },
+    {
+      "name": "scale-09",
+      "size": "16px",
+      "tracking": "-0.16px",
+      "note": "fontSize-09 · letterSpacing-09"
+    },
+    {
+      "name": "scale-10",
+      "size": "18px",
+      "tracking": "-0.18px",
+      "note": "fontSize-10 · letterSpacing-10"
+    },
+    {
+      "name": "scale-11",
+      "size": "20px",
+      "tracking": "-0.2px",
+      "note": "fontSize-11 · letterSpacing-11"
+    },
+    {
+      "name": "scale-12",
+      "size": "22px",
+      "tracking": "-0.22px",
+      "note": "fontSize-12 · letterSpacing-12"
+    },
+    {
+      "name": "scale-13",
+      "size": "24px",
+      "tracking": "-0.24px",
+      "note": "fontSize-13 · letterSpacing-13"
+    },
+    {
+      "name": "scale-14",
+      "size": "26px",
+      "tracking": "-0.26px",
+      "note": "fontSize-14 · letterSpacing-14"
+    },
+    {
+      "name": "scale-15",
+      "size": "34px",
+      "tracking": "-0.34px",
+      "note": "fontSize-15 · letterSpacing-15"
+    },
+    {
+      "name": "scale-16",
+      "size": "42px",
+      "tracking": "-0.42px",
+      "note": "fontSize-16 · letterSpacing-16"
+    }
+  ],
+  "spacing": [
+    {
+      "name": "ds-50",
+      "value": "2px",
+      "px": 2
+    },
+    {
+      "name": "ds-100",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "ds-150",
+      "value": "6px",
+      "px": 6
+    },
+    {
+      "name": "ds-200",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "ds-250",
+      "value": "10px",
+      "px": 10
+    },
+    {
+      "name": "ds-300",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "ds-400",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "ds-500",
+      "value": "20px",
+      "px": 20
+    },
+    {
+      "name": "ds-600",
+      "value": "24px",
+      "px": 24
+    },
+    {
+      "name": "ds-700",
+      "value": "28px",
+      "px": 28
+    },
+    {
+      "name": "ds-750",
+      "value": "30px",
+      "px": 30
+    },
+    {
+      "name": "ds-900",
+      "value": "36px",
+      "px": 36
+    },
+    {
+      "name": "ds-1000",
+      "value": "40px",
+      "px": 40
+    }
+  ],
+  "radius": [
+    {
+      "name": "radius-50",
+      "value": "2px",
+      "px": 2
+    },
+    {
+      "name": "radius-100",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "radius-full",
+      "value": "9999px",
+      "px": 9999
+    }
+  ],
+  "elevation": [
+    {
+      "name": "carousel-arrow",
+      "value": "2px 4px 8px 0 oklch(0.000 0.000 0.0 / 0.06)",
+      "note": "캐러셀 화살표 원 · 컴포넌트 코드의 값(이름 붙은 그림자 토큰 아님)"
+    },
+    {
+      "name": "floating-box",
+      "value": "5px 5px 10px 0 oklch(0.000 0.000 0.0 / 0.08)",
+      "note": "떠 있는 상자(1440 만) · 컴포넌트 코드의 값(이름 붙은 그림자 토큰 아님)"
+    },
+    {
+      "name": "legacy-button",
+      "value": "0 1px 1px 0 oklch(0.871 0.007 247.9 / 0.3)",
+      "note": "상세 rui_ 버튼(옛 층) · 레거시 CSS 의 값"
+    }
+  ]
+}

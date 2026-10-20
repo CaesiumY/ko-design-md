@@ -5,17 +5,19 @@ import { describe, expect, it } from "vitest"
 import { findKey, readFrontmatter } from "./frontmatter"
 import { splitFrontmatter } from "./frontmatter-fence"
 
-// Three entries publish a semantic role layer twice (#435): as a Markdown table
-// in `## Colors` — the reader's copy, carrying `[src:N]` and, for greeting, the
-// dark values — and as quoted reference rows in frontmatter `colors:`
-// (`bg-brand-solid: "{colors.carrot-600}"`), which is what standard DESIGN.md
-// tooling reads. Nothing else compares the two. token-extractor skips reference
-// rows, so `tokens:check` cannot see them, and the spec linter only checks that a
-// reference resolves, not that it resolves to the palette step the table names.
+// The entries in CASES below publish a semantic role layer twice (#435): as a
+// Markdown table in `## Colors` — the reader's copy, carrying `[src:N]` and,
+// for greeting, the dark values — and as quoted reference rows in frontmatter
+// `colors:` (`bg-brand-solid: "{colors.carrot-600}"`), which is what standard
+// DESIGN.md tooling reads. Nothing else compares the two. token-extractor skips
+// reference rows, so `tokens:check` cannot see them, and the spec linter only
+// checks that a reference resolves, not that it resolves to the palette step the
+// table names.
 // A re-audit that fixes one copy and not the other would pass every other gate.
 //
 // Pinned in both directions: every table role that maps to a single declared
-// palette token has its row(s), and no row exists without a table role behind it.
+// palette token has its row(s) — save one under a spec colour-role name, which
+// stays in the table — and no row exists without a table role behind it.
 
 const SERVICES = join(
   fileURLToPath(new URL("../..", import.meta.url)),
@@ -72,6 +74,11 @@ const SPEC_COLOR_ROLES = new Set([
   "neutral",
 ])
 
+// A reference row's key less its theme marking: the `dark-` prefix this form
+// uses, or the `-dark` suffix vapor-ui's older aliases use.
+const bare = (key: string): string =>
+  key.replace(/^dark-/, "").replace(/-dark$/, "")
+
 const spans = (cell: string): Array<string> =>
   [...cell.matchAll(/`([^`]+)`/g)].map((m) => m[1])
 
@@ -81,21 +88,31 @@ function expectRowsToMatch(
   refs: Map<string, string>,
   literals: Set<string>
 ): void {
-  // A table with nothing parsed would make every assertion below vacuous.
-  expect(expected.size, `${slug}: no table roles parsed`).toBeGreaterThan(0)
   for (const target of expected.values()) {
     expect(
       literals.has(target),
       `${slug}: ${target} is not a palette key`
     ).toBe(true)
   }
+  // A table role under a spec colour-role name stays in the table only
+  // (CLAUDE.md), so it is dropped from what the rows must match. Left in, it
+  // would demand the very row refused below.
+  const owed = [...expected].filter(([key]) => !SPEC_COLOR_ROLES.has(bare(key)))
+  // A table with nothing left to compare would make the assertions vacuous.
+  expect(owed.length, `${slug}: no table roles parsed`).toBeGreaterThan(0)
   // The #381 brand alias (`primary: "{colors.blue500}"`) points at the brand
   // colour, not at a table role, so it is not compared. The other spec role
-  // names have no such procedure: any row under them fails as unexpected.
+  // names have no such procedure, and a row under one is refused here.
+  // `dark-primary` is refused too — the alias has no dark twin.
   const roleRows = [...refs].filter(([key]) => key !== "primary")
-  expect(Object.fromEntries(roleRows), slug).toEqual(
-    Object.fromEntries(expected)
-  )
+  const specNamed = roleRows
+    .map(([key]) => key)
+    .filter((key) => SPEC_COLOR_ROLES.has(bare(key)))
+  expect(
+    specNamed,
+    `${slug}: reference rows under a spec colour-role name`
+  ).toEqual([])
+  expect(Object.fromEntries(roleRows), slug).toEqual(Object.fromEntries(owed))
 }
 
 // One comparison per entry that publishes its role table twice. Registering
@@ -122,7 +139,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
     },
   },
   greeting: {
-    title: "light only, no text role under a spec colour-role name",
+    title: "light only, brand alias off the text ladder",
     check: () => {
       const { literals, refs, tableRows } = load("greeting")
       const expected = new Map<string, string>()
@@ -145,7 +162,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
         if (roles.length !== palette.length) continue
         if (!palette.every((p) => literals.has(p))) continue
         roles.forEach((role, i) => {
-          if (!SPEC_COLOR_ROLES.has(role)) expected.set(role, palette[i])
+          expected.set(role, palette[i])
           if (TEXT_ROLES.has(role)) textColours.add(palette[i])
         })
       }
@@ -182,12 +199,55 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       expectRowsToMatch("codeit", expected, refs, literals)
     },
   },
+  ridi: {
+    title: "single-reference roles, light and `dark-` twin",
+    check: () => {
+      const { literals, refs, tableRows } = load("ridi")
+      // A cell that is exactly one `{colors.x}` reference. color-mix and the dark
+      // literal (`surface-disabled`) carry prose and fall out here — they live in
+      // the table only.
+      const single = (cell: string): string | undefined =>
+        /^`\{colors\.([^}]+)\}`$/.exec(cell)?.[1]
+      const expected = new Map<string, string>()
+      for (const [roleCell, light = "", dark = ""] of tableRows) {
+        const [name] = spans(roleCell)
+        // The emotion-group table leads with a `{colors.x}` key, not a role.
+        // Skip by that shape, not by what a role name looks like — a name
+        // filter would also drop a role whose name it did not foresee.
+        if (!name || name.startsWith("{colors.")) continue
+        const l = single(light)
+        const d = single(dark)
+        if (l) expected.set(name, l)
+        // Primitives do not change with the theme, so the dark twin points at an
+        // unprefixed palette key.
+        if (d) expected.set(`dark-${name}`, d)
+      }
+      expectRowsToMatch("ridi", expected, refs, literals)
+    },
+  },
 }
 
 describe("role reference rows agree with the body role tables", () => {
   for (const [slug, { title, check }] of Object.entries(CASES)) {
     it(`${slug} — ${title}`, check)
   }
+
+  it("passes a spec-named table role kept in the table, refuses its row", () => {
+    // greeting keeps such roles in its table and so guards the first half;
+    // no entry has carried such a row, so the refusal needs a fixture.
+    const literals = new Set(["gray-500", "gray-600", "blue-500"])
+    const expected = new Map([
+      ["secondary", "gray-500"],
+      ["dark-secondary", "gray-600"],
+      ["bg-brand", "blue-500"],
+    ])
+    const tableOnly = new Map([["bg-brand", "blue-500"]])
+    expectRowsToMatch("fixture", expected, tableOnly, literals)
+    const withRow = new Map([...tableOnly, ["secondary", "gray-500"]])
+    expect(() =>
+      expectRowsToMatch("fixture", expected, withRow, literals)
+    ).toThrow(/spec colour-role name/)
+  })
 
   it("has a case for every entry whose reference rows alias its role table", () => {
     // Detected by shape, not by listing: a reference row whose key — less a
@@ -197,8 +257,6 @@ describe("role reference rows agree with the body role tables", () => {
     // aliases) name no table role and are not caught. A role table written
     // without backticks, or with the role outside the first column, is not
     // seen either — CLAUDE.md states that shape.
-    const bare = (key: string): string =>
-      key.replace(/^dark-/, "").replace(/-dark$/, "")
     const docsName = (key: string): string =>
       bare(key)
         .replace(/^text-/, "txt-")
