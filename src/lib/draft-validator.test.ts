@@ -2253,6 +2253,51 @@ describe("token rules read the frontmatter maps", () => {
     expect(issue?.fix).toContain('`fill-brand: "{colors.brand}"`')
   })
 
+  it("blocks an OKLCH value with more written after it", () => {
+    // The sidecar would carry the whole string as one colour.
+    for (const value of [
+      "oklch(0.62 0.19 258) typo",
+      "oklch(0.62 0.19 258) oklch(0.5 0.1 30)",
+    ]) {
+      expect(
+        rulesFor(
+          draftWithFrontmatterColors([
+            "brand: oklch(0.62 0.19 258)",
+            `surface: ${value}`,
+          ])
+        ),
+        value
+      ).toContain("non-oklch-token-value")
+    }
+  })
+
+  it("does not offer a token a reference to itself", () => {
+    // `"{colors.brand}"` on the `brand` row would pass every rule and never
+    // resolve to a colour.
+    const issue = validateDraft(
+      draftWithFrontmatterColors(["brand: brand"]),
+      OPTS
+    ).issues.find((i) => i.rule === "non-oklch-token-value")
+    expect(issue?.fix).not.toContain("{colors.brand}")
+    expect(issue?.fix).toContain("`oklch(L C H)`")
+  })
+
+  it("blocks a value that only opens like a reference", () => {
+    // Skipped as a reference, it was found by no reference check and dropped
+    // by the sidecar.
+    for (const value of ['"{not-a-reference"', '"{colors.brand} x"']) {
+      expect(
+        rulesFor(
+          draftWithFrontmatterColors([
+            "brand: oklch(0.62 0.19 258)",
+            `surface: ${value}`,
+          ])
+        ),
+        value
+      ).toContain("non-oklch-token-value")
+    }
+  })
+
   it("blocks an upper-case colour function in the other token maps", () => {
     expect(
       rulesFor(

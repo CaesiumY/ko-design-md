@@ -90,6 +90,9 @@ const SLUG_FORM = /^[a-z0-9-]+$/
 // `colors:` — a colour there is a mistake in any case. In `colors:` itself
 // anything but `oklch(…)` is rejected (`tokenLineIssues`).
 const NON_OKLCH_VALUE = /^(?:#[0-9a-f]{3,8}\b|(?:rgba?|hsla?)\s*\()/i
+// A `colors:` value: one `oklch(…)` and nothing after it — the sidecar carries
+// the whole string as the colour.
+const OKLCH_COLOUR = new RegExp(`${LEADING_OKLCH.source}$`)
 // Prose hex: 3-8 hex digits after `#`, not preceded by URL/fragment/heading
 // characters. URLs are masked before matching.
 const PROSE_HEX = /(?<![\w&#/])#[0-9a-fA-F]{3,8}\b/
@@ -258,7 +261,7 @@ interface BodyScan {
  *  drift into disagreeing about what a valid token value is.
  *
  *  `colours` is the `colors:` map's declared names, given for a row of that
- *  map: there a value must be `oklch(…)`. The linter also reads a named colour
+ *  map: there a value must be one `oklch(…)`. The linter also reads a named colour
  *  (`white`) or an upper-case function (`RGB(…)`) as a colour, but the sidecar
  *  keeps neither, so one mixed into an OKLCH palette would leave it silently
  *  (#597). */
@@ -270,8 +273,9 @@ function tokenLineIssues(
 ): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
   const fix = colours
-    ? !LEADING_OKLCH.test(value) &&
-      (colours.has(value)
+    ? !OKLCH_COLOUR.test(value) &&
+      // Not its own name: `brand: "{colors.brand}"` would pass and never resolve.
+      (colours.has(value) && value !== name
         ? `token \`${name}: ${value}\` names another colour without a reference — write \`${name}: "{colors.${value}}"\`.`
         : `token \`${name}: ${value}\` is not OKLCH — express color token values as \`oklch(L C H)\`, in lower case: the sidecar drops a named colour (\`white\`) or an upper-case function (\`RGB(…)\`) although the linter reads it. Keep the original as a trailing \`# ${value}\` comment if useful, and point at another colour as \`"{colors.name}"\`.`)
     : NON_OKLCH_VALUE.test(value) &&
@@ -1101,8 +1105,10 @@ function scanFrontmatterTokens(read: FrontmatterRead): Array<ValidationIssue> {
       }
       const value = tokenText(row)
       if (value === undefined) continue
-      // A reference resolves elsewhere, so it is not judged as a literal.
-      if (value.startsWith("{")) continue
+      // A reference resolves elsewhere, so it is not judged as a literal. In
+      // `colors:` only a whole one is: `"{not-a-reference"` would otherwise be
+      // skipped here, found by no reference check and dropped by the sidecar.
+      if (colours ? BARE_REFERENCE.test(value) : value.startsWith("{")) continue
       // The row as YAML read it, in the one shape the shared OKLCH↔hex rule
       // judges — the same string `audit:oklch` builds.
       const line = definitionRow(row.key, value, row.comment)
