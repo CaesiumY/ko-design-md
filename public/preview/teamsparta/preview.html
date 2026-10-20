@@ -295,6 +295,9 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .select-wrap select { appearance: none; padding: 0 36px 0 12px; }
 [data-theme="dark"] .select-wrap::after { content: ""; position: absolute; right: 14px; top: 50%; width: 8px; height: 8px; border-right: 1.5px solid var(--text-2); border-bottom: 1.5px solid var(--text-2); transform: translateY(-70%) rotate(45deg); pointer-events: none; }
 [data-theme="dark"] .field.error input { border-color: var(--sp-danger); }
+/* md 토큰 아님 · 파생색 — 다크 입력 안내 문구는 ::placeholder 규칙이 없어 브라우저 기본 회색(4.19)이 칠해졌다.
+   md 는 안내 문구 색을 정하지 않으므로 같은 무채색으로 밝혔다(4.89). 다크 --surface 가 바뀌면 다시 잰다. */
+[data-theme="dark"] input::placeholder { color: oklch(0.60 0 0); }
 [data-theme="dark"] .help { color: var(--text-2); font-size: 11px; }
 [data-theme="dark"] .error .help { color: var(--sp-danger); }
 [data-theme="dark"] .check { display: flex; align-items: center; gap: 8px; min-height: 40px; cursor: pointer; user-select: none; color: var(--text); }
