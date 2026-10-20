@@ -151,6 +151,33 @@ describe("readFrontmatter", () => {
     ])
   })
 
+  it("gives a comment after a pair's separating comma to that pair, in a flow map over several lines", () => {
+    // The `,` only separates `a` from the next pair: the comment is still the
+    // one that ends `a`'s line, as YAML reads it. A later pair on the line
+    // takes it instead.
+    const fm = readOk(
+      doc(
+        "colors: {",
+        "  a: oklch(0.9 0.02 30),  # #ff0000",
+        "  b: oklch(0.5 0 0), c: oklch(0.6 0 0),  # #00ff00",
+        "  d: oklch(0.7 0 0)  # #0000ff",
+        "}",
+        "slug: toss"
+      )
+    )
+    const colors = fm.keys.find((k) => k.key === "colors")
+
+    expect(colors?.comment).toBeUndefined()
+    expect(
+      colors?.rows?.map((r) => (r.kind === "entry" ? [r.key, r.comment] : r))
+    ).toEqual([
+      ["a", "#ff0000"],
+      ["b", undefined],
+      ["c", "#00ff00"],
+      ["d", "#0000ff"],
+    ])
+  })
+
   it("returns a token map's rows in source order, with the `## label` rows that open groups", () => {
     const fm = readOk(
       doc(

@@ -85,6 +85,28 @@ describe("auditOklch — judging", () => {
     })
   })
 
+  it("judges a flow-map pair by the hex after its separating comma", () => {
+    const md = [
+      "---",
+      "colors: {",
+      "  a: oklch(0.900 0.020 30),  # #ff0000",
+      "  b: oklch(0.5 0 0)",
+      "}",
+      "---",
+      "",
+    ].join("\n")
+    const audit = auditOklch(md, { fix: true })
+    expect({ annotated: audit.annotated, judged: audit.judged }).toEqual({
+      annotated: 1,
+      judged: 1,
+    })
+    expect(audit.findings.map((f) => [f.line, f.token])).toEqual([[3, "a"]])
+    expect(audit.text.split("\n")[2]).toMatch(
+      /^ {2}a: oklch\([\d.]+ [\d.]+ \d+\), {2}# #ff0000$/
+    )
+    expect(auditOklch(audit.text, { fix: false }).findings).toEqual([])
+  })
+
   it("does not judge a definition-shaped line outside the frontmatter rows", () => {
     const md = [
       "---",

@@ -221,10 +221,12 @@ class Reading {
   /**
    * The comment ending `line`, if it is this key's. One line can hold several
    * keys (`colors: { a: …, b: … } # note`), and the comment is the node's that
-   * ends right before it: the key's when only blanks separate its value's end
-   * from the `#`, or when its value runs past the comment — a block scalar's
-   * header comment, `key: # note` above a value, a map whose rows follow. Not
-   * a pair's inside a flow map, which a `,` or `}` separates from it.
+   * ends right before it: the key's when only blanks — and the `,` that
+   * separates it from the next pair in a flow map (`  a: oklch(…),  # #hex`) —
+   * stand between its value's end and the `#`, or when its value runs past the
+   * comment: a block scalar's header comment, `key: # note` above a value, a
+   * map whose rows follow. Not a pair's that a later pair or the map's closing
+   * `}` follows on the line: that comment is the map's, as YAML reads it.
    */
   private ownComment(
     line: number,
@@ -239,7 +241,7 @@ class Reading {
         ? comment.text
         : undefined
     }
-    return this.text.slice(end, comment.offset).trim() === ""
+    return /^\s*,?\s*$/.test(this.text.slice(end, comment.offset))
       ? comment.text
       : undefined
   }
