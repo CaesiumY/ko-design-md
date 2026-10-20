@@ -1117,6 +1117,50 @@ function scanFrontmatterTokens(read: FrontmatterRead): Array<ValidationIssue> {
   return issues
 }
 
+/** A value YAML reads as a map through an alias (`rounded: *scale`): the
+ *  reader gives it no rows — a map written out has rows, `{}` an empty list of
+ *  them. */
+function isAliasedMap(entry: FrontmatterKey): boolean {
+  const { value } = entry
+  return (
+    entry.rows === undefined &&
+    typeof value === "object" &&
+    value !== null &&
+    !Array.isArray(value)
+  )
+}
+
+/**
+ * A map written as a YAML alias, at any depth (`rounded: *scale`, a style
+ * `title: *body`, a component). The linter expands it, but it has no rows of
+ * its own in the file — no lines, `## group` headings or comments — so every
+ * reader of rows (the sidecar, the token rules, the drift check, `audit:oklch`)
+ * would have to borrow the anchor's, and `--fix` would rewrite one line on
+ * behalf of two maps. The sidecar carried none of its tokens. Writing the map
+ * out costs nothing; an `&anchor` on the map it copies is harmless.
+ */
+function checkAliasedMaps(read: FrontmatterRead): Array<ValidationIssue> {
+  const issues: Array<ValidationIssue> = []
+  const walk = (entries: ReadonlyArray<FrontmatterKey>, path: string): void => {
+    for (const entry of entries) {
+      const name = path === "" ? entry.key : `${path}.${entry.key}`
+      if (isAliasedMap(entry)) {
+        issues.push(
+          block(
+            "aliased-map-value",
+            "frontmatter",
+            `\`${name}\` is written as a YAML alias (\`*name\`) of another map. The official linter expands it, but the sidecar and every token check read a map's rows where they are written, and an alias has none — its tokens never reach the Tokens tab or \`use-design-md\`. Write the map out in full under \`${entry.key}:\`.`
+          )
+        )
+        continue
+      }
+      if (entry.rows) walk(entriesOf(entry), name)
+    }
+  }
+  walk(read.keys, "")
+  return issues
+}
+
 /** `TYPE_STYLE_PROPERTIES` as the rule's messages name them. */
 const STYLE_PROPERTY_NAMES = TYPE_STYLE_PROPERTIES.map((p) => `\`${p}\``).join(
   " / "
@@ -1134,6 +1178,8 @@ function checkTypographyStyles(read: FrontmatterRead): Array<ValidationIssue> {
   if (!map) return []
   const issues: Array<ValidationIssue> = []
   for (const style of entriesOf(map)) {
+    // `aliased-map-value` names this one: "sets none of …" would be wrong.
+    if (isAliasedMap(style)) continue
     // One level only: a map under a style is a group the sidecar does not
     // read as a style (`{typography.title.mobile}` names nothing it carries).
     const nested = entriesOf(style).find((p) => p.rows)
@@ -1338,6 +1384,8 @@ function checkComponents(read: FrontmatterRead): Array<ValidationIssue> {
       )
       continue
     }
+    // `aliased-map-value` names this one.
+    if (isAliasedMap(component)) continue
     if (!component.rows) {
       // `height:48px` — YAML starts a value only after a space or tab, so the
       // row is one string and the component's value is that string, with no
@@ -2291,6 +2339,7 @@ export function validateDraft(
     issues.push(frontmatterReadIssue(read))
   } else {
     issues.push(...checkFrontmatterKeys(read))
+    issues.push(...checkAliasedMaps(read))
     issues.push(...checkFields(read, opts, entrySlug, fileSlug))
     const componentIssues = checkComponents(read)
     // One cause, one message: a component that is empty (YAML null, which the

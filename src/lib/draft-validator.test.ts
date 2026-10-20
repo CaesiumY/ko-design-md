@@ -1259,6 +1259,38 @@ describe("where the retired rules' inputs go (#589)", () => {
     ).not.toContain("oklch-hex-mismatch")
   })
 
+  it("blocks a map written as a YAML alias, once, at any depth (A1, A2)", () => {
+    const blocks = (raw: string) => rulesOf(raw, OPTS, "block")
+    const END = "    fontWeight: 400\n---"
+    // A whole token map: the linter expands it, the sidecar got no rows.
+    expect(
+      blocks(
+        makeDraft().replace(
+          END,
+          "    fontWeight: 400\nspacing: &scale\n  sm: 4px\nrounded: *scale\n---"
+        )
+      )
+    ).toEqual(["aliased-map-value"])
+    // A style: the alias names it, not a misleading "sets no size".
+    expect(
+      blocks(
+        makeDraft().replace(
+          TYPE_SCALE,
+          "typography:\n  body: &body\n    fontSize: 16px\n  title: *body\n"
+        )
+      )
+    ).toEqual(["aliased-map-value"])
+    // An anchor alone, or an alias of one value, is not one.
+    expect(
+      blocks(
+        makeDraft().replace(
+          END,
+          "    fontWeight: 400\nspacing: &scale\n  sm: &four 4px\nrounded:\n  sm: *four\n---"
+        )
+      )
+    ).toEqual([])
+  })
+
   it("blocks a known key cut at a colon, naming the key meant (M33, M34)", () => {
     // `name:: 토스` is the key `name:` to YAML and `design_system_name:x: y`
     // the key `design_system_name:x`: the site reads neither, so the value
