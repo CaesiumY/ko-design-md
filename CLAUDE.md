@@ -103,7 +103,8 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행하고, 프리
   폰트 스택은 따옴표가 있어야 YAML 이 그 값으로 읽는다. **"사이트와 YAML 이 다르게 읽는 경우"를 막는 규칙은 다시
   만들지 않는다** — 그런 경우가 보이면 이 모듈을 거치지 않는 독자를 고친다.
 - **frontmatter 가 YAML 로 읽히지 않으면 `frontmatter-yaml-invalid` 하나만 낸다**(block — 닫는 `---` 가
-  없는 것 포함). 그 문서의 다른 frontmatter 판정은 내지 않는다. 인용 없는 폰트 스택 하나가 문서 전체를
+  없는 것, 그리고 YAML 은 받아도 한 맵에 같은 이름으로 읽히는 키가 둘인 것(`? *k` 별칭 키가 있는 키를 되풀이,
+  `500:` 와 `"500":`) 포함 — 독자마다 첫 값과 마지막 값을 다르게 고르게 되기 때문이다). 그 문서의 다른 frontmatter 판정은 내지 않는다. 인용 없는 폰트 스택 하나가 문서 전체를
   0토큰으로 만들어도 아무도 몰랐던 일(7개 항목)을 막는 관문이다. 사이트 빌드도 같은 원인으로 실패한다.
 - **사이트가 읽는 키(`CONSUMED_KEYS`)를 값 없이 쓰면 사이트 빌드가 실패한다**(`site-frontmatter.ts`) —
   맨 `name:` 이나 `name: ~` 가 기본값(슬러그)으로 조용히 바뀌지 않게 하려는 것이다. 키를 아예 안 쓰면 지금처럼
@@ -402,8 +403,8 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   실패한다. 값을 비교하므로 같은 날 후속 편집(이미 그 날짜면)은 통과하고,
   반대로 "올리긴 했는데 이틀 어긋난 날짜"는 잡힌다 — 히스토리 재생에서 둘 다
   실제로 나왔다. 카탈로그 전수가 아니라 **바꾼 파일만** 보므로, 손대지 않은
-  항목의 낡은 날짜가 무관한 PR을 막지 않는다. 바꾼 파일의 frontmatter 가 YAML 로 읽히지 않으면 날짜를
-  판정하지 못한 채 넘기지 않고 막는다(`unreadable-frontmatter`) — 이 발견은 아래 트레일러로도 면제되지 않는다.
+  항목의 낡은 날짜가 무관한 PR을 막지 않는다. 바꾼 파일의 frontmatter 를 읽을 수 없으면(`frontmatter-yaml-invalid`
+  와 같은 경우) 날짜를 판정하지 못한 채 넘기지 않고 막는다(`unreadable-frontmatter`) — 이 발견은 아래 트레일러로도 면제되지 않는다.
   카탈로그 전반을 훑는 기계적 편집
   (가드레일 문구 삽입 같은)은 커밋 메시지에 `Skip-Last-Updated: <이유>` 트레일러로
   면제한다(DCO 서명과 같은 형식) — 그런 편집으로 전 항목을 RSS 상단에 올리는 건
@@ -452,7 +453,7 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
 `validate:catalog` 전체의 warn 목록이 아니다** — 검증기는 그 밖에도
 `oklch-hex-mismatch` · `hex-in-prose` · `duplicate-token-value` 등을 낸다.
 `check:last-updated`는 별도 게이트이고 warn이 아니라 **block**이다
-(위 "날짜는 조회해서 쓴다" 항). frontmatter 가 YAML 로 읽히지 않는 파일도 막는다(`unreadable-frontmatter`).
+(위 "날짜는 조회해서 쓴다" 항). frontmatter 를 읽을 수 없는 파일도 막는다(`unreadable-frontmatter`).
 막지 않는 경우는 둘이다 — `Skip-Last-Updated` 트레일러로 면제된
 발견(출력만 한다 — 단 `unreadable-frontmatter` 는 트레일러로 면제되지 않는다)과, base 에서 물려받아 PR 이 옮기지 않은 날짜(미래 판정 없음 — 오늘+1일을 넘을 때만
 `carried-future-last-updated` warn, 그 안이면 무판정)다. stale 판정은 물려받은 날짜에도 돈다.
