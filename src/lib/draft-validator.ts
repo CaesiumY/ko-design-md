@@ -776,7 +776,8 @@ function segmentPattern(pattern: string): RegExp {
  *   • A standalone `{word}` naming a map this entry declares (blocks), or
  *     another map, a phantom, a declared key or a text-fence row used in prose
  *     (warns — see the dotless pass below). A whole `colors:` value of that
- *     shape is skipped: the OKLCH rule blocks it and names the fix (#600).
+ *     shape is skipped on its own line: the OKLCH rule blocks it and names
+ *     the fix (#600). The same word in prose is judged as ever.
  *   • Prose and stylesheet fences are read in full; data fences (json) are
  *     not read at all (see DATA_FENCE_LANGUAGES). In a source-code fence,
  *     only `//`,
@@ -990,18 +991,26 @@ function checkTokenReferences(
   // `{ease-out}` and wanted's `{typography}` were both this shape.
   const fenceNames = proseFenceKeys(raw)
   // A map-less `{word}` written as a `colors:` value is blocked by the OKLCH
-  // rule, which names the fix; a warning here would repeat it (#600). Matched
-  // by text, so the same `{word}` in prose is quiet until that row is fixed.
+  // rule, which names the fix; a finding here would repeat it (#600). Only on
+  // that row's line: the same `{word}` in prose is judged as ever.
   const colorsKey = findKey(read.keys, "colors")
-  const colourValues = new Set(
-    colorsKey ? entriesOf(colorsKey).map((row) => tokenText(row)) : []
+  const colourRefLines = new Set(
+    (colorsKey ? entriesOf(colorsKey) : [])
+      .filter((row) => BARE_REFERENCE.test(tokenText(row) ?? ""))
+      .flatMap((row) => {
+        // Every line the value spans: a block scalar's text is below its key.
+        const [first, last] = row.sourceLines ?? [row.line, row.line]
+        return Array.from({ length: last - first + 1 }, (_, i) => first + i)
+      })
   )
+  const lineOf = (index: number) => raw.slice(0, index).split("\n").length
   for (const hit of text.matchAll(DOTLESS_REFERENCE)) {
     const [ref, word] = hit
     // Inside a source-code string it is someone else's placeholder — an i18n
     // key (`t("{title}")`) or another token system — as for dotted references.
     if (!withoutSourceStrings.startsWith(ref, hit.index)) continue
-    if (reported.has(ref) || colourValues.has(ref)) continue
+    if (colourRefLines.has(lineOf(hit.index))) continue
+    if (reported.has(ref)) continue
     const lower = word.toLowerCase()
     const holders = [...REFERENCE_MAPS].filter((m) => resolves(maps[m], word))
     let advice: string

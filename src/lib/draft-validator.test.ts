@@ -2362,6 +2362,29 @@ describe("token rules read the frontmatter maps", () => {
     expect(issues[0].fix).toContain('`fill-brand: "{colors.brand}"`')
   })
 
+  it("gives a block-scalar map-less reference one message too", () => {
+    const issues = validateDraft(
+      draftWithFrontmatterColors([
+        "brand: oklch(0.62 0.19 258)",
+        "fill-brand: |-",
+        "  {brand}",
+      ]),
+      OPTS
+    ).issues.filter((i) => i.fix.includes("{brand}"))
+    expect(issues.map((i) => i.rule)).toEqual(["non-oklch-token-value"])
+  })
+
+  it("still judges the same map-less word in prose", () => {
+    // Only the colour row is the OKLCH rule's; the prose line keeps its own
+    // finding.
+    const raw = draftWithFrontmatterColors([
+      "brand: oklch(0.62 0.19 258)",
+      'fill-brand: "{brand}"',
+    ]).replace("# 데모", "# 데모\n\n버튼은 {brand} 를 쓴다.")
+    expect(raw).toContain("버튼은 {brand}")
+    expect(rulesOf(raw, OPTS, "warn")).toContain("dotless-token-ref")
+  })
+
   it("leaves a colour reference to the reference check", () => {
     const rules = rulesFor(
       draftWithFrontmatterColors([
