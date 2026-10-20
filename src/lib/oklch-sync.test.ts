@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest"
 import {
+  definitionLines,
   indexCorrections,
   matchDefinition,
   syncOklchLiterals,
@@ -208,6 +209,49 @@ describe("syncOklchLiterals — ambiguous definitions", () => {
     )
 
     expect(text).toContain("oklch(0.706 0.242 335)")
+    expect(count).toBe(1)
+  })
+})
+
+// The pattern skip only knew the bare `key: oklch(…)  # #hex` line. A quoted
+// definition — or one below its key — looked like a copy, so another token's
+// correction rewrote it: the chaining failure above, on a definition.
+describe("syncOklchLiterals — the frontmatter's own definitions", () => {
+  // After `--fix`: gray-06 moved 0.65→0.67, gray-07 0.67→0.68.
+  const fixed = [
+    "---",
+    "colors:",
+    '  gray-06: "oklch(0.67 0 0)"   # #9C9C9C',
+    "  gray-07:   # #A6A6A6",
+    "    oklch(0.68 0 0)",
+    "  gray-08: >-   # #B0B0B0",
+    "    oklch(0.67 0 0)",
+    '  pink: "oklch(0.67 0 0)"   # ≈ #9C9C9C (mid는 #FF53C0)',
+    "  copy: oklch(0.67 0 0)",
+    "---",
+    "",
+  ].join("\n")
+  const chain = corrections([
+    ["0.65 0 0", ["0.67", "0", "0"]],
+    ["0.67 0 0", ["0.68", "0", "0"]],
+  ])
+
+  it("names every line of each annotated definition, however it is written", () => {
+    expect([...definitionLines(fixed)].sort((a, b) => a - b)).toEqual([
+      3, 4, 5, 6, 7, 8,
+    ])
+  })
+
+  it("leaves quoted, next-line, block and ambiguous definitions alone, and sweeps the copy", () => {
+    const { text, count } = syncOklchLiterals(
+      fixed,
+      chain,
+      definitionLines(fixed)
+    )
+    const before = fixed.split("\n")
+    const after = text.split("\n")
+    expect(before.flatMap((l, i) => (l === after[i] ? [] : [i]))).toEqual([8])
+    expect(after[8]).toBe("  copy: oklch(0.68 0 0)")
     expect(count).toBe(1)
   })
 })

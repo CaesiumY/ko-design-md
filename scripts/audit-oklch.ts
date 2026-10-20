@@ -1,6 +1,10 @@
 import fs from "node:fs"
 import path from "node:path"
-import { indexCorrections, syncOklchLiterals } from "../src/lib/oklch-sync"
+import {
+  definitionLines,
+  indexCorrections,
+  syncOklchLiterals,
+} from "../src/lib/oklch-sync"
 import { auditOklch } from "../src/lib/oklch-audit"
 import { definitionsForSlug, findPreviewDrift } from "../src/lib/oklch-drift"
 import {
@@ -143,7 +147,13 @@ for (const slug of slugs) {
   }
   for (const target of targets) {
     const src = fs.readFileSync(target, "utf8")
-    const { text: out, count } = syncOklchLiterals(src, byOld)
+    // The md's own definitions, as read after `--fix` wrote them, are never
+    // swept as copies. A preview has none.
+    const { text: out, count } = syncOklchLiterals(
+      src,
+      byOld,
+      target === mdPath ? definitionLines(src) : undefined
+    )
     syncCount += count
     if (out !== src) fs.writeFileSync(target, out)
   }

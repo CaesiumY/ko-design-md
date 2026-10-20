@@ -1,4 +1,4 @@
-import { entriesOf, tokenText } from "./frontmatter"
+import { entriesOf, readFrontmatter, tokenText } from "./frontmatter"
 import type { FrontmatterKey } from "./frontmatter"
 
 // Propagating a corrected OKLCH primitive into the places that copied it —
@@ -154,6 +154,29 @@ export function matchDefinition(line: string): DefinitionMatch | null {
 export const OKLCH_ANNOTATED_DEFINITION =
   /^\s*[a-z][\w-]*:\s+oklch\(\s*[\d.]+\s+[\d.]+\s+[\d.]+[^)]*\)\s*#[^\n]*#[0-9a-fA-F]{3,8}\b/
 
+/**
+ * The file lines of every frontmatter colour definition that owns its value —
+ * a row whose comment carries a hex, judgeable or not (the
+ * `OKLCH_ANNOTATED_DEFINITION` question, asked of the row as YAML read it) —
+ * so `syncOklchLiterals` leaves them alone however they are written: quoted,
+ * below the key, as a block scalar. The pattern alone only knew the bare
+ * `key: oklch(…)  # #hex` line, so a quoted definition was swept as a copy.
+ * Empty for a frontmatter YAML cannot read.
+ */
+export function definitionLines(markdown: string): Set<number> {
+  const out = new Set<number>()
+  const read = readFrontmatter(markdown)
+  if (!read.ok) return out
+  for (const entry of oklchEntries(read.keys)) {
+    const row = definitionRow(entry.key, entry.value, entry.comment)
+    if (!OKLCH_ANNOTATED_DEFINITION.test(row)) continue
+    out.add(entry.line)
+    const [first, last] = entry.sourceLines ?? [entry.line, entry.line]
+    for (let line = first; line <= last; line++) out.add(line)
+  }
+  return out
+}
+
 /** Any oklch literal, whatever follows the triple (`)`, ` / 30%)`). */
 const OKLCH_LITERAL = /(oklch\(\s*)([\d.]+)(\s+)([\d.]+)(\s+)([\d.]+)(\s*[/)])/g
 
@@ -223,16 +246,19 @@ export function indexCorrections(corrections: Array<Correction>): {
 export function syncOklchLiterals(
   text: string,
   corrections: OklchCorrections,
-  skipLine: (line: string) => boolean = (l) =>
-    OKLCH_ANNOTATED_DEFINITION.test(l)
+  ownLines: ReadonlySet<number> = new Set()
 ): { text: string; count: number } {
   let count = 0
   const out = text
     .split(/\r?\n/)
-    .map((line) => {
+    .map((line, i) => {
       // A definition line already carries its new value — and that value may
       // itself be some other token's old one, so it must not be rewritten.
-      if (skipLine(line)) return line
+      // The frontmatter's come in `ownLines` (from `definitionLines`, in any
+      // spelling YAML reads); the pattern still keeps the bare spelling
+      // elsewhere, such as a body `text` fence's annotated rows.
+      if (ownLines.has(i + 1) || OKLCH_ANNOTATED_DEFINITION.test(line))
+        return line
       return line.replace(
         OKLCH_LITERAL,
         (whole, open, L, s1, C, s2, H, close: string) => {
