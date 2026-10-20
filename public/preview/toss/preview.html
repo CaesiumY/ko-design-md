@@ -1974,7 +1974,8 @@
     color: var(--tds-fg-primary);
     letter-spacing: -0.005em;
   }
-/* md 토큰 아님 · 파생색 — 위 .input::placeholder 와 같은 다크 안내 문구 값(흰색 50%, grey-100 위 4.66). */
+/* md 토큰 아님 · 파생색 — 위 .input::placeholder 와 같은 다크 안내 문구 값(흰색 50%, grey-100 위 4.66).
+   다크 grey-100 이나 검색창 바탕이 바뀌면 다시 잰다. */
 [data-theme="dark"] .search-field input::placeholder { color: oklch(1 0 0 / 0.50); }
 [data-theme="dark"] .search-field.focus {
     background: var(--tds-near-black);
@@ -2391,7 +2392,7 @@
     align-self: center;
     border: 1px solid var(--tds-border-secondary);
     border-radius: 12px;
-    /* md 토큰 아님 · 파생색 — 위 .num-spin 과 같은 다크 캡슐(dark-blue-500 4.74). */
+    /* md 토큰 아님 · 파생색 — 위 .num-spin 과 같은 다크 캡슐(dark-blue-500 4.74). 다크 blue-500 이 바뀌면 다시 잰다. */
     background: oklch(0.230 0.012 285);
     overflow: hidden;
   }
