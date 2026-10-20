@@ -58,8 +58,11 @@ elevation:                            # 그림자가 발행되지 않았으면 �
 
 Rules for the token maps — each one is a gate, not a preference:
 
-- **OKLCH only for colour values.** `non-oklch-token-value` blocks a hex or
-  `rgba()`. The brand's published hex goes in the trailing comment.
+- **OKLCH only for colour values.** A `colors:` value is one lower-case
+  `oklch(…)` or a quoted reference (`"{colors.x}"`); `non-oklch-token-value`
+  blocks anything else — a hex, `rgba()`, a named colour (`transparent`), an
+  upper-case function, another token's bare name. The brand's published hex
+  goes in the trailing comment.
 - **Names stay flat.** Never nest a group as a sub-map — that renames the token
   and breaks every `{colors.X}` prose reference to it, and the draft gate blocks
   it.
