@@ -1,10 +1,8 @@
 import { readFrontmatter } from "./frontmatter"
 import {
   LEADING_OKLCH,
-  OKLCH_ANNOTATED_DEFINITION,
-  definitionRow,
+  annotatedDefinitions,
   matchDefinition,
-  oklchEntries,
 } from "./oklch-sync"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
 import { deltaE, hexToOklab, lchToOklab, oklabToLch } from "./oklch-convert"
@@ -214,10 +212,9 @@ export function auditOklch(
   const parts = markdown.split(/(\r?\n)/)
   let changed = false
 
-  for (const entry of oklchEntries(read.keys)) {
-    // The row as YAML read it, in the one shape the shared rule judges.
-    const row = definitionRow(entry.key, entry.value, entry.comment)
-    if (!OKLCH_ANNOTATED_DEFINITION.test(row)) continue
+  // The rows as YAML read them, in the one shape the shared rule judges — and
+  // the same rows `--sync` protects.
+  for (const { entry, row } of annotatedDefinitions(read.keys)) {
     result.annotated++
     const d = matchDefinition(row)
     if (!d) continue

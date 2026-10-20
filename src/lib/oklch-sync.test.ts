@@ -256,6 +256,38 @@ describe("syncOklchLiterals — the frontmatter's own definitions", () => {
   })
 })
 
+// The pattern guard is for the body's `text` fences. In the frontmatter the
+// reader names the definitions, so a definition-shaped line that is not one —
+// prose inside a block scalar — is a copy like any other.
+describe("syncOklchLiterals — the pattern guard covers the body only", () => {
+  it("sweeps a definition-shaped line inside a frontmatter value, and keeps a body fence row", () => {
+    const md = [
+      "---",
+      "note: |",
+      "  fake: oklch(0.67 0 0)   # #9C9C9C",
+      "colors:",
+      "  copy: oklch(0.67 0 0)",
+      "---",
+      "```text",
+      "gray-06: oklch(0.67 0 0)   # #9C9C9C",
+      "```",
+      "",
+    ].join("\n")
+    const { text, count } = syncOklchLiterals(
+      md,
+      corrections([["0.67 0 0", ["0.68", "0", "0"]]]),
+      definitionLines(md)
+    )
+    const before = md.split("\n")
+    const after = text.split("\n")
+    expect(before.flatMap((l, i) => (l === after[i] ? [] : [i]))).toEqual([
+      2, 4,
+    ])
+    expect(after[7]).toBe(before[7])
+    expect(count).toBe(2)
+  })
+})
+
 // `src/lib/token-extractor.ts` accepts leading whitespace on a token line, so
 // an indented definition is a real, parseable shape. Anchoring these predicates
 // at column zero made the audit decline to judge it AND the sync stop treating

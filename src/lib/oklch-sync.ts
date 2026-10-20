@@ -1,4 +1,5 @@
 import { entriesOf, readFrontmatter, tokenText } from "./frontmatter"
+import { splitFrontmatter } from "./frontmatter-fence"
 import type { FrontmatterKey } from "./frontmatter"
 
 // Propagating a corrected OKLCH primitive into the places that copied it —
@@ -154,22 +155,42 @@ export function matchDefinition(line: string): DefinitionMatch | null {
 export const OKLCH_ANNOTATED_DEFINITION =
   /^\s*[a-z][\w-]*:\s+oklch\(\s*[\d.]+\s+[\d.]+\s+[\d.]+[^)]*\)\s*#[^\n]*#[0-9a-fA-F]{3,8}\b/
 
+/** A frontmatter colour definition that owns its value, with its row as YAML
+ *  read it in the one line shape the OKLCH↔hex rules read. */
+export interface AnnotatedDefinition {
+  entry: FrontmatterKey & { value: string }
+  row: string
+}
+
 /**
- * The file lines of every frontmatter colour definition that owns its value —
- * a row whose comment carries a hex, judgeable or not (the
- * `OKLCH_ANNOTATED_DEFINITION` question, asked of the row as YAML read it) —
- * so `syncOklchLiterals` leaves them alone however they are written: quoted,
- * below the key, as a block scalar. The pattern alone only knew the bare
- * `key: oklch(…)  # #hex` line, so a quoted definition was swept as a copy.
- * Empty for a frontmatter YAML cannot read.
+ * Every frontmatter colour definition whose comment carries a hex, judgeable
+ * or not — the `OKLCH_ANNOTATED_DEFINITION` question, asked of each row as
+ * YAML read it. The one answer both `audit:oklch` (its `annotated` count, and
+ * the rows it judges) and `--sync` (the lines it protects, `definitionLines`)
+ * use, so the two cannot disagree about which rows are definitions.
+ */
+export function annotatedDefinitions(
+  keys: ReadonlyArray<FrontmatterKey>
+): Array<AnnotatedDefinition> {
+  return oklchEntries(keys).flatMap((entry) => {
+    const row = definitionRow(entry.key, entry.value, entry.comment)
+    return OKLCH_ANNOTATED_DEFINITION.test(row) ? [{ entry, row }] : []
+  })
+}
+
+/**
+ * The file lines of every annotated frontmatter definition (`annotatedDefinitions`)
+ * — its key line and every line its value spans — so `syncOklchLiterals` leaves
+ * them alone however they are written: quoted, below the key, as a block
+ * scalar. The pattern alone only knew the bare `key: oklch(…)  # #hex` line, so
+ * a quoted definition was swept as a copy. Empty for a frontmatter YAML cannot
+ * read.
  */
 export function definitionLines(markdown: string): Set<number> {
   const out = new Set<number>()
   const read = readFrontmatter(markdown)
   if (!read.ok) return out
-  for (const entry of oklchEntries(read.keys)) {
-    const row = definitionRow(entry.key, entry.value, entry.comment)
-    if (!OKLCH_ANNOTATED_DEFINITION.test(row)) continue
+  for (const { entry } of annotatedDefinitions(read.keys)) {
     out.add(entry.line)
     const [first, last] = entry.sourceLines ?? [entry.line, entry.line]
     for (let line = first; line <= last; line++) out.add(line)
@@ -249,15 +270,21 @@ export function syncOklchLiterals(
   ownLines: ReadonlySet<number> = new Set()
 ): { text: string; count: number } {
   let count = 0
+  // The first line after the frontmatter block; 1 when there is none (a
+  // preview), so the whole text is body.
+  const split = splitFrontmatter(text)
+  const bodyFrom = split ? split.frontmatter.split(/\r?\n/).length + 3 : 1
   const out = text
     .split(/\r?\n/)
     .map((line, i) => {
       // A definition line already carries its new value — and that value may
       // itself be some other token's old one, so it must not be rewritten.
-      // The frontmatter's come in `ownLines` (from `definitionLines`, in any
-      // spelling YAML reads); the pattern still keeps the bare spelling
-      // elsewhere, such as a body `text` fence's annotated rows.
-      if (ownLines.has(i + 1) || OKLCH_ANNOTATED_DEFINITION.test(line))
+      // In the frontmatter, the definitions are exactly `ownLines` (from
+      // `definitionLines`, in any spelling YAML reads). After it, the pattern
+      // keeps the bare `key: oklch(…)  # #hex` rows a body `text` fence
+      // restates.
+      if (ownLines.has(i + 1)) return line
+      if (i + 1 >= bodyFrom && OKLCH_ANNOTATED_DEFINITION.test(line))
         return line
       return line.replace(
         OKLCH_LITERAL,
