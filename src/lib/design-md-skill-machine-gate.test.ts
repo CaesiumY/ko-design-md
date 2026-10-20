@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest"
 // section gate enforces, so adding a required section can never leave the
 // template behind.
 import {
+  BARE_REFERENCE,
   COMPONENT_DIMENSION_UNITS,
   COMPONENT_PROPERTIES,
   REQUIRED_SECTIONS,
@@ -230,6 +231,21 @@ describe("/design-md machine gates", () => {
     expect(unitBlock, "the linter config must list units").toBeDefined()
     const units = [...(unitBlock ?? "").matchAll(/- (\w+)/g)].map((m) => m[1])
     expect([...COMPONENT_DIMENSION_UNITS].sort()).toEqual([...units].sort())
+
+    // The gate's copy of the linter's `isTokenReference` (block-scalar component
+    // values are judged by it, #591) — not exported either, so read its body.
+    const linterSource = readRepoFile(
+      "node_modules/@google/design.md/dist/linter/index.js"
+    )
+    const reference =
+      /function isTokenReference\(\w+\) \{\s*return \/(.+)\/\.test\(/.exec(
+        linterSource
+      )?.[1]
+    expect(
+      reference,
+      "the linter must define isTokenReference as one regex test"
+    ).toBeDefined()
+    expect(BARE_REFERENCE.source).toBe(reference)
 
     const stitch = readRepoFile(DESIGN_MD_STITCH_FORMAT)
     const stated = /\*\*Only the spec's \w+ properties:\*\* ([^\n]+?)\. /.exec(

@@ -1231,12 +1231,19 @@ export const COMPONENT_DIMENSION_UNITS: ReadonlyArray<string> = [
   "rem",
 ]
 
+/** The linter's `isTokenReference`, as it tests the string YAML hands it.
+ *  Copied because the package does not export it; the machine-gate contract
+ *  test pins it to the pinned linter's own source. */
+export const BARE_REFERENCE = /^\{[a-zA-Z0-9._-]+\}$/
 /** A whole value that is one quoted reference, with the characters the
  *  linter's `isTokenReference` allows between the braces — `"{ colors.x }"` or
  *  `"{colors/x}"` it keeps as raw text. Whether it RESOLVES (a declared key,
  *  in a map the linter reads — not `{fonts.x}`) is not form: the linter
- *  reports that as a broken reference, which CI's error ratchet blocks. */
-const QUOTED_REFERENCE = /^(["'])\{[a-zA-Z0-9._-]+\}\1$/
+ *  reports that as a broken reference, which CI's error ratchet blocks.
+ *  Built from `BARE_REFERENCE` so the two cannot part. */
+const QUOTED_REFERENCE = new RegExp(
+  String.raw`^(["'])` + BARE_REFERENCE.source.slice(1, -1) + String.raw`\1$`
+)
 /** A number exactly as the linter's `parseDimensionParts` reads one —
  *  `-1`, `.5`, `1.25`; not `+4` or `48.`, which it keeps as raw text. */
 const SPEC_NUMBER = String.raw`-?\d*\.?\d+`
@@ -1334,9 +1341,6 @@ function rewrittenRow(prop: string, value: string): string {
     ? `Write \`${prop}: ${value}\`.`
     : `Write \`${prop}: …\` — and its value \`${value}\` is not one the map reads either: ${componentValueFix(value)}.`
 }
-
-/** The linter's `isTokenReference`, as it tests the string YAML hands it. */
-const BARE_REFERENCE = /^\{[a-zA-Z0-9._-]+\}$/
 
 /**
  * A component property's value, and whether a standard tool reads it.
