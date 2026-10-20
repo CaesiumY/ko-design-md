@@ -775,7 +775,8 @@ function segmentPattern(pattern: string): RegExp {
  *     known name (`{Colors.primary}` blocks, `{React.Fragment}` is left).
  *   • A standalone `{word}` naming a map this entry declares (blocks), or
  *     another map, a phantom, a declared key or a text-fence row used in prose
- *     (warns — see the dotless pass below).
+ *     (warns — see the dotless pass below). A whole `colors:` value of that
+ *     shape is skipped: the OKLCH rule blocks it and names the fix (#600).
  *   • Prose and stylesheet fences are read in full; data fences (json) are
  *     not read at all (see DATA_FENCE_LANGUAGES). In a source-code fence,
  *     only `//`,
