@@ -1742,7 +1742,7 @@
     letter-spacing: -0.005em;
   }
 /* md 토큰 아님 · 파생색 — 다크 안내 문구. md 는 fg-quaternary(placeholder)를 라이트로만 발행하고, 다크의 흰색 28% 는
-   프리뷰가 만든 값이라 grey-100 위 2.45 였다. 흰색 50% 로 옮겨 4.69. 비활성 글자는 변수(28%)를 그대로 쓴다.
+   프리뷰가 만든 값이라 grey-100 위 2.45 였다. 흰색 50% 로 옮겨 4.66(측정). 비활성 글자는 변수(28%)를 그대로 쓴다.
    다크 grey-100 이나 입력 바탕이 바뀌면 다시 잰다. */
 [data-theme="dark"] .input::placeholder { color: oklch(1 0 0 / 0.50); }
 [data-theme="dark"] .input.focused {
@@ -1974,7 +1974,7 @@
     color: var(--tds-fg-primary);
     letter-spacing: -0.005em;
   }
-/* md 토큰 아님 · 파생색 — 위 .input::placeholder 와 같은 다크 안내 문구 값(흰색 50%, grey-100 위 4.69). */
+/* md 토큰 아님 · 파생색 — 위 .input::placeholder 와 같은 다크 안내 문구 값(흰색 50%, grey-100 위 4.66). */
 [data-theme="dark"] .search-field input::placeholder { color: oklch(1 0 0 / 0.50); }
 [data-theme="dark"] .search-field.focus {
     background: var(--tds-near-black);
@@ -2338,7 +2338,7 @@
     border: 1px solid var(--tds-border-secondary);
     border-radius: 999px;
     /* md 토큰 아님 · 파생색 — md 536 의 흰 캡슐을 다크에서 파생 grey-150 으로 옮겼었고, 그 위 파란 ± 가 3.44 였다.
-       타일(grey-100)보다 어두운 캡슐로 옮겨 dark-blue-500 이 4.75. 다크 blue-500 이 바뀌면 다시 잰다. */
+       타일(grey-100)보다 어두운 캡슐로 옮겨 dark-blue-500 이 4.74(측정). 다크 blue-500 이 바뀌면 다시 잰다. */
     background: oklch(0.230 0.012 285);
     overflow: hidden;
   }
@@ -2391,7 +2391,7 @@
     align-self: center;
     border: 1px solid var(--tds-border-secondary);
     border-radius: 12px;
-    /* md 토큰 아님 · 파생색 — 위 .num-spin 과 같은 다크 캡슐(dark-blue-500 4.75). */
+    /* md 토큰 아님 · 파생색 — 위 .num-spin 과 같은 다크 캡슐(dark-blue-500 4.74). */
     background: oklch(0.230 0.012 285);
     overflow: hidden;
   }
