@@ -1,6 +1,8 @@
 import { readFrontmatter } from "./frontmatter"
 import {
+  LEADING_OKLCH,
   OKLCH_ANNOTATED_DEFINITION,
+  definitionRow,
   matchDefinition,
   oklchEntries,
 } from "./oklch-sync"
@@ -71,9 +73,6 @@ function like(sample: string, value: number): string {
   const decimals = (sample.split(".")[1] ?? "").length
   return value.toFixed(decimals)
 }
-
-/** The `oklch(…)` literal a value starts with — the span `--fix` replaces. */
-const LEADING_OKLCH = /^oklch\([^)]*\)/
 
 /**
  * The literal rebuilt with a new triple. Every separator the author wrote
@@ -171,9 +170,7 @@ export function auditOklch(
 
   for (const entry of oklchEntries(read.keys)) {
     // The row as YAML read it, in the one shape the shared rule judges.
-    const row =
-      `${entry.key}: ${entry.value}` +
-      (entry.comment === undefined ? "" : ` #${entry.comment}`)
+    const row = definitionRow(entry.key, entry.value, entry.comment)
     if (!OKLCH_ANNOTATED_DEFINITION.test(row)) continue
     result.annotated++
     const d = matchDefinition(row)

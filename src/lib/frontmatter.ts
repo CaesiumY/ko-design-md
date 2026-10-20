@@ -11,8 +11,6 @@ import { splitFrontmatter } from "./frontmatter-fence"
 import type { ServiceFrontmatter } from "./content-types"
 import type { Document, Node, YAMLMap } from "yaml"
 
-export { splitFrontmatter } from "./frontmatter-fence"
-
 // The frontmatter, read ONCE, as YAML reads it (docs/adr/0011).
 //
 // Six places in this repo read the frontmatter, each its own way — the site's
@@ -309,6 +307,24 @@ export function readFrontmatter(raw: string): FrontmatterResult {
     }
   }
   return { ok: true, keys }
+}
+
+/** The top-level key named `name`, if the block writes it. */
+export function findKey(
+  keys: ReadonlyArray<FrontmatterKey>,
+  name: string
+): FrontmatterKey | undefined {
+  return keys.find((k) => k.key === name)
+}
+
+/** A map value's entry rows in source order, its `## Label` group rows left
+ *  out. Empty for a value that is not a map. */
+export function entriesOf(
+  key: FrontmatterKey | undefined
+): Array<FrontmatterEntryRow> {
+  return (key?.rows ?? []).filter(
+    (row): row is FrontmatterEntryRow => row.kind === "entry"
+  )
 }
 
 /**

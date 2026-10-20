@@ -16,7 +16,7 @@
 // The value comparison gets all four right, so it is strictly the better rule
 // rather than merely the stricter one.
 
-import { readFrontmatter } from "./frontmatter"
+import { findKey, readFrontmatter } from "./frontmatter"
 
 /**
  * Is a repo-wide mechanical sweep exempted by a commit in range?
@@ -99,7 +99,7 @@ type DateReading =
 function readLastUpdated(raw: string): DateReading {
   const read = readFrontmatter(raw)
   if (!read.ok) return { ok: false, ...read.errors[0] }
-  const value = read.keys.find((k) => k.key === "last_updated")?.value
+  const value = findKey(read.keys, "last_updated")?.value
   const date =
     typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)
       ? value

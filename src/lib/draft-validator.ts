@@ -3,17 +3,19 @@ import { buildSiteDoc } from "./content-parser"
 import {
   CONSUMED_KEYS,
   KNOWN_FRONTMATTER_KEYS,
+  entriesOf,
+  findKey,
   readFrontmatter,
-  splitFrontmatter,
   tokenText,
 } from "./frontmatter"
-import { siteFrontmatterOf, siteValue } from "./site-frontmatter"
+import { splitFrontmatter } from "./frontmatter-fence"
+import { siteFrontmatterFrom, siteValue } from "./site-frontmatter"
 import { REFERENCE_MAP_KEYS, ROW_SCAN_MAP_KEYS } from "./frontmatter-map-table"
 import { CATEGORIES } from "./content-types"
 import { auditSourceCitations } from "./source-citations"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
 import { deltaE, hexToOklab, lchToOklab, oklabToLch } from "./oklch-convert"
-import { matchDefinition } from "./oklch-sync"
+import { definitionRow, matchDefinition } from "./oklch-sync"
 import { conflictingDefinitions } from "./oklch-drift"
 import { KNOWN_SPEC_LIMITATIONS } from "./spec-limitations"
 import { LOGO_TAKEDOWNS } from "./logo-takedowns"
@@ -429,20 +431,10 @@ const WHOLE_FENCE_LANGUAGES: ReadonlySet<string> = new Set([
   ...STYLESHEET_FENCE_LANGUAGES,
 ])
 
-// A frontmatter node as the reference check reads it.
-type YamlNode = FrontmatterValue
-
 function isYamlMap(
-  node: YamlNode | undefined
-): node is { [key: string]: YamlNode } {
+  node: FrontmatterValue | undefined
+): node is { [key: string]: FrontmatterValue } {
   return typeof node === "object" && node !== null && !Array.isArray(node)
-}
-
-/** A map row's entries, its `## Label` group rows left out. */
-function entriesOf(key: FrontmatterKey): Array<FrontmatterEntryRow> {
-  return (key.rows ?? []).filter(
-    (row): row is FrontmatterEntryRow => row.kind === "entry"
-  )
 }
 
 /**
@@ -452,9 +444,9 @@ function entriesOf(key: FrontmatterKey): Array<FrontmatterEntryRow> {
  * spelling here, as the reader gives them.
  */
 function writtenTree(keys: ReadonlyArray<FrontmatterKey>): {
-  [key: string]: YamlNode
+  [key: string]: FrontmatterValue
 } {
-  const out: { [key: string]: YamlNode } = {}
+  const out: { [key: string]: FrontmatterValue } = {}
   for (const entry of keys) {
     out[entry.key] = entry.rows ? writtenTree(entriesOf(entry)) : entry.value
   }
@@ -800,24 +792,33 @@ function checkTokenReferences(
 ): Array<ValidationIssue> {
   const maps = writtenTree(read.keys)
   // A key with no value (`brand:` and nothing after it) resolves to nothing.
-  const resolves = (map: YamlNode | undefined, name: string): boolean => {
+  const resolves = (
+    map: FrontmatterValue | undefined,
+    name: string
+  ): boolean => {
     if (!isYamlMap(map)) return false
     if (Object.hasOwn(map, name)) return map[name] !== null
-    let cur: YamlNode | undefined = map
+    let cur: FrontmatterValue | undefined = map
     for (const part of name.split(".")) {
       if (!isYamlMap(cur) || !Object.hasOwn(cur, part)) return false
       cur = cur[part]
     }
     return cur !== null
   }
-  const matchesPattern = (map: YamlNode | undefined, pattern: string) => {
+  const matchesPattern = (
+    map: FrontmatterValue | undefined,
+    pattern: string
+  ) => {
     if (!isYamlMap(map)) return false
     const re = segmentPattern(pattern)
     if (Object.keys(map).some((key) => re.test(key) && map[key] !== null))
       return true
     // A pattern over a property path (`{typography.*.fontSize}`) walks it one
     // segment at a time, the way `resolves` walks a single one.
-    const walk = (node: YamlNode | undefined, segs: Array<string>): boolean => {
+    const walk = (
+      node: FrontmatterValue | undefined,
+      segs: Array<string>
+    ): boolean => {
       if (segs.length === 0) return node !== null && node !== undefined
       if (!isYamlMap(node)) return false
       const seg = segmentPattern(segs[0])
@@ -1049,7 +1050,7 @@ function commentHex(row: FrontmatterKey): string | undefined {
 function scanFrontmatterTokens(read: FrontmatterRead): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
   for (const mapKey of ROW_SCAN_MAP_KEYS) {
-    const map = read.keys.find((k) => k.key === mapKey)
+    const map = findKey(read.keys, mapKey)
     if (!map) continue
     for (const row of entriesOf(map)) {
       // These maps are flat: a token is one `name: value` row. A map under a
@@ -1088,9 +1089,7 @@ function scanFrontmatterTokens(read: FrontmatterRead): Array<ValidationIssue> {
       if (value.startsWith("{")) continue
       // The row as YAML read it, in the one shape the shared OKLCH↔hex rule
       // judges — the same string `audit:oklch` builds.
-      const line =
-        `${row.key}: ${value}` +
-        (row.comment === undefined ? "" : ` #${row.comment}`)
+      const line = definitionRow(row.key, value, row.comment)
       issues.push(...tokenLineIssues(row.key, value, line))
       // The extractor keeps only rows shaped like a shadow, so anything else in
       // `elevation:` vanishes from the sidecar while the file still publishes
@@ -1131,7 +1130,7 @@ const TYPE_STYLE_PROPERTIES: ReadonlyArray<string> = [
  * while every gate passes.
  */
 function checkTypographyStyles(read: FrontmatterRead): Array<ValidationIssue> {
-  const map = read.keys.find((k) => k.key === "typography")
+  const map = findKey(read.keys, "typography")
   if (!map) return []
   const issues: Array<ValidationIssue> = []
   for (const style of entriesOf(map)) {
@@ -1322,7 +1321,7 @@ const GLUED_PROPERTY = /^([A-Za-z]+):(\S.*)$/
  * `validateDraft` then skips the linter.
  */
 function checkComponents(read: FrontmatterRead): Array<ValidationIssue> {
-  const map = read.keys.find((k) => k.key === "components")
+  const map = findKey(read.keys, "components")
   if (!map) return []
   const issues: Array<ValidationIssue> = []
   const shape = (fix: string) =>
@@ -2266,9 +2265,7 @@ export function validateDraft(
   // The entry's slug for lookups keyed by it (recorded limitations, logo
   // takedowns, citations): the written slug, else the caller's, else the
   // file name.
-  const slugEntry = read.ok
-    ? read.keys.find((k) => k.key === "slug")
-    : undefined
+  const slugEntry = read.ok ? findKey(read.keys, "slug") : undefined
   const entrySlug =
     (typeof slugEntry?.value === "string" && slugEntry.value !== ""
       ? slugEntry.value
@@ -2299,7 +2296,7 @@ export function validateDraft(
       doc = buildSiteDoc(
         opts.filePath,
         raw,
-        siteFrontmatterOf(opts.filePath, raw, () => {})
+        siteFrontmatterFrom(opts.filePath, read, () => {})
       )
     } catch {
       doc = null

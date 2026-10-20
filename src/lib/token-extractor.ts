@@ -1,5 +1,5 @@
-import { readFrontmatter, tokenText } from "./frontmatter"
-import type { FrontmatterEntryRow, FrontmatterKey } from "./frontmatter"
+import { entriesOf, findKey, readFrontmatter, tokenText } from "./frontmatter"
+import type { FrontmatterKey } from "./frontmatter"
 import type {
   ColorToken,
   ElevationToken,
@@ -231,17 +231,6 @@ function valueText(entry: FrontmatterKey): string | undefined {
   return tokenText(entry)?.trim()
 }
 
-/** The rows of one top-level token map, entries only. */
-function mapEntries(
-  keys: Array<FrontmatterKey>,
-  mapKey: string
-): Array<FrontmatterEntryRow> {
-  const map = keys.find((k) => k.key === mapKey)
-  return (map?.rows ?? []).filter(
-    (row): row is FrontmatterEntryRow => row.kind === "entry"
-  )
-}
-
 /** One frontmatter token map, read as RawLines so the existing parsers derive
  *  everything (the `px` field, `%` handling, alias skipping).
  *
@@ -254,7 +243,7 @@ function frontmatterRows(
   mapKey: string
 ): Array<RawLine> {
   const out: Array<RawLine> = []
-  for (const row of mapEntries(keys, mapKey)) {
+  for (const row of entriesOf(findKey(keys, mapKey))) {
     const note = row.comment || undefined
     if (Array.isArray(row.value)) {
       out.push({
@@ -278,10 +267,8 @@ function frontmatterRows(
  *  `frontmatterRows` — one style spans several lines. */
 function frontmatterTypography(keys: Array<FrontmatterKey>): Array<TypeToken> {
   const out: Array<TypeToken> = []
-  for (const head of mapEntries(keys, "typography")) {
-    const properties = (head.rows ?? []).filter(
-      (row): row is FrontmatterEntryRow => row.kind === "entry"
-    )
+  for (const head of entriesOf(findKey(keys, "typography"))) {
+    const properties = entriesOf(head)
     // A style is a nested map, written as a block or inline
     // (`display-1: { fontSize: … }`) — YAML reads both alike.
     if (properties.length === 0) continue

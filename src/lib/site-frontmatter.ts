@@ -4,7 +4,7 @@ import {
   KNOWN_FRONTMATTER_KEYS,
   readFrontmatter,
 } from "./frontmatter"
-import type { FrontmatterKey } from "./frontmatter"
+import type { FrontmatterKey, FrontmatterRead } from "./frontmatter"
 import type { ServiceDoc, SiteFrontmatter } from "./content-types"
 
 // The site's frontmatter as the build takes it from the one reader
@@ -116,8 +116,18 @@ export function siteFrontmatterOf(
       `[site-frontmatter] ${path}:${first.line}: frontmatter does not read as YAML — ${first.message}`
     )
   }
+  return siteFrontmatterFrom(path, result, warn)
+}
+
+/** `siteFrontmatterOf` for a block already read — the draft validator reads
+ *  once and asks this what the site would take. */
+export function siteFrontmatterFrom(
+  path: string,
+  read: FrontmatterRead,
+  warn: (message: string) => void
+): SiteFrontmatter {
   const out: Record<string, string | number> = {}
-  for (const entry of result.keys) {
+  for (const entry of read.keys) {
     if (!KNOWN_FRONTMATTER_KEYS.includes(entry.key)) {
       warn(
         `[site-frontmatter] Unknown frontmatter key "${entry.key}" in ${path} (ignored)`

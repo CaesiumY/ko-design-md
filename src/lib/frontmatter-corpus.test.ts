@@ -3,7 +3,8 @@ import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
 import { isNode, isScalar, parseDocument } from "yaml"
-import { readFrontmatter, splitFrontmatter } from "./frontmatter"
+import { entriesOf, findKey, readFrontmatter } from "./frontmatter"
+import { splitFrontmatter } from "./frontmatter-fence"
 import type { Node } from "yaml"
 import type { FrontmatterEntryRow, FrontmatterKey } from "./frontmatter"
 import type { ServiceTokens } from "./content-types"
@@ -50,8 +51,7 @@ function entryRows(
   keys: Array<FrontmatterKey>,
   map: string
 ): Array<FrontmatterEntryRow> {
-  const rows = keys.find((k) => k.key === map)?.rows ?? []
-  return rows.filter((r): r is FrontmatterEntryRow => r.kind === "entry")
+  return entriesOf(findKey(keys, map))
 }
 
 /** Each named token's row, matched in order — a token found out of order, or

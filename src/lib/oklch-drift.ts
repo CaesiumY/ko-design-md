@@ -1,5 +1,6 @@
-import { readFrontmatter, splitFrontmatter } from "./frontmatter"
-import { oklchEntries } from "./oklch-sync"
+import { readFrontmatter } from "./frontmatter"
+import { splitFrontmatter } from "./frontmatter-fence"
+import { LEADING_OKLCH, oklchEntries } from "./oklch-sync"
 // Detect preview CSS that no longer agrees with the design.md it was built from.
 //
 // This exists because the gates added alongside it could not see their own
@@ -93,9 +94,6 @@ export function readDefinitions(markdown: string): Map<string, string> {
   for (const name of conflictsIn(defs).keys()) out.delete(name)
   return out
 }
-
-/** The leading literal of a value: a gradient's first stop is still a colour. */
-const LEADING_OKLCH = /^oklch\([^)]*\)/
 
 /**
  * Every `name: oklch(…)` definition, in document order, duplicates included.

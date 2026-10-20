@@ -2,7 +2,8 @@ import { readFileSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
-import { readFrontmatter, splitFrontmatter } from "./frontmatter"
+import { readFrontmatter } from "./frontmatter"
+import { splitFrontmatter } from "./frontmatter-fence"
 
 // Three entries publish a semantic role layer twice (#435): as a Markdown table
 // in `## Colors` — the reader's copy, carrying `[src:N]` and, for greeting, the

@@ -1,3 +1,4 @@
+import { entriesOf } from "./frontmatter"
 import type { FrontmatterKey } from "./frontmatter"
 
 // Propagating a corrected OKLCH primitive into the places that copied it —
@@ -8,7 +9,11 @@ import type { FrontmatterKey } from "./frontmatter"
 
 /** The token names the colour readers consider. Lowercase-first, so a numeric
  *  step key (`500:`) or a capitalised label is not a colour definition. */
-const TOKEN_NAME = /^[a-z][\w-]*$/
+export const TOKEN_NAME = /^[a-z][\w-]*$/
+
+/** The `oklch(…)` literal a value starts with: a gradient's first stop is
+ *  still a colour, and it is the span `audit:oklch --fix` replaces. */
+export const LEADING_OKLCH = /^oklch\([^)]*\)/
 
 /**
  * Every frontmatter row whose value is written as an `oklch(…)` literal, at
@@ -33,9 +38,7 @@ export function oklchEntries(
       ) {
         out.push({ ...row, value })
       }
-      if (row.rows) {
-        walk(row.rows.flatMap((r) => (r.kind === "entry" ? [r] : [])))
-      }
+      if (row.rows) walk(entriesOf(row))
     }
   }
   walk(keys)
@@ -77,7 +80,7 @@ export function oklchEntries(
  * renumbering them silently reformatted every corrected line.
  */
 export const OKLCH_DEFINITION =
-  /^(?<indent>\s*)(?<token>[a-z][\w-]*):(?<afterColon>\s+)oklch\(\s*(?<L>[\d.]+)(?<sepLC>\s+)(?<C>[\d.]+)(?<sepCH>\s+)(?<H>[\d.]+)(?<tail>[^)]*)\)(?<comment>\s*#[^#\n]*)(?<hex>#[0-9a-fA-F]{3,8})\b(?![^\n]*#[0-9a-fA-F]{3,8}\b)/
+  /^\s*(?<token>[a-z][\w-]*):\s+oklch\(\s*(?<L>[\d.]+)(?<sepLC>\s+)(?<C>[\d.]+)(?<sepCH>\s+)(?<H>[\d.]+)(?<tail>[^)]*)\)\s*#[^#\n]*(?<hex>#[0-9a-fA-F]{3,8})\b(?![^\n]*#[0-9a-fA-F]{3,8}\b)/
 
 /**
  * A judged definition line, with every part named.
@@ -89,12 +92,7 @@ export const OKLCH_DEFINITION =
  * happen; now it is a compile error.
  */
 export interface DefinitionMatch {
-  /** The matched span. Ends at the hex, so prose after it is left alone. */
-  matched: string
-  indent: string
   token: string
-  /** Whitespace between `token:` and `oklch(`. */
-  afterColon: string
   L: string
   sepLC: string
   C: string
@@ -102,9 +100,21 @@ export interface DefinitionMatch {
   H: string
   /** Remainder inside the parens — carries ` / alpha` when present. */
   tail: string
-  /** From the `#` comment marker up to (not including) the hex. */
-  comment: string
   hex: string
+}
+
+/**
+ * A frontmatter row as YAML read it, in the one line shape the OKLCH↔hex rule
+ * judges: `key: value #comment` (`comment` as the reader gives it, `#` and
+ * surrounding space removed). The draft validator and `audit:oklch` both build
+ * the line here, so they judge the same text.
+ */
+export function definitionRow(
+  key: string,
+  value: string,
+  comment: string | undefined
+): string {
+  return `${key}: ${value}` + (comment === undefined ? "" : ` #${comment}`)
 }
 
 /** Parse one line as a judgeable definition, or `null` when it is not one. */
@@ -113,17 +123,13 @@ export function matchDefinition(line: string): DefinitionMatch | null {
   const g = m?.groups
   if (!m || !g) return null
   return {
-    matched: m[0],
-    indent: g.indent,
     token: g.token,
-    afterColon: g.afterColon,
     L: g.L,
     sepLC: g.sepLC,
     C: g.C,
     sepCH: g.sepCH,
     H: g.H,
     tail: g.tail,
-    comment: g.comment,
     hex: g.hex,
   }
 }

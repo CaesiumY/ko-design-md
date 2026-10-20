@@ -30,6 +30,7 @@ import {
 } from "./oklch-convert"
 import { readFrontmatter } from "./frontmatter"
 import { readDefinitions } from "./oklch-drift"
+import { TOKEN_NAME } from "./oklch-sync"
 import type { FrontmatterRow } from "./frontmatter"
 import type { Rgb, Rgba } from "./contrast"
 import type { Oklab } from "./oklch-convert"
@@ -130,9 +131,6 @@ export interface Palette {
   /** Definitions `parseOklch` could not read — said, not dropped. */
   unreadable: Array<string>
 }
-
-/** A token name the colour readers consider (see `oklchEntries`). */
-const TOKEN_NAME = /^[a-z][\w-]*$/
 
 /**
  * The entry's `colors:` tokens, each marked published or observed.

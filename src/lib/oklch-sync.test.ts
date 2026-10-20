@@ -244,17 +244,16 @@ describe("matchDefinition", () => {
     const d = matchDefinition(
       "  fg-muted:  oklch(0.521 0.018 273 / 0.08)   # ≈ #70737C14"
     )
-    expect(d).not.toBeNull()
-    expect(d!.indent).toBe("  ")
-    expect(d!.token).toBe("fg-muted")
-    expect(d!.L).toBe("0.521")
-    expect(d!.C).toBe("0.018")
-    expect(d!.H).toBe("273")
-    expect(d!.tail).toBe(" / 0.08")
-    expect(d!.hex).toBe("#70737C14")
-    expect(d!.matched).toBe(
-      "  fg-muted:  oklch(0.521 0.018 273 / 0.08)   # ≈ #70737C14"
-    )
+    expect(d).toEqual({
+      token: "fg-muted",
+      L: "0.521",
+      sepLC: " ",
+      C: "0.018",
+      sepCH: " ",
+      H: "273",
+      tail: " / 0.08",
+      hex: "#70737C14",
+    })
   })
 
   it("returns null for a line the audit must not judge", () => {

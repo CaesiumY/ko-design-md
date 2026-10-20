@@ -6,7 +6,8 @@ import {
   truncateForMeta,
 } from "./content-collection"
 import { deriveTagline } from "./content-parser"
-import { CONSUMED_KEYS, readFrontmatter, splitFrontmatter } from "./frontmatter"
+import { CONSUMED_KEYS, readFrontmatter } from "./frontmatter"
+import { splitFrontmatter } from "./frontmatter-fence"
 
 describe("content-collection", () => {
   it("loads at least one service from /services/*.md", () => {

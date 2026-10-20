@@ -100,30 +100,17 @@ export function buildSiteDoc(
 ): ServiceDoc {
   const body = splitFrontmatter(raw)?.body ?? raw
   const slug = deriveSlug(filePath, fm.slug)
-  return docFrom(
-    {
-      name: fm.name ?? slug,
-      design_system_name: fm.design_system_name,
-      slug,
-      category: (fm.category ?? "etc") as Category,
-      last_updated: fm.last_updated ?? "",
-      created_at: fm.created_at ?? "",
-      lang: (fm.lang ?? "ko") as Lang,
-      estimated_tokens: fm.estimated_tokens,
-      logo: fm.logo,
-    },
-    filePath,
-    raw,
-    body
-  )
-}
-
-function docFrom(
-  frontmatter: ServiceFrontmatter,
-  filePath: string,
-  raw: string,
-  body: string
-): ServiceDoc {
+  const frontmatter: ServiceFrontmatter = {
+    name: fm.name ?? slug,
+    design_system_name: fm.design_system_name,
+    slug,
+    category: (fm.category ?? "etc") as Category,
+    last_updated: fm.last_updated ?? "",
+    created_at: fm.created_at ?? "",
+    lang: (fm.lang ?? "ko") as Lang,
+    estimated_tokens: fm.estimated_tokens,
+    logo: fm.logo,
+  }
   return {
     frontmatter,
     raw,
