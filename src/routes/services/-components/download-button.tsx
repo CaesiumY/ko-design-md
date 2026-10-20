@@ -47,9 +47,18 @@ function saveAs(raw: string, filename: string) {
   window.setTimeout(() => URL.revokeObjectURL(url), 40_000)
 }
 
+// The name the browser is asked to save the file under - a suggestion, so a
+// second download can land as `toss (1).md`. Exported so that what saves the
+// file and what shows its saved name (the DESIGN.md tab's file label and copy
+// confirmation) use this one name. The usage guide deliberately calls the file
+// DESIGN.md instead - see usage-guide.tsx.
+export function downloadFilename(slug: string): string {
+  return `${slug}.md`
+}
+
 export function DownloadButton({ raw, slug }: Props) {
   function download() {
-    saveAs(raw, `${slug}.md`)
+    saveAs(raw, downloadFilename(slug))
 
     // Its own event rather than `design_md_copy`. The primary metric counts
     // copies and downloads together (#336); a separate name keeps the split
