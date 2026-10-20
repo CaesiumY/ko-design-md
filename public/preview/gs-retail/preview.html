@@ -78,7 +78,8 @@
       /* md 토큰 아님 · 파생색 — 보조 글자(상단 식별 줄 · 범위 표지 · 시연 라벨 ·
          미선택 탭 · 할인 전 가격)만 쓰는 색. --ink-faint(neutral-600 62%) 에서
          84% 로 진하게 섞었다(page 위 2.94 → 4.85, 흰 위 3.20 → 5.27).
-         --ink-faint 는 비활성 스테퍼와 아이콘이 그대로 쓴다. neutral-600 이나
+         --ink-faint 는 비활성 스테퍼와 목록 아이콘이 그대로 쓴다(하단 탭바 아이콘은
+         .tab 의 currentColor 라 탭 라벨과 함께 진해졌다). neutral-600 이나
          지면 색이 바뀌면 다시 잰다. */
       --ink-faint-text: color-mix(in oklab, var(--gsr-neutral-600) 84%, var(--gsr-white));
 
