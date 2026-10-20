@@ -174,7 +174,10 @@
       box-shadow: 0 30px 60px var(--ll-shadow-color);
       min-width: 0;
     }
-    .quote-card .mark { font-size: 40px; font-weight: 800; line-height: 1; opacity: 0.5; }
+    /* 파생색 되돌림 · 발행값 — 인용 카드의 따옴표·출처는 발행 --ll-primary-foreground(흰색)에 투명도 .5 · .85 를 얹은 파생색이었고,
+       투명도를 걷어 발행 흰색으로 돌렸다(라이트 따옴표 1.69 → 3.02 큰 글자라 경계선 · 출처 2.54 → 3.02 미달 — 발행색끼리. 다크
+       출처도 함께 6.05 → 7.56). 다크 따옴표는 아래 다크 규칙(.75)이 덮는다. --ll-bg-primary 나 --ll-primary-foreground 가 바뀌면 다시 잰다. */
+    .quote-card .mark { font-size: 40px; font-weight: 800; line-height: 1; }
     .quote-card p {
       margin: 10px 0 0;
       font-size: var(--ll-fs-h4);
@@ -188,7 +191,6 @@
       font-style: normal;
       font-size: var(--ll-fs-body3);
       font-weight: 600;
-      opacity: 0.85;
     }
 
     @media (max-width: 860px) {
@@ -779,7 +781,7 @@
       --rule-strong: var(--ll-border-normal);
     }
     /* md 토큰 아님 · 파생색 — 다크 인용 카드의 따옴표는 다크 --ll-primary-foreground 에 투명도 .5 를 얹어 다크 오렌지 위에
-       놓은 색이었고, 다크에서만 투명도를 .75 로 올렸다(2.78 → 4.93). 라이트는 공유 규칙의 .5 그대로다. 다크
+       놓은 색이었고, 다크에서만 투명도를 .75 로 올렸다(2.78 → 4.93). 라이트는 공유 규칙에서 투명도를 걷었다. 다크
        --ll-primary-foreground · --ll-bg-primary 나 공유 규칙의 투명도가 바뀌면 다시 잰다. */
     [data-theme="dark"] .quote-card .mark { opacity: 0.75; }
     /* md 토큰 아님 · 파생색 — 다크 날짜 선택기의 이전·다음 달 날짜는 다크 --ll-fg-disabled oklch(0.46 0.014 258) 이었고,
