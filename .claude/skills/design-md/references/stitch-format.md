@@ -205,8 +205,9 @@ Write `0em`, not `0`. A bare zero is valid CSS but not a valid `Dimension` under
 The frontmatter token maps feed the **token-card sidecar**
 (`services/{slug}.tokens.json`, generated at Stage 8 by `pnpm tokens:build` and
 loaded as `doc.tokens` for the detail page's card view). The extractor reads
-these maps as YAML does — indentation and line breaks change nothing — one
-`name: value` entry per token: `name: oklch(...)` (colors; a named colour such
+these maps as YAML does — how a flat map is indented or broken across lines
+changes nothing, but a token indented under another token is a nested map,
+which the draft gate blocks — one `name: value` entry per token: `name: oklch(...)` (colors; a named colour such
 as `white` or an upper-case `OKLCH(…)` the linter reads but the sidecar drops),
 `name: 16px` (spacing/rounded), `name: 0 1px 2px oklch(...)` (elevation). **Typography is the exception — it nests**, as
 shown above: a bare style name, then `fontSize` / `fontWeight` /
