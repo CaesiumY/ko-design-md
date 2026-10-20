@@ -24,8 +24,8 @@ import type {
 // The frontmatter is read by the shared reader (`readFrontmatter`, ADR 0011),
 // never by line patterns here: a row YAML reads is a row the sidecar gets,
 // whatever its indent or key quoting. A value is read as `tokenText` gives it:
-// YAML's string for text (quotes undone, a block scalar folded), the spelling
-// as written for a number, because YAML turns `lineHeight: 1.50` into the
+// YAML's string for text (quotes undone, a block scalar folded), trimmed, and
+// the spelling as written for a number, because YAML turns `lineHeight: 1.50` into the
 // number 1.5 while the sidecar carries `"1.50"` as written.
 
 interface RawLine {
@@ -222,15 +222,6 @@ function clean<T extends Record<string, string | number | undefined>>(
   return obj
 }
 
-/** A row's value as the sidecar carries it (`tokenText`). Undefined for a
- *  map, a list or an empty value (`key:`), which carry no text to read. The
- *  trailing comment is already apart (`comment`), so a property copied from
- *  the skeleton — which annotates these lines — never lands in the sidecar as
- *  `56px   # 속성명은 …`. */
-function valueText(entry: FrontmatterKey): string | undefined {
-  return tokenText(entry)
-}
-
 /** One frontmatter token map, read as RawLines so the existing parsers derive
  *  everything (the `px` field, `%` handling, alias skipping).
  *
@@ -255,8 +246,11 @@ function frontmatterRows(
       })
       continue
     }
-    // A nested map or an empty row carries no value.
-    const value = valueText(row)
+    // A nested map, a list or an empty row (`key:`) carries no value. The
+    // trailing comment is already apart (`comment`), so a property copied from
+    // the skeleton — which annotates these lines — never lands in the sidecar
+    // as `56px   # 속성명은 …`.
+    const value = tokenText(row)
     if (value === undefined) continue
     out.push({ key: row.key, value, note, group: row.group })
   }
@@ -297,7 +291,7 @@ export const TYPE_STYLE_PROPERTIES: ReadonlyArray<string> = Object.keys(
  *  linter then waves through. */
 export function stylePropertyValue(row: FrontmatterKey): string | undefined {
   if (!Object.hasOwn(STYLE_PROPERTY_FIELDS, row.key)) return undefined
-  const raw = valueText(row)
+  const raw = tokenText(row)
   return raw === undefined || raw === "" ? undefined : raw
 }
 
