@@ -60,7 +60,10 @@
             그리려면 어떤 값이든 골라야 한다. 이 셋은 그렇게 고른 값이고
             브랜드 발행값이 아니다. --gsr-* 와 이름을 갈라 둔 이유다. ─────── */
       --render-fresh-green: oklch(0.660 0.165 148);
-      --render-expiry-orange: oklch(0.665 0.195 42);
+      /* md 토큰 아님 · 파생색 — 흰 글자가 얹히는 주황 배지 바닥(.tag · .expiry).
+         oklch(0.665 0.195 42) 에서 같은 색상각·채도 비율로 명도만 내렸다
+         (흰 글자 대비 3.29 → 4.91). 이 값이나 배지 글자색이 바뀌면 다시 잰다. */
+      --render-expiry-orange: oklch(0.565 0.166 42);
       --render-wine-pink: oklch(0.585 0.205 355);
 
       /* ── 시맨틱. 두 테마가 공유하는 이름이고, 다크는 이 층만 갈아 끼운다. ── */
@@ -72,6 +75,12 @@
       --ink: var(--gsr-primary-dark);
       --ink-muted: var(--gsr-neutral-600);
       --ink-faint: color-mix(in oklab, var(--gsr-neutral-600) 62%, var(--gsr-white));
+      /* md 토큰 아님 · 파생색 — 보조 글자(상단 식별 줄 · 범위 표지 · 시연 라벨 ·
+         미선택 탭 · 할인 전 가격)만 쓰는 색. --ink-faint(neutral-600 62%) 에서
+         84% 로 진하게 섞었다(page 위 2.94 → 4.85, 흰 위 3.20 → 5.27).
+         --ink-faint 는 비활성 스테퍼와 아이콘이 그대로 쓴다. neutral-600 이나
+         지면 색이 바뀌면 다시 잰다. */
+      --ink-faint-text: color-mix(in oklab, var(--gsr-neutral-600) 84%, var(--gsr-white));
 
       --cta-bg: var(--gsr-primary-dark);
       --cta-ink: var(--gsr-white);
@@ -153,11 +162,11 @@
     .topbar-id { min-width: 0; }
     .topbar-kicker {
       font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--ink-faint);
+      text-transform: uppercase; color: var(--ink-faint-text);
     }
     .topbar-name { font-size: 15px; font-weight: 700; }
     .topbar-slug {
-      font-size: 11px; font-weight: 600; color: var(--ink-faint);
+      font-size: 11px; font-weight: 600; color: var(--ink-faint-text);
       margin-left: 6px; letter-spacing: 0.02em;
     }
 
@@ -226,7 +235,7 @@
       letter-spacing: 0; overflow-wrap: anywhere;
     }
     .scope {
-      font-size: 11px; font-weight: 600; color: var(--ink-faint);
+      font-size: 11px; font-weight: 600; color: var(--ink-faint-text);
       border: 1px solid var(--line); border-radius: var(--r-chip);
       padding: 2px 9px; max-width: 100%; min-width: 0;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -254,7 +263,7 @@
     .btn-block { display: block; width: 100%; }
     .btn-row { display: flex; flex-wrap: wrap; gap: 14px; min-width: 0; }
     .btn-demo { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
-    .lab { font-size: 11px; font-weight: 600; color: var(--ink-faint); }
+    .lab { font-size: 11px; font-weight: 600; color: var(--ink-faint-text); }
 
     /* ── 헤더 액션 ───────────────────────────────────────────────────────── */
     .hdr-actions { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
@@ -321,7 +330,7 @@
       background: transparent; border: 0;
       border-bottom: 2px solid transparent;
       padding: 10px 14px; font-size: 13px; font-weight: 700;
-      color: var(--ink-faint); cursor: pointer;
+      color: var(--ink-faint-text); cursor: pointer;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .seg > button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--cta-bg); }
@@ -412,7 +421,7 @@
     }
     .prod-name { margin-top: 16px; font-size: 13px; font-weight: 700; }
     .prod-price { font-size: 15px; font-weight: 800; }
-    .prod-strike { font-size: 12px; font-weight: 600; color: var(--ink-faint); text-decoration: line-through; }
+    .prod-strike { font-size: 12px; font-weight: 600; color: var(--ink-faint-text); text-decoration: line-through; }
     .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
     .tag-inline {
       font-size: 11px; font-weight: 700; border-radius: 6px; padding: 2px 7px;
@@ -501,7 +510,7 @@
     .tab {
       flex: 1 1 0; min-width: 0; border: 0; background: transparent; padding: 0;
       display: flex; flex-direction: column; align-items: center; gap: 4px;
-      font-size: 10px; font-weight: 600; color: var(--ink-faint); cursor: pointer;
+      font-size: 10px; font-weight: 600; color: var(--ink-faint-text); cursor: pointer;
     }
     .tab svg { width: 20px; height: 20px; }
     .tab span { max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -556,6 +565,9 @@
       --ink: oklch(0.965 0.004 272);
       --ink-muted: oklch(0.762 0.012 275);
       --ink-faint: oklch(0.642 0.012 275);
+      /* 라이트에서 보조 글자만 진하게 갈랐던 색이다. 다크는 --ink-faint 로
+         이미 기준을 넘으므로 그 값을 그대로 쓴다. */
+      --ink-faint-text: var(--ink-faint);
 
       /* primary-dark 는 근접 검정이라 어두운 지면에서 사라진다. 색상각과
          채도는 유지한 채 명도만 올렸다. 발행된 다크 토큰이 아니다. */
@@ -566,11 +578,19 @@
 
       --brand-soft: oklch(0.298 0.048 208);
 
-      /* 근사 관찰색도 어두운 지면에 맞춰 명도만 올렸다. 라이트와 마찬가지로
-         브랜드 발행값이 아니라 렌더를 위한 선택이다. */
+      /* 근사 관찰색은 라이트와 마찬가지로 브랜드 발행값이 아니라 렌더를 위한
+         선택이다. 초록은 어두운 지면에 맞춰 명도만 올렸다. 주황·분홍은 흰
+         글자가 얹히는 바닥이라 아래 주석대로 명도를 내렸다. */
       --render-fresh-green: oklch(0.735 0.155 148);
-      --render-expiry-orange: oklch(0.742 0.172 46);
-      --render-wine-pink: oklch(0.690 0.185 353);
+      /* md 토큰 아님 · 파생색 — 다크 주황 배지 바닥(.tag · .expiry).
+         oklch(0.742 0.172 46) 에서 같은 색상각·채도 비율로 명도만 내렸다
+         (흰 글자 대비 2.45 → 4.71). 이 값이나 배지 글자색이 바뀌면 다시 잰다. */
+      --render-expiry-orange: oklch(0.570 0.132 46);
+      /* md 토큰 아님 · 파생색 — 다크 와인 분홍(.chip-observed 바닥 · .wine-card
+         테두리 — 칩이 그 테두리 색을 보여 주므로 함께 옮겼다).
+         oklch(0.690 0.185 353) 에서 같은 색상각·채도 비율로 명도만 내렸다
+         (흰 글자 대비 3.05 → 4.76). 이 값이나 칩 글자색이 바뀌면 다시 잰다. */
+      --render-wine-pink: oklch(0.575 0.154 353);
 
       --shade: 0 1px 2px oklch(0 0 0 / 0.40), 0 10px 26px oklch(0 0 0 / 0.45);
       --shade-lift: 0 8px 20px oklch(0 0 0 / 0.55);

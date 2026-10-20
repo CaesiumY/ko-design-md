@@ -1943,7 +1943,9 @@
     position: absolute;
     top: 8px;
     left: 8px;
-    background: var(--bm-red);
+    /* 파생색 되돌림 · 발행값 — 다크용으로 밝힌 빨강 oklch(0.68 0.24 27)을 md red oklch(0.63 0.24 27)로
+       (흰 글자 3.48 → 3.93). md red 나 이 배지의 글자색이 바뀌면 다시 잰다. */
+    background: oklch(0.63 0.24 27);
     color: oklch(1 0 0);
     font-family: var(--bm-body);
     font-weight: 800;
@@ -2099,14 +2101,18 @@
     letter-spacing: -0.01em;
     white-space: nowrap;
   }
-[data-theme="dark"] .tag-discount { background: var(--bm-red); color: oklch(1 0 0); }
+/* 파생색 되돌림 · 발행값 — 다크용으로 밝힌 빨강 oklch(0.68 0.24 27)을 md red oklch(0.63 0.24 27)로
+   (흰 글자 3.48 → 3.93). md red 나 이 칩의 글자색이 바뀌면 다시 잰다. */
+[data-theme="dark"] .tag-discount { background: oklch(0.63 0.24 27); color: oklch(1 0 0); }
 [data-theme="dark"] .tag-mint { background: var(--bm-primary-tint); color: var(--bm-mint-700); }
 [data-theme="dark"] .tag-purple { background: var(--bm-navy-tint); color: oklch(0.75 0.12 286); }
 [data-theme="dark"] .tag-frozen-circle {
     width: 28px;
     height: 28px;
     padding: 0;
-    background: var(--bm-frozen);
+    /* 파생색 되돌림 · 발행값 — 다크용으로 밝힌 냉동 파랑 oklch(0.72 0.18 240)을 md frozen oklch(0.69 0.18 240)로
+       (흰 글자 2.43 → 2.66). md frozen 이나 이 원의 글자색이 바뀌면 다시 잰다. */
+    background: oklch(0.69 0.18 240);
     color: oklch(1 0 0);
     border-radius: 50%;
     font-size: 10px;
@@ -2117,7 +2123,9 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: var(--bm-frozen);
+    /* 파생색 되돌림 · 발행값 — 다크용으로 밝힌 냉동 파랑 oklch(0.72 0.18 240)을 md frozen oklch(0.69 0.18 240)로
+       (흰 글자 2.43 → 2.66). md frozen 이나 이 원의 글자색이 바뀌면 다시 잰다. */
+    background: oklch(0.69 0.18 240);
     color: oklch(1 0 0);
     font-family: var(--bm-body);
     font-size: 11px;
@@ -2131,7 +2139,9 @@
     height: 18px;
     padding: 0 6px;
     border-radius: 9999px;
-    background: var(--bm-pink);
+    /* 파생색 되돌림 · 발행값 — 다크용으로 밝힌 분홍 oklch(0.70 0.24 4)을 md pink oklch(0.66 0.24 4)로
+       (흰 글자 3.27 → 3.52). md pink 나 이 뱃지의 글자색이 바뀌면 다시 잰다. */
+    background: oklch(0.66 0.24 4);
     color: oklch(1 0 0);
     font-family: var(--bm-body);
     font-size: 9px;
@@ -2297,7 +2307,9 @@
 [data-theme="dark"] .search-app-bar .iconbtn svg, [data-theme="dark"] .search-app-bar .iconbtn-cart svg { width: 22px; height: 22px; }
 [data-theme="dark"] .search-app-bar .iconbtn-cart .cart-badge {
     position: absolute; top: -2px; right: -4px;
-    background: var(--bm-red); color: oklch(1 0 0);
+    /* 파생색 되돌림 · 발행값 — 다크용으로 밝힌 빨강 oklch(0.68 0.24 27)을 md red oklch(0.63 0.24 27)로
+       (흰 글자 3.48 → 3.93). md red 나 이 뱃지의 글자색이 바뀌면 다시 잰다. */
+    background: oklch(0.63 0.24 27); color: oklch(1 0 0);
     font-size: 10px; font-weight: 700;
     padding: 0 5px; height: 16px; min-width: 16px;
     border-radius: 9999px;
@@ -2365,7 +2377,9 @@
   }
 [data-theme="dark"] .filter-chip-row .chip-glyph-sort { font-size: 12px; color: var(--bm-fg-2); }
 [data-theme="dark"] .filter-chip-row .chip-glyph-cross {
-    background: var(--bm-red); color: oklch(1 0 0);
+    /* 파생색 되돌림 · 발행값 — 다크용으로 밝힌 빨강 oklch(0.68 0.24 27)을 md red oklch(0.63 0.24 27)로
+       (흰 ✕ 3.48 → 3.93). md red 나 이 글리프의 색이 바뀌면 다시 잰다. */
+    background: oklch(0.63 0.24 27); color: oklch(1 0 0);
     border-radius: 9999px;
     width: 14px; height: 14px;
     font-size: 9px; font-weight: 700;
@@ -2379,7 +2393,9 @@
 [data-theme="dark"] .list-subhdr .sort-label { color: var(--bm-fg-1); font-weight: 600; }
 [data-theme="dark"] .list-subhdr .sort-label .info-i { color: var(--bm-fg-3); font-weight: 400; }
 [data-theme="dark"] .list-subhdr .ad-label {
-    color: var(--bm-fg-3); font-size: 11px;
+    /* md 토큰 아님 · 파생색 — 다크 fg-3 oklch(0.60 0 0)을 이 표식만 oklch(0.62 0 0)으로
+       (다크 bg-subtle 위 4.36 → 4.73). 다크 bg-subtle 이나 이 표식의 바탕이 바뀌면 다시 잰다. */
+    color: oklch(0.62 0 0); font-size: 11px;
     background: var(--bm-bg-subtle);
     padding: 2px 6px; border-radius: 4px;
   }
@@ -2413,7 +2429,9 @@
 [data-theme="dark"] .restaurant-row .rest-rating .rest-cats { color: var(--bm-fg-3); }
 [data-theme="dark"] .restaurant-row .rest-eta { display: flex; align-items: center; gap: 6px; }
 [data-theme="dark"] .restaurant-row .free-delivery-pill {
-    background: var(--bm-red); color: oklch(1 0 0);
+    /* 파생색 되돌림 · 발행값 — 다크용으로 밝힌 빨강 oklch(0.68 0.24 27)을 md red oklch(0.63 0.24 27)로
+       (흰 글자 3.48 → 3.93). md red 나 이 배지의 글자색이 바뀌면 다시 잰다. */
+    background: oklch(0.63 0.24 27); color: oklch(1 0 0);
     font-size: 11px; font-weight: 700;
     padding: 2px 7px; border-radius: 4px;
     letter-spacing: -0.01em;
