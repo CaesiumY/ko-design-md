@@ -2269,10 +2269,11 @@ const SCHEMA_KEY_RULES: ReadonlySet<string> = new Set([
  * `colors:` is a required map, and the extractor behind the Tokens tab and
  * `use-design-md` keeps only a hex or a lower-case colour function. The
  * linter also reads a named colour (`white`, `transparent`) and an upper-case
- * function (`OKLCH(…)`, `RGB(…)`), which no other rule blocks — so a palette
- * written only that way would ship an empty colour sidecar with every other
- * gate green. Only the empty case: alias rows the linter resolves are left
- * out of the sidecar by design, so the two counts differ in a sound entry.
+ * function (`OKLCH(…)`, `RGB(…)`). `non-oklch-token-value` blocks each such
+ * row where it is written (#597); this measures what the two readers actually
+ * resolve, so a palette of nothing else also says its sidecar would be empty.
+ * Only the empty case: alias rows the linter resolves are left out of the
+ * sidecar by design, so the two counts differ in a sound entry.
  *
  * A map whose shape already blocks — a row holding a map
  * (`noncanonical-token-indent`), or the map or a row written as an alias

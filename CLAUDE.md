@@ -95,7 +95,8 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행하고, 프리
     (아래 표준 절의 `components:` 항).
 - **색상 토큰 값은 OKLCH만.** frontmatter `colors:` 맵의 `name: oklch(...)` 형식. 브랜드 hex는
   `# #FAFAFA` 트레일링 주석이나 같은 줄 `(≈ oklch(...))` 병기로만 기록. `colors:` 값이 소문자 `oklch(` 로
-  시작하지도, 따옴표 친 참조(`"{colors.x}"`)도 아니면 `non-oklch-token-value` 로 block 이다 — hex·`rgb()` 뿐
+  시작하지도, 따옴표 친 참조(`"{colors.x}"` — `{` 로 시작하는 값은 참조로 보고 건너뛰며, 참조가 풀리는지는
+  `unresolved-token-ref` 가, 맵 이름이 빠진 `"{blue-500}"` 은 `dotless-token-ref` warn 과 CI 린터 래칫이 본다)도 아니면 `non-oklch-token-value` 로 block 이다 — hex·`rgb()` 뿐
   아니라 이름 색(`white`)·대문자 함수(`RGB(…)`·`OKLCH(…)`)·`oklab(` 같은 다른 표기·다른 토큰 이름을 그냥 쓴
   값까지. 린터는 이름 색과 대문자 함수도 색으로 읽지만 사이드카는 싣지 않아, 하나만 섞여도 그 색이 Tokens 탭에서
   조용히 빠졌다(#597).

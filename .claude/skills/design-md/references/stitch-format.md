@@ -208,7 +208,8 @@ loaded as `doc.tokens` for the detail page's card view). The extractor reads
 these maps as YAML does — how a flat map is indented or broken across lines
 changes nothing, but a token indented under another token is a nested map,
 which the draft gate blocks — one `name: value` entry per token: `name: oklch(...)` (colors; a named colour such
-as `white` or an upper-case `OKLCH(…)` the linter reads but the sidecar drops),
+as `white` or an upper-case `OKLCH(…)` the linter reads but the sidecar drops,
+so the draft gate blocks it row by row — `non-oklch-token-value`),
 `name: 16px` (spacing/rounded), `name: 0 1px 2px oklch(...)` (elevation). **Typography is the exception — it nests**, as
 shown above: a bare style name, then `fontSize` / `fontWeight` /
 `lineHeight` / `letterSpacing` under it. Forms that set none of those four —
