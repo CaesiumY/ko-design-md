@@ -1825,7 +1825,22 @@ function checkFrontmatterKeys(read: FrontmatterRead): Array<ValidationIssue> {
     const retired = RETIRED_FRONTMATTER_KEYS.get(key)
     if (retired) {
       issues.push(block("retired-frontmatter-key", "frontmatter", retired))
-    } else if (!KNOWN_FRONTMATTER_KEYS.includes(key)) {
+      continue
+    }
+    if (KNOWN_FRONTMATTER_KEYS.includes(key)) continue
+    // A known key followed at once by a colon (`name:: 토스`,
+    // `design_system_name:x: y`) is an extra colon: YAML reads the key up to
+    // the colon-space, so the value meant for the known key is lost.
+    const meant = KNOWN_FRONTMATTER_KEYS.find((k) => key.startsWith(`${k}:`))
+    if (meant !== undefined) {
+      issues.push(
+        block(
+          "colon-cut-frontmatter-key",
+          "frontmatter",
+          `YAML reads the key \`${key}\` (the key \`${meant}\` with an extra colon after it), so the value meant for \`${meant}\` is lost: the site and every other reader see the entry without it. Write it as \`${meant}: value\`: one colon, then a space (quote a value that holds \`: \`).`
+        )
+      )
+    } else {
       issues.push(
         warn(
           "unknown-frontmatter-key",

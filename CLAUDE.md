@@ -124,6 +124,10 @@ author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행하고, 프리
   공백과 붙어 잘린다, #466). 이 규칙의 안내는 이름을 살리는 줄이 먼저다 — 구분자를 바꾼 줄, 그게 어느 한 줄로도
   담기지 않으면 따옴표·백슬래시를 뺀 줄, 둘 다 안 될 때만 줄 삭제 순이고, 각 줄은 YAML 이 그 이름 그대로 읽는지
   되읽어 고른다.
+- **알려진 키 바로 뒤에 콜론이 하나 더 붙은 키는 막는다**(`colon-cut-frontmatter-key` — `name:: 토스`·
+  `design_system_name:x: y`). YAML 이 다른 키(`name:`)로 읽어 그 값이 모든 독자에게서 사라지기 때문이다. 독자끼리
+  다르게 읽는 경우가 아니라 모두가 같은 키를 잃는 저자 오타라 위 "다시 만들지 않는다" 와 부딪히지 않는다. 그 줄에는
+  `unknown-frontmatter-key` warn 을 따로 내지 않는다.
 - **토큰 맵(`colors:`·`spacing:`·`rounded:`·`elevation:`) 아래에 또 맵을 두면 막는다**
   (`noncanonical-token-indent`). 중첩하면 토큰 이름이 `{colors.blue.500}` 로 바뀌어 사이드카·참조와 어긋난다.
   따옴표 없는 참조(`brand: {colors.x}`)도 YAML 에는 맵이라 여기 걸린다. `typography:` 는 원래 한 단계 중첩하는

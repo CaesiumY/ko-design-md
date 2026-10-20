@@ -421,7 +421,7 @@ describe("validateDraft — frontmatter", () => {
   it("finds a takedown when the slug key is cut at a doubled colon", () => {
     // `slug:: demo` is the unknown key `slug:` to YAML, so the entry's slug
     // is its file name — still `demo`, still taken down, and the absent logo
-    // is the takedown itself. The cut key only warns (#589).
+    // is the takedown itself. The cut key is its own block (#589).
     const raw = makeDraft()
       .replace("logo: https://getdesign.kr/logos/demo.png\n", "")
       .replace("slug: demo", "slug:: demo")
@@ -430,8 +430,7 @@ describe("validateDraft — frontmatter", () => {
       expectedLogoUrl: undefined,
       logoTakedowns: new Set(["demo"]),
     }
-    expect(rulesOf(raw, opts, "block")).toEqual([])
-    expect(rulesOf(raw, opts, "warn")).toContain("unknown-frontmatter-key")
+    expect(rulesOf(raw, opts, "block")).toEqual(["colon-cut-frontmatter-key"])
   })
 
   it("blocks a malformed logo URL even without an expected logo", () => {
@@ -1027,13 +1026,13 @@ describe("where the retired rules' inputs go (#589)", () => {
       "M33 a key cut at a doubled colon",
       "name: 데모",
       "name:: 토스",
-      ["spec-schema-key"],
+      ["colon-cut-frontmatter-key", "spec-schema-key"],
     ],
     [
       "M34 a key cut at an inner colon",
       "name: 데모",
       "name: 데모\ndesign_system_name:x: y",
-      [],
+      ["colon-cut-frontmatter-key"],
     ],
     // nonbare-frontmatter-key — a known key the site's parser could not see.
     ["N1 a double-quoted key", "lang: ko", '"lang": ko', []],
@@ -1243,17 +1242,32 @@ describe("where the retired rules' inputs go (#589)", () => {
     ).toBe(1200)
   })
 
-  it("names a key cut at a colon as the unknown key YAML reads (M33, M34)", () => {
-    // `name:: 토스` is the key `name:` to YAML, which the site ignores, so the
-    // entry would be named by its slug: the official linter blocks it as a
-    // schema key it does not know. `design_system_name:x` only warns — the
-    // site then shows no system name, which an entry may leave out.
-    for (const to of ["name:: 토스", "name: 데모\ndesign_system_name:x: y"]) {
-      const raw = makeDraft().replace("name: 데모", to)
-      expect(rulesOf(raw, OPTS, "warn"), to).toContain(
-        "unknown-frontmatter-key"
-      )
+  it("blocks a known key cut at a colon, naming the key meant (M33, M34)", () => {
+    // `name:: 토스` is the key `name:` to YAML and `design_system_name:x: y`
+    // the key `design_system_name:x`: the site reads neither, so the value
+    // meant for the known key is lost. One block names that key and the fix;
+    // the line is not also warned about as an unknown key.
+    for (const [to, meant] of [
+      ["name:: 토스", "name"],
+      ["name: 데모\ndesign_system_name:x: y", "design_system_name"],
+    ]) {
+      const issues = validateDraft(
+        makeDraft().replace("name: 데모", to),
+        OPTS
+      ).issues
+      const cut = issues.filter((i) => i.rule === "colon-cut-frontmatter-key")
+      expect(cut, to).toHaveLength(1)
+      expect(cut[0].severity).toBe("block")
+      expect(cut[0].fix).toContain(`\`${meant}: value\``)
+      expect(
+        issues.map((i) => i.rule),
+        to
+      ).not.toContain("unknown-frontmatter-key")
     }
+    // A key that only starts like a known one is a plain unknown key.
+    const near = makeDraft().replace("name: 데모", "name: 데모\nnamespace: x")
+    expect(rulesOf(near, OPTS, "block")).toEqual([])
+    expect(rulesOf(near, OPTS, "warn")).toContain("unknown-frontmatter-key")
   })
 
   it("passes the pipeline's quoted keys as the values they hold (N4–N10)", () => {
