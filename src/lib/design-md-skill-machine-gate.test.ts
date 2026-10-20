@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest"
 // section gate enforces, so adding a required section can never leave the
 // template behind.
 import {
+  BARE_REFERENCE,
   COMPONENT_DIMENSION_UNITS,
   COMPONENT_PROPERTIES,
   REQUIRED_SECTIONS,
@@ -231,6 +232,21 @@ describe("/design-md machine gates", () => {
     const units = [...(unitBlock ?? "").matchAll(/- (\w+)/g)].map((m) => m[1])
     expect([...COMPONENT_DIMENSION_UNITS].sort()).toEqual([...units].sort())
 
+    // The gate's copy of the linter's `isTokenReference` (block-scalar component
+    // values are judged by it, #591) — not exported either, so read its body.
+    const linterSource = readRepoFile(
+      "node_modules/@google/design.md/dist/linter/index.js"
+    )
+    const reference =
+      /function isTokenReference\(\w+\) \{\s*return \/(.+)\/\.test\(/.exec(
+        linterSource
+      )?.[1]
+    expect(
+      reference,
+      "the linter must define isTokenReference as one regex test"
+    ).toBeDefined()
+    expect(BARE_REFERENCE.source).toBe(reference)
+
     const stitch = readRepoFile(DESIGN_MD_STITCH_FORMAT)
     const stated = /\*\*Only the spec's \w+ properties:\*\* ([^\n]+?)\. /.exec(
       stitch
@@ -320,7 +336,9 @@ describe("/design-md machine gates", () => {
     const validator = readRepoFile("src/lib/draft-validator.ts")
     const emitted = /^lang: (\S+)$/m.exec(author)?.[1]
     expect(emitted, "the author template must emit a lang: line").toBeDefined()
-    const accepted = /sees\("lang"\) && lang !== "([^"]+)"/.exec(validator)?.[1]
+    const accepted = /single\.has\("lang"\) && lang !== "([^"]+)"/.exec(
+      validator
+    )?.[1]
     expect(
       accepted,
       "draft-validator must keep its bad-lang check"
@@ -553,6 +571,42 @@ describe("/design-md machine gates", () => {
       expect(
         leaked,
         `${doc} names validator rule ids (${leaked.join(", ")}) — describe the behaviour in prose instead; the validator's block message quotes the doc, not the other way round`
+      ).toEqual([])
+    }
+  })
+
+  // The draft gate's frontmatter is read by one module now (docs/adr/0011,
+  // #589), and the rules that reconciled two readers are gone. A prompt that
+  // still teaches one would send the author after a block that never comes —
+  // or, worse, to re-quote and re-indent a file that was fine.
+  it("names none of the draft-gate rules #589 retired", () => {
+    const retired = [
+      "misread-frontmatter-value",
+      "nonbare-frontmatter-key",
+      "quoted-token-value",
+      "unreadable-token-map",
+      "block-scalar-token-value",
+    ]
+    const validator = readRepoFile("src/lib/draft-validator.ts")
+    const raised = new Set(
+      [...validator.matchAll(/(?:block|warn)\(\s*\n?\s*"([a-z0-9-]+)"/g)].map(
+        (m) => m[1]
+      )
+    )
+    expect(raised.size, "the rule-id scan matched nothing").toBeGreaterThan(10)
+    // A rule raised again is a decision to revisit with this list, not a slip.
+    expect(retired.filter((id) => raised.has(id))).toEqual([])
+    for (const doc of [
+      DESIGN_MD_SKILL,
+      DESIGN_MD_TEMPLATE,
+      DESIGN_MD_RUBRIC_DESIGN,
+      DESIGN_MD_STITCH_FORMAT,
+      ...DESIGN_MD_AGENT_PATHS,
+    ]) {
+      const text = readRepoFile(doc)
+      expect(
+        retired.filter((id) => text.includes(id)),
+        `${doc} still names a retired draft-gate rule`
       ).toEqual([])
     }
   })

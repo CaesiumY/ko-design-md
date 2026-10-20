@@ -368,8 +368,8 @@ describe("elevation", () => {
   })
 
   it("strips YAML quotes an author wraps a value in", () => {
-    // `quoted-token-value` blocks this shape upstream; the reader still must
-    // not publish the quotes if one slips through.
+    // Quoting a token value is allowed (#589); the sidecar carries the value
+    // YAML reads, never the quotes.
     const t = extractTokensFromMarkdown(
       withElevation('shadow-toast: "0 4px 16px oklch(0 0 0 / 0.16)"')
     ).elevation
@@ -498,14 +498,13 @@ describe("elevation — shadow-vs-color discrimination", () => {
   })
 })
 
-describe("unquote", () => {
-  // A greedy `^"(.*)"$` strips the OUTER pair of a two-item quoted value and
-  // leaves the inner quotes stranded (`"Foo", "Bar"` → `Foo", "Bar`). Nothing
-  // in the catalogue takes that shape today, but this helper sits on the path
-  // every frontmatter token row takes (`splitInlineComment`).
+describe("quoted token values", () => {
+  // A greedy `^"(.*)"$` once stripped the OUTER pair of a two-item quoted
+  // value and left the inner quotes stranded (`"Foo", "Bar"` → `Foo", "Bar`).
+  // The value is YAML's now, so quoting is undone exactly as YAML undoes it.
   it("unwraps a value that is a single quoted string", () => {
-    // `quoted-token-value` blocks this shape upstream; the reader still must
-    // not publish the quotes if one slips through.
+    // Quoting a token value is allowed (#589); the sidecar carries the value
+    // YAML reads, never the quotes.
     const body = fm("colors:", '  brand: "oklch(0.62 0.19 258)"')
     expect(extractTokensFromMarkdown(body).colors[0]?.value).toBe(
       "oklch(0.62 0.19 258)"
@@ -513,19 +512,19 @@ describe("unquote", () => {
   })
 
   it("removes one pair only — a doubly quoted value keeps its inner pair", () => {
-    // Pinned so the limit is visible: `quoted-token-value` blocks this shape
-    // upstream, and the reader does not go further than one layer.
+    // Pinned so the limit is visible: YAML undoes one layer of quoting, and
+    // the inner pair is part of the value.
     const t = extractTokensFromMarkdown(
       fm("elevation:", `  e1: "'0 1px 2px oklch(0 0 0 / 0.1)'"`)
     ).elevation
     expect(t?.[0].value).toBe("'0 1px 2px oklch(0 0 0 / 0.1)'")
   })
 
-  it("leaves a value carrying more than one quoted item out of the sidecar", () => {
+  it("refuses a value carrying more than one quoted item", () => {
+    // `"Foo", "Bar"` is not one YAML scalar but invalid YAML, so no row reaches
+    // `unquote` — the read fails, naming the row's file line (1 is `---`).
     const body = fm("colors:", '  stack: "Foo", "Bar"')
-    // Not a colour, so it never reaches the sidecar — the reader leaves it as
-    // authored, but no category's shape check would accept it either way.
-    expect(extractTokensFromMarkdown(body).colors).toEqual([])
+    expect(() => extractTokensFromMarkdown(body)).toThrow(/\(line 4\)/)
   })
 })
 
@@ -568,7 +567,11 @@ describe("frontmatter shapes the docs prescribe", () => {
     const bounded = doc(
       "  a:\n    fontSize: 16px\nlang: ko\n  b:\n    fontSize: 20px"
     )
-    expect(extractTokensFromMarkdown(bounded).typography).toHaveLength(1)
+    // Rows indented under `lang: ko` are not typography — and not valid YAML
+    // under a scalar, so the read fails rather than guessing where they belong.
+    expect(() => extractTokensFromMarkdown(bounded)).toThrow(/line \d+/)
+    const closed = doc("  a:\n    fontSize: 16px\nlang: ko")
+    expect(extractTokensFromMarkdown(closed).typography).toHaveLength(1)
   })
 })
 
@@ -703,5 +706,106 @@ describe("typography shapes that look healthy but are not", () => {
         doc("  a:\n    fontSize: 16px\n    fontWeight: bold")
       ).typography[0]
     ).toEqual({ name: "a", size: "16px", weight: 700 })
+  })
+})
+
+describe("reads the token maps as YAML reads them (ADR 0011)", () => {
+  // The extractor reads the frontmatter through the one shared reader, so a
+  // row YAML reads is a row the sidecar gets, whatever its spelling.
+  it("reads token rows indented by four spaces", () => {
+    const body = fm("colors:", "    brand: oklch(0.62 0.19 258) # #3182F6")
+    expect(extractTokensFromMarkdown(body).colors).toEqual([
+      { name: "brand", value: "oklch(0.62 0.19 258)", note: "#3182F6" },
+    ])
+  })
+
+  it("keeps the note on a value written below its key", () => {
+    const body = fm(
+      "colors:",
+      "  brand:",
+      "    oklch(0.62 0.19 258) # #3182F6",
+      '  split: "oklch(0.62',
+      '    0.19 258)" # #3182F6'
+    )
+    expect(extractTokensFromMarkdown(body).colors).toEqual([
+      { name: "brand", value: "oklch(0.62 0.19 258)", note: "#3182F6" },
+      { name: "split", value: "oklch(0.62 0.19 258)", note: "#3182F6" },
+    ])
+  })
+
+  it("gives a one-line map's comment to the map, not to each token in it", () => {
+    const body = fm(
+      "colors: { a: oklch(0.62 0.19 258), b: oklch(0.5 0 0) } # #3182F6",
+      "typography:",
+      "  title: { fontSize: 24px } # hero"
+    )
+    const tokens = extractTokensFromMarkdown(body)
+    expect(tokens.colors).toEqual([
+      { name: "a", value: "oklch(0.62 0.19 258)" },
+      { name: "b", value: "oklch(0.5 0 0)" },
+    ])
+    expect(tokens.typography[0]).toMatchObject({ name: "title", note: "hero" })
+  })
+
+  it("reads a quoted key as its name", () => {
+    const body = fm("colors:", '  "brand": oklch(0.62 0.19 258)')
+    expect(extractTokensFromMarkdown(body).colors[0]?.name).toBe("brand")
+  })
+
+  it("keeps a number's written spelling — `1.50` stays `1.50`", () => {
+    // YAML resolves `1.50` to the number 1.5; the committed sidecars carry the
+    // text as written, so the extractor must not round-trip through the number.
+    const body = fm(
+      "typography:",
+      "  body:",
+      "    fontSize: 16px",
+      "    lineHeight: 1.50"
+    )
+    expect(extractTokensFromMarkdown(body).typography[0]?.lineHeight).toBe(
+      "1.50"
+    )
+  })
+
+  it("reads a style written as an inline map", () => {
+    // YAML reads `{ fontSize: … }` as the same style the nested block is, so
+    // the sidecar gets it too (#589 retired the rule that asked for a block).
+    const body = fm(
+      "typography:",
+      "  body: { fontSize: 16px, fontWeight: 400 }"
+    )
+    expect(extractTokensFromMarkdown(body).typography).toEqual([
+      { name: "body", size: "16px", weight: 400 },
+    ])
+  })
+
+  it("reads a value written as a block scalar, as YAML reads it", () => {
+    // The scalar's text starts with `>`; YAML's value is the colour. Reading
+    // the text dropped the token from the sidecar without a word.
+    const body = fm("colors:", "  brand: >", "    oklch(0.62 0.19 258)")
+    expect(extractTokensFromMarkdown(body).colors).toEqual([
+      { name: "brand", value: "oklch(0.62 0.19 258)" },
+    ])
+  })
+
+  it("reads a quoted value as YAML unescapes it", () => {
+    const body = fm("elevation:", `  e1: '0 1px 2px oklch(0 0 0 / 0.1)'`)
+    expect(extractTokensFromMarkdown(body).elevation?.[0].value).toBe(
+      "0 1px 2px oklch(0 0 0 / 0.1)"
+    )
+  })
+
+  it("reads no tokens from a block that never closes", () => {
+    // No block is not a broken block: the validator reports the missing fence
+    // as `frontmatter-parse`, and the extractor has no maps to read.
+    const unclosed = md("---", "name: 데모", "colors:", "  a: oklch(0.5 0 0)")
+    expect(extractTokensFromMarkdown(unclosed).colors).toEqual([])
+  })
+
+  it("throws, naming the line, when the frontmatter is not valid YAML", () => {
+    // A reader that guessed at broken YAML could publish a partial sidecar
+    // that `tokens:check` then confirms. Failing loudly sends the author to
+    // `frontmatter-yaml-invalid` instead.
+    const body = fm("colors:", "  a: oklch(0.5 0 0)", "  b: : :")
+    expect(() => extractTokensFromMarkdown(body)).toThrow(/line \d+/)
   })
 })

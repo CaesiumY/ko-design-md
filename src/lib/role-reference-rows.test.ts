@@ -1,8 +1,9 @@
 import { readFileSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
-import { parse } from "yaml"
 import { describe, expect, it } from "vitest"
+import { findKey, readFrontmatter } from "./frontmatter"
+import { splitFrontmatter } from "./frontmatter-fence"
 
 // The entries in CASES below publish a semantic role layer twice (#435): as a
 // Markdown table in `## Colors` — the reader's copy, carrying `[src:N]` and,
@@ -36,13 +37,11 @@ function load(slug: string): {
     /\r\n/g,
     "\n"
   )
-  // Rejoin the rest: a body `---` rule (krds and wanted have one) would
-  // otherwise end the body there.
-  const [, frontmatter, ...rest] = raw.split(/^---$/m)
-  const body = rest.join("---")
-  const { colors = {} } = parse(frontmatter) as {
-    colors?: Record<string, string>
-  }
+  const body = splitFrontmatter(raw)?.body ?? ""
+  const read = readFrontmatter(raw)
+  const colors = (
+    read.ok ? (findKey(read.keys, "colors")?.value ?? {}) : {}
+  ) as Record<string, string>
   const literals = new Set<string>()
   const refs = new Map<string, string>()
   for (const [key, value] of Object.entries(colors)) {

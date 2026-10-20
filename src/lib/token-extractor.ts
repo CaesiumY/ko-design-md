@@ -1,5 +1,5 @@
-import { stripQuotes } from "./content-parser"
-import { isHeadRow, mapRows } from "./frontmatter-map"
+import { entriesOf, findKey, readFrontmatter, tokenText } from "./frontmatter"
+import type { FrontmatterKey } from "./frontmatter"
 import type {
   ColorToken,
   ElevationToken,
@@ -20,49 +20,21 @@ import type {
 // `scripts/build-tokens.ts` runs this once per entry to write
 // `{slug}.tokens.json`, and the runtime only reads that JSON (see
 // content-collection.ts).
+//
+// The frontmatter is read by the shared reader (`readFrontmatter`, ADR 0011),
+// never by line patterns here: a row YAML reads is a row the sidecar gets,
+// whatever its indent or key quoting. A value is read as `tokenText` gives it:
+// YAML's string for text (quotes undone, a block scalar folded), trimmed, and
+// the spelling as written for a number, because YAML turns `lineHeight: 1.50` into the
+// number 1.5 while the sidecar carries `"1.50"` as written.
 
 interface RawLine {
   key: string
   value: string
+  /** A flow-list value (`[2, 4, 8]`), item by item. */
+  items?: Array<string>
   note?: string
   group?: string
-}
-
-// Split a trailing ` # comment` (whitespace + hash), preserving a `#` that is
-// part of the value (hex) and the `/ a` alpha slash. Mirrors content-parser's
-// stripInlineComment rule, where only a space-prefixed `#` opens a comment.
-function splitInlineComment(rest: string): { value: string; note?: string } {
-  const m = rest.match(/\s+#\s?(.*)$/)
-  if (!m) return { value: unquote(rest.trim()) }
-  return {
-    value: unquote(rest.slice(0, m.index).trim()),
-    note: m[1].trim() || undefined,
-  }
-}
-
-// Strip the YAML string quotes an author may wrap a value in (a shadow quoted
-// so its commas don't read as flow syntax). Left in, a consumer pasting the
-// value into CSS gets a broken declaration. Exactly ONE matching outer pair is
-// removed: a doubly quoted value (`"'0 1px …'"`) keeps its inner pair. Any
-// quoted value is blocked upstream by `quoted-token-value`, so this is a
-// backstop for a single slip, not a normaliser for every quoting style.
-//
-// SHARED, not elevation-only: it is the only quote-stripping on the path every
-// token row value takes (`splitInlineComment`; `frontmatterRows` strips only
-// the key). It was added for shadows but applies catalogue-wide —
-// measured when it landed, no existing category moved. Re-measure with
-// `pnpm tokens:build --all` + `git diff` before widening it.
-// `[^"]*` rather than `.*`: a greedy match on a value carrying two quoted
-// items (`"Foo", "Bar"` — the shape a quoted font stack would take) strips the
-// OUTER pair and leaves `Foo", "Bar`, silently corrupting it. Requiring no
-// interior quote means only a genuinely wrapped value is unwrapped; anything
-// else is left exactly as authored.
-function unquote(value: string): string {
-  const double = value.match(/^"([^"]*)"$/)
-  if (double) return double[1]
-  const single = value.match(/^'([^']*)'$/)
-  if (single) return single[1]
-  return value
 }
 
 // ── Colors ────────────────────────────────────────────────────────────────
@@ -109,9 +81,8 @@ function parseScale(rows: Array<RawLine>): Array<SpacingToken> {
   for (const r of rows) {
     // YAML scale array (`spacing-scale: [2, 4, 8, ...]`) — expand each step into
     // its own token. The array carries no per-step names, so name by px value.
-    const arr = r.value.match(/^\[(.+)\]$/)
-    if (arr) {
-      for (const item of arr[1].split(",")) {
+    if (r.items) {
+      for (const item of r.items) {
         const d = dimension(item.trim())
         if (d) {
           out.push({
@@ -254,112 +225,147 @@ function clean<T extends Record<string, string | number | undefined>>(
 /** One frontmatter token map, read as RawLines so the existing parsers derive
  *  everything (the `px` field, `%` handling, alias skipping).
  *
- *  Group and comment are told apart by the hash count: `## Brand` restores the
- *  sidecar's `group`, a single `# …` is commentary the fences used to carry.
- *  They would otherwise be indistinguishable — krds has four such comments and
- *  no groups at all. */
-function frontmatterRows(fm: Array<string>, mapKey: string): Array<RawLine> {
+ *  Group and comment are told apart by the reader: a `## Brand` line restores
+ *  the sidecar's `group`, a single `# …` is commentary the fences used to
+ *  carry. They would otherwise be indistinguishable — krds has four such
+ *  comments and no groups at all. */
+function frontmatterRows(
+  keys: Array<FrontmatterKey>,
+  mapKey: string
+): Array<RawLine> {
   const out: Array<RawLine> = []
-  for (const row of mapRows(fm, mapKey)) {
-    // Two spaces only: that is the canonical token row, and anything deeper is a
-    // shape `noncanonical-token-indent` blocks upstream rather than something to
-    // guess at here.
-    if (row.indent !== 2 || row.rest.trim() === "") continue
-    const { value, note } = splitInlineComment(row.rest)
-    out.push({
-      key: stripQuotes(row.key),
-      value,
-      note,
-      group: row.group,
-    })
+  for (const row of entriesOf(findKey(keys, mapKey))) {
+    const note = row.comment || undefined
+    if (Array.isArray(row.value)) {
+      out.push({
+        key: row.key,
+        value: "",
+        items: row.value.map((item) => String(item)),
+        note,
+        group: row.group,
+      })
+      continue
+    }
+    // A nested map, a list or an empty row (`key:`) carries no value. The
+    // trailing comment is already apart (`comment`), so a property copied from
+    // the skeleton — which annotates these lines — never lands in the sidecar
+    // as `56px   # 속성명은 …`.
+    const value = tokenText(row)
+    if (value === undefined) continue
+    out.push({ key: row.key, value, note, group: row.group })
   }
   return out
 }
 
+/** Each typography style property the sidecar reads, and where its value
+ *  lands in the token. `fontFamily` is not one: the sidecar has never carried
+ *  it. */
+const STYLE_PROPERTY_FIELDS: Record<
+  string,
+  (token: TypeToken, raw: string) => void
+> = {
+  fontSize: (token, raw) => {
+    token.size = raw
+  },
+  fontWeight: (token, raw) => {
+    token.weight = parseWeight(raw)
+  },
+  lineHeight: (token, raw) => {
+    token.lineHeight = raw
+  },
+  letterSpacing: (token, raw) => {
+    token.tracking = raw
+  },
+}
+
+/** The style properties the sidecar reads — a style that sets none of them is
+ *  not a type token. The draft validator's `typography-style-shape` judges a
+ *  style by the same list. */
+export const TYPE_STYLE_PROPERTIES: ReadonlyArray<string> = Object.keys(
+  STYLE_PROPERTY_FIELDS
+)
+
+/** The text a style property row carries into the sidecar: undefined when the
+ *  row is not one of `TYPE_STYLE_PROPERTIES` or sets no value. An empty row
+ *  counts as unset, or `Number("")` would become a `fontWeight: 0` the spec
+ *  linter then waves through. */
+export function stylePropertyValue(row: FrontmatterKey): string | undefined {
+  if (!Object.hasOwn(STYLE_PROPERTY_FIELDS, row.key)) return undefined
+  const raw = tokenText(row)
+  return raw === undefined || raw === "" ? undefined : raw
+}
+
 /** Typography is nested, so it is assembled here rather than from
  *  `frontmatterRows` — one style spans several lines. */
-function frontmatterTypography(fm: Array<string>): Array<TypeToken> {
+function frontmatterTypography(keys: Array<FrontmatterKey>): Array<TypeToken> {
   const out: Array<TypeToken> = []
-  let current: TypeToken | null = null
-  // `note` is applied only once an entry's properties are in, because
-  // JSON.stringify serialises in insertion order and the committed sidecars
-  // carry it last: `{name, size, weight, …, note}`. Setting it at the head line
-  // — where the comment is actually read — produces the same values in a
-  // different order, and `tokens:check` compares whole strings.
-  let pendingNote: string | undefined
-  let pushed = false
-
-  const finish = () => {
-    if (current && pendingNote !== undefined) current.note = pendingNote
-    pendingNote = undefined
-  }
-
-  for (const row of mapRows(fm, "typography")) {
-    // A head row opens a nested map: its value must be empty or a comment. The
-    // inline flow form (`display-1: { size: … }`) is deliberately NOT accepted —
-    // treating it as a head would mint a property-less token, and a non-zero
-    // count is worse than a zero one here because the skill's own check looks
-    // for zero.
-    if (row.indent === 2) {
-      if (!isHeadRow(row)) continue
-      finish()
-      current = { name: stripQuotes(row.key) }
-      pushed = false
-      const comment = row.rest.match(/^#\s?(.*)$/)
-      pendingNote = comment?.[1].trim() || undefined
-      continue
+  for (const head of entriesOf(findKey(keys, "typography"))) {
+    const properties = entriesOf(head)
+    // A style is a nested map, written as a block or inline
+    // (`display-1: { fontSize: … }`) — YAML reads both alike.
+    if (properties.length === 0) continue
+    const current: TypeToken = { name: head.key }
+    let read = false
+    for (const row of properties) {
+      // fontFamily is repeated on every entry because the spec has no
+      // cross-group reference; the sidecar has never carried it, so it is read
+      // and discarded rather than added to the shape the site consumes.
+      const raw = stylePropertyValue(row)
+      if (raw === undefined) continue
+      STYLE_PROPERTY_FIELDS[row.key](current, raw)
+      read = true
     }
-    if (row.indent !== 4 || !current) continue
-    // An empty property row carries no value. The previous reader's regex
-    // required one; `mapRows` matches `rest === ""`, and without this guard
-    // `Number("")` becomes a `fontWeight: 0` the spec linter then waves through.
-    // The sibling reader `frontmatterRows` has had this guard all along.
-    if (row.rest.trim() === "") continue
-    // Strip the trailing comment, exactly as the colour rows do. Without this a
-    // property copied from the skeleton — which annotates these lines — lands in
-    // the sidecar as `56px   # 속성명은 …`: not a CSS value, but non-empty, so
-    // the skill's zero-count guard and `tokens:check` both wave it through.
-    const { value: raw } = splitInlineComment(row.rest)
-    if (row.key === "fontSize") current.size = raw
-    else if (row.key === "fontWeight") current.weight = parseWeight(raw)
-    else if (row.key === "lineHeight") current.lineHeight = raw
-    else if (row.key === "letterSpacing") current.tracking = raw
-    else continue
-    // Only now does the style become a token. Appending it at the head row made
-    // an unreadable shape — a nested group, a style with only `fontFamily`, a
-    // misspelt property — count as a token, so the skill's zero-count guard saw
-    // a healthy number while `emitTypography` filtered every one of them out.
-    if (!pushed) {
-      out.push(current)
-      pushed = true
-    }
-    // fontFamily is repeated on every entry because the spec has no
-    // cross-group reference; the sidecar has never carried it, so it is read
-    // and discarded rather than added to the shape the site consumes.
+    // Only a style with a readable property becomes a token. Counting the head
+    // made an unreadable shape — a nested group, a style with only
+    // `fontFamily`, a misspelt property — count as a token, so the skill's
+    // zero-count guard saw a healthy number while `emitTypography` filtered
+    // every one of them out.
+    if (!read) continue
+    // `note` goes on last because JSON.stringify serialises in insertion order
+    // and the committed sidecars carry it last: `{name, size, weight, …,
+    // note}`. `tokens:check` compares whole strings.
+    if (head.comment) current.note = head.comment
+    out.push(current)
   }
-  finish()
   return out
 }
 
 /**
  * Tokens for one catalog entry, read from its frontmatter token maps.
  *
- * Accepts a whole document; a document without frontmatter yields empty
- * arrays. The body is not read — see the note at the top of this file.
+ * Accepts a whole document; a document without a frontmatter block (no
+ * opening or no closing `---`) yields empty arrays — the draft validator
+ * reports that as `frontmatter-yaml-invalid`. The body is not read — see the
+ * note at the top of this file.
+ *
+ * Throws when the frontmatter is not valid YAML, naming the line: a partial
+ * read would be a sidecar `tokens:check` then confirms. The draft validator
+ * reports the same input as `frontmatter-yaml-invalid`.
  */
 export function extractTokensFromMarkdown(text: string): ServiceTokens {
-  const lines = text.split(/\r?\n/)
-  const fmEnd = lines[0]?.trim() === "---" ? lines.indexOf("---", 1) : -1
-  const fm = fmEnd === -1 ? [] : lines.slice(1, fmEnd)
+  const read = readFrontmatter(text)
+  if (!read.ok && read.reason === "missing") {
+    return { colors: [], typography: [], spacing: [], radius: [] }
+  }
+  if (!read.ok) {
+    const [first] = read.errors
+    // YAML's own position counts from the block, not the file; `line` is the
+    // file's, so the block-relative one is dropped rather than shown beside it.
+    const message = first.message.replace(/ at line \d+, column \d+:?$/, "")
+    throw new Error(
+      `frontmatter is not readable YAML: ${message} (line ${first.line})`
+    )
+  }
+  const { keys } = read
 
   // Elevation is not one of the four spec token maps (#421), so its sidecar key
   // is omitted rather than left empty when the entry publishes no shadow.
-  const elevation = parseElevation(frontmatterRows(fm, "elevation"))
+  const elevation = parseElevation(frontmatterRows(keys, "elevation"))
   return {
-    colors: parseColors(frontmatterRows(fm, "colors")),
-    typography: frontmatterTypography(fm),
-    spacing: parseScale(frontmatterRows(fm, "spacing")),
-    radius: parseScale(frontmatterRows(fm, "rounded")),
+    colors: parseColors(frontmatterRows(keys, "colors")),
+    typography: frontmatterTypography(keys),
+    spacing: parseScale(frontmatterRows(keys, "spacing")),
+    radius: parseScale(frontmatterRows(keys, "rounded")),
     ...(elevation.length > 0 ? { elevation } : {}),
   }
 }

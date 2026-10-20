@@ -1,8 +1,64 @@
+import { entriesOf, readFrontmatter, tokenText } from "./frontmatter"
+import { splitFrontmatter } from "./frontmatter-fence"
+import type { FrontmatterKey } from "./frontmatter"
+
 // Propagating a corrected OKLCH primitive into the places that copied it —
 // semantic aliases, gradients, prose, preview CSS. Extracted from
 // `scripts/audit-oklch.ts` so the substitution itself can be tested: applying
 // corrections as sequential passes silently corrupted committed data, and only a
 // test pins the fix down.
+
+/** The token names the colour readers consider. Lowercase-first, so a numeric
+ *  step key (`500:`) or a capitalised label is not a colour definition. */
+export const TOKEN_NAME = /^[a-z][\w-]*$/
+
+/** The `oklch(…)` literal a value starts with: a gradient's first stop is
+ *  still a colour, and it is the span `audit:oklch --fix` replaces. */
+export const LEADING_OKLCH = /^oklch\([^)]*\)/
+
+/**
+ * A row's value as a colour definition: its `tokenText` when that opens with
+ * `oklch(` and the row's name is a token name, else undefined. The one
+ * selection every colour reader shares — `oklchEntries` below (the drift
+ * check, `audit:oklch`) and the contrast palette (`paletteOf`) — so a value the
+ * sidecar publishes as a colour is one each of them places.
+ */
+export function oklchValue(row: FrontmatterKey): string | undefined {
+  const value = tokenText(row)
+  return value !== undefined &&
+    value.startsWith("oklch(") &&
+    TOKEN_NAME.test(row.key)
+    ? value
+    : undefined
+}
+
+/**
+ * Every frontmatter row whose value is written as an `oklch(…)` literal, at
+ * any depth of map nesting, in document order — as `readFrontmatter` read it
+ * (docs/adr/0011). Shared by the drift gate and `audit:oklch`, so the two
+ * cannot disagree about which rows are colour definitions.
+ *
+ * Only maps are walked. A list item is not a named token, and the text of a
+ * block scalar is one string value, not rows.
+ *
+ * `value` is the row's `tokenText` — the text the sidecar publishes — so a
+ * value the sidecar carries as a colour (`"  oklch(…)"`, a block scalar that
+ * opens on a blank line) is a value these readers judge.
+ */
+export function oklchEntries(
+  keys: ReadonlyArray<FrontmatterKey>
+): Array<FrontmatterKey & { value: string }> {
+  const out: Array<FrontmatterKey & { value: string }> = []
+  const walk = (rows: ReadonlyArray<FrontmatterKey>): void => {
+    for (const row of rows) {
+      const value = oklchValue(row)
+      if (value !== undefined) out.push({ ...row, value })
+      if (row.rows) walk(entriesOf(row))
+    }
+  }
+  walk(keys)
+  return out
+}
 
 /**
  * `token: oklch(L C H[ / a])  # …#hex` — a definition whose trailing comment
@@ -39,7 +95,7 @@
  * renumbering them silently reformatted every corrected line.
  */
 export const OKLCH_DEFINITION =
-  /^(?<indent>\s*)(?<token>[a-z][\w-]*):(?<afterColon>\s+)oklch\(\s*(?<L>[\d.]+)(?<sepLC>\s+)(?<C>[\d.]+)(?<sepCH>\s+)(?<H>[\d.]+)(?<tail>[^)]*)\)(?<comment>\s*#[^#\n]*)(?<hex>#[0-9a-fA-F]{3,8})\b(?![^\n]*#[0-9a-fA-F]{3,8}\b)/
+  /^\s*(?<token>[a-z][\w-]*):\s+oklch\(\s*(?<L>[\d.]+)(?<sepLC>\s+)(?<C>[\d.]+)(?<sepCH>\s+)(?<H>[\d.]+)(?<tail>[^)]*)\)\s*#[^#\n]*(?<hex>#[0-9a-fA-F]{3,8})\b(?![^\n]*#[0-9a-fA-F]{3,8}\b)/
 
 /**
  * A judged definition line, with every part named.
@@ -51,12 +107,7 @@ export const OKLCH_DEFINITION =
  * happen; now it is a compile error.
  */
 export interface DefinitionMatch {
-  /** The matched span. Ends at the hex, so prose after it is left alone. */
-  matched: string
-  indent: string
   token: string
-  /** Whitespace between `token:` and `oklch(`. */
-  afterColon: string
   L: string
   sepLC: string
   C: string
@@ -64,9 +115,21 @@ export interface DefinitionMatch {
   H: string
   /** Remainder inside the parens — carries ` / alpha` when present. */
   tail: string
-  /** From the `#` comment marker up to (not including) the hex. */
-  comment: string
   hex: string
+}
+
+/**
+ * A frontmatter row as YAML read it, in the one line shape the OKLCH↔hex rule
+ * judges: `key: value #comment` (`comment` as the reader gives it, `#` and
+ * surrounding space removed). The draft validator and `audit:oklch` both build
+ * the line here, so they judge the same text.
+ */
+export function definitionRow(
+  key: string,
+  value: string,
+  comment: string | undefined
+): string {
+  return `${key}: ${value}` + (comment === undefined ? "" : ` #${comment}`)
 }
 
 /** Parse one line as a judgeable definition, or `null` when it is not one. */
@@ -75,17 +138,13 @@ export function matchDefinition(line: string): DefinitionMatch | null {
   const g = m?.groups
   if (!m || !g) return null
   return {
-    matched: m[0],
-    indent: g.indent,
     token: g.token,
-    afterColon: g.afterColon,
     L: g.L,
     sepLC: g.sepLC,
     C: g.C,
     sepCH: g.sepCH,
     H: g.H,
     tail: g.tail,
-    comment: g.comment,
     hex: g.hex,
   }
 }
@@ -106,77 +165,51 @@ export function matchDefinition(line: string): DefinitionMatch | null {
 export const OKLCH_ANNOTATED_DEFINITION =
   /^\s*[a-z][\w-]*:\s+oklch\(\s*[\d.]+\s+[\d.]+\s+[\d.]+[^)]*\)\s*#[^\n]*#[0-9a-fA-F]{3,8}\b/
 
+/** A frontmatter colour definition that owns its value, with its row as YAML
+ *  read it in the one line shape the OKLCH↔hex rules read. */
+export interface AnnotatedDefinition {
+  entry: FrontmatterKey & { value: string }
+  row: string
+}
+
+/**
+ * Every frontmatter colour definition whose comment carries a hex, judgeable
+ * or not — the `OKLCH_ANNOTATED_DEFINITION` question, asked of each row as
+ * YAML read it. The one answer both `audit:oklch` (its `annotated` count, and
+ * the rows it judges) and `--sync` (the lines it protects, `definitionLines`)
+ * use, so the two cannot disagree about which rows are definitions.
+ */
+export function annotatedDefinitions(
+  keys: ReadonlyArray<FrontmatterKey>
+): Array<AnnotatedDefinition> {
+  return oklchEntries(keys).flatMap((entry) => {
+    const row = definitionRow(entry.key, entry.value, entry.comment)
+    return OKLCH_ANNOTATED_DEFINITION.test(row) ? [{ entry, row }] : []
+  })
+}
+
+/**
+ * The file lines of every annotated frontmatter definition (`annotatedDefinitions`)
+ * — its key line and every line its value spans — so `syncOklchLiterals` leaves
+ * them alone however they are written: quoted, below the key, as a block
+ * scalar. The pattern alone only knew the bare `key: oklch(…)  # #hex` line, so
+ * a quoted definition was swept as a copy. Empty for a frontmatter YAML cannot
+ * read.
+ */
+export function definitionLines(markdown: string): Set<number> {
+  const out = new Set<number>()
+  const read = readFrontmatter(markdown)
+  if (!read.ok) return out
+  for (const { entry } of annotatedDefinitions(read.keys)) {
+    out.add(entry.line)
+    const [first, last] = entry.sourceLines ?? [entry.line, entry.line]
+    for (let line = first; line <= last; line++) out.add(line)
+  }
+  return out
+}
+
 /** Any oklch literal, whatever follows the triple (`)`, ` / 30%)`). */
 const OKLCH_LITERAL = /(oklch\(\s*)([\d.]+)(\s+)([\d.]+)(\s+)([\d.]+)(\s*[/)])/g
-
-/**
- * How many annotated definitions exist, and how many of them the audit can
- * actually judge.
- *
- * `audit:oklch` reports findings, and "no findings" is indistinguishable from
- * "matched nothing" — same output, same exit code. That ambiguity is not
- * hypothetical: `OKLCH_DEFINITION` once skipped 102 annotated pairs across
- * `services/` (66 of them genuinely wrong) while the gate reported a clean
- * catalog. Coverage has to be counted and asserted, never inferred from silence.
- */
-export function countDefinitions(text: string): {
-  annotated: number
-  judged: number
-} {
-  let annotated = 0
-  let judged = 0
-  for (const line of text.split(/\r?\n/)) {
-    if (!OKLCH_ANNOTATED_DEFINITION.test(line)) continue
-    annotated++
-    if (OKLCH_DEFINITION.test(line)) judged++
-  }
-  return { annotated, judged }
-}
-
-/**
- * Rebuild a definition line from its own match, swapping in a new triple.
- *
- * Every separator the author wrote — indentation, the gap after the colon, the
- * spaces between L/C/H, the run before the comment — is replayed from the
- * capture groups so a correction moves the numbers and nothing else. The
- * invariant is round-trip: rebuilding with the values already on the line must
- * return that line byte-for-byte.
- *
- * This lives here rather than in `scripts/audit-oklch.ts` because `scripts/`
- * has no test coverage, and an unverified reconstruction quietly reformats
- * every line it touches.
- */
-export function rebuildDefinition(
-  d: DefinitionMatch,
-  triple: [string, string, string],
-  alphaTail: string
-): string {
-  return (
-    `${d.indent}${d.token}:${d.afterColon}oklch(` +
-    `${triple[0]}${d.sepLC}${triple[1]}${d.sepCH}${triple[2]}${alphaTail})` +
-    `${d.comment}${d.hex}`
-  )
-}
-
-/**
- * Splice a rebuilt definition back over the span it came from.
- *
- * The splice is here, not at the call site, because `String.replace` with a
- * STRING replacement treats `$&`, `$$`, `$1` and `$<name>` as substitution
- * patterns — and the rebuilt line carries the author's free-form comment
- * verbatim. A single literal `$` in a comment would silently corrupt the
- * rewrite. Passing a callback opts out of that parsing entirely, so the only
- * way to get it wrong is to not use this function.
- */
-export function applyDefinition(
-  line: string,
-  d: DefinitionMatch,
-  triple: [string, string, string],
-  alphaTail: string
-): string {
-  const rebuilt = rebuildDefinition(d, triple, alphaTail)
-  return line.replace(d.matched, () => rebuilt)
-}
 
 /** `"0.65 0 0"` → the replacement triple. */
 export type OklchCorrections = Map<string, [string, string, string]>
@@ -244,16 +277,25 @@ export function indexCorrections(corrections: Array<Correction>): {
 export function syncOklchLiterals(
   text: string,
   corrections: OklchCorrections,
-  skipLine: (line: string) => boolean = (l) =>
-    OKLCH_ANNOTATED_DEFINITION.test(l)
+  ownLines: ReadonlySet<number> = new Set()
 ): { text: string; count: number } {
   let count = 0
+  // The first line after the frontmatter block; 1 when there is none (a
+  // preview), so the whole text is body.
+  const split = splitFrontmatter(text)
+  const bodyFrom = split ? split.frontmatter.split(/\r?\n/).length + 3 : 1
   const out = text
     .split(/\r?\n/)
-    .map((line) => {
+    .map((line, i) => {
       // A definition line already carries its new value — and that value may
       // itself be some other token's old one, so it must not be rewritten.
-      if (skipLine(line)) return line
+      // In the frontmatter, the definitions are exactly `ownLines` (from
+      // `definitionLines`, in any spelling YAML reads). After it, the pattern
+      // keeps the bare `key: oklch(…)  # #hex` rows a body `text` fence
+      // restates.
+      if (ownLines.has(i + 1)) return line
+      if (i + 1 >= bodyFrom && OKLCH_ANNOTATED_DEFINITION.test(line))
+        return line
       return line.replace(
         OKLCH_LITERAL,
         (whole, open, L, s1, C, s2, H, close: string) => {

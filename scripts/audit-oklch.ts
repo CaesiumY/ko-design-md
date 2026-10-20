@@ -1,12 +1,11 @@
 import fs from "node:fs"
 import path from "node:path"
 import {
-  applyDefinition,
-  countDefinitions,
+  definitionLines,
   indexCorrections,
-  matchDefinition,
   syncOklchLiterals,
 } from "../src/lib/oklch-sync"
+import { auditOklch } from "../src/lib/oklch-audit"
 import { definitionsForSlug, findPreviewDrift } from "../src/lib/oklch-drift"
 import {
   DARK_PREVIEW_FILE,
@@ -15,15 +14,8 @@ import {
   lightScopeFile,
   resolvePreviewLayout,
 } from "../src/lib/preview-layout"
-import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "../src/lib/oklch-tolerance"
-import {
-  deltaE,
-  hexToOklab,
-  lchToOklab,
-  oklabToLch,
-} from "../src/lib/oklch-convert"
 import type { CorrectionConflict } from "../src/lib/oklch-sync"
-import type { Oklab } from "../src/lib/oklch-convert"
+import type { OklchFinding } from "../src/lib/oklch-audit"
 
 // Audit (and optionally fix) OKLCH values that disagree with the hex annotated
 // beside them — the past-data counterpart to the `oklch-hex-mismatch` rule in
@@ -31,9 +23,9 @@ import type { Oklab } from "../src/lib/oklch-convert"
 //
 // Why this exists as its own tool rather than living in the validator:
 //
-//   1. The validator only scans `name: oklch(…)  # #hex` lines inside yaml
-//      fences, because that is the one shape where "these two describe the same
-//      colour" is unambiguous. But a corrected primitive is echoed in three
+//   1. The validator only judges `name: oklch(…)  # #hex` token rows, because
+//      that is the one shape where "these two describe the same colour" is
+//      unambiguous. But a corrected primitive is echoed in three
 //      OTHER shapes that the validator deliberately ignores — semantic aliases
 //      (`fg-2: oklch(…)  # gray-80`), composite values (gradients), and prose
 //      citations. Those cannot be validated (there is no hex to compare) but
@@ -65,42 +57,11 @@ const cwd = process.cwd()
 const SERVICES = path.resolve(cwd, "services")
 const PREVIEW = path.resolve(cwd, "public/preview")
 
-// Shared with the draft validator — see src/lib/oklch-tolerance.ts for the
-// calibration. An 8-digit hex pins opacity as well as colour, and ΔE alone
-// cannot see it: `oklch(0 0 0 / 30%)  # #00000008` scores a perfect 0 while
-// rendering at ten times the annotated 3%.
-const DELTA_E = DELTA_E_TOLERANCE
-
-/** Alpha declared inside an oklch literal (`/ 30%`, `/ 0.3`), or null. */
-function oklchAlpha(value: string): number | null {
-  const m = value.match(/\/\s*([\d.]+)\s*(%?)/)
-  if (!m) return null
-  return m[2] === "%" ? Number(m[1]) / 100 : Number(m[1])
-}
-
-/** Oklch with the hue already rounded to the integer degrees tokens are written in. */
-function labToLch(lab: Oklab): { L: number; C: number; H: number } {
-  const { L, C, H } = oklabToLch(lab)
-  return { L, C, H: Math.round(H) % 360 }
-}
-
-/** Keep the author's decimal precision so a fix produces a minimal diff. */
-function like(sample: string, value: number): string {
-  const decimals = (sample.split(".")[1] ?? "").length
-  return value.toFixed(decimals)
-}
-
-interface Finding {
+// Judging one document — and `--fix`'s rewrite of it — lives in
+// src/lib/oklch-audit.ts, where it is tested. This file walks the catalogue,
+// writes what that returns, and runs `--sync` and the drift check.
+interface Finding extends OklchFinding {
   slug: string
-  line: number
-  token: string
-  from: [string, string, string]
-  to: [string, string, string]
-  deltaE: number
-  /** False when only the opacity was wrong and `to` restates the authored triple. */
-  colourOff: boolean
-  /** `[authored, corrected]` when the opacity disagrees with an 8-digit hex. */
-  alpha: [string, string] | null
 }
 
 const args = process.argv.slice(2)
@@ -122,6 +83,9 @@ let syncCount = 0
 // collected so one slug's ambiguity does not abort the rest of the catalogue.
 const unsynced: Array<{ slug: string; conflicts: Array<CorrectionConflict> }> =
   []
+// Mismatches `--fix` could not rewrite — the value is not whole on one line —
+// collected the same way, and left exactly as written.
+const unfixed: Array<Finding> = []
 
 // Coverage, not just findings. "No mismatches" and "matched nothing" produce
 // identical output otherwise — the failure mode that let 102 annotated pairs go
@@ -131,79 +95,22 @@ const coverage = { annotated: 0, judged: 0 }
 for (const slug of slugs) {
   const mdPath = path.join(SERVICES, `${slug}.md`)
   const md = fs.readFileSync(mdPath, "utf8")
-  const lines = md.split(/\r?\n/)
-  const c = countDefinitions(md)
-  coverage.annotated += c.annotated
-  coverage.judged += c.judged
-  const corrections: Array<{
-    old: [string, string, string]
-    neu: [string, string, string]
-  }> = []
+  const audit = auditOklch(md, { fix })
+  coverage.annotated += audit.annotated
+  coverage.judged += audit.judged
+  for (const f of audit.findings) findings.push({ slug, ...f })
+  for (const f of audit.unfixed) unfixed.push({ slug, ...f })
+  // Only a changed triple can be propagated — an alpha-only edit has no
+  // old→new pair for --sync to search for. Nor can a definition left as
+  // written: its copies must keep agreeing with it.
+  const corrections = audit.findings
+    .filter((f) => f.colourOff && !audit.unfixed.includes(f))
+    .map((f) => ({ old: f.from, neu: f.to }))
 
-  const fixedLines = lines.map((line, i) => {
-    const d = matchDefinition(line)
-    if (!d) return line
-    const want = hexToOklab(d.hex)
-    if (!want) return line
-    const got = lchToOklab(Number(d.L), Number(d.C), Number(d.H))
-    const dE = deltaE(got, want.lab)
-    // Only compared when BOTH sides declare it — a 6-digit hex carries no alpha.
-    const wroteA = oklchAlpha(d.tail)
-    const wantA = want.alpha
-    const alphaOff =
-      wroteA != null &&
-      wantA != null &&
-      Math.abs(wroteA - wantA) > ALPHA_TOLERANCE
-    if (dE <= DELTA_E && !alphaOff) return line
-
-    const from: [string, string, string] = [d.L, d.C, d.H]
-    const target = labToLch(want.lab)
-    const chroma = like(d.C, target.C)
-    // A pure grey carries float residue on a/b (#111111 lands at a≈1e-11), so
-    // atan2 reports an arbitrary angle — 90° rather than the author's 0. Once
-    // chroma rounds to zero the hue is unobservable, so keep what was written
-    // instead of churning the diff with a meaningless number.
-    const hueIsMeaningless = Number(chroma) === 0
-    // An alpha-only mismatch leaves the colour itself inside tolerance, so keep
-    // the authored L/C/H rather than restating them at full precision.
-    const colourOff = dE > DELTA_E
-    const to: [string, string, string] = colourOff
-      ? [like(d.L, target.L), chroma, hueIsMeaningless ? d.H : String(target.H)]
-      : from
-    // `alphaOff` already narrows wantA to a number — it cannot be true otherwise.
-    const alphaTo = alphaOff
-      ? d.tail.replace(/\/\s*[\d.]+\s*%?/, (seg) =>
-          seg.includes("%")
-            ? `/ ${Number((wantA * 100).toFixed(1))}%`
-            : `/ ${Number(wantA.toFixed(3))}`
-        )
-      : d.tail
-
-    findings.push({
-      slug,
-      line: i + 1,
-      token: d.token,
-      from,
-      to,
-      deltaE: dE,
-      colourOff,
-      alpha: alphaOff ? [d.tail.trim(), alphaTo.trim()] : null,
-    })
-    // Only a changed triple can be propagated — an alpha-only edit has no
-    // old→new pair for --sync to search for.
-    if (colourOff) corrections.push({ old: from, neu: to })
-
-    if (!fix) return line
-    // Preserve the author's spacing so only the numbers move in the diff, and
-    // splice through `applyDefinition` so a `$` in the comment cannot be read as
-    // a substitution pattern. Both are pinned by tests in `src/lib/` — this file
-    // has none of its own.
-    return applyDefinition(line, d, to, alphaTo)
-  })
-
-  if (fix && corrections.length > 0) {
-    fs.writeFileSync(mdPath, fixedLines.join("\n"))
-  }
+  // `auditOklch` rewrites only the corrected values, on the lines the
+  // frontmatter reader gave their rows, and keeps every other byte — line
+  // endings included. Its tests pin that; this file has none of its own.
+  if (fix && audit.text !== md) fs.writeFileSync(mdPath, audit.text)
 
   // --sync: a corrected primitive is echoed in aliases, composites, prose and
   // preview HTML. Those carry no hex of their own, so they can only be swept by
@@ -240,7 +147,13 @@ for (const slug of slugs) {
   }
   for (const target of targets) {
     const src = fs.readFileSync(target, "utf8")
-    const { text: out, count } = syncOklchLiterals(src, byOld)
+    // The md's own definitions, as read after `--fix` wrote them, are never
+    // swept as copies. A preview has none.
+    const { text: out, count } = syncOklchLiterals(
+      src,
+      byOld,
+      target === mdPath ? definitionLines(src) : undefined
+    )
     syncCount += count
     if (out !== src) fs.writeFileSync(target, out)
   }
@@ -275,7 +188,7 @@ console.log(
       : "")
 )
 console.log(
-  `${findings.length} token(s) ${verb}` +
+  `${findings.length - unfixed.length} token(s) ${verb}` +
     (sync ? `, ${syncCount} derived literal(s) synced` : "") +
     (findings.length && !fix ? " — re-run with --fix to rewrite" : "")
 )
@@ -291,9 +204,10 @@ console.log(
 // the gate is whole there. A local `pnpm audit:oklch --fix` on its own is not:
 // the drop is on screen for a human to notice, and nothing enforces it.
 //
-// Recorded rather than exited on: the preview drift check below parses md with
-// its OWN regex (`oklch-drift.ts`), so it still produces real diagnostics on a
-// run where this pattern is broken. Exiting here would bury them.
+// Recorded rather than exited on: the preview drift check below does not judge
+// against hexes (`oklch-drift.ts` compares values only), so it still produces
+// real diagnostics on a run where this pattern is broken. Exiting here would
+// bury them.
 const patternDead = coverage.annotated > 0 && coverage.judged === 0
 if (patternDead) {
   console.error(
@@ -320,6 +234,24 @@ if (unsynced.length > 0) {
     `\n  Their md definitions are fixed; only the derived literals (aliases,\n` +
       `  gradients, prose, preview CSS) are ambiguous — update those by hand.\n` +
       `  Every other slug was processed normally.`
+  )
+}
+
+if (unfixed.length > 0) {
+  console.error(
+    `
+${unfixed.length} mismatched token(s) NOT corrected — the value is not ` +
+      `written whole on one line, so --fix left it as written:`
+  )
+  for (const f of unfixed) {
+    console.error(
+      `  ${f.slug}  L${f.line}  ${f.token}  ${f.from.join(" ")}  →  ${f.to.join(" ")}`
+    )
+  }
+  console.error(
+    `
+  Write each value on one line, or correct it by hand. Every other ` +
+      `token was processed normally.`
   )
 }
 
@@ -388,8 +320,10 @@ if (drift > 0) {
 
 // Report-only mode is a check: non-zero exit lets CI or a pre-commit hook gate on it.
 // An unsynced slug fails in either mode — it means the tree is now half-updated.
+// So does a token `--fix` could not rewrite: the run left a mismatch behind.
 // A dead pattern fails in either mode too: with nothing judged, a `--fix` run
 // that "corrected" nothing is not a success, it is a no-op on a broken tool.
 if (patternDead) process.exit(1)
 if (unsynced.length > 0) process.exit(1)
+if (unfixed.length > 0) process.exit(1)
 if (!fix && (findings.length > 0 || drift > 0)) process.exit(1)

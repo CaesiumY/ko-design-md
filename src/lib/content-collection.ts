@@ -1,5 +1,6 @@
 import { previewSlugs } from "virtual:preview-slugs"
-import { buildDoc, sortDocsByAdded } from "./content-parser"
+import { siteFrontmatter } from "virtual:site-frontmatter"
+import { buildSiteDoc, sortDocsByAdded } from "./content-parser"
 import type { ServiceDoc, ServiceSummary, ServiceTokens } from "./content-types"
 
 const RAW_MODULES: Record<string, string> = import.meta.glob("/services/*.md", {
@@ -90,7 +91,16 @@ const TOKENS_BY_SLUG = new Map<string, ServiceTokens>(
 
 const DOCS: Array<ServiceDoc> = sortDocsByAdded(
   Object.entries(RAW_MODULES).map(([filePath, raw]) => {
-    const doc = buildDoc(filePath, raw)
+    // The build read this entry's frontmatter (`siteFrontmatterPlugin` in
+    // vite.config.ts) and failed on any empty key the site reads, so a
+    // missing record means the two globs disagree — not an empty entry.
+    const frontmatter = siteFrontmatter[filePath]
+    if (frontmatter === undefined) {
+      throw new Error(
+        `[content-collection] ${filePath} has no frontmatter from the build`
+      )
+    }
+    const doc = buildSiteDoc(filePath, raw, frontmatter)
     const tokens = TOKENS_BY_SLUG.get(doc.frontmatter.slug)
     return tokens ? { ...doc, tokens } : doc
   })

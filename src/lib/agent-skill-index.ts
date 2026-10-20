@@ -6,7 +6,7 @@ import {
   AGENT_TEXT_HEADERS,
 } from "./agent-representation"
 import skillMarkdown from "/.claude/skills/use-design-md/SKILL.md?raw"
-import { splitFrontmatter } from "./content-parser"
+import { splitFrontmatter } from "./frontmatter-fence"
 import { AGENT_SKILL_MD_PATH } from "./site-config"
 
 /**

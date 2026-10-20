@@ -35,9 +35,9 @@ export interface ServiceFrontmatter {
    * never reshuffles the list. `last_updated` is a separate signal — it drives
    * the "Updated" badge and the RSS feed's own ordering, nothing else.
    *
-   * Required. `buildDoc` leaves it "" when absent rather than throwing (so a
-   * malformed contribution can't take the site down), and the
-   * `missing-created-at` rule in draft-validator blocks it in CI.
+   * Required. The site leaves it "" when the key is absent, and the
+   * `missing-created-at` rule in draft-validator blocks that in CI; written
+   * with no value, it fails the site's build (`site-frontmatter.ts`).
    */
   created_at: string
   lang: Lang
@@ -50,6 +50,18 @@ export interface ServiceFrontmatter {
    */
   logo?: string
 }
+
+/**
+ * The frontmatter keys the site reads, as the build hands them over
+ * (`virtual:site-frontmatter`, #585): each present only when the entry writes
+ * it. The site derives what is missing exactly as it always has.
+ */
+export type SiteFrontmatter = Partial<
+  Omit<ServiceFrontmatter, "category" | "lang"> & {
+    category: string
+    lang: string
+  }
+>
 
 /**
  * A single design token row, normalized from a service's prose YAML into the

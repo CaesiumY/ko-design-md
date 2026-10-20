@@ -1,7 +1,7 @@
 import fs from "node:fs"
 import path from "node:path"
 import { describe, expect, it } from "vitest"
-import { countDefinitions } from "./oklch-sync"
+import { auditOklch } from "./oklch-audit"
 import { readDefinitions } from "./oklch-drift"
 import { findFontDisplaySrc } from "./preview-validator"
 
@@ -17,9 +17,11 @@ import { findFontDisplaySrc } from "./preview-validator"
 // That is not hypothetical. Moving tokens into YAML frontmatter — the migration
 // this file was written to protect — breaks both regexes at once if the emitter
 // quotes values or the reader keeps its column-0 anchor. Measured on a synthetic
-// migrated line: quoting drops `countDefinitions` from 1 to 0 and
-// `readDefinitions` from 1 to 0; indenting alone still drops `readDefinitions`.
-// Both gates then pass.
+// migrated line: quoting dropped the audit's line count from 1 to 0 and
+// `readDefinitions` from 1 to 0; indenting alone still dropped `readDefinitions`.
+// Both gates then passed. Both now read rows through `readFrontmatter`
+// (docs/adr/0011), where quoting and indentation no longer change what is
+// read — but a reader can still stop matching, and this table is what notices.
 //
 // `oklch-drift-corpus.test.ts` already carries this idea for one gate (its
 // MATCH_FLOOR exists because "a regex that silently stops matching" must fail
@@ -63,7 +65,7 @@ function readAll(): Array<{ slug: string; raw: string }> {
 }
 
 interface Coverage {
-  /** `name: oklch(…)  # #hex` pairs `countDefinitions` sees — what feeds `audit:oklch`. */
+  /** `name: oklch(…)  # #hex` pairs `audit:oklch` sees (`auditOklch`). */
   annotated: number
   /** The subset it can actually judge: one hex on the line. */
   judged: number
@@ -125,7 +127,7 @@ describe("token gate coverage", () => {
   // self-conflict.
   const measured = new Map<string, Coverage>(
     docs.map(({ slug, raw }) => {
-      const c = countDefinitions(raw)
+      const c = auditOklch(raw, { fix: false })
       const row: Coverage = {
         annotated: c.annotated,
         judged: c.judged,
@@ -181,7 +183,7 @@ describe("token gate coverage", () => {
   })
 
   it("keeps audit:oklch comparing the annotated definitions it can see", () => {
-    // `countDefinitions` feeds `pnpm audit:oklch`. `annotated` is every
+    // `auditOklch` is `pnpm audit:oklch` per entry. `annotated` is every
     // `name: oklch(…)  # #hex` pair; `judged` is the subset it can actually
     // compare (the rest name more than one hex on the line and are skipped).
     const diffs = [...moved("annotated"), ...moved("judged")]

@@ -16,7 +16,7 @@
 // The value comparison gets all four right, so it is strictly the better rule
 // rather than merely the stricter one.
 
-import { splitFrontmatter } from "./content-parser"
+import { findKey, readFrontmatter } from "./frontmatter"
 
 /**
  * Is a repo-wide mechanical sweep exempted by a commit in range?
@@ -41,6 +41,7 @@ export function isExempt(commitMessages: string): boolean {
 export interface LastUpdatedIssue {
   file: string
   rule:
+    | "unreadable-frontmatter"
     | "stale-last-updated"
     | "last-updated-regressed"
     | "future-last-updated"
@@ -76,40 +77,34 @@ function nextDay(iso: string): string {
   return d.toISOString().slice(0, 10)
 }
 
+type DateReading =
+  | { ok: true; date: string | null }
+  | { ok: false; message: string; line: number }
+
 /**
- * Frontmatter `last_updated`, or null when absent or unparseable.
+ * Frontmatter `last_updated`, through the one frontmatter reader (ADR 0011).
  *
- * Deliberately a regex rather than `buildDoc` from content-parser: this gate
- * needs one date out of a file that may be mid-edit, and must stay silent on
- * anything malformed, which validate:catalog already blocks. Routing it through
- * the real parser would couple a freshness check to full document validity.
+ * The value is what YAML reads: quotes are optional, a trailing ` # comment`
+ * is not part of it, and `"2026-01-01 # x"` or `2026-01-01#x` keep the `#` in
+ * the string. Anything that is not a plain ISO date reads as absent — that is
+ * validate:catalog's `missing-last-updated` to report, not this gate's.
  *
- * Quotes are optional in YAML, so both `last_updated: "2026-08-02"` and the
- * bare form are accepted; anything that is not a plain ISO date reads as absent.
+ * Only the frontmatter is read: a body line in the same shape (a template
+ * excerpt in a text fence) is an example, not the entry's date.
+ *
+ * A frontmatter YAML cannot read is not "no date". This gate used to go silent
+ * on it, which let the one check that blocks on the date pass a file it never
+ * judged; it now comes back as unreadable, with the reader's line.
  */
-function readLastUpdated(raw: string): string | null {
-  // The `\1` backreference pairs the quotes: whatever opened must close, so
-  // `"2026-08-02` with the closing quote missing does not match. Two
-  // independent optionals would accept it, and this file's rule is to go silent
-  // on malformed input rather than guess at it.
-  //
-  // Single quotes count too. YAML allows them, so recognizing only `"` would
-  // let `last_updated: '2026-08-02'` fall through as unparseable and skip the
-  // gate — a silent pass, which is the one outcome this file must not produce.
-  //
-  // A trailing comment counts for the same reason: YAML ends the value at ` #`
-  // (whitespace first — `2026-01-01#x` is one string), so `… # synced` is a
-  // date to every other reader. Anchoring at the bare line end read it as
-  // absent here and let a stale date through.
-  //
-  // Only the frontmatter is searched: a body line in the same shape (a
-  // template excerpt in a text fence) is an example, not the entry's date.
-  const frontmatter = splitFrontmatter(raw)?.frontmatter
-  if (frontmatter === undefined) return null
-  const m = frontmatter.match(
-    /^last_updated:[ \t]*(["']?)(\d{4}-\d{2}-\d{2})\1(?:[ \t]+#.*)?[ \t]*$/m
-  )
-  return m ? m[2] : null
+function readLastUpdated(raw: string): DateReading {
+  const read = readFrontmatter(raw)
+  if (!read.ok) return { ok: false, ...read.errors[0] }
+  const value = findKey(read.keys, "last_updated")?.value
+  const date =
+    typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)
+      ? value
+      : null
+  return { ok: true, date }
 }
 
 /**
@@ -128,12 +123,23 @@ function readLastUpdated(raw: string): string | null {
 export function checkLastUpdated(
   input: LastUpdatedInput
 ): LastUpdatedIssue | null {
-  const current = readLastUpdated(input.raw)
+  const reading = readLastUpdated(input.raw)
+  if (!reading.ok) {
+    return {
+      file: input.file,
+      rule: "unreadable-frontmatter",
+      message: `the frontmatter could not be read as YAML (line ${reading.line}: ${reading.message}), so \`last_updated\` could not be judged. Fix the YAML first.`,
+    }
+  }
+  const current = reading.date
   // A missing date is already a `missing-last-updated` block in
   // validate:catalog. Reporting it here too makes one fix look like two.
   if (!current) return null
 
-  const previous = input.baseRaw ? readLastUpdated(input.baseRaw) : null
+  // A base this change cannot read is not this change's to fix: it reads as
+  // having no date, as an added file does.
+  const base = input.baseRaw ? readLastUpdated(input.baseRaw) : null
+  const previous = base?.ok ? base.date : null
   if (previous && current < previous) {
     return {
       file: input.file,

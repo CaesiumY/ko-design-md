@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest"
 import { lint } from "@google/design.md/linter"
 import { REQUIRED_SECTIONS, validateDraft } from "./draft-validator"
-import { matter } from "./content-parser"
+import { findKey, readFrontmatter } from "./frontmatter"
 import { FRONTMATTER_MAPS } from "./frontmatter-map-table"
 import type { FrontmatterMapTraits } from "./frontmatter-map-table"
 import type { DraftValidationOptions } from "./draft-validator"
@@ -165,9 +165,9 @@ describe("validateDraft — valid draft", () => {
 // ── frontmatter block rules ──────────────────────────────────────────────────
 
 describe("validateDraft — frontmatter", () => {
-  it("blocks a malformed frontmatter fence", () => {
+  it("blocks a malformed frontmatter fence, and judges nothing else in it", () => {
     const raw = makeDraft().replace(/\n---\n/, "\n") // drop closing fence
-    expect(rulesOf(raw, OPTS, "block")).toContain("frontmatter-parse")
+    expect(rulesOf(raw, OPTS, "block")).toEqual(["frontmatter-yaml-invalid"])
   })
 
   it("blocks an off-enum category", () => {
@@ -300,23 +300,9 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(raw, other, "block")).toContain("missing-logo")
   })
 
-  it("exempts a takedown by the entry's slug when the slug line is misread", () => {
-    // The site reads `slug:: demo` as `: demo`; the misread is the one
-    // message — the entry is still `demo`, whose logo was taken down.
-    const raw = makeDraft()
-      .replace("logo: https://getdesign.kr/logos/demo.png\n", "")
-      .replace("slug: demo", "slug:: demo")
-    const opts = {
-      ...OPTS,
-      expectedLogoUrl: undefined,
-      logoTakedowns: new Set(["demo"]),
-    }
-    expect(rulesOf(raw, opts, "block")).toEqual(["misread-frontmatter-value"])
-  })
-
   // The takedown procedure removes the `logo:` line. An exempt slug that
-  // leaves an empty one behind is still broken: `buildDoc` reads it as `[]`,
-  // which the site's logo renderer treats as truthy and crashes on.
+  // leaves an empty one behind is still a `logo` key, and the site's build
+  // refuses a key it reads with no value.
   it("blocks an exempt slug's empty `logo:` line — only an absent key is exempt", () => {
     const raw = makeDraft().replace(
       "logo: https://getdesign.kr/logos/demo.png",
@@ -327,17 +313,15 @@ describe("validateDraft — frontmatter", () => {
       expectedLogoUrl: undefined,
       logoTakedowns: new Map([["demo", "#123"]]),
     }
-    const blocks = rulesOf(raw, opts, "block")
-    expect(blocks).toContain("missing-logo")
-    expect(blocks).not.toContain("logo-url-form")
+    expect(rulesOf(raw, opts, "block")).toEqual(["takedown-logo-declared"])
   })
 
   // A taken-down entry that writes `logo` in any form has one cause, and the
   // fix does not depend on the form: drop the line, or — when the caller
   // names the expected logo, so a restore was decided — write that value and
   // take the slug off LOGO_TAKEDOWNS (the logo-policy test blocks a listed
-  // slug that declares a logo). Each form gets that one message, and the
-  // draft it describes passes (#492 review).
+  // slug that declares a logo). Every form is the one rule with that one
+  // message, and the draft it describes passes (#492 review, #589).
   it("tells every logo form on a taken-down slug the takedown's one fix", () => {
     const logo = "logo: https://getdesign.kr/logos/demo.png"
     const url = logo.slice("logo: ".length)
@@ -347,16 +331,17 @@ describe("validateDraft — frontmatter", () => {
       logoTakedowns: new Set(["demo"]),
     }
     const expectsLogo = { ...takedown, expectedLogoUrl: url }
-    const forms: Array<[string, string]> = [
-      ["logo:", "missing-logo"],
-      [logo, "takedown-logo-declared"],
-      [`"logo": ${url}`, "nonbare-frontmatter-key"],
-      [`logo: "${url}" # x`, "misread-frontmatter-value"],
-      [`logo:\n  - ${url}`, "list-frontmatter-value"],
-      [`logo: [${url}]`, "list-frontmatter-value"],
-      ["logo: []", "list-frontmatter-value"],
+    const forms = [
+      "logo:",
+      logo,
+      `"logo": ${url}`,
+      `logo: "${url}" # x`,
+      `logo:\n  - ${url}`,
+      `logo: [${url}]`,
+      "logo: []",
     ]
-    for (const [line, rule] of forms) {
+    const rule = "takedown-logo-declared"
+    for (const line of forms) {
       const raw = makeDraft().replace(logo, line)
       for (const opts of [takedown, expectsLogo]) {
         const blocks = validateDraft(raw, opts).issues.filter(
@@ -406,8 +391,8 @@ describe("validateDraft — frontmatter", () => {
 
   // Which entry is taken down is the caller's expected slug when it gives
   // one — `slug-arg-mismatch` holds the written slug to it — and the logo is
-  // judged from what the site read, so neither a wrong slug line nor an
-  // unrelated `buildDoc` failure hides the takedown for a run (#494 Codex).
+  // judged from the key as written, so neither a wrong slug line nor an
+  // unrelated refused value hides the takedown for a run (#494 Codex).
   it("finds a takedown by the expected slug and without a built document", () => {
     const takedown = {
       ...OPTS,
@@ -433,9 +418,19 @@ describe("validateDraft — frontmatter", () => {
     expect(blocks).toContain("takedown-logo-declared")
   })
 
-  it("does not report missing-logo for a logo key the site parser dropped", () => {
-    const raw = makeDraft().replace("logo: https", '"logo": https')
-    expect(rulesOf(raw, OPTS, "block")).not.toContain("missing-logo")
+  it("finds a takedown when the slug key is cut at a doubled colon", () => {
+    // `slug:: demo` is the unknown key `slug:` to YAML, so the entry's slug
+    // is its file name — still `demo`, still taken down, and the absent logo
+    // is the takedown itself. The cut key is its own block (#589).
+    const raw = makeDraft()
+      .replace("logo: https://getdesign.kr/logos/demo.png\n", "")
+      .replace("slug: demo", "slug:: demo")
+    const opts = {
+      ...OPTS,
+      expectedLogoUrl: undefined,
+      logoTakedowns: new Set(["demo"]),
+    }
+    expect(rulesOf(raw, opts, "block")).toEqual(["colon-cut-frontmatter-key"])
   })
 
   it("blocks a malformed logo URL even without an expected logo", () => {
@@ -452,8 +447,8 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(raw, OPTS, "warn")).toContain("unknown-frontmatter-key")
   })
 
-  // A quoted top-level key is valid YAML the site parser ignores, and the bare
-  // scan never saw it — the same blind spot #447 closed in `mapRows`.
+  // A quoted top-level key is the key YAML reads, so it is judged like a bare
+  // one (#447 found a bare scan that never saw it).
   it("warns on an unknown key in its quoted spellings too", () => {
     for (const key of ['"notes"', "'notes'", '"not\\u0065s"']) {
       const raw = makeDraft().replace("lang: ko", `lang: ko\n${key}: draft`)
@@ -463,20 +458,6 @@ describe("validateDraft — frontmatter", () => {
       expect(issue?.severity, key).toBe("warn")
       expect(issue?.fix, key).toContain("`notes`")
     }
-  })
-
-  it("still names a quoted unknown key when the block does not parse", () => {
-    // The YAML gate blocks this block, but the parser still resolves the keys
-    // it can, quoted ones included — the warn must name it all the same.
-    const raw = makeDraft().replace(
-      "lang: ko",
-      'lang: ko\nfonts:\n  sans: "Pretendard", sans-serif\n"notes": draft'
-    )
-    expect(rulesOf(raw, OPTS, "block")).toContain("frontmatter-yaml-invalid")
-    const issue = validateDraft(raw, OPTS).issues.find(
-      (i) => i.rule === "unknown-frontmatter-key"
-    )
-    expect(issue?.fix).toContain("`notes`")
   })
 
   it("warns once on a key YAML resolves to another spelling", () => {
@@ -489,34 +470,19 @@ describe("validateDraft — frontmatter", () => {
     expect(warns).toHaveLength(1)
   })
 
-  it("warns once on such a key when the block does not parse, too", () => {
-    // The bare scan runs on a broken block. It must know `True` is already
-    // there as the spelling of `true`, or it names the key a second time.
-    const raw = makeDraft().replace(
-      "lang: ko",
-      'lang: ko\nTrue: x\nfonts:\n  sans: "Pretendard", sans-serif'
-    )
-    expect(rulesOf(raw, OPTS, "block")).toContain("frontmatter-yaml-invalid")
-    const warns = rulesOf(raw, OPTS, "warn").filter(
-      (r) => r === "unknown-frontmatter-key"
-    )
-    expect(warns).toHaveLength(1)
-  })
-
   it("names the key as the file spells it, not as YAML resolves it", () => {
     // `True:` and `0x1F:` resolve to `true` and `31` — strings the author
-    // cannot find by searching the file.
-    for (const [spelled, resolved] of [
-      ["True", "true"],
-      ["0x1F", "31"],
+    // cannot find by searching the file. A quoted key is named unquoted.
+    for (const [written, named] of [
+      ["True", "True"],
+      ["0x1F", "0x1F"],
       ['"notes"', "notes"],
     ]) {
-      const raw = makeDraft().replace("lang: ko", `lang: ko\n${spelled}: x`)
+      const raw = makeDraft().replace("lang: ko", `lang: ko\n${written}: x`)
       const issue = validateDraft(raw, OPTS).issues.find(
         (i) => i.rule === "unknown-frontmatter-key"
       )
-      expect(issue?.fix, spelled).toContain(`\`${spelled}\``)
-      expect(issue?.fix, spelled).toContain(`\`${resolved}\``)
+      expect(issue?.fix, written).toContain(`\`${named}\``)
     }
   })
 
@@ -525,263 +491,9 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(raw, OPTS, "warn")).not.toContain("unknown-frontmatter-key")
   })
 
-  // The site's parser reads only a bare `key:` at column 0. A known key spelled
-  // any other way is valid YAML the site silently drops — `"lang": ko` left
-  // every gate green while the entry lost its field.
-  it("blocks a known key the site's parser cannot read", () => {
-    for (const [from, to] of [
-      ["lang: ko", '"lang": ko'],
-      ["lang: ko", "'lang': ko"],
-      ["lang: ko", "lang : ko"],
-      ["slug: demo", '"slug": demo'],
-    ]) {
-      const raw = makeDraft().replace(from, to)
-      const issue = validateDraft(raw, OPTS).issues.find(
-        (i) => i.rule === "nonbare-frontmatter-key"
-      )
-      expect(issue?.severity, to).toBe("block")
-      expect(issue?.fix, to).toContain(`\`${from.split(":")[0]}:\``)
-    }
-  })
-
-  it("names every non-plain form in its fix, not only quotes", () => {
-    // An anchored key has no quotes and no space to remove; the fix must say
-    // what else keeps the site from reading it (#453 review).
-    const raw = makeDraft().replace("lang: ko", "&a lang: ko")
-    const issue = validateDraft(raw, OPTS).issues.find(
-      (i) => i.rule === "nonbare-frontmatter-key"
-    )
-    expect(issue?.fix).toContain("anchor")
-    expect(issue?.fix).toContain("column 0")
-  })
-
-  it("blocks a known key written through a YAML alias", () => {
-    // `? *k` resolves to `lang`; the site's parser cannot read it (#453 review).
-    const raw = makeDraft().replace("lang: ko", "lang2: &k lang\n? *k\n: ko")
-    const issue = validateDraft(raw, OPTS).issues.find(
-      (i) => i.rule === "nonbare-frontmatter-key"
-    )
-    expect(issue?.fix).toContain("`lang:`")
-  })
-
-  it("leaves a key-like line hidden in a value to the YAML gate", () => {
-    // A column-0 `lang: ko` inside a multi-line quoted value would read as a
-    // bare `lang` to the site while YAML's `lang` is the quoted key below
-    // (#453 review). YAML does not parse that block — a column-0 line cannot
-    // continue a value — so the parse block is the one message.
-    const raw = makeDraft()
-      .replace("name: 데모", 'name: "데모\nlang: ko"')
-      .replace("lang: ko\n", '"lang": en\n')
-    const blocks = rulesOf(raw, OPTS, "block")
-    expect(blocks).toContain("frontmatter-yaml-invalid")
-    expect(blocks).not.toContain("nonbare-frontmatter-key")
-  })
-
-  it("gives a dropped key one message, not its consequences too", () => {
-    // Quoting `last_updated` makes the site see no date, and quoting a token
-    // map makes the extractor read nothing — both true, both the same cause.
-    const raw = makeDraft()
-      .replace('last_updated: "2026-07-03"', '"last_updated": "2026-07-03"')
-      .replace("typography:", '"typography":')
-    const blocks = rulesOf(raw, OPTS, "block")
-    expect(blocks.filter((r) => r === "nonbare-frontmatter-key")).toHaveLength(
-      2
-    )
-    expect(blocks).not.toContain("missing-last-updated")
-    expect(blocks).not.toContain("unreadable-token-map")
-  })
-
-  it("silences every field rule for a dropped key, as the skill pipeline runs it", () => {
-    // The pipeline validates `draft.md` with `--slug` and `--expected-logo`.
-    // A dropped slug then reads as the file name and a dropped logo as none —
-    // both would tell the author to fix a value that is already there.
-    const pipeline = { ...OPTS, filePath: "/cache/demo/draft.md" }
-    for (const [from, to] of [
-      ["slug: demo", '"slug": demo'],
-      ["logo: https", '"logo": https'],
-      ["category: finance", '"category": finance'],
-      ["lang: ko", '"lang": ko'],
-    ]) {
-      const raw = makeDraft().replace(from, to)
-      expect(rulesOf(raw, pipeline, "block"), to).toEqual([
-        "nonbare-frontmatter-key",
-      ])
-    }
-  })
-
-  it("judges a dropped slug's recorded limitations by the expected slug", () => {
-    // In the pipeline a dropped slug reads as the file name, `draft`, which has
-    // no recorded `%` radius — the warn would ask to record 11st's again.
-    const raw = makeDraft()
-      .replace("slug: demo", '"slug": 11st')
-      .replace("lang: ko", "lang: ko\nrounded:\n  circle: 50%")
-    const rules = rulesOf(raw, {
-      ...OPTS,
-      filePath: "/cache/11st/draft.md",
-      expectedSlug: "11st",
-    })
-    expect(rules).toContain("nonbare-frontmatter-key")
-    expect(rules).not.toContain("spec-unrecorded-limitation")
-  })
-
-  // The site's parser reads a value only from the key's own line. A value on
-  // the next line, or one that runs on to a second, is valid YAML the site
-  // reads as something else — `name` passed every gate that way.
-  it("blocks a value the site's parser reads differently from YAML", () => {
-    for (const [from, to] of [
-      ["name: 데모", "name:\n  데모"],
-      ["name: 데모", "name: 데모\n  시스템"],
-      ["lang: ko", "lang:\n  ko"],
-    ]) {
-      const raw = makeDraft().replace(from, to)
-      expect(rulesOf(raw, OPTS, "block"), to).toEqual([
-        "misread-frontmatter-value",
-      ])
-      const issue = validateDraft(raw, OPTS).issues.find(
-        (i) => i.rule === "misread-frontmatter-value"
-      )
-      expect(issue?.fix, to).toContain(`\`${from.split(":")[0]}\``)
-    }
-  })
-
-  it("blocks a quoted value whose escapes the site's parser keeps", () => {
-    // YAML turns `\"` into `"`; the site only strips the outer quotes.
-    const raw = makeDraft().replace("name: 데모", 'name: "데모 \\"DS\\""')
-    expect(rulesOf(raw, OPTS, "block")).toContain("misread-frontmatter-value")
-  })
-
-  it("gives a misread value one message, even where the site's reading breaks buildDoc", () => {
-    // A misread date or count can make the site's own build throw, and a
-    // misread logo trips the URL-form rule — both the same cause.
-    const noLogoArg = { ...OPTS, expectedLogoUrl: undefined }
-    for (const [from, to] of [
-      ['last_updated: "2026-07-03"', 'last_updated: "2026-07-03" # synced'],
-      ["lang: ko", "lang: ko\nestimated_tokens:\n  1200"],
-      [
-        "logo: https://getdesign.kr/logos/demo.png",
-        "logo:\n  https://getdesign.kr/logos/demo.png",
-      ],
-    ]) {
-      const raw = makeDraft().replace(from, to)
-      expect(rulesOf(raw, noLogoArg, "block"), to).toEqual([
-        "misread-frontmatter-value",
-      ])
-    }
-  })
-
-  // The site keeps every value as text and turns only `estimated_tokens` into
-  // a number. In any other key, a value YAML reads as a number or boolean is a
-  // different value to a YAML consumer, however alike the two print (#454 review).
-  it("blocks a text field YAML reads as a number or boolean", () => {
-    const draft = makeDraft().replace(
-      "name: 데모",
-      "name: 데모\ndesign_system_name: 데모 DS"
-    )
-    for (const [from, to] of [
-      ["name: 데모", "name: 1.50"],
-      ["name: 데모", "name: 1e3"],
-      ["name: 데모", "name: true"],
-      ["design_system_name: 데모 DS", "design_system_name: 2.10"],
-    ]) {
-      const raw = draft.replace(from, to)
-      expect(rulesOf(raw, OPTS, "block"), to).toEqual([
-        "misread-frontmatter-value",
-      ])
-      const issue = validateDraft(raw, OPTS).issues.find(
-        (i) => i.rule === "misread-frontmatter-value"
-      )
-      expect(issue?.fix, to).toContain("Quote the value")
-    }
-    // A slug the site reads as `0x1f` is not the expected one either; the
-    // misread is the one message about it.
-    const slug = makeDraft().replace("slug: demo", "slug: 0x1f")
-    expect(rulesOf(slug, OPTS, "block")).toEqual(["misread-frontmatter-value"])
-  })
-
-  // The site reads only text and lists of text, so the two readings are
-  // compared by type: a list or map YAML reads must not pass because the site's
-  // text happens to print the same (#454 review, second round).
-  it("blocks a list or map YAML reads where the site reads other text", () => {
-    for (const to of [
-      'name: ["데모"] # c',
-      "name: {}",
-      'name: {"a":1}',
-      "name: [true]",
-      "name: [1.50]",
-    ]) {
-      const raw = makeDraft().replace("name: 데모", to)
-      expect(rulesOf(raw, OPTS, "block"), to).toEqual([
-        "misread-frontmatter-value",
-      ])
-    }
-  })
-
-  it("blocks a key the site cuts at a colon YAML keeps in the key", () => {
-    // `name:: 토스` is the key `name:` to YAML and `name` (value `: 토스`) to
-    // the site; YAML has no `name` at all (#454 review, fourth round).
-    for (const [from, to] of [
-      ["name: 데모", "name:: 토스"],
-      ["name: 데모", "name: 데모\ndesign_system_name:x: y"],
-    ]) {
-      const raw = makeDraft().replace(from, to)
-      const rules = rulesOf(raw, OPTS)
-      expect(rules, to).toContain("misread-frontmatter-value")
-      // The site reads it, so a warn that says it is ignored would be wrong.
-      expect(rules, to).not.toContain("unknown-frontmatter-key")
-      const issue = validateDraft(raw, OPTS).issues.find(
-        (i) => i.rule === "misread-frontmatter-value"
-      )
-      expect(issue?.fix, to).toContain("first colon")
-    }
-  })
-
-  it("keeps the unknown-key warn for a cut key the site's reading did not misread", () => {
-    // The site reads `name` last from `name: 데모`, so it matches YAML; only
-    // the warn names the stray YAML key `name:x`.
-    const raw = makeDraft().replace("name: 데모", "name:x: y\nname: 데모")
-    const rules = rulesOf(raw, OPTS)
-    expect(rules).not.toContain("misread-frontmatter-value")
-    expect(rules).toContain("unknown-frontmatter-key")
-  })
-
-  it("names the cut line a misread came from, even where YAML has the key", () => {
-    // YAML reads `name` as `데모` and a second key `name:x`; the site reads
-    // `name` last, from the cut line, as `x: y` (#454 review, sixth round).
-    const raw = makeDraft().replace("name: 데모", "name: 데모\nname:x: y")
-    const rules = rulesOf(raw, OPTS)
-    expect(rules).toContain("misread-frontmatter-value")
-    expect(rules).not.toContain("unknown-frontmatter-key")
-    const issue = validateDraft(raw, OPTS).issues.find(
-      (i) => i.rule === "misread-frontmatter-value"
-    )
-    expect(issue?.fix).toContain("`name:x`")
-  })
-
-  it("matches a cut line with spaces before YAML's colon to its key", () => {
-    // YAML's plain key `name:x` does not hold the spaces before `: `; the
-    // warn would otherwise say the site ignores the line the misread names
-    // (#454 review, eighth round).
-    const raw = makeDraft().replace("name: 데모", "name:x  : y")
-    const rules = rulesOf(raw, OPTS)
-    expect(rules).toContain("misread-frontmatter-value")
-    expect(rules).not.toContain("unknown-frontmatter-key")
-  })
-
-  it("keeps the warn for a cut line when the misread has another cause", () => {
-    // The site reads `name` from the later line, whose escapes are the
-    // misread; the earlier `name:x` line is a stray key only the warn names.
-    const raw = makeDraft().replace(
-      "name: 데모",
-      'name:x: y\nname: "데모 \\"DS\\""'
-    )
-    const rules = rulesOf(raw, OPTS)
-    expect(rules).toContain("misread-frontmatter-value")
-    expect(rules).toContain("unknown-frontmatter-key")
-  })
-
   it("blocks an empty design_system_name", () => {
-    // `buildDoc` drops what is not text, so the site shows no name while
-    // YAML consumers get an empty string or null.
+    // The site would show no name while YAML consumers get an empty string
+    // or null.
     for (const to of [
       'design_system_name: ""',
       "design_system_name:",
@@ -877,7 +589,11 @@ describe("validateDraft — frontmatter", () => {
       // The applied line reads back as the whole name, not a cut one.
       if (offered !== null) {
         const name = /^design_system_name: (["']?)(.*)\1$/.exec(offered)?.[2]
-        expect(matter(fixed).data.design_system_name, value).toBe(name)
+        const read = readFrontmatter(fixed)
+        const written = read.ok
+          ? findKey(read.keys, "design_system_name")?.value
+          : undefined
+        expect(written, value).toBe(name)
       }
     }
   })
@@ -885,7 +601,7 @@ describe("validateDraft — frontmatter", () => {
   // The cases above are shapes reviews found one round at a time. This holds
   // the property itself: for any name this rule blocks, applying its hint as
   // written leaves nothing blocked. Names are drawn, deterministically, as
-  // words YAML and the site's parser treat specially — drawn by word, not by
+  // words YAML treats specially — drawn by word, not by
   // character, because the shapes that matter (a quoted dash beside both kinds
   // of quote mark) almost never come out of single characters.
   it("offers a hint the next run accepts for any name it blocks", () => {
@@ -967,8 +683,8 @@ describe("validateDraft — frontmatter", () => {
     expect(unquoted).toBeGreaterThan(3)
   })
 
-  // Every consumed key holds one value. A list both parsers read alike used to
-  // reach each field rule, whose message then contradicted itself: "slug
+  // Every consumed key holds one value. A list used to reach each field
+  // rule, whose message then contradicted itself: "slug
   // `demo` differs from the expected `demo`", "lang `ko` must be exactly
   // `ko`", or "logo is missing" (#454 review, sixth and seventh rounds).
   // `[]` means no value. Each hint must name the one fix the next run accepts
@@ -1060,7 +776,7 @@ describe("validateDraft — frontmatter", () => {
   })
 
   it("does not blame a missing name for a list slug", () => {
-    // Without a `name:` line `buildDoc` names the entry by its slug — here the
+    // Without a `name:` line the site names the entry by its slug — here the
     // list — and the slug's own block is the one message.
     const raw = makeDraft()
       .replace("name: 데모\n", "")
@@ -1068,24 +784,11 @@ describe("validateDraft — frontmatter", () => {
     expect(rulesOf(raw, OPTS, "block")).toEqual(["list-frontmatter-value"])
   })
 
-  it("does not judge date order on a date the site misread", () => {
-    // The site reads only `2026-09-01`, a valid date later than last_updated;
-    // that is not the date the author wrote (#454 review, third round).
-    const raw = makeDraft().replace(
-      'created_at: "2026-07-03"',
-      "created_at: 2026-09-01\n  x"
-    )
-    const rules = rulesOf(raw, OPTS)
-    expect(rules).toContain("misread-frontmatter-value")
-    expect(rules).not.toContain("created-at-after-last-updated")
-  })
-
   it("blocks an empty name", () => {
-    // Both parsers read these alike, but `buildDoc` keeps them as the name —
-    // a bare `name:` is YAML's null and the site's `[]`, which `?? slug` does
-    // not catch — and the catalog sorts and titles by it as text.
-    // Whitespace alone is empty too: both parsers read `"   "` alike, and the
-    // card and title would show nothing — as they would for a zero-width
+    // A bare `name:` is YAML's null, which the site's build refuses, and the
+    // catalog sorts and titles by the name as text.
+    // Whitespace alone is empty too: the card and title would show
+    // nothing — as they would for a zero-width
     // space, a Hangul filler or the blank braille pattern, which `trim()`
     // keeps (the last two are a letter and a symbol to Unicode).
     const zeroWidth = String.fromCharCode(0x200b)
@@ -1122,161 +825,11 @@ describe("validateDraft — frontmatter", () => {
     expect(issue?.fix).toContain("visible character")
   })
 
-  it("keeps comparing when an unrelated map has many aliases", () => {
-    // `toJS` on the whole document throws past 100 aliases; a catalog-only
-    // map the site never reads must not switch off every comparison
-    // (#454 review, ninth round).
-    const aliases = [
-      "grid:",
-      "  a: &a [x, x, x, x, x, x, x, x, x, x, x]",
-      "  b: &b [*a, *a, *a, *a, *a, *a, *a, *a, *a, *a, *a]",
-      "  c: [*b, *b, *b, *b, *b, *b, *b, *b, *b, *b, *b]",
-    ].join("\n")
-    const raw = makeDraft().replace("name: 데모", `${aliases}\nname: 1.50`)
-    expect(rulesOf(raw, OPTS, "block")).toContain("misread-frontmatter-value")
-    // A consumed key past the limit is itself a misread, named as such.
-    const own = makeDraft().replace(
-      "name: 데모",
-      `${aliases}\nname: [*b, *b, *b, *b, *b, *b, *b, *b, *b, *b, *b]`
-    )
-    const issue = validateDraft(own, OPTS).issues.find(
-      (i) => i.rule === "misread-frontmatter-value"
-    )
-    expect(issue?.fix).toContain("alias limit")
-  })
-
-  it("does not claim YAML's reading of a list in a block YAML cannot parse", () => {
-    const raw = makeDraft().replace(
-      "lang: ko",
-      'lang: [ko]\nfonts:\n  sans: "Pretendard", sans-serif'
-    )
-    const issue = validateDraft(raw, OPTS).issues.find(
-      (i) => i.rule === "list-frontmatter-value"
-    )
-    expect(issue?.fix).toContain("The site's frontmatter parser reads")
-    expect(issue?.fix).not.toContain("YAML")
-  })
-
-  it("does not crash on a value that contains itself", () => {
-    // A recursive alias is valid YAML; the message must still be written.
-    const raw = makeDraft().replace("name: 데모", "name: &x [*x]")
-    expect(rulesOf(raw, OPTS, "block")).toEqual(["misread-frontmatter-value"])
-  })
-
-  it("never tells a misread list to stay a list", () => {
-    // Quoting the items (`["1.50"]`) or dropping the comment would only meet
-    // `list-frontmatter-value` on the next run (#454 review, tenth round).
-    for (const to of ["name: [1.50]", 'name: ["데모"] # c', "name: [true]"]) {
-      const raw = makeDraft().replace("name: 데모", to)
-      const issue = validateDraft(raw, OPTS).issues.find(
-        (i) => i.rule === "misread-frontmatter-value"
-      )
-      expect(issue?.fix, to).toContain("with no brackets")
-      expect(issue?.fix, to).not.toContain("list item")
-    }
-    // The one-line value it asks for passes both rules.
-    const fixed = makeDraft().replace("name: 데모", 'name: "1.50"')
-    expect(rulesOf(fixed, OPTS, "block")).toEqual([])
-  })
-
-  it("blocks a count YAML reads as text but the site turns into a number", () => {
-    // `true`·`{}`·`[1200]` are no number to either parser; the message names
-    // the fix rather than leaving "must be a number" to a second run.
-    for (const to of [
-      'estimated_tokens: "1200"',
-      "estimated_tokens: 0b101",
-      "estimated_tokens: true",
-      "estimated_tokens: {}",
-      "estimated_tokens: [1200]",
-    ]) {
-      const raw = makeDraft().replace("lang: ko", `lang: ko\n${to}`)
-      expect(rulesOf(raw, OPTS, "block"), to).toEqual([
-        "misread-frontmatter-value",
-      ])
-      const issue = validateDraft(raw, OPTS).issues.find(
-        (i) => i.rule === "misread-frontmatter-value"
-      )
-      expect(issue?.fix, to).toContain("plain decimal number")
-    }
-  })
-
-  it("lets a quoted number-like text field through", () => {
-    for (const to of ['name: "1.50"', "name: '1e3'", 'name: "true"']) {
-      const raw = makeDraft().replace("name: 데모", to)
-      expect(rulesOf(raw, OPTS, "block"), to).not.toContain(
-        "misread-frontmatter-value"
-      )
-    }
-  })
-
-  it("names YAML-only syntax as a cause", () => {
-    // Already one-line values, so the line rules alone would not point at
-    // the tag, anchor or block scalar (#454 review, eleventh round).
-    for (const to of [
-      "name: !!str 데모",
-      "name: &a 데모",
-      "name: >-\n  데모",
-    ]) {
-      const raw = makeDraft().replace("name: 데모", to)
-      const issue = validateDraft(raw, OPTS).issues.find(
-        (i) => i.rule === "misread-frontmatter-value"
-      )
-      expect(issue?.fix, to).toContain("tag")
-      expect(issue?.fix, to).toContain("block scalar")
-    }
-  })
-
-  it("names a comment after a quoted value as a cause", () => {
-    const raw = makeDraft().replace("lang: ko", 'lang: "ko" # only')
-    const issue = validateDraft(raw, OPTS).issues.find(
-      (i) => i.rule === "misread-frontmatter-value"
-    )
-    expect(issue?.fix).toContain("comment")
-  })
-
-  it("lets values both parsers read alike through", () => {
-    for (const [from, to] of [
-      ["name: 데모", 'name: "데모: 디자인"'],
-      ["name: 데모", "name: 데모 # 표기"],
-      ["name: 데모", "name: '데모'"],
-      ["lang: ko", "lang: ko\nestimated_tokens: 1200"],
-      ["lang: ko", "lang: ko\nestimated_tokens: 1.0e3"],
-      ["lang: ko", "lang: ko\nestimated_tokens: 0x10"],
-      ["name: 데모", 'name: "{}"'],
-    ]) {
-      const raw = makeDraft().replace(from, to)
-      expect(rulesOf(raw, OPTS, "block"), to).not.toContain(
-        "misread-frontmatter-value"
-      )
-    }
-  })
-
   it("lets a bare estimated_tokens through as no count", () => {
-    // YAML reads null and the site `[]` — both no value, and the site falls
-    // back to its own estimate. It used to pass the misread comparison only
-    // to fail `buildDoc` with "must be a number …, got object".
+    // YAML reads null — no value, and the site falls back to its own
+    // estimate rather than failing its build.
     const raw = makeDraft().replace("lang: ko", "lang: ko\nestimated_tokens:")
     expect(rulesOf(raw, OPTS, "block")).toEqual([])
-  })
-
-  it("leaves a dropped key to the nonbare rule", () => {
-    const raw = makeDraft().replace("name: 데모", '"name":\n  데모')
-    expect(rulesOf(raw, OPTS, "block")).toEqual(["nonbare-frontmatter-key"])
-  })
-
-  it("leaves an unknown quoted key to the unknown-key warn", () => {
-    const raw = makeDraft().replace("lang: ko", 'lang: ko\n"notes": draft')
-    expect(rulesOf(raw, OPTS, "block")).not.toContain("nonbare-frontmatter-key")
-  })
-
-  it("leaves a quoted known key to the YAML gate when the block does not parse", () => {
-    const raw = makeDraft().replace(
-      "lang: ko",
-      '"lang": ko\nfonts:\n  sans: "Pretendard", sans-serif'
-    )
-    const blocks = rulesOf(raw, OPTS, "block")
-    expect(blocks).toContain("frontmatter-yaml-invalid")
-    expect(blocks).not.toContain("nonbare-frontmatter-key")
   })
 
   it("does not also warn on a retired key that is quoted", () => {
@@ -1304,6 +857,564 @@ describe("validateDraft — frontmatter", () => {
       "lang: ko\ncomponents:\n  topbar:\n    height: 56px"
     )
     expect(rulesOf(raw, OPTS, "warn")).not.toContain("unknown-frontmatter-key")
+  })
+})
+
+// ── where the retired rules' inputs go (#589) ───────────────────────────────
+// The validator used to block every shape on which the site's hand parser, the
+// line-based token readers and YAML disagreed (`misread-frontmatter-value`,
+// `nonbare-frontmatter-key`, `quoted-token-value`, `block-scalar-token-value`,
+// `unreadable-token-map`, the indentation rule). One reader now reads the
+// frontmatter for all of them (docs/adr/0011), so each input those rules
+// caught is one of: read as the same value (passes), blocked by another rule,
+// or blocked as YAML that does not read. Each row below is one such input and
+// its outcome — the whereabouts table of #589, pinned.
+
+describe("where the retired rules' inputs go (#589)", () => {
+  const PIPELINE: DraftValidationOptions = {
+    ...OPTS,
+    filePath: "/cache/demo/draft.md",
+  }
+  const TYPE_SCALE = /typography:\n(?: {2,}[^\n]*\n)+/
+  const COLOUR_ROW = "  primary: oklch(0.62 0.19 258)   # #3182F6"
+  const LOGO = "logo: https://getdesign.kr/logos/demo.png"
+  const DATE = 'last_updated: "2026-07-03"'
+  const aliases = [
+    "grid:",
+    "  a: &a [x, x, x, x, x, x, x, x, x, x, x]",
+    "  b: &b [*a, *a, *a, *a, *a, *a, *a, *a, *a, *a, *a]",
+    "  c: [*b, *b, *b, *b, *b, *b, *b, *b, *b, *b, *b]",
+  ].join("\n")
+  const broken = 'fonts:\n  sans: "Pretendard", sans-serif'
+
+  // [row id, the draft's line, what replaces it, the blocks expected]
+  const ROWS: Array<[string, string, string, Array<string>]> = [
+    // misread-frontmatter-value — a value the site's parser read differently.
+    ["M1 value on the next line", "name: 데모", "name:\n  데모", []],
+    [
+      "M2 value continued on the next line",
+      "name: 데모",
+      "name: 데모\n  시스템",
+      [],
+    ],
+    ["M3 lang on the next line", "lang: ko", "lang:\n  ko", []],
+    [
+      "M4 escapes inside double quotes",
+      "name: 데모",
+      'name: "데모 \\"DS\\""',
+      [],
+    ],
+    ["M5 a comment after a quoted value", DATE, `${DATE} # synced`, []],
+    [
+      "M6 a count on the next line",
+      "lang: ko",
+      "lang: ko\nestimated_tokens:\n  1200",
+      [],
+    ],
+    ["M7 a logo on the next line", LOGO, `logo:\n  ${LOGO.slice(6)}`, []],
+    [
+      "M8 a name YAML reads as a number",
+      "name: 데모",
+      "name: 1.50",
+      ["bad-name"],
+    ],
+    [
+      "M9 a name YAML reads as a boolean",
+      "name: 데모",
+      "name: true",
+      ["bad-name"],
+    ],
+    [
+      "M10 a system name YAML reads as a number",
+      "name: 데모",
+      "name: 데모\ndesign_system_name: 2.10",
+      ["bad-design-system-name"],
+    ],
+    [
+      "M11 a slug YAML reads as a number",
+      "slug: demo",
+      "slug: 0x1f",
+      ["bad-slug"],
+    ],
+    ["M12 a name YAML reads as a map", "name: 데모", "name: {}", ["bad-name"]],
+    [
+      "M13 a name YAML reads as a list",
+      "name: 데모",
+      'name: ["데모"] # c',
+      ["list-frontmatter-value"],
+    ],
+    ["M14 YAML's null for a name", "name: 데모", "name: ~", ["bad-name"]],
+    [
+      "M15 YAML's null for a category",
+      "category: finance",
+      "category: null",
+      ["bad-category"],
+    ],
+    ["M16 YAML's null for lang", "lang: ko", "lang: ~", ["bad-lang"]],
+    [
+      "M17 YAML's null for a date",
+      DATE,
+      "last_updated: ~",
+      ["missing-last-updated"],
+    ],
+    ["M18 YAML's null for the logo", LOGO, "logo: ~", ["missing-logo"]],
+    [
+      "M19 a value continued past a date",
+      'created_at: "2026-07-03"',
+      "created_at: 2026-07-03\n  x",
+      ["frontmatter-parse"],
+    ],
+    [
+      "M20 a map past YAML's alias limit",
+      "name: 데모",
+      `${aliases}\nname: 데모`,
+      ["frontmatter-yaml-invalid"],
+    ],
+    [
+      "M21 a value that contains itself",
+      "name: 데모",
+      "name: &x [*x]",
+      ["list-frontmatter-value"],
+    ],
+    [
+      "M22 a quoted count",
+      "lang: ko",
+      'lang: ko\nestimated_tokens: "1200"',
+      ["frontmatter-parse"],
+    ],
+    [
+      "M23 a binary count",
+      "lang: ko",
+      "lang: ko\nestimated_tokens: 0b101",
+      ["frontmatter-parse"],
+    ],
+    [
+      "M24 a boolean count",
+      "lang: ko",
+      "lang: ko\nestimated_tokens: true",
+      ["frontmatter-parse"],
+    ],
+    [
+      "M25 a list count",
+      "lang: ko",
+      "lang: ko\nestimated_tokens: [1200]",
+      ["list-frontmatter-value"],
+    ],
+    ["M26 a tag", "name: 데모", "name: !!str 데모", []],
+    ["M27 an anchor", "name: 데모", "name: &a 데모", []],
+    ["M28 a block scalar", "name: 데모", "name: >-\n  데모", []],
+    ["M29 a comment after quoted lang", "lang: ko", 'lang: "ko" # only', []],
+    [
+      "M30 a quoted value holding `: `",
+      "name: 데모",
+      'name: "데모: 디자인"',
+      [],
+    ],
+    [
+      "M31 a quoted name YAML would read as a number",
+      "name: 데모",
+      'name: "1.50"',
+      [],
+    ],
+    [
+      "M32 a count in exponent form",
+      "lang: ko",
+      "lang: ko\nestimated_tokens: 1.0e3",
+      [],
+    ],
+    [
+      "M33 a key cut at a doubled colon",
+      "name: 데모",
+      "name:: 토스",
+      ["colon-cut-frontmatter-key", "spec-schema-key"],
+    ],
+    [
+      "M34 a key cut at an inner colon",
+      "name: 데모",
+      "name: 데모\ndesign_system_name:x: y",
+      ["colon-cut-frontmatter-key"],
+    ],
+    // nonbare-frontmatter-key — a known key the site's parser could not see.
+    ["N1 a double-quoted key", "lang: ko", '"lang": ko', []],
+    ["N2 a single-quoted key", "lang: ko", "'lang': ko", []],
+    ["N3 a space before the colon", "lang: ko", "lang : ko", []],
+    ["N4 a quoted slug key", "slug: demo", '"slug": demo', []],
+    ["N5 an anchored key", "lang: ko", "&a lang: ko", []],
+    [
+      "N6 a key written through an alias",
+      "lang: ko",
+      "lang2: &k lang\n? *k\n: ko",
+      [],
+    ],
+    [
+      "D1 an alias key that repeats a key's name",
+      DATE,
+      `holder: &k last_updated\n${DATE}\n? *k\n: "2026-01-01"`,
+      ["frontmatter-yaml-invalid"],
+    ],
+    [
+      "D2 a number key and its quoted spelling in one map",
+      COLOUR_ROW,
+      `${COLOUR_ROW}\n  500: oklch(0.5 0.1 10)\n  "500": oklch(0.6 0.1 10)`,
+      ["frontmatter-yaml-invalid"],
+    ],
+    [
+      "N7 a quoted key with its value on the next line",
+      "name: 데모",
+      '"name":\n  데모',
+      [],
+    ],
+    ["N8 a quoted date key", DATE, `"last_updated": "2026-07-03"`, []],
+    ["N9 a quoted token map", "typography:", '"typography":', []],
+    ["N10 a quoted logo key", LOGO, `"logo": ${LOGO.slice(6)}`, []],
+    [
+      "N11 a key-like line inside a quoted value",
+      "name: 데모",
+      'name: "데모\nlang: ko"',
+      ["frontmatter-yaml-invalid"],
+    ],
+    [
+      "N12 a quoted key in a block YAML cannot read",
+      "lang: ko",
+      `"lang": ko\n${broken}`,
+      ["frontmatter-yaml-invalid"],
+    ],
+    // list-frontmatter-value — reduced to a type check, so its old cross-reader
+    // message has nothing left to say about a block YAML cannot read.
+    [
+      "L1 a list in a block YAML cannot read",
+      "lang: ko",
+      `lang: [ko]\n${broken}`,
+      ["frontmatter-yaml-invalid"],
+    ],
+    // quoted-token-value — a quoted token value hid from the line readers.
+    [
+      "Q1 a quoted OKLCH colour",
+      COLOUR_ROW,
+      '  primary: "oklch(0.62 0.19 258)"   # #3182F6',
+      [],
+    ],
+    [
+      "Q2 a quoted hex colour",
+      COLOUR_ROW,
+      '  primary: "#3182F6"',
+      ["non-oklch-token-value"],
+    ],
+    [
+      "Q3 a quoted shadow",
+      "lang: ko",
+      'lang: ko\nelevation:\n  s1: "0 1px 2px oklch(0 0 0 / 0.06)"',
+      [],
+    ],
+    [
+      "Q4 a quoted shadow holding a hex",
+      "lang: ko",
+      'lang: ko\nelevation:\n  s1: "0 1px 2px #0000001A"',
+      [],
+    ],
+    // block-scalar-token-value — a token value written as `>` or `|`.
+    [
+      "B1 a folded colour",
+      COLOUR_ROW,
+      "  primary: >\n    oklch(0.62 0.19 258)",
+      [],
+    ],
+    [
+      "B2 a literal hex colour",
+      COLOUR_ROW,
+      "  primary: |-\n    #3182F6",
+      ["non-oklch-token-value"],
+    ],
+    [
+      "B3 a folded shadow",
+      "lang: ko",
+      "lang: ko\nelevation:\n  s1: >\n    0 1px 2px oklch(0 0 0 / 0.06)",
+      [],
+    ],
+    [
+      "B4 a folded easing in elevation",
+      "lang: ko",
+      "lang: ko\nelevation:\n  ease: >\n    cubic-bezier(.2, 0, .2, 1)",
+      ["elevation-not-shadow"],
+    ],
+    // unreadable-token-map — the linter read a style the extractor did not.
+    // A style that is not a map with one of the four sized properties is now
+    // one shape rule's (`typography-style-shape`).
+    [
+      "U1 an inline style",
+      "typography:",
+      "typography:\n  title: { fontSize: 24px }",
+      [],
+    ],
+    [
+      "U2 an inline style with names the scale does not use",
+      "typography:",
+      "typography:\n  title: { size: 24px }",
+      ["typography-style-shape"],
+    ],
+    [
+      "U3 a font family with no size",
+      "typography:",
+      "typography:\n  code:\n    fontFamily: D2Coding",
+      ["typography-style-shape"],
+    ],
+    [
+      "U4 a numeric style name",
+      "typography:",
+      "typography:\n  1.0:\n    fontSize: 16px",
+      [],
+    ],
+    [
+      "U5 a colour alias row",
+      COLOUR_ROW,
+      `${COLOUR_ROW}\n  brand: "{colors.primary}"`,
+      [],
+    ],
+    [
+      "U7 a whole style written as an alias",
+      "typography:",
+      'typography:\n  hero: "{typography.body}"',
+      ["typography-style-shape"],
+    ],
+    [
+      "U8 a style written as one value",
+      "typography:",
+      "typography:\n  caption: 16px",
+      ["typography-style-shape"],
+    ],
+    [
+      "U6 an inline style YAML cannot read",
+      "typography:",
+      `typography:\n  title: { fontSize: 24px\n${broken}`,
+      ["frontmatter-yaml-invalid"],
+    ],
+    // Its colours half — the linter resolves a colour the extractor drops.
+    // Only an empty colour sidecar is blocked, as before: alias rows make the
+    // two counts differ in a sound entry, so one dropped colour beside a kept
+    // one (U11) passes.
+    [
+      "U9 a palette of named colours only",
+      COLOUR_ROW,
+      "  primary: white\n  surface: transparent",
+      ["unreadable-colors"],
+    ],
+    [
+      "U10 a colour written as an upper-case function",
+      COLOUR_ROW,
+      "  primary: OKLCH(0.62 0.19 258)",
+      ["unreadable-colors"],
+    ],
+    [
+      "U11 a named colour beside an OKLCH one",
+      COLOUR_ROW,
+      `${COLOUR_ROW}\n  surface: white`,
+      [],
+    ],
+    // noncanonical-token-indent — now "no map under a token map".
+    ["I1 a colour map indented four spaces", COLOUR_ROW, `  ${COLOUR_ROW}`, []],
+    [
+      "I2 a token nested under a group",
+      COLOUR_ROW,
+      "  brand:\n    primary: oklch(0.62 0.19 258)",
+      ["noncanonical-token-indent"],
+    ],
+    [
+      "I3 an unquoted reference",
+      COLOUR_ROW,
+      `${COLOUR_ROW}\n  brand: {colors.primary}`,
+      ["noncanonical-token-indent"],
+    ],
+    [
+      "I4 a type style nested under a group",
+      "typography:",
+      "typography:\n  group:\n    caption:\n      fontSize: 12px",
+      ["typography-style-shape"],
+    ],
+    [
+      "I5 a map under a sized style",
+      "typography:",
+      "typography:\n  title:\n    fontSize: 24px\n    mobile:\n      fontSize: 20px",
+      ["typography-style-shape"],
+    ],
+    // frontmatter-parse — the fence it used to report is the read gate's now.
+    [
+      "P1 a frontmatter with no closing fence",
+      "\n---\n",
+      "\n",
+      ["frontmatter-yaml-invalid"],
+    ],
+    // …and what it still reports: a value the site's build refuses.
+    [
+      "P2 a date that is not a real day",
+      DATE,
+      'last_updated: "2026-02-30"',
+      ["frontmatter-parse"],
+    ],
+  ]
+
+  it.each(ROWS)("%s", (_, from, to, blocks) => {
+    const draft = makeDraft()
+    expect(draft, "the fixture holds the line to replace").toContain(from)
+    expect(rulesOf(draft.replace(from, to), OPTS, "block")).toEqual(blocks)
+  })
+
+  it("reads each passing row's value as YAML does", () => {
+    // Passing is not enough: the site gets the value the author wrote.
+    const read = (raw: string) => {
+      const result = readFrontmatter(raw)
+      if (!result.ok) throw new Error(result.errors[0].message)
+      return Object.fromEntries(result.keys.map((k) => [k.key, k.value]))
+    }
+    const at = (from: string, to: string) => read(makeDraft().replace(from, to))
+    expect(at("name: 데모", "name:\n  데모").name).toBe("데모")
+    expect(at("name: 데모", "name: 데모\n  시스템").name).toBe("데모 시스템")
+    expect(at("name: 데모", 'name: "데모 \\"DS\\""').name).toBe('데모 "DS"')
+    expect(at("lang: ko", '"lang": ko').lang).toBe("ko")
+    expect(at("lang: ko", "lang2: &k lang\n? *k\n: ko").lang).toBe("ko")
+    expect(
+      at("lang: ko", "lang: ko\nestimated_tokens:\n  1200").estimated_tokens
+    ).toBe(1200)
+  })
+
+  it("judges a colour written below its key by the hex on the value's line (C1)", () => {
+    // YAML reads the comment that ends the value's line as the value's, so the
+    // hex there is the one the check pairs it with — on the next line or after
+    // a quoted value split over two.
+    const warns = (to: string) =>
+      rulesOf(makeDraft().replace(COLOUR_ROW, to), OPTS, "warn")
+    expect(warns("  primary:\n    oklch(0.42 0.18 254)   # #3182F6")).toContain(
+      "oklch-hex-mismatch"
+    )
+    expect(
+      warns('  primary: "oklch(0.42\n    0.18 254)"   # #3182F6')
+    ).toContain("oklch-hex-mismatch")
+    expect(
+      warns("  primary:\n    oklch(0.62 0.19 258)   # #3182F6")
+    ).not.toContain("oklch-hex-mismatch")
+  })
+
+  it("blocks a map written as a YAML alias, once, at any depth (A1, A2)", () => {
+    const blocks = (raw: string) => rulesOf(raw, OPTS, "block")
+    const END = "    fontWeight: 400\n---"
+    // A whole token map: the linter expands it, the sidecar got no rows.
+    expect(
+      blocks(
+        makeDraft().replace(
+          END,
+          "    fontWeight: 400\nspacing: &scale\n  sm: 4px\nrounded: *scale\n---"
+        )
+      )
+    ).toEqual(["aliased-map-value"])
+    // A style: the alias names it, not a misleading "sets no size".
+    expect(
+      blocks(
+        makeDraft().replace(
+          TYPE_SCALE,
+          "typography:\n  body: &body\n    fontSize: 16px\n  title: *body\n"
+        )
+      )
+    ).toEqual(["aliased-map-value"])
+    // An anchor alone, or an alias of one value, is not one.
+    expect(
+      blocks(
+        makeDraft().replace(
+          END,
+          "    fontWeight: 400\nspacing: &scale\n  sm: &four 4px\nrounded:\n  sm: *four\n---"
+        )
+      )
+    ).toEqual([])
+  })
+
+  it("blocks a known key cut at a colon, naming the key meant (M33, M34)", () => {
+    // `name:: 토스` is the key `name:` to YAML and `design_system_name:x: y`
+    // the key `design_system_name:x`: the site reads neither, so the value
+    // meant for the known key is lost. One block names that key and the fix;
+    // the line is not also warned about as an unknown key.
+    for (const [to, meant] of [
+      ["name:: 토스", "name"],
+      ["name: 데모\ndesign_system_name:x: y", "design_system_name"],
+    ]) {
+      const issues = validateDraft(
+        makeDraft().replace("name: 데모", to),
+        OPTS
+      ).issues
+      const cut = issues.filter((i) => i.rule === "colon-cut-frontmatter-key")
+      expect(cut, to).toHaveLength(1)
+      expect(cut[0].severity).toBe("block")
+      expect(cut[0].fix).toContain(`\`${meant}: value\``)
+      expect(
+        issues.map((i) => i.rule),
+        to
+      ).not.toContain("unknown-frontmatter-key")
+    }
+    // A key that only starts like a known one is a plain unknown key.
+    const near = makeDraft().replace("name: 데모", "name: 데모\nnamespace: x")
+    expect(rulesOf(near, OPTS, "block")).toEqual([])
+    expect(rulesOf(near, OPTS, "warn")).toContain("unknown-frontmatter-key")
+  })
+
+  it("passes the pipeline's quoted keys as the values they hold (N4–N10)", () => {
+    // In the pipeline a dropped slug read as the file name, `draft`, and a
+    // dropped logo as none. Read once, both are the values written.
+    for (const [from, to] of [
+      ["slug: demo", '"slug": demo'],
+      [LOGO, `"logo": ${LOGO.slice(6)}`],
+      ["category: finance", '"category": finance'],
+      ["lang: ko", '"lang": ko'],
+    ]) {
+      expect(
+        rulesOf(makeDraft().replace(from, to), PIPELINE, "block"),
+        to
+      ).toEqual([])
+    }
+    // …and a quoted slug is the entry's slug for its recorded limitations.
+    const limited = makeDraft()
+      .replace("slug: demo", '"slug": 11st')
+      .replace("lang: ko", "lang: ko\nrounded:\n  circle: 50%")
+    expect(
+      rulesOf(limited, {
+        ...OPTS,
+        filePath: "/cache/11st/draft.md",
+        expectedSlug: "11st",
+      })
+    ).not.toContain("spec-unrecorded-limitation")
+  })
+
+  it("blocks each unsized style beside a sized one and sends a bare family to `fonts:` (U2, U3)", () => {
+    // The linter counts `title` and `code` as styles; the sidecar carries
+    // neither, since neither sets a size, weight, line height or tracking.
+    // `body` is a style both read, so it is not named.
+    const raw = makeDraft().replace(
+      TYPE_SCALE,
+      "typography:\n  body:\n    fontSize: 16px\n  title: { size: 24px }\n  code:\n    fontFamily: D2Coding\n"
+    )
+    const shape = validateDraft(raw, OPTS).issues.filter(
+      (i) => i.rule === "typography-style-shape"
+    )
+    expect(shape.map((i) => i.fix.match(/^style `([^`]+)`/)?.[1])).toEqual([
+      "title",
+      "code",
+    ])
+    for (const { fix } of shape) {
+      expect(fix).toContain("catalog-only `fonts:` map")
+      expect(fix).toContain("do not invent a size")
+    }
+  })
+
+  it("tells a nested style both ways out: a group comment row, or a flat variant (I4, I5)", () => {
+    const fixFor = (scale: string) =>
+      validateDraft(makeDraft().replace(TYPE_SCALE, scale), OPTS).issues.find(
+        (i) => i.rule === "typography-style-shape"
+      )?.fix
+    const group = fixFor(
+      "typography:\n  body:\n    fontSize: 16px\n  group:\n    caption:\n      fontSize: 12px\n"
+    )
+    expect(group).toContain("`  ## group` comment row")
+    expect(group).toContain("(`caption:`)")
+    const variant = fixFor(
+      "typography:\n  title:\n    fontSize: 24px\n    mobile:\n      fontSize: 20px\n"
+    )
+    expect(variant).toContain("(`title-mobile:`)")
   })
 })
 
@@ -1510,107 +1621,26 @@ describe("validateDraft — official spec linter", () => {
     expect(rulesOf(raw, OPTS, "block")).toContain("spec-no-colors")
   })
 
-  it("blocks a document with no type scale", () => {
-    // `colors:` and `typography:` are the two required maps (#428). The linter
-    // resolving none is its own cause, so the extractor rule stays quiet.
-    const raw = makeDraft().replace(/typography:\n(?: {2,}[^\n]*\n)+/, "")
-    const blocks = rulesOf(raw, OPTS, "block")
-    expect(blocks).toContain("spec-no-typography")
-    expect(blocks).not.toContain("unreadable-token-map")
-  })
-
-  it("blocks a type scale the linter reads but the token extractor does not", () => {
-    // The inline form is a token to the linter and zero tokens to the
-    // extractor, so the sidecar behind the Tokens tab ships empty (#428).
-    const raw = makeDraft().replace(
-      /typography:\n(?: {2,}[^\n]*\n)+/,
-      "typography:\n  body: { size: 16px, weight: 400 }\n"
-    )
-    const blocks = rulesOf(raw, OPTS, "block")
-    expect(blocks).toContain("unreadable-token-map")
-    expect(blocks).not.toContain("spec-no-typography")
-  })
-
-  it("blocks a type scale the extractor reads only part of", () => {
-    // One nested style reads; the inline ones beside it do not, so the sidecar
-    // would ship one style of three with no count at zero to notice it.
-    const raw = makeDraft().replace(
-      /typography:\n(?: {2,}[^\n]*\n)+/,
-      "typography:\n  body:\n    fontSize: 16px\n  title: { size: 24px }\n  caption: { size: 12px }\n"
-    )
-    const issue = validateDraft(raw, OPTS).issues.find(
-      (i) => i.rule === "unreadable-token-map"
-    )
-    expect(issue?.severity).toBe("block")
-    expect(issue?.fix).toContain("1 of 3")
-    expect(issue?.fix).toContain("`title`, `caption`")
-  })
-
-  it("blocks the review's stray-row case, where a count check once passed", () => {
-    // The linter resolves only `body`, which the extractor cannot read. Before
-    // `mapRows` closed the map at a quoted key, the extractor also read
-    // `caption` from under `"notes":`, and 1 >= 1 passed (#447 review). The map
-    // now closes there; judging by name keeps a stray row from standing in for
-    // a missing style should another path ever let one through.
-    const raw = makeDraft().replace(
-      /typography:\n(?: {2,}[^\n]*\n)+/,
-      'typography:\n  body: { fontSize: 16px }\n"notes":\n  caption:\n    fontWeight: 400\n'
-    )
-    const issue = validateDraft(raw, OPTS).issues.find(
-      (i) => i.rule === "unreadable-token-map"
-    )
-    expect(issue?.fix).toContain("`body`")
-  })
-
-  it("matches a numeric style name the YAML parser normalises", () => {
-    // The linter reads `1.0:` as the key `1`; the extractor keeps the source
-    // text. Judging by name must not call that style unread.
-    const raw = makeDraft().replace(
-      /typography:\n(?: {2,}[^\n]*\n)+/,
-      "typography:\n  1.0:\n    fontSize: 16px\n  body:\n    fontSize: 14px\n"
-    )
-    expect(rulesOf(raw, OPTS, "block")).not.toContain("unreadable-token-map")
-  })
-
-  it("points a font family with no published size at `fonts:`, not an invented size", () => {
-    // A `fontFamily`-only style is spec-legal but yields no sidecar token; the
-    // fix must not press the author to make up a `fontSize` to pass.
-    const raw = makeDraft().replace(
-      /typography:\n(?: {2,}[^\n]*\n)+/,
-      "typography:\n  body:\n    fontSize: 16px\n  code:\n    fontFamily: D2Coding\n"
-    )
-    const issue = validateDraft(raw, OPTS).issues.find(
-      (i) => i.rule === "unreadable-token-map"
-    )
-    expect(issue?.fix).toContain("`code`")
-    expect(issue?.fix).toContain("`fonts:`")
-  })
-
-  it("lets colour alias rows through, which the sidecar leaves out by design", () => {
-    // The linter resolves `{colors.x}` rows; the extractor skips them on
-    // purpose, so a colour map need only yield one token.
+  it("blocks colours the linter resolves and the sidecar would carry none of", () => {
+    // A named colour or an upper-case function reads as a colour to the
+    // linter, so `spec-no-colors` stays quiet, while the extractor keeps
+    // neither — the Tokens tab would ship with no colour.
     const raw = makeDraft().replace(
       /colors:\n {2}primary: [^\n]*\n/,
-      'colors:\n  blue-500: oklch(0.62 0.19 258)\n  primary: "{colors.blue-500}"\n'
+      "colors:\n  primary: white\n  accent: RGB(49 130 246)\n"
     )
-    expect(rulesOf(raw, OPTS, "block")).not.toContain("unreadable-token-map")
+    const issues = validateDraft(raw, OPTS).issues
+    expect(issues.map((i) => i.rule)).not.toContain("spec-no-colors")
+    const fix = issues.find((i) => i.rule === "unreadable-colors")
+    expect(fix?.severity).toBe("block")
+    expect(fix?.fix).toContain("`primary`, `accent`")
+    expect(fix?.fix).toContain("`name: oklch(L C H)`")
   })
 
-  it("leaves the extractor check to the YAML gate when the frontmatter does not parse", () => {
-    // The extractor degrades silently on invalid YAML — the parse block is the
-    // one message for that cause.
-    const raw = makeDraft().replace(
-      /typography:\n(?: {2,}[^\n]*\n)+/,
-      'typography:\n  body: { size: 16px\nfonts:\n  sans: "Pretendard", sans-serif\n'
-    )
-    const blocks = rulesOf(raw, OPTS, "block")
-    expect(blocks).toContain("frontmatter-yaml-invalid")
-    expect(blocks).not.toContain("unreadable-token-map")
-    expect(blocks).not.toContain("spec-no-typography")
-  })
-
-  it("passes the fixture through the extractor check", () => {
-    expect(rulesOf(makeDraft(), OPTS)).not.toContain("unreadable-token-map")
+  it("blocks a document with no type scale", () => {
+    // `colors:` and `typography:` are the two required maps (#428).
+    const raw = makeDraft().replace(/typography:\n(?: {2,}[^\n]*\n)+/, "")
+    expect(rulesOf(raw, OPTS, "block")).toContain("spec-no-typography")
   })
 
   it("warns on a value the spec cannot express, naming where to record it", () => {
@@ -1671,7 +1701,7 @@ describe("validateDraft — official spec linter", () => {
     const raw = makeDraft()
       .replace("slug: demo", "slug: 11st")
       .replace("lang: ko", "lang: ko\nrounded:\n  circle: 50%")
-      // A date that is valid YAML but not a real calendar day: buildDoc throws.
+      // A date that is valid YAML but not a real calendar day: the site refuses it.
       .replace('last_updated: "2026-07-03"', 'last_updated: "2026-13-45"')
     const rules = rulesOf(raw, {
       filePath: "/services/11st.md",
@@ -2203,14 +2233,30 @@ describe("token rules read the frontmatter maps", () => {
   })
 
   it("warns when one token name carries two different values", () => {
+    // In two maps: YAML reads both, and the drift gate drops the name.
     expect(
       rulesFor(
         draftWithFrontmatterColors([
-          "bg-canvas: oklch(1 0 0)",
-          "bg-canvas: oklch(0.148 0.004 277)",
+          "light:",
+          "  bg-canvas: oklch(1 0 0)",
+          "dark:",
+          "  bg-canvas: oklch(0.148 0.004 277)",
         ])
       )
     ).toContain("duplicate-token-value")
+  })
+
+  it("blocks one token name written twice in the same map as unreadable YAML", () => {
+    // YAML refuses a repeated key, so the colour readers read nothing from the
+    // block (docs/adr/0011) and the one cause is the YAML error.
+    const rules = rulesFor(
+      draftWithFrontmatterColors([
+        "bg-canvas: oklch(1 0 0)",
+        "bg-canvas: oklch(0.148 0.004 277)",
+      ])
+    )
+    expect(rules).toContain("frontmatter-yaml-invalid")
+    expect(rules).not.toContain("duplicate-token-value")
   })
 
   it("leaves a reference alone rather than judging it as a literal", () => {
@@ -2276,27 +2322,6 @@ describe("quoting cannot hide a token from the rules", () => {
         value
       ).toContain("non-oklch-token-value")
     }
-  })
-
-  it("blocks a quoted value even when the colour itself is fine", () => {
-    // Quoting is not cosmetic: `audit:oklch` and the drift check regex over the
-    // raw text, so a quoted definition drops out of both while they keep
-    // reporting success.
-    expect(
-      rulesFor(draftWithFrontmatterColors(['brand: "oklch(0.62 0.19 258)"']))
-    ).toContain("quoted-token-value")
-  })
-
-  it("still allows the quoted form a reference requires", () => {
-    // `{...}` unquoted is a YAML flow mapping, so a reference MUST be quoted.
-    expect(
-      rulesFor(
-        draftWithFrontmatterColors([
-          "brand: oklch(0.62 0.19 258)",
-          'fill-brand: "{colors.brand}"',
-        ])
-      )
-    ).not.toContain("quoted-token-value")
   })
 })
 
@@ -2373,22 +2398,30 @@ describe("frontmatter must parse as YAML", () => {
 })
 
 describe("indentation cannot hide a token either", () => {
-  it("blocks a bad value nested deeper than the canonical two spaces", () => {
-    // The extractor reads only 2-space rows, so a deeper one is a token it drops
-    // in silence. The validator therefore has to look wider than the extractor,
-    // turning a silent loss into an error. `typography:` is the map that
-    // legitimately nests, and it is not scanned by this rule.
+  it("blocks a token nested under another, whatever its value", () => {
+    // A nested token is renamed `{colors.brand.primary}`, which the sidecar
+    // and a `{colors.primary}` reference both miss. `typography:` is the map
+    // that legitimately nests, and it is not scanned by this rule.
     expect(
       rulesFor(draftWithRawColorRows(["  brand:", "    primary: #ABCDEF"]))
-    ).toContain("non-oklch-token-value")
+    ).toContain("noncanonical-token-indent")
+  })
+
+  it("reads a map indented by four spaces as the same tokens", () => {
+    // Indentation is YAML's business: four spaces is the same flat map (#589).
+    expect(
+      rulesFor(draftWithRawColorRows(["    primary: oklch(0.62 0.19 258)"]))
+    ).toEqual(
+      rulesFor(draftWithRawColorRows(["  primary: oklch(0.62 0.19 258)"]))
+    )
   })
 })
 
 describe("the token map's canonical shape is enforced, not just its values", () => {
   it("blocks a token nested below a group key even when its colour is valid", () => {
-    // A VALID colour at the wrong indent is the dangerous case: nothing objects
-    // to the value, but `frontmatterRows` reads only two-space rows, so the
-    // token never reaches the sidecar — and `tokens:check` then agrees with the
+    // A VALID colour under a group key is the dangerous case: nothing objects
+    // to the value, but the extractor reads the map's own rows, so the token
+    // never reaches the sidecar — and `tokens:check` then agrees with the
     // truncated file it just generated. Measured: 33 colours became 32.
     expect(
       rulesFor(
@@ -2442,40 +2475,13 @@ describe("a BOM cannot switch the YAML check off", () => {
 
   it("reports invalid YAML with or without one", () => {
     // Editors that emit a BOM would otherwise get a free pass: the `^---` anchor
-    // misses, this check returns nothing, and `buildDoc` falls back to the
-    // permissive parser — the silent zero-token failure the check exists to stop.
+    // misses and this check returns nothing — the silent zero-token failure
+    // the check exists to stop.
     const plain = makeDraft({ frontmatter: brokenFrontmatter })
     expect(rulesFor(plain), "no BOM").toContain("frontmatter-yaml-invalid")
     expect(rulesFor(BOM + plain), "with BOM").toContain(
       "frontmatter-yaml-invalid"
     )
-  })
-})
-
-describe("token values must be single-line scalars", () => {
-  it("blocks a block scalar in the colors map", () => {
-    // Legal YAML, but every reader of these maps is line-based: writing one into
-    // `colors:` dropped the token from the sidecar entirely while
-    // `validate:catalog` still printed PASSED.
-    for (const rows of [
-      ["  primary: >", "    oklch(0.62 0.19 258)"],
-      ["  primary: oklch(0.62 0.19 258)", "  odd: |-"],
-    ]) {
-      expect(rulesFor(draftWithRawColorRows(rows)), rows.join(" / ")).toContain(
-        "block-scalar-token-value"
-      )
-    }
-  })
-
-  it("does not mistake a value that merely contains > or | for one", () => {
-    expect(
-      rulesFor(
-        draftWithRawColorRows([
-          '  ramp: "{colors.a}"',
-          "  b: oklch(0.5 0.1 30)",
-        ])
-      )
-    ).not.toContain("block-scalar-token-value")
   })
 })
 
@@ -2492,23 +2498,8 @@ describe("the elevation map is held to the token rules", () => {
         "  shadow-1: 0 1px 2px oklch(0 0 0 / 0.06), 0 1px 1px oklch(0 0 0 / 0.04)   # 카드"
       )
     )
-    expect(rules).not.toContain("quoted-token-value")
-    expect(rules).not.toContain("block-scalar-token-value")
+    expect(rules).not.toContain("elevation-not-shadow")
     expect(rules).not.toContain("noncanonical-token-indent")
-  })
-
-  it("blocks a block scalar — the extractor reads one line per shadow", () => {
-    expect(
-      rulesFor(
-        withElevation("  shadow-1: >", "    0 1px 2px oklch(0 0 0 / 0.06)")
-      )
-    ).toContain("block-scalar-token-value")
-  })
-
-  it("blocks a quoted shadow value", () => {
-    expect(
-      rulesFor(withElevation('  shadow-1: "0 1px 2px oklch(0 0 0 / 0.06)"'))
-    ).toContain("quoted-token-value")
   })
 
   it("blocks a bare hex colour, which YAML reads as a comment", () => {
@@ -2548,22 +2539,6 @@ describe("the elevation map is held to the token rules", () => {
     }
   })
 
-  it("reports a quoted shadow as quoted, not as a cut-off colour", () => {
-    // Valid YAML whose value is intact; the line reader cuts at the ` #`
-    // inside the quotes, so the true fault is the quoting.
-    const rules = rulesFor(withElevation('  q: "0 1px 2px #0000001A"'))
-    expect(rules).toContain("quoted-token-value")
-    expect(rules).not.toContain("elevation-not-shadow")
-  })
-
-  it("leaves a block scalar to its own rule", () => {
-    const rules = rulesFor(
-      withElevation("  bs: >", "    0 1px 2px oklch(0 0 0 / 0.06)")
-    )
-    expect(rules).toContain("block-scalar-token-value")
-    expect(rules).not.toContain("elevation-not-shadow")
-  })
-
   it("blocks a row that is not a shadow at all", () => {
     // An easing curve or a z-index reaches no sidecar from here; it belongs
     // in a body text fence.
@@ -2598,7 +2573,6 @@ describe("the spec's components map takes only what standard tools read", () => 
       withComponents(["  pill:", '    backgroundColor: "#FF0038"'])
     )
     expect(rules).toContain("component-value-form")
-    expect(rules).not.toContain("quoted-token-value")
     expect(rules).not.toContain("non-oklch-token-value")
   })
 
@@ -2660,9 +2634,9 @@ describe("the spec's components map takes only what standard tools read", () => 
     expect(form).toHaveLength(1)
     expect(form[0].severity).toBe("block")
     expect(form[0].fix).toContain(hint)
-    const rules = result.issues.map((i) => i.rule)
-    expect(rules).not.toContain("quoted-token-value")
-    expect(rules).not.toContain("non-oklch-token-value")
+    expect(result.issues.map((i) => i.rule)).not.toContain(
+      "non-oklch-token-value"
+    )
   })
 
   it.each(["border: 1px", "border: #fff"])(
@@ -2756,16 +2730,18 @@ describe("the spec's components map takes only what standard tools read", () => 
         "    height: 56px",
       ])
     )
-    expect(rules).not.toContain("quoted-token-value")
+    expect(rules).not.toContain("component-value-form")
     expect(rules).not.toContain("noncanonical-component-shape")
   })
 
-  it("blocks a one-line flow-map component", () => {
-    // The linter accepts it, but every line-based gate reads properties one per
-    // line, so its values would reach the published DESIGN.md unjudged.
-    expect(
-      rulesFor(withComponents(['  pill: { backgroundColor: "#FF0038" }']))
-    ).toContain("noncanonical-component-shape")
+  it("judges a one-line flow-map component's values like any other", () => {
+    // YAML reads `{ … }` as the same component a block is, so its values are
+    // judged — this one is a literal colour (#589).
+    const rules = rulesFor(
+      withComponents(['  pill: { backgroundColor: "#FF0038" }'])
+    )
+    expect(rules).toContain("component-value-form")
+    expect(rules).not.toContain("noncanonical-component-shape")
   })
 
   it("blocks nesting past component and property", () => {
@@ -2776,11 +2752,34 @@ describe("the spec's components map takes only what standard tools read", () => 
     ).toContain("noncanonical-component-shape")
   })
 
-  it("blocks a block scalar in a component property", () => {
-    expect(
-      rulesFor(withComponents(["  card:", "    padding: >", "      12px 16px"]))
-    ).toContain("block-scalar-token-value")
+  it("judges a block-scalar component value as YAML reads it", () => {
+    // `>` folds to `12px 16px`, a shorthand the spec's map does not read.
+    const fix = validateDraft(
+      withComponents(["  card:", "    padding: >", "      12px 16px"]),
+      OPTS
+    ).issues.find((i) => i.rule === "component-value-form")?.fix
+    expect(fix).toContain("write one value")
   })
+
+  it.each([
+    [
+      ["    backgroundColor: |-", '      "{colors.primary}"'],
+      '"{colors.primary}"',
+    ],
+    [["    height: |", "      48px"], "48px"],
+  ])(
+    "sends a block-scalar value the linter reads as text to the key's line (%j)",
+    (rows, oneLine) => {
+      // The quotes inside `|-`, and the newline a bare `|` keeps, are part of
+      // the value — the one-line spelling is the fix.
+      const fix = validateDraft(
+        withComponents(["  card:", ...rows]),
+        OPTS
+      ).issues.find((i) => i.rule === "component-value-form")?.fix
+      expect(fix).toContain(`on the key's line as \``)
+      expect(fix).toContain(`: ${oneLine}\``)
+    }
+  )
 })
 
 describe("every component value the gate admits is one the linter reads", () => {
@@ -2826,6 +2825,8 @@ describe("every component value the gate admits is one the linter reads", () => 
   // linter reads (`unresolved-token-ref`, and the linter's own broken-ref
   // error), and whether it fits its property.
   const GATE_RULES = new Set([
+    // A row YAML cannot read is not admitted either — no gate judges it.
+    "frontmatter-yaml-invalid",
     "component-value-form",
     "unknown-component-property",
     "noncanonical-component-shape",
@@ -2858,8 +2859,36 @@ describe("every component value the gate admits is one the linter reads", () => 
     "height: 48px\t",
     `height: ${"1".repeat(62)}px`,
   ]
+  // A block scalar has no quotes of its own: its value is the exact string
+  // YAML yields, and that string is what the linter tests (#589 review). So a
+  // reference is bare braces inside it, and quotes written inside stay in the
+  // value — the linter reads `"{colors.primary}"` as text, not a reference.
+  // A `|` or `>` header without `-` keeps a trailing newline, text again.
+  const BLOCK_SCALAR_READ = [
+    ["backgroundColor: |-", "      {colors.primary}"],
+    ["backgroundColor: >-", "      {colors.primary}"],
+    ["typography: |-", "      {typography.body}"],
+    ["typography: >-", "      {typography.body}"],
+    ["height: |-", "      48px"],
+    ["height: >-", "      48px"],
+  ]
+  const BLOCK_SCALAR_TEXT = [
+    ["backgroundColor: |-", '      "{colors.primary}"'],
+    ["backgroundColor: >-", '      "{colors.primary}"'],
+    ["backgroundColor: |-", "      '{colors.primary}'"],
+    ["typography: |-", '      "{typography.body}"'],
+    ["typography: >-", '      "{typography.body}"'],
+    ["height: |-", '      "48px"'],
+    ["height: >-", '      "48px"'],
+    ["backgroundColor: |", "      {colors.primary}"],
+    ["backgroundColor: >", "      {colors.primary}"],
+    ["height: |", "      48px"],
+    ["height: >", "      48px"],
+  ]
   const ROWS: Array<string | Array<string>> = [
     ...WELL_FORMED,
+    ...BLOCK_SCALAR_READ,
+    ...BLOCK_SCALAR_TEXT,
     ["height: 48px", 'backgroundColor: "{colors.primary}"'],
     // Rows the row splitter does not match, beside one it does.
     ["height: 48px", "padding : 12px 16px"],
@@ -2904,6 +2933,25 @@ describe("every component value the gate admits is one the linter reads", () => 
     expect(admits(rowsOf(row))).toBe(true)
   })
 
+  const asCase = (rows: Array<string>) => ({
+    rows,
+    shown: rows.map((r) => r.trim()).join(" + "),
+  })
+
+  it.each(BLOCK_SCALAR_READ.map(asCase))(
+    "admits the block scalar $shown, a value the linter reads",
+    ({ rows }) => {
+      expect(admits(rowsOf(rows))).toBe(true)
+    }
+  )
+
+  it.each(BLOCK_SCALAR_TEXT.map(asCase))(
+    "blocks the block scalar $shown, which the linter reads as text",
+    ({ rows }) => {
+      expect(admits(rowsOf(rows))).toBe(false)
+    }
+  )
+
   it.each(ROWS.map((c) => ({ rows: rowsOf(c) })))(
     "$rows: admitted only if the linter reads every property",
     ({ rows }) => {
@@ -2924,10 +2972,10 @@ describe("every component value the gate admits is one the linter reads", () => 
   )
 })
 
-describe("a component the line scan cannot see whole", () => {
-  // The line scan judged what it matched; YAML's reading decides what is
-  // there. A head written `chip :` leaves the head above it with nothing.
-  it("names the component YAML reads as empty, and the head it could not read", () => {
+describe("components as YAML reads them", () => {
+  // One reader decides what is there (#589): a head written `chip :` is the
+  // component `chip` to YAML, so only the empty one above it is named.
+  it("names the component YAML reads as empty, and only that", () => {
     const rules = rulesFor(
       draftWithRawColorRows([
         "  brand: oklch(0.62 0.19 258)",
@@ -2938,7 +2986,7 @@ describe("a component the line scan cannot see whole", () => {
       ])
     )
     expect(rules).toContain("empty-component")
-    expect(rules).toContain("noncanonical-component-shape")
+    expect(rules).not.toContain("noncanonical-component-shape")
   })
 
   it("does not call a list-item property empty", () => {
@@ -2994,65 +3042,38 @@ describe("a component the line scan cannot see whole", () => {
     }
   )
 
-  it("names a misshapen head once, not again from YAML's reading", () => {
-    const shape = componentIssues(["  pill: { height: 48px }"]).filter(
-      (i) => i.rule === "noncanonical-component-shape"
-    )
-    expect(shape).toHaveLength(1)
-  })
-
-  it("does not blame a value for a head it could not read", () => {
-    // `chip :` hands its `40px` row to `button` in the line scan; comparing
-    // that with YAML's `button.height` (48px) would call it a value continued
-    // on the next line — a fix that changes nothing.
-    const rules = componentIssues([
-      "  button:",
-      "    height: 48px",
-      "  chip :",
-      "    height: 40px",
-    ]).map((i) => i.rule)
-    expect(rules).toContain("noncanonical-component-shape")
+  it.each([
+    ["an inline map", ["  pill: { height: 48px }"]],
+    [
+      "a space before a head's colon",
+      ["  button:", "    height: 48px", "  chip :", "    height: 40px"],
+    ],
+    ["a quoted property key", ["  card:", '    "height": 48px']],
+  ])("admits %s, which YAML reads as the plain form", (_, rows) => {
+    const rules = componentIssues(rows).map((i) => i.rule)
+    expect(rules).not.toContain("noncanonical-component-shape")
+    expect(rules).not.toContain("unknown-component-property")
     expect(rules).not.toContain("component-value-form")
   })
 
-  it("tells a quoted property key to go bare, not to the body", () => {
-    const fix = componentIssues(["  card:", '    "height": 48px']).find(
-      (i) => i.rule === "unknown-component-property"
-    )?.fix
-    expect(fix).toContain("Write `height: 48px`")
-    expect(fix).not.toContain("body spec")
-  })
-
-  it.each([
-    ['    "height": 50%', "unknown-component-property"],
-    ["    width:50%", "component-value-form"],
-  ])("rewrites the row with its value's fix too (%s)", (row, rule) => {
-    // A rewrite that fixed only the key side would meet
-    // `component-value-form` on the next run.
-    const fix = componentIssues(["  card:", row]).find(
-      (i) => i.rule === rule
-    )?.fix
-    expect(fix).toContain("not one the map reads either")
-    expect(fix).toContain("other unit")
-  })
+  it.each([["    width:50%", "component-value-form"]])(
+    "rewrites the row with its value's fix too (%s)",
+    (row, rule) => {
+      // A rewrite that fixed only the key side would meet
+      // `component-value-form` on the next run.
+      const fix = componentIssues(["  card:", row]).find(
+        (i) => i.rule === rule
+      )?.fix
+      expect(fix).toContain("not one the map reads either")
+      expect(fix).toContain("other unit")
+    }
+  )
 })
 
-describe("block scalars and nesting, in every token map", () => {
-  it("recognizes the block headers YAML actually accepts", () => {
-    // `>` and `|` take an indentation digit and a chomping indicator in EITHER
-    // order, and may carry a comment. Matching only the tidy spellings let
-    // `> # note` and `|2-` through the check that exists to stop exactly this.
-    for (const header of ["> # note", "|2-", "|-2", ">-", "|+", ">3"]) {
-      expect(
-        rulesFor(draftWithRawColorRows([`  a: ${header}`, "    x"])),
-        header
-      ).toContain("block-scalar-token-value")
-    }
-  })
-
+describe("nesting, in every token map", () => {
   it("applies the flat-shape rule to spacing and rounded too", () => {
-    // The colour map was the only one checked, but `frontmatterRows` reads all
-    // three through the same two-space shape.
+    // The colour map was the only one checked, but the sidecar reads all
+    // three as flat maps.
     for (const map of ["spacing", "rounded"]) {
       const draft = makeDraft({
         frontmatter: [
@@ -3101,11 +3122,11 @@ describe("every map in the table reaches every rule its traits name", () => {
   for (const [map, traits] of Object.entries<FrontmatterMapTraits>(
     FRONTMATTER_MAPS
   )) {
-    it(`${map}: block scalar ${traits.noBlockScalar ? "blocked" : "left alone"}`, () => {
-      const rules = rulesFor(draftWithMap(map, ["  a: >", "    x"]))
-      if (traits.noBlockScalar)
-        expect(rules).toContain("block-scalar-token-value")
-      else expect(rules).not.toContain("block-scalar-token-value")
+    it(`${map}: a block scalar is judged as the same value on one line`, () => {
+      // YAML reads `>` + `x` as `x`; so does every rule (#589).
+      expect(rulesFor(draftWithMap(map, ["  a: >", "    x"]))).toEqual(
+        rulesFor(draftWithMap(map, ["  a: x"]))
+      )
     })
 
     it(`${map}: nested row ${traits.rowScan ? "blocked" : "left alone"}`, () => {
