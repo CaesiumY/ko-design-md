@@ -2293,6 +2293,19 @@ describe("token rules read the frontmatter maps", () => {
     expect(issue?.fix).toContain("`oklch(L C H)`")
   })
 
+  it("offers a reference only to a row that holds a colour", () => {
+    // `a: "{colors.b}"` and `b: "{colors.a}"` would pass the draft gate as a
+    // cycle that never resolves.
+    const fixes = validateDraft(
+      draftWithFrontmatterColors(["a: b", "b: a"]),
+      OPTS
+    )
+      .issues.filter((i) => i.rule === "non-oklch-token-value")
+      .map((i) => i.fix)
+    expect(fixes).toHaveLength(2)
+    for (const fix of fixes) expect(fix).not.toMatch(/\{colors\.[ab]\}/)
+  })
+
   it("blocks a value that only opens like a reference", () => {
     // Skipped as a reference, it was found by no reference check and dropped
     // by the sidecar.

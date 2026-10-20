@@ -260,7 +260,7 @@ interface BodyScan {
  *  Shared by the frontmatter scan and the legacy fence scan so the two cannot
  *  drift into disagreeing about what a valid token value is.
  *
- *  `colours` is the `colors:` map's declared names, given for a row of that
+ *  `colours` is the `colors:` map's rows, name to value, given for a row of that
  *  map: there a value must be one `oklch(…)`. The linter also reads a named colour
  *  (`white`) or an upper-case function (`RGB(…)`) as a colour, but the sidecar
  *  keeps neither, so one mixed into an OKLCH palette would leave it silently
@@ -269,16 +269,16 @@ function tokenLineIssues(
   name: string,
   value: string,
   line: string,
-  colours?: ReadonlySet<string>
+  colours?: ReadonlyMap<string, string | undefined>
 ): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
   const fix = colours
     ? !OKLCH_COLOUR.test(value) &&
-      // Only a reference that would pass: not its own name (`brand:
-      // "{colors.brand}"` never resolves), and reference-shaped — a key such
-      // as `빨강` is valid YAML, but `{colors.빨강}` is blocked again.
-      (colours.has(value) &&
-      value !== name &&
+      // Only a reference that would resolve and pass: to a row that holds a
+      // colour (not this row, not a cycle such as `a: b` + `b: a`), and
+      // reference-shaped — `빨강` is a valid key, but `{colors.빨강}` is
+      // blocked again.
+      (OKLCH_COLOUR.test(colours.get(value) ?? "") &&
       BARE_REFERENCE.test(`{colors.${value}}`)
         ? `token \`${name}: ${value}\` names another colour without a reference — write \`${name}: "{colors.${value}}"\`.`
         : `token \`${name}: ${value}\` is not OKLCH — express color token values as \`oklch(L C H)\`, in lower case: the sidecar drops a named colour (\`white\`) or an upper-case function (\`RGB(…)\`) although the linter reads it. Keep the original as a trailing \`# ${value}\` comment if useful, and point at another colour as \`"{colors.name}"\`.`)
@@ -1074,7 +1074,7 @@ function scanFrontmatterTokens(read: FrontmatterRead): Array<ValidationIssue> {
     if (!map) continue
     const colours =
       mapKey === "colors"
-        ? new Set(entriesOf(map).map((row) => row.key))
+        ? new Map(entriesOf(map).map((row) => [row.key, tokenText(row)]))
         : undefined
     for (const row of entriesOf(map)) {
       // These maps are flat: a token is one `name: value` row. A map under a
