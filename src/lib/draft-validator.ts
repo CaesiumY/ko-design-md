@@ -15,7 +15,7 @@ import { CATEGORIES } from "./content-types"
 import { auditSourceCitations } from "./source-citations"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
 import { deltaE, hexToOklab, lchToOklab, oklabToLch } from "./oklch-convert"
-import { definitionRow, matchDefinition } from "./oklch-sync"
+import { LEADING_OKLCH, definitionRow, matchDefinition } from "./oklch-sync"
 import { conflictingDefinitions } from "./oklch-drift"
 import { KNOWN_SPEC_LIMITATIONS } from "./spec-limitations"
 import { LOGO_TAKEDOWNS } from "./logo-takedowns"
@@ -86,9 +86,15 @@ export const REQUIRED_SECTIONS = [
 const LOGO_URL_FORM =
   /^https:\/\/getdesign\.kr\/logos\/[a-z0-9.-]+\.(?:svg|png|webp|avif)$/
 const SLUG_FORM = /^[a-z0-9-]+$/
-// Non-OKLCH color notations rejected in yaml token *values*. `oklab`/`lch` etc.
-// are also off-catalog but have never appeared; hex/rgb/hsl are the real risks.
-const NON_OKLCH_VALUE = /^(?:#[0-9a-fA-F]{3,8}\b|(?:rgba?|hsla?)\s*\()/
+// A value that opens with a hex or an `rgb(`/`hsl(` colour is not OKLCH. Judged
+// for the token maps other than `colors:` and for a body yaml fence row that
+// survives (the fence itself is `token-fence`'s); only the value's start is
+// read, so `elevation:`'s `0 1px 2px oklch(…)` is not caught. In `colors:`
+// anything but `oklch(…)` is rejected (`tokenLineIssues`).
+const NON_OKLCH_VALUE = /^(?:#[0-9a-f]{3,8}\b|(?:rgba?|hsla?)\s*\()/i
+// A `colors:` value: one `oklch(…)` and nothing after it — the sidecar carries
+// the whole string as the colour.
+const OKLCH_COLOUR = new RegExp(`${LEADING_OKLCH.source}$`)
 // Prose hex: 3-8 hex digits after `#`, not preceded by URL/fragment/heading
 // characters. URLs are masked before matching.
 const PROSE_HEX = /(?<![\w&#/])#[0-9a-fA-F]{3,8}\b/
@@ -254,22 +260,35 @@ interface BodyScan {
 /** The OKLCH-only rule and its hex cross-check, for one `name: value` line.
  *
  *  Shared by the frontmatter scan and the legacy fence scan so the two cannot
- *  drift into disagreeing about what a valid token value is. */
+ *  drift into disagreeing about what a valid token value is.
+ *
+ *  `colours` is the `colors:` map's rows, name to value, given for a row of that
+ *  map: there a value must be one `oklch(…)`. The linter also reads a named colour
+ *  (`white`) or an upper-case function (`RGB(…)`) as a colour, but the sidecar
+ *  keeps neither, so one mixed into an OKLCH palette would leave it silently
+ *  (#597). */
 function tokenLineIssues(
   name: string,
   value: string,
-  line: string
+  line: string,
+  colours?: ReadonlyMap<string, string | undefined>
 ): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
-  if (NON_OKLCH_VALUE.test(value)) {
-    issues.push(
-      block(
-        "non-oklch-token-value",
-        "tokens",
-        `token \`${name}: ${value}\` is not OKLCH — express color token values as \`oklch(L C H)\` (keep the original as a trailing \`# ${value}\` comment if useful).`
-      )
-    )
-  }
+  // A map-less `{word}` meant the colour `word`.
+  const target = BARE_REFERENCE.test(value) ? value.slice(1, -1) : value
+  const fix = colours
+    ? !OKLCH_COLOUR.test(value) &&
+      // Only a reference that would resolve and pass: to a row that holds a
+      // colour (not this row, not a cycle such as `a: b` + `b: a`), and
+      // reference-shaped — `빨강` is a valid key, but `{colors.빨강}` is
+      // blocked again.
+      (OKLCH_COLOUR.test(colours.get(target) ?? "") &&
+      BARE_REFERENCE.test(`{colors.${target}}`)
+        ? `token \`${name}: ${value}\` names another colour without a full reference — write \`${name}: "{colors.${target}}"\`.`
+        : `token \`${name}: ${value}\` is not OKLCH — express color token values as \`oklch(L C H)\`, in lower case: the sidecar drops a named colour (\`white\`) or an upper-case function (\`RGB(…)\`) although the linter reads it. Keep the original as a trailing \`# ${value}\` comment if useful, and point at another colour as \`"{colors.name}"\`.`)
+    : NON_OKLCH_VALUE.test(value) &&
+      `token \`${name}: ${value}\` is not OKLCH — express color token values as \`oklch(L C H)\` (keep the original as a trailing \`# ${value}\` comment if useful).`
+  if (fix) issues.push(block("non-oklch-token-value", "tokens", fix))
   // Warn (not block): the hex comment is a reference value, and a brand may
   // legitimately annotate an approximation. But a real mismatch means a
   // consumer copying the token renders the wrong colour.
@@ -758,7 +777,9 @@ function segmentPattern(pattern: string): RegExp {
  *     known name (`{Colors.primary}` blocks, `{React.Fragment}` is left).
  *   • A standalone `{word}` naming a map this entry declares (blocks), or
  *     another map, a phantom, a declared key or a text-fence row used in prose
- *     (warns — see the dotless pass below).
+ *     (warns — see the dotless pass below). A whole `colors:` value of that
+ *     shape is skipped inside that value: the OKLCH rule blocks it and names
+ *     the fix (#600). The same word in prose is judged as ever.
  *   • Prose and stylesheet fences are read in full; data fences (json) are
  *     not read at all (see DATA_FENCE_LANGUAGES). In a source-code fence,
  *     only `//`,
@@ -971,11 +992,32 @@ function checkTokenReferences(
   // defines: a map, a declared key, or a row of a text fence. baemin's
   // `{ease-out}` and wanted's `{typography}` were both this shape.
   const fenceNames = proseFenceKeys(raw)
+  // A `colors:` value that is a reference outside `colors:` (`"{brand}"`) is
+  // blocked by the OKLCH rule, which names the fix; a finding here would
+  // repeat it (#600). Only inside that value: its row's comment, a sound
+  // `{colors.…}` row and the same `{word}` in prose are judged as ever.
+  const lineStarts = [0]
+  for (const nl of raw.matchAll(/\n/g)) lineStarts.push(nl.index + 1)
+  const colorsKey = findKey(read.keys, "colors")
+  const blockedRefValues = (colorsKey ? entriesOf(colorsKey) : []).flatMap(
+    (row) => {
+      const value = tokenText(row) ?? ""
+      const { source, sourceLines, sourceColumn } = row
+      if (!BARE_REFERENCE.test(value) || isColourReference(value)) return []
+      if (source === undefined || !sourceLines || sourceColumn === undefined)
+        return []
+      const start = lineStarts[sourceLines[0] - 1] + sourceColumn
+      return [[start, start + source.length] as const]
+    }
+  )
+  const inBlockedValue = (index: number) =>
+    blockedRefValues.some(([start, end]) => index >= start && index < end)
   for (const hit of text.matchAll(DOTLESS_REFERENCE)) {
     const [ref, word] = hit
     // Inside a source-code string it is someone else's placeholder — an i18n
     // key (`t("{title}")`) or another token system — as for dotted references.
     if (!withoutSourceStrings.startsWith(ref, hit.index)) continue
+    if (inBlockedValue(hit.index)) continue
     if (reported.has(ref)) continue
     const lower = word.toLowerCase()
     const holders = [...REFERENCE_MAPS].filter((m) => resolves(maps[m], word))
@@ -1057,6 +1099,10 @@ function scanFrontmatterTokens(read: FrontmatterRead): Array<ValidationIssue> {
   for (const mapKey of ROW_SCAN_MAP_KEYS) {
     const map = findKey(read.keys, mapKey)
     if (!map) continue
+    const colours =
+      mapKey === "colors"
+        ? new Map(entriesOf(map).map((row) => [row.key, tokenText(row)]))
+        : undefined
     for (const row of entriesOf(map)) {
       // These maps are flat: a token is one `name: value` row. A map under a
       // row renames every token in it (`{colors.brand.primary}`, not
@@ -1089,13 +1135,28 @@ function scanFrontmatterTokens(read: FrontmatterRead): Array<ValidationIssue> {
         continue
       }
       const value = tokenText(row)
-      if (value === undefined) continue
-      // A reference resolves elsewhere, so it is not judged as a literal.
-      if (value.startsWith("{")) continue
+      if (value === undefined) {
+        // No value, or a list: the sidecar keeps neither, so in `colors:` the
+        // colour would vanish from it without a word (#597). A row aliasing a
+        // map is `aliased-map-value`'s to name.
+        if (colours && !isAliasedMap(row))
+          issues.push(
+            block(
+              "non-oklch-token-value",
+              "tokens",
+              `token \`${row.key}\` in \`colors:\` holds ${Array.isArray(row.value) ? "a list" : "no value"} — write one colour as \`oklch(L C H)\`, or point at another colour as \`"{colors.name}"\`.`
+            )
+          )
+        continue
+      }
+      // A reference resolves elsewhere, so it is not judged as a literal. In
+      // `colors:` only a whole one is: `"{not-a-reference"` would otherwise be
+      // skipped here, found by no reference check and dropped by the sidecar.
+      if (colours ? isColourReference(value) : value.startsWith("{")) continue
       // The row as YAML read it, in the one shape the shared OKLCH↔hex rule
       // judges — the same string `audit:oklch` builds.
       const line = definitionRow(row.key, value, row.comment)
-      issues.push(...tokenLineIssues(row.key, value, line))
+      issues.push(...tokenLineIssues(row.key, value, line, colours))
       // The extractor keeps only rows shaped like a shadow, so anything else in
       // `elevation:` vanishes from the sidecar while the file still publishes
       // it. The common way in is a bare hex colour: ` #0000001A` opens a YAML
@@ -1235,6 +1296,13 @@ export const COMPONENT_DIMENSION_UNITS: ReadonlyArray<string> = [
  *  Copied because the package does not export it; the machine-gate contract
  *  test pins it to the pinned linter's own source. */
 export const BARE_REFERENCE = /^\{[a-zA-Z0-9._-]+\}$/
+/** A `colors:` value skipped as a reference: one into `colors:` itself, which
+ *  the reference check resolves. The linter drops any other reference there
+ *  without a word — a map-less `{word}`, `{fonts.x}`, an unknown `{zzz.x}` —
+ *  so those are the OKLCH rule's to block (#600). Built on `BARE_REFERENCE`. */
+function isColourReference(value: string): boolean {
+  return BARE_REFERENCE.test(value) && value.startsWith("{colors.")
+}
 /** A whole value that is one quoted reference, with the characters the
  *  linter's `isTokenReference` allows between the braces — `"{ colors.x }"` or
  *  `"{colors/x}"` it keeps as raw text. Whether it RESOLVES (a declared key,
@@ -2258,10 +2326,11 @@ const SCHEMA_KEY_RULES: ReadonlySet<string> = new Set([
  * `colors:` is a required map, and the extractor behind the Tokens tab and
  * `use-design-md` keeps only a hex or a lower-case colour function. The
  * linter also reads a named colour (`white`, `transparent`) and an upper-case
- * function (`OKLCH(…)`, `RGB(…)`), which no other rule blocks — so a palette
- * written only that way would ship an empty colour sidecar with every other
- * gate green. Only the empty case: alias rows the linter resolves are left
- * out of the sidecar by design, so the two counts differ in a sound entry.
+ * function (`OKLCH(…)`, `RGB(…)`). `non-oklch-token-value` blocks each such
+ * row where it is written (#597); this measures what the two readers actually
+ * resolve, so a palette of nothing else also says its sidecar would be empty.
+ * Only the empty case: alias rows the linter resolves are left out of the
+ * sidecar by design, so the two counts differ in a sound entry.
  *
  * A map whose shape already blocks — a row holding a map
  * (`noncanonical-token-indent`), or the map or a row written as an alias
@@ -2339,7 +2408,7 @@ function checkSpecLint(
       block(
         "spec-no-colors",
         "spec",
-        "The official DESIGN.md linter resolves no colours from this document. Declare the palette in the frontmatter `colors:` map (one `name: oklch(...)` per line) — this file is published as the standard DESIGN.md, and a tool reading it would see an empty design system."
+        "The official DESIGN.md linter resolves no colours from this document. Declare the palette in the frontmatter `colors:` map (a `name: oklch(L C H)` row for each colour) — this file is published as the standard DESIGN.md, and a tool reading it would see an empty design system."
       )
     )
   }

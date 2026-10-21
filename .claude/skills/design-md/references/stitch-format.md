@@ -149,7 +149,10 @@ token — the frontmatter declaration is the definition, prose is commentary:
 
 Every form must use OKLCH. Hex and rgba are rejected — `non-oklch-token-value` is
 a **block**, checked against the frontmatter maps — because downstream LLMs cannot
-reason about them the way they can about explicit lightness, chroma and hue. Keep
+reason about them the way they can about explicit lightness, chroma and hue. In
+`colors:` the rule rejects anything but one lower-case `oklch(…)` or a quoted
+reference into `colors:` (`"{colors.x}"`), so a named colour, another token's bare
+name, `"{brand}"` with no map name or `"{fonts.x}"` too. Keep
 the brand's published hex as the trailing comment; that is what it is for.
 
 ### Per-theme palettes need distinct names
@@ -208,7 +211,8 @@ loaded as `doc.tokens` for the detail page's card view). The extractor reads
 these maps as YAML does — how a flat map is indented or broken across lines
 changes nothing, but a token indented under another token is a nested map,
 which the draft gate blocks — one `name: value` entry per token: `name: oklch(...)` (colors; a named colour such
-as `white` or an upper-case `OKLCH(…)` the linter reads but the sidecar drops),
+as `white` or an upper-case `OKLCH(…)` the linter reads but the sidecar drops,
+so the draft gate blocks it row by row — `non-oklch-token-value`),
 `name: 16px` (spacing/rounded), `name: 0 1px 2px oklch(...)` (elevation). **Typography is the exception — it nests**, as
 shown above: a bare style name, then `fontSize` / `fontWeight` /
 `lineHeight` / `letterSpacing` under it. Forms that set none of those four —

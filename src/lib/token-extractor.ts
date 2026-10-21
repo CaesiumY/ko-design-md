@@ -50,8 +50,10 @@ function parseColors(rows: Array<RawLine>): Array<ColorToken> {
     // render time (token-curation.lightColorsOnly) — the light/full split lives at
     // the component boundary, not in the data.
     //
-    // Aliases (`{colors.x}` or a bare token name) and numeric scalars (opacity)
-    // carry no swatch, so they are still excluded here and remain in the md prose.
+    // Aliases (`{colors.x}`) carry no swatch, so they are still excluded here
+    // and remain in the md prose. Anything else this drops — a bare token name,
+    // a number, a named colour, an upper-case function — the draft validator
+    // blocks in `colors:` (`non-oklch-token-value`, #597), so it never ships.
     if (!COLOR_VALUE.test(r.value)) continue
     // Collapse the author's column-alignment spaces (`0.000 0.000 0   / 0.08`)
     // so the machine-readable value is canonical. CSS color functions are

@@ -1189,26 +1189,26 @@ describe("where the retired rules' inputs go (#589)", () => {
       ["frontmatter-yaml-invalid"],
     ],
     // Its colours half — the linter resolves a colour the extractor drops.
-    // Only an empty colour sidecar is blocked, as before: alias rows make the
-    // two counts differ in a sound entry, so one dropped colour beside a kept
-    // one (U11) passes.
+    // Each such row is not OKLCH, so it is blocked where it is written (#597);
+    // a palette of nothing else also leaves the sidecar empty, which the
+    // linter-against-extractor count names as well.
     [
       "U9 a palette of named colours only",
       COLOUR_ROW,
       "  primary: white\n  surface: transparent",
-      ["unreadable-colors"],
+      ["unreadable-colors", "non-oklch-token-value", "non-oklch-token-value"],
     ],
     [
       "U10 a colour written as an upper-case function",
       COLOUR_ROW,
       "  primary: OKLCH(0.62 0.19 258)",
-      ["unreadable-colors"],
+      ["unreadable-colors", "non-oklch-token-value"],
     ],
     [
       "U11 a named colour beside an OKLCH one",
       COLOUR_ROW,
       `${COLOUR_ROW}\n  surface: white`,
-      [],
+      ["non-oklch-token-value"],
     ],
     // noncanonical-token-indent — now "no map under a token map".
     ["I1 a colour map indented four spaces", COLOUR_ROW, `  ${COLOUR_ROW}`, []],
@@ -2218,10 +2218,262 @@ describe("token rules read the frontmatter maps", () => {
     }
   })
 
-  it("accepts an OKLCH value", () => {
+  it("blocks a colour the sidecar would drop, even beside an OKLCH one", () => {
+    // The linter reads a named colour or an upper-case function as a colour
+    // and the extractor keeps neither, so one mixed into an OKLCH palette left
+    // the sidecar while the gate passed (#597).
+    for (const value of [
+      "white",
+      "transparent",
+      "RGB(49 130 246)",
+      "OKLCH(0.62 0.19 258)",
+      "oklab(0.62 -0.03 -0.18)",
+      "0.4",
+    ]) {
+      expect(
+        rulesFor(
+          draftWithFrontmatterColors([
+            "brand: oklch(0.62 0.19 258)",
+            `surface: ${value}`,
+          ])
+        ),
+        value
+      ).toContain("non-oklch-token-value")
+    }
+  })
+
+  it("offers the reference spelling for a bare token name", () => {
+    const issue = validateDraft(
+      draftWithFrontmatterColors([
+        "brand: oklch(0.62 0.19 258)",
+        "fill-brand: brand",
+      ]),
+      OPTS
+    ).issues.find((i) => i.rule === "non-oklch-token-value")
+    expect(issue?.fix).toContain('`fill-brand: "{colors.brand}"`')
+  })
+
+  it("blocks an OKLCH value with more written after it", () => {
+    // The sidecar would carry the whole string as one colour.
+    for (const value of [
+      "oklch(0.62 0.19 258) typo",
+      "oklch(0.62 0.19 258) oklch(0.5 0.1 30)",
+    ]) {
+      expect(
+        rulesFor(
+          draftWithFrontmatterColors([
+            "brand: oklch(0.62 0.19 258)",
+            `surface: ${value}`,
+          ])
+        ),
+        value
+      ).toContain("non-oklch-token-value")
+    }
+  })
+
+  it("does not offer a token a reference to itself", () => {
+    // `"{colors.brand}"` on the `brand` row would pass every rule and never
+    // resolve to a colour.
+    const issue = validateDraft(
+      draftWithFrontmatterColors(["brand: brand"]),
+      OPTS
+    ).issues.find((i) => i.rule === "non-oklch-token-value")
+    expect(issue?.fix).not.toContain("{colors.brand}")
+    expect(issue?.fix).toContain("`oklch(L C H)`")
+  })
+
+  it("does not offer a reference the reference check would refuse", () => {
+    // A Korean key is valid YAML, but `{colors.빨강}` is not reference-shaped,
+    // so following that hint would block the row again.
+    const issue = validateDraft(
+      draftWithFrontmatterColors(["빨강: oklch(0.6 0.2 25)", "accent: 빨강"]),
+      OPTS
+    ).issues.find((i) => i.rule === "non-oklch-token-value")
+    expect(issue?.fix).not.toContain("{colors.빨강}")
+    expect(issue?.fix).toContain("`oklch(L C H)`")
+  })
+
+  it("offers a reference only to a row that holds a colour", () => {
+    // `a: "{colors.b}"` and `b: "{colors.a}"` would pass the draft gate as a
+    // cycle that never resolves.
+    const fixes = validateDraft(
+      draftWithFrontmatterColors(["a: b", "b: a"]),
+      OPTS
+    )
+      .issues.filter((i) => i.rule === "non-oklch-token-value")
+      .map((i) => i.fix)
+    expect(fixes).toHaveLength(2)
+    for (const fix of fixes) expect(fix).not.toMatch(/\{colors\.[ab]\}/)
+  })
+
+  it("blocks a colour row with no value or a list for a value", () => {
+    // Neither is a string, so the sidecar drops the row while another colour
+    // keeps `unreadable-colors` quiet.
+    for (const row of [
+      "surface:",
+      "surface:   # 표면",
+      "surface: ~",
+      "surface: []",
+      "surface: [white]",
+    ]) {
+      expect(
+        rulesFor(
+          draftWithFrontmatterColors(["brand: oklch(0.62 0.19 258)", row])
+        ),
+        row
+      ).toContain("non-oklch-token-value")
+    }
+  })
+
+  it("leaves a row that aliases a map to its own rule", () => {
+    // `aliased-map-value` names it; a second block on the row would say the
+    // same thing, and call the map a list.
+    const rules = rulesFor(
+      draftWithFrontmatterColors([
+        "brand: oklch(0.62 0.19 258)",
+        "surface: *a",
+      ]).replace("colors:\n", "grid: &a\n  x: 1\ncolors:\n")
+    )
+    expect(rules).toContain("aliased-map-value")
+    expect(rules).not.toContain("non-oklch-token-value")
+  })
+
+  it("blocks a colour reference with no map name", () => {
+    // The linter drops it without a word, so nothing else would (#600).
     expect(
-      rulesFor(draftWithFrontmatterColors(["brand: oklch(0.62 0.19 258)"]))
-    ).not.toContain("non-oklch-token-value")
+      rulesFor(
+        draftWithFrontmatterColors([
+          "brand: oklch(0.62 0.19 258)",
+          'surface: "{nokey}"',
+        ])
+      )
+    ).toContain("non-oklch-token-value")
+  })
+
+  it("names the colour a map-less reference meant, in one message", () => {
+    const issues = validateDraft(
+      draftWithFrontmatterColors([
+        "brand: oklch(0.62 0.19 258)",
+        'fill-brand: "{brand}"',
+      ]),
+      OPTS
+    ).issues.filter((i) => i.fix.includes("{brand}"))
+    expect(issues.map((i) => i.rule)).toEqual(["non-oklch-token-value"])
+    expect(issues[0].fix).toContain('`fill-brand: "{colors.brand}"`')
+  })
+
+  it("gives a block-scalar map-less reference one message too", () => {
+    const issues = validateDraft(
+      draftWithFrontmatterColors([
+        "brand: oklch(0.62 0.19 258)",
+        "fill-brand: |-",
+        "  {brand}",
+      ]),
+      OPTS
+    ).issues.filter((i) => i.fix.includes("{brand}"))
+    expect(issues.map((i) => i.rule)).toEqual(["non-oklch-token-value"])
+  })
+
+  it("still judges a map-less word in the comment of a colour reference row", () => {
+    // The row is a sound reference, so nothing else blocks the stray
+    // `{typography}` its note carries to the sidecar.
+    const rules = rulesFor(
+      draftWithFrontmatterColors([
+        "brand: oklch(0.62 0.19 258)",
+        'fill-brand: "{colors.brand}"  # {typography} 와 혼동 금지',
+      ])
+    )
+    expect(rules).toContain("unresolved-token-ref")
+  })
+
+  it("still judges a map-less word after a blocked row's value", () => {
+    const issues = validateDraft(
+      draftWithFrontmatterColors([
+        "brand: oklch(0.62 0.19 258)",
+        'fill-brand: "{brand}"  # {typography} 참고',
+      ]),
+      OPTS
+    ).issues.filter((i) => i.fix.includes("{typography}"))
+    expect(issues.map((i) => i.rule)).toEqual(["unresolved-token-ref"])
+  })
+
+  it("still judges the same map-less word in prose", () => {
+    // Only the colour row is the OKLCH rule's; the prose line keeps its own
+    // finding.
+    const raw = draftWithFrontmatterColors([
+      "brand: oklch(0.62 0.19 258)",
+      'fill-brand: "{brand}"',
+    ]).replace("# 데모", "# 데모\n\n버튼은 {brand} 를 쓴다.")
+    expect(raw).toContain("버튼은 {brand}")
+    expect(rulesOf(raw, OPTS, "warn")).toContain("dotless-token-ref")
+  })
+
+  it("leaves a colour reference to the reference check", () => {
+    const rules = rulesFor(
+      draftWithFrontmatterColors([
+        "brand: oklch(0.62 0.19 258)",
+        'surface: "{colors.nope}"',
+      ])
+    )
+    expect(rules).toContain("unresolved-token-ref")
+    expect(rules).not.toContain("non-oklch-token-value")
+  })
+
+  it("blocks a colour that points outside `colors:`", () => {
+    // The linter drops such a row without a word; a colour points into
+    // `colors:`. `{Palette.x}` is a namespace the reference check leaves.
+    for (const value of ['"{zzz.x}"', '"{fonts.sans}"', '"{Palette.x}"']) {
+      expect(
+        rulesFor(
+          draftWithFrontmatterColors([
+            "brand: oklch(0.62 0.19 258)",
+            `surface: ${value}`,
+          ])
+        ),
+        value
+      ).toContain("non-oklch-token-value")
+    }
+  })
+
+  it("blocks a value that only opens like a reference", () => {
+    // Skipped as a reference, it was found by no reference check and dropped
+    // by the sidecar.
+    for (const value of ['"{not-a-reference"', '"{colors.brand} x"']) {
+      expect(
+        rulesFor(
+          draftWithFrontmatterColors([
+            "brand: oklch(0.62 0.19 258)",
+            `surface: ${value}`,
+          ])
+        ),
+        value
+      ).toContain("non-oklch-token-value")
+    }
+  })
+
+  it("blocks an upper-case colour function in the other token maps", () => {
+    expect(
+      rulesFor(
+        draftWithRawColorRows([
+          "  brand: oklch(0.62 0.19 258)",
+          "rounded:",
+          "  card: RGB(0 0 0)",
+        ])
+      )
+    ).toContain("non-oklch-token-value")
+  })
+
+  it("accepts an OKLCH value, quoted or not", () => {
+    for (const value of [
+      "oklch(0.62 0.19 258)",
+      '"oklch(0.62 0.19 258)"',
+      "oklch(0.62 0.19 258 / 40%)",
+    ]) {
+      expect(
+        rulesFor(draftWithFrontmatterColors([`brand: ${value}`])),
+        value
+      ).not.toContain("non-oklch-token-value")
+    }
   })
 
   it("warns when the OKLCH does not decode to its annotated hex", () => {
