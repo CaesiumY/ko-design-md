@@ -97,8 +97,10 @@ describe("colors", () => {
       value: "oklch(0.5 0.1 30)",
       note: "핵심 CTA",
     })
-    // aliases ({ref} + bare token names) and numeric opacity scalars stay in the
-    // md only. dark-* tokens ARE extracted, though — the sidecar carries the full
+    // aliases ({ref}) stay in the md only, and so would a bare token name or a
+    // number — shapes the draft validator blocks in `colors:` (#597), kept here
+    // to pin what the extractor itself drops.
+    // dark-* tokens ARE extracted, though — the sidecar carries the full
     // palette so a token copy can reproduce dark mode; the card VIEW filters them
     // to light at render time (see token-curation.lightColorsOnly), not here.
     expect(colors.map((c) => c.name)).toEqual(["primary", "dark-bg"])
