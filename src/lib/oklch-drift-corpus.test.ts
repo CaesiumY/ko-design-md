@@ -108,6 +108,7 @@ function slugs(): Array<string> {
 const MATCH_FLOOR: Partial<Record<string, number>> = {
   "11st": 19,
   baemin: 37,
+  banksalad: 181,
   // Not a naming problem and not fixable by one: bezier's preview declares no
   // `oklch` at all — it is hex — so there is nothing for a name rule to reach.
   bezier: 0,

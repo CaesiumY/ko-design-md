@@ -1,0 +1,1361 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>뱅크샐러드 preview</title>
+  <link rel="stylesheet" href="/preview/_runtime/tokens.css">
+  <script src="/preview/_runtime/iframe.js" defer></script>
+  <style>
+    :root {
+      /* 원시 — green */
+      --bs-green-10: oklch(0.159 0.029 169.5);
+      --bs-green-20: oklch(0.224 0.046 164.9);
+      --bs-green-30: oklch(0.342 0.075 160.6);
+      --bs-green-40: oklch(0.500 0.112 159.8);
+      --bs-green-50: oklch(0.648 0.149 158.8);
+      --bs-green-60: oklch(0.678 0.143 161.5);
+      --bs-green-70: oklch(0.740 0.122 165.3);
+      --bs-green-80: oklch(0.846 0.076 168.9);
+      --bs-green-90: oklch(0.922 0.038 171.5);
+      --bs-green-95: oklch(0.969 0.014 174.2);
+      --bs-primary: var(--bs-green-50);
+      /* 원시 — mint */
+      --bs-mint-10: oklch(0.157 0.025 190.0);
+      --bs-mint-20: oklch(0.225 0.036 185.7);
+      --bs-mint-30: oklch(0.339 0.057 186.0);
+      --bs-mint-40: oklch(0.498 0.085 186.2);
+      --bs-mint-50: oklch(0.644 0.111 185.6);
+      --bs-mint-60: oklch(0.674 0.110 186.4);
+      --bs-mint-70: oklch(0.741 0.098 187.7);
+      --bs-mint-80: oklch(0.846 0.062 189.6);
+      --bs-mint-90: oklch(0.924 0.032 189.3);
+      --bs-mint-95: oklch(0.971 0.012 197.0);
+      /* 원시 — sky */
+      --bs-sky-10: oklch(0.160 0.023 205.7);
+      --bs-sky-20: oklch(0.225 0.035 211.4);
+      --bs-sky-30: oklch(0.343 0.057 213.0);
+      --bs-sky-40: oklch(0.500 0.085 214.7);
+      --bs-sky-50: oklch(0.647 0.111 214.5);
+      --bs-sky-60: oklch(0.678 0.109 212.4);
+      --bs-sky-70: oklch(0.742 0.095 210.3);
+      --bs-sky-80: oklch(0.850 0.060 209.5);
+      --bs-sky-90: oklch(0.924 0.030 209.6);
+      --bs-sky-95: oklch(0.968 0.013 208.8);
+      /* 원시 — light-blue */
+      --bs-light-blue-10: oklch(0.154 0.029 231.9);
+      --bs-light-blue-20: oklch(0.212 0.045 239.7);
+      --bs-light-blue-30: oklch(0.324 0.075 243.3);
+      --bs-light-blue-40: oklch(0.473 0.117 245.1);
+      --bs-light-blue-50: oklch(0.610 0.154 245.9);
+      --bs-light-blue-60: oklch(0.643 0.144 242.9);
+      --bs-light-blue-70: oklch(0.713 0.118 239.1);
+      --bs-light-blue-80: oklch(0.833 0.070 236.2);
+      --bs-light-blue-90: oklch(0.915 0.034 235.9);
+      --bs-light-blue-95: oklch(0.961 0.015 235.4);
+      /* 원시 — deep-blue */
+      --bs-deep-blue-10: oklch(0.205 0.044 258.7);
+      --bs-deep-blue-20: oklch(0.257 0.061 257.8);
+      --bs-deep-blue-30: oklch(0.355 0.092 258.0);
+      --bs-deep-blue-40: oklch(0.444 0.122 258.3);
+      --bs-deep-blue-50: oklch(0.571 0.164 258.3);
+      --bs-deep-blue-60: oklch(0.612 0.147 257.8);
+      --bs-deep-blue-70: oklch(0.694 0.112 258.0);
+      --bs-deep-blue-80: oklch(0.826 0.062 257.5);
+      --bs-deep-blue-90: oklch(0.912 0.031 258.9);
+      --bs-deep-blue-95: oklch(0.957 0.015 260.7);
+      /* 원시 — indigo */
+      --bs-indigo-10: oklch(0.198 0.048 274.0);
+      --bs-indigo-20: oklch(0.243 0.068 273.2);
+      --bs-indigo-30: oklch(0.333 0.105 272.3);
+      --bs-indigo-40: oklch(0.417 0.138 271.5);
+      --bs-indigo-50: oklch(0.534 0.185 271.2);
+      --bs-indigo-60: oklch(0.579 0.165 272.7);
+      --bs-indigo-70: oklch(0.718 0.106 276.2);
+      --bs-indigo-80: oklch(0.814 0.068 276.5);
+      --bs-indigo-90: oklch(0.908 0.033 278.2);
+      --bs-indigo-95: oklch(0.954 0.016 278.5);
+      /* 원시 — violet */
+      --bs-violet-10: oklch(0.193 0.051 285.9);
+      --bs-violet-20: oklch(0.239 0.072 284.2);
+      --bs-violet-30: oklch(0.363 0.127 283.3);
+      --bs-violet-40: oklch(0.442 0.161 282.4);
+      --bs-violet-50: oklch(0.518 0.192 282.2);
+      --bs-violet-60: oklch(0.565 0.173 284.0);
+      --bs-violet-70: oklch(0.758 0.093 288.9);
+      --bs-violet-80: oklch(0.855 0.054 289.9);
+      --bs-violet-90: oklch(0.905 0.035 291.0);
+      --bs-violet-95: oklch(0.951 0.017 293.1);
+      /* 원시 — purple */
+      --bs-purple-10: oklch(0.204 0.053 295.0);
+      --bs-purple-20: oklch(0.253 0.075 293.9);
+      --bs-purple-30: oklch(0.391 0.130 293.1);
+      --bs-purple-40: oklch(0.476 0.166 293.0);
+      --bs-purple-50: oklch(0.559 0.198 292.7);
+      --bs-purple-60: oklch(0.600 0.180 294.2);
+      --bs-purple-70: oklch(0.732 0.117 297.0);
+      --bs-purple-80: oklch(0.822 0.078 298.8);
+      --bs-purple-90: oklch(0.912 0.037 299.2);
+      --bs-purple-95: oklch(0.946 0.022 300.2);
+      /* 원시 — orchid */
+      --bs-orchid-10: oklch(0.160 0.030 315.0);
+      --bs-orchid-20: oklch(0.222 0.055 316.4);
+      --bs-orchid-30: oklch(0.338 0.095 315.9);
+      --bs-orchid-40: oklch(0.442 0.132 316.4);
+      --bs-orchid-50: oklch(0.638 0.200 316.1);
+      --bs-orchid-60: oklch(0.670 0.182 316.2);
+      --bs-orchid-70: oklch(0.740 0.142 316.6);
+      --bs-orchid-80: oklch(0.850 0.080 316.7);
+      --bs-orchid-90: oklch(0.924 0.040 317.0);
+      --bs-orchid-95: oklch(0.953 0.023 317.1);
+      /* 원시 — magenta */
+      --bs-magenta-10: oklch(0.161 0.030 341.8);
+      --bs-magenta-20: oklch(0.226 0.052 341.6);
+      --bs-magenta-30: oklch(0.342 0.094 343.1);
+      --bs-magenta-40: oklch(0.450 0.129 342.7);
+      --bs-magenta-50: oklch(0.649 0.195 343.3);
+      --bs-magenta-60: oklch(0.679 0.178 342.7);
+      --bs-magenta-70: oklch(0.777 0.118 340.1);
+      --bs-magenta-80: oklch(0.849 0.078 339.6);
+      --bs-magenta-90: oklch(0.925 0.038 338.1);
+      --bs-magenta-95: oklch(0.953 0.022 336.8);
+      /* 원시 — pink */
+      --bs-pink-10: oklch(0.222 0.050 0.2);
+      --bs-pink-20: oklch(0.280 0.069 0.7);
+      --bs-pink-30: oklch(0.392 0.103 2.1);
+      --bs-pink-40: oklch(0.494 0.136 3.1);
+      --bs-pink-50: oklch(0.639 0.182 3.1);
+      --bs-pink-60: oklch(0.668 0.166 1.3);
+      --bs-pink-70: oklch(0.770 0.107 358.6);
+      --bs-pink-80: oklch(0.844 0.071 356.2);
+      --bs-pink-90: oklch(0.921 0.034 354.9);
+      --bs-pink-95: oklch(0.950 0.021 358.7);
+      /* 원시 — coral */
+      --bs-coral-10: oklch(0.161 0.025 20.2);
+      --bs-coral-20: oklch(0.229 0.046 23.4);
+      --bs-coral-30: oklch(0.349 0.083 24.3);
+      --bs-coral-40: oklch(0.512 0.132 25.2);
+      --bs-coral-50: oklch(0.662 0.176 25.1);
+      --bs-coral-60: oklch(0.690 0.158 23.9);
+      --bs-coral-70: oklch(0.783 0.102 21.9);
+      --bs-coral-80: oklch(0.854 0.065 20.9);
+      --bs-coral-90: oklch(0.926 0.031 20.2);
+      --bs-coral-95: oklch(0.951 0.020 25.2);
+      /* 원시 — red (65단 포함) */
+      --bs-red-10: oklch(0.150 0.030 16.5);
+      --bs-red-20: oklch(0.209 0.053 17.3);
+      --bs-red-30: oklch(0.317 0.096 18.7);
+      --bs-red-40: oklch(0.510 0.168 20.4);
+      --bs-red-50: oklch(0.600 0.199 20.6);
+      --bs-red-60: oklch(0.628 0.182 18.6);
+      --bs-red-65: oklch(0.661 0.164 16.8);
+      --bs-red-70: oklch(0.698 0.142 15.5);
+      --bs-red-80: oklch(0.821 0.078 11.9);
+      --bs-red-90: oklch(0.954 0.019 9.3);
+      --bs-red-95: oklch(0.972 0.011 10.3);
+      /* 원시 — orange */
+      --bs-orange-10: oklch(0.165 0.027 55.4);
+      --bs-orange-20: oklch(0.233 0.046 53.6);
+      --bs-orange-30: oklch(0.355 0.078 51.6);
+      --bs-orange-40: oklch(0.521 0.124 49.9);
+      --bs-orange-50: oklch(0.674 0.164 49.4);
+      --bs-orange-60: oklch(0.702 0.151 51.4);
+      --bs-orange-70: oklch(0.794 0.102 54.4);
+      --bs-orange-80: oklch(0.861 0.066 56.2);
+      --bs-orange-90: oklch(0.930 0.033 57.1);
+      --bs-orange-95: oklch(0.965 0.016 58.6);
+      /* 원시 — mustard */
+      --bs-mustard-10: oklch(0.167 0.028 87.8);
+      --bs-mustard-20: oklch(0.233 0.041 78.3);
+      --bs-mustard-30: oklch(0.355 0.068 75.5);
+      --bs-mustard-40: oklch(0.521 0.104 74.4);
+      --bs-mustard-50: oklch(0.675 0.137 74.0);
+      --bs-mustard-60: oklch(0.723 0.141 75.4);
+      --bs-mustard-70: oklch(0.801 0.096 80.9);
+      --bs-mustard-80: oklch(0.865 0.065 80.7);
+      --bs-mustard-90: oklch(0.932 0.032 81.0);
+      --bs-mustard-95: oklch(0.967 0.016 79.4);
+      /* 원시 — gray 23단 */
+      --bs-gray-0: oklch(0.000 0.000 0.0);
+      --bs-gray-10: oklch(0.163 0.003 248.0);
+      --bs-gray-20: oklch(0.222 0.008 264.4);
+      --bs-gray-23: oklch(0.252 0.010 268.3);
+      --bs-gray-25: oklch(0.284 0.012 264.4);
+      --bs-gray-27: oklch(0.307 0.013 253.0);
+      --bs-gray-30: oklch(0.336 0.015 264.3);
+      --bs-gray-32: oklch(0.387 0.016 251.8);
+      --bs-gray-38: oklch(0.473 0.021 261.3);
+      --bs-gray-40: oklch(0.515 0.021 258.4);
+      --bs-gray-50: oklch(0.656 0.022 264.4);
+      --bs-gray-60: oklch(0.721 0.017 262.7);
+      --bs-gray-70: oklch(0.781 0.013 259.8);
+      --bs-gray-80: oklch(0.875 0.011 261.8);
+      --bs-gray-84: oklch(0.912 0.009 264.5);
+      --bs-gray-88: oklch(0.930 0.007 260.7);
+      --bs-gray-90: oklch(0.948 0.006 255.5);
+      --bs-gray-91: oklch(0.960 0.005 258.3);
+      --bs-gray-92: oklch(0.964 0.004 271.4);
+      --bs-gray-93: oklch(0.970 0.004 271.4);
+      --bs-gray-94: oklch(0.976 0.003 264.5);
+      --bs-gray-95: oklch(0.982 0.003 264.5);
+      --bs-gray-100: oklch(1.000 0.000 0.0);
+
+      /* 시맨틱 계열 슬롯 — 라이트 (bg 95 · weak 90 · normal 50 · strong 40 · heavy 30) */
+      --bs-green-bg: var(--bs-green-95); --bs-green-weak: var(--bs-green-90); --bs-green-normal: var(--bs-green-50); --bs-green-strong: var(--bs-green-40); --bs-green-heavy: var(--bs-green-30);
+      --bs-mint-bg: var(--bs-mint-95); --bs-mint-weak: var(--bs-mint-90); --bs-mint-normal: var(--bs-mint-50); --bs-mint-strong: var(--bs-mint-40); --bs-mint-heavy: var(--bs-mint-30);
+      --bs-sky-bg: var(--bs-sky-95); --bs-sky-weak: var(--bs-sky-90); --bs-sky-normal: var(--bs-sky-50); --bs-sky-strong: var(--bs-sky-40); --bs-sky-heavy: var(--bs-sky-30);
+      --bs-light-blue-bg: var(--bs-light-blue-95); --bs-light-blue-weak: var(--bs-light-blue-90); --bs-light-blue-normal: var(--bs-light-blue-50); --bs-light-blue-strong: var(--bs-light-blue-40); --bs-light-blue-heavy: var(--bs-light-blue-30);
+      --bs-deep-blue-bg: var(--bs-deep-blue-95); --bs-deep-blue-weak: var(--bs-deep-blue-90); --bs-deep-blue-normal: var(--bs-deep-blue-50); --bs-deep-blue-strong: var(--bs-deep-blue-40); --bs-deep-blue-heavy: var(--bs-deep-blue-30);
+      --bs-indigo-bg: var(--bs-indigo-95); --bs-indigo-weak: var(--bs-indigo-90); --bs-indigo-normal: var(--bs-indigo-50); --bs-indigo-strong: var(--bs-indigo-40); --bs-indigo-heavy: var(--bs-indigo-30);
+      --bs-violet-bg: var(--bs-violet-95); --bs-violet-weak: var(--bs-violet-90); --bs-violet-normal: var(--bs-violet-50); --bs-violet-strong: var(--bs-violet-40); --bs-violet-heavy: var(--bs-violet-30);
+      --bs-purple-bg: var(--bs-purple-95); --bs-purple-weak: var(--bs-purple-90); --bs-purple-normal: var(--bs-purple-50); --bs-purple-strong: var(--bs-purple-40); --bs-purple-heavy: var(--bs-purple-30);
+      --bs-orchid-bg: var(--bs-orchid-95); --bs-orchid-weak: var(--bs-orchid-90); --bs-orchid-normal: var(--bs-orchid-50); --bs-orchid-strong: var(--bs-orchid-40); --bs-orchid-heavy: var(--bs-orchid-30);
+      --bs-magenta-bg: var(--bs-magenta-95); --bs-magenta-weak: var(--bs-magenta-90); --bs-magenta-normal: var(--bs-magenta-50); --bs-magenta-strong: var(--bs-magenta-40); --bs-magenta-heavy: var(--bs-magenta-30);
+      --bs-pink-bg: var(--bs-pink-95); --bs-pink-weak: var(--bs-pink-90); --bs-pink-normal: var(--bs-pink-50); --bs-pink-strong: var(--bs-pink-40); --bs-pink-heavy: var(--bs-pink-30);
+      --bs-coral-bg: var(--bs-coral-95); --bs-coral-weak: var(--bs-coral-90); --bs-coral-normal: var(--bs-coral-50); --bs-coral-strong: var(--bs-coral-40); --bs-coral-heavy: var(--bs-coral-30);
+      --bs-red-bg: var(--bs-red-95); --bs-red-weak: var(--bs-red-90); --bs-red-normal: var(--bs-red-50); --bs-red-strong: var(--bs-red-40); --bs-red-heavy: var(--bs-red-30);
+      --bs-orange-bg: var(--bs-orange-95); --bs-orange-weak: var(--bs-orange-90); --bs-orange-normal: var(--bs-orange-50); --bs-orange-strong: var(--bs-orange-40); --bs-orange-heavy: var(--bs-orange-30);
+      --bs-mustard-bg: var(--bs-mustard-95); --bs-mustard-weak: var(--bs-mustard-90); --bs-mustard-normal: var(--bs-mustard-50); --bs-mustard-strong: var(--bs-mustard-40); --bs-mustard-heavy: var(--bs-mustard-30);
+      --bs-gray-bg: var(--bs-gray-95); --bs-gray-weak: var(--bs-gray-90); --bs-gray-normal: var(--bs-gray-50); --bs-gray-strong: var(--bs-gray-40); --bs-gray-heavy: var(--bs-gray-30);
+
+      /* 시맨틱 역할 — 라이트 */
+      --bs-text-strong: var(--bs-gray-20);
+      --bs-text-normal: var(--bs-gray-25);
+      --bs-text-neutral: var(--bs-gray-40);
+      --bs-text-alternative: var(--bs-gray-60);
+      --bs-text-disable: var(--bs-gray-80);
+      --bs-text-highlight: var(--bs-gray-100);
+      --bs-background-white: var(--bs-gray-100);
+      --bs-background-gray: var(--bs-gray-94);
+      --bs-background-layer1: var(--bs-gray-100);
+      --bs-background-layer2: var(--bs-gray-95);
+      --bs-background-layer3: var(--bs-gray-92);
+      --bs-background-highlight: var(--bs-green-50);
+      --bs-background-dim: var(--bs-gray-10);
+      --bs-line-normal: var(--bs-gray-91);
+      --bs-line-strong: var(--bs-gray-88);
+      --bs-line-neutral: var(--bs-gray-94);
+      --bs-status-profit: var(--bs-red-65);
+      --bs-status-negative: var(--bs-red-50);
+      --bs-status-loss: var(--bs-light-blue-70);
+      --bs-status-positive: var(--bs-light-blue-50);
+      --bs-status-caution: var(--bs-mustard-50);
+      --bs-static-black: var(--bs-gray-0);
+      --bs-static-strong: var(--bs-gray-20);
+      --bs-static-normal: var(--bs-gray-25);
+      --bs-static-neutral: var(--bs-gray-40);
+      --bs-static-alternative: var(--bs-gray-60);
+      --bs-static-assistive: var(--bs-gray-80);
+      --bs-static-disable: var(--bs-gray-90);
+      --bs-static-white: var(--bs-gray-100);
+      --bs-alpha: var(--bs-gray-10);
+      --bs-background-highlight-opacity: 0.04;
+      --bs-background-dim-opacity: 0.56;
+
+      /* 옛 층 — 홈 마케팅 셸 */
+      --bs-legacy-green-100: oklch(0.706 0.156 160.2);
+      --bs-legacy-gray-050: oklch(0.178 0.000 0.0);
+      --bs-legacy-gray-100: oklch(0.346 0.020 257.3);
+      --bs-legacy-gray-200: oklch(0.473 0.021 261.3);
+      --bs-legacy-gray-400: oklch(0.646 0.022 264.4);
+      --bs-legacy-gray-550: oklch(0.807 0.015 264.5);
+      --bs-legacy-white-900: oklch(1.000 0.000 0.0);
+
+      /* gradients · fonts · rounded · elevation */
+      --bs-home-hero-gradient: linear-gradient(180deg, oklch(0.669 0.184 248.8) 0%, oklch(0.760 0.143 24.1) 100%);
+      --bs-font-sans: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+      --bs-font-ios: Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      --bs-rounded: 6px;
+      --bs-xsmall: 8px;
+      --bs-small: 12px;
+      --bs-medium: 16px;
+      --bs-large: 20px;
+      --bs-xlarge: 24px;
+      --bs-full: 9999px;
+      --bs-lg: 50%;
+      --bs-shadow-sm: 0px 2px 8px oklch(0.000 0.000 0.0 / 0.1);
+      --bs-shadow-md: 0px 4px 16px oklch(0.000 0.000 0.0 / 0.1);
+      --bs-shadow-lg: 0px 8px 32px oklch(0.000 0.000 0.0 / 0.1);
+
+      /* 홈 리터럴 — 변수를 거치지 않는 값 */
+      --lit-hero-mint: oklch(0.971 0.019 167.9);
+      --lit-hero-sky: oklch(0.944 0.028 236.2);
+      --lit-hero-mint-2: oklch(0.943 0.052 170.2);
+      --lit-home-loan: oklch(0.630 0.155 258.4);
+      --lit-partner-bg: oklch(0.969 0.007 219.6);
+      --lit-partner-fg: oklch(0.579 0.044 214.5);
+      --lit-shadow-pick: 0 0 2px oklch(0.000 0.000 0.0 / 0.26);
+      --lit-shadow-pill: 0 4px 9px oklch(0.000 0.000 0.0 / 0.15);
+      --lit-shadow-dot: 0 2px 8px oklch(0.000 0.000 0.0 / 0.1);
+      --lit-shadow-up: 0px -3px 4px 0px oklch(0.000 0.000 0.0 / 0.12);
+
+      /* 홈 셸 역할 */
+      --home-bg: var(--bs-legacy-white-900);
+      --home-ink: var(--bs-legacy-gray-050);
+      --home-sub: var(--bs-legacy-gray-200);
+      --home-meta: var(--bs-legacy-gray-400);
+      --home-row: var(--bs-legacy-gray-100);
+      --wm-plate: transparent;
+      --wm-pad: 0px;
+
+      /* 런타임 덮어쓰기 */
+      --background: var(--bs-background-white);
+      --foreground: var(--bs-text-normal);
+      --card: var(--bs-background-layer1);
+      --card-foreground: var(--bs-text-normal);
+      --primary: var(--bs-green-normal);
+      --primary-foreground: var(--bs-static-white);
+      --secondary: var(--bs-green-weak);
+      --secondary-foreground: var(--bs-green-strong);
+      --muted: var(--bs-background-layer2);
+      --muted-foreground: var(--bs-text-neutral);
+      --accent: var(--bs-green-bg);
+      --accent-foreground: var(--bs-green-strong);
+      --border: var(--bs-line-normal);
+      --accent-glow: var(--bs-green-normal);
+      --rule-strong: var(--bs-line-strong);
+      --ghost: var(--bs-background-layer3);
+    }
+
+    body {
+      font-family: "Pretendard Variable", var(--bs-font-sans);
+      font-feature-settings: "tnum", "ss01", "ss07";
+      font-size: 14px;
+      line-height: 20px;
+      letter-spacing: -0.005em;
+      background: var(--bs-background-white);
+      color: var(--bs-text-normal);
+      word-break: keep-all;
+    }
+    a { color: inherit; }
+    .sr {
+      position: absolute; width: 1px; height: 1px; overflow: hidden;
+      clip: rect(0 0 0 0); white-space: nowrap; margin: -1px; padding: 0; border: 0;
+    }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+    .wm-box {
+      display: inline-flex; align-items: center; max-width: 100%;
+      background: var(--wm-plate); padding: var(--wm-pad); border-radius: var(--bs-xsmall);
+    }
+    .wm-box img { display: block; width: auto; max-width: 100%; }
+
+    /* ── hero ── */
+    .hero { padding: 48px 0 56px; border-bottom: 1px solid var(--bs-line-normal); }
+    .hero-grid {
+      display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 48px; align-items: center;
+    }
+    .hero-copy { min-width: 0; }
+    .lockup img { height: 30px; }
+    .hero-kicker {
+      margin: 28px 0 0; font-size: 15px; line-height: 23px; font-weight: 700;
+      color: var(--bs-text-neutral);
+    }
+    .hero h1 {
+      margin: 10px 0 0; font-size: 52px; line-height: 60px; font-weight: 700;
+      letter-spacing: 0.5px; color: var(--bs-text-strong);
+    }
+    .hero-tagline {
+      margin: 16px 0 0; max-width: 480px; font-size: 18px; line-height: 26px;
+      color: var(--bs-text-neutral);
+    }
+    .hero-ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 32px; }
+    .hero-visual { min-width: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+
+    /* hero carousel (radio-driven) */
+    .hv { position: relative; min-width: 0; width: 100%; max-width: 440px; }
+    .hv-in { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; pointer-events: none; }
+    .hv-stage {
+      position: relative; display: flex; align-items: center; justify-content: center;
+      aspect-ratio: 1 / 1; border-radius: var(--bs-xlarge); overflow: hidden; padding: 36px 36px 60px;
+      background: var(--lit-hero-mint); transition: background-color 0.3s;
+    }
+    #hv2:checked ~ .hv-stage { background: var(--lit-hero-sky); }
+    #hv3:checked ~ .hv-stage { background: var(--lit-hero-mint-2); }
+    #hv4:checked ~ .hv-stage { background: var(--bs-home-hero-gradient); }
+    .hv-art {
+      position: relative; display: flex; align-items: center; justify-content: center;
+      width: 82%; aspect-ratio: 1 / 1; border-radius: var(--bs-lg); padding: 32px;
+      border: 2px dashed var(--bs-green-80); text-align: center;
+      background: color-mix(in oklab, var(--bs-static-white) 60%, transparent);
+      color: var(--bs-static-neutral); font-size: 13px; line-height: 20px;
+    }
+    .hv-art::before, .hv-art::after {
+      content: ""; position: absolute; border-radius: var(--bs-lg); pointer-events: none;
+      border: 2px solid color-mix(in oklab, var(--bs-static-white) 70%, transparent);
+    }
+    .hv-art::before { inset: 14%; }
+    .hv-art::after { inset: 28%; }
+    .hv-dots { position: absolute; left: 0; right: 0; bottom: 14px; display: flex; justify-content: center; gap: 12px; }
+    .hv-dot { display: inline-flex; align-items: center; height: 24px; cursor: pointer; }
+    .hv-pip {
+      display: block; width: 8px; height: 8px; border-radius: 999px;
+      background: var(--bs-static-white); opacity: 0.6; box-shadow: var(--lit-shadow-dot);
+      transition: width 0.3s, opacity 0.3s;
+    }
+    #hv1:checked ~ .hv-stage .hv-dot[for="hv1"] .hv-pip,
+    #hv2:checked ~ .hv-stage .hv-dot[for="hv2"] .hv-pip,
+    #hv3:checked ~ .hv-stage .hv-dot[for="hv3"] .hv-pip,
+    #hv4:checked ~ .hv-stage .hv-dot[for="hv4"] .hv-pip { width: 36px; opacity: 1; }
+    #hv1:focus-visible ~ .hv-stage .hv-dot[for="hv1"],
+    #hv2:focus-visible ~ .hv-stage .hv-dot[for="hv2"],
+    #hv3:focus-visible ~ .hv-stage .hv-dot[for="hv3"],
+    #hv4:focus-visible ~ .hv-stage .hv-dot[for="hv4"] { outline: 2px solid var(--bs-static-strong); outline-offset: 2px; border-radius: 4px; }
+
+    /* ── buttons ── */
+    .btn {
+      position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+      max-width: 100%; min-width: 0; border: 0; font-family: inherit; font-size: 16px; line-height: 24px;
+      font-weight: 700; letter-spacing: -0.08px; text-decoration: none; cursor: pointer;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .btn::after {
+      content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+      background: var(--bs-static-black); opacity: 0; transition: opacity 100ms;
+    }
+    .btn:active::after, .btn.is-pressed::after { opacity: 0.04; }
+    @media (pointer: fine) {
+      .btn:hover::after { opacity: 0.04; }
+    }
+    .btn:focus-visible { outline: 2px solid var(--bs-green-strong); outline-offset: 2px; }
+    .btn[aria-disabled="true"] { opacity: 0.4; pointer-events: none; cursor: default; }
+    .btn-primary {
+      height: 56px; padding: 16px 20px; border-radius: 16px;
+      background: var(--bs-green-normal); color: var(--primary-foreground);
+    }
+    .btn-secondary {
+      height: 48px; padding: 12px 16px; border-radius: 12px;
+      background: var(--bs-green-weak); color: var(--bs-green-strong);
+    }
+    .btn-text {
+      height: 56px; padding: 16px 20px; border-radius: 16px; background: transparent;
+      color: var(--bs-text-neutral); box-shadow: inset 0 0 0 1px var(--bs-line-strong);
+    }
+    .btn-text.no-line { box-shadow: none; }
+    .btn-block { display: flex; width: 100%; }
+
+    /* ── sections & cells ── */
+    .sec { padding: 56px 0 0; }
+    main.wrap { padding-bottom: 80px; }
+    .sec-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; }
+    .sec-idx { font-size: 13px; line-height: 20px; font-weight: 700; color: var(--bs-green-strong); }
+    .sec-head h2 { margin: 0; font-size: 24px; line-height: 32px; font-weight: 800; color: var(--bs-text-strong); }
+    .cells { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+    .cell {
+      min-width: 0; display: flex; flex-direction: column; gap: 16px; padding: 20px;
+      border: 1px solid var(--bs-line-normal); border-radius: var(--bs-medium);
+      background: var(--bs-background-layer1);
+    }
+    .cell.wide { grid-column: 1 / -1; }
+    .kicker { font-size: 12px; line-height: 18px; font-weight: 700; color: var(--bs-text-neutral); letter-spacing: 0; }
+    .specs { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+    .spec, .hint { font-size: 12px; line-height: 18px; color: var(--bs-text-neutral); letter-spacing: 0; }
+    .states { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 20px; }
+    .state { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; min-width: 0; max-width: 100%; }
+    .state-full { align-items: stretch; width: min(100%, 390px); }
+    .state-label { font-size: 12px; line-height: 18px; color: var(--bs-text-neutral); }
+    .trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
+    .fill { align-self: stretch; }
+
+    /* ── tab-segment ── */
+    .seg {
+      position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+      max-width: 100%; min-width: 0; border-bottom: 1px solid var(--bs-line-normal);
+    }
+    .seg.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .seg-in { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; pointer-events: none; }
+    .seg-tab {
+      min-width: 0; padding: 14px 4px 12px; text-align: center; font-size: 16px; line-height: 24px;
+      font-weight: 700; color: var(--bs-text-alternative); cursor: pointer;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .seg-in:checked + .seg-tab, .seg-tab.on { color: var(--bs-text-normal); }
+    .seg-in:focus-visible + .seg-tab { outline: 2px solid var(--bs-green-strong); outline-offset: -2px; }
+    .seg-bar {
+      position: absolute; left: 0; bottom: -1px; width: calc(100% / 3); height: 2px;
+      background: var(--bs-text-normal); transition: transform 0.3s cubic-bezier(.7, 0, .4, 1);
+    }
+    #sg1:checked ~ .seg-bar { transform: translateX(100%); }
+    #sg2:checked ~ .seg-bar { transform: translateX(200%); }
+    .seg.lg .seg-tab { font-size: 18px; line-height: 26px; }
+    .seg.lg .seg-tab.on { color: var(--bs-text-strong); }
+    .seg-tab.on { box-shadow: inset 0 -2px 0 currentColor; }
+    .seg.two .seg-tab.on { box-shadow: inset 0 -2px 0 var(--bs-text-normal); }
+    .seg-dot {
+      display: inline-block; width: 5px; height: 5px; margin-left: 2px; vertical-align: top;
+      border-radius: var(--bs-lg); background: var(--bs-red-normal);
+    }
+
+    /* ── badge · pill · chip ── */
+    .badge {
+      display: inline-flex; align-items: center; justify-content: center; padding: 1px 4px;
+      border-radius: 999px; background: var(--bs-green-normal); color: var(--bs-static-white);
+      font-size: 10px; line-height: 14px; font-weight: 700; letter-spacing: -0.005em;
+    }
+    .evtab { display: inline-flex; flex-direction: column; align-items: center; gap: 4px; font-size: 16px; line-height: 24px; font-weight: 700; color: var(--bs-text-normal); }
+    .evtab-cnt { color: var(--bs-legacy-green-100); }
+    .pill {
+      display: inline-flex; align-items: center; padding: 2px 6px; border-radius: 999px;
+      font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: -0.06px; white-space: nowrap;
+    }
+    .pill-red { background: var(--bs-red-weak); color: var(--bs-red-strong); }
+    .pill-lb { background: var(--bs-light-blue-weak); color: var(--bs-light-blue-strong); }
+    .txt-ok { color: var(--bs-green-normal); font-weight: 700; }
+    .txt-bad { color: var(--bs-red-normal); font-weight: 700; }
+    .nchip {
+      display: inline-flex; align-items: center; justify-content: center; flex: none;
+      width: 20px; height: 20px; border-radius: 6px; background: var(--bs-gray-weak);
+      color: var(--bs-gray-normal); font-size: 14px; line-height: 20px; font-weight: 700;
+    }
+    .row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+
+    /* ── cards · banner · notice ── */
+    .card-sec { min-width: 0; background: var(--bs-background-layer2); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 6px; }
+    .card-ol {
+      min-width: 0; background: var(--bs-background-layer1); border: 1px solid var(--bs-line-normal);
+      border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 8px;
+    }
+    .card-ol.is-short { border-color: var(--bs-red-weak); }
+    .k13 { font-size: 13px; line-height: 20px; font-weight: 700; }
+    .amt18 { font-size: 18px; line-height: 26px; font-weight: 700; color: var(--bs-text-strong); }
+    .lb-n { color: var(--bs-light-blue-normal); }
+    .co-head { display: flex; justify-content: space-between; gap: 8px; font-size: 14px; line-height: 20px; font-weight: 700; color: var(--bs-text-strong); }
+    .co-line { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; line-height: 20px; color: var(--bs-text-alternative); }
+    .co-line.top { border-top: 1px solid var(--bs-line-normal); padding-top: 8px; }
+    .banner-hl {
+      display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px;
+      background: var(--bs-green-bg); border-radius: 12px; padding: 20px;
+      font-size: 16px; line-height: 24px; font-weight: 700; color: var(--bs-text-normal);
+    }
+    .banner-hl .amt { color: var(--bs-green-normal); }
+    .notice {
+      background: var(--bs-mustard-bg); border-radius: 12px; padding: 12px;
+      font-size: 12px; line-height: 18px; letter-spacing: -0.005em; color: var(--bs-text-neutral);
+    }
+    .chip-loan {
+      align-self: flex-start; max-width: 100%; background: var(--bs-gray-bg); border-radius: 16px; padding: 12px;
+      font-size: 15px; line-height: 22px; font-weight: 500;
+    }
+    .chip-loan .k { color: var(--bs-text-neutral); margin-right: 8px; }
+    .chip-loan .v { color: var(--bs-green-normal); font-weight: 700; }
+
+    /* ── rows ── */
+    .lrow-card { background: var(--bs-background-layer2); border-radius: 12px; overflow: hidden; }
+    .lrow { position: relative; display: flex; align-items: center; gap: 14px; padding: 16px 20px; color: var(--bs-text-normal); text-decoration: none; }
+    .lrow:focus-visible { outline: 2px solid var(--bs-green-strong); outline-offset: -2px; }
+    .ic { flex: none; width: 40px; height: 40px; border-radius: var(--bs-lg); }
+    .ic-lb { background: var(--bs-light-blue-weak); }
+    .ic-pk { background: var(--bs-pink-weak); }
+    .ic-ms { background: var(--bs-mustard-weak); }
+    .ic-gr { background: var(--bs-gray-weak); }
+    .lrow-t { flex: 1 1 auto; min-width: 0; font-size: 18px; line-height: 26px; font-weight: 700; }
+    .chev { flex: none; color: var(--bs-text-alternative); }
+    .erows { display: flex; flex-direction: column; background: var(--bs-background-layer1); }
+    .erow { display: flex; align-items: center; gap: 16px; padding: 20px 24px; }
+    .erow-tile {
+      flex: none; display: flex; align-items: center; justify-content: center; width: 46px; height: 70px;
+      border-radius: 8px; background: var(--bs-gray-weak); color: var(--bs-text-neutral);
+      font-size: 10px; line-height: 14px; text-align: center;
+    }
+    .erow-body { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+    .erow-top { font-size: 14px; line-height: 20px; font-weight: 500; color: var(--home-sub); }
+    .erow-bot { font-size: 18px; line-height: 25px; font-weight: 700; color: var(--home-row); overflow-wrap: anywhere; }
+    .faq { border-top: 1px solid var(--bs-line-normal); }
+    .faq details { border-bottom: 1px solid var(--bs-line-normal); }
+    .faq summary {
+      min-height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 12px 16px; font-size: 16px; line-height: 24px; color: var(--bs-text-normal);
+      cursor: pointer; list-style: none;
+    }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary:focus-visible { outline: 2px solid var(--bs-green-strong); outline-offset: -2px; }
+    .faq summary span:first-child { min-width: 0; }
+    .faq details[open] .chev { transform: rotate(180deg); }
+    .faq-a { margin: 0; padding: 0 16px 14px; font-size: 14px; line-height: 22px; color: var(--bs-text-neutral); }
+    .cta-frame { position: relative; overflow: hidden; border-radius: 12px; background: var(--bs-background-layer2); padding-top: 56px; }
+    .cta-frame .ghost-line { position: absolute; left: 20px; right: 20px; height: 10px; border-radius: 999px; background: var(--bs-line-strong); }
+    .cta-frame .ghost-line.a { top: 18px; }
+    .cta-frame .ghost-line.b { top: 36px; right: 40%; }
+    .bcta {
+      position: relative; display: flex; flex-direction: column; gap: 10px; padding: 14px 20px 20px;
+      background: var(--bs-background-white); box-shadow: var(--lit-shadow-up);
+    }
+    .bcta.fade { box-shadow: none; padding-top: 32px; background: linear-gradient(180deg, transparent 0%, var(--bs-background-white) 38%); }
+    .bcta-note { text-align: center; font-size: 14px; line-height: 20px; color: var(--bs-text-normal); }
+    .legal { display: flex; flex-direction: column; gap: 24px; background: var(--bs-background-gray); padding: 28px 20px; }
+    .legal.boxed { border-radius: 12px; }
+    .legal-blk { display: flex; flex-direction: column; gap: 10px; }
+    .legal h4 { margin: 0; font-size: 18px; line-height: 26px; font-weight: 700; color: var(--bs-text-neutral); }
+    .legal ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; line-height: 22px; color: var(--bs-text-neutral); }
+    .legal-meta { font-size: 13px; line-height: 20px; color: var(--bs-text-alternative); }
+
+    /* ── home shell (옛 층) ── */
+    .hgnb {
+      display: flex; align-items: center; gap: 28px; min-height: 56px; padding: 0 16px; min-width: 0; max-width: 100%;
+      border: 1px solid var(--bs-line-strong); border-radius: 8px; background: var(--home-bg);
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .hgnb a, .hm-menu span {
+      flex: none; font-size: 16px; line-height: 26px; font-weight: 700; color: var(--home-ink);
+      text-decoration: none; white-space: nowrap; transition: color 0.15s cubic-bezier(.4, 0, .2, 1);
+    }
+    .hgnb a:hover, .hgnb a.is-hover { color: var(--bs-legacy-green-100); }
+    .hgnb a:focus-visible { outline: 2px solid var(--bs-green-strong); outline-offset: 2px; }
+    .hpill {
+      display: inline-flex; align-items: center; max-width: 100%; min-width: 0; border-radius: 41px; padding: 10px 20px;
+      font-size: 18px; line-height: 21px; font-weight: 500; text-decoration: none; white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis; box-shadow: var(--lit-shadow-pill);
+    }
+    .hpill-fill { background: var(--bs-legacy-green-100); color: var(--bs-static-white); }
+    .hpill-line { background: var(--home-bg); color: var(--bs-legacy-green-100); box-shadow: inset 0 0 0 1px var(--bs-legacy-green-100), var(--lit-shadow-pill); }
+    .hpill:focus-visible, .hloan:focus-visible { outline: 2px solid var(--bs-green-strong); outline-offset: 2px; }
+    .hloan {
+      display: inline-flex; align-items: center; gap: 6px; max-width: 100%; min-width: 0; border-radius: 8px; padding: 12px 20px;
+      background: var(--lit-home-loan); color: var(--bs-text-highlight); box-shadow: var(--lit-shadow-dot);
+      font-size: 18px; line-height: 26px; font-weight: 700; text-decoration: none; white-space: nowrap;
+    }
+    .hloan svg { flex: none; }
+    .pick-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+    .pick { min-width: 0; display: flex; flex-direction: column; background: var(--home-bg); border-radius: 2px; box-shadow: var(--lit-shadow-pick); overflow: hidden; text-decoration: none; }
+    .pick-img { height: 130px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--bs-static-neutral); }
+    .pk-a { background: var(--bs-gray-90); }
+    .pk-b { background: var(--bs-purple-90); }
+    .pk-c { background: var(--bs-deep-blue-90); }
+    .pk-d { background: var(--bs-light-blue-90); }
+    .pick-body { padding: 16px 12px; font-size: 16px; line-height: 24px; color: var(--home-ink); }
+    .pick-cat { font-weight: 400; }
+    .pick-title { font-weight: 500; overflow-wrap: anywhere; }
+
+    /* ── phone mocks ── */
+    .phone {
+      width: min(100%, 390px); margin: 0 auto; padding: 10px; border-radius: 36px;
+      background: var(--bs-background-layer3); border: 1px solid var(--bs-line-strong);
+    }
+    .screen { position: relative; border-radius: 28px; overflow: hidden; background: var(--bs-background-white); color: var(--bs-text-normal); }
+    .ph-head { height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 20px; color: var(--bs-text-strong); }
+    .ph-head .wm-box img { height: 23px; }
+    .ln-main { padding: 20px 20px 0; display: flex; flex-direction: column; gap: 20px; }
+    .ln-h1 { margin: 0; font-size: 24px; line-height: 32px; font-weight: 800; color: var(--bs-text-strong); }
+    .ln-art { height: 150px; display: flex; align-items: center; justify-content: center; }
+    .ln-art span {
+      display: flex; align-items: center; justify-content: center; width: 104px; height: 104px; border-radius: 28px;
+      border: 2px dashed var(--bs-mustard-70); color: var(--bs-mustard-strong); font-size: 12px; line-height: 18px; text-align: center;
+    }
+    .bens { display: flex; flex-direction: column; gap: 22px; padding-bottom: 40px; }
+    .ben { display: flex; gap: 12px; align-items: flex-start; }
+    .ben .ic { width: 28px; height: 28px; margin-top: 2px; }
+    .ben-t { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .ben-t b { font-size: 16px; line-height: 24px; font-weight: 700; color: var(--bs-text-normal); }
+    .ben-t span { font-size: 15px; line-height: 22px; font-weight: 500; color: var(--bs-text-alternative); }
+    .screen .legal { padding-bottom: 136px; }
+    .ln-cta { position: absolute; left: 0; right: 0; bottom: 0; }
+    .hl-conn { display: flex; align-items: center; gap: 10px; padding: 12px 20px; }
+    .hl-conn .sq { flex: none; width: 22px; height: 22px; border-radius: 6px; background: var(--bs-green-bg); }
+    .hl-conn .t { flex: 1 1 auto; min-width: 0; font-size: 14px; line-height: 20px; font-weight: 500; }
+    .hl-conn .go { flex: none; font-size: 14px; line-height: 20px; font-weight: 700; color: var(--bs-green-normal); }
+    .screen .seg { padding: 0 8px; }
+    .hl-main { padding: 20px 20px 0; display: flex; flex-direction: column; gap: 22px; }
+    .hl-kick { font-size: 13px; line-height: 20px; color: var(--bs-text-neutral); }
+    .hl-h1 { margin: 4px 0 0; font-size: 20px; line-height: 28px; font-weight: 700; color: var(--bs-text-strong); }
+    .journey {
+      position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px;
+      padding: 22px 12px; border-radius: 16px; text-align: center;
+      background: linear-gradient(96deg, var(--bs-red-bg) 0%, var(--bs-red-weak) 100%);
+    }
+    .journey::before { content: ""; position: absolute; top: 31px; left: 14%; right: 14%; height: 2px; background: var(--bs-red-weak); }
+    .jn { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
+    .jn-x {
+      width: 18px; height: 18px; border-radius: var(--bs-lg); background: var(--bs-red-normal);
+      color: var(--bs-static-white); font-size: 11px; line-height: 18px; font-weight: 700;
+    }
+    .jn-k { max-width: 100%; font-size: 12px; line-height: 16px; color: var(--bs-red-strong); overflow-wrap: anywhere; }
+    .jn-v { max-width: 100%; font-size: 14px; line-height: 20px; font-weight: 700; color: var(--bs-text-strong); overflow-wrap: anywhere; }
+    .tl { display: flex; flex-direction: column; gap: 22px; border-left: 2px solid var(--bs-line-normal); margin-left: 9px; padding-left: 17px; }
+    .tl-item { display: flex; flex-direction: column; gap: 8px; margin-left: -28px; }
+    .tl-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .tl-head h3 { margin: 0; font-size: 18px; line-height: 26px; font-weight: 700; color: var(--bs-text-strong); }
+    .tl-desc { margin: 0 0 0 28px; font-size: 13px; line-height: 20px; color: var(--bs-text-neutral); }
+    .tl-bar {
+      margin-left: 28px; display: flex; align-items: center; gap: 18px; padding: 16px 20px; border-radius: 16px;
+      background: var(--bs-background-layer2); font-size: 14px; line-height: 20px; font-weight: 700; color: var(--bs-text-alternative);
+    }
+    .tl-bar .d { display: inline-flex; align-items: center; gap: 6px; }
+    .tl-bar .d::before { content: ""; width: 10px; height: 10px; border-radius: var(--bs-lg); background: var(--bs-coral-normal); }
+    .tl-bar .chev { margin-left: auto; }
+    .gain { display: flex; flex-direction: column; gap: 14px; }
+    .gain-head { display: flex; gap: 8px; align-items: flex-start; }
+    .gain-head .nchip { margin-top: 4px; }
+    .gain-head h3 { margin: 0; font-size: 20px; line-height: 28px; font-weight: 700; color: var(--bs-text-strong); }
+    .gain .card-sec { margin-left: 28px; gap: 14px; padding: 20px 16px; }
+    .cmp { display: flex; justify-content: space-between; align-items: flex-start; gap: 6px; text-align: center; }
+    .cmp-col { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0; }
+    .cmp-col .k13.n { color: var(--bs-text-neutral); }
+    .cmp-arrow { margin-top: 20px; color: var(--bs-text-alternative); }
+    .perk {
+      display: flex; align-items: center; gap: 10px; padding: 14px 12px; border-radius: 12px;
+      background: var(--bs-background-layer1);
+    }
+    .perk .sq { flex: none; width: 24px; height: 24px; border-radius: 6px; }
+    .sq-red { background: var(--bs-red-weak); }
+    .sq-lb { background: var(--bs-light-blue-weak); }
+    .perk-t { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+    .perk-t span { font-size: 12px; line-height: 18px; color: var(--bs-text-neutral); }
+    .perk-t b { font-size: 13px; line-height: 20px; font-weight: 700; color: var(--bs-text-strong); }
+    .dz { margin-top: 28px; border-top: 12px solid var(--bs-background-layer3); padding: 28px 20px 0; display: flex; flex-direction: column; gap: 16px; }
+    .dz h3, .fq-h { margin: 0; font-size: 20px; line-height: 28px; font-weight: 700; color: var(--bs-text-strong); }
+    .dz-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .dz-grid .card-ol { padding: 14px 12px; }
+    .fq { padding: 36px 20px 8px; }
+    .fq-h { font-size: 18px; line-height: 26px; margin-bottom: 8px; }
+    .fq .faq summary { padding: 12px 0; }
+    .fq .faq-a { padding: 0 0 14px; }
+    .hl-cta { margin-top: 24px; }
+
+    /* ── desktop home mock ── */
+    .desk { min-width: 0; border: 1px solid var(--bs-line-strong); border-radius: 12px; overflow: hidden; background: var(--home-bg); color: var(--home-ink); }
+    .hm-gnb { display: flex; align-items: center; gap: 40px; height: 85px; padding: 0 32px; }
+    .hm-gnb .wm-box { flex: none; }
+    .hm-gnb .wm-box img { height: 23px; }
+    .hm-menu { display: flex; gap: 32px; flex: 1 1 auto; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+    .hm-burger { display: none; margin-left: auto; color: var(--home-ink); }
+    .hm-hero { position: relative; background: var(--lit-hero-mint); padding: 48px 32px 72px; }
+    .hm-hero-in { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 40px; align-items: center; max-width: 946px; margin: 0 auto; }
+    .hm-hero-copy { min-width: 0; }
+    .hm-title { margin: 0; font-size: 52px; line-height: 60px; font-weight: 500; letter-spacing: 0.5px; color: var(--bs-static-strong); }
+    .hm-pills { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; margin-top: 28px; }
+    .hm-art {
+      display: flex; align-items: center; justify-content: center; width: 100%; max-width: 300px; justify-self: end;
+      aspect-ratio: 1 / 1; border-radius: var(--bs-lg); border: 2px dashed var(--bs-green-80); padding: 32px; text-align: center;
+      color: var(--bs-static-neutral); font-size: 13px; line-height: 20px;
+    }
+    .hm-dots { position: absolute; left: 0; right: 0; bottom: 22px; display: flex; justify-content: center; gap: 12px; }
+    .hm-dots i { display: block; width: 8px; height: 8px; border-radius: 999px; background: var(--bs-static-white); opacity: 0.6; box-shadow: var(--lit-shadow-dot); }
+    .hm-dots i.on { width: 36px; opacity: 1; }
+    .hm-sec { padding: 48px 32px; display: flex; flex-direction: column; align-items: center; gap: 32px; text-align: center; }
+    .hm-sub { font-size: 18px; line-height: 26px; color: var(--home-sub); }
+    .hm-h2 { margin: 0; font-size: 28px; line-height: 38px; font-weight: 500; color: var(--home-ink); }
+    .hm-feats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; width: 100%; max-width: 882px; }
+    .hm-feat { display: flex; flex-direction: column; align-items: center; gap: 12px; min-width: 0; }
+    .hm-feat-ic {
+      display: flex; align-items: center; justify-content: center; width: 160px; max-width: 100%; height: 110px;
+      border-radius: 16px; background: var(--bs-green-95); color: var(--bs-green-40); font-size: 12px;
+    }
+    .hm-feat h4 { margin: 0; font-size: 16px; line-height: 24px; font-weight: 500; color: var(--home-ink); }
+    .hm-feat p { margin: 0; font-size: 16px; line-height: 24px; color: var(--home-sub); }
+    .hm-band { height: 12px; background: var(--bs-background-gray); }
+    .hm-pick { padding: 48px 32px 64px; }
+    .hm-pick-in { max-width: 882px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+    .hm-dl { position: relative; background: var(--bs-gray-30); color: var(--bs-static-white); padding: 56px 32px; }
+    .hm-dl-in { position: relative; max-width: 882px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 20px 32px; }
+    .hm-dl-photo { position: absolute; top: 12px; right: 24px; left: 24px; text-align: right; font-size: 13px; color: var(--bs-gray-70); }
+    .hm-dl-app { display: flex; align-items: center; gap: 16px; min-width: 0; }
+    .hm-dl-app img { flex: none; width: 56px; height: 56px; border-radius: 13px; }
+    .hm-dl-app b { font-size: 24px; line-height: 32px; font-weight: 500; }
+    .stores { display: flex; flex-wrap: wrap; gap: 10px; }
+    .store {
+      display: inline-flex; align-items: center; border: 1px solid var(--bs-gray-50); border-radius: 6px; padding: 7px 14px;
+      background: var(--bs-static-black); color: var(--bs-static-white); font-size: 13px; line-height: 18px; white-space: nowrap;
+    }
+    .hm-partner { background: var(--lit-partner-bg); color: var(--lit-partner-fg); padding: 28px 32px; text-align: center; font-size: 14px; line-height: 21px; }
+    .hm-foot { padding: 40px 32px 56px; }
+    .hm-foot-in { max-width: 958px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px; }
+    .hm-cols { display: grid; grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, 1fr)); gap: 32px; }
+    .hm-col { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; min-width: 0; }
+    .hm-col .wm-box img { height: 30px; }
+    .hm-col-h { font-size: 14px; line-height: 20px; font-weight: 700; color: var(--home-ink); }
+    .hm-link { font-size: 14px; line-height: 20px; font-weight: 500; color: var(--home-sub); }
+    .hm-best { font-weight: 700; color: var(--bs-legacy-green-100); }
+    .hm-info { display: flex; flex-wrap: wrap; gap: 8px 32px; font-size: 13px; line-height: 20px; color: var(--home-sub); }
+    .hm-corp { font-size: 12px; line-height: 18px; color: var(--home-meta); }
+
+    @media (max-width: 960px) {
+      .hm-gnb { height: 60px; padding: 0 20px; }
+      .hm-menu { display: none; }
+      .hm-burger { display: flex; }
+    }
+    @media (max-width: 959px) {
+      .cell.phone-cell { grid-column: 1 / -1; }
+    }
+    @media (max-width: 860px) {
+      .trio { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 767px) {
+      .wrap { padding: 0 16px; }
+      .pick-img { height: 56px; }
+      .hm-title { font-size: 36px; line-height: 41px; }
+    }
+    @media (max-width: 720px) {
+      .hero { padding: 28px 0 40px; }
+      .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+      .hero-visual { align-items: center; }
+      .hero h1 { font-size: 36px; line-height: 41px; }
+      .cells { grid-template-columns: minmax(0, 1fr); }
+      .cell { padding: 16px; }
+      .pick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .hm-hero { padding: 32px 20px 64px; }
+      .hm-hero-in { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+      .hm-art { width: min(100%, 240px); justify-self: center; }
+      .hm-sec, .hm-pick, .hm-foot { padding-left: 20px; padding-right: 20px; }
+      .hm-dl { padding: 48px 20px; }
+      .hm-feats { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+      .hm-cols { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+      .hm-h2 { font-size: 20px; line-height: 28px; }
+    }
+    @media (max-width: 440px) {
+      .journey { padding: 18px 6px; gap: 2px; }
+      .journey::before { top: 26px; }
+      .jn-v { font-size: 12px; line-height: 18px; }
+      .jn-k { font-size: 11px; }
+      .cmp .amt18 { font-size: 16px; line-height: 24px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+  <style>
+    [data-theme="dark"] {
+      --bs-green-bg: var(--bs-green-20); --bs-green-weak: var(--bs-green-30); --bs-green-normal: var(--bs-green-60); --bs-green-strong: var(--bs-green-70); --bs-green-heavy: var(--bs-green-80);
+      --bs-mint-bg: var(--bs-mint-20); --bs-mint-weak: var(--bs-mint-30); --bs-mint-normal: var(--bs-mint-60); --bs-mint-strong: var(--bs-mint-70); --bs-mint-heavy: var(--bs-mint-80);
+      --bs-sky-bg: var(--bs-sky-20); --bs-sky-weak: var(--bs-sky-30); --bs-sky-normal: var(--bs-sky-60); --bs-sky-strong: var(--bs-sky-70); --bs-sky-heavy: var(--bs-sky-80);
+      --bs-light-blue-bg: var(--bs-light-blue-20); --bs-light-blue-weak: var(--bs-light-blue-30); --bs-light-blue-normal: var(--bs-light-blue-60); --bs-light-blue-strong: var(--bs-light-blue-70); --bs-light-blue-heavy: var(--bs-light-blue-80);
+      --bs-deep-blue-bg: var(--bs-deep-blue-20); --bs-deep-blue-weak: var(--bs-deep-blue-30); --bs-deep-blue-normal: var(--bs-deep-blue-60); --bs-deep-blue-strong: var(--bs-deep-blue-70); --bs-deep-blue-heavy: var(--bs-deep-blue-80);
+      --bs-indigo-bg: var(--bs-indigo-20); --bs-indigo-weak: var(--bs-indigo-30); --bs-indigo-normal: var(--bs-indigo-60); --bs-indigo-strong: var(--bs-indigo-70); --bs-indigo-heavy: var(--bs-indigo-80);
+      --bs-violet-bg: var(--bs-violet-20); --bs-violet-weak: var(--bs-violet-30); --bs-violet-normal: var(--bs-violet-60); --bs-violet-strong: var(--bs-violet-70); --bs-violet-heavy: var(--bs-violet-80);
+      --bs-purple-bg: var(--bs-purple-20); --bs-purple-weak: var(--bs-purple-30); --bs-purple-normal: var(--bs-purple-60); --bs-purple-strong: var(--bs-purple-70); --bs-purple-heavy: var(--bs-purple-80);
+      --bs-orchid-bg: var(--bs-orchid-20); --bs-orchid-weak: var(--bs-orchid-30); --bs-orchid-normal: var(--bs-orchid-60); --bs-orchid-strong: var(--bs-orchid-70); --bs-orchid-heavy: var(--bs-orchid-80);
+      --bs-magenta-bg: var(--bs-magenta-20); --bs-magenta-weak: var(--bs-magenta-30); --bs-magenta-normal: var(--bs-magenta-60); --bs-magenta-strong: var(--bs-magenta-70); --bs-magenta-heavy: var(--bs-magenta-80);
+      --bs-pink-bg: var(--bs-pink-20); --bs-pink-weak: var(--bs-pink-30); --bs-pink-normal: var(--bs-pink-60); --bs-pink-strong: var(--bs-pink-70); --bs-pink-heavy: var(--bs-pink-80);
+      --bs-coral-bg: var(--bs-coral-20); --bs-coral-weak: var(--bs-coral-30); --bs-coral-normal: var(--bs-coral-60); --bs-coral-strong: var(--bs-coral-70); --bs-coral-heavy: var(--bs-coral-80);
+      --bs-red-bg: var(--bs-red-20); --bs-red-weak: var(--bs-red-30); --bs-red-normal: var(--bs-red-60); --bs-red-strong: var(--bs-red-70); --bs-red-heavy: var(--bs-red-80);
+      --bs-orange-bg: var(--bs-orange-20); --bs-orange-weak: var(--bs-orange-30); --bs-orange-normal: var(--bs-orange-60); --bs-orange-strong: var(--bs-orange-70); --bs-orange-heavy: var(--bs-orange-80);
+      --bs-mustard-bg: var(--bs-mustard-20); --bs-mustard-weak: var(--bs-mustard-30); --bs-mustard-normal: var(--bs-mustard-60); --bs-mustard-strong: var(--bs-mustard-70); --bs-mustard-heavy: var(--bs-mustard-80);
+      --bs-gray-bg: var(--bs-gray-25); --bs-gray-weak: var(--bs-gray-30); --bs-gray-normal: var(--bs-gray-60); --bs-gray-strong: var(--bs-gray-70); --bs-gray-heavy: var(--bs-gray-80);
+
+      --bs-text-strong: var(--bs-gray-93);
+      --bs-text-normal: var(--bs-gray-84);
+      --bs-text-neutral: var(--bs-gray-60);
+      --bs-text-alternative: var(--bs-gray-38);
+      --bs-text-disable: var(--bs-gray-32);
+      --bs-text-highlight: var(--bs-gray-20);
+      --bs-background-white: var(--bs-gray-20);
+      --bs-background-gray: var(--bs-gray-10);
+      --bs-background-layer1: var(--bs-gray-23);
+      --bs-background-layer2: var(--bs-gray-25);
+      --bs-background-layer3: var(--bs-gray-27);
+      --bs-line-normal: var(--bs-gray-27);
+      --bs-line-strong: var(--bs-gray-32);
+      --bs-line-neutral: var(--bs-gray-10);
+      --bs-alpha: var(--bs-gray-100);
+      --bs-background-dim-opacity: 0.72;
+
+      --bs-legacy-white-900: oklch(0.217 0.008 264.4);
+      --home-ink: var(--bs-text-strong);
+      --home-sub: var(--bs-text-neutral);
+      --home-meta: var(--bs-text-neutral);
+      --home-row: var(--bs-text-normal);
+      --wm-plate: var(--bs-static-white);
+      --wm-pad: 6px 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
+
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <div class="lockup wm-box"><img src="/logos/banksalad-logotype.png" alt="뱅크샐러드" height="30"></div>
+        <p class="hero-kicker">자산관리 · 금융상품 비교 · 건강 자산</p>
+        <h1>금융을 넘어<br>건강 자산까지</h1>
+        <p class="hero-tagline">카드 · 대출 · 예적금에서 무료 건강 검사 · 건강 보험 · 자동차보험까지</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="#">금융상품 비교하기</a>
+          <a class="btn btn-secondary" href="#">건강정보 연결하기</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hv">
+          <input class="hv-in" type="radio" name="hv" id="hv1" checked aria-label="1번째 슬라이드">
+          <input class="hv-in" type="radio" name="hv" id="hv2" aria-label="2번째 슬라이드">
+          <input class="hv-in" type="radio" name="hv" id="hv3" aria-label="3번째 슬라이드">
+          <input class="hv-in" type="radio" name="hv" id="hv4" aria-label="4번째 슬라이드">
+          <div class="hv-stage">
+            <div class="hv-art">[히어로 일러스트 — 플랫 벡터 인물 · 동심원 링 · 흩어진 오브젝트]</div>
+            <div class="hv-dots">
+              <label class="hv-dot" for="hv1"><span class="hv-pip"></span><span class="sr">1번째 슬라이드</span></label>
+              <label class="hv-dot" for="hv2"><span class="hv-pip"></span><span class="sr">2번째 슬라이드</span></label>
+              <label class="hv-dot" for="hv3"><span class="hv-pip"></span><span class="sr">3번째 슬라이드</span></label>
+              <label class="hv-dot" for="hv4"><span class="hv-pip"></span><span class="sr">4번째 슬라이드</span></label>
+            </div>
+          </div>
+        </div>
+        <span class="hint">점을 눌러 슬라이드를 바꿔 보세요</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="sec" aria-labelledby="s1">
+      <div class="sec-head"><span class="sec-idx">01</span><h2 id="s1">버튼</h2></div>
+      <div class="cells">
+        <div class="cell wide">
+          <span class="kicker">button-primary · button-primary-pressed</span>
+          <div class="states">
+            <div class="state"><span class="state-label">기본</span><a class="btn btn-primary" href="#">최저금리 대출 찾기</a></div>
+            <div class="state"><span class="state-label">눌림 · 검정 0.04 덮개</span><span class="btn btn-primary is-pressed">최저금리 대출 찾기</span></div>
+            <div class="state"><span class="state-label">비활성 (가정)</span><a class="btn btn-primary" aria-disabled="true">최저금리 대출 찾기</a></div>
+          </div>
+          <div class="state state-full"><span class="state-label">전폭</span><a class="btn btn-primary btn-block" href="#">지금 보험료로 더 많이 보장 받기</a></div>
+          <div class="specs">
+            <span class="spec">16 / 24 · 700 · 반경 16 · 패딩 16 20 · 높이 56</span>
+            <span class="spec">덮개 100ms</span>
+            <span class="hint">버튼에 마우스를 올리거나 눌러 보세요</span>
+          </div>
+        </div>
+
+        <div class="cell">
+          <span class="kicker">button-secondary</span>
+          <div class="states">
+            <div class="state"><span class="state-label">기본</span><a class="btn btn-secondary" href="#">건강정보 연결하고 확인하기</a></div>
+            <div class="state"><span class="state-label">눌림</span><span class="btn btn-secondary is-pressed">건강정보 연결하고 확인하기</span></div>
+          </div>
+          <div class="specs"><span class="spec">16 / 24 · 700 · 반경 12 · 패딩 12 16 · 높이 48</span></div>
+        </div>
+
+        <div class="cell">
+          <span class="kicker">button-text</span>
+          <div class="states">
+            <div class="state"><span class="state-label">얇은 테두리 (가정)</span><a class="btn btn-text" href="#">전체 보기 <span aria-hidden="true">∨</span></a></div>
+            <div class="state"><span class="state-label">테두리 없음</span><a class="btn btn-text no-line" href="#">전체 보기 <span aria-hidden="true">∨</span></a></div>
+          </div>
+          <div class="specs"><span class="spec">16 / 24 · 700 · 반경 16</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" aria-labelledby="s2">
+      <div class="sec-head"><span class="sec-idx">02</span><h2 id="s2">탭 · 배지 · 알약</h2></div>
+      <div class="cells">
+        <div class="cell">
+          <span class="kicker">tab-segment · tab-segment-active</span>
+          <div class="seg" role="radiogroup" aria-label="보험 메뉴">
+            <input class="seg-in" type="radio" name="sg" id="sg0">
+            <label class="seg-tab" for="sg0">내 보험</label>
+            <input class="seg-in" type="radio" name="sg" id="sg1" checked>
+            <label class="seg-tab" for="sg1">보장분석</label>
+            <input class="seg-in" type="radio" name="sg" id="sg2">
+            <label class="seg-tab" for="sg2">보험청구</label>
+            <span class="seg-bar" aria-hidden="true"></span>
+          </div>
+          <div class="state">
+            <span class="state-label">대출 허브 · 18 / 26</span>
+          </div>
+          <div class="seg two lg" aria-hidden="true">
+            <span class="seg-tab on">MY 대출</span>
+            <span class="seg-tab">대출 찾기</span>
+          </div>
+          <div class="specs">
+            <span class="spec">동일 폭 · 16 / 24 · 700 · 막대 2px</span>
+            <span class="hint">탭을 눌러 보세요</span>
+          </div>
+        </div>
+
+        <div class="cell">
+          <span class="kicker">badge-count</span>
+          <p class="catalog-dummy">더미 데이터 — 이벤트 개수는 레이아웃 시연용이며 실제 진행 중인 이벤트 수가 아닙니다.</p>
+          <div class="states">
+            <div class="state"><span class="state-label">새 항목</span><span class="badge">N</span></div>
+            <div class="state"><span class="state-label">개수</span><span class="badge">3</span></div>
+            <div class="state"><span class="state-label">카드 이벤트 탭 변종</span><span class="evtab"><span class="badge">N</span><span>진행 중 이벤트 <span class="evtab-cnt">12</span></span></span></div>
+          </div>
+          <div class="specs"><span class="spec">10 / 14 · 700 · 999px · 패딩 1 4</span></div>
+        </div>
+
+        <div class="cell">
+          <span class="kicker">pill-red · pill-light-blue</span>
+          <p class="catalog-dummy">더미 데이터 — 부족·이득 판정과 금액은 레이아웃 시연용이며 실제 보장분석 결과가 아닙니다.</p>
+          <div class="states">
+            <div class="state"><span class="state-label">빨강</span><span class="pill pill-red">부족</span></div>
+            <div class="state"><span class="state-label">파랑</span><span class="pill pill-lb">200만원 이득</span></div>
+            <div class="state"><span class="state-label">충분 · 초록 글자</span><span class="txt-ok">충분</span></div>
+          </div>
+          <div class="specs"><span class="spec">12 / 16 · 700 · 999px · 패딩 2 6</span></div>
+        </div>
+
+        <div class="cell">
+          <span class="kicker">number-chip</span>
+          <template data-theme-variant="dark"><span class="kicker">number-chip · 다크 글자색 (가정)</span></template>
+          <div class="row">
+            <span class="nchip">1</span><span class="nchip">2</span><span class="nchip">3</span><span class="nchip">4</span><span class="nchip">5</span>
+          </div>
+          <div class="specs"><span class="spec">20 × 20 · 반경 6 · 14 / 20 · 700</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" aria-labelledby="s3">
+      <div class="sec-head"><span class="sec-idx">03</span><h2 id="s3">카드 · 배너 · 안내</h2></div>
+      <div class="cells">
+        <div class="cell wide">
+          <span class="kicker">card-section · card-outline</span>
+          <p class="catalog-dummy">더미 데이터 — 가입 금액과 보장 충분·부족 판정은 레이아웃 시연용이며 실제 보장분석 결과가 아닙니다.</p>
+          <div class="trio">
+            <div class="state">
+              <span class="state-label">card-section · 패딩 20</span>
+              <div class="card-sec fill"><span class="k13 lb-n">지금 가입</span><span class="amt18">총 4,180만원</span></div>
+            </div>
+            <div class="state">
+              <span class="state-label">card-outline · 패딩 16</span>
+              <div class="card-ol fill">
+                <div class="co-head"><span>위암</span><span class="chev" aria-hidden="true">›</span></div>
+                <div class="co-line"><span>보장금액</span><span class="txt-ok">충분</span></div>
+                <div class="co-line"><span>보장기간</span><span class="txt-ok">충분</span></div>
+              </div>
+            </div>
+            <div class="state">
+              <span class="state-label">부족 · 붉은 테두리 (가정)</span>
+              <div class="card-ol is-short fill">
+                <div class="co-head"><span>대장암</span><span class="chev" aria-hidden="true">›</span></div>
+                <div class="co-line"><span>보장금액</span><span class="txt-ok">충분</span></div>
+                <div class="co-line"><span>보장기간</span><span class="txt-bad">부족</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="specs"><span class="spec">반경 16 · 그림자 없음 · 테두리 1px</span></div>
+        </div>
+
+        <div class="cell">
+          <span class="kicker">banner-highlight · chip-loan-summary</span>
+          <p class="catalog-dummy">더미 데이터 — 이자지원금 금액과 즉시 지급 표기는 레이아웃 시연용이며 실제 뱅크샐러드 혜택 조건이 아닙니다.</p>
+          <div class="banner-hl"><span>이자지원금</span><span class="amt">최대 40만원</span></div>
+          <div class="chip-loan"><span class="k">이자지원금</span><span class="v">최대 40만원 즉시 지급</span></div>
+          <div class="specs"><span class="spec">배너 반경 12 · 패딩 20</span><span class="spec">칩 반경 16 · 패딩 12</span></div>
+        </div>
+
+        <div class="cell">
+          <span class="kicker">notice-box</span>
+          <div class="notice">[안내 문구 자리 — 조회 조건 · 유의사항 한두 줄]</div>
+          <div class="specs"><span class="spec">12 / 18 · 반경 12 · 패딩 12</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" aria-labelledby="s4">
+      <div class="sec-head"><span class="sec-idx">04</span><h2 id="s4">행 · 하단 · 고지</h2></div>
+      <div class="cells">
+        <div class="cell">
+          <span class="kicker">list-row</span>
+          <div class="lrow-card">
+            <a class="lrow" href="#"><span class="ic ic-lb"></span><span class="lrow-t">신용 · 비상금대출</span><span class="chev" aria-hidden="true">›</span></a>
+            <a class="lrow" href="#"><span class="ic ic-pk"></span><span class="lrow-t">주택담보대출</span><span class="chev" aria-hidden="true">›</span></a>
+            <a class="lrow" href="#"><span class="ic ic-ms"></span><span class="lrow-t">대출 갈아타기</span><span class="chev" aria-hidden="true">›</span></a>
+          </div>
+          <div class="specs"><span class="spec">gap 14 · 패딩 16 20 · 18 / 26 · 700</span></div>
+        </div>
+
+        <div class="cell">
+          <span class="kicker">card-event-row</span>
+          <template data-theme-variant="dark"><span class="kicker">card-event-row · 다크 글자색 (가정)</span></template>
+          <div class="erows">
+            <div class="erow"><span class="erow-tile">[발급사]</span><span class="erow-body"><span class="erow-top">[이벤트 문구]</span><span class="erow-bot">[카드명]</span></span><span class="chev" aria-hidden="true">›</span></div>
+            <div class="erow"><span class="erow-tile">[발급사]</span><span class="erow-body"><span class="erow-top">[이벤트 문구]</span><span class="erow-bot">[카드명]</span></span><span class="chev" aria-hidden="true">›</span></div>
+          </div>
+          <div class="specs"><span class="spec">패딩 20 24 · 타일 46 × 70 · 반경 8 · 구분선 없음</span></div>
+        </div>
+
+        <div class="cell">
+          <span class="kicker">faq-row</span>
+          <div class="faq">
+            <details><summary><span>질병별 예상 보험금은 어떻게 계산되나요?</span><span class="chev" aria-hidden="true">∨</span></summary><p class="faq-a">[답변 자리]</p></details>
+            <details><summary><span>보장금액 충분 / 부족의 기준은 무엇인가요?</span><span class="chev" aria-hidden="true">∨</span></summary><p class="faq-a">[답변 자리]</p></details>
+          </div>
+          <div class="specs"><span class="spec">높이 48 · 패딩 12 16 · 아래 1px 선</span><span class="hint">질문을 눌러 보세요</span></div>
+        </div>
+
+        <div class="cell">
+          <span class="kicker">bottom-cta</span>
+          <div class="state state-full">
+            <span class="state-label">건강 · 안심 안내 + 위쪽 그림자 (가정)</span>
+            <div class="cta-frame">
+              <span class="ghost-line a"></span><span class="ghost-line b"></span>
+              <div class="bcta">
+                <span class="bcta-note">안심하세요. 전화 연락이 오지 않아요.</span>
+                <a class="btn btn-primary btn-block" href="#">지금 보험료로 더 많이 보장 받기</a>
+              </div>
+            </div>
+          </div>
+          <div class="state state-full">
+            <span class="state-label">대출 · 위쪽 페이드</span>
+            <div class="cta-frame">
+              <span class="ghost-line a"></span><span class="ghost-line b"></span>
+              <div class="bcta fade"><a class="btn btn-primary btn-block" href="#">최저금리 대출 찾기</a></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cell wide">
+          <span class="kicker">legal-notice</span>
+          <div class="legal boxed">
+            <div class="legal-blk"><h4>이자지원금 안내</h4><ul><li>[안내 불릿 자리]</li><li>[안내 불릿 자리]</li></ul></div>
+            <div class="legal-blk"><h4>유의사항</h4><ul><li>[고지 불릿 자리]</li><li>[대출모집법인 등록번호 자리]</li></ul></div>
+            <div class="legal-meta">[고객센터 연락처]<br>[준법감시인 심의필 번호]</div>
+          </div>
+          <div class="specs"><span class="spec">소제목 18 / 26 · 700 · 불릿 14 / 22</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" aria-labelledby="s5">
+      <div class="sec-head"><span class="sec-idx">05</span><h2 id="s5">홈 셸 · 옛 층</h2></div>
+      <div class="cells">
+        <div class="cell wide">
+          <span class="kicker">gnb-desktop</span>
+          <template data-theme-variant="dark"><span class="kicker">gnb-desktop · 다크 글자색 (가정)</span></template>
+          <nav class="hgnb" aria-label="홈 메뉴 시연">
+            <a href="#">카드</a>
+            <a href="#" class="is-hover">대출</a>
+            <a href="#">예적금</a>
+            <a href="#">무료 건강 검사</a>
+            <a href="#">건강 보험</a>
+            <a href="#">자동차보험</a>
+            <a href="#">돈이 된다! 머니피드</a>
+          </nav>
+          <div class="specs">
+            <span class="spec">16 · 700 · 호버 legacy-green-100 · 높이 85</span>
+            <span class="hint">메뉴에 마우스를 올려 보세요</span>
+          </div>
+        </div>
+
+        <div class="cell">
+          <span class="kicker">home-hero-pill</span>
+          <div class="states">
+            <div class="state"><span class="state-label">주</span><a class="hpill hpill-fill" href="#">뱅크샐러드 사용해보기</a></div>
+            <div class="state"><span class="state-label">보조 · 1px 테두리</span><a class="hpill hpill-line" href="#">서비스 더 알아보기</a></div>
+          </div>
+          <div class="specs"><span class="spec">반경 41 · 패딩 10 20 · 18 / 21 · 500</span></div>
+        </div>
+
+        <div class="cell">
+          <span class="kicker">home-loan-button</span>
+          <div class="states">
+            <div class="state"><span class="state-label">기본</span><a class="hloan" href="#"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M7 8.5h6M7 11.5h6M10 6v8" stroke="currentColor" stroke-width="1.4"/></svg>신용대출 금리 비교</a></div>
+          </div>
+          <div class="specs"><span class="spec">반경 8 · 패딩 12 20 · gap 6 · 18 / 26 · 700</span></div>
+        </div>
+
+        <div class="cell wide">
+          <span class="kicker">pick-card</span>
+          <template data-theme-variant="dark"><span class="kicker">pick-card · 다크 글자색 (가정)</span></template>
+          <p class="catalog-dummy">더미 데이터 — Pick 카드 항목은 레이아웃 시연용이며 실제 뱅크샐러드 추천 편성이 아닙니다.</p>
+          <div class="pick-grid">
+            <a class="pick" href="#"><span class="pick-img pk-a">[이미지]</span><span class="pick-body"><span class="pick-cat">카드</span><br><span class="pick-title">신용카드 추천</span></span></a>
+            <a class="pick" href="#"><span class="pick-img pk-b">[이미지]</span><span class="pick-body"><span class="pick-cat">보험</span><br><span class="pick-title">실비보험 비교</span></span></a>
+            <a class="pick" href="#"><span class="pick-img pk-c">[이미지]</span><span class="pick-body"><span class="pick-cat">대출</span><br><span class="pick-title">무직자 대출</span></span></a>
+            <a class="pick" href="#"><span class="pick-img pk-d">[이미지]</span><span class="pick-body"><span class="pick-cat">보험</span><br><span class="pick-title">숨은 보험금 찾기</span></span></a>
+          </div>
+          <div class="specs"><span class="spec">반경 2 · 그림자 0 0 2px · 이미지 130</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" aria-labelledby="s6">
+      <div class="sec-head"><span class="sec-idx">06</span><h2 id="s6">화면</h2></div>
+      <div class="cells">
+        <div class="cell phone-cell">
+          <span class="kicker">신용대출 사전조회 · 390</span>
+          <p class="catalog-dummy">더미 데이터 — 제목의 이자지원 문구, 이자지원금 금액·즉시 지급, 조회 금융사 수(69개), 신용점수 영향 안내는 레이아웃 시연용이며 실제 대출 상품 조건·제휴 현황이 아닙니다.</p>
+          <div class="phone">
+            <div class="screen">
+              <div class="ph-head">
+                <span class="wm-box"><img src="/logos/banksalad-logotype.png" alt="뱅크샐러드" height="23"></span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+              </div>
+              <div class="ln-main">
+                <h3 class="ln-h1">신용대출 최저금리로 받고<br>즉시 이자지원 받기</h3>
+                <div class="chip-loan"><span class="k">이자지원금</span><span class="v">최대 40만원 즉시 지급</span></div>
+                <div class="ln-art"><span>[3D 일러스트<br>돈주머니]</span></div>
+                <div class="bens">
+                  <div class="ben"><span class="ic ic-ms"></span><span class="ben-t"><b>같은 대출이면 최대 혜택 받으세요</b><span>얼마를 대출 받든 즉시 이자지원금 드려요</span></span></div>
+                  <div class="ben"><span class="ic ic-gr"></span><span class="ben-t"><b>한 번에 69개 금융사를 조회해요</b><span>쉽고 빠르게 최저금리 대출을 찾아요</span></span></div>
+                  <div class="ben"><span class="ic ic-lb"></span><span class="ben-t"><b>신용점수에 영향이 없어요</b><span>신용 조회 알림이 와도 놀라지 마세요</span></span></div>
+                </div>
+              </div>
+              <div class="legal">
+                <div class="legal-blk"><h4>이자지원금 안내</h4><ul><li>[안내 불릿 자리]</li></ul></div>
+                <div class="legal-blk"><h4>이벤트 기간</h4><ul><li>[기간 자리]</li></ul></div>
+                <div class="legal-blk"><h4>유의사항</h4><ul><li>[고지 불릿 자리]</li><li>[대출모집법인 등록번호 자리]</li></ul></div>
+                <div class="legal-meta">[고객센터 연락처]<br>[준법감시인 심의필 번호]</div>
+              </div>
+              <div class="ln-cta">
+                <div class="bcta fade"><span class="btn btn-primary btn-block">최저금리 대출 찾기</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cell phone-cell">
+          <span class="kicker">보장분석 · 390</span>
+          <p class="catalog-dummy">더미 데이터 — 보장 충분·부족 판정, 가입 금액·이득 금액, 발병률, 상령일·청년보험 할인율과 전화 연락 안내는 레이아웃 시연용이며 실제 보장분석 결과·보험 조건이 아닙니다.</p>
+          <div class="phone">
+            <div class="screen">
+              <div class="ph-head">
+                <span class="wm-box"><img src="/logos/banksalad-logotype.png" alt="뱅크샐러드" height="23"></span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+              </div>
+              <div class="hl-conn"><span class="sq"></span><span class="t">보험 연결하고 맞춤 분석을 받아보세요</span><span class="go">연결하기 ›</span></div>
+              <div class="seg">
+                <span class="seg-tab">내 보험</span>
+                <span class="seg-tab on">보장분석</span>
+                <span class="seg-tab">보험청구<span class="seg-dot"></span></span>
+              </div>
+              <div class="hl-main">
+                <div>
+                  <span class="hl-kick">내 보장 분석 결과</span>
+                  <h3 class="hl-h1">감기부터 큰 치료, 회복 이후까지<br>곁을 지켜주는 보장들을 살펴봤어요</h3>
+                </div>
+                <div class="journey">
+                  <div class="jn"><span class="jn-x" aria-hidden="true">×</span><span class="jn-k">병원 진료</span><span class="jn-v">실비보험</span></div>
+                  <div class="jn"><span class="jn-x" aria-hidden="true">×</span><span class="jn-k">질병 진단</span><span class="jn-v">암·뇌·심장</span></div>
+                  <div class="jn"><span class="jn-x" aria-hidden="true">×</span><span class="jn-k">치료</span><span class="jn-v">수술비</span></div>
+                  <div class="jn"><span class="jn-x" aria-hidden="true">×</span><span class="jn-k">회복 이후</span><span class="jn-v">후유장해</span></div>
+                </div>
+                <div class="tl">
+                  <div class="tl-item">
+                    <div class="tl-head"><span class="nchip">1</span><h3>실비보험</h3><span class="pill pill-red">부족</span></div>
+                    <p class="tl-desc">평생 드는 병원비 중 큰 몫을 돌려 받아요.</p>
+                    <div class="tl-bar"><span class="d">보장금액</span><span class="d">보장기간</span><span class="chev" aria-hidden="true">∨</span></div>
+                  </div>
+                  <div class="tl-item">
+                    <div class="tl-head"><span class="nchip">2</span><h3>암·뇌·심장 진단비</h3><span class="pill pill-red">부족</span></div>
+                    <p class="tl-desc">3대 질환 치료에 필요한 금액을 한 번에 받아요.</p>
+                    <div class="tl-bar"><span class="d">보장금액</span><span class="d">보장기간</span><span class="chev" aria-hidden="true">∨</span></div>
+                  </div>
+                  <div class="tl-item">
+                    <div class="tl-head"><span class="nchip">3</span><h3>수술비</h3><span class="pill pill-red">부족</span></div>
+                    <p class="tl-desc">실손으로 부족한 수술비까지 대비할 수 있어요.</p>
+                    <div class="tl-bar"><span class="d">보장금액</span><span class="d">보장기간</span><span class="chev" aria-hidden="true">∨</span></div>
+                  </div>
+                </div>
+                <div class="gain">
+                  <div class="gain-head"><span class="nchip">4</span><h3>지금 부족한 보장을 채우는 것이<br><span class="lb-n">200만원</span> 이득이에요</h3></div>
+                  <div class="card-sec">
+                    <div class="cmp">
+                      <div class="cmp-col"><span class="k13 lb-n">지금 가입</span><span class="amt18">총 4,180만원</span><span class="pill pill-lb">200만원 이득</span></div>
+                      <span class="cmp-arrow" aria-hidden="true">••▸</span>
+                      <div class="cmp-col"><span class="k13 n">?일 이후 가입</span><span class="amt18">총 4,390만원</span></div>
+                    </div>
+                    <div class="perk"><span class="sq sq-red"></span><span class="perk-t"><span>보험나이 오르는 상령일 D-?</span><b>어릴수록 보험료가 5~10% 저렴해요</b></span><span class="chev" aria-hidden="true">›</span></div>
+                    <div class="perk"><span class="sq sq-lb"></span><span class="perk-t"><span>청년보험 혜택 만료 D-?</span><b>청년이면 보험료가 최대 20% 저렴해요</b></span><span class="chev" aria-hidden="true">›</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="dz">
+                <h3>내가 주의해야할 질병의<br>보장을 점검했어요</h3>
+                <div class="dz-grid">
+                  <div class="card-ol is-short"><div class="co-head"><span>대장암</span><span class="chev" aria-hidden="true">›</span></div><div class="co-line"><span>보장금액</span><span class="txt-ok">충분</span></div><div class="co-line"><span>보장기간</span><span class="txt-bad">부족</span></div><div class="co-line top"><span>발병률</span><span>??배 높음</span></div></div>
+                  <div class="card-ol"><div class="co-head"><span>위암</span><span class="chev" aria-hidden="true">›</span></div><div class="co-line"><span>보장금액</span><span class="txt-ok">충분</span></div><div class="co-line"><span>보장기간</span><span class="txt-ok">충분</span></div><div class="co-line top"><span>발병률</span><span>??배 낮음</span></div></div>
+                  <div class="card-ol is-short"><div class="co-head"><span>간암</span><span class="chev" aria-hidden="true">›</span></div><div class="co-line"><span>보장금액</span><span class="txt-bad">부족</span></div><div class="co-line"><span>보장기간</span><span class="txt-bad">부족</span></div></div>
+                  <div class="card-ol is-short"><div class="co-head"><span>폐암</span><span class="chev" aria-hidden="true">›</span></div><div class="co-line"><span>보장금액</span><span class="txt-bad">부족</span></div><div class="co-line"><span>보장기간</span><span class="txt-bad">부족</span></div></div>
+                </div>
+                <span class="btn btn-secondary btn-block">건강정보 연결하고 확인하기</span>
+              </div>
+              <div class="fq">
+                <h3 class="fq-h">보험 보장분석 FAQ</h3>
+                <div class="faq">
+                  <details><summary><span>보장금액 충분 / 부족의 기준은 무엇인가요?</span><span class="chev" aria-hidden="true">∨</span></summary><p class="faq-a">[답변 자리]</p></details>
+                  <details><summary><span>적정금액은 어떻게 산정되나요?</span><span class="chev" aria-hidden="true">∨</span></summary><p class="faq-a">[답변 자리]</p></details>
+                </div>
+              </div>
+              <div class="bcta hl-cta">
+                <span class="bcta-note">안심하세요. 전화 연락이 오지 않아요.</span>
+                <span class="btn btn-primary btn-block">지금 보험료로 더 많이 보장 받기</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cell wide">
+          <span class="kicker">홈 · 데스크톱</span>
+          <template data-theme-variant="dark"><span class="kicker">홈 · 데스크톱 · 다크 글자색 (가정)</span></template>
+          <p class="catalog-dummy">더미 데이터 — Pick 카드 항목, 푸터 서비스 목록과 BEST 표기는 레이아웃 시연용이며 실제 뱅크샐러드 편성·순위가 아닙니다.</p>
+          <div class="desk">
+            <div class="hm-gnb">
+              <span class="wm-box"><img src="/logos/banksalad-logotype.png" alt="뱅크샐러드" height="23"></span>
+              <div class="hm-menu" aria-hidden="true"><span>카드</span><span>대출</span><span>예적금</span><span>무료 건강 검사</span><span>건강 보험</span><span>자동차보험</span><span>돈이 된다! 머니피드</span></div>
+              <span class="hm-burger"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></span>
+            </div>
+            <div class="hm-hero">
+              <div class="hm-hero-in">
+                <div class="hm-hero-copy">
+                  <h3 class="hm-title">금융을 내 편으로<br>뱅크샐러드</h3>
+                  <div class="hm-pills">
+                    <span class="hpill hpill-fill">뱅크샐러드 사용해보기</span>
+                    <span class="hpill hpill-line">서비스 더 알아보기</span>
+                  </div>
+                </div>
+                <div class="hm-art">[히어로 일러스트 — 플랫 벡터 인물 · 동심원 링 · 흩어진 오브젝트]</div>
+              </div>
+              <div class="hm-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
+            </div>
+            <div class="hm-sec">
+              <div>
+                <div class="hm-sub">내게 맞는 금융상품, 비교하기 힘드시죠?</div>
+                <h4 class="hm-h2">뱅크샐러드는 쉽고 정확하게 비교합니다.</h4>
+              </div>
+              <div class="hm-feats">
+                <div class="hm-feat"><span class="hm-feat-ic">[아이콘]</span><h4>금융상품 데이터</h4><p>[설명 문구 자리]</p></div>
+                <div class="hm-feat"><span class="hm-feat-ic">[아이콘]</span><h4>나만을 위한 금융매칭</h4><p>[설명 문구 자리]</p></div>
+              </div>
+            </div>
+            <div class="hm-band"></div>
+            <div class="hm-pick">
+              <div class="hm-pick-in">
+                <h4 class="hm-h2">뱅크샐러드 Pick!</h4>
+                <div class="pick-grid">
+                  <span class="pick"><span class="pick-img pk-a">[이미지]</span><span class="pick-body"><span class="pick-cat">카드</span><br><span class="pick-title">신용카드 추천</span></span></span>
+                  <span class="pick"><span class="pick-img pk-b">[이미지]</span><span class="pick-body"><span class="pick-cat">보험</span><br><span class="pick-title">실비보험 비교</span></span></span>
+                  <span class="pick"><span class="pick-img pk-c">[이미지]</span><span class="pick-body"><span class="pick-cat">대출</span><br><span class="pick-title">무직자 대출</span></span></span>
+                  <span class="pick"><span class="pick-img pk-d">[이미지]</span><span class="pick-body"><span class="pick-cat">보험</span><br><span class="pick-title">숨은 보험금 찾기</span></span></span>
+                </div>
+              </div>
+            </div>
+            <div class="hm-dl">
+              <span class="hm-dl-photo">[전폭 사진 배경 — 앱 화면을 든 손]</span>
+              <div class="hm-dl-in">
+                <div class="hm-dl-app"><img src="/logos/banksalad.png" alt="뱅크샐러드 앱 아이콘" width="56" height="56"><b>금융을 내 편으로<br>뱅크샐러드 다운로드</b></div>
+                <div class="stores"><span class="store">Google Play</span><span class="store">App Store</span></div>
+              </div>
+            </div>
+            <div class="hm-partner">[제휴 사례 문구 자리]<br>[사업 제휴 문의 연락처]</div>
+            <div class="hm-foot">
+              <div class="hm-foot-in">
+                <div class="hm-cols">
+                  <div class="hm-col">
+                    <span class="wm-box"><img src="/logos/banksalad-logotype.png" alt="뱅크샐러드" height="30"></span>
+                    <div class="stores"><span class="store">App Store</span><span class="store">Google Play</span></div>
+                  </div>
+                  <div class="hm-col">
+                    <b class="hm-col-h">많이 찾는 서비스</b>
+                    <span class="hm-link">신용대출 금리 비교 한 번에 <span class="hm-best">BEST</span></span>
+                    <span class="hm-link">주택담보대출 금리 비교 한 번에</span>
+                    <span class="hm-link">신용카드 캐시백 이벤트</span>
+                  </div>
+                  <div class="hm-col">
+                    <b class="hm-col-h">뱅크샐러드</b>
+                    <span class="hm-link">회사소개</span>
+                    <span class="hm-link">블로그</span>
+                    <span class="hm-link">고객안심센터</span>
+                  </div>
+                </div>
+                <div class="hm-info"><span>공지사항</span><span>개인정보처리방침</span><span>이용약관</span><span>전자금융거래이용약관</span><span>사업 제휴</span></div>
+                <div class="hm-corp">(주)뱅크샐러드<br>[사업자 정보 · 주소]<br>[저작권 표기]</div>
+              </div>
+            </div>
+          </div>
+          <div class="specs"><span class="spec">GNB 85 · 히어로 52 / 60 · 섹션 안쪽 946 · 구획 띠 12</span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

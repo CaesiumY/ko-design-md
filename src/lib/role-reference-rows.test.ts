@@ -120,6 +120,53 @@ function expectRowsToMatch(
 // checks the detected entries against these keys, so an entry cannot be
 // listed without a case, nor use the form without being listed.
 const CASES: Record<string, { title: string; check: () => void }> = {
+  banksalad: {
+    title: "family slots by the slot table, roles light and `dark-` twin",
+    check: () => {
+      const { literals, refs, tableRows } = load("banksalad")
+      // `background-highlight` / `background-dim` write their opacity beside the
+      // reference (`× 불투명도 0.04`); the opacity lives in the `opacity:` map, so
+      // the colour still aliases one palette step.
+      const single = (cell: string): string | undefined =>
+        /^`\{colors\.([^}]+)\}`(?: × 불투명도 [\d.]+)?$/.exec(cell)?.[1]
+      const expected = new Map<string, string>()
+      for (const [roleCell, light = "", dark = ""] of tableRows) {
+        const [name] = spans(roleCell)
+        if (!name) continue
+        const l = single(light)
+        const d = single(dark)
+        if (l) expected.set(name, l)
+        // Theme-invariant roles say "`dark-` 짝 없음" instead of a reference,
+        // so they owe no twin. Primitives do not change with the theme.
+        if (d) expected.set(`dark-${name}`, d)
+      }
+      // The five family slots are one rule for every family, written once as
+      // an unbackticked table (`| bg | 95 | 20 (gray 만 25) |`) — load() does
+      // not see it, so it is read here and expanded over the palette families.
+      const raw = readFileSync(join(SERVICES, "banksalad.md"), "utf-8")
+      const slots = [
+        ...raw.matchAll(
+          /^\| (bg|weak|normal|strong|heavy) \| (\d+) \| (\d+)(?: \(([a-z-]+) 만 (\d+)\))? \|$/gm
+        ),
+      ]
+      expect(slots.length, "slot table parsed").toBe(5)
+      const families = new Set(
+        [...literals]
+          .filter((key) => !/^(legacy|dark)-/.test(key))
+          .map((key) => /^([a-z-]+)-\d+$/.exec(key)?.[1])
+          .filter((family): family is string => family !== undefined)
+      )
+      expect(families.size, "palette families").toBe(16)
+      for (const [, slot, light, dark, odd, oddDark] of slots) {
+        for (const family of families) {
+          expected.set(`${family}-${slot}`, `${family}-${light}`)
+          const step = family === odd ? oddDark : dark
+          expected.set(`dark-${family}-${slot}`, `${family}-${step}`)
+        }
+      }
+      expectRowsToMatch("banksalad", expected, refs, literals)
+    },
+  },
   "seed-design": {
     title: "every role, light and `dark-` twin",
     check: () => {
