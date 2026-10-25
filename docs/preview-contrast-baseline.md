@@ -724,7 +724,8 @@ warn 만)이라 갱신이 강제되지 않고, 두 분류표의 비텍스트 행
 | zigbang | non-text | 33 | 0 | 0 | 0 | 33 |
 
 **어느 슬러그부터 (2026-10-26 재집계 기준).** 고칠 수 있는 칸(`one-token`·`no-token`)이 큰 쪽은
-텍스트에서는 bezier 이고 greeting · codeit, 그다음 line-design-system · class101 이 뒤따른다. 단 #550 의 슬러그 티켓으로 이미 처리한 슬러그는, 텍스트
+텍스트에서는 bezier 이고 greeting · codeit, 그다음 line-design-system · class101 이 뒤따른다(wanted 는 아래 caveat 의 테마가 엇갈린 우연 일치로
+`both-published` 에 든 다크 푸터 줄을 고칠 수 있는 칸으로 되돌려도 이 둘보다 작다). 단 #550 의 슬러그 티켓으로 이미 처리한 슬러그는, 텍스트
 칸이 행마다 처리를 마친 뒤의 남은 행일 수 있다 — 무엇으로 처리했는지는 그 티켓의 PR 본문에 있고, 이 문단에는 쌓지
 않는다(비텍스트 칸은 그 티켓들이 따로 다루지 않았다 — 선언으로 함께 빠진 행은 있다). 비텍스트에서는 greeting 이 가장 크고, samsung-one-ui
 비텍스트는 미달 전부가 이 두 칸이다. 반대로 socar · zigbang · remember · kyobobook 텍스트 · seed-design 텍스트의 미달은 거의 전부

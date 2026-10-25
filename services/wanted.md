@@ -489,7 +489,7 @@ focus-ring:      2px blue-800 + 2px transparent offset
 page-transition: ~200ms fade-in only
 ```
 
-spring·bounce·parallax는 시스템 전반에서 사용되지 않는다. Hover는 solid 버튼(primary·danger)에서는 색 단계를 갈지 않고 인터랙션 층을 덮고(`### button-primary`), outlined·text 계열 버튼은 각 절의 옅은 채움이며, 링크에서는 lighten이며, lift·scale은 잡 카드(translateY(-2px), 0.12s ease) 외에는 거의 등장하지 않는다.
+spring·bounce·parallax는 시스템 전반에서 사용되지 않는다. Hover는 solid 버튼(primary·danger)에서는 색 단계를 갈지 않고 인터랙션 층을 덮는다(`### button-primary`). 그 밖의 버튼(outlined·assistive·text)은 각 절이 정한 채움을 쓰고, 링크는 lighten이다. lift·scale은 잡 카드(translateY(-2px), 0.12s ease) 외에는 거의 등장하지 않는다.
 
 ## Shapes
 
@@ -537,7 +537,7 @@ spring·bounce·parallax는 시스템 전반에서 사용되지 않는다. Hover
 
 ### button-primary
 
-solid 변형 — `{colors.bg-brand}` (`oklch(0.563 0.241 261)`) 배경 + `{colors.fg-on-brand}` (흰 텍스트). 화면당 가장 중요한 단일 액션에 사용. Hover·active 때 배경을 다른 색 단계로 갈지 않는다 — 몽타주의 공통 인터랙션 층이 `foreground.neutral.primary`(라이트 `#171719` ≈ `oklch(0.205 0.004 286)` · 다크 `#F7F7F8` ≈ `oklch(0.976 0.001 286)`) 한 색을 버튼 위에 덮고, solid primary 는 강한 단계라 hover 7.5% · active 18%다 — `{colors.interaction-strong-hover}` · `{colors.interaction-strong-active}`(다크는 `dark-` 짝) [src:20][src:21].
+solid 변형 — `{colors.bg-brand}` (`oklch(0.563 0.241 261)`) 배경 + `{colors.fg-on-brand}` (흰 텍스트). 화면당 가장 중요한 단일 액션에 사용. Hover·active 때 배경을 다른 색 단계로 갈지 않는다 — 몽타주의 공통 인터랙션 층이 `foreground.neutral.primary`(라이트 `#171719` ≈ `oklch(0.205 0.004 286)` · 다크 `#F7F7F8` ≈ `oklch(0.976 0.001 286)` [src:17][src:18]) 한 색을 버튼 위에 덮고, solid primary 는 강한 단계라 hover 7.5% · active 18%다 — `{colors.interaction-strong-hover}` · `{colors.interaction-strong-active}`(다크는 `dark-` 짝) [src:20][src:21].
 
 ### button-secondary
 
@@ -822,7 +822,7 @@ active filter는 brand-subtle 배경 + brand 텍스트로 표시되며, sort는 
 
 ### alert (inline)
 
-padding `14 16`, `{rounded.radius-12}`, 좌측 18px 아이콘 + title(14/600) + msg(13/500) 슬롯. 인라인 알림이며 toast와 달리 dismiss 없이 페이지 흐름에 남는다. 변형은 **info**·**danger**·**success**·**warning**이다. 바탕은 두 겹이다 — 중립 배경을 `{opacity.alpha-88}`로 깐 위에, 상태색(info 는 브랜드 surface — 라이트 `{colors.bg-brand}`, 다크는 몽타주 `#3385FF` ≈ `oklch(0.633 0.198 259)` 로 본 문서에 토큰이 없다 — 나머지는 `{colors.fg-danger}`·`{colors.fg-success}`·`{colors.fg-warning}`)을 `{opacity.alpha-5}`로 얹는다. 글자는 상태와 무관하게 제목 `{colors.fg-strong}`·설명 `{colors.fg-default}` 역할이고(몽타주는 같은 역할에 `foreground.neutral.primary`·`foreground.neutral.secondary` 를 쓰며 값은 본 문서 번들 값과 다르다), 상태색은 좌측 아이콘에만 쓴다 [src:22][src:23].
+padding `14 16`, `{rounded.radius-12}`, 좌측 18px 아이콘 + title(14/600) + msg(13/500) 슬롯. 인라인 알림이며 toast와 달리 dismiss 없이 페이지 흐름에 남는다. 변형은 **info**·**danger**·**success**·**warning**이다. 바탕은 두 겹이다 — 중립 배경을 `{opacity.alpha-88}`로 깐 위에, 상태색(info 는 브랜드 surface — 라이트 `{colors.bg-brand}`, 다크는 몽타주 `#3385FF` ≈ `oklch(0.633 0.198 259)` [src:17][src:18] 로 본 문서에 토큰이 없다 — 나머지는 `{colors.fg-danger}`·`{colors.fg-success}`·`{colors.fg-warning}`)을 `{opacity.alpha-5}`로 얹는다. 글자는 상태와 무관하게 제목 `{colors.fg-strong}`·설명 `{colors.fg-default}` 역할이고(몽타주는 같은 역할에 `foreground.neutral.primary`·`foreground.neutral.secondary` 를 쓰며 값은 본 문서 번들 값과 다르다), 상태색은 좌측 아이콘에만 쓴다 [src:22][src:23].
 
 ### empty-state
 
