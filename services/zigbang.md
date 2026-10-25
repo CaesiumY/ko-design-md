@@ -3,7 +3,7 @@ name: 직방
 design_system_name: ZUIX
 slug: zigbang
 category: etc
-last_updated: "2026-10-02"
+last_updated: "2026-10-25"
 created_at: "2026-10-01"
 lang: ko
 logo: https://getdesign.kr/logos/zigbang.png
@@ -48,6 +48,11 @@ colors:
   ## Purple
   purple1: oklch(0.526 0.219 279) # #584DE4
   purple2: oklch(0.951 0.020 289) # #EEEDFC
+  ## Badge — enum 밖 · 컴포넌트 하드코딩
+  badge-pink: oklch(0.665 0.264 351) # #FF20A6 — Badge pink1(기본) 글자·아이콘 · enum 밖
+  badge-pink-bg: oklch(0.980 0.013 341) # #FFF5FB — Badge pink1 배경 · enum 밖
+  badge-blue: oklch(0.513 0.247 263) # #0651F1 — Badge blue1 글자·아이콘 · enum 밖, 이름이 같은 enum blue1 과 다른 값
+  badge-blue-bg: oklch(0.973 0.013 252) # #F0F7FF — Badge blue1 배경 · enum 밖
   ## Alpha — gray10·white 기반
   grayOpacity05: oklch(0.218 0.000 0 / 5%) # rgba(26, 26, 26, 0.05)
   grayOpacity08: oklch(0.218 0.000 0 / 8%) # rgba(26, 26, 26, 0.08) — 누름 오버레이 기본값
@@ -131,7 +136,9 @@ ZUIX는 소비자 웹에도 닿아 있다. www.zigbang.com 은 curl 로는 Cloud
 
 ## Colors
 
-ZUIX가 발행하는 색은 번들 안 TypeScript enum `Color`의 hex·rgba 문자열이다 [src:5][src:6]. 공개된 OKLCH는 없으므로 frontmatter의 OKLCH는 발행 hex를 변환한 값이고, 발행 hex·rgba는 각 토큰 줄의 트레일링 주석에 남겼다. 이름은 enum 그대로다.
+> **대조 결과(2026-10-25).** Badge 청크 [src:13] 를 다시 열어 글자 두 값과 배경 두 값이 그대로임을 확인하고, 네 값을 frontmatter `## Badge` 그룹의 토큰으로 올렸다. enum 밖 하드코딩이라는 사실은 각 토큰 줄의 주석에 남겼다.
+
+ZUIX가 발행하는 색은 번들 안 TypeScript enum `Color`의 hex·rgba 문자열이다 [src:5][src:6]. 공개된 OKLCH는 없으므로 frontmatter의 OKLCH는 발행 hex를 변환한 값이고, 발행 hex·rgba는 각 토큰 줄의 트레일링 주석에 남겼다. 이름은 enum 그대로다 — enum 밖 Badge 값을 실은 `## Badge` 그룹만 컴포넌트 이름(`badge-*`)을 쓴다.
 
 **enum은 팔레트뿐이고 역할 이름이 없다.** style 청크에 primary·background·surface 같은 시맨틱 이름 맵은 0건이다 [src:5]. **다크 모드도 없다** — 다크 관련 식별자는 Storybook 크롬(런타임·docs blocks)에만 걸린다 [src:70][src:76]. 스토리 인덱스에도 Color·Foundation·Tokens 항목이 없다 [src:2]. 그래서 이 항목은 `primary` 토큰도 `dark-` 토큰도 싣지 않는다. `{colors.orange1}`이 강조를 도맡는 것은 위 컴포넌트들에서 **관측된 사실**이지 브랜드가 역할로 지정한 것이 아니다.
 
@@ -154,10 +161,8 @@ ZUIX가 발행하는 색은 번들 안 TypeScript enum `Color`의 hex·rgba 문�
 
 **그라디언트는 둘만 발행됐다.** Button `orange1G` 테마는 135°로 `{colors.orange1}`에서 enum 밖의 붉은 오렌지 `oklch(0.614 0.214 29)`로 넘어가고 비활성에서는 그리지 않는다 [src:8]. Tag `hug` 테마는 오른쪽 방향의 하늘색→연두 2-스톱이다 [src:12]. 둘 다 단색이 아니라 frontmatter `colors:`가 아닌 `gradients:` 맵에 `gradients.button-orange1G`·`gradients.tag-hug`로 두었다.
 
-**enum 밖 하드코딩 색 — ZUIX 번들 안.** 아래 값은 토큰이 아니라 관찰로 남긴다.
+**enum 밖 하드코딩 색 — ZUIX 번들 안.** Badge 의 네 값은 frontmatter `## Badge` 그룹에 토큰으로 실었다. Badge 테마는 `pink1`(기본)·`blue1` 둘이고, 글자·아이콘은 `{colors.badge-pink}`·`{colors.badge-blue}`, 배경은 `{colors.badge-pink-bg}`·`{colors.badge-blue-bg}`다. 파랑은 테마 이름이 enum `blue1`과 겹치지만 값이 다르다 [src:13]. Badge 만 토큰으로 실은 것은 테마 이름으로 고르는 색 묶음이어서다 — 아래 나머지 값은 테마 같은 선택 축 없이 컴포넌트에 직접 박힌 리터럴이라 토큰이 아니라 관찰로 남긴다.
 
-- Badge 글자·아이콘은 핑크 `#FF20A6`(`oklch(0.665 0.264 351)`)와 파랑 `#0651F1`(`oklch(0.513 0.247 263)`)이고, 파랑은 이름이 enum `blue1`과 겹치지만 값이 다르다 [src:13].
-- Badge 배경은 `#FFF5FB`(`oklch(0.980 0.013 341)`)와 `#F0F7FF`(`oklch(0.973 0.013 252)`)다 [src:13].
 - BottomSheetView 핸들은 `#D9D9D9`(`oklch(0.885 0.000 0)`)다 [src:47].
 - Thumbnail 글자 그림자만 gray10 잉크가 아니라 순수 검정 `oklch(0 0 0 / 0.5)`를 쓴다 [src:44].
 - Icon 청크는 enum을 참조하지 않고 `{colors.orange1}`·`{colors.orange2}`·`{colors.white}` 값을 리터럴로 박아 두며 [src:49], ListImageItem 카드 배경도 흰색 리터럴이다 [src:51].
@@ -375,7 +380,7 @@ Filter는 상태를 Button 테마로 매핑한다 — active → `lineOrange`, s
 
 ### badge
 
-높이 20, radius 4, 16×16 아이콘 + 11 글자다. 색은 enum이 아니라 하드코딩 핑크·파랑이다(`## Colors` 참고). 라벨은 글자 확대를 끈다 [src:13].
+높이 20, radius 4, 16×16 아이콘 + 11 글자다. 색은 enum이 아니라 하드코딩 핑크·파랑이다 — 글자 `{colors.badge-pink}`·`{colors.badge-blue}`, 배경 `{colors.badge-pink-bg}`·`{colors.badge-blue-bg}`(`## Colors` 참고). 라벨은 글자 확대를 끈다 [src:13].
 
 ### bottom-cta
 

@@ -116,6 +116,12 @@
       "group": "Deep navy & accents"
     },
     {
+      "name": "star-gold",
+      "value": "oklch(0.82 0.16 85)",
+      "note": "별점 ★ 전용 — 포인트 코인 yellow보다 약간 어둡고 채도 낮음",
+      "group": "Deep navy & accents"
+    },
+    {
       "name": "pink",
       "value": "oklch(0.66 0.24 4)",
       "note": "배민페이",
