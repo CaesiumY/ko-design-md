@@ -664,7 +664,8 @@ warn 만)이라 갱신이 강제되지 않고, 두 분류표의 비텍스트 행
 
 **이 수도 위 절과 같은 두 방향의 오차를 진다.** 겹친 반투명 층·`opacity` 가 낀 표면은 입력이 모두 발행
 토큰이어도 `one-token`·`no-token` 칸에 들어가고(발행 쌍을 적게 센다), 우연히 토큰이나 합성 근처에 떨어진
-파생색은 토큰으로 세어진다(많이 센다). 그래서 `one-token`·`no-token` 칸은 "고칠 수 있는 것"의 후보 목록이지 그 수가 아니다.
+파생색은 토큰으로 세어진다(많이 센다 — 분류기는 테마를 가리지 않아, wanted 다크 푸터 3행의 바탕 `#0a0b0c` 가 **라이트**
+`interaction-strong-active` 를 `neutral-970` 위에 얹은 합성과 0.0017 로 맞아 `both-published` 에 들어가 있다). 그래서 `one-token`·`no-token` 칸은 "고칠 수 있는 것"의 후보 목록이지 그 수가 아니다.
 비텍스트 행은 게이트가 갱신을 강제하지 않는 참고 열과 묶여 있어 낡을 수 있다(위 「게이트는 이것을 어떻게 다루나」 문단).
 
 | slug | kind | both-published | observed-pair | one-token | no-token | total |
