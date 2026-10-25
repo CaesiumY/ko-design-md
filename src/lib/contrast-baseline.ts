@@ -489,10 +489,10 @@ export const BASELINE_TABLE = `\
 | vapor-ui | dark | non-text | 22 | 31 | 17 | 0 | 0 |
 | vapor-ui | light | text | 134 | 265 | 1 | 14 | 3 |
 | vapor-ui | light | non-text | 22 | 31 | 11 | 1 | 0 |
-| wanted | dark | text | 136 | 236 | 18 | 0 | 7 |
-| wanted | dark | non-text | 18 | 18 | 5 | 0 | 2 |
-| wanted | light | text | 136 | 236 | 46 | 2 | 7 |
-| wanted | light | non-text | 18 | 18 | 8 | 0 | 2 |
+| wanted | dark | text | 138 | 238 | 18 | 0 | 7 |
+| wanted | dark | non-text | 22 | 22 | 5 | 0 | 2 |
+| wanted | light | text | 138 | 238 | 45 | 2 | 7 |
+| wanted | light | non-text | 22 | 22 | 10 | 0 | 2 |
 | yeogi | dark | text | 70 | 94 | 5 | 5 | 3 |
 | yeogi | dark | non-text | 14 | 14 | 7 | 0 | 2 |
 | yeogi | light | text | 70 | 94 | 34 | 2 | 3 |
