@@ -161,7 +161,7 @@ ZUIX가 발행하는 색은 번들 안 TypeScript enum `Color`의 hex·rgba 문�
 
 **그라디언트는 둘만 발행됐다.** Button `orange1G` 테마는 135°로 `{colors.orange1}`에서 enum 밖의 붉은 오렌지 `oklch(0.614 0.214 29)`로 넘어가고 비활성에서는 그리지 않는다 [src:8]. Tag `hug` 테마는 오른쪽 방향의 하늘색→연두 2-스톱이다 [src:12]. 둘 다 단색이 아니라 frontmatter `colors:`가 아닌 `gradients:` 맵에 `gradients.button-orange1G`·`gradients.tag-hug`로 두었다.
 
-**enum 밖 하드코딩 색 — ZUIX 번들 안.** Badge 의 네 값은 frontmatter `## Badge` 그룹에 토큰으로 실었다. Badge 테마는 `pink1`(기본)·`blue1` 둘이고, 글자·아이콘은 `{colors.badge-pink}`·`{colors.badge-blue}`, 배경은 `{colors.badge-pink-bg}`·`{colors.badge-blue-bg}`다. 파랑은 테마 이름이 enum `blue1`과 겹치지만 값이 다르다 [src:13]. Badge 만 토큰으로 실은 것은 테마 이름으로 고르는 색 묶음이어서다 — 아래 나머지 값은 한 컴포넌트에 한 번 박힌 리터럴이라 토큰이 아니라 관찰로 남긴다.
+**enum 밖 하드코딩 색 — ZUIX 번들 안.** Badge 의 네 값은 frontmatter `## Badge` 그룹에 토큰으로 실었다. Badge 테마는 `pink1`(기본)·`blue1` 둘이고, 글자·아이콘은 `{colors.badge-pink}`·`{colors.badge-blue}`, 배경은 `{colors.badge-pink-bg}`·`{colors.badge-blue-bg}`다. 파랑은 테마 이름이 enum `blue1`과 겹치지만 값이 다르다 [src:13]. Badge 만 토큰으로 실은 것은 테마 이름으로 고르는 색 묶음이어서다 — 아래 나머지 값은 테마 같은 선택 축 없이 컴포넌트에 직접 박힌 리터럴이라 토큰이 아니라 관찰로 남긴다.
 
 - BottomSheetView 핸들은 `#D9D9D9`(`oklch(0.885 0.000 0)`)다 [src:47].
 - Thumbnail 글자 그림자만 gray10 잉크가 아니라 순수 검정 `oklch(0 0 0 / 0.5)`를 쓴다 [src:44].
