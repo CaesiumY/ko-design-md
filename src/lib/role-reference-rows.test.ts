@@ -143,7 +143,10 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       // The five family slots are one rule for every family, written once as
       // an unbackticked table (`| bg | 95 | 20 (gray 만 25) |`) — load() does
       // not see it, so it is read here and expanded over the palette families.
-      const raw = readFileSync(join(SERVICES, "banksalad.md"), "utf-8")
+      const raw = readFileSync(join(SERVICES, "banksalad.md"), "utf-8").replace(
+        /\r\n/g,
+        "\n"
+      )
       const slots = [
         ...raw.matchAll(
           /^\| (bg|weak|normal|strong|heavy) \| (\d+) \| (\d+)(?: \(([a-z-]+) 만 (\d+)\))? \|$/gm
