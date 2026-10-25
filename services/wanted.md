@@ -489,7 +489,7 @@ focus-ring:      2px blue-800 + 2px transparent offset
 page-transition: ~200ms fade-in only
 ```
 
-spring·bounce·parallax는 시스템 전반에서 사용되지 않는다. Hover는 버튼에서는 색 단계를 갈지 않고 인터랙션 층을 덮으며(`### button-primary`), 링크에서는 lighten이며, lift·scale은 잡 카드(translateY(-2px), 0.12s ease) 외에는 거의 등장하지 않는다.
+spring·bounce·parallax는 시스템 전반에서 사용되지 않는다. Hover는 solid 버튼(primary·danger)에서는 색 단계를 갈지 않고 인터랙션 층을 덮고(`### button-primary`), outlined·text 계열 버튼은 각 절의 옅은 채움이며, 링크에서는 lighten이며, lift·scale은 잡 카드(translateY(-2px), 0.12s ease) 외에는 거의 등장하지 않는다.
 
 ## Shapes
 
