@@ -137,7 +137,7 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
   teamsparta: 18,
   toss: 27,
   "vapor-ui": 36,
-  wanted: 37,
+  wanted: 53,
   yeogi: 29,
   zigbang: 43,
 }

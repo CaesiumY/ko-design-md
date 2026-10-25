@@ -2,7 +2,7 @@
 name: 원티드
 slug: wanted
 category: career
-last_updated: "2026-08-24"
+last_updated: "2026-10-26"
 created_at: "2026-05-12"
 lang: ko
 logo: https://getdesign.kr/logos/wanted.png
@@ -10,7 +10,7 @@ colors:
   ## Brand
   primary: "{colors.blue-800}"
   blue-800: oklch(0.563 0.241 261)   # core Wanted Blue (#0066FF), 단일 primary
-  blue-700: oklch(0.607 0.225 257)   # hover step
+  blue-700: oklch(0.607 0.225 257)
   blue-850: oklch(0.529 0.220 258)
   blue-900: oklch(0.484 0.205 258)
   blue-100: oklch(0.954 0.022 250)   # --bg-brand-subtle
@@ -58,13 +58,13 @@ colors:
   neutral-970: oklch(0.135 0.002 286)
   neutral-980: oklch(0.108 0.002 286)
   ## Semantic signal
-  red-700: oklch(0.546 0.220 27)   # --fg-danger
+  red-700: oklch(0.546 0.220 27)
   red-600: oklch(0.643 0.231 27)
   red-100: oklch(0.951 0.018 18)   # --bg-danger-subtle (#FEECEC)
   red-200: oklch(0.901 0.044 22)
-  green-600: oklch(0.673 0.211 144)   # --fg-success
+  green-600: oklch(0.673 0.211 144)
   green-100: oklch(0.968 0.052 154)   # --bg-success-subtle (#D9FFE6)
-  orange-700: oklch(0.625 0.148 56)   # --fg-warning
+  orange-700: oklch(0.625 0.148 56)
   orange-600: oklch(0.733 0.179 56)
   orange-100: oklch(0.967 0.030 81)   # --bg-warning-subtle (#FEF4E6)
   coral-600: oklch(0.686 0.210 41)   # brand gradient end-stop
@@ -88,6 +88,9 @@ colors:
   bg-danger-subtle: oklch(0.951 0.018 18)
   bg-success-subtle: oklch(0.968 0.052 154)
   bg-warning-subtle: oklch(0.967 0.030 81)
+  surface-danger: oklch(0.662 0.225 26 / 0.08)   # #FF4242 @ 8% — 몽타주 surface.negative.primary · 배지 바탕
+  surface-success: oklch(0.700 0.213 146 / 0.08)   # #00BF40 @ 8% — 몽타주 surface.positive.primary · 배지 바탕
+  surface-warning: oklch(0.760 0.176 61 / 0.08)   # #FF9200 @ 8% — 몽타주 surface.cautionary.primary · 배지 바탕
   # Foreground (alpha multiplier on neutral-825 / neutral-875)
   fg-strong: oklch(0.148 0.004 277)   # @ alpha 1 (= neutral-960)
   fg-default: oklch(0.259 0.010 273 / 0.88)   # body
@@ -97,9 +100,9 @@ colors:
   fg-on-brand: oklch(1 0 0)
   fg-brand: oklch(0.563 0.241 261)
   fg-link: oklch(0.563 0.241 261)
-  fg-danger: oklch(0.546 0.220 27)
-  fg-success: oklch(0.673 0.211 144)
-  fg-warning: oklch(0.625 0.148 56)
+  fg-danger: oklch(0.662 0.225 26)   # #FF4242 — 몽타주 foreground.negative.primary · 실서비스와 같은 값
+  fg-success: oklch(0.700 0.213 146)   # #00BF40 — 몽타주 foreground.positive.primary · 실서비스와 같은 값
+  fg-warning: oklch(0.760 0.176 61)   # #FF9200 — 몽타주 foreground.cautionary.primary · 실서비스와 같은 값
   # Borders
   border-subtle: oklch(0.521 0.018 273 / 0.08)
   border-default: oklch(0.521 0.018 273 / 0.22)
@@ -118,6 +121,9 @@ colors:
   dark-bg-danger-subtle: oklch(0.298 0.10 22 / 0.32)   # synthesized for dark contrast
   dark-bg-success-subtle: oklch(0.298 0.10 144 / 0.28)   # synthesized
   dark-bg-warning-subtle: oklch(0.298 0.10 56 / 0.32)   # synthesized
+  dark-surface-danger: oklch(0.700 0.191 23 / 0.08)   # #FF6363 @ 8% — 몽타주 surface.negative.primary (dark)
+  dark-surface-success: oklch(0.761 0.214 148 / 0.08)   # #1ED45A @ 8% — 몽타주 surface.positive.primary (dark)
+  dark-surface-warning: oklch(0.802 0.157 69 / 0.08)   # #FFA938 @ 8% — 몽타주 surface.cautionary.primary (dark)
   # Foreground (alpha on white in dark theme)
   dark-fg-strong: oklch(1 0 0)
   dark-fg-default: oklch(1 0 0 / 0.88)
@@ -126,9 +132,9 @@ colors:
   dark-fg-disabled: oklch(1 0 0 / 0.28)
   dark-fg-on-brand: oklch(1 0 0)
   dark-fg-brand: oklch(0.715 0.155 255)   # blue-400 (brightened from blue-800; synthesized)
-  dark-fg-danger: oklch(0.715 0.220 27)   # synthesized (red @ ↑ lightness)
-  dark-fg-success: oklch(0.760 0.180 144)   # synthesized (green @ ↑ lightness)
-  dark-fg-warning: oklch(0.778 0.158 64)   # synthesized (orange @ ↑ lightness)
+  dark-fg-danger: oklch(0.700 0.191 23)   # #FF6363 — 몽타주 foreground.negative.primary (dark)
+  dark-fg-success: oklch(0.761 0.214 148)   # #1ED45A — 몽타주 foreground.positive.primary (dark)
+  dark-fg-warning: oklch(0.802 0.157 69)   # #FFA938 — 몽타주 foreground.cautionary.primary (dark)
   # Borders
   dark-border-subtle: oklch(1 0 0 / 0.08)
   dark-border-default: oklch(1 0 0 / 0.22)
@@ -322,6 +328,8 @@ Voice는 **친근한 2인칭 + 부드러운 존댓말**로 요약된다. 사무�
 
 ## Colors
 
+> **팔레트 정정(2026-10-26).** 상태 글자색 `{colors.fg-danger}`·`{colors.fg-success}`·`{colors.fg-warning}`(다크 짝 포함)을 몽타주 시맨틱 값으로 고쳤다 — 원티드 실서비스 스타일시트가 같은 값을 싣고, 번들 값은 실서비스에도 몽타주에도 없었다 [src:17][src:18]. 배지 바탕 `{colors.surface-success}` 류(상태색 8%)를 새로 실었다. 램프 앵커(`{colors.red-700}` 등)는 번들 값 그대로다(`## Known Gaps`).
+
 원본 hex는 SSOT 번들 `colors_and_type.css`에 정의되어 있으며, 본 문서는 OKLCH로 변환해 표기한다. 시스템의 구조적 특징은 두 가지이며 **둘 다 몽타주 공개 토큰으로 확인된다** — (1) **dual neutral ramp** (채도 0의 흑백 톤과 cool blue-tinted 톤이 별도 램프로 운영됨), (2) **alpha multiplier로 텍스트 위계를 합성** (별도 gray hex를 정의하는 대신 한 베이스 색 위에 알파 사다리를 곱해 라이트/다크 양쪽에서 일관된 "soft black/white" 톤을 만든다).
 
 공개 토큰과의 대조 결과는 다음과 같다 [src:3][src:4].
@@ -367,10 +375,10 @@ Voice는 **친근한 2인칭 + 부드러운 존댓말**로 요약된다. 사무�
 
 다크 모드는 light 모드의 alpha multiplier 구조를 그대로 유지한다 — text 알파 베이스가 `neutral-825`/`neutral-875` → `oklch(1 0 0)`(흰색)로 뒤집힐 뿐이다. 시맨틱 alias의 의미(fg-default = 본문, fg-secondary = label/caption, fg-tertiary = placeholder, fg-disabled = disabled)는 양 테마에서 동일하다.
 
-**위 다크 값 중 `dark-bg-danger/success/warning-subtle`과 `dark-fg-brand/danger/success/warning`은 본 카탈로그가 preview 대비를 맞추려고 합성(synthesized)한 값이며, 공개 출처의 값과 다르다.** 종전 판본은 이를 "SSOT가 surface하지 않은 빈자리"로 설명했으나, 몽타주 공개 문서는 해당 다크 토큰을 모두 공개하고 있으므로 그 설명은 사실이 아니다 — 합성값은 공개 출처 부재 때문이 아니라 번들 기준 팔레트와의 정합을 위해 남겨 둔 것이다. 공식 다크 값은 다음과 같다 [src:4].
+**위 다크 값 중 `dark-bg-danger/success/warning-subtle`과 `dark-fg-brand`는 본 카탈로그가 preview 대비를 맞추려고 합성(synthesized)한 값이며, 공개 출처의 값과 다르다.** 종전 판본은 이를 "SSOT가 surface하지 않은 빈자리"로 설명했으나, 몽타주 공개 문서는 해당 다크 토큰을 모두 공개하고 있으므로 그 설명은 사실이 아니다 — 합성값은 공개 출처 부재 때문이 아니라 번들 기준 팔레트와의 정합을 위해 남겨 둔 것이다. 다크 상태 글자색 `dark-fg-danger/success/warning` 과 배지 바탕 `dark-surface-*` 는 2026-10-26 부터 아래 공개 값 그대로다(`## Colors` 첫머리). 공식 다크 값은 다음과 같다 [src:4][src:18].
 
-- `status-positive` `#1ED45A`(≈ `oklch(0.761 0.214 148)`), `status-cautionary` `#FFA938`, `status-negative` `#FF6363` — 각 hue 램프의 `-60` 단계로, 라이트의 `-50` 단계보다 한 칸 밝다.
-- `background-status-*`는 같은 hue를 **알파 8%**로 깔아 만든다 (`#FF636314` ≈ `oklch(0.700 0.191 23 / 0.08)`) — 본 문서가 쓴 0.28~0.32 알파보다 훨씬 옅다.
+- `status-positive` `#1ED45A`(≈ `oklch(0.761 0.214 148)`), `status-cautionary` `#FFA938`, `status-negative` `#FF6363` — 각 hue 램프의 `-60` 단계로, 라이트의 `-50` 단계보다 한 칸 밝다. 본 문서의 `{colors.dark-fg-success}`·`{colors.dark-fg-warning}`·`{colors.dark-fg-danger}` 가 이 값이다.
+- `background-status-*`는 같은 hue를 **알파 8%**로 깔아 만든다 (`#FF636314` ≈ `oklch(0.700 0.191 23 / 0.08)`) — 본 문서의 `{colors.dark-surface-danger}` 류가 이 값이고, 합성한 `dark-bg-*-subtle` 의 0.28~0.32 알파보다 훨씬 옅다.
 - `primary-normal`(다크)은 `#3385FF`(`blue-60`, ≈ `oklch(0.633 0.198 259)`)로, 본 문서의 `dark-fg-brand` 값 `oklch(0.715 0.155 255)`보다 어둡고 채도가 높다.
 - 다크 텍스트 베이스도 순백이 아니다 — 공식은 `label-normal` `#F7F7F8`(≈ `oklch(0.976 0.001 286)`), `label-neutral` `#C2C4C8` @88%, `label-alternative` `#AEB0B6` @61%처럼 밝은 회색 베이스에 알파를 얹으며, 순백은 `label-strong`에만 쓴다.
 
@@ -477,7 +485,7 @@ focus-ring:      2px blue-800 + 2px transparent offset
 page-transition: ~200ms fade-in only
 ```
 
-spring·bounce·parallax는 시스템 전반에서 사용되지 않는다. Hover는 darken(버튼) 또는 lighten(링크)이며, lift·scale은 잡 카드(translateY(-2px), 0.12s ease) 외에는 거의 등장하지 않는다.
+spring·bounce·parallax는 시스템 전반에서 사용되지 않는다. Hover는 버튼에서는 색 단계를 갈지 않고 인터랙션 층을 덮으며(`### button-primary`), 링크에서는 lighten이며, lift·scale은 잡 카드(translateY(-2px), 0.12s ease) 외에는 거의 등장하지 않는다.
 
 ## Shapes
 
@@ -525,7 +533,7 @@ spring·bounce·parallax는 시스템 전반에서 사용되지 않는다. Hover
 
 ### button-primary
 
-solid 변형 — `{colors.bg-brand}` (`oklch(0.563 0.241 261)`) 배경 + `{colors.fg-on-brand}` (흰 텍스트). 화면당 가장 중요한 단일 액션에 사용. Hover 시 `{colors.blue-900}` (`oklch(0.484 0.205 258)`), active 시 blue-925 (`oklch(0.392 0.156 264)`)로 단계적으로 darken한다.
+solid 변형 — `{colors.bg-brand}` (`oklch(0.563 0.241 261)`) 배경 + `{colors.fg-on-brand}` (흰 텍스트). 화면당 가장 중요한 단일 액션에 사용. Hover·active 때 배경을 다른 색 단계로 갈지 않는다 — 몽타주의 공통 인터랙션 층이 `foreground.neutral.primary`(라이트 `#171719` ≈ `oklch(0.205 0.004 286)` · 다크 `#F7F7F8` ≈ `oklch(0.976 0.001 286)`) 한 색을 버튼 위에 덮고, solid primary 는 강한 단계라 hover 7.5% · active 18%다 [src:20][src:21].
 
 ### button-secondary
 
@@ -545,7 +553,7 @@ text 변형 — 투명 배경 + `{colors.fg-brand}` 텍스트, 보더 없음. Ho
 
 ### button-danger
 
-`{colors.red-700}` (`oklch(0.546 0.220 27)`) 배경 + 흰 텍스트. 파괴적 액션 전용. Hover 시 red-800 (`oklch(0.452 0.188 28)`)로 darken.
+`{colors.red-700}` (`oklch(0.546 0.220 27)`) 배경 + 흰 텍스트. 파괴적 액션 전용. Hover·active 는 `### button-primary` 와 같은 인터랙션 층(강한 단계)이다 [src:21].
 
 ### button-disabled
 
@@ -609,7 +617,7 @@ filter bar 안쪽 작은 칩 변형. resting은 chip과 동일하지만 padding�
 
 ### badge
 
-6px 라운드(컴포넌트 로컬, `{rounded.radius-4}`보다 한 단계 큼), padding `5 8`, font 12/600 — chip보다 작고 정보 밀도 높은 표면에 쓴다. 변형은 시맨틱 색에 매핑된 washed 배경으로 운영된다 — **brand**(`{colors.bg-brand-subtle}` + `{colors.fg-brand}`), **solid**(`{colors.bg-brand}` + 흰 텍스트), **danger/success/warning**(`{colors.bg-danger-subtle}`/`{colors.bg-success-subtle}`/`{colors.bg-warning-subtle}` + 각 시맨틱 fg의 짙은 단계), **neutral**(`{colors.neutral-100}` + `{colors.fg-default}`). `dot` 변형은 앞에 6px currentColor 원을 붙이고, `count` 변형은 18×18 pill(`{rounded.radius-full}`)에 `{colors.red-700}` 배경 + 흰 11px 숫자를 얹는 알림 카운트다.
+6px 라운드(컴포넌트 로컬, `{rounded.radius-4}`보다 한 단계 큼), padding `5 8`, font 12/600 — chip보다 작고 정보 밀도 높은 표면에 쓴다. 변형은 시맨틱 색에 매핑된 washed 배경으로 운영된다 — **brand**(`{colors.bg-brand-subtle}` + `{colors.fg-brand}`), **solid**(`{colors.bg-brand}` + 흰 텍스트), **danger/success/warning**(`{colors.surface-danger}`/`{colors.surface-success}`/`{colors.surface-warning}` — 각 시맨틱 fg 의 8%, 다크는 `dark-` 짝 — 바탕 + 같은 시맨틱 fg 글자; 몽타주 ContentBadge 가 accent 색을 글자로, 그 8%를 바탕으로 쓰는 것과 같다 [src:19]), **neutral**(`{colors.neutral-100}` + `{colors.fg-default}`). `dot` 변형은 앞에 6px currentColor 원을 붙이고, `count` 변형은 18×18 pill(`{rounded.radius-full}`)에 `{colors.red-700}` 배경 + 흰 11px 숫자를 얹는 알림 카운트다.
 
 ### header
 
@@ -810,7 +818,7 @@ active filter는 brand-subtle 배경 + brand 텍스트로 표시되며, sort는 
 
 ### alert (inline)
 
-padding `14 16`, `{rounded.radius-12}`, 좌측 18px 아이콘 + title(14/600) + msg(13/500) 슬롯. 인라인 알림이며 toast와 달리 dismiss 없이 페이지 흐름에 남는다. 변형은 **info**(`{colors.bg-brand-subtle}` 배경), **danger**(`{colors.bg-danger-subtle}`), **success**(`{colors.bg-success-subtle}`), **warning**(`{colors.bg-warning-subtle}`)이며, 텍스트는 각 시맨틱 hue의 짙은 단계를 써 subtle 배경 위 대비를 확보한다.
+padding `14 16`, `{rounded.radius-12}`, 좌측 18px 아이콘 + title(14/600) + msg(13/500) 슬롯. 인라인 알림이며 toast와 달리 dismiss 없이 페이지 흐름에 남는다. 변형은 **info**·**danger**·**success**·**warning**이다. 바탕은 두 겹이다 — 중립 배경을 `{opacity.alpha-88}`로 깐 위에, 상태색(info 는 `{colors.bg-brand}`, 나머지는 `{colors.fg-danger}`·`{colors.fg-success}`·`{colors.fg-warning}`)을 `{opacity.alpha-5}`로 얹는다. 글자는 상태와 무관하게 제목 `{colors.fg-strong}`·설명 `{colors.fg-default}` 역할(몽타주 `foreground.neutral.primary`·`foreground.neutral.secondary`)이고, 상태색은 좌측 아이콘에만 쓴다 [src:22][src:23].
 
 ### empty-state
 
@@ -1005,7 +1013,8 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 - **OKLCH 표기 정정 (2026-07-26)** — 원본 `colors_and_type.css`도, 공식 `wds-theme` 토큰도 hex로만 값을 ship하며 OKLCH 표기는 어느 쪽에도 없다 [src:14]. 본 문서의 OKLCH는 sRGB → OKLab 변환값인데, 병기 hex로 역산하니 12쌍 중 9쌍이 이 저장소의 허용치(ΔE 0.01)를 넘었다 (최대 `gradient-stop-2` 0.055). **hex 쪽이 공식과 일치하는 정답이므로 OKLCH를 hex 유도값으로 재계산해 반영했고**, 시맨틱 alias·그라디언트·산문·프리뷰의 파생 리터럴까지 함께 갱신했다. 지금은 `pnpm audit:oklch`가 이 파일을 판정 대상으로 삼고 통과한다.
 
   이 불일치는 오래 숨어 있었다 — 검증기의 `OKLCH_DEFINITION` 정규식이 `oklch(...)  # #RRGGBB` 형태만 매칭해서, 본 문서가 쓰는 `# ≈ #58CF04`·`# core Wanted Blue (#0066FF)` 같은 형태를 전부 건너뛰었기 때문이다. 카탈로그 전역으로 102쌍이 미판정 상태였고 그중 66개가 어긋나 있었다. 정규식을 고쳐 이 사각지대를 닫았다.
-- **번들 앵커와 공개 램프의 단계 어긋남** — 병기 hex가 있는 토큰은 공개 값과 맞지만, hex를 병기하지 않은 중성/신호색 앵커는 공개 램프보다 어두운 단계를 가리킨다 (예: `neutral-875` `oklch(0.259 …)` vs 공개 `coolNeutral-22` `#2E2F33` ≈ `oklch(0.306 …)`, `red-700` `oklch(0.546 …)` vs 공개 `status-negative` `#FF4242` ≈ `oklch(0.662 …)`). 값을 덮어쓰지 않고 차이만 기록한다 — 번들 팔레트 내부의 상대 위계는 일관되므로, 공식 값으로 옮길 때는 개별 치환이 아니라 램프 단위로 교체해야 한다 [src:3][src:4].
+- **번들 앵커와 공개 램프의 단계 어긋남** — 병기 hex가 있는 토큰은 공개 값과 맞지만, hex를 병기하지 않은 중성/신호색 앵커는 공개 램프보다 어두운 단계를 가리킨다 (예: `neutral-875` `oklch(0.259 …)` vs 공개 `coolNeutral-22` `#2E2F33` ≈ `oklch(0.306 …)`, `red-700` `oklch(0.546 …)` vs 공개 `status-negative` `#FF4242` ≈ `oklch(0.662 …)`). 램프 값은 덮어쓰지 않고 차이만 기록한다 — 번들 팔레트 내부의 상대 위계는 일관되므로, 램프를 공식 값으로 옮길 때는 개별 치환이 아니라 램프 단위로 교체해야 한다 [src:3][src:4]. 다만 상태 글자색 역할(`{colors.fg-danger}` 등)과 배지 바탕은 원티드 실서비스와 몽타주가 같은 값을 써서 램프와 따로 그 값으로 옮겼다(2026-10-26) — 그래서 위험 버튼 채움·입력 오류 테두리(`{colors.red-700}`)와 오류 글자(`{colors.fg-danger}`)는 서로 다른 빨강이다 [src:17][src:18].
+- **상태 글자색의 대비 (2026-10-26)** — 몽타주 상태 글자색은 흰 바탕에서 위험 `{colors.fg-danger}` 3.44:1 · 성공 `{colors.fg-success}` 2.46:1 · 경고 `{colors.fg-warning}` 2.24:1 로 WCAG 1.4.3 의 4.5:1 에 못 미친다. 몽타주가 폼 오류 문구·배지 글자에 이 값을 그대로 쓰고(실서비스도 같다) 본 문서는 발행값을 옮기므로 값을 바꾸지 않는다 [src:18][src:19]. 본문 크기 글자에 쓸 때는 대비를 따로 확인할 것.
 - **그라디언트 mid-stop 미세 차이** — 브랜드 그라디언트의 mid-stop은 README와 atomic 팔레트에서 약간 다른 값으로 surface된다. README/avatar gradient는 `#FF53C0`(≈ `oklch(0.709 0.232 346)`, magenta-shifted), atomic pink-600은 `#F553DA` — UI kit `styles.css`에서 실제 사용되는 hex는 `#FF53C0`이며 본 문서는 이를 우선한다. **공개 대조 결과, `#F553DA`는 공식 `pink-50` 토큰과 정확히 일치하지만 `#FF53C0`은 공식 토큰 집합 어디에도 없다** [src:3] — 본 문서가 병기한 hex 12개 중 공개 출처로 확인되지 않는 유일한 값이다. 또한 공식 문서 사이트가 렌더링하는 원티드 로고는 13개 이상의 `linearGradient`에 57개 stop을 쓰는 다층 그라디언트로, 본 문서의 3-stop 서술은 그 단순화다. 로고·워드마크 등 브랜드 자산은 디자인 시스템 라이선스가 아니라 별도 브랜드 가이드라인의 적용을 받으므로 [src:2], 그라디언트 마크를 그대로 재현하는 용도로는 쓰지 않는다.
 - **공식 motion 토큰** — duration·easing의 시스템 토큰은 명시되지 않았으며, hover transition은 100–150ms ease, page transition은 ~200ms fade-in이라는 정책만 README에 prose로 surface된다. 본 문서의 Motion 표는 SSOT의 정책 prose에서 추출한 권장값이며, 명시 토큰은 아니다.
 - **다크 모드 alias의 합성값** — `### Semantic alias — Dark`의 `bg-danger/success/warning-subtle`과 `fg-brand/danger/success/warning`은 본 카탈로그가 preview 대비를 맞추려 **합성(synthesized)**한 값이다. 종전 판본은 이를 "SSOT가 surface하지 않은 빈자리"로 설명했으나 **몽타주 공개 문서는 해당 다크 토큰을 모두 공개하고 있어 그 설명은 성립하지 않는다** [src:4]. 값을 임의로 덮어쓰지 않기 위해 합성값은 그대로 두되, 공식 값(`status-*`는 각 hue의 `-60` 단계, `background-status-*`는 같은 hue 알파 8%, 다크 `primary-normal`은 `#3385FF` ≈ `oklch(0.633 0.198 259)`)을 같은 절에 병기했다. 공식 패키지 위에서 구현한다면 공개 값을 쓴다.
@@ -1029,7 +1038,13 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 11. https://montage.wanted.co.kr/docs/components/selection-and-input/text-field/design — Text field 해부도(Heading·Placeholder·Description·Leading icon·Required badge·Trailing contents).
 12. https://montage.wanted.co.kr/docs/components/feedback/snackbar/design — Snackbar 해부도와 공개 치수(기본 높이 54px, 최대 너비 420px).
 13. https://montage.wanted.co.kr/docs/release-note — 시맨틱 버저닝 정책. Major는 3개 플랫폼 공통으로 6월·12월 정기 릴리즈.
-14. https://github.com/wanteddev/montage-web — 몽타주 웹 공식 오픈소스 구현(MIT). `packages/wds-theme`가 atomic·semantic·opacity·breakpoint·spacing·zIndex 토큰의 소스오브트루스.
+14. https://github.com/wanteddev/montage-web — 몽타주 웹 공식 오픈소스 구현(MIT). `packages/theme`(옛 `packages/wds-theme`)가 atomic·semantic·opacity·breakpoint·spacing·zIndex 토큰의 소스오브트루스이고, `packages/core` 가 컴포넌트 구현이다.
 15. https://github.com/wanteddev/wanted-sans — Wanted Sans 오픈소스 typeface (OFL). 디자인·제작 원티드랩(길형진·강한빈), 한글 바탕은 본고딕. 7가지 기본 굵기 + 가변 글꼴.
 16. https://github.com/orioncactus/pretendard — Pretendard JP variable typeface. 몽타주가 지정한 기본 글꼴.
-17. https://www.wanted.co.kr — 원티드 공식 마케팅 + 잡 마켓플레이스. 제품 표면의 카피 보이스·잡카드 조립물 관찰 대상.
+17. https://www.wanted.co.kr — 원티드 공식 마케팅 + 잡 마켓플레이스. 제품 표면의 카피 보이스·잡카드 조립물 관찰 대상. 페이지가 싣는 `asset.wanted.co.kr` 스타일시트가 몽타주 `--semantic-*`·`--atomic-*` 커스텀 프로퍼티를 그대로 담는다(해시 파일명이라 페이지에서 찾아 연다).
+18. https://github.com/wanteddev/montage-web/blob/c333375c9ebbf0baf30d5e85fe29451048118ab9/packages/theme/src/theme/semantic/index.ts — 시맨틱 토큰 소스(라이트·다크). foreground 의 positive·cautionary·negative·neutral 과 surface(상태색 opacity[8]) 값. 커밋을 고정한 링크다.
+19. https://github.com/wanteddev/montage-web/blob/c333375c9ebbf0baf30d5e85fe29451048118ab9/packages/core/src/components/content-badge/style.ts — ContentBadge 스타일. accent 변형의 글자 = accent 색, 바탕 = 그 색 opacity[8], 테두리 = opacity[43].
+20. https://github.com/wanteddev/montage-web/blob/c333375c9ebbf0baf30d5e85fe29451048118ab9/packages/core/src/components/with-interaction/style.ts — 공통 인터랙션 층. 덮개 한 장과 hover·active 투명도 단계(normal·light·strong).
+21. https://github.com/wanteddev/montage-web/blob/c333375c9ebbf0baf30d5e85fe29451048118ab9/packages/core/src/components/button/index.tsx — Button 이 인터랙션 층에 넘기는 색(foreground.neutral.primary)과 변형별 강도(solid primary·negative 는 strong).
+22. https://github.com/wanteddev/montage-web/blob/c333375c9ebbf0baf30d5e85fe29451048118ab9/packages/core/src/components/section-message/style.ts — SectionMessage 두 겹 바탕(중립 배경 opacity[88] + 상태색 opacity[5])과 상태별 아이콘 색.
+23. https://github.com/wanteddev/montage-web/blob/c333375c9ebbf0baf30d5e85fe29451048118ab9/packages/core/src/components/section-message/index.tsx — SectionMessage 제목·설명 글자색(foreground.neutral.primary·secondary — 상태와 무관).
