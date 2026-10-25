@@ -332,7 +332,7 @@ Voice는 **친근한 2인칭 + 부드러운 존댓말**로 요약된다. 사무�
 
 ## Colors
 
-> **팔레트 정정(2026-10-26).** 상태 글자색 `{colors.fg-danger}`·`{colors.fg-success}`·`{colors.fg-warning}`(다크 짝 포함)을 몽타주 시맨틱 값으로 고쳤다 — 원티드 실서비스 스타일시트가 같은 값을 싣고, 번들 값은 실서비스에도 몽타주에도 없었다 [src:17][src:18]. 배지 바탕 `{colors.surface-success}` 류(상태색 8%)와 버튼 hover·active 의 인터랙션 층 `{colors.interaction-strong-hover}` 류를 새로 실었다 [src:20][src:21]. 램프 앵커(`{colors.red-700}` 등)는 번들 값 그대로다(`## Known Gaps`).
+> **팔레트 정정(2026-10-26).** 상태 글자색 `{colors.fg-danger}`·`{colors.fg-success}`·`{colors.fg-warning}`(다크 짝 포함)을 몽타주 시맨틱 값으로 고쳤다 — 원티드 실서비스 스타일시트가 같은 값을 싣고, 번들 값은 실서비스에도 몽타주에도 없었다 [src:17][src:18]. 배지 바탕 `{colors.surface-success}` 류(상태색 8%) [src:18][src:19]와 버튼 hover·active 의 인터랙션 층 `{colors.interaction-strong-hover}` 류 [src:20][src:21]를 새로 실었다. 램프 앵커(`{colors.red-700}` 등)는 번들 값 그대로다(`## Known Gaps`).
 
 원본 hex는 SSOT 번들 `colors_and_type.css`에 정의되어 있으며, 본 문서는 OKLCH로 변환해 표기한다. 시스템의 구조적 특징은 두 가지이며 **둘 다 몽타주 공개 토큰으로 확인된다** — (1) **dual neutral ramp** (채도 0의 흑백 톤과 cool blue-tinted 톤이 별도 램프로 운영됨), (2) **alpha multiplier로 텍스트 위계를 합성** (별도 gray hex를 정의하는 대신 한 베이스 색 위에 알파 사다리를 곱해 라이트/다크 양쪽에서 일관된 "soft black/white" 톤을 만든다).
 
