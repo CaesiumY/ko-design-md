@@ -91,6 +91,8 @@ colors:
   surface-danger: oklch(0.662 0.225 26 / 0.08)   # #FF4242 @ 8% — 몽타주 surface.negative.primary · 배지 바탕
   surface-success: oklch(0.700 0.213 146 / 0.08)   # #00BF40 @ 8% — 몽타주 surface.positive.primary · 배지 바탕
   surface-warning: oklch(0.760 0.176 61 / 0.08)   # #FF9200 @ 8% — 몽타주 surface.cautionary.primary · 배지 바탕
+  interaction-strong-hover: oklch(0.205 0.004 286 / 0.075)   # #171719 @ 7.5% — 몽타주 인터랙션 층 강한 단계 hover · 덮개 색 foreground.neutral.primary
+  interaction-strong-active: oklch(0.205 0.004 286 / 0.18)   # #171719 @ 18% — 몽타주 인터랙션 층 강한 단계 active
   # Foreground (alpha multiplier on neutral-825 / neutral-875)
   fg-strong: oklch(0.148 0.004 277)   # @ alpha 1 (= neutral-960)
   fg-default: oklch(0.259 0.010 273 / 0.88)   # body
@@ -124,6 +126,8 @@ colors:
   dark-surface-danger: oklch(0.700 0.191 23 / 0.08)   # #FF6363 @ 8% — 몽타주 surface.negative.primary (dark)
   dark-surface-success: oklch(0.761 0.214 148 / 0.08)   # #1ED45A @ 8% — 몽타주 surface.positive.primary (dark)
   dark-surface-warning: oklch(0.802 0.157 69 / 0.08)   # #FFA938 @ 8% — 몽타주 surface.cautionary.primary (dark)
+  dark-interaction-strong-hover: oklch(0.976 0.001 286 / 0.075)   # #F7F7F8 @ 7.5% — 몽타주 인터랙션 층 강한 단계 hover (dark)
+  dark-interaction-strong-active: oklch(0.976 0.001 286 / 0.18)   # #F7F7F8 @ 18% — 몽타주 인터랙션 층 강한 단계 active (dark)
   # Foreground (alpha on white in dark theme)
   dark-fg-strong: oklch(1 0 0)
   dark-fg-default: oklch(1 0 0 / 0.88)
@@ -328,7 +332,7 @@ Voice는 **친근한 2인칭 + 부드러운 존댓말**로 요약된다. 사무�
 
 ## Colors
 
-> **팔레트 정정(2026-10-26).** 상태 글자색 `{colors.fg-danger}`·`{colors.fg-success}`·`{colors.fg-warning}`(다크 짝 포함)을 몽타주 시맨틱 값으로 고쳤다 — 원티드 실서비스 스타일시트가 같은 값을 싣고, 번들 값은 실서비스에도 몽타주에도 없었다 [src:17][src:18]. 배지 바탕 `{colors.surface-success}` 류(상태색 8%)를 새로 실었다. 램프 앵커(`{colors.red-700}` 등)는 번들 값 그대로다(`## Known Gaps`).
+> **팔레트 정정(2026-10-26).** 상태 글자색 `{colors.fg-danger}`·`{colors.fg-success}`·`{colors.fg-warning}`(다크 짝 포함)을 몽타주 시맨틱 값으로 고쳤다 — 원티드 실서비스 스타일시트가 같은 값을 싣고, 번들 값은 실서비스에도 몽타주에도 없었다 [src:17][src:18]. 배지 바탕 `{colors.surface-success}` 류(상태색 8%)와 버튼 hover·active 의 인터랙션 층 `{colors.interaction-strong-hover}` 류를 새로 실었다 [src:20]. 램프 앵커(`{colors.red-700}` 등)는 번들 값 그대로다(`## Known Gaps`).
 
 원본 hex는 SSOT 번들 `colors_and_type.css`에 정의되어 있으며, 본 문서는 OKLCH로 변환해 표기한다. 시스템의 구조적 특징은 두 가지이며 **둘 다 몽타주 공개 토큰으로 확인된다** — (1) **dual neutral ramp** (채도 0의 흑백 톤과 cool blue-tinted 톤이 별도 램프로 운영됨), (2) **alpha multiplier로 텍스트 위계를 합성** (별도 gray hex를 정의하는 대신 한 베이스 색 위에 알파 사다리를 곱해 라이트/다크 양쪽에서 일관된 "soft black/white" 톤을 만든다).
 
@@ -533,7 +537,7 @@ spring·bounce·parallax는 시스템 전반에서 사용되지 않는다. Hover
 
 ### button-primary
 
-solid 변형 — `{colors.bg-brand}` (`oklch(0.563 0.241 261)`) 배경 + `{colors.fg-on-brand}` (흰 텍스트). 화면당 가장 중요한 단일 액션에 사용. Hover·active 때 배경을 다른 색 단계로 갈지 않는다 — 몽타주의 공통 인터랙션 층이 `foreground.neutral.primary`(라이트 `#171719` ≈ `oklch(0.205 0.004 286)` · 다크 `#F7F7F8` ≈ `oklch(0.976 0.001 286)`) 한 색을 버튼 위에 덮고, solid primary 는 강한 단계라 hover 7.5% · active 18%다 [src:20][src:21].
+solid 변형 — `{colors.bg-brand}` (`oklch(0.563 0.241 261)`) 배경 + `{colors.fg-on-brand}` (흰 텍스트). 화면당 가장 중요한 단일 액션에 사용. Hover·active 때 배경을 다른 색 단계로 갈지 않는다 — 몽타주의 공통 인터랙션 층이 `foreground.neutral.primary`(라이트 `#171719` ≈ `oklch(0.205 0.004 286)` · 다크 `#F7F7F8` ≈ `oklch(0.976 0.001 286)`) 한 색을 버튼 위에 덮고, solid primary 는 강한 단계라 hover 7.5% · active 18%다 — `{colors.interaction-strong-hover}` · `{colors.interaction-strong-active}`(다크는 `dark-` 짝) [src:20][src:21].
 
 ### button-secondary
 

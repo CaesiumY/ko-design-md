@@ -193,7 +193,7 @@
   .btn-lg { height: 48px; padding: 0 28px; font-size: 16px; border-radius: 12px; }
   .btn-xl { height: 56px; padding: 0 32px; font-size: 17px; border-radius: 14px; }
   .btn-primary { background: var(--w-bg-brand); color: var(--w-fg-on-brand); }
-  /* md button-primary 절 · 몽타주 인터랙션 층 — hover·active 에 배경색 단계를 갈지 않고 foreground.neutral.primary(--w-overlay)를 버튼 위에 덮는다. solid primary·negative 는 강한 단계라 hover 7.5% · active 18%(montage-web packages/core/src/components/with-interaction/style.ts · button/index.tsx). 덮개가 칠하는 색을 한 색으로 칠한다. 버튼 바탕이나 덮개 색이 바뀌면 다시 잰다. */
+  /* md button-primary 절 · 몽타주 인터랙션 층 — hover·active 에 배경색 단계를 갈지 않고 foreground.neutral.primary(--w-overlay)를 버튼 위에 덮는다. solid primary·negative 는 강한 단계라 hover 7.5% · active 18%(md interaction-strong-hover · interaction-strong-active, montage-web packages/core/src/components/with-interaction/style.ts · button/index.tsx). 덮개가 칠하는 색을 한 색으로 칠한다. 버튼 바탕이나 덮개 색이 바뀌면 다시 잰다. */
   .btn-primary:hover { background: color-mix(in srgb, var(--w-overlay) 7.5%, var(--w-bg-brand)); }
   .btn-primary:active { background: color-mix(in srgb, var(--w-overlay) 18%, var(--w-bg-brand)); }
   .btn-secondary { background: var(--w-bg-surface); border-color: var(--w-border-default); color: var(--w-fg-brand); }

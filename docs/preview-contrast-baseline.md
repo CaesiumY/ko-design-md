@@ -660,7 +660,7 @@ warn 만)이라 갱신이 강제되지 않고, 두 분류표의 비텍스트 행
 아래 caveat 의 합성 오차와 같은 방향이다. 그 구간의 읽기 수와 0.005 에서의 `both-published` 는 위 명령이 표와 함께
 `readings …` 줄로 낸다.
 
-**결과: `fail` 1873행 중 1382행이 두 색 모두 발행 토큰인 쌍이다.**
+**결과: `fail` 1873행 중 1392행이 두 색 모두 발행 토큰인 쌍이다.**
 
 **이 수도 위 절과 같은 두 방향의 오차를 진다.** 겹친 반투명 층·`opacity` 가 낀 표면은 입력이 모두 발행
 토큰이어도 `one-token`·`no-token` 칸에 들어가고(발행 쌍을 적게 센다), 우연히 토큰이나 합성 근처에 떨어진
@@ -714,7 +714,7 @@ warn 만)이라 갱신이 강제되지 않고, 두 분류표의 비텍스트 행
 | toss | non-text | 21 | 0 | 0 | 0 | 21 |
 | vapor-ui | text | 14 | 0 | 2 | 0 | 16 |
 | vapor-ui | non-text | 26 | 0 | 2 | 0 | 28 |
-| wanted | text | 45 | 0 | 9 | 7 | 61 |
+| wanted | text | 55 | 0 | 2 | 4 | 61 |
 | wanted | non-text | 10 | 0 | 5 | 0 | 15 |
 | yeogi | text | 33 | 0 | 5 | 1 | 39 |
 | yeogi | non-text | 4 | 0 | 2 | 7 | 13 |
@@ -722,7 +722,7 @@ warn 만)이라 갱신이 강제되지 않고, 두 분류표의 비텍스트 행
 | zigbang | non-text | 33 | 0 | 0 | 0 | 33 |
 
 **어느 슬러그부터 (2026-10-26 재집계 기준).** 고칠 수 있는 칸(`one-token`·`no-token`)이 큰 쪽은
-텍스트에서는 bezier 이고 greeting · codeit, 그다음 wanted · line-design-system · class101 이 뒤따른다. 단 #550 의 슬러그 티켓으로 이미 처리한 슬러그는, 텍스트
+텍스트에서는 bezier 이고 greeting · codeit, 그다음 line-design-system · class101 이 뒤따른다. 단 #550 의 슬러그 티켓으로 이미 처리한 슬러그는, 텍스트
 칸이 행마다 처리를 마친 뒤의 남은 행일 수 있다 — 무엇으로 처리했는지는 그 티켓의 PR 본문에 있고, 이 문단에는 쌓지
 않는다(비텍스트 칸은 그 티켓들이 따로 다루지 않았다 — 선언으로 함께 빠진 행은 있다). 비텍스트에서는 greeting 이 가장 크고, samsung-one-ui
 비텍스트는 미달 전부가 이 두 칸이다. 반대로 socar · zigbang · remember · kyobobook 텍스트 · seed-design 텍스트의 미달은 거의 전부

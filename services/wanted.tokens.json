@@ -408,6 +408,18 @@
       "group": "Semantic alias — Light"
     },
     {
+      "name": "interaction-strong-hover",
+      "value": "oklch(0.205 0.004 286 / 0.075)",
+      "note": "#171719 @ 7.5% — 몽타주 인터랙션 층 강한 단계 hover · 덮개 색 foreground.neutral.primary",
+      "group": "Semantic alias — Light"
+    },
+    {
+      "name": "interaction-strong-active",
+      "value": "oklch(0.205 0.004 286 / 0.18)",
+      "note": "#171719 @ 18% — 몽타주 인터랙션 층 강한 단계 active",
+      "group": "Semantic alias — Light"
+    },
+    {
       "name": "fg-strong",
       "value": "oklch(0.148 0.004 277)",
       "note": "@ alpha 1 (= neutral-960)",
@@ -569,6 +581,18 @@
       "name": "dark-surface-warning",
       "value": "oklch(0.802 0.157 69 / 0.08)",
       "note": "#FFA938 @ 8% — 몽타주 surface.cautionary.primary (dark)",
+      "group": "Semantic alias — Dark"
+    },
+    {
+      "name": "dark-interaction-strong-hover",
+      "value": "oklch(0.976 0.001 286 / 0.075)",
+      "note": "#F7F7F8 @ 7.5% — 몽타주 인터랙션 층 강한 단계 hover (dark)",
+      "group": "Semantic alias — Dark"
+    },
+    {
+      "name": "dark-interaction-strong-active",
+      "value": "oklch(0.976 0.001 286 / 0.18)",
+      "note": "#F7F7F8 @ 18% — 몽타주 인터랙션 층 강한 단계 active (dark)",
       "group": "Semantic alias — Dark"
     },
     {
