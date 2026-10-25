@@ -75,6 +75,7 @@
     --w-surface-danger:  oklch(0.662 0.225 26 / 0.08);
     --w-surface-success: oklch(0.700 0.213 146 / 0.08);
     --w-surface-warning: oklch(0.760 0.176 61 / 0.08);
+    --w-overlay: oklch(0.205 0.004 286);
 
     --w-fg-strong:    var(--w-neutral-960);
     --w-fg-default:   oklch(0.259 0.010 273 / 0.88);
@@ -192,9 +193,9 @@
   .btn-lg { height: 48px; padding: 0 28px; font-size: 16px; border-radius: 12px; }
   .btn-xl { height: 56px; padding: 0 32px; font-size: 17px; border-radius: 14px; }
   .btn-primary { background: var(--w-bg-brand); color: var(--w-fg-on-brand); }
-  /* frontmatter 밖에 발행된 값 — 몽타주 Button 은 hover·active 에 배경색 단계를 갈지 않고 공통 인터랙션 층(foreground.neutral.primary)을 덮는다. solid primary·negative 는 강한 단계라 hover 7.5% · active 18%(montage-web packages/core/src/components/with-interaction/style.ts · button/index.tsx). 덮개가 칠하는 색을 한 색으로 칠한다. 버튼 바탕이나 덮개 색이 바뀌면 다시 잰다. */
-  .btn-primary:hover { background: color-mix(in srgb, oklch(0.205 0.004 286) 7.5%, var(--w-bg-brand)); }
-  .btn-primary:active { background: color-mix(in srgb, oklch(0.205 0.004 286) 18%, var(--w-bg-brand)); }
+  /* md button-primary 절 · 몽타주 인터랙션 층 — hover·active 에 배경색 단계를 갈지 않고 foreground.neutral.primary(--w-overlay)를 버튼 위에 덮는다. solid primary·negative 는 강한 단계라 hover 7.5% · active 18%(montage-web packages/core/src/components/with-interaction/style.ts · button/index.tsx). 덮개가 칠하는 색을 한 색으로 칠한다. 버튼 바탕이나 덮개 색이 바뀌면 다시 잰다. */
+  .btn-primary:hover { background: color-mix(in srgb, var(--w-overlay) 7.5%, var(--w-bg-brand)); }
+  .btn-primary:active { background: color-mix(in srgb, var(--w-overlay) 18%, var(--w-bg-brand)); }
   .btn-secondary { background: var(--w-bg-surface); border-color: var(--w-border-default); color: var(--w-fg-brand); }
   .btn-secondary:hover { background: var(--w-blue-50); }
   .btn-tertiary { background: color-mix(in oklab, var(--w-neutral-700) 10%, transparent); color: var(--w-fg-default); }
@@ -204,8 +205,8 @@
   .btn-assistive-text { background: transparent; color: var(--w-fg-secondary); }
   .btn-assistive-text:hover { background: var(--w-bg-muted); }
   .btn-danger { background: var(--w-red-700); color: var(--w-fg-on-brand); }
-  .btn-danger:hover { background: color-mix(in srgb, oklch(0.205 0.004 286) 7.5%, var(--w-red-700)); }
-  .btn-danger:active { background: color-mix(in srgb, oklch(0.205 0.004 286) 18%, var(--w-red-700)); }
+  .btn-danger:hover { background: color-mix(in srgb, var(--w-overlay) 7.5%, var(--w-red-700)); }
+  .btn-danger:active { background: color-mix(in srgb, var(--w-overlay) 18%, var(--w-red-700)); }
   .btn-disabled { background: color-mix(in oklab, var(--w-neutral-700) 10%, transparent); color: var(--w-fg-disabled); cursor: not-allowed; }
   .btn .arrow { width: 14px; height: 14px; }
 
@@ -457,8 +458,8 @@
 
   .walert { display: flex; gap: 10px; padding: 14px 16px; border-radius: 12px; align-items: flex-start; font-size: 13px; font-weight: 500; line-height: 1.5; font-family: inherit; }
   .walert b { font-size: 14px; font-weight: 600; line-height: 1.4; font-family: inherit; display: block; margin-bottom: 2px; color: var(--w-fg-strong); }
-  .walert-ic { flex: none; width: 8px; height: 8px; margin-top: 6px; border-radius: 9999px; }
-  /* frontmatter 밖에 발행된 값 — 몽타주 SectionMessage 는 중립 배경 opacity[88] 위에 상태색(info 는 브랜드) opacity[5] 를 얹는다(montage-web packages/core/src/components/section-message/style.ts). md 의 상태색을 md opacity 사다리 alpha-5 로 bg-surface 위에 한 색으로 칠한다 — 바탕 위가 bg-surface 라 88% 층은 같은 색이 된다. 글자는 상태와 무관하게 제목 fg-strong · 설명 fg-default, 상태색은 왼쪽 점(.walert-ic — 아이콘 자리, 가상 요소로 그리면 측정기가 글자 배경을 판정 보류한다)에만. 상태색·surface 가 바뀌면 다시 잰다. */
+  .walert-ic { flex: none; width: 18px; height: 18px; margin-top: 1px; border-radius: 9999px; }
+  /* md alert 절 · 몽타주 SectionMessage — 중립 배경 opacity[88] 위에 상태색(info 는 브랜드 surface) opacity[5] 를 얹는다(montage-web packages/core/src/components/section-message/style.ts). md 의 상태색을 md opacity 사다리 alpha-5 로 bg-surface 위에 한 색으로 칠한다 — 바탕 위가 bg-surface 라 88% 층은 같은 색이 된다. 글자는 상태와 무관하게 제목 fg-strong · 설명 fg-default, 상태색은 왼쪽 아이콘 자리(.walert-ic — 가상 요소로 그리면 측정기가 알림 글자의 배경을 판정 보류한다)에만. 상태색·surface 가 바뀌면 다시 잰다. */
   .walert.info { background: color-mix(in srgb, var(--w-bg-brand) 5%, var(--w-bg-surface)); color: var(--w-fg-default); }
   .walert.info .walert-ic { background: var(--w-bg-brand); }
   .walert.danger { background: color-mix(in srgb, var(--w-fg-danger) 5%, var(--w-bg-surface)); color: var(--w-fg-default); }
@@ -593,6 +594,8 @@
     --w-surface-danger:  oklch(0.700 0.191 23 / 0.08);
     --w-surface-success: oklch(0.761 0.214 148 / 0.08);
     --w-surface-warning: oklch(0.802 0.157 69 / 0.08);
+    --w-overlay: oklch(0.976 0.001 286);
+    --w-brand-surface: oklch(0.633 0.198 259);
 
     --w-fg-strong:    oklch(1 0 0);
     --w-fg-default:   oklch(1 0 0 / 0.88);
@@ -705,9 +708,9 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .btn-lg { height: 48px; padding: 0 28px; font-size: 16px; border-radius: 12px; }
 [data-theme="dark"] .btn-xl { height: 56px; padding: 0 32px; font-size: 17px; border-radius: 14px; }
 [data-theme="dark"] .btn-primary { background: var(--w-bg-brand); color: var(--w-fg-on-brand); }
-/* frontmatter 밖에 발행된 값 — 몽타주 Button 은 hover·active 에 배경색 단계를 갈지 않고 공통 인터랙션 층(foreground.neutral.primary — 다크)을 덮는다. solid primary·negative 는 강한 단계라 hover 7.5% · active 18%(montage-web packages/core/src/components/with-interaction/style.ts · button/index.tsx). 덮개가 칠하는 색을 한 색으로 칠한다. 버튼 바탕이나 덮개 색이 바뀌면 다시 잰다. */
-[data-theme="dark"] .btn-primary:hover { background: color-mix(in srgb, oklch(0.976 0.001 286) 7.5%, var(--w-bg-brand)); }
-[data-theme="dark"] .btn-primary:active { background: color-mix(in srgb, oklch(0.976 0.001 286) 18%, var(--w-bg-brand)); }
+/* 라이트와 같은 몽타주 인터랙션 층 — 다크 덮개 색(--w-overlay)으로 칠한다. 버튼 바탕이나 덮개 색이 바뀌면 다시 잰다. */
+[data-theme="dark"] .btn-primary:hover { background: color-mix(in srgb, var(--w-overlay) 7.5%, var(--w-bg-brand)); }
+[data-theme="dark"] .btn-primary:active { background: color-mix(in srgb, var(--w-overlay) 18%, var(--w-bg-brand)); }
 [data-theme="dark"] .btn-secondary { background: transparent; border-color: var(--w-border-default); color: var(--w-fg-brand); }
 [data-theme="dark"] .btn-secondary:hover { background: var(--w-bg-muted); }
 [data-theme="dark"] .btn-tertiary { background: color-mix(in oklab, oklch(1 0 0) 10%, transparent); color: var(--w-fg-default); }
@@ -717,8 +720,8 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .btn-assistive-text { background: transparent; color: var(--w-fg-secondary); }
 [data-theme="dark"] .btn-assistive-text:hover { background: var(--w-bg-muted); }
 [data-theme="dark"] .btn-danger { background: var(--w-red-700); color: var(--w-fg-on-brand); }
-[data-theme="dark"] .btn-danger:hover { background: color-mix(in srgb, oklch(0.976 0.001 286) 7.5%, var(--w-red-700)); }
-[data-theme="dark"] .btn-danger:active { background: color-mix(in srgb, oklch(0.976 0.001 286) 18%, var(--w-red-700)); }
+[data-theme="dark"] .btn-danger:hover { background: color-mix(in srgb, var(--w-overlay) 7.5%, var(--w-red-700)); }
+[data-theme="dark"] .btn-danger:active { background: color-mix(in srgb, var(--w-overlay) 18%, var(--w-red-700)); }
 [data-theme="dark"] .btn-disabled { background: color-mix(in oklab, oklch(1 0 0) 8%, transparent); color: var(--w-fg-disabled); cursor: not-allowed; }
 [data-theme="dark"] .btn .arrow { width: 14px; height: 14px; }
 /* === Form & chips === */
@@ -941,10 +944,10 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .wdivider.thick { height: 8px; background: var(--w-bg-subtle); border-radius: 0; }
 [data-theme="dark"] .walert { display: flex; gap: 10px; padding: 14px 16px; border-radius: 12px; align-items: flex-start; font-size: 13px; font-weight: 500; line-height: 1.5; font-family: inherit; }
 [data-theme="dark"] .walert b { font-size: 14px; font-weight: 600; line-height: 1.4; font-family: inherit; display: block; margin-bottom: 2px; color: var(--w-fg-strong); }
-[data-theme="dark"] .walert-ic { flex: none; width: 8px; height: 8px; margin-top: 6px; border-radius: 9999px; }
-/* frontmatter 밖에 발행된 값 — 라이트와 같은 몽타주 SectionMessage 두 겹 바탕을 다크 bg-surface 위 한 색으로. 다크 상태색·surface 가 바뀌면 다시 잰다. */
-[data-theme="dark"] .walert.info { background: color-mix(in srgb, var(--w-bg-brand) 5%, var(--w-bg-surface)); color: var(--w-fg-default); }
-[data-theme="dark"] .walert.info .walert-ic { background: var(--w-bg-brand); }
+[data-theme="dark"] .walert-ic { flex: none; width: 18px; height: 18px; margin-top: 1px; border-radius: 9999px; }
+/* 라이트와 같은 몽타주 SectionMessage 두 겹 바탕을 다크 bg-surface 위 한 색으로. 다크 info 의 브랜드 surface(--w-brand-surface)는 몽타주 다크 값이고 md 에 토큰이 없다. 다크 상태색·surface 가 바뀌면 다시 잰다. */
+[data-theme="dark"] .walert.info { background: color-mix(in srgb, var(--w-brand-surface) 5%, var(--w-bg-surface)); color: var(--w-fg-default); }
+[data-theme="dark"] .walert.info .walert-ic { background: var(--w-brand-surface); }
 [data-theme="dark"] .walert.danger { background: color-mix(in srgb, var(--w-fg-danger) 5%, var(--w-bg-surface)); color: var(--w-fg-default); }
 [data-theme="dark"] .walert.danger .walert-ic { background: var(--w-fg-danger); }
 [data-theme="dark"] .walert.success { background: color-mix(in srgb, var(--w-fg-success) 5%, var(--w-bg-surface)); color: var(--w-fg-default); }
