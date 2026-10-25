@@ -238,6 +238,7 @@
     {
       "name": "red-700",
       "value": "oklch(0.546 0.220 27)",
+      "note": "번들 값 — 몽타주 negative 보다 어두운 단계 · 위험 버튼 채움·입력 오류 테두리용, 오류 글자는 fg-danger (Known Gaps)",
       "group": "Semantic signal"
     },
     {
@@ -259,6 +260,7 @@
     {
       "name": "green-600",
       "value": "oklch(0.673 0.211 144)",
+      "note": "번들 값 — 몽타주 positive 보다 어두운 단계 · 성공 글자는 fg-success (Known Gaps)",
       "group": "Semantic signal"
     },
     {
@@ -270,6 +272,7 @@
     {
       "name": "orange-700",
       "value": "oklch(0.625 0.148 56)",
+      "note": "번들 값 — 몽타주 cautionary 보다 어두운 단계 · 경고 글자는 fg-warning (Known Gaps)",
       "group": "Semantic signal"
     },
     {

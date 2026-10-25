@@ -58,13 +58,13 @@ colors:
   neutral-970: oklch(0.135 0.002 286)
   neutral-980: oklch(0.108 0.002 286)
   ## Semantic signal
-  red-700: oklch(0.546 0.220 27)
+  red-700: oklch(0.546 0.220 27)   # 번들 값 — 몽타주 negative 보다 어두운 단계 · 위험 버튼 채움·입력 오류 테두리용, 오류 글자는 fg-danger (Known Gaps)
   red-600: oklch(0.643 0.231 27)
   red-100: oklch(0.951 0.018 18)   # --bg-danger-subtle (#FEECEC)
   red-200: oklch(0.901 0.044 22)
-  green-600: oklch(0.673 0.211 144)
+  green-600: oklch(0.673 0.211 144)   # 번들 값 — 몽타주 positive 보다 어두운 단계 · 성공 글자는 fg-success (Known Gaps)
   green-100: oklch(0.968 0.052 154)   # --bg-success-subtle (#D9FFE6)
-  orange-700: oklch(0.625 0.148 56)
+  orange-700: oklch(0.625 0.148 56)   # 번들 값 — 몽타주 cautionary 보다 어두운 단계 · 경고 글자는 fg-warning (Known Gaps)
   orange-600: oklch(0.733 0.179 56)
   orange-100: oklch(0.967 0.030 81)   # --bg-warning-subtle (#FEF4E6)
   coral-600: oklch(0.686 0.210 41)   # brand gradient end-stop
