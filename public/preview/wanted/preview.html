@@ -327,15 +327,6 @@
     background: var(--w-green-600); display: flex; align-items: center; justify-content: center;
   }
   .toast .ic svg { width: 10px; height: 10px; stroke: oklch(1 0 0); stroke-width: 3; fill: none; }
-  .alert {
-    display: flex; align-items: flex-start; gap: 8px;
-    padding: 12px 16px; border-radius: 8px; font-size: 14px; font-weight: 500; line-height: 1.4; font-family: inherit;
-  }
-  .alert.danger  { background: var(--w-bg-danger-subtle);  color: var(--w-fg-danger); }
-  .alert.success { background: var(--w-bg-success-subtle); color: var(--w-fg-success); }
-  .alert.warn    { background: var(--w-bg-warning-subtle); color: var(--w-fg-warning); }
-  .alert.brand   { background: var(--w-bg-brand-subtle);   color: var(--w-fg-brand); }
-
   /* === Footer === */
   .footer {
     padding: 40px 0 56px;
@@ -835,14 +826,6 @@ html[data-theme="dark"], [data-theme="dark"] body {
     background: var(--w-green-600); display: flex; align-items: center; justify-content: center;
   }
 [data-theme="dark"] .toast .ic svg { width: 10px; height: 10px; stroke: oklch(1 0 0); stroke-width: 3; fill: none; }
-[data-theme="dark"] .alert {
-    display: flex; align-items: flex-start; gap: 8px;
-    padding: 12px 16px; border-radius: 8px; font-size: 14px; font-weight: 500; line-height: 1.4; font-family: inherit;
-  }
-[data-theme="dark"] .alert.danger { background: var(--w-bg-danger-subtle);  color: var(--w-fg-danger); }
-[data-theme="dark"] .alert.success { background: var(--w-bg-success-subtle); color: var(--w-fg-success); }
-[data-theme="dark"] .alert.warn { background: var(--w-bg-warning-subtle); color: var(--w-fg-warning); }
-[data-theme="dark"] .alert.brand { background: var(--w-bg-brand-subtle);   color: oklch(0.802 0.105 254); }
 /* === Footer === */
 [data-theme="dark"] .footer {
     padding: 40px 0 56px;
@@ -1142,18 +1125,12 @@ html[data-theme="dark"], [data-theme="dark"] body {
       </div>
 
       <div class="palette-row">
-        <p class="row-label">FEEDBACK · toast (bg-inverse + green-600 ic) · subtle tint (bg-*-subtle + semantic fg)</p>
-        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 12px;">
+        <p class="row-label">FEEDBACK · toast (bg-inverse + green-600 ic)</p>
+        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
           <span class="toast">
             <span class="ic"><svg viewBox="0 0 24 24"><polyline points="4,12 10,18 20,6"></polyline></svg></span>
             지원이 완료되었어요
           </span>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-          <div class="alert success">지원이 완료되었어요. 결과는 1주일 안에 알려드려요.</div>
-          <div class="alert danger">잠시 후 다시 시도해 주세요. 일시적인 오류가 발생했어요.</div>
-          <div class="alert warn">이력서를 한 번 더 확인해 주세요. 누락된 항목이 있어요.</div>
-          <div class="alert brand">맞춤형 직무 제안이 도착했어요. 지금 확인해 보세요.</div>
         </div>
       </div>
 

@@ -238,7 +238,7 @@
     {
       "name": "red-700",
       "value": "oklch(0.546 0.220 27)",
-      "note": "번들 값 — 몽타주 negative 보다 어두운 단계 · 위험 버튼 채움·입력 오류 테두리용, 오류 글자는 fg-danger (Known Gaps)",
+      "note": "번들 값 — 몽타주 foreground.negative.primary 보다 어두운 단계 · 채움·오류 테두리·파괴적 메뉴 글자에 쓰고, 오류 helper 글자는 fg-danger (Known Gaps)",
       "group": "Semantic signal"
     },
     {
@@ -260,7 +260,7 @@
     {
       "name": "green-600",
       "value": "oklch(0.673 0.211 144)",
-      "note": "번들 값 — 몽타주 positive 보다 어두운 단계 · 성공 글자는 fg-success (Known Gaps)",
+      "note": "번들 값 — 몽타주 foreground.positive.primary 보다 어두운 단계 · 성공 글자는 fg-success (Known Gaps)",
       "group": "Semantic signal"
     },
     {
@@ -272,7 +272,7 @@
     {
       "name": "orange-700",
       "value": "oklch(0.625 0.148 56)",
-      "note": "번들 값 — 몽타주 cautionary 보다 어두운 단계 · 경고 글자는 fg-warning (Known Gaps)",
+      "note": "번들 값 — 몽타주 foreground.cautionary.primary 보다 어두운 단계 · 경고 글자는 fg-warning (Known Gaps)",
       "group": "Semantic signal"
     },
     {
@@ -416,7 +416,7 @@
     {
       "name": "interaction-strong-active",
       "value": "oklch(0.205 0.004 286 / 0.18)",
-      "note": "#171719 @ 18% — 몽타주 인터랙션 층 강한 단계 active",
+      "note": "#171719 @ 18% — 몽타주 인터랙션 층 강한 단계 active · 덮개 색 foreground.neutral.primary",
       "group": "Semantic alias — Light"
     },
     {
@@ -586,13 +586,13 @@
     {
       "name": "dark-interaction-strong-hover",
       "value": "oklch(0.976 0.001 286 / 0.075)",
-      "note": "#F7F7F8 @ 7.5% — 몽타주 인터랙션 층 강한 단계 hover (dark)",
+      "note": "#F7F7F8 @ 7.5% — 몽타주 인터랙션 층 강한 단계 hover · 덮개 색 foreground.neutral.primary (dark)",
       "group": "Semantic alias — Dark"
     },
     {
       "name": "dark-interaction-strong-active",
       "value": "oklch(0.976 0.001 286 / 0.18)",
-      "note": "#F7F7F8 @ 18% — 몽타주 인터랙션 층 강한 단계 active (dark)",
+      "note": "#F7F7F8 @ 18% — 몽타주 인터랙션 층 강한 단계 active · 덮개 색 foreground.neutral.primary (dark)",
       "group": "Semantic alias — Dark"
     },
     {

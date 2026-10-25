@@ -58,13 +58,13 @@ colors:
   neutral-970: oklch(0.135 0.002 286)
   neutral-980: oklch(0.108 0.002 286)
   ## Semantic signal
-  red-700: oklch(0.546 0.220 27)   # 번들 값 — 몽타주 negative 보다 어두운 단계 · 위험 버튼 채움·입력 오류 테두리용, 오류 글자는 fg-danger (Known Gaps)
+  red-700: oklch(0.546 0.220 27)   # 번들 값 — 몽타주 foreground.negative.primary 보다 어두운 단계 · 채움·오류 테두리·파괴적 메뉴 글자에 쓰고, 오류 helper 글자는 fg-danger (Known Gaps)
   red-600: oklch(0.643 0.231 27)
   red-100: oklch(0.951 0.018 18)   # --bg-danger-subtle (#FEECEC)
   red-200: oklch(0.901 0.044 22)
-  green-600: oklch(0.673 0.211 144)   # 번들 값 — 몽타주 positive 보다 어두운 단계 · 성공 글자는 fg-success (Known Gaps)
+  green-600: oklch(0.673 0.211 144)   # 번들 값 — 몽타주 foreground.positive.primary 보다 어두운 단계 · 성공 글자는 fg-success (Known Gaps)
   green-100: oklch(0.968 0.052 154)   # --bg-success-subtle (#D9FFE6)
-  orange-700: oklch(0.625 0.148 56)   # 번들 값 — 몽타주 cautionary 보다 어두운 단계 · 경고 글자는 fg-warning (Known Gaps)
+  orange-700: oklch(0.625 0.148 56)   # 번들 값 — 몽타주 foreground.cautionary.primary 보다 어두운 단계 · 경고 글자는 fg-warning (Known Gaps)
   orange-600: oklch(0.733 0.179 56)
   orange-100: oklch(0.967 0.030 81)   # --bg-warning-subtle (#FEF4E6)
   coral-600: oklch(0.686 0.210 41)   # brand gradient end-stop
@@ -92,7 +92,7 @@ colors:
   surface-success: oklch(0.700 0.213 146 / 0.08)   # #00BF40 @ 8% — 몽타주 surface.positive.primary · 배지 바탕
   surface-warning: oklch(0.760 0.176 61 / 0.08)   # #FF9200 @ 8% — 몽타주 surface.cautionary.primary · 배지 바탕
   interaction-strong-hover: oklch(0.205 0.004 286 / 0.075)   # #171719 @ 7.5% — 몽타주 인터랙션 층 강한 단계 hover · 덮개 색 foreground.neutral.primary
-  interaction-strong-active: oklch(0.205 0.004 286 / 0.18)   # #171719 @ 18% — 몽타주 인터랙션 층 강한 단계 active
+  interaction-strong-active: oklch(0.205 0.004 286 / 0.18)   # #171719 @ 18% — 몽타주 인터랙션 층 강한 단계 active · 덮개 색 foreground.neutral.primary
   # Foreground (alpha multiplier on neutral-825 / neutral-875)
   fg-strong: oklch(0.148 0.004 277)   # @ alpha 1 (= neutral-960)
   fg-default: oklch(0.259 0.010 273 / 0.88)   # body
@@ -126,8 +126,8 @@ colors:
   dark-surface-danger: oklch(0.700 0.191 23 / 0.08)   # #FF6363 @ 8% — 몽타주 surface.negative.primary (dark)
   dark-surface-success: oklch(0.761 0.214 148 / 0.08)   # #1ED45A @ 8% — 몽타주 surface.positive.primary (dark)
   dark-surface-warning: oklch(0.802 0.157 69 / 0.08)   # #FFA938 @ 8% — 몽타주 surface.cautionary.primary (dark)
-  dark-interaction-strong-hover: oklch(0.976 0.001 286 / 0.075)   # #F7F7F8 @ 7.5% — 몽타주 인터랙션 층 강한 단계 hover (dark)
-  dark-interaction-strong-active: oklch(0.976 0.001 286 / 0.18)   # #F7F7F8 @ 18% — 몽타주 인터랙션 층 강한 단계 active (dark)
+  dark-interaction-strong-hover: oklch(0.976 0.001 286 / 0.075)   # #F7F7F8 @ 7.5% — 몽타주 인터랙션 층 강한 단계 hover · 덮개 색 foreground.neutral.primary (dark)
+  dark-interaction-strong-active: oklch(0.976 0.001 286 / 0.18)   # #F7F7F8 @ 18% — 몽타주 인터랙션 층 강한 단계 active · 덮개 색 foreground.neutral.primary (dark)
   # Foreground (alpha on white in dark theme)
   dark-fg-strong: oklch(1 0 0)
   dark-fg-default: oklch(1 0 0 / 0.88)
@@ -332,7 +332,7 @@ Voice는 **친근한 2인칭 + 부드러운 존댓말**로 요약된다. 사무�
 
 ## Colors
 
-> **팔레트 정정(2026-10-26).** 상태 글자색 `{colors.fg-danger}`·`{colors.fg-success}`·`{colors.fg-warning}`(다크 짝 포함)을 몽타주 시맨틱 값으로 고쳤다 — 원티드 실서비스 스타일시트가 같은 값을 싣고, 번들 값은 실서비스에도 몽타주에도 없었다 [src:17][src:18]. 배지 바탕 `{colors.surface-success}` 류(상태색 8%)와 버튼 hover·active 의 인터랙션 층 `{colors.interaction-strong-hover}` 류를 새로 실었다 [src:20]. 램프 앵커(`{colors.red-700}` 등)는 번들 값 그대로다(`## Known Gaps`).
+> **팔레트 정정(2026-10-26).** 상태 글자색 `{colors.fg-danger}`·`{colors.fg-success}`·`{colors.fg-warning}`(다크 짝 포함)을 몽타주 시맨틱 값으로 고쳤다 — 원티드 실서비스 스타일시트가 같은 값을 싣고, 번들 값은 실서비스에도 몽타주에도 없었다 [src:17][src:18]. 배지 바탕 `{colors.surface-success}` 류(상태색 8%)와 버튼 hover·active 의 인터랙션 층 `{colors.interaction-strong-hover}` 류를 새로 실었다 [src:20][src:21]. 램프 앵커(`{colors.red-700}` 등)는 번들 값 그대로다(`## Known Gaps`).
 
 원본 hex는 SSOT 번들 `colors_and_type.css`에 정의되어 있으며, 본 문서는 OKLCH로 변환해 표기한다. 시스템의 구조적 특징은 두 가지이며 **둘 다 몽타주 공개 토큰으로 확인된다** — (1) **dual neutral ramp** (채도 0의 흑백 톤과 cool blue-tinted 톤이 별도 램프로 운영됨), (2) **alpha multiplier로 텍스트 위계를 합성** (별도 gray hex를 정의하는 대신 한 베이스 색 위에 알파 사다리를 곱해 라이트/다크 양쪽에서 일관된 "soft black/white" 톤을 만든다).
 
@@ -557,7 +557,7 @@ text 변형 — 투명 배경 + `{colors.fg-brand}` 텍스트, 보더 없음. Ho
 
 ### button-danger
 
-`{colors.red-700}` (`oklch(0.546 0.220 27)`) 배경 + 흰 텍스트. 파괴적 액션 전용. Hover·active 는 `### button-primary` 와 같은 인터랙션 층(강한 단계)이다 [src:21].
+`{colors.red-700}` (`oklch(0.546 0.220 27)`) 배경 + 흰 텍스트. 파괴적 액션 전용. Hover·active 는 `### button-primary` 와 같은 인터랙션 층(강한 단계 — `{colors.interaction-strong-hover}` · `{colors.interaction-strong-active}`)이다 [src:21].
 
 ### button-disabled
 
@@ -621,7 +621,7 @@ filter bar 안쪽 작은 칩 변형. resting은 chip과 동일하지만 padding�
 
 ### badge
 
-6px 라운드(컴포넌트 로컬, `{rounded.radius-4}`보다 한 단계 큼), padding `5 8`, font 12/600 — chip보다 작고 정보 밀도 높은 표면에 쓴다. 변형은 시맨틱 색에 매핑된 washed 배경으로 운영된다 — **brand**(`{colors.bg-brand-subtle}` + `{colors.fg-brand}`), **solid**(`{colors.bg-brand}` + 흰 텍스트), **danger/success/warning**(`{colors.surface-danger}`/`{colors.surface-success}`/`{colors.surface-warning}` — 각 시맨틱 fg 의 8%, 다크는 `dark-` 짝 — 바탕 + 같은 시맨틱 fg 글자; 몽타주 ContentBadge 가 accent 색을 글자로, 그 8%를 바탕으로 쓰는 것과 같다 [src:19]), **neutral**(`{colors.neutral-100}` + `{colors.fg-default}`). `dot` 변형은 앞에 6px currentColor 원을 붙이고, `count` 변형은 18×18 pill(`{rounded.radius-full}`)에 `{colors.red-700}` 배경 + 흰 11px 숫자를 얹는 알림 카운트다.
+6px 라운드(컴포넌트 로컬, `{rounded.radius-4}`보다 한 단계 큼), padding `5 8`, font 12/600 — chip보다 작고 정보 밀도 높은 표면에 쓴다. 변형은 시맨틱 색에 매핑된 washed 배경으로 운영된다 — **brand**(`{colors.bg-brand-subtle}` + `{colors.fg-brand}`), **solid**(`{colors.bg-brand}` + 흰 텍스트), **danger/success/warning**(`{colors.surface-danger}`/`{colors.surface-success}`/`{colors.surface-warning}` — 각 시맨틱 fg 의 8%, 다크는 `dark-` 짝 — 바탕 + 같은 시맨틱 fg 글자; 몽타주 ContentBadge 가 accent 색을 글자로, 그 8%를 바탕으로 쓰는 것과 바탕·글자가 같다 — ContentBadge 의 테두리(opacity 43%)는 싣지 않았다 [src:19]), **neutral**(`{colors.neutral-100}` + `{colors.fg-default}`). `dot` 변형은 앞에 6px currentColor 원을 붙이고, `count` 변형은 18×18 pill(`{rounded.radius-full}`)에 `{colors.red-700}` 배경 + 흰 11px 숫자를 얹는 알림 카운트다.
 
 ### header
 
