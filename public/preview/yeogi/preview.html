@@ -112,7 +112,9 @@
         --card: var(--yg-white);
         --card-foreground: var(--yg-neutral-900);
         --primary: var(--yg-red-800);
-        --primary-foreground: oklch(0.99 0.006 25);
+        /* 파생색 되돌림 · 발행값 — 빨강 버튼 글자는 흰색에 분홍을 살짝 섞은 파생색(0.99 0.006 25)이었고, md common-100(흰색)으로
+           돌렸다(라이트 .btn--primary 3.46 → 3.58 · .btn--dprimary 4.31 → 4.45 — 둘 다 여전히 4.5 아래, 발행색끼리). --primary 나 --yg-red-900 이 바뀌면 다시 잰다. */
+        --primary-foreground: var(--yg-white);
         --secondary: var(--yg-cyan-800);
         --secondary-foreground: oklch(0.99 0.006 250);
         --muted: var(--yg-neutral-50);
@@ -170,7 +172,9 @@
         --card: oklch(0.228 0.007 35);
         --card-foreground: oklch(0.965 0.003 60);
         --primary: oklch(0.665 0.216 28);
-        --primary-foreground: oklch(0.995 0.006 25);
+        /* 파생색 되돌림 · 발행값 — 다크 빨강 버튼 글자도 흰색에 분홍을 섞은 파생색(0.995 0.006 25)이었고, md common-100(흰색)으로
+           돌렸다(.btn--dprimary 4.36 → 4.45 · .btn--primary 3.29 → 3.36 — 여전히 4.5 아래). 다크 --primary 나 --yg-red-900 이 바뀌면 다시 잰다. */
+        --primary-foreground: var(--yg-white);
         --secondary: oklch(0.7 0.16 252);
         --secondary-foreground: oklch(0.14 0.02 250);
         --muted: oklch(0.255 0.006 35);
@@ -194,8 +198,10 @@
         --marker-surface: oklch(0.285 0.008 40);
         --marker-surface-viewed: oklch(0.235 0.006 40);
         --marker-ink: oklch(0.97 0.003 60);
-        --marker-ink-viewed: oklch(0.64 0.004 60);
-        --marker-ink-sold: oklch(0.55 0.004 60);
+        /* md 토큰 아님 · 파생색 — 다크 열람·랭킹 하위 마커 글자를 L 0.64 → 0.67 로 밝혔다(랭킹 하위 마커 위 4.29 → 4.81, 열람 마커 위 4.99 → 5.60). --marker-surface · --marker-surface-viewed 다크 값이 바뀌면 다시 잰다. */
+        --marker-ink-viewed: oklch(0.67 0.004 60);
+        /* md 토큰 아님 · 파생색 — 다크 판매 완료 마커 글자를 L 0.55 → 0.63 으로 밝혔다(3.44 → 4.79). 열람 마커 글자(0.67)보다는 어둡게 둔다. --marker-surface-viewed 다크 값이 바뀌면 다시 잰다. */
+        --marker-ink-sold: oklch(0.63 0.004 60);
         --marker-border: oklch(0.42 0.008 40);
         --marker-border-sold: oklch(0.36 0.006 40);
         --marker-selected: oklch(0.7 0.16 252);
@@ -210,7 +216,8 @@
         --mem-grad-b: oklch(0.5 0.2 282);
         --tier1-bg: color-mix(in oklab, var(--yg-violet-400) 30%, var(--card));
         --tier1-ink: oklch(0.85 0.09 290);
-        --tier2-bg: oklch(0.64 0.21 285);
+        /* md 토큰 아님 · 파생색 — 다크 멤버십 2단계 배지 바탕을 같은 색상각·채도 비율로 L 0.64 → 0.565 로 어둡게 했다(흰 글자 3.54 → 4.72). violet-600 되돌림은 4.52 라 경계선이다. --on-accent 가 바뀌면 다시 잰다. */
+        --tier2-bg: oklch(0.565 0.185 285);
         --tier3-bg: oklch(0.55 0.205 283);
 
         --field-bg: oklch(0.2 0.006 35);
@@ -1212,7 +1219,9 @@
         --card: var(--yg-white);
         --card-foreground: var(--yg-neutral-900);
         --primary: var(--yg-red-800);
-        --primary-foreground: oklch(0.99 0.006 25);
+        /* 파생색 되돌림 · 발행값 — 빨강 버튼 글자는 흰색에 분홍을 살짝 섞은 파생색(0.99 0.006 25)이었고, md common-100(흰색)으로
+           돌렸다(라이트 .btn--primary 3.46 → 3.58 · .btn--dprimary 4.31 → 4.45 — 둘 다 여전히 4.5 아래, 발행색끼리). --primary 나 --yg-red-900 이 바뀌면 다시 잰다. */
+        --primary-foreground: var(--yg-white);
         --secondary: var(--yg-cyan-800);
         --secondary-foreground: oklch(0.99 0.006 250);
         --muted: var(--yg-neutral-50);
@@ -1269,7 +1278,9 @@
         --card: oklch(0.228 0.007 35);
         --card-foreground: oklch(0.965 0.003 60);
         --primary: oklch(0.665 0.216 28);
-        --primary-foreground: oklch(0.995 0.006 25);
+        /* 파생색 되돌림 · 발행값 — 다크 빨강 버튼 글자도 흰색에 분홍을 섞은 파생색(0.995 0.006 25)이었고, md common-100(흰색)으로
+           돌렸다(.btn--dprimary 4.36 → 4.45 · .btn--primary 3.29 → 3.36 — 여전히 4.5 아래). 다크 --primary 나 --yg-red-900 이 바뀌면 다시 잰다. */
+        --primary-foreground: var(--yg-white);
         --secondary: oklch(0.7 0.16 252);
         --secondary-foreground: oklch(0.14 0.02 250);
         --muted: oklch(0.255 0.006 35);
@@ -1293,8 +1304,10 @@
         --marker-surface: oklch(0.285 0.008 40);
         --marker-surface-viewed: oklch(0.235 0.006 40);
         --marker-ink: oklch(0.97 0.003 60);
-        --marker-ink-viewed: oklch(0.64 0.004 60);
-        --marker-ink-sold: oklch(0.55 0.004 60);
+        /* md 토큰 아님 · 파생색 — 다크 열람·랭킹 하위 마커 글자를 L 0.64 → 0.67 로 밝혔다(랭킹 하위 마커 위 4.29 → 4.81, 열람 마커 위 4.99 → 5.60). --marker-surface · --marker-surface-viewed 다크 값이 바뀌면 다시 잰다. */
+        --marker-ink-viewed: oklch(0.67 0.004 60);
+        /* md 토큰 아님 · 파생색 — 다크 판매 완료 마커 글자를 L 0.55 → 0.63 으로 밝혔다(3.44 → 4.79). 열람 마커 글자(0.67)보다는 어둡게 둔다. --marker-surface-viewed 다크 값이 바뀌면 다시 잰다. */
+        --marker-ink-sold: oklch(0.63 0.004 60);
         --marker-border: oklch(0.42 0.008 40);
         --marker-border-sold: oklch(0.36 0.006 40);
         --marker-selected: oklch(0.7 0.16 252);
@@ -1309,7 +1322,8 @@
         --mem-grad-b: oklch(0.5 0.2 282);
         --tier1-bg: color-mix(in oklab, var(--yg-violet-400) 30%, var(--card));
         --tier1-ink: oklch(0.85 0.09 290);
-        --tier2-bg: oklch(0.64 0.21 285);
+        /* md 토큰 아님 · 파생색 — 다크 멤버십 2단계 배지 바탕을 같은 색상각·채도 비율로 L 0.64 → 0.565 로 어둡게 했다(흰 글자 3.54 → 4.72). violet-600 되돌림은 4.52 라 경계선이다. --on-accent 가 바뀌면 다시 잰다. */
+        --tier2-bg: oklch(0.565 0.185 285);
         --tier3-bg: oklch(0.55 0.205 283);
 
         --field-bg: oklch(0.2 0.006 35);

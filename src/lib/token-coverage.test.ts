@@ -88,7 +88,7 @@ interface Coverage {
 // different claim and is refused below.
 const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   "11st": { annotated: 31, judged: 31, drift: 33 },
-  baemin: { annotated: 0, judged: 0, drift: 37 },
+  baemin: { annotated: 0, judged: 0, drift: 38 },
   banksalad: { annotated: 182, judged: 182, drift: 182 },
   bezier: { annotated: 0, judged: 0, drift: 43 },
   class101: { annotated: 34, judged: 33, drift: 34 },
@@ -113,7 +113,7 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   "vapor-ui": { annotated: 223, judged: 223, drift: 223 },
   wanted: { annotated: 13, judged: 12, drift: 111, webfont: true },
   yeogi: { annotated: 51, judged: 51, drift: 73, webfont: true },
-  zigbang: { annotated: 33, judged: 33, drift: 39 },
+  zigbang: { annotated: 37, judged: 37, drift: 43 },
 }
 // Column sums when the table was written (2026-09-12): annotated 1136, judged
 // 1127, drift 1472. Deliberately not asserted — a total is the shared line

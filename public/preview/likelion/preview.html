@@ -174,7 +174,10 @@
       box-shadow: 0 30px 60px var(--ll-shadow-color);
       min-width: 0;
     }
-    .quote-card .mark { font-size: 40px; font-weight: 800; line-height: 1; opacity: 0.5; }
+    /* 파생색 되돌림 · 발행값 — 인용 카드의 따옴표·출처는 발행 --ll-primary-foreground(흰색)에 투명도 .5 · .85 를 얹은 파생색이었고,
+       투명도를 걷어 발행 흰색으로 돌렸다(라이트 따옴표 1.69 → 3.02 큰 글자라 경계선 · 출처 2.54 → 3.02 미달 — 발행색끼리. 다크
+       출처 6.05 → 7.56, 다크 따옴표 2.78 → 7.56 도 함께 — 다크만 투명도를 .75 로 올리던 규칙은 걷었다). --ll-bg-primary 나 --ll-primary-foreground 가 바뀌면 다시 잰다. */
+    .quote-card .mark { font-size: 40px; font-weight: 800; line-height: 1; }
     .quote-card p {
       margin: 10px 0 0;
       font-size: var(--ll-fs-h4);
@@ -188,7 +191,7 @@
       font-style: normal;
       font-size: var(--ll-fs-body3);
       font-weight: 600;
-      opacity: 0.85;
+      /* 투명도(.85)를 걷은 자리 — 사연은 위 .quote-card .mark 주석. */
     }
 
     @media (max-width: 860px) {
@@ -778,6 +781,10 @@
       --accent-glow: var(--ll-bg-primary);
       --rule-strong: var(--ll-border-normal);
     }
+    /* md 토큰 아님 · 파생색 — 다크 날짜 선택기의 이전·다음 달 날짜는 다크 --ll-fg-disabled oklch(0.46 0.014 258) 이었고,
+       이 규칙만 같은 색상각·채도로 밝혔다(2.47 → 4.87). 같은 변수를 쓰는 비활성 글자는 그대로다. 다크
+       --ll-bg-white(달력 바탕)가 바뀌면 다시 잰다. */
+    [data-theme="dark"] .dp-grid .day.muted { color: oklch(0.62 0.014 258); }
   </style>
 </head>
 <body>
@@ -882,7 +889,7 @@
             <div class="form-row">
               <label class="checkbox"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></span>알림 수신 동의</label>
               <label class="checkbox checked"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></span>이용약관 동의</label>
-              <label class="checkbox disabled"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></span>선택 불가 항목</label>
+              <label class="checkbox disabled" aria-disabled="true"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></span>선택 불가 항목</label>
             </div>
           </div>
           <div class="demo-block">
@@ -914,7 +921,7 @@
               <span class="help">포커스 상태</span>
             </div>
             <div class="field">
-              <label class="is-disabled" for="demo-nickname">닉네임</label>
+              <label class="is-disabled" for="demo-nickname" aria-disabled="true">닉네임</label>
               <div class="text-field is-disabled">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg>
                 <input id="demo-nickname" type="text" placeholder="비활성 필드" disabled>

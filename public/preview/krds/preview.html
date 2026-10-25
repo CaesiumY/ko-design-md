@@ -696,16 +696,22 @@
   .kbadge.o-ter { color: var(--muted-foreground); border: 1px solid var(--border); }
   .kbadge.s-pri { color: var(--primary-foreground); background: var(--krds-primary-50); }
   .kbadge.s-pas { color: var(--krds-primary-70); background: var(--krds-primary-10); }
-  .kbadge.s-suc { color: var(--krds-success); background: color-mix(in oklab, var(--krds-success) 16%, var(--card)); }
+  /* md 토큰 아님 · 파생색 — 성공 배지 바탕은 success 를 card 에 16% 섞은 색이었고 10% 로 옅혔다(글자 대비 4.35 → 4.73).
+     success · card 값이나 섞는 비율이 바뀌면 다시 잰다. */
+  .kbadge.s-suc { color: var(--krds-success); background: color-mix(in oklab, var(--krds-success) 10%, var(--card)); }
   .kbadge.s-warn { color: var(--krds-warning); background: color-mix(in oklab, var(--krds-warning) 16%, var(--card)); }
-  .kbadge.s-dan { color: var(--krds-danger); background: color-mix(in oklab, var(--krds-danger) 16%, var(--card)); }
+  /* md 토큰 아님 · 파생색 — 위험 배지 바탕은 danger 를 card 에 16% 섞은 색이었고 2% 로 옅혔다(글자 대비 3.91 → 4.69).
+     danger 는 흰 바탕 위에서도 4.82 라 바탕을 거의 흰색까지 옮겨야 4.6 을 넘는다. danger · card 값이나 섞는 비율이 바뀌면 다시 잰다. */
+  .kbadge.s-dan { color: var(--krds-danger); background: color-mix(in oklab, var(--krds-danger) 2%, var(--card)); }
 
   /* Feedback */
   .alert-stack { display: grid; gap: 12px; }
   .alert { display: flex; gap: 12px; padding: 14px 16px; border-radius: 8px; border: 1px solid; align-items: flex-start; }
   .alert .a-icon { width: 24px; height: 24px; border-radius: 50%; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; }
   .alert .a-title { font-size: 15px; font-weight: 700; color: var(--foreground); margin: 0 0 2px; }
-  .alert .a-body { font-size: 13px; color: var(--muted-foreground); margin: 0; line-height: 1.55; }
+  /* 결정 · 발행 토큰 교체 — 메인테이너 결정. md 의 alert 절은 본문을 13px fg-2(gray-80)로 정하는데 프리뷰는 fg-3(muted)을
+     써서 파스텔 바탕 위 미달이었다. md 대로 fg-2 로 맞췄다(3.83~3.92 → 7.49~7.67). 알림 파스텔 바탕이나 gray-80 이 바뀌면 다시 잰다. */
+  .alert .a-body { font-size: 13px; color: var(--krds-gray-80); margin: 0; line-height: 1.55; }
   .alert.info { border-color: color-mix(in oklab, var(--krds-info) 45%, var(--card)); background: color-mix(in oklab, var(--krds-info) 12%, var(--card)); }
   .alert.info .a-icon { background: var(--krds-info); }
   .alert.success { border-color: color-mix(in oklab, var(--krds-success) 45%, var(--card)); background: color-mix(in oklab, var(--krds-success) 12%, var(--card)); }
@@ -723,7 +729,9 @@
   .critical-alert { display: flex; gap: 16px; align-items: center; padding: 14px 24px; border-radius: 8px; background: var(--krds-danger); color: var(--primary-foreground); }
   .critical-alert .c-icon { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,.18); display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
   .critical-alert .c-title { font-size: 17px; font-weight: 700; margin: 0; }
-  .critical-alert .c-body { font-size: 15px; margin: 2px 0 0; opacity: .92; }
+  /* 파생색 되돌림 · 발행값 — 본문 글자는 흰색(--primary-foreground)에 프리뷰가 투명도 .92 를 얹은 색이었고, 투명도를 걷어
+     md 「critical-alert」의 danger 배경 + 흰 텍스트로 돌렸다(4.28 → 4.82). danger 나 --primary-foreground 가 바뀌면 다시 잰다. */
+  .critical-alert .c-body { font-size: 15px; margin: 2px 0 0; }
 
   @media (max-width: 880px) {
     .field-grid { grid-template-columns: 1fr; }

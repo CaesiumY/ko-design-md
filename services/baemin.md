@@ -2,7 +2,7 @@
 name: 배달의민족
 slug: baemin
 category: delivery
-last_updated: "2026-08-24"
+last_updated: "2026-10-25"
 created_at: 2026-05-18
 lang: ko
 logo: https://getdesign.kr/logos/baemin.svg
@@ -42,6 +42,7 @@ colors:
   red-tint: oklch(0.94 0.04 27)
   orange: oklch(0.71 0.17 32)   # 쿠폰 티켓
   yellow: oklch(0.93 0.20 100)   # 포인트 코인
+  star-gold: oklch(0.82 0.16 85)   # 별점 ★ 전용 — 포인트 코인 yellow보다 약간 어둡고 채도 낮음
   pink: oklch(0.66 0.24 4)   # 배민페이
   pink-tint: oklch(0.95 0.03 4)
   frozen: oklch(0.69 0.18 240)   # B마트 냉동 인디케이터
@@ -181,6 +182,8 @@ fonts:
 7. **본화이트(bone-white) 배경**: 페이지 배경이 순백이 아니라 옅게 따뜻한 회백색이다 — 토스의 순백이나 카카오의 옅은 옐로와 다른, 한국 UI에서 보편화되지 않은 색을 의도적으로 선택해 손맛 톤을 보강하는 작은 차별점이다.
 
 ## Colors
+
+> **토큰 승격(2026-10-25).** `### rating` 의 별점 금색을 frontmatter 토큰 `{colors.star-gold}` 로 올렸다. 값은 본문이 적던 OKLCH 그대로이고, 함께 적혀 있던 hex 병기는 그 OKLCH 와 다른(더 밝은) 색을 가리켜 뺐다. 이 값도 다른 정량값처럼 핸드오프 번들 관찰값이다(`## Known Gaps`).
 
 색 시스템의 중심은 **2024 리브랜드 민트 `{colors.primary}`**와 **딥 네이비 `{colors.navy}`**, 그리고 따뜻한 회색 뉴트럴 스택이다. 핸드오프 `colors_and_type.css`가 토큰 표면을 명시한다.
 
@@ -374,11 +377,11 @@ B마트 상품 카드. 1:1 정사각 썸네일(`{rounded.md}`) + 좌상단 빨�
 
 ### rating
 
-별점 컴파운드 칩. `{component.list-row}`·`{component.restaurant-row}`·`{component.product-card}` 메타에 반복 등장하는 재사용 단위다. inline-flex(gap 2px), 별은 별점 전용 골드 `oklch(0.82 0.16 85)`(`#FFC42E` — 포인트 코인 `{colors.yellow}`보다 약간 어둡고 채도 낮은 별 전용 색) 14px, 평점 숫자는 `{typography.body-sm}` 800 `{colors.fg-1}`, 회색 리뷰수는 `{colors.fg-3}` 600 좌측 margin 4px. 리뷰수 표기는 `리뷰 999`·`리뷰 1만+`·`리뷰 9`처럼 한국어 수 표기를 그대로 쓴다.
+별점 컴파운드 칩. `{component.list-row}`·`{component.restaurant-row}`·`{component.product-card}` 메타에 반복 등장하는 재사용 단위다. inline-flex(gap 2px), 별은 별점 전용 골드 `{colors.star-gold}`(포인트 코인 `{colors.yellow}`보다 약간 어둡고 채도 낮은 별 전용 색) 14px, 평점 숫자는 `{typography.body-sm}` 800 `{colors.fg-1}`, 회색 리뷰수는 `{colors.fg-3}` 600 좌측 margin 4px. 리뷰수 표기는 `리뷰 999`·`리뷰 1만+`·`리뷰 9`처럼 한국어 수 표기를 그대로 쓴다.
 
 ```tsx
 <Rating>
-  <Star color="oklch(0.82 0.16 85)">★</Star>
+  <Star color={`{colors.star-gold}`}>★</Star>
   <Score className="body-sm" weight={800}>4.8</Score>
   <Reviews color={`{colors.fg-3}`}>리뷰 999</Reviews>   {/* 1만+ · 9 */}
 </Rating>

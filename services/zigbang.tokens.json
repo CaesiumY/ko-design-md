@@ -199,6 +199,30 @@
       "group": "Purple"
     },
     {
+      "name": "badge-pink",
+      "value": "oklch(0.665 0.264 351)",
+      "note": "#FF20A6 — Badge pink1(기본) 글자·아이콘 · enum 밖",
+      "group": "Badge — enum 밖 · 컴포넌트 하드코딩"
+    },
+    {
+      "name": "badge-pink-bg",
+      "value": "oklch(0.980 0.013 341)",
+      "note": "#FFF5FB — Badge pink1 배경 · enum 밖",
+      "group": "Badge — enum 밖 · 컴포넌트 하드코딩"
+    },
+    {
+      "name": "badge-blue",
+      "value": "oklch(0.513 0.247 263)",
+      "note": "#0651F1 — Badge blue1 글자·아이콘 · enum 밖, 이름이 같은 enum blue1 과 다른 값",
+      "group": "Badge — enum 밖 · 컴포넌트 하드코딩"
+    },
+    {
+      "name": "badge-blue-bg",
+      "value": "oklch(0.973 0.013 252)",
+      "note": "#F0F7FF — Badge blue1 배경 · enum 밖",
+      "group": "Badge — enum 밖 · 컴포넌트 하드코딩"
+    },
+    {
       "name": "grayOpacity05",
       "value": "oklch(0.218 0.000 0 / 5%)",
       "note": "rgba(26, 26, 26, 0.05)",

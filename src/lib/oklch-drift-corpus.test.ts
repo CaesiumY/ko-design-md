@@ -107,7 +107,7 @@ function slugs(): Array<string> {
 // convenient. Going down means something stopped matching.
 const MATCH_FLOOR: Partial<Record<string, number>> = {
   "11st": 19,
-  baemin: 37,
+  baemin: 38,
   banksalad: 181,
   // Not a naming problem and not fixable by one: bezier's preview declares no
   // `oklch` at all — it is hex — so there is nothing for a name rule to reach.
@@ -140,7 +140,7 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
   "vapor-ui": 36,
   wanted: 37,
   yeogi: 29,
-  zigbang: 39,
+  zigbang: 43,
 }
 
 describe("oklch-drift — catalogue coverage", () => {

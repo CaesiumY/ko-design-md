@@ -1505,7 +1505,9 @@
       width: 14px;
       height: 14px;
       border-radius: 50%;
-      background: var(--gray-08);
+      /* md 토큰 아님 · 파생색 — 다크 gray-08 파생값(L 0.40) 바탕을 L 0.57 회색으로(검정 × 글자 2.30 → 4.69).
+         이 규칙만 바꾸고 --gray-08 변수는 그대로다. × 글자색이 바뀌면 다시 잰다. */
+      background: oklch(0.57 0 0);
       color: oklch(0 0 0);
       font-size: 9px;
       display: inline-flex;
@@ -1559,7 +1561,9 @@
       justify-content: center; font-weight: 800;
     }
 [data-theme="dark"] .badge--rank-mute {
-      background: var(--bg-surface); color: var(--gray-08);
+      /* md 토큰 아님 · 파생색 — 다크 gray-08 파생값(L 0.40) 글자를 L 0.60 회색으로(다크 bg-surface 파생 바탕 위 2.02 → 4.68).
+         이 규칙만 바꾸고 --gray-08 변수는 그대로다. 다크 bg-surface(gray-12)가 바뀌면 다시 잰다. */
+      background: var(--bg-surface); color: oklch(0.60 0 0);
       min-width: 26px; padding: 0 6px;
       justify-content: center; font-weight: 800;
     }
@@ -2233,7 +2237,9 @@
       justify-content: center;
       font-size: 11px;
       font-weight: 800;
-      color: var(--gray-08);
+      /* md 토큰 아님 · 파생색 — 다크 gray-08 파생값(L 0.40) 글자를 L 0.63 회색으로(다크 gray-11 파생 바탕 위 1.80 → 4.72).
+         이 규칙만 바꾸고 --gray-08 변수는 그대로다. 다크 gray-11 이나 점 바탕이 바뀌면 다시 잰다. */
+      color: oklch(0.63 0 0);
     }
 [data-theme="dark"] .step.is-done .step-dot { background: var(--primary); color: oklch(1 0 0); }
 [data-theme="dark"] .step.is-current .step-dot {
@@ -2367,7 +2373,7 @@
             <span class="chip">패션</span>
             <span class="chip">뷰티</span>
             <span class="chip">디지털</span>
-            <span class="chip is-disabled">품절</span>
+            <span class="chip is-disabled" aria-disabled="true">품절</span>
           </div>
           <div class="chip-row">
             <div class="chip-row-label">Input</div>
@@ -2425,7 +2431,7 @@
               <span>마케팅 수신 동의</span>
               <span class="ctl-meta">unchecked</span>
             </label>
-            <label class="ctl-row is-disabled">
+            <label class="ctl-row is-disabled" aria-disabled="true">
               <span class="checkbox is-disabled"></span>
               <span>야간 알림 받기</span>
               <span class="ctl-meta">disabled</span>
@@ -2446,7 +2452,7 @@
               <span>새벽 배송</span>
               <span class="ctl-meta">unselected</span>
             </label>
-            <label class="ctl-row is-disabled">
+            <label class="ctl-row is-disabled" aria-disabled="true">
               <span class="radio is-disabled"></span>
               <span>해외 직배송</span>
               <span class="ctl-meta">disabled</span>
@@ -2467,7 +2473,7 @@
               <span>야간 알림</span>
               <span class="ctl-meta">off</span>
             </label>
-            <label class="ctl-row is-disabled">
+            <label class="ctl-row is-disabled" aria-disabled="true">
               <span class="toggle is-disabled"></span>
               <span>위치 기반 추천</span>
               <span class="ctl-meta">disabled</span>
