@@ -124,11 +124,12 @@ const CASES: Record<string, { title: string; check: () => void }> = {
     title: "family slots by the slot table, roles light and `dark-` twin",
     check: () => {
       const { literals, refs, tableRows } = load("banksalad")
-      // `background-highlight` / `background-dim` write their opacity beside the
-      // reference (`× 불투명도 0.04`); the opacity lives in the `opacity:` map, so
-      // the colour still aliases one palette step.
+      // A cell that is exactly one `{colors.x}` reference. `background-highlight`
+      // and `background-dim` carry `× 불투명도 …` and fall out here — they are
+      // painted through a separate opacity variable, so a reference row would
+      // hand standard tools an opaque colour. They live in the table only.
       const single = (cell: string): string | undefined =>
-        /^`\{colors\.([^}]+)\}`(?: × 불투명도 [\d.]+)?$/.exec(cell)?.[1]
+        /^`\{colors\.([^}]+)\}`$/.exec(cell)?.[1]
       const expected = new Map<string, string>()
       for (const [roleCell, light = "", dark = ""] of tableRows) {
         const [name] = spans(roleCell)

@@ -398,8 +398,6 @@ colors:
   dark-background-layer2: "{colors.gray-25}"
   background-layer3: "{colors.gray-92}"
   dark-background-layer3: "{colors.gray-27}"
-  background-highlight: "{colors.green-50}"   # 두 테마 같은 원시 — dark- 짝 없음. 불투명도는 opacity 맵의 background-highlight-opacity
-  background-dim: "{colors.gray-10}"   # 두 테마 같은 원시 — dark- 짝 없음. 불투명도는 opacity 맵(라이트·다크가 다르다)
   ## 시맨틱 역할 — line (--semantic-color-line-*)
   line-normal: "{colors.gray-91}"
   dark-line-normal: "{colors.gray-27}"
@@ -715,8 +713,8 @@ gray 만 다크 bg 가 25단이라 `{colors.dark-gray-bg}` 는 `{colors.gray-25}
 | `background-layer1` | `{colors.gray-100}` | `{colors.gray-23}` |
 | `background-layer2` | `{colors.gray-95}` | `{colors.gray-25}` |
 | `background-layer3` | `{colors.gray-92}` | `{colors.gray-27}` |
-| `background-highlight` | `{colors.green-50}` × 불투명도 0.04 | 같은 원시 × 0.04 — `dark-` 짝 없음 |
-| `background-dim` | `{colors.gray-10}` × 불투명도 0.56 | 같은 원시 × 0.72 — `dark-` 짝 없음 |
+| `background-highlight` | `{colors.green-50}` × 불투명도 0.04 | 같은 원시 × 0.04 — 불투명도를 거쳐 참조 행 없음 |
+| `background-dim` | `{colors.gray-10}` × 불투명도 0.56 | 같은 원시 × 0.72 — 불투명도를 거쳐 참조 행 없음 |
 | `line-normal` | `{colors.gray-91}` | `{colors.gray-27}` |
 | `line-strong` | `{colors.gray-88}` | `{colors.gray-32}` |
 | `line-neutral` | `{colors.gray-94}` | `{colors.gray-10}` |
@@ -735,7 +733,7 @@ gray 만 다크 bg 가 25단이라 `{colors.dark-gray-bg}` 는 `{colors.gray-25}
 | `static-white` | `{colors.gray-100}` | 같음(테마 고정) — `dark-` 짝 없음 |
 | `alpha` | `{colors.gray-10}` | `{colors.gray-100}` |
 
-`dark-` 짝이 없는 것은 두 테마가 같은 원시를 가리키는 15개 — static 8 · status 5 · `background-highlight` · `background-dim` — 다 [src:1]. 뒤의 둘은 시맨틱 변수가 원시를 그대로 가리키고 불투명도는 별도 변수(`--semantic-color-background-highlight-opacity` 0.04, `--semantic-color-background-dim-opacity` 라이트 0.56 · 다크 0.72)라서, 색은 참조 행으로 싣고 불투명도는 카탈로그 전용 `opacity:` 맵에 단위 없는 수로 두었다 [src:1].
+`dark-` 짝이 없는 것은 두 테마가 같은 원시를 가리키는 13개 — static 8 · status 5 — 다 [src:1]. `background-highlight` · `background-dim` 은 시맨틱 변수가 원시를 가리키지만 화면에는 별도 불투명도 변수(`--semantic-color-background-highlight-opacity` 0.04, `--semantic-color-background-dim-opacity` 라이트 0.56 · 다크 0.72)를 곱한 색으로 칠해진다 [src:1]. 참조 행으로 실으면 표준 도구가 불투명한 원시 색을 받으므로 이 표에만 두고 frontmatter 참조 행으로는 싣지 않는다. 불투명도 값은 카탈로그 전용 `opacity:` 맵에 단위 없는 수로 둔다.
 
 status 유틸은 `bg-status-{caution,loss,negative,positive,profit}` 과 `text-status-{negative,positive,profit}` 8개가 정의돼 있다 [src:1]. 「profit = 빨강, loss = 파랑」은 상승을 빨강으로 쓰는 국내 관례와 같은 배치지만 이름만으로 읽은 해석이고, negative(빨강)·positive(파랑) 축과도 의미가 겹친다 [src:1]. ≈ 측정한 6개 화면의 DOM 에서는 status 클래스가 한 번도 쓰이지 않았다(렌더 관찰 · 공개 출처 없음).
 
@@ -1102,7 +1100,7 @@ footer             pb-104 pt-40 · md:max-w-[958px]
 
 ## Known Gaps
 
-- **대비 미달 4건(계산값)** — 주 버튼 흰 글자 / `{colors.green-normal}` 약 3.04:1, 홈 히어로 알약 흰 / `{colors.legacy-green-100}` 약 2.44:1, 숫자 칩 `{colors.gray-50}` / `{colors.gray-weak}` 약 2.72:1, 홈 대출 버튼 흰 / `oklch(0.630 0.155 258.4)` 약 3.53:1 로 4.5:1 에 못 미친다. 발행값을 그대로 기록했고 바꾸지 않았다 [src:1] [src:2].
+- **대비 미달 5건(계산값)** — 주 버튼 흰 글자 / `{colors.green-normal}` 약 3.04:1, 홈 히어로 알약 흰 / `{colors.legacy-green-100}` 약 2.44:1, 숫자 칩 `{colors.gray-50}` / `{colors.gray-weak}` 약 2.72:1, 홈 대출 버튼 흰 / `oklch(0.630 0.155 258.4)` 약 3.53:1, 보조 글자 `{colors.text-alternative}` 가 라이트 `{colors.background-white}` 위 약 2.48:1 · 다크 `{colors.dark-text-alternative}` 가 `{colors.dark-background-white}` 위 약 2.56:1 · `{colors.dark-background-layer1}` 위 약 2.36:1 · `{colors.dark-background-layer2}` 위 약 2.13:1 로 4.5:1 에 못 미친다. 발행값을 그대로 기록했고 바꾸지 않았다 [src:1] [src:2].
 - **다크 범위** — 다크 값은 셸 번들에만 있고 앱 번들 넷에는 다크 블록이 없으며, 웹 방문자에게는 켜지지 않는다 [src:1] [src:15] [src:16] [src:17] [src:18]. 옛 층 다크값은 `white-900`·`green-200`·`shadow-white-000`·`spacing-gray-000`·`black-000` 만 확인했고 나머지 표는 뽑지 않았다 [src:1]. ≈ 홈 셸을 강제 다크로 렌더하면 히어로 파스텔은 다크값이 없어 그대로 남는다 — 제품 다크 화면이 아니다(캡처 관찰 · 공개 출처 없음).
 - **status 의미 미확인** — status-* 를 쓰는 화면이 관측되지 않았고, 보장분석의 파랑 금액이 `{colors.status-positive}` 인지 `{colors.light-blue-normal}` 인지는 값이 같아 가를 수 없다 [src:1] [src:4].
 - **미측정 컴포넌트** — 입력·체크·스위치·바텀시트·모달·토스트는 CSS 단서(`focus:border-green-strong`, `data-[checked]:bg-green-normal`, `focus-visible:ring-2`)만 있고 치수를 재지 않았다. `button-text` 의 얇은 테두리를 그리는 방식, 서브셋 woff2 가 `ss01` · `ss07` 을 실제로 담는지도 확인하지 못했다 [src:1].
