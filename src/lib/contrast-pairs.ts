@@ -14,7 +14,8 @@
 // definitions (`readDefinitions`), carry each measured hex into Oklab
 // (`hexToOklab`), and call it a token when the nearest one is within
 // `PUBLISHED_PAIR_TOLERANCE` — or, for a translucent token, when laying it over
-// what the collector laid it over lands within that distance (#551). Run over
+// what the collector laid it over — with tokens the row's theme can paint —
+// lands within that distance (#551). Run over
 // the artifact CI uploads, never a local sweep — the recorded tables describe
 // CI's rendering.
 
@@ -28,13 +29,18 @@ import {
   parseOklch,
   rgbToOklab,
 } from "./oklch-convert"
-import { readFrontmatter } from "./frontmatter"
+import { readFrontmatter, tokenText } from "./frontmatter"
 import { readDefinitions } from "./oklch-drift"
 import { oklchValue } from "./oklch-sync"
 import type { FrontmatterRow } from "./frontmatter"
 import type { Rgb, Rgba } from "./contrast"
 import type { Oklab } from "./oklch-convert"
-import type { DedupedFinding, Finding, Judgement } from "./contrast-report"
+import type {
+  DedupedFinding,
+  Finding,
+  Judgement,
+  Theme,
+} from "./contrast-report"
 
 /**
  * How close a measured colour must be to a definition to count as that token.
@@ -105,11 +111,37 @@ export const OBSERVED_COLOURS: Readonly<Record<string, ObservedColours>> =
     },
   })
 
+/**
+ * Which preview theme a token can be painted in, read off the catalogue's
+ * naming (CLAUDE.md 「테마별 팔레트는 이름을 갈라 쓴다」): a `dark-` name is
+ * the dark side; its light side is the unprefixed name with a declared `dark-`
+ * twin, or a `light-` name when the twin drops that prefix (codeit's
+ * `light-gray-00` beside `dark-gray-00`); any other name — a ramp step, a
+ * theme-free token — serves both. A twin that is a reference back to the token
+ * itself (`dark-veil: "{colors.veil}"`) is not a twin: the dark theme paints
+ * that token too. Read off the name, a `dark-` name that only means a deeper
+ * shade of a light-theme colour would be taken for the dark side, and so would
+ * a `dark-` token the light theme paints through a reference
+ * (`veil: "{colors.dark-veil}"`); no entry names or refers to a colour that
+ * way.
+ * Any other way of naming a theme reads as `both`, which keeps the classifier
+ * as wide as it was: a `-dark` suffix whether it marks a theme (samsung-one-ui's
+ * `black-dark`, the dark theme's black beside a light `black`) or only a darker
+ * shade (gs-shop's `positive-dark`).
+ */
+export type TokenTheme = Theme | "both"
+
+const DARK_PREFIX = "dark-"
+const LIGHT_PREFIX = "light-"
+/** A colors row whose whole value is a `{colors.name}` reference. */
+const COLOUR_REFERENCE = /^\{colors\.([a-zA-Z0-9._-]+)\}$/
+
 export interface PaletteEntry {
   name: string
   lab: Oklab
   /** Listed for the entry in `OBSERVED_COLOURS`, by group or by name. */
   observed: boolean
+  theme: TokenTheme
 }
 
 /**
@@ -122,6 +154,7 @@ export interface TranslucentEntry {
   name: string
   paint: Rgba
   observed: boolean
+  theme: TokenTheme
 }
 
 export interface Palette {
@@ -158,6 +191,12 @@ export function paletteOf(
     { map: string | null; group: string | null }
   >()
   const colourGroups = new Set<string>()
+  // Every key the colors map declares, whatever its value: a token's `dark-`
+  // twin may be a reference row (`"{colors.x}"`), which `placeOf` leaves out.
+  const colourKeys = new Set<string>()
+  // Where each of those reference rows points, so a twin that comes back to
+  // the token itself is not read as a second theme of it.
+  const referenceOf = new Map<string, string>()
   const read = readFrontmatter(markdown)
   const walk = (
     map: string,
@@ -170,6 +209,11 @@ export function paletteOf(
         continue
       }
       const group = row.group ?? outer
+      if (map === "colors") {
+        colourKeys.add(row.key)
+        const target = COLOUR_REFERENCE.exec(tokenText(row) ?? "")?.[1]
+        if (target !== undefined) referenceOf.set(row.key, target)
+      }
       // The colour readers' one selection, so a value that opens with blanks
       // (`"  oklch(…)"`) is placed as `readDefinitions` reads it.
       if (oklchValue(row) !== undefined && !placeOf.has(row.key)) {
@@ -194,6 +238,30 @@ export function paletteOf(
   const entries: Array<PaletteEntry> = []
   const translucent: Array<TranslucentEntry> = []
   const unreadable: Array<string> = []
+  // The row a chain of references ends on; a cycle ends where it closes.
+  const resolved = (name: string): string => {
+    const seen = new Set<string>()
+    let at = name
+    while (!seen.has(at)) {
+      seen.add(at)
+      const next = referenceOf.get(at)
+      if (next === undefined) break
+      at = next
+    }
+    return at
+  }
+  // A declared `dark-` row that paints something other than `name` itself —
+  // `dark-veil: "{colors.veil}"` says the dark theme paints `veil` too.
+  const isTwin = (twin: string, name: string): boolean =>
+    colourKeys.has(twin) && resolved(twin) !== name
+  const themeOf = (name: string): TokenTheme =>
+    name.startsWith(DARK_PREFIX)
+      ? "dark"
+      : isTwin(DARK_PREFIX + name, name) ||
+          (name.startsWith(LIGHT_PREFIX) &&
+            isTwin(DARK_PREFIX + name.slice(LIGHT_PREFIX.length), name))
+        ? "light"
+        : "both"
   for (const [name, value] of readDefinitions(markdown)) {
     const place = placeOf.get(name)
     if (place?.map !== "colors") continue
@@ -211,14 +279,28 @@ export function paletteOf(
       const a = Math.round(parsed.alpha * 255) / 255
       if (a > 0) {
         const { r, g, b } = paintOf(parsed.lab)
-        translucent.push({ name, paint: { r, g, b, a }, observed: seen })
+        translucent.push({
+          name,
+          paint: { r, g, b, a },
+          observed: seen,
+          theme: themeOf(name),
+        })
       }
       continue
     }
-    entries.push({ name, lab: parsed.lab, observed: seen })
+    entries.push({
+      name,
+      lab: parsed.lab,
+      observed: seen,
+      theme: themeOf(name),
+    })
   }
   return { entries, translucent, unreadable }
 }
+
+/** Whether a token of `token`'s theme can be painted in a row of `row`'s. */
+const paintableIn = (token: TokenTheme, row: Theme | undefined): boolean =>
+  row === undefined || token === "both" || token === row
 
 /** A token's colour as the browser paints it: 8-bit sRGB channels. */
 function paintOf(lab: Oklab): Rgb {
@@ -264,7 +346,7 @@ export function toleranceBand(
       readings++
       if (within(nearestDistance(hex, palette))) inBand++
     }
-    const read = readPair(r.fg, r.bg, palette, lo)
+    const read = readPair(r.fg, r.bg, palette, lo, r.theme)
     for (const side of [read.fg, read.bg]) {
       if (side.direct === null && within(side.composite.any)) compositeInBand++
     }
@@ -298,10 +380,11 @@ export type PairClass =
 
 type ReadingClass = ReturnType<typeof readingClass>
 
-type Base = { rgb: Rgb; observed: boolean }
+type Base = { rgb: Rgb; observed: boolean; theme: TokenTheme }
 
 // Every opaque token as paint, once per palette rather than once per row: a
-// background reading is tried against all of them.
+// background reading is tried against those its row's theme can paint (see
+// `paintableIn`).
 const basesOf = new WeakMap<Palette, Array<Base>>()
 function opaqueBases(palette: Palette): Array<Base> {
   let bases = basesOf.get(palette)
@@ -309,6 +392,7 @@ function opaqueBases(palette: Palette): Array<Base> {
     bases = palette.entries.map((e) => ({
       rgb: paintOf(e.lab),
       observed: e.observed,
+      theme: e.theme,
     }))
     basesOf.set(palette, bases)
   }
@@ -336,14 +420,17 @@ const strongerClass = (x: ReadingClass, y: ReadingClass): ReadingClass =>
 function compositeDistance(
   hex: string,
   palette: Palette,
-  bases: Array<Base>
+  bases: Array<Base>,
+  theme: Theme | undefined
 ): CompositeDistance {
   const lab = hexToOklab(hex)?.lab
   if (lab === undefined) return NO_COMPOSITE
   let any = Infinity
   let published = Infinity
   for (const t of palette.translucent) {
+    if (!paintableIn(t.theme, theme)) continue
     for (const base of bases) {
+      if (!paintableIn(base.theme, theme)) continue
       const d = deltaE(lab, rgbToOklab(compositeOver(t.paint, base.rgb)))
       any = Math.min(any, d)
       if (!t.observed && !base.observed) published = Math.min(published, d)
@@ -386,14 +473,15 @@ function readPair(
   fg: string,
   bg: string,
   palette: Palette,
-  tolerance: number
+  tolerance: number,
+  theme: Theme | undefined
 ): { fg: Reading; bg: Reading } {
   const read = (hex: string, bases: () => Array<Base>): Reading => {
     const direct = readingClass(hex, palette, tolerance)
     if (direct === "published") {
       return { direct, composite: NO_COMPOSITE, class: direct }
     }
-    const composite = compositeDistance(hex, palette, bases())
+    const composite = compositeDistance(hex, palette, bases(), theme)
     return {
       direct,
       composite,
@@ -405,7 +493,8 @@ function readPair(
   const front = read(fg, () =>
     back.class === null || bgRgb === null
       ? []
-      : [{ rgb: bgRgb, observed: back.class === "observed" }]
+      : // The backdrop the collector read, whatever theme its token is.
+        [{ rgb: bgRgb, observed: back.class === "observed", theme: "both" }]
   )
   return { fg: front, bg: back }
 }
@@ -423,7 +512,8 @@ function readPair(
  * each over the colour it reports as `bg`) — that is the pair's own background, and only when that background
  * is itself a token: a published translucent over the preview's own fill is
  * not a colour the brand chose. For the background it is the layer beneath,
- * which the reading does not name, so any opaque token of the entry.
+ * which the reading does not name, so any opaque token of the entry that the
+ * row's theme can paint (see `theme` below).
  *
  * The two sides differ because what is known differs. The collector
  * composites the front reading over the backdrop it recorded, so its base is
@@ -434,15 +524,25 @@ function readPair(
  * translucent token's alpha by ±0.03 or ±0.06, which keeps the same token ×
  * base combinations but breaks the real ones, moved at most 4 `fail`
  * non-text rows into a token class where the true alphas moved 63 (CI run
- * 38463871450, a one-off check recorded in the baseline document).
+ * 38463871450, a one-off check recorded in the baseline document — taken
+ * before composites were narrowed to the row's theme).
+ *
+ * Given the row's `theme`, a composite uses only tokens that can be painted in
+ * it (`TokenTheme`) — both the translucent token and, for a background, the
+ * opaque base. Without that the net reached across themes: wanted's dark
+ * footer (`#0a0b0c`) matched the LIGHT interaction overlay laid over a dark
+ * grey, a colour no dark render can produce. A direct match is not narrowed —
+ * a row that paints the other theme's token exactly made that choice, it did
+ * not fall near it by accident.
  */
 export function pairClass(
   fg: string,
   bg: string,
   palette: Palette,
-  tolerance = PUBLISHED_PAIR_TOLERANCE
+  tolerance = PUBLISHED_PAIR_TOLERANCE,
+  theme?: Theme
 ): PairClass {
-  const read = readPair(fg, bg, palette, tolerance)
+  const read = readPair(fg, bg, palette, tolerance, theme)
   const a = read.fg.class
   const b = read.bg.class
   if (a === null && b === null) return "no-token"
@@ -474,9 +574,10 @@ const FIELD: Record<PairClass, PairCount> = {
 const KIND_ORDER = { text: 0, "non-text": 1 }
 
 /**
- * The rows of one verdict, classified and counted by slug and kind. Themes are
- * summed: the question is which entry a fix would touch, and a pair's two
- * themes are usually two pairs of the same tokens.
+ * The rows of one verdict, classified and counted by slug and kind. Each row
+ * is classified in its own theme; the themes are then summed: the question is
+ * which entry a fix would touch, and a pair's two themes are usually two pairs
+ * of the same tokens.
  */
 export function tallyPairs(
   rows: Array<DedupedFinding>,
@@ -501,7 +602,8 @@ export function tallyPairs(
       }
       byKey.set(key, t)
     }
-    const field = FIELD[pairClass(r.fg, r.bg, paletteFor(r.slug), tolerance)]
+    const field =
+      FIELD[pairClass(r.fg, r.bg, paletteFor(r.slug), tolerance, r.theme)]
     t[field]++
     t.total++
   }
