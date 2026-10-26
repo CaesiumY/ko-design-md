@@ -120,8 +120,10 @@ export const OBSERVED_COLOURS: Readonly<Record<string, ObservedColours>> =
  * theme-free token — serves both. A twin that is a reference back to the token
  * itself (`dark-veil: "{colors.veil}"`) is not a twin: the dark theme paints
  * that token too. Read off the name, a `dark-` name that only means a deeper
- * shade of a light-theme colour would be taken for the dark side; no entry
- * names a colour that way.
+ * shade of a light-theme colour would be taken for the dark side, and so would
+ * a `dark-` token the light theme paints through a reference
+ * (`veil: "{colors.dark-veil}"`); no entry names or refers to a colour that
+ * way.
  * Any other way of naming a theme reads as `both`, which keeps the classifier
  * as wide as it was: a `-dark` suffix whether it marks a theme (samsung-one-ui's
  * `black-dark`, the dark theme's black beside a light `black`) or only a darker
@@ -381,7 +383,8 @@ type ReadingClass = ReturnType<typeof readingClass>
 type Base = { rgb: Rgb; observed: boolean; theme: TokenTheme }
 
 // Every opaque token as paint, once per palette rather than once per row: a
-// background reading is tried against all of them.
+// background reading is tried against those its row's theme can paint (see
+// `paintableIn`).
 const basesOf = new WeakMap<Palette, Array<Base>>()
 function opaqueBases(palette: Palette): Array<Base> {
   let bases = basesOf.get(palette)
