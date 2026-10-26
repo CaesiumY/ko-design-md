@@ -701,7 +701,7 @@ components:
 | strong | 40 | 70 |
 | heavy | 30 | 80 |
 
-gray 만 다크 bg 가 25단이라 `{colors.dark-gray-bg}` 는 `{colors.gray-25}` 를 가리킨다 [src:1]. 화면에서 쓰는 슬롯은 초록 셋(`{colors.green-normal}` 주 버튼 · `{colors.green-weak}` 보조 버튼 바탕 · `{colors.green-strong}` 보조 버튼 글자), 상태 알약의 red · light-blue weak/strong, 안내 상자의 `{colors.mustard-bg}`, 이자지원금 배너의 `{colors.green-bg}` 다 [src:1] [src:19].
+gray 만 다크 bg 가 25단이라 `{colors.dark-gray-bg}` 는 `{colors.gray-25}` 를 가리킨다 [src:1]. 화면에서 쓰는 슬롯은 초록 셋(`{colors.green-normal}` 주 버튼 · `{colors.green-weak}` 보조 버튼 바탕 · `{colors.green-strong}` 보조 버튼 글자), 상태 알약의 red · light-blue weak/strong, 안내 상자의 `{colors.mustard-bg}`, 이자지원금 배너의 `{colors.green-bg}`, 대출 요약 칩의 `{colors.gray-bg}`, 숫자 칩의 `{colors.gray-weak}` 다 [src:1] [src:19].
 
 ### 시맨틱 — 역할 30개
 
