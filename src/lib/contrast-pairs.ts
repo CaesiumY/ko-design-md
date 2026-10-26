@@ -117,7 +117,11 @@ export const OBSERVED_COLOURS: Readonly<Record<string, ObservedColours>> =
  * the dark side; its light side is the unprefixed name with a declared `dark-`
  * twin, or a `light-` name when the twin drops that prefix (codeit's
  * `light-gray-00` beside `dark-gray-00`); any other name — a ramp step, a
- * theme-free token — serves both.
+ * theme-free token — serves both. A twin that is a reference back to the token
+ * itself (`dark-veil: "{colors.veil}"`) is not a twin: the dark theme paints
+ * that token too. Read off the name, a `dark-` name that only means a deeper
+ * shade of a light-theme colour would be taken for the dark side; no entry
+ * names a colour that way.
  * Any other way of naming a theme reads as `both`, which keeps the classifier
  * as wide as it was: a `-dark` suffix whether it marks a theme (samsung-one-ui's
  * `black-dark`, the dark theme's black beside a light `black`) or only a darker
@@ -127,6 +131,8 @@ export type TokenTheme = Theme | "both"
 
 const DARK_PREFIX = "dark-"
 const LIGHT_PREFIX = "light-"
+/** A colors row whose whole value is a `{colors.name}` reference. */
+const COLOUR_REFERENCE = /^\{colors\.([a-zA-Z0-9._-]+)\}$/
 
 export interface PaletteEntry {
   name: string
@@ -186,6 +192,9 @@ export function paletteOf(
   // Every key the colors map declares, whatever its value: a token's `dark-`
   // twin may be a reference row (`"{colors.x}"`), which `placeOf` leaves out.
   const colourKeys = new Set<string>()
+  // Where each of those reference rows points, so a twin that comes back to
+  // the token itself is not read as a second theme of it.
+  const referenceOf = new Map<string, string>()
   const read = readFrontmatter(markdown)
   const walk = (
     map: string,
@@ -198,7 +207,14 @@ export function paletteOf(
         continue
       }
       const group = row.group ?? outer
-      if (map === "colors") colourKeys.add(row.key)
+      if (map === "colors") {
+        colourKeys.add(row.key)
+        const target =
+          typeof row.value === "string"
+            ? COLOUR_REFERENCE.exec(row.value.trim())?.[1]
+            : undefined
+        if (target !== undefined) referenceOf.set(row.key, target)
+      }
       // The colour readers' one selection, so a value that opens with blanks
       // (`"  oklch(…)"`) is placed as `readDefinitions` reads it.
       if (oklchValue(row) !== undefined && !placeOf.has(row.key)) {
@@ -223,13 +239,28 @@ export function paletteOf(
   const entries: Array<PaletteEntry> = []
   const translucent: Array<TranslucentEntry> = []
   const unreadable: Array<string> = []
-  const isColour = (name: string): boolean => colourKeys.has(name)
+  // The row a chain of references ends on; a cycle ends where it closes.
+  const resolved = (name: string): string => {
+    const seen = new Set<string>()
+    let at = name
+    while (!seen.has(at)) {
+      seen.add(at)
+      const next = referenceOf.get(at)
+      if (next === undefined) break
+      at = next
+    }
+    return at
+  }
+  // A declared `dark-` row that paints something other than `name` itself —
+  // `dark-veil: "{colors.veil}"` says the dark theme paints `veil` too.
+  const isTwin = (twin: string, name: string): boolean =>
+    colourKeys.has(twin) && resolved(twin) !== name
   const themeOf = (name: string): TokenTheme =>
     name.startsWith(DARK_PREFIX)
       ? "dark"
-      : isColour(DARK_PREFIX + name) ||
+      : isTwin(DARK_PREFIX + name, name) ||
           (name.startsWith(LIGHT_PREFIX) &&
-            isColour(DARK_PREFIX + name.slice(LIGHT_PREFIX.length)))
+            isTwin(DARK_PREFIX + name.slice(LIGHT_PREFIX.length), name))
         ? "light"
         : "both"
   for (const [name, value] of readDefinitions(markdown)) {

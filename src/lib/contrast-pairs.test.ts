@@ -148,6 +148,31 @@ describe("paletteOf", () => {
     expect(paletteOf(md, {}).translucent.map((t) => t.theme)).toEqual(["light"])
   })
 
+  it("does not pair a token with a dark- twin that refers back to it", () => {
+    // `dark-veil` says the dark theme paints `veil` as well — directly, or
+    // through another reference row — so `veil` serves both themes.
+    const direct = [
+      "---",
+      "colors:",
+      "  veil: oklch(0 0 0 / 5%)",
+      '  dark-veil: "{colors.veil}"',
+      "---",
+    ].join("\n")
+    const chained = [
+      "---",
+      "colors:",
+      "  veil: oklch(0 0 0 / 5%)",
+      '  overlay: "{colors.veil}"',
+      '  dark-veil: "{colors.overlay}"',
+      "---",
+    ].join("\n")
+    for (const doc of [direct, chained]) {
+      expect(paletteOf(doc, {}).translucent.map((t) => t.theme)).toEqual([
+        "both",
+      ])
+    }
+  })
+
   it("pairs a token only with a dark- twin in the colors map", () => {
     // A `dark-` row outside the colors map — a gradient stop here — is not a
     // token, so it does not make `ink` the light side of anything.
