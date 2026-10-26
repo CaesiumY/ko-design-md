@@ -679,7 +679,7 @@ components:
 
 글의 톤은 둘로 갈린다. 제품 안내는 「한 번에 69개 금융사를 조회해요」처럼 굵은 해요체 단문에 회색 보조줄을 붙이고, 법정 고지와 브랜드 선언은 합니다체다 [src:3] [src:2]. 준법감시인 심의필 번호와 대출모집법인 등록 고지가 화면의 큰 부분을 차지하는 것도 이 도메인의 특징이다 [src:3] [src:5] [src:20].
 
-카탈로그 로고는 회사 사이트의 PWA 아이콘 512px PNG 를 쓴다 — 투명 배경에 프레임 없는 심볼이다 [src:13]. 저해상 원본을 확대한 파일이라 크게 보면 가장자리가 흐리고, 그 밖의 자기 도메인 심볼은 25×25 파비콘뿐이다 [src:14]. App Store 앱 아이콘은 흰 바탕이 박혀 있어 쓰지 않았다 [src:10]. 헤더 워드마크는 897×144 투명 PNG 한 장이고 라이트·다크가 같은 파일이다 [src:11] [src:2].
+카탈로그 로고는 App Store 앱 아이콘 1024px PNG 다 — 흰 정사각 바탕에 심볼이 놓인 원본이다 [src:10]. 자기 도메인에서 프레임 없는 심볼은 웹 아이콘으로만 나온다 — 회사 사이트 PWA 아이콘 512px(작은 원본을 키워 가장자리가 흐림)과 25×25 파비콘이다 [src:13] [src:14]. 심볼만 담은 SVG 는 없고, 공식 SVG 는 심볼과 글자를 한 파일에 담은 헤더 워드마크 락업뿐이다 [src:11]. 그래서 웹 아이콘으로만 심볼을 발행하는 브랜드의 앱 아이콘 예외를 따랐다. 헤더 워드마크는 897×144 투명 PNG 이고, 같은 경로에 SVG 판과 다크 모드용 `-darkmode` 판(PNG·SVG)이 따로 있다 [src:11].
 
 ## Colors
 
@@ -1126,10 +1126,10 @@ footer             pb-104 pt-40 · md:max-w-[958px]
 7. https://blog.banksalad.com/tech/banksalad-product-language-design/ — BPL 소개 글(값 없음)
 8. https://blog.banksalad.com/tech/banksalad-product-language-ios/ — BPL iOS 글(값 없음)
 9. https://apps.apple.com/kr/app/id1195804784 — App Store 앱 페이지
-10. https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/40/c6/e9/40c6e985-e0c3-1f0e-f1db-647b5e24a559/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/512x512bb.png — App Store 앱 아이콘 512 PNG. 앱 업데이트 때 경로가 바뀔 수 있다
-11. https://cdn.banksalad.com/graphic/color/illustration/setting/banksalad-signature1.png — 헤더 워드마크 PNG
+10. https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/40/c6/e9/40c6e985-e0c3-1f0e-f1db-647b5e24a559/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/1024x1024bb.png — App Store 앱 아이콘 1024 PNG(카탈로그 로고 원본). 앱 업데이트 때 경로가 바뀔 수 있다
+11. https://cdn.banksalad.com/graphic/color/illustration/setting/banksalad-signature1.png — 헤더 워드마크 PNG. 같은 경로에 `.svg` 판과 `-darkmode` 판(PNG·SVG)이 있다 — 심볼과 글자를 한 파일에 담은 락업이다
 12. https://policies.banksalad.com/뱅크샐러드/서비스-이용-약관/ — 서비스 이용약관. JS 셸이라 렌더해야 본문이 읽힌다
-13. https://corp.banksalad.com/icons/icon-512x512.png — 회사 사이트 PWA 아이콘(카탈로그 로고 원본)
+13. https://corp.banksalad.com/icons/icon-512x512.png — 회사 사이트 PWA 아이콘(작은 원본을 키운 512px)
 14. https://cdn.banksalad.com/app/meta/introduce-a/favicon.ico — 파비콘
 15. https://webview-cdn.banksalad.com/health-web/1aaf224598/_next/static/css/f7298f70eab3bee3.css — (해시 번들) 건강 앱 운영 CSS
 16. https://webview-cdn.banksalad.com/loan-web/45b0d0da5d/_next/static/css/6d249f6322c93b8f.css — (해시 번들) 대출 앱 운영 CSS
