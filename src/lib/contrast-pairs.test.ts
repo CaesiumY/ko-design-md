@@ -11,7 +11,7 @@ import {
   toleranceBand,
 } from "./contrast-pairs"
 import { hexToOklab, parseOklch } from "./oklch-convert"
-import type { PairTally, Palette } from "./contrast-pairs"
+import type { PairTally, Palette, TokenTheme } from "./contrast-pairs"
 import type { DedupedFinding, Finding } from "./contrast-report"
 
 // #808080 is oklch(0.6 0 0) to well inside the tolerance (achromatic, so the
@@ -23,11 +23,13 @@ const greyLab = hexToOklab(GREY)!.lab
 const entry = (
   name: string,
   L: number,
-  observed = false
+  observed = false,
+  theme: TokenTheme = "both"
 ): Palette["entries"][number] => ({
   name,
   lab: { L, a: 0, b: 0 },
   observed,
+  theme,
 })
 
 const palette = (...entries: Palette["entries"]): Palette => ({
@@ -43,6 +45,7 @@ const VEIL: Palette["translucent"][number] = {
   name: "veil",
   paint: { r: 0, g: 0, b: 0, a: 128 / 255 },
   observed: false,
+  theme: "both",
 }
 
 describe("parseOklch", () => {
@@ -108,7 +111,35 @@ describe("paletteOf", () => {
         name: "veil",
         paint: { r: 0, g: 0, b: 0, a: 13 / 255 },
         observed: true,
+        theme: "both",
       },
+    ])
+  })
+
+  it("reads a token's theme off the catalogue's dark- prefix", () => {
+    // `dark-` opens a dark-theme token; an unprefixed token whose `dark-` twin
+    // is declared is that twin's light side; any other token serves both.
+    const themed = [
+      "---",
+      "colors:",
+      "  ink: oklch(0.6 0 0)",
+      "  dark-ink: oklch(0.8 0 0)",
+      "  rule: oklch(0.4 0 0)",
+      "  veil: oklch(0 0 0 / 5%)",
+      "  dark-veil: oklch(1 0 0 / 5%)",
+      "  dark-glow: oklch(1 0 0 / 10%)",
+      "---",
+    ].join("\n")
+    const got = paletteOf(themed, {})
+    expect(got.entries.map((e) => [e.name, e.theme])).toEqual([
+      ["ink", "light"],
+      ["dark-ink", "dark"],
+      ["rule", "both"],
+    ])
+    expect(got.translucent.map((t) => [t.name, t.theme])).toEqual([
+      ["veil", "light"],
+      ["dark-veil", "dark"],
+      ["dark-glow", "dark"],
     ])
   })
 
@@ -321,6 +352,79 @@ describe("pairClass with a translucent token", () => {
   })
 })
 
+describe("pairClass in a theme", () => {
+  // The veil over white reads `#7f7f7f` (see above). Where the veil is one
+  // theme's token, a row of the other theme cannot have been painted with it,
+  // so the composite is not looked for there — wanted's dark footer once
+  // matched a light-only overlay laid over a dark grey this way.
+  const veiled = (veil: TokenTheme, white: TokenTheme = "both"): Palette => ({
+    ...palette(entry("white", 1, false, white)),
+    translucent: [{ ...VEIL, theme: veil }],
+  })
+
+  it("composites a token of the row's own theme, or of both", () => {
+    expect(
+      pairClass("#ffffff", "#7f7f7f", veiled("dark"), undefined, "dark")
+    ).toBe("both-published")
+    expect(
+      pairClass("#ffffff", "#7f7f7f", veiled("light"), undefined, "light")
+    ).toBe("both-published")
+    expect(
+      pairClass("#ffffff", "#7f7f7f", veiled("both"), undefined, "dark")
+    ).toBe("both-published")
+  })
+
+  it("does not composite a translucent token of the other theme", () => {
+    expect(
+      pairClass("#ffffff", "#7f7f7f", veiled("light"), undefined, "dark")
+    ).toBe("one-token")
+    expect(
+      pairClass("#7f7f7f", "#ffffff", veiled("dark"), undefined, "light")
+    ).toBe("one-token")
+  })
+
+  it("does not lay a background over an opaque base of the other theme", () => {
+    // White here is a light-only token: a dark row's fill cannot sit on it.
+    expect(
+      pairClass(
+        "#000000",
+        "#7f7f7f",
+        veiled("both", "light"),
+        undefined,
+        "dark"
+      )
+    ).toBe("no-token")
+    expect(
+      pairClass(
+        "#000000",
+        "#7f7f7f",
+        veiled("both", "light"),
+        undefined,
+        "light"
+      )
+    ).toBe("one-token")
+  })
+
+  it("still matches a reading to a token of the other theme directly", () => {
+    // Only composites are narrowed: a dark row that paints a light-only
+    // token's exact value is a choice the preview made, not a coincidence of
+    // alpha and base.
+    const p = palette(
+      entry("white", 1, false, "light"),
+      entry("grey", greyLab.L, false, "light")
+    )
+    expect(pairClass(GREY, "#ffffff", p, undefined, "dark")).toBe(
+      "both-published"
+    )
+  })
+
+  it("looks at every token when no theme is given", () => {
+    expect(pairClass("#ffffff", "#7f7f7f", veiled("light"))).toBe(
+      "both-published"
+    )
+  })
+})
+
 const row = (over: Partial<DedupedFinding>): DedupedFinding => ({
   slug: "toss",
   theme: "light",
@@ -385,6 +489,24 @@ describe("tallyPairs", () => {
         total: 1,
       },
     ])
+  })
+})
+
+describe("tallyPairs in a theme", () => {
+  it("classifies each row in its own theme", () => {
+    const veiled: Palette = {
+      ...palette(entry("white", 1)),
+      translucent: [{ ...VEIL, theme: "light" }],
+    }
+    const got = tallyPairs(
+      [
+        row({ fg: "#ffffff", bg: "#7f7f7f" }),
+        row({ theme: "dark", fg: "#ffffff", bg: "#7f7f7f" }),
+      ],
+      () => veiled,
+      "fail"
+    )
+    expect(got.map((t) => [t.bothPublished, t.oneToken])).toEqual([[1, 1]])
   })
 })
 
