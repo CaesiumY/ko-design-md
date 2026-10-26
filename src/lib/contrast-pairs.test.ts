@@ -116,6 +116,24 @@ describe("paletteOf", () => {
     ])
   })
 
+  it("reads a light- name as the light side of the dark- twin it prefixes", () => {
+    // codeit's palette pairs `light-gray-00` with `dark-gray-00`; a `light-`
+    // name with no such twin is just a name.
+    const md = [
+      "---",
+      "colors:",
+      "  light-ink: oklch(0.6 0 0)",
+      "  dark-ink: oklch(0.8 0 0)",
+      "  light-blue: oklch(0.7 0.1 250)",
+      "---",
+    ].join("\n")
+    expect(paletteOf(md, {}).entries.map((e) => [e.name, e.theme])).toEqual([
+      ["light-ink", "light"],
+      ["dark-ink", "dark"],
+      ["light-blue", "both"],
+    ])
+  })
+
   it("pairs a token only with a dark- twin in the colors map", () => {
     // A `dark-` row outside the colors map — a gradient stop here — is not a
     // token, so it does not make `ink` the light side of anything.

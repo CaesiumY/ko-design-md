@@ -114,8 +114,10 @@ export const OBSERVED_COLOURS: Readonly<Record<string, ObservedColours>> =
 /**
  * Which preview theme a token can be painted in, read off the catalogue's
  * naming (CLAUDE.md 「테마별 팔레트는 이름을 갈라 쓴다」): a `dark-` name is
- * the dark side, an unprefixed name whose `dark-` twin is declared is the light
- * side, and any other name — a ramp step, a theme-free token — serves both.
+ * the dark side; its light side is the unprefixed name with a declared `dark-`
+ * twin, or a `light-` name when the twin drops that prefix (codeit's
+ * `light-gray-00` beside `dark-gray-00`); any other name — a ramp step, a
+ * theme-free token — serves both.
  * Any other way of naming a theme reads as `both`, which keeps the classifier
  * as wide as it was: a `-dark` suffix whether it marks a theme (samsung-one-ui's
  * `black-dark`, the dark theme's black beside a light `black`) or only a darker
@@ -124,6 +126,7 @@ export const OBSERVED_COLOURS: Readonly<Record<string, ObservedColours>> =
 export type TokenTheme = Theme | "both"
 
 const DARK_PREFIX = "dark-"
+const LIGHT_PREFIX = "light-"
 
 export interface PaletteEntry {
   name: string
@@ -216,10 +219,14 @@ export function paletteOf(
   const entries: Array<PaletteEntry> = []
   const translucent: Array<TranslucentEntry> = []
   const unreadable: Array<string> = []
+  const isColour = (name: string): boolean =>
+    placeOf.get(name)?.map === "colors"
   const themeOf = (name: string): TokenTheme =>
     name.startsWith(DARK_PREFIX)
       ? "dark"
-      : placeOf.get(DARK_PREFIX + name)?.map === "colors"
+      : isColour(DARK_PREFIX + name) ||
+          (name.startsWith(LIGHT_PREFIX) &&
+            isColour(DARK_PREFIX + name.slice(LIGHT_PREFIX.length)))
         ? "light"
         : "both"
   for (const [name, value] of readDefinitions(markdown)) {
@@ -471,7 +478,8 @@ function readPair(
  * each over the colour it reports as `bg`) — that is the pair's own background, and only when that background
  * is itself a token: a published translucent over the preview's own fill is
  * not a colour the brand chose. For the background it is the layer beneath,
- * which the reading does not name, so any opaque token of the entry.
+ * which the reading does not name, so any opaque token of the entry that the
+ * row's theme can paint (see `theme` below).
  *
  * The two sides differ because what is known differs. The collector
  * composites the front reading over the backdrop it recorded, so its base is
