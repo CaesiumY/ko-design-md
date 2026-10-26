@@ -120,9 +120,10 @@ export const OBSERVED_COLOURS: Readonly<Record<string, ObservedColours>> =
  * theme-free token — serves both. A twin that is a reference back to the token
  * itself (`dark-veil: "{colors.veil}"`) is not a twin: the dark theme paints
  * that token too.
- * Read off names, this misses two things; no catalogue entry has either. A `dark-`
- * name that only means a deeper shade of a light-theme colour is taken for
- * the dark side. And a reference row never changes the theme of the token it
+ * Read off names, this misses two things — which of them the catalogue was
+ * checked for, and how, is in `docs/preview-contrast-baseline.md` 「테마」, not
+ * repeated here. A `dark-` name that only means a deeper shade of a
+ * light-theme colour is taken for the dark side. And a reference row never changes the theme of the token it
  * points at, so when a reference makes one theme paint a token read as the
  * other's, that token stays out of the first theme's composites —
  * `veil: "{colors.dark-veil}"` (the light theme paints `dark-veil`), or
