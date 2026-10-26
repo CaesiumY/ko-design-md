@@ -2,7 +2,7 @@
 name: 원티드
 slug: wanted
 category: career
-last_updated: "2026-10-26"
+last_updated: "2026-10-27"
 created_at: "2026-05-12"
 lang: ko
 logo: https://getdesign.kr/logos/wanted.png
