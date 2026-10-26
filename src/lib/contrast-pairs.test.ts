@@ -117,14 +117,14 @@ describe("paletteOf", () => {
   })
 
   it("pairs a token only with a dark- twin in the colors map", () => {
-    // A `dark-` key in another map is not a colour; it does not make `ink`
-    // the light side of anything.
+    // A `dark-` row outside the colors map — a gradient stop here — is not a
+    // token, so it does not make `ink` the light side of anything.
     const md = [
       "---",
       "colors:",
       "  ink: oklch(0.6 0 0)",
-      "rounded:",
-      "  dark-ink: 4px",
+      "gradients:",
+      "  dark-ink: oklch(0.2 0 0)",
       "---",
     ].join("\n")
     expect(paletteOf(md, {}).entries.map((e) => e.theme)).toEqual(["both"])
