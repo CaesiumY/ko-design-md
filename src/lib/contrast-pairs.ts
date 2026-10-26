@@ -123,9 +123,10 @@ export const OBSERVED_COLOURS: Readonly<Record<string, ObservedColours>> =
  * Read off names, this misses two things — which of them the catalogue was
  * checked for, and how, is in `docs/preview-contrast-baseline.md` 「테마」, not
  * repeated here. A `dark-` name that only means a deeper shade of a
- * light-theme colour is taken for the dark side. And a reference row never changes the theme of the token it
- * points at, so when a reference makes one theme paint a token read as the
- * other's, that token stays out of the first theme's composites —
+ * light-theme colour is taken for the dark side. And a reference row never
+ * changes the theme of the token it points at, so when a reference makes one
+ * theme paint a token read as the other's, that token stays out of the first
+ * theme's composites —
  * `veil: "{colors.dark-veil}"` (the light theme paints `dark-veil`), or
  * `dark-veil: "{colors.ink}"` beside a declared `dark-ink` (the dark theme
  * paints `ink`, read as light).
