@@ -28,6 +28,7 @@ function load(slug: string): {
   literals: Set<string>
   refs: Map<string, string>
   tableRows: Array<Array<string>>
+  colorsSection: string
 } {
   // Normalised: a Windows checkout can leave a `w/crlf` entry (see CLAUDE.md
   // 「Windows 로컬 주의」), and `^---$` / `^## Colors$` would miss every
@@ -63,7 +64,7 @@ function load(slug: string): {
         .slice(1, -1)
         .map((cell) => cell.trim())
     )
-  return { literals, refs, tableRows }
+  return { literals, refs, tableRows, colorsSection }
 }
 
 // spec-config `color_roles`.
@@ -81,6 +82,32 @@ const bare = (key: string): string =>
 
 const spans = (cell: string): Array<string> =>
   [...cell.matchAll(/`([^`]+)`/g)].map((m) => m[1])
+
+// A cell that is exactly one `{colors.x}` reference. Anything else — color-mix,
+// a literal, an opacity note — carries prose and lives in the table only.
+const single = (cell: string): string | undefined =>
+  /^`\{colors\.([^}]+)\}`$/.exec(cell)?.[1]
+
+// Table roles whose light and dark cells are each one reference: the role's
+// row and its `dark-` twin. Primitives do not change with the theme, so the
+// twin points at an unprefixed palette key.
+function singleReferenceRoles(
+  tableRows: Array<Array<string>>
+): Map<string, string> {
+  const expected = new Map<string, string>()
+  for (const [roleCell, light = "", dark = ""] of tableRows) {
+    const [name] = spans(roleCell)
+    // ridi's emotion-group table leads with a `{colors.x}` key, not a role.
+    // Skip by that shape, not by what a role name looks like — a name filter
+    // would also drop a role whose name it did not foresee.
+    if (!name || name.startsWith("{colors.")) continue
+    const l = single(light)
+    const d = single(dark)
+    if (l) expected.set(name, l)
+    if (d) expected.set(`dark-${name}`, d)
+  }
+  return expected
+}
 
 function expectRowsToMatch(
   slug: string,
@@ -120,6 +147,41 @@ function expectRowsToMatch(
 // checks the detected entries against these keys, so an entry cannot be
 // listed without a case, nor use the form without being listed.
 const CASES: Record<string, { title: string; check: () => void }> = {
+  banksalad: {
+    title: "family slots by the slot table, roles light and `dark-` twin",
+    check: () => {
+      const { literals, refs, tableRows, colorsSection } = load("banksalad")
+      // `background-highlight` / `background-dim` carry `× 불투명도 …` and fall
+      // out — they are painted through a separate opacity variable, so a
+      // reference row would hand standard tools an opaque colour. Theme-invariant
+      // roles say "`dark-` 짝 없음" and owe no twin.
+      const expected = singleReferenceRoles(tableRows)
+      // The five family slots are one rule for every family, written once as
+      // an unbackticked table (`| bg | 95 | 20 (gray 만 25) |`) that tableRows
+      // does not see, so it is read here and expanded over the palette families.
+      const slots = [
+        ...colorsSection.matchAll(
+          /^\| (bg|weak|normal|strong|heavy) \| (\d+) \| (\d+)(?: \(([a-z-]+) 만 (\d+)\))? \|$/gm
+        ),
+      ]
+      expect(slots.length, "slot table parsed").toBe(5)
+      const families = new Set(
+        [...literals]
+          .filter((key) => !/^(legacy|dark)-/.test(key))
+          .map((key) => /^([a-z-]+)-\d+$/.exec(key)?.[1])
+          .filter((family): family is string => family !== undefined)
+      )
+      expect(families.size, "palette families").toBe(16)
+      for (const [, slot, light, dark, odd, oddDark] of slots) {
+        for (const family of families) {
+          expected.set(`${family}-${slot}`, `${family}-${light}`)
+          const step = family === odd ? oddDark : dark
+          expected.set(`dark-${family}-${slot}`, `${family}-${step}`)
+        }
+      }
+      expectRowsToMatch("banksalad", expected, refs, literals)
+    },
+  },
   "seed-design": {
     title: "every role, light and `dark-` twin",
     check: () => {
@@ -203,25 +265,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
     title: "single-reference roles, light and `dark-` twin",
     check: () => {
       const { literals, refs, tableRows } = load("ridi")
-      // A cell that is exactly one `{colors.x}` reference. color-mix and the dark
-      // literal (`surface-disabled`) carry prose and fall out here — they live in
-      // the table only.
-      const single = (cell: string): string | undefined =>
-        /^`\{colors\.([^}]+)\}`$/.exec(cell)?.[1]
-      const expected = new Map<string, string>()
-      for (const [roleCell, light = "", dark = ""] of tableRows) {
-        const [name] = spans(roleCell)
-        // The emotion-group table leads with a `{colors.x}` key, not a role.
-        // Skip by that shape, not by what a role name looks like — a name
-        // filter would also drop a role whose name it did not foresee.
-        if (!name || name.startsWith("{colors.")) continue
-        const l = single(light)
-        const d = single(dark)
-        if (l) expected.set(name, l)
-        // Primitives do not change with the theme, so the dark twin points at an
-        // unprefixed palette key.
-        if (d) expected.set(`dark-${name}`, d)
-      }
+      const expected = singleReferenceRoles(tableRows)
       expectRowsToMatch("ridi", expected, refs, literals)
     },
   },

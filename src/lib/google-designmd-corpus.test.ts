@@ -36,6 +36,7 @@ const NO_TYPE_SCALE: Record<string, string> = {}
  * entries carry the map under #389's rules, so each owes a row here.
  */
 const COMPONENT_COUNTS: Record<string, number> = {
+  banksalad: 16,
   ridi: 11,
   teamsparta: 10,
 }
@@ -127,6 +128,7 @@ describe("catalog md, linted as the standard DESIGN.md", () => {
       .filter(({ slug }) => rulesOf(slug).includes("missing-primary"))
       .map((d) => d.slug)
     expect(missing).toEqual([
+      "banksalad",
       "bezier",
       "gmarket",
       "gs-retail",

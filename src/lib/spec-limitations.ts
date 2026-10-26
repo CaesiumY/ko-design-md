@@ -15,6 +15,7 @@ export const KNOWN_SPEC_LIMITATIONS: Readonly<Record<string, number>> = {
   // accepts only px, em and rem.
   "11st": 1,
   baemin: 1,
+  banksalad: 1,
   bezier: 1,
   "line-design-system": 1,
   remember: 1,

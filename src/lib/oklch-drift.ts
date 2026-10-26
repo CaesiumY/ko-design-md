@@ -196,6 +196,7 @@ const PREVIEW_TOKEN_ALIASES: Partial<
   Record<string, ReadonlyArray<readonly [string, string]>>
 > = {
   baemin: [["", "bm-"]],
+  banksalad: [["", "bs-"]],
   class101: [["", "c101-"]],
   codeit: [
     ["codeit-", "ci-"],

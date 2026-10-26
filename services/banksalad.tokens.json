@@ -1,0 +1,1389 @@
+{
+  "colors": [
+    {
+      "name": "green-10",
+      "value": "oklch(0.159 0.029 169.5)",
+      "note": "#01110B",
+      "group": "원시 — green (--base-color-green-*)"
+    },
+    {
+      "name": "green-20",
+      "value": "oklch(0.224 0.046 164.9)",
+      "note": "#012216",
+      "group": "원시 — green (--base-color-green-*)"
+    },
+    {
+      "name": "green-30",
+      "value": "oklch(0.342 0.075 160.6)",
+      "note": "#02442B",
+      "group": "원시 — green (--base-color-green-*)"
+    },
+    {
+      "name": "green-40",
+      "value": "oklch(0.500 0.112 159.8)",
+      "note": "#04764C",
+      "group": "원시 — green (--base-color-green-*)"
+    },
+    {
+      "name": "green-50",
+      "value": "oklch(0.648 0.149 158.8)",
+      "note": "#06A96C — green-normal · background-highlight 가 가리키는 단",
+      "group": "원시 — green (--base-color-green-*)"
+    },
+    {
+      "name": "green-60",
+      "value": "oklch(0.678 0.143 161.5)",
+      "note": "#1FB27B — 다크 green-normal",
+      "group": "원시 — green (--base-color-green-*)"
+    },
+    {
+      "name": "green-70",
+      "value": "oklch(0.740 0.122 165.3)",
+      "note": "#51C398",
+      "group": "원시 — green (--base-color-green-*)"
+    },
+    {
+      "name": "green-80",
+      "value": "oklch(0.846 0.076 168.9)",
+      "note": "#9BDDC4",
+      "group": "원시 — green (--base-color-green-*)"
+    },
+    {
+      "name": "green-90",
+      "value": "oklch(0.922 0.038 171.5)",
+      "note": "#CDEEE2",
+      "group": "원시 — green (--base-color-green-*)"
+    },
+    {
+      "name": "green-95",
+      "value": "oklch(0.969 0.014 174.2)",
+      "note": "#ECF8F4",
+      "group": "원시 — green (--base-color-green-*)"
+    },
+    {
+      "name": "mint-10",
+      "value": "oklch(0.157 0.025 190.0)",
+      "note": "#01100F",
+      "group": "원시 — mint (--base-color-mint-*)"
+    },
+    {
+      "name": "mint-20",
+      "value": "oklch(0.225 0.036 185.7)",
+      "note": "#03211E",
+      "group": "원시 — mint (--base-color-mint-*)"
+    },
+    {
+      "name": "mint-30",
+      "value": "oklch(0.339 0.057 186.0)",
+      "note": "#05413C",
+      "group": "원시 — mint (--base-color-mint-*)"
+    },
+    {
+      "name": "mint-40",
+      "value": "oklch(0.498 0.085 186.2)",
+      "note": "#09726A",
+      "group": "원시 — mint (--base-color-mint-*)"
+    },
+    {
+      "name": "mint-50",
+      "value": "oklch(0.644 0.111 185.6)",
+      "note": "#0DA397",
+      "group": "원시 — mint (--base-color-mint-*)"
+    },
+    {
+      "name": "mint-60",
+      "value": "oklch(0.674 0.110 186.4)",
+      "note": "#25ACA1",
+      "group": "원시 — mint (--base-color-mint-*)"
+    },
+    {
+      "name": "mint-70",
+      "value": "oklch(0.741 0.098 187.7)",
+      "note": "#56BFB6",
+      "group": "원시 — mint (--base-color-mint-*)"
+    },
+    {
+      "name": "mint-80",
+      "value": "oklch(0.846 0.062 189.6)",
+      "note": "#9EDAD5",
+      "group": "원시 — mint (--base-color-mint-*)"
+    },
+    {
+      "name": "mint-90",
+      "value": "oklch(0.924 0.032 189.3)",
+      "note": "#CFEDEA",
+      "group": "원시 — mint (--base-color-mint-*)"
+    },
+    {
+      "name": "mint-95",
+      "value": "oklch(0.971 0.012 197.0)",
+      "note": "#EDF8F8",
+      "group": "원시 — mint (--base-color-mint-*)"
+    },
+    {
+      "name": "sky-10",
+      "value": "oklch(0.160 0.023 205.7)",
+      "note": "#021012",
+      "group": "원시 — sky (--base-color-sky-*)"
+    },
+    {
+      "name": "sky-20",
+      "value": "oklch(0.225 0.035 211.4)",
+      "note": "#042025",
+      "group": "원시 — sky (--base-color-sky-*)"
+    },
+    {
+      "name": "sky-30",
+      "value": "oklch(0.343 0.057 213.0)",
+      "note": "#07404A",
+      "group": "원시 — sky (--base-color-sky-*)"
+    },
+    {
+      "name": "sky-40",
+      "value": "oklch(0.500 0.085 214.7)",
+      "note": "#0D6F81",
+      "group": "원시 — sky (--base-color-sky-*)"
+    },
+    {
+      "name": "sky-50",
+      "value": "oklch(0.647 0.111 214.5)",
+      "note": "#129FB8",
+      "group": "원시 — sky (--base-color-sky-*)"
+    },
+    {
+      "name": "sky-60",
+      "value": "oklch(0.678 0.109 212.4)",
+      "note": "#2AA9BF",
+      "group": "원시 — sky (--base-color-sky-*)"
+    },
+    {
+      "name": "sky-70",
+      "value": "oklch(0.742 0.095 210.3)",
+      "note": "#59BCCD",
+      "group": "원시 — sky (--base-color-sky-*)"
+    },
+    {
+      "name": "sky-80",
+      "value": "oklch(0.850 0.060 209.5)",
+      "note": "#A0D9E3",
+      "group": "원시 — sky (--base-color-sky-*)"
+    },
+    {
+      "name": "sky-90",
+      "value": "oklch(0.924 0.030 209.6)",
+      "note": "#D0ECF1",
+      "group": "원시 — sky (--base-color-sky-*)"
+    },
+    {
+      "name": "sky-95",
+      "value": "oklch(0.968 0.013 208.8)",
+      "note": "#EBF7F9",
+      "group": "원시 — sky (--base-color-sky-*)"
+    },
+    {
+      "name": "light-blue-10",
+      "value": "oklch(0.154 0.029 231.9)",
+      "note": "#010E16",
+      "group": "원시 — light-blue (--base-color-light-blue-*)"
+    },
+    {
+      "name": "light-blue-20",
+      "value": "oklch(0.212 0.045 239.7)",
+      "note": "#021B2B",
+      "group": "원시 — light-blue (--base-color-light-blue-*)"
+    },
+    {
+      "name": "light-blue-30",
+      "value": "oklch(0.324 0.075 243.3)",
+      "note": "#043757",
+      "group": "원시 — light-blue (--base-color-light-blue-*)"
+    },
+    {
+      "name": "light-blue-40",
+      "value": "oklch(0.473 0.117 245.1)",
+      "note": "#066098",
+      "group": "원시 — light-blue (--base-color-light-blue-*)"
+    },
+    {
+      "name": "light-blue-50",
+      "value": "oklch(0.610 0.154 245.9)",
+      "note": "#0989D9 — status-positive · light-blue-normal 이 같은 값",
+      "group": "원시 — light-blue (--base-color-light-blue-*)"
+    },
+    {
+      "name": "light-blue-60",
+      "value": "oklch(0.643 0.144 242.9)",
+      "note": "#2295DD",
+      "group": "원시 — light-blue (--base-color-light-blue-*)"
+    },
+    {
+      "name": "light-blue-70",
+      "value": "oklch(0.713 0.118 239.1)",
+      "note": "#53ACE4 — status-loss",
+      "group": "원시 — light-blue (--base-color-light-blue-*)"
+    },
+    {
+      "name": "light-blue-80",
+      "value": "oklch(0.833 0.070 236.2)",
+      "note": "#9DD0F0",
+      "group": "원시 — light-blue (--base-color-light-blue-*)"
+    },
+    {
+      "name": "light-blue-90",
+      "value": "oklch(0.915 0.034 235.9)",
+      "note": "#CEE7F7",
+      "group": "원시 — light-blue (--base-color-light-blue-*)"
+    },
+    {
+      "name": "light-blue-95",
+      "value": "oklch(0.961 0.015 235.4)",
+      "note": "#E9F4FB",
+      "group": "원시 — light-blue (--base-color-light-blue-*)"
+    },
+    {
+      "name": "deep-blue-10",
+      "value": "oklch(0.205 0.044 258.7)",
+      "note": "#0A172B",
+      "group": "원시 — deep-blue (--base-color-deep-blue-*)"
+    },
+    {
+      "name": "deep-blue-20",
+      "value": "oklch(0.257 0.061 257.8)",
+      "note": "#0F2340",
+      "group": "원시 — deep-blue (--base-color-deep-blue-*)"
+    },
+    {
+      "name": "deep-blue-30",
+      "value": "oklch(0.355 0.092 258.0)",
+      "note": "#1A3B6B",
+      "group": "원시 — deep-blue (--base-color-deep-blue-*)"
+    },
+    {
+      "name": "deep-blue-40",
+      "value": "oklch(0.444 0.122 258.3)",
+      "note": "#245296",
+      "group": "원시 — deep-blue (--base-color-deep-blue-*)"
+    },
+    {
+      "name": "deep-blue-50",
+      "value": "oklch(0.571 0.164 258.3)",
+      "note": "#3375D6",
+      "group": "원시 — deep-blue (--base-color-deep-blue-*)"
+    },
+    {
+      "name": "deep-blue-60",
+      "value": "oklch(0.612 0.147 257.8)",
+      "note": "#4783DA",
+      "group": "원시 — deep-blue (--base-color-deep-blue-*)"
+    },
+    {
+      "name": "deep-blue-70",
+      "value": "oklch(0.694 0.112 258.0)",
+      "note": "#709EE2",
+      "group": "원시 — deep-blue (--base-color-deep-blue-*)"
+    },
+    {
+      "name": "deep-blue-80",
+      "value": "oklch(0.826 0.062 257.5)",
+      "note": "#ADC8EF",
+      "group": "원시 — deep-blue (--base-color-deep-blue-*)"
+    },
+    {
+      "name": "deep-blue-90",
+      "value": "oklch(0.912 0.031 258.9)",
+      "note": "#D6E3F7",
+      "group": "원시 — deep-blue (--base-color-deep-blue-*)"
+    },
+    {
+      "name": "deep-blue-95",
+      "value": "oklch(0.957 0.015 260.7)",
+      "note": "#EBF1FB",
+      "group": "원시 — deep-blue (--base-color-deep-blue-*)"
+    },
+    {
+      "name": "indigo-10",
+      "value": "oklch(0.198 0.048 274.0)",
+      "note": "#0F132B",
+      "group": "원시 — indigo (--base-color-indigo-*)"
+    },
+    {
+      "name": "indigo-20",
+      "value": "oklch(0.243 0.068 273.2)",
+      "note": "#161C40",
+      "group": "원시 — indigo (--base-color-indigo-*)"
+    },
+    {
+      "name": "indigo-30",
+      "value": "oklch(0.333 0.105 272.3)",
+      "note": "#252F6B",
+      "group": "원시 — indigo (--base-color-indigo-*)"
+    },
+    {
+      "name": "indigo-40",
+      "value": "oklch(0.417 0.138 271.5)",
+      "note": "#334296",
+      "group": "원시 — indigo (--base-color-indigo-*)"
+    },
+    {
+      "name": "indigo-50",
+      "value": "oklch(0.534 0.185 271.2)",
+      "note": "#495ED6",
+      "group": "원시 — indigo (--base-color-indigo-*)"
+    },
+    {
+      "name": "indigo-60",
+      "value": "oklch(0.579 0.165 272.7)",
+      "note": "#5B6EDA",
+      "group": "원시 — indigo (--base-color-indigo-*)"
+    },
+    {
+      "name": "indigo-70",
+      "value": "oklch(0.718 0.106 276.2)",
+      "note": "#929EE6",
+      "group": "원시 — indigo (--base-color-indigo-*)"
+    },
+    {
+      "name": "indigo-80",
+      "value": "oklch(0.814 0.068 276.5)",
+      "note": "#B6BFEF",
+      "group": "원시 — indigo (--base-color-indigo-*)"
+    },
+    {
+      "name": "indigo-90",
+      "value": "oklch(0.908 0.033 278.2)",
+      "note": "#DBDFF7",
+      "group": "원시 — indigo (--base-color-indigo-*)"
+    },
+    {
+      "name": "indigo-95",
+      "value": "oklch(0.954 0.016 278.5)",
+      "note": "#EDEFFB",
+      "group": "원시 — indigo (--base-color-indigo-*)"
+    },
+    {
+      "name": "violet-10",
+      "value": "oklch(0.193 0.051 285.9)",
+      "note": "#13102A",
+      "group": "원시 — violet (--base-color-violet-*)"
+    },
+    {
+      "name": "violet-20",
+      "value": "oklch(0.239 0.072 284.2)",
+      "note": "#1C183F",
+      "group": "원시 — violet (--base-color-violet-*)"
+    },
+    {
+      "name": "violet-30",
+      "value": "oklch(0.363 0.127 283.3)",
+      "note": "#382F7D",
+      "group": "원시 — violet (--base-color-violet-*)"
+    },
+    {
+      "name": "violet-40",
+      "value": "oklch(0.442 0.161 282.4)",
+      "note": "#4A3FA7",
+      "group": "원시 — violet (--base-color-violet-*)"
+    },
+    {
+      "name": "violet-50",
+      "value": "oklch(0.518 0.192 282.2)",
+      "note": "#5D4FD1",
+      "group": "원시 — violet (--base-color-violet-*)"
+    },
+    {
+      "name": "violet-60",
+      "value": "oklch(0.565 0.173 284.0)",
+      "note": "#6D61D6",
+      "group": "원시 — violet (--base-color-violet-*)"
+    },
+    {
+      "name": "violet-70",
+      "value": "oklch(0.758 0.093 288.9)",
+      "note": "#AEA7E8",
+      "group": "원시 — violet (--base-color-violet-*)"
+    },
+    {
+      "name": "violet-80",
+      "value": "oklch(0.855 0.054 289.9)",
+      "note": "#CECAF1",
+      "group": "원시 — violet (--base-color-violet-*)"
+    },
+    {
+      "name": "violet-90",
+      "value": "oklch(0.905 0.035 291.0)",
+      "note": "#DFDCF6",
+      "group": "원시 — violet (--base-color-violet-*)"
+    },
+    {
+      "name": "violet-95",
+      "value": "oklch(0.951 0.017 293.1)",
+      "note": "#EFEDFA",
+      "group": "원시 — violet (--base-color-violet-*)"
+    },
+    {
+      "name": "purple-10",
+      "value": "oklch(0.204 0.053 295.0)",
+      "note": "#19112C",
+      "group": "원시 — purple (--base-color-purple-*)"
+    },
+    {
+      "name": "purple-20",
+      "value": "oklch(0.253 0.075 293.9)",
+      "note": "#251942",
+      "group": "원시 — purple (--base-color-purple-*)"
+    },
+    {
+      "name": "purple-30",
+      "value": "oklch(0.391 0.130 293.1)",
+      "note": "#4A3283",
+      "group": "원시 — purple (--base-color-purple-*)"
+    },
+    {
+      "name": "purple-40",
+      "value": "oklch(0.476 0.166 293.0)",
+      "note": "#6342AF",
+      "group": "원시 — purple (--base-color-purple-*)"
+    },
+    {
+      "name": "purple-50",
+      "value": "oklch(0.559 0.198 292.7)",
+      "note": "#7C53DB",
+      "group": "원시 — purple (--base-color-purple-*)"
+    },
+    {
+      "name": "purple-60",
+      "value": "oklch(0.600 0.180 294.2)",
+      "note": "#8964DF",
+      "group": "원시 — purple (--base-color-purple-*)"
+    },
+    {
+      "name": "purple-70",
+      "value": "oklch(0.732 0.117 297.0)",
+      "note": "#B098E9",
+      "group": "원시 — purple (--base-color-purple-*)"
+    },
+    {
+      "name": "purple-80",
+      "value": "oklch(0.822 0.078 298.8)",
+      "note": "#CBBAF1",
+      "group": "원시 — purple (--base-color-purple-*)"
+    },
+    {
+      "name": "purple-90",
+      "value": "oklch(0.912 0.037 299.2)",
+      "note": "#E5DDF8",
+      "group": "원시 — purple (--base-color-purple-*)"
+    },
+    {
+      "name": "purple-95",
+      "value": "oklch(0.946 0.022 300.2)",
+      "note": "#EFEAFA",
+      "group": "원시 — purple (--base-color-purple-*)"
+    },
+    {
+      "name": "orchid-10",
+      "value": "oklch(0.160 0.030 315.0)",
+      "note": "#120916",
+      "group": "원시 — orchid (--base-color-orchid-*)"
+    },
+    {
+      "name": "orchid-20",
+      "value": "oklch(0.222 0.055 316.4)",
+      "note": "#25122C",
+      "group": "원시 — orchid (--base-color-orchid-*)"
+    },
+    {
+      "name": "orchid-30",
+      "value": "oklch(0.338 0.095 315.9)",
+      "note": "#4A2558",
+      "group": "원시 — orchid (--base-color-orchid-*)"
+    },
+    {
+      "name": "orchid-40",
+      "value": "oklch(0.442 0.132 316.4)",
+      "note": "#6F3783",
+      "group": "원시 — orchid (--base-color-orchid-*)"
+    },
+    {
+      "name": "orchid-50",
+      "value": "oklch(0.638 0.200 316.1)",
+      "note": "#B95CDB",
+      "group": "원시 — orchid (--base-color-orchid-*)"
+    },
+    {
+      "name": "orchid-60",
+      "value": "oklch(0.670 0.182 316.2)",
+      "note": "#C06CDF",
+      "group": "원시 — orchid (--base-color-orchid-*)"
+    },
+    {
+      "name": "orchid-70",
+      "value": "oklch(0.740 0.142 316.6)",
+      "note": "#CE8DE6",
+      "group": "원시 — orchid (--base-color-orchid-*)"
+    },
+    {
+      "name": "orchid-80",
+      "value": "oklch(0.850 0.080 316.7)",
+      "note": "#E3BEF1",
+      "group": "원시 — orchid (--base-color-orchid-*)"
+    },
+    {
+      "name": "orchid-90",
+      "value": "oklch(0.924 0.040 317.0)",
+      "note": "#F1DEF8",
+      "group": "원시 — orchid (--base-color-orchid-*)"
+    },
+    {
+      "name": "orchid-95",
+      "value": "oklch(0.953 0.023 317.1)",
+      "note": "#F6EBFA",
+      "group": "원시 — orchid (--base-color-orchid-*)"
+    },
+    {
+      "name": "magenta-10",
+      "value": "oklch(0.161 0.030 341.8)",
+      "note": "#160811",
+      "group": "원시 — magenta (--base-color-magenta-*)"
+    },
+    {
+      "name": "magenta-20",
+      "value": "oklch(0.226 0.052 341.6)",
+      "note": "#2C1123",
+      "group": "원시 — magenta (--base-color-magenta-*)"
+    },
+    {
+      "name": "magenta-30",
+      "value": "oklch(0.342 0.094 343.1)",
+      "note": "#582145",
+      "group": "원시 — magenta (--base-color-magenta-*)"
+    },
+    {
+      "name": "magenta-40",
+      "value": "oklch(0.450 0.129 342.7)",
+      "note": "#833268",
+      "group": "원시 — magenta (--base-color-magenta-*)"
+    },
+    {
+      "name": "magenta-50",
+      "value": "oklch(0.649 0.195 343.3)",
+      "note": "#DB53AD",
+      "group": "원시 — magenta (--base-color-magenta-*)"
+    },
+    {
+      "name": "magenta-60",
+      "value": "oklch(0.679 0.178 342.7)",
+      "note": "#DF64B5",
+      "group": "원시 — magenta (--base-color-magenta-*)"
+    },
+    {
+      "name": "magenta-70",
+      "value": "oklch(0.777 0.118 340.1)",
+      "note": "#E998CE",
+      "group": "원시 — magenta (--base-color-magenta-*)"
+    },
+    {
+      "name": "magenta-80",
+      "value": "oklch(0.849 0.078 339.6)",
+      "note": "#F1BADE",
+      "group": "원시 — magenta (--base-color-magenta-*)"
+    },
+    {
+      "name": "magenta-90",
+      "value": "oklch(0.925 0.038 338.1)",
+      "note": "#F8DDEF",
+      "group": "원시 — magenta (--base-color-magenta-*)"
+    },
+    {
+      "name": "magenta-95",
+      "value": "oklch(0.953 0.022 336.8)",
+      "note": "#FAEAF5",
+      "group": "원시 — magenta (--base-color-magenta-*)"
+    },
+    {
+      "name": "pink-10",
+      "value": "oklch(0.222 0.050 0.2)",
+      "note": "#2D101A",
+      "group": "원시 — pink (--base-color-pink-*)"
+    },
+    {
+      "name": "pink-20",
+      "value": "oklch(0.280 0.069 0.7)",
+      "note": "#431827",
+      "group": "원시 — pink (--base-color-pink-*)"
+    },
+    {
+      "name": "pink-30",
+      "value": "oklch(0.392 0.103 2.1)",
+      "note": "#702941",
+      "group": "원시 — pink (--base-color-pink-*)"
+    },
+    {
+      "name": "pink-40",
+      "value": "oklch(0.494 0.136 3.1)",
+      "note": "#9D395A",
+      "group": "원시 — pink (--base-color-pink-*)"
+    },
+    {
+      "name": "pink-50",
+      "value": "oklch(0.639 0.182 3.1)",
+      "note": "#E05181",
+      "group": "원시 — pink (--base-color-pink-*)"
+    },
+    {
+      "name": "pink-60",
+      "value": "oklch(0.668 0.166 1.3)",
+      "note": "#E3628E",
+      "group": "원시 — pink (--base-color-pink-*)"
+    },
+    {
+      "name": "pink-70",
+      "value": "oklch(0.770 0.107 358.6)",
+      "note": "#EC97B3",
+      "group": "원시 — pink (--base-color-pink-*)"
+    },
+    {
+      "name": "pink-80",
+      "value": "oklch(0.844 0.071 356.2)",
+      "note": "#F3B9CD",
+      "group": "원시 — pink (--base-color-pink-*)"
+    },
+    {
+      "name": "pink-90",
+      "value": "oklch(0.921 0.034 354.9)",
+      "note": "#F9DCE6",
+      "group": "원시 — pink (--base-color-pink-*)"
+    },
+    {
+      "name": "pink-95",
+      "value": "oklch(0.950 0.021 358.7)",
+      "note": "#FBE9EE",
+      "group": "원시 — pink (--base-color-pink-*)"
+    },
+    {
+      "name": "coral-10",
+      "value": "oklch(0.161 0.025 20.2)",
+      "note": "#170909",
+      "group": "원시 — coral (--base-color-coral-*)"
+    },
+    {
+      "name": "coral-20",
+      "value": "oklch(0.229 0.046 23.4)",
+      "note": "#2F1312",
+      "group": "원시 — coral (--base-color-coral-*)"
+    },
+    {
+      "name": "coral-30",
+      "value": "oklch(0.349 0.083 24.3)",
+      "note": "#5E2624",
+      "group": "원시 — coral (--base-color-coral-*)"
+    },
+    {
+      "name": "coral-40",
+      "value": "oklch(0.512 0.132 25.2)",
+      "note": "#A5423E",
+      "group": "원시 — coral (--base-color-coral-*)"
+    },
+    {
+      "name": "coral-50",
+      "value": "oklch(0.662 0.176 25.1)",
+      "note": "#EB5E59",
+      "group": "원시 — coral (--base-color-coral-*)"
+    },
+    {
+      "name": "coral-60",
+      "value": "oklch(0.690 0.158 23.9)",
+      "note": "#ED6E6A",
+      "group": "원시 — coral (--base-color-coral-*)"
+    },
+    {
+      "name": "coral-70",
+      "value": "oklch(0.783 0.102 21.9)",
+      "note": "#F39E9B",
+      "group": "원시 — coral (--base-color-coral-*)"
+    },
+    {
+      "name": "coral-80",
+      "value": "oklch(0.854 0.065 20.9)",
+      "note": "#F7BFBD",
+      "group": "원시 — coral (--base-color-coral-*)"
+    },
+    {
+      "name": "coral-90",
+      "value": "oklch(0.926 0.031 20.2)",
+      "note": "#FBDFDE",
+      "group": "원시 — coral (--base-color-coral-*)"
+    },
+    {
+      "name": "coral-95",
+      "value": "oklch(0.951 0.020 25.2)",
+      "note": "#FCEAE8",
+      "group": "원시 — coral (--base-color-coral-*)"
+    },
+    {
+      "name": "red-10",
+      "value": "oklch(0.150 0.030 16.5)",
+      "note": "#160607",
+      "group": "원시 — red (--base-color-red-*, 65단 추가)"
+    },
+    {
+      "name": "red-20",
+      "value": "oklch(0.209 0.053 17.3)",
+      "note": "#2C0C0F",
+      "group": "원시 — red (--base-color-red-*, 65단 추가)"
+    },
+    {
+      "name": "red-30",
+      "value": "oklch(0.317 0.096 18.7)",
+      "note": "#59171E",
+      "group": "원시 — red (--base-color-red-*, 65단 추가)"
+    },
+    {
+      "name": "red-40",
+      "value": "oklch(0.510 0.168 20.4)",
+      "note": "#B22E3B",
+      "group": "원시 — red (--base-color-red-*, 65단 추가)"
+    },
+    {
+      "name": "red-50",
+      "value": "oklch(0.600 0.199 20.6)",
+      "note": "#DE3A4A — status-negative",
+      "group": "원시 — red (--base-color-red-*, 65단 추가)"
+    },
+    {
+      "name": "red-60",
+      "value": "oklch(0.628 0.182 18.6)",
+      "note": "#E14E5C",
+      "group": "원시 — red (--base-color-red-*, 65단 추가)"
+    },
+    {
+      "name": "red-65",
+      "value": "oklch(0.661 0.164 16.8)",
+      "note": "#E5616E — red 계열에만 있는 단 · status-profit",
+      "group": "원시 — red (--base-color-red-*, 65단 추가)"
+    },
+    {
+      "name": "red-70",
+      "value": "oklch(0.698 0.142 15.5)",
+      "note": "#E87580",
+      "group": "원시 — red (--base-color-red-*, 65단 추가)"
+    },
+    {
+      "name": "red-80",
+      "value": "oklch(0.821 0.078 11.9)",
+      "note": "#F2B0B7",
+      "group": "원시 — red (--base-color-red-*, 65단 추가)"
+    },
+    {
+      "name": "red-90",
+      "value": "oklch(0.954 0.019 9.3)",
+      "note": "#FCEBED",
+      "group": "원시 — red (--base-color-red-*, 65단 추가)"
+    },
+    {
+      "name": "red-95",
+      "value": "oklch(0.972 0.011 10.3)",
+      "note": "#FDF3F4",
+      "group": "원시 — red (--base-color-red-*, 65단 추가)"
+    },
+    {
+      "name": "orange-10",
+      "value": "oklch(0.165 0.027 55.4)",
+      "note": "#170B04",
+      "group": "원시 — orange (--base-color-orange-*)"
+    },
+    {
+      "name": "orange-20",
+      "value": "oklch(0.233 0.046 53.6)",
+      "note": "#2E1707",
+      "group": "원시 — orange (--base-color-orange-*)"
+    },
+    {
+      "name": "orange-30",
+      "value": "oklch(0.355 0.078 51.6)",
+      "note": "#5B2E0F",
+      "group": "원시 — orange (--base-color-orange-*)"
+    },
+    {
+      "name": "orange-40",
+      "value": "oklch(0.521 0.124 49.9)",
+      "note": "#A0501A",
+      "group": "원시 — orange (--base-color-orange-*)"
+    },
+    {
+      "name": "orange-50",
+      "value": "oklch(0.674 0.164 49.4)",
+      "note": "#E47225",
+      "group": "원시 — orange (--base-color-orange-*)"
+    },
+    {
+      "name": "orange-60",
+      "value": "oklch(0.702 0.151 51.4)",
+      "note": "#E7803B",
+      "group": "원시 — orange (--base-color-orange-*)"
+    },
+    {
+      "name": "orange-70",
+      "value": "oklch(0.794 0.102 54.4)",
+      "note": "#EFAA7C",
+      "group": "원시 — orange (--base-color-orange-*)"
+    },
+    {
+      "name": "orange-80",
+      "value": "oklch(0.861 0.066 56.2)",
+      "note": "#F4C7A8",
+      "group": "원시 — orange (--base-color-orange-*)"
+    },
+    {
+      "name": "orange-90",
+      "value": "oklch(0.930 0.033 57.1)",
+      "note": "#FAE3D3",
+      "group": "원시 — orange (--base-color-orange-*)"
+    },
+    {
+      "name": "orange-95",
+      "value": "oklch(0.965 0.016 58.6)",
+      "note": "#FCF1E9",
+      "group": "원시 — orange (--base-color-orange-*)"
+    },
+    {
+      "name": "mustard-10",
+      "value": "oklch(0.167 0.028 87.8)",
+      "note": "#140E02",
+      "group": "원시 — mustard (--base-color-mustard-*)"
+    },
+    {
+      "name": "mustard-20",
+      "value": "oklch(0.233 0.041 78.3)",
+      "note": "#281B05",
+      "group": "원시 — mustard (--base-color-mustard-*)"
+    },
+    {
+      "name": "mustard-30",
+      "value": "oklch(0.355 0.068 75.5)",
+      "note": "#50360A",
+      "group": "원시 — mustard (--base-color-mustard-*)"
+    },
+    {
+      "name": "mustard-40",
+      "value": "oklch(0.521 0.104 74.4)",
+      "note": "#8C5F12",
+      "group": "원시 — mustard (--base-color-mustard-*)"
+    },
+    {
+      "name": "mustard-50",
+      "value": "oklch(0.675 0.137 74.0)",
+      "note": "#C88819 — status-caution",
+      "group": "원시 — mustard (--base-color-mustard-*)"
+    },
+    {
+      "name": "mustard-60",
+      "value": "oklch(0.723 0.141 75.4)",
+      "note": "#D89726",
+      "group": "원시 — mustard (--base-color-mustard-*)"
+    },
+    {
+      "name": "mustard-70",
+      "value": "oklch(0.801 0.096 80.9)",
+      "note": "#DEB875",
+      "group": "원시 — mustard (--base-color-mustard-*)"
+    },
+    {
+      "name": "mustard-80",
+      "value": "oklch(0.865 0.065 80.7)",
+      "note": "#E9CFA3",
+      "group": "원시 — mustard (--base-color-mustard-*)"
+    },
+    {
+      "name": "mustard-90",
+      "value": "oklch(0.932 0.032 81.0)",
+      "note": "#F4E7D1",
+      "group": "원시 — mustard (--base-color-mustard-*)"
+    },
+    {
+      "name": "mustard-95",
+      "value": "oklch(0.967 0.016 79.4)",
+      "note": "#FAF3E8",
+      "group": "원시 — mustard (--base-color-mustard-*)"
+    },
+    {
+      "name": "gray-0",
+      "value": "oklch(0.000 0.000 0.0)",
+      "note": "#000000",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "gray-10",
+      "value": "oklch(0.163 0.003 248.0)",
+      "note": "#0D0E0F",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "gray-20",
+      "value": "oklch(0.222 0.008 264.4)",
+      "note": "#191B1F",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "gray-23",
+      "value": "oklch(0.252 0.010 268.3)",
+      "note": "#202227",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "gray-25",
+      "value": "oklch(0.284 0.012 264.4)",
+      "note": "#272A30 — 라이트 text-normal",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "gray-27",
+      "value": "oklch(0.307 0.013 253.0)",
+      "note": "#2B3036",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "gray-30",
+      "value": "oklch(0.336 0.015 264.3)",
+      "note": "#33373F",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "gray-32",
+      "value": "oklch(0.387 0.016 251.8)",
+      "note": "#3E454D",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "gray-38",
+      "value": "oklch(0.473 0.021 261.3)",
+      "note": "#555C68 — 옛 층 legacy-gray-200 과 같은 값",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "gray-40",
+      "value": "oklch(0.515 0.021 258.4)",
+      "note": "#606874 — 라이트 text-neutral",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "gray-50",
+      "value": "oklch(0.656 0.022 264.4)",
+      "note": "#8A919F",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "gray-60",
+      "value": "oklch(0.721 0.017 262.7)",
+      "note": "#9FA5B0",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "gray-70",
+      "value": "oklch(0.781 0.013 259.8)",
+      "note": "#B3B8C0",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "gray-80",
+      "value": "oklch(0.875 0.011 261.8)",
+      "note": "#D2D6DD",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "gray-84",
+      "value": "oklch(0.912 0.009 264.5)",
+      "note": "#DFE2E8",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "gray-88",
+      "value": "oklch(0.930 0.007 260.7)",
+      "note": "#E5E8ED",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "gray-90",
+      "value": "oklch(0.948 0.006 255.5)",
+      "note": "#EBEEF2",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "gray-91",
+      "value": "oklch(0.960 0.005 258.3)",
+      "note": "#F0F2F5",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "gray-92",
+      "value": "oklch(0.964 0.004 271.4)",
+      "note": "#F2F3F6",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "gray-93",
+      "value": "oklch(0.970 0.004 271.4)",
+      "note": "#F4F5F8",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "gray-94",
+      "value": "oklch(0.976 0.003 264.5)",
+      "note": "#F6F7F9",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "gray-95",
+      "value": "oklch(0.982 0.003 264.5)",
+      "note": "#F8F9FB",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "gray-100",
+      "value": "oklch(1.000 0.000 0.0)",
+      "note": "#FFFFFF — 원시 흰색. 옛 층 legacy-gray-100(진회색)과 다른 토큰",
+      "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
+    },
+    {
+      "name": "legacy-green-100",
+      "value": "oklch(0.706 0.156 160.2)",
+      "note": "#13BD7E — 옛 --color-green-100(= highlight-000). 다크에서도 같은 값. 대표색 아님",
+      "group": "옛 층 — 홈 마케팅 셸이 쓰는 --color-* (화면 사용값만)"
+    },
+    {
+      "name": "legacy-gray-050",
+      "value": "oklch(0.178 0.000 0.0)",
+      "note": "#111111 — body 기본 글자 · 홈 GNB 메뉴",
+      "group": "옛 층 — 홈 마케팅 셸이 쓰는 --color-* (화면 사용값만)"
+    },
+    {
+      "name": "legacy-gray-100",
+      "value": "oklch(0.346 0.020 257.3)",
+      "note": "#333A44 — 모바일 메뉴 행. 원시 gray-100(흰색)과 다른 토큰",
+      "group": "옛 층 — 홈 마케팅 셸이 쓰는 --color-* (화면 사용값만)"
+    },
+    {
+      "name": "legacy-gray-200",
+      "value": "oklch(0.473 0.021 261.3)",
+      "note": "#555C68 — 푸터 링크. 원시 gray-38 과 같은 값",
+      "group": "옛 층 — 홈 마케팅 셸이 쓰는 --color-* (화면 사용값만)"
+    },
+    {
+      "name": "legacy-gray-400",
+      "value": "oklch(0.646 0.022 264.4)",
+      "note": "#878E9C — 푸터 회사 정보",
+      "group": "옛 층 — 홈 마케팅 셸이 쓰는 --color-* (화면 사용값만)"
+    },
+    {
+      "name": "legacy-gray-550",
+      "value": "oklch(0.807 0.015 264.5)",
+      "note": "#BBC0CA — 머니피드 목록의 「다음」 화살표 아이콘",
+      "group": "옛 층 — 홈 마케팅 셸이 쓰는 --color-* (화면 사용값만)"
+    },
+    {
+      "name": "legacy-white-900",
+      "value": "oklch(1.000 0.000 0.0)",
+      "note": "#FFFFFF — 홈 셸 바탕",
+      "group": "옛 층 — 홈 마케팅 셸이 쓰는 --color-* (화면 사용값만)"
+    },
+    {
+      "name": "dark-legacy-white-900",
+      "value": "oklch(0.217 0.008 264.4)",
+      "note": "#181A1E — 옛 층 다크 바탕. 시맨틱 dark-background-white(gray-20)와 1단위 차",
+      "group": "옛 층 — 홈 마케팅 셸이 쓰는 --color-* (화면 사용값만)"
+    },
+    {
+      "name": "dark-legacy-gray-050",
+      "value": "oklch(0.985 0.001 286.4)",
+      "note": "#FAFAFB — 옛 층 다크",
+      "group": "옛 층 — 홈 마케팅 셸이 쓰는 --color-* (화면 사용값만)"
+    },
+    {
+      "name": "dark-legacy-gray-100",
+      "value": "oklch(0.970 0.003 264.5)",
+      "note": "#F4F5F7 — 옛 층 다크",
+      "group": "옛 층 — 홈 마케팅 셸이 쓰는 --color-* (화면 사용값만)"
+    },
+    {
+      "name": "dark-legacy-gray-200",
+      "value": "oklch(0.930 0.007 260.7)",
+      "note": "#E5E8ED — 옛 층 다크",
+      "group": "옛 층 — 홈 마케팅 셸이 쓰는 --color-* (화면 사용값만)"
+    },
+    {
+      "name": "dark-legacy-gray-400",
+      "value": "oklch(0.718 0.018 267.7)",
+      "note": "#9FA4B0 — 옛 층 다크",
+      "group": "옛 층 — 홈 마케팅 셸이 쓰는 --color-* (화면 사용값만)"
+    },
+    {
+      "name": "dark-legacy-gray-550",
+      "value": "oklch(0.590 0.024 259.2)",
+      "note": "#757E8C — 옛 층 다크",
+      "group": "옛 층 — 홈 마케팅 셸이 쓰는 --color-* (화면 사용값만)"
+    }
+  ],
+  "typography": [
+    {
+      "name": "head-36",
+      "size": "36px",
+      "weight": 800,
+      "lineHeight": "48px",
+      "tracking": "0em"
+    },
+    {
+      "name": "head-32",
+      "size": "32px",
+      "weight": 800,
+      "lineHeight": "42px",
+      "tracking": "0em"
+    },
+    {
+      "name": "head-30",
+      "size": "30px",
+      "weight": 800,
+      "lineHeight": "40px",
+      "tracking": "0em"
+    },
+    {
+      "name": "head-28",
+      "size": "28px",
+      "weight": 800,
+      "lineHeight": "37px",
+      "tracking": "0em"
+    },
+    {
+      "name": "head-24",
+      "size": "24px",
+      "weight": 800,
+      "lineHeight": "32px",
+      "tracking": "0em"
+    },
+    {
+      "name": "head-20",
+      "size": "20px",
+      "weight": 800,
+      "lineHeight": "28px",
+      "tracking": "0em"
+    },
+    {
+      "name": "body-18",
+      "size": "18px",
+      "lineHeight": "26px",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "body-16",
+      "size": "16px",
+      "lineHeight": "26px",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "body-15",
+      "size": "15px",
+      "lineHeight": "23px",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "body-14",
+      "size": "14px",
+      "lineHeight": "20px",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "body-13",
+      "size": "13px",
+      "lineHeight": "20px",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "caption-12",
+      "size": "12px",
+      "lineHeight": "18px",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "caption-10",
+      "size": "10px",
+      "lineHeight": "15px",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "caption-9",
+      "size": "9px",
+      "lineHeight": "14px",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "caption-8",
+      "size": "8px",
+      "lineHeight": "12px",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "d56",
+      "size": "56px",
+      "lineHeight": "74px",
+      "tracking": "0em"
+    },
+    {
+      "name": "d42",
+      "size": "42px",
+      "lineHeight": "56px",
+      "tracking": "0em"
+    },
+    {
+      "name": "h36",
+      "size": "36px",
+      "lineHeight": "48px",
+      "tracking": "0em"
+    },
+    {
+      "name": "h32",
+      "size": "32px",
+      "lineHeight": "42px",
+      "tracking": "0em"
+    },
+    {
+      "name": "h28",
+      "size": "28px",
+      "lineHeight": "38px",
+      "tracking": "0em"
+    },
+    {
+      "name": "h24",
+      "size": "24px",
+      "lineHeight": "32px",
+      "tracking": "0em"
+    },
+    {
+      "name": "h20",
+      "size": "20px",
+      "lineHeight": "28px",
+      "tracking": "0em"
+    },
+    {
+      "name": "b18",
+      "size": "18px",
+      "lineHeight": "26px",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "b16",
+      "size": "16px",
+      "lineHeight": "24px",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "b15",
+      "size": "15px",
+      "lineHeight": "22px",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "b14",
+      "size": "14px",
+      "lineHeight": "20px",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "b13",
+      "size": "13px",
+      "lineHeight": "18px",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "c12",
+      "size": "12px",
+      "lineHeight": "16px",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "c11",
+      "size": "11px",
+      "lineHeight": "14px",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "c10",
+      "size": "10px",
+      "lineHeight": "14px",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "c9",
+      "size": "9px",
+      "lineHeight": "14px",
+      "tracking": "-0.005em"
+    },
+    {
+      "name": "c8",
+      "size": "8px",
+      "lineHeight": "12px",
+      "tracking": "-0.005em"
+    }
+  ],
+  "spacing": [],
+  "radius": [
+    {
+      "name": "rounded",
+      "value": "6px",
+      "px": 6,
+      "note": ".rounded — 상류 철자 그대로"
+    },
+    {
+      "name": "xsmall",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "small",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "medium",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "large",
+      "value": "20px",
+      "px": 20,
+      "note": ".rounded-large — lg(50%)와 다른 토큰"
+    },
+    {
+      "name": "xlarge",
+      "value": "24px",
+      "px": 24
+    },
+    {
+      "name": "full",
+      "value": "9999px",
+      "px": 9999
+    },
+    {
+      "name": "lg",
+      "value": "50%",
+      "px": null,
+      "note": ".rounded-lg — 원형. large(20px)와 다르고 Tailwind 기본 lg(8px)와도 다르다"
+    }
+  ],
+  "elevation": [
+    {
+      "name": "shadow-sm",
+      "value": "0px 2px 8px oklch(0.000 0.000 0.0 / 0.1)",
+      "note": "#0000001a · 화면 사용 0건"
+    },
+    {
+      "name": "shadow-md",
+      "value": "0px 4px 16px oklch(0.000 0.000 0.0 / 0.1)",
+      "note": "#0000001a · 화면 사용 0건"
+    },
+    {
+      "name": "shadow-lg",
+      "value": "0px 8px 32px oklch(0.000 0.000 0.0 / 0.1)",
+      "note": "#0000001a · 화면 사용 0건"
+    }
+  ]
+}

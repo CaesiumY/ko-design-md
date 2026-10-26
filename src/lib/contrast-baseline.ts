@@ -405,6 +405,10 @@ export const BASELINE_TABLE = `\
 | baemin | dark | non-text | 4 | 15 | 2 | 0 | 0 |
 | baemin | light | text | 86 | 157 | 19 | 4 | 2 |
 | baemin | light | non-text | 4 | 15 | 2 | 0 | 0 |
+| banksalad | dark | text | 173 | 381 | 46 | 0 | 5 |
+| banksalad | dark | non-text | 21 | 28 | 15 | 0 | 0 |
+| banksalad | light | text | 171 | 381 | 65 | 3 | 5 |
+| banksalad | light | non-text | 17 | 23 | 15 | 0 | 0 |
 | bezier | dark | text | 175 | 349 | 59 | 10 | 11 |
 | bezier | dark | non-text | 42 | 45 | 11 | 4 | 1 |
 | bezier | light | text | 175 | 349 | 54 | 9 | 11 |
