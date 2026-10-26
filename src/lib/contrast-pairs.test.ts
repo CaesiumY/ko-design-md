@@ -116,6 +116,20 @@ describe("paletteOf", () => {
     ])
   })
 
+  it("pairs a token only with a dark- twin in the colors map", () => {
+    // A `dark-` key in another map is not a colour; it does not make `ink`
+    // the light side of anything.
+    const md = [
+      "---",
+      "colors:",
+      "  ink: oklch(0.6 0 0)",
+      "rounded:",
+      "  dark-ink: 4px",
+      "---",
+    ].join("\n")
+    expect(paletteOf(md, {}).entries.map((e) => e.theme)).toEqual(["both"])
+  })
+
   it("reads a token's theme off the catalogue's dark- prefix", () => {
     // `dark-` opens a dark-theme token; an unprefixed token whose `dark-` twin
     // is declared is that twin's light side; any other token serves both.
@@ -418,6 +432,19 @@ describe("pairClass in a theme", () => {
     )
   })
 
+  it("narrows an observed token the same way", () => {
+    const p: Palette = {
+      ...palette(entry("white", 1)),
+      translucent: [{ ...VEIL, observed: true, theme: "light" }],
+    }
+    expect(pairClass("#ffffff", "#7f7f7f", p, undefined, "light")).toBe(
+      "observed-pair"
+    )
+    expect(pairClass("#ffffff", "#7f7f7f", p, undefined, "dark")).toBe(
+      "one-token"
+    )
+  })
+
   it("looks at every token when no theme is given", () => {
     expect(pairClass("#ffffff", "#7f7f7f", veiled("light"))).toBe(
       "both-published"
@@ -548,6 +575,24 @@ describe("toleranceBand", () => {
       [0.002, 0.005]
     )
     expect(got).toEqual({ readings: 4, inBand: 0, compositeInBand: 1 })
+  })
+
+  it("counts a composite in the band only in the row's own theme", () => {
+    // `#808080` sits 0.00338 from the light-only veil over white: in the band
+    // for a light row, not looked for at all in a dark one.
+    const veiled: Palette = {
+      ...palette(entry("white", 1)),
+      translucent: [{ ...VEIL, theme: "light" }],
+    }
+    const band = (theme: "light" | "dark") =>
+      toleranceBand(
+        [row({ theme, fg: "#808080" })],
+        () => veiled,
+        "fail",
+        [0.002, 0.005]
+      ).compositeInBand
+    expect(band("light")).toBe(1)
+    expect(band("dark")).toBe(0)
   })
 
   it("decides which readings no token matches with the band's own lower edge", () => {

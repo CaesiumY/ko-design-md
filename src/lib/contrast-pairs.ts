@@ -14,7 +14,8 @@
 // definitions (`readDefinitions`), carry each measured hex into Oklab
 // (`hexToOklab`), and call it a token when the nearest one is within
 // `PUBLISHED_PAIR_TOLERANCE` — or, for a translucent token, when laying it over
-// what the collector laid it over lands within that distance (#551). Run over
+// what the collector laid it over — with tokens the row's theme can paint —
+// lands within that distance (#551). Run over
 // the artifact CI uploads, never a local sweep — the recorded tables describe
 // CI's rendering.
 
@@ -115,10 +116,13 @@ export const OBSERVED_COLOURS: Readonly<Record<string, ObservedColours>> =
  * naming (CLAUDE.md 「테마별 팔레트는 이름을 갈라 쓴다」): a `dark-` name is
  * the dark side, an unprefixed name whose `dark-` twin is declared is the light
  * side, and any other name — a ramp step, a theme-free token — serves both.
- * Entries that split themes another way (vapor-ui's `-dark` suffix) read as
- * `both`, which keeps the classifier as wide as it was for them.
+ * A name that only ends in `-dark` (samsung-one-ui's `black-dark`, gs-shop's
+ * `positive-dark` — a darker shade, not a theme) reads as `both`, which keeps
+ * the classifier as wide as it was for it.
  */
 export type TokenTheme = Theme | "both"
+
+const DARK_PREFIX = "dark-"
 
 export interface PaletteEntry {
   name: string
@@ -252,8 +256,6 @@ export function paletteOf(
   }
   return { entries, translucent, unreadable }
 }
-
-const DARK_PREFIX = "dark-"
 
 /** Whether a token of `token`'s theme can be painted in a row of `row`'s. */
 const paintableIn = (token: TokenTheme, row: Theme | undefined): boolean =>
@@ -479,7 +481,9 @@ function readPair(
  * translucent token's alpha by ±0.03 or ±0.06, which keeps the same token ×
  * base combinations but breaks the real ones, moved at most 4 `fail`
  * non-text rows into a token class where the true alphas moved 63 (CI run
- * 38463871450, a one-off check recorded in the baseline document). *
+ * 38463871450, a one-off check recorded in the baseline document — taken
+ * before composites were narrowed to the row's theme).
+ *
  * Given the row's `theme`, a composite uses only tokens that can be painted in
  * it (`TokenTheme`) — both the translucent token and, for a background, the
  * opaque base. Without that the net reached across themes: wanted's dark
@@ -527,9 +531,10 @@ const FIELD: Record<PairClass, PairCount> = {
 const KIND_ORDER = { text: 0, "non-text": 1 }
 
 /**
- * The rows of one verdict, classified and counted by slug and kind. Themes are
- * summed: the question is which entry a fix would touch, and a pair's two
- * themes are usually two pairs of the same tokens.
+ * The rows of one verdict, classified and counted by slug and kind. Each row
+ * is classified in its own theme; the themes are then summed: the question is
+ * which entry a fix would touch, and a pair's two themes are usually two pairs
+ * of the same tokens.
  */
 export function tallyPairs(
   rows: Array<DedupedFinding>,
