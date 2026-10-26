@@ -119,11 +119,15 @@ export const OBSERVED_COLOURS: Readonly<Record<string, ObservedColours>> =
  * `light-gray-00` beside `dark-gray-00`); any other name — a ramp step, a
  * theme-free token — serves both. A twin that is a reference back to the token
  * itself (`dark-veil: "{colors.veil}"`) is not a twin: the dark theme paints
- * that token too. Read off the name, a `dark-` name that only means a deeper
- * shade of a light-theme colour would be taken for the dark side, and so would
- * a `dark-` token the light theme paints through a reference
- * (`veil: "{colors.dark-veil}"`); no entry names or refers to a colour that
- * way.
+ * that token too.
+ * Read off names, this misses two things, and no entry has either. A `dark-`
+ * name that only means a deeper shade of a light-theme colour is taken for
+ * the dark side. And a reference row never changes the theme of the token it
+ * points at, so when a reference makes one theme paint a token read as the
+ * other's, that token stays out of the first theme's composites —
+ * `veil: "{colors.dark-veil}"` (the light theme paints `dark-veil`), or
+ * `dark-veil: "{colors.ink}"` beside a declared `dark-ink` (the dark theme
+ * paints `ink`, read as light).
  * Any other way of naming a theme reads as `both`, which keeps the classifier
  * as wide as it was: a `-dark` suffix whether it marks a theme (samsung-one-ui's
  * `black-dark`, the dark theme's black beside a light `black`) or only a darker
