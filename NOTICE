@@ -61,7 +61,7 @@ until then, update this section whenever a logo file is added or removed.
   11st.png                       11번가
   baemin.svg                     배달의민족
   banksalad-logotype.png         뱅크샐러드 (banksalad.com 헤더 워드마크 PNG — cdn.banksalad.com/graphic/color/illustration/setting/banksalad-signature1.png)
-  banksalad.png                  뱅크샐러드 (App Store 앱 아이콘 1024px — is1-ssl.mzstatic.com …/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/1024x1024bb.png. 자기 도메인 심볼이 저해상도뿐이라(512px 확대본·25px 파비콘, SVG 없음) 앱 아이콘 예외)
+  banksalad.png                  뱅크샐러드 (corp.banksalad.com/icons/icon-512x512.png — 회사 사이트 PWA 아이콘, 투명 배경 심볼)
   bezier.png                     채널톡
   class101.png                   클래스101
   codeit-logotype.png            코드잇
