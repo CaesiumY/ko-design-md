@@ -36,7 +36,7 @@ const NO_TYPE_SCALE: Record<string, string> = {}
  * entries carry the map under #389's rules, so each owes a row here.
  */
 const COMPONENT_COUNTS: Record<string, number> = {
-  banksalad: 15,
+  banksalad: 16,
   ridi: 11,
   teamsparta: 10,
 }

@@ -1091,6 +1091,36 @@
       "value": "oklch(0.217 0.008 264.4)",
       "note": "#181A1E — 옛 층 다크 바탕. 시맨틱 dark-background-white(gray-20)와 1단위 차",
       "group": "옛 층 — 홈 마케팅 셸이 쓰는 --color-* (화면 사용값만)"
+    },
+    {
+      "name": "dark-legacy-gray-050",
+      "value": "oklch(0.985 0.001 286.4)",
+      "note": "#FAFAFB — 옛 층 다크",
+      "group": "옛 층 — 홈 마케팅 셸이 쓰는 --color-* (화면 사용값만)"
+    },
+    {
+      "name": "dark-legacy-gray-100",
+      "value": "oklch(0.970 0.003 264.5)",
+      "note": "#F4F5F7 — 옛 층 다크",
+      "group": "옛 층 — 홈 마케팅 셸이 쓰는 --color-* (화면 사용값만)"
+    },
+    {
+      "name": "dark-legacy-gray-200",
+      "value": "oklch(0.930 0.007 260.7)",
+      "note": "#E5E8ED — 옛 층 다크",
+      "group": "옛 층 — 홈 마케팅 셸이 쓰는 --color-* (화면 사용값만)"
+    },
+    {
+      "name": "dark-legacy-gray-400",
+      "value": "oklch(0.718 0.018 267.7)",
+      "note": "#9FA4B0 — 옛 층 다크",
+      "group": "옛 층 — 홈 마케팅 셸이 쓰는 --color-* (화면 사용값만)"
+    },
+    {
+      "name": "dark-legacy-gray-550",
+      "value": "oklch(0.590 0.024 259.2)",
+      "note": "#757E8C — 옛 층 다크",
+      "group": "옛 층 — 홈 마케팅 셸이 쓰는 --color-* (화면 사용값만)"
     }
   ],
   "typography": [

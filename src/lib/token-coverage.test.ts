@@ -89,7 +89,7 @@ interface Coverage {
 const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   "11st": { annotated: 31, judged: 31, drift: 33 },
   baemin: { annotated: 0, judged: 0, drift: 38 },
-  banksalad: { annotated: 182, judged: 182, drift: 182 },
+  banksalad: { annotated: 187, judged: 187, drift: 187 },
   bezier: { annotated: 0, judged: 0, drift: 43 },
   class101: { annotated: 34, judged: 33, drift: 34 },
   codeit: { annotated: 166, judged: 159, drift: 166, webfont: true },

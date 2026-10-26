@@ -431,6 +431,11 @@ colors:
   legacy-gray-550: oklch(0.807 0.015 264.5)   # #BBC0CA — 머니피드 목록의 「다음」 화살표 아이콘
   legacy-white-900: oklch(1.000 0.000 0.0)   # #FFFFFF — 홈 셸 바탕
   dark-legacy-white-900: oklch(0.217 0.008 264.4)   # #181A1E — 옛 층 다크 바탕. 시맨틱 dark-background-white(gray-20)와 1단위 차
+  dark-legacy-gray-050: oklch(0.985 0.001 286.4)   # #FAFAFB — 옛 층 다크
+  dark-legacy-gray-100: oklch(0.970 0.003 264.5)   # #F4F5F7 — 옛 층 다크
+  dark-legacy-gray-200: oklch(0.930 0.007 260.7)   # #E5E8ED — 옛 층 다크
+  dark-legacy-gray-400: oklch(0.718 0.018 267.7)   # #9FA4B0 — 옛 층 다크
+  dark-legacy-gray-550: oklch(0.590 0.024 259.2)   # #757E8C — 옛 층 다크
 opacity:
   background-highlight-opacity: 0.04   # 두 테마 같음
   background-dim-opacity: 0.56
@@ -649,6 +654,9 @@ components:
     backgroundColor: "{colors.gray-bg}"
     rounded: 16px   # 임의값 rounded-[16px] — 토큰 이름을 거치지 않는다
     padding: 12px
+  list-row:
+    textColor: "{colors.text-normal}"
+    typography: "{typography.b18}"
   faq-row:
     height: 48px   # ≈ 렌더 실측
 ---
@@ -663,7 +671,7 @@ components:
 
 시각 톤은 절제된 금융 화면이다. 흰 바탕에 쿨 그레이 글자(`{colors.text-normal}` · `{colors.text-neutral}`)를 깔고, 유채색은 초록 `{colors.green-normal}` 하나가 주 버튼·강조 금액·개수 배지를 맡는다 [src:1] [src:3]. 회색 23단은 모든 단에서 파랑 성분이 빨강 성분 이상인 쿨 그레이라, 화면 전체가 살짝 푸른 기를 띤다 [src:1]. 숫자는 전역 `font-feature-settings: "tnum","ss01","ss07"` 로 고정폭이 기본이어서 금액·금리가 세로로 줄을 맞춘다 [src:1].
 
-≈ 서비스 화면(건강 [src:4] · 대출 [src:3] · 카드 [src:5])은 넓은 데스크톱에서도 좁은 단일 열이다 — 건강·대출은 약 375px, 카드는 약 767px 폭이 1440 캔버스 가운데 놓인다(캡처 실측 · 공개 출처 없음 — 인용은 화면 위치만 가리킨다). 카드는 그림자 대신 연회색 면과 1px 선으로 나뉜다 [src:1].
+≈ 서비스 화면(건강 [src:4] · 대출 [src:3] · 카드 [src:5])은 넓은 데스크톱에서도 좁은 단일 열이다 — 건강·대출은 약 375px, 카드는 약 767px 폭이 1440 캔버스 가운데 놓인다(캡처 실측 · 공개 출처 없음 — 인용은 화면 위치만 가리킨다). ≈ 카드는 그림자 대신 연회색 면과 1px 선으로 나뉜다(렌더 관찰 — 면·선 토큰은 [src:1]).
 
 두 시각 층이 한 사이트에 공존한다. 서비스 화면은 원시+시맨틱 토큰을 쓰고, 홈 마케팅 셸(GNB·히어로·푸터)은 옛 `--color-*` 변수와 클래스에 직접 적은 리터럴 색을 쓴다 [src:1] [src:2]. 홈 히어로는 연민트·연하늘 파스텔 슬라이드와 파랑→산호 그라디언트 슬라이드의 캐러셀이고, 플랫 벡터 인물·동심원 링 일러스트가 들어간다 [src:2].
 
@@ -679,7 +687,7 @@ components:
 
 ### 원시 — 16계열 174개
 
-유채 15계열(green · mint · sky · light-blue · deep-blue · indigo · violet · purple · orchid · magenta · pink · coral · red · orange · mustard)은 10·20·30·40·50·60·70·80·90·95 의 10단이고, red 에만 65단이 하나 더 있다 [src:1]. gray 는 0~100 사이 23단이다 [src:1]. 50 이 각 계열의 기준색이자 시맨틱 normal 이 가리키는 단이다 [src:1]. 원시는 다크 블록에서 바뀌지 않으므로 `dark-` 원시는 없다 [src:1]. frontmatter 키는 접두만 뗐다(`--base-color-green-50` → `green-50`).
+유채 15계열(green · mint · sky · light-blue · deep-blue · indigo · violet · purple · orchid · magenta · pink · coral · red · orange · mustard)은 10·20·30·40·50·60·70·80·90·95 의 10단이고, red 에만 65단이 하나 더 있다 [src:1]. gray 는 0~100 사이 23단이다 [src:1]. 50 이 각 계열의 기준색이자 라이트 시맨틱 normal 이 가리키는 단이다(다크 normal 은 60단) [src:1]. 원시는 다크 블록에서 바뀌지 않으므로 `dark-` 원시는 없다 [src:1]. frontmatter 키는 접두만 뗐다(`--base-color-green-50` → `green-50`).
 
 ### 시맨틱 — 계열 5슬롯 (80개)
 
@@ -732,7 +740,7 @@ gray 만 다크 bg 가 25단이라 `{colors.dark-gray-bg}` 는 `{colors.gray-25}
 | `static-white` | `{colors.gray-100}` | 같음(테마 고정) — `dark-` 짝 없음 |
 | `alpha` | `{colors.gray-10}` | `{colors.gray-100}` |
 
-`dark-` 짝이 없는 것은 두 테마가 같은 원시를 가리키는 13개 — static 8 · status 5 — 다 [src:1]. `background-highlight` · `background-dim` 은 시맨틱 변수가 원시를 가리키지만 화면에는 별도 불투명도 변수(`--semantic-color-background-highlight-opacity` 0.04, `--semantic-color-background-dim-opacity` 라이트 0.56 · 다크 0.72)를 곱한 색으로 칠해진다 [src:1]. 참조 행으로 실으면 표준 도구가 불투명한 원시 색을 받으므로 이 표에만 두고 frontmatter 참조 행으로는 싣지 않는다. 불투명도 값은 카탈로그 전용 `opacity:` 맵에 단위 없는 수로 둔다.
+`dark-` 짝이 없는 것은 두 테마가 같은 원시를 가리키는 13개 — static 8 · status 5 — 다 [src:1]. `background-highlight` · `background-dim` 은 시맨틱 변수가 원시를 가리키지만 화면에는 별도 불투명도 변수(`--semantic-color-background-highlight-opacity` 0.04, `--semantic-color-background-dim-opacity` 라이트 0.56 · 다크 0.72)를 곱한 색으로 칠해진다 [src:1]. 참조 행으로 실으면 표준 도구가 불투명한 원시 색을 받으므로 이 표에만 두고 frontmatter 참조 행으로는 싣지 않는다. 불투명도 값은 카탈로그 전용 `opacity:` 맵에 단위 없는 수로 둔다. `alpha` 는 불투명도 없이 칠하는 `.bg-alpha` 가 있어 참조 행으로 싣지만, 나머지 쓰임(`bg-alpha/4` · `border-alpha/8` · `text-alpha/16` 등)은 Tailwind 불투명도를 곱한다 [src:1].
 
 status 유틸은 `bg-status-{caution,loss,negative,positive,profit}` 과 `text-status-{negative,positive,profit}` 8개가 정의돼 있다 [src:1]. 「profit = 빨강, loss = 파랑」은 상승을 빨강으로 쓰는 국내 관례와 같은 배치지만 이름만으로 읽은 해석이고, negative(빨강)·positive(파랑) 축과도 의미가 겹친다 [src:1]. ≈ 측정한 6개 화면의 DOM 에서는 status 클래스가 한 번도 쓰이지 않았다(렌더 관찰 · 공개 출처 없음).
 
@@ -740,7 +748,7 @@ status 유틸은 `bg-status-{caution,loss,negative,positive,profit}` 과 `text-s
 
 옛 `--color-*` 87개는 쉼표 RGB 형식(`rgba(var(--color-gray-200),var(--tw-text-opacity,1))`)이고 다섯 번들 모두에 있다(2026-10-25 스냅숏 대조) [src:1] [src:15] [src:16] [src:17] [src:18]. 다크 블록에서 60개가 바뀌고 27개는 그대로다 [src:1]. frontmatter 에는 홈이 실제로 쓰는 값만 `legacy-` 접두를 붙여 실었다 — 접두가 없으면 `green-100` 이 원시 램프의 다음 단처럼 읽히기 때문이다. 특히 `{colors.legacy-gray-100}` 은 진회색이고 원시 `{colors.gray-100}` 은 흰색이라, 이름이 비슷해도 전혀 다른 값이다 [src:1].
 
-쓰임은 이렇다 — 홈 GNB 메뉴 `text-body-16 font-bold text-gray-050`(`{colors.legacy-gray-050}`), 호버와 푸터 「BEST」 라벨 `text-green-100`(`{colors.legacy-green-100}`), 푸터 링크 `text-gray-200`(`{colors.legacy-gray-200}`), 모바일 메뉴 행 `{colors.legacy-gray-100}` [src:2], 머니피드 목록의 「다음」 화살표 아이콘 `text-gray-550`(`{colors.legacy-gray-550}`) [src:22]. 홈 바탕 `{colors.legacy-white-900}` 의 다크값은 `{colors.dark-legacy-white-900}` 로, 시맨틱 `{colors.dark-background-white}` 와 1단위 다르다 [src:1]. 홈이 쓰는 나머지 옛 변수 `spacing-gray-000`(구획 사이 12px 띠) · `deep-blue-100` · `violet-100` · `mustard-100` 은 토큰으로 싣지 않았다 [src:1] [src:2].
+쓰임은 이렇다 — 홈 GNB 메뉴 `text-body-16 font-bold text-gray-050`(`{colors.legacy-gray-050}`), 호버와 푸터 「BEST」 라벨 `text-green-100`(`{colors.legacy-green-100}`), 푸터 링크 `text-gray-200`(`{colors.legacy-gray-200}`), 모바일 메뉴 행 `{colors.legacy-gray-100}` [src:2], 머니피드 목록의 「다음」 화살표 아이콘 `text-gray-550`(`{colors.legacy-gray-550}`) [src:22]. 홈 바탕 `{colors.legacy-white-900}` 의 다크값은 `{colors.dark-legacy-white-900}` 로, 시맨틱 `{colors.dark-background-white}` 와 1단위 다르다 [src:1]. 옛 회색 다섯 개도 다크 블록에서 밝은 쪽으로 뒤집히고(`{colors.dark-legacy-gray-050}` 등), `legacy-green-100` 은 두 테마가 같다 [src:1]. 홈이 쓰는 나머지 옛 변수 `spacing-gray-000`(구획 사이 12px 띠) · `deep-blue-100` · `violet-100` · `mustard-100` 은 토큰으로 싣지 않았다 [src:1] [src:2].
 
 홈 리터럴은 토큰이 아니다. 히어로 알약 `bg-[…]`(값은 `{colors.legacy-green-100}` 과 같음), 홈 대출 버튼(`oklch(0.630 0.155 258.4)`, 옛 `deep-blue-100` 과 같은 값), 히어로 파스텔 `oklch(0.944 0.028 236.2)` · `oklch(0.971 0.019 167.9)` · `oklch(0.943 0.052 170.2)`, 제휴 띠 바탕 `oklch(0.969 0.007 219.6)` · 글자 `oklch(0.579 0.044 214.5)` 는 모두 클래스에 직접 적은 값으로 변수를 거치지 않는다 [src:2]. 4번째 히어로 슬라이드의 180deg 파랑→산호 그라디언트는 카탈로그 전용 `gradients:` 맵의 `home-hero-gradient` 로 옮겼다 [src:2]. 옛 층에는 흰색에서 투명으로 가는 그라디언트 변수 6개(`--gradient-gradation` 등)도 있고, 흰색 변수를 참조하므로 다크에서 함께 바뀐다 [src:1].
 
@@ -802,7 +810,7 @@ home-hero-pill        18px / 21px (500)
 
 그림자 클래스는 `{elevation.shadow-sm}` · `{elevation.shadow-md}` · `{elevation.shadow-lg}` 세 개로, 모두 검정 10% 단일 레이어다 [src:1]. ≈ 측정한 화면에서 이 클래스는 한 번도 쓰이지 않았다(렌더 관찰 · 공개 출처 없음).
 
-서비스 화면의 깊이는 그림자가 아니라 면의 단계와 선이다 — `{colors.background-layer1}` · `{colors.background-layer2}` · `{colors.background-layer3}` 세 단(다크 짝 `{colors.dark-background-layer1}` 등)과 1px `{colors.line-normal}` 로 위계를 나눈다 [src:1]. 다크에서도 그림자 색 `--color-shadow-000` 은 검정 그대로다 [src:1]. 테두리 두께 유틸은 `border`·`border-1` 1px · `border-2` · `border-3` 이다 [src:1].
+서비스 화면의 깊이는 그림자가 아니라 면의 단계와 선이다 — `{colors.background-layer1}` · `{colors.background-layer2}` · `{colors.background-layer3}` 세 단(다크 짝 `{colors.dark-background-layer1}` 등)과 1px `{colors.line-normal}` 로 위계를 나눈다(토큰은 [src:1], 쓰임은 렌더 관찰). 다크에서도 그림자 색 `--color-shadow-000` 은 검정 그대로다 [src:1]. 테두리 두께 유틸은 `border`·`border-1` 1px · `border-2` · `border-3` 이다 [src:1].
 
 실제로 쓰이는 그림자는 홈 셸의 리터럴이다 [src:1] [src:2].
 
@@ -830,7 +838,7 @@ prefers-reduced-motion 규칙 0건
 
 ## Shapes
 
-둥근 사각형의 언어다. 주 면(버튼·카드·칩)은 `{rounded.medium}`, 보조 면(보조 버튼·배너·안내 상자)은 `{rounded.small}` 로 한 단 작게 굴리고, 상태 표시는 알약, 원형은 `{rounded.lg}` 로 만든다 [src:1]. 그림자 없이 연회색 면과 1px 선으로 덩어리를 가르므로 화면이 평평하고 조용하다 [src:1].
+둥근 사각형의 언어다. ≈ 주 면(버튼·카드·칩)은 16px(`{rounded.medium}` 과 같은 값), 보조 면(보조 버튼·배너·안내 상자)은 12px(`{rounded.small}` 과 같은 값)로 한 단 작게 굴리고, 상태 표시는 알약이다 — 대부분 `rounded-[16px]` 같은 임의값이라 토큰 이름을 거치지 않는다(렌더 관찰). 원형 유틸은 `{rounded.lg}` 다 [src:1]. ≈ 그림자 없이 연회색 면과 1px 선으로 덩어리를 가르므로 화면이 평평하고 조용하다(렌더 관찰).
 
 일러스트는 섞여 있다 — 홈 히어로의 플랫 벡터 인물·동심원 링·흩어진 오브젝트 [src:2], 대출 허브의 원형 아이콘 [src:19], ≈ 대출 화면의 3D 돈주머니·지폐와 다운로드 띠의 실사 사진(캡처 관찰 · 공개 출처 없음)이 한 사이트에 공존한다.
 
@@ -990,7 +998,7 @@ weak 바탕 + strong 글자 규칙의 빨강 판이다 — `{colors.red-weak}` /
 위치  layer2 · 반경 12 카드 안
 ```
 
-대출 허브의 메뉴 행(「신용 · 비상금대출 / 주택담보대출 / 대출 갈아타기」)이다 [src:19]. 글자는 `{typography.b18}` 클래스에 `font-bold`, 색은 `{colors.text-normal}` 이다(렌더 DOM 관찰). 행 하나의 구성이라 frontmatter `components:` 맵에는 싣지 않았다.
+대출 허브의 메뉴 행(「신용 · 비상금대출 / 주택담보대출 / 대출 갈아타기」)이다 [src:19]. 글자는 `{typography.b18}` 클래스에 `font-bold`, 색은 `{colors.text-normal}` 이다(렌더 DOM 관찰). 두 클래스를 확인했으므로 frontmatter `components:` 맵에도 싣는다.
 
 ### card-event-row
 
@@ -1055,9 +1063,9 @@ footer             pb-104 pt-40 · md:max-w-[958px]
 
 **Do** 금액·금리·개수는 고정폭 숫자(`tnum`)로 쓴다 — 전역 기본값이 그렇고 `.font-no-tnum` 은 예외용이다 [src:1].
 
-**Do** 화면 하나의 유채색 액션은 `{colors.green-normal}` 하나로 모으고, 나머지 위계는 `{colors.text-normal}` · `{colors.text-neutral}` · `{colors.text-alternative}` 회색 사다리로 나눈다 [src:1].
+**Do** 화면 하나의 유채색 액션은 `{colors.green-normal}` 하나로 모으고, 나머지 위계는 `{colors.text-normal}` · `{colors.text-neutral}` · `{colors.text-alternative}` 회색 사다리로 나눈다 — 서비스 화면 주 버튼·강조 금액이 이 초록이다 [src:3] [src:4].
 
-**Do** 서비스 카드의 깊이는 `{colors.background-layer2}` 면이나 `{colors.background-layer1}` + 1px `{colors.line-normal}` 로 만든다 — 그림자를 기본으로 깔지 않는다 [src:1].
+**Do** 서비스 카드의 깊이는 `{colors.background-layer2}` 면이나 `{colors.background-layer1}` + 1px `{colors.line-normal}` 로 만든다 — 그림자를 기본으로 깔지 않는다(발행 그림자 셋은 화면 사용 0건, 렌더 관찰).
 
 **Do** 상태 알약은 같은 계열의 weak 바탕 + strong 글자(`{component.pill-red}` · `{component.pill-light-blue}`)로 짓는다 [src:1].
 
@@ -1069,7 +1077,7 @@ footer             pb-104 pt-40 · md:max-w-[958px]
 
 **Don't** 옛 층과 원시를 이름으로 맞바꾸지 않는다 — `{colors.legacy-gray-100}` 은 진회색, `{colors.gray-100}` 은 흰색이다 [src:1].
 
-**Don't** 홈 셸 리터럴(`{colors.legacy-green-100}` 알약, 히어로 파스텔)을 서비스 화면 컴포넌트에 섞지 않는다 — 서비스 화면의 주 버튼은 `{colors.green-normal}` 이다 [src:1] [src:2].
+**Don't** 홈 셸 리터럴(`{colors.legacy-green-100}` 알약, 히어로 파스텔)을 서비스 화면 컴포넌트에 섞지 않는다 — 서비스 화면의 주 버튼은 `{colors.green-normal}` 이다 [src:3] [src:4].
 
 **Don't** `{colors.status-profit}` · `{colors.status-loss}` 에 상승·하락 의미를 단정해 붙이지 않는다 — 이름만으로 읽은 해석이고 쓰는 화면이 관측되지 않았다 [src:1].
 
@@ -1100,12 +1108,14 @@ footer             pb-104 pt-40 · md:max-w-[958px]
 ## Known Gaps
 
 - **대비 미달 5건(계산값)** — 주 버튼 흰 글자 / `{colors.green-normal}` 약 3.04:1, 홈 히어로 알약 흰 / `{colors.legacy-green-100}` 약 2.44:1, 숫자 칩 `{colors.gray-50}` / `{colors.gray-weak}` 약 2.72:1, 홈 대출 버튼 흰 / `oklch(0.630 0.155 258.4)` 약 3.53:1, 보조 글자 `{colors.text-alternative}` 가 라이트 `{colors.background-white}` 위 약 2.48:1 · 다크 `{colors.dark-text-alternative}` 가 `{colors.dark-background-white}` 위 약 2.56:1 · `{colors.dark-background-layer1}` 위 약 2.36:1 · `{colors.dark-background-layer2}` 위 약 2.13:1 로 4.5:1 에 못 미친다. 발행값을 그대로 기록했고 바꾸지 않았다 [src:1] [src:2].
-- **다크 범위** — 다크 값은 셸 번들에만 있고 앱 번들 넷에는 다크 블록이 없으며, 웹 방문자에게는 켜지지 않는다 [src:1] [src:15] [src:16] [src:17] [src:18]. 옛 층 다크값은 `white-900`·`green-200`·`shadow-white-000`·`spacing-gray-000`·`black-000` 만 확인했고 나머지 표는 뽑지 않았다 [src:1]. ≈ 홈 셸을 강제 다크로 렌더하면 히어로 파스텔은 다크값이 없어 그대로 남는다 — 제품 다크 화면이 아니다(캡처 관찰 · 공개 출처 없음).
+- **다크 범위** — 다크 값은 셸 번들에만 있고 앱 번들 넷에는 다크 블록이 없으며, 웹 방문자에게는 켜지지 않는다 [src:1] [src:15] [src:16] [src:17] [src:18]. 옛 층 다크값은 frontmatter 에 실은 여섯(`white-900` · `gray-050` · `gray-100` · `gray-200` · `gray-400` · `gray-550`)과 `green-200`·`shadow-white-000`·`spacing-gray-000`·`black-000` 을 확인했고, 나머지 표는 뽑지 않았다 [src:1]. ≈ 홈 셸을 강제 다크로 렌더하면 히어로 파스텔은 다크값이 없어 그대로 남는다 — 제품 다크 화면이 아니다(캡처 관찰 · 공개 출처 없음).
 - **status 의미 미확인** — status-* 를 쓰는 화면이 관측되지 않았고, 보장분석의 파랑 금액이 `{colors.status-positive}` 인지 `{colors.light-blue-normal}` 인지는 값이 같아 가를 수 없다 [src:1] [src:4].
 - **미측정 컴포넌트** — 입력·체크·스위치·바텀시트·모달·토스트는 CSS 단서(`focus:border-green-strong`, `data-[checked]:bg-green-normal`, `focus-visible:ring-2`)만 있고 치수를 재지 않았다. `button-text` 의 얇은 테두리를 그리는 방식, 서브셋 woff2 가 `ss01` · `ss07` 을 실제로 담는지도 확인하지 못했다 [src:1].
 - **출처 수명과 약관** — 토큰 CSS 는 빌드 해시 경로라 배포마다 바뀐다. 재감사 때는 www 홈이 불러오는 `--base-color` 정의 파일을 다시 찾는다 [src:1] [src:2]. 서비스 이용약관에는 화면·디자인 이용을 제한하는 이용자 대상 조항이 있고, 이 카탈로그에 적용되는지는 판단하지 않았다 [src:12].
 
 ## References
+
+안정 진입점은 www.banksalad.com 이다 [src:2]. "(해시 번들)" 표시가 붙은 항목은 경로의 빌드 디렉터리와 파일명 해시가 배포마다 바뀐다. 1번은 홈이 불러오는 `--base-color` 정의 CSS 로, 15~18번은 각 앱 화면이 불러오는 운영 CSS 로 다시 찾는다.
 
 1. https://webview-cdn.banksalad.com/banksaladv2/28713ab040/_next/static/css/dfdf5be0c353b889.css — (해시 번들) 홈·카드·공지 공통 셸 운영 CSS. 원시·시맨틱·옛 층 색, `:root[class~=dark]`, 타입·반경·그림자 클래스 규칙
 2. https://www.banksalad.com/ — 홈. GNB·히어로·푸터 마크업과 다크 전환 인라인 스크립트
