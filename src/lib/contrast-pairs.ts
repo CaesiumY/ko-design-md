@@ -183,6 +183,9 @@ export function paletteOf(
     { map: string | null; group: string | null }
   >()
   const colourGroups = new Set<string>()
+  // Every key the colors map declares, whatever its value: a token's `dark-`
+  // twin may be a reference row (`"{colors.x}"`), which `placeOf` leaves out.
+  const colourKeys = new Set<string>()
   const read = readFrontmatter(markdown)
   const walk = (
     map: string,
@@ -195,6 +198,7 @@ export function paletteOf(
         continue
       }
       const group = row.group ?? outer
+      if (map === "colors") colourKeys.add(row.key)
       // The colour readers' one selection, so a value that opens with blanks
       // (`"  oklch(…)"`) is placed as `readDefinitions` reads it.
       if (oklchValue(row) !== undefined && !placeOf.has(row.key)) {
@@ -219,8 +223,7 @@ export function paletteOf(
   const entries: Array<PaletteEntry> = []
   const translucent: Array<TranslucentEntry> = []
   const unreadable: Array<string> = []
-  const isColour = (name: string): boolean =>
-    placeOf.get(name)?.map === "colors"
+  const isColour = (name: string): boolean => colourKeys.has(name)
   const themeOf = (name: string): TokenTheme =>
     name.startsWith(DARK_PREFIX)
       ? "dark"

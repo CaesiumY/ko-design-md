@@ -134,6 +134,20 @@ describe("paletteOf", () => {
     ])
   })
 
+  it("pairs a token with a dark- twin that is a reference row", () => {
+    // The twin's value is a reference, not a colour of its own, but it still
+    // says `veil` is the light side.
+    const md = [
+      "---",
+      "colors:",
+      "  veil: oklch(0 0 0 / 5%)",
+      "  ink: oklch(0.2 0 0)",
+      '  dark-veil: "{colors.ink}"',
+      "---",
+    ].join("\n")
+    expect(paletteOf(md, {}).translucent.map((t) => t.theme)).toEqual(["light"])
+  })
+
   it("pairs a token only with a dark- twin in the colors map", () => {
     // A `dark-` row outside the colors map — a gradient stop here — is not a
     // token, so it does not make `ink` the light side of anything.
