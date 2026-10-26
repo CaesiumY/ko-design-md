@@ -2,7 +2,7 @@
 name: 뱅크샐러드
 slug: banksalad
 category: finance
-last_updated: "2026-10-26"
+last_updated: "2026-10-27"
 created_at: "2026-10-26"
 lang: ko
 logo: https://getdesign.kr/logos/banksalad.png
@@ -12,7 +12,6 @@ colors:
   green-20: oklch(0.224 0.046 164.9)   # #012216
   green-30: oklch(0.342 0.075 160.6)   # #02442B
   green-40: oklch(0.500 0.112 159.8)   # #04764C
-  primary: "{colors.green-50}"
   green-50: oklch(0.648 0.149 158.8)   # #06A96C — green-normal · background-highlight 가 가리키는 단
   green-60: oklch(0.678 0.143 161.5)   # #1FB27B — 다크 green-normal
   green-70: oklch(0.740 0.122 165.3)   # #51C398
@@ -672,11 +671,11 @@ components:
 
 글의 톤은 둘로 갈린다. 제품 안내는 「한 번에 69개 금융사를 조회해요」처럼 굵은 해요체 단문에 회색 보조줄을 붙이고, 법정 고지와 브랜드 선언은 합니다체다 [src:3] [src:2]. 준법감시인 심의필 번호와 대출모집법인 등록 고지가 화면의 큰 부분을 차지하는 것도 이 도메인의 특징이다 [src:3] [src:5] [src:20].
 
-카탈로그 로고는 App Store 앱 아이콘 512px PNG 를 쓴다 [src:10]. 자기 도메인의 심볼 파일은 25×25 파비콘과 저해상 확대 PWA 아이콘뿐이라 쓰지 않았다 [src:14] [src:13]. 헤더 워드마크는 897×144 투명 PNG 한 장이고 라이트·다크가 같은 파일이다 [src:11] [src:2].
+카탈로그 로고는 회사 사이트의 PWA 아이콘 512px PNG 를 쓴다 — 투명 배경에 프레임 없는 심볼이다 [src:13]. 저해상 원본을 확대한 파일이라 크게 보면 가장자리가 흐리고, 그 밖의 자기 도메인 심볼은 25×25 파비콘뿐이다 [src:14]. App Store 앱 아이콘은 흰 바탕이 박혀 있어 쓰지 않았다 [src:10]. 헤더 워드마크는 897×144 투명 PNG 한 장이고 라이트·다크가 같은 파일이다 [src:11] [src:2].
 
 ## Colors
 
-값의 정본은 홈이 불러오는 운영 CSS 의 `:root` · `:root[class~=dark]` 블록이고, 변수 값은 공백으로 구분한 R G B 숫자다 [src:1]. 색은 세 층이다 — 원시 `--base-color-*` 16계열 174개, 그 원시를 하나씩 가리키는 시맨틱 `--semantic-color-*` 112개(색 110 + 불투명도 수 2), 홈 마케팅 셸이 쓰는 옛 `--color-*` 87개 [src:1]. 다크 값은 공통 셸 번들의 `:root[class~=dark]` 에만 있고, 건강·대출·자동차보험·고객안전 앱 번들에는 다크 블록이 없다(2026-10-25 스냅숏 대조) [src:1] [src:15] [src:16] [src:17] [src:18]. 홈의 인라인 스크립트는 쿠키 `banksalad-application-name` 이 있고 `prefers-color-scheme: dark` 일 때만 `html` 에 `dark` 클래스를 붙이므로, 웹 방문자에게는 다크가 켜지지 않는다 — 앱 웹뷰에서만 켜지는 것으로 보이지만 앱이 그 쿠키를 심는다는 것은 추정이다 [src:2]. 그래서 frontmatter 의 `dark-` 행은 발행된 다크 짝이되, 웹에서 그것이 켜지는 경로는 이 조건 하나다. 대표색은 `{colors.green-50}` 이고 frontmatter `primary` 는 그 값을 가리키는 별칭이다 — 대표색을 지정한 공개 문서는 없어 이 지정은 `green-normal`·`background-highlight` 가 모두 이 원시를 가리키고 [src:1] 서비스 화면 주 버튼이 `green-normal` 채움이라는 [src:3] [src:4] 정황에 기댄다. 옛 층 `{colors.legacy-green-100}` 과 로고 래스터의 초록 `oklch(0.747 0.176 157.7)` 은 대표색이 아니다 [src:1] [src:10].
+값의 정본은 홈이 불러오는 운영 CSS 의 `:root` · `:root[class~=dark]` 블록이고, 변수 값은 공백으로 구분한 R G B 숫자다 [src:1]. 색은 세 층이다 — 원시 `--base-color-*` 16계열 174개, 그 원시를 하나씩 가리키는 시맨틱 `--semantic-color-*` 112개(색 110 + 불투명도 수 2), 홈 마케팅 셸이 쓰는 옛 `--color-*` 87개 [src:1]. 다크 값은 공통 셸 번들의 `:root[class~=dark]` 에만 있고, 건강·대출·자동차보험·고객안전 앱 번들에는 다크 블록이 없다(2026-10-25 스냅숏 대조) [src:1] [src:15] [src:16] [src:17] [src:18]. 홈의 인라인 스크립트는 쿠키 `banksalad-application-name` 이 있고 `prefers-color-scheme: dark` 일 때만 `html` 에 `dark` 클래스를 붙이므로, 웹 방문자에게는 다크가 켜지지 않는다 — 앱 웹뷰에서만 켜지는 것으로 보이지만 앱이 그 쿠키를 심는다는 것은 추정이다 [src:2]. 그래서 frontmatter 의 `dark-` 행은 발행된 다크 짝이되, 웹에서 그것이 켜지는 경로는 이 조건 하나다. 대표색을 지정한 공개 문서는 없다. 정황상 대표색은 `{colors.green-50}` 이다 — `green-normal`·`background-highlight` 가 모두 이 원시를 가리키고 [src:1] 서비스 화면 주 버튼이 `green-normal` 채움이다 [src:3] [src:4]. 발행된 지정이 아니라 frontmatter 에 `primary` 별칭은 두지 않았다. 옛 층 `{colors.legacy-green-100}` 과 앱 아이콘의 초록 `oklch(0.747 0.176 157.7)` 은 이 값과 다르다 [src:1] [src:10].
 
 ### 원시 — 16계열 174개
 
@@ -1120,7 +1119,7 @@ footer             pb-104 pt-40 · md:max-w-[958px]
 10. https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/40/c6/e9/40c6e985-e0c3-1f0e-f1db-647b5e24a559/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/512x512bb.png — App Store 앱 아이콘 512 PNG. 앱 업데이트 때 경로가 바뀔 수 있다
 11. https://cdn.banksalad.com/graphic/color/illustration/setting/banksalad-signature1.png — 헤더 워드마크 PNG
 12. https://policies.banksalad.com/뱅크샐러드/서비스-이용-약관/ — 서비스 이용약관. JS 셸이라 렌더해야 본문이 읽힌다
-13. https://corp.banksalad.com/icons/icon-512x512.png — 회사 사이트 PWA 아이콘
+13. https://corp.banksalad.com/icons/icon-512x512.png — 회사 사이트 PWA 아이콘(카탈로그 로고 원본)
 14. https://cdn.banksalad.com/app/meta/introduce-a/favicon.ico — 파비콘
 15. https://webview-cdn.banksalad.com/health-web/1aaf224598/_next/static/css/f7298f70eab3bee3.css — (해시 번들) 건강 앱 운영 CSS
 16. https://webview-cdn.banksalad.com/loan-web/45b0d0da5d/_next/static/css/6d249f6322c93b8f.css — (해시 번들) 대출 앱 운영 CSS

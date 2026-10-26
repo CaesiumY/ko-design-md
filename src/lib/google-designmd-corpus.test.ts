@@ -128,6 +128,7 @@ describe("catalog md, linted as the standard DESIGN.md", () => {
       .filter(({ slug }) => rulesOf(slug).includes("missing-primary"))
       .map((d) => d.slug)
     expect(missing).toEqual([
+      "banksalad",
       "bezier",
       "gmarket",
       "gs-retail",
