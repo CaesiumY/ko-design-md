@@ -428,7 +428,7 @@ colors:
   legacy-gray-100: oklch(0.346 0.020 257.3)   # #333A44 — 모바일 메뉴 행. 원시 gray-100(흰색)과 다른 토큰
   legacy-gray-200: oklch(0.473 0.021 261.3)   # #555C68 — 푸터 링크. 원시 gray-38 과 같은 값
   legacy-gray-400: oklch(0.646 0.022 264.4)   # #878E9C — 푸터 회사 정보
-  legacy-gray-550: oklch(0.807 0.015 264.5)   # #BBC0CA
+  legacy-gray-550: oklch(0.807 0.015 264.5)   # #BBC0CA — 머니피드 목록의 「다음」 화살표 아이콘
   legacy-white-900: oklch(1.000 0.000 0.0)   # #FFFFFF — 홈 셸 바탕
   dark-legacy-white-900: oklch(0.217 0.008 264.4)   # #181A1E — 옛 층 다크 바탕. 시맨틱 dark-background-white(gray-20)와 1단위 차
 opacity:
@@ -738,9 +738,9 @@ status 유틸은 `bg-status-{caution,loss,negative,positive,profit}` 과 `text-s
 
 ### 옛 층 — 홈 마케팅 셸
 
-옛 `--color-*` 87개는 쉼표 RGB 형식(`rgba(var(--color-gray-200),var(--tw-text-opacity,1))`)이고 다섯 번들 모두에 있다. 다크 블록에서 60개가 바뀌고 27개는 그대로다 [src:1]. frontmatter 에는 홈이 실제로 쓰는 값만 `legacy-` 접두를 붙여 실었다 — 접두가 없으면 `green-100` 이 원시 램프의 다음 단처럼 읽히기 때문이다. 특히 `{colors.legacy-gray-100}` 은 진회색이고 원시 `{colors.gray-100}` 은 흰색이라, 이름이 비슷해도 전혀 다른 값이다 [src:1].
+옛 `--color-*` 87개는 쉼표 RGB 형식(`rgba(var(--color-gray-200),var(--tw-text-opacity,1))`)이고 다섯 번들 모두에 있다(2026-10-25 스냅숏 대조) [src:1] [src:15] [src:16] [src:17] [src:18]. 다크 블록에서 60개가 바뀌고 27개는 그대로다 [src:1]. frontmatter 에는 홈이 실제로 쓰는 값만 `legacy-` 접두를 붙여 실었다 — 접두가 없으면 `green-100` 이 원시 램프의 다음 단처럼 읽히기 때문이다. 특히 `{colors.legacy-gray-100}` 은 진회색이고 원시 `{colors.gray-100}` 은 흰색이라, 이름이 비슷해도 전혀 다른 값이다 [src:1].
 
-쓰임은 이렇다 — 홈 GNB 메뉴 `text-body-16 font-bold text-gray-050`(`{colors.legacy-gray-050}`), 호버와 푸터 「BEST」 라벨 `text-green-100`(`{colors.legacy-green-100}`), 푸터 링크 `text-gray-200`(`{colors.legacy-gray-200}`), 모바일 메뉴 행 `{colors.legacy-gray-100}` [src:2]. 홈 바탕 `{colors.legacy-white-900}` 의 다크값은 `{colors.dark-legacy-white-900}` 로, 시맨틱 `{colors.dark-background-white}` 와 1단위 다르다 [src:1]. 홈이 쓰는 나머지 옛 변수 `spacing-gray-000`(구획 사이 12px 띠) · `deep-blue-100` · `violet-100` · `mustard-100` 은 토큰으로 싣지 않았다 [src:1] [src:2].
+쓰임은 이렇다 — 홈 GNB 메뉴 `text-body-16 font-bold text-gray-050`(`{colors.legacy-gray-050}`), 호버와 푸터 「BEST」 라벨 `text-green-100`(`{colors.legacy-green-100}`), 푸터 링크 `text-gray-200`(`{colors.legacy-gray-200}`), 모바일 메뉴 행 `{colors.legacy-gray-100}` [src:2], 머니피드 목록의 「다음」 화살표 아이콘 `text-gray-550`(`{colors.legacy-gray-550}`) [src:22]. 홈 바탕 `{colors.legacy-white-900}` 의 다크값은 `{colors.dark-legacy-white-900}` 로, 시맨틱 `{colors.dark-background-white}` 와 1단위 다르다 [src:1]. 홈이 쓰는 나머지 옛 변수 `spacing-gray-000`(구획 사이 12px 띠) · `deep-blue-100` · `violet-100` · `mustard-100` 은 토큰으로 싣지 않았다 [src:1] [src:2].
 
 홈 리터럴은 토큰이 아니다. 히어로 알약 `bg-[…]`(값은 `{colors.legacy-green-100}` 과 같음), 홈 대출 버튼(`oklch(0.630 0.155 258.4)`, 옛 `deep-blue-100` 과 같은 값), 히어로 파스텔 `oklch(0.944 0.028 236.2)` · `oklch(0.971 0.019 167.9)` · `oklch(0.943 0.052 170.2)`, 제휴 띠 바탕 `oklch(0.969 0.007 219.6)` · 글자 `oklch(0.579 0.044 214.5)` 는 모두 클래스에 직접 적은 값으로 변수를 거치지 않는다 [src:2]. 4번째 히어로 슬라이드의 180deg 파랑→산호 그라디언트는 카탈로그 전용 `gradients:` 맵의 `home-hero-gradient` 로 옮겼다 [src:2]. 옛 층에는 흰색에서 투명으로 가는 그라디언트 변수 6개(`--gradient-gradation` 등)도 있고, 흰색 변수를 참조하므로 다크에서 함께 바뀐다 [src:1].
 
@@ -1128,3 +1128,4 @@ footer             pb-104 pt-40 · md:max-w-[958px]
 19. https://www.banksalad.com/loan/hub — 대출 허브
 20. https://www.banksalad.com/loan/prequalification/mortgage — 주택담보대출 사전조회
 21. https://itunes.apple.com/lookup?bundleId=com.rainist.banksalad2 — App Store lookup API(앱 메타)
+22. https://www.banksalad.com/articles/home — 머니피드 목록

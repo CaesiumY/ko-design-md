@@ -1077,7 +1077,7 @@
     {
       "name": "legacy-gray-550",
       "value": "oklch(0.807 0.015 264.5)",
-      "note": "#BBC0CA",
+      "note": "#BBC0CA — 머니피드 목록의 「다음」 화살표 아이콘",
       "group": "옛 층 — 홈 마케팅 셸이 쓰는 --color-* (화면 사용값만)"
     },
     {
