@@ -171,6 +171,32 @@ describe("paletteOf", () => {
         "both",
       ])
     }
+    const lightPrefixed = [
+      "---",
+      "colors:",
+      "  light-ink: oklch(0.6 0 0)",
+      '  dark-ink: "{colors.light-ink}"',
+      "---",
+    ].join("\n")
+    expect(paletteOf(lightPrefixed, {}).entries.map((e) => e.theme)).toEqual([
+      "both",
+    ])
+  })
+
+  it("stops following references where a cycle closes", () => {
+    // `dark-veil` and `loop` point at each other and never reach `veil`, so
+    // the twin still paints something else in the dark theme.
+    const cycle = [
+      "---",
+      "colors:",
+      "  veil: oklch(0 0 0 / 5%)",
+      '  dark-veil: "{colors.loop}"',
+      '  loop: "{colors.dark-veil}"',
+      "---",
+    ].join("\n")
+    expect(paletteOf(cycle, {}).translucent.map((t) => t.theme)).toEqual([
+      "light",
+    ])
   })
 
   it("pairs a token only with a dark- twin in the colors map", () => {

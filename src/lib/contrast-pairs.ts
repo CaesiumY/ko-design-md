@@ -29,7 +29,7 @@ import {
   parseOklch,
   rgbToOklab,
 } from "./oklch-convert"
-import { readFrontmatter } from "./frontmatter"
+import { readFrontmatter, tokenText } from "./frontmatter"
 import { readDefinitions } from "./oklch-drift"
 import { oklchValue } from "./oklch-sync"
 import type { FrontmatterRow } from "./frontmatter"
@@ -209,10 +209,7 @@ export function paletteOf(
       const group = row.group ?? outer
       if (map === "colors") {
         colourKeys.add(row.key)
-        const target =
-          typeof row.value === "string"
-            ? COLOUR_REFERENCE.exec(row.value.trim())?.[1]
-            : undefined
+        const target = COLOUR_REFERENCE.exec(tokenText(row) ?? "")?.[1]
         if (target !== undefined) referenceOf.set(row.key, target)
       }
       // The colour readers' one selection, so a value that opens with blanks
