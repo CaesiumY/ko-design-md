@@ -9,7 +9,6 @@
     {
       "name": "blue-700",
       "value": "oklch(0.607 0.225 257)",
-      "note": "hover step",
       "group": "Brand"
     },
     {
@@ -239,7 +238,7 @@
     {
       "name": "red-700",
       "value": "oklch(0.546 0.220 27)",
-      "note": "--fg-danger",
+      "note": "번들 값 — 몽타주 foreground.negative.primary 보다 어두운 단계 · 채움·오류 테두리·파괴적 메뉴 글자에 쓰고, 오류 helper 글자는 fg-danger (Known Gaps)",
       "group": "Semantic signal"
     },
     {
@@ -261,7 +260,7 @@
     {
       "name": "green-600",
       "value": "oklch(0.673 0.211 144)",
-      "note": "--fg-success",
+      "note": "번들 값 — 몽타주 foreground.positive.primary 보다 어두운 단계 · 성공 글자는 fg-success (Known Gaps)",
       "group": "Semantic signal"
     },
     {
@@ -273,7 +272,7 @@
     {
       "name": "orange-700",
       "value": "oklch(0.625 0.148 56)",
-      "note": "--fg-warning",
+      "note": "번들 값 — 몽타주 foreground.cautionary.primary 보다 어두운 단계 · 경고 글자는 fg-warning (Known Gaps)",
       "group": "Semantic signal"
     },
     {
@@ -391,6 +390,36 @@
       "group": "Semantic alias — Light"
     },
     {
+      "name": "surface-danger",
+      "value": "oklch(0.662 0.225 26 / 0.08)",
+      "note": "#FF4242 @ 8% — 몽타주 surface.negative.primary · 배지 바탕",
+      "group": "Semantic alias — Light"
+    },
+    {
+      "name": "surface-success",
+      "value": "oklch(0.700 0.213 146 / 0.08)",
+      "note": "#00BF40 @ 8% — 몽타주 surface.positive.primary · 배지 바탕",
+      "group": "Semantic alias — Light"
+    },
+    {
+      "name": "surface-warning",
+      "value": "oklch(0.760 0.176 61 / 0.08)",
+      "note": "#FF9200 @ 8% — 몽타주 surface.cautionary.primary · 배지 바탕",
+      "group": "Semantic alias — Light"
+    },
+    {
+      "name": "interaction-strong-hover",
+      "value": "oklch(0.205 0.004 286 / 0.075)",
+      "note": "#171719 @ 7.5% — 몽타주 인터랙션 층 강한 단계 hover · 덮개 색 foreground.neutral.primary",
+      "group": "Semantic alias — Light"
+    },
+    {
+      "name": "interaction-strong-active",
+      "value": "oklch(0.205 0.004 286 / 0.18)",
+      "note": "#171719 @ 18% — 몽타주 인터랙션 층 강한 단계 active · 덮개 색 foreground.neutral.primary",
+      "group": "Semantic alias — Light"
+    },
+    {
       "name": "fg-strong",
       "value": "oklch(0.148 0.004 277)",
       "note": "@ alpha 1 (= neutral-960)",
@@ -436,17 +465,20 @@
     },
     {
       "name": "fg-danger",
-      "value": "oklch(0.546 0.220 27)",
+      "value": "oklch(0.662 0.225 26)",
+      "note": "#FF4242 — 몽타주 foreground.negative.primary · 실서비스와 같은 값",
       "group": "Semantic alias — Light"
     },
     {
       "name": "fg-success",
-      "value": "oklch(0.673 0.211 144)",
+      "value": "oklch(0.700 0.213 146)",
+      "note": "#00BF40 — 몽타주 foreground.positive.primary · 실서비스와 같은 값",
       "group": "Semantic alias — Light"
     },
     {
       "name": "fg-warning",
-      "value": "oklch(0.625 0.148 56)",
+      "value": "oklch(0.760 0.176 61)",
+      "note": "#FF9200 — 몽타주 foreground.cautionary.primary · 실서비스와 같은 값",
       "group": "Semantic alias — Light"
     },
     {
@@ -534,6 +566,36 @@
       "group": "Semantic alias — Dark"
     },
     {
+      "name": "dark-surface-danger",
+      "value": "oklch(0.700 0.191 23 / 0.08)",
+      "note": "#FF6363 @ 8% — 몽타주 surface.negative.primary (dark)",
+      "group": "Semantic alias — Dark"
+    },
+    {
+      "name": "dark-surface-success",
+      "value": "oklch(0.761 0.214 148 / 0.08)",
+      "note": "#1ED45A @ 8% — 몽타주 surface.positive.primary (dark)",
+      "group": "Semantic alias — Dark"
+    },
+    {
+      "name": "dark-surface-warning",
+      "value": "oklch(0.802 0.157 69 / 0.08)",
+      "note": "#FFA938 @ 8% — 몽타주 surface.cautionary.primary (dark)",
+      "group": "Semantic alias — Dark"
+    },
+    {
+      "name": "dark-interaction-strong-hover",
+      "value": "oklch(0.976 0.001 286 / 0.075)",
+      "note": "#F7F7F8 @ 7.5% — 몽타주 인터랙션 층 강한 단계 hover · 덮개 색 foreground.neutral.primary (dark)",
+      "group": "Semantic alias — Dark"
+    },
+    {
+      "name": "dark-interaction-strong-active",
+      "value": "oklch(0.976 0.001 286 / 0.18)",
+      "note": "#F7F7F8 @ 18% — 몽타주 인터랙션 층 강한 단계 active · 덮개 색 foreground.neutral.primary (dark)",
+      "group": "Semantic alias — Dark"
+    },
+    {
       "name": "dark-fg-strong",
       "value": "oklch(1 0 0)",
       "group": "Semantic alias — Dark"
@@ -571,20 +633,20 @@
     },
     {
       "name": "dark-fg-danger",
-      "value": "oklch(0.715 0.220 27)",
-      "note": "synthesized (red @ ↑ lightness)",
+      "value": "oklch(0.700 0.191 23)",
+      "note": "#FF6363 — 몽타주 foreground.negative.primary (dark)",
       "group": "Semantic alias — Dark"
     },
     {
       "name": "dark-fg-success",
-      "value": "oklch(0.760 0.180 144)",
-      "note": "synthesized (green @ ↑ lightness)",
+      "value": "oklch(0.761 0.214 148)",
+      "note": "#1ED45A — 몽타주 foreground.positive.primary (dark)",
       "group": "Semantic alias — Dark"
     },
     {
       "name": "dark-fg-warning",
-      "value": "oklch(0.778 0.158 64)",
-      "note": "synthesized (orange @ ↑ lightness)",
+      "value": "oklch(0.802 0.157 69)",
+      "note": "#FFA938 — 몽타주 foreground.cautionary.primary (dark)",
       "group": "Semantic alias — Dark"
     },
     {
