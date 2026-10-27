@@ -41,7 +41,7 @@ import type { SweepArgs } from "./audit-contrast-sweep"
 const ROOT = fileURLToPath(new URL("..", import.meta.url))
 const PREVIEW_DIR = join(ROOT, "public", "preview")
 
-// The widths CLAUDE.md fixes for preview validation. 976 is the detail page's
+// The widths .claude/rules/preview.md fixes for preview validation. 976 is the detail page's
 // embed width, historically the blind spot — overflow and media-query colour
 // changes hide at the middle multi-column widths, so 375 alone is not a sweep.
 //

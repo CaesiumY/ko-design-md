@@ -113,7 +113,7 @@ export const OBSERVED_COLOURS: Readonly<Record<string, ObservedColours>> =
 
 /**
  * Which preview theme a token can be painted in, read off the catalogue's
- * naming (CLAUDE.md 「테마별 팔레트는 이름을 갈라 쓴다」): a `dark-` name is
+ * naming (.claude/rules/catalog.md 「테마별 팔레트는 이름을 갈라 쓴다」): a `dark-` name is
  * the dark side; its light side is the unprefixed name with a declared `dark-`
  * twin, or a `light-` name when the twin drops that prefix (codeit's
  * `light-gray-00` beside `dark-gray-00`); any other name — a ramp step, a

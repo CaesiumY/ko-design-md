@@ -10,7 +10,7 @@
 // machine's, not CI's. CI measures with pinned Noto CJK and its own fontconfig,
 // and a different Korean fallback face breaks lines differently, which moves
 // the lines a verdict rests on. So a reading here can pass where CI's fails or
-// the other way round; the baseline numbers stay CI's (CLAUDE.md).
+// the other way round; the baseline numbers stay CI's (.claude/rules/preview.md).
 //
 // Two outcomes, both exit 0, because the loop must go on to the reviewer
 // either way:
