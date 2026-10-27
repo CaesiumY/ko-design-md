@@ -23,7 +23,7 @@ export interface Rgb {
 // are continuous across the whole interval between them — so reusing the
 // catalogue's own `srgbToLinear` costs nothing measurable and keeps one
 // implementation of the gamma decode in the repository, which is the same
-// reason `oklch-convert.ts` keeps one copy of the colour maths.
+// reason the OKLCH conversions live only in `oklch-convert.ts`.
 const relativeLuminance = (c: Rgb): number =>
   0.2126 * srgbToLinear(c.r / 255) +
   0.7152 * srgbToLinear(c.g / 255) +
