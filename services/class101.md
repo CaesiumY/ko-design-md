@@ -40,9 +40,9 @@ colors:
   onViewPrimary: oklch(0.685 0.211 41)   # #ff5d00 — 텍스트용 오렌지
   dim: oklch(0 0 0 / 70%)   # #000000b2 — 오버레이 스크림
   # 확장 팔레트 — ~Vibrant 변형 예시 [src:3]
-  orangeVibrant: oklch(0.685 0.211 41)   # #ff5d00 — primary와 동일값
-  blueVibrant: oklch(0.583 0.219 265)   # #376dfa — informative와 동일값
-  magentaVibrant: oklch(0.632 0.252 2)   # #f7097d
+  orangeVibrant: oklch(0.685 0.211 41)   # #ff5d00 — primary와 동일값 · 두 모드 동일
+  blueVibrant: oklch(0.583 0.219 265)   # #376dfa — informative와 동일값 · 두 모드 동일
+  magentaVibrant: oklch(0.632 0.252 2)   # #f7097d — 두 모드 동일
   violetVibrant: oklch(0.603 0.269 305)   # #a839fd
   orangeMuted: oklch(0.930 0.031 45)   # #fbe2d7 (라이트) — 다크 값은 `dark-orangeMuted`
   # 글래스 표면·덮개·상태 글자·윤곽선 — 라이트 모드 값 [src:3]
@@ -208,7 +208,7 @@ VDS 색 체계는 92개 시맨틱 토큰이 라이트/다크 값 쌍으로 정�
 
 구조 원칙은 세 가지다. (1) 강조는 primary 오렌지 하나로 수렴하고, 라이트/다크 어디서든 같은 값을 유지한다 — 다크 캔버스에서도 버튼이 같은 오렌지로 렌더된다 [src:2][src:3][src:9]. (2) 상태는 informative/error/success/warning 4색이 담당하며, 각자 옅은 container 틴트를 동반한다 [src:2]. (3) 텍스트 위계는 `onView1→onView2→onView3` 3단으로 토큰화되어 "항상 onView1" 식으로 컴포넌트 규칙에 직접 인용된다 [src:2][src:32].
 
-다크 모드는 별도 팔레트가 아니라 같은 토큰명의 값 오버라이드다. `primary`·`onPrimary`·`informative`·`error`·`success`·`warning`·`onWarning`은 두 모드에서 동일값을 유지하고, 나머지는 아래처럼 반전된다 [src:3]. 이 값들은 frontmatter 에도 라이트 토큰과 같은 이름에 `dark-` 를 붙인 토큰으로 실려 있다(`dark-surface2`·`dark-onView3` 등 — 아래 표의 22개에 `dark-violetVibrant`·`dark-orangeMuted` 를 더한 24개. 글래스 표면·덮개·상태 글자·윤곽선 20개는 라이트·다크 짝으로 이 표 밖에 실려 있다 — `surfaceThin`·`overlay`·`onViewError`·`outlineError` 등) [src:3].
+다크 모드는 별도 팔레트가 아니라 같은 토큰명의 값 오버라이드다. `primary`·`onPrimary`·`informative`·`error`·`success`·`warning`·`onWarning`과 확장 팔레트의 `orangeVibrant`·`blueVibrant`·`magentaVibrant`는 두 모드에서 동일값을 유지하고, 나머지는 아래처럼 반전된다 [src:3]. 이 값들은 frontmatter 에도 라이트 토큰과 같은 이름에 `dark-` 를 붙인 토큰으로 실려 있다 — 아래 표의 값과 `dark-violetVibrant`·`dark-orangeMuted`. 글래스 표면·덮개·상태 글자·윤곽선(`surfaceThin`·`overlay`·`onViewError`·`outlineError` 등)은 라이트·다크 짝으로 이 표 밖에 실려 있다 [src:3].
 
 | token                | 다크 값 (OKLCH)          | 원본 hex    |
 | -------------------- | ------------------------ | ----------- |

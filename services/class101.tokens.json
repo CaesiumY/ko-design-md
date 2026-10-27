@@ -148,17 +148,17 @@
     {
       "name": "orangeVibrant",
       "value": "oklch(0.685 0.211 41)",
-      "note": "#ff5d00 — primary와 동일값"
+      "note": "#ff5d00 — primary와 동일값 · 두 모드 동일"
     },
     {
       "name": "blueVibrant",
       "value": "oklch(0.583 0.219 265)",
-      "note": "#376dfa — informative와 동일값"
+      "note": "#376dfa — informative와 동일값 · 두 모드 동일"
     },
     {
       "name": "magentaVibrant",
       "value": "oklch(0.632 0.252 2)",
-      "note": "#f7097d"
+      "note": "#f7097d — 두 모드 동일"
     },
     {
       "name": "violetVibrant",
