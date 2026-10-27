@@ -766,8 +766,9 @@ function segmentPattern(pattern: string): RegExp {
  *
  * A key is matched in its raw spelling, before YAML normalises it (`1.0`).
  *
- * Scope — what is judged, and what is deliberately not. This list is the only
- * copy (.claude/rules/catalog.md points here): when a review brings a shape it does not name,
+ * Scope — what is judged, and what is deliberately not. This list is the
+ * canonical copy (.claude/rules/catalog.md points here, and the design-md author
+ * prompt summarises part of it): when a review brings a shape it does not name,
  * check it against this list before adding a rule.
  *   • `{ns.…}` with a lowercase namespace: the reference syntax itself. A known
  *     map or phantom is judged in every shape (`{motion.a/b/c}` blocks, and so

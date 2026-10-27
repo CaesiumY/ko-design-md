@@ -38,6 +38,8 @@ paths:
 루트 `CLAUDE.md` 의 검증 커맨드 묶음에 없다 — CI 의 **별도 `contrast` 잡**에서 돈다. 프리뷰 대비를 라이트·다크 × 4폭으로 전수 재고
 `docs/preview-contrast-baseline.md` 의 총계 표와 대조해, 개별 미달이 아니라 **그 수가 움직였는지**만
 막는다(ADR 0007). **수치는 CI 가 정본이다** — 폰트 폴백이 OS 마다 달라 줄바꿈과 판정이 바뀔 수 있다.
+로컬에서 돌리려면 `pnpm exec playwright install chromium` 이 선행이고, 종료 코드(어긋남 3 · 측정기 고장 1 ·
+인자 오류 2)의 뜻은 `scripts/audit-contrast.ts` 머리 주석에 있다.
 
 **총계 표를 갱신하는 PR 은 발행색 분류표도 함께 다시 낸다** — 같은 CI 아티팩트(`contrast-report`)로
 `pnpm audit:contrast:pairs --findings <contrast-findings.json>` 를 돌린다(어긋나면 `pnpm test` 가 막고, 실패
@@ -46,4 +48,4 @@ paths:
 
 스킬 루프 안의 `pnpm audit:contrast:staged`(Stage 9a3, ADR 0009)는 미달을 **warn** 으로만 합친다.
 Chromium 이 없거나 측정이 깨지면 exit 0 과 `render.skipped` 를 남기는데, 이것은 "미달 없음"이 아니라
-"재지 않음"이다. 로컬 수치라 기준선과 대조하지 않는다.
+"재지 않음"이다. exit 2 는 호출이나 그 파일이 잘못된 경우뿐이다. 로컬 수치라 기준선과 대조하지 않는다.

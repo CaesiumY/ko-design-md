@@ -12,7 +12,7 @@ ADR 0003 은 토큰을 frontmatter 로 옮겨 항목 파일 자체를 명세 문
 
 ## Consequences
 
-- "본문에 yaml 펜스가 없다"가 발행의 전제가 된다. 이를 지키는 게이트와 저작 규칙은 `CLAUDE.md` 에 있다.
+- "본문에 yaml 펜스가 없다"가 발행의 전제가 된다. 이를 지키는 게이트와 저작 규칙은 `.claude/rules/catalog.md` 에 있다(루트 `CLAUDE.md` 는 색인만 둔다).
 - 그림자의 출처가 본문 펜스에서 frontmatter 로 바뀌었다. 이관 직후 사이드카는 바이트 단위로 이관 전과 같았으므로, 사이트 Tokens 탭과 `use-design-md` 가 보는 값은 바뀌지 않았다.
 - 명세의 `description` 은 발행하지 않는다.
 - 항목 메타(slug·logo·날짜)와 카탈로그 고유 맵이 표준 도구 쪽에도 그대로 실린다.

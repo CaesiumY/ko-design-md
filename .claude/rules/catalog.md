@@ -41,7 +41,10 @@ paths:
   키만 가리킬 수 있다 — 한글 키(`빨강`)는 ASCII 로 짓거나 값을 `oklch(…)` 로 직접 쓴다.
 - **frontmatter 는 한 모듈이 진짜 YAML 로 한 번 읽는다**(`src/lib/frontmatter.ts` 의 `readFrontmatter`,
   ADR 0011). **"사이트와 YAML 이 다르게 읽는 경우"를 막는 규칙은 다시 만들지 않는다** — 그런 경우가 보이면
-  이 모듈을 거치지 않는 독자를 고친다.
+  이 모듈을 거치지 않는 독자를 고친다. 그 대신 YAML 이 읽는 대로 읽으므로, 따옴표로 시작하는 값은 YAML 문법을
+  따라야 한다 — 폰트 스택 `"Pretendard", sans-serif` 는 값 전체를 다른 따옴표로 한 번 더 감싸야
+  (`'"Pretendard", sans-serif'`) 읽히고, 참조는 `"{colors.x}"` 처럼 따옴표가 있어야 참조로 읽힌다. 감싸지 않은
+  폰트 스택 하나가 frontmatter 전체를 못 읽게 만드는데, 검증기는 파서 오류만 알리고 고치는 법은 말하지 않는다.
 - **사이트가 읽는 키(`CONSUMED_KEYS`)를 값 없이 쓰면 사이트 빌드가 실패한다**(`site-frontmatter.ts`) —
   빈 값이 기본값으로 조용히 바뀌지 않게 하려는 것이다. 키를 아예 안 쓰면 기본값으로 떨어진다. `name`·
   `category`·`lang` 은 지워도 게이트가 받아 주지만 스킬 루브릭(`rubric-design.md`)은 필수로 요구한다.
