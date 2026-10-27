@@ -10,6 +10,7 @@ paths:
   - ".claude/agents/preview-html-*.md"
   - ".claude/skills/design-md/**"
   - ".claude/cache/design-md/**"
+  - ".claude/skills/preview-prose-audit/**"
 ---
 
 # 프리뷰 HTML · 산문 감사 · 대비 게이트

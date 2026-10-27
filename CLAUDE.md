@@ -45,7 +45,7 @@ pnpm test:e2e           # E2E 스모크 — 빌드된 서버 + Chromium, CI 는 
 - 커밋은 DCO 서명: `git commit -s`. PR 템플릿 참고.
 - **PR·이슈 본문의 첫 1~3줄은 쉬운 말 요약이다** — 무엇이 바뀌는지 · 왜 · 독자에게 무엇이 달라지는지를
   함수명·규칙 ID·단계 번호 없이 쓰고, 저장소 은어(`block`·게이트·사이드카·상류 등)는 괄호로 한 줄 풀이한다.
-  `gh issue create` 로 쓰는 이슈는 맨 위 `Part of #N`·`Blocked by:` 줄 다음에 둔다(`docs/agents/issue-tracker.md`).
+  이슈는 `gh issue create` 로 손수 쓰는 본문만 해당하고(웹 폼 이슈는 제외), 맨 위 `Part of #N`·`Blocked by:` 줄 다음에 둔다(`docs/agents/issue-tracker.md`).
 - **여러 줄 문서·커밋 메시지는 인용 구분자 heredoc으로 넘긴다** — `cat > f <<'EOF'`.
   `node -e "…"`나 `printf`에 큰따옴표로 넘기면 **백틱 안 내용을 셸이 명령 치환해 통째로 날린다.**
   PowerShell here-string `@'…'@`을 Bash에 쓰면 리터럴 `@`가 박히는 것도 같은 계열이다.
