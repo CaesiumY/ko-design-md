@@ -201,7 +201,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
     },
   },
   greeting: {
-    title: "light only, brand alias off the text ladder",
+    title: "light reference rows only, brand alias off the text ladder",
     check: () => {
       const { literals, refs, tableRows } = load("greeting")
       const expected = new Map<string, string>()
@@ -216,8 +216,9 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       const textColours = new Set<string>()
       for (const [roleCell, paletteCell] of tableRows) {
         const roles = spans(roleCell)
-        // Frontmatter carries light values only, so a `x`(L) / `y`(D) cell
-        // is judged by its light side.
+        // The reference rows are light only (the palette has `dark-` literals,
+        // but no role row points at them), so a `x`(L) / `y`(D) cell is judged
+        // by its light side.
         const split = /^`([^`]+)`\(L\) \/ `[^`]+`\(D\)$/.exec(paletteCell)
         const palette = split ? [split[1]] : spans(paletteCell)
         // The `effect1` / … / `effect4` row pairs positionally with its palette.
