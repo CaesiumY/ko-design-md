@@ -3,7 +3,7 @@ name: 클래스101
 design_system_name: Vibrant
 slug: class101
 category: education
-last_updated: "2026-08-16"
+last_updated: "2026-10-28"
 created_at: "2026-07-04"
 lang: ko
 logo: https://getdesign.kr/logos/class101.png
@@ -44,7 +44,73 @@ colors:
   blueVibrant: oklch(0.583 0.219 265)   # #376dfa — informative와 동일값
   magentaVibrant: oklch(0.632 0.252 2)   # #f7097d
   violetVibrant: oklch(0.603 0.269 305)   # #a839fd
-  orangeMuted: oklch(0.930 0.031 45)   # #fbe2d7 (라이트) — 다크에서는 oklch(0.255 0.055 51) #371a07로 반전
+  orangeMuted: oklch(0.930 0.031 45)   # #fbe2d7 (라이트) — 다크 값은 `dark-orangeMuted`
+  # 글래스 표면·덮개·상태 글자·윤곽선 — 라이트 모드 값 [src:3]
+  surfaceUltraThin: oklch(0.922 0 0 / 40%)   # #e5e5e566
+  surfaceThin: oklch(0.922 0 0 / 60%)   # #e5e5e599
+  surfaceRegular: oklch(0.964 0 0 / 80%)   # #f3f3f3cc
+  surfaceThick: oklch(0.964 0 0 / 95%)   # #f3f3f3f2
+  surfaceOnMedia: oklch(0.559 0 0 / 20%)   # #74747433
+  inverseDim: oklch(1 0 0 / 80%)   # #ffffffcc
+  overlay: oklch(0 0 0 / 5%)   # #0000000d
+  onViewInformative: oklch(0.583 0.219 265)   # #376dfa
+  onViewError: oklch(0.581 0.230 23)   # #e30f32
+  onViewSuccess: oklch(0.543 0.144 151)   # #078641
+  onViewWarning: oklch(0.671 0.142 71)   # #cb8409
+  onInformative: oklch(1 0 0)   # #ffffff
+  onError: oklch(1 0 0)   # #ffffff
+  onSuccess: oklch(1 0 0)   # #ffffff
+  onInformativeContainer: oklch(0.624 0.195 270)   # #5a7afb
+  onErrorContainer: oklch(0.627 0.248 23)   # #fb1239
+  onSuccessContainer: oklch(0.587 0.155 151)   # #099549
+  onWarningContainer: oklch(0.608 0.129 71)   # #b27307
+  outlineDisable: oklch(0 0 0 / 5%)   # #0000000d
+  outlineError: oklch(0.581 0.230 23)   # #e30f32
+  ## 다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]
+  dark-primaryContainer: oklch(0.187 0.025 55)   # #1c1008
+  dark-onPrimaryContainer: oklch(0.716 0.186 43)   # #ff7430
+  dark-informativeContainer: oklch(0.199 0.045 270)   # #0e142a
+  dark-errorContainer: oklch(0.187 0.034 36)   # #200d08
+  dark-successContainer: oklch(0.171 0.027 149)   # #071309
+  dark-warningContainer: oklch(0.192 0.023 78)   # #1a1308
+  dark-background: oklch(0.154 0 0)   # #0c0c0c
+  dark-surface1: oklch(1 0 0 / 5%)   # #ffffff0d
+  dark-surface2: oklch(0.205 0 0)   # #171717
+  dark-surface3: oklch(0 0 0)   # #000000
+  dark-surface4: oklch(0.471 0 0)   # #5b5b5b
+  dark-inverseSurface: oklch(0.964 0 0)   # #f3f3f3
+  dark-onInverseSurface: oklch(0.154 0 0)   # #0c0c0c
+  dark-disable: oklch(1 0 0 / 15%)   # #ffffff26
+  dark-outline1: oklch(1 0 0 / 8%)   # #ffffff14
+  dark-outline2: oklch(1 0 0 / 15%)   # #ffffff26
+  dark-outlineNeutral: oklch(0.964 0 0)   # #f3f3f3
+  dark-onView1: oklch(0.964 0 0)   # #f3f3f3
+  dark-onView2: oklch(0.964 0 0 / 65%)   # #f3f3f3a6
+  dark-onView3: oklch(0.559 0 0)   # #747474
+  dark-onViewPrimary: oklch(0.716 0.186 43)   # #ff7430
+  dark-dim: oklch(0 0 0 / 80%)   # #000000cc
+  dark-violetVibrant: oklch(0.642 0.246 307)   # #b452fe
+  dark-orangeMuted: oklch(0.255 0.055 51)   # #371a07
+  dark-surfaceUltraThin: oklch(0.289 0 0 / 40%)   # #2b2b2b66
+  dark-surfaceThin: oklch(0.289 0 0 / 60%)   # #2b2b2b99
+  dark-surfaceRegular: oklch(0.244 0 0 / 75%)   # #202020bf
+  dark-surfaceThick: oklch(0.205 0 0 / 80%)   # #171717cc
+  dark-surfaceOnMedia: oklch(0.559 0 0 / 40%)   # #74747466
+  dark-inverseDim: oklch(0 0 0 / 20%)   # #00000033
+  dark-overlay: oklch(1 0 0 / 10%)   # #ffffff1a
+  dark-onViewInformative: oklch(0.674 0.166 274)   # #788bfb
+  dark-onViewError: oklch(0.686 0.198 25)   # #fd5b59
+  dark-onViewSuccess: oklch(0.644 0.170 151)   # #0ca954
+  dark-onViewWarning: oklch(0.789 0.168 71)   # #fca50e
+  dark-onInformative: oklch(0.967 0.012 286)   # #f3f3fc
+  dark-onError: oklch(0.966 0.012 24)   # #fcf1f0
+  dark-onSuccess: oklch(0.960 0.050 151)   # #dbfce1
+  dark-onInformativeContainer: oklch(0.674 0.166 274)   # #788bfb
+  dark-onErrorContainer: oklch(0.686 0.198 25)   # #fd5b59
+  dark-onSuccessContainer: oklch(0.644 0.170 151)   # #0ca954
+  dark-onWarningContainer: oklch(0.671 0.142 71)   # #cb8409
+  dark-outlineDisable: oklch(1 0 0 / 10%)   # #ffffff1a
+  dark-outlineError: oklch(0.489 0.193 23)   # #b40a26
 typography:
   # size / line-height (px) — npm 원문은 rem [src:3]
   display1:   # 6rem / 6.75rem
@@ -136,13 +202,13 @@ Vibrant Design System은 "Class101의 사용자들이 보다 일관적인 서비
 
 ## Colors
 
-> **대조 결과(2026-08-02).** 이 문서의 색 토큰 **34개 전부**가 발행된 `@vibrant-ui/theme` 0.94.37의 팔레트와 ΔE ≤ 0.02로 일치했다 [src:3]. 아래 문단이 "npm 실측이 전 항목 일치"라고 적은 것을 독립적으로 재확인한 셈이다. 참고로 `npmjs.com` 페이지는 봇 요청에 403을 반환하지만 죽은 링크가 아니다 — `registry.npmjs.org/@vibrant-ui/theme`는 200이며, 향후 생존 감사에서 오탐으로 처리하지 말 것.
+> **대조 결과(2026-10-28).** 라이트 색 토큰 **54개 전부**가 발행된 `@vibrant-ui/theme` 0.94.37의 팔레트와 ΔE ≤ 0.02로 일치했다 [src:3]. 다크 값 44개(`dark-` 접두)는 같은 패키지의 `darkModeColors`·`palettes` 를 텍스트로 풀어 hex 를 바이트 단위로 대조했고 전부 일치한다 [src:3]. 아래 문단이 "npm 실측이 전 항목 일치"라고 적은 것을 독립적으로 재확인한 셈이다. 참고로 `npmjs.com` 페이지는 봇 요청에 403을 반환하지만 죽은 링크가 아니다 — `registry.npmjs.org/@vibrant-ui/theme`는 200이며, 향후 생존 감사에서 오탐으로 처리하지 말 것.
 
 VDS 색 체계는 92개 시맨틱 토큰이 라이트/다크 값 쌍으로 정의된 단일 사전이다 [src:3]. "Vibrant color token 은 다크/라이트 모드에 맞추어 제작되었습니다"가 공식 전제이고 [src:2], 라이트 값은 공식 Color Token 문서와 npm `@vibrant-ui/theme@0.94.37` 실측이 전 항목 일치한다 [src:2][src:3]. 아래 OKLCH 값은 그 공식 hex를 변환한 것이며 원본 hex를 트레일링 주석으로 병기한다.
 
 구조 원칙은 세 가지다. (1) 강조는 primary 오렌지 하나로 수렴하고, 라이트/다크 어디서든 같은 값을 유지한다 — 다크 캔버스에서도 버튼이 같은 오렌지로 렌더된다 [src:2][src:3][src:9]. (2) 상태는 informative/error/success/warning 4색이 담당하며, 각자 옅은 container 틴트를 동반한다 [src:2]. (3) 텍스트 위계는 `onView1→onView2→onView3` 3단으로 토큰화되어 "항상 onView1" 식으로 컴포넌트 규칙에 직접 인용된다 [src:2][src:32].
 
-다크 모드는 별도 팔레트가 아니라 같은 토큰명의 값 오버라이드다. `primary`·`onPrimary`·`informative`·`error`·`success`·`warning`·`onWarning`은 두 모드에서 동일값을 유지하고, 나머지는 아래처럼 반전된다 [src:3].
+다크 모드는 별도 팔레트가 아니라 같은 토큰명의 값 오버라이드다. `primary`·`onPrimary`·`informative`·`error`·`success`·`warning`·`onWarning`은 두 모드에서 동일값을 유지하고, 나머지는 아래처럼 반전된다 [src:3]. 이 값들은 frontmatter 에도 라이트 토큰과 같은 이름에 `dark-` 를 붙인 토큰으로 실려 있다(`dark-surface2`·`dark-onView3` 등 — 아래 표의 22개에 `dark-violetVibrant`·`dark-orangeMuted` 를 더한 24개. 글래스 표면·덮개·상태 글자·윤곽선 20개는 라이트·다크 짝으로 이 표 밖에 실려 있다 — `surfaceThin`·`overlay`·`onViewError`·`outlineError` 등) [src:3].
 
 | token                | 다크 값 (OKLCH)          | 원본 hex    |
 | -------------------- | ------------------------ | ----------- |
