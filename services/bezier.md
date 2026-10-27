@@ -3,7 +3,7 @@ name: 채널톡
 design_system_name: Bezier Design System
 slug: bezier
 category: developer
-last_updated: "2026-08-22"
+last_updated: "2026-10-28"
 created_at: "2026-06-03"
 lang: ko
 logo: https://getdesign.kr/logos/bezier.png
@@ -153,7 +153,7 @@ Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3
 
 ### Accent global hues (300/400/500 core)
 
-액센트는 한 hue가 **연·진 한 쌍**으로 작동한다 — **20% 틴트를 배경 fill**(`fill-accent-blue` = `blue-400`의 20% 알파)로, **솔리드 hue를 텍스트·아이콘**(`text/icon-accent-*`)으로 쓴다. 그래서 배너·태그·상태 칩이 "연한 틴트 위 진한 동색 글자/아이콘"으로 읽힌다.
+액센트는 한 hue가 **연·진 한 쌍**으로 작동한다 — **옅은 틴트를 배경 fill**로, **솔리드 hue를 텍스트·아이콘**(`text/icon-accent-*`)으로 쓴다. 틴트는 두 단계다 — 기본 `fill-accent-{hue}`는 라이트에서 `{hue}-400`의 10% 알파(다크에서는 300 계열의 18%), 한 단계 진한 `fill-accent-{hue}-heavy`는 20%(다크 30%)다 [src:3]. 그래서 배너·태그·상태 칩이 "연한 틴트 위 진한 동색 글자/아이콘"으로 읽힌다.
 
 ### Semantic (라이트/다크 분리)
 
