@@ -139,6 +139,48 @@
       "group": "프리미티브 스케일 — 라이트 테마"
     },
     {
+      "name": "light-gray-100-opacity-80",
+      "value": "oklch(0.320 0.007 297 / 80%)",
+      "note": "#333236cc",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-gray-100-opacity-60",
+      "value": "oklch(0.320 0.007 297 / 60%)",
+      "note": "#33323699",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-gray-100-opacity-50",
+      "value": "oklch(0.320 0.007 297 / 50%)",
+      "note": "#33323680",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-gray-100-opacity-30",
+      "value": "oklch(0.320 0.007 297 / 30%)",
+      "note": "#3332364d",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-gray-100-opacity-15",
+      "value": "oklch(0.320 0.007 297 / 15%)",
+      "note": "#33323626",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-gray-100-opacity-10",
+      "value": "oklch(0.320 0.007 297 / 10%)",
+      "note": "#3332361a",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
+      "name": "light-gray-100-opacity-05",
+      "value": "oklch(0.320 0.007 297 / 5%)",
+      "note": "#3332360d",
+      "group": "프리미티브 스케일 — 라이트 테마"
+    },
+    {
       "name": "light-purple-00",
       "value": "oklch(0.978 0.015 312)",
       "note": "#fbf5ff — 테마 불변",
@@ -604,6 +646,48 @@
       "name": "dark-gray-100",
       "value": "oklch(0.976 0.001 286)",
       "note": "#f7f7f8",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-gray-100-opacity-80",
+      "value": "oklch(0.976 0.001 286 / 80%)",
+      "note": "#f7f7f8cc",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-gray-100-opacity-60",
+      "value": "oklch(0.976 0.001 286 / 60%)",
+      "note": "#f7f7f899",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-gray-100-opacity-50",
+      "value": "oklch(0.976 0.001 286 / 50%)",
+      "note": "#f7f7f880",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-gray-100-opacity-30",
+      "value": "oklch(0.976 0.001 286 / 30%)",
+      "note": "#f7f7f84d",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-gray-100-opacity-15",
+      "value": "oklch(0.976 0.001 286 / 15%)",
+      "note": "#f7f7f826",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-gray-100-opacity-10",
+      "value": "oklch(0.976 0.001 286 / 10%)",
+      "note": "#f7f7f81a",
+      "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "dark-gray-100-opacity-05",
+      "value": "oklch(0.976 0.001 286 / 5%)",
+      "note": "#f7f7f80d",
       "group": "프리미티브 스케일 — 다크 테마"
     },
     {

@@ -2,7 +2,7 @@
 name: 코드잇
 slug: codeit
 category: education
-last_updated: "2026-09-29"
+last_updated: "2026-10-28"
 created_at: "2026-07-16"
 lang: ko
 logo: https://getdesign.kr/logos/codeit.png
@@ -33,6 +33,13 @@ colors:
   light-gray-80: oklch(0.513 0.012 286)   # #66666e
   light-gray-90: oklch(0.409 0.010 294)   # #4a494f
   light-gray-100: oklch(0.320 0.007 297)   # #333236
+  light-gray-100-opacity-80: oklch(0.320 0.007 297 / 80%)   # #333236cc
+  light-gray-100-opacity-60: oklch(0.320 0.007 297 / 60%)   # #33323699
+  light-gray-100-opacity-50: oklch(0.320 0.007 297 / 50%)   # #33323680
+  light-gray-100-opacity-30: oklch(0.320 0.007 297 / 30%)   # #3332364d
+  light-gray-100-opacity-15: oklch(0.320 0.007 297 / 15%)   # #33323626
+  light-gray-100-opacity-10: oklch(0.320 0.007 297 / 10%)   # #3332361a
+  light-gray-100-opacity-05: oklch(0.320 0.007 297 / 5%)   # #3332360d
   light-purple-00: oklch(0.978 0.015 312)   # #fbf5ff — 테마 불변
   light-purple-05: oklch(0.958 0.028 313)   # #f8ecff — 테마 불변
   light-purple-10: oklch(0.886 0.075 310)   # #e9ccff — 테마 불변
@@ -112,6 +119,13 @@ colors:
   dark-gray-80: oklch(0.872 0.012 281)   # #d3d4dd
   dark-gray-90: oklch(0.950 0.004 286)   # #eeeef1
   dark-gray-100: oklch(0.976 0.001 286)   # #f7f7f8
+  dark-gray-100-opacity-80: oklch(0.976 0.001 286 / 80%)   # #f7f7f8cc
+  dark-gray-100-opacity-60: oklch(0.976 0.001 286 / 60%)   # #f7f7f899
+  dark-gray-100-opacity-50: oklch(0.976 0.001 286 / 50%)   # #f7f7f880
+  dark-gray-100-opacity-30: oklch(0.976 0.001 286 / 30%)   # #f7f7f84d
+  dark-gray-100-opacity-15: oklch(0.976 0.001 286 / 15%)   # #f7f7f826
+  dark-gray-100-opacity-10: oklch(0.976 0.001 286 / 10%)   # #f7f7f81a
+  dark-gray-100-opacity-05: oklch(0.976 0.001 286 / 5%)   # #f7f7f80d
   dark-purple-00: oklch(0.978 0.015 312)   # #fbf5ff (라이트와 동일 — 불변)
   dark-purple-05: oklch(0.958 0.028 313)   # #f8ecff (불변)
   dark-purple-10: oklch(0.886 0.075 310)   # #e9ccff (불변)
@@ -178,7 +192,7 @@ colors:
   dark-green-90: oklch(0.951 0.079 147)   # #cdfed0 — ⚠ 반전 공식의 유일한 예외(공식대로면 #d9ffdb 예상, 원시 CSS 재확인으로 실측값 확정)
   dark-green-100: oklch(0.980 0.034 145)   # #ebffeb
   ## 시맨틱 역할 — 팔레트 참조
-  # 번들이 팔레트 하나를 가리키는 역할만 싣는다. text-primary 등 불투명도 램프(gray-100-opacity-*)를 거치는 역할은 본문 표에만 있다
+  # 번들이 팔레트 하나를 가리키는 역할만 싣는다. text-primary 등 불투명도 램프(gray-100-opacity-*)를 거치는 역할은 본문 표에만 있다 — 램프의 일곱 단계(80·60·50·30·15·10·05)는 위 팔레트에 선언돼 있지만 역할 참조 행으로는 싣지 않는다
   text-purple-primary: "{colors.light-purple-80}"   # docs 표기 txt-purple-primary
   text-purple-secondary: "{colors.light-purple-60}"   # docs 표기 txt-purple-secondary
   background-primary: "{colors.light-gray-00}"   # docs 표기 bg-primary
@@ -192,7 +206,7 @@ colors:
   dark-background-primary: "{colors.dark-gray-00}"   # docs 표기 bg-primary (다크)
   dark-background-secondary: "{colors.dark-gray-05}"   # docs 표기 bg-secondary (다크)
   dark-background-tertiary: "{colors.dark-gray-10}"   # docs 표기 bg-tertiary (다크)
-  # dark-background-purple-primary 는 없다 — 다크 번들은 팔레트 단계가 아니라 purple-opacity-15(purple-60 @ 15%)를 가리키고, 그 불투명도 램프는 이 맵에 선언돼 있지 않다
+  # dark-background-purple-primary 는 없다 — 다크 번들은 팔레트 단계가 아니라 purple-opacity-15(purple-60 @ 15%)를 가리키고, 그 purple 불투명도 램프는 이 맵에 선언돼 있지 않다
   dark-border-primary: "{colors.dark-gray-100}"
   dark-status-positive: "{colors.dark-green-70}"
 typography:
@@ -385,7 +399,7 @@ gray는 라이트에서 단순 반전되지 않는 완전히 독립된 램프이
 
 docs는 시맨틱 25종이라 서술하나 표로 확보된 것은 22종(Text 8 + Diff 4 + Background 5 + Border 3 + Status 2)이며, 나머지 3종은 크롤 캐시에 없다 [src:8].
 
-이 중 번들이 팔레트 하나를 가리키는 역할은 frontmatter `colors:` 에 번들 표기의 참조 행으로도 실었다 — `background-primary: "{colors.light-gray-00}"` 와 그 다크 짝 `dark-background-primary` 식이다 [src:2]. `gray-100` 불투명도 램프를 거치는 텍스트·보더 역할은 순수 참조로 표현할 수 없어 아래 표에만 있다. `txt-primary` 도 번들에서는 `gray-100` 이 아니라 그 램프의 100% 단계를 가리킨다 [src:2].
+이 중 번들이 팔레트 하나를 가리키는 역할은 frontmatter `colors:` 에 번들 표기의 참조 행으로도 실었다 — `background-primary: "{colors.light-gray-00}"` 와 그 다크 짝 `dark-background-primary` 식이다 [src:2]. `gray-100` 불투명도 램프를 거치는 텍스트·보더 역할은 참조 행으로 싣지 않고 아래 표에만 둔다 — 램프의 일곱 단계(80·60·50·30·15·10·05)는 `light-gray-100-opacity-80` 식 팔레트 토큰으로 `colors:` 에 선언돼 있다(00·100 단계는 뺐다). 역할을 그 토큰으로 가리키는 참조 행은 아직 없다. `txt-primary` 도 번들에서는 `gray-100` 이 아니라 그 램프의 100% 단계를 가리킨다 [src:2].
 
 **Text (8)** — 근거·용도는 [src:8], 실색 대입은 [src:2]. `{colors.light-gray-100}` / `{colors.dark-gray-100}` 위의 opacity 램프다.
 
