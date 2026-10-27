@@ -12,8 +12,8 @@
 // paints each token through the inverse `oklabToRgb` (Oklab → sRGB, clipped to
 // the cube), composites a translucent one over a background in sRGB the way the
 // contrast collector composites a reading, and compares the result in Oklab
-// through the forward transform. A wrong constant in the inverse would fail no validator;
-// it would silently change which rows the classification tables in
+// through the forward transform. A wrong constant in the inverse would fail no
+// validator; it would silently change which rows the classification tables in
 // `docs/preview-contrast-baseline.md` count as published colours, and moving a
 // row between classes leaves every sum those tables are checked against as it
 // was. The round trip in `oklch-convert.test.ts` (hex → Oklab → the same 8-bit
@@ -94,9 +94,10 @@ const linearToSrgb = (c: number): number =>
 /**
  * Oklab → sRGB channels on [0, 255], unrounded — the inverse of `hexToOklab`'s
  * transform. A colour outside sRGB is clipped to the cube, the way the browser
- * paints it, rather than gamut-mapped. Used to composite a translucent token
- * the same way the contrast collector composites a reading
- * (`contrast-pairs.ts`).
+ * paints it, rather than gamut-mapped. The pair classifier
+ * (`contrast-pairs.ts`) paints each token with it before compositing a
+ * translucent one with `compositeOver`, the way the contrast collector
+ * composites a reading.
  */
 export function oklabToRgb(lab: Oklab): { r: number; g: number; b: number } {
   const l = (lab.L + 0.3963377774 * lab.a + 0.2158037573 * lab.b) ** 3

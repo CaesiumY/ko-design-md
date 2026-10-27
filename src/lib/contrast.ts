@@ -6,8 +6,9 @@
 // reaches this file. That split is deliberate — Chromium resolves
 // `color-mix(in oklab, ...)` to an `oklab()` string in computed style, and the
 // catalogue does not resolve that itself. `./oklch-convert`'s `oklabToRgb`
-// paints a single token (the pair classifier composites with it); it does not
-// parse a computed `oklab()` string, a `color-mix()` or a `var()` chain.
+// paints a single token (the pair classifier paints tokens with it, then
+// composites them with `compositeOver` here); it does not parse a computed
+// `oklab()` string, a `color-mix()` or a `var()` chain.
 
 import { srgbToLinear } from "./oklch-convert"
 
