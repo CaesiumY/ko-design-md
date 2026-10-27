@@ -12,7 +12,7 @@ paths:
   - ".claude/cache/design-md/**"
 ---
 
-# 프리뷰 HTML 과 대비 게이트
+# 프리뷰 HTML · 산문 감사 · 대비 게이트
 
 ## 프리뷰 HTML
 
@@ -32,6 +32,12 @@ paths:
   (요소가 목업 `.screen` 안이면 목업 밖 셀 이름표·상태 이름표에 단다 — 더미 데이터 표기와 같은
   규칙). 기준은 `rubric-preview.md` 의 `## Explanatory prose` 이고, 의미 판정이라 검증기로는
   잡지 않는다.
+
+## 프리뷰 산문 감사
+
+**프리뷰 산문을 고치기 전에 `.claude/skills/preview-prose-audit/SKILL.md` 를 반드시 읽을 것.** 판정의 뼈대는
+하나다 — **"md에 없음"은 결함의 근거가 아니다**(md는 손실 전사일 수 있다). md 또는 상류가 반증할 때만 결함이고,
+상류를 확인 못 하면 판정하지 않고 유보한다.
 
 ## 프리뷰 대비 게이트 (`pnpm gate:contrast`)
 

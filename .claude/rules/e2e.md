@@ -20,5 +20,5 @@ Chromium 이 필요해 CI 에서는 **별도 `e2e` 잡**이다. 로컬은 `pnpm 
 - `e2e/` 는 vitest 에서 제외돼 있다 — `*.spec.ts` 가 vitest 기본 수집 패턴에 걸리기 때문이다.
 - 구조는 e2e-flow 스킬 관례다(저장소 밖 도구 — 없어도 구조만 따르면 된다). `e2e/tests/{도메인}/specs`·
   `flows`·`e2e/helpers`. 스킬 템플릿 9종 중 안 쓰는 것도 스킬이 그 9개 이름으로 셋업 완료를 판정하므로
-  남겨 둔다. `@smoke` 표시는 이 저장소가 범위를 나누지 않아 효과가 없다.
+  남겨 둔다.
 - `@playwright/test` 와 `playwright` 는 같은 버전이어야 한다(다르면 Chromium 이 두 벌 깔린다).
