@@ -1,11 +1,25 @@
-// sRGB hex → Oklab/Oklch, and the ΔE between two Oklab colours.
+// sRGB ↔ Oklab and Oklab ↔ Oklch, and the ΔE between two Oklab colours.
 //
-// Shared by the draft validator (gates new entries) and `scripts/audit-oklch.ts`
-// (gates the committed catalogue) for the same reason `./oklch-tolerance` is:
-// they answer one question — "does this OKLCH decode to its annotated hex?" — so
-// a second copy of the maths is a second answer waiting to drift. Keeping the
-// bound shared while duplicating the transform it is applied to would only move
-// the divergence one step down.
+// The draft validator (gates new entries) and `./oklch-audit` (behind
+// `scripts/audit-oklch.ts`, gates the committed catalogue) decode an authored
+// OKLCH to Oklab (`lchToOklab`), compare it there with its annotated hex
+// (`hexToOklab`), and state a hex as OKLCH (`oklabToLch`); neither goes back to
+// sRGB. They share this module for the same reason `./oklch-tolerance` is
+// shared: they answer one question — "does this OKLCH decode to its annotated
+// hex?" — so a second copy of the maths is a second answer waiting to drift.
+// Keeping the bound shared while duplicating the transform it is applied to
+// would only move the divergence one step down.
+//
+// Only the contrast pair classifier (`./contrast-pairs`) goes from Oklab back
+// to sRGB: it paints each token through `oklabToRgb` (clipped to the cube),
+// composites a translucent one over a background in sRGB the way the contrast
+// collector composites a reading, and compares the result in Oklab through
+// `rgbToOklab`. No test re-runs the classifier against the classification
+// tables in `docs/preview-contrast-baseline.md`, so a wrong constant in
+// `oklabToRgb` would fail no validator; it would silently change which rows the
+// next regeneration of those tables counts as published colours. The round
+// trip in `oklch-convert.test.ts` (hex → Oklab → the same 8-bit channels)
+// holds `oklabToRgb` to the forward transform.
 
 export interface Oklab {
   L: number
@@ -82,9 +96,10 @@ const linearToSrgb = (c: number): number =>
 /**
  * Oklab → sRGB channels on [0, 255], unrounded — the inverse of `hexToOklab`'s
  * transform. A colour outside sRGB is clipped to the cube, the way the browser
- * paints it, rather than gamut-mapped. Used to composite a translucent token
- * the same way the contrast collector composites a reading
- * (`contrast-pairs.ts`).
+ * paints it, rather than gamut-mapped. The pair classifier
+ * (`contrast-pairs.ts`) paints each token with it before compositing a
+ * translucent one with `compositeOver`, the way the contrast collector
+ * composites a reading.
  */
 export function oklabToRgb(lab: Oklab): { r: number; g: number; b: number } {
   const l = (lab.L + 0.3963377774 * lab.a + 0.2158037573 * lab.b) ** 3
