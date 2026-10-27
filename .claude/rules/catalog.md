@@ -13,6 +13,7 @@ paths:
   - "src/lib/license-notice-consistency.test.ts"
   - "scripts/validate-draft.ts"
   - "scripts/validate-spec.ts"
+  - "scripts/spec-report.ts"
   - "scripts/validate-sources.ts"
   - "scripts/build-tokens.ts"
   - "public/logos/**"
@@ -65,6 +66,8 @@ paths:
   밖으로 복사돼도 유효해야 함). 프리뷰 HTML 안에서는 반대로 site-relative `/logos/...`.
 - **테마별 팔레트는 이름을 갈라 쓴다** (`bg-canvas` / `dark-bg-canvas`). 한 이름을 두 값으로
   선언하면 어느 쪽이 정본인지 알 수 없어 프리뷰 대조가 그 토큰에서 꺼진다. 관례는 `dark-` 접두다.
+- **Dimension 값은 0이어도 단위를 붙인다** — `tracking: 0` 이 아니라 `0em`. 검증기는 `components:` 값에서만 이것을
+  막으므로, 다른 맵에서는 이 규칙이 유일한 안내다.
 - **본문의 `{map.name}` 참조는 그 맵에 실제로 있는 키를 가리켜야 한다** — 이 파일이 표준 DESIGN.md 로
   그대로 발행되므로, 없는 키를 가리키는 참조는 소비자가 끝낼 수 없는 조회다. 토큰이 없는 이름(`text` 펜스의
   모션 값, 본문 표에만 있는 역할 이름)은 괄호 없이 코드 스팬으로 쓰고, 참조를 살리려고 `[src:N]` 근거 없는
@@ -155,3 +158,6 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
     `role-reference-rows.test.ts` 가 `CASES` 에 등록된 항목마다 둘을 양방향으로 대조한다(`tokens:check` 로는
     못 잡는다). 새 항목이 이 형식을 쓰면 그 맵에 대조 함수를 더한다 — 빠뜨리면 같은 파일의 가드가 실패한다.
     가드는 `## Colors` 표 **첫 열의 백틱 스팬**을 보므로, 역할을 백틱 없이 쓰거나 첫 열 밖에 두면 못 본다.
+  - **기계로 막는 곳은 `CASES` 에 등록된 항목뿐이다**(텍스트 사다리 `primary` 검사는 greeting 에만 있다). 이 형식
+    이전부터 있던 참조 행 — toss 의 알파 토큰·`tds-*` 사슬, vapor-ui 의 `-dark` 접미 별칭, likelion · teamsparta ·
+    baemin 의 참조 행 — 은 이 규칙과 테스트의 대상이 아니다. 이 형식에 맞추려고 고치지 말 것.

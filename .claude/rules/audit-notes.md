@@ -3,6 +3,9 @@ paths:
   - "services/**"
   - "scripts/check-last-updated.ts"
   - "src/lib/last-updated-check*"
+  - "src/lib/oklch-audit*"
+  - "src/lib/oklch-sync*"
+  - "scripts/audit-oklch.ts"
   - ".claude/skills/preview-prose-audit/**"
 ---
 

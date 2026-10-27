@@ -41,7 +41,7 @@ paths:
 
 **총계 표를 갱신하는 PR 은 발행색 분류표도 함께 다시 낸다** — 같은 CI 아티팩트(`contrast-report`)로
 `pnpm audit:contrast:pairs --findings <contrast-findings.json>` 를 돌린다(어긋나면 `pnpm test` 가 막고, 실패
-메시지가 단계를 말한다). 비텍스트 `fail`·`borderline` 은 `gate:contrast` 가 warn 만 내므로 비텍스트 쪽은 두 표가
+메시지가 단계를 말한다). 새 항목은 다음 재집계까지 면제되므로 온보딩의 등록처는 늘지 않는다. 비텍스트 `fail`·`borderline` 은 `gate:contrast` 가 warn 만 내므로 비텍스트 쪽은 두 표가
 함께 낡을 수 있다.
 
 스킬 루프 안의 `pnpm audit:contrast:staged`(Stage 9a3, ADR 0009)는 미달을 **warn** 으로만 합친다.

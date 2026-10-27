@@ -787,8 +787,8 @@ function segmentPattern(pattern: string): RegExp {
  *     particle after the braces does not hide it (`{typography}로`). The map
  *     and declared-key checks also run inside a `text` fence; the fence-row
  *     check runs in prose only, since `'{company}'` inside a fence is that
- *     spec's own template syntax. A whole `colors:` value of that
- *     shape is skipped inside that value: the OKLCH rule blocks it and names
+ *     spec's own template syntax. A whole `colors:` value that is a
+ *     standalone `{word}` is skipped inside that value: the OKLCH rule blocks it and names
  *     the fix (#600). The same word in prose is judged as ever.
  *   • Prose and stylesheet fences are read in full; data fences (json) are
  *     not read at all (see DATA_FENCE_LANGUAGES). In a source-code fence,
@@ -1672,7 +1672,7 @@ function scanBody(body: string): BodyScan {
     if (/^#{2,}\s+/.test(line)) inReferences = heading?.[1] === "References"
     // Two boundaries, deliberately different. `inReferences` ends at any
     // `#{2,}` to match `parseReferences`. The audit-note scope is the H2:
-    // The audit-note rule "one note per section" means one per `## Colors`, and 9 of 17
+    // "one note per section" means one per `## Colors`, and 9 of 17
     // entries nest `###` inside it — sharing the wider boundary would let a note
     // under a subsection restart the count and pass the very duplicate this
     // rule exists to catch. An H3 is content, so it also ends "first paragraph".
