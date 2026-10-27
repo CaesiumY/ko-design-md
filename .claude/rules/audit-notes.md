@@ -41,7 +41,8 @@ paths:
     `git log -1 --format='%ad' --date=format:'%Y-%m-%d %z'`.
   - **면제는 커밋 메시지의 `Skip-Last-Updated: <이유>` 트레일러다**(DCO 서명과 같은 형식). 대상은 카탈로그
     전반을 훑는 기계적 편집(전 항목을 RSS 상단에 올리는 건 잘못된 신호다), 값을 바꾸지 않는 `primary` 별칭
-    추가, 본문 스펙을 참조로만 옮겨 싣는 `components:` 맵이다.
+    추가, 본문 스펙을 참조로만 옮겨 싣는 `components:` 맵이다. frontmatter 를 YAML 로 읽지 못해 막힌 파일
+    (`unreadable-frontmatter`)은 트레일러로 면제되지 않는다 — 메시지대로 YAML 부터 고친다.
   - **squash 머지면 트레일러가 squash 메시지에 남아야 한다** — main push 에서는 게이트가 squash 커밋 하나만
     보고, 그 author 날짜는 **머지 시각**이다. 트레일러 없이 머지하는 PR 은 `last_updated` 가 머지일과 같아야
     한다 — 하루 밀리면 다시 올린다.
