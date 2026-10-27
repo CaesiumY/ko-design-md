@@ -212,7 +212,7 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | baemin | light | text | 86 | 157 | 19 | 4 | 2 |
 | baemin | light | non-text | 4 | 15 | 2 | 0 | 0 |
 | banksalad | dark | text | 173 | 381 | 46 | 0 | 5 |
-| banksalad | dark | non-text | 21 | 28 | 15 | 0 | 0 |
+| banksalad | dark | non-text | 17 | 23 | 15 | 0 | 0 |
 | banksalad | light | text | 171 | 381 | 65 | 3 | 5 |
 | banksalad | light | non-text | 17 | 23 | 15 | 0 | 0 |
 | bezier | dark | text | 175 | 349 | 59 | 10 | 11 |
