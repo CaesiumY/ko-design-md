@@ -286,13 +286,13 @@
     },
     {
       "name": "teal-400-10",
-      "value": "oklch(0.690 0.118 191 / 0.10)",
+      "value": "oklch(0.690 0.118 190 / 0.10)",
       "note": "#09b2ac1a",
       "group": "Accent alpha tints"
     },
     {
       "name": "teal-400-20",
-      "value": "oklch(0.690 0.118 191 / 0.20)",
+      "value": "oklch(0.690 0.118 190 / 0.20)",
       "note": "#09b2ac33",
       "group": "Accent alpha tints"
     },
@@ -358,13 +358,13 @@
     },
     {
       "name": "pink-400-10",
-      "value": "oklch(0.637 0.208 339 / 0.10)",
+      "value": "oklch(0.637 0.208 338 / 0.10)",
       "note": "#d64bb51a",
       "group": "Accent alpha tints"
     },
     {
       "name": "pink-400-20",
-      "value": "oklch(0.637 0.208 339 / 0.20)",
+      "value": "oklch(0.637 0.208 338 / 0.20)",
       "note": "#d64bb533",
       "group": "Accent alpha tints"
     },
