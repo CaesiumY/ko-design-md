@@ -225,7 +225,7 @@ function oklchHexMismatch(line: string): string | null {
   )
 }
 
-// A re-audit note, per CLAUDE.md: `> **<label>(YYYY-MM-DD).** …`. Only the
+// A re-audit note, per .claude/rules/audit-notes.md: `> **<label>(YYYY-MM-DD).** …`. Only the
 // blockquote, the parenthesised date, and the section-head position are fixed —
 // the label is free text, because a label that says what happened ("팔레트 정정")
 // carries more than one that says a note exists.
@@ -238,11 +238,11 @@ const AUDIT_NOTE = /^>\s*\*\*[^*]*\(\d{4}-\d{2}-\d{2}\)\s*\.?\s*\*\*/
 // the source's release — a static fact References is *supposed* to carry.
 // Synonyms are listed because pinning one word lets the next author write 조회
 // and wonder why the rule stayed quiet; the list is still a list, so a verb
-// outside it passes silently. That limit is documented in CLAUDE.md.
+// outside it passes silently.
 //
 // Two more blind spots, both shared rather than introduced here. Only the
 // date→verb order is matched (`확인일: 2026-08-02` passes), which is the order
-// CLAUDE.md specifies. And the rule rides on `inReferences`, which an `###`
+// the stamp `(YYYY-MM-DD 확인)` takes. And the rule rides on `inReferences`, which an `###`
 // inside References switches off — `parseReferences` stops there too, so the
 // two agree; a References subsection would go unchecked by both, not just this.
 const REF_DATE_STAMP = /\d{4}-\d{2}-\d{2}(?:에)?\s*(?:확인|조회|검증|대조)/
@@ -767,7 +767,7 @@ function segmentPattern(pattern: string): RegExp {
  * A key is matched in its raw spelling, before YAML normalises it (`1.0`).
  *
  * Scope — what is judged, and what is deliberately not. This list is the only
- * copy (CLAUDE.md points here): when a review brings a shape it does not name,
+ * copy (.claude/rules/catalog.md points here): when a review brings a shape it does not name,
  * check it against this list before adding a rule.
  *   • `{ns.…}` with a lowercase namespace: the reference syntax itself. A known
  *     map or phantom is judged in every shape (`{motion.a/b/c}` blocks, and so
@@ -1672,7 +1672,7 @@ function scanBody(body: string): BodyScan {
     if (/^#{2,}\s+/.test(line)) inReferences = heading?.[1] === "References"
     // Two boundaries, deliberately different. `inReferences` ends at any
     // `#{2,}` to match `parseReferences`. The audit-note scope is the H2:
-    // CLAUDE.md's "one note per section" means one per `## Colors`, and 9 of 17
+    // The audit-note rule "one note per section" means one per `## Colors`, and 9 of 17
     // entries nest `###` inside it — sharing the wider boundary would let a note
     // under a subsection restart the count and pass the very duplicate this
     // rule exists to catch. An H3 is content, so it also ends "first paragraph".

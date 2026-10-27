@@ -497,7 +497,7 @@ This file is outside the skill's write scope too: the operator makes the edit by
 
 Six more registries remain — `BASELINE_TABLE` always, the rest only under the condition each names —
 and none is reachable from this stage: each fails in CI on
-someone who never saw it. `CLAUDE.md` 「카탈로그 정책」 carries the full list; the ones not already
+someone who never saw it. `.claude/rules/catalog.md` carries the full list; the ones not already
 covered above are:
 
 - **`BASELINE_TABLE`** (`src/lib/contrast-baseline.ts`) — four rows per slug, mirrored byte for byte

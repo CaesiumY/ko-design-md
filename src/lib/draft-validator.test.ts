@@ -2045,7 +2045,7 @@ describe("hex-in-prose — References is not prose", () => {
 })
 
 // ── audit-note format ────────────────────────────────────────────────────────
-// CLAUDE.md fixes the shape of a re-audit note: a `> **<label>(YYYY-MM-DD).**`
+// .claude/rules/audit-notes.md fixes the shape of a re-audit note: a `> **<label>(YYYY-MM-DD).**`
 // blockquote, at the head of its section, one per section. The rule existed for
 // one batch before it was broken nine times in a row — every violation was
 // caught by a human reviewer, which is why it is mechanical now.
@@ -2110,7 +2110,7 @@ describe("audit-note format", () => {
 
   it("does not mistake a Known Gaps bullet for an audit note", () => {
     // Known Gaps keeps a standing list; its dated bullets are a different form
-    // and CLAUDE.md says so explicitly.
+    // and .claude/rules/audit-notes.md says so explicitly.
     const raw = makeDraft({
       body: (s) =>
         `${s}\n\n## Known Gaps\n\n- **철회된 부재 주장 2건 (2026-08-02)** — 종전 판본은 …`,

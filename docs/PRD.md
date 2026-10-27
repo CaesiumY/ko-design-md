@@ -216,7 +216,7 @@ V0 문서의 열린 질문(OQ)과 결정 로그는 이렇게 정리됐다.
 | 본문 섹션 구조·토큰 표현 | [stitch-format.md](../.claude/skills/design-md/references/stitch-format.md) |
 | frontmatter 필드·카테고리 | [CONTRIBUTING.md](../CONTRIBUTING.md) 1절 체크리스트(필드)·3절(값 규칙) |
 | 항목 작성 템플릿 | [design-md-template.md](../.claude/skills/design-md/references/design-md-template.md) |
-| 카탈로그 정책·CI 게이트·사이트 규칙 | [CLAUDE.md](../CLAUDE.md) |
+| 카탈로그 정책·CI 게이트·사이트 규칙 | [CLAUDE.md](../CLAUDE.md) · [.claude/rules/](../.claude/rules/) |
 | 기여 절차·DCO | [CONTRIBUTING.md](../CONTRIBUTING.md) |
 | 라이선스 | [LICENSE](../LICENSE) · [LICENSE-CONTENT](../LICENSE-CONTENT) · [NOTICE](../NOTICE) |
 | 삭제 요청 | [TAKEDOWN.md](./TAKEDOWN.md) |

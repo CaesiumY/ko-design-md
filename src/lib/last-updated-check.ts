@@ -3,7 +3,7 @@
 //
 // `last_updated` drives sitemap `lastmod`, RSS ordering, and the home Updated
 // badge, so an entry edited without bumping it sorts as though nothing changed.
-// CLAUDE.md states the rule; this file is the half of it a machine can judge.
+// .claude/rules/audit-notes.md states the rule; this file is the half of it a machine can judge.
 //
 // The comparison is against the DATE THE FILE CHANGED, not against whether the
 // `last_updated` line shows up in the diff. Both halves of that choice were
@@ -11,7 +11,7 @@
 //   • Three same-day follow-up edits (#203, #204, #205) already carried the
 //     correct date, so no diff line appeared. A line-based check fails all three.
 //   • `be494be` bumped three entries to 2026-07-27 while committing on 07-29 —
-//     the date was written from memory, exactly what CLAUDE.md warns against.
+//     the date was written from memory, exactly what the audit-note rules warn against.
 //     A line-based check sees a bump and waves it through.
 // The value comparison gets all four right, so it is strictly the better rule
 // rather than merely the stricter one.

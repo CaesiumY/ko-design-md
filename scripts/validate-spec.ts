@@ -9,7 +9,7 @@ import type { EntryReport } from "./spec-report"
 // Conformance gate against the PUBLISHED Google DESIGN.md spec, using the
 // official linter (`@google/design.md`, pinned) rather than a re-implementation
 // of its rules — the catalog already pays for restating one spec in four places
-// (see CLAUDE.md on the 10-section list), and this avoids adding a fifth.
+// (the 10-section list once lived in four places), and this avoids a fifth.
 //
 // Each entry is linted exactly as committed — the file IS what
 // `/services/{slug}/DESIGN.md` serves (#421). services/*.md is never touched.

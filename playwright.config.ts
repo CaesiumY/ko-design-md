@@ -1,6 +1,6 @@
 // Playwright E2E smoke for the site (`pnpm test:e2e`). Laid out with the
 // e2e-flow skill's conventions and adapted to this repo — see the E2E paragraph
-// in CLAUDE.md.
+// in .claude/rules/e2e.md.
 import { defineConfig, devices } from "@playwright/test"
 
 const HOST = "127.0.0.1"
