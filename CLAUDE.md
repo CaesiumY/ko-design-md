@@ -25,249 +25,33 @@ pnpm test:e2e           # E2E 스모크 — 빌드된 서버 + Chromium, CI 는 
 `pnpm validate:previews --slug <slug> --verbose`. 스킬 파이프라인은 이 검증기를
 author→reviewer 사이 기계 게이트(Stage 6a2/9a2)로 실행하고, 프리뷰 루프는 9a2 뒤에 렌더
 대비 관측(9a3)을 한 번 더 거친다. **검증기 메시지가 막는 이유와 고치는 법을 말한다** — 막히면
-메시지를 따르고, 통과하려고 값을 지어내지 말 것.
+메시지를 따르고, 통과하려고 값을 지어내지 말 것. `pnpm gate:contrast`(프리뷰 대비 기준선 게이트)는 위 묶음에
+없고 CI 의 별도 `contrast` 잡에서 돈다 — 수치는 CI 가 정본이다.
 
-### E2E 스모크 (`pnpm test:e2e`)
+## 카탈로그 핵심 규칙 (위반은 CI가 block)
 
-홈 검색·카테고리, 상세 탭과 `?tab=`, 프리뷰 테마 토글을 Playwright 로 실제 브라우저에서 돈다.
-Chromium 이 필요해 CI 에서는 **별도 `e2e` 잡**이다. 로컬은 `pnpm exec playwright install chromium` 이 선행이다.
-- **dev 서버가 아니라 빌드된 서버(포트 4174)를 상대한다** — dev 는 일부 라우트가 다르게 답한다
-  (`.md` 404 항). `scripts/e2e-server.ts` 가 `.output/` 이 빌드 입력보다 낡았으면 `pnpm build` 부터 한다.
-  포트에 떠 있는 서버는 재사용하지 않는다 — 재사용하면 낡음 검사를 건너뛴다. 4174 가 차 있으면 그 서버를
-  끈다(4173 은 `test:http` 와 미리보기 몫이다).
-- **기대값은 `services/*.md` 에서 계산한다**(`e2e/support/catalog.ts`) — 항목 수·순서를 테스트에 적지 않아
-  새 항목이 E2E 를 깨지 않는다. 고정 기준점은 `toss` 하나다. 사이트의 필터 코드를 가져다 기대값을 만들지
-  말 것 — 함께 틀려 늘 통과한다. 항목 읽기(`buildDoc`)와 카테고리 라벨은 사이트 것을 쓰므로 그 둘의 회귀는
-  단위 테스트 몫이다.
-- `e2e/` 는 vitest 에서 제외돼 있다 — `*.spec.ts` 가 vitest 기본 수집 패턴에 걸리기 때문이다.
-- 구조는 e2e-flow 스킬 관례다(저장소 밖 도구 — 없어도 구조만 따르면 된다). `e2e/tests/{도메인}/specs`·
-  `flows`·`e2e/helpers`. 스킬 템플릿 9종 중 안 쓰는 것도 스킬이 그 9개 이름으로 셋업 완료를 판정하므로
-  남겨 둔다. `@smoke` 표시는 이 저장소가 범위를 나누지 않아 효과가 없다.
-- `@playwright/test` 와 `playwright` 는 같은 버전이어야 한다(다르면 Chromium 이 두 벌 깔린다).
+자세한 규칙과 이유는 아래 「규칙이 사는 곳」의 파일에 있다. 여기는 무엇이 막히는지 보는 색인이다.
 
-### 프리뷰 대비 게이트 (`pnpm gate:contrast`)
+- 토큰은 frontmatter 맵에 산다. 본문에는 yaml 펜스가 하나도 없다.
+- 색 토큰 값은 OKLCH 만. 브랜드 hex 는 주석이나 병기로만.
+- `logo` 는 필수다. 출처는 `## References` 한 곳이고, 인용은 존재가 아니라 내용 일치다.
+- `primary` 라는 이름의 토큰을 지어내지 말 것. 통과하려고 값을 지어내지 말 것.
+- 새 항목은 슬러그별 등록처 9곳에 자기 줄을 적는다(표는 `catalog.md`).
+- 감사 메모는 섹션 첫머리 블록쿼트 하나. 날짜는 조회해서 쓰고 `last_updated` 를 올린다.
+- 프리뷰는 375 / 768 / 976 / 1440 폭에서 검증하고, 설명 캡션을 쓰지 않는다.
 
-위 묶음에 없다 — CI 의 **별도 `contrast` 잡**에서 돈다. 프리뷰 대비를 라이트·다크 × 4폭으로 전수 재고
-`docs/preview-contrast-baseline.md` 의 총계 표와 대조해, 개별 미달이 아니라 **그 수가 움직였는지**만
-막는다(ADR 0007). **수치는 CI 가 정본이다** — 폰트 폴백이 OS 마다 달라 줄바꿈과 판정이 바뀔 수 있다.
+## 규칙이 사는 곳
 
-**총계 표를 갱신하는 PR 은 발행색 분류표도 함께 다시 낸다** — 같은 CI 아티팩트(`contrast-report`)로
-`pnpm audit:contrast:pairs --findings <contrast-findings.json>` 를 돌린다(어긋나면 `pnpm test` 가 막고, 실패
-메시지가 단계를 말한다). 비텍스트 `fail`·`borderline` 은 `gate:contrast` 가 warn 만 내므로 비텍스트 쪽은 두 표가
-함께 낡을 수 있다.
+`.claude/rules/` 의 파일은 Claude Code 가 그 `paths:` 에 맞는 파일을 다룰 때 읽는다. 그 밖의 에이전트는
+작업 파일에 맞는 파일을 직접 읽는다.
 
-스킬 루프 안의 `pnpm audit:contrast:staged`(Stage 9a3, ADR 0009)는 미달을 **warn** 으로만 합친다.
-Chromium 이 없거나 측정이 깨지면 exit 0 과 `render.skipped` 를 남기는데, 이것은 "미달 없음"이 아니라
-"재지 않음"이다. 로컬 수치라 기준선과 대조하지 않는다.
-
-## 카탈로그 정책 (위반은 CI가 block)
-
-- **토큰은 frontmatter 에 산다.** `colors:` · `typography:` · `spacing:` · `rounded:` 맵이 Google DESIGN.md
-  형태다. 그룹은 `  ## 라벨` 주석 행이 열고(사이드카 `group`), 토큰별 단서는 그 줄의 트레일링 `#` 주석이
-  나른다(사이드카 `note` — 기계 소비자에게 닿는 유일한 경로).
-- **본문에는 yaml 펜스가 하나도 없다.** 항목 파일이 그대로 표준 DESIGN.md 로 발행되고, 공식 린터는 본문
-  yaml 펜스를 frontmatter 와 한 네임스페이스로 병합해 읽기 때문이다(`wanted` 는 그래서 문서 전체가 0토큰이
-  됐었다). 그림자는 frontmatter `elevation:` 맵(행 하나에 그림자 하나)에, 모션 값 · `## Components` 스펙 ·
-  그림자가 아닌 elevation 표 · `## Spacing` 치수 표는 본문 ```` ```text ```` 펜스에 산다.
-- **색상 토큰 값은 OKLCH만.** `colors:` 값은 소문자 `oklch(…)` 하나이거나 따옴표 친 `"{colors.이름}"`
-  참조다. 브랜드 hex는 `# #FAFAFA` 트레일링 주석이나 같은 줄 `(≈ oklch(...))` 병기로만 기록. 참조는 ASCII
-  키만 가리킬 수 있다 — 한글 키(`빨강`)는 ASCII 로 짓거나 값을 `oklch(…)` 로 직접 쓴다.
-- **frontmatter 는 한 모듈이 진짜 YAML 로 한 번 읽는다**(`src/lib/frontmatter.ts` 의 `readFrontmatter`,
-  ADR 0011). **"사이트와 YAML 이 다르게 읽는 경우"를 막는 규칙은 다시 만들지 않는다** — 그런 경우가 보이면
-  이 모듈을 거치지 않는 독자를 고친다.
-- **사이트가 읽는 키(`CONSUMED_KEYS`)를 값 없이 쓰면 사이트 빌드가 실패한다**(`site-frontmatter.ts`) —
-  빈 값이 기본값으로 조용히 바뀌지 않게 하려는 것이다. 키를 아예 안 쓰면 기본값으로 떨어진다. `name`·
-  `category`·`lang` 은 지워도 게이트가 받아 주지만 스킬 루브릭(`rubric-design.md`)은 필수로 요구한다.
-- **출처 목록은 `## References` 한 곳이다.** frontmatter `sources` 는 References 와의 중복이라
-  걷어냈다(ADR 0004) — 되살리지 말 것. 인용은 `[src:N]` 정수 인덱스.
-- **인용은 존재가 아니라 내용 일치.** `[src:N]`이 가리키는 소스가 실제로 그 주장을
-  담고 있어야 한다 (리뷰어의 의미적 스팟체크 대상).
-- **`logo`는 필수다** — 없으면 그리드 카드는 이름 첫 글자 배지로, OG 는 텍스트 전용으로 떨어진다. 스킬
-  인테이크에 "없음" 답은 없다. 고르는 순서:
-  - 심볼을 발행하지 않는 브랜드는 앱스토어 앱 아이콘으로 대신한다(프레임 박힌 아이콘 금지 규칙의 유일한 예외).
-  - 심볼을 **웹 아이콘으로만** 발행하는 브랜드도 앱 아이콘을 쓸 수 있다 — 자기 도메인에서 프레임 없는 심볼이
-    파비콘·웹 앱 매니페스트 아이콘·`apple-touch-icon` 으로만 나오고 SVG 나 따로 낸 로고 파일로는 나오지 않을
-    때다(워드마크와 한 파일인 락업은 단독 심볼로 치지 않는다. 파비콘만 있는 브랜드도 든다). 판정은 선명도가
-    아니라 파일이 어디서 나오는지로 하고, 두 후보를 함께 보여 고르게 하고, 이 예외를 쓰면 그 사유를 `NOTICE`
-    줄에 적는다. 기존 항목은 일괄로 바꾸지 않고 재감사 때 항목마다 판단한다.
-  - 앱 아이콘도 없으면 워드마크를 경고와 함께 확인받아 쓰고, 그것도 없으면 온보딩을 멈춘다.
-  - 로고 없이 남는 항목은 권리자 요청으로 로고만 뺀 경우뿐이다. 그 슬러그는 요청 참조(공개 이슈 `#N` 또는
-    비공개 advisory `GHSA-…`)와 함께 `src/lib/logo-takedowns.ts` 의 `LOGO_TAKEDOWNS` 에 적는다(docs/TAKEDOWN.md).
-    그 슬러그는 스킬이 로고를 다시 찾지 않고 멈춘다(손으로 재감사한다). 로고 복원은 관리자 몫이다.
-
-  값은 `https://getdesign.kr/logos/*.{svg,png,webp,avif}` 절대 URL (파일이 사이트
-  밖으로 복사돼도 유효해야 함). 프리뷰 HTML 안에서는 반대로 site-relative `/logos/...`.
-- **테마별 팔레트는 이름을 갈라 쓴다** (`bg-canvas` / `dark-bg-canvas`). 한 이름을 두 값으로
-  선언하면 어느 쪽이 정본인지 알 수 없어 프리뷰 대조가 그 토큰에서 꺼진다. 관례는 `dark-` 접두다.
-- **본문의 `{map.name}` 참조는 그 맵에 실제로 있는 키를 가리켜야 한다** — 이 파일이 표준 DESIGN.md 로
-  그대로 발행되므로, 없는 키를 가리키는 참조는 소비자가 끝낼 수 없는 조회다. 토큰이 없는 이름(`text` 펜스의
-  모션 값, 본문 표에만 있는 역할 이름)은 괄호 없이 코드 스팬으로 쓰고, 참조를 살리려고 `[src:N]` 근거 없는
-  토큰을 만들지 말 것. 검사가 읽는 모양과 일부러 읽지 않는 모양의 목록은 `src/lib/draft-validator.ts` 의
-  `checkTokenReferences` 주석이 정본이다 — 리뷰가 새 모양을 들고 오면 규칙을 늘리기 전에 그 목록과 대조할 것.
-- **새 항목은 슬러그별 표에 자기 줄을 적는다. 아래가 그 전부이고, 다른 곳엔 통합 목록이
-  없다** — 스킬(Stage 10 의 등록처 안내)은 아홉 전부를 안다. 템플릿은 `KNOWN_SPEC_LIMITATIONS`
-  하나를 이름으로 대고, `CASES` 의무는 저작 명세(`stitch-format.md`)를 가리켜서만 안다.
-  셋은 늘 필요하고 여섯은 조건부다(그중 `PREVIEW_TOKEN_ALIASES` 와 `COMPONENT_COUNTS` 는 새 항목 거의
-  전부에 해당한다).
-
-  | 등록처 | 위치 | 언제 |
-  | --- | --- | --- |
-  | `PREVIEW_TOKEN_ALIASES` | `src/lib/oklch-drift.ts` | 프리뷰가 커스텀 프로퍼티를 네임스페이스하면(거의 전부) |
-  | `MATCH_FLOOR` | `oklch-drift-corpus.test.ts` | 항상 (하한) |
-  | `TOKEN_COVERAGE` | `token-coverage.test.ts` | 항상 (양방향 정확값) |
-  | `BASELINE_TABLE` | `contrast-baseline.ts` | 항상 (슬러그마다 **4행**) |
-  | `NOTICE` 자산 인벤토리 | `NOTICE` | `public/logos/` 에 새 파일을 놓을 때 (로고 필수라 사실상 늘 — 기존 파일을 재사용할 때만 빠진다) |
-  | missing-primary 배열 | `google-designmd-corpus.test.ts` | `primary` 라는 이름의 토큰이 **없을 때** |
-  | `KNOWN_SPEC_LIMITATIONS` | `src/lib/spec-limitations.ts` | `%` radius 를 쓸 때 |
-  | `COMPONENT_COUNTS` | `google-designmd-corpus.test.ts` | frontmatter `components:` 를 쓸 때 (정확값 — 새 항목은 사실상 늘) |
-  | 역할 표 대조 함수 (`CASES`) | `role-reference-rows.test.ts` | 본문 역할 표를 frontmatter 참조 행으로도 실을 때 (양방향 · 누락은 가드가 막는다) |
-
-  **`PREVIEW_TOKEN_ALIASES` 를 빠뜨리면 조용히 0건 비교가 된다** — 드리프트 게이트가 이름을
-  못 맞춰 그 항목에 대해 아무것도 검사하지 않는다. `MATCH_FLOOR` 에 `0` 을 적는 것이 거부되는
-  이유가 이것이다. `BASELINE_TABLE` 의 수치는 `pnpm gate:contrast` 의 실패 출력이 만들어 주며 같은 바이트가
-  `docs/preview-contrast-baseline.md` 에도 있어야 한다.
-
-  전부 총계가 아니라 슬러그 단위라 동시에 열린 카탈로그 PR 끼리 서로를 깨지 않는다.
-  **다만 표 자체가 새로 생기는 경우는 막아 주지 않는다** — 「기여 관례」의 합본 재검증 항을 볼 것.
-
-## Google DESIGN.md 표준 (`pnpm validate:spec`)
-
-Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.md`, 버전 `alpha`, Apache-2.0)를
-**공식 린터로** 판정한다. 룰을 재진술하지 않으므로 명세가 바뀌면 자동 추종된다. 명세 자체를 확인할 일이
-생기면 `packages/cli/src/linter/spec-config.yaml` 하나가 단일 진실 원천이고, 산문 요약본들은 서로 어긋나므로
-믿지 말 것. 린터를 올리는 PR 에서 테스트가 초록으로 넘기는 변화와 확인법은 `.github/dependabot.yml` 주석에 있다.
-
-- **`Spacing`+`Rounded` 를 `Layout` 하나로 합치지 말 것** — `REQUIRED_SECTIONS` 가 두 헤딩을 모두 요구한다.
-  `Brand & Style` 은 `Overview` 의 공식 별칭이다.
-- **항목의 DESIGN.md 가 변환 없이 그대로 표준 문서다**(ADR 0003·0008). 표준 도구용 판을 따로 만들던 어댑터는
-  걷었다 — 되살리지 말 것: 어댑터는 항목 파일이 표준에서 멀어진 것을 가려, 파일을 직접 가져간 소비자만
-  어긋난 문서를 받게 한다.
-- **`spacing:`·`rounded:` 는 필수 맵이 아니다**(`colors:`·`typography:` 는 필수) — 브랜드가 발행하지 않았을
-  수 있어, 필수로 하면 값을 지어내라는 압력이 된다. 타입 스케일 block 에는 예외 경로가 없다 — 코퍼스 테스트의
-  `NO_TYPE_SCALE` 에 기록해도 `validate:catalog` 는 통과하지 못한다.
-- **dev 서버에서는 `/services/{slug}/DESIGN.md` 라우트가 404 다.** Vite 미들웨어가 `.md` 요청을 라우터보다
-  먼저 가로챈다. nitro 에는 없어 프로덕션은 200 이다 — dev 결과로 "라우트가 깨졌다"고 판단하지 말 것.
-- **카탈로그가 명세보다 표현력이 높은 자리가 둘 있다.** `%` 단위 radius(`50%`)와 다중 스톱
-  그라디언트다. 준수하려면 실제 발행값을 버려야 하므로 값은 고치지 않는다.
-  - **그라디언트는 카탈로그 전용 `gradients:` 맵에 둔다** — `colors:` 에 두면 명세의 Color(단색)
-    로 읽혀 토큰마다 에러가 나고, 사이트 스와치도 빈 칸이 된다.
-  - **`%` radius 는 `rounded:` 에 그대로 두고 기록한다** — 명세 단위로 옮기면 뜻이 바뀌고(`50%` 는
-    직사각형에서 타원, `9999px` 는 알약), 맵 밖으로 빼면 표준 도구와 Tokens 탭이 값을 못 본다.
-    `KNOWN_SPEC_LIMITATIONS` 가 슬러그별 개수를 적고, 코퍼스 테스트가 그것을 **양방향 래칫**으로
-    고정한다(새 에러도, 조용한 수정도 실패시킨다).
-- **`primary` 라는 이름의 토큰을 지어내지 말 것.** 명세가 없으면 경고하지만, 어느 브랜드
-  색이 primary 인지는 의미 판단이다. 같은 코퍼스 테스트가 해당 슬러그 목록을 고정해
-  둬서, 붙이려면 근거와 함께 명시적으로 해야 한다. 붙일 때의 형식(브랜드 대표색 별칭):
-  - **참조 행 한 줄** `primary: "{colors.x}"` — 값을 리터럴로 복제하지 않는다. 가리킬
-    대상은 브랜드가 대표색으로 **발행한** 값이지 시맨틱 fill 역할이 아니다(toss 는
-    `fill-brand` 가 아니라 `blue-500`). 대상 토큰 바로 앞에 둔다.
-  - **근거는 커밋/PR 본문에** 둔다(인용 번호 + 상류 재확인). 감사 메모 자리가 아니다.
-    토큰 줄 주석은 같은 이름의 다른 뜻 토큰(`text-primary` 등)과 가르는 단서가 필요할
-    때만 쓴다.
-  - 참조 행은 사이드카·`TOKEN_COVERAGE`·`MATCH_FLOOR` 어디에도 안 잡힌다 — 움직이는
-    것은 missing-primary 배열 하나다. 그래서 **사이트 Tokens 탭과 `use-design-md` 는
-    이 별칭을 못 본다**(DESIGN.md 파일의 frontmatter 에만 있다).
-  - `last_updated` 는 올리지 않고 `Skip-Last-Updated` 트레일러를 단다(감사 메모 절의 날짜 항).
-- **새 항목은 컴포넌트를 명세의 `components:` 맵에도 싣는다**(기존 항목은 소급하지 않는다). 저작 규칙의
-  정본은 `stitch-format.md` 의 "Component tokens in the frontmatter `components:` map" 이고, 검증기는 행의
-  모양·속성·값 형태·참조를 막는다. 맵이 아예 없거나, 행이 본문 스펙과 다르거나, 참조가 속성에 맞지 않는 것
-  (`height: "{colors.x}"`)은 리뷰어 루브릭만 본다. 본문 스펙 펜스(`text`)는 그대로 남는다(두 벌의 어긋남은
-  리뷰 루브릭이 본다). 사이드카가 싣지 않으므로 사이트 Tokens 탭과 `use-design-md` 는 못 본다. 컴포넌트가
-  생기면 린터 경고 `orphaned-tokens`·`contrast-ratio` 가 깨어나지만 게이트는 막지 않는다.
-- **브랜드가 발행한 역할→팔레트 계층은 frontmatter 참조 행으로 싣는다.** 형식은
-  `bg-brand-solid: "{colors.carrot-600}"` 이고, 다크 짝은 `dark-` 접두로 다크 팔레트를 가리킨다
-  (`dark-bg-brand-solid`). 테마를 타지 않는 팔레트(seed-design `static-*`)에는 `dark-` 짝이 없으므로 다크 짝도
-  접두 없는 키를 가리킨다. 다음을 지킨다.
-  - **상류가 역할을 단일 팔레트 토큰으로 가리킬 때만 싣는다.** 불투명도 램프를 거치는 역할은 값이
-    같아도 싣지 않는다. codeit `txt-primary` 는 `gray-100` 이 아니라 `gray-100-opacity-100` 을
-    가리킨다. 이런 역할과, 상류가 표와 어긋나는 짝은 본문 표에만 둔다.
-  - **명세 `color_roles`(`primary` · `secondary` · `tertiary` · `neutral`)와 같은 이름으로 표의 역할을 싣지 않는다.**
-    greeting 의 `primary` · `secondary` · `tertiary` 는 텍스트색이다. 그 이름으로 발행하면 도구가 브랜드 역할로 읽는다.
-    `primary` 만은 위의 브랜드 대표색 별칭으로 둘 수 있다. 이 금지는 **본문 역할 표의 역할을 그 이름으로 싣는
-    경우**에 한한다 — remember 의 `secondary` 처럼 브랜드가 그 이름으로 발행한 색은 해당하지 않는다.
-  - **본문 표와 참조 행은 같은 대응의 두 벌이다.** 한쪽을 고치면 다른 쪽도 고친다.
-    `role-reference-rows.test.ts` 가 `CASES` 에 등록된 항목마다 둘을 양방향으로 대조한다(`tokens:check` 로는
-    못 잡는다). 새 항목이 이 형식을 쓰면 그 맵에 대조 함수를 더한다 — 빠뜨리면 같은 파일의 가드가 실패한다.
-    가드는 `## Colors` 표 **첫 열의 백틱 스팬**을 보므로, 역할을 백틱 없이 쓰거나 첫 열 밖에 두면 못 본다.
-
-## 감사 메모 (인용 재검증 결과를 문서에 남기는 형식)
-
-기존 항목을 브랜드 발행물과 재대조하면 그 결과를 문서에 남긴다. 형식이 배치마다 달라져 같은 리뷰 질문이
-반복됐으므로 아래로 고정한다.
-
-- **값과 같은 화면에 둔다.** 대조 결과는 해당 섹션(보통 `## Colors`) **첫머리에**
-  `> **<라벨>(YYYY-MM-DD).** …` 블록쿼트로 넣는다. 라벨은 무슨 일이 있었는지
-  말하는 짧은 말이면 된다 — `대조 결과`(값이 맞았음), `팔레트 정정`(값을 고침),
-  `프로비넌스 정정`(출처 서술을 고침)이 실제로 쓰인 예다. 고정할 것은 **블록쿼트
-  · 섹션 첫머리 · 괄호 안 날짜** 세 가지다. 문서 하단으로 몰지 말 것 —
-  md를 읽는 사람이 값을 보기 전에 단서를 지나가야 한다. **다만 이 블록쿼트는
-  마크다운 독자에게만 닿는다** — 토큰 추출기는 본문 산문을 버린다. 기계 소비자에게 caveat를 전하는 건
-  아래 항의 몫이다.
-- **개별 토큰에 걸리는 단서는 그 토큰 줄에 적는다. 이게 소비 경로에 닿는 유일한
-  자리다** — 트레일링 주석만 `note` 필드로 `services/*.tokens.json`에 실리고,
-  그 사이드카를 사이트 Tokens 탭과 `use-design-md` 스킬이 그대로 읽는다. 값이
-  어긋나거나 발행명이 다르면 섹션 블록쿼트에만 적지 말고 반드시 그 줄에도 쓴다.
-  **단 hex를 두 개 넣지 말 것** —
-  `OKLCH_DEFINITION`이 짝짓기 모호로 그 줄을 통째로 스킵해, 차이를 적으려던
-  주석이 그 토큰만 기계 검증에서 빼버린다. 두 번째 값이 필요하면 바로 위 순수
-  `#` 주석 줄에 둔다(그 줄은 토큰 정의가 아니라 스킵 대상이 아니다).
-- **섹션당 감사 메모는 하나. 재감사하면 덮어쓴다.** 새 결과를 아래에 덧붙이지
-  말 것 — 그러면 이 규칙이 막으려던 감사 로그 누적이 섹션 첫머리에서 그대로
-  재현된다. 이전 결과는 git 히스토리에 남으므로 문서에 쌓을 이유가 없다.
-- **날짜는 조회해서 쓴다.** 세션 도중 본 타임스탬프를 기억으로 적지 말 것 —
-  실제로 며칠 어긋난 사례가 있다. 문서를 편집하면 `last_updated`도 함께 올린다
-  (sitemap `lastmod`·RSS 정렬·홈 Updated 뱃지를 구동한다 — `check:last-updated` 가 block 으로 강제한다).
-  - **날짜는 KST 기준이고 게이트도 그렇다**(author 의 로컬 프레임 `%as`). 반면 `gh pr view --json commits`의
-    `authoredDate`와 GitHub UI는 UTC로 보여 주므로, **KST 저녁 커밋은 하루 이르게 보인다** — 리뷰가 이것을
-    "기억으로 적은 날짜"로 오인한 적이 여러 번 있다. raw 오프셋으로 가른다:
-    `git log -1 --format='%ad' --date=format:'%Y-%m-%d %z'`.
-  - **면제는 커밋 메시지의 `Skip-Last-Updated: <이유>` 트레일러다**(DCO 서명과 같은 형식). 대상은 카탈로그
-    전반을 훑는 기계적 편집(전 항목을 RSS 상단에 올리는 건 잘못된 신호다), 값을 바꾸지 않는 `primary` 별칭
-    추가, 본문 스펙을 참조로만 옮겨 싣는 `components:` 맵이다.
-  - **squash 머지면 트레일러가 squash 메시지에 남아야 한다** — main push 에서는 게이트가 squash 커밋 하나만
-    보고, 그 author 날짜는 **머지 시각**이다. 트레일러 없이 머지하는 PR 은 `last_updated` 가 머지일과 같아야
-    한다 — 하루 밀리면 다시 올린다.
-  - 물려받은 미래 날짜를 고치려면 **값 낮추기만 하는 별도 변경**으로 하고, 그 파일을 건드린 커밋 전부(squash
-    면 squash 메시지도)에 트레일러를 단다.
-- **References 항목 설명에는 소스의 성격만.** "이 URL은 JS 셸이라 렌더해야
-  읽힌다", "값은 여기가 아니라 [src:N]에 있다" 같은 **정적 사실**은 쓴다.
-  같은 문서의 다른 출처를 `[src:N]`으로 가리키는 상호 참조도 허용한다(셸 URL과
-  그 데이터 엔드포인트를 짝지어야 하는 경우가 반복된다). 재감사할 때마다 늘어나는
-  "N차 확인" 이력은 쓰지 말 것 — 그건 커밋 메시지와 PR 설명의 몫이다.
-- **md와 상류의 값이 어긋나면 어느 쪽을 정본으로 삼을지는 따로 정해져 있다.**
-  `preview-prose-audit` 스킬의 **"다만 상류가 늘 이기는 건 아니다"** 항이 그
-  기준이다 — 그 항은 프리뷰 감사에서 나왔지만 **판정 기준 자체는 카탈로그
-  전반의 값 대조에 적용된다.**
-- **상대평가를 쓰지 말 것.** "카탈로그에서 가장 …한 항목" 류는 다른 문서가 바뀌면
-  조용히 거짓이 된다. 그 자리에서 참거짓을 확인할 수 있는 측정값으로 쓴다.
-
-**`## Known Gaps`의 날짜 붙은 불릿은 여기 해당하지 않는다.** Known Gaps는 아직 메워지지 않은 공백과 철회된
-주장을 모아 두는 **상시 목록**이라, `- **철회된 부재 주장 2건 (YYYY-MM-DD)** — …` 같은 불릿이 제 형식이다.
-둘을 한 형식으로 몰지 말 것.
-
-이 형식에는 예외가 없다 — 형식이 다른 감사 메모를 보면 구버전이 아니라 규칙 위반이니 고친다.
-`validate:catalog` 는 메모를 `> **<라벨>(YYYY-MM-DD).**` 형태로만 알아보므로 형태가 어긋난 메모는 **잡히는 게
-아니라 아예 안 보인다.** 형태 · 라벨이 정보를 담는지 · 날짜가 실제 조회일인지 · 상대평가 · 토큰 줄 단서는
-리뷰가 본다.
-
-## 프리뷰 HTML
-
-- 검증 폭: **375 / 768 / 976(상세페이지 임베드 폭 — 역사적 사각지대) / 1440**.
-  오버플로우는 중간 다열 폭에서 숨는다 — 375px만 보고 통과 판정 금지.
-- 가드 요지: content 트랙은 `minmax(0, 1fr)`(bare `1fr` 금지), 다열 grid는 @media
-  collapse 필수, 고정폭 자식을 감싼 flex/grid 아이템에 `min-width: 0`, 원자적 컨트롤
-  그룹(segmented 등)은 `max-width: 100%` + `min-width: 0`.
-- 컬러 표면 위 텍스트는 `var(--primary-foreground)` 계열 토큰 — 흰색 하드코딩 시
-  다크 모드에서 대비 붕괴.
-- 사이트 chrome은 라이트 고정; `[data-theme="dark"]`는 프리뷰 iframe 전용.
-- **디자인 설명 캡션을 쓰지 않는다**(#499). 시연 자체의 글(히어로 브랜드명·태그라인·CTA, 섹션 제목,
-  컴포넌트·목업 안 카피) 밖의 글은 닫힌 목록뿐이다 — `catalog-disclaimer` 띠 · `catalog-dummy`
-  더미 데이터 표기 · `catalog-attribution` 줄 · 컴포넌트·상태 이름표(스펙·값 라벨 포함) · 조작 안내 ·
-  이미지 자리 표시. md 가 말하지 못하는 것(빌린 토큰 · 값 없이 그린 자리 · 다크 해석)도 문장으로 밝히지
-  않는다. **리뷰가 "가정임을 밝혀라"고 하면 노트가 아니라 그 요소의 `(가정)` 표지로 답한다**
-  (요소가 목업 `.screen` 안이면 목업 밖 셀 이름표·상태 이름표에 단다 — 더미 데이터 표기와 같은
-  규칙). 기준은 `rubric-preview.md` 의 `## Explanatory prose` 이고, 의미 판정이라 검증기로는
-  잡지 않는다.
+| 파일 | 내용 | 읽히는 때 |
+| --- | --- | --- |
+| `catalog.md` | 카탈로그 정책 · Google DESIGN.md 표준 · 등록처 표 | 항목(`services/`) · 검사기 · 토큰 추출기 · 로고 · design-md 스킬 |
+| `audit-notes.md` | 감사 메모 형식 · 날짜와 `Skip-Last-Updated` | 항목 · 날짜 검사 · 프리뷰 산문 감사 스킬 |
+| `preview.md` | 프리뷰 HTML 가드 · 대비 게이트와 분류표 | `public/preview/` · 프리뷰 검사기 · 대비 측정 · design-md 스킬 |
+| `e2e.md` | E2E 스모크 | `e2e/` · `playwright.config.ts` |
+| `skill-wiring.md` | 스킬↔계약 테스트 배선 · use-design-md 가 빌드 소스인 것 | `.claude/skills/` · `.claude/agents/` · 스킬 테스트 |
 
 ## 프리뷰 산문 감사 — 판정 근거의 등급
 
@@ -303,35 +87,6 @@ Google Labs 가 발행한 DESIGN.md 명세(`github.com/google-labs-code/design.m
   원리적으로 못 잡는다. 슬러그별 표를 쓰는 것이 이 위험을 줄이지만 지우지는 않는다 —
   표가 **늘어나는** 경우가 남기 때문이다(#390 이 슬러그당 4행짜리 대비 기준선 표를 새로 세운 것이 예).
   "순서를 조율한다"는 해법이 아니고, **나중에 머지하는 브랜치가 수정을 싣는다.**
-
-### 스킬 파일을 고칠 때
-
-- `.claude/skills/design-md/` 변경은 영향이 크므로 이슈에서 사전 합의. 스킬↔검증기
-  배선은 `src/lib/design-md-skill-*.test.ts` 계약 테스트가 고정한다 — 프롬프트가 말하는
-  임계값·규칙 id·명령·파일 경로·코드 이름을 검증기 소스나 저장소 실물과 대조하는 **배선만**
-  고정하고, 문장이 그대로 있는지만 보는 단언은 두지 않는다(#424). 예외는 둘이다 — 프롬프트가
-  스스로 "계약 테스트가 고정한다"며 규칙을 맡긴 자리와, author 프롬프트의 면책 띠 문자열
-  (`design-md-preview-disclaimer.test.ts`)이다. 배선 대조도 프롬프트에서 값을 뽑을 **기준 문구**
-  (`same widths (…)`·`Capture the answers as:`·`## Stage N —` 헤딩·Stage 12 의
-  `**Design-board cross-check` 단계 제목 같은 문장 꼴)를 쓰므로, 그 꼴을 바꾸면 테스트도
-  함께 고친다. 그 밖의 문구 다듬기는 이 테스트를 고칠 필요가 없다.
-- **이 glob 밖에도 프롬프트를 읽는 테스트가 여럿 있다.** 프롬프트를 읽는 테스트는 모두
-  `src/lib/skill-asset-paths.ts` 를 import 하므로, 프롬프트를 고치기 전에 **그 모듈을 import 하는 테스트
-  파일**을 보는 것이 정본이다. 상수 이름으로 찾으면 빠진다 — 묶음 배열(`DESIGN_MD_AGENT_PATHS`)이나
-  `SKILLS_DIR` 조립으로도 읽는다. 테스트가 읽는 `.claude/` 경로는 전부 그 파일 한 곳에 **리터럴 그대로**
-  모여 있다(조립기로 바꾸지 말 것 — 목록이 보이는 것 자체가 계약이다). 스킬을 추가하면 같은 파일의
-  `PUBLIC_SKILLS`·`INTERNAL_SKILLS` 중 하나에 선언한다. **공개/내부를 디렉터리로 가르지 않는 이유**:
-  skills.sh 가 로컬·원격 모두 `.claude/skills/`를 스캔하므로 옮겨도 디스커버리는 그대로이고, 잃는 것(이 저장소
-  안에서의 사용성·외부 링크)만 있다.
-- **`.claude/skills/use-design-md/SKILL.md` 는 사이트 빌드의 소스이기도 하다.**
-  `src/lib/agent-skill-index.ts` 가 이 파일을 `?raw` 로 import 해
-  `/.well-known/agent-skills/use-design-md/SKILL.md` 로 그대로 서빙하고, 같은 바이트의 SHA-256 을
-  `/.well-known/agent-skills/index.json` 이 발행한다(skills.sh·플러그인 마켓플레이스와 같은 파일이다).
-  그래서 **본문 한 글자만 바뀌어도 발행 digest 가 바뀌는 것이 정상**이다 — 드리프트가
-  아니다. 다만 frontmatter 는 `name:`·`description:` 을 **한 줄 스칼라로 유지**할 것.
-  `description: >` 같은 YAML block scalar 로 바꾸면 추출기가 접기 지시자 한 글자를
-  값으로 읽는다. **이걸 막는 건 `pnpm build` 가 아니라 `pnpm test` 다** — 빌드는 통과하고 배포되면 그
-  엔드포인트가 500 을 낸다.
 
 ## Windows 로컬 주의
 
