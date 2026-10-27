@@ -604,6 +604,12 @@ describe("validateDraft — frontmatter", () => {
   // words YAML treats specially — drawn by word, not by
   // character, because the shapes that matter (a quoted dash beside both kinds
   // of quote mark) almost never come out of single characters.
+  //
+  // The cost is inherent: a full `validateDraft` (official linter included) for
+  // each drawn name, and again for each applied hint. Inside a full local
+  // `pnpm test` on Windows it twice crossed vitest's 5s default (6.7s and 5.2s,
+  // 2026-10-18) while passing alone. Drawing fewer names would weaken the
+  // property, so the limit is raised instead (the last argument).
   it("offers a hint the next run accepts for any name it blocks", () => {
     const backslash = String.fromCharCode(92)
     const vocabulary = [
@@ -657,14 +663,15 @@ describe("validateDraft — frontmatter", () => {
       const line = `design_system_name: ${words.join(" ")}`
       const raw = makeDraft().replace("name: 데모", `name: 데모\n${line}`)
       // Only names that reach this rule alone: ones that are invalid YAML or
-      // misread to begin with have their own block and their own fix.
-      const blocked = rulesOf(raw, OPTS, "block")
-      if (blocked.join() !== "design-system-name-separator") continue
+      // misread to begin with have their own block and their own fix. One run
+      // gives both the verdict and the hint.
+      const blocks = validateDraft(raw, OPTS).issues.filter(
+        (issue) => issue.severity === "block"
+      )
+      const rules = blocks.map((issue) => issue.rule)
+      if (rules.join() !== "design-system-name-separator") continue
       tried++
-      const fix =
-        validateDraft(raw, OPTS).issues.find(
-          (issue) => issue.rule === "design-system-name-separator"
-        )?.fix ?? ""
+      const fix = blocks[0].fix
       if (fix.includes("without its quote marks")) unquoted++
       const offered = /as `(design_system_name: .*)`\.?$/.exec(fix)?.[1]
       const fixed =
@@ -681,7 +688,7 @@ describe("validateDraft — frontmatter", () => {
     // property would hold only for the easy shapes (#508 review: a quoted dash
     // freed by that branch was the defect the hand-picked cases missed).
     expect(unquoted).toBeGreaterThan(3)
-  })
+  }, 30_000)
 
   // Every consumed key holds one value. A list used to reach each field
   // rule, whose message then contradicted itself: "slug
