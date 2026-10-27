@@ -36,7 +36,7 @@ pnpm test:e2e           # E2E 스모크 — 빌드된 서버 + Chromium, CI 는 
 | --- | --- | --- |
 | `catalog.md` | 카탈로그 정책 · Google DESIGN.md 표준 · 등록처 표 | 항목(`services/`) · 검사기 · 토큰 추출기 · 로고·`NOTICE` · design-md 스킬과 스테이징 |
 | `audit-notes.md` | 감사 메모 형식 · 날짜와 `Skip-Last-Updated` | 항목 · 날짜 검사 · OKLCH 감사 · 프리뷰 산문 감사 스킬 |
-| `preview.md` | 프리뷰 HTML 가드 · 산문 감사 · 대비 게이트와 분류표 | `public/preview/` · 프리뷰 검사기 · 대비 측정 · design-md 스킬과 스테이징 |
+| `preview.md` | 프리뷰 HTML 가드 · 산문 감사 · 대비 게이트와 분류표 | `public/preview/` · 프리뷰 검사기 · 대비 측정 · 프리뷰 산문 감사 스킬 · design-md 스킬과 스테이징 |
 | `e2e.md` | E2E 스모크 | `e2e/` · `playwright.config.ts` |
 | `skill-wiring.md` | 스킬↔계약 테스트 배선 · use-design-md 가 빌드 소스인 것 | `.claude/skills/` · `.claude/agents/` · 스킬 테스트 |
 
