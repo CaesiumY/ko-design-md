@@ -1,5 +1,4 @@
-// sRGB ↔ Oklab and Oklab ↔ Oklch, each in both directions, and the ΔE between
-// two Oklab colours.
+// sRGB ↔ Oklab and Oklab ↔ Oklch, and the ΔE between two Oklab colours.
 //
 // The forward transform (hex → Oklab → Oklch) is shared by the draft validator
 // (gates new entries) and `./oklch-audit` (behind `scripts/audit-oklch.ts`,
@@ -10,10 +9,10 @@
 // the divergence one step down.
 //
 // The contrast pair classifier (`./contrast-pairs`) uses both directions: it
-// composites a translucent token over a background the way the contrast
-// collector composites a reading — through the inverse `oklabToRgb` (Oklab →
-// sRGB, clipped to the cube) — and compares the result in Oklab through the
-// forward transform. A wrong constant in the inverse would fail no validator;
+// paints each token through the inverse `oklabToRgb` (Oklab → sRGB, clipped to
+// the cube), composites a translucent one over a background in sRGB the way the
+// contrast collector composites a reading, and compares the result in Oklab
+// through the forward transform. A wrong constant in the inverse would fail no validator;
 // it would silently change which rows the classification tables in
 // `docs/preview-contrast-baseline.md` count as published colours, and moving a
 // row between classes leaves every sum those tables are checked against as it
