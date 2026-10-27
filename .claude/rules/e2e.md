@@ -5,9 +5,7 @@ paths:
   - "scripts/e2e-server.ts"
 ---
 
-# E2E 스모크
-
-## E2E 스모크 (`pnpm test:e2e`)
+# E2E 스모크 (`pnpm test:e2e`)
 
 홈 검색·카테고리, 상세 탭과 `?tab=`, 프리뷰 테마 토글을 Playwright 로 실제 브라우저에서 돈다.
 Chromium 이 필요해 CI 에서는 **별도 `e2e` 잡**이다. 로컬은 `pnpm exec playwright install chromium` 이 선행이다.
