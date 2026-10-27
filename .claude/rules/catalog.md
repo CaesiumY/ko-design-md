@@ -27,7 +27,7 @@ paths:
 
 # 카탈로그 항목 규칙
 
-## 카탈로그 정책 (위반은 CI가 block)
+## 카탈로그 정책
 
 - **토큰은 frontmatter 에 산다.** `colors:` · `typography:` · `spacing:` · `rounded:` 맵이 Google DESIGN.md
   형태다. 그룹은 `  ## 라벨` 주석 행이 열고(사이드카 `group`), 토큰별 단서는 그 줄의 트레일링 `#` 주석이

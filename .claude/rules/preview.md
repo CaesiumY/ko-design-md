@@ -35,11 +35,11 @@ paths:
 
 ## 프리뷰 대비 게이트 (`pnpm gate:contrast`)
 
-루트 `CLAUDE.md` 의 검증 커맨드 묶음에 없다 — CI 의 **별도 `contrast` 잡**에서 돈다. 프리뷰 대비를 라이트·다크 × 4폭으로 전수 재고
+CI 의 **별도 `contrast` 잡**에서 돈다. 프리뷰 대비를 라이트·다크 × 4폭으로 전수 재고
 `docs/preview-contrast-baseline.md` 의 총계 표와 대조해, 개별 미달이 아니라 **그 수가 움직였는지**만
 막는다(ADR 0007). **수치는 CI 가 정본이다** — 폰트 폴백이 OS 마다 달라 줄바꿈과 판정이 바뀔 수 있다.
-로컬에서 돌리려면 `pnpm exec playwright install chromium` 이 선행이고, 종료 코드(어긋남 3 · 측정기 고장 1 ·
-인자 오류 2)의 뜻은 `scripts/audit-contrast.ts` 머리 주석에 있다.
+로컬에서 돌리려면 `pnpm exec playwright install chromium` 이 선행이고, 종료 코드는 어긋남 3 · `--self-check` 의
+측정기 고장 1 · 인자 오류 2 다(정의는 `scripts/audit-contrast.ts`).
 
 **총계 표를 갱신하는 PR 은 발행색 분류표도 함께 다시 낸다** — 같은 CI 아티팩트(`contrast-report`)로
 `pnpm audit:contrast:pairs --findings <contrast-findings.json>` 를 돌린다(어긋나면 `pnpm test` 가 막고, 실패
