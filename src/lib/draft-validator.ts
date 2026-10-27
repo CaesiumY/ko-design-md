@@ -764,8 +764,11 @@ function segmentPattern(pattern: string): RegExp {
  *     so at least one declared key must match it;
  *   • anything else (`{motion.dur-fast/base/slow}`) is not one reference.
  *
- * Scope — what is judged, and what is deliberately not. The same list is in
- * CLAUDE.md; keep the two in step.
+ * A key is matched in its raw spelling, before YAML normalises it (`1.0`).
+ *
+ * Scope — what is judged, and what is deliberately not. This list is the only
+ * copy (CLAUDE.md points here): when a review brings a shape it does not name,
+ * check it against this list before adding a rule.
  *   • `{ns.…}` with a lowercase namespace: the reference syntax itself. A known
  *     map or phantom is judged in every shape (`{motion.a/b/c}` blocks, and so
  *     does a file list starting with a map name, `{colors.ts,fonts.ts}`). Any
@@ -775,9 +778,16 @@ function segmentPattern(pattern: string): RegExp {
  *     packed typo (`{colours.a/b}`) is left.
  *   • A capitalised namespace, only when it is a case slip or near miss of a
  *     known name (`{Colors.primary}` blocks, `{React.Fragment}` is left).
+ *   • `{component.*}` (a `###` heading) and `{group.*}` (notation describing
+ *     the syntax itself) are NON_MAP_NAMESPACES and are not judged.
  *   • A standalone `{word}` naming a map this entry declares (blocks), or
  *     another map, a phantom, a declared key or a text-fence row used in prose
- *     (warns — see the dotless pass below). A whole `colors:` value of that
+ *     (warns — see the dotless pass below; a warning, because such words can
+ *     be plain placeholders, and `title`/`body` really are map keys). A Korean
+ *     particle after the braces does not hide it (`{typography}로`). The map
+ *     and declared-key checks also run inside a `text` fence; the fence-row
+ *     check runs in prose only, since `'{company}'` inside a fence is that
+ *     spec's own template syntax. A whole `colors:` value of that
  *     shape is skipped inside that value: the OKLCH rule blocks it and names
  *     the fix (#600). The same word in prose is judged as ever.
  *   • Prose and stylesheet fences are read in full; data fences (json) are
@@ -788,7 +798,8 @@ function segmentPattern(pattern: string): RegExp {
  *     only this catalog's map names are judged inside a string literal: an
  *     unknown or phantom namespace there may be another token system's alias
  *     (DTCG `"{color.carrot.600}"`, `"{radius.sm}"`). A comment is judged
- *     like prose.
+ *     like prose. A `'` or `"` left open to the end of its line is text, not
+ *     a string (`6.1"`).
  *   • Out of scope by design: bare braces in source code, `#` comments and
  *     HTML text nodes inside a source fence (the frontmatter's `#` comments
  *     are read), template interpolation (`${x.y}`, and SCSS `#{x.y}` in a stylesheet fence), a dotless `{word}`
