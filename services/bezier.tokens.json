@@ -117,6 +117,270 @@
       "group": "Accent global hues"
     },
     {
+      "name": "blue-400-10",
+      "value": "oklch(0.554 0.214 280 / 0.102)",
+      "note": "#6157ea1a",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "blue-400-20",
+      "value": "oklch(0.554 0.214 280 / 0.20)",
+      "note": "#6157ea33",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "blue-300-18",
+      "value": "oklch(0.615 0.211 277 / 0.18)",
+      "note": "#6b6eff2e",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "blue-300-30",
+      "value": "oklch(0.615 0.211 277 / 0.302)",
+      "note": "#6b6eff4d",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "cobalt-400-10",
+      "value": "oklch(0.643 0.150 248 / 0.102)",
+      "note": "#3292e31a",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "cobalt-400-20",
+      "value": "oklch(0.643 0.150 248 / 0.20)",
+      "note": "#3292e333",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "cobalt-300-18",
+      "value": "oklch(0.724 0.125 245 / 0.18)",
+      "note": "#5cadef2e",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "cobalt-300-30",
+      "value": "oklch(0.724 0.125 245 / 0.302)",
+      "note": "#5cadef4d",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "green-400-10",
+      "value": "oklch(0.652 0.168 150 / 0.102)",
+      "note": "#20ab551a",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "green-400-20",
+      "value": "oklch(0.652 0.168 150 / 0.20)",
+      "note": "#20ab5533",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "green-300-18",
+      "value": "oklch(0.724 0.162 150 / 0.18)",
+      "note": "#4bc16c2e",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "green-300-30",
+      "value": "oklch(0.724 0.162 150 / 0.302)",
+      "note": "#4bc16c4d",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "red-400-10",
+      "value": "oklch(0.634 0.177 20 / 0.102)",
+      "note": "#e1535d1a",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "red-400-20",
+      "value": "oklch(0.634 0.177 20 / 0.20)",
+      "note": "#e1535d33",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "red-300-18",
+      "value": "oklch(0.677 0.180 23 / 0.18)",
+      "note": "#f260602e",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "red-300-30",
+      "value": "oklch(0.677 0.180 23 / 0.302)",
+      "note": "#f260604d",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "orange-400-10",
+      "value": "oklch(0.698 0.156 55 / 0.102)",
+      "note": "#e67f2b1a",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "orange-400-20",
+      "value": "oklch(0.698 0.156 55 / 0.20)",
+      "note": "#e67f2b33",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "orange-300-18",
+      "value": "oklch(0.764 0.148 58 / 0.18)",
+      "note": "#f798472e",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "orange-300-30",
+      "value": "oklch(0.764 0.148 58 / 0.302)",
+      "note": "#f798474d",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "yellow-400-10",
+      "value": "oklch(0.789 0.161 82 / 0.102)",
+      "note": "#edae0d1a",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "yellow-400-20",
+      "value": "oklch(0.789 0.161 82 / 0.20)",
+      "note": "#edae0d33",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "yellow-300-18",
+      "value": "oklch(0.824 0.160 88 / 0.18)",
+      "note": "#f0be272e",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "yellow-300-30",
+      "value": "oklch(0.824 0.160 88 / 0.302)",
+      "note": "#f0be274d",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "olive-400-10",
+      "value": "oklch(0.730 0.160 113 / 0.102)",
+      "note": "#a9b1101a",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "olive-400-20",
+      "value": "oklch(0.730 0.160 113 / 0.20)",
+      "note": "#a9b11033",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "olive-300-18",
+      "value": "oklch(0.784 0.167 115 / 0.18)",
+      "note": "#b7c4272e",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "olive-300-30",
+      "value": "oklch(0.784 0.167 115 / 0.302)",
+      "note": "#b7c4274d",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "teal-400-10",
+      "value": "oklch(0.690 0.118 190 / 0.102)",
+      "note": "#09b2ac1a",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "teal-400-20",
+      "value": "oklch(0.690 0.118 190 / 0.20)",
+      "note": "#09b2ac33",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "teal-300-18",
+      "value": "oklch(0.787 0.123 186 / 0.18)",
+      "note": "#40d3c52e",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "teal-300-30",
+      "value": "oklch(0.787 0.123 186 / 0.302)",
+      "note": "#40d3c54d",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "navy-400-10",
+      "value": "oklch(0.469 0.147 273 / 0.102)",
+      "note": "#424fab1a",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "navy-400-20",
+      "value": "oklch(0.469 0.147 273 / 0.20)",
+      "note": "#424fab33",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "navy-300-18",
+      "value": "oklch(0.607 0.118 276 / 0.18)",
+      "note": "#6f7bc82e",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "navy-300-30",
+      "value": "oklch(0.607 0.118 276 / 0.302)",
+      "note": "#6f7bc84d",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "purple-400-10",
+      "value": "oklch(0.591 0.208 297 / 0.102)",
+      "note": "#8e57e71a",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "purple-400-20",
+      "value": "oklch(0.591 0.208 297 / 0.20)",
+      "note": "#8e57e733",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "purple-300-18",
+      "value": "oklch(0.670 0.205 299 / 0.18)",
+      "note": "#a970ff2e",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "purple-300-30",
+      "value": "oklch(0.670 0.205 299 / 0.302)",
+      "note": "#a970ff4d",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "pink-400-10",
+      "value": "oklch(0.637 0.208 338 / 0.102)",
+      "note": "#d64bb51a",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "pink-400-20",
+      "value": "oklch(0.637 0.208 338 / 0.20)",
+      "note": "#d64bb533",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "pink-300-18",
+      "value": "oklch(0.722 0.192 336 / 0.18)",
+      "note": "#ec6fd32e",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "pink-300-30",
+      "value": "oklch(0.722 0.192 336 / 0.302)",
+      "note": "#ec6fd34d",
+      "group": "Accent alpha tints"
+    },
+    {
       "name": "grey-25",
       "value": "oklch(0.995 0.003 286)",
       "group": "Neutral global"
@@ -201,9 +465,21 @@
       "group": "Neutral global"
     },
     {
+      "name": "black-15",
+      "value": "oklch(0 0 0 / 0.149)",
+      "note": "#00000026 · 라이트 fill-neutral-heavy",
+      "group": "Neutral global"
+    },
+    {
       "name": "black-8",
       "value": "oklch(0 0 0 / 0.08)",
       "note": "border-neutral",
+      "group": "Neutral global"
+    },
+    {
+      "name": "black-5",
+      "value": "oklch(0 0 0 / 0.051)",
+      "note": "#0000000d · 라이트 fill-neutral-light",
       "group": "Neutral global"
     },
     {
@@ -214,12 +490,43 @@
     {
       "name": "white-90",
       "value": "oklch(1 0 0 / 0.90)",
+      "note": "라이트 surface-glass",
+      "group": "Neutral global"
+    },
+    {
+      "name": "white-80",
+      "value": "oklch(1 0 0 / 0.80)",
+      "note": "#ffffffcc · 다크 text-neutral / icon-neutral-heavier",
+      "group": "Neutral global"
+    },
+    {
+      "name": "white-60",
+      "value": "oklch(1 0 0 / 0.60)",
+      "note": "#ffffff99 · 다크 text-neutral-light",
+      "group": "Neutral global"
+    },
+    {
+      "name": "white-40",
+      "value": "oklch(1 0 0 / 0.40)",
+      "note": "#ffffff66 · 다크 text-neutral-lighter / fill-neutral-heavier",
+      "group": "Neutral global"
+    },
+    {
+      "name": "white-20",
+      "value": "oklch(1 0 0 / 0.20)",
+      "note": "#ffffff33 · 다크 fill-neutral-heavy",
       "group": "Neutral global"
     },
     {
       "name": "white-12",
       "value": "oklch(1 0 0 / 0.12)",
       "note": "다크 표면 위 보더",
+      "group": "Neutral global"
+    },
+    {
+      "name": "white-8",
+      "value": "oklch(1 0 0 / 0.078)",
+      "note": "#ffffff14 · 다크 fill-neutral-light",
       "group": "Neutral global"
     }
   ],
