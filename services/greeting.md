@@ -3,7 +3,7 @@ name: 그리팅
 design_system_name: Doodlin UI
 slug: greeting
 category: career
-last_updated: "2026-09-29"
+last_updated: "2026-10-28"
 created_at: "2026-07-26"
 lang: ko
 logo: https://getdesign.kr/logos/greeting.svg
@@ -80,6 +80,77 @@ colors:
   murkyUltraviolet500: oklch(0.648 0.079 281.4)   # #8689BE
   murkyVolcano500: oklch(0.612 0.072 27.2)   # #AB736C
   murkyYellow500: oklch(0.719 0.093 100.6)   # #B1A65F
+  ## dark gray — 다크 테마 무채색 램프 (라이트 gray 의 거울)
+  dark-gray0: oklch(0.000 0.000 0)   # #000000
+  dark-gray25: oklch(0.205 0.000 0)   # #171717
+  dark-gray50: oklch(0.252 0.000 0)   # #222222
+  dark-gray75: oklch(0.301 0.000 0)   # #2E2E2E
+  dark-gray100: oklch(0.383 0.000 0)   # #434343
+  dark-gray200: oklch(0.464 0.000 0)   # #595959
+  dark-gray300: oklch(0.640 0.000 0)   # #8C8C8C
+  dark-gray400: oklch(0.805 0.000 0)   # #BFBFBF
+  dark-gray500: oklch(0.885 0.000 0)   # #D9D9D9
+  dark-gray600: oklch(0.955 0.000 0)   # #F0F0F0
+  dark-gray700: oklch(0.970 0.000 0)   # #F5F5F5
+  dark-gray800: oklch(0.985 0.000 0)   # #FAFAFA
+  dark-gray900: oklch(1.000 0.000 0)   # #FFFFFF
+  ## dark neutral — 다크 테마 알파 오버레이
+  dark-neutral25: oklch(1.000 0.000 0 / 0.02)   # 흰색 2% 오버레이
+  dark-neutral50: oklch(1.000 0.000 0 / 0.04)   # 흰색 4% 오버레이
+  dark-neutral75: oklch(1.000 0.000 0 / 0.06)   # 흰색 6% 오버레이
+  dark-neutral100: oklch(1.000 0.000 0 / 0.11)   # 흰색 11% 오버레이
+  dark-neutral200: oklch(1.000 0.000 0 / 0.18)   # 흰색 18% 오버레이
+  dark-neutral300: oklch(1.000 0.000 0 / 0.25)   # 흰색 25% 오버레이
+  dark-neutral400: oklch(1.000 0.000 0 / 0.45)   # 흰색 45% 오버레이
+  dark-neutral500: oklch(1.000 0.000 0 / 0.6)   # 흰색 60% 오버레이
+  dark-neutral600: oklch(1.000 0.000 0 / 0.85)   # 흰색 85% 오버레이
+  ## dark blue — 다크 테마 브랜드 램프
+  dark-blue50: oklch(0.296 0.071 246.4)   # #052F4E
+  dark-blue100: oklch(0.358 0.091 247.5)   # #063F69
+  dark-blue200: oklch(0.425 0.112 248.1)   # #045188
+  dark-blue300: oklch(0.493 0.132 248.8)   # #0764A8
+  dark-blue400: oklch(0.561 0.151 248.8)   # #0A78C8
+  dark-blue500: oklch(0.627 0.170 249.0)   # #0C8CE9
+  dark-blue600: oklch(0.708 0.142 243.8)   # #44A9F2
+  dark-blue700: oklch(0.771 0.105 241.0)   # #74BDF1
+  dark-blue800: oklch(0.832 0.074 240.3)   # #9CCFF4
+  dark-blue900: oklch(0.877 0.051 239.2)   # #B9DCF5
+  ## dark 일반 12색 램프 500 대표값
+  dark-cyan500: oklch(0.656 0.093 191.5)   # #3DA39F
+  dark-gold500: oklch(0.739 0.139 82.7)   # #D5A12C
+  dark-green500: oklch(0.661 0.157 140.5)   # #57A947
+  dark-lime500: oklch(0.645 0.132 122.8)   # #7F9A33
+  dark-magenta500: oklch(0.629 0.155 349.9)   # #CB5C96
+  dark-orange500: oklch(0.713 0.131 67.4)   # #D8913C
+  dark-purple500: oklch(0.621 0.157 303.0)   # #9A6BD3
+  dark-red500: oklch(0.690 0.172 21.8)   # #F3686A
+  dark-red400: oklch(0.610 0.173 21.0)   # #D74D54
+  dark-ultraviolet500: oklch(0.601 0.153 268.7)   # #5B79DB
+  dark-volcano500: oklch(0.653 0.144 41.7)   # #D76E44
+  dark-yellow500: oklch(0.760 0.142 97.6)   # #CAB131
+  ## dark murkyBlue — 다크 테마 murky 램프 표본
+  dark-murkyBlue50: oklch(0.348 0.038 247.5)   # #2A3C4D
+  dark-murkyBlue100: oklch(0.410 0.051 247.2)   # #334D65
+  dark-murkyBlue200: oklch(0.480 0.066 247.2)   # #3E6181
+  dark-murkyBlue300: oklch(0.548 0.077 247.6)   # #4B759C
+  dark-murkyBlue400: oklch(0.615 0.075 247.3)   # #5F89B0
+  dark-murkyBlue500: oklch(0.684 0.065 246.6)   # #799EC0
+  dark-murkyBlue600: oklch(0.775 0.058 246.1)   # #98BAD9
+  dark-murkyBlue700: oklch(0.834 0.040 246.0)   # #B4CCE2
+  dark-murkyBlue800: oklch(0.884 0.029 246.5)   # #CADBEB
+  dark-murkyBlue900: oklch(0.939 0.018 250.6)   # #E2ECF7
+  ## dark murky 12색 램프 500 대표값
+  dark-murkyCyan500: oklch(0.740 0.059 205.8)   # #7EB6BD
+  dark-murkyGold500: oklch(0.689 0.050 74.2)   # #AE9779
+  dark-murkyGreen500: oklch(0.731 0.067 155.5)   # #86B596
+  dark-murkyLime500: oklch(0.702 0.076 126.1)   # #93A874
+  dark-murkyMagenta500: oklch(0.679 0.045 337.5)   # #AB8EA2
+  dark-murkyOrange500: oklch(0.711 0.051 54.6)   # #BC9A84
+  dark-murkyPurple500: oklch(0.684 0.077 296.7)   # #9E90C4
+  dark-murkyRed500: oklch(0.667 0.069 8.3)   # #BA838C
+  dark-murkyUltraviolet500: oklch(0.689 0.069 283.5)   # #9596C5
+  dark-murkyVolcano500: oklch(0.652 0.057 27.3)   # #B0837D
+  dark-murkyYellow500: oklch(0.737 0.075 102.0)   # #B3AC74
   ## SystemColor — 브랜드 · 상태 시맨틱 (라이트 참조)
   brand: "{colors.blue500}"
   link: "{colors.blue600}"
@@ -108,7 +179,7 @@ colors:
   effect2: "{colors.neutral100}"
   effect3: "{colors.neutral200}"
   effect4: "{colors.neutral300}"
-  baseBackground: "{colors.gray0}"   # 라이트 대응 — 다크는 다크 램프의 gray25 = oklch(0.205 0.000 0) 로 갈아탄다. 이 맵의 gray25 는 라이트 값이라 그대로 풀면 안 된다
+  baseBackground: "{colors.gray0}"   # 라이트 대응 — 다크는 gray0 이 아니라 gray25 를 고른다(이 맵의 dark-gray25). gray25 는 라이트 값이라 다크에 그대로 풀면 안 된다
 typography:
   title1:
     fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
@@ -231,7 +302,7 @@ elevation:
 
 ## Colors
 
-> **역할 대응 정정(2026-09-27).** 아래 세 시맨틱 표(`SystemColor` · `InterviewColor` · `SemanticTheme`)의 역할→팔레트 대응 28개를 npm 배포 tarball 0.0.76 이 내보내는 라이트 시맨틱 객체 `LIGHT_SEMANTIC` 과 맞춰 불일치 0건이었다 [src:7]. 다크 객체 `DARK_SEMANTIC` 은 한 곳이 달랐다 — `SemanticTheme` 표가 `baseBackground` 를 양 테마 모두 `gray0` 으로 적어 다크 값을 검정 `oklch(0.000 0.000 0)` 으로 싣고 있었으나, 배포본은 `gray25` 를 가리킨다 [src:7]. 공개 Storybook 번들의 다크 `SemanticTheme` 도 같은 `gray25` 다 [src:1]. 다크 열을 `gray25` `oklch(0.205 0.000 0)` 로 고쳤다.
+> **다크 팔레트 수록(2026-10-28).** frontmatter 의 라이트 팔레트 토큰 65개(gray 13 · neutral 9 · 유채색 43)마다 `dark-` 짝을 실었다. 값은 npm 배포 tarball 0.0.76 의 다크 팔레트 객체 `DARK_PALETTE` 에서 hex 를 그대로 옮겨 OKLCH 로 바꿨다 [src:7]. 본문 표에 이미 다크 값이 있던 28개(gray 거울 13 · neutral 9 · `blue500` · `blue600` · `green500` · `gold500` · `orange500` · `red400`)는 배포본과 모두 같았다. 역할→팔레트 대응 28개는 같은 tarball 의 `LIGHT_SEMANTIC` · `DARK_SEMANTIC` 과 맞췄고, 다크에서 다른 단계를 고르는 역할은 `baseBackground`(`gray25`) 하나다 [src:7].
 
 구조는 **Palette(원시) → Semantic(의미 별칭) 2층 + 라이트/다크 거울**이다 [src:1]. 세 가지가 이 시스템의 색 설계를 규정한다.
 
@@ -239,9 +310,9 @@ elevation:
 2. `neutral`은 hex가 아니라 **알파 오버레이**다. 라이트는 검정 알파, 다크는 흰색 알파이며 **알파 값은 양쪽이 동일**하다 [src:1].
 3. 그래서 `primary` · `border2` · `background3` 같은 시맨틱 이름이 **양 테마에서 그대로** 동작한다 [src:1]. 실무 귀결은 하나다 — 회색을 하드코딩하지 말고 neutral 파생 시맨틱을 쓴다 [src:1].
 
-아래 토큰 값은 전부 라이트 테마이며, 원본 hex는 트레일링 주석으로 병기했다 [src:1].
+frontmatter 팔레트는 라이트 값과 그 다크 짝(`dark-` 접두 — `dark-blue500` · `dark-neutral100`)을 함께 싣고, 원본 hex는 트레일링 주석으로 병기했다 [src:1][src:7]. 다크 짝은 배포본의 `DARK_PALETTE` 에서 같은 이름의 값이다 [src:7].
 
-아래 세 시맨틱 표의 역할→팔레트 대응은 frontmatter `colors:` 에 참조 행(`border2: "{colors.neutral100}"`)으로도 실려 있다. frontmatter 팔레트가 라이트 값만 싣기 때문에 참조도 라이트 대응뿐이다. 텍스트 역할 `primary` · `secondary` · `tertiary` 는 싣지 않았다 — 표준 DESIGN.md 명세가 이 세 이름을 브랜드 색 역할로 쓰므로, 텍스트색을 그 이름으로 발행하면 도구가 브랜드 대표색으로 읽는다.
+아래 세 시맨틱 표의 역할→팔레트 대응은 frontmatter `colors:` 에 참조 행(`border2: "{colors.neutral100}"`)으로도 실려 있다. 참조 행은 라이트 대응만 싣는다 — 다크 대응은 아래 표의 dark 열에 있다. 텍스트 역할 `primary` · `secondary` · `tertiary` 는 싣지 않았다 — 표준 DESIGN.md 명세가 이 세 이름을 브랜드 색 역할로 쓰므로, 텍스트색을 그 이름으로 발행하면 도구가 브랜드 대표색으로 읽는다.
 
 ### neutral — 알파 오버레이 (라이트)
 
@@ -641,4 +712,4 @@ height 32px, 라벨 {typography.body6}, 내부 padding `0px 16px 0px 0px` / `0px
 4. https://registry.npmjs.org/@doodlincorp/doodlin-ui/latest — npm 레지스트리 JSON(버전 · license 필드 · 엔트리 · 의존성 styled-components/@floating-ui/dayzed · repository 필드)
 5. https://guide.greetinghr.com/ko — 그리팅 공식 제품 가이드(카테고리 네비가 1️⃣ 채용 ATS / 2️⃣ 채용 홈페이지 Homepage / 3️⃣ 설문 Form / 4️⃣ 인재영입 TRM / 5️⃣ 분석 Analytics 다섯 모듈을 번호로 열거, 모바일 안내 문서는 사용자 절차 가이드)
 6. https://blog.greetinghr.com/greeting/ — 그리팅 공식 블로그(마케팅 `-요` 체 카피의 출처)
-7. https://registry.npmjs.org/@doodlincorp/doodlin-ui/-/doodlin-ui-0.0.76.tgz — npm 배포 tarball(v0.0.76). `dist/` 가 테마별 시맨틱 객체 `LIGHT_SEMANTIC` · `DARK_SEMANTIC` 을 내보낸다. 각각은 `SYSTEM_COLOR` · `INTERVIEW_COLOR` · `SEMANTIC_THEME` 을 합친 것이고, 값은 팔레트 키 참조(`brand: e.blue500` 꼴)다. 두 객체는 `LIGHT_PALETTE` · `DARK_PALETTE` 를 각각 import 하는 별개 파일에 있다
+7. https://registry.npmjs.org/@doodlincorp/doodlin-ui/-/doodlin-ui-0.0.76.tgz — npm 배포 tarball(v0.0.76). `dist/` 가 테마별 시맨틱 객체 `LIGHT_SEMANTIC` · `DARK_SEMANTIC` 을 내보낸다. 각각은 `SYSTEM_COLOR` · `INTERVIEW_COLOR` · `SEMANTIC_THEME` 을 합친 것이고, 값은 팔레트 키 참조(`brand: e.blue500` 꼴)다. 두 객체는 `LIGHT_PALETTE` · `DARK_PALETTE` 를 각각 import 하는 별개 파일에 있다. `DARK_PALETTE` 는 `dist/index.es73.js` 에 hex 리터럴로 있다(유채색·murky 12색 × 50~900, gray 13단계, 흰색 알파 neutral 9단계)
