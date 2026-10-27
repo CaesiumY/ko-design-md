@@ -1,19 +1,19 @@
 {
   "colors": [
     {
-      "name": "primary",
+      "name": "point",
       "value": "oklch(0.626 0.211 285.3)",
       "note": "#816BFF 포인트 보라. 활성 칩·진행바·N 배지·활성 네비 링크, 두 테마 공통",
       "group": "Brand"
     },
     {
-      "name": "primary-slight-1",
+      "name": "point-slight-1",
       "value": "oklch(0.954 0.024 293.6)",
       "note": "#F0EDFF --button-slight-1·--background-highlight 라이트",
       "group": "Brand"
     },
     {
-      "name": "primary-slight-2",
+      "name": "point-slight-2",
       "value": "oklch(0.886 0.06 291.4)",
       "note": "#D9D3FF --button-slight-2 라이트",
       "group": "Brand"

@@ -135,6 +135,7 @@ describe("catalog md, linted as the standard DESIGN.md", () => {
       "chzzk",
       "gmarket",
       "gs-retail",
+      "laftel",
       "lg-electronics",
       "seed-design",
       "zigbang",

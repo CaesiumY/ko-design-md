@@ -2,7 +2,7 @@
 name: 치지직
 slug: chzzk
 category: content
-last_updated: 2026-10-27
+last_updated: 2026-10-28
 created_at: 2026-10-27
 lang: ko
 logo: https://getdesign.kr/logos/chzzk.png
@@ -337,14 +337,14 @@ LIVE 배지는 `{colors.live-red}` 배경에 흰 글자, 높이 20px, radius 4px
 - 본 방송 플레이어 컨트롤바, 채팅 하단 후원 버튼, 3티어 이상 구독색, 모바일·TV 레이아웃은 확인하지 못했다 [src:1][src:2].
 - 성공·경고·위험 의미 토큰이 없다 — 위험에 가까운 `{colors.live-red}`만 확인된다 [src:2].
 - 가시적 포커스 링이 없다. 전역 `a, button, input { outline: none }`이고 포커스는 hover 오버레이와 입력창 테두리색으로만 표시된다 [src:2].
-- 로고의 벡터 원본과 보호 영역·최소 크기 수치는 가이드 이미지로만 제공돼 확인하지 못했다 [src:3].
+- 로고의 벡터 원본과 보호 영역·최소 크기 수치는 확인하지 못했다 — 가이드의 다운로드 묶음은 PNG뿐이고, 수치는 가이드 이미지에만 있다 [src:3].
 - 닉네임 색 20종과 역할색(스트리머·매니저·서포터)은 토큰으로 옮기지 않았다 [src:2].
 
 ## References
 
 1. https://chzzk.naver.com/ — 서비스 홈. 렌더된 화면의 계산 스타일과 마크업·메타 확인.
 2. https://ssl.pstatic.net/static/nng/glive/resource/p/static/css/index-DtFlhVVI.css — 서비스 CSS 번들. `--ref-*`·`--sem-*` 토큰, 라이트/다크 정의, 폰트 선언의 1차 근거.
-3. https://chzzk.gitbook.io/chzzk/resources/brand-guides — 공식 브랜드 가이드. 네온 그린·블랙 컬러 규정, 아이콘 형태, 변형 금지.
+3. https://chzzk.gitbook.io/chzzk/resources/brand-guides — 공식 브랜드 가이드. 네온 그린·블랙 컬러 규정, 아이콘 형태, 변형 금지. 로고·아이콘 PNG 다운로드 링크가 있다.
 4. https://help.naver.com/service/30044/contents/23364 — 네이버 고객센터 로고 사용 안내.
 5. https://fficial.naver.com/contentDetail/76 — 치지직 브랜딩 글(2024-05-20). 글리치·스파크 모티프와 그래픽 시스템.
 6. https://www.navercorp.com/media/pressReleasesDetail?seq=31764 — 네이버 보도자료. 2024-05-09 정식 출시.

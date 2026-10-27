@@ -2,15 +2,15 @@
 name: 라프텔
 slug: laftel
 category: content
-last_updated: 2026-10-27
+last_updated: 2026-10-28
 created_at: 2026-10-27
 lang: ko
 logo: https://getdesign.kr/logos/laftel.png
 colors:
   ## Brand
-  primary: oklch(0.626 0.211 285.3)               # #816BFF 포인트 보라. 활성 칩·진행바·N 배지·활성 네비 링크, 두 테마 공통
-  primary-slight-1: oklch(0.954 0.024 293.6)      # #F0EDFF --button-slight-1·--background-highlight 라이트
-  primary-slight-2: oklch(0.886 0.06 291.4)       # #D9D3FF --button-slight-2 라이트
+  point: oklch(0.626 0.211 285.3)               # #816BFF 포인트 보라. 활성 칩·진행바·N 배지·활성 네비 링크, 두 테마 공통
+  point-slight-1: oklch(0.954 0.024 293.6)      # #F0EDFF --button-slight-1·--background-highlight 라이트
+  point-slight-2: oklch(0.886 0.06 291.4)       # #D9D3FF --button-slight-2 라이트
   ## Background (라이트)
   bg-1: oklch(1 0 0)                              # #FFFFFF --background-1
   bg-2: oklch(0.976 0 0)                          # #F7F7F7 --background-2
@@ -131,7 +131,7 @@ components:
     rounded: "{rounded.radius-xs}"
     height: 29.8px
   chip-active:
-    backgroundColor: "{colors.primary}"
+    backgroundColor: "{colors.point}"
     textColor: "{colors.white}"
     rounded: "{rounded.radius-pill}"
     height: 35.7px
@@ -146,7 +146,7 @@ components:
     rounded: "{rounded.radius-xs}"
     height: 17px
   badge-new:
-    backgroundColor: "{colors.primary}"
+    backgroundColor: "{colors.point}"
     textColor: "{colors.white}"
     typography: "{typography.caption-10}"
     height: 17px
@@ -175,7 +175,7 @@ components:
 
 색은 `--background-*`, `--foreground-*`, `--border-*`, `--button-*` 네 계열의 시맨틱 변수로 발행되고, 같은 이름에 라이트·다크 두 값이 `prefers-color-scheme`으로 주입된다 [src:1]. 이 카탈로그는 라이트를 기본 이름으로, 다크를 `dark-` 접두로 나눠 적는다. 앱 안의 수동 테마 토글은 확인하지 못했다 [src:1].
 
-브랜드 포인트는 `{colors.primary}`(보라) 하나다. 변수명이 아니라 리터럴로 쓰이며, 다크에서도 같은 값이다 — 활성 요일 탭, 활성 칩, "N" 뱃지, 진행바 채움, 활성 네비 링크, 멤버십 "현재 이용 중" 라벨이 이 색을 쓴다 [src:1]. 라이트의 `{colors.primary-slight-1}`·`{colors.primary-slight-2}`는 보라 틴트로 하이라이트와 보조 버튼에 들어간다 [src:1]. 다크에서는 같은 자리가 불투명한 틴트가 아니라 중립 회색 `{colors.dark-button-slight}`로 바뀐다 [src:1].
+브랜드 포인트는 `{colors.point}`(보라) 하나다. 컴포넌트에는 대부분 리터럴로 쓰여 다크에서도 같은 값이다 — 시맨틱 변수 중에는 `--foreground-slight`가 라이트에서 같은 보라지만 다크에서는 흰색으로 바뀐다. 활성 요일 탭, 활성 칩, "N" 뱃지, 진행바 채움, 활성 네비 링크, 멤버십 "현재 이용 중" 라벨이 이 색을 쓴다 [src:1]. 라이트의 `{colors.point-slight-1}`·`{colors.point-slight-2}`는 보라 틴트로 하이라이트와 보조 버튼에 들어간다 [src:1]. 다크에서는 같은 자리가 불투명한 틴트가 아니라 중립 회색 `{colors.dark-button-slight}`로 바뀐다 [src:1].
 
 중립은 순수 무채색이다. 다크 캔버스는 `{colors.dark-bg-1}`(홈 히어로 위 투명 헤더 제외)이고 그 아래 순검정 `{colors.dark-bg-2}`가 깔린다 — 라이트와 달리 다크에서는 "2번 배경"이 1번보다 더 어둡다 [src:1]. 토스트와 보라 회색 버튼은 남보라를 띤 `{colors.dark-bg-toast}` 계열이다 [src:1]. UP 뱃지 `{colors.badge-red}`는 빨강 포인트의 유일한 쓰임이다 [src:1]. 성공·경고 시맨틱 변수는 공개되지 않았다 [src:1].
 
@@ -211,7 +211,7 @@ radius도 토큰이 없고 스타일시트에 3·4·7·8·10·14·16·18·20px, 
 
 ### nav-link
 
-14px/21px 700, 흰 글자에 활성·hover는 `{colors.primary}`다. 투명 헤더에서는 hover가 흰색 80%로 흐려진다 [src:1].
+14px/21px 700, 흰 글자에 활성·hover는 `{colors.point}`다. 투명 헤더에서는 hover가 흰색 80%로 흐려진다 [src:1].
 
 ### search-field
 
@@ -231,7 +231,7 @@ radius도 토큰이 없고 스타일시트에 3·4·7·8·10·14·16·18·20px, 
 
 ### chip-active
 
-보라 `{colors.primary}` 배경에 흰 글자, 알약 `9999px`, 높이 약 35.7px(3em), 보더 없음이다 [src:1].
+보라 `{colors.point}` 배경에 흰 글자, 알약 `9999px`, 높이 약 35.7px(3em), 보더 없음이다 [src:1].
 
 ### chip-inactive
 
@@ -243,7 +243,7 @@ radius도 토큰이 없고 스타일시트에 3·4·7·8·10·14·16·18·20px, 
 
 ### badge-new
 
-"N" 뱃지는 `{colors.primary}` 배경 원형, 높이 약 17px, 10px 700 흰 글자다 [src:1].
+"N" 뱃지는 `{colors.point}` 배경 원형, 높이 약 17px, 10px 700 흰 글자다 [src:1].
 
 ### membership-card
 
@@ -255,7 +255,7 @@ radius도 토큰이 없고 스타일시트에 3·4·7·8·10·14·16·18·20px, 
 
 ## Do's and Don'ts
 
-**Do** 보라 `{colors.primary}`는 활성 상태(칩·탭·네비·진행)에만 쓴다 — 포인트 색이 "지금 선택된 것"의 신호로 일관된다 [src:1].
+**Do** 보라 `{colors.point}`는 활성 상태(칩·탭·네비·진행)에만 쓴다 — 포인트 색이 "지금 선택된 것"의 신호로 일관된다 [src:1].
 
 **Do** 다크 캔버스는 순검정 대신 `{colors.dark-bg-1}`을 기본 면으로 하고, 순검정 `{colors.dark-bg-2}`는 한 단계 더 깊은 배경에만 쓴다 [src:1].
 
