@@ -3,7 +3,7 @@ name: 지마켓
 design_system_name: Gmarket Design System
 slug: gmarket
 category: commerce
-last_updated: "2026-08-23"
+last_updated: "2026-10-28"
 created_at: "2026-05-23"
 lang: ko
 logo: https://getdesign.kr/logos/gmarket.png
@@ -91,6 +91,9 @@ colors:
   border-secondary: oklch(0.792 0.000 0)   # gray-400, secondary 버튼 보더 (#BDBDBD)
   border-tertiary: oklch(0.899 0.000 0)   # gray-300, 콘텐츠 배경 보더 (#E0E0E0)
   border-white: oklch(1.000 0.000 0)   # White, 썸네일 위 보더 (#FFFFFF)
+  # Semantic — 검정 알파 표면 (라이트 전용, 다크 값 미발행)
+  number-indicator-bg: oklch(0.000 0.000 0 / 30%)   # black 30%, 슬라이드 Number Indicator 알약 배경 [src:23] (#000000)
+  overlay: oklch(0.000 0.000 0 / 50%)   # black 50%, 다이얼로그 딤 오버레이 [src:12] (#000000)
   # Semantic — status (각 10단계 중 500이 기준)
   positive: oklch(0.711 0.242 142)   # green-500, 쿠폰·사은품 혜택·활성화 텍스트
   informative: oklch(0.608 0.211 257)   # blue-500, 별점·공식 태그 신뢰
@@ -193,7 +196,7 @@ GDS는 모바일 앱(iOS·Android, 1차 표면)·모바일 웹·PC 웹 전반의
 
 ## Colors
 
-> **대조 결과(2026-08-02).** 이 문서의 색 토큰 **89개 전부**가 공식 Colors 페이지가 발행하는 hex와 ΔE ≤ 0.02로 일치했다 [src:27]. 출처 33개도 전부 서버 렌더라 평문으로 받아 읽히고, 인용이 한 URL에 몰리지 않는다 — 최다 인용 출처가 `[src:27]` 25건으로 전체의 11%다. 브라우저 없이 재검증할 수 있고 단일 출처가 무너져도 문서 전체가 흔들리지 않는다는 뜻이다.
+> **알파 토큰 정정·추가(2026-10-28).** 슬라이드 번호 알약 배경을 black 40% 에서 **30%** 로 고치고 `number-indicator-bg` 로 실었다 — Slides 페이지 그림 9장에 그려진 알약 10개가 모두 검정 30% 채움(`fill-opacity="0.3"`)이고, 40% 는 발행물에서 확인되지 않는 값이었다 [src:23]. 다이얼로그 딤 오버레이 black 50% 도 `overlay` 로 실었다 — 페이지 글("컬러 Black, Opacity 50%")과 그림이 함께 뒷받침한다 [src:12]. 두 값 모두 라이트 전용이며 다크 값은 발행되지 않았다. 나머지 색 토큰 89개는 공식 Colors 페이지가 발행하는 hex와 ΔE ≤ 0.02로 일치한다(2026-08-02 대조) [src:27].
 
 GDS 컬러는 "Hex Code보다 컬러명 사용"을 권장하며, WCAG 2.0 기반으로 컬러별 10단계(50–900)를 지원하고 각 컬러의 주요 색상은 500이다 [src:27]. 아래 값은 공개된 hex 토큰을 ko-design-md 표준에 맞게 OKLCH로 변환한 것이며, **라이트 모드 전용으로 다크 변형은 존재하지 않는다** [src:27][src:32].
 
@@ -237,7 +240,7 @@ GDS는 8-Point Grid를 사용한다 — 주요 디바이스 스크린 사이즈�
 
 GDS의 깊이 언어는 매우 절제되어 있다 — 그림자는 모두 옅고, 글래스·블러·뉴모피즘 효과는 쓰지 않는다 [src:33]. 표면 분리는 강한 드롭섀도가 아니라 옅은 그림자와 1px 디바이더(`{colors.bg-divider}`)·배경 워시가 담당한다 [src:33][src:29].
 
-`elev-card`는 아이템 카드 수준의 약한 부양에, `elev-popover`는 팝오버에, `elev-sheet`는 하단에서 올라오는 시트에 쓴다 [src:32]. `elev-docked-btn`은 풀위드 도크 버튼 뒤에 깔리는 배경 그림자이며, 공식 버튼 가이드도 이 배경 그림자를 "black 2%, 20px 기준"으로 명시한다 [src:32][src:10]. 디밍 오버레이는 black, opacity 50%(`oklch(0.000 0.000 0 / 0.5)`)가 표준이다 [src:12]. **모든 그림자 토큰은 라이트 모드 값이다** — 다크 모드 대응 elevation은 공개되지 않았다 [src:32][src:27].
+`elev-card`는 아이템 카드 수준의 약한 부양에, `elev-popover`는 팝오버에, `elev-sheet`는 하단에서 올라오는 시트에 쓴다 [src:32]. `elev-docked-btn`은 풀위드 도크 버튼 뒤에 깔리는 배경 그림자이며, 공식 버튼 가이드도 이 배경 그림자를 "black 2%, 20px 기준"으로 명시한다 [src:32][src:10]. 디밍 오버레이는 black, opacity 50%(`{colors.overlay}`)가 표준이다 [src:12]. **모든 그림자 토큰은 라이트 모드 값이다** — 다크 모드 대응 elevation은 공개되지 않았다 [src:32][src:27].
 
 ## Shapes
 
@@ -389,7 +392,7 @@ CTA·Primary보다 낮은 위계의 보조 행동용이다 [src:10]. 보더는 `
 
 ### dialog
 
-긴급 정보 알림용 다이얼로그다 — 가로폭 280px 고정, 높이는 최대 360px 가변이며 Contents 영역은 상하 32px·좌우 16px다 [src:12]. 버튼은 최소 1개·최대 3개이고, 우선순위가 높은 버튼은 Text 컬러로 `{colors.blue-500}`을 쓴다 [src:12]. 이전으로 돌아갈 텍스트 버튼은 필수 포함하며, 닫기 아이콘 버튼은 중복 기능이라 쓰지 않는다 [src:12]. 오버레이는 black 50%다 [src:12].
+긴급 정보 알림용 다이얼로그다 — 가로폭 280px 고정, 높이는 최대 360px 가변이며 Contents 영역은 상하 32px·좌우 16px다 [src:12]. 버튼은 최소 1개·최대 3개이고, 우선순위가 높은 버튼은 Text 컬러로 `{colors.blue-500}`을 쓴다 [src:12]. 이전으로 돌아갈 텍스트 버튼은 필수 포함하며, 닫기 아이콘 버튼은 중복 기능이라 쓰지 않는다 [src:12]. 오버레이는 `{colors.overlay}`(black 50%)다 [src:12].
 
 ```tsx
 <Dialog title="주문을 취소할까요?">
@@ -506,7 +509,7 @@ CTA·Primary보다 낮은 위계의 보조 행동용이다 [src:10]. 보더는 `
 
 ### slide-indicator
 
-슬라이드/캐러셀의 현재 위치 표시 2종이다 [src:23]. **Dots**는 6px 원형이며 활성 dot만 `{colors.green-500}`로 칠한다 [src:23]. **Number Indicator**는 black 40% 배경의 pill에 `현재/전체`를 모노스페이스로 표기한다(예: `3/12`) [src:23].
+슬라이드/캐러셀의 현재 위치 표시 2종이다 [src:23]. **Dots**는 6px 원형이며 활성 dot만 `{colors.green-500}`로 칠한다 [src:23]. **Number Indicator**는 `{colors.number-indicator-bg}`(black 30%) 배경의 pill에 `현재/전체`를 모노스페이스로 표기한다(예: `3/12`) [src:23]. 공식 그림의 알약은 모두 black 30% 채움에 black 5%의 1px 테두리로 그려져 있다 [src:23].
 
 ```tsx
 <SlideDots total={5} active={2} />

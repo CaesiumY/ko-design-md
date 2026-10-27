@@ -336,6 +336,16 @@
       "note": "White, 썸네일 위 보더 (#FFFFFF)"
     },
     {
+      "name": "number-indicator-bg",
+      "value": "oklch(0.000 0.000 0 / 30%)",
+      "note": "black 30%, 슬라이드 Number Indicator 알약 배경 [src:23] (#000000)"
+    },
+    {
+      "name": "overlay",
+      "value": "oklch(0.000 0.000 0 / 50%)",
+      "note": "black 50%, 다이얼로그 딤 오버레이 [src:12] (#000000)"
+    },
+    {
       "name": "positive",
       "value": "oklch(0.711 0.242 142)",
       "note": "green-500, 쿠폰·사은품 혜택·활성화 텍스트"

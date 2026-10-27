@@ -93,7 +93,7 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   bezier: { annotated: 0, judged: 0, drift: 43 },
   class101: { annotated: 34, judged: 33, drift: 34 },
   codeit: { annotated: 180, judged: 173, drift: 180, webfont: true },
-  gmarket: { annotated: 85, judged: 85, drift: 89 },
+  gmarket: { annotated: 87, judged: 87, drift: 91 },
   greeting: { annotated: 56, judged: 56, drift: 65 },
   "gs-retail": { annotated: 23, judged: 23, drift: 23 },
   "gs-shop": { annotated: 52, judged: 52, drift: 52 },
