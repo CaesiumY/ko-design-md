@@ -1,11 +1,23 @@
-// sRGB hex → Oklab/Oklch, and the ΔE between two Oklab colours.
+// sRGB ↔ Oklab/Oklch in both directions, and the ΔE between two Oklab colours.
 //
-// Shared by the draft validator (gates new entries) and `scripts/audit-oklch.ts`
-// (gates the committed catalogue) for the same reason `./oklch-tolerance` is:
+// The forward transform (hex → Oklab → Oklch) is shared by the draft validator
+// (gates new entries) and `./oklch-audit` (behind `scripts/audit-oklch.ts`,
+// gates the committed catalogue) for the same reason `./oklch-tolerance` is:
 // they answer one question — "does this OKLCH decode to its annotated hex?" — so
 // a second copy of the maths is a second answer waiting to drift. Keeping the
 // bound shared while duplicating the transform it is applied to would only move
 // the divergence one step down.
+//
+// The inverse (`oklabToRgb`, Oklab → sRGB clipped to the cube) and the real-
+// valued `rgbToOklab` serve the contrast pair classifier (`./contrast-pairs`),
+// which composites a translucent token over a background the way the contrast
+// collector composites a reading. A wrong matrix constant would silently change
+// which rows the classification tables in `docs/preview-contrast-baseline.md`
+// count as published colours, and the tables' own checks would stay green:
+// they compare each table's sums to the recorded totals, which moving a row
+// between classes leaves unchanged. The round trip in `oklch-convert.test.ts`
+// (hex → Oklab → the same 8-bit channels) is what guards the two matrices
+// against each other.
 
 export interface Oklab {
   L: number
