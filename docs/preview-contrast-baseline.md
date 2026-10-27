@@ -752,11 +752,11 @@ warn 만)이라 갱신이 강제되지 않고, 두 분류표의 비텍스트 행
 | zigbang | text | 125 | 0 | 0 | 0 | 125 |
 | zigbang | non-text | 33 | 0 | 0 | 0 | 33 |
 
-**어느 슬러그부터 (2026-10-28 재집계 기준).** 고칠 수 있는 칸(`one-token`·`no-token`)의 합은 텍스트에서
-bezier 20행 · line-design-system 16행 · ridi 12행 · toss 11행 · baemin 10행이고, 나머지 슬러그는 10행보다 적다. 단 #550 의 슬러그 티켓으로 이미 처리한 슬러그는, 텍스트
+**어느 슬러그부터 (2026-10-28 재집계 기준).** 고칠 수 있는 칸(`one-token`·`no-token`)이 큰 쪽은 텍스트에서
+bezier 이고 line-design-system · ridi · toss · baemin 이 뒤따른다(수는 위 표에 있다). 단 #550 의 슬러그 티켓으로 이미 처리한 슬러그는, 텍스트
 칸이 행마다 처리를 마친 뒤의 남은 행일 수 있다 — 무엇으로 처리했는지는 그 티켓의 PR 본문에 있고, 이 문단에는 쌓지
-않는다(비텍스트 칸은 그 티켓들이 따로 다루지 않았다 — 선언으로 함께 빠진 행은 있다). 비텍스트에서는 samsung-one-ui 27행(미달
-전부) · gs-retail 21행 · greeting 19행 · line-design-system 16행 · likelion 15행 · codeit 14행이고, 그 밖은 10행보다 적다. 반대로 socar · zigbang · remember ·
+않는다(비텍스트 칸은 그 티켓들이 따로 다루지 않았다 — 선언으로 함께 빠진 행은 있다). 비텍스트에서는 samsung-one-ui(미달
+전부가 이 두 칸) · gs-retail · greeting · line-design-system · likelion · codeit 순이다. 반대로 socar · zigbang · remember ·
 class101 와 codeit · gmarket · kyobobook · seed-design 의 텍스트는 미달 전부가 `both-published` 라, 고치지 않고 두는 대상이다(아래
 「미달을 고칠 때」). lg-electronics 와 nol 은 미달 대부분이 `observed-pair` 다. 위 caveat 때문에, 고칠 수 있는 칸에서
 시작하더라도 행마다 합성 경로를 먼저 본다.
