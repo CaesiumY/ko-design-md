@@ -42,50 +42,50 @@ colors:
   # 상류 beta 원시값 이름 그대로 [src:3] — 두 테마가 함께 쓰는 원시값이라 dark- 접두가 없다.
   # fill-accent-{hue} = 라이트 {hue}-400-10 · 다크 {hue}-300-18, -heavy = 라이트 {hue}-400-20 · 다크 {hue}-300-30.
   # 300-18/30 의 기준 RGB 는 blue·green·red·navy 에서 상류 불투명 300 과 다르다(예: blue #6b6eff 대 #8082ff — 상류에도 그 RGB 의 불투명 판은 없다).
-  blue-400-10: oklch(0.554 0.214 280 / 0.102)   # #6157ea1a
+  blue-400-10: oklch(0.554 0.214 280 / 0.10)   # #6157ea1a
   blue-400-20: oklch(0.554 0.214 280 / 0.20)   # #6157ea33
   blue-300-18: oklch(0.615 0.211 277 / 0.18)   # #6b6eff2e
-  blue-300-30: oklch(0.615 0.211 277 / 0.302)   # #6b6eff4d
-  cobalt-400-10: oklch(0.643 0.150 248 / 0.102)   # #3292e31a
+  blue-300-30: oklch(0.615 0.211 277 / 0.30)   # #6b6eff4d
+  cobalt-400-10: oklch(0.643 0.150 248 / 0.10)   # #3292e31a
   cobalt-400-20: oklch(0.643 0.150 248 / 0.20)   # #3292e333
   cobalt-300-18: oklch(0.724 0.125 245 / 0.18)   # #5cadef2e
-  cobalt-300-30: oklch(0.724 0.125 245 / 0.302)   # #5cadef4d
-  green-400-10: oklch(0.652 0.168 150 / 0.102)   # #20ab551a
+  cobalt-300-30: oklch(0.724 0.125 245 / 0.30)   # #5cadef4d
+  green-400-10: oklch(0.652 0.168 150 / 0.10)   # #20ab551a
   green-400-20: oklch(0.652 0.168 150 / 0.20)   # #20ab5533
   green-300-18: oklch(0.724 0.162 150 / 0.18)   # #4bc16c2e
-  green-300-30: oklch(0.724 0.162 150 / 0.302)   # #4bc16c4d
-  red-400-10: oklch(0.634 0.177 20 / 0.102)   # #e1535d1a
+  green-300-30: oklch(0.724 0.162 150 / 0.30)   # #4bc16c4d
+  red-400-10: oklch(0.634 0.177 20 / 0.10)   # #e1535d1a
   red-400-20: oklch(0.634 0.177 20 / 0.20)   # #e1535d33
   red-300-18: oklch(0.677 0.180 23 / 0.18)   # #f260602e
-  red-300-30: oklch(0.677 0.180 23 / 0.302)   # #f260604d
-  orange-400-10: oklch(0.698 0.156 55 / 0.102)   # #e67f2b1a
+  red-300-30: oklch(0.677 0.180 23 / 0.30)   # #f260604d
+  orange-400-10: oklch(0.698 0.156 55 / 0.10)   # #e67f2b1a
   orange-400-20: oklch(0.698 0.156 55 / 0.20)   # #e67f2b33
   orange-300-18: oklch(0.764 0.148 58 / 0.18)   # #f798472e
-  orange-300-30: oklch(0.764 0.148 58 / 0.302)   # #f798474d
-  yellow-400-10: oklch(0.789 0.161 82 / 0.102)   # #edae0d1a
+  orange-300-30: oklch(0.764 0.148 58 / 0.30)   # #f798474d
+  yellow-400-10: oklch(0.789 0.161 82 / 0.10)   # #edae0d1a
   yellow-400-20: oklch(0.789 0.161 82 / 0.20)   # #edae0d33
   yellow-300-18: oklch(0.824 0.160 88 / 0.18)   # #f0be272e
-  yellow-300-30: oklch(0.824 0.160 88 / 0.302)   # #f0be274d
-  olive-400-10: oklch(0.730 0.160 113 / 0.102)   # #a9b1101a
+  yellow-300-30: oklch(0.824 0.160 88 / 0.30)   # #f0be274d
+  olive-400-10: oklch(0.730 0.160 113 / 0.10)   # #a9b1101a
   olive-400-20: oklch(0.730 0.160 113 / 0.20)   # #a9b11033
   olive-300-18: oklch(0.784 0.167 115 / 0.18)   # #b7c4272e
-  olive-300-30: oklch(0.784 0.167 115 / 0.302)   # #b7c4274d
-  teal-400-10: oklch(0.690 0.118 190 / 0.102)   # #09b2ac1a
-  teal-400-20: oklch(0.690 0.118 190 / 0.20)   # #09b2ac33
+  olive-300-30: oklch(0.784 0.167 115 / 0.30)   # #b7c4274d
+  teal-400-10: oklch(0.690 0.118 191 / 0.10)   # #09b2ac1a
+  teal-400-20: oklch(0.690 0.118 191 / 0.20)   # #09b2ac33
   teal-300-18: oklch(0.787 0.123 186 / 0.18)   # #40d3c52e
-  teal-300-30: oklch(0.787 0.123 186 / 0.302)   # #40d3c54d
-  navy-400-10: oklch(0.469 0.147 273 / 0.102)   # #424fab1a
+  teal-300-30: oklch(0.787 0.123 186 / 0.30)   # #40d3c54d
+  navy-400-10: oklch(0.469 0.147 273 / 0.10)   # #424fab1a
   navy-400-20: oklch(0.469 0.147 273 / 0.20)   # #424fab33
   navy-300-18: oklch(0.607 0.118 276 / 0.18)   # #6f7bc82e
-  navy-300-30: oklch(0.607 0.118 276 / 0.302)   # #6f7bc84d
-  purple-400-10: oklch(0.591 0.208 297 / 0.102)   # #8e57e71a
+  navy-300-30: oklch(0.607 0.118 276 / 0.30)   # #6f7bc84d
+  purple-400-10: oklch(0.591 0.208 297 / 0.10)   # #8e57e71a
   purple-400-20: oklch(0.591 0.208 297 / 0.20)   # #8e57e733
   purple-300-18: oklch(0.670 0.205 299 / 0.18)   # #a970ff2e
-  purple-300-30: oklch(0.670 0.205 299 / 0.302)   # #a970ff4d
-  pink-400-10: oklch(0.637 0.208 338 / 0.102)   # #d64bb51a
-  pink-400-20: oklch(0.637 0.208 338 / 0.20)   # #d64bb533
+  purple-300-30: oklch(0.670 0.205 299 / 0.30)   # #a970ff4d
+  pink-400-10: oklch(0.637 0.208 339 / 0.10)   # #d64bb51a
+  pink-400-20: oklch(0.637 0.208 339 / 0.20)   # #d64bb533
   pink-300-18: oklch(0.722 0.192 336 / 0.18)   # #ec6fd32e
-  pink-300-30: oklch(0.722 0.192 336 / 0.302)   # #ec6fd34d
+  pink-300-30: oklch(0.722 0.192 336 / 0.30)   # #ec6fd34d
   ## Neutral global
   grey-25: oklch(0.995 0.003 286)
   grey-50: oklch(0.988 0 286)
@@ -104,9 +104,9 @@ colors:
   black-85: oklch(0 0 0 / 0.85)   # text-neutral (본문 기본)
   black-60: oklch(0 0 0 / 0.60)   # text-neutral-light
   black-40: oklch(0 0 0 / 0.40)   # text-neutral-lighter / icon-neutral
-  black-15: oklch(0 0 0 / 0.149)   # #00000026 · 라이트 fill-neutral-heavy
+  black-15: oklch(0 0 0 / 0.15)   # #00000026 · 라이트 fill-neutral-heavy
   black-8: oklch(0 0 0 / 0.08)   # border-neutral
-  black-5: oklch(0 0 0 / 0.051)   # #0000000d · 라이트 fill-neutral-light
+  black-5: oklch(0 0 0 / 0.05)   # #0000000d · 라이트 fill-neutral-light
   white-100: oklch(1 0 0)
   white-90: oklch(1 0 0 / 0.90)   # 라이트 surface-glass
   white-80: oklch(1 0 0 / 0.80)   # #ffffffcc · 다크 text-neutral / icon-neutral-heavier
@@ -114,7 +114,7 @@ colors:
   white-40: oklch(1 0 0 / 0.40)   # #ffffff66 · 다크 text-neutral-lighter / fill-neutral-heavier
   white-20: oklch(1 0 0 / 0.20)   # #ffffff33 · 다크 fill-neutral-heavy
   white-12: oklch(1 0 0 / 0.12)   # 다크 표면 위 보더
-  white-8: oklch(1 0 0 / 0.078)   # #ffffff14 · 다크 fill-neutral-light
+  white-8: oklch(1 0 0 / 0.08)   # #ffffff14 · 다크 fill-neutral-light
 typography:
   # size — 토큰명 숫자 = px (핸드오프 colors_and_type.css는 `--font-size-11:11px`로 표기).
   # 아래 rem은 1rem=10px 루트 가정의 동치값(예: font-size-11 = 11px = 1.1rem@10px-root).
@@ -184,7 +184,7 @@ rounded:
 
 # Bezier Design System — design.md
 
-> 채널톡을 만드는 (주)채널코퍼레이션의 오픈소스 React 디자인 시스템. 컴포넌트 라이브러리 + 디자인 토큰 + 아이콘 세트를 한 모노레포로 배포하며, 핵심 패키지는 `@channel.io/bezier-react`·`@channel.io/bezier-tokens`(0.6.0)·`@channel.io/bezier-icons`(0.60.0)이다 [src:1][src:3][src:4]. 본 문서는 사용자가 제공한 Claude Design 핸드오프 번들을 1차 출처로 추출·정리해 합성한 결과다 — 번들은 비공개이므로, 아래 정량 주장은 2026-07-29에 공개 배포물(`@channel.io/bezier-tokens` 0.6.0 · `@channel.io/bezier-icons` 0.60.0 · Storybook 인덱스 [src:5])과 전수 대조했다. 당시의 색 토큰 43개는 전부 ΔE ≤ 0.02로 일치했고(2026-10-28에 더한 반투명 단계 51개는 Colors 절 감사 메모 참조), 컴포넌트 59개 이름도 Storybook 문서와 1:1로 대응했다.
+> 채널톡을 만드는 (주)채널코퍼레이션의 오픈소스 React 디자인 시스템. 컴포넌트 라이브러리 + 디자인 토큰 + 아이콘 세트를 한 모노레포로 배포하며, 핵심 패키지는 `@channel.io/bezier-react`·`@channel.io/bezier-tokens`(0.6.0)·`@channel.io/bezier-icons`(0.60.0)이다 [src:1][src:3][src:4]. 본 문서는 사용자가 제공한 Claude Design 핸드오프 번들을 1차 출처로 추출·정리해 합성한 결과다 — 번들은 비공개이므로, 아래 정량 주장은 2026-07-29에 공개 배포물(`@channel.io/bezier-tokens` 0.6.0 · `@channel.io/bezier-icons` 0.60.0 · Storybook 인덱스 [src:5])과 전수 대조했다. 당시 이 문서의 색 토큰은 전부 ΔE ≤ 0.02로 일치했고, 컴포넌트 59개 이름도 Storybook 문서와 1:1로 대응했다.
 
 ## Brand & Style
 
@@ -200,7 +200,7 @@ Bezier는 채널톡의 사내 제품 UI를 외부에 그대로 공개한 드문 
 
 ## Colors
 
-> **대조 결과(2026-10-28).** 이 절의 색 토큰 94개는 published `@channel.io/bezier-tokens` 0.6.0의 `dist/beta/css/styles.css`에서 나온다 [src:3]. 번들에서 온 43개는 2026-07-29에 전수 비교해 **전부 ΔE ≤ 0.02**로 일치했다 — 비공개 번들에서 나온 값이지만 공개 배포물로 재현된다. 이번에 더한 51개(accent 틴트 `{hue}-400-10/20`·`{hue}-300-18/30` 44개와 `white-8/20/40/60/80`·`black-5/15` 7개)는 상류 원시값 블록의 이름과 hex를 그대로 옮겼고, 줄 끝에 그 hex를 적어 `audit:oklch`가 줄마다 대조한다(상류가 `#fff3`처럼 줄여 쓴 값은 8자리로 풀어 적었다). 다만 **tier를 구분해 읽어야 한다**: 이 절의 색은 beta tier이고, 아래 Typography·Rounded·Spacing 절의 값은 기본(stable) tier다. 같은 토큰 이름이 tier마다 다른 값을 가진다 — `grey-900`이 stable에서는 `#242428` ≈ `oklch(0.262 0.007 286)`, beta에서는 `#1d1d20` ≈ `oklch(0.232 0.006 286)`이다. beta에는 stable에 없는 `grey-25/300/400/600/650/750/950`이 있고, 반대로 `radius-44`·`radius-42-p`는 stable에만 있다.
+> **대조 결과(2026-10-28).** 이 절의 색 토큰 94개는 published `@channel.io/bezier-tokens` 0.6.0의 `dist/beta/css/styles.css`에서 나온다 [src:3]. 번들에서 온 43개는 2026-07-29에 전수 비교해 **전부 ΔE ≤ 0.02**로 일치했다 — 비공개 번들에서 나온 값이지만 공개 배포물로 재현된다. 상류 원시값 블록에서 직접 옮긴 51개(accent 틴트 `{hue}-400-10/20`·`{hue}-300-18/30` 44개와 `white-8/20/40/60/80`·`black-5/15` 7개)는 상류 이름을 그대로 쓰고 알파는 이름이 말하는 백분율로 적었으며(`white-8` 은 `/ 0.08`), 줄 끝에 상류 hex를 적어 `audit:oklch`가 줄마다 대조한다(상류가 `#fff3`처럼 줄여 쓴 값은 8자리로 풀어 적었다). 다만 **tier를 구분해 읽어야 한다**: 이 절의 색은 beta tier이고, 아래 Typography·Rounded·Spacing 절의 값은 기본(stable) tier다. 같은 토큰 이름이 tier마다 다른 값을 가진다 — `grey-900`이 stable에서는 `#242428` ≈ `oklch(0.262 0.007 286)`, beta에서는 `#1d1d20` ≈ `oklch(0.232 0.006 286)`이다. beta에는 stable에 없는 `grey-25/300/400/600/650/750/950`이 있고, 반대로 `radius-44`·`radius-42-p`는 stable에만 있다.
 
 Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3계층 토큰 구조다 [src:3][src:2]. 글로벌은 원시 색값이고, 시맨틱(`--bg-*`, `--txt-*`, `--color-*`)은 테마별로 다른 글로벌을 참조한다 [src:2]. 특징은 navy·purple·pink·red·orange·yellow·olive·green·teal·cobalt·blue 11개 hue를 각각 300/400/500 명도 + 알파 변형으로 갖춘 무지개 액센트 팔레트다 [src:3][src:4].
 
@@ -601,8 +601,8 @@ Bezier는 앱 셸/뷰포트 브레이크포인트를 토큰으로 발행하지 �
 - **Breakpoint 토큰 부재.** Bezier는 뷰포트 브레이크포인트를 토큰으로 발행하지 않으며, 반응형은 컴포넌트 로컬 폭과 앱 레이어 몫이다 — 데스크톱/모바일 레이아웃 분기는 다운스트림에서 정의해야 한다 [src:3][src:2].
 - **alpha/legacy 컴포넌트 중복.** 같은 역할에 안정·alpha·legacy 변종이 공존한다(예: `{component.avatar}` ↔ `{component.alpha-avatar}`, `{component.tooltip}` ↔ `{component.legacy-tooltip}`, `{component.stack}` ↔ `{component.legacy-stack}`) — 어느 라인을 채택할지는 소비처가 결정해야 하며, 본 문서는 신규 코드에 안정/alpha 라인을 권장한다 [src:2].
 - **hex→OKLCH 변환 오차.** 모든 색은 Bezier가 hex로 게시한 토큰을 OKLCH로 변환한 것이라 미세한 변환 드리프트가 있을 수 있다 — 정확한 원본 hex는 `@channel.io/bezier-tokens` 빌드 CSS를 직접 참조해야 한다 [src:3].
-- **beta 팔레트는 이제 검증됐다(2026-07-29 정정).** 이 항목은 원래 "beta 팔레트 값 상당수가 공개 URL로 직접 교차검증되지 않는다"고 적고 있었으나, 실제로 대조해 보니 당시 이 문서의 색 토큰 43개 전부가 `@channel.io/bezier-tokens` 0.6.0의 beta 엔트리와 ΔE ≤ 0.02로 일치했다(Colors 절 참조). 남은 공백은 **컴포넌트 정본 스펙**(Banner/Toast 처리 등)이며, 이쪽은 Storybook 개별 docs를 `?path=/docs/<id>`로 열어 대조해야 한다 [src:3][src:2].
-- **시맨틱 다크 원시값은 이제 실렸다(2026-10-28 정정).** 이 항목은 원래 "다크 측이 참조하는 일부 white-알파 원시값의 정확한 단계는 코퍼스에서 전부 발췌되지 않았다"고 적고 있었으나, 상류 beta 엔트리에서 그 단계를 확인해 다크 글자·중립 채움이 가리키는 `white-8/20/40/60/80`, 라이트 중립 채움의 `black-5/15`, accent 채움 사다리 44개를 frontmatter에 실었다(Colors 절 참조). 상류의 나머지 투명 단계(`{hue}-300-0/10/45`·`{hue}-400-0/5/30` 등)는 싣지 않았다 [src:3].
+- **beta 팔레트는 이제 검증됐다(2026-07-29 정정).** 이 항목은 원래 "beta 팔레트 값 상당수가 공개 URL로 직접 교차검증되지 않는다"고 적고 있었으나, 실제로 대조해 보니 당시 이 문서의 색 토큰 전부가 `@channel.io/bezier-tokens` 0.6.0의 beta 엔트리와 ΔE ≤ 0.02로 일치했다(Colors 절 참조). 남은 공백은 **컴포넌트 정본 스펙**(Banner/Toast 처리 등)이며, 이쪽은 Storybook 개별 docs를 `?path=/docs/<id>`로 열어 대조해야 한다 [src:3][src:2].
+- **시맨틱 다크 원시값은 이제 실렸다(2026-10-28 정정).** 이 항목은 원래 "다크 측이 참조하는 일부 white-알파 원시값의 정확한 단계는 코퍼스에서 전부 발췌되지 않았다"고 적고 있었으나, 상류 beta 엔트리에서 그 단계를 확인해 다크 글자·중립 채움이 가리키는 `white-8/20/40/60/80`, 라이트 중립 채움의 `black-5/15`, accent 채움 사다리를 frontmatter에 실었다(Colors 절 참조). 상류의 나머지 투명 단계(`{hue}-300-0/10/45`·`{hue}-400-0/5/30` 등)는 싣지 않았다 [src:3].
 - **모바일 리플로우 미관찰.** 제공 스크린샷이 데스크톱 Storybook 캔버스 한정이라, 실제 모바일 웹/네이티브에서의 컴포넌트 리플로우·접힘 거동은 직접 확인되지 않았다 [src:2].
 
 ## References

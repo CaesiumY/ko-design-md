@@ -81,8 +81,8 @@ interface Coverage {
 //
 // `annotated: 0` is a fact about the entry, not a broken regex: baemin
 // comments its colours in prose with no hex, so `audit:oklch` has nothing to
-// judge there. bezier annotates only the 51 alpha steps added from the beta
-// tier of `@channel.io/bezier-tokens` (#569); the 43 from the handoff bundle
+// judge there. bezier annotates only the alpha steps taken from the beta
+// tier of `@channel.io/bezier-tokens` (#569); the steps from the handoff bundle
 // stay unannotated. toss annotates only the steps whose name maps to
 // Toss's published `@toss/tds-colors` (15 light + 15 `dark-*`); its bundle-only
 // steps stay unannotated. teamsparta likewise annotates only the three reds
