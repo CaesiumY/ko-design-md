@@ -37,6 +37,8 @@ const NO_TYPE_SCALE: Record<string, string> = {}
  */
 const COMPONENT_COUNTS: Record<string, number> = {
   banksalad: 16,
+  chzzk: 12,
+  laftel: 11,
   ridi: 11,
   teamsparta: 10,
 }
@@ -130,6 +132,7 @@ describe("catalog md, linted as the standard DESIGN.md", () => {
     expect(missing).toEqual([
       "banksalad",
       "bezier",
+      "chzzk",
       "gmarket",
       "gs-retail",
       "lg-electronics",

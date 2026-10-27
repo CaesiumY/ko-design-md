@@ -1,0 +1,315 @@
+{
+  "colors": [
+    {
+      "name": "primary",
+      "value": "oklch(0.626 0.211 285.3)",
+      "note": "#816BFF 포인트 보라. 활성 칩·진행바·N 배지·활성 네비 링크, 두 테마 공통",
+      "group": "Brand"
+    },
+    {
+      "name": "primary-slight-1",
+      "value": "oklch(0.954 0.024 293.6)",
+      "note": "#F0EDFF --button-slight-1·--background-highlight 라이트",
+      "group": "Brand"
+    },
+    {
+      "name": "primary-slight-2",
+      "value": "oklch(0.886 0.06 291.4)",
+      "note": "#D9D3FF --button-slight-2 라이트",
+      "group": "Brand"
+    },
+    {
+      "name": "bg-1",
+      "value": "oklch(1 0 0)",
+      "note": "#FFFFFF --background-1",
+      "group": "Background (라이트)"
+    },
+    {
+      "name": "bg-2",
+      "value": "oklch(0.976 0 0)",
+      "note": "#F7F7F7 --background-2",
+      "group": "Background (라이트)"
+    },
+    {
+      "name": "bg-3",
+      "value": "oklch(0.949 0 0)",
+      "note": "#EEEEEE --background-3",
+      "group": "Background (라이트)"
+    },
+    {
+      "name": "bg-4",
+      "value": "oklch(0.913 0 0)",
+      "note": "#E2E2E2 --background-4",
+      "group": "Background (라이트)"
+    },
+    {
+      "name": "bg-toast",
+      "value": "oklch(0 0 0)",
+      "note": "#000000 --background-toast",
+      "group": "Background (라이트)"
+    },
+    {
+      "name": "dark-bg-1",
+      "value": "oklch(0.182 0 0)",
+      "note": "#121212 --background-1",
+      "group": "Background (다크)"
+    },
+    {
+      "name": "dark-bg-2",
+      "value": "oklch(0 0 0)",
+      "note": "#000000 --background-2",
+      "group": "Background (다크)"
+    },
+    {
+      "name": "dark-bg-3",
+      "value": "oklch(0.317 0 0)",
+      "note": "#323232 --background-3",
+      "group": "Background (다크)"
+    },
+    {
+      "name": "dark-bg-4",
+      "value": "oklch(0.431 0 0)",
+      "note": "#505050 --background-4",
+      "group": "Background (다크)"
+    },
+    {
+      "name": "dark-bg-toast",
+      "value": "oklch(0.272 0.033 281.5)",
+      "note": "#242537 --background-toast",
+      "group": "Background (다크)"
+    },
+    {
+      "name": "fg-1",
+      "value": "oklch(0.182 0 0)",
+      "note": "#121212 --foreground-1",
+      "group": "Foreground (라이트)"
+    },
+    {
+      "name": "fg-2",
+      "value": "oklch(0.431 0 0)",
+      "note": "#505050 --foreground-2",
+      "group": "Foreground (라이트)"
+    },
+    {
+      "name": "fg-3",
+      "value": "oklch(0.633 0 0)",
+      "note": "#8A8A8A --foreground-3",
+      "group": "Foreground (라이트)"
+    },
+    {
+      "name": "fg-4",
+      "value": "oklch(0.858 0 0)",
+      "note": "#D0D0D0 --foreground-4·--foreground-disable",
+      "group": "Foreground (라이트)"
+    },
+    {
+      "name": "dark-fg-1",
+      "value": "oklch(0.976 0 0)",
+      "note": "#F7F7F7 --foreground-1",
+      "group": "Foreground (다크)"
+    },
+    {
+      "name": "dark-fg-2",
+      "value": "oklch(0.913 0 0)",
+      "note": "#E2E2E2 --foreground-2",
+      "group": "Foreground (다크)"
+    },
+    {
+      "name": "dark-fg-3",
+      "value": "oklch(0.741 0 0)",
+      "note": "#ABABAB --foreground-3",
+      "group": "Foreground (다크)"
+    },
+    {
+      "name": "dark-fg-4",
+      "value": "oklch(0.5 0 0)",
+      "note": "#636363 --foreground-4·--foreground-disable",
+      "group": "Foreground (다크)"
+    },
+    {
+      "name": "border-1",
+      "value": "oklch(0.949 0 0)",
+      "note": "#EEEEEE --border-1 라이트",
+      "group": "Border"
+    },
+    {
+      "name": "border-2",
+      "value": "oklch(0.913 0 0)",
+      "note": "#E2E2E2 --border-2 라이트",
+      "group": "Border"
+    },
+    {
+      "name": "dark-border-1",
+      "value": "oklch(0.317 0 0)",
+      "note": "#323232 --border-1 다크",
+      "group": "Border"
+    },
+    {
+      "name": "dark-border-2",
+      "value": "oklch(0.431 0 0)",
+      "note": "#505050 --border-2 다크",
+      "group": "Border"
+    },
+    {
+      "name": "button-disable",
+      "value": "oklch(0.949 0 0)",
+      "note": "#EEEEEE --button-disable 라이트",
+      "group": "Button / State"
+    },
+    {
+      "name": "dark-button-slight",
+      "value": "oklch(0.317 0 0)",
+      "note": "#323232 --button-slight-1·--button-disable 다크",
+      "group": "Button / State"
+    },
+    {
+      "name": "button-purple-gray",
+      "value": "oklch(0.228 0.029 277.9)",
+      "note": "#191B2A --button-purple-gray 라이트",
+      "group": "Button / State"
+    },
+    {
+      "name": "dark-button-purple-gray",
+      "value": "oklch(0.272 0.033 281.5)",
+      "note": "#242537 --button-purple-gray 다크",
+      "group": "Button / State"
+    },
+    {
+      "name": "badge-red",
+      "value": "oklch(0.631 0.254 28.8)",
+      "note": "#FF1010 UP 뱃지 배경·텍스트형 글자",
+      "group": "Button / State"
+    },
+    {
+      "name": "badge-red-weak",
+      "value": "oklch(0.952 0.024 8.2)",
+      "note": "#FFE9EC 텍스트형 UP 칩 배경",
+      "group": "Button / State"
+    },
+    {
+      "name": "white",
+      "value": "oklch(1 0 0)",
+      "note": "#FFFFFF 보라 면 위 고정 흰 글자",
+      "group": "Button / State"
+    }
+  ],
+  "typography": [
+    {
+      "name": "heading-32",
+      "size": "32px",
+      "weight": 700,
+      "lineHeight": "48px",
+      "tracking": "0em"
+    },
+    {
+      "name": "heading-24",
+      "size": "24px",
+      "weight": 700,
+      "lineHeight": "36px",
+      "tracking": "0em"
+    },
+    {
+      "name": "title-16",
+      "size": "16px",
+      "weight": 700,
+      "lineHeight": "24px",
+      "tracking": "0em"
+    },
+    {
+      "name": "body-18",
+      "size": "18px",
+      "weight": 500,
+      "lineHeight": "27px",
+      "tracking": "0em"
+    },
+    {
+      "name": "body-16",
+      "size": "16px",
+      "weight": 400,
+      "lineHeight": "24px",
+      "tracking": "0em"
+    },
+    {
+      "name": "label-14",
+      "size": "14px",
+      "weight": 700,
+      "lineHeight": "21px",
+      "tracking": "0em"
+    },
+    {
+      "name": "input-14",
+      "size": "14px",
+      "weight": 600,
+      "lineHeight": "21px",
+      "tracking": "0em"
+    },
+    {
+      "name": "caption-12",
+      "size": "12px",
+      "weight": 700,
+      "lineHeight": "18px",
+      "tracking": "0em"
+    },
+    {
+      "name": "caption-10",
+      "size": "10px",
+      "weight": 700,
+      "lineHeight": "15px",
+      "tracking": "0em"
+    }
+  ],
+  "spacing": [
+    {
+      "name": "space-8",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "space-12",
+      "value": "12px",
+      "px": 12
+    },
+    {
+      "name": "space-16",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "space-24",
+      "value": "24px",
+      "px": 24
+    },
+    {
+      "name": "space-40",
+      "value": "40px",
+      "px": 40
+    }
+  ],
+  "radius": [
+    {
+      "name": "radius-xs",
+      "value": "3px",
+      "px": 3
+    },
+    {
+      "name": "radius-sm",
+      "value": "4px",
+      "px": 4
+    },
+    {
+      "name": "radius-md",
+      "value": "8px",
+      "px": 8
+    },
+    {
+      "name": "radius-lg",
+      "value": "16px",
+      "px": 16
+    },
+    {
+      "name": "radius-pill",
+      "value": "9999px",
+      "px": 9999
+    }
+  ]
+}
