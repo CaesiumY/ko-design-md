@@ -294,8 +294,6 @@
       --home-sub: var(--bs-legacy-gray-200);
       --home-meta: var(--bs-legacy-gray-400);
       --home-row: var(--bs-legacy-gray-100);
-      --wm-plate: transparent;
-      --wm-pad: 0px;
 
       /* 런타임 덮어쓰기 */
       --background: var(--bs-background-white);
@@ -332,10 +330,7 @@
       clip: rect(0 0 0 0); white-space: nowrap; margin: -1px; padding: 0; border: 0;
     }
     .wrap { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-    .wm-box {
-      display: inline-flex; align-items: center; max-width: 100%;
-      background: var(--wm-plate); padding: var(--wm-pad); border-radius: var(--bs-xsmall);
-    }
+    .wm-box { display: inline-flex; align-items: center; max-width: 100%; }
     .wm-box img { display: block; width: auto; max-width: 100%; }
 
     /* ── hero ── */
@@ -853,8 +848,6 @@
       --bs-legacy-gray-200: oklch(0.930 0.007 260.7);
       --bs-legacy-gray-400: oklch(0.718 0.018 267.7);
       --bs-legacy-gray-550: oklch(0.590 0.024 259.2);
-      --wm-plate: var(--bs-static-white);
-      --wm-pad: 6px 10px;
     }
   </style>
 </head>
@@ -864,7 +857,7 @@
   <header class="hero">
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <div class="lockup wm-box"><img src="/logos/banksalad-logotype.png" alt="뱅크샐러드" height="30"></div>
+        <div class="lockup wm-box"><img src="/logos/banksalad-logotype.png" alt="뱅크샐러드" height="30"><template data-theme-variant="dark"><img src="/logos/banksalad-logotype-dark.png" alt="뱅크샐러드" height="30"></template></div>
         <p class="hero-kicker">자산관리 · 금융상품 비교 · 건강 자산</p>
         <h1>금융을 넘어<br>건강 자산까지</h1>
         <p class="hero-tagline">카드 · 대출 · 예적금에서 무료 건강 검사 · 건강 보험 · 자동차보험까지</p>
@@ -1167,7 +1160,7 @@
           <div class="phone">
             <div class="screen">
               <div class="ph-head">
-                <span class="wm-box"><img src="/logos/banksalad-logotype.png" alt="뱅크샐러드" height="23"></span>
+                <span class="wm-box"><img src="/logos/banksalad-logotype.png" alt="뱅크샐러드" height="23"><template data-theme-variant="dark"><img src="/logos/banksalad-logotype-dark.png" alt="뱅크샐러드" height="23"></template></span>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
               </div>
               <div class="ln-main">
@@ -1199,7 +1192,7 @@
           <div class="phone">
             <div class="screen">
               <div class="ph-head">
-                <span class="wm-box"><img src="/logos/banksalad-logotype.png" alt="뱅크샐러드" height="23"></span>
+                <span class="wm-box"><img src="/logos/banksalad-logotype.png" alt="뱅크샐러드" height="23"><template data-theme-variant="dark"><img src="/logos/banksalad-logotype-dark.png" alt="뱅크샐러드" height="23"></template></span>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
               </div>
               <div class="hl-conn"><span class="sq"></span><span class="t">보험 연결하고 맞춤 분석을 받아보세요</span><span class="go">연결하기 ›</span></div>
@@ -1280,7 +1273,7 @@
           <p class="catalog-dummy">더미 데이터 — Pick 카드 항목, 푸터 서비스 목록과 BEST 표기는 레이아웃 시연용이며 실제 뱅크샐러드 편성·순위가 아닙니다.</p>
           <div class="desk">
             <div class="hm-gnb">
-              <span class="wm-box"><img src="/logos/banksalad-logotype.png" alt="뱅크샐러드" height="23"></span>
+              <span class="wm-box"><img src="/logos/banksalad-logotype.png" alt="뱅크샐러드" height="23"><template data-theme-variant="dark"><img src="/logos/banksalad-logotype-dark.png" alt="뱅크샐러드" height="23"></template></span>
               <div class="hm-menu" aria-hidden="true"><span>카드</span><span>대출</span><span>예적금</span><span>무료 건강 검사</span><span>건강 보험</span><span>자동차보험</span><span>돈이 된다! 머니피드</span></div>
               <span class="hm-burger"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></span>
             </div>
@@ -1331,7 +1324,7 @@
               <div class="hm-foot-in">
                 <div class="hm-cols">
                   <div class="hm-col">
-                    <span class="wm-box"><img src="/logos/banksalad-logotype.png" alt="뱅크샐러드" height="30"></span>
+                    <span class="wm-box"><img src="/logos/banksalad-logotype.png" alt="뱅크샐러드" height="30"><template data-theme-variant="dark"><img src="/logos/banksalad-logotype-dark.png" alt="뱅크샐러드" height="30"></template></span>
                     <div class="stores"><span class="store">App Store</span><span class="store">Google Play</span></div>
                   </div>
                   <div class="hm-col">
