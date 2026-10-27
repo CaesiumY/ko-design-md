@@ -337,13 +337,13 @@
     },
     {
       "name": "number-indicator-bg",
-      "value": "oklch(0.000 0.000 0 / 30%)",
-      "note": "black 30%, 슬라이드 Number Indicator 알약 배경 [src:23] (#000000)"
+      "value": "oklch(0.000 0.000 0 / 0.30)",
+      "note": "black 30%, 슬라이드 Number Indicator 알약 배경 [src:23] (#0000004d)"
     },
     {
       "name": "overlay",
-      "value": "oklch(0.000 0.000 0 / 50%)",
-      "note": "black 50%, 다이얼로그 딤 오버레이 [src:12] (#000000)"
+      "value": "oklch(0.000 0.000 0 / 0.50)",
+      "note": "black 50%, 다이얼로그 딤 오버레이 [src:12] (#00000080)"
     },
     {
       "name": "positive",

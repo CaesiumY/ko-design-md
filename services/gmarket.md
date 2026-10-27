@@ -92,8 +92,8 @@ colors:
   border-tertiary: oklch(0.899 0.000 0)   # gray-300, 콘텐츠 배경 보더 (#E0E0E0)
   border-white: oklch(1.000 0.000 0)   # White, 썸네일 위 보더 (#FFFFFF)
   # Semantic — 검정 알파 표면 (라이트 전용, 다크 값 미발행)
-  number-indicator-bg: oklch(0.000 0.000 0 / 30%)   # black 30%, 슬라이드 Number Indicator 알약 배경 [src:23] (#000000)
-  overlay: oklch(0.000 0.000 0 / 50%)   # black 50%, 다이얼로그 딤 오버레이 [src:12] (#000000)
+  number-indicator-bg: oklch(0.000 0.000 0 / 0.30)   # black 30%, 슬라이드 Number Indicator 알약 배경 [src:23] (#0000004d)
+  overlay: oklch(0.000 0.000 0 / 0.50)   # black 50%, 다이얼로그 딤 오버레이 [src:12] (#00000080)
   # Semantic — status (각 10단계 중 500이 기준)
   positive: oklch(0.711 0.242 142)   # green-500, 쿠폰·사은품 혜택·활성화 텍스트
   informative: oklch(0.608 0.211 257)   # blue-500, 별점·공식 태그 신뢰
