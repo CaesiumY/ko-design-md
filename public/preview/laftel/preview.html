@@ -101,6 +101,7 @@
   .box .state { margin: 0 0 12px; font-size: 16px; line-height: 24px; font-weight: 700; color: var(--accent); }
   .box .manage { font-size: 18px; line-height: 27px; font-weight: 500; color: var(--ink-3); }
   .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 12px; }
+  .cta-stage { background: var(--hero-bg); border-radius: 4px; padding: 12px; }
   .tag-up { display: inline-flex; height: 20px; padding: 0 4px; border-radius: 4px; background: var(--lft-badge-red-weak); color: var(--lft-badge-red); font-size: 12px; line-height: 18px; font-weight: 700; align-items: center; }
 
   @media (max-width: 720px) {
@@ -138,7 +139,7 @@
 
 <header class="hdr">
   <div class="hdr-logo"><img src="/logos/laftel.png" alt="라프텔"><span>LAFTEL</span></div>
-  <nav class="hdr-nav" aria-label="상단 메뉴"><span class="is-on">태그검색</span><span>요일별 신작</span><span>멤버십</span><span>스토어</span><span>이벤트<i class="nbadge">N</i></span></nav>
+  <nav class="hdr-nav" aria-label="상단 메뉴"><span class="is-on">태그검색</span><span>요일별 신작</span><span>멤버십</span><span>스토어</span><span>이벤트</span><span>루프<i class="nbadge">N</i></span></nav>
   <div class="hdr-search">검색</div>
   <div class="hdr-ic">알림</div>
 </header>
@@ -177,7 +178,7 @@
     </div>
     <div class="box">
       <p class="cell-k">버튼과 배지</p>
-      <div class="row"><span class="btn btn-cta">보러가기</span><span class="btn btn-cta is-hover">hover</span></div>
+      <div class="row cta-stage"><span class="btn btn-cta">보러가기</span><span class="btn btn-cta is-hover">hover</span></div>
       <div class="row"><span class="btn btn-2">업로드 공지</span><span class="tag-up">UP</span><span class="nbadge">N</span></div>
       <div class="chips"><span class="chip is-on">활성</span><span class="chip">비활성</span></div>
     </div>

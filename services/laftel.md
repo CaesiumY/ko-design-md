@@ -142,7 +142,7 @@ components:
     height: 35.7px
   badge-up:
     backgroundColor: "{colors.badge-red}"
-    textColor: "{colors.dark-fg-1}"
+    textColor: "{colors.white}"
     rounded: "{rounded.radius-xs}"
     height: 17px
   badge-new:
@@ -207,7 +207,7 @@ radius도 토큰이 없고 스타일시트에 3·4·7·8·10·14·16·18·20px, 
 
 ### header
 
-높이 64px, 서브페이지는 `{colors.dark-bg-1}` 배경에 하단 1px `--border-1`이고 홈 최상단은 투명이다. 배경·그림자 전환은 `.4s`다. 항목은 태그검색·요일별 신작·멤버십·스토어·이벤트와 루프(N 뱃지)이다 [src:1].
+높이 64px, 서브페이지는 `{colors.dark-bg-1}` 배경에 하단 1px `--border-1`이고 홈 최상단은 투명이다. 배경·그림자 전환은 `.4s`다. 항목은 태그검색·요일별 신작·멤버십·스토어·이벤트·루프이고, N 뱃지는 루프에 붙는다 [src:1].
 
 ### nav-link
 
