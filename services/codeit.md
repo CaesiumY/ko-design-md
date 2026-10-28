@@ -401,7 +401,7 @@ docs는 시맨틱 25종이라 서술하나 표로 확보된 것은 22종(Text 8 
 
 이 중 번들이 팔레트 하나를 가리키는 역할은 frontmatter `colors:` 에 번들 표기의 참조 행으로도 실었다 — `background-primary: "{colors.light-gray-00}"` 와 그 다크 짝 `dark-background-primary` 식이다 [src:2]. `gray-100` 불투명도 램프를 거치는 텍스트·보더 역할은 참조 행으로 싣지 않고 아래 표에만 둔다 — 램프의 일곱 단계(80·60·50·30·15·10·05)는 `light-gray-100-opacity-80` 식 팔레트 토큰으로 `colors:` 에 선언돼 있다(00·100 단계는 뺐다). 역할을 그 토큰으로 가리키는 참조 행으로는 싣지 않는다. `txt-primary` 도 번들에서는 `gray-100` 이 아니라 그 램프의 100% 단계를 가리킨다 [src:2].
 
-**Text (8)** — 근거·용도는 [src:8], 실색 대입은 [src:2]. `{colors.light-gray-100}` / `{colors.dark-gray-100}` 위의 opacity 램프다. 단계 값은 frontmatter 의 `light-gray-100-opacity-*` · `dark-gray-100-opacity-*` 토큰에, 팔레트 단계와 리터럴의 값은 근거 칸이 가리키는 토큰에 있다.
+**Text (8)** — 근거·용도는 [src:8], 실색 대입은 [src:2]. `{colors.light-gray-100}` / `{colors.dark-gray-100}` 위의 opacity 램프다. 단계 값은 frontmatter 의 `light-gray-100-opacity-*` · `dark-gray-100-opacity-*` 토큰에, 100% 단계는 `light-gray-100` · `dark-gray-100` 값 그대로이고, 팔레트 단계와 리터럴의 값은 근거 칸이 가리키는 토큰에 있다.
 
 | Token | 근거 |
 | --- | --- |
