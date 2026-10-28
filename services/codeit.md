@@ -2,7 +2,7 @@
 name: 코드잇
 slug: codeit
 category: education
-last_updated: "2026-10-28"
+last_updated: "2026-10-29"
 created_at: "2026-07-16"
 lang: ko
 logo: https://getdesign.kr/logos/codeit.png
@@ -401,18 +401,18 @@ docs는 시맨틱 25종이라 서술하나 표로 확보된 것은 22종(Text 8 
 
 이 중 번들이 팔레트 하나를 가리키는 역할은 frontmatter `colors:` 에 번들 표기의 참조 행으로도 실었다 — `background-primary: "{colors.light-gray-00}"` 와 그 다크 짝 `dark-background-primary` 식이다 [src:2]. `gray-100` 불투명도 램프를 거치는 텍스트·보더 역할은 참조 행으로 싣지 않고 아래 표에만 둔다 — 램프의 일곱 단계(80·60·50·30·15·10·05)는 `light-gray-100-opacity-80` 식 팔레트 토큰으로 `colors:` 에 선언돼 있다(00·100 단계는 뺐다). 역할을 그 토큰으로 가리키는 참조 행은 아직 없다. `txt-primary` 도 번들에서는 `gray-100` 이 아니라 그 램프의 100% 단계를 가리킨다 [src:2].
 
-**Text (8)** — 근거·용도는 [src:8], 실색 대입은 [src:2]. `{colors.light-gray-100}` / `{colors.dark-gray-100}` 위의 opacity 램프다.
+**Text (8)** — 근거·용도는 [src:8], 실색 대입은 [src:2]. `{colors.light-gray-100}` / `{colors.dark-gray-100}` 위의 opacity 램프다. 단계 값은 frontmatter 의 `light-gray-100-opacity-*` · `dark-gray-100-opacity-*` 토큰에, 팔레트 단계와 리터럴의 값은 근거 칸이 가리키는 토큰에 있다.
 
-| Token | 근거 | Light | Dark |
-|---|---|---|---|
-| `txt-primary` | gray-100 @ 100% | `oklch(0.320 0.007 297)` | `oklch(0.976 0.001 286)` |
-| `txt-secondary` | gray-100 @ 80% | `oklch(0.320 0.007 297 / 80%)` | `oklch(0.976 0.001 286 / 80%)` |
-| `txt-tertiary` | gray-100 @ 60% | `oklch(0.320 0.007 297 / 60%)` | `oklch(0.976 0.001 286 / 60%)` |
-| `txt-caption` | gray-100 @ 50% | `oklch(0.320 0.007 297 / 50%)` | `oklch(0.976 0.001 286 / 50%)` |
-| `txt-disabled` | gray-100 @ 30% | `oklch(0.320 0.007 297 / 30%)` | `oklch(0.976 0.001 286 / 30%)` |
-| `txt-link` | 리터럴 | `oklch(0.666 0.107 203)` | `oklch(0.666 0.107 203)`(동일) |
-| `txt-purple-primary` | purple-80(L) / purple-20(D) | `oklch(0.490 0.261 296)` | `oklch(0.762 0.147 309)` |
-| `txt-purple-secondary` | purple-60(L) / purple-30(D) | `oklch(0.582 0.273 300)` | `oklch(0.714 0.191 308)` |
+| Token | 근거 |
+| --- | --- |
+| `txt-primary` | gray-100 @ 100% |
+| `txt-secondary` | gray-100 @ 80% |
+| `txt-tertiary` | gray-100 @ 60% |
+| `txt-caption` | gray-100 @ 50% |
+| `txt-disabled` | gray-100 @ 30% |
+| `txt-link` | 리터럴 `text-link` |
+| `txt-purple-primary` | purple-80(L) / purple-20(D) |
+| `txt-purple-secondary` | purple-60(L) / purple-30(D) |
 
 **Diff (4)** — 코드 비교 UI 전용. 시맨틱 25종 중 docs 텍스트와 번들 실측이 라이트·다크 4쌍 전부 일치하는 대조군이며, docs 정확도를 가늠하는 기준점이 된다 [src:8] [src:2].
 
@@ -427,32 +427,32 @@ docs는 시맨틱 25종이라 서술하나 표로 확보된 것은 22종(Text 8 
 
 **Background (5)** [src:8] [src:2]
 
-| Token | 근거 | Light | Dark |
-|---|---|---|---|
-| `bg-primary` | gray-00 | `oklch(1.000 0.000 0)` | `oklch(0.225 0.026 274)` |
-| `bg-secondary` | gray-05 | `oklch(0.988 0.000 0)` | `oklch(0.250 0.023 274)` |
-| `bg-tertiary` | gray-10 | `oklch(0.974 0.003 286)` | `oklch(0.276 0.026 275)` |
-| `bg-invert` | 리터럴(스케일 밖) | `oklch(0.154 0.019 263)` | `oklch(0.154 0.019 263)`(동일) |
-| `bg-purple-primary` | purple-05(L) / purple-opacity-15(D) | `oklch(0.958 0.028 313)` | `oklch(0.582 0.273 300 / 15%)` |
+| Token | 근거 |
+| --- | --- |
+| `bg-primary` | gray-00 |
+| `bg-secondary` | gray-05 |
+| `bg-tertiary` | gray-10 |
+| `bg-invert` | 리터럴 `background-invert`(스케일 밖) |
+| `bg-purple-primary` | purple-05(L) / purple-opacity-15(D) |
 
 purple 램프 자체는 테마 불변이지만 `bg-purple-primary`는 그렇지 않다 — 다크 번들이 이 역할을 불투명 스텝이 아니라 purple-60의 15% 불투명도로 다시 가리킨다 [src:2]. 번들에만 있는 짝 `background-purple-primary-invert`(docs 미기재)도 같은 방식이다: 라이트 purple-50(`oklch(0.622 0.249 302)`), 다크 `purple-opacity-90`(`oklch(0.582 0.273 300 / 90%)`) [src:2]. 이 토큰을 쓰는 곳은 Label의 invert-purple이다(아래 표).
 
 **Border (3 docs)** [src:8] [src:2]
 
-| Token | 근거 | Light | Dark | 비고 |
-|---|---|---|---|---|
-| `border-primary` | gray-100 | `oklch(0.320 0.007 297)` | `oklch(0.976 0.001 286)` | docs=번들 일치 |
-| `border-secondary` | gray-100 @ 15% | `oklch(0.320 0.007 297 / 15%)` | `oklch(0.976 0.001 286 / 15%)` | ⚠ docs는 20%, 번들 실배선 15% — 번들 채택 |
-| `border-tertiary` | gray-100 @ 10% | `oklch(0.320 0.007 297 / 10%)` | `oklch(0.976 0.001 286 / 10%)` | 일치 |
+| Token | 근거 | 비고 |
+| --- | --- | --- |
+| `border-primary` | gray-100 | docs=번들 일치 |
+| `border-secondary` | gray-100 @ 15% | ⚠ docs는 20%, 번들 실배선 15% — 번들 채택 |
+| `border-tertiary` | gray-100 @ 10% | 일치 |
 
 번들에만 존재하는 확장 Border 시맨틱(docs 미기재, 참고용) [src:2]: `border-primary-invert`(gray-00 참조), `border-secondary-invert`/`border-tertiary-invert`(gray-00 opacity 20%/10%), `border-purple-primary`(light purple-60 / dark purple-opacity-90), `border-purple-secondary`(light purple-30 / dark purple-opacity-70), `border-purple-tertiary`(light purple-10 / dark purple-opacity-50).
 
 **Status (2)** [src:8] [src:2]
 
-| Token | 근거 | Light | Dark | 비고 |
-|---|---|---|---|---|
-| `status-positive` | green-70 | `oklch(0.648 0.202 145)` | `oklch(0.892 0.145 145)` | ⚠ docs는 다크를 green-30이라 서술하나 번들은 양 테마 `var(--green-70)`만 참조 — 다크 실제 렌더값 채택 |
-| `status-negative` | 리터럴 | `oklch(0.561 0.216 20)` | `oklch(0.561 0.216 20)`(동일) | 일치 |
+| Token | 근거 | 비고 |
+| --- | --- | --- |
+| `status-positive` | green-70 | ⚠ docs는 다크를 green-30이라 서술하나 번들은 양 테마 `var(--green-70)`만 참조 — 다크 실제 렌더값 채택 |
+| `status-negative` | 리터럴 `status-negative` | 일치 |
 
 기타: New 아이콘 권장색 `pink-60`(라이트 `#eb008d` ≈ `oklch(0.614 0.253 355)` / 다크 `#ffa6db` ≈ `oklch(0.828 0.123 344)`, hex는 docs 미공개·번들 실측)[src:13] [src:2].
 
