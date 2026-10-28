@@ -122,3 +122,7 @@ Google Labs 의 DESIGN.md 명세를 **공식 린터로** 판정한다. 명세를
     표 **첫 열의 백틱 스팬**만 본다 — 역할을 백틱 없이 쓰거나 첫 열 밖에 두면 대조가 조용히 빠진다.
   - 이 형식 이전부터 있던 참조 행(toss · vapor-ui · likelion · teamsparta · baemin)은 이 규칙의 대상이 아니다.
     이 형식에 맞추려고 고치지 말 것.
+  - **greeting 은 다크 짝을 아직 싣지 않는다**(#574). 다크 팔레트(`dark-gray0`…)는 frontmatter 에 있지만 역할
+    참조 행은 라이트 대응만 싣는다 — `role-reference-rows.test.ts` 의 greeting 대조가 라이트 대응만 맞추도록
+    짜여 있어, 다크 짝을 실으려면 그 대조를 함께 고쳐야 한다. 그때까지 다크 대응은 본문 역할 표(다크에서 다른
+    단계를 고르는 `baseBackground` 의 `(L)` / `(D)`)와 "같은 단계의 `dark-` 짝" 서술이 나른다.
