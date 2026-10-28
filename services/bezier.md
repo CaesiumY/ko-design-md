@@ -3,7 +3,7 @@ name: 채널톡
 design_system_name: Bezier Design System
 slug: bezier
 category: developer
-last_updated: "2026-08-22"
+last_updated: "2026-10-28"
 created_at: "2026-06-03"
 lang: ko
 logo: https://getdesign.kr/logos/bezier.png
@@ -145,7 +145,7 @@ Bezier는 채널톡의 사내 제품 UI를 외부에 그대로 공개한 드문 
 
 ## Colors
 
-> **대조 결과(2026-07-29).** 이 절의 색 토큰 43개를 published `@channel.io/bezier-tokens` 0.6.0의 `dist/beta/css/styles.css`와 전수 비교했고 **43개 전부 ΔE ≤ 0.02**로 일치했다 — 비공개 번들에서 나온 값이지만 공개 배포물로 재현된다 [src:3]. 다만 **tier를 구분해 읽어야 한다**: 이 절의 색은 beta tier이고, 아래 Typography·Rounded·Spacing 절의 값은 기본(stable) tier다. 같은 토큰 이름이 tier마다 다른 값을 가진다 — `grey-900`이 stable에서는 `#242428` ≈ `oklch(0.262 0.007 286)`, beta에서는 `#1d1d20` ≈ `oklch(0.232 0.006 286)`이다. beta에는 stable에 없는 `grey-25/300/400/600/650/750/950`이 있고, 반대로 `radius-44`·`radius-42-p`는 stable에만 있다.
+> **대조 결과·서술 정정(2026-10-28).** 이 절의 색 토큰 43개를 published `@channel.io/bezier-tokens` 0.6.0의 `dist/beta/css/styles.css`와 전수 비교했고 **43개 전부 ΔE ≤ 0.02**로 일치했다 — 비공개 번들에서 나온 값이지만 공개 배포물로 재현된다 [src:3]. 같은 파일과 대조해 아래 「Accent global hues」의 틴트 서술은 고쳤다 — 전에는 `fill-accent-blue`를 `blue-400`의 20%로 적었으나, 상류의 기본 `fill-accent-{hue}`는 10%(다크 `{hue}-300-18`)이고 20%는 `fill-accent-{hue}-heavy`(다크 `{hue}-300-30`)다 [src:3]. 다만 **tier를 구분해 읽어야 한다**: 이 절의 색은 beta tier이고, 아래 Typography·Rounded·Spacing 절의 값은 기본(stable) tier다. 같은 토큰 이름이 tier마다 다른 값을 가진다 — `grey-900`이 stable에서는 `#242428` ≈ `oklch(0.262 0.007 286)`, beta에서는 `#1d1d20` ≈ `oklch(0.232 0.006 286)`이다. beta에는 stable에 없는 `grey-25/300/400/600/650/750/950`이 있고, 반대로 `radius-44`·`radius-42-p`는 stable에만 있다.
 
 Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3계층 토큰 구조다 [src:3][src:2]. 글로벌은 원시 색값이고, 시맨틱(`--bg-*`, `--txt-*`, `--color-*`)은 테마별로 다른 글로벌을 참조한다 [src:2]. 특징은 navy·purple·pink·red·orange·yellow·olive·green·teal·cobalt·blue 11개 hue를 각각 300/400/500 명도 + 알파 변형으로 갖춘 무지개 액센트 팔레트다 [src:3][src:4].
 
@@ -153,7 +153,7 @@ Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3
 
 ### Accent global hues (300/400/500 core)
 
-액센트는 한 hue가 **연·진 한 쌍**으로 작동한다 — **20% 틴트를 배경 fill**(`fill-accent-blue` = `blue-400`의 20% 알파)로, **솔리드 hue를 텍스트·아이콘**(`text/icon-accent-*`)으로 쓴다. 그래서 배너·태그·상태 칩이 "연한 틴트 위 진한 동색 글자/아이콘"으로 읽힌다.
+액센트는 한 hue가 **연·진 한 쌍**으로 작동한다 — **옅은 틴트를 배경 fill**로, **솔리드 hue를 텍스트·아이콘**(`text/icon-accent-*`)으로 쓴다. 틴트는 두 단계다 — 기본 `fill-accent-{hue}`는 라이트에서 `{hue}-400`의 10% 알파(다크에서는 `{hue}-300-18` 토큰), 한 단계 진한 `fill-accent-{hue}-heavy`는 20%(다크 `{hue}-300-30`)다 [src:3]. 그래서 배너·태그·상태 칩이 "연한 틴트 위 진한 동색 글자/아이콘"으로 읽힌다. 다만 다크 쪽 반투명 토큰은 blue·green·red·navy 네 hue에서 기준색이 불투명 300과 달라(blue는 300보다 짙다), 300 값에 알파를 곱해 다시 만들면 상류와 어긋난다 [src:3].
 
 ### Semantic (라이트/다크 분리)
 
