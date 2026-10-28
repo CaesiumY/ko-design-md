@@ -3,7 +3,7 @@ name: 채널톡
 design_system_name: Bezier Design System
 slug: bezier
 category: developer
-last_updated: "2026-10-28"
+last_updated: "2026-10-29"
 created_at: "2026-06-03"
 lang: ko
 logo: https://getdesign.kr/logos/bezier.png

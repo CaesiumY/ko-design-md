@@ -3,7 +3,7 @@ name: 지마켓
 design_system_name: Gmarket Design System
 slug: gmarket
 category: commerce
-last_updated: "2026-10-28"
+last_updated: "2026-10-29"
 created_at: "2026-05-23"
 lang: ko
 logo: https://getdesign.kr/logos/gmarket.png
