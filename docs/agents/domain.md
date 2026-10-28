@@ -22,7 +22,7 @@
 └── src/
 ```
 
-**카탈로그 정책과 검증 규칙의 정본은 `CLAUDE.md`, 항목 작성 규격의 정본은 `.claude/skills/design-md/references/stitch-format.md` 다.** `GLOSSARY.md` 는 용어집, `docs/adr/` 는 결정 기록이다 — `CLAUDE.md` 의 규칙을 그리로 복제하지 말 것. 이 저장소는 같은 규칙이 두 곳에 적혀 서로 어긋나는 일을 여러 번 겪었다.
+**카탈로그 정책과 검증 규칙의 정본은 `CLAUDE.md` 와 `.claude/rules/`(경로별 규칙 파일), 항목 작성 규격의 정본은 `.claude/skills/design-md/references/stitch-format.md` 다.** `GLOSSARY.md` 는 용어집, `docs/adr/` 는 결정 기록이다 — `CLAUDE.md` 의 규칙을 그리로 복제하지 말 것. 이 저장소는 같은 규칙이 두 곳에 적혀 서로 어긋나는 일을 여러 번 겪었다.
 
 ## 용어집의 어휘를 쓴다
 

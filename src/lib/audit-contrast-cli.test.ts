@@ -71,7 +71,7 @@ describe("audit-contrast CLI — arguments", () => {
     "accepts the widths the repository validates at",
     { timeout: CLI_TIMEOUT },
     () => {
-      // 375 / 768 / 976 / 1440 — the preview widths CLAUDE.md fixes, 976 being
+      // 375 / 768 / 976 / 1440 — the preview widths .claude/rules/preview.md fixes, 976 being
       // the detail page's embed width. Parsing them must not be an error.
       const r = run(["--widths", "375,768,976,1440", "--slug", "not-a-brand"])
       expect(r.out).not.toContain("width")

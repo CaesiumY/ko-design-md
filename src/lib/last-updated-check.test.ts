@@ -156,7 +156,7 @@ describe("checkLastUpdated", () => {
 
     it("warns from two days past today — the slack is exactly one day", () => {
       // Pins the boundary. Widening the slack (two days, a month) would keep
-      // every other case green while CLAUDE.md's "two or more days" went false.
+      // every other case green while the two-day threshold went false.
       const r = checkLastUpdated({
         file: FILE,
         raw: doc("2026-09-30"),

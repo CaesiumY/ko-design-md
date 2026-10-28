@@ -122,7 +122,7 @@ function expectRowsToMatch(
     ).toBe(true)
   }
   // A table role under a spec colour-role name stays in the table only
-  // (CLAUDE.md), so it is dropped from what the rows must match. Left in, it
+  // (.claude/rules/catalog.md), so it is dropped from what the rows must match. Left in, it
   // would demand the very row refused below.
   const owed = [...expected].filter(([key]) => !SPEC_COLOR_ROLES.has(bare(key)))
   // A table with nothing left to compare would make the assertions vacuous.
@@ -301,7 +301,7 @@ describe("role reference rows agree with the body role tables", () => {
     // tables. Older reference rows elsewhere (toss's role chains, vapor-ui's
     // aliases) name no table role and are not caught. A role table written
     // without backticks, or with the role outside the first column, is not
-    // seen either — CLAUDE.md states that shape.
+    // seen either — .claude/rules/catalog.md states that shape.
     const docsName = (key: string): string =>
       bare(key)
         .replace(/^text-/, "txt-")

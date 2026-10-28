@@ -200,7 +200,7 @@ Bezier는 채널톡의 사내 제품 UI를 외부에 그대로 공개한 드문 
 
 ## Colors
 
-> **대조 결과(2026-10-28).** 이 절의 색 토큰 94개는 published `@channel.io/bezier-tokens` 0.6.0의 `dist/beta/css/styles.css`에서 나온다 [src:3]. 비공개 핸드오프 번들에서 온 43개도 이 배포물과 **전부 ΔE ≤ 0.02**로 일치한다 — 번들 값이 공개 배포물로 재현된다. 상류 원시값 블록에서 직접 옮긴 51개(accent 틴트 `{hue}-400-10/20`·`{hue}-300-18/30` 44개와 `white-8/20/40/60/80`·`black-5/15` 7개)는 상류 이름을 그대로 쓰고 알파는 이름이 말하는 백분율로 적었으며(`white-8` 은 `/ 0.08`), 줄 끝에 상류 hex를 적어 `audit:oklch`가 줄마다 대조한다(상류가 `#fff3`처럼 줄여 쓴 값은 8자리로 풀어 적었다). 다만 **tier를 구분해 읽어야 한다**: 이 절의 색은 beta tier이고, 아래 Typography·Rounded·Spacing 절의 값은 기본(stable) tier다. 같은 토큰 이름이 tier마다 다른 값을 가진다 — `grey-900`이 stable에서는 `#242428` ≈ `oklch(0.262 0.007 286)`, beta에서는 `#1d1d20` ≈ `oklch(0.232 0.006 286)`이다. beta에는 stable에 없는 `grey-25/300/400/600/650/750/950`이 있고, 반대로 `radius-44`·`radius-42-p`는 stable에만 있다.
+> **대조 결과·서술 정정(2026-10-28).** 이 절의 색 토큰 94개는 published `@channel.io/bezier-tokens` 0.6.0의 `dist/beta/css/styles.css`에서 나온다 [src:3]. 비공개 핸드오프 번들에서 온 43개도 이 배포물과 **전부 ΔE ≤ 0.02**로 일치한다 — 번들 값이 공개 배포물로 재현된다. 상류 원시값 블록에서 직접 옮긴 51개(accent 틴트 `{hue}-400-10/20`·`{hue}-300-18/30` 44개와 `white-8/20/40/60/80`·`black-5/15` 7개)는 상류 이름을 그대로 쓰고 알파는 이름이 말하는 백분율로 적었으며(`white-8` 은 `/ 0.08`), 줄 끝에 상류 hex를 적어 `audit:oklch`가 줄마다 대조한다(상류가 `#fff3`처럼 줄여 쓴 값은 8자리로 풀어 적었다). 같은 파일과 대조해 아래 「Accent global hues」의 틴트 서술을 상류 이름에 맞췄다 — 기본 `fill-accent-{hue}`는 10%(다크 `{hue}-300-18`)이고 20%는 `fill-accent-{hue}-heavy`(다크 `{hue}-300-30`)다 [src:3]. 다만 **tier를 구분해 읽어야 한다**: 이 절의 색은 beta tier이고, 아래 Typography·Rounded·Spacing 절의 값은 기본(stable) tier다. 같은 토큰 이름이 tier마다 다른 값을 가진다 — `grey-900`이 stable에서는 `#242428` ≈ `oklch(0.262 0.007 286)`, beta에서는 `#1d1d20` ≈ `oklch(0.232 0.006 286)`이다. beta에는 stable에 없는 `grey-25/300/400/600/650/750/950`이 있고, 반대로 `radius-44`·`radius-42-p`는 stable에만 있다.
 
 Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3계층 토큰 구조다 [src:3][src:2]. 글로벌은 원시 색값이고, 시맨틱(`--bg-*`, `--txt-*`, `--color-*`)은 테마별로 다른 글로벌을 참조한다 [src:2]. 특징은 navy·purple·pink·red·orange·yellow·olive·green·teal·cobalt·blue 11개 hue를 각각 300/400/500 명도 + 알파 변형으로 갖춘 무지개 액센트 팔레트다 [src:3][src:4].
 
@@ -208,7 +208,7 @@ Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3
 
 ### Accent global hues (300/400/500 core)
 
-액센트는 한 hue가 **연·진 한 쌍**으로 작동한다 — **알파 틴트를 배경 fill**(`fill-accent-blue` = 라이트 `{colors.blue-400-10}`(10%) · 다크 `{colors.blue-300-18}`, 한 단계 진한 `fill-accent-blue-heavy` = 라이트 `{colors.blue-400-20}`(20%) · 다크 `{colors.blue-300-30}`)로 [src:3], **솔리드 hue를 텍스트·아이콘**(`text/icon-accent-*`)으로 쓴다. 그래서 배너·태그·상태 칩이 "연한 틴트 위 진한 동색 글자/아이콘"으로 읽힌다.
+액센트는 한 hue가 **연·진 한 쌍**으로 작동한다 — **옅은 틴트를 배경 fill**로, **솔리드 hue를 텍스트·아이콘**(`text/icon-accent-*`)으로 쓴다. 틴트는 두 단계다 — 기본 `fill-accent-{hue}`는 라이트 `{hue}-400-10`(10%) · 다크 `{hue}-300-18`, 한 단계 진한 `fill-accent-{hue}-heavy`는 라이트 `{hue}-400-20`(20%) · 다크 `{hue}-300-30`이다(blue 는 `{colors.blue-400-10}` · `{colors.blue-300-18}` · `{colors.blue-400-20}` · `{colors.blue-300-30}`) [src:3]. 그래서 배너·태그·상태 칩이 "연한 틴트 위 진한 동색 글자/아이콘"으로 읽힌다. 다만 다크 쪽 반투명 토큰은 blue·green·red·navy 네 hue에서 기준색이 불투명 300과 달라(blue는 300보다 짙다), 300 값에 알파를 곱해 다시 만들면 상류와 어긋난다 — 그래서 이 토큰들은 상류 값 그대로 실려 있다 [src:3].
 
 ### Semantic (라이트/다크 분리)
 
