@@ -3,7 +3,7 @@ name: 클래스101
 design_system_name: Vibrant
 slug: class101
 category: education
-last_updated: "2026-10-28"
+last_updated: "2026-10-29"
 created_at: "2026-07-04"
 lang: ko
 logo: https://getdesign.kr/logos/class101.png
@@ -208,32 +208,7 @@ VDS 색 체계는 92개 시맨틱 토큰이 라이트/다크 값 쌍으로 정�
 
 구조 원칙은 세 가지다. (1) 강조는 primary 오렌지 하나로 수렴하고, 라이트/다크 어디서든 같은 값을 유지한다 — 다크 캔버스에서도 버튼이 같은 오렌지로 렌더된다 [src:2][src:3][src:9]. (2) 상태는 informative/error/success/warning 4색이 담당하며, 각자 옅은 container 틴트를 동반한다 [src:2]. (3) 텍스트 위계는 `onView1→onView2→onView3` 3단으로 토큰화되어 "항상 onView1" 식으로 컴포넌트 규칙에 직접 인용된다 [src:2][src:32].
 
-다크 모드는 별도 팔레트가 아니라 같은 토큰명의 값 오버라이드다. `primary`·`onPrimary`·`informative`·`error`·`success`·`warning`·`onWarning`과 확장 팔레트의 `orangeVibrant`·`blueVibrant`·`magentaVibrant`는 두 모드에서 동일값을 유지하고, 나머지는 아래처럼 반전된다 [src:3]. 이 값들은 frontmatter 에도 라이트 토큰과 같은 이름에 `dark-` 를 붙인 토큰으로 실려 있다 — 아래 표의 값과 `dark-violetVibrant`·`dark-orangeMuted`. 글래스 표면·덮개·상태 글자·윤곽선(`surfaceThin`·`overlay`·`onViewError`·`outlineError` 등)은 라이트·다크 짝으로 이 표 밖에 실려 있다 [src:3].
-
-| token                | 다크 값 (OKLCH)          | 원본 hex    |
-| -------------------- | ------------------------ | ----------- |
-| primaryContainer     | `oklch(0.187 0.025 55)`  | `#1c1008`   |
-| onPrimaryContainer   | `oklch(0.716 0.186 43)`  | `#ff7430`   |
-| informativeContainer | `oklch(0.199 0.045 270)` | `#0e142a`   |
-| errorContainer       | `oklch(0.187 0.034 36)`  | `#200d08`   |
-| successContainer     | `oklch(0.171 0.027 149)` | `#071309`   |
-| warningContainer     | `oklch(0.192 0.023 78)`  | `#1a1308`   |
-| background           | `oklch(0.154 0 0)`       | `#0c0c0c`   |
-| surface1             | `oklch(1 0 0 / 5%)`      | `#ffffff0d` |
-| surface2             | `oklch(0.205 0 0)`       | `#171717`   |
-| surface3             | `oklch(0 0 0)`           | `#000000`   |
-| surface4             | `oklch(0.471 0 0)`       | `#5b5b5b`   |
-| inverseSurface       | `oklch(0.964 0 0)`       | `#f3f3f3`   |
-| onInverseSurface     | `oklch(0.154 0 0)`       | `#0c0c0c`   |
-| disable              | `oklch(1 0 0 / 15%)`     | `#ffffff26` |
-| outline1             | `oklch(1 0 0 / 8%)`      | `#ffffff14` |
-| outline2             | `oklch(1 0 0 / 15%)`     | `#ffffff26` |
-| outlineNeutral       | `oklch(0.964 0 0)`       | `#f3f3f3`   |
-| onView1              | `oklch(0.964 0 0)`       | `#f3f3f3`   |
-| onView2              | `oklch(0.964 0 0 / 65%)` | `#f3f3f3a6` |
-| onView3              | `oklch(0.559 0 0)`       | `#747474`   |
-| onViewPrimary        | `oklch(0.716 0.186 43)`  | `#ff7430`   |
-| dim                  | `oklch(0 0 0 / 80%)`     | `#000000cc` |
+다크 모드는 별도 팔레트가 아니라 같은 토큰명의 값 오버라이드다. `primary`·`onPrimary`·`informative`·`error`·`success`·`warning`·`onWarning`과 확장 팔레트의 `orangeVibrant`·`blueVibrant`·`magentaVibrant`는 두 모드에서 동일값을 유지하고, 나머지는 다크에서 값이 바뀐다 [src:3]. 다크 값은 frontmatter 에 라이트 토큰과 같은 이름에 `dark-` 를 붙인 토큰으로 실려 있다 — 컨테이너·표면·윤곽선·글자 위계(`dark-primaryContainer`·`dark-surface2`·`dark-outline1`·`dark-onView3` 등)와 `dark-violetVibrant`·`dark-orangeMuted`, 그리고 글래스 표면·덮개·상태 글자·윤곽선(`surfaceThin`·`overlay`·`onViewError`·`outlineError` 등)의 다크 짝이다 [src:3].
 
 시맨틱 사전과 별개로, blue/green/magenta/orange/red/violet/yellow 7계열이 `~Vibrant / ~Contrast / ~Soft / ~Muted / ~Inverse` 변형으로 패키지에 정의된 유채색 확장 팔레트가 있다 — 배지·일러스트용 보조 악센트다 [src:3].
 
