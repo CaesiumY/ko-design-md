@@ -6,8 +6,8 @@ import { findKey, readFrontmatter } from "./frontmatter"
 import { splitFrontmatter } from "./frontmatter-fence"
 
 // The entries in CASES below publish a semantic role layer twice (#435): as a
-// Markdown table in `## Colors` — the reader's copy, carrying `[src:N]` and,
-// for greeting, the dark values — and as quoted reference rows in frontmatter
+// Markdown table in `## Colors` — the reader's copy, carrying `[src:N]` — and
+// as quoted reference rows in frontmatter
 // `colors:` (`bg-brand-solid: "{colors.carrot-600}"`), which is what standard
 // DESIGN.md tooling reads. Nothing else compares the two. token-extractor skips
 // reference rows, so `tokens:check` cannot see them, and the spec linter only

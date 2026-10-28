@@ -3,7 +3,7 @@ name: 그리팅
 design_system_name: Doodlin UI
 slug: greeting
 category: career
-last_updated: "2026-10-28"
+last_updated: "2026-10-29"
 created_at: "2026-07-26"
 lang: ko
 logo: https://getdesign.kr/logos/greeting.svg
@@ -302,7 +302,7 @@ elevation:
 
 ## Colors
 
-> **다크 팔레트 수록(2026-10-28).** frontmatter 의 라이트 팔레트 토큰 65개(gray 13 · neutral 9 · 유채색 43)마다 `dark-` 짝을 실었다. 값은 npm 배포 tarball 0.0.76 의 다크 팔레트 객체 `DARK_PALETTE` 에서 hex 를 그대로 옮겨 OKLCH 로 바꿨다 [src:7]. 본문 표에 이미 다크 값이 있던 28개(gray 거울 13 · neutral 9 · `blue500` · `blue600` · `green500` · `gold500` · `orange500` · `red400`)는 배포본과 모두 같았다. 역할→팔레트 대응 28개는 같은 tarball 의 `LIGHT_SEMANTIC` · `DARK_SEMANTIC` 과 맞췄고, 다크에서 다른 단계를 고르는 역할은 `baseBackground`(`gray25`) 하나다 [src:7].
+> **다크 팔레트 수록(2026-10-28).** frontmatter 의 라이트 팔레트 토큰 65개(gray 13 · neutral 9 · 유채색 43)마다 `dark-` 짝을 실었다. 값은 npm 배포 tarball 0.0.76 의 다크 팔레트 객체 `DARK_PALETTE` 에서 hex 를 그대로 옮겨 OKLCH 로 바꿨다 [src:7]. 역할→팔레트 대응 28개는 같은 tarball 의 `LIGHT_SEMANTIC` · `DARK_SEMANTIC` 과 맞췄고, 다크에서 다른 단계를 고르는 역할은 `baseBackground`(`gray25`) 하나다 [src:7].
 
 구조는 **Palette(원시) → Semantic(의미 별칭) 2층 + 라이트/다크 거울**이다 [src:1]. 세 가지가 이 시스템의 색 설계를 규정한다.
 
@@ -312,7 +312,7 @@ elevation:
 
 frontmatter 팔레트는 라이트 값과 그 다크 짝(`dark-` 접두 — `dark-blue500` · `dark-neutral100`)을 함께 싣고, 원본 hex는 트레일링 주석으로 병기했다 [src:1][src:7]. 다크 짝은 배포본의 `DARK_PALETTE` 에서 같은 이름의 값이다 [src:7].
 
-아래 세 시맨틱 표의 역할→팔레트 대응은 frontmatter `colors:` 에 참조 행(`border2: "{colors.neutral100}"`)으로도 실려 있다. 참조 행은 라이트 대응만 싣는다 — 다크 대응은 아래 표의 dark 열에 있다. 텍스트 역할 `primary` · `secondary` · `tertiary` 는 싣지 않았다 — 표준 DESIGN.md 명세가 이 세 이름을 브랜드 색 역할로 쓰므로, 텍스트색을 그 이름으로 발행하면 도구가 브랜드 대표색으로 읽는다.
+아래 세 시맨틱 표의 역할→팔레트 대응은 frontmatter `colors:` 에 참조 행(`border2: "{colors.neutral100}"`)으로도 실려 있다. 참조 행은 라이트 대응만 싣는다 — 다크 대응은 같은 팔레트 단계의 `dark-` 짝(`border2` → `dark-neutral100`)이고, 다크에서 다른 단계를 고르는 `baseBackground` 만 표에 `(L)` / `(D)` 로 갈라 적었다. 텍스트 역할 `primary` · `secondary` · `tertiary` 는 싣지 않았다 — 표준 DESIGN.md 명세가 이 세 이름을 브랜드 색 역할로 쓰므로, 텍스트색을 그 이름으로 발행하면 도구가 브랜드 대표색으로 읽는다.
 
 ### neutral — 알파 오버레이 (라이트)
 
@@ -334,14 +334,14 @@ frontmatter 팔레트는 라이트 값과 그 다크 짝(`dark-` 접두 — `dar
 
 ### SystemColor — 브랜드 · 상태 시맨틱
 
-| token     | → palette  | light                      | dark                       |
-| --------- | ---------- | -------------------------- | -------------------------- |
-| `brand`   | `blue500`  | `oklch(0.651 0.191 252.8)` | `oklch(0.627 0.170 249.0)` |
-| `link`    | `blue600`  | `oklch(0.548 0.185 256.3)` | `oklch(0.708 0.142 243.8)` |
-| `info`    | `blue500`  | `oklch(0.651 0.191 252.8)` | `oklch(0.627 0.170 249.0)` |
-| `success` | `green500` | `oklch(0.717 0.228 141.5)` | `oklch(0.661 0.157 140.5)` |
-| `warning` | `gold500`  | `oklch(0.782 0.163 74.8)`  | `oklch(0.739 0.139 82.7)`  |
-| `danger`  | `red400`   | `oklch(0.673 0.214 24.5)`  | `oklch(0.610 0.173 21.0)`  |
+| token     | → palette  |
+| --------- | ---------- |
+| `brand`   | `blue500`  |
+| `link`    | `blue600`  |
+| `info`    | `blue500`  |
+| `success` | `green500` |
+| `warning` | `gold500`  |
+| `danger`  | `red400`   |
 
 [src:1]
 
@@ -349,56 +349,40 @@ frontmatter 팔레트는 라이트 값과 그 다크 짝(`dark-` 접두 — `dar
 
 `SystemColor`와 **동급의 시맨틱 그룹**으로 선언돼 있다. 부록이 아니라 1급 개념이라는 점이 이 시스템의 정체성이다 [src:1].
 
-| token           | → palette   | 의미        | light                     | dark                      |
-| --------------- | ----------- | ----------- | ------------------------- | ------------------------- |
-| `ready`         | `orange500` | 면접 준비됨 | `oklch(0.729 0.160 60.7)` | `oklch(0.713 0.131 67.4)` |
-| `request`       | `gray300`   | 요청됨      | `oklch(0.640 0.000 0)`    | `oklch(0.640 0.000 0)`    |
-| `complete`      | `gray200`   | 완료        | `oklch(0.805 0.000 0)`    | `oklch(0.464 0.000 0)`    |
-| `changeRequest` | `red400`    | 변경 요청   | `oklch(0.673 0.214 24.5)` | `oklch(0.610 0.173 21.0)` |
+| token           | → palette   | 의미        |
+| --------------- | ----------- | ----------- |
+| `ready`         | `orange500` | 면접 준비됨 |
+| `request`       | `gray300`   | 요청됨      |
+| `complete`      | `gray200`   | 완료        |
+| `changeRequest` | `red400`    | 변경 요청   |
 
 `request`(gray300)가 양 테마에서 같은 값이라는 점이 특이하다 — gray300이 반전축의 중심이기 때문이다 [src:1].
 
 ### SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트
 
-18개 별칭 중 17개가 `neutral` 알파를 가리킨다. 값이 알파이므로 라이트/다크에서 같은 이름이 그대로 작동한다 [src:1]. 나머지 하나인 `baseBackground` 만 불투명 gray 를 가리키고, **테마마다 다른 단계를 고른다** — 라이트 `gray0`(흰색), 다크 `gray25` 다. 다크의 `gray0` 은 검정이므로, 다크 바탕은 검정이 아니라 한 단계 밝은 `gray25` 다 [src:1][src:7].
+18개 별칭 중 17개가 `neutral` 알파를 가리킨다. 값이 알파이므로 라이트/다크에서 같은 이름이 그대로 작동한다 [src:1] — 이펙트 `effect1`~`effect4` 는 6% / 11% / 18% / 25% 검정(다크는 흰색) 오버레이다. 나머지 하나인 `baseBackground` 만 불투명 gray 를 가리키고, **테마마다 다른 단계를 고른다** — 라이트 `gray0`(흰색), 다크 `gray25` 다. 다크의 `gray0` 은 검정이므로, 다크 바탕은 검정이 아니라 한 단계 밝은 `gray25` 다 [src:1][src:7].
 
-| token                                         | → palette                                                | light                         | dark                          |
-| --------------------------------------------- | -------------------------------------------------------- | ----------------------------- | ----------------------------- |
-| `primary`                                     | `neutral600`                                             | `oklch(0.000 0.000 0 / 0.85)` | `oklch(1.000 0.000 0 / 0.85)` |
-| `secondary`                                   | `neutral500`                                             | `oklch(0.000 0.000 0 / 0.6)`  | `oklch(1.000 0.000 0 / 0.6)`  |
-| `tertiary`                                    | `neutral400`                                             | `oklch(0.000 0.000 0 / 0.45)` | `oklch(1.000 0.000 0 / 0.45)` |
-| `disabled`                                    | `neutral300`                                             | `oklch(0.000 0.000 0 / 0.25)` | `oklch(1.000 0.000 0 / 0.25)` |
-| `border1`                                     | `neutral75`                                              | `oklch(0.000 0.000 0 / 0.06)` | `oklch(1.000 0.000 0 / 0.06)` |
-| `border2`                                     | `neutral100`                                             | `oklch(0.000 0.000 0 / 0.11)` | `oklch(1.000 0.000 0 / 0.11)` |
-| `border3`                                     | `neutral200`                                             | `oklch(0.000 0.000 0 / 0.18)` | `oklch(1.000 0.000 0 / 0.18)` |
-| `border4`                                     | `neutral400`                                             | `oklch(0.000 0.000 0 / 0.45)` | `oklch(1.000 0.000 0 / 0.45)` |
-| `border5`                                     | `neutral500`                                             | `oklch(0.000 0.000 0 / 0.6)`  | `oklch(1.000 0.000 0 / 0.6)`  |
-| `background1`                                 | `neutral25`                                              | `oklch(0.000 0.000 0 / 0.02)` | `oklch(1.000 0.000 0 / 0.02)` |
-| `background2`                                 | `neutral50`                                              | `oklch(0.000 0.000 0 / 0.04)` | `oklch(1.000 0.000 0 / 0.04)` |
-| `background3`                                 | `neutral75`                                              | `oklch(0.000 0.000 0 / 0.06)` | `oklch(1.000 0.000 0 / 0.06)` |
-| `background4`                                 | `neutral100`                                             | `oklch(0.000 0.000 0 / 0.11)` | `oklch(1.000 0.000 0 / 0.11)` |
-| `effect1` / `effect2` / `effect3` / `effect4` | `neutral75` / `neutral100` / `neutral200` / `neutral300` | 6% / 11% / 18% / 25% 검정     | 6% / 11% / 18% / 25% 흰색     |
-| `baseBackground`                              | `gray0`(L) / `gray25`(D)                                 | `oklch(1.000 0.000 0)`        | `oklch(0.205 0.000 0)`        |
+| token                                         | → palette                                                |
+| --------------------------------------------- | -------------------------------------------------------- |
+| `primary`                                     | `neutral600`                                             |
+| `secondary`                                   | `neutral500`                                             |
+| `tertiary`                                    | `neutral400`                                             |
+| `disabled`                                    | `neutral300`                                             |
+| `border1`                                     | `neutral75`                                              |
+| `border2`                                     | `neutral100`                                             |
+| `border3`                                     | `neutral200`                                             |
+| `border4`                                     | `neutral400`                                             |
+| `border5`                                     | `neutral500`                                             |
+| `background1`                                 | `neutral25`                                              |
+| `background2`                                 | `neutral50`                                              |
+| `background3`                                 | `neutral75`                                              |
+| `background4`                                 | `neutral100`                                             |
+| `effect1` / `effect2` / `effect3` / `effect4` | `neutral75` / `neutral100` / `neutral200` / `neutral300` |
+| `baseBackground`                              | `gray0`(L) / `gray25`(D)                                 |
 
 ### gray 램프의 거울 구조
 
-| step  | light                  | dark                   |
-| ----- | ---------------------- | ---------------------- |
-| `0`   | `oklch(1.000 0.000 0)` | `oklch(0.000 0.000 0)` |
-| `25`  | `oklch(0.985 0.000 0)` | `oklch(0.205 0.000 0)` |
-| `50`  | `oklch(0.970 0.000 0)` | `oklch(0.252 0.000 0)` |
-| `75`  | `oklch(0.955 0.000 0)` | `oklch(0.301 0.000 0)` |
-| `100` | `oklch(0.885 0.000 0)` | `oklch(0.383 0.000 0)` |
-| `200` | `oklch(0.805 0.000 0)` | `oklch(0.464 0.000 0)` |
-| `300` | `oklch(0.640 0.000 0)` | `oklch(0.640 0.000 0)` |
-| `400` | `oklch(0.464 0.000 0)` | `oklch(0.805 0.000 0)` |
-| `500` | `oklch(0.383 0.000 0)` | `oklch(0.885 0.000 0)` |
-| `600` | `oklch(0.301 0.000 0)` | `oklch(0.955 0.000 0)` |
-| `700` | `oklch(0.252 0.000 0)` | `oklch(0.970 0.000 0)` |
-| `800` | `oklch(0.205 0.000 0)` | `oklch(0.985 0.000 0)` |
-| `900` | `oklch(0.000 0.000 0)` | `oklch(1.000 0.000 0)` |
-
-[src:1] — 다크 테마는 별도 팔레트가 아니라 **같은 이름의 값 반전**이다. 유채색 램프도 같은 원리로 밝은 단계와 어두운 단계가 자리를 바꾸며, 그 결과 `blue500`은 다크에서 한 단계 어두워진 `oklch(0.627 0.170 249.0)`이 된다 [src:1].
+다크의 gray 램프는 라이트 램프를 거꾸로 놓은 것이다 — `dark-gray0` 은 `gray900`(검정), `dark-gray900` 은 `gray0`(흰색)과 같은 값이고, 사이 단계도 반대편 끝에서 같은 자리의 라이트 값을 가져와(`dark-gray25` = `gray800`, `dark-gray100` = `gray500`) 가운데 `gray300` 만 두 테마에서 같은 값이다 [src:1][src:7]. 다크 테마는 별도 팔레트가 아니라 **같은 이름의 값 반전**이다. 유채색 램프도 같은 원리로 밝은 단계와 어두운 단계가 자리를 바꾸며, 그 결과 `blue500`은 다크에서 한 단계 어두워진 `dark-blue500` 값이 된다 [src:1].
 
 ### 색 사용 규칙 (관찰)
 
