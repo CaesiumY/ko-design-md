@@ -410,7 +410,7 @@ docs는 시맨틱 25종이라 서술하나 표로 확보된 것은 22종(Text 8 
 | `txt-tertiary` | gray-100 @ 60% |
 | `txt-caption` | gray-100 @ 50% |
 | `txt-disabled` | gray-100 @ 30% |
-| `txt-link` | 리터럴 `text-link` |
+| `txt-link` | 리터럴 `text-link`(양 테마 동일) |
 | `txt-purple-primary` | purple-80(L) / purple-20(D) |
 | `txt-purple-secondary` | purple-60(L) / purple-30(D) |
 
@@ -432,7 +432,7 @@ docs는 시맨틱 25종이라 서술하나 표로 확보된 것은 22종(Text 8 
 | `bg-primary` | gray-00 |
 | `bg-secondary` | gray-05 |
 | `bg-tertiary` | gray-10 |
-| `bg-invert` | 리터럴 `background-invert`(스케일 밖) |
+| `bg-invert` | 리터럴 `background-invert`(스케일 밖 · 양 테마 동일) |
 | `bg-purple-primary` | purple-05(L) / purple-opacity-15(D) |
 
 purple 램프 자체는 테마 불변이지만 `bg-purple-primary`는 그렇지 않다 — 다크 번들이 이 역할을 불투명 스텝이 아니라 purple-60의 15% 불투명도로 다시 가리킨다 [src:2]. 번들에만 있는 짝 `background-purple-primary-invert`(docs 미기재)도 같은 방식이다: 라이트 purple-50(`oklch(0.622 0.249 302)`), 다크 `purple-opacity-90`(`oklch(0.582 0.273 300 / 90%)`) [src:2]. 이 토큰을 쓰는 곳은 Label의 invert-purple이다(아래 표).
@@ -452,7 +452,7 @@ purple 램프 자체는 테마 불변이지만 `bg-purple-primary`는 그렇지 
 | Token | 근거 | 비고 |
 | --- | --- | --- |
 | `status-positive` | green-70 | ⚠ docs는 다크를 green-30이라 서술하나 번들은 양 테마 `var(--green-70)`만 참조 — 다크 실제 렌더값 채택 |
-| `status-negative` | 리터럴 `status-negative` | 일치 |
+| `status-negative` | 리터럴 `status-negative`(양 테마 동일) | 일치 |
 
 기타: New 아이콘 권장색 `pink-60`(라이트 `#eb008d` ≈ `oklch(0.614 0.253 355)` / 다크 `#ffa6db` ≈ `oklch(0.828 0.123 344)`, hex는 docs 미공개·번들 실측)[src:13] [src:2].
 
