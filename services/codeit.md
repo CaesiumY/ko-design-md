@@ -399,7 +399,7 @@ gray는 라이트에서 단순 반전되지 않는 완전히 독립된 램프이
 
 docs는 시맨틱 25종이라 서술하나 표로 확보된 것은 22종(Text 8 + Diff 4 + Background 5 + Border 3 + Status 2)이며, 나머지 3종은 크롤 캐시에 없다 [src:8].
 
-이 중 번들이 팔레트 하나를 가리키는 역할은 frontmatter `colors:` 에 번들 표기의 참조 행으로도 실었다 — `background-primary: "{colors.light-gray-00}"` 와 그 다크 짝 `dark-background-primary` 식이다 [src:2]. `gray-100` 불투명도 램프를 거치는 텍스트·보더 역할은 참조 행으로 싣지 않고 아래 표에만 둔다 — 램프의 일곱 단계(80·60·50·30·15·10·05)는 `light-gray-100-opacity-80` 식 팔레트 토큰으로 `colors:` 에 선언돼 있다(00·100 단계는 뺐다). 역할을 그 토큰으로 가리키는 참조 행은 아직 없다. `txt-primary` 도 번들에서는 `gray-100` 이 아니라 그 램프의 100% 단계를 가리킨다 [src:2].
+이 중 번들이 팔레트 하나를 가리키는 역할은 frontmatter `colors:` 에 번들 표기의 참조 행으로도 실었다 — `background-primary: "{colors.light-gray-00}"` 와 그 다크 짝 `dark-background-primary` 식이다 [src:2]. `gray-100` 불투명도 램프를 거치는 텍스트·보더 역할은 참조 행으로 싣지 않고 아래 표에만 둔다 — 램프의 일곱 단계(80·60·50·30·15·10·05)는 `light-gray-100-opacity-80` 식 팔레트 토큰으로 `colors:` 에 선언돼 있다(00·100 단계는 뺐다). 역할을 그 토큰으로 가리키는 참조 행으로는 싣지 않는다. `txt-primary` 도 번들에서는 `gray-100` 이 아니라 그 램프의 100% 단계를 가리킨다 [src:2].
 
 **Text (8)** — 근거·용도는 [src:8], 실색 대입은 [src:2]. `{colors.light-gray-100}` / `{colors.dark-gray-100}` 위의 opacity 램프다. 단계 값은 frontmatter 의 `light-gray-100-opacity-*` · `dark-gray-100-opacity-*` 토큰에, 팔레트 단계와 리터럴의 값은 근거 칸이 가리키는 토큰에 있다.
 
@@ -435,7 +435,7 @@ docs는 시맨틱 25종이라 서술하나 표로 확보된 것은 22종(Text 8 
 | `bg-invert` | 리터럴 `background-invert`(스케일 밖 · 양 테마 동일) |
 | `bg-purple-primary` | purple-05(L) / purple-opacity-15(D) |
 
-purple 램프 자체는 테마 불변이지만 `bg-purple-primary`는 그렇지 않다 — 다크 번들이 이 역할을 불투명 스텝이 아니라 purple-60의 15% 불투명도로 다시 가리킨다 [src:2]. 번들에만 있는 짝 `background-purple-primary-invert`(docs 미기재)도 같은 방식이다: 라이트 purple-50(`oklch(0.622 0.249 302)`), 다크 `purple-opacity-90`(`oklch(0.582 0.273 300 / 90%)`) [src:2]. 이 토큰을 쓰는 곳은 Label의 invert-purple이다(아래 표).
+purple 램프 자체는 테마 불변이지만 `bg-purple-primary`는 그렇지 않다 — 다크 번들이 이 역할을 불투명 스텝이 아니라 purple-60의 15% 불투명도(`purple-opacity-15` = `oklch(0.582 0.273 300 / 15%)`)로 다시 가리킨다 [src:2]. 번들에만 있는 짝 `background-purple-primary-invert`(docs 미기재)도 같은 방식이다: 라이트 purple-50(`oklch(0.622 0.249 302)`), 다크 `purple-opacity-90`(`oklch(0.582 0.273 300 / 90%)`) [src:2]. 이 토큰을 쓰는 곳은 Label의 invert-purple이다(아래 표).
 
 **Border (3 docs)** [src:8] [src:2]
 
