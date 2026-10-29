@@ -179,7 +179,36 @@ colors:
   effect2: "{colors.neutral100}"
   effect3: "{colors.neutral200}"
   effect4: "{colors.neutral300}"
-  baseBackground: "{colors.gray0}"   # 라이트 대응 — 다크는 gray0 이 아니라 gray25 를 고른다(이 맵의 dark-gray25). gray25 는 라이트 값이라 다크에 그대로 풀면 안 된다
+  baseBackground: "{colors.gray0}"   # 다크 짝은 같은 단계가 아니라 dark-gray25 를 가리킨다(아래 dark-baseBackground)
+  ## dark SystemColor — 브랜드 · 상태 시맨틱 (다크 참조)
+  dark-brand: "{colors.dark-blue500}"
+  dark-link: "{colors.dark-blue600}"
+  dark-info: "{colors.dark-blue500}"
+  dark-success: "{colors.dark-green500}"
+  dark-warning: "{colors.dark-gold500}"
+  dark-danger: "{colors.dark-red400}"
+  ## dark InterviewColor — 면접 진행 상태 시맨틱 (다크 참조)
+  dark-ready: "{colors.dark-orange500}"
+  dark-request: "{colors.dark-gray300}"
+  dark-complete: "{colors.dark-gray200}"
+  dark-changeRequest: "{colors.dark-red400}"
+  ## dark SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (다크 참조)
+  # 텍스트 primary · secondary · tertiary 의 다크 짝도 싣지 않는다 — 라이트와 같은 이유(## Colors 참고)
+  dark-disabled: "{colors.dark-neutral300}"
+  dark-border1: "{colors.dark-neutral75}"
+  dark-border2: "{colors.dark-neutral100}"
+  dark-border3: "{colors.dark-neutral200}"
+  dark-border4: "{colors.dark-neutral400}"
+  dark-border5: "{colors.dark-neutral500}"
+  dark-background1: "{colors.dark-neutral25}"
+  dark-background2: "{colors.dark-neutral50}"
+  dark-background3: "{colors.dark-neutral75}"
+  dark-background4: "{colors.dark-neutral100}"
+  dark-effect1: "{colors.dark-neutral75}"
+  dark-effect2: "{colors.dark-neutral100}"
+  dark-effect3: "{colors.dark-neutral200}"
+  dark-effect4: "{colors.dark-neutral300}"
+  dark-baseBackground: "{colors.dark-gray25}"   # 다크에서 라이트와 다른 단계를 고르는 유일한 역할 — 다크의 gray0 은 검정이라 한 단계 밝은 gray25 가 바탕이다
 typography:
   title1:
     fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
@@ -302,7 +331,7 @@ elevation:
 
 ## Colors
 
-> **다크 팔레트 수록(2026-10-28).** frontmatter 의 라이트 팔레트 토큰 65개(gray 13 · neutral 9 · 유채색 43)마다 `dark-` 짝을 실었다. 값은 npm 배포 tarball 0.0.76 의 다크 팔레트 객체 `DARK_PALETTE` 에서 hex 를 그대로 옮겨 OKLCH 로 바꿨다 [src:7]. 역할→팔레트 대응 28개는 같은 tarball 의 `LIGHT_SEMANTIC` · `DARK_SEMANTIC` 과 맞췄고, 다크에서 다른 단계를 고르는 역할은 `baseBackground`(`gray25`) 하나다 [src:7].
+> **다크 팔레트 · 다크 역할 수록(2026-10-29).** frontmatter 의 라이트 팔레트 토큰 65개(gray 13 · neutral 9 · 유채색 43)마다 `dark-` 짝을 실었다. 값은 npm 배포 tarball 0.0.76 의 다크 팔레트 객체 `DARK_PALETTE` 에서 hex 를 그대로 옮겨 OKLCH 로 바꿨다 [src:7]. 역할→팔레트 대응 28개는 같은 tarball 의 `LIGHT_SEMANTIC` · `DARK_SEMANTIC` 과 맞췄고, 다크에서 다른 단계를 고르는 역할은 `baseBackground`(`gray25`) 하나다 [src:7]. 그중 25개는 frontmatter 참조 행으로 라이트(`border2`)와 다크 짝(`dark-border2`)을 함께 싣는다.
 
 구조는 **Palette(원시) → Semantic(의미 별칭) 2층 + 라이트/다크 거울**이다 [src:1]. 세 가지가 이 시스템의 색 설계를 규정한다.
 
@@ -312,7 +341,7 @@ elevation:
 
 frontmatter 팔레트는 라이트 값과 그 다크 짝(`dark-` 접두 — `dark-blue500` · `dark-neutral100`)을 함께 싣고, 원본 hex는 트레일링 주석으로 병기했다 [src:1][src:7]. 다크 짝은 배포본의 `DARK_PALETTE` 에서 같은 이름의 값이다 [src:7].
 
-아래 세 시맨틱 표의 역할→팔레트 대응은 frontmatter `colors:` 에 참조 행(`border2: "{colors.neutral100}"`)으로도 실려 있다. 참조 행은 라이트 대응만 싣는다 — 다크 대응은 같은 팔레트 단계의 `dark-` 짝(`border2` → `dark-neutral100`)이고, 다크에서 다른 단계를 고르는 `baseBackground` 만 표에 `(L)` / `(D)` 로 갈라 적었다. 텍스트 역할 `primary` · `secondary` · `tertiary` 는 싣지 않았다 — 표준 DESIGN.md 명세가 이 세 이름을 브랜드 색 역할로 쓰므로, 텍스트색을 그 이름으로 발행하면 도구가 브랜드 대표색으로 읽는다.
+아래 세 시맨틱 표의 역할→팔레트 대응은 frontmatter `colors:` 에 참조 행(`border2: "{colors.neutral100}"`)으로도 실려 있고, 다크 대응은 `dark-` 접두 참조 행(`dark-border2: "{colors.dark-neutral100}"`)으로 함께 실려 있다. 다크 행은 같은 팔레트 단계의 `dark-` 짝을 가리키며, 다크에서 다른 단계를 고르는 `baseBackground` 만 `dark-gray25` 를 가리킨다 — 표에서도 이 역할만 `(L)` / `(D)` 로 갈라 적었다. 텍스트 역할 `primary` · `secondary` · `tertiary` 는 라이트·다크 모두 싣지 않았다 — 표준 DESIGN.md 명세가 이 세 이름을 브랜드 색 역할로 쓰므로, 텍스트색을 그 이름으로 발행하면 도구가 브랜드 대표색으로 읽는다.
 
 ### neutral — 알파 오버레이 (라이트)
 
