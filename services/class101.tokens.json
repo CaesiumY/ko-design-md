@@ -148,17 +148,17 @@
     {
       "name": "orangeVibrant",
       "value": "oklch(0.685 0.211 41)",
-      "note": "#ff5d00 — primary와 동일값"
+      "note": "#ff5d00 — primary와 동일값 · 두 모드 동일"
     },
     {
       "name": "blueVibrant",
       "value": "oklch(0.583 0.219 265)",
-      "note": "#376dfa — informative와 동일값"
+      "note": "#376dfa — informative와 동일값 · 두 모드 동일"
     },
     {
       "name": "magentaVibrant",
       "value": "oklch(0.632 0.252 2)",
-      "note": "#f7097d"
+      "note": "#f7097d — 두 모드 동일"
     },
     {
       "name": "violetVibrant",
@@ -168,7 +168,371 @@
     {
       "name": "orangeMuted",
       "value": "oklch(0.930 0.031 45)",
-      "note": "#fbe2d7 (라이트) — 다크에서는 oklch(0.255 0.055 51) #371a07로 반전"
+      "note": "#fbe2d7 (라이트) — 다크 값은 `dark-orangeMuted`"
+    },
+    {
+      "name": "surfaceUltraThin",
+      "value": "oklch(0.922 0 0 / 40%)",
+      "note": "#e5e5e566"
+    },
+    {
+      "name": "surfaceThin",
+      "value": "oklch(0.922 0 0 / 60%)",
+      "note": "#e5e5e599"
+    },
+    {
+      "name": "surfaceRegular",
+      "value": "oklch(0.964 0 0 / 80%)",
+      "note": "#f3f3f3cc"
+    },
+    {
+      "name": "surfaceThick",
+      "value": "oklch(0.964 0 0 / 95%)",
+      "note": "#f3f3f3f2"
+    },
+    {
+      "name": "surfaceOnMedia",
+      "value": "oklch(0.559 0 0 / 20%)",
+      "note": "#74747433"
+    },
+    {
+      "name": "inverseDim",
+      "value": "oklch(1 0 0 / 80%)",
+      "note": "#ffffffcc"
+    },
+    {
+      "name": "overlay",
+      "value": "oklch(0 0 0 / 5%)",
+      "note": "#0000000d"
+    },
+    {
+      "name": "onViewInformative",
+      "value": "oklch(0.583 0.219 265)",
+      "note": "#376dfa"
+    },
+    {
+      "name": "onViewError",
+      "value": "oklch(0.581 0.230 23)",
+      "note": "#e30f32"
+    },
+    {
+      "name": "onViewSuccess",
+      "value": "oklch(0.543 0.144 151)",
+      "note": "#078641"
+    },
+    {
+      "name": "onViewWarning",
+      "value": "oklch(0.671 0.142 71)",
+      "note": "#cb8409"
+    },
+    {
+      "name": "onInformative",
+      "value": "oklch(1 0 0)",
+      "note": "#ffffff"
+    },
+    {
+      "name": "onError",
+      "value": "oklch(1 0 0)",
+      "note": "#ffffff"
+    },
+    {
+      "name": "onSuccess",
+      "value": "oklch(1 0 0)",
+      "note": "#ffffff"
+    },
+    {
+      "name": "onInformativeContainer",
+      "value": "oklch(0.624 0.195 270)",
+      "note": "#5a7afb"
+    },
+    {
+      "name": "onErrorContainer",
+      "value": "oklch(0.627 0.248 23)",
+      "note": "#fb1239"
+    },
+    {
+      "name": "onSuccessContainer",
+      "value": "oklch(0.587 0.155 151)",
+      "note": "#099549"
+    },
+    {
+      "name": "onWarningContainer",
+      "value": "oklch(0.608 0.129 71)",
+      "note": "#b27307"
+    },
+    {
+      "name": "outlineDisable",
+      "value": "oklch(0 0 0 / 5%)",
+      "note": "#0000000d"
+    },
+    {
+      "name": "outlineError",
+      "value": "oklch(0.581 0.230 23)",
+      "note": "#e30f32"
+    },
+    {
+      "name": "dark-primaryContainer",
+      "value": "oklch(0.187 0.025 55)",
+      "note": "#1c1008",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-onPrimaryContainer",
+      "value": "oklch(0.716 0.186 43)",
+      "note": "#ff7430",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-informativeContainer",
+      "value": "oklch(0.199 0.045 270)",
+      "note": "#0e142a",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-errorContainer",
+      "value": "oklch(0.187 0.034 36)",
+      "note": "#200d08",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-successContainer",
+      "value": "oklch(0.171 0.027 149)",
+      "note": "#071309",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-warningContainer",
+      "value": "oklch(0.192 0.023 78)",
+      "note": "#1a1308",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-background",
+      "value": "oklch(0.154 0 0)",
+      "note": "#0c0c0c",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-surface1",
+      "value": "oklch(1 0 0 / 5%)",
+      "note": "#ffffff0d",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-surface2",
+      "value": "oklch(0.205 0 0)",
+      "note": "#171717",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-surface3",
+      "value": "oklch(0 0 0)",
+      "note": "#000000",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-surface4",
+      "value": "oklch(0.471 0 0)",
+      "note": "#5b5b5b",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-inverseSurface",
+      "value": "oklch(0.964 0 0)",
+      "note": "#f3f3f3",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-onInverseSurface",
+      "value": "oklch(0.154 0 0)",
+      "note": "#0c0c0c",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-disable",
+      "value": "oklch(1 0 0 / 15%)",
+      "note": "#ffffff26",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-outline1",
+      "value": "oklch(1 0 0 / 8%)",
+      "note": "#ffffff14",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-outline2",
+      "value": "oklch(1 0 0 / 15%)",
+      "note": "#ffffff26",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-outlineNeutral",
+      "value": "oklch(0.964 0 0)",
+      "note": "#f3f3f3",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-onView1",
+      "value": "oklch(0.964 0 0)",
+      "note": "#f3f3f3",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-onView2",
+      "value": "oklch(0.964 0 0 / 65%)",
+      "note": "#f3f3f3a6",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-onView3",
+      "value": "oklch(0.559 0 0)",
+      "note": "#747474",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-onViewPrimary",
+      "value": "oklch(0.716 0.186 43)",
+      "note": "#ff7430",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-dim",
+      "value": "oklch(0 0 0 / 80%)",
+      "note": "#000000cc",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-violetVibrant",
+      "value": "oklch(0.642 0.246 307)",
+      "note": "#b452fe",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-orangeMuted",
+      "value": "oklch(0.255 0.055 51)",
+      "note": "#371a07",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-surfaceUltraThin",
+      "value": "oklch(0.289 0 0 / 40%)",
+      "note": "#2b2b2b66",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-surfaceThin",
+      "value": "oklch(0.289 0 0 / 60%)",
+      "note": "#2b2b2b99",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-surfaceRegular",
+      "value": "oklch(0.244 0 0 / 75%)",
+      "note": "#202020bf",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-surfaceThick",
+      "value": "oklch(0.205 0 0 / 80%)",
+      "note": "#171717cc",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-surfaceOnMedia",
+      "value": "oklch(0.559 0 0 / 40%)",
+      "note": "#74747466",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-inverseDim",
+      "value": "oklch(0 0 0 / 20%)",
+      "note": "#00000033",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-overlay",
+      "value": "oklch(1 0 0 / 10%)",
+      "note": "#ffffff1a",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-onViewInformative",
+      "value": "oklch(0.674 0.166 274)",
+      "note": "#788bfb",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-onViewError",
+      "value": "oklch(0.686 0.198 25)",
+      "note": "#fd5b59",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-onViewSuccess",
+      "value": "oklch(0.644 0.170 151)",
+      "note": "#0ca954",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-onViewWarning",
+      "value": "oklch(0.789 0.168 71)",
+      "note": "#fca50e",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-onInformative",
+      "value": "oklch(0.967 0.012 286)",
+      "note": "#f3f3fc",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-onError",
+      "value": "oklch(0.966 0.012 24)",
+      "note": "#fcf1f0",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-onSuccess",
+      "value": "oklch(0.960 0.050 151)",
+      "note": "#dbfce1",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-onInformativeContainer",
+      "value": "oklch(0.674 0.166 274)",
+      "note": "#788bfb",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-onErrorContainer",
+      "value": "oklch(0.686 0.198 25)",
+      "note": "#fd5b59",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-onSuccessContainer",
+      "value": "oklch(0.644 0.170 151)",
+      "note": "#0ca954",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-onWarningContainer",
+      "value": "oklch(0.671 0.142 71)",
+      "note": "#cb8409",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-outlineDisable",
+      "value": "oklch(1 0 0 / 10%)",
+      "note": "#ffffff1a",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
+    },
+    {
+      "name": "dark-outlineError",
+      "value": "oklch(0.489 0.193 23)",
+      "note": "#b40a26",
+      "group": "다크 모드 값 — 같은 토큰명의 오버라이드 [src:3]"
     }
   ],
   "typography": [

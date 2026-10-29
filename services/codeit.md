@@ -2,7 +2,7 @@
 name: 코드잇
 slug: codeit
 category: education
-last_updated: "2026-09-29"
+last_updated: "2026-10-29"
 created_at: "2026-07-16"
 lang: ko
 logo: https://getdesign.kr/logos/codeit.png
@@ -33,6 +33,13 @@ colors:
   light-gray-80: oklch(0.513 0.012 286)   # #66666e
   light-gray-90: oklch(0.409 0.010 294)   # #4a494f
   light-gray-100: oklch(0.320 0.007 297)   # #333236
+  light-gray-100-opacity-80: oklch(0.320 0.007 297 / 80%)   # #333236cc
+  light-gray-100-opacity-60: oklch(0.320 0.007 297 / 60%)   # #33323699
+  light-gray-100-opacity-50: oklch(0.320 0.007 297 / 50%)   # #33323680
+  light-gray-100-opacity-30: oklch(0.320 0.007 297 / 30%)   # #3332364d
+  light-gray-100-opacity-15: oklch(0.320 0.007 297 / 15%)   # #33323626
+  light-gray-100-opacity-10: oklch(0.320 0.007 297 / 10%)   # #3332361a
+  light-gray-100-opacity-05: oklch(0.320 0.007 297 / 5%)   # #3332360d
   light-purple-00: oklch(0.978 0.015 312)   # #fbf5ff — 테마 불변
   light-purple-05: oklch(0.958 0.028 313)   # #f8ecff — 테마 불변
   light-purple-10: oklch(0.886 0.075 310)   # #e9ccff — 테마 불변
@@ -112,6 +119,13 @@ colors:
   dark-gray-80: oklch(0.872 0.012 281)   # #d3d4dd
   dark-gray-90: oklch(0.950 0.004 286)   # #eeeef1
   dark-gray-100: oklch(0.976 0.001 286)   # #f7f7f8
+  dark-gray-100-opacity-80: oklch(0.976 0.001 286 / 80%)   # #f7f7f8cc
+  dark-gray-100-opacity-60: oklch(0.976 0.001 286 / 60%)   # #f7f7f899
+  dark-gray-100-opacity-50: oklch(0.976 0.001 286 / 50%)   # #f7f7f880
+  dark-gray-100-opacity-30: oklch(0.976 0.001 286 / 30%)   # #f7f7f84d
+  dark-gray-100-opacity-15: oklch(0.976 0.001 286 / 15%)   # #f7f7f826
+  dark-gray-100-opacity-10: oklch(0.976 0.001 286 / 10%)   # #f7f7f81a
+  dark-gray-100-opacity-05: oklch(0.976 0.001 286 / 5%)   # #f7f7f80d
   dark-purple-00: oklch(0.978 0.015 312)   # #fbf5ff (라이트와 동일 — 불변)
   dark-purple-05: oklch(0.958 0.028 313)   # #f8ecff (불변)
   dark-purple-10: oklch(0.886 0.075 310)   # #e9ccff (불변)
@@ -178,7 +192,7 @@ colors:
   dark-green-90: oklch(0.951 0.079 147)   # #cdfed0 — ⚠ 반전 공식의 유일한 예외(공식대로면 #d9ffdb 예상, 원시 CSS 재확인으로 실측값 확정)
   dark-green-100: oklch(0.980 0.034 145)   # #ebffeb
   ## 시맨틱 역할 — 팔레트 참조
-  # 번들이 팔레트 하나를 가리키는 역할만 싣는다. text-primary 등 불투명도 램프(gray-100-opacity-*)를 거치는 역할은 본문 표에만 있다
+  # 번들이 팔레트 하나를 가리키는 역할만 싣는다. text-primary 등 불투명도 램프(gray-100-opacity-*)를 거치는 역할은 본문 표에만 있다 — 램프의 일곱 단계(80·60·50·30·15·10·05)는 위 팔레트에 선언돼 있지만 역할 참조 행으로는 싣지 않는다
   text-purple-primary: "{colors.light-purple-80}"   # docs 표기 txt-purple-primary
   text-purple-secondary: "{colors.light-purple-60}"   # docs 표기 txt-purple-secondary
   background-primary: "{colors.light-gray-00}"   # docs 표기 bg-primary
@@ -192,7 +206,7 @@ colors:
   dark-background-primary: "{colors.dark-gray-00}"   # docs 표기 bg-primary (다크)
   dark-background-secondary: "{colors.dark-gray-05}"   # docs 표기 bg-secondary (다크)
   dark-background-tertiary: "{colors.dark-gray-10}"   # docs 표기 bg-tertiary (다크)
-  # dark-background-purple-primary 는 없다 — 다크 번들은 팔레트 단계가 아니라 purple-opacity-15(purple-60 @ 15%)를 가리키고, 그 불투명도 램프는 이 맵에 선언돼 있지 않다
+  # dark-background-purple-primary 는 없다 — 다크 번들은 팔레트 단계가 아니라 purple-opacity-15(purple-60 @ 15%)를 가리키고, 그 purple 불투명도 램프는 이 맵에 선언돼 있지 않다
   dark-border-primary: "{colors.dark-gray-100}"
   dark-status-positive: "{colors.dark-green-70}"
 typography:
@@ -361,7 +375,7 @@ font-display-src: https://cdn.jsdelivr.net/npm/spoqa-han-sans@3.3.0/css/SpoqaHan
 
 ## Colors
 
-> **부재 주장 철회·다크 값 정정·역할 참조 행 대조(2026-09-27).** [src:2]의 프로덕션 번들 CSS를 다시 받아 Label 모듈을 대조했다. 「Label 색 6종이 어느 스텝인지는 소스에 없다」던 서술은 틀렸다 — 번들이 기본 6종과 invert 6종의 배경·글자 배선을 전부 선언하고 있어, 이 섹션 끝의 「Label 색 배선」 표로 바꿨다. 같은 대조에서 `bg-purple-primary`의 다크 값이 purple-05가 아니라 `purple-opacity-15`(purple-60의 15%)로 드러나 Background 표를 고쳤다. 같은 번들과 다시 맞춘 나머지는 그대로다 — 팔레트 램프 156개가 이름·값까지 일치했고(배선이 가리키는 프리미티브 19스텝의 라이트·다크 값 38개 포함), 리터럴 10개 중 7개(`text-link` · `background-invert` · `status-negative`, 그리고 `diff-*` 넷의 라이트·다크 값)도 번들에 같은 이름과 값으로 있다. 나머지 셋 중 `codeit-white` · `codeit-black` 은 번들의 라이트 `gray-00` · `gray-100` 과 값이 같고, `codeit-violet` 은 번들이 아니라 공식 브랜드 값이라 `purple-90` 과 1-unit 차이가 난다(아래 문단). 같은 번들의 `:root` · `[data-theme=DARK]` 블록에서 역할이 팔레트 한 단계를 가리키는 8개(다크 짝 7개)는 frontmatter 참조 행으로도 실었고 배선이 번들과 같다 — 불투명도 램프를 가리키는 역할과 짝은 뺐다. `border-purple-*` 의 다크 불투명도 대응(아래 확장 Border 문단)도 번들과 일치한다. 값 출처를 docs가 아니라 번들로 잡는 이유는 [src:8] 설명에 있다 — docs 색 페이지는 값을 스와치 이미지로만 싣는다.
+> **불투명도 램프 수록(2026-10-28).** [src:2]의 프로덕션 번들 CSS 가 `:root`·`[data-theme=DARK]` 에 발행하는 `--gray-100-opacity-*` 램프 중 본문과 프리뷰가 쓰는 일곱 단계(`05` 는 프리뷰 헤어라인)를 `light-gray-100-opacity-*`·`dark-gray-100-opacity-*` 로 실었다 — 라이트는 `rgb(51 50 54 / N%)`, 다크는 `rgb(247 247 248 / N%)` 로 번들 값과 같다. 투명(00)과 `gray-100` 과 같은 값(100) 단계는 싣지 않았고, 이 램프를 가리키는 역할은 참조 행으로 싣지 않는다. 값 출처를 docs가 아니라 번들로 잡는 이유는 [src:8] 설명에 있다 — docs 색 페이지는 값을 스와치 이미지로만 싣는다.
 
 코드잇의 색 시스템은 차갑고 밝은(high-key) 무채색 베이스에 단일 바이올렛 액센트로 수렴한다 [src:2] [src:5]. 브랜드 컬러는 "브랜드 분위기를 형성하는" 유채색 단일 핵심색이고, White/Black은 그 브랜드 컬러를 돋보이게 하는 보조 배경색으로 정의된다 [src:5].
 
@@ -375,7 +389,7 @@ Gray 램프는 순수 중성회색이 아니라 살짝 블루/네이비 쪽으�
 
 텍스트 위계는 별도 회색 팔레트가 아니라 **`gray-100` 위의 opacity 램프**(100/80/60/50/30%)로 구현된다 [src:8] [src:2]. 접근성 원칙은 "배경 요소 위의 계층 명암비는 WCAG 기준을 준수해야 함"만 텍스트로 명시하고 구체 등급(AA/AAA)은 없다 [src:8].
 
-⚠ **docs-번들 불일치 2건**은 실제 렌더(번들) 기준으로 채택하고 docs 서술은 주석으로만 병기한다: `border-secondary`는 docs가 opacity 20이라 하나 번들은 15로 렌더하고 [src:8] [src:2], 다크 `status-positive`는 docs가 `green-30`이라 서술하나 번들은 라이트·다크 양쪽에서 이름이 같은 `var(--green-70)`만 참조해 다크 실값이 캐스케이드로 `#9bf59f`(≈ `oklch(0.892 0.145 145)`)가 된다 [src:8] [src:2].
+⚠ **docs-번들 불일치 2건**은 실제 렌더(번들) 기준으로 채택하고 docs 서술은 주석으로만 병기한다: `border-secondary`는 docs가 opacity 20이라 하나 번들은 15로 렌더하고 [src:8] [src:2], 다크 `status-positive`는 docs가 `green-30`이라 서술하나 번들은 라이트·다크 양쪽에서 이름이 같은 `var(--green-70)`만 참조해 다크 실값이 캐스케이드로 `{colors.dark-green-70}` 이 된다 [src:8] [src:2].
 
 ### 프리미티브 스케일 — 다크 테마
 
@@ -385,20 +399,20 @@ gray는 라이트에서 단순 반전되지 않는 완전히 독립된 램프이
 
 docs는 시맨틱 25종이라 서술하나 표로 확보된 것은 22종(Text 8 + Diff 4 + Background 5 + Border 3 + Status 2)이며, 나머지 3종은 크롤 캐시에 없다 [src:8].
 
-이 중 번들이 팔레트 하나를 가리키는 역할은 frontmatter `colors:` 에 번들 표기의 참조 행으로도 실었다 — `background-primary: "{colors.light-gray-00}"` 와 그 다크 짝 `dark-background-primary` 식이다 [src:2]. `gray-100` 불투명도 램프를 거치는 텍스트·보더 역할은 순수 참조로 표현할 수 없어 아래 표에만 있다. `txt-primary` 도 번들에서는 `gray-100` 이 아니라 그 램프의 100% 단계를 가리킨다 [src:2].
+이 중 번들이 팔레트 하나를 가리키는 역할은 frontmatter `colors:` 에 번들 표기의 참조 행으로도 실었다 — `background-primary: "{colors.light-gray-00}"` 와 그 다크 짝 `dark-background-primary` 식이다 [src:2]. `gray-100` 불투명도 램프를 거치는 텍스트·보더 역할은 참조 행으로 싣지 않고 아래 표에만 둔다 — 램프의 일곱 단계(80·60·50·30·15·10·05)는 `light-gray-100-opacity-80` 식 팔레트 토큰으로 `colors:` 에 선언돼 있다(00·100 단계는 뺐다). 역할을 그 토큰으로 가리키는 참조 행으로는 싣지 않는다. `txt-primary` 도 번들에서는 `gray-100` 이 아니라 그 램프의 100% 단계를 가리킨다 [src:2].
 
-**Text (8)** — 근거·용도는 [src:8], 실색 대입은 [src:2]. `{colors.light-gray-100}` / `{colors.dark-gray-100}` 위의 opacity 램프다.
+**Text (8)** — 근거·용도는 [src:8], 실색 대입은 [src:2]. `{colors.light-gray-100}` / `{colors.dark-gray-100}` 위의 opacity 램프다. 단계 값은 frontmatter 의 `light-gray-100-opacity-*` · `dark-gray-100-opacity-*` 토큰에, 100% 단계는 `light-gray-100` · `dark-gray-100` 값 그대로이고, 팔레트 단계와 리터럴의 값은 근거 칸이 가리키는 토큰에 있다.
 
-| Token | 근거 | Light | Dark |
-|---|---|---|---|
-| `txt-primary` | gray-100 @ 100% | `oklch(0.320 0.007 297)` | `oklch(0.976 0.001 286)` |
-| `txt-secondary` | gray-100 @ 80% | `oklch(0.320 0.007 297 / 80%)` | `oklch(0.976 0.001 286 / 80%)` |
-| `txt-tertiary` | gray-100 @ 60% | `oklch(0.320 0.007 297 / 60%)` | `oklch(0.976 0.001 286 / 60%)` |
-| `txt-caption` | gray-100 @ 50% | `oklch(0.320 0.007 297 / 50%)` | `oklch(0.976 0.001 286 / 50%)` |
-| `txt-disabled` | gray-100 @ 30% | `oklch(0.320 0.007 297 / 30%)` | `oklch(0.976 0.001 286 / 30%)` |
-| `txt-link` | 리터럴 | `oklch(0.666 0.107 203)` | `oklch(0.666 0.107 203)`(동일) |
-| `txt-purple-primary` | purple-80(L) / purple-20(D) | `oklch(0.490 0.261 296)` | `oklch(0.762 0.147 309)` |
-| `txt-purple-secondary` | purple-60(L) / purple-30(D) | `oklch(0.582 0.273 300)` | `oklch(0.714 0.191 308)` |
+| Token | 근거 |
+| --- | --- |
+| `txt-primary` | gray-100 @ 100% |
+| `txt-secondary` | gray-100 @ 80% |
+| `txt-tertiary` | gray-100 @ 60% |
+| `txt-caption` | gray-100 @ 50% |
+| `txt-disabled` | gray-100 @ 30% |
+| `txt-link` | 리터럴 `text-link`(양 테마 동일) |
+| `txt-purple-primary` | purple-80(L) / purple-20(D) |
+| `txt-purple-secondary` | purple-60(L) / purple-30(D) |
 
 **Diff (4)** — 코드 비교 UI 전용. 시맨틱 25종 중 docs 텍스트와 번들 실측이 라이트·다크 4쌍 전부 일치하는 대조군이며, docs 정확도를 가늠하는 기준점이 된다 [src:8] [src:2].
 
@@ -413,34 +427,34 @@ docs는 시맨틱 25종이라 서술하나 표로 확보된 것은 22종(Text 8 
 
 **Background (5)** [src:8] [src:2]
 
-| Token | 근거 | Light | Dark |
-|---|---|---|---|
-| `bg-primary` | gray-00 | `oklch(1.000 0.000 0)` | `oklch(0.225 0.026 274)` |
-| `bg-secondary` | gray-05 | `oklch(0.988 0.000 0)` | `oklch(0.250 0.023 274)` |
-| `bg-tertiary` | gray-10 | `oklch(0.974 0.003 286)` | `oklch(0.276 0.026 275)` |
-| `bg-invert` | 리터럴(스케일 밖) | `oklch(0.154 0.019 263)` | `oklch(0.154 0.019 263)`(동일) |
-| `bg-purple-primary` | purple-05(L) / purple-opacity-15(D) | `oklch(0.958 0.028 313)` | `oklch(0.582 0.273 300 / 15%)` |
+| Token | 근거 |
+| --- | --- |
+| `bg-primary` | gray-00 |
+| `bg-secondary` | gray-05 |
+| `bg-tertiary` | gray-10 |
+| `bg-invert` | 리터럴 `background-invert`(스케일 밖 · 양 테마 동일) |
+| `bg-purple-primary` | purple-05(L) / purple-opacity-15(D) |
 
-purple 램프 자체는 테마 불변이지만 `bg-purple-primary`는 그렇지 않다 — 다크 번들이 이 역할을 불투명 스텝이 아니라 purple-60의 15% 불투명도로 다시 가리킨다 [src:2]. 번들에만 있는 짝 `background-purple-primary-invert`(docs 미기재)도 같은 방식이다: 라이트 purple-50(`oklch(0.622 0.249 302)`), 다크 `purple-opacity-90`(`oklch(0.582 0.273 300 / 90%)`) [src:2]. 이 토큰을 쓰는 곳은 Label의 invert-purple이다(아래 표).
+purple 램프 자체는 테마 불변이지만 `bg-purple-primary`는 그렇지 않다 — 다크 번들이 이 역할을 불투명 스텝이 아니라 purple-60의 15% 불투명도(`purple-opacity-15` = `oklch(0.582 0.273 300 / 15%)`)로 다시 가리킨다 [src:2]. 번들에만 있는 짝 `background-purple-primary-invert`(docs 미기재)도 같은 방식이다: 라이트 purple-50(`oklch(0.622 0.249 302)`), 다크 `purple-opacity-90`(`oklch(0.582 0.273 300 / 90%)`) [src:2]. 이 토큰을 쓰는 곳은 Label의 invert-purple이다(아래 표).
 
 **Border (3 docs)** [src:8] [src:2]
 
-| Token | 근거 | Light | Dark | 비고 |
-|---|---|---|---|---|
-| `border-primary` | gray-100 | `oklch(0.320 0.007 297)` | `oklch(0.976 0.001 286)` | docs=번들 일치 |
-| `border-secondary` | gray-100 @ 15% | `oklch(0.320 0.007 297 / 15%)` | `oklch(0.976 0.001 286 / 15%)` | ⚠ docs는 20%, 번들 실배선 15% — 번들 채택 |
-| `border-tertiary` | gray-100 @ 10% | `oklch(0.320 0.007 297 / 10%)` | `oklch(0.976 0.001 286 / 10%)` | 일치 |
+| Token | 근거 | 비고 |
+| --- | --- | --- |
+| `border-primary` | gray-100 | docs=번들 일치 |
+| `border-secondary` | gray-100 @ 15% | ⚠ docs는 20%, 번들 실배선 15% — 번들 채택 |
+| `border-tertiary` | gray-100 @ 10% | 일치 |
 
 번들에만 존재하는 확장 Border 시맨틱(docs 미기재, 참고용) [src:2]: `border-primary-invert`(gray-00 참조), `border-secondary-invert`/`border-tertiary-invert`(gray-00 opacity 20%/10%), `border-purple-primary`(light purple-60 / dark purple-opacity-90), `border-purple-secondary`(light purple-30 / dark purple-opacity-70), `border-purple-tertiary`(light purple-10 / dark purple-opacity-50).
 
 **Status (2)** [src:8] [src:2]
 
-| Token | 근거 | Light | Dark | 비고 |
-|---|---|---|---|---|
-| `status-positive` | green-70 | `oklch(0.648 0.202 145)` | `oklch(0.892 0.145 145)` | ⚠ docs는 다크를 green-30이라 서술하나 번들은 양 테마 `var(--green-70)`만 참조 — 다크 실제 렌더값 채택 |
-| `status-negative` | 리터럴 | `oklch(0.561 0.216 20)` | `oklch(0.561 0.216 20)`(동일) | 일치 |
+| Token | 근거 | 비고 |
+| --- | --- | --- |
+| `status-positive` | green-70 | ⚠ docs는 다크를 green-30이라 서술하나 번들은 양 테마 `var(--green-70)`만 참조 — 다크 실제 렌더값 채택 |
+| `status-negative` | 리터럴 `status-negative`(양 테마 동일) | 일치 |
 
-기타: New 아이콘 권장색 `pink-60`(라이트 `#eb008d` ≈ `oklch(0.614 0.253 355)` / 다크 `#ffa6db` ≈ `oklch(0.828 0.123 344)`, hex는 docs 미공개·번들 실측)[src:13] [src:2].
+기타: New 아이콘 권장색 `pink-60`(라이트 `{colors.light-pink-60}` / 다크 `{colors.dark-pink-60}`, 값은 docs 미공개·번들 실측)[src:13] [src:2].
 
 **Label 색 배선 (번들 실측)** — docs는 Color 6종(purple/green/pink/yellow/gray/blue)과 Invert 속성을 이름으로만 싣지만 [src:21], 번들의 Label 모듈이 12개 변형의 배경·글자를 모두 선언한다 [src:2].
 
@@ -501,7 +515,7 @@ Buttons는 시스템에서 가장 주요한 UI 컴포넌트로 5개 서브타입
 
 ### button-primary
 
-ESSENTIAL 레이블 + OPTIONAL 아이콘. Size L/M/S(최소 padding 24/16/12px), State default/hover/disabled, Icon-left/Icon-right [src:17]. **Do**: 여러 버튼 중 가장 우측에 배치. **Don't**: Primary 버튼을 여러 개 나열하지 말 것 [src:17]. 데모 렌더의 fill은 공식 `{colors.codeit-violet}`보다 밝아 육안상 `{colors.light-purple-60}` ≈ `oklch(0.582 0.273 300)` 계열에 가깝다 — 캡처 관찰 추정이며 공식 토큰이 아니다. 버튼 fill을 지정하는 색상 토큰은 docs·번들 어디에도 문서화돼 있지 않다.
+ESSENTIAL 레이블 + OPTIONAL 아이콘. Size L/M/S(최소 padding 24/16/12px), State default/hover/disabled, Icon-left/Icon-right [src:17]. **Do**: 여러 버튼 중 가장 우측에 배치. **Don't**: Primary 버튼을 여러 개 나열하지 말 것 [src:17]. 데모 렌더의 fill은 공식 `{colors.codeit-violet}`보다 밝아 육안상 `{colors.light-purple-60}` 계열에 가깝다 — 캡처 관찰 추정이며 공식 토큰이 아니다. 버튼 fill을 지정하는 색상 토큰은 docs·번들 어디에도 문서화돼 있지 않다.
 
 ```tsx
 <ButtonPrimary size="L" icon="right" state="default">
@@ -775,7 +789,7 @@ Anatomy 3요소 — Filter Button(적용 필터 유무로 on/off), Filter Header
 - **정량 스펙과 접근성**: hover/disabled를 포함한 컴포넌트별 색상 적용값, 구체 대비 등급(AA/AAA), ARIA role/label 규격이 전 컴포넌트에서 docs에 공개되지 않는다 [src:8] [src:17] [src:29]. 색상 적용값 중 Label은 번들 CSS에서 확인해 `## Colors`에 실었다 [src:2]. 나머지 컴포넌트는 번들과 대조하지 않았다.
 - **UX Writing**: `/ux-writing` 경로가 내비게이션에 존재하나 페이지 본문이 비어 있어 카피·보이스 가이드가 공개되지 않는다 [src:38]. 위 Do's and Don'ts의 종결어미 항목은 컴포넌트 문서에 흩어진 개별 예시를 모은 것이지 공식 라이팅 가이드가 아니다.
 - **시각 근거의 한계**: 제공된 데모 캡처 21종은 라이트 렌더·단일 데스크톱 뷰포트만 존재해 다크 모드·모바일 폭에서 컴포넌트가 실제로 어떻게 조합되는지는 확인할 수 없다.
-- **다크 배경의 로고 처리**: 로고에 대해 명시된 원칙은 "서체 변경·자간 조정 등 임의적 변형 금지" 하나뿐이고 [src:6], 다크 배경에서의 색 처리는 규정되지 않는다. 브랜드 바이올렛 `#6500C3`(≈ `oklch(0.439 0.240 296)`) [src:5]을 다크 베이스 `gray-00`(`#181b28` ≈ `oklch(0.225 0.026 274)`) [src:2] 위에 그대로 올리면 대비가 약 1.9:1로 그래픽 요소의 3:1 기준에 못 미친다(라이트 흰 배경에서는 약 9:1). 다크 UI에 로고를 배치해야 한다면 소비자가 직접 해결해야 하는 지점이며, 이 문서는 근거 없는 반전 규칙을 만들지 않는다.
+- **다크 배경의 로고 처리**: 로고에 대해 명시된 원칙은 "서체 변경·자간 조정 등 임의적 변형 금지" 하나뿐이고 [src:6], 다크 배경에서의 색 처리는 규정되지 않는다. 브랜드 바이올렛 `{colors.codeit-violet}` [src:5]을 다크 베이스 `{colors.dark-gray-00}` [src:2] 위에 그대로 올리면 대비가 약 1.9:1로 그래픽 요소의 3:1 기준에 못 미친다(라이트 흰 배경에서는 약 9:1). 다크 UI에 로고를 배치해야 한다면 소비자가 직접 해결해야 하는 지점이며, 이 문서는 근거 없는 반전 규칙을 만들지 않는다.
 
 ## References
 

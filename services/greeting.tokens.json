@@ -389,6 +389,396 @@
       "value": "oklch(0.719 0.093 100.6)",
       "note": "#B1A65F",
       "group": "murky 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-gray0",
+      "value": "oklch(0.000 0.000 0)",
+      "note": "#000000",
+      "group": "dark gray — 다크 테마 무채색 램프 (라이트 gray 의 거울)"
+    },
+    {
+      "name": "dark-gray25",
+      "value": "oklch(0.205 0.000 0)",
+      "note": "#171717",
+      "group": "dark gray — 다크 테마 무채색 램프 (라이트 gray 의 거울)"
+    },
+    {
+      "name": "dark-gray50",
+      "value": "oklch(0.252 0.000 0)",
+      "note": "#222222",
+      "group": "dark gray — 다크 테마 무채색 램프 (라이트 gray 의 거울)"
+    },
+    {
+      "name": "dark-gray75",
+      "value": "oklch(0.301 0.000 0)",
+      "note": "#2E2E2E",
+      "group": "dark gray — 다크 테마 무채색 램프 (라이트 gray 의 거울)"
+    },
+    {
+      "name": "dark-gray100",
+      "value": "oklch(0.383 0.000 0)",
+      "note": "#434343",
+      "group": "dark gray — 다크 테마 무채색 램프 (라이트 gray 의 거울)"
+    },
+    {
+      "name": "dark-gray200",
+      "value": "oklch(0.464 0.000 0)",
+      "note": "#595959",
+      "group": "dark gray — 다크 테마 무채색 램프 (라이트 gray 의 거울)"
+    },
+    {
+      "name": "dark-gray300",
+      "value": "oklch(0.640 0.000 0)",
+      "note": "#8C8C8C",
+      "group": "dark gray — 다크 테마 무채색 램프 (라이트 gray 의 거울)"
+    },
+    {
+      "name": "dark-gray400",
+      "value": "oklch(0.805 0.000 0)",
+      "note": "#BFBFBF",
+      "group": "dark gray — 다크 테마 무채색 램프 (라이트 gray 의 거울)"
+    },
+    {
+      "name": "dark-gray500",
+      "value": "oklch(0.885 0.000 0)",
+      "note": "#D9D9D9",
+      "group": "dark gray — 다크 테마 무채색 램프 (라이트 gray 의 거울)"
+    },
+    {
+      "name": "dark-gray600",
+      "value": "oklch(0.955 0.000 0)",
+      "note": "#F0F0F0",
+      "group": "dark gray — 다크 테마 무채색 램프 (라이트 gray 의 거울)"
+    },
+    {
+      "name": "dark-gray700",
+      "value": "oklch(0.970 0.000 0)",
+      "note": "#F5F5F5",
+      "group": "dark gray — 다크 테마 무채색 램프 (라이트 gray 의 거울)"
+    },
+    {
+      "name": "dark-gray800",
+      "value": "oklch(0.985 0.000 0)",
+      "note": "#FAFAFA",
+      "group": "dark gray — 다크 테마 무채색 램프 (라이트 gray 의 거울)"
+    },
+    {
+      "name": "dark-gray900",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "#FFFFFF",
+      "group": "dark gray — 다크 테마 무채색 램프 (라이트 gray 의 거울)"
+    },
+    {
+      "name": "dark-neutral25",
+      "value": "oklch(1.000 0.000 0 / 0.02)",
+      "note": "흰색 2% 오버레이",
+      "group": "dark neutral — 다크 테마 알파 오버레이"
+    },
+    {
+      "name": "dark-neutral50",
+      "value": "oklch(1.000 0.000 0 / 0.04)",
+      "note": "흰색 4% 오버레이",
+      "group": "dark neutral — 다크 테마 알파 오버레이"
+    },
+    {
+      "name": "dark-neutral75",
+      "value": "oklch(1.000 0.000 0 / 0.06)",
+      "note": "흰색 6% 오버레이",
+      "group": "dark neutral — 다크 테마 알파 오버레이"
+    },
+    {
+      "name": "dark-neutral100",
+      "value": "oklch(1.000 0.000 0 / 0.11)",
+      "note": "흰색 11% 오버레이",
+      "group": "dark neutral — 다크 테마 알파 오버레이"
+    },
+    {
+      "name": "dark-neutral200",
+      "value": "oklch(1.000 0.000 0 / 0.18)",
+      "note": "흰색 18% 오버레이",
+      "group": "dark neutral — 다크 테마 알파 오버레이"
+    },
+    {
+      "name": "dark-neutral300",
+      "value": "oklch(1.000 0.000 0 / 0.25)",
+      "note": "흰색 25% 오버레이",
+      "group": "dark neutral — 다크 테마 알파 오버레이"
+    },
+    {
+      "name": "dark-neutral400",
+      "value": "oklch(1.000 0.000 0 / 0.45)",
+      "note": "흰색 45% 오버레이",
+      "group": "dark neutral — 다크 테마 알파 오버레이"
+    },
+    {
+      "name": "dark-neutral500",
+      "value": "oklch(1.000 0.000 0 / 0.6)",
+      "note": "흰색 60% 오버레이",
+      "group": "dark neutral — 다크 테마 알파 오버레이"
+    },
+    {
+      "name": "dark-neutral600",
+      "value": "oklch(1.000 0.000 0 / 0.85)",
+      "note": "흰색 85% 오버레이",
+      "group": "dark neutral — 다크 테마 알파 오버레이"
+    },
+    {
+      "name": "dark-blue50",
+      "value": "oklch(0.296 0.071 246.4)",
+      "note": "#052F4E",
+      "group": "dark blue — 다크 테마 브랜드 램프"
+    },
+    {
+      "name": "dark-blue100",
+      "value": "oklch(0.358 0.091 247.5)",
+      "note": "#063F69",
+      "group": "dark blue — 다크 테마 브랜드 램프"
+    },
+    {
+      "name": "dark-blue200",
+      "value": "oklch(0.425 0.112 248.1)",
+      "note": "#045188",
+      "group": "dark blue — 다크 테마 브랜드 램프"
+    },
+    {
+      "name": "dark-blue300",
+      "value": "oklch(0.493 0.132 248.8)",
+      "note": "#0764A8",
+      "group": "dark blue — 다크 테마 브랜드 램프"
+    },
+    {
+      "name": "dark-blue400",
+      "value": "oklch(0.561 0.151 248.8)",
+      "note": "#0A78C8",
+      "group": "dark blue — 다크 테마 브랜드 램프"
+    },
+    {
+      "name": "dark-blue500",
+      "value": "oklch(0.627 0.170 249.0)",
+      "note": "#0C8CE9",
+      "group": "dark blue — 다크 테마 브랜드 램프"
+    },
+    {
+      "name": "dark-blue600",
+      "value": "oklch(0.708 0.142 243.8)",
+      "note": "#44A9F2",
+      "group": "dark blue — 다크 테마 브랜드 램프"
+    },
+    {
+      "name": "dark-blue700",
+      "value": "oklch(0.771 0.105 241.0)",
+      "note": "#74BDF1",
+      "group": "dark blue — 다크 테마 브랜드 램프"
+    },
+    {
+      "name": "dark-blue800",
+      "value": "oklch(0.832 0.074 240.3)",
+      "note": "#9CCFF4",
+      "group": "dark blue — 다크 테마 브랜드 램프"
+    },
+    {
+      "name": "dark-blue900",
+      "value": "oklch(0.877 0.051 239.2)",
+      "note": "#B9DCF5",
+      "group": "dark blue — 다크 테마 브랜드 램프"
+    },
+    {
+      "name": "dark-cyan500",
+      "value": "oklch(0.656 0.093 191.5)",
+      "note": "#3DA39F",
+      "group": "dark 일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-gold500",
+      "value": "oklch(0.739 0.139 82.7)",
+      "note": "#D5A12C",
+      "group": "dark 일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-green500",
+      "value": "oklch(0.661 0.157 140.5)",
+      "note": "#57A947",
+      "group": "dark 일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-lime500",
+      "value": "oklch(0.645 0.132 122.8)",
+      "note": "#7F9A33",
+      "group": "dark 일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-magenta500",
+      "value": "oklch(0.629 0.155 349.9)",
+      "note": "#CB5C96",
+      "group": "dark 일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-orange500",
+      "value": "oklch(0.713 0.131 67.4)",
+      "note": "#D8913C",
+      "group": "dark 일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-purple500",
+      "value": "oklch(0.621 0.157 303.0)",
+      "note": "#9A6BD3",
+      "group": "dark 일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-red500",
+      "value": "oklch(0.690 0.172 21.8)",
+      "note": "#F3686A",
+      "group": "dark 일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-red400",
+      "value": "oklch(0.610 0.173 21.0)",
+      "note": "#D74D54",
+      "group": "dark 일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-ultraviolet500",
+      "value": "oklch(0.601 0.153 268.7)",
+      "note": "#5B79DB",
+      "group": "dark 일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-volcano500",
+      "value": "oklch(0.653 0.144 41.7)",
+      "note": "#D76E44",
+      "group": "dark 일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-yellow500",
+      "value": "oklch(0.760 0.142 97.6)",
+      "note": "#CAB131",
+      "group": "dark 일반 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-murkyBlue50",
+      "value": "oklch(0.348 0.038 247.5)",
+      "note": "#2A3C4D",
+      "group": "dark murkyBlue — 다크 테마 murky 램프 표본"
+    },
+    {
+      "name": "dark-murkyBlue100",
+      "value": "oklch(0.410 0.051 247.2)",
+      "note": "#334D65",
+      "group": "dark murkyBlue — 다크 테마 murky 램프 표본"
+    },
+    {
+      "name": "dark-murkyBlue200",
+      "value": "oklch(0.480 0.066 247.2)",
+      "note": "#3E6181",
+      "group": "dark murkyBlue — 다크 테마 murky 램프 표본"
+    },
+    {
+      "name": "dark-murkyBlue300",
+      "value": "oklch(0.548 0.077 247.6)",
+      "note": "#4B759C",
+      "group": "dark murkyBlue — 다크 테마 murky 램프 표본"
+    },
+    {
+      "name": "dark-murkyBlue400",
+      "value": "oklch(0.615 0.075 247.3)",
+      "note": "#5F89B0",
+      "group": "dark murkyBlue — 다크 테마 murky 램프 표본"
+    },
+    {
+      "name": "dark-murkyBlue500",
+      "value": "oklch(0.684 0.065 246.6)",
+      "note": "#799EC0",
+      "group": "dark murkyBlue — 다크 테마 murky 램프 표본"
+    },
+    {
+      "name": "dark-murkyBlue600",
+      "value": "oklch(0.775 0.058 246.1)",
+      "note": "#98BAD9",
+      "group": "dark murkyBlue — 다크 테마 murky 램프 표본"
+    },
+    {
+      "name": "dark-murkyBlue700",
+      "value": "oklch(0.834 0.040 246.0)",
+      "note": "#B4CCE2",
+      "group": "dark murkyBlue — 다크 테마 murky 램프 표본"
+    },
+    {
+      "name": "dark-murkyBlue800",
+      "value": "oklch(0.884 0.029 246.5)",
+      "note": "#CADBEB",
+      "group": "dark murkyBlue — 다크 테마 murky 램프 표본"
+    },
+    {
+      "name": "dark-murkyBlue900",
+      "value": "oklch(0.939 0.018 250.6)",
+      "note": "#E2ECF7",
+      "group": "dark murkyBlue — 다크 테마 murky 램프 표본"
+    },
+    {
+      "name": "dark-murkyCyan500",
+      "value": "oklch(0.740 0.059 205.8)",
+      "note": "#7EB6BD",
+      "group": "dark murky 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-murkyGold500",
+      "value": "oklch(0.689 0.050 74.2)",
+      "note": "#AE9779",
+      "group": "dark murky 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-murkyGreen500",
+      "value": "oklch(0.731 0.067 155.5)",
+      "note": "#86B596",
+      "group": "dark murky 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-murkyLime500",
+      "value": "oklch(0.702 0.076 126.1)",
+      "note": "#93A874",
+      "group": "dark murky 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-murkyMagenta500",
+      "value": "oklch(0.679 0.045 337.5)",
+      "note": "#AB8EA2",
+      "group": "dark murky 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-murkyOrange500",
+      "value": "oklch(0.711 0.051 54.6)",
+      "note": "#BC9A84",
+      "group": "dark murky 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-murkyPurple500",
+      "value": "oklch(0.684 0.077 296.7)",
+      "note": "#9E90C4",
+      "group": "dark murky 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-murkyRed500",
+      "value": "oklch(0.667 0.069 8.3)",
+      "note": "#BA838C",
+      "group": "dark murky 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-murkyUltraviolet500",
+      "value": "oklch(0.689 0.069 283.5)",
+      "note": "#9596C5",
+      "group": "dark murky 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-murkyVolcano500",
+      "value": "oklch(0.652 0.057 27.3)",
+      "note": "#B0837D",
+      "group": "dark murky 12색 램프 500 대표값"
+    },
+    {
+      "name": "dark-murkyYellow500",
+      "value": "oklch(0.737 0.075 102.0)",
+      "note": "#B3AC74",
+      "group": "dark murky 12색 램프 500 대표값"
     }
   ],
   "typography": [

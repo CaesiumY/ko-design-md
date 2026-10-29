@@ -413,7 +413,7 @@ export const BASELINE_TABLE = `\
 | bezier | dark | non-text | 42 | 45 | 11 | 4 | 1 |
 | bezier | light | text | 175 | 349 | 54 | 9 | 11 |
 | bezier | light | non-text | 41 | 44 | 18 | 9 | 1 |
-| class101 | dark | text | 97 | 160 | 23 | 1 | 7 |
+| class101 | dark | text | 97 | 160 | 24 | 0 | 7 |
 | class101 | dark | non-text | 16 | 18 | 7 | 1 | 4 |
 | class101 | light | text | 97 | 160 | 33 | 2 | 7 |
 | class101 | light | non-text | 15 | 18 | 7 | 3 | 3 |

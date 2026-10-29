@@ -6,8 +6,8 @@ import { findKey, readFrontmatter } from "./frontmatter"
 import { splitFrontmatter } from "./frontmatter-fence"
 
 // The entries in CASES below publish a semantic role layer twice (#435): as a
-// Markdown table in `## Colors` — the reader's copy, carrying `[src:N]` and,
-// for greeting, the dark values — and as quoted reference rows in frontmatter
+// Markdown table in `## Colors` — the reader's copy, carrying `[src:N]` — and
+// as quoted reference rows in frontmatter
 // `colors:` (`bg-brand-solid: "{colors.carrot-600}"`), which is what standard
 // DESIGN.md tooling reads. Nothing else compares the two. token-extractor skips
 // reference rows, so `tokens:check` cannot see them, and the spec linter only
@@ -201,12 +201,12 @@ const CASES: Record<string, { title: string; check: () => void }> = {
     },
   },
   greeting: {
-    title: "light only, brand alias off the text ladder",
+    title: "roles light and `dark-` twin, brand alias off the text ladder",
     check: () => {
       const { literals, refs, tableRows } = load("greeting")
       const expected = new Map<string, string>()
-      // Every palette step the text ladder points at (`primary` → `neutral600`,
-      // … `disabled` → `neutral300`).
+      // Every light palette step the text ladder points at (`primary` →
+      // `neutral600`, … `disabled` → `neutral300`).
       const TEXT_ROLES = new Set([
         "primary",
         "secondary",
@@ -216,15 +216,20 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       const textColours = new Set<string>()
       for (const [roleCell, paletteCell] of tableRows) {
         const roles = spans(roleCell)
-        // Frontmatter carries light values only, so a `x`(L) / `y`(D) cell
-        // is judged by its light side.
-        const split = /^`([^`]+)`\(L\) \/ `[^`]+`\(D\)$/.exec(paletteCell)
+        // The table names one palette step per role, and the dark twin points
+        // at that step's `dark-` key. A `x`(L) / `y`(D) cell — `baseBackground`,
+        // which picks another step in dark — names each theme's step itself.
+        const split = /^`([^`]+)`\(L\) \/ `([^`]+)`\(D\)$/.exec(paletteCell)
         const palette = split ? [split[1]] : spans(paletteCell)
+        const darkPalette = split
+          ? [`dark-${split[2]}`]
+          : palette.map((p) => `dark-${p}`)
         // The `effect1` / … / `effect4` row pairs positionally with its palette.
         if (roles.length !== palette.length) continue
         if (!palette.every((p) => literals.has(p))) continue
         roles.forEach((role, i) => {
           expected.set(role, palette[i])
+          expected.set(`dark-${role}`, darkPalette[i])
           if (TEXT_ROLES.has(role)) textColours.add(palette[i])
         })
       }

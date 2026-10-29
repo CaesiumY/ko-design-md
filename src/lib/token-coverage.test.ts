@@ -79,9 +79,11 @@ interface Coverage {
 // the failure messages below print the measured numbers, and nothing else in
 // the repo does.
 //
-// `annotated: 0` is a fact about the entry, not a broken regex: baemin and
-// bezier comment their colours in prose with no hex, so `audit:oklch` has
-// nothing to judge there. toss annotates only the steps whose name maps to
+// `annotated: 0` is a fact about the entry, not a broken regex: baemin
+// comments its colours in prose with no hex, so `audit:oklch` has nothing to
+// judge there. bezier annotates only the alpha steps taken from the beta
+// tier of `@channel.io/bezier-tokens` (#569); the steps from the handoff bundle
+// stay unannotated. toss annotates only the steps whose name maps to
 // Toss's published `@toss/tds-colors` (15 light + 15 `dark-*`); its bundle-only
 // steps stay unannotated. teamsparta likewise annotates only the three reds
 // corrected to the live sites' `--stack-semantic-*` values. `drift: 0` is a
@@ -90,11 +92,11 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   "11st": { annotated: 31, judged: 31, drift: 33 },
   baemin: { annotated: 0, judged: 0, drift: 38 },
   banksalad: { annotated: 187, judged: 187, drift: 187 },
-  bezier: { annotated: 0, judged: 0, drift: 43 },
-  class101: { annotated: 34, judged: 33, drift: 34 },
-  codeit: { annotated: 166, judged: 159, drift: 166, webfont: true },
-  gmarket: { annotated: 85, judged: 85, drift: 89 },
-  greeting: { annotated: 56, judged: 56, drift: 65 },
+  bezier: { annotated: 51, judged: 51, drift: 94 },
+  class101: { annotated: 98, judged: 98, drift: 98 },
+  codeit: { annotated: 180, judged: 173, drift: 180, webfont: true },
+  gmarket: { annotated: 87, judged: 87, drift: 91 },
+  greeting: { annotated: 112, judged: 112, drift: 130 },
   "gs-retail": { annotated: 23, judged: 23, drift: 23 },
   "gs-shop": { annotated: 52, judged: 52, drift: 52 },
   krds: { annotated: 44, judged: 44, drift: 55 },
