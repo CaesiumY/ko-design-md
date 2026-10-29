@@ -107,7 +107,9 @@ Google Labs 의 DESIGN.md 명세를 **공식 린터로** 판정한다. 명세를
 - **새 항목은 컴포넌트를 명세의 `components:` 맵에도 싣는다**(기존 항목은 소급하지 않는다). 저작 규칙의
   정본은 `stitch-format.md` 의 "Component tokens in the frontmatter `components:` map" 이다. 본문 스펙 펜스
   (`text`)도 그대로 남는다 — 두 벌의 어긋남은 리뷰 루브릭이 본다.
-- **브랜드가 발행한 역할→팔레트 계층은 frontmatter 참조 행으로 싣는다.** 형식은
+- **브랜드가 발행한 역할→팔레트 계층은 frontmatter 참조 행으로 싣는다(#435).** 이 형식을 쓰기로 한 항목 — #435 의
+  greeting · seed-design · codeit 처럼 역할 계층을 참조 행으로 싣는 항목 — 에 적용한다. 다른 항목에 새로 들이는
+  것은 따로 정한다. 형식은
   `bg-brand-solid: "{colors.carrot-600}"` 이고, 다크 짝은 `dark-` 접두로 다크 팔레트를 가리킨다(테마를 타지
   않는 팔레트 — seed-design `static-*` — 는 다크 짝도 접두 없는 키를 가리킨다).
   - **상류가 역할을 단일 팔레트 토큰으로 가리킬 때만 싣는다.** 불투명도 램프를 거치는 역할은 값이
