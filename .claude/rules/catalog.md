@@ -110,7 +110,7 @@ Google Labs 의 DESIGN.md 명세를 **공식 린터로** 판정한다. 명세를
 - **브랜드가 발행한 역할→팔레트 계층을 frontmatter 참조 행으로 싣는 항목은 아래 꼴을 따른다(#435).** 역할을
   참조 행으로 싣는 것은 선택이다 — 스킬 정본 `stitch-format.md` 「Role → palette reference rows」가 역할 표를
   참조 행으로 "can also be carried" 라고 쓴다. 이 형식은 #435 에서 greeting · seed-design · codeit 으로
-  시작했다. 이 형식을 쓰는 항목은(기존 항목에 더할 때도) 아래 `CASES` 대조 등록을 따르고, 이 형식 이전부터 있던
+  시작했다. 이 형식을 쓰는 항목은(기존 항목에 더할 때도) 등록처 표의 `CASES` 대조 등록을 따르고, 이 형식 이전부터 있던
   참조 행은 이 절 마지막 항이 따로 다룬다. 형식은
   `bg-brand-solid: "{colors.carrot-600}"` 이고, 다크 짝은 `dark-` 접두로 다크 팔레트를 가리킨다(테마를 타지
   않는 팔레트 — seed-design `static-*` — 는 다크 짝도 접두 없는 키를 가리킨다).
