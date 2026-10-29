@@ -208,7 +208,7 @@ colors:
   dark-effect2: "{colors.dark-neutral100}"
   dark-effect3: "{colors.dark-neutral200}"
   dark-effect4: "{colors.dark-neutral300}"
-  dark-baseBackground: "{colors.dark-gray25}"   # 다크에서 라이트와 다른 단계를 고르는 유일한 역할 — 다크의 gray0 은 검정이라 한 단계 밝은 gray25 가 바탕이다
+  dark-baseBackground: "{colors.dark-gray25}"   # 다크에서 라이트와 다른 단계를 고르는 유일한 역할 (배포본 DARK_SEMANTIC)
 typography:
   title1:
     fontFamily: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif
