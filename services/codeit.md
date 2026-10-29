@@ -389,7 +389,7 @@ Gray 램프는 순수 중성회색이 아니라 살짝 블루/네이비 쪽으�
 
 텍스트 위계는 별도 회색 팔레트가 아니라 **`gray-100` 위의 opacity 램프**(100/80/60/50/30%)로 구현된다 [src:8] [src:2]. 접근성 원칙은 "배경 요소 위의 계층 명암비는 WCAG 기준을 준수해야 함"만 텍스트로 명시하고 구체 등급(AA/AAA)은 없다 [src:8].
 
-⚠ **docs-번들 불일치 2건**은 실제 렌더(번들) 기준으로 채택하고 docs 서술은 주석으로만 병기한다: `border-secondary`는 docs가 opacity 20이라 하나 번들은 15로 렌더하고 [src:8] [src:2], 다크 `status-positive`는 docs가 `green-30`이라 서술하나 번들은 라이트·다크 양쪽에서 이름이 같은 `var(--green-70)`만 참조해 다크 실값이 캐스케이드로 `#9bf59f`(≈ `oklch(0.892 0.145 145)`)가 된다 [src:8] [src:2].
+⚠ **docs-번들 불일치 2건**은 실제 렌더(번들) 기준으로 채택하고 docs 서술은 주석으로만 병기한다: `border-secondary`는 docs가 opacity 20이라 하나 번들은 15로 렌더하고 [src:8] [src:2], 다크 `status-positive`는 docs가 `green-30`이라 서술하나 번들은 라이트·다크 양쪽에서 이름이 같은 `var(--green-70)`만 참조해 다크 실값이 캐스케이드로 `{colors.dark-green-70}` 이 된다 [src:8] [src:2].
 
 ### 프리미티브 스케일 — 다크 테마
 
@@ -454,7 +454,7 @@ purple 램프 자체는 테마 불변이지만 `bg-purple-primary`는 그렇지 
 | `status-positive` | green-70 | ⚠ docs는 다크를 green-30이라 서술하나 번들은 양 테마 `var(--green-70)`만 참조 — 다크 실제 렌더값 채택 |
 | `status-negative` | 리터럴 `status-negative`(양 테마 동일) | 일치 |
 
-기타: New 아이콘 권장색 `pink-60`(라이트 `#eb008d` ≈ `oklch(0.614 0.253 355)` / 다크 `#ffa6db` ≈ `oklch(0.828 0.123 344)`, hex는 docs 미공개·번들 실측)[src:13] [src:2].
+기타: New 아이콘 권장색 `pink-60`(라이트 `{colors.light-pink-60}` / 다크 `{colors.dark-pink-60}`, 값은 docs 미공개·번들 실측)[src:13] [src:2].
 
 **Label 색 배선 (번들 실측)** — docs는 Color 6종(purple/green/pink/yellow/gray/blue)과 Invert 속성을 이름으로만 싣지만 [src:21], 번들의 Label 모듈이 12개 변형의 배경·글자를 모두 선언한다 [src:2].
 
@@ -515,7 +515,7 @@ Buttons는 시스템에서 가장 주요한 UI 컴포넌트로 5개 서브타입
 
 ### button-primary
 
-ESSENTIAL 레이블 + OPTIONAL 아이콘. Size L/M/S(최소 padding 24/16/12px), State default/hover/disabled, Icon-left/Icon-right [src:17]. **Do**: 여러 버튼 중 가장 우측에 배치. **Don't**: Primary 버튼을 여러 개 나열하지 말 것 [src:17]. 데모 렌더의 fill은 공식 `{colors.codeit-violet}`보다 밝아 육안상 `{colors.light-purple-60}` ≈ `oklch(0.582 0.273 300)` 계열에 가깝다 — 캡처 관찰 추정이며 공식 토큰이 아니다. 버튼 fill을 지정하는 색상 토큰은 docs·번들 어디에도 문서화돼 있지 않다.
+ESSENTIAL 레이블 + OPTIONAL 아이콘. Size L/M/S(최소 padding 24/16/12px), State default/hover/disabled, Icon-left/Icon-right [src:17]. **Do**: 여러 버튼 중 가장 우측에 배치. **Don't**: Primary 버튼을 여러 개 나열하지 말 것 [src:17]. 데모 렌더의 fill은 공식 `{colors.codeit-violet}`보다 밝아 육안상 `{colors.light-purple-60}` 계열에 가깝다 — 캡처 관찰 추정이며 공식 토큰이 아니다. 버튼 fill을 지정하는 색상 토큰은 docs·번들 어디에도 문서화돼 있지 않다.
 
 ```tsx
 <ButtonPrimary size="L" icon="right" state="default">
@@ -789,7 +789,7 @@ Anatomy 3요소 — Filter Button(적용 필터 유무로 on/off), Filter Header
 - **정량 스펙과 접근성**: hover/disabled를 포함한 컴포넌트별 색상 적용값, 구체 대비 등급(AA/AAA), ARIA role/label 규격이 전 컴포넌트에서 docs에 공개되지 않는다 [src:8] [src:17] [src:29]. 색상 적용값 중 Label은 번들 CSS에서 확인해 `## Colors`에 실었다 [src:2]. 나머지 컴포넌트는 번들과 대조하지 않았다.
 - **UX Writing**: `/ux-writing` 경로가 내비게이션에 존재하나 페이지 본문이 비어 있어 카피·보이스 가이드가 공개되지 않는다 [src:38]. 위 Do's and Don'ts의 종결어미 항목은 컴포넌트 문서에 흩어진 개별 예시를 모은 것이지 공식 라이팅 가이드가 아니다.
 - **시각 근거의 한계**: 제공된 데모 캡처 21종은 라이트 렌더·단일 데스크톱 뷰포트만 존재해 다크 모드·모바일 폭에서 컴포넌트가 실제로 어떻게 조합되는지는 확인할 수 없다.
-- **다크 배경의 로고 처리**: 로고에 대해 명시된 원칙은 "서체 변경·자간 조정 등 임의적 변형 금지" 하나뿐이고 [src:6], 다크 배경에서의 색 처리는 규정되지 않는다. 브랜드 바이올렛 `#6500C3`(≈ `oklch(0.439 0.240 296)`) [src:5]을 다크 베이스 `gray-00`(`#181b28` ≈ `oklch(0.225 0.026 274)`) [src:2] 위에 그대로 올리면 대비가 약 1.9:1로 그래픽 요소의 3:1 기준에 못 미친다(라이트 흰 배경에서는 약 9:1). 다크 UI에 로고를 배치해야 한다면 소비자가 직접 해결해야 하는 지점이며, 이 문서는 근거 없는 반전 규칙을 만들지 않는다.
+- **다크 배경의 로고 처리**: 로고에 대해 명시된 원칙은 "서체 변경·자간 조정 등 임의적 변형 금지" 하나뿐이고 [src:6], 다크 배경에서의 색 처리는 규정되지 않는다. 브랜드 바이올렛 `{colors.codeit-violet}` [src:5]을 다크 베이스 `{colors.dark-gray-00}` [src:2] 위에 그대로 올리면 대비가 약 1.9:1로 그래픽 요소의 3:1 기준에 못 미친다(라이트 흰 배경에서는 약 9:1). 다크 UI에 로고를 배치해야 한다면 소비자가 직접 해결해야 하는 지점이며, 이 문서는 근거 없는 반전 규칙을 만들지 않는다.
 
 ## References
 
