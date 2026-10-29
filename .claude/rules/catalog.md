@@ -107,11 +107,11 @@ Google Labs 의 DESIGN.md 명세를 **공식 린터로** 판정한다. 명세를
 - **새 항목은 컴포넌트를 명세의 `components:` 맵에도 싣는다**(기존 항목은 소급하지 않는다). 저작 규칙의
   정본은 `stitch-format.md` 의 "Component tokens in the frontmatter `components:` map" 이다. 본문 스펙 펜스
   (`text`)도 그대로 남는다 — 두 벌의 어긋남은 리뷰 루브릭이 본다.
-- **브랜드가 발행한 역할→팔레트 계층을 frontmatter 참조 행으로도 싣는 항목은 아래 꼴을 따른다(#435).**
-  참조 행으로 싣는 것은 선택이다 — 역할 계층을 본문 표로만 두는 항목도 있다(bezier · class101 · gmarket 등). 이
-  형식은 #435 에서 greeting · seed-design · codeit 으로 시작했고, 지금 쓰는 항목은 frontmatter 에 역할 이름 키의
-  참조 행이 있는 항목이다(본문 표와의 기계 대조는 아래 `CASES` 가 맡는다). 새 항목이 이 형식을 쓰면 그 대조 등록을
-  따른다. 형식은
+- **브랜드가 발행한 역할→팔레트 계층을 본문 `## Colors` 역할 표와 함께 frontmatter 참조 행으로도 싣는 항목은 아래
+  꼴을 따른다(#435).** 참조 행으로 싣는 것은 선택이다 — 스킬 정본 `stitch-format.md` 「Role → palette reference
+  rows」가 역할 표를 참조 행으로 "can also be carried" 라고 쓴다. 이 형식은 #435 에서 greeting · seed-design ·
+  codeit 으로 시작했다. 새 항목이 이 형식을 쓰면 아래 `CASES` 대조 등록을 따르고, 이 형식 이전부터 있던 참조 행은
+  이 절 마지막 항이 따로 다룬다. 형식은
   `bg-brand-solid: "{colors.carrot-600}"` 이고, 다크 짝은 `dark-` 접두로 다크 팔레트를 가리킨다(테마를 타지
   않는 팔레트 — seed-design `static-*` — 는 다크 짝도 접두 없는 키를 가리킨다).
   - **상류가 역할을 단일 팔레트 토큰으로 가리킬 때만 싣는다.** 불투명도 램프를 거치는 역할은 값이
