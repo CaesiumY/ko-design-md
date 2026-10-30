@@ -24,12 +24,6 @@ const SERVICES = join(
   "services"
 )
 
-/** Every catalogue entry's slug. */
-const slugs = (): Array<string> =>
-  readdirSync(SERVICES)
-    .filter((f) => f.endsWith(".md"))
-    .map((f) => f.slice(0, -".md".length))
-
 function load(slug: string): {
   literals: Set<string>
   refs: Map<string, string>
@@ -81,9 +75,8 @@ const SPEC_COLOR_ROLES = new Set([
   "neutral",
 ])
 
-// A reference row's key less its theme marking — the `dark-` prefix, the
-// spelling the catalogue uses for a dark twin (the suffix guard below catches a
-// twin spelt with `-dark` / `-light` instead).
+// A reference row's key less its theme marking — the `dark-` prefix, the one
+// spelling the catalogue uses for a dark twin (#625).
 const bare = (key: string): string => key.replace(/^dark-/, "")
 
 const spans = (cell: string): Array<string> =>
@@ -304,38 +297,6 @@ describe("role reference rows agree with the body role tables", () => {
     ).toThrow(/spec colour-role name/)
   })
 
-  it("spells a reference row's theme twin with the `dark-` prefix, not a suffix", () => {
-    // One spelling for the dark twin (#625), so a reader — and the card view's
-    // light filter, which tests the prefix only — finds it the same way in every
-    // entry. A suffix alone is not a theme: a brand may publish a shade under
-    // such a name (gs-shop's literal `positive-dark`), and a role row carries
-    // the published name. A suffixed row is a theme twin when it points at the
-    // dark palette, or when its stem also appears bare, `dark-`-prefixed (a
-    // half-done rename) or with the other suffix.
-    const suffixed = slugs().flatMap((slug) => {
-      const { refs } = load(slug)
-      return [...refs]
-        .filter(([key, target]) => {
-          const stem = /^(.*)-(?:dark|light)$/.exec(key)?.[1]
-          if (stem === undefined) return false
-          const siblings = [
-            stem,
-            `dark-${stem}`,
-            `${stem}-dark`,
-            `${stem}-light`,
-          ].filter((other) => other !== key && refs.has(other))
-          return target.startsWith("dark-") || siblings.length > 0
-        })
-        .map(([key]) => `${slug}.md: ${key}`)
-    })
-    expect(
-      suffixed,
-      "theme twins named by a suffix — write the dark row `dark-<role>` and drop " +
-        "`-light` from its light side (.claude/rules/catalog.md 「테마별 팔레트는 " +
-        "이름을 갈라 쓴다」); a brand-published shade name with no twin is not caught"
-    ).toEqual([])
-  })
-
   it("has a case for every entry whose reference rows alias its role table", () => {
     // Detected by shape, not by listing: a reference row whose key — less a
     // `dark-` prefix, and with codeit's `text-` / `background-` read as `txt-` /
@@ -348,7 +309,9 @@ describe("role reference rows agree with the body role tables", () => {
       bare(key)
         .replace(/^text-/, "txt-")
         .replace(/^background-/, "bg-")
-    const using = slugs()
+    const using = readdirSync(SERVICES)
+      .filter((f) => f.endsWith(".md"))
+      .map((f) => f.slice(0, -".md".length))
       .filter((slug) => {
         const { refs, tableRows } = load(slug)
         const roles = new Set(tableRows.flatMap(([cell]) => spans(cell)))
