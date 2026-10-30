@@ -75,10 +75,9 @@ const SPEC_COLOR_ROLES = new Set([
   "neutral",
 ])
 
-// A reference row's key less its theme marking: the `dark-` prefix this form
-// uses, or the `-dark` suffix vapor-ui's older aliases use.
-const bare = (key: string): string =>
-  key.replace(/^dark-/, "").replace(/-dark$/, "")
+// A reference row's key less its theme marking — the `dark-` prefix, the only
+// spelling a reference row uses (pinned by the suffix guard below).
+const bare = (key: string): string => key.replace(/^dark-/, "")
 
 const spans = (cell: string): Array<string> =>
   [...cell.matchAll(/`([^`]+)`/g)].map((m) => m[1])
@@ -298,9 +297,24 @@ describe("role reference rows agree with the body role tables", () => {
     ).toThrow(/spec colour-role name/)
   })
 
+  it("marks every dark reference row with the `dark-` prefix, never a suffix", () => {
+    // One spelling for the dark twin (#625), so a reader — and the card view's
+    // light filter, which tests the prefix only — finds it the same way in every
+    // entry. Scoped to reference rows: a literal `positive-dark` (gs-shop) is a
+    // darker shade on the light theme, not a twin.
+    const suffixed = readdirSync(SERVICES)
+      .filter((f) => f.endsWith(".md"))
+      .flatMap((f) =>
+        [...load(f.slice(0, -".md".length)).refs.keys()]
+          .filter((key) => /-(dark|light)$/.test(key))
+          .map((key) => `${f}: ${key}`)
+      )
+    expect(suffixed).toEqual([])
+  })
+
   it("has a case for every entry whose reference rows alias its role table", () => {
     // Detected by shape, not by listing: a reference row whose key — less a
-    // `dark-` prefix or `-dark` suffix, in either spelling codeit uses — is a
+    // `dark-` prefix, in either spelling codeit uses — is a
     // backticked name in the first column of the entry's own `## Colors`
     // tables. Older reference rows elsewhere (toss's role chains, vapor-ui's
     // aliases) name no table role and are not caught. A role table written
