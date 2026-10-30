@@ -306,14 +306,29 @@ describe("role reference rows agree with the body role tables", () => {
   it("marks a reference row's theme with a prefix, never a `-dark` / `-light` suffix", () => {
     // One spelling for the dark twin (#625), so a reader — and the card view's
     // light filter, which tests the prefix only — finds it the same way in every
-    // entry. Scoped to reference rows: a literal `positive-dark` (gs-shop) is a
-    // darker shade on the light theme, not a twin.
-    const suffixed = slugs().flatMap((slug) =>
-      [...load(slug).refs.keys()]
-        .filter((key) => /-(dark|light)$/.test(key))
-        .map((key) => `${slug}.md: ${key}`)
-    )
-    expect(suffixed).toEqual([])
+    // entry. A suffix alone is not a theme: a brand may publish a shade under
+    // such a name (gs-shop's literal `positive-dark`), and a role row carries
+    // the published name. A suffixed row is a theme twin when it points at the
+    // dark palette, or when its stem also appears bare or with the other suffix.
+    const suffixed = slugs().flatMap((slug) => {
+      const { refs } = load(slug)
+      return [...refs]
+        .filter(([key, target]) => {
+          const stem = /^(.*)-(?:dark|light)$/.exec(key)?.[1]
+          if (stem === undefined) return false
+          const siblings = [stem, `${stem}-dark`, `${stem}-light`].filter(
+            (other) => other !== key && refs.has(other)
+          )
+          return target.startsWith("dark-") || siblings.length > 0
+        })
+        .map(([key]) => `${slug}.md: ${key}`)
+    })
+    expect(
+      suffixed,
+      "theme twins named by a suffix — write the dark row `dark-<role>` and drop " +
+        "`-light` from its light side (.claude/rules/catalog.md 「테마별 팔레트는 " +
+        "이름을 갈라 쓴다」); a brand-published shade name with no twin is not caught"
+    ).toEqual([])
   })
 
   it("has a case for every entry whose reference rows alias its role table", () => {
