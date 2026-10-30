@@ -449,7 +449,7 @@ Voice는 "factual, didactic, slightly warm"으로 정의된다 [src:5]. 한국�
 
 ## Colors
 
-> **팔레트 정정(2026-09-08).** 배포본 `@vapor-ui/core` 1.3.0 의 `dist/styles/themes.css.ts.vanilla.css` 와 재대조해 **다크 절반을 새로 발행하고 시맨틱 alias 44건을 고쳤다** [src:4]. 종전 판본은 라이트 램프만 싣고 다크를 다크 alias 가 라이트 램프의 다른 단계를 가리키는 방식으로 근사했는데, 상류는 **다크에서 램프 자체를 재정의한다** — 11 패밀리 × 10단 전부이고 번호가 커질수록 밝아진다(다크 `gray-600` 은 `#A7A7A7` (≈ oklch(0.728 0.000 0)), `gray-900` 은 `#FAFAFA` (≈ oklch(0.985 0.000 0))). 근사는 일관되게 한 단씩 어두웠고, contrast 계열은 방향까지 뒤집혀 있었다 — `foreground-contrast-200` 다크 alias 가 `#F7F7F7` (≈ oklch(0.976 0.000 0), 밝음)인데 발행값은 `#606060` (≈ oklch(0.489 0.000 0), 중간 회색)이다.
+> **팔레트 정정(2026-09-08).** 배포본 `@vapor-ui/core` 1.3.0 의 `dist/styles/themes.css.ts.vanilla.css` 와 재대조해 **다크 절반을 새로 발행하고 시맨틱 alias 44건을 고쳤다** [src:4]. 종전 판본은 라이트 램프만 싣고 다크는 다크 쪽 alias 가 라이트 램프의 다른 단계를 가리키는 방식으로 근사했는데, 상류는 **다크에서 램프 자체를 재정의한다** — 11 패밀리 × 10단 전부이고 번호가 커질수록 밝아진다(다크 `gray-600` 은 `#A7A7A7` (≈ oklch(0.728 0.000 0)), `gray-900` 은 `#FAFAFA` (≈ oklch(0.985 0.000 0))). 근사는 일관되게 한 단씩 어두웠고, contrast 계열은 방향까지 뒤집혀 있었다 — `foreground-contrast-200` 다크 alias 가 `#F7F7F7` (≈ oklch(0.976 0.000 0), 밝음)인데 발행값은 `#606060` (≈ oklch(0.489 0.000 0), 중간 회색)이다.
 >
 > **이제 `dark-` 접두 램프 111개를 함께 발행한다.** 다크 alias 40개가 전부 그 램프를 가리킨다 — 36개는 라이트 램프의 다른 단계를 가리키던 것을 고쳤고, 비어 있던 `dark-color-background-{primary,success,warning,danger}-100` 4개는 새로 채웠다. 라이트도 4건이 어긋나 함께 고쳤다 — `foreground-primary-100` 은 `blue-500` 이 아니라 `blue-600` 이고, `background-primary-100` 은 `blue-100`, `background-secondary-100`·`-200` 은 각각 `gray-050`·`gray-100` 이다.
 >
