@@ -122,4 +122,4 @@ Google Labs 의 DESIGN.md 명세를 **공식 린터로** 판정한다. 명세를
     표 **첫 열의 백틱 스팬**만 본다 — 역할을 백틱 없이 쓰거나 첫 열 밖에 두면 대조가 조용히 빠진다.
   - 이 형식 이전부터 있던 참조 행(toss · vapor-ui · likelion · teamsparta · baemin)은 이 규칙의 대상이 아니다.
     이 형식에 맞추려고 고치지 말 것. 다만 다크 짝 이름은 이들도 `dark-` 접두다 — vapor-ui · teamsparta 의 뒤붙임을
-    #625 가 바꿨고, 뒤붙임 참조 행 키는 `role-reference-rows.test.ts` 가 막는다.
+    #625 가 바꿨고, 테마 짝을 뒤붙임으로 적은 참조 행은 `role-reference-rows.test.ts` 가 막는다.
