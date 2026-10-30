@@ -3,7 +3,7 @@ name: 팀스파르타
 slug: teamsparta
 category: education
 logo: https://getdesign.kr/logos/teamsparta-favicon.png
-last_updated: "2026-10-30"
+last_updated: "2026-10-31"
 created_at: "2026-05-13"
 lang: ko
 colors:

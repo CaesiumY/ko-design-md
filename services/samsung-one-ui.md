@@ -4,7 +4,7 @@ design_system_name: One UI
 slug: samsung-one-ui
 category: developer
 logo: https://getdesign.kr/logos/samsung-one-ui.png
-last_updated: "2026-10-30"
+last_updated: "2026-10-31"
 created_at: "2026-08-13"
 lang: ko
 colors:
