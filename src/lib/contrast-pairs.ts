@@ -132,7 +132,8 @@ export const OBSERVED_COLOURS: Readonly<Record<string, ObservedColours>> =
  * paints `ink`, read as light).
  * Any other way of naming a theme reads as `both`, which keeps the classifier
  * as wide as it was. The catalogue writes every dark twin with the prefix
- * (#625), so a `-dark` suffix is only a darker shade (gs-shop's
+ * (#625 — pinned by a test for reference rows, kept by review for literal
+ * tokens), so a `-dark` suffix is only a darker shade (gs-shop's
  * `positive-dark`).
  */
 export type TokenTheme = Theme | "both"

@@ -24,6 +24,12 @@ const SERVICES = join(
   "services"
 )
 
+/** Every catalogue entry's slug. */
+const slugs = (): Array<string> =>
+  readdirSync(SERVICES)
+    .filter((f) => f.endsWith(".md"))
+    .map((f) => f.slice(0, -".md".length))
+
 function load(slug: string): {
   literals: Set<string>
   refs: Map<string, string>
@@ -302,13 +308,11 @@ describe("role reference rows agree with the body role tables", () => {
     // light filter, which tests the prefix only — finds it the same way in every
     // entry. Scoped to reference rows: a literal `positive-dark` (gs-shop) is a
     // darker shade on the light theme, not a twin.
-    const suffixed = readdirSync(SERVICES)
-      .filter((f) => f.endsWith(".md"))
-      .flatMap((f) =>
-        [...load(f.slice(0, -".md".length)).refs.keys()]
-          .filter((key) => /-(dark|light)$/.test(key))
-          .map((key) => `${f}: ${key}`)
-      )
+    const suffixed = slugs().flatMap((slug) =>
+      [...load(slug).refs.keys()]
+        .filter((key) => /-(dark|light)$/.test(key))
+        .map((key) => `${slug}.md: ${key}`)
+    )
     expect(suffixed).toEqual([])
   })
 
@@ -324,9 +328,7 @@ describe("role reference rows agree with the body role tables", () => {
       bare(key)
         .replace(/^text-/, "txt-")
         .replace(/^background-/, "bg-")
-    const using = readdirSync(SERVICES)
-      .filter((f) => f.endsWith(".md"))
-      .map((f) => f.slice(0, -".md".length))
+    const using = slugs()
       .filter((slug) => {
         const { refs, tableRows } = load(slug)
         const roles = new Set(tableRows.flatMap(([cell]) => spans(cell)))
