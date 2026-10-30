@@ -8,12 +8,12 @@ created_at: "2026-05-13"
 lang: ko
 colors:
   bg-canvas: "{colors.white}"
-  bg-subtle: "{colors.gray-50}"   # 라이트 테마 값 — 다크 짝은 이 문서에 없다(상류 재대조는 #634). 다크 화면에 그대로 쓰지 말 것
+  bg-subtle: "{colors.gray-50}"   # 라이트 테마 값 — 다크 짝은 이 문서에 없다. 다크 화면에 그대로 쓰지 말 것
   bg-surface: "{colors.white}"
   dark-bg-canvas: "{colors.gray-900}"
   dark-bg-surface: "{colors.gray-950}"
-  fg-primary: "{colors.gray-900}"   # 라이트 테마 값 — 다크 짝은 이 문서에 없다(상류 재대조는 #634). 다크 화면에 그대로 쓰지 말 것
-  fg-secondary: "{colors.gray-500}"   # 라이트 테마 값 — 다크 짝은 이 문서에 없다(상류 재대조는 #634). 다크 화면에 그대로 쓰지 말 것
+  fg-primary: "{colors.gray-900}"   # 라이트 테마 값 — 다크 짝은 이 문서에 없다. 다크 화면에 그대로 쓰지 말 것
+  fg-secondary: "{colors.gray-500}"   # 라이트 테마 값 — 다크 짝은 이 문서에 없다. 다크 화면에 그대로 쓰지 말 것
   fg-inverse: "{colors.white}"
   border-default: "{colors.gray-200}"
   border-muted: "{colors.gray-100}"

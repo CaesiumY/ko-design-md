@@ -177,10 +177,11 @@ describe("lightTokensOnly", () => {
   })
 
   it("drops dark tokens marked by GROUP when the name is shared across themes", () => {
-    // wanted reuses the same names in both themes (`bg-canvas` exists in Light
-    // and Dark) and distinguishes them only by the group heading. Filtering on
-    // the name alone let 23 dark swatches render in the light card view as
-    // duplicate-named cards.
+    // A fixture, not a live entry: wanted once reused the same names in both
+    // themes and told them apart only by the group heading, and filtering on the
+    // name alone let its dark swatches render in the light card view as
+    // duplicate-named cards. It now prefixes them (`dark-bg-canvas`); the group
+    // check stays as the defence for an entry written that way.
     const colors = [
       c("bg-canvas", "oklch(1 0 0)", "Semantic alias — Light"),
       c("bg-canvas", "oklch(0.148 0.004 277)", "Semantic alias — Dark"),
