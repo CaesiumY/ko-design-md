@@ -297,7 +297,7 @@ describe("role reference rows agree with the body role tables", () => {
     ).toThrow(/spec colour-role name/)
   })
 
-  it("marks every dark reference row with the `dark-` prefix, never a suffix", () => {
+  it("marks a reference row's theme with a prefix, never a `-dark` / `-light` suffix", () => {
     // One spelling for the dark twin (#625), so a reader — and the card view's
     // light filter, which tests the prefix only — finds it the same way in every
     // entry. Scoped to reference rows: a literal `positive-dark` (gs-shop) is a
@@ -314,8 +314,8 @@ describe("role reference rows agree with the body role tables", () => {
 
   it("has a case for every entry whose reference rows alias its role table", () => {
     // Detected by shape, not by listing: a reference row whose key — less a
-    // `dark-` prefix, in either spelling codeit uses — is a
-    // backticked name in the first column of the entry's own `## Colors`
+    // `dark-` prefix, and with codeit's `text-` / `background-` read as `txt-` /
+    // `bg-` — is a backticked name in the first column of the entry's own `## Colors`
     // tables. Older reference rows elsewhere (toss's role chains, vapor-ui's
     // aliases) name no table role and are not caught. A role table written
     // without backticks, or with the role outside the first column, is not
