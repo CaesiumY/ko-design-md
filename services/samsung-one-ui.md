@@ -4,17 +4,17 @@ design_system_name: One UI
 slug: samsung-one-ui
 category: developer
 logo: https://getdesign.kr/logos/samsung-one-ui.png
-last_updated: "2026-09-14"
+last_updated: "2026-10-30"
 created_at: "2026-08-13"
 lang: ko
 colors:
   primary: oklch(0.617 0.208 255.8)   # #0381fe · Light/Dark 동일 · 무버전 발행 페이지, 2019 가이드라인과 일치
   primary-dark: oklch(0.561 0.186 255.2)   # #0072de · Light 테마 값 · 무버전 발행 페이지, 2019 가이드라인과 일치
-  primary-dark-on-dark: oklch(0.661 0.182 256.7)   # #3e91ff · Dark 테마의 Primary dark 값 · 무버전 페이지, 2019 가이드라인과 일치
+  dark-primary-dark: oklch(0.661 0.182 256.7)   # #3e91ff · Dark 테마의 Primary dark 값 · 무버전 페이지, 2019 가이드라인과 일치
   color-control-activated: oklch(0.661 0.182 256.7)   # #3e91ff · 양 테마 동일, 선택 컨트롤 활성 · 무버전 페이지, 2019 가이드라인과 일치
   white: oklch(0.985 0 0)   # #fafafa · 양 테마 동일 · One UI 2(2019) 발행값
   black: oklch(0 0 0)   # #000000 · Light 테마의 Black · One UI 2(2019) 발행값
-  black-dark: oklch(0.134 0 0)   # #080808 · Dark 테마 팔레트의 Black(Light 테마는 순흑) · One UI 2(2019) 발행값
+  dark-black: oklch(0.134 0 0)   # #080808 · Dark 테마 팔레트의 Black(Light 테마는 순흑) · One UI 2(2019) 발행값
 spacing:
   margin-side-min: 24px   # 공식 표기 24dp — 웹 1dp≈1px 매핑은 카탈로그 해석 · 좌우 최소 마진
   touch-target-gap-min: 8px   # 공식 표기 "8dp or more" · 인접 터치 대상 사이 최소 간격 · 타겟 크기는 미발행
@@ -74,11 +74,11 @@ One UI의 목표는 폰·태블릿·워치·이어버드·PC 어느 디바이스
 
 One UI는 "풍부한 단색(rich, solid colors)"에 의존하며, 중요한 정보의 식별성과 가독성을 위해 색의 명도·채도를 특정 범위 안에 묶는다 [src:7] (그 범위는 텍스트가 아니라 도형으로 발행돼 있다 [src:40] — 권장 구간은 S50/B100부터 S100/B50까지이고, 색상 H41–65는 "Range not recommended"로 배제된다). 컬러는 role 단위로 정의된다 — Primary는 플로팅 액션 버튼·슬라이더·입력 필드·포커스 요소에, Primary dark는 강조 버튼 배경·앱바 텍스트·다이얼로그 버튼에, Color control activated는 체크박스·라디오·토글 같은 선택 컨트롤의 활성 상태에 쓰인다 [src:7][src:9].
 
-`{colors.primary-dark-on-dark}`와 `{colors.color-control-activated}`가 같은 값을 공유하는 것은 전사 오류가 아니라 발행값 그대로다 [src:7] — "Primary dark"라는 하나의 role이 테마에 따라 값을 바꾸고, 그 다크 테마 값이 선택 컨트롤 활성색과 일치한다. 토큰명 `primary-dark-on-dark`와 `black-dark`는 발행 role명이 아니라 **카탈로그가 부여한 이름**이다 — 삼성은 "Primary dark"와 "Black" 각 하나의 이름 아래 테마별 값을 발행하는데, 토큰 사이드카가 1토큰 1값을 요구해 테마별로 편 것이다.
+`{colors.dark-primary-dark}`와 `{colors.color-control-activated}`가 같은 값을 공유하는 것은 전사 오류가 아니라 발행값 그대로다 [src:7] — "Primary dark"라는 하나의 role이 테마에 따라 값을 바꾸고, 그 다크 테마 값이 선택 컨트롤 활성색과 일치한다. 토큰명 `dark-primary-dark`와 `dark-black`는 발행 role명이 아니라 **카탈로그가 부여한 이름**이다 — 삼성은 "Primary dark"와 "Black" 각 하나의 이름 아래 테마별 값을 발행하는데, 토큰 사이드카가 1토큰 1값을 요구해 테마별로 편 것이다.
 
 palette 운용 모델: One UI의 팔레트는 Android 테마 시스템의 카테고리화된 팔레트 위에서 동작한다 — 한 카테고리의 색 값을 바꾸면 그 카테고리에 속한 화면 요소가 일괄 갱신된다 [src:9]. **이는 삼성이 Android의 테마 메커니즘을 사용한다는 서술이지, Material Design의 시각 규칙이 One UI 규칙이라는 뜻이 아니다** — One UI는 그 메커니즘 위에서 자기 고유의 role 값과 배치 규칙을 강제한다 (Do's and Don'ts 참조).
 
-다크 모드는 권장이 아니라 기본 제공 장치다. 다크 모드에서 배경·메뉴·UI 요소는 검정 또는 짙은 회색으로 전환되어 눈부심을 줄이고 [src:8], 출시 전 라이트·다크 두 모드 모두에서 테스트해야 한다 [src:8]. 다크 테마 팔레트의 Black은 순흑이 아닌 `{colors.black-dark}`로 발행돼 있다 [src:9]. 같은 가이드는 베젤이 검은 디바이스에서 검은 배경이 베젤과 화면의 경계를 지워 화면이 시각적으로 확장돼 보이게 한다고 적는데 [src:9], 이것은 어두운 배경 일반의 근거이지 근흑을 순흑보다 앞세우는 규칙은 아니다. 모든 앱이 사용자가 원하는 시점(또는 예약 시각)에 다크 모드로 전환할 수 있게 하는 것이 권장된다 [src:9].
+다크 모드는 권장이 아니라 기본 제공 장치다. 다크 모드에서 배경·메뉴·UI 요소는 검정 또는 짙은 회색으로 전환되어 눈부심을 줄이고 [src:8], 출시 전 라이트·다크 두 모드 모두에서 테스트해야 한다 [src:8]. 다크 테마 팔레트의 Black은 순흑이 아닌 `{colors.dark-black}`로 발행돼 있다 [src:9]. 같은 가이드는 베젤이 검은 디바이스에서 검은 배경이 베젤과 화면의 경계를 지워 화면이 시각적으로 확장돼 보이게 한다고 적는데 [src:9], 이것은 어두운 배경 일반의 근거이지 근흑을 순흑보다 앞세우는 규칙은 아니다. 모든 앱이 사용자가 원하는 시점(또는 예약 시각)에 다크 모드로 전환할 수 있게 하는 것이 권장된다 [src:9].
 
 ## Typography
 
@@ -158,11 +158,11 @@ One UI의 기하는 **둥근 사각형과 원**이다. 스마트 디바이스 �
 
 ### button-flat
 
-배경 없는 플랫 버튼. 툴바와 다이얼로그에서는 불필요한 레이어를 더하지 않도록 플랫 버튼을 쓴다 [src:16]. 텍스트 색은 `{colors.primary-dark}` (다크 테마에서 `{colors.primary-dark-on-dark}`) [src:9].
+배경 없는 플랫 버튼. 툴바와 다이얼로그에서는 불필요한 레이어를 더하지 않도록 플랫 버튼을 쓴다 [src:16]. 텍스트 색은 `{colors.primary-dark}` (다크 테마에서 `{colors.dark-primary-dark}`) [src:9].
 
 ### button-contained
 
-면이 있는 버튼. **회색 배경은 중간 강조, 유채색 배경은 높은 강조**를 나타낸다 [src:16]. 높은 강조 배경은 `{colors.primary-dark}`(다크 테마에서 `{colors.primary-dark-on-dark}`) [src:7], radius는 `{rounded.radius-button}` [src:16]. **한 화면에는 한 가지 버튼 스타일만 쓴다** [src:16] — 강조 등급은 색으로 구분하되 스타일 체계 자체를 섞지 않는다.
+면이 있는 버튼. **회색 배경은 중간 강조, 유채색 배경은 높은 강조**를 나타낸다 [src:16]. 높은 강조 배경은 `{colors.primary-dark}`(다크 테마에서 `{colors.dark-primary-dark}`) [src:7], radius는 `{rounded.radius-button}` [src:16]. **한 화면에는 한 가지 버튼 스타일만 쓴다** [src:16] — 강조 등급은 색으로 구분하되 스타일 체계 자체를 섞지 않는다.
 
 ### dialog-choice
 
@@ -309,7 +309,7 @@ One UI는 모든 디스플레이 크기·해상도·화면비(폰·태블릿·�
 3. **탭은 텍스트로, 5개 이내로** — 바텀 내비게이션에 아이콘 전용 탭이나 스와이프 페이저를 만들지 않는다.
 4. **버튼 체계는 하나만** — 화면당 flat 또는 contained 한 체계를 고르고, 강조는 배경색(회색→유채색)으로만 올린다.
 5. **색은 role로** — `{colors.primary}`는 FAB·입력 포커스에, `{colors.primary-dark}`는 강조 버튼·텍스트 버튼에, `{colors.color-control-activated}`는 토글·체크박스 활성에 묶는다. 값을 바꿔 리브랜딩할 때도 role 구조는 유지한다.
-6. **다크 모드는 발행 다크 팔레트로** — 다크 배경은 `{colors.black-dark}`(다크 팔레트의 Black을 배경에 쓰는 것은 [src:8]의 검정 배경 서술을 옮긴 해석), 두 테마를 항상 함께 생성한다.
+6. **다크 모드는 발행 다크 팔레트로** — 다크 배경은 `{colors.dark-black}`(다크 팔레트의 Black을 배경에 쓰는 것은 [src:8]의 검정 배경 서술을 옮긴 해석), 두 테마를 항상 함께 생성한다.
 7. **모션은 100–500ms** — `cubic-bezier(0.22, 0.25, 0, 1)`로 빠른 가속·완만한 감속. 텍스트 교체는 순차 페이드, 이미지 교체는 겹침 페이드.
 8. **600dp에서 갈라진다** — 그 이상이면 멀티페인(42:58 → 960dp부터 38:62, 폴더블은 50:50)과 rail 내비게이션으로 전환한다.
 9. **수치를 인용할 때 세대를 붙인다** — 이 문서의 hex/radius 값은 "One UI 2(2019) 발행값"이라는 스탬프와 함께 옮긴다. 스탬프를 떼면 그 순간부터 보편 규칙 사칭이 된다.
