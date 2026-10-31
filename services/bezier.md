@@ -653,7 +653,7 @@ Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3
 | `bg-grey-lightest` | 기본 tier `grey-50`(#FCFCFC ≈ `oklch(0.991 0 0)`) — beta `{colors.grey-50}` 과 다른 값 | 기본 tier `grey-850`(#2A2B2D ≈ `oklch(0.289 0.004 265)`) — beta `{colors.grey-850}` 과 다른 값 |
 | `bg-grey-lighter` | `{colors.grey-100}` | 기본 tier `grey-800`(#313234 ≈ `oklch(0.317 0.004 265)`) — beta `{colors.grey-800}` 과 다른 값 |
 | `bg-grey-light` | `{colors.grey-200}` | 기본 tier `grey-700`(#464748 ≈ `oklch(0.397 0.002 248)`) — beta `{colors.grey-700}` 과 다른 값 |
-| `bg-grey-dim-lightest` | 기본 tier `grey-50-80` — beta 같은 이름 단계와 다른 값이라 싣지 않음 | 기본 tier `grey-850-80` — beta 같은 이름 단계와 다른 값이라 싣지 않음 |
+| `bg-grey-dim-lightest` | 기본 tier `grey-50-80`(#FCFCFCCC ≈ `oklch(0.991 0 0 / 0.80)`) — 같은 이름 beta 단계와 다른 값 | 기본 tier `grey-850-80`(#2A2B2DCC ≈ `oklch(0.289 0.004 265 / 0.80)`) — 같은 이름 beta 단계와 다른 값 |
 | `bg-grey-dark` | `{colors.grey-500}` | `{colors.grey-500}` |
 | `bg-grey-darkest` | 기본 tier `grey-900`(#242428 ≈ `oklch(0.262 0.007 286)`) — beta `{colors.grey-900}` 과 다른 값 | `{colors.white-100}` |
 | `bg-black-lightest` | `{colors.black-3}` | `{colors.white-5}` |
@@ -662,11 +662,11 @@ Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3
 | `bg-black-dark` | `{colors.black-15}` | `{colors.white-20}` |
 | `bg-black-darker` | `{colors.black-40}` | `{colors.white-40}` |
 | `bg-black-darkest` | `{colors.black-60}` | `{colors.white-60}` |
-| `bg-lounge` | `{colors.grey-100-90}` | 기본 tier `grey-800-90` — beta 같은 이름 단계와 다른 값이라 싣지 않음 |
-| `bg-header-float` | `{colors.white-90}` | 기본 tier `grey-800-80` — beta 같은 이름 단계와 다른 값이라 싣지 않음 |
+| `bg-lounge` | `{colors.grey-100-90}` | 기본 tier `grey-800-90`(#313234E6 ≈ `oklch(0.317 0.004 265 / 0.90)`) — beta `{colors.grey-800-90}` 과 다른 값 |
+| `bg-header-float` | `{colors.white-90}` | 기본 tier `grey-800-80`(#313234CC ≈ `oklch(0.317 0.004 265 / 0.80)`) — 같은 이름 beta 단계와 다른 값 |
 | `bg-header` | `{colors.white-100}` | 기본 tier `grey-800`(#313234 ≈ `oklch(0.317 0.004 265)`) — beta `{colors.grey-800}` 과 다른 값 |
-| `bg-navi` | `{colors.grey-100-80}` | 기본 tier `grey-800-80` — beta 같은 이름 단계와 다른 값이라 싣지 않음 |
-| `bg-gnb` | `{colors.grey-200-80}` | 기본 tier `grey-700-80` — beta 같은 이름 단계와 다른 값이라 싣지 않음 |
+| `bg-navi` | `{colors.grey-100-80}` | 기본 tier `grey-800-80`(#313234CC ≈ `oklch(0.317 0.004 265 / 0.80)`) — 같은 이름 beta 단계와 다른 값 |
+| `bg-gnb` | `{colors.grey-200-80}` | 기본 tier `grey-700-80`(#464748CC ≈ `oklch(0.397 0.002 248 / 0.80)`) — 같은 이름 beta 단계와 다른 값 |
 | `bg-white-dim-light` | `{colors.white-20}` | `{colors.black-20}` |
 | `bg-white-dim-dark` | `{colors.white-60}` | `{colors.black-60}` |
 | `bg-white-low` | `{colors.white-100}` | 기본 tier `grey-800`(#313234 ≈ `oklch(0.317 0.004 265)`) — beta `{colors.grey-800}` 과 다른 값 |
@@ -1445,7 +1445,7 @@ Bezier는 앱 셸/뷰포트 브레이크포인트를 토큰으로 발행하지 �
 - **hex→OKLCH 변환 오차.** 모든 색은 Bezier가 hex로 게시한 토큰을 OKLCH로 변환한 것이라 미세한 변환 드리프트가 있을 수 있다 — 정확한 원본 hex는 `@channel.io/bezier-tokens` 빌드 CSS를 직접 참조해야 한다 [src:3].
 - **beta 팔레트는 이제 검증됐다(2026-07-29 정정).** 이 항목은 원래 "beta 팔레트 값 상당수가 공개 URL로 직접 교차검증되지 않는다"고 적고 있었으나, 실제로 대조해 보니 당시 이 문서의 색 토큰 전부가 `@channel.io/bezier-tokens` 0.6.0의 beta 엔트리와 ΔE ≤ 0.02로 일치했다(Colors 절 참조). 남은 공백은 **컴포넌트 정본 스펙**(Banner/Toast 처리 등)이며, 이쪽은 Storybook 개별 docs를 `?path=/docs/<id>`로 열어 대조해야 한다 [src:3][src:2].
 - **시맨틱 다크 원시값은 이제 실렸다(2026-10-28 정정).** 이 항목은 원래 "다크 측이 참조하는 일부 white-알파 원시값의 정확한 단계는 코퍼스에서 전부 발췌되지 않았다"고 적고 있었으나, 상류 beta 엔트리에서 그 단계를 확인해 다크 글자·중립 채움이 가리키는 `white-8/20/40/60/80`, 라이트 중립 채움의 `black-5/15`, accent 채움 사다리를 frontmatter에 실었다(Colors 절 참조). beta 역할이 가리키지 않는 나머지 투명 단계 — 색상 알파 41개(`{hue}-300-10`·`{hue}-400-5`, blue 밖의 `{hue}-300-45`, blue·orange 밖의 `{hue}-400-30`)와 중립색 알파 12개(`grey-700-90`·`grey-900-0/90`·`white-22/30/50`·`black-50/70`·`grey-50/700/800/850-80`) — 는 싣지 않았다 [src:3].
-- **기본 tier 역할 일부는 참조 행이 없다(2026-11-01).** Colors 절 「Semantic」 표의 `bg-*`·`txt-*` 는 기본 tier 원시값을 가리키는데, 그중 `grey-50/700/800/850/900` 은 이 문서가 실은 beta 같은 이름 단계와 값이 달라, 그 단계를 가리키는 쪽(대부분 다크 표면)은 표에만 있다. 그 단계의 알파판(`grey-50-80`·`grey-700-80`·`grey-800-80/90`·`grey-850-80`)도 같은 이유로 표에만 있다. 이 16칸을 참조 행으로 실으려면 같은 이름의 beta 팔레트 값을 기본 tier 값으로 바꿔야 해서, beta 역할 층과 함께 쓰는 팔레트를 그대로 두었다 [src:3].
+- **기본 tier 역할 일부는 참조 행이 없다(2026-11-01).** Colors 절 「Semantic」 표의 `bg-*`·`txt-*` 는 기본 tier 원시값을 가리키는데, 그중 `grey-50/700/800/850/900` 은 이 문서가 실은 beta 같은 이름 단계와 값이 달라, 그 단계를 가리키는 쪽(대부분 다크 표면)은 기본 tier 값(hex 와 OKLCH)으로 표에만 있다. 그 단계의 알파판(`grey-50-80`·`grey-700-80`·`grey-800-80/90`·`grey-850-80`)도 같은 이유로 값과 함께 표에만 있다. 참조 행이 한쪽만 있는 역할 12개는 그 행의 줄 끝 주석이 빠진 쪽을 밝히고, 두 테마 모두 표에만 있는 `bg-grey-lightest`·`bg-grey-dim-lightest` 는 사이드카에 실리지 않는다. 이 16칸을 참조 행으로 실으려면 같은 이름의 beta 팔레트 값을 기본 tier 값으로 바꿔야 해서, beta 역할 층과 함께 쓰는 팔레트를 그대로 두었다 [src:3].
 - **모바일 리플로우 미관찰.** 제공 스크린샷이 데스크톱 Storybook 캔버스 한정이라, 실제 모바일 웹/네이티브에서의 컴포넌트 리플로우·접힘 거동은 직접 확인되지 않았다 [src:2].
 
 ## References
