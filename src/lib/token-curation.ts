@@ -133,7 +133,9 @@ export function curateColors(colors: Array<ColorToken>): {
 //      a heading that OPENS with the theme counts (`Dark palette`, `dark gray —
 //      …`, `다크 모드 값 — …`). Matched anywhere, it dropped 138 light role
 //      cards (ridi 120, banksalad 18) whose headings merely talk about the
-//      dark twins — "… — dark- 행은 …", "… · dark- 짝 없음".
+//      dark twins — "… — dark- 행은 …", "… · dark- 짝 없음". A heading that
+//      names the theme last (`Semantic alias — Dark`) is not read; the
+//      prefix is what covers it.
 const DARK_NAME_PREFIX = /^dark-/
 const DARK_GROUP = /^\s*(?:dark|다크)(?![a-z])/i
 

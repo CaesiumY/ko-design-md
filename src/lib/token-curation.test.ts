@@ -190,11 +190,6 @@ describe("lightTokensOnly", () => {
         "oklch(0.95 0 0)",
         "다크 모드 값 — 같은 토큰명의 오버라이드"
       ),
-      c(
-        "dark-gray-00",
-        "oklch(0.225 0.026 274)",
-        "프리미티브 스케일 — 다크 테마"
-      ),
     ]
     expect(lightTokensOnly(colors).map((x) => x.name)).toEqual(["canvas"])
   })
