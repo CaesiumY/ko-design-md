@@ -21,6 +21,19 @@ import { oklabToRgb, parseOklch, rgbToOklab } from "./oklch-convert"
 import type { Oklab } from "./oklch-convert"
 import type { Rgba } from "./contrast"
 
+/**
+ * One element's `background-*` longhands as computed style writes them. Every
+ * field but `value` is a list the browser repeats to the number of images.
+ */
+export interface BackgroundImage {
+  value: string
+  repeat: string
+  /** `background-clip`: how much of the box an image reaches. */
+  clip: string
+  /** `background-blend-mode`: how an image mixes with what is under it. */
+  blend: string
+}
+
 export interface ImageLayer {
   /** Deduplicated; channels on [0, 255], alpha on [0, 1]. */
   colours: Array<Rgba>
@@ -57,22 +70,46 @@ interface Stop {
 
 const BLOCKED_GRADIENT = { kind: "blocked", blocker: "gradient" } as const
 
-export function paintableColours(image: string, repeat: string): PaintedImage {
-  if (image.trim() === "none") return { kind: "none" }
-  const values = splitTopLevel(image)
-  const repeats = splitTopLevel(repeat)
-  if (values === null || repeats === null) return BLOCKED_GRADIENT
+/** The key two colours share when they paint the same 8-bit pixel. */
+export const rgbaKey = (c: Rgba): string =>
+  [c.r, c.g, c.b, c.a * 255].map((v) => Math.round(v)).join()
+
+// Anything that draws a picture rather than a gradient — `url()` directly or
+// inside `image-set()` / `cross-fade()`, or an element or worklet painted in.
+const IMAGE =
+  /\burl\(|^(?:-webkit-)?(?:image-set|cross-fade)\(|^element\(|^paint\(/
+
+export function paintableColours(image: BackgroundImage): PaintedImage {
+  if (image.value.trim() === "none") return { kind: "none" }
+  const values = splitTopLevel(image.value)
+  const repeats = splitTopLevel(image.repeat)
+  const clips = splitTopLevel(image.clip)
+  const blends = splitTopLevel(image.blend)
+  if (values === null || repeats === null || clips === null || blends === null)
+    return BLOCKED_GRADIENT
   // An image is checked across every layer first: it is the stronger reason,
   // and a gradient beside it being readable does not make the box readable.
-  if (values.some((v) => /^(url|image-set|-webkit-image-set)\(/.test(v))) {
+  if (values.some((v) => IMAGE.test(v))) {
     return { kind: "blocked", blocker: "image" }
   }
+  // Each longhand repeats its list to the number of images.
+  const at = (list: Array<string>, i: number): string => list[i % list.length]
   const layers: Array<ImageLayer> = []
   for (const [i, value] of values.entries()) {
+    // Anything but `normal` mixes the image with what is under it, which the
+    // source-over the caller composites with does not reproduce: `multiply`
+    // would read darker than the screen. And an image clipped to `text` paints
+    // inside glyphs, so it is not a backdrop at all — counting its colours as
+    // one would leave the real backdrop out of the set.
+    if (at(blends, i) !== "normal" || at(clips, i) === "text") {
+      return BLOCKED_GRADIENT
+    }
     const colours = gradientColours(value)
     if (colours === null) return BLOCKED_GRADIENT
-    // `background-repeat` repeats its list to the number of images.
-    layers.push({ colours, covers: tiles(repeats[i % repeats.length]) })
+    // Clipped short of the border box, the image leaves a band of the box it
+    // does not reach — one more place the text could sit on the bare colour.
+    const covers = tiles(at(repeats, i)) && at(clips, i) === "border-box"
+    layers.push({ colours, covers })
   }
   return { kind: "colours", layers }
 }
@@ -121,7 +158,7 @@ function gradientColours(value: string): Array<Rgba> | null {
   const out: Array<Rgba> = []
   const seen = new Set<string>()
   const add = (c: Rgba): void => {
-    const key = [c.r, c.g, c.b, c.a * 255].map((v) => Math.round(v)).join()
+    const key = rgbaKey(c)
     if (seen.has(key)) return
     seen.add(key)
     out.push(c)

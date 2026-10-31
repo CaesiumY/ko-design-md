@@ -55,7 +55,7 @@ those; never paste the measurer's new output into them.
 
 ## `gradient-backdrop.html`
 
-A third synthetic document under the same rule (#402). It covers text and a
+Another synthetic document under the same rule (#402). It covers text and a
 non-text surface over a `background-image`, which the sweep judges by every
 colour the image can paint rather than holding outright. No text in the
 samsung file sits on a gradient, and the file cannot gain one.

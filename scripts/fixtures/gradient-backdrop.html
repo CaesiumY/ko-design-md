@@ -8,10 +8,10 @@
       scripts/fixtures/README.md: the expectations are derived from this CSS by
       hand, so a change here changes the derivation in the oracle too.
 
-      Five panels, each 300x120 — over 1% of the 976x800 viewport, so no panel
-      is measured as a non-text surface itself. Four carry one run of black
-      16px text over a gradient or an image painted on a transparent
-      `background-color`; the fifth carries a 12x12 dot, which qualifies for the
+      Every panel is 300x120 — over 1% of the 976x800 viewport, so no panel
+      is measured as a non-text surface itself. The text panels carry one run of
+      black 16px text over a gradient or an image painted on a transparent
+      `background-color`; the last carries a 12x12 dot, which qualifies for the
       non-text pass. Every colour is an achromatic OKLCH, whose relative
       luminance is L³, and a gradient between two greys stays grey in either
       interpolation space, so each weakest colour is an end stop.

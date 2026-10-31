@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { paintableColours } from "./contrast-gradient"
+import type { BackgroundImage } from "./contrast-gradient"
 import type { Rgba } from "./contrast"
 
 // Inputs are written the way Chromium serialises a COMPUTED `background-image`,
@@ -8,8 +9,16 @@ import type { Rgba } from "./contrast"
 // `rgba(0, 0, 0, 0)`, an `oklch()` stop keeps its own spelling, and a colour
 // hint stays a bare length between two stops.
 
+// What computed style reports for a box with nothing but its image set.
+const bg = (
+  value: string,
+  repeat = "repeat",
+  clip = "border-box",
+  blend = "normal"
+): BackgroundImage => ({ value, repeat, clip, blend })
+
 const coloursOf = (image: string, repeat = "repeat"): Array<Rgba> => {
-  const got = paintableColours(image, repeat)
+  const got = paintableColours(bg(image, repeat))
   if (got.kind !== "colours") throw new Error(`not enumerable: ${got.kind}`)
   return got.layers.flatMap((layer) => layer.colours)
 }
@@ -20,9 +29,11 @@ const near = (c: Rgba, r: number, g: number, b: number, a = 1): boolean =>
   Math.abs(c.b - b) < 0.6 &&
   Math.abs(c.a - a) < 0.01
 
+const HELD = { kind: "blocked", blocker: "gradient" }
+
 describe("paintableColours", () => {
   it("reports no image as nothing to enumerate", () => {
-    expect(paintableColours("none", "repeat")).toEqual({ kind: "none" })
+    expect(paintableColours(bg("none"))).toEqual({ kind: "none" })
   })
 
   it("contains both end stops and stays between them", () => {
@@ -57,10 +68,9 @@ describe("paintableColours", () => {
   it("holds a hue space, whose path around the wheel is not a straight line", () => {
     expect(
       paintableColours(
-        "linear-gradient(in hsl, rgb(255, 0, 0), rgb(0, 0, 255))",
-        "repeat"
+        bg("linear-gradient(in hsl, rgb(255, 0, 0), rgb(0, 0, 255))")
       )
-    ).toEqual({ kind: "blocked", blocker: "gradient" })
+    ).toEqual(HELD)
   })
 
   it("interpolates alpha premultiplied, so a fade to transparent keeps its hue", () => {
@@ -112,8 +122,10 @@ describe("paintableColours", () => {
 
   it("keeps the layers apart, topmost first, with whether each covers its box", () => {
     const got = paintableColours(
-      "linear-gradient(to right, oklch(0.9 0 0) 1px, rgba(0, 0, 0, 0) 1px), linear-gradient(rgb(255, 0, 0), rgb(255, 0, 0))",
-      "repeat, no-repeat"
+      bg(
+        "linear-gradient(to right, oklch(0.9 0 0) 1px, rgba(0, 0, 0, 0) 1px), linear-gradient(rgb(255, 0, 0), rgb(255, 0, 0))",
+        "repeat, no-repeat"
+      )
     )
     expect(got.kind).toBe("colours")
     if (got.kind !== "colours") return
@@ -125,8 +137,7 @@ describe("paintableColours", () => {
   it("treats a tile as covering its box only when it repeats on both axes", () => {
     const covers = (repeat: string): boolean => {
       const got = paintableColours(
-        "linear-gradient(rgb(0, 0, 0), rgb(255, 255, 255))",
-        repeat
+        bg("linear-gradient(rgb(0, 0, 0), rgb(255, 255, 255))", repeat)
       )
       return got.kind === "colours" && got.layers[0].covers
     }
@@ -138,13 +149,40 @@ describe("paintableColours", () => {
     expect(covers("repeat no-repeat")).toBe(false)
   })
 
-  it("holds an image as `image`, even beside a gradient it could read", () => {
-    expect(
-      paintableColours(
-        "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E\"), linear-gradient(rgb(255, 0, 0), rgb(0, 0, 255))",
-        "repeat, repeat"
+  it("treats an image clipped short of the border box as not covering it", () => {
+    const got = paintableColours(
+      bg(
+        "linear-gradient(rgb(0, 0, 0), rgb(255, 255, 255))",
+        "repeat",
+        "content-box"
       )
-    ).toEqual({ kind: "blocked", blocker: "image" })
+    )
+    expect(got.kind === "colours" && got.layers[0].covers).toBe(false)
+  })
+
+  it("holds a layer that blends with what is under it, or paints inside glyphs", () => {
+    // `multiply` reads darker on screen than the source-over the caller
+    // composites with, so enumerating it could pass what the screen fails.
+    // A `text` clip paints the image inside letters, not behind them.
+    const ramp = "linear-gradient(rgb(0, 0, 0), rgb(255, 255, 255))"
+    expect(
+      paintableColours(bg(ramp, "repeat", "border-box", "multiply"))
+    ).toEqual(HELD)
+    expect(paintableColours(bg(ramp, "repeat", "text"))).toEqual(HELD)
+  })
+
+  it("holds an image as `image`, even beside a gradient it could read", () => {
+    for (const value of [
+      "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E\"), linear-gradient(rgb(255, 0, 0), rgb(0, 0, 255))",
+      // Inside another image function too: what it draws is still a picture.
+      'cross-fade(url("a.png"), rgb(0, 0, 0))',
+      'image-set(url("a.png") 1x)',
+    ]) {
+      expect(paintableColours(bg(value, "repeat"))).toEqual({
+        kind: "blocked",
+        blocker: "image",
+      })
+    }
   })
 
   it("holds what it cannot read as `gradient` rather than guessing", () => {
@@ -155,13 +193,9 @@ describe("paintableColours", () => {
       // writes one, which is exactly why it is not read as setup either: a
       // first stop mistaken for a direction would drop a colour from the set.
       "linear-gradient(red, rgb(0, 0, 255))",
-      "cross-fade(rgb(0, 0, 0), rgb(255, 255, 255))",
       "linear-gradient(rgb(0, 0, 0)",
     ]) {
-      expect(paintableColours(image, "repeat")).toEqual({
-        kind: "blocked",
-        blocker: "gradient",
-      })
+      expect(paintableColours(bg(image))).toEqual(HELD)
     }
   })
 })

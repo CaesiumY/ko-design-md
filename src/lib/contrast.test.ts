@@ -967,7 +967,7 @@ const painted = (value: string, repeat = "repeat", opacity = 1) => ({
   onWhite: WHITE,
   onBlack: BLACK,
   opacity,
-  image: { value, repeat },
+  image: { value, repeat, clip: "border-box", blend: "normal" },
 })
 
 const textOn = (
@@ -1040,6 +1040,38 @@ describe("a background image is judged by every colour it can paint (#402)", () 
     )
     expect(got.verdict).toBe("fail")
     expect(got.bg).toBe("#282828")
+  })
+
+  it("does not let a split gradient line hold a run another line already fails", () => {
+    // Black on #6c6c6c is 4.00:1 — a certain failure. The second line's
+    // gradient runs from white (21:1) to #646464 (3.55:1), so that line alone
+    // is split. However the split falls, the run's weakest line is at most
+    // 4.00, which fails either way: the run fails, and on the plain line's
+    // pair, since that is the one the verdict is certain of.
+    const got = textOn(
+      [opaque(108, 108, 108)],
+      [
+        painted("linear-gradient(rgb(255, 255, 255), rgb(100, 100, 100))"),
+        opaque(255, 255, 255),
+      ]
+    )
+    expect(got.verdict).toBe("fail")
+    expect(got.blockers).toEqual([])
+    expect(got.bg).toBe("#6c6c6c")
+  })
+
+  it("holds a run whose plain line passes when a split line might be weaker", () => {
+    const got = textOn(
+      [opaque(255, 255, 255)],
+      [
+        painted("linear-gradient(rgb(255, 255, 255), rgb(100, 100, 100))"),
+        opaque(255, 255, 255),
+      ]
+    )
+    expect(got.verdict).toBe("indeterminate")
+    expect(got.blockers).toEqual(["gradient"])
+    // The number a held reading carries is the weakest it could be.
+    expect(got.bg).toBe("#646464")
   })
 
   it("holds an image as `image` and still reports the colour beneath it", () => {

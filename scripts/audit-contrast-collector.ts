@@ -189,15 +189,21 @@ export function collectContrast(): Collected {
     return value
   }
 
-  // A layer's `background-image`, handed across as computed style writes it.
-  // Nothing is decided about it here — whether it is a gradient that can be
-  // enumerated or an image that cannot is `contrast-gradient.ts`'s to say,
-  // where that answer can be tested (#402).
+  // A layer's `background-image` and the longhands that decide where and how it
+  // paints, handed across as computed style writes them. Nothing is decided
+  // about them here — whether it is a gradient that can be enumerated or an
+  // image that cannot is `contrast-gradient.ts`'s to say, where that answer
+  // can be tested (#402).
   const imageOf = (cs: CSSStyleDeclaration): Pick<RawLayer, "image"> =>
     cs.backgroundImage === "none"
       ? {}
       : {
-          image: { value: cs.backgroundImage, repeat: cs.backgroundRepeat },
+          image: {
+            value: cs.backgroundImage,
+            repeat: cs.backgroundRepeat,
+            clip: cs.backgroundClip,
+            blend: cs.backgroundBlendMode,
+          },
         }
 
   function pathOf(node: Element): string {

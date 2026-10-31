@@ -22,10 +22,12 @@
 // No shipped preview has the shape either. Six of them declare `filter` and
 // none puts it behind a small text-free surface — toss filters its buttons,
 // which carry their own label, so its filter is caught on the TEXT path. So
-// the branch is covered by a second, synthetic fixture (#399), written for
-// this check alone. Its authority is of a different kind and the two are kept
-// apart: nothing in it is a record of a past defect, and every expectation on
-// it is derived from its CSS by hand, next to the anchor that claims it.
+// the branch is covered by a synthetic fixture (#399), written for this check
+// alone. Its authority is of a different kind and the two are kept apart:
+// nothing in it is a record of a past defect, and every expectation on it is
+// derived from its CSS by hand, next to the anchor that claims it. Form-control
+// text (#400) and readings over a background image (#402) are covered the
+// same way, each by a synthetic fixture of its own.
 
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
