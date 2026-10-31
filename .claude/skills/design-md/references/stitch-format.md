@@ -159,7 +159,7 @@ the brand's published hex as the trailing comment; that is what it is for.
 
 When a brand publishes both a light and a dark value for the same semantic role, **do not declare the role twice under one name**. Nothing downstream can tell which declaration is authoritative: `readDefinitions` (`src/lib/oklch-drift.ts`) drops a name that disagrees with itself rather than guessing, so the preview-drift comparison switches off for that token entirely — and the official linter, which reads the file as published, keeps only one, because frontmatter keys must be unique.
 
-Prefix the dark scale instead. This is the established catalog convention, not a new rule: `codeit` names 78 tokens that way and `seed-design` 109, and both carry zero name collisions.
+Prefix the dark scale instead. This is the established catalog convention, not a new rule: `codeit` names 78 tokens that way and `seed-design` 109, and both carry zero name collisions. The light side keeps its bare name, and neither side takes a theme suffix (`bg-canvas-dark`, `bg-canvas-light`) — the card view recognises a dark token by its `dark-` prefix (or a group heading that opens with "Dark" or "다크"), so a suffixed one under any other heading lands among the light cards. A lightness step that is not a theme twin (`primary-dark` as a darker shade on the same canvas) is not a theme suffix.
 
 ```yaml
 bg-canvas:      oklch(1 0 0)
@@ -170,7 +170,7 @@ Measured cost of getting this wrong: `wanted` shipped 21 colliding names, which 
 
 ### Role → palette reference rows
 
-When the brand publishes a role layer on top of its palette (`bg-brand-solid` → `carrot-600`), the body's `## Colors` role table can also be carried as frontmatter reference rows. Live example, `services/seed-design.md`:
+When the brand publishes a role layer on top of its palette (`bg-brand-solid` → `carrot-600`), carry it **twice, always**: as a role table in the body's `## Colors` and as frontmatter reference rows (ADR 0012). How the research describes the layer does not matter — a layer written up only in prose or in token-line comments, or a role the upstream points at a palette step but that arrived as that step's literal value, still owes both. A system with no palette under its roles, where each role holds its value directly, has no role layer and owes neither. Live example, `services/seed-design.md`:
 
 ```yaml
 bg-brand-solid: "{colors.carrot-600}"
@@ -178,11 +178,13 @@ dark-bg-brand-solid: "{colors.dark-carrot-700}"
 dark-bg-overlay: "{colors.static-black-alpha-700}"
 ```
 
-Carry a role this way only under these rules:
+The obligation and its limits:
 
-- **Only a role the upstream points at a single palette token.** A role that goes through an opacity ramp stays out even when the value matches — codeit's `txt-primary` points at `gray-100-opacity-100`, not `gray-100`. Such roles, and pairs where the upstream disagrees with the table, stay in the body table only.
+- **"Published" means a brand publication (public docs, a package) or deployed code defines the role under that name.** Not published, so not owed: a name the catalogue author coined for values they observed (in a handoff bundle or in deployed code alike), a name the body itself says is not the official one, and a synthesized name.
+- **The body table is required, with each role name as a backticked span in the first cell.** That is the only place the `CASES` guard below looks.
+- **A reference row only for a role the upstream points at a single palette token.** A role that goes through an opacity ramp stays out even when the value matches — codeit's `txt-primary` points at `gray-100-opacity-100`, not `gray-100`. Such roles, and pairs where the upstream disagrees with the table, stay in the body table only. When the upstream lacks what a row would need — the palette token to point at, or the mapped value — do not invent it; record it in Known Gaps.
 - **Not under a spec `color_roles` name** (`primary` · `secondary` · `tertiary` · `neutral`). Tools read those as brand roles, so a table role named `secondary` (greeting's text colour) must not be published under it. `primary` is allowed only as the brand-colour alias (`primary: "{colors.x}"`, pointing at the colour the brand publishes as its own). A colour the brand itself publishes under one of these names (remember's `secondary`) is not a table role and is unaffected.
-- **The dark pair takes the `dark-` prefix and points into the dark palette** (`dark-bg-brand-solid` → `dark-carrot-700`). A palette that does not change with the theme (seed-design's `static-*`) has no `dark-` twin, so the dark pair points at the same unprefixed key.
+- **The dark pair is named with the `dark-` prefix only and points into the dark palette** (`dark-bg-brand-solid` → `dark-carrot-700`) — never a suffix such as `…-dark`. A palette that does not change with the theme (seed-design's `static-*`) has no `dark-` twin, so the dark pair points at the same unprefixed key.
 - **The body table and the reference rows are two copies of one mapping — edit both.** The sidecar carries the reference rows but not the body table, so `tokens:check` cannot see the two drift apart.
 
 **This shape owes a hand-written comparison in `CASES`** (`src/lib/role-reference-rows.test.ts`). The guard in that file finds entries by shape: a reference row whose key — less a `dark-` prefix, and with codeit's `text-` / `background-` read as `txt-` / `bg-` — appears as a backticked name in the first cell of a row in the entry's own `## Colors` section. Only rows whose first non-space character is `|` and whose first cell *starts* with a backtick are read (indented tables count), so a role cell like ``배경 `bg-x` `` or a table written without the leading pipe is not seen. Such an entry fails CI until `CASES` holds a function comparing its rows against its table. It is not a one-line row: entries lay out their role tables differently, so each comparison is written for its slug. The `primary` alias above does not count. The test file is outside this skill's write scope; the operator adds the function.

@@ -9,10 +9,10 @@ import { splitFrontmatter } from "./frontmatter-fence"
 // Markdown table in `## Colors` — the reader's copy, carrying `[src:N]` — and
 // as quoted reference rows in frontmatter
 // `colors:` (`bg-brand-solid: "{colors.carrot-600}"`), which is what standard
-// DESIGN.md tooling reads. Nothing else compares the two. token-extractor skips
-// reference rows, so `tokens:check` cannot see them, and the spec linter only
-// checks that a reference resolves, not that it resolves to the palette step the
-// table names.
+// DESIGN.md tooling reads. Nothing else compares the two. The sidecar carries the
+// rows but not the table, so `tokens:check` cannot see the two drift apart, and
+// the spec linter only checks that a reference resolves, not that it resolves to
+// the palette step the table names.
 // A re-audit that fixes one copy and not the other would pass every other gate.
 //
 // Pinned in both directions: every table role that maps to a single declared

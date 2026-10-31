@@ -145,7 +145,7 @@ describe("/design-md machine gates", () => {
     )
   })
 
-  // Issue #448: the template invites `{{semantic-alias}}: "{colors.x}"` rows,
+  // Issue #448: the template invites `{{alias-name}}: "{colors.x}"` rows,
   // and an alias named like a role in the entry's own `## Colors` table trips
   // the role-reference-rows guard, which wants a hand-written comparison in
   // CASES. Pinned at both ends: the skill and the format reference name the
