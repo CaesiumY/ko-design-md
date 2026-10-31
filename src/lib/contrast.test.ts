@@ -1086,6 +1086,32 @@ describe("a background image is judged by every colour it can paint (#402)", () 
     expect(got.bg).toBe("#767676")
   })
 
+  it("lets a certain failure stand whatever holds a line that could be weaker", () => {
+    // The run reads as its weakest line, so a plain line failing at 4.00 caps
+    // it below the threshold. A covered line that might be weaker can only
+    // pull it lower, never lift it to a pass: the `overlay` on it changes
+    // nothing about the verdict.
+    const got = evaluateText({
+      fontSizePx: 16,
+      fontWeight: 400,
+      fg: opaque(0, 0, 0),
+      lines: [
+        { stack: [opaque(108, 108, 108)], blockers: [] },
+        {
+          stack: [
+            painted("linear-gradient(rgb(255, 255, 255), rgb(100, 100, 100))"),
+            opaque(255, 255, 255),
+          ],
+          blockers: ["overlay"],
+        },
+      ],
+      blockers: [],
+    })
+    expect(got.verdict).toBe("fail")
+    expect(got.blockers).toEqual([])
+    expect(got.bg).toBe("#6c6c6c")
+  })
+
   it("holds a run whose plain line passes when a split line might be weaker", () => {
     const got = textOn(
       [opaque(255, 255, 255)],

@@ -242,9 +242,9 @@ export type Blocker =
    */
   | "gradient"
   /**
-   * A `background-image` that is an image (`url()`, `image-set()`,
-   * `cross-fade()`), whose colours cannot be listed from computed style at
-   * all.
+   * A `background-image` that is an image (`url()`, or `image-set()`,
+   * `cross-fade()`, `element()`, `paint()`), whose colours cannot be listed
+   * from computed style at all.
    */
   | "image"
   | "overlay"
@@ -599,9 +599,12 @@ export function evaluateText(sample: RawTextSample): Measurement {
   // The lines the verdict could rest on: the one that caps the run, and every
   // line that could be weaker than that cap. A plain run has exactly one, its
   // weakest line, as before — the comparison is strict so a tie keeps the
-  // first, also as before.
+  // first, also as before. A cap that already fails is the exception: the run
+  // reads as its weakest line, so a line that might be weaker can only pull it
+  // lower, and whatever holds that line cannot lift the run to a pass.
+  const capFails = judge(ceiling.strongest, threshold) === "fail"
   const contenders = readings.filter(
-    (r) => r === ceiling || r.weakest.ratio < ceiling.strongest
+    (r) => r === ceiling || (!capFails && r.weakest.ratio < ceiling.strongest)
   )
 
   // The blockers describe the lines the verdict rests on, plus whatever holds
