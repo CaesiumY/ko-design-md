@@ -275,7 +275,7 @@ Foundation 매니페스트에 `foundation-typography--docs` 페이지가 별도�
 
 ## Spacing
 
-기준 단위는 4px다. `--spacing-primitive-*` 네임스페이스가 이 배수로 14개 토큰을 이루고, 그 위에 `gap-semantic`(13개)·`padding-semantic`(11개) 두 시맨틱 네임스페이스가 얹혀 총 24개의 시맨틱 spacing 토큰을 구성한다 [src:2][src:4]. Primitive 14개 중 9개(4~48px 구간)만 코퍼스에서 개별 재확인됐고, 나머지 단계는 Known Gaps에 남긴다.
+기준 단위는 4px다. `--spacing-primitive-*` 네임스페이스가 이 배수로 14개 토큰을 이루고, 그 위에 `gap-semantic`(13개)·`padding-semantic`(11개) 두 시맨틱 네임스페이스가 얹혀 총 24개의 시맨틱 spacing 토큰을 구성한다 [src:2][src:4]. Primitive 14개 중 9개(4~48px 구간)만 코퍼스에서 개별 재확인됐고, 나머지 단계는 Known Gaps에 남긴다. npm `@likelion-design/ui` 1.0.32 도 `--spacing-primitive-*` 14개를 정의한다 — 개수만 확인했고 값은 아직 대조하지 않았다(2026-11-01) [src:15].
 
 ## Rounded
 
@@ -375,7 +375,7 @@ Foundation의 Brand Logo 그룹은 컴포넌트가 아니라 자산 규정이지
 - 브랜드 고유 그림자/elevation 토큰과 모션(duration/easing) 토큰이 공개돼 있지 않다 — Tailwind 기본 인프라 변수만 존재한다 [src:2].
 - Typography frontmatter의 `fontWeight` 값은 사이즈·굵기·자간 세 스케일이 각 스타일명에 정확히 어떻게 짝지어지는지가 개별 문서화돼 있지 않아 고른 예시 조합이다 [src:4] — 실제 값은 스타일별로 다를 수 있다. `lineHeight`는 코퍼스에 스케일 자체가 공개돼 있지 않아 관례적 비율을 적용한 추정값이며, 각 head row의 `# 미확인` 주석으로 표시해 뒀다.
 - 18개 컴포넌트의 사이즈/색상 변형, 호버·비활성 등 상태별 세부값이 이름 목록 외에는 개별 확인되지 않았다 [src:3].
-- Spacing 14개 중 9개, Radius 11개 중 8개만 코퍼스에서 개별 재확인됐다 — 나머지 스텝 값은 미확인이다 [src:2][src:4].
+- Spacing 14개 중 9개, Radius 11개 중 8개만 코퍼스에서 개별 재확인됐다 — 나머지 스텝 값은 미확인이다 [src:2][src:4]. 패키지 1.0.32 가 정의하는 `--spacing-primitive-*` 14개와는 개수만 맞춰 봤고 값은 아직 대조하지 않았다(2026-11-01) [src:15].
 - `@likelion-design/ui`·`@likelion-design/docs-mcp`의 라이선스 상태가 모호하다 — `license` 필드 null, 별도 LICENSE 파일 미게시, 명시적 금지 문구도 미발견으로, 명시적 허용도 명시적 금지도 없는 상태다 [src:6][src:7][src:2].
 
 ## References
@@ -394,4 +394,4 @@ Foundation의 Brand Logo 그룹은 컴포넌트가 아니라 자산 규정이지
 12. https://ko.wikipedia.org/wiki/멋쟁이사자처럼 — 브랜드 연혁·트랙 구성·슬로건 개요.
 13. https://designsystem.likelion.net/img/BrandLogo/03_Clearspace.png — Brand Logo 문서의 Clear space 다이어그램 이미지. 여백 사방을 "0.2X"로 표기해, 같은 문서 본문 텍스트의 "8.2배" 서술과 어긋남을 확인하는 근거.
 14. https://unpkg.com/@likelion-design/ui@1.0.32/tailwind.theme.css — npm 패키지의 Tailwind v4 테마 파일. 시맨틱 역할을 `--color-semantic-` 를 뗀 이름의 테마 변수(`--color-fg-primary`)와 유틸리티(`@utility bg-normal`, `@utility border-primary`)로 발행한다.
-15. https://unpkg.com/@likelion-design/ui@1.0.32/dist/colors.css.css — npm 패키지의 색 토큰 CSS. `--color-semantic-*` 역할이 어느 팔레트 변수를 가리키는지의 1차 근거이고, 시맨틱 정의는 [src:4] 와 같다.
+15. https://unpkg.com/@likelion-design/ui@1.0.32/dist/colors.css.css — npm 패키지의 토큰 CSS(파일 이름은 colors 지만 `--spacing-primitive-*` 도 담는다). `--color-semantic-*` 역할이 어느 팔레트 변수를 가리키는지의 1차 근거이고, 시맨틱 정의는 [src:4] 와 같다.
