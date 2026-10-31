@@ -53,47 +53,47 @@
   body { margin: 0; background: var(--canvas); color: var(--ink); font-family: var(--font); font-size: 16px; line-height: 24px; }
   button { font-family: inherit; }
 
-  .hdr { display: flex; align-items: center; gap: 20px; height: 64px; padding: 0 24px; background: var(--canvas); box-shadow: 0 1px 0 0 var(--line); }
-  .hdr-logo { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; font-weight: 800; font-size: 20px; letter-spacing: 0.02em; }
+  .hdr { display: flex; align-items: center; gap: 40px; height: 64px; padding: 0 50px; background: var(--canvas); box-shadow: 0 1px 0 0 var(--line); }
+  .hdr-logo { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
   .hdr-logo img { width: 36px; height: 36px; display: block; object-fit: contain; }
-  .hdr-nav { display: flex; gap: 20px; flex: 1 1 0; min-width: 0; overflow: hidden; }
+  .hdr-nav { display: flex; gap: 24px; flex: 1 1 0; min-width: 0; overflow: hidden; }
   .hdr-nav span { font-size: 14px; line-height: 21px; font-weight: 700; color: var(--ink); white-space: nowrap; display: inline-flex; align-items: center; gap: 2px; }
   .hdr-nav span.is-on { color: var(--accent); }
   .nbadge { min-width: 17px; height: 17px; border-radius: 9999px; background: var(--accent); color: var(--accent-ink); font-size: 10px; line-height: 15px; font-weight: 700; display: inline-grid; place-items: center; padding: 0 3px; margin-left: 2px; }
-  .hdr-search { flex: 0 1 288px; min-width: 0; height: 40px; border-radius: 4px; border: 1px solid var(--line); background: var(--canvas); color: var(--ink-3); font-size: 14px; line-height: 21px; font-weight: 600; display: flex; align-items: center; padding: 0 12px 0 16px; }
-  .hdr-ic { width: 40px; height: 40px; border-radius: 9999px; display: grid; place-items: center; background: var(--panel); flex: 0 0 auto; font-size: 12px; color: var(--ink-3); }
+  .hdr-search { width: 288px; max-width: 100%; min-width: 0; height: 40px; border-radius: 4px; border: 1px solid var(--line); background: var(--canvas); color: var(--ink-3); font-size: 14px; line-height: 38px; font-weight: 600; display: block; padding: 0 12px 0 16px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .hdr-ic { width: 40px; height: 40px; border-radius: 9999px; display: grid; place-items: center; background: transparent; flex: 0 0 auto; font-size: 12px; color: var(--ink-3); }
+  .hdr-menu { display: none; }
 
   .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px 40px; }
   .hero { margin: 0 -24px 28px; padding: 40px 24px; background: var(--hero-bg); color: var(--hero-ink); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 220px); gap: 24px; align-items: center; }
   .hero h1 { margin: 0 0 8px; font-size: 32px; line-height: 48px; font-weight: 700; }
   .hero p { margin: 0 0 20px; font-size: 16px; line-height: 24px; opacity: 0.8; }
   .btn { display: inline-flex; align-items: center; justify-content: center; border-radius: 3px; font-weight: 700; font-size: 14px; line-height: 21px; gap: 8px; }
-  .btn-cta { height: 45px; padding: 0 18px 0 24px; background: var(--cta-bg); color: var(--cta-ink); }
+  .btn-cta { height: 45px; padding: 9px 13.5px 9px 18px; gap: 0; font-size: 18px; line-height: 27px; background: var(--cta-bg); color: var(--cta-ink); }
+  .btn-cta svg { display: block; flex: 0 0 auto; }
   .btn-cta.is-hover { background: oklch(1 0 0 / 0.7); }
-  .btn-2 { height: 30px; padding: 0 12px; background: var(--canvas); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line-2); font-size: 13px; font-weight: 600; }
+  .btn-2 { height: 30px; padding: 0 12px; background: var(--canvas); color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line-2); font-size: 12px; font-weight: 700; }
   .hero-mark { display: grid; place-items: center; }
   .hero-mark img { width: 100%; max-width: 160px; height: auto; display: block; }
 
-  .sec { margin: 0 0 32px; min-width: 0; }
-  .sec-h { display: flex; justify-content: space-between; align-items: baseline; margin: 0 0 12px; font-size: 24px; line-height: 36px; font-weight: 700; }
-  .sec-h a { font-size: 14px; line-height: 21px; font-weight: 700; color: var(--ink-3); }
+  .sec { margin: 0 0 48px; min-width: 0; }
+  .sec-h { display: flex; justify-content: flex-start; align-items: center; gap: 8px; margin: 0 0 12px; font-size: 21px; line-height: 31px; font-weight: 700; }
   .cell-k { margin: 0 0 12px; font-size: 13px; font-weight: 700; color: var(--ink-3); }
 
-  .days { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 16px; }
-  .day { width: 45px; height: 45px; border-radius: 9999px; background: var(--day-off); color: var(--lft-white); display: grid; place-items: center; font-size: 12px; font-weight: 600; }
+  .days { display: flex; gap: 22px; flex-wrap: wrap; margin: 0 0 16px; }
+  .day { width: 45px; height: 45px; border-radius: 9999px; background: var(--day-off); color: var(--lft-white); display: grid; place-items: center; font-size: 18px; line-height: 27px; font-weight: 700; }
   .day.is-on { background: var(--accent); }
   .chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 16px; }
-  .chip { height: 36px; padding: 0 12px; border-radius: 9999px; display: inline-flex; align-items: center; font-size: 12px; background: var(--canvas); color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line); }
+  .chip { height: 36px; padding: 0 12px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; min-width: 72px; font-size: 18px; line-height: 27px; font-weight: 700; background: var(--canvas); color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line); }
   .chip.is-on { background: var(--accent); color: var(--accent-ink); box-shadow: none; }
 
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; }
   .card { min-width: 0; }
-  .poster { position: relative; border-radius: 4px; background: var(--lft-bg-3); aspect-ratio: 3 / 4; display: grid; place-items: center; color: var(--ink-3); font-size: 11px; overflow: hidden; }
+  .poster { position: relative; border-radius: 4px; background: var(--lft-bg-3); aspect-ratio: 16 / 9; display: grid; place-items: center; color: var(--ink-3); font-size: 11px; overflow: hidden; }
   .up { position: absolute; left: 6px; top: 6px; height: 17px; padding: 1px 4px; border-radius: 3px; background: var(--lft-badge-red); color: var(--lft-white); font-size: 10px; line-height: 15px; font-weight: 700; }
   .card h3 { margin: 8px 0 2px; font-size: 13px; line-height: 20px; font-weight: 400; overflow-wrap: anywhere; }
-  .card p { margin: 0; font-size: 13px; line-height: 20px; font-weight: 700; }
-  .card .bar { height: 4px; border-radius: 16px; background: var(--track); margin-top: 6px; overflow: hidden; }
-  .card .bar i { display: block; height: 100%; width: 40%; background: var(--accent); }
+  .poster .bar { position: absolute; left: 12px; right: 12px; bottom: 12px; height: 4.46px; border-radius: 16px; background: var(--track); overflow: hidden; }
+  .poster .bar i { display: block; height: 100%; width: 40%; background: var(--accent); }
 
   .duo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
   .box { border: 1px solid var(--line); border-radius: 4px; padding: 24px; background: var(--canvas); min-width: 0; }
@@ -109,7 +109,14 @@
     .hero h1 { font-size: 24px; line-height: 36px; }
     .hdr { padding: 0 12px; gap: 12px; }
     .hdr-nav { display: none; }
-    .hdr-search { flex: 1 1 0; }
+    .hdr-logo { margin-right: auto; }
+    .hdr-menu { display: grid; }
+    .sec-h { font-size: 18px; line-height: 27px; }
+    .sec-h .btn-2 { height: 27px; border-radius: 4px; font-size: 13px; }
+    .days { gap: 8px; }
+    .day { width: 40px; height: 40px; font-size: 16px; line-height: 24px; }
+    .chip { font-size: 13px; line-height: 19.5px; }
+    .up { left: 8px; top: 8px; border-radius: 4px; }
     .wrap { padding: 0 16px 32px; }
     .hero { margin: 0 -16px 24px; padding: 28px 16px; }
   }
@@ -138,10 +145,10 @@
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
 
 <header class="hdr">
-  <div class="hdr-logo"><img src="/logos/laftel.png" alt="라프텔"><span>LAFTEL</span></div>
+  <div class="hdr-logo"><img src="/logos/laftel.png" alt="라프텔"></div>
   <nav class="hdr-nav" aria-label="상단 메뉴"><span class="is-on">태그검색</span><span>요일별 신작</span><span>멤버십</span><span>스토어</span><span>이벤트</span><span>루프<i class="nbadge">N</i></span></nav>
-  <div class="hdr-search">검색</div>
-  <div class="hdr-ic">알림</div>
+  <div class="hdr-ic">검색</div>
+  <div class="hdr-ic hdr-menu">메뉴</div>
 </header>
 
 <div class="wrap">
@@ -149,22 +156,21 @@
     <div>
       <h1>덕후를 위한 모든 애니</h1>
       <p>보고 싶은 작품을 고화질로, 마음 놓고 즐기세요</p>
-      <span class="btn btn-cta">보러가기</span>
+      <span class="btn btn-cta">보러가기<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M7 4l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg></span>
     </div>
     <div class="hero-mark"><img src="/logos/laftel.png" alt=""></div>
   </section>
 
   <section class="sec">
-    <h2 class="sec-h">요일별 신작 <a>더보기</a></h2>
+    <h2 class="sec-h">요일별 신작 <span class="btn btn-2">업로드 공지</span></h2>
     <div class="days"><span class="day is-on">월</span><span class="day">화</span><span class="day">수</span><span class="day">목</span><span class="day">금</span><span class="day">토</span><span class="day">일</span></div>
-    <div class="chips"><span class="chip is-on">전체</span><span class="chip">자막</span><span class="chip">더빙</span><span class="chip">극장판</span></div>
-    <p class="catalog-dummy">작품명·회차·UP 배지·시청 진행률은 레이아웃 시연용 더미 데이터입니다.</p>
+    <p class="catalog-dummy">작품명·UP 배지·시청 진행률은 레이아웃 시연용 더미 데이터입니다.</p>
     <div class="grid">
-      <div class="card"><div class="poster"><span class="up">UP</span>포스터 자리</div><h3>작품 제목 자리</h3><p>12화</p></div>
-      <div class="card"><div class="poster">포스터 자리</div><h3>두 줄까지 늘어나는 작품 제목 예시</h3><p>3화</p><div class="bar"><i></i></div></div>
-      <div class="card"><div class="poster"><span class="up">UP</span>포스터 자리</div><h3>작품 제목</h3><p>8화</p></div>
-      <div class="card"><div class="poster">포스터 자리</div><h3>작품 제목 자리</h3><p>극장판</p></div>
-      <div class="card"><div class="poster">포스터 자리</div><h3>작품 제목 자리</h3><p>24화</p></div>
+      <div class="card"><div class="poster"><span class="up">UP</span>썸네일 자리</div><h3>작품 제목 자리</h3></div>
+      <div class="card"><div class="poster">썸네일 자리<div class="bar"><i></i></div></div><h3>두 줄까지 늘어나는 작품 제목 예시</h3></div>
+      <div class="card"><div class="poster"><span class="up">UP</span>썸네일 자리</div><h3>작품 제목</h3></div>
+      <div class="card"><div class="poster">썸네일 자리</div><h3>작품 제목 자리</h3></div>
+      <div class="card"><div class="poster">썸네일 자리</div><h3>작품 제목 자리</h3></div>
     </div>
   </section>
 
@@ -178,9 +184,11 @@
     </div>
     <div class="box">
       <p class="cell-k">버튼과 배지</p>
-      <div class="row cta-stage"><span class="btn btn-cta">보러가기</span><span class="btn btn-cta is-hover">hover</span></div>
+      <div class="row cta-stage"><span class="btn btn-cta">보러가기<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M7 4l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg></span><span class="btn btn-cta is-hover">hover<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M7 4l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg></span></div>
       <div class="row"><span class="btn btn-2">업로드 공지</span><span class="tag-up">UP</span><span class="nbadge">N</span></div>
       <div class="chips"><span class="chip is-on">활성</span><span class="chip">비활성</span></div>
+      <p class="cell-k">검색창(펼침)</p>
+      <div class="hdr-search">제목(초성), 제작사, 감독으로 검색</div>
     </div>
   </section>
 </div>

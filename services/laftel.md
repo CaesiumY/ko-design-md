@@ -2,13 +2,13 @@
 name: 라프텔
 slug: laftel
 category: content
-last_updated: 2026-10-28
+last_updated: 2026-10-31
 created_at: 2026-10-27
 lang: ko
 logo: https://getdesign.kr/logos/laftel.png
 colors:
   ## Brand
-  point: oklch(0.626 0.211 285.3)               # #816BFF 포인트 보라. 활성 칩·진행바·N 배지·활성 네비 링크, 두 테마 공통
+  point: oklch(0.626 0.211 285.3)               # #816BFF 포인트 보라. 활성 칩·진행바·N 배지·활성 네비 링크·작품 라벨(선독점 등), 두 테마 공통
   point-slight-1: oklch(0.954 0.024 293.6)      # #F0EDFF --button-slight-1·--background-highlight 라이트
   point-slight-2: oklch(0.886 0.06 291.4)       # #D9D3FF --button-slight-2 라이트
   ## Background (라이트)
@@ -127,7 +127,7 @@ components:
     width: 114px
   button-secondary:
     backgroundColor: "{colors.dark-bg-1}"
-    textColor: "{colors.dark-fg-1}"
+    textColor: "{colors.dark-fg-2}"
     rounded: "{rounded.radius-xs}"
     height: 29.8px
   chip-active:
@@ -175,15 +175,15 @@ components:
 
 색은 `--background-*`, `--foreground-*`, `--border-*`, `--button-*` 네 계열의 시맨틱 변수로 발행되고, 같은 이름에 라이트·다크 두 값이 `prefers-color-scheme`으로 주입된다 [src:1]. 이 카탈로그는 라이트를 기본 이름으로, 다크를 `dark-` 접두로 나눠 적는다. 앱 안의 수동 테마 토글은 확인하지 못했다 [src:1].
 
-브랜드 포인트는 `{colors.point}`(보라) 하나다. 컴포넌트에는 대부분 리터럴로 쓰여 다크에서도 같은 값이다 — 시맨틱 변수 중에는 `--foreground-slight`가 라이트에서 같은 보라지만 다크에서는 흰색으로 바뀐다. 활성 요일 탭, 활성 칩, "N" 뱃지, 진행바 채움, 활성 네비 링크, 멤버십 "현재 이용 중" 라벨이 이 색을 쓴다 [src:1]. 라이트의 `{colors.point-slight-1}`·`{colors.point-slight-2}`는 보라 틴트로 하이라이트와 보조 버튼에 들어간다 [src:1]. 다크에서는 같은 자리가 불투명한 틴트가 아니라 중립 회색 `{colors.dark-button-slight}`로 바뀐다 [src:1].
+브랜드 포인트는 `{colors.point}`(보라) 하나다. 컴포넌트에는 대부분 리터럴로 쓰여 다크에서도 같은 값이다 — 시맨틱 변수 중에는 `--foreground-slight`가 라이트에서 같은 보라지만 다크에서는 흰색으로 바뀐다. 활성 요일 탭, 활성 칩, "N" 뱃지, 진행바 채움, 활성 네비 링크, 멤버십 "현재 이용 중" 라벨, 선독점·ONLY 같은 작품 라벨 배경이 이 색을 쓴다 [src:1]. 라이트의 `{colors.point-slight-1}`·`{colors.point-slight-2}`는 보라 틴트로 하이라이트와 보조 버튼에 들어간다 [src:1]. 다크에서는 같은 자리가 불투명한 틴트가 아니라 중립 회색 `{colors.dark-button-slight}`로 바뀐다 [src:1].
 
-중립은 순수 무채색이다. 다크 캔버스는 `{colors.dark-bg-1}`(홈 히어로 위 투명 헤더 제외)이고 그 아래 순검정 `{colors.dark-bg-2}`가 깔린다 — 라이트와 달리 다크에서는 "2번 배경"이 1번보다 더 어둡다 [src:1]. 토스트와 보라 회색 버튼은 남보라를 띤 `{colors.dark-bg-toast}` 계열이다 [src:1]. UP 뱃지 `{colors.badge-red}`는 빨강 포인트의 유일한 쓰임이다 [src:1]. 성공·경고 시맨틱 변수는 공개되지 않았다 [src:1].
+중립은 순수 무채색이다. 다크 캔버스는 `{colors.dark-bg-1}`(홈 히어로 위 투명 헤더 제외)이고 그 아래 순검정 `{colors.dark-bg-2}`가 깔린다 — 라이트와 달리 다크에서는 "2번 배경"이 1번보다 더 어둡다 [src:1]. 토스트와 보라 회색 버튼은 남보라를 띤 `{colors.dark-bg-toast}` 계열이다 [src:1]. UP 뱃지는 `{colors.badge-red}`를 쓴다. 실시간 방송 카드의 LIVE 뱃지도 빨강 면이지만 UP과 다른 순빨강 리터럴이다 [src:1]. 성공·경고 시맨틱 변수는 공개되지 않았다 [src:1].
 
 ## Typography
 
-단일 서체 Pretendard를 서비스 전체에 쓴다. 전역 리셋 `*:not(svg) { font: inherit }`과 `@import`된 Pretendard 정적 CSS가 한글·영문을 같은 스택으로 묶는다 [src:7][src:1]. 기본은 16px/24px 400이고 관찰된 굵기는 400·500·600·700 넷이다 [src:1].
+단일 서체 Pretendard를 서비스 전체에 쓴다. 전역 리셋 `*:not(svg) { font: inherit }`과 `@import`된 Pretendard 정적 CSS가 한글·영문을 같은 스택으로 묶는다 [src:7][src:1]. 기본은 16px/24px 400이고 관찰된 굵기는 400·500·600·700·800 다섯이다 — 800은 헤더의 "로그인/가입" 링크(14px/21px)에만 보였다 [src:1].
 
-일반 페이지는 px 고정 스케일이다 — 페이지 H1 32px/48px 700, 카드 타이틀 24px/36px 700, 섹션 제목 16px/24px 700, 네비 링크 14px/21px 700, 검색 입력 14px/21px 600, 뱃지 12px·10px 700 [src:1]. 홈의 콜렉션 영역만 다르다 — `DefaultCollectionMediaQueryBlock`이 기준 글자 크기를 뷰포트 폭에 비례(`0.82646vw`, 1416px 이하 `0.97871vw` …)로 바꾸고 안쪽은 em 단위다. 1440px 기준 1em은 약 11.9px이고, 콜렉션 제목 1.75em, 카드 제목 1.125em이다 [src:1]. frontmatter의 스케일은 px 고정 페이지 스케일만 옮겼다.
+일반 페이지는 px 고정 스케일이다 — 태그검색 페이지 H1 32px/48px 700(페이지 H1 크기는 페이지마다 다르다) [src:8], 카드 타이틀 24px/36px 700, 섹션 제목 16px/24px 700, 네비 링크 14px/21px 700, 검색 입력 14px/21px 600, 뱃지 12px·10px 700 [src:1]. 홈의 콜렉션 영역만 다르다 — `DefaultCollectionMediaQueryBlock`이 기준 글자 크기를 뷰포트 폭에 비례(`0.82646vw`, 1400px 이하 `0.97871vw` …)로 바꾸고 안쪽은 em 단위다. 1440px 기준 1em은 약 11.9px이고, 콜렉션 제목 1.75em, 카드 제목 1.125em이다 [src:1]. frontmatter의 스케일은 px 고정 페이지 스케일만 옮겼다.
 
 ## Spacing
 
@@ -195,7 +195,7 @@ radius도 토큰이 없고 스타일시트에 3·4·7·8·10·14·16·18·20px, 
 
 ## Elevation & Depth
 
-공개된 elevation 체계가 없다. 관찰된 `box-shadow`는 서브페이지 헤더의 `0 1px 0 0 var(--border-1)` 한 줄뿐이고, 홈 최상단에서는 투명 처리돼 사라진다 [src:1]. `--shadow-basic`·`--shadow-dropdown` 변수는 정의돼 있지만 이를 쓰는 규칙은 확인하지 못했다 [src:1]. 깊이는 그림자가 아니라 `{colors.dark-bg-1}` → `{colors.dark-bg-3}`의 면 명도 차와 1px 보더로 만든다.
+공개된 elevation 체계가 없다. 관찰된 `box-shadow`는 둘이다 — 서브페이지 헤더의 `0 1px 0 0 var(--border-1)`(홈 최상단에서는 투명 처리돼 사라진다)과, 헤더 검색을 열면 뜨는 인기 검색어 드롭다운의 `0 0 16px var(--shadow-basic)`(라이트 검정 25%, 다크 50%, 1px `--border-1` 보더와 `0.25rem` radius를 함께 쓴다)이다 [src:1]. `--shadow-dropdown` 변수를 쓰는 규칙은 확인하지 못했다 [src:1]. 깊이는 대부분 `{colors.dark-bg-1}` → `{colors.dark-bg-3}`의 면 명도 차와 1px 보더로 만들고, 그림자는 떠 있는 드롭다운에만 보인다.
 
 ## Shapes
 
@@ -215,7 +215,7 @@ radius도 토큰이 없고 스타일시트에 3·4·7·8·10·14·16·18·20px, 
 
 ### search-field
 
-높이 40px, 폭 288px, radius 4px, 패딩 `0 12px 0 16px`, 보더 `{colors.dark-border-1}`. 안쪽 입력은 14px/21px 600이고 placeholder는 `{colors.dark-fg-3}`다 [src:1].
+처음에는 접혀 40×40 원형 아이콘 버튼만 보이고, 누르면 펼쳐진다. 펼친 검색창은 높이 40px, 폭 288px, radius 4px, 패딩 `0 12px 0 16px`, 보더 `{colors.dark-border-1}`. 안쪽 입력은 14px/21px 600이고 placeholder는 `{colors.dark-fg-3}`다. placeholder 문구는 "제목(초성), 제작사, 감독으로 검색"이다 [src:1].
 
 ### button-cta
 
@@ -227,7 +227,7 @@ radius도 토큰이 없고 스타일시트에 3·4·7·8·10·14·16·18·20px, 
 
 ### button-secondary
 
-배경 `{colors.dark-bg-1}`, 글자 `{colors.dark-fg-1}`, 1px `{colors.dark-border-2}` 보더, 높이 약 29.8px, 패딩 `0 1em`이다 [src:1].
+배경 `{colors.dark-bg-1}`, 글자 `{colors.dark-fg-2}`(라이트 `{colors.fg-2}`) 1em 700, 1px `{colors.dark-border-2}` 보더, 높이 약 29.8px, 패딩 `0 1em`이다 [src:1].
 
 ### chip-active
 
@@ -251,31 +251,31 @@ radius도 토큰이 없고 스타일시트에 3·4·7·8·10·14·16·18·20px, 
 
 ### poster-card
 
-폭 222px, 이미지 radius 4px, 제목은 1.125em 400, 회차는 700이다. 하단 4.46px 진행바는 보라 채움이다. hover 때 `cursor: pointer` 외 시각 변화는 확인되지 않았다 [src:1].
+폭 222px, 썸네일은 가로형(높이가 폭의 약 55.7%, 16:9에 가깝다)이고 radius 4px이다. 카드 글자는 썸네일 위 배지와 제목(1.125em 400, 최대 두 줄)뿐이다. 진행바는 썸네일 안 하단에 좌·우·아래 12px 들여 겹치는 4.46px 막대이고 radius 16px, 채움은 `{colors.point}`다. hover 때 `cursor: pointer` 외 시각 변화는 확인되지 않았다 [src:1].
 
 ## Do's and Don'ts
 
-**Do** 보라 `{colors.point}`는 활성 상태(칩·탭·네비·진행)에만 쓴다 — 포인트 색이 "지금 선택된 것"의 신호로 일관된다 [src:1].
+**Do** 보라 `{colors.point}`는 신호에만 쓴다 — 활성 상태(칩·탭·네비·진행)와 선독점·ONLY 같은 작품 라벨이 이 색을 쓰고, 면과 본문은 무채색 중립이 맡는다 [src:1].
 
 **Do** 다크 캔버스는 순검정 대신 `{colors.dark-bg-1}`을 기본 면으로 하고, 순검정 `{colors.dark-bg-2}`는 한 단계 더 깊은 배경에만 쓴다 [src:1].
 
 **Do** 카피에는 약간의 위트를 곁들인다 — 푸밍 같은 캐릭터 톤이 친근함의 원천이다 [src:3].
 
-**Don't** 라프텔의 멤버십 구독 플로우, 애니 작품명·요일별 신작 구성, 푸밍 캐릭터 자체를 그대로 재현하지 않는다 — 다크 캔버스와 보라 한 점이라는 시각 처리만 차용한다 [src:1][src:3].
+**Don't** 라프텔의 멤버십 구독 플로우, 애니 작품명·요일별 신작 구성, 푸밍 캐릭터 자체를 그대로 재현하지 않는다 — 다크 캔버스와 보라 포인트 한 가지라는 시각 처리만 차용한다 [src:1][src:3].
 
 **Don't** 가시적 포커스 링을 지우지 않는다. 라프텔은 전역 `outline: none`에 `:focus-visible` 규칙이 0건이라 키보드 포커스가 보이지 않는다 — 이는 따라 하지 않을 사례다 [src:1].
 
 ## Responsive Behavior
 
-공개된 브레이크포인트 표는 없다(no published breakpoint system surfaced). 홈 콜렉션 영역은 기준 글자 크기를 폭에 비례시켜 반응형을 구현하는데, 1417px 이상은 0.82646vw, 1416px 이하는 0.97871vw, 1040px 이하는 1.20052vw, 850px 이하는 1.55735vw, 496px 이하는 2.12247vw이다. 터치 기기이면서 480px 이하이면 16px 고정이다 [src:1]. 뷰포트 메타에 `maximum-scale=1`이 있어 핀치 줌이 막혀 있다 [src:1].
+공개된 브레이크포인트 표는 없다(no published breakpoint system surfaced). 홈 콜렉션 영역은 기준 글자 크기를 폭에 비례시켜 반응형을 구현하는데, 1401px 이상은 0.82646vw, 1400px 이하는 0.97871vw, 1024px 이하는 1.20052vw, 834px 이하는 1.55735vw, 480px 이하는 2.12247vw이다(같은 경계를 쓰는 다른 콜렉션 블록은 계수가 다르다). 터치 기기이면서 480px 이하이면 16px 고정이다 [src:1]. 뷰포트 메타에 `maximum-scale=1`이 있어 핀치 줌이 막혀 있다 [src:1].
 
 ## Known Gaps
 
 - 공식 브랜드 가이드·디자인 시스템 문서가 없다 — 값은 CSS 변수와 렌더된 계산 스타일에서 읽었다 [src:1].
-- 라이트 모드는 CSS 소스에서만 읽었고 렌더 화면으로 확인하지 못했다 [src:1].
+- 라이트 모드는 대부분 CSS 소스에서 읽었고, 렌더 화면으로는 업로드 공지 버튼 글자색 같은 일부 값만 확인했다 [src:1].
 - 보라의 hover/pressed 전용 셰이드, 성공·경고 시맨틱 색, 비구독 상태의 구독 CTA, 플레이어 UI는 확인하지 못했다 [src:1].
-- 그림자 실사용 값이 공개돼 있지 않고, `rounded`와 `spacing` 토큰은 관찰값을 정리한 것이다 [src:1].
-- 푸밍 정사각 심볼의 독립 SVG와 투명 PNG 원본, 로고 사용 규정은 공개돼 있지 않다 — 로고는 홈이 선언한 apple-touch-icon(152px)이다 [src:6].
+- 그림자는 관찰된 두 값뿐이고 발행된 체계가 없으며, `rounded`와 `spacing` 토큰은 관찰값을 정리한 것이다 [src:1].
+- 푸밍 정사각 심볼의 독립 SVG와 투명 PNG 원본, 로고 사용 규정은 공개돼 있지 않다 — 로고는 홈이 선언한 apple-touch-icon(152px)이다 [src:6]. 헤더가 쓰는 72×36 "LAFTEL" 워드마크 SVG도 카탈로그 자산으로 옮기지 않았다 [src:1].
 - 라이트에서 `--background-highlight`의 다크 값은 반투명 보라 `rgba(129,107,255,.1)`이어서 토큰으로 옮기지 않았다 [src:1].
 
 ## References
@@ -287,3 +287,4 @@ radius도 토큰이 없고 스타일시트에 3·4·7·8·10·14·16·18·20px, 
 5. https://blog.laftel.net/post/10 — 라프텔 팀 블로그 UX Writing 가이드. 위트 있는 카피 톤.
 6. https://static.laftel.net/favicon-152.png — 푸밍 캐릭터 마크(apple-touch-icon 152px).
 7. https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard.css — 서비스 CSS 청크가 `@import`하는 Pretendard 정적 CSS.
+8. https://laftel.net/finder — 태그검색 페이지. 렌더된 페이지 H1(태그검색)의 계산 스타일.

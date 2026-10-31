@@ -9,6 +9,7 @@
 <style>
   :root {
     --chz-brand-strongest: oklch(0.678 0.152 158.3);
+    --chz-brand-strong: oklch(0.733 0.132 162.1);
     --chz-brand-text: oklch(0.539 0.106 161.2);
     --chz-brand-weak: oklch(0.929 0.037 168.4);
     --chz-bg-base: oklch(1 0 0);
@@ -39,39 +40,48 @@
     --ink-3: var(--chz-text-tertiary);
     --line: var(--chz-border-weak);
     --thumb: var(--chz-surface-base);
-    --chip-off: var(--chz-surface-weak);
+    --chip-off: var(--chz-surface-base);
     --hover: oklch(0 0 0 / 0.05);
+    --outline-line: oklch(0 0 0 / 0.15);
+    --chat-line: var(--chz-surface-base);
+    --chat-h-ink: oklch(0.308 0.006 258.4);
 
     --background: var(--canvas);
     --foreground: var(--ink);
     --primary: var(--brand);
     --primary-foreground: var(--brand-ink);
     --font: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    --font-display: "Sandoll Nemony2", "Apple SD Gothic Neo", "Helvetica Neue", Helvetica, NanumGothic, "Malgun Gothic", var(--font);
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--canvas); color: var(--ink); font-family: var(--font); letter-spacing: -0.3px; }
   button { font-family: inherit; letter-spacing: inherit; }
 
-  .hdr { display: flex; align-items: center; gap: 16px; height: 60px; padding: 0 20px; background: var(--canvas); border-bottom: 1px solid var(--line); }
-  .hdr-logo { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 20px; flex: 0 0 auto; }
+  .hdr { display: flex; align-items: center; gap: 16px; height: 60px; padding: 0 20px; background: var(--canvas); }
+  .hdr-logo { display: flex; align-items: center; flex: 0 0 auto; }
+  .icon-btn { width: 40px; height: 40px; border-radius: 20px; display: grid; place-items: center; flex: 0 0 auto; color: var(--ink-2); }
+  .icon-btn svg { width: 24px; height: 24px; display: block; }
   .hdr-logo img { height: 32px; width: auto; display: block; }
   .hdr-tabs { display: flex; gap: 4px; flex: 0 0 auto; }
   .hdr-tab { height: 40px; padding: 0 10px; display: inline-flex; align-items: center; font-size: 17px; line-height: 21px; font-weight: 800; color: var(--ink-2); }
-  .hdr-search { flex: 1 1 0; min-width: 0; max-width: 360px; height: 38px; border-radius: 19px; background: var(--field); color: var(--chz-text-weak); display: flex; align-items: center; padding: 0 16px; font-size: 14px; line-height: 20px; margin-left: auto; }
+  .hdr-search { flex: 1 1 0; min-width: 0; max-width: 400px; height: 38px; border-radius: 19px; background: transparent; box-shadow: inset 0 0 0 1px var(--line); color: var(--chz-text-weak); display: flex; align-items: center; gap: 8px; padding: 0 12px 0 16px; font-size: 15px; line-height: 19px; margin: 0 auto; }
+  .hdr-search-t { flex: 1 1 0; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hdr-search svg { width: 20px; height: 20px; flex: 0 0 auto; display: block; color: var(--ink-2); }
   .hdr-actions { display: flex; gap: 8px; flex: 0 0 auto; }
 
-  .btn { height: 34px; padding: 0 12px; border: 0; border-radius: 17px; font-size: 14px; font-weight: 700; line-height: 18px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: default; }
+  .btn { height: 34px; padding: 0 12px; border: 0; border-radius: 17px; font-size: 14px; font-weight: 700; line-height: 18px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: default; letter-spacing: 0; }
   .btn-1 { background: var(--brand); color: var(--brand-ink); }
   .btn-2 { background: var(--btn-2); color: var(--ink); }
   .btn-3 { background: var(--btn-3); color: var(--btn-3-ink); }
-  .btn-out { background: transparent; color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line); }
-  .btn-1.is-hover { background-image: linear-gradient(oklch(0 0 0 / 0.05), oklch(0 0 0 / 0.05)); }
-  .btn-1.is-down { background-image: linear-gradient(oklch(0 0 0 / 0.12), oklch(0 0 0 / 0.12)); }
+  .btn-1, .btn-2, .btn-3 { font-family: var(--font-display); font-weight: 400; }
+  .btn-out { background: transparent; color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--outline-line); }
+  .btn-1.is-hover { background-image: linear-gradient(oklch(1 0 0 / 0.05), oklch(1 0 0 / 0.05)); }
+  .btn-1.is-down { background-image: linear-gradient(oklch(1 0 0 / 0.12), oklch(1 0 0 / 0.12)); }
   .btn.is-off { background: var(--btn-2); color: var(--chz-text-weak); }
 
   .shell { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-height: 560px; }
-  .side { padding: 16px 12px; border-right: 1px solid var(--line); background: var(--canvas); }
-  .side-h { margin: 0 8px 8px; font-size: 13px; line-height: 17px; font-weight: 600; color: var(--ink-3); }
+  .side { padding: 16px 20px; background: var(--canvas); }
+  .side-h { margin: 0 6px 8px; font-size: 13px; line-height: 17px; font-weight: 600; color: var(--ink-3); }
   .side-i { display: flex; align-items: center; gap: 10px; height: 38px; padding: 7px 8px; border-radius: 8px; font-size: 15px; line-height: 19px; font-weight: 600; color: var(--ink-2); }
   .side-i.is-on { background: var(--hover); }
   .side-av { width: 24px; height: 24px; border-radius: 12px; background: var(--thumb); flex: 0 0 auto; display: grid; place-items: center; font-size: 10px; color: var(--ink-3); }
@@ -89,45 +99,48 @@
 
   .cell-k { margin: 0 0 12px; font-size: 13px; line-height: 17px; font-weight: 700; color: var(--ink-3); }
   .sec { margin: 0 0 28px; min-width: 0; }
-  .sec-h { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; font-size: 22px; line-height: 30px; font-weight: 700; }
-  .pill-more { height: 25px; padding: 0 8px 0 11px; border-radius: 13px; box-shadow: inset 0 0 0 1px var(--line); color: var(--ink-3); font-size: 12px; display: inline-flex; align-items: center; font-weight: 600; }
+  .sec-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 0 12px; }
+  .sec-h { margin: 0; min-width: 0; font-family: var(--font-display); font-size: 19px; line-height: 24px; font-weight: 400; letter-spacing: 0; }
+  .more-link { flex: 0 0 auto; height: 26px; display: inline-flex; align-items: center; font-family: var(--font-display); font-size: 15px; font-weight: 400; letter-spacing: 0; color: var(--ink-3); }
+  .more-row { display: flex; align-items: center; gap: 12px; margin: 24px 0 0; }
+  .more-line { flex: 1 1 0; min-width: 0; height: 1px; background: var(--line); }
+  .pill-more { flex: 0 0 auto; max-width: 100%; white-space: nowrap; height: 25px; padding: 0 8px 0 11px; border-radius: 13px; box-shadow: inset 0 0 0 1px var(--line); color: var(--ink-3); font-size: 12px; display: inline-flex; align-items: center; font-weight: 600; }
   .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 16px; }
-  .tab { height: 34px; padding: 0 14px; border-radius: 17px; display: inline-flex; align-items: center; font-size: 14px; font-weight: 700; background: var(--chip-off); color: var(--ink-2); }
+  .tab { height: 28px; padding: 0 9px; border-radius: 14px; display: inline-flex; align-items: center; font-family: var(--font-display); font-size: 13px; line-height: 16px; font-weight: 400; letter-spacing: 0; background: var(--chip-off); color: var(--ink-3); }
   .tab.is-on { background: var(--chz-surface-strongest); color: var(--chz-white); }
 
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px 14px; }
   .card { min-width: 0; }
   .thumb { position: relative; border-radius: 12px; background: var(--thumb); aspect-ratio: 16 / 9; display: grid; place-items: center; color: var(--ink-3); font-size: 11px; font-weight: 500; overflow: hidden; }
   .badge { display: inline-flex; align-items: center; height: 20px; padding: 0 4px; border-radius: 4px; font-size: 12px; line-height: 20px; font-weight: 700; color: var(--chz-white); }
   .b-live { background: var(--chz-live-red); }
   .b-replay { background: var(--chz-replay-violet); }
   .b-view { background: oklch(0 0 0 / 0.8); }
-  .thumb .b-live { position: absolute; left: 8px; top: 8px; }
-  .thumb .b-view { position: absolute; left: 8px; bottom: 8px; }
-  .card h3 { margin: 10px 0 2px; font-size: 15px; line-height: 21px; font-weight: 500; overflow-wrap: anywhere; }
-  .card p { margin: 0; font-size: 13px; line-height: 17px; color: var(--ink-3); font-weight: 600; }
+  .thumb-badges { position: absolute; top: 6px; left: 6px; right: 6px; display: flex; align-items: center; gap: 4px; }
+  .card h3 { margin: 12px 0 2px; font-size: 15px; line-height: 19px; font-weight: 600; color: var(--ink-2); overflow-wrap: anywhere; }
+  .card p { margin: 0; font-size: 14px; line-height: 18px; color: var(--ink-3); font-weight: 600; }
 
   .duo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
   .box { border-radius: 12px; background: var(--panel); box-shadow: inset 0 0 0 1px var(--line); padding: 16px; min-width: 0; }
   .btn-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 12px; }
   .btn-row small { font-size: 11px; font-weight: 600; color: var(--ink-3); width: 56px; flex: 0 0 auto; }
 
-  .field { display: flex; align-items: center; gap: 8px; height: 38px; border-radius: 19px; background: var(--field); padding: 0 16px; font-size: 14px; line-height: 20px; color: var(--chz-text-weak); margin: 0 0 8px; }
-  .field.is-focus { color: var(--ink); box-shadow: 0 0 0 1px var(--brand); }
+  .field { display: flex; align-items: center; gap: 8px; height: 38px; border-radius: 19px; background: transparent; box-shadow: inset 0 0 0 1px var(--line); padding: 0 16px; font-size: 15px; line-height: 19px; color: var(--chz-text-weak); margin: 0 0 8px; }
+  .field.is-focus { color: var(--ink); box-shadow: inset 0 0 0 1px var(--chz-brand-strong); }
 
-  .chat { border-radius: 12px; overflow: hidden; background: var(--panel); box-shadow: inset 0 0 0 1px var(--line); min-width: 0; }
-  .chat-h { height: 44px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; border-bottom: 1px solid var(--line); }
+  .chat { border-radius: 12px; overflow: hidden; background: var(--canvas); box-shadow: inset 0 0 0 1px var(--line); min-width: 0; }
+  .chat-h { height: 44px; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 15px; line-height: 18px; font-weight: 400; letter-spacing: 0; color: var(--chat-h-ink); border-bottom: 1px solid var(--chat-line); }
   .chat-b { padding: 8px 6px; }
   .msg { padding: 4px 6px; height: 28px; font-size: 14px; line-height: 20px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
   .msg b { font-weight: 700; margin-right: 6px; }
   .chat-in { display: flex; gap: 8px; align-items: center; margin: 8px; height: 42px; padding: 6px; border-radius: 8px; background: var(--btn-2); }
-  .chat-in span { flex: 1 1 0; min-width: 0; font-size: 14px; color: var(--chz-text-weak); padding-left: 6px; }
+  .chat-in span { flex: 1 1 0; min-width: 0; font-size: 14px; color: var(--ink-3); padding-left: 6px; }
   .chat-send { height: 32px; width: 46px; border-radius: 8px; background: var(--btn-2); color: var(--chz-text-weak); font-size: 13px; display: grid; place-items: center; font-weight: 700; flex: 0 0 auto; box-shadow: inset 0 0 0 1px var(--line); }
 
-  .modal { max-width: 450px; border-radius: 12px; background: var(--canvas); box-shadow: 0 4px 4px oklch(0 0 0 / 0.2), 0 4px 4px oklch(0 0 0 / 0.3); padding: 24px 20px 20px; }
+  .modal { max-width: 450px; border-radius: 12px; background: var(--canvas); box-shadow: 0 6px 18px 6px oklch(0 0 0 / 0.05), 0 6px 6px 0 oklch(0 0 0 / 0.1); padding: 24px 20px 20px; }
   .modal h4 { margin: 0 0 8px; font-size: 20px; line-height: 28px; font-weight: 700; }
   .modal p { margin: 0 0 20px; font-size: 14px; line-height: 20px; color: var(--ink-3); }
-  .modal .btn { width: 100%; height: 44px; border-radius: 8px; font-size: 15px; }
+  .modal .btn { width: 100%; height: 44px; border-radius: 8px; padding: 0 20px; font-family: var(--font-display); font-size: 14px; line-height: 18px; font-weight: 400; letter-spacing: 0; }
 
   @media (max-width: 900px) {
     .shell { grid-template-columns: minmax(0, 1fr); }
@@ -139,7 +152,7 @@
     .hero h1 { font-size: 32px; line-height: 40px; }
     .main { padding: 16px 16px 28px; }
     .hdr { padding: 0 12px; gap: 8px; }
-    .hdr-actions .btn-out { display: none; }
+    .hdr-theme { display: none; }
   }
 </style>
 <style>
@@ -157,7 +170,10 @@
     --ink-3: oklch(0.721 0.026 265.5);
     --line: oklch(0.308 0.006 258.4);
     --thumb: oklch(0.308 0.006 258.4);
-    --chip-off: oklch(1 0 0 / 0.15);
+    --chip-off: oklch(0.308 0.006 258.4);
+    --outline-line: oklch(1 0 0 / 0.15);
+    --chat-line: oklch(0.251 0.005 248);
+    --chat-h-ink: oklch(0.913 0.011 269.5);
     --hover: oklch(1 0 0 / 0.05);
     --chz-text-weak: oklch(0.548 0.03 266.4);
     --chz-surface-strongest: oklch(0.913 0.011 269.5);
@@ -165,19 +181,21 @@
   }
   [data-theme="dark"] .hero-stage { background: oklch(0.168 0.003 248); }
   [data-theme="dark"] .tab.is-on { color: oklch(0.168 0.003 248); }
-  [data-theme="dark"] .btn-1.is-hover { background-image: linear-gradient(oklch(1 0 0 / 0.05), oklch(1 0 0 / 0.05)); }
-  [data-theme="dark"] .btn-1.is-down { background-image: linear-gradient(oklch(1 0 0 / 0.12), oklch(1 0 0 / 0.12)); }
-  [data-theme="dark"] .field.is-focus { box-shadow: 0 0 0 1px oklch(0.602 0.138 159.2); }
+  [data-theme="dark"] .btn-1.is-hover { background-image: linear-gradient(oklch(0 0 0 / 0.05), oklch(0 0 0 / 0.05)); }
+  [data-theme="dark"] .btn-1.is-down { background-image: linear-gradient(oklch(0 0 0 / 0.12), oklch(0 0 0 / 0.12)); }
+  [data-theme="dark"] .field.is-focus { box-shadow: inset 0 0 0 1px oklch(0.602 0.138 159.2); }
+  [data-theme="dark"] .modal { box-shadow: 0 6px 18px 6px oklch(0 0 0 / 0.2), 0 6px 6px 0 oklch(0 0 0 / 0.3); }
 </style>
 </head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
 
 <header class="hdr">
-  <div class="hdr-logo"><img src="/logos/chzzk.png" alt="치지직"><span>치지직</span></div>
-  <nav class="hdr-tabs" aria-label="상단 탭"><span class="hdr-tab">홈</span><span class="hdr-tab">라이브</span><span class="hdr-tab">카테고리</span></nav>
-  <div class="hdr-search">검색</div>
-  <div class="hdr-actions"><span class="btn btn-out">스튜디오</span><span class="btn btn-1">로그인</span></div>
+  <span class="icon-btn" role="img" aria-label="메뉴"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></span>
+  <div class="hdr-logo"><img src="/logos/chzzk.png" alt="치지직"></div>
+  <nav class="hdr-tabs" aria-label="주제 탭"><span class="hdr-tab">게임</span><span class="hdr-tab">e스포츠</span><span class="hdr-tab">스포츠</span><span class="hdr-tab">엔터+</span></nav>
+  <div class="hdr-search"><span class="hdr-search-t">채널, 라이브, 동영상 검색</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg></div>
+  <div class="hdr-actions"><span class="icon-btn hdr-theme" role="img" aria-label="테마 전환"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"/></svg></span><span class="btn btn-out">로그인</span></div>
 </header>
 
 <div class="shell">
@@ -201,15 +219,16 @@
     </section>
 
     <section class="sec">
-      <h2 class="sec-h">추천 라이브 <span class="pill-more">더보기</span></h2>
-      <div class="tabs"><span class="tab is-on">전체</span><span class="tab">게임</span><span class="tab">스포츠</span><span class="tab">음악</span></div>
+      <div class="sec-row"><h2 class="sec-h">추천 라이브</h2><span class="more-link">전체보기</span></div>
+      <div class="tabs"><span class="tab is-on">전체</span><span class="tab">게임</span><span class="tab">스포츠</span><span class="tab">엔터</span><span class="tab">기타</span></div>
       <p class="catalog-dummy">방송 제목·채널명·시청자 수·LIVE 배지·다시보기 배지는 레이아웃 시연용 더미 데이터입니다.</p>
       <div class="grid">
-        <div class="card"><div class="thumb"><span class="badge b-live">LIVE</span><span class="badge b-view">1.2천명</span>썸네일 자리</div><h3>방송 제목 자리 — 오늘의 라이브</h3><p>채널 A</p></div>
-        <div class="card"><div class="thumb"><span class="badge b-live">LIVE</span><span class="badge b-view">830명</span>썸네일 자리</div><h3>두 줄까지 늘어나는 방송 제목 예시 텍스트</h3><p>채널 B</p></div>
-        <div class="card"><div class="thumb"><span class="badge b-replay">다시보기</span>썸네일 자리</div><h3>다시보기 영상 제목</h3><p>채널 C</p></div>
-        <div class="card"><div class="thumb"><span class="badge b-live">LIVE</span><span class="badge b-view">57명</span>썸네일 자리</div><h3>새벽 방송</h3><p>채널 D</p></div>
+        <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">1.2천명</span></div>썸네일 자리</div><h3>방송 제목 자리 — 오늘의 라이브</h3><p>채널 A</p></div>
+        <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">830명</span></div>썸네일 자리</div><h3>두 줄까지 늘어나는 방송 제목 예시 텍스트</h3><p>채널 B</p></div>
+        <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-replay">다시보기</span></div>썸네일 자리</div><h3>다시보기 영상 제목</h3><p>채널 C</p></div>
+        <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">57명</span></div>썸네일 자리</div><h3>새벽 방송</h3><p>채널 D</p></div>
       </div>
+      <div class="more-row"><span class="more-line"></span><span class="pill-more">추천 라이브 더보기</span><span class="more-line"></span></div>
     </section>
 
     <section class="sec duo">

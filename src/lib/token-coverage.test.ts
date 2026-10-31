@@ -93,7 +93,7 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   baemin: { annotated: 0, judged: 0, drift: 38 },
   banksalad: { annotated: 187, judged: 187, drift: 187 },
   bezier: { annotated: 51, judged: 51, drift: 94 },
-  chzzk: { annotated: 48, judged: 48, drift: 48 },
+  chzzk: { annotated: 50, judged: 50, drift: 50 },
   class101: { annotated: 98, judged: 98, drift: 98 },
   codeit: { annotated: 180, judged: 173, drift: 180, webfont: true },
   gmarket: { annotated: 87, judged: 87, drift: 91 },

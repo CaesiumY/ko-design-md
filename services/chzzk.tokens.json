@@ -57,7 +57,19 @@
     {
       "name": "brand-text",
       "value": "oklch(0.539 0.106 161.2)",
-      "note": "#23815A 라이트 브랜드 텍스트",
+      "note": "#23815A 라이트 브랜드 텍스트 strong(content-brand-strong)",
+      "group": "Brand (라이트 #1BB373 · 다크 네온 #00FFA3)"
+    },
+    {
+      "name": "brand-text-base",
+      "value": "oklch(0.575 0.127 158.6)",
+      "note": "#168F5C 라이트 브랜드 텍스트 base(content-brand-base), 사이드바 현재 메뉴",
+      "group": "Brand (라이트 #1BB373 · 다크 네온 #00FFA3)"
+    },
+    {
+      "name": "brand-text-weak",
+      "value": "oklch(0.596 0.13 159)",
+      "note": "#1A9662 라이트 브랜드 텍스트 weak(content-brand-weak), 드롭스·일정 강조",
       "group": "Brand (라이트 #1BB373 · 다크 네온 #00FFA3)"
     },
     {
@@ -340,6 +352,20 @@
       "tracking": "-0.3px"
     },
     {
+      "name": "label-15-400",
+      "size": "15px",
+      "weight": 400,
+      "lineHeight": "19px",
+      "tracking": "-0.3px"
+    },
+    {
+      "name": "label-nemony-14",
+      "size": "14px",
+      "weight": 400,
+      "lineHeight": "18px",
+      "tracking": "0px"
+    },
+    {
       "name": "label-13",
       "size": "13px",
       "weight": 600,
@@ -480,9 +506,14 @@
       "note": "sem-elevation-style-3, 다크 값"
     },
     {
+      "name": "shadow-level-6",
+      "value": "0 6px 18px 6px oklch(0 0 0 / 0.2), 0 6px 6px 0 oklch(0 0 0 / 0.3)",
+      "note": "sem-elevation-style-6, 다크 값"
+    },
+    {
       "name": "shadow-popover",
       "value": "0 4px 4px oklch(0 0 0 / 0.7), 0 0 1px oklch(0 0 0 / 0.7), 0 8px 20px oklch(0 0 0 / 0.5)",
-      "note": "팝오버 CSS 규칙 실측"
+      "note": "팝오버 그림자, 다크 전용(.theme_dark 규칙). 라이트 팝오버는 그림자 없이 1px border-weak 테두리만 긋는다"
     }
   ]
 }
