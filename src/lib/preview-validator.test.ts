@@ -1801,6 +1801,30 @@ describe("validatePreviewPair — OKLCH coverage metrics", () => {
     )
     expect(coverageRules).toEqual([])
   })
+
+  // A role row resolves to a palette value it shares, so counting it would
+  // grow the total by the size of the role layer and count one painted value
+  // once per role pointing at it — the metric is about the palette.
+  it("counts the palette only — role reference rows leave the metric as it was", () => {
+    const withRoles = makeDesignMd().replace(
+      "  surface: oklch(0.98 0.005 250)",
+      [
+        "  surface: oklch(0.98 0.005 250)",
+        '  bg-brand: "{colors.primary}"',
+        '  fg-brand: "{colors.primary}"',
+        '  bg-canvas: "{colors.surface}"',
+      ].join("\n")
+    )
+    const lightRaw = makeHtml({
+      style: ":root { --primary: oklch(0.62 0.18 250); }",
+    })
+    const plain = validatePreviewPair(makeInput({ lightRaw }))
+    const roles = validatePreviewPair(
+      makeInput({ lightRaw, designMdRaw: withRoles })
+    )
+    expect(plain.metrics.light).toEqual({ matched: 1, total: 2 })
+    expect(roles.metrics).toEqual(plain.metrics)
+  })
 })
 
 // ── 루브릭 조항 기계화 ────────────────────────────────────────────────────────

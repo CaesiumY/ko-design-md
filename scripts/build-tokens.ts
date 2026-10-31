@@ -2,7 +2,7 @@ import fs from "node:fs"
 import path from "node:path"
 import { buildDoc } from "../src/lib/site-frontmatter"
 import { extractTokensFromMarkdown } from "../src/lib/token-extractor"
-import type { ServiceDoc } from "../src/lib/content-types"
+import type { ServiceDoc, ServiceTokens } from "../src/lib/content-types"
 
 // Codegen: write machine-readable token sidecars (`services/{slug}.tokens.json`)
 // from each design.md's frontmatter token maps (src/lib/token-extractor.ts).
@@ -37,12 +37,12 @@ function collectDocs(): Array<ServiceDoc> {
 function check(docs: Array<ServiceDoc>): never {
   const stale: Array<string> = []
   const missing: Array<string> = []
+  const failed: Array<string> = []
 
-  for (const doc of docs) {
+  for (const [doc, tokens] of extractEach(docs, failed)) {
     const slug = doc.frontmatter.slug
     const outPath = path.join(SERVICES_DIR, `${slug}.tokens.json`)
-    const expected =
-      JSON.stringify(extractTokensFromMarkdown(doc.raw), null, 2) + "\n"
+    const expected = JSON.stringify(tokens, null, 2) + "\n"
     if (!fs.existsSync(outPath)) {
       missing.push(slug)
       continue
@@ -50,7 +50,7 @@ function check(docs: Array<ServiceDoc>): never {
     if (fs.readFileSync(outPath, "utf-8") !== expected) stale.push(slug)
   }
 
-  if (missing.length === 0 && stale.length === 0) {
+  if (missing.length === 0 && stale.length === 0 && failed.length === 0) {
     console.log(`[tokens] ${docs.length} sidecar(s) in sync with services/*.md`)
     process.exit(0)
   }
@@ -62,11 +62,40 @@ function check(docs: Array<ServiceDoc>): never {
       `  ✗ ${slug}.tokens.json differs from what ${slug}.md produces`
     )
   }
-  console.error(
-    `\n[tokens] ${missing.length + stale.length} sidecar(s) out of sync — ` +
-      `run \`pnpm tokens:build ${[...missing, ...stale].join(" ")}\` and commit the result.`
-  )
+  if (failed.length > 0) {
+    console.error(
+      `\n[tokens] ${failed.length} md(s) cannot be read — fix the row named above in each first.`
+    )
+  }
+  if (missing.length + stale.length > 0) {
+    console.error(
+      `\n[tokens] ${missing.length + stale.length} sidecar(s) out of sync — ` +
+        `run \`pnpm tokens:build ${[...missing, ...stale].join(" ")}\` and commit the result.`
+    )
+  }
   process.exit(1)
+}
+
+// A `colors:` reference row that ends nowhere makes the extractor throw. Each
+// entry is tried on its own, so one bad row names its slug and the rest of the
+// catalogue is still checked or written, instead of the run stopping halfway on
+// an unattributed stack trace.
+function extractEach(
+  docs: Array<ServiceDoc>,
+  failed: Array<string>
+): Array<[ServiceDoc, ServiceTokens]> {
+  return docs.flatMap((doc): Array<[ServiceDoc, ServiceTokens]> => {
+    try {
+      return [[doc, extractTokensFromMarkdown(doc.raw)]]
+    } catch (e) {
+      const slug = doc.frontmatter.slug
+      failed.push(slug)
+      console.error(
+        `  ✗ ${slug}.md: ${e instanceof Error ? e.message : String(e)}`
+      )
+      return []
+    }
+  })
 }
 
 function main() {
@@ -97,16 +126,23 @@ function main() {
   console.log(`[tokens] Drafting sidecars → services/`)
   let written = 0
   let skipped = 0
-  for (const doc of docs) {
-    const slug = doc.frontmatter.slug
-    const outPath = path.join(SERVICES_DIR, `${slug}.tokens.json`)
-    // A bulk no-arg run only fills in MISSING sidecars — it never clobbers a
-    // reviewed/committed one. Pass a slug or --all to deliberately regenerate.
+  const failed: Array<string> = []
+  // A bulk no-arg run only fills in MISSING sidecars — it never clobbers a
+  // reviewed/committed one. Pass a slug or --all to deliberately regenerate.
+  const wanted = docs.filter((doc) => {
+    const outPath = path.join(
+      SERVICES_DIR,
+      `${doc.frontmatter.slug}.tokens.json`
+    )
     if (!force && slugArgs.length === 0 && fs.existsSync(outPath)) {
       skipped++
-      continue
+      return false
     }
-    const tokens = extractTokensFromMarkdown(doc.raw)
+    return true
+  })
+  for (const [doc, tokens] of extractEach(wanted, failed)) {
+    const slug = doc.frontmatter.slug
+    const outPath = path.join(SERVICES_DIR, `${slug}.tokens.json`)
     fs.writeFileSync(outPath, JSON.stringify(tokens, null, 2) + "\n")
     written++
     const elevationCount = tokens.elevation?.length ?? 0
@@ -124,6 +160,12 @@ function main() {
   console.log(
     `[tokens] Wrote ${written}${tail}. Review drafts before committing.`
   )
+  if (failed.length > 0) {
+    console.error(
+      `[tokens] ${failed.length} not written — fix the row named above in ${failed.map((s) => `${s}.md`).join(", ")}.`
+    )
+    process.exit(1)
+  }
 }
 
 main()

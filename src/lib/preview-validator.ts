@@ -3,7 +3,7 @@ import { readFrontmatter } from "./frontmatter"
 import { buildDoc } from "./site-frontmatter"
 import { bodyOf, isBlankText, walkHtml } from "./html-walk"
 import { hasAppliedReduceBlock, hasCssMotion } from "./reduced-motion-block"
-import { extractTokensFromMarkdown } from "./token-extractor"
+import { ColorRefError, extractTokensFromMarkdown } from "./token-extractor"
 import type { WalkNode } from "./html-walk"
 import type { ValidationIssue } from "./draft-validator"
 
@@ -1645,7 +1645,11 @@ export function validatePreviewPair(
     expectedLang = doc.frontmatter.lang
     mdLogo = doc.frontmatter.logo
     const tokens = extractTokensFromMarkdown(doc.raw)
-    colorValues = tokens.colors.map((c) => c.value)
+    // The palette only: a role reference row (`ref`) carries a palette value it
+    // shares, and counting it would scale the metric with the role layer.
+    colorValues = tokens.colors
+      .filter((c) => c.ref === undefined)
+      .map((c) => c.value)
     typographyNames = tokens.typography.map((t) => t.name)
     fontDisplaySrc = findFontDisplaySrc(doc.raw)
   } catch (e) {
@@ -1653,7 +1657,9 @@ export function validatePreviewPair(
       block(
         "design-md-unreadable",
         "design.md",
-        `The paired design.md failed to parse: ${e instanceof Error ? e.message : String(e)}`
+        e instanceof ColorRefError
+          ? `The paired design.md parses, but a \`colors:\` reference row does not end at a colour: ${e.message}.`
+          : `The paired design.md failed to parse: ${e instanceof Error ? e.message : String(e)}`
       )
     )
   }

@@ -41,6 +41,12 @@
       "note": "interpolated"
     },
     {
+      "name": "primary",
+      "value": "oklch(0.494 0.144 277)",
+      "note": "명세의 대표색 역할 — 로고 전용 brand-navy·brand-green 과 다르고, 핫트랙스 primary(red-700)와도 다른 축",
+      "ref": "blue-700"
+    },
+    {
       "name": "blue-700",
       "value": "oklch(0.494 0.144 277)",
       "note": "#5055B1 CORE — UI 기본 액션 / Informative / Accent"

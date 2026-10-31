@@ -19,9 +19,10 @@ import type { ServiceTokens } from "./content-types"
 // - the committed token sidecars (`services/*.tokens.json`), which the
 //   line-based extractor wrote, for every token's name, value, note and group.
 //
-// The sidecar is a filtered projection (aliases, non-colours, non-dimensions
-// and non-shadows are dropped; whitespace is collapsed), so the check runs one
-// way: every sidecar token must be found, in order, among the module's rows.
+// The sidecar is a filtered projection (non-colours, non-dimensions and
+// non-shadows are dropped — a spacing or radius alias among them; a colour
+// reference row is kept, resolved; whitespace is collapsed), so the check runs
+// one way: every sidecar token must be found, in order, among the module's rows.
 
 const ROOT = fileURLToPath(new URL("../..", import.meta.url))
 const SERVICES = join(ROOT, "services")
@@ -184,12 +185,22 @@ describe("readFrontmatter on the catalogue", () => {
     "%s: colour rows carry the sidecar's name, value, note and group",
     (slug) => {
       const rows = entryRows(read(slug), "colors")
-      for (const [token, row] of inOrder(sidecar(slug).colors, rows)) {
+      const colors = sidecar(slug).colors
+      for (const [token, row] of inOrder(colors, rows)) {
+        // A reference row (`"{colors.x}"`) carries the key it names as `ref`
+        // and, as its value, whatever the token it names carries (#626). The
+        // pattern is written out rather than imported from the extractor, so a
+        // misread there is not inherited here.
+        const ref = collapsed(row)?.match(/^\{colors\.([^{}]+)\}$/)?.[1]
         expect(token).toEqual({
           name: row?.key,
-          value: collapsed(row),
+          value:
+            ref === undefined
+              ? collapsed(row)
+              : colors.find((c) => c.name === ref)?.value,
           ...(note(row) === undefined ? {} : { note: note(row) }),
           ...(row?.group === undefined ? {} : { group: row.group }),
+          ...(ref === undefined ? {} : { ref }),
         })
       }
     }

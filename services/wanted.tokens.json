@@ -1,6 +1,12 @@
 {
   "colors": [
     {
+      "name": "primary",
+      "value": "oklch(0.563 0.241 261)",
+      "group": "Brand",
+      "ref": "blue-800"
+    },
+    {
       "name": "blue-800",
       "value": "oklch(0.563 0.241 261)",
       "note": "core Wanted Blue (#0066FF), 단일 primary",

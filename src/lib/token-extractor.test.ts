@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs"
 import { describe, expect, it } from "vitest"
 import { DESIGN_MD_TEMPLATE, readRepoFile } from "./skill-asset-paths"
-import { extractTokensFromMarkdown } from "./token-extractor"
+import { ColorRefError, extractTokensFromMarkdown } from "./token-extractor"
 
 /** A real catalog entry, frontmatter included — exactly what the codegen
  *  script feeds the extractor. Handing it only `doc.body` would read zero
@@ -83,11 +83,10 @@ describe("extractTokensFromMarkdown — structure", () => {
 })
 
 describe("colors", () => {
-  it("keeps only real color values; aliases and numeric scalars stay in the md only", () => {
+  it("keeps only real color values; bare names and numeric scalars stay in the md only", () => {
     const body = fm(
       "colors:",
       "  primary: oklch(0.5 0.1 30)   # 핵심 CTA",
-      '  accent: "{colors.primary}"',
       "  fill: primary",
       "  op: 0.30",
       "  dark-bg: oklch(0.1 0 0)"
@@ -97,12 +96,12 @@ describe("colors", () => {
       value: "oklch(0.5 0.1 30)",
       note: "핵심 CTA",
     })
-    // aliases ({ref}) stay in the md only, and so would a bare token name or a
-    // number — shapes the draft validator blocks in `colors:` (#597), kept here
-    // to pin what the extractor itself drops.
+    // A bare token name or a number stays in the md only — shapes the draft
+    // validator blocks in `colors:` (#597), kept here to pin what the extractor
+    // itself drops. A quoted reference row is read; see the next block.
     // dark-* tokens ARE extracted, though — the sidecar carries the full
     // palette so a token copy can reproduce dark mode; the card VIEW filters them
-    // to light at render time (see token-curation.lightColorsOnly), not here.
+    // to light at render time (see token-curation.lightTokensOnly), not here.
     expect(colors.map((c) => c.name)).toEqual(["primary", "dark-bg"])
   })
 
@@ -125,10 +124,11 @@ describe("colors", () => {
     const blue = colors.find((c) => c.name === "blue-500")
     expect(blue?.value).toBe("oklch(0.620 0.191 258)")
     expect(blue?.note).toContain("카노니컬")
-    // ~37 light swatches plus 15 `dark-*` TDS values once the ~40 semantic
-    // aliases are excluded.
-    expect(colors.length).toBeGreaterThan(45)
-    expect(colors.length).toBeLessThan(60)
+    // ~37 light swatches plus 15 `dark-*` TDS values; the semantic aliases
+    // ride beside them as reference tokens and are counted apart.
+    const literals = colors.filter((c) => c.ref === undefined)
+    expect(literals.length).toBeGreaterThan(45)
+    expect(literals.length).toBeLessThan(60)
   })
 
   it("preserves the alpha slash inside oklch values (toss fg-tertiary)", () => {
@@ -138,14 +138,149 @@ describe("colors", () => {
     )
   })
 
-  it("excludes bare-reference aliases from the color sidecar (toss fill-brand)", () => {
+  it("carries a semantic alias as a reference token (toss fill-brand)", () => {
     const { colors } = extractTokensFromMarkdown(loadRaw("toss"))
-    expect(colors.find((c) => c.name === "fill-brand")).toBeUndefined()
+    expect(colors.find((c) => c.name === "fill-brand")).toEqual({
+      name: "fill-brand",
+      value: "oklch(0.620 0.191 258)",
+      ref: "blue-500",
+    })
   })
 
   it("excludes non-color numeric scalars from toss (disabled-opacity)", () => {
     const { colors } = extractTokensFromMarkdown(loadRaw("toss"))
     expect(colors.find((c) => c.name === "disabled-opacity")).toBeUndefined()
+  })
+})
+
+describe("colors — reference rows", () => {
+  it("resolves a reference row to the colour it points at and names that key", () => {
+    const { colors } = extractTokensFromMarkdown(
+      fm(
+        "colors:",
+        "  gray-050: oklch(0.98 0 0)",
+        '  bg-canvas: "{colors.gray-050}"'
+      )
+    )
+    expect(colors[1]).toEqual({
+      name: "bg-canvas",
+      value: "oklch(0.98 0 0)",
+      ref: "gray-050",
+    })
+  })
+
+  it("follows a reference to a reference to the end, keeping the first hop as ref", () => {
+    const { colors } = extractTokensFromMarkdown(
+      fm(
+        "colors:",
+        "  blue-500: oklch(0.6 0.19 258)",
+        '  primary: "{colors.blue-500}"',
+        '  fill-brand: "{colors.primary}"',
+        '  button-bg: "{colors.fill-brand}"'
+      )
+    )
+    expect(colors.find((c) => c.name === "button-bg")).toEqual({
+      name: "button-bg",
+      value: "oklch(0.6 0.19 258)",
+      ref: "fill-brand",
+    })
+  })
+
+  // A role that silently fell out of the sidecar would pass `tokens:check`,
+  // which only compares the sidecar with what this function returns.
+  it("refuses a reference to a key that colors: does not have, naming both", () => {
+    expect(() =>
+      extractTokensFromMarkdown(
+        fm(
+          "colors:",
+          "  gray-050: oklch(0.98 0 0)",
+          '  bg-canvas: "{colors.gray-05}"'
+        )
+      )
+    ).toThrow(
+      "colors.bg-canvas points at colors.gray-05, which colors: does not have"
+    )
+  })
+
+  it("refuses references that loop, spelling out the loop", () => {
+    expect(() =>
+      extractTokensFromMarkdown(
+        fm(
+          "colors:",
+          '  fg-default: "{colors.fg-strong}"',
+          '  fg-strong: "{colors.fg-default}"'
+        )
+      )
+    ).toThrow(
+      "colors.fg-default never reaches a colour: fg-default → fg-strong → fg-default"
+    )
+  })
+
+  it("refuses a reference that ends at a value that is not a colour", () => {
+    expect(() =>
+      extractTokensFromMarkdown(
+        fm(
+          "colors:",
+          "  disabled-opacity: 0.30",
+          '  fg-disabled: "{colors.disabled-opacity}"'
+        )
+      )
+    ).toThrow(
+      "colors.fg-disabled ends at colors.disabled-opacity, whose value 0.30 is not a colour"
+    )
+  })
+
+  it("names every bad row in one throw, and a loop once for all its rows", () => {
+    let caught: ColorRefError | undefined
+    try {
+      extractTokensFromMarkdown(
+        fm(
+          "colors:",
+          "  gray-050: oklch(0.98 0 0)",
+          '  bg-canvas: "{colors.nope}"',
+          '  bg-page: "{colors.bg-canvas}"',
+          '  fg-default: "{colors.fg-strong}"',
+          '  fg-strong: "{colors.fg-default}"'
+        )
+      )
+    } catch (e) {
+      if (e instanceof ColorRefError) caught = e
+    }
+    expect(caught?.problems.map((p) => p.kind)).toEqual(["missing", "loop"])
+  })
+
+  it("keeps a reference row's group heading and trailing comment", () => {
+    const { colors } = extractTokensFromMarkdown(
+      fm(
+        "colors:",
+        "  gray-900: oklch(0.2 0 0)",
+        "  ## Semantic",
+        '  fg-primary: "{colors.gray-900}"   # 본문 텍스트'
+      )
+    )
+    expect(colors[1]).toEqual({
+      name: "fg-primary",
+      value: "oklch(0.2 0 0)",
+      note: "본문 텍스트",
+      group: "Semantic",
+      ref: "gray-900",
+    })
+  })
+
+  it("leaves the literal tokens exactly as they were read without the references", () => {
+    const literals = [
+      "colors:",
+      "  ## Brand",
+      "  blue-500: oklch(0.6  0.19 258)   # 대표 파랑",
+      "  gray-050: oklch(0.98 0 0)",
+    ]
+    const alone = extractTokensFromMarkdown(fm(...literals)).colors
+    const withRefs = extractTokensFromMarkdown(
+      fm(...literals, "  ## Semantic", '  bg-canvas: "{colors.gray-050}"')
+    ).colors
+    expect(withRefs.filter((c) => c.ref === undefined)).toEqual(alone)
+    // Same keys in the same order, so the committed sidecar bytes do not move.
+    expect(JSON.stringify(withRefs.slice(0, 2))).toBe(JSON.stringify(alone))
   })
 })
 

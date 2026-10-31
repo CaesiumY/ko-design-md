@@ -1,6 +1,12 @@
 {
   "colors": [
     {
+      "name": "primary",
+      "value": "oklch(0.72 0.205 149)",
+      "note": "명세의 대표색 역할 — 서비스가 재정의하는 ldsg-color-brand-primary·검정 본문색 ldsg-color-role-primarytext 와 다른 축",
+      "ref": "ldsg-color-linegreen"
+    },
+    {
       "name": "ldsg-color-linegreen",
       "value": "oklch(0.72 0.205 149)",
       "note": "#06C755 · 공식 공개값. LDSG 기본 Primary"
