@@ -85,11 +85,11 @@ corrects an earlier version of the entry — nothing to apply):
 - Wire both values to one token name in the target's dark-mode mechanism (a custom-property
   theme block, `prefers-color-scheme`, Tailwind's `dark:` variant, …), so components switch
   without code changes.
-- A role's dark twin need not point at the same-stem dark token of its light step
-  (`color-background-overlay-100` → `canvas`, but `dark-color-background-overlay-100` →
-  `dark-gray-100`, not `dark-canvas`). Read the role rows rather than pairing by stem.
-  Before deciding a token has no dark pair, check same-stem neighbours, their comments
-  and the role rows that point at it.
+- For a role, read its own `dark-` row; do not derive it from the light step's same-stem
+  dark token. `color-background-overlay-100` → `canvas`, but
+  `dark-color-background-overlay-100` → `dark-gray-100`, not `dark-canvas`.
+- For a palette token, look for its `dark-` same-stem neighbour and read their comments.
+  Before deciding it has no dark pair, also check the role rows that point at it.
 - No dark pair means one of two things. Some tokens are theme-invariant by design (e.g. a
   `static-*` family). Others simply weren't published — Known Gaps may say so, but not
   every entry does. A dark value you fill in for those is your inference (SKILL.md "Scope

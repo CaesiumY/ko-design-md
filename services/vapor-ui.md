@@ -457,7 +457,7 @@ Voice는 "factual, didactic, slightly warm"으로 정의된다 [src:5]. 한국�
 
 > **역할 계층 정정(2026-11-01).** 배포본 `@vapor-ui/core` 1.3.0 의 `dist/styles/themes.css.ts.vanilla.css` 와 시맨틱 alias 를 다시 대조했다 [src:4]. 상류는 alias 42개를 라이트·다크 블록에 각각 정의하고, 84개 짝 가운데 이 문서가 상류 이름으로 싣던 78개 중 77개는 가리키는 팔레트 단계까지 맞았고, 남은 하나(`overlay-100` 라이트)도 값은 같고 가리키는 토큰 이름만 달랐다 — **값 어긋남은 0건이고 어긋남은 이름에만 있었다.** 세 가지를 고쳤다. `color-background-canvas` 는 상류 이름대로 `color-background-canvas-100` 으로 바꿨다. 싣지 않던 `color-border-normal`(라이트 `gray-100` / 다크 `dark-gray-300`)과 `color-foreground-inverse`(두 테마 모두 `white`)를 더했다. `canvas-100`·`overlay-100` 의 라이트 쪽은 상류가 `white` 가 아니라 별도 팔레트 토큰 `color-canvas` 를 가리키므로, 그 토큰을 `canvas` 로 싣고 그쪽을 가리키게 했다 — 값은 `color-white` 와 같다.
 >
-> 다크 램프 111개와 다크 alias 의 대응은 2026-09-08 재대조 결과 그대로다. 상류는 다크에서 램프 자체를 다시 정의하므로(번호가 커질수록 밝아진다) 다크 alias 는 전부 `dark-` 접두 램프를 가리킨다 [src:4].
+> 다크 램프와 기존 다크 alias 의 대응은 2026-09-08 재대조 결과 그대로다. 상류는 다크에서 램프 자체를 다시 정의하므로(번호가 커질수록 밝아진다) 다크 alias 는 `dark-` 접두 팔레트를 가리킨다 — 예외는 `dark-color-foreground-inverse` 하나로, 상류 다크 블록이 `white` 를 라이트와 같은 값으로 다시 정의하므로 접두 없는 `color-white` 를 가리킨다 [src:4].
 
 Vapor는 두 테마(`light`, `dark`) 위에 11-family 베이스 팔레트를 둔다 — Red, Pink, Grape, Violet, Blue, Cyan, Green, Lime, Yellow, Orange, Gray. 각 패밀리는 `050, 100, 200, 300, 400, 500, 600, 700, 800, 900` 10단계 + `color-white`/`color-black` 상수로 구성된다 [src:5]. 브랜드 primary는 **Blue 500**이며, 카노니컬한 violet은 Vapor 워드마크에만 등장한다 [src:5].
 
@@ -467,7 +467,7 @@ product-facing 색은 모두 **시맨틱 alias**로 호출하고 raw 팔레트�
 
 위 OKLCH는 `@vapor-ui/core`가 배포하는 hex를 변환한 결과이고, 각 출처 hex는 같은 줄 트레일링 주석에 남겼다 [src:4]. (2026-07-29 이전 리비전은 핸드오프 번들 `colors_and_type.css`의 hex를 옮긴 것이었다.)
 
-**램프는 테마마다 한 벌씩이다.** 상류는 다크에서 시맨틱 alias 이름을 유지한 채 램프 자체를 다시 정의하므로, frontmatter 도 `dark-` 접두로 두 번째 벌을 발행한다 — `## Base palette` 그룹이 라이트 110개 + `color-white`·`color-black`·`canvas`, `## Dark palette` 그룹이 다크 110개 + `dark-canvas` 다 [src:4]. 다크 램프는 번호가 커질수록 밝아져 라이트의 역순에 가깝다 — 다크 `gray-900` 은 표면이 아니라 본문 글자색 자리이고, 표면은 `dark-gray-050` 쪽이다. 다크 alias(`dark-color-*`)는 전부 이 두 번째 벌을 가리킨다. `canvas`·`dark-canvas` 는 상류가 램프와 별개로 두는 `color-canvas` 의 라이트·다크 값이다 — 라이트 값은 `color-white` 와 같지만 상류가 다른 토큰으로 두고 표면 역할은 이쪽을 가리킨다 [src:4]. 상류 이름은 `color-canvas` 이지만, 같은 묶음의 `color-white`·`color-black` 과 달리 접두를 떼고 `canvas` 로 실었다 — 기존 `dark-canvas` 와 짝을 맞추기 위해서다. 상류는 `color-white`·`color-black` 도 다크 블록에서 같은 값으로 다시 정의하므로 이 둘은 `dark-` 짝을 두지 않는다.
+**램프는 테마마다 한 벌씩이다.** 상류는 다크에서 시맨틱 alias 이름을 유지한 채 램프 자체를 다시 정의하므로, frontmatter 도 `dark-` 접두로 두 번째 벌을 발행한다 — `## Base palette` 그룹이 라이트 110개 + `color-white`·`color-black`·`canvas`, `## Dark palette` 그룹이 다크 110개 + `dark-canvas` 다 [src:4]. 다크 램프는 번호가 커질수록 밝아져 라이트의 역순에 가깝다 — 다크 `gray-900` 은 표면이 아니라 본문 글자색 자리이고, 표면은 `dark-gray-050` 쪽이다. 다크 alias(`dark-color-*`)는 이 두 번째 벌을 가리킨다 — 예외는 아래의 `color-white` 를 가리키는 `dark-color-foreground-inverse` 하나다. `canvas`·`dark-canvas` 는 상류가 램프와 별개로 두는 `color-canvas` 의 라이트·다크 값이다 — 라이트 값은 `color-white` 와 같지만 상류가 다른 토큰으로 두고 표면 역할은 이쪽을 가리킨다 [src:4]. 상류 이름은 `color-canvas` 이지만, 같은 묶음의 `color-white`·`color-black` 과 달리 접두를 떼고 `canvas` 로 실었다 — 기존 `dark-canvas` 와 짝을 맞추기 위해서다. 상류는 `color-white`·`color-black` 도 다크 블록에서 같은 값으로 다시 정의하므로 이 둘은 `dark-` 짝을 두지 않는다.
 
 ### Semantic alias (light → dark)
 
