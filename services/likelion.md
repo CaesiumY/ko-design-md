@@ -171,7 +171,7 @@ rounded:
 
 > **역할 계층 대조 결과(2026-11-01).** 배포 토큰 CSS [src:4] 와 npm `@likelion-design/ui` 1.0.32 의 `dist/colors.css.css` [src:15] 를 다시 받아 대조했다. 두 파일의 `--color-semantic-*` 정의 62개는 한 글자도 다르지 않다. 이전 판이 싣던 역할 11개는 모두 상류 대응과 맞았고(불일치 0), 나머지 역할 51개를 더해 62개를 모두 표에 실었다. 그중 팔레트 단계 하나를 가리키는 50개는 frontmatter 참조 행으로도 실었고, 이를 위해 역할이 가리키는 상류 팔레트 단계 16개(색상 7계열의 50 · 500 단계와 `red-600`, `basic-black`)를 상류 hex 그대로 팔레트에 더했다 [src:15]. 불투명도 램프나 그라데이션·딤 값을 거치는 12개는 표에만 있다. 역할 이름(`bg-normal` · `fg-primary` · `border-primary` 등)은 같은 패키지가 `--color-semantic-` 를 뗀 이름으로 Tailwind 테마 변수와 유틸리티로 발행하는 이름이다 [src:14]. 다크 테마의 시맨틱 정의는 상류에 없다 [src:4][src:15].
 
-시그니처는 10단계 오렌지 램프로, 500 단계 `oklch(0.69 0.209 42)`(#FF6000)을 중심으로 밝은 배경용(50~200)과 어두운 강조용(600~900)이 대칭적으로 갈린다 [src:4]. 뉴트럴은 순수 무채색이 아니라 미세하게 푸른 기운이 도는 "gray" 램프(`#F9FAFB`→`#191F28`)로, 오렌지 액센트와 대비되는 차가운 배경 톤을 만든다 [src:4]. 시맨틱 레이어는 배경(`bg-*`)·전경(`fg-*`)·테두리(`border-*`) 세 축이 중심이고, `info-*` 와 `style-*` 가 곁에 있다 [src:15]. `bg-primary` · `fg-primary` · `border-primary` 는 오렌지 500 을 가리키고, 눌림·호버 상태(`fg-pressed` · `bg-primary-hovered`)는 600, 어두운 바탕 위 강조(`fg-primary-inverted`)는 300 을 가리킨다 [src:4][src:15].
+시그니처는 10단계 오렌지 램프로, 500 단계 `oklch(0.69 0.209 42)`(#FF6000)을 중심으로 밝은 배경용(50~200)과 어두운 강조용(600~900)이 대칭적으로 갈린다 [src:4]. 뉴트럴은 순수 무채색이 아니라 미세하게 푸른 기운이 도는 "gray" 램프(`#F9FAFB`→`#191F28`)로, 오렌지 액센트와 대비되는 차가운 배경 톤을 만든다 [src:4]. 시맨틱 레이어는 배경(`bg-*`)·전경(`fg-*`)·테두리(`border-*`) 세 축이 중심이고, `info-*` 와 `style-*` 가 곁에 있다 [src:15]. `bg-primary` · `fg-primary` · `border-primary` 는 오렌지 500 을, `fg-pressed` · `bg-primary-hovered` 는 600 을, `fg-primary-inverted` 는 300 을 가리킨다 [src:4][src:15]. 이름으로 읽으면 600 쪽 둘은 눌림·호버 상태, 300 쪽 하나는 어두운 바탕 위 강조이지만, 상류가 이 용도를 문서화한 것은 아니다.
 
 공개 코퍼스는 `--color-*` 커스텀 프로퍼티 199개를 grep으로 확인했고, Foundation 매니페스트가 Primitive/Semantic/Style/Palette 하위 페이지를 추가로 문서화한다고 밝히고 있어 이 수치는 하한선이다 [src:2][src:3].
 
@@ -298,11 +298,11 @@ Storybook 매니페스트(`index.json`, 총 135 엔트리)는 각각 문서 페�
 
 라이선스 참고: 컴포넌트 코드가 배포되는 npm 패키지 `@likelion-design/ui`(최신 `1.0.32`)는 `license` 필드가 비어 있고(null) [src:7], 문서 사이트 자체도 `/LICENSE` 요청에 403을 반환하며 [src:6], ~100개 이상의 JS/CSS 청크와 index.html을 grep해도 명시적 저작권/재배포 금지 문구는 발견되지 않았다 [src:2]. 즉 컴포넌트/토큰 콘텐츠 자체에는 명시적 허용도 명시적 금지도 없다 — 유일하게 명문화된 사용 제한은 아래 Brand Logo 규정뿐이다.
 
-개별 컴포넌트가 정확히 어떤 토큰을 쓰는지는 렌더링된 화면이 아니라 시맨틱 토큰의 이름 자체에서 유추한 것이며(예: `border-primary`는 포커스/강조용으로 명명돼 있다), 컴포넌트별 실측 매핑은 아니다 [src:4].
+개별 컴포넌트가 정확히 어떤 토큰을 쓰는지는 렌더링된 화면이 아니라 시맨틱 토큰의 이름 자체에서 유추한 것이며, 컴포넌트별 실측 매핑은 아니다. 아래 컴포넌트 서술에서 인용은 컴포넌트가 문서화돼 있다는 사실 [src:3] 에만 붙고, 토큰 대응은 모두 이름에서 읽은 추정이다.
 
 ### action-button
 
-1차 CTA 버튼 계열. 시맨틱 토큰 이름 구조상 `{colors.bg-primary}` 채움과 `{colors.fg-white}` 라벨 잉크, `{rounded.radius-3}` 코너를 쓰는 것이 스케일과 정합적이다 [src:3][src:4].
+ActionButton 은 Storybook 에 문서화된 버튼 컴포넌트다 [src:3]. 이름에서 읽으면 1차 CTA 버튼 계열로, `{colors.bg-primary}` 채움과 `{colors.fg-white}` 라벨 잉크, `{rounded.radius-3}` 코너를 쓰는 것이 스케일과 정합적이다(이름에서 읽은 추정).
 
 ```tsx
 <ActionButton variant="primary">확인</ActionButton>
@@ -310,11 +310,11 @@ Storybook 매니페스트(`index.json`, 총 135 엔트리)는 각각 문서 페�
 
 ### icon-button
 
-아이콘 전용 컴팩트 버튼. `{rounded.radius-full}` 원형 코너와 `{colors.gray-600}` 기본 아이콘 잉크, 활성/호버 시 `{colors.fg-primary}`로 전환되는 구조가 토큰 명명과 정합적이다 [src:3][src:4].
+IconButton 은 Storybook 에 문서화된 아이콘 버튼이다 [src:3]. `{rounded.radius-full}` 원형 코너와 `{colors.gray-600}` 기본 아이콘 잉크, 활성/호버 시 `{colors.fg-primary}`로 전환되는 구조가 토큰 명명과 정합적이다(이름에서 읽은 추정).
 
 ### text-field
 
-입력 필드. 기본 상태 `{colors.border-normal}`, 포커스/강조 상태 `{colors.border-primary}`, 비활성 라벨 `{colors.fg-disabled}`를 쓰는 것이 시맨틱 토큰 이름 구조상 자연스럽다 — 정확한 상태별 매핑은 렌더링 확인이 필요하다 [src:3][src:4].
+TextField 는 Storybook 에 문서화된 입력 필드다 [src:3]. 기본 상태 `{colors.border-normal}`, 포커스/강조 상태 `{colors.border-primary}`, 비활성 라벨 `{colors.fg-disabled}`를 쓰는 것이 시맨틱 토큰 이름 구조상 자연스럽다(이름에서 읽은 추정) — 정확한 상태별 매핑은 렌더링 확인이 필요하다.
 
 ```tsx
 <TextField placeholder="이메일" disabled={false} />
@@ -322,15 +322,15 @@ Storybook 매니페스트(`index.json`, 총 135 엔트리)는 각각 문서 페�
 
 ### select-box
 
-SelectBox·SelectHeader·SelectMenu 세 엔트리가 나란히 문서화돼 있다 [src:3] — 이름 구조상 트리거 헤더 + 오버레이 메뉴로 조합되는 선택형 패턴으로 추정되나, 세 엔트리를 하나의 패턴으로 묶어 설명하는 문서 자체가 확인된 것은 아니다. 오버레이 표면에는 `{colors.bg-white}`, 구분선에는 `{colors.border-weak}`가 정합적이다 [src:4].
+SelectBox·SelectHeader·SelectMenu 세 엔트리가 나란히 문서화돼 있다 [src:3] — 이름 구조상 트리거 헤더 + 오버레이 메뉴로 조합되는 선택형 패턴으로 추정되나, 세 엔트리를 하나의 패턴으로 묶어 설명하는 문서 자체가 확인된 것은 아니다. 오버레이 표면에는 `{colors.bg-white}`, 구분선에는 `{colors.border-weak}`가 정합적이다(이름에서 읽은 추정).
 
 ### dialog / toast
 
-Dialog(모달)와 Toast(일시적 알림)는 각각 별도 스토리로 문서화된 피드백 컴포넌트다 [src:3]. 표면 배경은 `{colors.bg-white}`, 강조가 필요한 경우 `{colors.bg-primary-weak}` 배경에 `{colors.fg-primary}` 텍스트 조합을 쓰는 것이 팔레트 구조와 맞는다 [src:4].
+Dialog(모달)와 Toast(일시적 알림)는 각각 별도 스토리로 문서화된 피드백 컴포넌트다 [src:3]. 표면 배경은 `{colors.bg-white}`, 강조가 필요한 경우 `{colors.bg-primary-weak}` 배경에 `{colors.fg-primary}` 텍스트 조합을 쓰는 것이 팔레트 구조와 맞는다(이름에서 읽은 추정).
 
 ### tag / chip
 
-Tag와 Chip은 별도 컴포넌트로 각각 문서화돼 있다 [src:3]. 라벨류 컴포넌트답게 `{colors.bg-primary-weak}` 배경에 `{colors.fg-primary}` 텍스트, `{rounded.radius-full}` 또는 `{rounded.radius-2}` 코너를 쓰는 조합이 팔레트·radius 스케일과 정합적이다 [src:4].
+Tag와 Chip은 별도 컴포넌트로 각각 문서화돼 있다 [src:3]. 라벨류 컴포넌트답게 `{colors.bg-primary-weak}` 배경에 `{colors.fg-primary}` 텍스트, `{rounded.radius-full}` 또는 `{rounded.radius-2}` 코너를 쓰는 조합이 팔레트·radius 스케일과 정합적이다(이름에서 읽은 추정).
 
 ### brand-logo
 
