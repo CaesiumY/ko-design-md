@@ -91,7 +91,7 @@ colors:
   brand-red: oklch(0.621 0.251 24)   # #FA0030 — 라이브 발행값 stack semantic-brand-default, 워드마크·primary CTA·progress highlight
   brand-red-dark: oklch(0.556 0.225 24)   # #D80028 — 라이브 발행값 stack semantic-brand-strong. primary CTA hover/pressed 역할은 번들 배정이며 라이브 CTA hover 로는 관측되지 않았다
   brand-red-soft: oklch(0.944 0.029 7)   # red badge and subtle alert surface
-  interaction-blue: oklch(0.429 0.297 264)   # links, info, focus ring source. sRGB 색역 밖 — 브라우저가 클리핑하며 라이브는 더 낮은 채도를 쓴다(Colors 절 팔레트 정정 참조)
+  interaction-blue: oklch(0.429 0.297 264)   # links, info, focus ring source. sRGB 색역 밖 — 브라우저가 클리핑하며 라이브는 더 낮은 채도를 쓴다(Colors 절 감사 메모 참조)
   interaction-blue-soft: oklch(0.958 0.020 280)
   teal-strong: oklch(0.378 0.066 224)   # active sidebar, live session, data cards
   ## Neutral scale
@@ -112,9 +112,9 @@ colors:
   success: oklch(0.627 0.170 149)
   warning: oklch(0.769 0.165 70)
   danger: oklch(0.646 0.226 33)   # #F94015 — 라이브 발행값 stack semantic-status-error-default. brand-red 와 별개 값이다
-  info: oklch(0.429 0.297 264)   # interaction-blue 값 — sRGB 색역 밖이라 브라우저가 클리핑한다(Colors 절 팔레트 정정 참조)
+  info: oklch(0.429 0.297 264)   # interaction-blue 값 — sRGB 색역 밖이라 브라우저가 클리핑한다(Colors 절 감사 메모 참조)
   ## Semantic alias
-  focus-ring: oklch(0.429 0.297 264 / 0.32)   # interaction-blue 값 — sRGB 색역 밖(Colors 절 팔레트 정정 참조)
+  focus-ring: oklch(0.429 0.297 264 / 0.32)   # interaction-blue 값 — sRGB 색역 밖(Colors 절 감사 메모 참조)
   modal-backdrop: oklch(0.000 0.000 0 / 0.48)
   ## Supporting badge surfaces
   badge-blue-bg: oklch(0.932 0.034 286)
@@ -283,7 +283,7 @@ fonts:
 
 ## Colors
 
-> **역할 계층 대조(2026-11-01).** 팀스파르타는 디자인 토큰을 npm 패키지 `@teamsparta/stack-tokens`로 발행한다 [src:5]. 이 패키지(2.6.0)는 원시 팔레트 `primitiveColor` 위에 역할 계층을 정의한다 — 라이트는 `baseSemanticColor`(스파르타클럽 테마 `sccLight`는 여기에 같은 brand 값만 다시 적는다), 다크는 `sccDark`다. 내일배움캠프는 그 역할을 `--stack-semantic-*` 커스텀 프로퍼티로 서빙한다 [src:2]. 아래 역할 표의 45개 역할은 패키지에서 옮겼고, 라이트 45개를 내일배움캠프 라이브 값과 hex로 대조하니 불일치는 0개였다. 다크 값은 라이브와 대조하지 않았다. 전에 frontmatter 첫머리에 있던 역할 행 11개(`bg-canvas`·`fg-primary`·`border-default` 등)는 핸드오프 번들이 붙인 이름이라 패키지에도 배포 CSS에도 없었고, 대응도 발행본과 달랐다(번들 `fg-secondary` → `gray-500`, 발행 `text-secondary` → `neutral-80`). 발행 이름이 아니므로 그 행을 지우고 발행 역할 계층으로 바꿨다. 번들 회색 `gray-*` 11단계는 발행 `neutral-*`와 거의 다른 값이라(같은 값은 `gray-400`·`gray-950` 둘) 그대로 두고, 역할이 가리키는 발행 단계는 `neutral-*`·`red-*` 등 별도 이름으로 실었다. 컴포넌트와 프리뷰는 아직 번들 값을 쓴다. 브랜드 red 3개(`brand-red`·`brand-red-dark`·`danger`)는 2026-09-24에 라이브 시맨틱 값(`brand-default`·`brand-strong`·`status-error-default`)으로 바로잡은 값이고 발행 원시 `red-70`·`red-80`·`orange-red-70`과 같다. `brand-red`는 라이브 사이트 4곳이 칠하는 브랜드 red(워드마크 fill·CTA 배경·내일배움캠프 히어로 배경·커리어 사이트 테넌트 테마)와 같은 값이다 [src:1][src:2][src:3][src:4]. `brand-red-soft`·`success` 등 번들에서 온 나머지 리터럴은 이번에 다시 맞추지 않았다.
+> **역할 계층 대조(2026-11-01).** 팀스파르타는 디자인 토큰을 npm 패키지 `@teamsparta/stack-tokens`로 발행한다 [src:5]. 이 패키지(2.6.0)는 원시 팔레트 `primitiveColor` 위에 역할 계층을 정의한다 — 라이트는 `baseSemanticColor`(스파르타클럽 테마 `sccLight`는 여기에 같은 brand 값만 다시 적는다), 다크는 `sccDark`다. 내일배움캠프는 그 역할을 `--stack-semantic-*` 커스텀 프로퍼티로 서빙한다 [src:2]. 아래 역할 표의 45개 역할은 패키지에서 옮겼고, 라이트 45개를 내일배움캠프 라이브 값과 hex로 대조하니 불일치는 0개였다. 내일배움캠프 라이브 페이지는 `--stack-semantic-*`를 라이트 값 한 벌로만 서빙하고 다크 테마 정의(`prefers-color-scheme` 분기 등)가 없어, 다크 값은 패키지로만 대조했다. 전에 frontmatter 첫머리에 있던 역할 행 11개(`bg-canvas`·`fg-primary`·`border-default` 등)는 핸드오프 번들이 붙인 이름이라 패키지에도 배포 CSS에도 없었고, 대응도 발행본과 달랐다(번들 `fg-secondary` → `gray-500`, 발행 `text-secondary` → `neutral-80`). 발행 이름이 아니므로 그 행을 지우고 발행 역할 계층으로 바꿨다. 번들 회색 `gray-*` 11단계는 발행 `neutral-*`와 거의 다른 값이라(같은 값은 `gray-400`·`gray-950` 둘) 그대로 두고, 역할이 가리키는 발행 단계는 `neutral-*`·`red-*` 등 별도 이름으로 실었다. 컴포넌트와 프리뷰는 아직 번들 값을 쓴다. 브랜드 red 3개(`brand-red`·`brand-red-dark`·`danger`)는 2026-09-24에 라이브 시맨틱 값(`brand-default`·`brand-strong`·`status-error-default`)으로 바로잡은 값이고 발행 원시 `red-70`·`red-80`·`orange-red-70`과 같다. `brand-red`는 라이브 사이트 4곳이 칠하는 브랜드 red(워드마크 fill·CTA 배경·내일배움캠프 히어로 배경·커리어 사이트 테넌트 테마)와 같은 값이다 [src:1][src:2][src:3][src:4]. `brand-red-soft`·`success` 등 번들에서 온 나머지 리터럴은 이번에 다시 맞추지 않았다.
 >
 > **`interaction-blue`는 sRGB 색역 밖이다.** `oklch(0.429 0.297 264)`를 선형 sRGB로 풀면 red 채널이 −0.0002로 음수라, 브라우저는 이 값을 그대로 그리지 못하고 클리핑한다. 라이브 사이트가 쓰는 가장 가까운 파랑은 `#003CDC` = `oklch(0.457 0.245 264)`로 **hue는 같고 채도가 낮은**(색역 안) 값이며 ΔE 0.059 떨어져 있다. 방침대로 값은 그대로 두고 차이만 적는다 — 이 토큰을 참조하는 `info`·`focus-ring`·`input-focus-ring`도 같은 값을 쓰므로 네 줄 모두에 같은 단서를 달았다. 다만 사이드카로 실려 나가는 건 앞의 셋뿐이다 — `input-focus-ring`은 컴포넌트 절에 있어 `tokens:build`의 색 토큰 추출 대상이 아니다.
 
@@ -452,7 +452,7 @@ Input은 6px radius, 14px text, 10px 12px padding, gray-200 border를 사용한�
 ```text
 input-radius: radius-xs
 input-border: gray-200
-input-focus-ring: oklch(0.429 0.297 264 / 0.18)   # interaction-blue 값 — sRGB 색역 밖(Colors 절 팔레트 정정 참조)
+input-focus-ring: oklch(0.429 0.297 264 / 0.18)   # interaction-blue 값 — sRGB 색역 밖(Colors 절 감사 메모 참조)
 input-error-border: danger
 ```
 
@@ -510,7 +510,7 @@ Cards and course rows must preserve scan order: thumbnail → badge/track → ti
 - The blue-vs-red token semantics are documented as a caveat and should be confirmed by the team before production adoption.
 - The dashboard default theme is not confirmed; the bundle authored light mode as default while keeping dark-mode tokens available.
 - No custom icon library was included; Lucide/Heroicons-style outline icons are the documented fallback.
-- 발행 토큰 패키지 `@teamsparta/stack-tokens` [src:5]로는 역할 계층과 그것이 가리키는 단계만 옮겼다. 번들에서 온 팔레트(`gray-*`·`brand-red-soft`·`success`·`warning`·`interaction-blue` 계열·`teal-strong`·배지 표면)와 그것을 쓰는 컴포넌트 스펙·프리뷰는 아직 이 패키지와 다시 맞추지 않았다. 패키지의 컴포넌트 토큰(`button`·`checkbox` 등)도 싣지 않았다.
+- The published palette is upstream and is carried: the `neutral-*`/`red-*`/`orange-red-*`/`yellow-*`/`green-*`/`blue-*` steps the role layer points at were added from `@teamsparta/stack-tokens` [src:5]. What is not yet aligned is this entry's bundle palette (`gray-*`, `brand-red-soft`, `success`, `warning`, the `interaction-blue` family, `teal-strong`, badge surfaces) and the component specs and preview that use it — moving them to the published values means changing existing values, and a maintainer decision (2026-11-01) split that into follow-up work. The package's component tokens (`button`, `checkbox`, …) are upstream too and are left to the same follow-up.
 
 ## References
 
