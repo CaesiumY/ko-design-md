@@ -33,6 +33,9 @@ colors:
   gray-850: oklch(0.30 0.027 257)     # #262F3C
   gray-900: oklch(0.24 0.024 262)     # #191F28
   gray-950: oklch(0.22 0.007 247)     # #191C1F
+  ## Basic (상류 basic-*)
+  white: oklch(1 0 0)                 # #FFFFFF 상류 이름은 basic-white
+  black: oklch(0.00 0.000 0)          # #000000 상류 이름은 basic-black
   ## Hue (시맨틱 역할이 가리키는 단계만 — 상류 램프는 계열마다 50~900)
   blue-50: oklch(0.96 0.022 235)        # #E5F5FF
   blue-500: oklch(0.67 0.179 256)       # #3D94FF
@@ -50,8 +53,6 @@ colors:
   yellow-50: oklch(0.98 0.027 91)      # #FFF8E4
   yellow-500: oklch(0.83 0.171 80)     # #FFB700
   ## Semantic (bg/fg/border/info)
-  white: oklch(1 0 0)                 # #FFFFFF 상류 이름은 basic-white
-  black: oklch(0.00 0.000 0)          # #000000 상류 이름은 basic-black
   bg-white: "{colors.white}"
   bg-normal: "{colors.gray-100}"
   bg-normal-hovered: "{colors.gray-50}"

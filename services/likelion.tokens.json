@@ -139,6 +139,18 @@
       "group": "Gray (쿨톤 뉴트럴)"
     },
     {
+      "name": "white",
+      "value": "oklch(1 0 0)",
+      "note": "#FFFFFF 상류 이름은 basic-white",
+      "group": "Basic (상류 basic-*)"
+    },
+    {
+      "name": "black",
+      "value": "oklch(0.00 0.000 0)",
+      "note": "#000000 상류 이름은 basic-black",
+      "group": "Basic (상류 basic-*)"
+    },
+    {
       "name": "blue-50",
       "value": "oklch(0.96 0.022 235)",
       "note": "#E5F5FF",
@@ -227,18 +239,6 @@
       "value": "oklch(0.83 0.171 80)",
       "note": "#FFB700",
       "group": "Hue (시맨틱 역할이 가리키는 단계만 — 상류 램프는 계열마다 50~900)"
-    },
-    {
-      "name": "white",
-      "value": "oklch(1 0 0)",
-      "note": "#FFFFFF 상류 이름은 basic-white",
-      "group": "Semantic (bg/fg/border/info)"
-    },
-    {
-      "name": "black",
-      "value": "oklch(0.00 0.000 0)",
-      "note": "#000000 상류 이름은 basic-black",
-      "group": "Semantic (bg/fg/border/info)"
     },
     {
       "name": "bg-white",
