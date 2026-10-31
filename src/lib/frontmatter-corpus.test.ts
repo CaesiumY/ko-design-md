@@ -19,9 +19,10 @@ import type { ServiceTokens } from "./content-types"
 // - the committed token sidecars (`services/*.tokens.json`), which the
 //   line-based extractor wrote, for every token's name, value, note and group.
 //
-// The sidecar is a filtered projection (aliases, non-colours, non-dimensions
-// and non-shadows are dropped; whitespace is collapsed), so the check runs one
-// way: every sidecar token must be found, in order, among the module's rows.
+// The sidecar is a filtered projection (non-colours, non-dimensions and
+// non-shadows are dropped — a spacing or radius alias among them; a colour
+// reference row is kept, resolved; whitespace is collapsed), so the check runs
+// one way: every sidecar token must be found, in order, among the module's rows.
 
 const ROOT = fileURLToPath(new URL("../..", import.meta.url))
 const SERVICES = join(ROOT, "services")
