@@ -273,6 +273,18 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       expectRowsToMatch("ridi", expected, refs, literals)
     },
   },
+  teamsparta: {
+    title: "stack-tokens roles, light and `dark-` twin on one palette",
+    check: () => {
+      const { literals, refs, tableRows } = load("teamsparta")
+      // `@teamsparta/stack-tokens` primitives do not change with the theme, so
+      // a `dark-` twin points at an unprefixed step. Cells through an alpha ramp
+      // (`neutralBlueAlpha[15]`) or a literal (`brand-faint`) are not single
+      // references and fall out.
+      const expected = singleReferenceRoles(tableRows)
+      expectRowsToMatch("teamsparta", expected, refs, literals)
+    },
+  },
 }
 
 describe("role reference rows agree with the body role tables", () => {

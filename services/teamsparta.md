@@ -3,23 +3,91 @@ name: 팀스파르타
 slug: teamsparta
 category: education
 logo: https://getdesign.kr/logos/teamsparta-favicon.png
-last_updated: "2026-10-31"
+last_updated: "2026-11-01"
 created_at: "2026-05-13"
 lang: ko
 colors:
-  bg-canvas: "{colors.white}"
-  bg-subtle: "{colors.gray-50}"   # 라이트 테마 값 — 다크 짝은 이 문서에 없다. 다크 화면에 그대로 쓰지 말 것
-  bg-surface: "{colors.white}"
-  dark-bg-canvas: "{colors.gray-900}"
-  dark-bg-surface: "{colors.gray-950}"
-  fg-primary: "{colors.gray-900}"   # 라이트 테마 값 — 다크 짝은 이 문서에 없다. 다크 화면에 그대로 쓰지 말 것
-  fg-secondary: "{colors.gray-500}"   # 라이트 테마 값 — 다크 짝은 이 문서에 없다. 다크 화면에 그대로 쓰지 말 것
-  fg-inverse: "{colors.white}"
-  border-default: "{colors.gray-200}"
-  border-muted: "{colors.gray-100}"
-  badge-red-bg: "{colors.brand-red-soft}"
+  ## Role layer — @teamsparta/stack-tokens semantic (light = baseSemanticColor, dark- = sccDark)
+  brand-strong: "{colors.red-80}"
+  brand-default: "{colors.red-70}"
+  brand-subtle: "{colors.red-50}"
+  brand-subtler: "{colors.red-20}"
+  brand-subtlest: "{colors.red-5}"
+  status-success-default: "{colors.green-70}"
+  status-success-subtle: "{colors.green-50}"
+  status-success-subtler: "{colors.green-20}"
+  status-success-subtlest: "{colors.green-10}"
+  status-warning-default: "{colors.yellow-70}"
+  status-warning-subtle: "{colors.yellow-50}"
+  status-warning-subtler: "{colors.yellow-20}"
+  status-warning-subtlest: "{colors.yellow-10}"
+  status-error-default: "{colors.orange-red-70}"
+  status-error-subtle: "{colors.orange-red-50}"
+  status-error-subtler: "{colors.orange-red-20}"
+  status-error-subtlest: "{colors.orange-red-10}"
+  status-processing-default: "{colors.blue-70}"
+  status-processing-subtle: "{colors.blue-50}"
+  status-processing-subtler: "{colors.blue-20}"
+  status-processing-subtlest: "{colors.blue-10}"
+  text-primary: "{colors.neutral-100}"
+  text-secondary: "{colors.neutral-80}"
+  text-tertiary: "{colors.neutral-60}"
+  text-quaternary: "{colors.neutral-50}"
+  text-inverse: "{colors.neutral-0}"
+  icon-primary: "{colors.neutral-100}"
+  icon-secondary: "{colors.neutral-80}"
+  icon-tertiary: "{colors.neutral-60}"
+  icon-quaternary: "{colors.neutral-50}"
+  icon-inverse: "{colors.neutral-0}"
+  background-default: "{colors.neutral-0}"
+  background-subtle: "{colors.neutral-5}"
+  background-modal: "{colors.neutral-0}"
+  background-popover: "{colors.neutral-0}"
+  line-selected: "{colors.neutral-80}"
+  fill-default: "{colors.neutral-0}"
+  fill-subtle: "{colors.neutral-10}"
+  fill-inverse-default: "{colors.neutral-100}"
+  fill-inverse-subtle: "{colors.neutral-80}"
+  dark-brand-strong: "{colors.red-50}"
+  dark-brand-default: "{colors.red-70}"
+  dark-brand-subtle: "{colors.red-80}"
+  dark-brand-subtler: "{colors.red-90}"
+  dark-brand-subtlest: "{colors.red-100}"
+  dark-status-success-default: "{colors.green-60}"
+  dark-status-success-subtle: "{colors.green-70}"
+  dark-status-success-subtler: "{colors.green-90}"
+  dark-status-success-subtlest: "{colors.green-100}"
+  dark-status-warning-default: "{colors.yellow-60}"
+  dark-status-warning-subtle: "{colors.yellow-70}"
+  dark-status-warning-subtler: "{colors.yellow-90}"
+  dark-status-warning-subtlest: "{colors.yellow-100}"
+  dark-status-error-default: "{colors.orange-red-60}"
+  dark-status-error-subtle: "{colors.orange-red-70}"
+  dark-status-error-subtler: "{colors.orange-red-90}"
+  dark-status-error-subtlest: "{colors.orange-red-100}"
+  dark-status-processing-default: "{colors.blue-60}"
+  dark-status-processing-subtle: "{colors.blue-70}"
+  dark-status-processing-subtler: "{colors.blue-90}"
+  dark-status-processing-subtlest: "{colors.blue-100}"
+  dark-text-primary: "{colors.neutral-0}"
+  dark-text-secondary: "{colors.neutral-20}"
+  dark-text-tertiary: "{colors.neutral-50}"
+  dark-text-quaternary: "{colors.neutral-60}"
+  dark-text-inverse: "{colors.neutral-100}"
+  dark-icon-primary: "{colors.neutral-0}"
+  dark-icon-secondary: "{colors.neutral-20}"
+  dark-icon-tertiary: "{colors.neutral-50}"
+  dark-icon-quaternary: "{colors.neutral-60}"
+  dark-icon-inverse: "{colors.neutral-100}"
+  dark-background-default: "{colors.neutral-100}"
+  dark-background-subtle: "{colors.neutral-90}"
+  dark-background-modal: "{colors.neutral-90}"
+  dark-background-popover: "{colors.neutral-80}"
+  dark-line-selected: "{colors.neutral-20}"
+  dark-fill-inverse-default: "{colors.neutral-0}"
+  dark-fill-inverse-subtle: "{colors.neutral-30}"
   ## Brand & interaction
-  primary: "{colors.brand-red}"   # 명세의 대표색 역할 — 텍스트 축의 fg-primary(gray-900)와 다른 축
+  primary: "{colors.brand-red}"   # 명세의 대표색 역할 — 텍스트 축의 text-primary(neutral-100)와 다른 축
   brand-red: oklch(0.621 0.251 24)   # #FA0030 — 라이브 발행값 stack semantic-brand-default, 워드마크·primary CTA·progress highlight
   brand-red-dark: oklch(0.556 0.225 24)   # #D80028 — 라이브 발행값 stack semantic-brand-strong. primary CTA hover/pressed 역할은 번들 배정이며 라이브 CTA hover 로는 관측되지 않았다
   brand-red-soft: oklch(0.944 0.029 7)   # red badge and subtle alert surface
@@ -52,6 +120,52 @@ colors:
   badge-blue-bg: oklch(0.932 0.034 286)
   badge-teal-bg: oklch(0.941 0.021 208)
   badge-green-bg: oklch(0.962 0.043 157)
+  ## Stack palette — @teamsparta/stack-tokens primitiveColor (role layer 가 가리키는 단계만)
+  neutral-0: oklch(1.000 0.000 0.0)   # #FFFFFF — stack-tokens neutral[0]
+  neutral-5: oklch(0.982 0.001 286.4)   # #F9F9FA — stack-tokens neutral[5]
+  neutral-10: oklch(0.959 0.003 286.3)   # #F1F1F3 — stack-tokens neutral[10]
+  neutral-20: oklch(0.931 0.004 271.4)   # #E7E8EB — stack-tokens neutral[20]
+  neutral-30: oklch(0.879 0.006 264.5)   # #D5D7DB — stack-tokens neutral[30]
+  neutral-50: oklch(0.729 0.013 271.2)   # #A4A7B0 — stack-tokens neutral[50]
+  neutral-60: oklch(0.628 0.017 273.7)   # #858893 — stack-tokens neutral[60]
+  neutral-80: oklch(0.378 0.017 281.0)   # #40414B — stack-tokens neutral[80]
+  neutral-90: oklch(0.307 0.013 279.2)   # #2E2F36 — stack-tokens neutral[90]
+  neutral-100: oklch(0.164 0.007 271.0)   # #0D0E11 — stack-tokens neutral[100]
+  red-5: oklch(0.984 0.011 339.3)   # #FFF7FC — stack-tokens red[5]
+  red-20: oklch(0.936 0.038 350.6)   # #FFE0ED — stack-tokens red[20]
+  red-50: oklch(0.736 0.167 10.2)   # #FF7791 — stack-tokens red[50]
+  red-70: oklch(0.621 0.251 24.0)   # #FA0030 — stack-tokens red[70]
+  red-80: oklch(0.556 0.225 24.0)   # #D80028 — stack-tokens red[80]
+  red-90: oklch(0.494 0.199 21.9)   # #B80028 — stack-tokens red[90]
+  red-100: oklch(0.351 0.140 15.5)   # #720021 — stack-tokens red[100]
+  orange-red-10: oklch(0.964 0.018 26.1)   # #FFEFED — stack-tokens orangeRed[10]
+  orange-red-20: oklch(0.929 0.036 26.3)   # #FFDFDB — stack-tokens orangeRed[20]
+  orange-red-50: oklch(0.732 0.165 28.3)   # #FF7A6B — stack-tokens orangeRed[50]
+  orange-red-60: oklch(0.684 0.207 33.9)   # #FF5A36 — stack-tokens orangeRed[60]
+  orange-red-70: oklch(0.646 0.226 33.4)   # #F94015 — stack-tokens orangeRed[70]
+  orange-red-90: oklch(0.528 0.207 30.4)   # #C71704 — stack-tokens orangeRed[90]
+  orange-red-100: oklch(0.426 0.165 30.6)   # #941103 — stack-tokens orangeRed[100]
+  yellow-10: oklch(0.976 0.024 83.4)   # #FFF6E5 — stack-tokens yellow[10]
+  yellow-20: oklch(0.945 0.051 80.5)   # #FFEAC7 — stack-tokens yellow[20]
+  yellow-50: oklch(0.842 0.146 78.0)   # #FFBE4D — stack-tokens yellow[50]
+  yellow-60: oklch(0.804 0.164 72.0)   # #FFAB24 — stack-tokens yellow[60]
+  yellow-70: oklch(0.772 0.174 64.6)   # #FF9900 — stack-tokens yellow[70]
+  yellow-90: oklch(0.600 0.139 61.1)   # #BA6900 — stack-tokens yellow[90]
+  yellow-100: oklch(0.478 0.109 63.2)   # #874D00 — stack-tokens yellow[100]
+  green-10: oklch(0.980 0.034 145.3)   # #EBFFEB — stack-tokens green[10]
+  green-20: oklch(0.948 0.076 144.9)   # #CFFCCF — stack-tokens green[20]
+  green-50: oklch(0.820 0.170 143.8)   # #79E079 — stack-tokens green[50]
+  green-60: oklch(0.772 0.202 143.3)   # #55D455 — stack-tokens green[60]
+  green-70: oklch(0.710 0.225 142.7)   # #27C227 — stack-tokens green[70]
+  green-90: oklch(0.520 0.177 142.5)   # #008000 — stack-tokens green[90]
+  green-100: oklch(0.387 0.107 143.2)   # #185218 — stack-tokens green[100]
+  blue-10: oklch(0.969 0.015 248.0)   # #EDF6FF — stack-tokens blue[10]
+  blue-20: oklch(0.927 0.037 247.0)   # #D4EAFF — stack-tokens blue[20]
+  blue-50: oklch(0.741 0.140 248.4)   # #5CB1FF — stack-tokens blue[50]
+  blue-60: oklch(0.671 0.180 251.5)   # #2998FF — stack-tokens blue[60]
+  blue-70: oklch(0.626 0.205 254.9)   # #0085FF — stack-tokens blue[70]
+  blue-90: oklch(0.431 0.138 254.1)   # #004F99 — stack-tokens blue[90]
+  blue-100: oklch(0.328 0.100 252.6)   # #003566 — stack-tokens blue[100]
 typography:
   xs:
     fontFamily: "\"Pretendard Variable\", Pretendard, \"Pretendard Bold Placeholder\", -apple-system, BlinkMacSystemFont, system-ui, \"Malgun Gothic\", \"Apple SD Gothic Neo\", sans-serif"
@@ -157,7 +271,7 @@ fonts:
 
 # 팀스파르타 (스파르타클럽) — design.md
 
-> 팀스파르타가 운영하는 스파르타클럽 학습 생태계의 인증 대시보드 디자인 시스템이다. 본 문서는 Claude Design handoff bundle의 `스파르타클럽 Design System` README, `colors_and_type.css`, preview cards, dashboard UI kit, chat transcript를 1차 출처로 합성했다. 공개 공식 사이트와 내일배움캠프, 기업교육, 커리어 surface는 서비스 범위와 브랜드 맥락 확인용 보조 출처로 사용했다 [src:1][src:2][src:3][src:4]. 색·타이포·스페이싱·컴포넌트의 정량값은 공개된 디자인 토큰 문서가 없어 이 핸드오프 번들에서 재구성한 것이다. 다만 색 값에 한해서는 인용된 라이브 사이트가 실제로 서빙하는 색과 대조했고, 브랜드 red 3개는 번들값이 라이브에서 다른 역할의 색이었으므로 라이브 발행값으로 바로잡았다(Colors 절 팔레트 정정 참조).
+> 팀스파르타가 운영하는 스파르타클럽 학습 생태계의 인증 대시보드 디자인 시스템이다. 본 문서는 Claude Design handoff bundle의 `스파르타클럽 Design System` README, `colors_and_type.css`, preview cards, dashboard UI kit, chat transcript를 1차 출처로 합성했다. 공개 공식 사이트와 내일배움캠프, 기업교육, 커리어 surface는 서비스 범위와 브랜드 맥락 확인용 보조 출처로 사용했다 [src:1][src:2][src:3][src:4]. 색 역할 계층과 그것이 가리키는 팔레트 단계는 팀스파르타가 npm에 발행한 토큰 패키지에서 옮겼다 [src:5]. 그 밖의 색·타이포·스페이싱·컴포넌트 정량값은 이 핸드오프 번들에서 재구성한 것이다. 다만 색 값에 한해서는 인용된 라이브 사이트가 실제로 서빙하는 색과 대조했고, 브랜드 red 3개는 번들값이 라이브에서 다른 역할의 색이었으므로 라이브 발행값으로 바로잡았다(Colors 절 감사 메모 참조).
 
 ## Brand & Style
 
@@ -169,11 +283,63 @@ fonts:
 
 ## Colors
 
-> **팔레트 정정(2026-09-24).** 라이브 사이트 4곳이 칠하는 브랜드 red는 하나다. 내일배움캠프가 그 값을 CSS 커스텀 프로퍼티 `--stack-semantic-brand-default`로 발행하고, 같은 값이 스파르타클럽·기업교육 사이트의 워드마크 SVG fill과 CTA 배경, 내일배움캠프 히어로 배경, 커리어 사이트의 테넌트 테마 `--primitive-color-brand-500`에 쓰인다 [src:1][src:2][src:3][src:4]. 이 문서가 전에 적었던 `brand-red`는 그 값이 아니라 내일배움캠프의 `--stack-primitive-pink-70`이었고, 네 사이트 홈에서 그 값으로 렌더되는 요소는 없었다. 2026-08-02 대조가 이를 일치로 셌던 것은 역할을 보지 않고 서빙 바이트 전체에서 가장 가까운 hex만 찾았기 때문이다 — 같은 방식을 다시 돌리면 `brand-red-dark`도 `pink-90`에 붙는다. 그래서 `brand-red`·`brand-red-dark`·`danger`를 같은 스택의 시맨틱 토큰 `brand-default`·`brand-strong`·`status-error-default` 값으로 바꾸고 토큰 줄에 hex를 병기했다. `danger`는 번들에서 `brand-red`와 같은 값이었으나 발행본은 오류색을 브랜드색과 따로 둔다. `brand-red-soft`는 발행본 `brand-subtler`와 ΔE 0.015 떨어져 있으나 이번 정정 범위 밖이라 그대로 두었다. 같은 최근접 방식으로 29개를 다시 세면 24개가 ΔE ≤ 0.02이고, 나머지 5개는 `success`(ΔE 0.031)와 아래 interaction-blue 계열 4개(각 ΔE 0.059)다 — 세 red는 이제 역할까지 맞는 값으로 그 24개 안에 든다.
+> **역할 계층 대조(2026-11-01).** 팀스파르타는 디자인 토큰을 npm 패키지 `@teamsparta/stack-tokens`로 발행한다 [src:5]. 이 패키지(2.6.0)는 원시 팔레트 `primitiveColor` 위에 역할 계층을 정의한다 — 라이트는 `baseSemanticColor`(스파르타클럽 테마 `sccLight`는 여기에 같은 brand 값만 다시 적는다), 다크는 `sccDark`다. 내일배움캠프는 그 역할을 `--stack-semantic-*` 커스텀 프로퍼티로 서빙한다 [src:2]. 아래 역할 표의 45개 역할은 패키지에서 옮겼고, 라이트 45개를 내일배움캠프 라이브 값과 hex로 대조하니 불일치는 0개였다. 다크 값은 라이브와 대조하지 않았다. 전에 frontmatter 첫머리에 있던 역할 행 11개(`bg-canvas`·`fg-primary`·`border-default` 등)는 핸드오프 번들이 붙인 이름이라 패키지에도 배포 CSS에도 없었고, 대응도 발행본과 달랐다(번들 `fg-secondary` → `gray-500`, 발행 `text-secondary` → `neutral-80`). 발행 이름이 아니므로 그 행을 지우고 발행 역할 계층으로 바꿨다. 번들 회색 `gray-*` 11단계는 발행 `neutral-*`와 거의 다른 값이라(같은 값은 `gray-400`·`gray-950` 둘) 그대로 두고, 역할이 가리키는 발행 단계는 `neutral-*`·`red-*` 등 별도 이름으로 실었다. 컴포넌트와 프리뷰는 아직 번들 값을 쓴다. 브랜드 red 3개(`brand-red`·`brand-red-dark`·`danger`)는 2026-09-24에 라이브 시맨틱 값(`brand-default`·`brand-strong`·`status-error-default`)으로 바로잡은 값이고 발행 원시 `red-70`·`red-80`·`orange-red-70`과 같다. `brand-red`는 라이브 사이트 4곳이 칠하는 브랜드 red(워드마크 fill·CTA 배경·내일배움캠프 히어로 배경·커리어 사이트 테넌트 테마)와 같은 값이다 [src:1][src:2][src:3][src:4]. `brand-red-soft`·`success` 등 번들에서 온 나머지 리터럴은 이번에 다시 맞추지 않았다.
 >
 > **`interaction-blue`는 sRGB 색역 밖이다.** `oklch(0.429 0.297 264)`를 선형 sRGB로 풀면 red 채널이 −0.0002로 음수라, 브라우저는 이 값을 그대로 그리지 못하고 클리핑한다. 라이브 사이트가 쓰는 가장 가까운 파랑은 `#003CDC` = `oklch(0.457 0.245 264)`로 **hue는 같고 채도가 낮은**(색역 안) 값이며 ΔE 0.059 떨어져 있다. 방침대로 값은 그대로 두고 차이만 적는다 — 이 토큰을 참조하는 `info`·`focus-ring`·`input-focus-ring`도 같은 값을 쓰므로 네 줄 모두에 같은 단서를 달았다. 다만 사이드카로 실려 나가는 건 앞의 셋뿐이다 — `input-focus-ring`은 컴포넌트 절에 있어 `tokens:build`의 색 토큰 추출 대상이 아니다.
 
-원본 토큰은 `colors_and_type.css`에 정의되어 있으며(위 정정으로 라이브 발행값으로 바꾼 red 3개는 제외), 본 문서는 catalog 규약에 따라 OKLCH로 변환해 표기한다. Blue는 interaction/info, red는 brand/CTA, teal은 informational active surface, cool gray는 dashboard structure를 담당한다.
+색은 두 층이다. 역할 계층과 그것이 가리키는 `neutral-*`·`red-*`·`orange-red-*`·`yellow-*`·`green-*`·`blue-*` 단계는 발행 패키지에서 옮겼다 [src:5]. 그 밖의 팔레트(`gray-*`·`interaction-blue`·`teal-strong`·배지 표면 등)는 핸드오프 번들의 `colors_and_type.css`에서 왔다(위 대조로 라이브 발행값으로 바꾼 red 3개는 제외). 둘 다 catalog 규약에 따라 OKLCH로 변환해 표기한다. Blue는 interaction/info, red는 brand/CTA, teal은 informational active surface, cool gray는 dashboard structure를 담당한다.
+
+### 역할 계층
+
+역할 이름은 배포 CSS의 `--stack-semantic-<역할>` 이름이다 [src:2][src:5]. 원시 팔레트는 테마를 타지 않아서, 다크 열도 접두 없는 같은 팔레트 단계를 가리킨다. 불투명도 램프(`neutralBlueAlpha`·`neutralWhiteAlpha`·`neutralBlackAlpha`)나 리터럴을 가리키는 칸은 frontmatter 참조 행으로 싣지 않고 이 표에만 둔다.
+
+| 역할 | 라이트 (`baseSemanticColor`) | 다크 (`sccDark`) |
+| --- | --- | --- |
+| `brand-strong` | `{colors.red-80}` | `{colors.red-50}` |
+| `brand-default` | `{colors.red-70}` | `{colors.red-70}` |
+| `brand-subtle` | `{colors.red-50}` | `{colors.red-80}` |
+| `brand-subtler` | `{colors.red-20}` | `{colors.red-90}` |
+| `brand-subtlest` | `{colors.red-5}` | `{colors.red-100}` |
+| `brand-faint` | 리터럴 `oklch(0.670 0.219 17.9 / 0.15)` | 리터럴 `oklch(0.670 0.219 17.9 / 0.25)` |
+| `status-success-default` | `{colors.green-70}` | `{colors.green-60}` |
+| `status-success-subtle` | `{colors.green-50}` | `{colors.green-70}` |
+| `status-success-subtler` | `{colors.green-20}` | `{colors.green-90}` |
+| `status-success-subtlest` | `{colors.green-10}` | `{colors.green-100}` |
+| `status-warning-default` | `{colors.yellow-70}` | `{colors.yellow-60}` |
+| `status-warning-subtle` | `{colors.yellow-50}` | `{colors.yellow-70}` |
+| `status-warning-subtler` | `{colors.yellow-20}` | `{colors.yellow-90}` |
+| `status-warning-subtlest` | `{colors.yellow-10}` | `{colors.yellow-100}` |
+| `status-error-default` | `{colors.orange-red-70}` | `{colors.orange-red-60}` |
+| `status-error-subtle` | `{colors.orange-red-50}` | `{colors.orange-red-70}` |
+| `status-error-subtler` | `{colors.orange-red-20}` | `{colors.orange-red-90}` |
+| `status-error-subtlest` | `{colors.orange-red-10}` | `{colors.orange-red-100}` |
+| `status-processing-default` | `{colors.blue-70}` | `{colors.blue-60}` |
+| `status-processing-subtle` | `{colors.blue-50}` | `{colors.blue-70}` |
+| `status-processing-subtler` | `{colors.blue-20}` | `{colors.blue-90}` |
+| `status-processing-subtlest` | `{colors.blue-10}` | `{colors.blue-100}` |
+| `text-primary` | `{colors.neutral-100}` | `{colors.neutral-0}` |
+| `text-secondary` | `{colors.neutral-80}` | `{colors.neutral-20}` |
+| `text-tertiary` | `{colors.neutral-60}` | `{colors.neutral-50}` |
+| `text-quaternary` | `{colors.neutral-50}` | `{colors.neutral-60}` |
+| `text-inverse` | `{colors.neutral-0}` | `{colors.neutral-100}` |
+| `icon-primary` | `{colors.neutral-100}` | `{colors.neutral-0}` |
+| `icon-secondary` | `{colors.neutral-80}` | `{colors.neutral-20}` |
+| `icon-tertiary` | `{colors.neutral-60}` | `{colors.neutral-50}` |
+| `icon-quaternary` | `{colors.neutral-50}` | `{colors.neutral-60}` |
+| `icon-inverse` | `{colors.neutral-0}` | `{colors.neutral-100}` |
+| `background-default` | `{colors.neutral-0}` | `{colors.neutral-100}` |
+| `background-subtle` | `{colors.neutral-5}` | `{colors.neutral-90}` |
+| `background-modal` | `{colors.neutral-0}` | `{colors.neutral-90}` |
+| `background-popover` | `{colors.neutral-0}` | `{colors.neutral-80}` |
+| `line-clickable` | `neutralBlueAlpha[15]` = `oklch(0.328 0.100 252.6 / 0.15)` — 불투명도 램프 | `neutralWhiteAlpha[20]` = `oklch(1.000 0.000 0.0 / 0.2)` — 불투명도 램프 |
+| `line-nonClickable` | `neutralBlueAlpha[12]` = `oklch(0.328 0.100 252.6 / 0.12)` — 불투명도 램프 | `neutralWhiteAlpha[12]` = `oklch(1.000 0.000 0.0 / 0.12)` — 불투명도 램프 |
+| `line-selected` | `{colors.neutral-80}` | `{colors.neutral-20}` |
+| `dimm-default` | `neutralBlackAlpha[60]` = `oklch(0.164 0.007 271.0 / 0.6)` — 불투명도 램프 | `neutralBlackAlpha[60]` = `oklch(0.164 0.007 271.0 / 0.6)` — 불투명도 램프 |
+| `fill-default` | `{colors.neutral-0}` | `neutralBlackAlpha[0]` = `oklch(0.164 0.007 271.0 / 0)` — 불투명도 램프 |
+| `fill-subtle` | `{colors.neutral-10}` | `neutralWhiteAlpha[12]` = `oklch(1.000 0.000 0.0 / 0.12)` — 불투명도 램프 |
+| `fill-inverse-default` | `{colors.neutral-100}` | `{colors.neutral-0}` |
+| `fill-inverse-subtle` | `{colors.neutral-80}` | `{colors.neutral-30}` |
+| `fill-transparent` | `neutralWhiteAlpha[0]` = `oklch(1.000 0.000 0.0 / 0)` — 불투명도 램프 | `neutralBlackAlpha[0]` = `oklch(0.164 0.007 271.0 / 0)` — 불투명도 램프 |
 
 ## Typography
 
@@ -344,6 +510,7 @@ Cards and course rows must preserve scan order: thumbnail → badge/track → ti
 - The blue-vs-red token semantics are documented as a caveat and should be confirmed by the team before production adoption.
 - The dashboard default theme is not confirmed; the bundle authored light mode as default while keeping dark-mode tokens available.
 - No custom icon library was included; Lucide/Heroicons-style outline icons are the documented fallback.
+- 발행 토큰 패키지 `@teamsparta/stack-tokens` [src:5]로는 역할 계층과 그것이 가리키는 단계만 옮겼다. 번들에서 온 팔레트(`gray-*`·`brand-red-soft`·`success`·`warning`·`interaction-blue` 계열·`teal-strong`·배지 표면)와 그것을 쓰는 컴포넌트 스펙·프리뷰는 아직 이 패키지와 다시 맞추지 않았다. 패키지의 컴포넌트 토큰(`button`·`checkbox` 등)도 싣지 않았다.
 
 ## References
 
@@ -351,3 +518,4 @@ Cards and course rows must preserve scan order: thumbnail → badge/track → ti
 2. https://nbcamp.spartaclub.kr/ — 내일배움캠프. 색 토큰을 `--stack-semantic-*`·`--stack-primitive-*` CSS 커스텀 프로퍼티로 서빙한다
 3. https://b2b.spartaclub.kr/ — 팀스파르타 기업교육. `axis.spartapartners.ai`로 리다이렉트된다
 4. https://career.spartaclub.kr/ — 팀스파르타 커리어. 외부 채용 플랫폼(Greeting) 위의 페이지라 플랫폼 고유 색 토큰이 섞여 있고, 브랜드 red는 테넌트 테마가 `--primitive-color-brand-500`을 덮어써 넣는다
+5. https://cdn.jsdelivr.net/npm/@teamsparta/stack-tokens@2.6.0/dist/ — 팀스파르타가 npm에 발행한 토큰 패키지 `@teamsparta/stack-tokens` 2.6.0의 배포 파일. 원시 팔레트(`primitiveColor`), 라이트 역할 계층(`baseSemanticColor`), 서비스별 테마(`sccLight`·`sccDark` 등)가 들어 있다
