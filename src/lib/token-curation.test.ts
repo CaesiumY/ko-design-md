@@ -197,9 +197,9 @@ describe("lightTokensOnly", () => {
   it("keeps a light token whose group heading only mentions the dark theme", () => {
     // ridi's light role groups read "… — dark- 행은 발행된 다크 짝이나 …" and
     // banksalad's "… 테마 고정 · dark- 짝 없음": prose about the dark twins,
-    // over light tokens. Reading the heading alone dropped 138 light role cards
-    // once the sidecar carried reference rows. Only a heading that opens with
-    // the theme names it.
+    // over light tokens. Reading the heading anywhere dropped those light role
+    // cards once the sidecar carried reference rows. Only a heading that opens
+    // with the theme names it.
     const colors = [
       c(
         "background-primary",

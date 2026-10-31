@@ -219,7 +219,9 @@ shown above: a bare style name, then `fontSize` / `fontWeight` /
 `name: { size, weight, … }`, `name: 16 / 24 / 700`, a whole-style alias — yield
 **zero** type tokens and are blocked by the draft gate, and the extractor reads nothing in the body. A reference row whose value points at another colour
 (`fill-brand: "{colors.red}"`) is carried as the colour it resolves to, with
-`ref` naming the key it points at, and the Tokens tab shows it as a role card.
+`ref` naming the key it points at, and the Tokens tab shows it as a role card —
+except the `primary` brand-colour alias, which sits with the palette (still with
+its "→ key" line).
 A reference that names a missing key, loops, or ends at a value that is not a
 colour fails `pnpm tokens:build` — the draft gate blocks each one first. `pnpm tokens:check` compares the regenerated sidecar byte-for-byte, so
 a formatting slip here fails CI rather than silently changing a card.
