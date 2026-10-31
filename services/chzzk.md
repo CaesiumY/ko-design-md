@@ -328,7 +328,7 @@ LIVE 배지는 `{colors.live-red}` 배경에 흰 글자, 높이 20px, radius 4px
 
 ## Do's and Don'ts
 
-**Do** 다크에서 네온 `{colors.brand-neon}`은 1차 버튼 면(팔로우)과 짧은 강조 글자(배너 날짜·드롭스 태그 같은 라벨)에 쓰고, 넓은 면이나 본문에는 쓰지 않는다. 입력창 포커스 테두리는 한 단계 낮은 `{colors.dark-brand-base}`, 사이드바 현재 메뉴 글자는 `{colors.dark-brand-stronger}`다 [src:1][src:2].
+**Do** 다크에서 네온 `{colors.brand-neon}`은 1차 버튼 면(팔로우)과 짧은 강조 글자(배너 날짜, 썸네일 위 드롭스 배지)에 쓰고, 넓은 면이나 본문에는 쓰지 않는다. 카드 아래 태그 줄의 강조 칩 글자는 한 단계 낮은 `{colors.dark-brand-strong}`이고, 입력창 포커스 테두리는 한 단계 낮은 `{colors.dark-brand-base}`, 사이드바 현재 메뉴 글자는 `{colors.dark-brand-stronger}`다 [src:1][src:2].
 
 **Do** 상태는 반투명 오버레이(hover 5%·selected 12%)로 표현하되, 밝은 면에는 darken, 어두운 면에는 lighten 쪽을 쓴다. 채운(solid) 버튼은 면 색을 그대로 두고 오버레이를 배경 이미지로 얹는다 [src:2].
 
