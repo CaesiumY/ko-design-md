@@ -9,7 +9,12 @@
 // paints a single token (the pair classifier paints tokens with it, then
 // composites them with `compositeOver` here); it does not parse a computed
 // `oklab()` string, a `color-mix()` or a `var()` chain.
+//
+// The one string that does arrive is a layer's computed `background-image`,
+// which no canvas read can flatten into one colour. `./contrast-gradient` turns
+// it into the set of colours it can paint; everything after that is here.
 
+import { paintableColours } from "./contrast-gradient"
 import { srgbToLinear } from "./oklch-convert"
 
 /** An opaque sRGB colour, channels on [0, 255]. */
@@ -116,6 +121,18 @@ export function compositeOver(fg: Rgba, bg: Rgb): Rgb {
   }
 }
 
+/** Source-over of one translucent colour onto another, both left straight. */
+function paintOver(src: Rgba, dst: Rgba): Rgba {
+  const a = src.a + dst.a * (1 - src.a)
+  if (a === 0) return dst
+  return {
+    r: (src.r * src.a + dst.r * dst.a * (1 - src.a)) / a,
+    g: (src.g * src.a + dst.g * dst.a * (1 - src.a)) / a,
+    b: (src.b * src.a + dst.b * dst.a * (1 - src.a)) / a,
+    a,
+  }
+}
+
 /**
  * What a viewer actually sees behind a sample point.
  *
@@ -129,17 +146,7 @@ export function flattenStack(layers: Array<Rgba>): {
   rootTransparent: boolean
 } {
   let acc: Rgba = { r: 0, g: 0, b: 0, a: 0 }
-  for (let i = layers.length - 1; i >= 0; i--) {
-    const src = layers[i]
-    const outA = src.a + acc.a * (1 - src.a)
-    if (outA === 0) continue
-    acc = {
-      r: (src.r * src.a + acc.r * acc.a * (1 - src.a)) / outA,
-      g: (src.g * src.a + acc.g * acc.a * (1 - src.a)) / outA,
-      b: (src.b * src.a + acc.b * acc.a * (1 - src.a)) / outA,
-      a: outA,
-    }
-  }
+  for (let i = layers.length - 1; i >= 0; i--) acc = paintOver(layers[i], acc)
   // Nothing in the document painted an opaque backdrop under this point. The
   // preview is served in an iframe on a page whose chrome is pinned to light
   // (`__root.tsx` hardcodes data-theme="light"), so white is what shows
@@ -222,7 +229,18 @@ export interface RawColor {
  * unverified reading is held, not decided.
  */
 export type Blocker =
+  /**
+   * A `background-image` gradient whose colours do not all agree on a verdict
+   * — some pass, some do not, and where the text sits along it is not known —
+   * or one `./contrast-gradient` cannot read. One whose colours agree is
+   * judged, not held (#402).
+   */
   | "gradient"
+  /**
+   * A `background-image` that is an image (`url()`, `image-set()`), whose
+   * colours cannot be listed from computed style at all.
+   */
+  | "image"
   | "overlay"
   | "pseudo-background"
   | "text-fill"
@@ -240,12 +258,23 @@ export type Blocker =
    */
   | "inset-shadow"
 
+/**
+ * One element's paint in a backdrop: its `background-color` as a `RawColor`
+ * reads it and, when it has one, its computed `background-image` handed over
+ * as written. The image is not a colour the canvas can read, so it travels as
+ * text and is enumerated on this side, where it can be tested.
+ */
+export interface RawLayer extends RawColor {
+  image?: { value: string; repeat: string }
+}
+
 /** One line box of a run: what is behind it, and what stops it being read. */
 export interface RawTextLine {
   /** Topmost first, as `document.elementsFromPoint` returns it. */
-  stack: Array<RawColor>
+  stack: Array<RawLayer>
   /**
-   * Why THIS line cannot be read — a gradient behind it, something over it.
+   * Why THIS line cannot be read — a painted pseudo-element behind it,
+   * something over it.
    * Held per line because a wrapped run can cross a band that one line sits on
    * and another does not.
    */
@@ -446,6 +475,90 @@ function resolve(raw: RawColor): Rgba {
   return { ...recovered, a: recovered.a * raw.opacity }
 }
 
+/**
+ * How many backdrops one reading may enumerate before it is held instead.
+ * Two image layers on one element (a grid drawn as two gradients) already
+ * multiply; a few more in the stack would make the walk the slowest part of
+ * the sweep for a reading that is almost certainly mixed anyway.
+ */
+const MAX_BACKDROPS = 4096
+
+const keyOf = (c: Rgba): string =>
+  [c.r, c.g, c.b, c.a * 255].map((v) => Math.round(v)).join()
+
+/**
+ * Every colour one layer can paint: its `background-color` with each
+ * combination of its image layers' colours drawn over it, then faded by the
+ * layer's opacity. A layer with no image paints one colour, as before.
+ */
+function layerPaints(layer: RawLayer): Array<Rgba> | Blocker {
+  const image =
+    layer.image === undefined
+      ? ({ kind: "none" } as const)
+      : paintableColours(layer.image.value, layer.image.repeat)
+  if (image.kind === "blocked") return image.blocker
+  let paints = [recoverAlpha(layer.onWhite, layer.onBlack)]
+  if (image.kind === "colours") {
+    // `background-image` lists its topmost layer first; paint from the bottom.
+    for (const tile of [...image.layers].reverse()) {
+      const next = new Map<string, Rgba>()
+      for (const under of paints) {
+        // Outside a tile that does not fill the box, the box shows what was
+        // under the tile — one more colour the text can sit on.
+        if (!tile.covers) next.set(keyOf(under), under)
+        for (const colour of tile.colours) {
+          const out = paintOver(colour, under)
+          next.set(keyOf(out), out)
+        }
+        if (next.size > MAX_BACKDROPS) return "gradient"
+      }
+      paints = [...next.values()]
+    }
+  }
+  return paints.map((c) => ({ ...c, a: c.a * layer.opacity }))
+}
+
+interface Backdrop {
+  color: Rgb
+  rootTransparent: boolean
+}
+
+/**
+ * Every backdrop a stack can put behind a point, or the reason it cannot be
+ * listed. A blocked stack still carries ONE backdrop — the stack read with its
+ * images left out — because a held reading reports its number all the same.
+ */
+function backdropsOf(stack: Array<RawLayer>): {
+  backdrops: Array<Backdrop>
+  blocker: Blocker | null
+} {
+  const plain = (blocker: Blocker) => ({
+    backdrops: [flattenStack(stack.map(resolve))],
+    blocker,
+  })
+  const perLayer: Array<Array<Rgba>> = []
+  for (const layer of stack) {
+    const paints = layerPaints(layer)
+    if (typeof paints === "string") return plain(paints)
+    perLayer.push(paints)
+  }
+  // The product over the layers, not their positions: which colour of one
+  // gradient sits over which colour of another is geometry this does not know,
+  // so every pairing is a backdrop the text might be on.
+  const count = perLayer.reduce((n, paints) => n * paints.length, 1)
+  if (count > MAX_BACKDROPS) return plain("gradient")
+  let partial: Array<Array<Rgba>> = [[]]
+  for (const paints of perLayer) {
+    partial = partial.flatMap((above) => paints.map((p) => [...above, p]))
+  }
+  const seen = new Map<string, Backdrop>()
+  for (const layers of partial) {
+    const backdrop = flattenStack(layers)
+    seen.set(`${toHex(backdrop.color)}|${backdrop.rootTransparent}`, backdrop)
+  }
+  return { backdrops: [...seen.values()], blocker: null }
+}
+
 export function evaluateText(sample: RawTextSample): Measurement {
   const fg = resolve(sample.fg)
   const threshold = textThreshold(sample.fontSizePx, sample.fontWeight)
@@ -463,19 +576,38 @@ export function evaluateText(sample: RawTextSample): Measurement {
     bg: Rgb
   } | null = null
   for (const line of lines) {
-    const backdrop = flattenStack(line.stack.map(resolve))
-    // Composed here rather than at the end: the pair belongs to the line that
-    // wins, and recomposing afterwards would take whichever backdrop the loop
-    // happened to leave behind.
-    const composed = compositeOver(fg, backdrop.color)
-    const ratio = contrastRatio(composed, backdrop.color)
-    if (worst === null || ratio < worst.ratio) {
+    const { backdrops, blocker } = backdropsOf(line.stack)
+    // A line is ranked by the weakest backdrop it can have. Ranking it by its
+    // `background-color` alone let a gradient line read as the colour under
+    // its gradient and lose to a plain line, so the run was judged on the
+    // plain one while the gradient line sat on something darker.
+    let lineWorst: {
+      ratio: number
+      fg: Rgb
+      bg: Rgb
+    } | null = null
+    const verdicts = new Set<Verdict>()
+    for (const backdrop of backdrops) {
+      // Composed here rather than at the end: the pair belongs to the line that
+      // wins, and recomposing afterwards would take whichever backdrop the loop
+      // happened to leave behind.
+      const composed = compositeOver(fg, backdrop.color)
+      const ratio = contrastRatio(composed, backdrop.color)
+      verdicts.add(judge(ratio, threshold))
+      if (lineWorst === null || ratio < lineWorst.ratio) {
+        lineWorst = { ratio, fg: composed, bg: backdrop.color }
+      }
+    }
+    const here = lineWorst as NonNullable<typeof lineWorst>
+    // Judged only when every backdrop agrees. Where along the gradient the
+    // text sits is not known, so a split is held rather than decided either
+    // way — the weakest colour failing does not mean the text is on it.
+    const unread = blocker ?? (verdicts.size > 1 ? "gradient" : null)
+    if (worst === null || here.ratio < worst.ratio) {
       worst = {
-        ratio,
-        rootTransparent: backdrop.rootTransparent,
-        blockers: line.blockers,
-        fg: composed,
-        bg: backdrop.color,
+        ...here,
+        rootTransparent: backdrops.some((b) => b.rootTransparent),
+        blockers: unread === null ? line.blockers : [...line.blockers, unread],
       }
     }
   }
@@ -511,7 +643,7 @@ export function evaluateText(sample: RawTextSample): Measurement {
 
 export interface RawNonTextSample {
   /** The element's own background, or null when it paints none. */
-  fill: RawColor | null
+  fill: RawLayer | null
   /**
    * The element's border colour, or null when it has no border at least 1px
    * wide on any side. The width test is the collector's, because a border of
@@ -519,7 +651,7 @@ export interface RawNonTextSample {
    */
   border: RawColor | null
   /** What is behind the element. Topmost first. */
-  outer: Array<RawColor>
+  outer: Array<RawLayer>
   blockers: Array<Blocker>
 }
 
@@ -541,16 +673,13 @@ export interface NonTextMeasurement extends Measurement {
  * Returns null for an element with neither, which is not a failure but nothing
  * to measure: a text-only link or button is judged by SC 1.4.3 on its text.
  */
-export function evaluateNonText(
-  sample: RawNonTextSample
-): NonTextMeasurement | null {
-  if (sample.fill === null && sample.border === null) return null
-  const outer = flattenStack(sample.outer.map(resolve))
-  const inner =
-    sample.fill === null
-      ? outer.color
-      : compositeOver(resolve(sample.fill), outer.color)
-
+/** The better of a surface's two boundaries over one backdrop. */
+function bestSeparation(
+  outer: Rgb,
+  fill: Rgba | null,
+  border: Rgba | null
+): { ratio: number; basis: "fill" | "border"; fg: Rgb; bg: Rgb } {
+  const inner = fill === null ? outer : compositeOver(fill, outer)
   // Each candidate carries the pair it was taken between, not just its number.
   // A border used to be scored with `Math.max` over its two comparisons, which
   // answered how well it separates but forgot WHICH separation answered — so a
@@ -561,32 +690,72 @@ export function evaluateNonText(
     fg: Rgb
     bg: Rgb
   }> = []
-  if (sample.fill !== null) {
+  if (fill !== null) {
     candidates.push({
-      ratio: contrastRatio(inner, outer.color),
+      ratio: contrastRatio(inner, outer),
       basis: "fill",
       fg: inner,
-      bg: outer.color,
+      bg: outer,
     })
   }
-  if (sample.border !== null) {
-    const border = resolve(sample.border)
+  if (border !== null) {
     const against = (bg: Rgb): { ratio: number; fg: Rgb; bg: Rgb } => {
       const fg = compositeOver(border, bg)
       return { ratio: contrastRatio(fg, bg), fg, bg }
     }
-    const outward = against(outer.color)
+    const outward = against(outer)
     const inward = against(inner)
     candidates.push({
       ...(inward.ratio > outward.ratio ? inward : outward),
       basis: "border",
     })
   }
-  const best = candidates.reduce((a, b) => (b.ratio > a.ratio ? b : a))
+  return candidates.reduce((a, b) => (b.ratio > a.ratio ? b : a))
+}
 
-  const blockers = outer.rootTransparent
-    ? [...sample.blockers, "root-transparent" as const]
-    : sample.blockers
+export function evaluateNonText(
+  sample: RawNonTextSample
+): NonTextMeasurement | null {
+  if (sample.fill === null && sample.border === null) return null
+  const outer = backdropsOf(sample.outer)
+  // The surface's own image is enumerated like a layer behind it. Blocked, it
+  // is read as its `background-color` alone and held for the same reason.
+  const ownPaints = sample.fill === null ? null : layerPaints(sample.fill)
+  const fills =
+    ownPaints === null
+      ? [null]
+      : typeof ownPaints === "string"
+        ? [resolve(sample.fill as RawLayer)]
+        : ownPaints
+  const border = sample.border === null ? null : resolve(sample.border)
+
+  // Scored once per backdrop and surface colour, then the weakest of those
+  // stands for the element — where the surface sits along the gradient is no
+  // more known than where text does.
+  let worst: ReturnType<typeof bestSeparation> | null = null
+  const verdicts = new Set<Verdict>()
+  for (const backdrop of outer.backdrops) {
+    for (const fill of fills) {
+      const best = bestSeparation(backdrop.color, fill, border)
+      verdicts.add(judge(best.ratio, NON_TEXT_RATIO))
+      if (worst === null || best.ratio < worst.ratio) worst = best
+    }
+  }
+  const best = worst as NonNullable<typeof worst>
+  const unread =
+    outer.blocker ??
+    (typeof ownPaints === "string" ? ownPaints : null) ??
+    (verdicts.size > 1 ? "gradient" : null)
+
+  const blockers = [
+    ...new Set([
+      ...sample.blockers,
+      ...(unread === null ? [] : [unread]),
+      ...(outer.backdrops.some((b) => b.rootTransparent)
+        ? (["root-transparent"] as const)
+        : []),
+    ]),
+  ]
   const opacityApprox =
     (sample.fill?.opacity ?? 1) < 1 ||
     (sample.border?.opacity ?? 1) < 1 ||

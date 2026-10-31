@@ -660,7 +660,7 @@ Print a summary message containing:
   - `render_result = empty` → `렌더 대비: ⏭ 잰 행 없음 — 렌더는 됐지만 수집된 텍스트·비텍스트가 0개`
   - `render_result = skipped` → `렌더 대비: ⏭ 관측 건너뜀 — {reason}`
 
-  Neither the skipped line nor the empty line may read like the ok line: no Chromium, or a run that collected nothing, means nothing was measured, which is not the same fact as nothing falling short. The ok line carries the held count for the same reason — rows on a gradient or under an overlay were measured but not judged. If the Stage 12 responsive auto-fix rewrote the preview after the loop, add `(Stage 12 자동수정 전 파일 기준)` to the line — 9a3 measured the file the loop ended with, not the one that shipped.
+  Neither the skipped line nor the empty line may read like the ok line: no Chromium, or a run that collected nothing, means nothing was measured, which is not the same fact as nothing falling short. The ok line carries the held count for the same reason — rows on a gradient whose colours disagree or under an overlay were measured but not judged. If the Stage 12 responsive auto-fix rewrote the preview after the loop, add `(Stage 12 자동수정 전 파일 기준)` to the line — 9a3 measured the file the loop ended with, not the one that shipped.
 - Responsive verification (Stage 12 sweep) — pick the line by state:
   - `responsive_result = ok` → `반응형: ✅ 375/768/976/1440 가로 오버플로 없음 (자동수정 {attempts}회)`
   - `responsive_result = warn` → `반응형: ⚠️ 잔여 오버플로 — {file} @{width}px {overflowPx}px, 요소 {culprits} (스크린샷 {path}, 자동수정 2회 후 잔존)`
