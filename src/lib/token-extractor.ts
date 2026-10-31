@@ -75,7 +75,7 @@ function resolveRef(
     if (chain.includes(key)) {
       throw new ColorRefError(
         "loop",
-        `colors.${name} never reaches a colour: ${[...chain, key].join(" → ")}`
+        `colors.${name} never reaches a colour: ${[...chain, key].join(" → ")} — point one row of the loop at a palette key that holds a colour`
       )
     }
     chain.push(key)
@@ -83,7 +83,7 @@ function resolveRef(
     if (value === undefined) {
       throw new ColorRefError(
         "missing",
-        `colors.${from} points at colors.${key}, which colors: does not have`
+        `colors.${from} points at colors.${key}, which colors: does not have — fix the name to the palette key it means`
       )
     }
     const next = value.match(COLOR_REF)?.[1]
@@ -91,7 +91,7 @@ function resolveRef(
       if (COLOR_VALUE.test(value)) return value
       throw new ColorRefError(
         "not-colour",
-        `colors.${name} ends at colors.${key}, whose value ${value} is not a colour`
+        `colors.${name} ends at colors.${key}, whose value ${value} is not a colour — point it at a palette key that holds oklch(…)`
       )
     }
     from = key

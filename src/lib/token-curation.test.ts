@@ -176,29 +176,35 @@ describe("lightTokensOnly", () => {
     ])
   })
 
-  it("drops dark tokens marked by GROUP when the name is shared across themes", () => {
-    // A fixture, not a live entry: wanted once reused the same names in both
-    // themes and told them apart only by the group heading, and filtering on the
-    // name alone let its dark swatches render in the light card view as
-    // duplicate-named cards. It now prefixes them (`dark-bg-canvas`); the group
-    // check stays as the defence for an entry written that way.
+  it("drops an unprefixed token under a heading that opens with Dark or 다크", () => {
+    // A fixture, not a live entry: every token under such a heading in the
+    // catalogue carries `dark-` (toss's "Dark palette", greeting's "dark gray —
+    // …", class101's "다크 모드 값 — …"). The heading stands in for an entry that
+    // writes its dark palette without the prefix — a name cannot repeat inside
+    // one `colors:` map, so the heading is all that marks it.
     const colors = [
-      c("bg-canvas", "oklch(1 0 0)", "Semantic alias — Light"),
-      c("bg-canvas", "oklch(0.148 0.004 277)", "Semantic alias — Dark"),
-      c("fg-default", "oklch(0.2 0.01 270)", "Semantic alias — Light"),
-      c("fg-default", "oklch(0.95 0.003 280)", "Semantic alias — Dark"),
+      c("canvas", "oklch(1 0 0)", "Palette"),
+      c("night-canvas", "oklch(0.15 0 0)", "Dark palette"),
+      c(
+        "night-ink",
+        "oklch(0.95 0 0)",
+        "다크 모드 값 — 같은 토큰명의 오버라이드"
+      ),
+      c(
+        "dark-gray-00",
+        "oklch(0.225 0.026 274)",
+        "프리미티브 스케일 — 다크 테마"
+      ),
     ]
-    const kept = lightTokensOnly(colors)
-    expect(kept).toHaveLength(2)
-    expect(kept.every((x) => x.group === "Semantic alias — Light")).toBe(true)
+    expect(lightTokensOnly(colors).map((x) => x.name)).toEqual(["canvas"])
   })
 
   it("keeps a light token whose group heading only mentions the dark theme", () => {
     // ridi's light role groups read "… — dark- 행은 발행된 다크 짝이나 …" and
     // banksalad's "… 테마 고정 · dark- 짝 없음": prose about the dark twins,
     // over light tokens. Reading the heading alone dropped 138 light role cards
-    // once the sidecar carried reference rows. A heading only decides when the
-    // name cannot — when the same name is listed twice.
+    // once the sidecar carried reference rows. Only a heading that opens with
+    // the theme names it.
     const colors = [
       c(
         "background-primary",
@@ -220,18 +226,6 @@ describe("lightTokensOnly", () => {
       "background-primary",
       "status-red",
     ])
-  })
-
-  it("recognises a Korean 다크 group label too", () => {
-    const colors = [
-      c("gray-00", "oklch(1 0 0)", "프리미티브 스케일 — 라이트 테마"),
-      c(
-        "dark-gray-00",
-        "oklch(0.225 0.026 274)",
-        "프리미티브 스케일 — 다크 테마"
-      ),
-    ]
-    expect(lightTokensOnly(colors).map((x) => x.name)).toEqual(["gray-00"])
   })
 
   it("keeps tokens that merely contain 'dark' but do not start with 'dark-'", () => {

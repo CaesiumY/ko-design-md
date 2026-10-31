@@ -2376,7 +2376,7 @@ function checkSidecarColours(
         block(
           "unresolvable-colour-ref",
           "tokens",
-          `${e.message}. The token sidecar behind the Tokens tab and \`use-design-md\` carries each reference row as the colour it ends at, so one row of the loop has to name a palette key that holds a colour.`
+          `${e.message}. The token sidecar behind the Tokens tab and \`use-design-md\` carries each reference row as the colour it ends at, so a loop leaves those rows with no colour to carry.`
         ),
       ]
     }

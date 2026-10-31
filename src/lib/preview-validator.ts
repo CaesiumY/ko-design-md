@@ -3,7 +3,7 @@ import { readFrontmatter } from "./frontmatter"
 import { buildDoc } from "./site-frontmatter"
 import { bodyOf, isBlankText, walkHtml } from "./html-walk"
 import { hasAppliedReduceBlock, hasCssMotion } from "./reduced-motion-block"
-import { extractTokensFromMarkdown } from "./token-extractor"
+import { ColorRefError, extractTokensFromMarkdown } from "./token-extractor"
 import type { WalkNode } from "./html-walk"
 import type { ValidationIssue } from "./draft-validator"
 
@@ -1657,7 +1657,9 @@ export function validatePreviewPair(
       block(
         "design-md-unreadable",
         "design.md",
-        `The paired design.md failed to parse: ${e instanceof Error ? e.message : String(e)}`
+        e instanceof ColorRefError
+          ? `The paired design.md parses, but a \`colors:\` reference row does not end at a colour: ${e.message}.`
+          : `The paired design.md failed to parse: ${e instanceof Error ? e.message : String(e)}`
       )
     )
   }

@@ -123,23 +123,19 @@ export function curateColors(colors: Array<ColorToken>): {
 
 // The card filter recognises a dark-theme token two ways:
 //   1. name prefix   — seed-design writes `dark-gray-00` against a bare
-//      `gray-00`: 112 such pairs across its sidecar, 109 of them colours and 3
-//      shadows (`s1`/`dark-s1`…). Counting only the colours understates what
-//      this filter covers, and the shadow trio is the pair it most recently
-//      missed. codeit prefixes BOTH themes instead (`light-gray-00` /
-//      `dark-gray-00`, 78 colours each, no bare name), which is the reason the
-//      test names `dark-` alone: `light-` entries are light tokens and have to
-//      survive it.
-//   2. group heading — a defence for an entry that reuses the light names under
-//      a dark group label (`## Semantic alias — Dark` over a second `bg-canvas`),
-//      where the name alone can't tell the themes apart. No entry does today:
-//      wanted, which once did, prefixes its dark aliases (`dark-bg-canvas`), and
-//      the catalogue writes every dark twin with the prefix (#625). So the
-//      heading is read only for a name listed twice. Read for every token, it
-//      dropped 138 light role cards (ridi 120, banksalad 18) whose headings
-//      merely talk about the dark twins — "dark- 행은 …", "dark- 짝 없음".
+//      `gray-00`, shadows included (`s1`/`dark-s1`…), the pair this filter
+//      most recently missed. codeit prefixes BOTH palettes instead
+//      (`light-gray-00` / `dark-gray-00`), which is the reason the test names
+//      `dark-` alone: `light-` tokens are light and have to survive it.
+//   2. group heading — a defence for an entry that writes its dark palette
+//      without the prefix under a heading like `## Dark palette`. No entry does
+//      today: the catalogue writes every dark twin with the prefix (#625). Only
+//      a heading that OPENS with the theme counts (`Dark palette`, `dark gray —
+//      …`, `다크 모드 값 — …`). Matched anywhere, it dropped 138 light role
+//      cards (ridi 120, banksalad 18) whose headings merely talk about the
+//      dark twins — "… — dark- 행은 …", "… · dark- 짝 없음".
 const DARK_NAME_PREFIX = /^dark-/
-const DARK_GROUP = /(^|[\s—-])dark($|[\s—-])|다크/i
+const DARK_GROUP = /^\s*(?:dark|다크)(?![a-z])/i
 
 /**
  * The card view is light-only: the sidecar carries both themes (so a token copy
@@ -163,15 +159,7 @@ const DARK_GROUP = /(^|[\s—-])dark($|[\s—-])|다크/i
 export function lightTokensOnly<T extends { name: string; group?: string }>(
   tokens: Array<T>
 ): Array<T> {
-  const seen = new Set<string>()
-  const repeated = new Set<string>()
-  for (const t of tokens) {
-    if (seen.has(t.name)) repeated.add(t.name)
-    seen.add(t.name)
-  }
   return tokens.filter(
-    (t) =>
-      !DARK_NAME_PREFIX.test(t.name) &&
-      !(repeated.has(t.name) && DARK_GROUP.test(t.group ?? ""))
+    (t) => !DARK_NAME_PREFIX.test(t.name) && !DARK_GROUP.test(t.group ?? "")
   )
 }
