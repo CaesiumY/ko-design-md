@@ -187,9 +187,11 @@ const CASES: Record<string, { title: string; check: () => void }> = {
     check: () => {
       const { literals, refs, tableRows } = load("bezier")
       // Two published role layers share one palette, which is the beta tier's.
-      // Every beta role cell names one beta step, so each has its row. A stable
+      // Only the beta role cells that name one beta step have a row; the 183
+      // beta roles upstream writes as hex (`*-hovered`, `chart-theme-default-*`)
+      // are OKLCH literals in the table and fall out here. So does a stable
       // cell whose step differs in value from the beta step of the same name
-      // (`grey-900`, `grey-800-80`) is written as prose and falls out here.
+      // (`grey-900`, `grey-800-80`), which is written as prose.
       const expected = singleReferenceRoles(tableRows)
       // Both layers' tables must have parsed, or a dropped one would pass.
       const layers = [/^(bg|txt)-/, /^(text|icon|fill|border|surface)\b/]

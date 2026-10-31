@@ -64,8 +64,10 @@
     --fill-accent-navy-heavy:rgba(66,79,171,.20);
     --fill-accent-olive-heavy:rgba(169,177,16,.20);
 
-    /* md 토큰 아님 — 상류 bezier-tokens 0.6.0 beta `fill-accent-blue-heavy-hovered`(#5146e4 30%)와
-       `fill-accent-blue-heavier-hovered`(#5146e4). md 에 실리거나 상류가 바뀌면 대비를 다시 잰다(#552). */
+    /* md 「Colors」 beta hover 표 값(참조 행 없는 표 값) — 상류 bezier-tokens 0.6.0 beta `fill-accent-blue-heavy-hovered`
+       (#5146e4 30%)와 `fill-accent-blue-heavier-hovered`(#5146e4). 라이트 값이 md 표와 같아 대비를 다시 잴 일은 없다.
+       다크 짝 `--fill-accent-blue-heavier-hovered` 의 #6f64f0 은 md 표 다크 값(#9698ff)과 다른 알려진 차이다(다크 블록 주석).
+       상류가 바뀌면 대비를 다시 잰다(#552). */
     --fill-accent-blue-heavy-hovered:rgba(81,70,228,.30);
     --fill-accent-blue-heavier-hovered:#5146e4;
 
@@ -553,7 +555,7 @@
     /* accent fills: lift link/icon text to 300-tier.
        md 토큰 `{hue}-300-30`·`blue-300-18` — 상류 bezier-tokens 0.6.0 beta 다크 사다리: 라이트의 20% 틴트
        (`fill-accent-*-heavy`)는 다크에서 `color-{hue}-300-30`, 라이트의 10%(`fill-accent-blue`)는 `color-blue-300-18`.
-       hover `fill-accent-blue-heavy-hovered`(#8184ff4d)는 md 토큰 아님. blue·green·red·navy 는 이 반투명 값의 기준 RGB 가
+       hover `fill-accent-blue-heavy-hovered`(#8184ff4d)는 md 「Colors」 beta hover 표의 다크 값(참조 행 없는 표 값)과 같다. blue·green·red·navy 는 이 반투명 값의 기준 RGB 가
        불투명 300 색과 다르다(blue 는 #8082ff 가 아니라 #6b6eff · navy 는 md `navy-300` #7e89cd 가 아니라 #6f7bc8) — 300 색의 30% 로 다시 계산하지 말고
        md 토큰 값을 옮길 것. 상류가 바뀌면 대비를 다시 잰다(#552). */
     --txt-accent-blue:var(--c-blue-300);
@@ -570,7 +572,7 @@
     --fill-accent-olive-heavy:rgba(183,196,39,.30);
 
     --fill-accent-blue-heavy-hovered:rgba(129,132,255,.30);
-    /* md 토큰 아님 · 상류 값도 아님(#106 부터 있던 값, 출처 미상). 기본 버튼 바탕을 다크에서도 blue-400 으로 두므로
+    /* md 「Colors」 beta hover 표의 다크 값(#9698ff)과 다른 알려진 차이 · 상류 값도 아님(#106 부터 있던 값, 출처 미상). 기본 버튼 바탕을 다크에서도 blue-400 으로 두므로
        (md 「button-primary」) 그 짝으로 남긴다. 상류 0.6.0 beta 다크는 바탕 `fill-accent-blue-heavier` 가 blue-300,
        hover 가 #9698ff 다 — 바탕을 상류로 옮길 때 함께 바꾼다. */
     --fill-accent-blue-heavier-hovered:#6f64f0;
