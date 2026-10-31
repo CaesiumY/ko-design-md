@@ -14,13 +14,17 @@
      * dark theme can darken the shell while SOCAR cards stay true.
      */
     :root {
-      --sf-primary-regular: oklch(0.599 0.220 258);
-      --sf-primary-strong: oklch(0.569 0.237 260);
-      --sf-primary-heavy: oklch(0.498 0.226 262);
-      --sf-service-business: oklch(0.388 0.193 263);
+      --sf-primary-regular: var(--sf-blue-500);
+      --sf-primary-strong: var(--sf-blue-600);
+      --sf-primary-heavy: var(--sf-blue-700);
+      --sf-service-business: var(--sf-blue-900);
       --sf-blue-50: oklch(0.966 0.017 248);
       --sf-blue-100: oklch(0.931 0.035 247);
       --sf-blue-200: oklch(0.832 0.089 247);
+      --sf-blue-500: oklch(0.599 0.220 258);
+      --sf-blue-600: oklch(0.569 0.237 260);
+      --sf-blue-700: oklch(0.498 0.226 262);
+      --sf-blue-900: oklch(0.388 0.193 263);
       --sf-secondary-bg: oklch(0.931 0.035 247);
 
       --sf-gray-50: oklch(0.983 0.003 286);
@@ -35,31 +39,40 @@
       --sf-gray-900: oklch(0.302 0.027 258);
       --sf-gray-1000: oklch(0.217 0.022 261);
 
-      --sf-text-strong: oklch(0.217 0.022 261);
-      --sf-text-primary: oklch(0.372 0.035 258);
-      --sf-text-secondary: oklch(0.553 0.028 260);
-      --sf-text-tertiary: oklch(0.708 0.025 264);
-      --sf-text-disabled: oklch(0.792 0.024 267);
+      --sf-green-50: oklch(0.976 0.031 160);
+      --sf-green-500: oklch(0.740 0.171 159);
+      --sf-orange-50: oklch(0.980 0.025 89);
+      --sf-orange-500: oklch(0.744 0.181 56);
+      --sf-red-50: oklch(0.968 0.017 4);
+      --sf-red-500: oklch(0.659 0.229 18);
+      --sf-purple-500: oklch(0.643 0.210 293);
+      --sf-indigo-700: oklch(0.503 0.251 268);
 
-      --sf-background-regular: oklch(0.965 0.007 277);
-      --sf-border-regular: oklch(0.931 0.010 267);
-      --sf-divider-regular: oklch(0.931 0.010 267);
+      --sf-text-strong: var(--sf-gray-1000);
+      --sf-text-primary: var(--sf-gray-800);
+      --sf-text-secondary: var(--sf-gray-600);
+      --sf-text-tertiary: var(--sf-gray-500);
+      --sf-text-disabled: var(--sf-gray-400);
+
+      --sf-background-regular: var(--sf-gray-100);
+      --sf-border-regular: var(--sf-gray-200);
+      --sf-divider-regular: var(--sf-gray-200);
       --sf-white: oklch(1.000 0.000 0);
       --sf-black: oklch(0.000 0.000 0);
 
-      --sf-information-weak: oklch(0.966 0.017 248);
-      --sf-information-regular: oklch(0.599 0.220 258);
-      --sf-positive-weak: oklch(0.976 0.031 160);
-      --sf-positive-regular: oklch(0.740 0.171 159);
-      --sf-caution-weak: oklch(0.980 0.025 89);
-      --sf-caution-regular: oklch(0.744 0.181 56);
-      --sf-negative-weak: oklch(0.968 0.017 4);
-      --sf-negative-regular: oklch(0.659 0.229 18);
-      --sf-notification-red: oklch(0.659 0.229 18);
-      --sf-accent-purple: oklch(0.643 0.210 293);
+      --sf-status-information-weak: var(--sf-blue-50);
+      --sf-status-information-regular: var(--sf-blue-500);
+      --sf-status-positive-weak: var(--sf-green-50);
+      --sf-status-positive-regular: var(--sf-green-500);
+      --sf-status-caution-weak: var(--sf-orange-50);
+      --sf-status-caution-regular: var(--sf-orange-500);
+      --sf-status-negative-weak: var(--sf-red-50);
+      --sf-status-negative-regular: var(--sf-red-500);
+      --sf-notification-red: var(--sf-red-500);
+      --sf-accent-purple: var(--sf-purple-500);
 
-      --sf-location-rental: oklch(0.599 0.220 258);
-      --sf-location-return: oklch(0.503 0.251 268);
+      --sf-location-rental: var(--sf-blue-500);
+      --sf-location-return: var(--sf-indigo-700);
 
       --sf-shadow-sm: 0 1px 2px oklch(0.217 0.022 261 / 0.04);
       --sf-shadow-card: 0 2px 4px oklch(0.217 0.022 261 / 0.06);
@@ -529,7 +542,7 @@
       width: 84px;
       height: 64px;
       border-radius: 12px;
-      background: var(--sf-information-weak);
+      background: var(--sf-status-information-weak);
       color: var(--sf-primary-regular);
       font-size: 30px;
     }
@@ -552,9 +565,9 @@
       white-space: nowrap;
     }
 
-    .sf-tag.electric { color: var(--sf-positive-regular); background: var(--sf-positive-weak); }
-    .sf-tag.discount { color: var(--sf-negative-regular); background: var(--sf-negative-weak); }
-    .sf-tag.info { color: var(--sf-primary-regular); background: var(--sf-information-weak); }
+    .sf-tag.electric { color: var(--sf-status-positive-regular); background: var(--sf-status-positive-weak); }
+    .sf-tag.discount { color: var(--sf-status-negative-regular); background: var(--sf-status-negative-weak); }
+    .sf-tag.info { color: var(--sf-primary-regular); background: var(--sf-status-information-weak); }
 
     /* SOCAR snackbar pinned in the screen */
     .screen-snackbar {
@@ -872,14 +885,14 @@
       flex-shrink: 0;
     }
 
-    .status-bar.information { background: var(--sf-information-weak); color: var(--sf-primary-strong); }
-    .status-bar.information i { background: var(--sf-information-regular); }
-    .status-bar.positive { background: var(--sf-positive-weak); color: oklch(0.520 0.130 163); }
-    .status-bar.positive i { background: var(--sf-positive-regular); }
-    .status-bar.caution { background: var(--sf-caution-weak); color: oklch(0.520 0.130 56); }
-    .status-bar.caution i { background: var(--sf-caution-regular); }
-    .status-bar.negative { background: var(--sf-negative-weak); color: var(--sf-negative-regular); }
-    .status-bar.negative i { background: var(--sf-negative-regular); }
+    .status-bar.information { background: var(--sf-status-information-weak); color: var(--sf-primary-strong); }
+    .status-bar.information i { background: var(--sf-status-information-regular); }
+    .status-bar.positive { background: var(--sf-status-positive-weak); color: oklch(0.520 0.130 163); }
+    .status-bar.positive i { background: var(--sf-status-positive-regular); }
+    .status-bar.caution { background: var(--sf-status-caution-weak); color: oklch(0.520 0.130 56); }
+    .status-bar.caution i { background: var(--sf-status-caution-regular); }
+    .status-bar.negative { background: var(--sf-status-negative-weak); color: var(--sf-status-negative-regular); }
+    .status-bar.negative i { background: var(--sf-status-negative-regular); }
 
     /* ---- Accordion ---- */
     .sf-accordion {
@@ -923,7 +936,7 @@
       padding: 2px 7px;
       border-radius: 6px;
       font-weight: 600;
-      background: var(--sf-information-weak);
+      background: var(--sf-status-information-weak);
       color: var(--sf-primary-regular);
       white-space: nowrap;
     }
@@ -1039,7 +1052,7 @@
       line-height: 16px;
       padding: 1px 6px;
       border-radius: 6px;
-      background: var(--sf-information-weak);
+      background: var(--sf-status-information-weak);
       color: var(--sf-primary-regular);
       font-weight: 600;
     }
@@ -1288,7 +1301,7 @@
       min-width: 0;
       min-height: 84px;
       border-radius: 12px;
-      background: var(--sf-information-weak);
+      background: var(--sf-status-information-weak);
       color: var(--sf-primary-regular);
       font-size: 13px;
       font-weight: 600;
@@ -1495,13 +1508,17 @@
      * shell is the correct, expected result (not an inverted fake-dark).
      */
 [data-theme="dark"] {
-      --sf-primary-regular: oklch(0.599 0.220 258);
-      --sf-primary-strong: oklch(0.569 0.237 260);
-      --sf-primary-heavy: oklch(0.498 0.226 262);
-      --sf-service-business: oklch(0.388 0.193 263);
+      --sf-primary-regular: var(--sf-blue-500);
+      --sf-primary-strong: var(--sf-blue-600);
+      --sf-primary-heavy: var(--sf-blue-700);
+      --sf-service-business: var(--sf-blue-900);
       --sf-blue-50: oklch(0.966 0.017 248);
       --sf-blue-100: oklch(0.931 0.035 247);
       --sf-blue-200: oklch(0.832 0.089 247);
+      --sf-blue-500: oklch(0.599 0.220 258);
+      --sf-blue-600: oklch(0.569 0.237 260);
+      --sf-blue-700: oklch(0.498 0.226 262);
+      --sf-blue-900: oklch(0.388 0.193 263);
       --sf-secondary-bg: oklch(0.931 0.035 247);
 
       --sf-gray-50: oklch(0.983 0.003 286);
@@ -1516,31 +1533,40 @@
       --sf-gray-900: oklch(0.302 0.027 258);
       --sf-gray-1000: oklch(0.217 0.022 261);
 
-      --sf-text-strong: oklch(0.217 0.022 261);
-      --sf-text-primary: oklch(0.372 0.035 258);
-      --sf-text-secondary: oklch(0.553 0.028 260);
-      --sf-text-tertiary: oklch(0.708 0.025 264);
-      --sf-text-disabled: oklch(0.792 0.024 267);
+      --sf-green-50: oklch(0.976 0.031 160);
+      --sf-green-500: oklch(0.740 0.171 159);
+      --sf-orange-50: oklch(0.980 0.025 89);
+      --sf-orange-500: oklch(0.744 0.181 56);
+      --sf-red-50: oklch(0.968 0.017 4);
+      --sf-red-500: oklch(0.659 0.229 18);
+      --sf-purple-500: oklch(0.643 0.210 293);
+      --sf-indigo-700: oklch(0.503 0.251 268);
 
-      --sf-background-regular: oklch(0.965 0.007 277);
-      --sf-border-regular: oklch(0.931 0.010 267);
-      --sf-divider-regular: oklch(0.931 0.010 267);
+      --sf-text-strong: var(--sf-gray-1000);
+      --sf-text-primary: var(--sf-gray-800);
+      --sf-text-secondary: var(--sf-gray-600);
+      --sf-text-tertiary: var(--sf-gray-500);
+      --sf-text-disabled: var(--sf-gray-400);
+
+      --sf-background-regular: var(--sf-gray-100);
+      --sf-border-regular: var(--sf-gray-200);
+      --sf-divider-regular: var(--sf-gray-200);
       --sf-white: oklch(1.000 0.000 0);
       --sf-black: oklch(0.000 0.000 0);
 
-      --sf-information-weak: oklch(0.966 0.017 248);
-      --sf-information-regular: oklch(0.599 0.220 258);
-      --sf-positive-weak: oklch(0.976 0.031 160);
-      --sf-positive-regular: oklch(0.740 0.171 159);
-      --sf-caution-weak: oklch(0.980 0.025 89);
-      --sf-caution-regular: oklch(0.744 0.181 56);
-      --sf-negative-weak: oklch(0.968 0.017 4);
-      --sf-negative-regular: oklch(0.659 0.229 18);
-      --sf-notification-red: oklch(0.659 0.229 18);
-      --sf-accent-purple: oklch(0.643 0.210 293);
+      --sf-status-information-weak: var(--sf-blue-50);
+      --sf-status-information-regular: var(--sf-blue-500);
+      --sf-status-positive-weak: var(--sf-green-50);
+      --sf-status-positive-regular: var(--sf-green-500);
+      --sf-status-caution-weak: var(--sf-orange-50);
+      --sf-status-caution-regular: var(--sf-orange-500);
+      --sf-status-negative-weak: var(--sf-red-50);
+      --sf-status-negative-regular: var(--sf-red-500);
+      --sf-notification-red: var(--sf-red-500);
+      --sf-accent-purple: var(--sf-purple-500);
 
-      --sf-location-rental: oklch(0.599 0.220 258);
-      --sf-location-return: oklch(0.503 0.251 268);
+      --sf-location-rental: var(--sf-blue-500);
+      --sf-location-return: var(--sf-indigo-700);
 
       --sf-shadow-sm: 0 1px 2px oklch(0.217 0.022 261 / 0.04);
       --sf-shadow-card: 0 2px 4px oklch(0.217 0.022 261 / 0.06);
@@ -1964,7 +1990,7 @@
       width: 84px;
       height: 64px;
       border-radius: 12px;
-      background: var(--sf-information-weak);
+      background: var(--sf-status-information-weak);
       color: var(--sf-primary-regular);
       font-size: 30px;
     }
@@ -1984,9 +2010,9 @@
       font-weight: 600;
       white-space: nowrap;
     }
-[data-theme="dark"] .sf-tag.electric { color: var(--sf-positive-regular); background: var(--sf-positive-weak); }
-[data-theme="dark"] .sf-tag.discount { color: var(--sf-negative-regular); background: var(--sf-negative-weak); }
-[data-theme="dark"] .sf-tag.info { color: var(--sf-primary-regular); background: var(--sf-information-weak); }
+[data-theme="dark"] .sf-tag.electric { color: var(--sf-status-positive-regular); background: var(--sf-status-positive-weak); }
+[data-theme="dark"] .sf-tag.discount { color: var(--sf-status-negative-regular); background: var(--sf-status-negative-weak); }
+[data-theme="dark"] .sf-tag.info { color: var(--sf-primary-regular); background: var(--sf-status-information-weak); }
 /* SOCAR snackbar pinned in the screen */
 [data-theme="dark"] .screen-snackbar {
       position: absolute;
@@ -2261,14 +2287,14 @@
       font-style: normal;
       flex-shrink: 0;
     }
-[data-theme="dark"] .status-bar.information { background: var(--sf-information-weak); color: var(--sf-primary-strong); }
-[data-theme="dark"] .status-bar.information i { background: var(--sf-information-regular); }
-[data-theme="dark"] .status-bar.positive { background: var(--sf-positive-weak); color: oklch(0.520 0.130 163); }
-[data-theme="dark"] .status-bar.positive i { background: var(--sf-positive-regular); }
-[data-theme="dark"] .status-bar.caution { background: var(--sf-caution-weak); color: oklch(0.520 0.130 56); }
-[data-theme="dark"] .status-bar.caution i { background: var(--sf-caution-regular); }
-[data-theme="dark"] .status-bar.negative { background: var(--sf-negative-weak); color: var(--sf-negative-regular); }
-[data-theme="dark"] .status-bar.negative i { background: var(--sf-negative-regular); }
+[data-theme="dark"] .status-bar.information { background: var(--sf-status-information-weak); color: var(--sf-primary-strong); }
+[data-theme="dark"] .status-bar.information i { background: var(--sf-status-information-regular); }
+[data-theme="dark"] .status-bar.positive { background: var(--sf-status-positive-weak); color: oklch(0.520 0.130 163); }
+[data-theme="dark"] .status-bar.positive i { background: var(--sf-status-positive-regular); }
+[data-theme="dark"] .status-bar.caution { background: var(--sf-status-caution-weak); color: oklch(0.520 0.130 56); }
+[data-theme="dark"] .status-bar.caution i { background: var(--sf-status-caution-regular); }
+[data-theme="dark"] .status-bar.negative { background: var(--sf-status-negative-weak); color: var(--sf-status-negative-regular); }
+[data-theme="dark"] .status-bar.negative i { background: var(--sf-status-negative-regular); }
 /* ---- Accordion ---- */
 [data-theme="dark"] .sf-accordion {
       border: 1px solid var(--sf-gray-100);
@@ -2307,7 +2333,7 @@
       padding: 2px 7px;
       border-radius: 6px;
       font-weight: 600;
-      background: var(--sf-information-weak);
+      background: var(--sf-status-information-weak);
       color: var(--sf-primary-regular);
       white-space: nowrap;
     }
@@ -2404,7 +2430,7 @@
       line-height: 16px;
       padding: 1px 6px;
       border-radius: 6px;
-      background: var(--sf-information-weak);
+      background: var(--sf-status-information-weak);
       color: var(--sf-primary-regular);
       font-weight: 600;
     }
@@ -2617,7 +2643,7 @@
       min-width: 0;
       min-height: 84px;
       border-radius: 12px;
-      background: var(--sf-information-weak);
+      background: var(--sf-status-information-weak);
       color: var(--sf-primary-regular);
       font-size: 13px;
       font-weight: 600;

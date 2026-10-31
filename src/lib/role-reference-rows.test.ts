@@ -273,6 +273,22 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       expectRowsToMatch("ridi", expected, refs, literals)
     },
   },
+  socar: {
+    title: "light-only roles, one palette step each",
+    check: () => {
+      const { literals, refs, tableRows } = load("socar")
+      // SOCAR Frame is light-only, so the table has no dark column: its third
+      // column is where the role is used, which singleReferenceRoles would read
+      // as a dark cell. Only the role and its palette cell are compared.
+      const expected = new Map<string, string>()
+      for (const [roleCell, paletteCell = ""] of tableRows) {
+        const [name] = spans(roleCell)
+        const target = single(paletteCell)
+        if (name && target) expected.set(name, target)
+      }
+      expectRowsToMatch("socar", expected, refs, literals)
+    },
+  },
 }
 
 describe("role reference rows agree with the body role tables", () => {

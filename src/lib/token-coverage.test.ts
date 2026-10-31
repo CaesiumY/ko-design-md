@@ -109,7 +109,9 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   ridi: { annotated: 141, judged: 141, drift: 142 },
   "samsung-one-ui": { annotated: 7, judged: 7, drift: 7, webfont: true },
   "seed-design": { annotated: 229, judged: 229, drift: 241 },
-  socar: { annotated: 56, judged: 56, drift: 59 },
+  // 39 role literals became reference rows (no `oklch` of their own) and the
+  // 20 palette steps they point at were added (#630): 56 − 39 + 20, 59 − 39 + 20.
+  socar: { annotated: 37, judged: 37, drift: 40 },
   teamsparta: { annotated: 3, judged: 3, drift: 28 },
   toss: { annotated: 30, judged: 30, drift: 52 },
   "vapor-ui": { annotated: 223, judged: 223, drift: 223 },
