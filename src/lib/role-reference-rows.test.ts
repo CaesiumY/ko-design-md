@@ -273,6 +273,17 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       expectRowsToMatch("ridi", expected, refs, literals)
     },
   },
+  toss: {
+    title: "published adaptive roles, single-reference cells only",
+    check: () => {
+      const { literals, refs, tableRows } = load("toss")
+      // `@toss/tds-colors` defines its adaptive roles as hex literals; only the
+      // light `greyBackground` is named against a palette step (the TDS Mobile
+      // Colors page's `lightThemeGrey100`). Hex and opacity cells fall out.
+      const expected = singleReferenceRoles(tableRows)
+      expectRowsToMatch("toss", expected, refs, literals)
+    },
+  },
 }
 
 describe("role reference rows agree with the body role tables", () => {
@@ -301,8 +312,8 @@ describe("role reference rows agree with the body role tables", () => {
     // Detected by shape, not by listing: a reference row whose key — less a
     // `dark-` prefix, and with codeit's `text-` / `background-` read as `txt-` /
     // `bg-` — is a backticked name in the first column of the entry's own `## Colors`
-    // tables. Older reference rows elsewhere (toss's role chains, vapor-ui's
-    // aliases) name no table role and are not caught. A role table written
+    // tables. Older reference rows elsewhere (vapor-ui's aliases) name no
+    // table role and are not caught. A role table written
     // without backticks, or with the role outside the first column, is not
     // seen either — .claude/rules/catalog.md states that shape.
     const docsName = (key: string): string =>

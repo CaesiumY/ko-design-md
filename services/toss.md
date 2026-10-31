@@ -2,54 +2,15 @@
 name: 토스
 slug: toss
 category: finance
-last_updated: "2026-09-24"
+last_updated: "2026-11-01"
 created_at: "2026-05-11"
 lang: ko
 logo: https://getdesign.kr/logos/toss.png
 colors:
-  fill-brand: "{colors.blue-500}"
-  fill-primary: "{colors.grey-900}"
-  fill-secondary: "{colors.grey-100}"
-  fill-weak: "{colors.grey-50}"
-  fill-danger: "{colors.red-500}"
-  fill-success: "{colors.green-500}"
-  fill-warning: "{colors.orange-500}"
-  text-primary: "{colors.grey-900}"
-  text-secondary: "{colors.grey-700}"
-  text-tertiary: "{colors.fg-tertiary}"
-  text-placeholder: "{colors.fg-quaternary}"
-  text-alt: "{colors.white}"
-  text-brand: "{colors.blue-500}"
-  text-danger: "{colors.red-500}"
-  border-primary: "{colors.blue-500}"   # focused input
-  border-secondary: "{colors.grey-200}"   # default divider
-  border-strong: "{colors.grey-400}"
-  border-subtle: "{colors.line-subtle}"
-  overlay-scrim: "{colors.bg-overlay}"
-  overlay-press: "{colors.press-overlay}"
-  tds-fg-primary: "{colors.text-primary}"   # grey-900
-  tds-fg-secondary: "{colors.text-secondary}"   # grey-700
-  tds-fg-tertiary: "{colors.fg-tertiary}"   # navy-900 @ 58%
-  tds-fg-quaternary: "{colors.fg-quaternary}"   # navy-900 @ 28%
-  tds-fg-disabled: "{colors.grey-400}"
-  tds-fg-inverse: "{colors.text-alt}"   # white
-  tds-fg-brand: "{colors.text-brand}"
-  tds-fg-danger: "{colors.text-danger}"
-  tds-fg-success: "{colors.green-500}"
-  tds-bg-primary: "{colors.white}"
-  tds-bg-secondary: "{colors.fill-secondary}"   # grey-100
-  tds-bg-tertiary: "{colors.grey-200}"
-  tds-bg-elevated: "{colors.white}"
-  tds-bg-overlay: "{colors.overlay-scrim}"
-  tds-bg-brand: "{colors.fill-brand}"
-  tds-bg-brand-weak: "{colors.blue-50}"
-  tds-bg-danger: "{colors.fill-danger}"
-  tds-line-default: "{colors.border-secondary}"   # grey-200
-  tds-line-subtle: "{colors.border-subtle}"
-  tds-line-strong: "{colors.border-strong}"   # grey-400
-  tds-press-overlay: "{colors.overlay-press}"   # 검정 26%
+  ## TDS adaptive role
+  greyBackground: "{colors.grey-100}"   # TDS Mobile Colors 문서가 lightThemeGrey100 으로 가리키는 회색 바탕 — 다크 값은 다크 grey 단계가 아니라 짝 없음
   ## Brand
-  primary: "{colors.blue-500}"   # 명세의 대표색 역할 — TDS 의 fill-primary·text-primary(grey-900)와 다른 축
+  primary: "{colors.blue-500}"   # 명세의 대표색 역할 — 토스가 발행한 역할 이름이 아니라 카탈로그의 브랜드 대표색 별칭
   blue-500: oklch(0.620 0.191 258)   # #3182F6 — TDS 발행값 blue500, 카노니컬 Toss Blue, 화면당 하나의 primary CTA
   blue-600: oklch(0.522 0.176 257)   # pressed-blue 단계 — 번들 고유값, TDS blue600과 다른 색: 명도가 blue700과 blue800 사이이고 가장 가까운 blue700과도 ΔE 0.023
   blue-700: oklch(0.476 0.174 259)   # pressed gradient stop — 번들 고유값, TDS blue700과 다른 색: 가장 가까운 발행 step은 blue800(ΔE 0.012)
@@ -256,7 +217,7 @@ Voice는 **해요체(대화형 존댓말) + 위임형 + 일상어**로 요약된
 
 ## Colors
 
-> **팔레트 정정(2026-09-24).** 토스는 색 토큰을 발행한다 — npm `@toss/tds-colors` 0.1.0이 `colors.light.css`·`colors.dark.css`로 팔레트 hex를 싣고, TDS Mobile Colors 문서가 라이트 팔레트를 같은 이름·값으로 보여 준다 [src:12][src:13]. 이 절이 전에 적었던 "토큰 패키지도 값 표도 공개되지 않았다"는 틀렸다. base 팔레트에서 발행본에 같은 이름의 step이 있는 25개를 대조하되, 값을 고치기 전에 이름이 같은 색을 가리키는지부터 판정했다 — 번들 값에서 **가장 가까운 발행 step이 같은 이름의 step일 때만** 대응한다고 보았다. 대응하는 15개(`blue-500`·`blue-50`, `grey-50`~`grey-900` 10개, `yellow-300`·`yellow-500`, `red-500`)는 발행값으로 바꾸고 토큰 줄에 hex를 병기했다. 그중 `blue-500`은 번들값이 ΔE 0.020 어긋나 있었고, 미니앱 가이드의 `brand.primaryColor` 입력 예시도 발행값과 같은 hex다 [src:6]. 나머지 10개(`blue-600`·`blue-700`, `yellow-400`·`yellow-600`·`yellow-700`, `orange-300`·`orange-400`·`orange-500`, `red-600`, `green-500`)는 번들이 같은 이름을 다른 색에 붙인 경우라 값을 그대로 두고, 각 토큰 줄에 가장 가까운 발행 step을 적었다 — 번들 `yellow-700`은 `yellow-600`보다 밝고, `green-500`은 발행 `green500`보다 `green900`에 가깝다. 가장 가까운 step도 10개 모두 허용 오차(ΔE 0.01) 밖이라 이름을 그 step으로 옮기지도 않았다. 다크 값은 대응하는 15개만 `colors.dark.css`에서 `dark-` 토큰으로 옮겼다.
+> **역할 계층 정정(2026-11-01).** 이 항목은 frontmatter에 `fill-brand` → `blue-500` 같은 역할 참조 행 41개(`fill-*`·`text-*`·`border-*`·`overlay-*`·`tds-fg-*`·`tds-bg-*`·`tds-line-*`·`tds-press-overlay`)를 싣고 있었는데, 상류와 다시 대조해 보니 토스가 발행한 역할 이름이 아니어서 모두 뺐다. 이 이름과 대응은 토스 배포물이 아닌 핸드오프 번들의 `colors_and_type.css`에서 왔다. 토스의 컬러 시스템 글은 `fill-brand`를 토큰 이름 짓는 법의 예로만 들 뿐 그 토큰이 어느 팔레트 단계를 가리키는지는 적지 않고 [src:3], 색 토큰 패키지 `@toss/tds-colors` 0.1.0과 TDS Mobile Colors 문서에는 41개 이름이 하나도 없다 [src:12][src:13]. 토스가 실제로 발행한 역할 이름은 그 패키지의 adaptive 배경·선 이름(`background`·`greyBackground`·`hairlineBorder` 등)이다 [src:12]. 그중 팔레트 단계를 이름으로 가리키는 것은 TDS Mobile Colors 문서가 `lightThemeGrey100`으로 적은 라이트 `greyBackground` 하나라서 [src:13] 그것만 참조 행으로 싣고, 나머지는 아래 「TDS 발행 역할」 표에만 둔다. 본문의 컴포넌트 설명은 빠진 역할 이름 대신 팔레트 토큰을 직접 가리킨다. 팔레트 값은 2026-09-24 정정 그대로다 — 발행본과 이름이 대응하는 15개는 토큰 줄에 「TDS 발행값」으로, 번들이 같은 이름을 다른 색에 붙인 10개는 「번들 고유값」으로 적혀 있다 [src:12].
 
 TDS 컬러 시스템은 **4계층 구조**로 운영된다 [src:3]:
 
@@ -295,11 +256,20 @@ TDS 컬러 시스템은 **4계층 구조**로 운영된다 [src:3]:
 
 `@toss/tds-colors`는 다크 팔레트를 **같은 이름**으로 발행한다 — `colors.dark.css`의 `grey900`은 흰색이고 `grey50`은 가장 어두운 회색이라, 이름이 역할(텍스트·표면)을 따르고 명도는 테마에 맞춰 뒤집힌다 [src:12]. 본 문서는 라이트에서 이름이 대응한다고 판정한 15개만 `dark-` 접두로 옮겼다. 다크 grey는 라이트 grey(색상각 248~258)와 달리 색상각 285~286에 채도 0.02 이하인, 무채색에 가까운 중성색이다.
 
-### Semantic alias
+### TDS 발행 역할 (adaptive 배경·선)
 
-product-facing 색은 시맨틱·컴포넌트 토큰으로 호출하고 base 팔레트는 새 role을 만들 때만 직접 참조한다 [src:3].
+토스는 product-facing 색을 시맨틱·컴포넌트 토큰으로 호출하고 base 팔레트는 새 role을 만들 때만 직접 참조한다 [src:3]. 다만 시맨틱 토큰의 이름과 대응 표는 공개되지 않았고, 공개된 역할 이름은 `@toss/tds-colors`가 라이트·다크 짝으로 싣는 adaptive 배경·선 이름이다 [src:12]. 패키지는 이 값들을 hex 리터럴로 정의하므로, 팔레트 단계를 이름으로 가리킨다고 볼 수 있는 것은 TDS Mobile Colors 문서가 `lightThemeGrey100`으로 적은 라이트 `greyBackground` 하나다 [src:13]. 나머지 칸은 값이 팔레트 단계와 같아도 상류가 그 단계를 가리키지 않으므로 값만 적는다.
 
-새 번들(`HI3LORQulbJJqdr-BrZGMQ`)의 `colors_and_type.css`는 같은 카노니컬 값에 매핑되는 **4-카테고리 정식 변수명**(`--tds-fg-*` / `--tds-bg-*` / `--tds-line-*` / `--tds-press-overlay` / `--tds-disabled-opacity`)을 함께 export한다 — 위 단축 alias가 catalog 문서 관행이라면, 아래 매핑은 prototype에 그대로 inline할 수 있는 CSS custom property 이름이다.
+| 역할 | 라이트 | 다크 | 비고 |
+| --- | --- | --- | --- |
+| `background` | oklch(1.000 0.000 0) | oklch(0.207 0.010 286) | 기본 화면 바탕. 라이트 값은 `white`와 같지만 참조가 아니다 [src:12][src:13] |
+| `greyBackground` | `{colors.grey-100}` | oklch(0.174 0.006 286) | 회색 바탕. 문서가 라이트 값을 `lightThemeGrey100`으로 가리킨다 [src:13]. 다크 값은 다크 grey 단계가 아니다 [src:12] |
+| `layeredBackground` | oklch(1.000 0.000 0) | oklch(0.247 0.013 285) | 겹친 표면. 다크 값은 `dark-grey-50`과 같지만 참조가 아니다 [src:12] |
+| `floatBackground` | oklch(1.000 0.000 0) | oklch(0.297 0.016 285) | 떠 있는 표면. 문서는 `floatedBackground`로 적는다. 다크 값은 `dark-grey-100`과 같지만 참조가 아니다 [src:12][src:13] |
+| `dimmedBackground` | 검정 20% | 검정 56% | 스크림. 불투명도 값이다 [src:12] |
+| `hairlineBorder` | oklch(0.930 0.005 248) | oklch(0.361 0.019 285) | 헤어라인. 값은 `grey-200`·`dark-grey-200`과 같지만 참조가 아니다 [src:12] |
+
+패키지는 같은 값을 다른 이름으로도 싣는다 — `backgroundLevelB01`은 `greyBackground`, `backgroundLevel01`은 `layeredBackground`, `backgroundLevel02`는 `floatBackground`, `backgroundDimmed`는 `dimmedBackground`와 값이 같고, PC 화면 바탕 `pcScreenBg`가 따로 있다(라이트 oklch(0.976 0.003 265), 다크 oklch(0.247 0.013 285)) [src:12]. TDS Mobile Colors 문서는 `layeredBackground`·`floatedBackground`의 다크 견본을 각각 `background`·`greyBackground` 값으로 보여 주어 패키지와 다르다 — 표의 다크 값은 패키지를 따른다 [src:12][src:13].
 
 색 대비 자동 보정 — 미니앱이 자체 brand 컬러를 등록할 때, 등록된 색이 색 대비 기준을 충족하지 못하면 원래 색을 최대한 유지하는 선에서 자동 보정된다 [src:6]. 토큰 빌드는 Token Studio(Figma 플러그인) → GitHub PR → 플랫폼별 코드 자동 생성 파이프라인을 거친다 [src:3].
 
@@ -383,7 +353,7 @@ dur-slow: 320                                  # sheet, dialog
 | M  | 40 | `{rounded.radius-m}` (12)  | `{typography.label-m}` (15px Semibold) |
 | S  | 32 | 10                         | `{typography.label-s}` (13px Semibold) |
 
-pressed state는 `{colors.overlay-press}` (검정 26%)를 fill 위에 얹는 방식이고, disabled state는 컴포넌트 전체 노드에 `{opacity.disabled-opacity}` (0.30)를 적용한다 — 부분 회색 처리하지 않는다.
+pressed state는 `{colors.press-overlay}` (검정 26%)를 fill 위에 얹는 방식이고, disabled state는 컴포넌트 전체 노드에 `{opacity.disabled-opacity}` (0.30)를 적용한다 — 부분 회색 처리하지 않는다.
 
 ```tsx
 <Button variant="primary" size="xl">송금하기</Button>
@@ -392,19 +362,19 @@ pressed state는 `{colors.overlay-press}` (검정 26%)를 fill 위에 얹는 방
 
 ### button-primary
 
-`{colors.fill-brand}` (blue-500) 배경 + `{colors.text-alt}` (흰 텍스트). 화면당 단 하나의 가장 중요한 액션에만 사용된다.
+`{colors.blue-500}` 배경 + `{colors.white}` 텍스트. 화면당 단 하나의 가장 중요한 액션에만 사용된다.
 
 ### button-secondary
 
-`{colors.fill-secondary}` (grey-100) 배경 + `{colors.text-primary}` (grey-900) 텍스트. 같은 화면의 보조 액션을 표현할 때 사용된다.
+`{colors.grey-100}` 배경 + `{colors.grey-900}` 텍스트. 같은 화면의 보조 액션을 표현할 때 사용된다.
 
 ### button-danger
 
-`{colors.fill-danger}` (red-500) 배경 + `{colors.text-alt}` 텍스트. 파괴적 액션 전용.
+`{colors.red-500}` 배경 + `{colors.white}` 텍스트. 파괴적 액션 전용.
 
 ### button-ghost
 
-투명 배경 + `{colors.text-brand}` (blue-500) 라벨, 보더 없음. 텍스트 링크에 가까운 약한 위계.
+투명 배경 + `{colors.blue-500}` 라벨, 보더 없음. 텍스트 링크에 가까운 약한 위계.
 
 ### bottom-cta
 
@@ -416,19 +386,19 @@ pressed state는 `{colors.overlay-press}` (검정 26%)를 fill 위에 얹는 방
 
 ### text-field
 
-48px height, `{rounded.radius-m}` (12) radius, `{colors.fill-secondary}` (grey-100) resting 배경, 1px `{colors.border-secondary}` (grey-200) 보더. focus 상태에서 흰 배경 + 1.5px `{colors.border-primary}` (blue-500) 보더로 전환된다. error 상태는 1.5px `{colors.fill-danger}` (red-500) 보더와 그 아래 `{colors.text-danger}` 컬러의 헬퍼 텍스트로 표현된다.
+48px height, `{rounded.radius-m}` (12) radius, `{colors.grey-100}` resting 배경, 1px `{colors.grey-200}` 보더. focus 상태에서 흰 배경 + 1.5px `{colors.blue-500}` 보더로 전환된다. error 상태는 1.5px `{colors.red-500}` 보더와 그 아래 `{colors.red-500}` 컬러의 헬퍼 텍스트로 표현된다.
 
 ### chip
 
-34px 높이의 full pill (`{rounded.radius-full}`). resting은 1px `{colors.border-secondary}` 보더 + 흰 배경, active 변형은 `{colors.fill-primary}` (grey-900) 배경 + 흰 텍스트로 flip되며, brand 변형은 `{colors.blue-50}` 배경 + `{colors.text-brand}` (blue-500) 텍스트다.
+34px 높이의 full pill (`{rounded.radius-full}`). resting은 1px `{colors.grey-200}` 보더 + 흰 배경, active 변형은 `{colors.grey-900}` 배경 + 흰 텍스트로 flip되며, brand 변형은 `{colors.blue-50}` 배경 + `{colors.blue-500}` 텍스트다.
 
 ### badge
 
-22px 높이, 6px radius — chip보다 작고 더 정보 밀도 높은 표면에 사용된다. 시맨틱 색에 매핑된 washed 배경과 페어링된다 (예: red badge는 옅은 분홍 배경 + `{colors.text-danger}` 텍스트; green badge는 옅은 민트 배경 + `{colors.green-500}` 텍스트). 핸드오프 번들의 `colors_and_type.css`는 시맨틱 base step(`red-500/600`, `green-500`)만 정의하고 badge 전용 washed 배경 step은 노출하지 않으므로, washed 톤은 base hue에서 lightness를 끌어올린 추정값으로 운용한다 — red badge ≈ `oklch(0.940 0.040 18)` (정식 토큰 없음, 추정).
+22px 높이, 6px radius — chip보다 작고 더 정보 밀도 높은 표면에 사용된다. 시맨틱 색에 매핑된 washed 배경과 페어링된다 (예: red badge는 옅은 분홍 배경 + `{colors.red-500}` 텍스트; green badge는 옅은 민트 배경 + `{colors.green-500}` 텍스트). 핸드오프 번들의 `colors_and_type.css`는 시맨틱 base step(`red-500/600`, `green-500`)만 정의하고 badge 전용 washed 배경 step은 노출하지 않으므로, washed 톤은 base hue에서 lightness를 끌어올린 추정값으로 운용한다 — red badge ≈ `oklch(0.940 0.040 18)` (정식 토큰 없음, 추정).
 
 ### list-row
 
-토스 홈·계좌 목록·거래 내역의 표준 단위. 좌우 padding 14×24, 14px gap으로 44px 아바타(radius 14) + 타이틀/서브 스택 + 우측 정렬 amount/timestamp/arrow 슬롯을 갖는다. amount는 Bold 700 15px이며, 양수는 `{colors.text-brand}` (예: `+50,000원`), 음수는 `{colors.text-primary}` (예: `−12,300원`)로 표시된다.
+토스 홈·계좌 목록·거래 내역의 표준 단위. 좌우 padding 14×24, 14px gap으로 44px 아바타(radius 14) + 타이틀/서브 스택 + 우측 정렬 amount/timestamp/arrow 슬롯을 갖는다. amount는 Bold 700 15px이며, 양수는 `{colors.blue-500}` (예: `+50,000원`), 음수는 `{colors.grey-900}` (예: `−12,300원`)로 표시된다.
 
 ```tsx
 <ListRow
@@ -445,7 +415,7 @@ list-row 그룹의 헤더 — 섹션 타이틀과 우측 액션 슬롯(예: "전
 
 ### tab-bar
 
-미니앱의 floating tab-bar 변형 — 420px max-width, `{rounded.radius-3xl}` (24) radius, 흰 배경 + 1px `{colors.border-secondary}` 보더, 2~5개 destination [src:9]. active 아이콘은 filled 변형 + `{colors.text-primary}`, inactive는 outline + `{colors.text-tertiary}`다.
+미니앱의 floating tab-bar 변형 — 420px max-width, `{rounded.radius-3xl}` (24) radius, 흰 배경 + 1px `{colors.grey-200}` 보더, 2~5개 destination [src:9]. active 아이콘은 filled 변형 + `{colors.grey-900}`, inactive는 outline + `{colors.fg-tertiary}`다.
 
 ### top-app-bar
 
@@ -453,7 +423,7 @@ list-row 그룹의 헤더 — 섹션 타이틀과 우측 액션 슬롯(예: "전
 
 ### toast
 
-`{colors.fill-primary}` (grey-900) 표면 + 흰 라벨, `{rounded.radius-l}` (14) radius, `{elevation.shadow-toast}`. 성공 아이콘은 20px `{colors.green-500}` 원 + 흰 체크다.
+`{colors.grey-900}` 표면 + 흰 라벨, `{rounded.radius-l}` (14) radius, `{elevation.shadow-toast}`. 성공 아이콘은 20px `{colors.green-500}` 원 + 흰 체크다.
 
 ```tsx
 <Toast>송금이 완료되었어요</Toast>
@@ -461,7 +431,7 @@ list-row 그룹의 헤더 — 섹션 타이틀과 우측 액션 슬롯(예: "전
 
 ### dialog
 
-흰 표면, `{rounded.radius-2xl}` (20) radius, 24px inner padding, `{elevation.shadow-3}`. 타이틀은 18/700, 본문은 15/400 `{colors.text-secondary}`, primary blue + secondary grey-100 CTA 두 개가 각 48px 높이로 stack된다.
+흰 표면, `{rounded.radius-2xl}` (20) radius, 24px inner padding, `{elevation.shadow-3}`. 타이틀은 18/700, 본문은 15/400 `{colors.grey-700}`, primary blue + secondary grey-100 CTA 두 개가 각 48px 높이로 stack된다.
 
 ```tsx
 <Dialog
@@ -474,7 +444,7 @@ list-row 그룹의 헤더 — 섹션 타이틀과 우측 액션 슬롯(예: "전
 
 ### bottom-sheet
 
-토스 모바일에서 dialog의 1차 대체 — `shadow-bottom-sheet` (`0 -2px 12px oklch(0.155 0.060 261 / 0.06)`) shadow, `{colors.overlay-scrim}` scrim, 20~24px top corner radius. yellow-faced 일러스트 글리프가 sheet 상단에 anchored되는 패턴이 빈번하다.
+토스 모바일에서 dialog의 1차 대체 — `shadow-bottom-sheet` (`0 -2px 12px oklch(0.155 0.060 261 / 0.06)`) shadow, `{colors.bg-overlay}` scrim, 20~24px top corner radius. yellow-faced 일러스트 글리프가 sheet 상단에 anchored되는 패턴이 빈번하다.
 
 ### keypad
 
@@ -509,19 +479,19 @@ TDS Icon system — outline (`*-mono`) + filled (`*-fill`) 두 종 변형, 16/20
 
 ### checkbox · switch
 
-checkbox는 22px 정사각 + 6px radius, resting은 1.5px `{colors.border-strong}` (grey-300) 보더 + 흰 배경, checked는 `{colors.fill-brand}` (blue-500) 배경 + 흰 체크 글리프로 flip된다. switch는 44×26px 트랙 + 20px 흰 knob, off는 `{colors.grey-300}` 트랙, on은 `{colors.fill-brand}` 트랙으로 전환되며 knob은 `dur-base` (200ms) `ease`로 18px translate된다.
+checkbox는 22px 정사각 + 6px radius, resting은 1.5px `{colors.grey-300}` 보더 + 흰 배경, checked는 `{colors.blue-500}` 배경 + 흰 체크 글리프로 flip된다. switch는 44×26px 트랙 + 20px 흰 knob, off는 `{colors.grey-300}` 트랙, on은 `{colors.blue-500}` 트랙으로 전환되며 knob은 `dur-base` (200ms) `ease`로 18px translate된다.
 
 ### segmented-control
 
-여러 옵션 중 하나를 고르는 분절형 컨트롤 [src:9]. 트랙은 `{colors.fill-secondary}` (grey-100) 배경 + `{rounded.radius-m}`~`radius-l` 라운드, 선택된 분절은 흰 배경 + `{elevation.shadow-1}`로 떠오르고, 미선택 라벨은 `{colors.text-secondary}`다. chip이 다중 필터라면 segmented-control은 상호 배타적 단일 선택이다.
+여러 옵션 중 하나를 고르는 분절형 컨트롤 [src:9]. 트랙은 `{colors.grey-100}` 배경 + `{rounded.radius-m}`~`radius-l` 라운드, 선택된 분절은 흰 배경 + `{elevation.shadow-1}`로 떠오르고, 미선택 라벨은 `{colors.grey-700}`다. chip이 다중 필터라면 segmented-control은 상호 배타적 단일 선택이다.
 
 ### search-field
 
-`{component.text-field}`의 변형 — 좌측에 search 아이콘을 둔 48px 높이 입력, `{rounded.radius-m}` (12) radius, `{colors.fill-secondary}` (grey-100) resting 배경. focus 시 흰 배경 + 1.5px `{colors.border-primary}` (blue-500)로 전환되는 규칙은 text-field와 동일하다.
+`{component.text-field}`의 변형 — 좌측에 search 아이콘을 둔 48px 높이 입력, `{rounded.radius-m}` (12) radius, `{colors.grey-100}` resting 배경. focus 시 흰 배경 + 1.5px `{colors.blue-500}`로 전환되는 규칙은 text-field와 동일하다.
 
 ### slider
 
-트랙 + thumb 단일 값 선택 컨트롤. 트랙은 `{colors.grey-200}` baseline 위에 `{colors.fill-brand}` (blue-500) active fill, thumb는 흰 원 + 미세한 그림자다. 값 변화는 `dur-base` 안에서만 운용되고 바운스 오버슈트는 없다.
+트랙 + thumb 단일 값 선택 컨트롤. 트랙은 `{colors.grey-200}` baseline 위에 `{colors.blue-500}` active fill, thumb는 흰 원 + 미세한 그림자다. 값 변화는 `dur-base` 안에서만 운용되고 바운스 오버슈트는 없다.
 
 ### rating
 
@@ -529,31 +499,31 @@ checkbox는 22px 정사각 + 6px radius, resting은 1.5px `{colors.border-strong
 
 ### progress-bar · progress-stepper
 
-progress-bar는 `{colors.grey-200}` 트랙 + `{colors.fill-brand}` (blue-500) fill의 선형 진행 표시이며, 우측에 `{typography.label-s}` tabular 퍼센트를 둔다. progress-stepper는 26px 원형 node를 segment로 연결한 다단계 표시로, 완료 node는 `{colors.fill-brand}` + 흰 체크, 현재 node는 `{colors.fill-brand}` + `{colors.blue-50}` 4px 글로우 링, 미도달 node는 `{colors.grey-200}` + `{colors.text-tertiary}`다.
+progress-bar는 `{colors.grey-200}` 트랙 + `{colors.blue-500}` fill의 선형 진행 표시이며, 우측에 `{typography.label-s}` tabular 퍼센트를 둔다. progress-stepper는 26px 원형 node를 segment로 연결한 다단계 표시로, 완료 node는 `{colors.blue-500}` + 흰 체크, 현재 node는 `{colors.blue-500}` + `{colors.blue-50}` 4px 글로우 링, 미도달 node는 `{colors.grey-200}` + `{colors.fg-tertiary}`다.
 
 ### numeric-spinner · stepper
 
-numeric-spinner는 `−  값  +` 가로 캡슐(`{rounded.radius-full}` 보더 + 흰 배경)로 금액·수량 미세 조정에 쓰이며, 값은 tabular figure, ± 버튼은 `{colors.text-brand}` (blue-500)다. stepper는 같은 역할의 세로 변형(`▲ 값 ▼`)으로 `{rounded.radius-m}` 보더 컨테이너 안에서 값 행을 1px 헤어라인으로 분리한다. 비활성 버튼은 `{colors.text-placeholder}`로 흐려진다.
+numeric-spinner는 `−  값  +` 가로 캡슐(`{rounded.radius-full}` 보더 + 흰 배경)로 금액·수량 미세 조정에 쓰이며, 값은 tabular figure, ± 버튼은 `{colors.blue-500}`다. stepper는 같은 역할의 세로 변형(`▲ 값 ▼`)으로 `{rounded.radius-m}` 보더 컨테이너 안에서 값 행을 1px 헤어라인으로 분리한다. 비활성 버튼은 `{colors.fg-quaternary}`로 흐려진다.
 
 ### tooltip · bubble
 
-tooltip은 `{colors.fill-primary}` (grey-900) 표면 + 흰 라벨 + caret을 가진 짧은 보조 설명으로 `{elevation.shadow-2}`를 쓴다. bubble은 채팅 말풍선으로, 상대 발화는 `{colors.grey-200}` 배경 + 좌하단 4px 꼬리(`radius 14/14/14/4`), 본인 발화는 `{colors.fill-brand}` (blue-500) 배경 + 흰 텍스트 + 우하단 4px 꼬리(`radius 14/14/4/14`)다.
+tooltip은 `{colors.grey-900}` 표면 + 흰 라벨 + caret을 가진 짧은 보조 설명으로 `{elevation.shadow-2}`를 쓴다. bubble은 채팅 말풍선으로, 상대 발화는 `{colors.grey-200}` 배경 + 좌하단 4px 꼬리(`radius 14/14/14/4`), 본인 발화는 `{colors.blue-500}` 배경 + 흰 텍스트 + 우하단 4px 꼬리(`radius 14/14/4/14`)다.
 
 ### post · board-row · table-row · grid-list
 
-피드·랭킹·표·격자 등 콘텐츠 표시 단위. post는 28px 아바타 + 작성자/시간 헤더 + `{typography.body-3}` 본문 + 반응 strip(♥·💬, active는 `{colors.text-brand}`)으로 구성된다. board-row는 순위 숫자(`{colors.text-brand}`, 1위는 `{colors.text-primary}`) + 36px 원형 아바타 + 우측 tabular 점수의 리더보드 행이다. table-row는 라벨/값/증감 3열을 1px `{colors.border-secondary}` 헤어라인으로 구분하며 수치는 tabular, 등락은 시맨틱 색을 쓴다. grid-list는 2열 격자에 흰 카드(`{rounded.radius-m}` + `{colors.blue-50}` 아이콘 칩)를 배치한다.
+피드·랭킹·표·격자 등 콘텐츠 표시 단위. post는 28px 아바타 + 작성자/시간 헤더 + `{typography.body-3}` 본문 + 반응 strip(♥·💬, active는 `{colors.blue-500}`)으로 구성된다. board-row는 순위 숫자(`{colors.blue-500}`, 1위는 `{colors.grey-900}`) + 36px 원형 아바타 + 우측 tabular 점수의 리더보드 행이다. table-row는 라벨/값/증감 3열을 1px `{colors.grey-200}` 헤어라인으로 구분하며 수치는 tabular, 등락은 시맨틱 색을 쓴다. grid-list는 2열 격자에 흰 카드(`{rounded.radius-m}` + `{colors.blue-50}` 아이콘 칩)를 배치한다.
 
 ### bar-chart
 
-막대형 데이터 시각화. 막대는 `{colors.grey-200}` 기본 + 강조 막대만 `{colors.fill-brand}` (blue-500)이며, 상단만 6px 라운드된다. **axis line·divider를 두지 않는다** — 막대가 차분한 표면 위에 그대로 떠 있는 것이 토스 차트의 규칙이다.
+막대형 데이터 시각화. 막대는 `{colors.grey-200}` 기본 + 강조 막대만 `{colors.blue-500}`이며, 상단만 6px 라운드된다. **axis line·divider를 두지 않는다** — 막대가 차분한 표면 위에 그대로 떠 있는 것이 토스 차트의 규칙이다.
 
 ### bottom-info · list-footer
 
-bottom-info는 `{component.bottom-cta}` 위에 얹히는 보조 안내 — `{colors.blue-50}` 배경 + `{colors.text-brand}`의 full pill 칩으로 "수수료 없이 보내요" 같은 한 줄 컨텍스트를 전한다. list-footer는 목록 하단의 "더보기" 액션 행으로 44px 높이 + 1px `{colors.border-secondary}` 보더 + 우측 chevron(grey-400)을 둔다.
+bottom-info는 `{component.bottom-cta}` 위에 얹히는 보조 안내 — `{colors.blue-50}` 배경 + `{colors.blue-500}`의 full pill 칩으로 "수수료 없이 보내요" 같은 한 줄 컨텍스트를 전한다. list-footer는 목록 하단의 "더보기" 액션 행으로 44px 높이 + 1px `{colors.grey-200}` 보더 + 우측 chevron(grey-400)을 둔다.
 
 ### result · text-button · icon-button · tab · navigation
 
-result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아이콘(성공은 `{colors.green-500}`) + 타이틀 + 보조 카피 + yellow-faced 일러스트 anchor로 구성된다. text-button은 `{component.button-ghost}`에 가까운 보더 없는 텍스트 액션이며, icon-button은 40px 정사각 hit-area 안에 24px 아이콘만 둔 컨트롤이다. tab은 하단 2.5px `{colors.fill-brand}` 언더라인으로 활성 상태를 표시하는 인라인 탭(floating `{component.tab-bar}`와 구분된다). navigation(앱인토스)은 화면 상단에 고정되는 앱인토스 전용 내비게이션 바다 [src:6]. 미니앱이 토스 셸 안에서 실행 중임을 알리는 상단 inset 바로, 호스트 표기에 토스 심볼을 작게 동반한다.
+result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아이콘(성공은 `{colors.green-500}`) + 타이틀 + 보조 카피 + yellow-faced 일러스트 anchor로 구성된다. text-button은 `{component.button-ghost}`에 가까운 보더 없는 텍스트 액션이며, icon-button은 40px 정사각 hit-area 안에 24px 아이콘만 둔 컨트롤이다. tab은 하단 2.5px `{colors.blue-500}` 언더라인으로 활성 상태를 표시하는 인라인 탭(floating `{component.tab-bar}`와 구분된다). navigation(앱인토스)은 화면 상단에 고정되는 앱인토스 전용 내비게이션 바다 [src:6]. 미니앱이 토스 셸 안에서 실행 중임을 알리는 상단 inset 바로, 호스트 표기에 토스 심볼을 작게 동반한다.
 
 ### Full component coverage (41 Figma pages)
 
@@ -625,8 +595,8 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 
 **Do**
 
-- product-facing 색은 시맨틱·컴포넌트 alias(`{colors.fill-brand}`, `{colors.text-primary}`, `{colors.border-primary}`, `{colors.fill-secondary}`)로만 호출하고, base 팔레트(`{colors.blue-500}`, `{colors.grey-900}` 등)는 새 role을 만들 때만 직접 참조한다 [src:3].
-- 화면당 단일 강조색 정책을 유지한다 — primary CTA는 `{colors.fill-brand}` 하나로 통일하고, 보조 액션은 `{colors.fill-secondary}` 또는 ghost 변형으로 분리한다 [src:3].
+- product-facing 색은 시맨틱·컴포넌트 토큰으로 호출하고, base 팔레트는 새 role을 만들 때만 직접 참조한다 [src:3]. 토스의 시맨틱 토큰 이름과 대응은 공개되지 않았으므로, 이 문서를 적용할 때는 컴포넌트 설명이 가리키는 팔레트 단계(`{colors.blue-500}`, `{colors.grey-900}` 등)를 자기 프로젝트의 역할 토큰에 한 번 묶어 두고 그 이름으로 호출한다.
+- 화면당 단일 강조색 정책을 유지한다 — primary CTA는 `{colors.blue-500}` 하나로 통일하고, 보조 액션은 `{colors.grey-100}` 또는 ghost 변형으로 분리한다 [src:3].
 - 화면 최하단 강제 액션은 `{component.bottom-cta}`로, 화면 내부 액션은 `{component.button-primary}`로 분리한다 — 두 컴포넌트의 역할이 다르다.
 - 버튼 라운드는 사이즈와 페어로 운영한다 — XL→`{rounded.radius-xl}` (16), L→`{rounded.radius-l}` (14), M→`{rounded.radius-m}` (12), S→10.
 - 실시간 금융 데이터(잔액·환율·차트)는 `tabular-nums`로, 강조 숫자는 `proportional-nums`로 분리한다 [src:8].
@@ -637,20 +607,20 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 - 미니앱 브랜드명은 한국어 표기를 우선한다 — `Toss`보다 `토스`를 권장한다 [src:6].
 - 미니앱이 자체 brand 컬러를 등록할 때는 색 대비 자동 보정을 전제한다 — 기준에 못 미치는 색은 원래 색을 최대한 유지하는 선에서 바뀌므로, 등록한 hex가 그대로 렌더된다고 가정하지 않는다 [src:6].
 - 아이콘은 `currentColor`를 상속하게 둔다 — 외부 컬러 직접 주입은 금지다.
-- pressed state는 `{colors.overlay-press}` (검정 26%) overlay로, disabled state는 컴포넌트 전체 노드에 `{opacity.disabled-opacity}` (0.30)를 적용한다 — 부분 회색 처리하지 않는다.
+- pressed state는 `{colors.press-overlay}` (검정 26%) overlay로, disabled state는 컴포넌트 전체 노드에 `{opacity.disabled-opacity}` (0.30)를 적용한다 — 부분 회색 처리하지 않는다.
 
 **Don't**
 
 - 챗봇 톤("~해보세요!", "~할까요?")이나 마케팅 과장("혁신적", "최고의", "차세대")을 product 카피에 사용하지 않는다 [src:10].
 - 격식체(~십시오/~합니다)를 product 카피에 사용하지 않는다 — 토스가 잘못한 에러 화면에서도 해요체를 유지한다 [src:10].
 - 단정형 `-다`나 방송 헤드라인 톤을 사용하지 않는다 — 해요체가 표준이다.
-- 한 화면에 강조색을 둘 이상 사용하지 않는다 — `{colors.fill-brand}`는 단일 primary CTA에 예약된다.
+- 한 화면에 강조색을 둘 이상 사용하지 않는다 — `{colors.blue-500}`는 단일 primary CTA에 예약된다.
 - 그라디언트를 chrome에 사용하지 않는다 — 세 가지 문서화된 예외(bottom CTA 보호 그라디언트, 로딩 버튼 radial glow, yellow→orange 일러스트)만 허용된다.
 - iOS류 squircle/blob 라운드를 사용하지 않는다 — `Templates/Squircle` 전용 페이지를 제외하고는 표준 9단 `{rounded.*}` ladder만 사용한다.
-- 2px 장식용 보더, 컬러 left-rail accent 카드를 사용하지 않는다 — 기본 보더는 1px `{colors.border-secondary}` 헤어라인이다.
+- 2px 장식용 보더, 컬러 left-rail accent 카드를 사용하지 않는다 — 기본 보더는 1px `{colors.grey-200}` 헤어라인이다.
 - skeleton shimmer를 사용하지 않는다 — 로딩 상태는 3-dot loader와 미세 radial highlight로 처리한다.
 - 320ms 초과 fade·바운스 오버슈트·parallax를 사용하지 않는다 — 모션은 `dur-fast`/`dur-base`/`dur-slow` (120/200/320ms) 안에서만 운용한다.
-- inner shadow를 사용하지 않는다 — pressed state는 `{colors.overlay-press}` overlay이지 shadow가 아니다.
+- inner shadow를 사용하지 않는다 — pressed state는 `{colors.press-overlay}` overlay이지 shadow가 아니다.
 - 이모지를 product 카피에 inline으로 사용하지 않는다 — "emoji" 컨텐츠는 큐레이트된 `{component.asset}` 일러스트 세트로 다뤄지고, 텍스트 punctuation으로 쓰이지 않는다.
 - `{component.button-primary}`와 `{component.bottom-cta}`를 같은 화면에 동시에 두지 않는다 — 액션 위계가 무너지고 강조점이 분산된다.
 - 영문 UI 라벨에 ALL CAPS, 헤딩에 `!`, 한국어 문장 중간에 em-dash를 사용하지 않는다; "여기를 눌러주세요" 같은 디렉티브 라벨은 금지된다 — 버튼은 일어날 일을 직접 말한다(`송금하기`, `다음`, `시작하기`).
@@ -687,10 +657,11 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 
 ## Known Gaps
 
-- **다크 모드 alias 테이블** — 핸드오프 번들은 light 모드 카노니컬 hex만 제공하고, 2025년 OKLCH 마이그레이션 발표에도 시맨틱 다크 alias 테이블은 실리지 않았다 [src:3]. 다크 팔레트는 `@toss/tds-colors`의 `colors.dark.css`가 발행하며 [src:12], 본 문서는 이름이 대응하는 15개를 `dark-` 토큰으로 옮겼다. 번들 고유 step 11개(`blue-600`·`blue-700`, `grey-150`, `yellow-400`·`yellow-600`·`yellow-700`, `orange-300`·`orange-400`·`orange-500`, `red-600`, `green-500`)와 알파 토큰(`fg-tertiary` 등)은 발행된 다크 짝이 없어, 프리뷰가 그중 쓰는 값은 여전히 라이트 값에서 파생한 것이다. 시맨틱 alias(`text-primary` 등)의 다크 매핑도 문서화하지 않았다.
+- **시맨틱 토큰의 이름과 대응** — 토스의 컬러 시스템 글은 시맨틱 토큰을 Target·Role·Variant 규약으로 짓는다고만 밝히고(`fill-brand`는 이름 예시다) 토큰 목록이나 팔레트 대응은 싣지 않았다 [src:3]. `@toss/tds-colors`가 싣는 역할 이름은 adaptive 배경·선 이름뿐이고 [src:12], 텍스트·채움·보더 역할은 공개된 이름이 없다. 그래서 본 문서는 그런 역할을 참조 행으로 싣지 않고, 컴포넌트 설명에서 팔레트 토큰을 직접 가리킨다. 핸드오프 번들의 `colors_and_type.css`가 쓰던 `--tds-fg-*`·`--tds-bg-*`·`--tds-line-*` 이름은 토스 배포물에 없는 번들 고유 이름이라 싣지 않는다 — 프리뷰는 그 이름을 내부 CSS 변수로만 쓴다.
+- **다크 모드 역할 대응** — 다크 팔레트는 `@toss/tds-colors`의 `colors.dark.css`가 발행하며 [src:12], 본 문서는 이름이 대응하는 15개를 `dark-` 토큰으로 옮겼다. 번들 고유 step 11개(`blue-600`·`blue-700`, `grey-150`, `yellow-400`·`yellow-600`·`yellow-700`, `orange-300`·`orange-400`·`orange-500`, `red-600`, `green-500`)와 알파 토큰(`fg-tertiary` 등)은 발행된 다크 짝이 없어, 프리뷰가 그중 쓰는 값은 여전히 라이트 값에서 파생한 것이다. 발행 역할 가운데 다크 `greyBackground`의 값 oklch(0.174 0.006 286)은 다크 grey 단계가 아니어서 `dark-` 참조 행을 두지 않는다 [src:12].
 - **다크 모드 텍스트 대비** — `colors.dark.css`의 `blue500`·`red500`을 다크 표면 위 본문 크기 텍스트로 쓰면 WCAG 4.5:1에 못 미친다. 프리뷰에서 잰 값으로 `dark-blue-500` 텍스트는 `dark-blue-50` 위 3.84:1, `dark-grey-100` 위 3.87:1이고, `dark-red-500` 텍스트는 `dark-grey-100` 위 3.69:1이다. 토스가 다크 텍스트에 어느 step을 쓰는지는 시맨틱 다크 alias가 공개되지 않아 확인하지 못했으므로, 본 문서와 프리뷰는 발행값을 그대로 둔다.
 - **전체 컬러 step ladder** — `colors_and_type.css`에 노출된 step은 brand(blue 50/500/600/700), grey(50~900 + 150), yellow(300~700), orange(300~500), red(500/600), green(500), navy-900, brown(400~900)이다. 그 외 hue별 step(예: blue-100~400, green-50~400, red-50~400 등)과 teal·purple 팔레트는 `@toss/tds-colors`가 발행하지만 [src:12] 본 문서는 번들이 쓰는 step만 싣고 옮기지 않았다.
-- **철회된 부재 주장 2건 (2026-09-24)** — 「토큰 패키지도 값 표도 공개되지 않았다」(`## Colors` 이전 감사 메모)와 「나머지 hue별 step은 surface되지 않았다」(위 step ladder 항목의 이전 문구)는 번들 기준으로만 참이었다. 토스는 `@toss/tds-colors`로 라이트·다크 팔레트 값과 각 hue의 50~900 step을 발행한다 [src:12]. 위 다크 모드 항목의 alias 테이블 공백은 철회 대상이 아니다 — 그 패키지는 평면 hex 값만 싣고, semantic alias가 테마별로 어느 base step을 참조하는지는 싣지 않는다.
+- **철회된 부재 주장 2건 (2026-09-24)** — 「토큰 패키지도 값 표도 공개되지 않았다」(`## Colors` 이전 감사 메모)와 「나머지 hue별 step은 surface되지 않았다」(위 step ladder 항목의 이전 문구)는 번들 기준으로만 참이었다. 토스는 `@toss/tds-colors`로 라이트·다크 팔레트 값과 각 hue의 50~900 step을 발행한다 [src:12]. 위 시맨틱 토큰 항목의 공백은 철회 대상이 아니다 — 그 패키지는 팔레트와 adaptive 배경·선 값을 평면 hex로만 싣고, 시맨틱 토큰이 테마별로 어느 base step을 참조하는지는 싣지 않는다.
 - **Toss Product Sans 라이선스** — TPS는 자체 라이선스로 외부 재배포가 금지된다 [src:8]. 본 카탈로그를 적용하는 host 앱은 Pretendard로 substitute해야 하며, 메트릭은 거의 일치하지만 글리프 디테일(특수문자 디자인, fixed-width 숫자)에서는 차이가 발생할 수 있다.
 - **Token Studio 빌드 산출물 포맷** — 토큰은 Token Studio → GitHub PR → 플랫폼별 코드 자동 생성을 거치며 출력은 RGB/RGBA 포맷이다 [src:3]. 본 카탈로그는 OKLCH로 변환해 표기하나, 자동 생성 산출물의 정확한 포맷·툴체인 디테일은 공개되지 않았다.
 - **공식 breakpoint 토큰** — TDS Mobile은 mobile-first 정책상 breakpoint 토큰 자체가 공식 surface되지 않았다 [src:9]. 본 문서의 Responsive Behavior 분기점은 권장값이며 토스 공식 토큰이 아니다.
@@ -708,5 +679,5 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 9. https://developers-apps-in-toss.toss.im/design/components.html — 앱인토스 TDS 컴포넌트 목록 (Badge, Border, BottomCTA, Button, Asset, ListRow, ListHeader, Navigation, Paragraph, Tab, Top).
 10. https://toss.tech/article/introducing-toss-error-message-system — Toss 에러 메시지 시스템. Navigating error 원칙, 해요체 채택 의사결정, 개발자 라이브러리 + 디자이너 Framering.
 11. https://toss.im — 토스 공식 홈페이지. 슬로건·카피·비주얼 톤 보조 출처.
-12. https://www.npmjs.com/package/@toss/tds-colors — TDS 색 토큰 npm 패키지. `colors.light.css`·`colors.dark.css`가 `--adaptive*` 커스텀 프로퍼티로 팔레트 hex를 싣는다(blue·grey·green·red·orange·yellow·purple·teal 각 50~900).
-13. https://tossmini-docs.toss.im/tds-mobile/foundation/colors/ — TDS Mobile Colors 문서. `@toss/tds-colors` 사용법과 기본·배경 색상 팔레트를 이름과 hex로 보여 준다.
+12. https://www.npmjs.com/package/@toss/tds-colors — TDS 색 토큰 npm 패키지. `colors.light.css`·`colors.dark.css`가 `--adaptive*` 커스텀 프로퍼티로 팔레트 hex를 싣는다(blue·grey·green·red·orange·yellow·purple·teal 각 50~900). 같은 파일이 adaptive 배경·선 역할(`background`·`greyBackground`·`layeredBackground`·`floatBackground`·`dimmedBackground`·`hairlineBorder` 등)도 라이트·다크 hex 리터럴로 싣는다.
+13. https://tossmini-docs.toss.im/tds-mobile/foundation/colors/ — TDS Mobile Colors 문서. `@toss/tds-colors` 사용법과 기본·배경 색상 팔레트를 이름과 hex로 보여 준다. 배경 색상 견본은 `greyBackground`의 라이트 값을 hex가 아니라 `lightThemeGrey100`으로 적는다.
