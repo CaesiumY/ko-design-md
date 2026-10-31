@@ -45,54 +45,61 @@ const COLOR_VALUE =
 /** A reference row's value once YAML has undone its quotes: `{colors.x}`. */
 const COLOR_REF = /^\{colors\.([^{}]+)\}$/
 
-/** A `colors:` reference row that does not end at a colour. `kind` lets a
+/** One `colors:` reference row that does not end at a colour. `kind` lets a
  *  caller leave a cause another check already names to that check: the draft
  *  gate blocks a missing key (`unresolved-token-ref`) and a non-colour row
  *  (`non-oklch-token-value`) on their own, but nothing else sees a loop. */
+export interface ColorRefProblem {
+  kind: "missing" | "loop" | "not-colour"
+  message: string
+}
+
+/** Every reference row of one `colors:` map that does not end at a colour,
+ *  gathered so one run names them all — a missing key early in the map must
+ *  not hide a loop further down. */
 export class ColorRefError extends Error {
-  constructor(
-    readonly kind: "missing" | "loop" | "not-colour",
-    message: string
-  ) {
-    super(message)
+  constructor(readonly problems: ReadonlyArray<ColorRefProblem>) {
+    super(problems.map((p) => p.message).join("; "))
     this.name = "ColorRefError"
   }
 }
 
 /** The value the reference row `name` ends at, following references to
- *  references. Throws rather than return nothing: a role left out of the
- *  sidecar would pass `tokens:check`, which compares the sidecar with this
- *  function's own output. */
+ *  references — or what stops it. A loop also carries its members, sorted, so
+ *  the rows of one loop report it once between them; rows that run into the
+ *  same missing key report the same message, which is kept once too. */
 function resolveRef(
   valueOf: Map<string, string>,
   name: string,
   ref: string
-): string {
+): string | (ColorRefProblem & { loop?: string }) {
   const chain = [name]
   let from = name
   let key = ref
   for (;;) {
-    if (chain.includes(key)) {
-      throw new ColorRefError(
-        "loop",
-        `colors.${name} never reaches a colour: ${[...chain, key].join(" → ")} — point one row of the loop at a palette key that holds a colour`
-      )
+    const at = chain.indexOf(key)
+    if (at !== -1) {
+      return {
+        kind: "loop",
+        loop: chain.slice(at).sort().join(" "),
+        message: `colors.${name} never reaches a colour: ${[...chain, key].join(" → ")} — point one row of the loop at a palette key that holds a colour`,
+      }
     }
     chain.push(key)
     const value = valueOf.get(key)
     if (value === undefined) {
-      throw new ColorRefError(
-        "missing",
-        `colors.${from} points at colors.${key}, which colors: does not have — fix the name to the palette key it means`
-      )
+      return {
+        kind: "missing",
+        message: `colors.${from} points at colors.${key}, which colors: does not have — fix the name to the palette key it means`,
+      }
     }
     const next = value.match(COLOR_REF)?.[1]
     if (next === undefined) {
       if (COLOR_VALUE.test(value)) return value
-      throw new ColorRefError(
-        "not-colour",
-        `colors.${name} ends at colors.${key}, whose value ${value} is not a colour — point it at a palette key that holds oklch(…)`
-      )
+      return {
+        kind: "not-colour",
+        message: `colors.${name} ends at colors.${key}, whose value ${value} is not a colour — point it at a palette key that holds oklch(…)`,
+      }
     }
     from = key
     key = next
@@ -102,6 +109,10 @@ function resolveRef(
 function parseColors(rows: Array<RawLine>): Array<ColorToken> {
   const valueOf = new Map(rows.map((r) => [r.key, r.value]))
   const out: Array<ColorToken> = []
+  // Thrown, not skipped, once the map is read: a role left out of the sidecar
+  // would pass `tokens:check`, which compares the sidecar with this output.
+  const problems: Array<ColorRefProblem> = []
+  const reported = new Set<string>()
   for (const r of rows) {
     // dark-* primitives ARE extracted so the sidecar holds the full palette and a
     // token copy can reproduce dark mode. The card VIEW filters them to light at
@@ -113,6 +124,14 @@ function parseColors(rows: Array<RawLine>): Array<ColorToken> {
     // sidecar and the Tokens tab instead of living only in the md.
     const ref = r.value.match(COLOR_REF)?.[1]
     const raw = ref === undefined ? r.value : resolveRef(valueOf, r.key, ref)
+    if (typeof raw !== "string") {
+      const once = raw.loop ?? raw.message
+      if (!reported.has(once)) {
+        reported.add(once)
+        problems.push({ kind: raw.kind, message: raw.message })
+      }
+      continue
+    }
     // Anything else this drops — a bare token name, a number, a named colour,
     // an upper-case function — the draft validator blocks in `colors:`
     // (`non-oklch-token-value`, #597), so it never ships.
@@ -125,6 +144,7 @@ function parseColors(rows: Array<RawLine>): Array<ColorToken> {
     // token's bytes in the committed sidecars must not move.
     out.push(clean({ name: r.key, value, note: r.note, group: r.group, ref }))
   }
+  if (problems.length > 0) throw new ColorRefError(problems)
   return out
 }
 

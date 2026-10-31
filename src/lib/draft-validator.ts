@@ -2371,18 +2371,18 @@ function checkSidecarColours(
   try {
     carried = extractTokensFromMarkdown(raw).colors.length
   } catch (e) {
-    if (e instanceof ColorRefError && e.kind === "loop") {
-      return [
+    // A frontmatter the shared reader refuses is the read gate's to name; a
+    // missing key and a non-colour end are blocked by their own rules.
+    if (!(e instanceof ColorRefError)) return []
+    return e.problems
+      .filter((p) => p.kind === "loop")
+      .map((p) =>
         block(
           "unresolvable-colour-ref",
           "tokens",
-          `${e.message}. The token sidecar behind the Tokens tab and \`use-design-md\` carries each reference row as the colour it ends at, so a loop leaves those rows with no colour to carry.`
-        ),
-      ]
-    }
-    // A frontmatter the shared reader refuses is the read gate's to name; a
-    // missing key and a non-colour end are blocked by their own rules.
-    return []
+          `${p.message}. The token sidecar behind the Tokens tab and \`use-design-md\` carries each reference row as the colour it ends at, so a loop leaves those rows with no colour to carry.`
+        )
+      )
   }
   if (carried > 0) return []
   const listed = `${names

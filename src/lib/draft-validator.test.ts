@@ -2244,6 +2244,21 @@ describe("colour reference rows the sidecar cannot resolve", () => {
     expect(nonColour).toContain("non-oklch-token-value")
     expect(nonColour).not.toContain("unresolvable-colour-ref")
   })
+
+  // One run names every problem: a missing key earlier in the map must not
+  // hide a loop below it, and a loop is named once, not once per row in it.
+  it("names a loop even behind a missing key, once per loop", () => {
+    const rules = rulesFor(
+      draftWithFrontmatterColors([
+        "primary: oklch(0.62 0.19 258)",
+        'bg-canvas: "{colors.nope}"',
+        'fg-default: "{colors.fg-strong}"',
+        'fg-strong: "{colors.fg-default}"',
+      ])
+    )
+    expect(rules).toContain("unresolved-token-ref")
+    expect(rules.filter((r) => r === "unresolvable-colour-ref")).toHaveLength(1)
+  })
 })
 
 describe("token rules read the frontmatter maps", () => {

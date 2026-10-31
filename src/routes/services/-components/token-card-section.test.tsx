@@ -105,6 +105,34 @@ describe("TokenCardSection — role cards", () => {
     expect(cards).toHaveLength(40)
     expect(cards.filter((b) => b.closest("details"))).toHaveLength(0)
   })
+
+  // `primary: "{colors.x}"` is the brand-colour alias the catalogue allows
+  // under that spec name — the colour the brand publishes as its own, not a
+  // role from a role table. It sits with the palette, arrow and all.
+  it("keeps the primary brand-colour alias with the palette, not the roles", () => {
+    render(
+      <TokenCardSection
+        slug="demo"
+        tokens={tokens({
+          colors: [
+            ...gray,
+            { name: "primary", value: "oklch(0.6 0.19 258)", ref: "brand" },
+            role,
+          ],
+        })}
+      />
+    )
+
+    expect(screen.getByText("→ brand")).toBeTruthy()
+    expect(
+      screen.getByText(
+        (_, el) =>
+          el?.tagName === "P" && el.textContent === "12 Colors · 1 Roles"
+      )
+    ).toBeTruthy()
+    const roles = screen.getByText("Roles", { selector: "p" }).parentElement
+    expect(roles?.textContent).not.toContain("primary")
+  })
 })
 
 describe("TokenCardSection — dark roles", () => {

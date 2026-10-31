@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs"
 import { describe, expect, it } from "vitest"
 import { DESIGN_MD_TEMPLATE, readRepoFile } from "./skill-asset-paths"
-import { extractTokensFromMarkdown } from "./token-extractor"
+import { ColorRefError, extractTokensFromMarkdown } from "./token-extractor"
 
 /** A real catalog entry, frontmatter included — exactly what the codegen
  *  script feeds the extractor. Handing it only `doc.body` would read zero
@@ -228,6 +228,25 @@ describe("colors — reference rows", () => {
     ).toThrow(
       "colors.fg-disabled ends at colors.disabled-opacity, whose value 0.30 is not a colour"
     )
+  })
+
+  it("names every bad row in one throw, and a loop once for all its rows", () => {
+    let caught: ColorRefError | undefined
+    try {
+      extractTokensFromMarkdown(
+        fm(
+          "colors:",
+          "  gray-050: oklch(0.98 0 0)",
+          '  bg-canvas: "{colors.nope}"',
+          '  bg-page: "{colors.bg-canvas}"',
+          '  fg-default: "{colors.fg-strong}"',
+          '  fg-strong: "{colors.fg-default}"'
+        )
+      )
+    } catch (e) {
+      if (e instanceof ColorRefError) caught = e
+    }
+    expect(caught?.problems.map((p) => p.kind)).toEqual(["missing", "loop"])
   })
 
   it("keeps a reference row's group heading and trailing comment", () => {

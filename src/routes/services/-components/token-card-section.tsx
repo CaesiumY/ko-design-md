@@ -54,8 +54,12 @@ export function TokenCardSection({
   // palette curation below — a role named like a ramp step
   // (`color-background-canvas-200`) or painted a neutral grey is exactly what
   // curation folds away, and the role layer is what the reader came to scan.
-  const palette = cardColors.filter((c) => c.ref === undefined)
-  const roles = cardColors.filter((c) => c.ref !== undefined)
+  // `primary` is the exception: the catalogue allows that spec name only as the
+  // brand-colour alias, the colour the brand publishes as its own, so it stays
+  // with the palette (its card still shows the arrow).
+  const isRole = (c: ColorToken) => c.ref !== undefined && c.name !== "primary"
+  const palette = cardColors.filter((c) => !isRole(c))
+  const roles = cardColors.filter(isRole)
   const cardElevation = lightTokensOnly(tokens.elevation ?? [])
   if (
     cardColors.length === 0 &&
