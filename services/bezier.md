@@ -624,7 +624,7 @@ Bezier는 채널톡의 사내 제품 UI를 외부에 그대로 공개한 드문 
 
 ## Colors
 
-> **대조 결과·역할 표 추가(2026-11-01).** 아래 「Semantic」 표는 같은 패키지 0.6.0 이 발행한 역할 층 두 벌을 싣는다 — 기본 tier `dist/css/styles.css` 의 `--bg-*`·`--txt-*` 27개와 beta tier `dist/beta/css/styles.css` 의 `--color-*` 역할 163개이고, 둘 다 라이트(`:root`·`[data-bezier-theme="light"]`)·다크(`[data-bezier-theme="dark"]`) 블록에서 대응을 직접 옮겼다 [src:3]. beta 역할 163개는 두 테마 모두 beta 원시값 하나를 가리켜 326칸 전부가 frontmatter 참조 행이다. 가리키는 원시값 130개 가운데 이 문서에 이미 있던 88개는 상류와 ΔE ≤ 0.002 로 맞았고, 없던 42개는 상류 값으로 더했다. beta 테마 블록의 나머지 `--color-*` 183개(`-hovered` 173개·`chart-theme-default-*` 10개)는 상류가 두 테마 모두 원시값을 가리키지 않고 hex 를 직접 적어, 가리킬 팔레트 토큰이 상류에 없으므로 참조 행이 없고 표에도 싣지 않았다(알려진 공백 참조). 기본 tier 역할은 기본 tier 원시값을 가리키는데 이 절의 팔레트는 beta tier 라, 두 tier 를 원시값마다 hex 로 맞대 봤다 — `black-*`·`white-*` 알파 단계와 `grey-100/200/500`·`grey-100-80/90`·`grey-200-80` 은 같은 값이고, `grey-50/700/800/850/900` 과 그 알파 단계(`grey-50-80`·`grey-700-80`·`grey-800-80/90`·`grey-850-80`)는 다르다. 그래서 기본 tier 는 같은 값의 원시값을 가리키는 칸(38개)만 참조 행으로 싣고, 값이 다른 grey 단계를 가리키는 칸(16개)은 표에만 두었다. 참조 행이 아닌 팔레트 색 토큰 142개는 published `@channel.io/bezier-tokens` 0.6.0의 `dist/beta/css/styles.css`에서 나온다 [src:3]. 비공개 핸드오프 번들에서 온 43개도 이 배포물과 **전부 ΔE ≤ 0.02**로 일치한다 — 번들 값이 공개 배포물로 재현된다. 상류 원시값 블록에서 직접 옮긴 99개(accent 틴트 `{hue}-400-0/10/20`·`{hue}-300-0/18/30`·`blue-400-30`·`blue-300-45`·`orange-400-30` 69개, 불투명 `navy/purple/pink/teal-300` 4개, `grey-650/750/950` 3개, grey 알파 7개, `black-*`·`white-*` 알파 16개)는 상류 이름을 그대로 쓰고 알파는 이름이 말하는 백분율로 적었으며(`white-8` 은 `/ 0.08`), 줄 끝에 상류 hex를 적어 `audit:oklch`가 줄마다 대조한다(상류가 `#fff3`처럼 줄여 쓴 값은 8자리로 풀어 적었다). 같은 파일과 대조해 아래 「Accent global hues」의 틴트 서술을 상류 이름에 맞췄다 — 기본 `fill-accent-{hue}`는 10%(다크 `{hue}-300-18`)이고 20%는 `fill-accent-{hue}-heavy`(다크 `{hue}-300-30`)다 [src:3]. 다만 **tier를 구분해 읽어야 한다**: 이 절의 색은 beta tier이고, 아래 Typography·Rounded·Spacing 절의 값은 기본(stable) tier다. 같은 토큰 이름이 tier마다 다른 값을 가진다 — `grey-900`이 stable에서는 `#242428` ≈ `oklch(0.262 0.007 286)`, beta에서는 `#1d1d20` ≈ `oklch(0.232 0.006 286)`이다. beta에는 stable에 없는 `grey-25/300/400/600/650/750/950`이 있고, 반대로 `radius-44`·`radius-42-p`는 stable에만 있다.
+> **대조 결과·역할 표 추가(2026-11-01).** 아래 「Semantic」 표는 같은 패키지 0.6.0 이 발행한 역할 층 두 벌을 싣는다 — 기본 tier `dist/css/styles.css` 의 `--bg-*`·`--txt-*` 27개와 beta tier `dist/beta/css/styles.css` 의 `--color-*` 역할 346개이고, 둘 다 라이트(`:root`·`[data-bezier-theme="light"]`)·다크(`[data-bezier-theme="dark"]`) 블록에서 대응을 직접 옮겼다 [src:3]. beta 역할 가운데 163개는 두 테마 모두 beta 원시값 하나를 가리켜 326칸 전부가 frontmatter 참조 행이다. 가리키는 원시값 130개 가운데 이 문서에 이미 있던 88개는 상류와 ΔE ≤ 0.002 로 맞았고, 없던 42개는 상류 값으로 더했다. 나머지 183개(`-hovered` 173개와 hovered 가 아닌 `chart-theme-default-*` 10개)는 상류가 두 테마 모두 원시값을 가리키지 않고 hex 를 직접 적어 가리킬 팔레트 토큰이 상류에 없으므로, 참조 행 없이 표에만 OKLCH 로 실었다(hex 는 저장소 변환기로 옮겼다). 그중 19개(`fill-*-transparent-hovered` 계열)는 hex 가 원시값과 같지만 상류가 그 원시값을 가리키는 것은 아니어서, 칸에 그렇게 적고 참조 행을 두지 않았다. 기본 tier 역할은 기본 tier 원시값을 가리키는데 이 절의 팔레트는 beta tier 라, 두 tier 를 원시값마다 hex 로 맞대 봤다 — `black-*`·`white-*` 알파 단계와 `grey-100/200/500`·`grey-100-80/90`·`grey-200-80` 은 같은 값이고, `grey-50/700/800/850/900` 과 그 알파 단계(`grey-50-80`·`grey-700-80`·`grey-800-80/90`·`grey-850-80`)는 다르다. 그래서 기본 tier 는 같은 값의 원시값을 가리키는 칸(38개)만 참조 행으로 싣고, 값이 다른 grey 단계를 가리키는 칸(16개)은 표에만 두었다. 참조 행이 아닌 팔레트 색 토큰 142개는 published `@channel.io/bezier-tokens` 0.6.0의 `dist/beta/css/styles.css`에서 나온다 [src:3]. 비공개 핸드오프 번들에서 온 43개도 이 배포물과 **전부 ΔE ≤ 0.02**로 일치한다 — 번들 값이 공개 배포물로 재현된다. 상류 원시값 블록에서 직접 옮긴 99개(accent 틴트 `{hue}-400-0/10/20`·`{hue}-300-0/18/30`·`blue-400-30`·`blue-300-45`·`orange-400-30` 69개, 불투명 `navy/purple/pink/teal-300` 4개, `grey-650/750/950` 3개, grey 알파 7개, `black-*`·`white-*` 알파 16개)는 상류 이름을 그대로 쓰고 알파는 이름이 말하는 백분율로 적었으며(`white-8` 은 `/ 0.08`), 줄 끝에 상류 hex를 적어 `audit:oklch`가 줄마다 대조한다(상류가 `#fff3`처럼 줄여 쓴 값은 8자리로 풀어 적었다). 같은 파일과 대조해 아래 「Accent global hues」의 틴트 서술을 상류 이름에 맞췄다 — 기본 `fill-accent-{hue}`는 10%(다크 `{hue}-300-18`)이고 20%는 `fill-accent-{hue}-heavy`(다크 `{hue}-300-30`)다 [src:3]. 다만 **tier를 구분해 읽어야 한다**: 이 절의 색은 beta tier이고, 아래 Typography·Rounded·Spacing 절의 값은 기본(stable) tier다. 같은 토큰 이름이 tier마다 다른 값을 가진다 — `grey-900`이 stable에서는 `#242428` ≈ `oklch(0.262 0.007 286)`, beta에서는 `#1d1d20` ≈ `oklch(0.232 0.006 286)`이다. beta에는 stable에 없는 `grey-25/300/400/600/650/750/950`이 있고, 반대로 `radius-44`·`radius-42-p`는 stable에만 있다.
 
 Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3계층 토큰 구조다 [src:3][src:2]. 글로벌은 원시 색값이고, 시맨틱(`--bg-*`, `--txt-*`, `--color-*`)은 테마별로 다른 글로벌을 참조한다 [src:2][src:3]. `--bg-*`·`--txt-*` 는 기본 tier 의 시맨틱 이름이고, `--color-` 는 beta tier 의 이름 앞붙임이다 — beta 는 원시값(`--color-grey-900`)과 시맨틱(`--color-text-neutral`)이 같은 앞붙임을 쓴다 [src:3]. 특징은 navy·purple·pink·red·orange·yellow·olive·green·teal·cobalt·blue 11개 hue를 각각 300/400/500 명도 + 알파 변형으로 갖춘 무지개 액센트 팔레트다 [src:3][src:4].
 
@@ -636,7 +636,7 @@ Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3
 
 ### Semantic (라이트/다크 분리)
 
-시맨틱 토큰은 같은 이름이 테마별로 다른 글로벌을 참조한다 [src:3][src:2]. `@channel.io/bezier-tokens` 는 이 역할 층을 두 벌 발행한다 — 기본 tier 의 `--bg-*`·`--txt-*`(표면·텍스트 27개)와 beta tier 의 `--color-text-*`·`--color-fill-*` 등(163개)이다 [src:3]. 두 층은 이름 체계도 다르고(`txt-black-darkest` 대 `text-neutral`) 가리키는 원시값도 각자 자기 tier 의 것이다. 컴포넌트 문서가 부르는 이름은 beta 쪽이고(`--color-fill-accent-green-heavier` 등) [src:2], 기본 tier 이름도 패키지 기본 엔트리로 계속 발행되므로 둘 다 싣는다. 아래 표에서 beta 역할 이름은 상류 CSS 이름에서 `--color-` 를 뗀 것이다(`text-neutral` = `--color-text-neutral`). 칸이 참조 하나뿐이면 그 칸이 frontmatter 참조 행(다크는 `dark-` 앞붙임)으로도 실려 있다. 이 문서의 팔레트는 beta tier 라 beta 층은 모든 칸이 참조이고, 기본 tier 층에서 그 tier 원시값이 beta 팔레트와 값이 다른 칸은 산문으로 적고 참조 행을 두지 않았다.
+시맨틱 토큰은 같은 이름이 테마별로 다른 글로벌을 참조한다 [src:3][src:2]. `@channel.io/bezier-tokens` 는 이 역할 층을 두 벌 발행한다 — 기본 tier 의 `--bg-*`·`--txt-*`(표면·텍스트 27개)와 beta tier 의 `--color-text-*`·`--color-fill-*` 등(346개 — 원시값을 가리키는 163개와 hex 를 직접 적은 183개)이다 [src:3]. 두 층은 이름 체계도 다르고(`txt-black-darkest` 대 `text-neutral`) 가리키는 원시값도 각자 자기 tier 의 것이다. 컴포넌트 문서가 부르는 이름은 beta 쪽이고(`--color-fill-accent-green-heavier` 등) [src:2], 기본 tier 이름도 패키지 기본 엔트리로 계속 발행되므로 둘 다 싣는다. 아래 표에서 beta 역할 이름은 상류 CSS 이름에서 `--color-` 를 뗀 것이다(`text-neutral` = `--color-text-neutral`). 칸이 참조 하나뿐이면 그 칸이 frontmatter 참조 행(다크는 `dark-` 앞붙임)으로도 실려 있다. 이 문서의 팔레트는 beta tier 라 beta 층에서 원시값을 가리키는 163개는 모든 칸이 참조이고, hex 를 직접 적은 183개는 그 값을 OKLCH 리터럴로 적은 표에만 있다. 기본 tier 층에서는 그 tier 원시값이 beta 팔레트와 값이 다른 칸은 산문으로 적고 참조 행을 두지 않았다.
 
 - **컴포넌트 토큰**: `--color-fill-*`, `--color-text-*`, `--color-icon-*`, `--color-border-*`, `--color-surface-*`, `--color-state-action-light`, `--color-dim-absolute-black` 네임스페이스로 노출된다 [src:2].
 - foundation `color.mdx`는 토큰을 Global → Light → Dark 3섹션 스와치로 문서화하며, 라이트는 흰 패널·다크는 짙은 `--color-surface` 패널에 렌더해 양 테마 동시 검수를 전제한다 [src:2].
@@ -865,6 +865,199 @@ Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3
 | `elevation-small` | `{colors.black-8}` | `{colors.black-8}` |
 | `elevation-base` | `{colors.black-5}` | `{colors.black-5}` |
 | `elevation-base-inner` | `{colors.white-12}` | `{colors.white-12}` |
+
+#### beta tier hover 상태 — 상류가 hex 를 직접 적은 역할 (`*-hovered`, 173개)
+
+| 역할 | 라이트 | 다크 |
+| --- | --- | --- |
+| `text-action-hovered` | `oklch(0.511 0.228 278)` | `oklch(0.722 0.148 281)` |
+| `text-success-hovered` | `oklch(0.610 0.153 151)` | `oklch(0.765 0.157 150)` |
+| `text-highlight-hovered` | `oklch(0.616 0.155 249)` | `oklch(0.758 0.116 244)` |
+| `text-warning-hovered` | `oklch(0.672 0.159 53)` | `oklch(0.788 0.133 60)` |
+| `text-critical-hovered` | `oklch(0.604 0.186 21)` | `oklch(0.723 0.156 22)` |
+| `text-neutral-heaviest-hovered` | `oklch(0.226 0 0)` | `oklch(0.946 0 0)` |
+| `text-neutral-hovered` | `oklch(0.226 0 0 / 0.85)` | `oklch(0.946 0 0 / 0.80)` |
+| `text-neutral-light-hovered` | `oklch(0.226 0 0 / 0.60)` | `oklch(0.946 0 0 / 0.60)` |
+| `text-neutral-lighter-hovered` | `oklch(0.226 0 0 / 0.40)` | `oklch(0.946 0 0 / 0.40)` |
+| `text-accent-blue-hovered` | `oklch(0.511 0.228 278)` | `oklch(0.722 0.148 281)` |
+| `text-accent-cobalt-hovered` | `oklch(0.616 0.155 249)` | `oklch(0.758 0.116 244)` |
+| `text-accent-green-hovered` | `oklch(0.610 0.153 151)` | `oklch(0.765 0.157 150)` |
+| `text-accent-red-hovered` | `oklch(0.604 0.186 21)` | `oklch(0.723 0.156 22)` |
+| `text-accent-orange-hovered` | `oklch(0.672 0.159 53)` | `oklch(0.788 0.133 60)` |
+| `text-accent-yellow-hovered` | `oklch(0.740 0.150 82)` | `oklch(0.849 0.159 89)` |
+| `text-accent-olive-hovered` | `oklch(0.733 0.154 115)` | `oklch(0.852 0.185 115)` |
+| `text-accent-teal-hovered` | `oklch(0.652 0.111 191)` | `oklch(0.815 0.123 186)` |
+| `text-accent-navy-hovered` | `oklch(0.451 0.129 274)` | `oklch(0.687 0.098 276)` |
+| `text-accent-purple-hovered` | `oklch(0.553 0.220 296)` | `oklch(0.717 0.175 300)` |
+| `text-accent-pink-hovered` | `oklch(0.610 0.213 339)` | `oklch(0.754 0.178 335)` |
+| `text-absolute-white-hovered` | `oklch(0.946 0 0)` | `oklch(0.946 0 0)` |
+| `text-absolute-black-hovered` | `oklch(0.226 0 0)` | `oklch(0.145 0 0)` |
+| `text-inverse-hovered` | `oklch(0.946 0 0)` | `oklch(0.145 0 0 / 0.85)` |
+| `icon-action-hovered` | `oklch(0.511 0.228 278)` | `oklch(0.722 0.148 281)` |
+| `icon-success-hovered` | `oklch(0.610 0.153 151)` | `oklch(0.765 0.157 150)` |
+| `icon-highlight-hovered` | `oklch(0.616 0.155 249)` | `oklch(0.758 0.116 244)` |
+| `icon-warning-hovered` | `oklch(0.672 0.159 53)` | `oklch(0.788 0.133 60)` |
+| `icon-critical-hovered` | `oklch(0.604 0.186 21)` | `oklch(0.723 0.156 22)` |
+| `icon-neutral-hovered` | `oklch(0.226 0 0 / 0.40)` | `oklch(0.946 0 0 / 0.40)` |
+| `icon-neutral-heavy-hovered` | `oklch(0.226 0 0 / 0.60)` | `oklch(0.946 0 0 / 0.60)` |
+| `icon-neutral-heavier-hovered` | `oklch(0.226 0 0 / 0.85)` | `oklch(0.946 0 0 / 0.80)` |
+| `icon-accent-blue-hovered` | `oklch(0.511 0.228 278)` | `oklch(0.722 0.148 281)` |
+| `icon-accent-cobalt-hovered` | `oklch(0.616 0.155 249)` | `oklch(0.758 0.116 244)` |
+| `icon-accent-green-hovered` | `oklch(0.610 0.153 151)` | `oklch(0.765 0.157 150)` |
+| `icon-accent-red-hovered` | `oklch(0.604 0.186 21)` | `oklch(0.723 0.156 22)` |
+| `icon-accent-orange-hovered` | `oklch(0.672 0.159 53)` | `oklch(0.788 0.133 60)` |
+| `icon-accent-yellow-hovered` | `oklch(0.740 0.150 82)` | `oklch(0.849 0.159 89)` |
+| `icon-accent-olive-hovered` | `oklch(0.684 0.148 113)` | `oklch(0.852 0.185 115)` |
+| `icon-accent-teal-hovered` | `oklch(0.652 0.111 191)` | `oklch(0.815 0.123 186)` |
+| `icon-accent-navy-hovered` | `oklch(0.451 0.129 274)` | `oklch(0.687 0.098 276)` |
+| `icon-accent-purple-hovered` | `oklch(0.553 0.220 296)` | `oklch(0.717 0.175 300)` |
+| `icon-accent-pink-hovered` | `oklch(0.610 0.213 339)` | `oklch(0.754 0.178 335)` |
+| `icon-absolute-white-hovered` | `oklch(0.946 0 0)` | `oklch(0.946 0 0)` |
+| `icon-absolute-black-hovered` | `oklch(0.226 0 0)` | `oklch(0.145 0 0)` |
+| `icon-inverse-heavier-hovered` | `oklch(0.946 0 0)` | `oklch(0.145 0 0 / 0.85)` |
+| `fill-neutral-hovered` | `oklch(0.226 0 0 / 0.12)` | `oklch(0.946 0 0 / 0.18)` |
+| `fill-neutral-heaviest-hovered` | `oklch(0.226 0 0 / 0.85)` | `oklch(0.946 0 0)` |
+| `fill-neutral-heavier-hovered` | `oklch(0.226 0 0 / 0.40)` | `oklch(0.946 0 0 / 0.40)` |
+| `fill-neutral-heavy-hovered` | `oklch(0.226 0 0 / 0.22)` | `oklch(0.946 0 0 / 0.30)` |
+| `fill-neutral-light-hovered` | `oklch(0.226 0 0 / 0.08)` | `oklch(0.946 0 0 / 0.12)` |
+| `fill-neutral-lighter-hovered` | `oklch(0.226 0 0 / 0.05)` | `oklch(0.946 0 0 / 0.08)` |
+| `fill-neutral-lightest-hovered` | `oklch(0.226 0 0 / 0.02)` | `oklch(0.946 0 0 / 0.05)` |
+| `fill-neutral-transparent-hovered` | `oklch(0 0 0 / 0.05)` — hex 가 원시값 `black-5` 그대로, 참조 아님 | `oklch(1 0 0 / 0.05)` — hex 가 원시값 `white-5` 그대로, 참조 아님 |
+| `fill-action-hovered` | `oklch(0.511 0.228 278)` | `oklch(0.722 0.148 281)` |
+| `fill-action-light-hovered` | `oklch(0.511 0.228 278 / 0.30)` | `oklch(0.669 0.178 279 / 0.30)` |
+| `fill-action-lighter-hovered` | `oklch(0.511 0.228 278 / 0.15)` | `oklch(0.669 0.178 279 / 0.27)` |
+| `fill-action-transparent-hovered` | `oklch(0.554 0.214 280 / 0.10)` — hex 가 원시값 `blue-400-10` 그대로, 참조 아님 | `oklch(0.615 0.211 277 / 0.10)` — hex 가 원시값 `blue-300-10` 그대로, 참조 아님 |
+| `fill-success-hovered` | `oklch(0.610 0.153 151)` | `oklch(0.765 0.157 150)` |
+| `fill-success-light-hovered` | `oklch(0.610 0.153 151 / 0.30)` | `oklch(0.757 0.161 150 / 0.30)` |
+| `fill-success-lighter-hovered` | `oklch(0.610 0.153 151 / 0.15)` | `oklch(0.757 0.161 150 / 0.27)` |
+| `fill-success-transparent-hovered` | `oklch(0.652 0.168 150 / 0.10)` — hex 가 원시값 `green-400-10` 그대로, 참조 아님 | `oklch(0.724 0.162 150 / 0.10)` — hex 가 원시값 `green-300-10` 그대로, 참조 아님 |
+| `fill-highlight-hovered` | `oklch(0.616 0.155 249)` | `oklch(0.758 0.116 244)` |
+| `fill-highlight-light-hovered` | `oklch(0.616 0.155 249 / 0.30)` | `oklch(0.758 0.116 244 / 0.30)` |
+| `fill-highlight-lighter-hovered` | `oklch(0.616 0.155 249 / 0.15)` | `oklch(0.758 0.116 244 / 0.27)` |
+| `fill-highlight-transparent-hovered` | `oklch(0.643 0.150 248 / 0.10)` — hex 가 원시값 `cobalt-400-10` 그대로, 참조 아님 | `oklch(0.724 0.125 245 / 0.10)` — hex 가 원시값 `cobalt-300-10` 그대로, 참조 아님 |
+| `fill-warning-hovered` | `oklch(0.672 0.159 53)` | `oklch(0.788 0.133 60)` |
+| `fill-warning-light-hovered` | `oklch(0.672 0.159 53 / 0.30)` | `oklch(0.788 0.133 60 / 0.30)` |
+| `fill-warning-lighter-hovered` | `oklch(0.672 0.159 53 / 0.15)` | `oklch(0.788 0.133 60 / 0.27)` |
+| `fill-warning-transparent-hovered` | `oklch(0.698 0.156 55 / 0.10)` — hex 가 원시값 `orange-400-10` 그대로, 참조 아님 | `oklch(0.764 0.148 58 / 0.10)` — hex 가 원시값 `orange-300-10` 그대로, 참조 아님 |
+| `fill-critical-hovered` | `oklch(0.604 0.186 21)` | `oklch(0.723 0.156 22)` |
+| `fill-critical-light-hovered` | `oklch(0.604 0.186 21 / 0.30)` | `oklch(0.709 0.165 22 / 0.30)` |
+| `fill-critical-lighter-hovered` | `oklch(0.604 0.186 21 / 0.15)` | `oklch(0.709 0.165 22 / 0.27)` |
+| `fill-critical-transparent-hovered` | `oklch(0.634 0.177 20 / 0.10)` — hex 가 원시값 `red-400-10` 그대로, 참조 아님 | `oklch(0.677 0.180 23 / 0.10)` — hex 가 원시값 `red-300-10` 그대로, 참조 아님 |
+| `fill-grey-light-hovered` | `oklch(0.897 0.052 285)` | `oklch(0.274 0.007 286)` |
+| `fill-grey-hovered` | `oklch(0.934 0 0)` | `oklch(0.302 0.005 286)` |
+| `fill-grey-heavy-hovered` | `oklch(0.923 0.004 286)` | `oklch(0.323 0.009 286)` |
+| `fill-grey-heavier-hovered` | `oklch(0.901 0.003 286)` | `oklch(0.354 0.009 286)` |
+| `fill-accent-blue-hovered` | `oklch(0.511 0.228 278 / 0.15)` | `oklch(0.669 0.178 279 / 0.27)` |
+| `fill-accent-blue-heavy-hovered` | `oklch(0.511 0.228 278 / 0.30)` | `oklch(0.669 0.178 279 / 0.30)` |
+| `fill-accent-blue-heavier-hovered` | `oklch(0.511 0.228 278)` | `oklch(0.722 0.148 281)` |
+| `fill-accent-blue-transparent-hovered` | `oklch(0.554 0.214 280 / 0.10)` — hex 가 원시값 `blue-400-10` 그대로, 참조 아님 | `oklch(0.615 0.211 277 / 0.10)` — hex 가 원시값 `blue-300-10` 그대로, 참조 아님 |
+| `fill-accent-cobalt-hovered` | `oklch(0.616 0.155 249 / 0.15)` | `oklch(0.758 0.116 244 / 0.27)` |
+| `fill-accent-cobalt-heavy-hovered` | `oklch(0.616 0.155 249 / 0.30)` | `oklch(0.758 0.116 244 / 0.30)` |
+| `fill-accent-cobalt-heavier-hovered` | `oklch(0.616 0.155 249)` | `oklch(0.758 0.116 244)` |
+| `fill-accent-cobalt-transparent-hovered` | `oklch(0.643 0.150 248 / 0.10)` — hex 가 원시값 `cobalt-400-10` 그대로, 참조 아님 | `oklch(0.724 0.125 245 / 0.10)` — hex 가 원시값 `cobalt-300-10` 그대로, 참조 아님 |
+| `fill-accent-green-hovered` | `oklch(0.610 0.153 151 / 0.15)` | `oklch(0.757 0.161 150 / 0.27)` |
+| `fill-accent-green-heavy-hovered` | `oklch(0.610 0.153 151 / 0.30)` | `oklch(0.757 0.161 150 / 0.30)` |
+| `fill-accent-green-heavier-hovered` | `oklch(0.610 0.153 151)` | `oklch(0.765 0.157 150)` |
+| `fill-accent-green-transparent-hovered` | `oklch(0.652 0.168 150 / 0.10)` — hex 가 원시값 `green-400-10` 그대로, 참조 아님 | `oklch(0.724 0.162 150 / 0.10)` — hex 가 원시값 `green-300-10` 그대로, 참조 아님 |
+| `fill-accent-red-hovered` | `oklch(0.604 0.186 21 / 0.15)` | `oklch(0.709 0.165 22 / 0.27)` |
+| `fill-accent-red-heavy-hovered` | `oklch(0.604 0.186 21 / 0.30)` | `oklch(0.709 0.165 22 / 0.30)` |
+| `fill-accent-red-heavier-hovered` | `oklch(0.604 0.186 21)` | `oklch(0.723 0.156 22)` |
+| `fill-accent-red-transparent-hovered` | `oklch(0.634 0.177 20 / 0.10)` — hex 가 원시값 `red-400-10` 그대로, 참조 아님 | `oklch(0.677 0.180 23 / 0.10)` — hex 가 원시값 `red-300-10` 그대로, 참조 아님 |
+| `fill-accent-orange-hovered` | `oklch(0.672 0.159 53 / 0.15)` | `oklch(0.788 0.133 60 / 0.27)` |
+| `fill-accent-orange-heavy-hovered` | `oklch(0.672 0.159 53 / 0.30)` | `oklch(0.788 0.133 60 / 0.30)` |
+| `fill-accent-orange-heavier-hovered` | `oklch(0.672 0.159 53)` | `oklch(0.788 0.133 60)` |
+| `fill-accent-orange-transparent-hovered` | `oklch(0.698 0.156 55 / 0.10)` — hex 가 원시값 `orange-400-10` 그대로, 참조 아님 | `oklch(0.764 0.148 58 / 0.10)` — hex 가 원시값 `orange-300-10` 그대로, 참조 아님 |
+| `fill-accent-yellow-hovered` | `oklch(0.740 0.150 82 / 0.15)` | `oklch(0.849 0.159 89 / 0.27)` |
+| `fill-accent-yellow-heavy-hovered` | `oklch(0.740 0.150 82 / 0.30)` | `oklch(0.849 0.159 89 / 0.30)` |
+| `fill-accent-yellow-heavier-hovered` | `oklch(0.740 0.150 82)` | `oklch(0.849 0.159 89)` |
+| `fill-accent-yellow-transparent-hovered` | `oklch(0.789 0.161 82 / 0.10)` — hex 가 원시값 `yellow-400-10` 그대로, 참조 아님 | `oklch(0.824 0.160 88 / 0.10)` — hex 가 원시값 `yellow-300-10` 그대로, 참조 아님 |
+| `fill-accent-olive-hovered` | `oklch(0.684 0.148 113 / 0.15)` | `oklch(0.852 0.185 115 / 0.27)` |
+| `fill-accent-olive-heavy-hovered` | `oklch(0.684 0.148 113 / 0.30)` | `oklch(0.852 0.185 115 / 0.30)` |
+| `fill-accent-olive-heavier-hovered` | `oklch(0.684 0.148 113)` | `oklch(0.852 0.185 115)` |
+| `fill-accent-olive-transparent-hovered` | `oklch(0.730 0.160 113 / 0.10)` — hex 가 원시값 `olive-400-10` 그대로, 참조 아님 | `oklch(0.784 0.167 115 / 0.10)` — hex 가 원시값 `olive-300-10` 그대로, 참조 아님 |
+| `fill-accent-teal-hovered` | `oklch(0.652 0.111 191 / 0.15)` | `oklch(0.815 0.123 186 / 0.27)` |
+| `fill-accent-teal-heavy-hovered` | `oklch(0.652 0.111 191 / 0.30)` | `oklch(0.815 0.123 186 / 0.30)` |
+| `fill-accent-teal-heavier-hovered` | `oklch(0.652 0.111 191)` | `oklch(0.815 0.123 186)` |
+| `fill-accent-teal-transparent-hovered` | `oklch(0.690 0.118 190 / 0.10)` — hex 가 원시값 `teal-400-10` 그대로, 참조 아님 | `oklch(0.787 0.123 186 / 0.10)` — hex 가 원시값 `teal-300-10` 그대로, 참조 아님 |
+| `fill-accent-navy-hovered` | `oklch(0.451 0.129 274 / 0.15)` | `oklch(0.644 0.116 276 / 0.27)` |
+| `fill-accent-navy-heavy-hovered` | `oklch(0.451 0.129 274 / 0.30)` | `oklch(0.644 0.116 276 / 0.30)` |
+| `fill-accent-navy-heavier-hovered` | `oklch(0.451 0.129 274)` | `oklch(0.687 0.098 276)` |
+| `fill-accent-navy-transparent-hovered` | `oklch(0.469 0.147 273 / 0.10)` — hex 가 원시값 `navy-400-10` 그대로, 참조 아님 | `oklch(0.607 0.118 276 / 0.10)` — hex 가 원시값 `navy-300-10` 그대로, 참조 아님 |
+| `fill-accent-purple-hovered` | `oklch(0.553 0.220 296 / 0.15)` | `oklch(0.717 0.175 300 / 0.27)` |
+| `fill-accent-purple-heavy-hovered` | `oklch(0.553 0.220 296 / 0.30)` | `oklch(0.717 0.175 300 / 0.30)` |
+| `fill-accent-purple-heavier-hovered` | `oklch(0.553 0.220 296)` | `oklch(0.717 0.175 300)` |
+| `fill-accent-purple-transparent-hovered` | `oklch(0.591 0.208 297 / 0.10)` — hex 가 원시값 `purple-400-10` 그대로, 참조 아님 | `oklch(0.670 0.205 299 / 0.10)` — hex 가 원시값 `purple-300-10` 그대로, 참조 아님 |
+| `fill-accent-pink-hovered` | `oklch(0.610 0.213 339 / 0.15)` | `oklch(0.754 0.178 335 / 0.27)` |
+| `fill-accent-pink-heavy-hovered` | `oklch(0.610 0.213 339 / 0.30)` | `oklch(0.754 0.178 335 / 0.30)` |
+| `fill-accent-pink-heavier-hovered` | `oklch(0.610 0.213 339)` | `oklch(0.754 0.178 335)` |
+| `fill-accent-pink-transparent-hovered` | `oklch(0.637 0.208 338 / 0.10)` — hex 가 원시값 `pink-400-10` 그대로, 참조 아님 | `oklch(0.722 0.192 336 / 0.10)` — hex 가 원시값 `pink-300-10` 그대로, 참조 아님 |
+| `fill-absolute-white-hovered` | `oklch(0.946 0 0)` | `oklch(0.946 0 0)` |
+| `fill-absolute-white-light-hovered` | `oklch(0.946 0 0 / 0.30)` | `oklch(0.946 0 0 / 0.30)` |
+| `fill-absolute-white-transparent-hovered` | `oklch(1 0 0 / 0.05)` — hex 가 원시값 `white-5` 그대로, 참조 아님 | `oklch(1 0 0 / 0.05)` — hex 가 원시값 `white-5` 그대로, 참조 아님 |
+| `fill-absolute-black-hovered` | `oklch(0.226 0 0)` | `oklch(0.145 0 0)` |
+| `fill-absolute-black-light-hovered` | `oklch(0.226 0 0 / 0.30)` | `oklch(0.145 0 0 / 0.30)` |
+| `fill-absolute-black-transparent-hovered` | `oklch(0 0 0 / 0.05)` — hex 가 원시값 `black-5` 그대로, 참조 아님 | `oklch(0 0 0 / 0.05)` — hex 가 원시값 `black-5` 그대로, 참조 아님 |
+| `fill-bright-hovered` | `oklch(0.897 0.052 285)` | `oklch(0.505 0.009 286)` |
+| `border-neutral-hovered` | `oklch(0.226 0 0 / 0.12)` | `oklch(0.946 0 0 / 0.18)` |
+| `border-neutral-heavy-hovered` | `oklch(0.226 0 0 / 0.22)` | `oklch(0.946 0 0 / 0.30)` |
+| `border-neutral-heavier-hovered` | `oklch(0.226 0 0 / 0.40)` | `oklch(0.946 0 0 / 0.40)` |
+| `border-detach-hovered` | `oklch(0.946 0 0)` | `oklch(0.274 0.007 286)` |
+| `border-detach-highest-hovered` | `oklch(0.946 0 0)` | `oklch(0.354 0.009 286)` |
+| `border-detach-higher-hovered` | `oklch(0.946 0 0)` | `oklch(0.323 0.009 286)` |
+| `border-detach-high-hovered` | `oklch(0.946 0 0)` | `oklch(0.302 0.005 286)` |
+| `border-detach-low-hovered` | `oklch(0.934 0 0)` | `oklch(0.262 0.006 286)` |
+| `border-absolute-white-hovered` | `oklch(0.946 0 0)` | `oklch(0.946 0 0)` |
+| `surface-hovered` | `oklch(0.946 0 0)` | `oklch(0.274 0.007 286)` |
+| `surface-highest-hovered` | `oklch(0.946 0 0)` | `oklch(0.354 0.009 286)` |
+| `surface-higher-hovered` | `oklch(0.946 0 0)` | `oklch(0.323 0.009 286)` |
+| `surface-high-hovered` | `oklch(0.946 0 0)` | `oklch(0.302 0.005 286)` |
+| `surface-low-hovered` | `oklch(0.934 0 0)` | `oklch(0.262 0.006 286)` |
+| `surface-glass-hovered` | `oklch(0.946 0 0 / 0.90)` | `oklch(0.323 0.009 286 / 0.90)` |
+| `surface-glass-highest-hovered` | `oklch(0.901 0.003 286 / 0.90)` | `oklch(0.354 0.009 286 / 0.90)` |
+| `surface-glass-higher-hovered` | `oklch(0.923 0.004 286 / 0.90)` | `oklch(0.323 0.009 286 / 0.90)` |
+| `surface-glass-high-hovered` | `oklch(0.946 0 0 / 0.90)` | `oklch(0.302 0.005 286 / 0.90)` |
+| `dim-absolute-black-hovered` | `oklch(0.226 0 0 / 0.40)` | `oklch(0.145 0 0 / 0.40)` |
+| `dim-absolute-black-heavy-hovered` | `oklch(0.226 0 0 / 0.60)` | `oklch(0.145 0 0 / 0.60)` |
+| `dim-absolute-white-hovered` | `oklch(0.946 0 0 / 0.40)` | `oklch(0.946 0 0 / 0.40)` |
+| `dim-absolute-white-heavy-hovered` | `oklch(0.946 0 0 / 0.60)` | `oklch(0.946 0 0 / 0.60)` |
+| `gradient-green-hovered` | `oklch(0.610 0.153 151)` | `oklch(0.717 0.191 150)` |
+| `gradient-green-heavy-hovered` | `oklch(0.703 0.159 150)` | `oklch(0.765 0.157 150)` |
+| `state-default-hovered` | `oklch(0.226 0 0 / 0.22)` | `oklch(0.946 0 0 / 0.30)` |
+| `state-action-hovered` | `oklch(0.511 0.228 278)` | `oklch(0.722 0.148 281)` |
+| `state-action-light-hovered` | `oklch(0.511 0.228 278 / 0.30)` | `oklch(0.669 0.178 279 / 0.45)` |
+| `state-warning-hovered` | `oklch(0.672 0.159 53)` | `oklch(0.788 0.133 60)` |
+| `state-warning-light-hovered` | `oklch(0.672 0.159 53 / 0.30)` | `oklch(0.788 0.133 60 / 0.30)` |
+| `elevation-xlarge-hovered` | `oklch(0.226 0 0 / 0.30)` | `oklch(0.145 0 0 / 0.30)` |
+| `elevation-large-hovered` | `oklch(0.226 0 0 / 0.22)` | `oklch(0.145 0 0 / 0.22)` |
+| `elevation-medium-hovered` | `oklch(0.226 0 0 / 0.22)` | `oklch(0.145 0 0 / 0.22)` |
+| `elevation-small-hovered` | `oklch(0.226 0 0 / 0.12)` | `oklch(0.145 0 0 / 0.12)` |
+| `elevation-base-hovered` | `oklch(0.226 0 0 / 0.08)` | `oklch(0.145 0 0 / 0.08)` |
+| `elevation-base-inner-hovered` | `oklch(0.946 0 0 / 0.18)` | `oklch(0.946 0 0 / 0.18)` |
+| `chart-theme-default-10-hovered` | `oklch(0.816 0.050 226)` | `oklch(0.890 0.036 227)` |
+| `chart-theme-default-01-hovered` | `oklch(0.574 0.234 279)` | `oklch(0.686 0.168 284)` |
+| `chart-theme-default-02-hovered` | `oklch(0.817 0.096 194)` | `oklch(0.872 0.085 194)` |
+| `chart-theme-default-03-hovered` | `oklch(0.736 0.154 32)` | `oklch(0.813 0.103 31)` |
+| `chart-theme-default-04-hovered` | `oklch(0.546 0.109 9)` | `oklch(0.609 0.119 9)` |
+| `chart-theme-default-05-hovered` | `oklch(0.705 0.217 352)` | `oklch(0.772 0.160 349)` |
+| `chart-theme-default-06-hovered` | `oklch(0.655 0.210 315)` | `oklch(0.731 0.177 316)` |
+| `chart-theme-default-07-hovered` | `oklch(0.554 0.185 265)` | `oklch(0.626 0.166 266)` |
+| `chart-theme-default-08-hovered` | `oklch(0.722 0.143 256)` | `oklch(0.807 0.096 255)` |
+| `chart-theme-default-09-hovered` | `oklch(0.759 0.214 331)` | `oklch(0.834 0.141 330)` |
+
+#### beta tier 차트 색 — 상류가 hex 를 직접 적은 역할 (hovered 가 아닌 `chart-theme-default-*`, 10개)
+
+| 역할 | 라이트 | 다크 |
+| --- | --- | --- |
+| `chart-theme-default-10` | `oklch(0.856 0.042 226)` | `oklch(0.856 0.042 226)` |
+| `chart-theme-default-01` | `oklch(0.633 0.200 282)` | `oklch(0.633 0.200 282)` |
+| `chart-theme-default-02` | `oklch(0.845 0.090 194)` | `oklch(0.845 0.090 194)` |
+| `chart-theme-default-03` | `oklch(0.777 0.126 32)` | `oklch(0.777 0.126 32)` |
+| `chart-theme-default-04` | `oklch(0.574 0.115 9)` | `oklch(0.574 0.115 9)` |
+| `chart-theme-default-05` | `oklch(0.739 0.188 350)` | `oklch(0.739 0.188 350)` |
+| `chart-theme-default-06` | `oklch(0.694 0.192 316)` | `oklch(0.694 0.192 316)` |
+| `chart-theme-default-07` | `oklch(0.589 0.174 265)` | `oklch(0.589 0.174 265)` |
+| `chart-theme-default-08` | `oklch(0.767 0.117 256)` | `oklch(0.767 0.117 256)` |
+| `chart-theme-default-09` | `oklch(0.798 0.174 331)` | `oklch(0.798 0.174 331)` |
 
 #### alpha 엔트리
 
@@ -1252,7 +1445,6 @@ Bezier는 앱 셸/뷰포트 브레이크포인트를 토큰으로 발행하지 �
 - **hex→OKLCH 변환 오차.** 모든 색은 Bezier가 hex로 게시한 토큰을 OKLCH로 변환한 것이라 미세한 변환 드리프트가 있을 수 있다 — 정확한 원본 hex는 `@channel.io/bezier-tokens` 빌드 CSS를 직접 참조해야 한다 [src:3].
 - **beta 팔레트는 이제 검증됐다(2026-07-29 정정).** 이 항목은 원래 "beta 팔레트 값 상당수가 공개 URL로 직접 교차검증되지 않는다"고 적고 있었으나, 실제로 대조해 보니 당시 이 문서의 색 토큰 전부가 `@channel.io/bezier-tokens` 0.6.0의 beta 엔트리와 ΔE ≤ 0.02로 일치했다(Colors 절 참조). 남은 공백은 **컴포넌트 정본 스펙**(Banner/Toast 처리 등)이며, 이쪽은 Storybook 개별 docs를 `?path=/docs/<id>`로 열어 대조해야 한다 [src:3][src:2].
 - **시맨틱 다크 원시값은 이제 실렸다(2026-10-28 정정).** 이 항목은 원래 "다크 측이 참조하는 일부 white-알파 원시값의 정확한 단계는 코퍼스에서 전부 발췌되지 않았다"고 적고 있었으나, 상류 beta 엔트리에서 그 단계를 확인해 다크 글자·중립 채움이 가리키는 `white-8/20/40/60/80`, 라이트 중립 채움의 `black-5/15`, accent 채움 사다리를 frontmatter에 실었다(Colors 절 참조). beta 역할이 가리키지 않는 나머지 투명 단계 — 색상 알파 41개(`{hue}-300-10`·`{hue}-400-5`, blue 밖의 `{hue}-300-45`, blue·orange 밖의 `{hue}-400-30`)와 중립색 알파 12개(`grey-700-90`·`grey-900-0/90`·`white-22/30/50`·`black-50/70`·`grey-50/700/800/850-80`) — 는 싣지 않았다 [src:3].
-- **beta `--color-*` 183개는 싣지 않았다(2026-11-01).** 테마 블록의 `-hovered` 173개와 `chart-theme-default-*` 10개는 상류가 두 테마 모두 원시값을 거치지 않고 hex 를 직접 적어, 참조 행도 표도 두지 않았다. 그중 19개(`fill-*-transparent-hovered` 계열)는 hex 가 원시값(`{hue}-400-10`·`{hue}-300-10`·`black-5`·`white-5`)과 같지만 상류가 그 원시값을 가리키는 것이 아니다 [src:3].
 - **기본 tier 역할 일부는 참조 행이 없다(2026-11-01).** Colors 절 「Semantic」 표의 `bg-*`·`txt-*` 는 기본 tier 원시값을 가리키는데, 그중 `grey-50/700/800/850/900` 은 이 문서가 실은 beta 같은 이름 단계와 값이 달라, 그 단계를 가리키는 쪽(대부분 다크 표면)은 표에만 있다. 그 단계의 알파판(`grey-50-80`·`grey-700-80`·`grey-800-80/90`·`grey-850-80`)도 같은 이유로 표에만 있다. 이 16칸을 참조 행으로 실으려면 같은 이름의 beta 팔레트 값을 기본 tier 값으로 바꿔야 해서, beta 역할 층과 함께 쓰는 팔레트를 그대로 두었다 [src:3].
 - **모바일 리플로우 미관찰.** 제공 스크린샷이 데스크톱 Storybook 캔버스 한정이라, 실제 모바일 웹/네이티브에서의 컴포넌트 리플로우·접힘 거동은 직접 확인되지 않았다 [src:2].
 
