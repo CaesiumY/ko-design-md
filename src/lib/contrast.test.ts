@@ -1112,6 +1112,22 @@ describe("a background image is judged by every colour it can paint (#402)", () 
     expect(got.bg).toBe("#6c6c6c")
   })
 
+  it("reports a pass at the weakest the run could be, not at its cap", () => {
+    // The gradient line runs from 21:1 down to about 7:1, the plain line
+    // reads 10:1. Both ends pass, so the run passes — but it could read as low
+    // as the gradient line's weakest colour, and that is the number a pass is
+    // certain of. (A failing cap is the opposite: there the cap is certain.)
+    const got = textOn(
+      [
+        painted("linear-gradient(rgb(255, 255, 255), rgb(150, 150, 150))"),
+        opaque(255, 255, 255),
+      ],
+      [opaque(170, 170, 170)]
+    )
+    expect(got.verdict).toBe("pass")
+    expect(got.bg).toBe("#969696")
+  })
+
   it("holds a run whose plain line passes when a split line might be weaker", () => {
     const got = textOn(
       [opaque(255, 255, 255)],

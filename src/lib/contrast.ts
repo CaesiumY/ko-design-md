@@ -622,9 +622,11 @@ export function evaluateText(sample: RawTextSample): Measurement {
         : []),
     ]),
   ]
-  // A judged run reports the pair it is certain of; a held one, the weakest it
-  // could be.
-  const chosen = blockers.length === 0 ? ceiling : floor
+  // Which pair stands for the run. A failing run reports its cap: the run is
+  // certainly no stronger than that line, so the pair is one a fix has to
+  // move. Every other run — a pass, a borderline, a held one — reports the
+  // weakest it could be, the number its verdict still has to survive.
+  const chosen = blockers.length === 0 && capFails ? ceiling : floor
   const ratio = chosen.weakest.ratio
   return {
     ratio,

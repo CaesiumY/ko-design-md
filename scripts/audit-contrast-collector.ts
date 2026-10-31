@@ -31,8 +31,9 @@ export interface CollectedText {
   fg: RawColor
   /**
    * One entry per line box, each with the backdrop behind it AND the reasons
-   * that line alone cannot be read. `evaluateText` judges the weakest line and
-   * reports only its reasons.
+   * that line alone cannot be read. `evaluateText` judges the run from every
+   * line's range of possible backdrops and keeps only the reasons of the lines
+   * its verdict could rest on.
    */
   lines: Array<{ stack: Array<RawLayer>; blockers: Array<Blocker> }>
   /** Reasons that hold for the whole run, whichever line is judged. */
