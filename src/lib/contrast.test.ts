@@ -1060,6 +1060,32 @@ describe("a background image is judged by every colour it can paint (#402)", () 
     expect(got.bg).toBe("#6c6c6c")
   })
 
+  it("keeps the reasons of every line that could be the weakest", () => {
+    // The gradient line runs from 21:1 down to 4.62:1 and something covers it;
+    // the plain line reads 5.46:1. Both ends pass, but the covered line could
+    // be the weaker one, so its `overlay` still holds the run — exactly as it
+    // did when that line alone was ranked weakest.
+    const got = evaluateText({
+      fontSizePx: 16,
+      fontWeight: 400,
+      fg: opaque(0, 0, 0),
+      lines: [
+        {
+          stack: [
+            painted("linear-gradient(rgb(255, 255, 255), rgb(118, 118, 118))"),
+            opaque(255, 255, 255),
+          ],
+          blockers: ["overlay"],
+        },
+        { stack: [opaque(130, 130, 130)], blockers: [] },
+      ],
+      blockers: [],
+    })
+    expect(got.verdict).toBe("indeterminate")
+    expect(got.blockers).toEqual(["overlay"])
+    expect(got.bg).toBe("#767676")
+  })
+
   it("holds a run whose plain line passes when a split line might be weaker", () => {
     const got = textOn(
       [opaque(255, 255, 255)],
@@ -1072,6 +1098,28 @@ describe("a background image is judged by every colour it can paint (#402)", () 
     expect(got.blockers).toEqual(["gradient"])
     // The number a held reading carries is the weakest it could be.
     expect(got.bg).toBe("#646464")
+  })
+
+  it("counts the layer painting nothing where its image is clipped short", () => {
+    // `content-box` leaves a band the image does not reach, and the layer's own
+    // colour is clipped with it — so the band can show whatever is beneath,
+    // here black under black text.
+    const got = textOn([
+      {
+        onWhite: { r: 255, g: 255, b: 255 },
+        onBlack: { r: 255, g: 255, b: 255 },
+        opacity: 1,
+        image: {
+          value: "linear-gradient(rgb(255, 255, 255), rgb(255, 255, 255))",
+          repeat: "repeat",
+          clip: "content-box",
+          blend: "normal",
+        },
+      },
+      opaque(0, 0, 0),
+    ])
+    expect(got.verdict).toBe("indeterminate")
+    expect(got.blockers).toEqual(["gradient"])
   })
 
   it("holds an image as `image` and still reports the colour beneath it", () => {

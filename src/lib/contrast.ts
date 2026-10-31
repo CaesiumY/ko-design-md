@@ -518,6 +518,11 @@ function layerPaints(layer: RawLayer): Array<Rgba> | Blocker {
       paints = [...next.values()]
     }
   }
+  // Where an image is clipped short of the border box, the colour is clipped
+  // with it and the layer may paint nothing there.
+  if (image.kind === "colours" && image.layers.some((l) => l.clipped)) {
+    paints.push({ r: 0, g: 0, b: 0, a: 0 })
+  }
   return paints.map((c) => ({ ...c, a: c.a * layer.opacity }))
 }
 
@@ -591,9 +596,15 @@ export function evaluateText(sample: RawTextSample): Measurement {
   const settled =
     judge(floor.weakest.ratio, threshold) ===
     judge(ceiling.strongest, threshold)
-  const chosen = settled ? ceiling : floor
+  // The lines the verdict could rest on: the one that caps the run, and every
+  // line that could be weaker than that cap. A plain run has exactly one, its
+  // weakest line, as before — the comparison is strict so a tie keeps the
+  // first, also as before.
+  const contenders = readings.filter(
+    (r) => r === ceiling || r.weakest.ratio < ceiling.strongest
+  )
 
-  // The blockers describe the line the verdict rests on, plus whatever holds
+  // The blockers describe the lines the verdict rests on, plus whatever holds
   // for the whole run. NOT the union of every line's: that would let one
   // unreadable line withhold a verdict the rest of the run can support, which
   // hides failures rather than reporting them. The collector used to hand over
@@ -601,11 +612,16 @@ export function evaluateText(sample: RawTextSample): Measurement {
   const blockers = [
     ...new Set([
       ...sample.blockers,
-      ...chosen.blockers,
+      ...contenders.flatMap((r) => r.blockers),
       ...(settled ? [] : (["gradient"] as const)),
-      ...(chosen.rootTransparent ? (["root-transparent"] as const) : []),
+      ...(contenders.some((r) => r.rootTransparent)
+        ? (["root-transparent"] as const)
+        : []),
     ]),
   ]
+  // A judged run reports the pair it is certain of; a held one, the weakest it
+  // could be.
+  const chosen = blockers.length === 0 ? ceiling : floor
   const ratio = chosen.weakest.ratio
   return {
     ratio,

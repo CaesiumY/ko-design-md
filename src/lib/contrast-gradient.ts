@@ -43,6 +43,12 @@ export interface ImageLayer {
    * caller has to count that as one more colour the text can sit on.
    */
   covers: boolean
+  /**
+   * Whether `background-clip` stops short of the border box. The box's own
+   * colour is clipped by the same longhand, so in the band left over the
+   * element may paint nothing at all and show what is beneath it.
+   */
+  clipped: boolean
 }
 
 export type PaintedImage =
@@ -108,8 +114,8 @@ export function paintableColours(image: BackgroundImage): PaintedImage {
     if (colours === null) return BLOCKED_GRADIENT
     // Clipped short of the border box, the image leaves a band of the box it
     // does not reach — one more place the text could sit on the bare colour.
-    const covers = tiles(at(repeats, i)) && at(clips, i) === "border-box"
-    layers.push({ colours, covers })
+    const clipped = at(clips, i) !== "border-box"
+    layers.push({ colours, covers: tiles(at(repeats, i)) && !clipped, clipped })
   }
   return { kind: "colours", layers }
 }
