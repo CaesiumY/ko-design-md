@@ -9,7 +9,7 @@ logo: https://getdesign.kr/logos/baemin.svg
 colors:
   ## Brand mint
   # 현재 프라이머리 — 2024 Baemin 2.0 리브랜드 적용 [src:1]
-  # 배포 CSS `--ref-color-mint5` 는 #0CEFD3 = oklch(0.854 0.154 180) [src:14] — 아래 primary·mint-500 은 번들 값이라 다르다
+  # 배포 CSS `--ref-color-mint5` 는 #0CEFD3 (≈ oklch(0.854 0.154 180)) [src:14] — 아래 primary·mint-500 은 번들 값이라 다르다
   primary: oklch(0.88 0.18 178)   # 히어로 풀블리드·CTA·라이더 헬멧·카테고리 강조 · 배포 CSS `--ref-color-mint5` 와 값이 다름 — Known Gaps 참조
   primary-hover: oklch(0.69 0.13 184)   # 버튼 hover/pressed (mint-deep)
   primary-tint: oklch(0.97 0.05 178)   # 옅은 민트 배경 (체크리스트 등) · NEW·신규·환영 칩
