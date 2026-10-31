@@ -251,7 +251,7 @@ SOCAR Frame 2.0(쏘카프레임 2.0)는 쏘카의 디자인 시스템이며, 브
 
 > **역할 대조(2026-11-01).** 역할 → 팔레트 대응을 배포 코드와 다시 맞췄다. 공식 사이트가 싣는 Tailwind 프리셋 번들 [src:38]은 시맨틱 역할 40개를 모두 팔레트 단계 하나로 정의한다(`"text-strong": v["gray-1000"]` 꼴). 이 문서가 싣던 역할 39개와 대조해 **값 불일치는 0개**였고, 어긋난 것은 세 가지였다 — 상태 역할 12개가 발행 접두 없이 실려 있었고(`information-weak` → 발행명 `status-information-weak`), 발행 역할 `service-socar`(→ `blue-500`)가 빠져 있었고, `pressed-dark-regular` 의 값이 발행값(`gray-100` 의 66%)이 아니라 검정 8%였다. 셋 다 발행대로 고쳤다. 역할은 이제 아래 표와 frontmatter 참조 행 두 벌로 실리며, 역할이 가리키는 팔레트 단계 20개를 frontmatter 에 더했다 — 값은 [src:4] 의 hex 를 변환해 역할 줄에 있던 값 그대로다.
 >
-> **오버레이 3개는 역할 계층이 아니다.** `dimmed-regular`·`pressed-regular`·`pressed-dark-regular` 는 같은 번들이 팔레트를 가리키지 않고 rgba 리터럴 유틸리티(`.bg-dimmed-regular` 등)로 발행하며, Colors 표 [src:4]에는 없다. 그래서 역할 표에 넣지 않고 frontmatter 리터럴로 둔다.
+> **오버레이 3개는 역할 계층이 아니다.** `dimmed-regular`·`pressed-regular`·`pressed-dark-regular` 는 같은 번들이 팔레트를 가리키지 않고 rgba 리터럴 유틸리티(`.bg-dimmed-regular` 등)로 발행하며, Colors 표 [src:4]에는 없다. 그래서 참조 행을 싣지 않는다 — 아래 표에 알파 값만 적고, frontmatter 에는 리터럴로 둔다.
 >
 > **검증 방법.** `socarframe.socar.kr` 은 어떤 경로든 평범한 GET 에 같은 166자 셸을 돌려주므로 [src:4] 의 이름과 hex 는 페이지를 렌더해야 읽힌다. 역할이 어느 팔레트 단계를 가리키는지는 렌더된 표에도 없고 [src:38] 번들에만 있다. 프리셋을 담은 패키지 `@socar-inc/socar-frame-foundation` 은 공개 npm 레지스트리에 없다(E404).
 
@@ -303,6 +303,9 @@ SOCAR Frame 2.0은 공식 Colors 페이지에 전체 토큰 세트를 게시하�
 | `accent-cyan` | `{colors.cyan-500}` | 범주 태깅 |
 | `location-rental` | `{colors.blue-500}` | 지도 픽업 마커 |
 | `location-return` | `{colors.indigo-700}` | 지도 반납 마커 |
+| `dimmed-regular` | `{colors.gray-1000}` 의 44% — rgba 리터럴 유틸리티, 참조 아님 | 모달 · 시트 딤 |
+| `pressed-regular` | `{colors.gray-1000}` 의 6% — rgba 리터럴 유틸리티, 참조 아님 | 밝은 표면의 눌림 리플 |
+| `pressed-dark-regular` | `{colors.gray-100}` 의 66% — rgba 리터럴 유틸리티, 참조 아님 | 진한 fill 위의 눌림 리플 |
 
 ## Typography
 
