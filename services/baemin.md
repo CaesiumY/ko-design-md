@@ -9,17 +9,18 @@ logo: https://getdesign.kr/logos/baemin.svg
 colors:
   ## Brand mint
   # 현재 프라이머리 — 2024 Baemin 2.0 리브랜드 적용 [src:1]
-  primary: oklch(0.88 0.18 178)   # 히어로 풀블리드·CTA·라이더 헬멧·카테고리 강조
+  # 배포 CSS `--ref-color-mint5` 는 #0CEFD3 = oklch(0.854 0.154 180) [src:14] — 아래 primary·mint-500 은 번들 값이라 다르다
+  primary: oklch(0.88 0.18 178)   # 히어로 풀블리드·CTA·라이더 헬멧·카테고리 강조 · 배포 CSS `--ref-color-mint5` 와 값이 다름 — Known Gaps 참조
   primary-hover: oklch(0.69 0.13 184)   # 버튼 hover/pressed (mint-deep)
   primary-tint: oklch(0.97 0.05 178)   # 옅은 민트 배경 (체크리스트 등) · NEW·신규·환영 칩
   primary-legacy: oklch(0.72 0.10 187)   # 레거시 민트 (pre-2024, 호환용)
-  # Mint scale 050 → 900
+  # Mint scale 050 → 900 (번들 10단계 — 배포 CSS 는 mint1~mint8 8단계라 mint5 밖은 단계 대응이 분명하지 않다)
   mint-050: oklch(0.99 0.03 178)
   mint-100: oklch(0.96 0.07 178)
   mint-200: oklch(0.92 0.13 178)
   mint-300: oklch(0.91 0.16 178)
   mint-400: oklch(0.89 0.18 178)
-  mint-500: oklch(0.88 0.18 178)   # = primary
+  mint-500: oklch(0.88 0.18 178)   # = primary · 배포 CSS `--ref-color-mint5` 와 값이 다름 — Known Gaps 참조
   mint-600: oklch(0.69 0.13 184)   # = primary-hover
   mint-700: oklch(0.55 0.10 188)
   mint-800: oklch(0.40 0.07 191)
@@ -867,7 +868,7 @@ iOS 상태표시줄 아래 위치하는 검색 화면 헤더. 좌측 `←` back,
 - **WORK 폰트 미반영**: 2024 *Baemin 2.0* 리브랜드와 함께 공개된 자체 폰트 WORK는 외부 공개 배포가 확인되지 않아 본 문서 디스플레이 스택은 여전히 BM 한나체 시리즈를 기준으로 한다. 실제 신규 앱에서 헤드라인 폰트가 WORK로 교체됐는지 확인 필요 [src:1].
 - **민트 hex 표기 다원화**: 2010년대 후반 The PR 기사의 `#5EBEBB` 표기는 현행 디지털 프라이머리(`#0CEFD3` ≈ `oklch(0.854 0.154 180)`, Baemin 2.0)나 레거시 디지털 민트(`#2AC1BC`) 어느 쪽과도 정확히 일치하지 않는다 — 인쇄·홍보 자산용 다른 표기로 추정되며 디지털 토큰 적용 시 핸드오프 값을 우선한다 [src:3].
 - **마스코트 SVG 미포함**: 배달이친구들(독고배달이·메이배달이·냥이배달이 등 15종) 공식 SVG는 외부 배포되지 않아 핸드오프는 image-slot placeholder만 제공한다 [src:1][src:9][src:4].
-- **배포된 역할 계층 미수록 (2026-11-01)**: 배민 웹이 싣는 스타일시트는 팔레트 `--ref-color-*`(`mint1`~`mint8` 등 단계마다 라이트·다크 두 값)와 그 위의 역할 층 `--sem-base-color-*`·`--sem-mint-color-*`, 컴포넌트 층 `--com-*` 을 커스텀 프로퍼티로 배포한다 [src:14]. 역할 가운데 35개(`sem-base` 17 · `sem-mint` 18, 선언으로는 37개 — 두 역할은 테마마다 다른 단계를 가리킨다)는 팔레트 단계 하나를 가리키고(`--sem-mint-color-systemMainPrimary: var(--ref-color-mint5)` — `mint5` 의 값은 위 「민트 hex 표기 다원화」의 현행 디지털 프라이머리 hex 와 같다), 나머지는 hex·rgba·hsla 값이나 `transparent` 를 직접 갖는다. 이 계층은 상류에 있다 — 배포 코드가 그 이름으로 정의한 역할이라 카탈로그 정책상 본문 역할 표와 frontmatter 참조 행 두 벌로 실어야 하는 발행 계층이다. 다만 이 문서의 팔레트는 핸드오프 번들 값이라 배포 단계들과 이름도 값도 달라, 싣기 전에 팔레트를 배포 값으로 다시 실어야 한다. 그 일이 커서 사용자 결정(2026-11-01)으로 후속 작업으로 나눴다.
+- **배포된 역할 계층 미수록 (2026-11-01)**: 배민 웹이 싣는 스타일시트는 팔레트 `--ref-color-*`(`mint1`~`mint8` 등 단계마다 라이트·다크 두 값)와 그 위의 역할 층 `--sem-base-color-*`·`--sem-mint-color-*`, 컴포넌트 층 `--com-*` 을 커스텀 프로퍼티로 배포한다 [src:14]. 역할 가운데 35개(`sem-base` 17 · `sem-mint` 18, 선언으로는 37개 — 두 역할은 테마마다 다른 단계를 가리킨다)는 팔레트 단계 하나를 가리키고(`--sem-mint-color-systemMainPrimary: var(--ref-color-mint5)` — `mint5` 의 값은 위 「민트 hex 표기 다원화」의 현행 디지털 프라이머리 hex 와 같다), 나머지는 hex·rgba·hsla 값이나 `transparent` 를 직접 갖는다. 이 계층은 상류에 있다 — 배포 코드가 그 이름으로 정의한 역할이라 카탈로그 정책상 본문 역할 표와 frontmatter 참조 행 두 벌로 실어야 하는 발행 계층이다. 다만 이 문서의 팔레트는 핸드오프 번들 값이라 배포 단계들과 이름도 값도 달라, 싣기 전에 팔레트를 배포 값으로 다시 실어야 한다. 그 일이 커서 사용자 결정(2026-11-01)으로 후속 작업으로 나눴다. 단계 대응이 분명한 것은 브랜드 hex 와 같은 `mint5` ↔ `{colors.primary}`·`{colors.mint-500}` 뿐이고(번들 10단계 대 배포 8단계), 그 두 토큰 줄에 값이 다르다는 단서를 달았다. 사장님 사이트 [src:15] 도 같은 역할 어휘(`--sem-blue-color-system-main-primary` 처럼 이름만 케밥 표기)로 `--sem-blue-*` → `--ref-blue-*` 계층을 배포한다 — 팔레트를 가리키는 역할 18개(선언 19개). 같은 브랜드가 같은 체계의 다른 테마로 발행한 계층이라 같은 후속 작업에서 다루고, 어느 테마(`base`·`mint`·`blue`)를 실을지는 그 작업이 정한다.
 - **아이콘 시스템 단일화 미확인**: 핸드오프는 UI 라인 아이콘을 Lucide로 대체하되 SUBSTITUTION FLAG를 표시한다. 실제 배민은 (1) UI 라인 아이콘, (2) 3D 미니어처 카테고리, (3) 벡터 일러스트 배민스토어, (4) 손그림 라인 마케팅의 4종을 혼용 — 통합 아이콘 시스템은 공개되지 않았다 [src:1].
 
 ## References
