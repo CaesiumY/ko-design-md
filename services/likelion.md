@@ -193,13 +193,13 @@ rounded:
 | `bg-primary` | `{colors.primary-500}` | `--color-semantic-bg-primary` [src:15] |
 | `bg-primary-hovered` | `{colors.primary-600}` | `--color-semantic-bg-primary-hovered` [src:15] |
 | `bg-primary-weak` | `{colors.primary-50}` | `--color-semantic-bg-primary-weak` [src:15] |
-| `bg-primary-disabled` | `{colors.primary-500}` 값 × 24% 불투명도 | `basic-opacity-primary-24` 를 거친다 [src:15] |
-| `bg-weak-primary` | `{colors.primary-500}` 값 × 8% 불투명도 | `basic-opacity-primary-8` 을 거친다 [src:15] |
-| `bg-weak-primary-hovered` | `{colors.primary-500}` 값 × 16% 불투명도 | `basic-opacity-primary-16` 을 거친다 [src:15] |
-| `bg-weak-neutral-light` | `{colors.white}` 값 × 8% 불투명도 | `basic-opacity-neutral-light-8` 을 거친다 [src:15] |
-| `bg-weak-neutral-light-hovered` | `{colors.white}` 값 × 16% 불투명도 | `basic-opacity-neutral-light-16` 을 거친다 [src:15] |
-| `bg-weak-neutral-dark` | `{colors.black}` 값 × 8% 불투명도 | `basic-opacity-neutral-dark-8` 을 거친다 [src:15] |
-| `bg-weak-neutral-dark-hovered` | `{colors.black}` 값 × 16% 불투명도 | `basic-opacity-neutral-dark-16` 을 거친다 [src:15] |
+| `bg-primary-disabled` | `basic-opacity-primary-24` 를 거친다 — `{colors.primary-500}` 값 × 24% 불투명도 | `--color-semantic-bg-primary-disabled` [src:15] |
+| `bg-weak-primary` | `basic-opacity-primary-8` 을 거친다 — `{colors.primary-500}` 값 × 8% 불투명도 | `--color-semantic-bg-weak-primary` [src:15] |
+| `bg-weak-primary-hovered` | `basic-opacity-primary-16` 을 거친다 — `{colors.primary-500}` 값 × 16% 불투명도 | `--color-semantic-bg-weak-primary-hovered` [src:15] |
+| `bg-weak-neutral-light` | `basic-opacity-neutral-light-8` 을 거친다 — `{colors.white}` 값 × 8% 불투명도 | `--color-semantic-bg-weak-neutral-light` [src:15] |
+| `bg-weak-neutral-light-hovered` | `basic-opacity-neutral-light-16` 을 거친다 — `{colors.white}` 값 × 16% 불투명도 | `--color-semantic-bg-weak-neutral-light-hovered` [src:15] |
+| `bg-weak-neutral-dark` | `basic-opacity-neutral-dark-8` 을 거친다 — `{colors.black}` 값 × 8% 불투명도 | `--color-semantic-bg-weak-neutral-dark` [src:15] |
+| `bg-weak-neutral-dark-hovered` | `basic-opacity-neutral-dark-16` 을 거친다 — `{colors.black}` 값 × 16% 불투명도 | `--color-semantic-bg-weak-neutral-dark-hovered` [src:15] |
 | `bg-black` | `{colors.black}` | `--color-semantic-bg-black` [src:15] |
 | `bg-blue` | `{colors.blue-50}` | `--color-semantic-bg-blue` [src:15] |
 | `bg-green` | `{colors.green-50}` | `--color-semantic-bg-green` [src:15] |
@@ -379,6 +379,7 @@ Foundation의 Brand Logo 그룹은 컴포넌트가 아니라 자산 규정이지
 - Typography frontmatter의 `fontWeight` 값은 사이즈·굵기·자간 세 스케일이 각 스타일명에 정확히 어떻게 짝지어지는지가 개별 문서화돼 있지 않아 고른 예시 조합이다 [src:4] — 실제 값은 스타일별로 다를 수 있다. `lineHeight`는 코퍼스에 스케일 자체가 공개돼 있지 않아 관례적 비율을 적용한 추정값이며, 각 head row의 `# 미확인` 주석으로 표시해 뒀다.
 - 18개 컴포넌트의 사이즈/색상 변형, 호버·비활성 등 상태별 세부값이 이름 목록 외에는 개별 확인되지 않았다 [src:3].
 - Spacing 14개 중 9개, Radius 11개 중 8개만 코퍼스에서 개별 재확인됐다 — 나머지 스텝 값은 미확인이다 [src:2][src:4].
+- 색상 7계열(blue · green · light-green · pink · purple · red · yellow)은 상류에서 계열마다 50~900 의 10단계(모두 70단계)로 발행되지만, 이 항목은 시맨틱 역할이 가리키는 15단계(계열마다 50 · 500, 그리고 `red-600`)만 싣고 나머지 55단계는 싣지 않았다 [src:15].
 - 패키지 1.0.32 가 정의하는 `--spacing-primitive-*` 14개의 단계별 값은 아직 이 항목의 spacing 값과 대조하지 않았다 [src:15].
 - `@likelion-design/ui`·`@likelion-design/docs-mcp`의 라이선스 상태가 모호하다 — `license` 필드 null, 별도 LICENSE 파일 미게시, 명시적 금지 문구도 미발견으로, 명시적 허용도 명시적 금지도 없는 상태다 [src:6][src:7][src:2].
 
