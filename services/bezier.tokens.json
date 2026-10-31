@@ -442,6 +442,24 @@
       "group": "Neutral global"
     },
     {
+      "name": "grey-100-90",
+      "value": "oklch(0.976 0.001 286 / 0.90)",
+      "note": "#f7f7f8e6 · 라이트 bg-lounge",
+      "group": "Neutral global"
+    },
+    {
+      "name": "grey-100-80",
+      "value": "oklch(0.976 0.001 286 / 0.80)",
+      "note": "#f7f7f8cc · 라이트 bg-navi",
+      "group": "Neutral global"
+    },
+    {
+      "name": "grey-200-80",
+      "value": "oklch(0.952 0.001 286 / 0.80)",
+      "note": "#efeff0cc · 라이트 bg-gnb",
+      "group": "Neutral global"
+    },
+    {
       "name": "black-100",
       "value": "oklch(0 0 0)",
       "group": "Neutral global"
@@ -465,6 +483,12 @@
       "group": "Neutral global"
     },
     {
+      "name": "black-20",
+      "value": "oklch(0 0 0 / 0.20)",
+      "note": "#00000033 · 다크 bg-white-dim-light",
+      "group": "Neutral global"
+    },
+    {
       "name": "black-15",
       "value": "oklch(0 0 0 / 0.15)",
       "note": "#00000026 · 라이트 fill-neutral-heavy",
@@ -480,6 +504,12 @@
       "name": "black-5",
       "value": "oklch(0 0 0 / 0.05)",
       "note": "#0000000d · 라이트 fill-neutral-light",
+      "group": "Neutral global"
+    },
+    {
+      "name": "black-3",
+      "value": "oklch(0 0 0 / 0.03)",
+      "note": "#00000008 · 라이트 bg-black-lightest",
       "group": "Neutral global"
     },
     {
@@ -528,6 +558,240 @@
       "value": "oklch(1 0 0 / 0.08)",
       "note": "#ffffff14 · 다크 fill-neutral-light",
       "group": "Neutral global"
+    },
+    {
+      "name": "white-5",
+      "value": "oklch(1 0 0 / 0.05)",
+      "note": "#ffffff0d · 다크 bg-black-lightest",
+      "group": "Neutral global"
+    },
+    {
+      "name": "txt-white-normal",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "txt-black-dark",
+      "value": "oklch(0 0 0 / 0.40)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "black-40"
+    },
+    {
+      "name": "dark-txt-black-dark",
+      "value": "oklch(1 0 0 / 0.40)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "white-40"
+    },
+    {
+      "name": "txt-black-darker",
+      "value": "oklch(0 0 0 / 0.60)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "black-60"
+    },
+    {
+      "name": "dark-txt-black-darker",
+      "value": "oklch(1 0 0 / 0.60)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "white-60"
+    },
+    {
+      "name": "txt-black-darkest",
+      "value": "oklch(0 0 0 / 0.85)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "black-85"
+    },
+    {
+      "name": "dark-txt-black-darkest",
+      "value": "oklch(1 0 0 / 0.80)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "white-80"
+    },
+    {
+      "name": "txt-black-pure",
+      "value": "oklch(0 0 0)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "black-100"
+    },
+    {
+      "name": "dark-txt-black-pure",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "bg-grey-lighter",
+      "value": "oklch(0.976 0.001 286)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "grey-100"
+    },
+    {
+      "name": "bg-grey-light",
+      "value": "oklch(0.952 0.001 286)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "grey-200"
+    },
+    {
+      "name": "bg-grey-dark",
+      "value": "oklch(0.729 0.004 286)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "grey-500"
+    },
+    {
+      "name": "dark-bg-grey-dark",
+      "value": "oklch(0.729 0.004 286)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "grey-500"
+    },
+    {
+      "name": "dark-bg-grey-darkest",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "bg-black-lightest",
+      "value": "oklch(0 0 0 / 0.03)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "black-3"
+    },
+    {
+      "name": "dark-bg-black-lightest",
+      "value": "oklch(1 0 0 / 0.05)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "white-5"
+    },
+    {
+      "name": "bg-black-lighter",
+      "value": "oklch(0 0 0 / 0.05)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "black-5"
+    },
+    {
+      "name": "dark-bg-black-lighter",
+      "value": "oklch(1 0 0 / 0.08)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "white-8"
+    },
+    {
+      "name": "bg-black-light",
+      "value": "oklch(0 0 0 / 0.08)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "black-8"
+    },
+    {
+      "name": "dark-bg-black-light",
+      "value": "oklch(1 0 0 / 0.12)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "white-12"
+    },
+    {
+      "name": "bg-black-dark",
+      "value": "oklch(0 0 0 / 0.15)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "black-15"
+    },
+    {
+      "name": "dark-bg-black-dark",
+      "value": "oklch(1 0 0 / 0.20)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "white-20"
+    },
+    {
+      "name": "bg-black-darker",
+      "value": "oklch(0 0 0 / 0.40)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "black-40"
+    },
+    {
+      "name": "dark-bg-black-darker",
+      "value": "oklch(1 0 0 / 0.40)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "white-40"
+    },
+    {
+      "name": "bg-black-darkest",
+      "value": "oklch(0 0 0 / 0.60)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "black-60"
+    },
+    {
+      "name": "dark-bg-black-darkest",
+      "value": "oklch(1 0 0 / 0.60)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "white-60"
+    },
+    {
+      "name": "bg-lounge",
+      "value": "oklch(0.976 0.001 286 / 0.90)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "grey-100-90"
+    },
+    {
+      "name": "bg-header-float",
+      "value": "oklch(1 0 0 / 0.90)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "white-90"
+    },
+    {
+      "name": "bg-header",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "bg-navi",
+      "value": "oklch(0.976 0.001 286 / 0.80)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "grey-100-80"
+    },
+    {
+      "name": "bg-gnb",
+      "value": "oklch(0.952 0.001 286 / 0.80)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "grey-200-80"
+    },
+    {
+      "name": "bg-white-dim-light",
+      "value": "oklch(1 0 0 / 0.20)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "white-20"
+    },
+    {
+      "name": "dark-bg-white-dim-light",
+      "value": "oklch(0 0 0 / 0.20)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "black-20"
+    },
+    {
+      "name": "bg-white-dim-dark",
+      "value": "oklch(1 0 0 / 0.60)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "white-60"
+    },
+    {
+      "name": "dark-bg-white-dim-dark",
+      "value": "oklch(0 0 0 / 0.60)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "black-60"
+    },
+    {
+      "name": "bg-white-low",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "bg-white-normal",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "bg-white-high",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic bg-*·txt-* (stable tier)",
+      "ref": "white-100"
     }
   ],
   "typography": [

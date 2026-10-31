@@ -181,6 +181,18 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       expectRowsToMatch("banksalad", expected, refs, literals)
     },
   },
+  bezier: {
+    title: "stable-tier roles, single-reference cells, light and `dark-` twin",
+    check: () => {
+      const { literals, refs, tableRows } = load("bezier")
+      // The roles are the stable tier's; the palette is the beta tier's. A cell
+      // whose stable step differs in value from the beta step of the same name
+      // (`grey-900`) is written as prose and falls out here, as does one
+      // pointing at a step the entry does not carry (`black-3`, `grey-50-80`).
+      const expected = singleReferenceRoles(tableRows)
+      expectRowsToMatch("bezier", expected, refs, literals)
+    },
+  },
   "seed-design": {
     title: "every role, light and `dark-` twin",
     check: () => {

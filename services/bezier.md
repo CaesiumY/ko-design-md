@@ -3,7 +3,7 @@ name: 채널톡
 design_system_name: Bezier Design System
 slug: bezier
 category: developer
-last_updated: "2026-10-29"
+last_updated: "2026-11-01"
 created_at: "2026-06-03"
 lang: ko
 logo: https://getdesign.kr/logos/bezier.png
@@ -99,14 +99,20 @@ colors:
   grey-800: oklch(0.283 0.007 286)
   grey-850: oklch(0.261 0.004 286)
   grey-900: oklch(0.232 0.006 286)   # 다크 표면 기본 (beta는 더 짙은 grey-950까지 발행한다)
+  # 아래 grey 알파 3개·black-20/3·white-5 는 두 tier 가 같은 hex 로 발행한 원시값이다 — 기본 tier bg-* 가 가리킨다.
+  grey-100-90: oklch(0.976 0.001 286 / 0.90)   # #f7f7f8e6 · 라이트 bg-lounge
+  grey-100-80: oklch(0.976 0.001 286 / 0.80)   # #f7f7f8cc · 라이트 bg-navi
+  grey-200-80: oklch(0.952 0.001 286 / 0.80)   # #efeff0cc · 라이트 bg-gnb
   # 텍스트·보더·딤은 고정 grey가 아니라 alpha-black 위계로 쌓는다 (Bezier 시그니처)
   black-100: oklch(0 0 0)
   black-85: oklch(0 0 0 / 0.85)   # text-neutral (본문 기본)
   black-60: oklch(0 0 0 / 0.60)   # text-neutral-light
   black-40: oklch(0 0 0 / 0.40)   # text-neutral-lighter / icon-neutral
+  black-20: oklch(0 0 0 / 0.20)   # #00000033 · 다크 bg-white-dim-light
   black-15: oklch(0 0 0 / 0.15)   # #00000026 · 라이트 fill-neutral-heavy
   black-8: oklch(0 0 0 / 0.08)   # border-neutral
   black-5: oklch(0 0 0 / 0.05)   # #0000000d · 라이트 fill-neutral-light
+  black-3: oklch(0 0 0 / 0.03)   # #00000008 · 라이트 bg-black-lightest
   white-100: oklch(1 0 0)
   white-90: oklch(1 0 0 / 0.90)   # 라이트 surface-glass
   white-80: oklch(1 0 0 / 0.80)   # #ffffffcc · 다크 text-neutral / icon-neutral-heavier
@@ -115,6 +121,48 @@ colors:
   white-20: oklch(1 0 0 / 0.20)   # #ffffff33 · 다크 fill-neutral-heavy
   white-12: oklch(1 0 0 / 0.12)   # 다크 표면 위 보더
   white-8: oklch(1 0 0 / 0.08)   # #ffffff14 · 다크 fill-neutral-light
+  white-5: oklch(1 0 0 / 0.05)   # #ffffff0d · 다크 bg-black-lightest
+  ## Semantic bg-*·txt-* (stable tier)
+  # 기본 tier 역할 중 상류가 위 팔레트와 같은 값의 원시값 하나를 가리키는 쪽만 싣는다 [src:3].
+  # 기본 tier 의 grey-50/700/800/850/900 과 그 알파 단계는 위 beta 값과 달라 그 단계를 가리키는 쪽은 본문 표에만 둔다.
+  txt-white-normal: "{colors.white-100}"
+  txt-black-dark: "{colors.black-40}"
+  dark-txt-black-dark: "{colors.white-40}"
+  txt-black-darker: "{colors.black-60}"
+  dark-txt-black-darker: "{colors.white-60}"
+  txt-black-darkest: "{colors.black-85}"
+  dark-txt-black-darkest: "{colors.white-80}"
+  txt-black-pure: "{colors.black-100}"
+  dark-txt-black-pure: "{colors.white-100}"
+  bg-grey-lighter: "{colors.grey-100}"
+  bg-grey-light: "{colors.grey-200}"
+  bg-grey-dark: "{colors.grey-500}"
+  dark-bg-grey-dark: "{colors.grey-500}"
+  dark-bg-grey-darkest: "{colors.white-100}"
+  bg-black-lightest: "{colors.black-3}"
+  dark-bg-black-lightest: "{colors.white-5}"
+  bg-black-lighter: "{colors.black-5}"
+  dark-bg-black-lighter: "{colors.white-8}"
+  bg-black-light: "{colors.black-8}"
+  dark-bg-black-light: "{colors.white-12}"
+  bg-black-dark: "{colors.black-15}"
+  dark-bg-black-dark: "{colors.white-20}"
+  bg-black-darker: "{colors.black-40}"
+  dark-bg-black-darker: "{colors.white-40}"
+  bg-black-darkest: "{colors.black-60}"
+  dark-bg-black-darkest: "{colors.white-60}"
+  bg-lounge: "{colors.grey-100-90}"
+  bg-header-float: "{colors.white-90}"
+  bg-header: "{colors.white-100}"
+  bg-navi: "{colors.grey-100-80}"
+  bg-gnb: "{colors.grey-200-80}"
+  bg-white-dim-light: "{colors.white-20}"
+  dark-bg-white-dim-light: "{colors.black-20}"
+  bg-white-dim-dark: "{colors.white-60}"
+  dark-bg-white-dim-dark: "{colors.black-60}"
+  bg-white-low: "{colors.white-100}"
+  bg-white-normal: "{colors.white-100}"
+  bg-white-high: "{colors.white-100}"
 typography:
   # size — 토큰명 숫자 = px (핸드오프 colors_and_type.css는 `--font-size-11:11px`로 표기).
   # 아래 rem은 1rem=10px 루트 가정의 동치값(예: font-size-11 = 11px = 1.1rem@10px-root).
@@ -200,9 +248,9 @@ Bezier는 채널톡의 사내 제품 UI를 외부에 그대로 공개한 드문 
 
 ## Colors
 
-> **대조 결과·서술 정정(2026-10-28).** 이 절의 색 토큰 94개는 published `@channel.io/bezier-tokens` 0.6.0의 `dist/beta/css/styles.css`에서 나온다 [src:3]. 비공개 핸드오프 번들에서 온 43개도 이 배포물과 **전부 ΔE ≤ 0.02**로 일치한다 — 번들 값이 공개 배포물로 재현된다. 상류 원시값 블록에서 직접 옮긴 51개(accent 틴트 `{hue}-400-10/20`·`{hue}-300-18/30` 44개와 `white-8/20/40/60/80`·`black-5/15` 7개)는 상류 이름을 그대로 쓰고 알파는 이름이 말하는 백분율로 적었으며(`white-8` 은 `/ 0.08`), 줄 끝에 상류 hex를 적어 `audit:oklch`가 줄마다 대조한다(상류가 `#fff3`처럼 줄여 쓴 값은 8자리로 풀어 적었다). 같은 파일과 대조해 아래 「Accent global hues」의 틴트 서술을 상류 이름에 맞췄다 — 기본 `fill-accent-{hue}`는 10%(다크 `{hue}-300-18`)이고 20%는 `fill-accent-{hue}-heavy`(다크 `{hue}-300-30`)다 [src:3]. 다만 **tier를 구분해 읽어야 한다**: 이 절의 색은 beta tier이고, 아래 Typography·Rounded·Spacing 절의 값은 기본(stable) tier다. 같은 토큰 이름이 tier마다 다른 값을 가진다 — `grey-900`이 stable에서는 `#242428` ≈ `oklch(0.262 0.007 286)`, beta에서는 `#1d1d20` ≈ `oklch(0.232 0.006 286)`이다. beta에는 stable에 없는 `grey-25/300/400/600/650/750/950`이 있고, 반대로 `radius-44`·`radius-42-p`는 stable에만 있다.
+> **대조 결과·역할 표 추가(2026-11-01).** 아래 「Semantic」 표의 역할 27개는 같은 패키지 0.6.0 의 기본 tier `dist/css/styles.css` 가 라이트(`:root`·`[data-bezier-theme="light"]`)·다크(`[data-bezier-theme="dark"]`) 블록에 `--bg-*`·`--txt-*` 이름으로 정의한 것이고, 대응은 그 파일에서 직접 옮겼다 [src:3]. 이 역할들은 기본 tier 원시값을 가리키는데, 이 절의 팔레트는 beta tier 라 두 tier 를 원시값마다 hex 로 맞대 봤다 — `black-*`·`white-*` 알파 단계와 `grey-100/200/500`·`grey-100-80/90`·`grey-200-80` 은 같은 값이고, `grey-50/700/800/850/900` 과 그 알파 단계(`grey-50-80`·`grey-700-80`·`grey-800-80/90`·`grey-850-80`)는 다르다. 같은 값인데 이 문서에 없던 `black-3/20`·`white-5`·`grey-100-80/90`·`grey-200-80` 6개는 beta 값 그대로 팔레트에 더했다. 그래서 frontmatter 참조 행은 상류가 이 문서에 실린 같은 값의 원시값 하나를 가리키는 쪽(38개)만 싣고, 값이 다른 grey 단계를 가리키는 쪽은 표에만 두었다. 참조 행이 아닌 팔레트 색 토큰 100개는 published `@channel.io/bezier-tokens` 0.6.0의 `dist/beta/css/styles.css`에서 나온다 [src:3]. 비공개 핸드오프 번들에서 온 43개도 이 배포물과 **전부 ΔE ≤ 0.02**로 일치한다 — 번들 값이 공개 배포물로 재현된다. 상류 원시값 블록에서 직접 옮긴 57개(accent 틴트 `{hue}-400-10/20`·`{hue}-300-18/30` 44개, `white-5/8/20/40/60/80`·`black-3/5/15/20` 10개, `grey-100-80/90`·`grey-200-80` 3개)는 상류 이름을 그대로 쓰고 알파는 이름이 말하는 백분율로 적었으며(`white-8` 은 `/ 0.08`), 줄 끝에 상류 hex를 적어 `audit:oklch`가 줄마다 대조한다(상류가 `#fff3`처럼 줄여 쓴 값은 8자리로 풀어 적었다). 같은 파일과 대조해 아래 「Accent global hues」의 틴트 서술을 상류 이름에 맞췄다 — 기본 `fill-accent-{hue}`는 10%(다크 `{hue}-300-18`)이고 20%는 `fill-accent-{hue}-heavy`(다크 `{hue}-300-30`)다 [src:3]. 다만 **tier를 구분해 읽어야 한다**: 이 절의 색은 beta tier이고, 아래 Typography·Rounded·Spacing 절의 값은 기본(stable) tier다. 같은 토큰 이름이 tier마다 다른 값을 가진다 — `grey-900`이 stable에서는 `#242428` ≈ `oklch(0.262 0.007 286)`, beta에서는 `#1d1d20` ≈ `oklch(0.232 0.006 286)`이다. beta에는 stable에 없는 `grey-25/300/400/600/650/750/950`이 있고, 반대로 `radius-44`·`radius-42-p`는 stable에만 있다.
 
-Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3계층 토큰 구조다 [src:3][src:2]. 글로벌은 원시 색값이고, 시맨틱(`--bg-*`, `--txt-*`, `--color-*`)은 테마별로 다른 글로벌을 참조한다 [src:2]. 특징은 navy·purple·pink·red·orange·yellow·olive·green·teal·cobalt·blue 11개 hue를 각각 300/400/500 명도 + 알파 변형으로 갖춘 무지개 액센트 팔레트다 [src:3][src:4].
+Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3계층 토큰 구조다 [src:3][src:2]. 글로벌은 원시 색값이고, 시맨틱(`--bg-*`, `--txt-*`, `--color-*`)은 테마별로 다른 글로벌을 참조한다 [src:2][src:3]. `--bg-*`·`--txt-*` 는 기본 tier, `--color-*` 는 beta tier 의 시맨틱 이름이다 [src:3]. 특징은 navy·purple·pink·red·orange·yellow·olive·green·teal·cobalt·blue 11개 hue를 각각 300/400/500 명도 + 알파 변형으로 갖춘 무지개 액센트 팔레트다 [src:3][src:4].
 
 아래 값은 핸드오프 번들 `colors_and_type.css`가 정답으로 삼은 Bezier **beta 토큰 팔레트**를 ko-design-md 표준 OKLCH로 변환한 것이다 — 1차 액션은 indigo-violet 계열 `blue-400`이고, 원본이 hex로 발행돼 OKLCH 변환에 미세한 오차가 있을 수 있다 [src:3].
 
@@ -212,10 +260,38 @@ Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3
 
 ### Semantic (라이트/다크 분리)
 
-시맨틱 토큰은 같은 이름이 테마별로 다른 글로벌을 참조한다 [src:3][src:2]:
+시맨틱 토큰은 같은 이름이 테마별로 다른 글로벌을 참조한다 [src:3][src:2]. 기본 tier 의 표면(`bg-*`)·텍스트(`txt-*`) 역할 27개의 대응은 아래와 같다 [src:3]. 칸이 참조 하나뿐이면 그 칸이 frontmatter 참조 행(다크는 `dark-` 앞붙임)으로도 실려 있다. 상류가 가리키는 기본 tier 원시값이 이 문서의 beta 팔레트와 값이 다른 칸은 산문으로 적고 참조 행을 두지 않았다.
 
-- **표면**: `bg-white-normal`은 라이트에서 `{colors.white-100}` ↔ 다크에서 `{colors.grey-900}`. 라운지/헤더/네비 전용 표면(`bg-lounge`, `bg-header`, `bg-gnb`)도 테마별로 분기한다 [src:3].
-- **텍스트**: `txt-black-darkest`은 라이트에서 `{colors.black-85}` ↔ 다크에서 `{colors.white-80}`. `txt-black-darker`, `txt-black-dark` 식으로 같은 시맨틱 이름이 테마별 다른 원시값을 참조한다 [src:3].
+| 역할 | 라이트 | 다크 |
+| --- | --- | --- |
+| `txt-white-normal` | `{colors.white-100}` | 기본 tier `grey-900`(#242428 ≈ `oklch(0.262 0.007 286)`) — beta `{colors.grey-900}` 과 다른 값 |
+| `txt-black-dark` | `{colors.black-40}` | `{colors.white-40}` |
+| `txt-black-darker` | `{colors.black-60}` | `{colors.white-60}` |
+| `txt-black-darkest` | `{colors.black-85}` | `{colors.white-80}` |
+| `txt-black-pure` | `{colors.black-100}` | `{colors.white-100}` |
+| `bg-grey-lightest` | 기본 tier `grey-50`(#FCFCFC ≈ `oklch(0.991 0 0)`) — beta `{colors.grey-50}` 과 다른 값 | 기본 tier `grey-850`(#2A2B2D ≈ `oklch(0.289 0.004 265)`) — beta `{colors.grey-850}` 과 다른 값 |
+| `bg-grey-lighter` | `{colors.grey-100}` | 기본 tier `grey-800`(#313234 ≈ `oklch(0.317 0.004 265)`) — beta `{colors.grey-800}` 과 다른 값 |
+| `bg-grey-light` | `{colors.grey-200}` | 기본 tier `grey-700`(#464748 ≈ `oklch(0.397 0.002 248)`) — beta `{colors.grey-700}` 과 다른 값 |
+| `bg-grey-dim-lightest` | 기본 tier `grey-50-80` — beta 같은 이름 단계와 다른 값이라 싣지 않음 | 기본 tier `grey-850-80` — beta 같은 이름 단계와 다른 값이라 싣지 않음 |
+| `bg-grey-dark` | `{colors.grey-500}` | `{colors.grey-500}` |
+| `bg-grey-darkest` | 기본 tier `grey-900`(#242428 ≈ `oklch(0.262 0.007 286)`) — beta `{colors.grey-900}` 과 다른 값 | `{colors.white-100}` |
+| `bg-black-lightest` | `{colors.black-3}` | `{colors.white-5}` |
+| `bg-black-lighter` | `{colors.black-5}` | `{colors.white-8}` |
+| `bg-black-light` | `{colors.black-8}` | `{colors.white-12}` |
+| `bg-black-dark` | `{colors.black-15}` | `{colors.white-20}` |
+| `bg-black-darker` | `{colors.black-40}` | `{colors.white-40}` |
+| `bg-black-darkest` | `{colors.black-60}` | `{colors.white-60}` |
+| `bg-lounge` | `{colors.grey-100-90}` | 기본 tier `grey-800-90` — beta 같은 이름 단계와 다른 값이라 싣지 않음 |
+| `bg-header-float` | `{colors.white-90}` | 기본 tier `grey-800-80` — beta 같은 이름 단계와 다른 값이라 싣지 않음 |
+| `bg-header` | `{colors.white-100}` | 기본 tier `grey-800`(#313234 ≈ `oklch(0.317 0.004 265)`) — beta `{colors.grey-800}` 과 다른 값 |
+| `bg-navi` | `{colors.grey-100-80}` | 기본 tier `grey-800-80` — beta 같은 이름 단계와 다른 값이라 싣지 않음 |
+| `bg-gnb` | `{colors.grey-200-80}` | 기본 tier `grey-700-80` — beta 같은 이름 단계와 다른 값이라 싣지 않음 |
+| `bg-white-dim-light` | `{colors.white-20}` | `{colors.black-20}` |
+| `bg-white-dim-dark` | `{colors.white-60}` | `{colors.black-60}` |
+| `bg-white-low` | `{colors.white-100}` | 기본 tier `grey-800`(#313234 ≈ `oklch(0.317 0.004 265)`) — beta `{colors.grey-800}` 과 다른 값 |
+| `bg-white-normal` | `{colors.white-100}` | 기본 tier `grey-900`(#242428 ≈ `oklch(0.262 0.007 286)`) — beta `{colors.grey-900}` 과 다른 값 |
+| `bg-white-high` | `{colors.white-100}` | 기본 tier `grey-700`(#464748 ≈ `oklch(0.397 0.002 248)`) — beta `{colors.grey-700}` 과 다른 값 |
+
 - **컴포넌트 토큰**: `--color-fill-*`, `--color-text-*`, `--color-icon-*`, `--color-border-*`, `--color-surface-*`, `--color-state-action-light`, `--color-dim-absolute-black` 네임스페이스로 노출된다 [src:2].
 - foundation `color.mdx`는 토큰을 Global → Light → Dark 3섹션 스와치로 문서화하며, 라이트는 흰 패널·다크는 짙은 `--color-surface` 패널에 렌더해 양 테마 동시 검수를 전제한다 [src:2].
 
@@ -603,6 +679,7 @@ Bezier는 앱 셸/뷰포트 브레이크포인트를 토큰으로 발행하지 �
 - **hex→OKLCH 변환 오차.** 모든 색은 Bezier가 hex로 게시한 토큰을 OKLCH로 변환한 것이라 미세한 변환 드리프트가 있을 수 있다 — 정확한 원본 hex는 `@channel.io/bezier-tokens` 빌드 CSS를 직접 참조해야 한다 [src:3].
 - **beta 팔레트는 이제 검증됐다(2026-07-29 정정).** 이 항목은 원래 "beta 팔레트 값 상당수가 공개 URL로 직접 교차검증되지 않는다"고 적고 있었으나, 실제로 대조해 보니 당시 이 문서의 색 토큰 전부가 `@channel.io/bezier-tokens` 0.6.0의 beta 엔트리와 ΔE ≤ 0.02로 일치했다(Colors 절 참조). 남은 공백은 **컴포넌트 정본 스펙**(Banner/Toast 처리 등)이며, 이쪽은 Storybook 개별 docs를 `?path=/docs/<id>`로 열어 대조해야 한다 [src:3][src:2].
 - **시맨틱 다크 원시값은 이제 실렸다(2026-10-28 정정).** 이 항목은 원래 "다크 측이 참조하는 일부 white-알파 원시값의 정확한 단계는 코퍼스에서 전부 발췌되지 않았다"고 적고 있었으나, 상류 beta 엔트리에서 그 단계를 확인해 다크 글자·중립 채움이 가리키는 `white-8/20/40/60/80`, 라이트 중립 채움의 `black-5/15`, accent 채움 사다리를 frontmatter에 실었다(Colors 절 참조). 상류의 나머지 투명 단계(`{hue}-300-0/10/45`·`{hue}-400-0/5/30` 등)는 싣지 않았다 [src:3].
+- **기본 tier 역할 일부는 참조 행이 없다(2026-11-01).** Colors 절 「Semantic」 표의 `bg-*`·`txt-*` 는 기본 tier 원시값을 가리키는데, 그중 `grey-50/700/800/850/900` 은 이 문서가 실은 beta 같은 이름 단계와 값이 달라, 그 단계를 가리키는 쪽(대부분 다크 표면)은 표에만 있다. 그 단계의 알파판(`grey-50-80`·`grey-700-80`·`grey-800-80/90`·`grey-850-80`)도 같은 이유로 표에만 있다. beta tier 의 시맨틱 층(`--color-text-*`·`--color-fill-*` 등)은 역할 표로 옮기지 않았다 [src:3].
 - **모바일 리플로우 미관찰.** 제공 스크린샷이 데스크톱 Storybook 캔버스 한정이라, 실제 모바일 웹/네이티브에서의 컴포넌트 리플로우·접힘 거동은 직접 확인되지 않았다 [src:2].
 
 ## References
