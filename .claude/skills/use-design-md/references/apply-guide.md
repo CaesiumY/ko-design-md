@@ -77,9 +77,10 @@ corrects an earlier version of the entry — nothing to apply):
   comment, the Colors prose and Known Gaps confirm which it is.
 - A quoted `"{colors.x}"` value is a reference row: it resolves to key `x` in the same
   map, and `x` may itself be a reference — follow the chain to a literal value. Role rows
-  point at palette steps this way, light and dark alike. Like `fonts:`, reference rows
-  live only in the DESIGN.md frontmatter — the JSON token sidecar carries the palette
-  values without them, so build role and dark-pair wiring from the md.
+  point at palette steps this way, light and dark alike. The JSON token sidecar carries
+  each reference row as well: its `value` is the colour the chain ends at, and `ref`
+  names the key it points at (the first hop), so role and dark-pair wiring can be read
+  from either.
 - Wire both values to one token name in the target's dark-mode mechanism (a custom-property
   theme block, `prefers-color-scheme`, Tailwind's `dark:` variant, …), so components switch
   without code changes.

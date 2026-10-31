@@ -102,7 +102,6 @@ Google Labs 의 DESIGN.md 명세를 **공식 린터로** 판정한다. 명세를
     **발행한** 값이지 시맨틱 fill 역할이 아니다(toss 는 `fill-brand` 가 아니라 `blue-500`).
   - **근거는 커밋/PR 본문에** 둔다(인용 번호 + 상류 재확인). 감사 메모 자리가 아니다. 토큰 줄 주석은 같은
     이름의 다른 뜻 토큰(`text-primary` 등)과 가르는 단서가 필요할 때만 쓴다.
-  - 참조 행은 사이드카에 실리지 않아 **사이트 Tokens 탭과 `use-design-md` 는 이 별칭을 못 본다**.
   - `last_updated` 는 올리지 않고 `Skip-Last-Updated` 트레일러를 단다(`audit-notes.md` 의 날짜 항).
 - **새 항목은 컴포넌트를 명세의 `components:` 맵에도 싣는다**(기존 항목은 소급하지 않는다). 저작 규칙의
   정본은 `stitch-format.md` 의 "Component tokens in the frontmatter `components:` map" 이다. 본문 스펙 펜스

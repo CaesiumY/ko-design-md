@@ -45,6 +45,20 @@ const COLOR_VALUE =
 /** A reference row's value once YAML has undone its quotes: `{colors.x}`. */
 const COLOR_REF = /^\{colors\.([^{}]+)\}$/
 
+/** A `colors:` reference row that does not end at a colour. `kind` lets a
+ *  caller leave a cause another check already names to that check: the draft
+ *  gate blocks a missing key (`unresolved-token-ref`) and a non-colour row
+ *  (`non-oklch-token-value`) on their own, but nothing else sees a loop. */
+export class ColorRefError extends Error {
+  constructor(
+    readonly kind: "missing" | "loop" | "not-colour",
+    message: string
+  ) {
+    super(message)
+    this.name = "ColorRefError"
+  }
+}
+
 /** The value the reference row `name` ends at, following references to
  *  references. Throws rather than return nothing: a role left out of the
  *  sidecar would pass `tokens:check`, which compares the sidecar with this
@@ -59,21 +73,24 @@ function resolveRef(
   let key = ref
   for (;;) {
     if (chain.includes(key)) {
-      throw new Error(
+      throw new ColorRefError(
+        "loop",
         `colors.${name} never reaches a colour: ${[...chain, key].join(" → ")}`
       )
     }
     chain.push(key)
     const value = valueOf.get(key)
     if (value === undefined) {
-      throw new Error(
+      throw new ColorRefError(
+        "missing",
         `colors.${from} points at colors.${key}, which colors: does not have`
       )
     }
     const next = value.match(COLOR_REF)?.[1]
     if (next === undefined) {
       if (COLOR_VALUE.test(value)) return value
-      throw new Error(
+      throw new ColorRefError(
+        "not-colour",
         `colors.${name} ends at colors.${key}, whose value ${value} is not a colour`
       )
     }

@@ -73,7 +73,9 @@ GET https://raw.githubusercontent.com/CaesiumY/ko-design-md/main/services/<slug>
 Fetch it as SKILL.md "Fetching" says (the full command is in the Example below).
 
 JSON shape: `{ colors[], typography[], spacing[], radius[], elevation?[] }`. Each color
-has `name`/`value` (value usually OKLCH) plus optional `note`/`group`. `elevation` holds
+has `name`/`value` (value usually OKLCH) plus optional `note`/`group`/`ref`. `ref` marks a
+role reference row: it names the key the role points at, and `value` is already the colour
+that reference resolves to, so `colors[]` holds roles as well as the palette. `elevation` holds
 ready-to-paste CSS `box-shadow` values (comma-joined when a token stacks layers) and is
 **omitted** for entries that publish no shadow values in their frontmatter
 `elevation:` map — read it with `?? []`, not as a guaranteed array. getdesign.kr

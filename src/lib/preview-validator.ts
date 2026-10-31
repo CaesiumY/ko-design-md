@@ -1645,7 +1645,11 @@ export function validatePreviewPair(
     expectedLang = doc.frontmatter.lang
     mdLogo = doc.frontmatter.logo
     const tokens = extractTokensFromMarkdown(doc.raw)
-    colorValues = tokens.colors.map((c) => c.value)
+    // The palette only: a role reference row (`ref`) carries a palette value it
+    // shares, and counting it would scale the metric with the role layer.
+    colorValues = tokens.colors
+      .filter((c) => c.ref === undefined)
+      .map((c) => c.value)
     typographyNames = tokens.typography.map((t) => t.name)
     fontDisplaySrc = findFontDisplaySrc(doc.raw)
   } catch (e) {
