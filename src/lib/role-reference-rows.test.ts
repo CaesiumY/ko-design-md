@@ -199,6 +199,21 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       expectRowsToMatch("seed-design", expected, refs, literals)
     },
   },
+  gmarket: {
+    title: "light-only roles, each one palette step",
+    check: () => {
+      const { literals, refs, tableRows } = load("gmarket")
+      // GDS publishes no dark palette, so the table has no dark column and no
+      // role owes a `dark-` twin. Its third column is usage prose, which
+      // `single` never reads as a reference.
+      const expected = singleReferenceRoles(tableRows)
+      expect(
+        [...expected.keys()].filter((key) => key.startsWith("dark-")),
+        "gmarket: dark twins in a light-only system"
+      ).toEqual([])
+      expectRowsToMatch("gmarket", expected, refs, literals)
+    },
+  },
   greeting: {
     title: "roles light and `dark-` twin, brand alias off the text ladder",
     check: () => {

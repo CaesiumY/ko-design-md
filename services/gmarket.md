@@ -3,7 +3,7 @@ name: 지마켓
 design_system_name: Gmarket Design System
 slug: gmarket
 category: commerce
-last_updated: "2026-10-29"
+last_updated: "2026-11-01"
 created_at: "2026-05-23"
 lang: ko
 logo: https://getdesign.kr/logos/gmarket.png
@@ -17,8 +17,6 @@ colors:
   cta: oklch(0.373 0.209 264)   # Gmarket Blue, --cta, e커머스 전환 동선 한정 (#0028AC)
   blue-500: oklch(0.608 0.211 257)   # Informative Blue, --blue-500, 별점·공식 태그 신뢰색 (#067DFD)
   blue-800: oklch(0.381 0.192 263)   # Blue-800, 공식 브랜드 라벨 색상 (#0231A6)
-  # Brand — 캔버스
-  bg-white: oklch(1.000 0.000 0)   # Gmarket White, 전체 앱 기본 배경 (#FFFFFF)
   # Green 10단계
   green-50: oklch(0.968 0.041 143)   # (#E5FCE3)
   green-100: oklch(0.895 0.137 143)   # (#A5F4A0)
@@ -75,35 +73,39 @@ colors:
   gray-800: oklch(0.379 0.000 0)   # (#424242)
   gray-900: oklch(0.244 0.000 0)   # (#222222)
   black: oklch(0.000 0.000 0)   # (#000000)
-  # Semantic — text
-  text-cto: oklch(0.000 0.000 0)   # Black, 상품명·가격 숫자 한정 ('원'은 별도) (#000000)
-  text-primary: oklch(0.244 0.000 0)   # gray-900, 제목·본문 (#222222)
-  text-secondary: oklch(0.493 0.000 0)   # gray-700, 서브 본문 (#616161)
-  text-tertiary: oklch(0.699 0.000 0)   # gray-500, 설명·비활성 (할인 전 가격·품절) (#9E9E9E)
-  text-caption: oklch(0.792 0.000 0)   # gray-400, 법적 규제 텍스트 (#BDBDBD)
-  text-link: oklch(0.534 0.214 260)   # blue-600, 링크·텍스트 버튼 색상 (#0062E5)
-  text-on-color: oklch(1.000 0.000 0)   # white, 컬러 표면 위 텍스트 (#FFFFFF)
-  # Semantic — background / border
-  bg-off-white: oklch(0.970 0.000 0)   # gray-100, 페이지·모달 2차 배경 (#F5F5F5)
-  bg-card-ui: oklch(0.985 0.000 0)   # gray-50, 카드 UI 내 배경·푸터 (#FAFAFA)
-  bg-divider: oklch(0.944 0.000 0)   # gray-200, 디바이더 라인 (#EEEEEE)
-  border-active: oklch(0.244 0.000 0)   # gray-900, 폼 필드 포커스 보더 (#222222)
-  border-secondary: oklch(0.792 0.000 0)   # gray-400, secondary 버튼 보더 (#BDBDBD)
-  border-tertiary: oklch(0.899 0.000 0)   # gray-300, 콘텐츠 배경 보더 (#E0E0E0)
-  border-white: oklch(1.000 0.000 0)   # White, 썸네일 위 보더 (#FFFFFF)
+  white: oklch(1.000 0.000 0)   # Gmarket White (#FFFFFF)
+  # Semantic — text (상류 Text Color 표의 역할 → 팔레트)
+  text-cto: "{colors.black}"   # 상품명·가격 숫자 한정 ('원'은 별도)
+  text-primary: "{colors.gray-900}"   # 제목·본문
+  text-secondary: "{colors.gray-700}"   # 서브 본문
+  text-tertiary: "{colors.gray-500}"   # 설명·비활성 (할인 전 가격·품절)
+  text-caption: "{colors.gray-400}"   # 법적 규제 텍스트
+  # Semantic — background (상류 Background Color 표의 역할 → 팔레트)
+  bg-white: "{colors.white}"   # 전체 앱 기본 배경
+  bg-off-white: "{colors.gray-100}"   # 페이지·모달 2차 배경
+  bg-divider: "{colors.gray-200}"   # 디바이더 라인
+  bg-card-ui: "{colors.gray-50}"   # 카드 UI 내 배경·푸터
+  # Semantic — border (상류 Border Color 표의 역할 → 팔레트)
+  border-active: "{colors.gray-900}"   # 폼 필드 포커스 보더 (상류 토큰 표기는 border-acitve)
+  border-tertiary: "{colors.gray-300}"   # 콘텐츠 배경 보더
+  border-secondary: "{colors.gray-400}"   # secondary 버튼 보더
+  border-white: "{colors.white}"   # 썸네일 위 보더
+  # Semantic — status (상류 State Colors, 각 10단계 중 500이 기준)
+  positive: "{colors.green-500}"   # 쿠폰·사은품 혜택·활성화 텍스트
+  informative: "{colors.blue-500}"   # 별점·공식 태그 신뢰
+  warning: "{colors.red-500}"   # 취소·탈퇴 등 주의·에러
+  delay: "{colors.orange-500}"   # 배송 지연
+  # 카탈로그 보조 역할 — 상류 발행 이름이 아니다 (Claude Design 재현 번들이 붙인 이름, 참조 행 아님)
+  text-link: oklch(0.534 0.214 260)   # 상류 발행 이름 아님 · blue-600 값, 링크·텍스트 버튼 색상 (#0062E5)
+  text-on-color: oklch(1.000 0.000 0)   # 상류 발행 이름 아님 · white 값, 컬러 표면 위 텍스트 (#FFFFFF)
   # Semantic — 검정 알파 표면 (라이트 전용, 다크 값 미발행)
   number-indicator-bg: oklch(0.000 0.000 0 / 0.30)   # black 30%, 슬라이드 Number Indicator 알약 배경 [src:23] (#0000004d)
   overlay: oklch(0.000 0.000 0 / 0.50)   # black 50%, 다이얼로그 딤 오버레이 [src:12] (#00000080)
-  # Semantic — status (각 10단계 중 500이 기준)
-  positive: oklch(0.711 0.242 142)   # green-500, 쿠폰·사은품 혜택·활성화 텍스트
-  informative: oklch(0.608 0.211 257)   # blue-500, 별점·공식 태그 신뢰
-  warning: oklch(0.615 0.229 27)   # red-500, 취소·탈퇴 등 주의·에러
-  delay: oklch(0.668 0.210 39)   # orange-500, 배송 지연
-  # 각 상태색과 짝지는 표면 배경 틴트 (해당 컬러 10단계의 50)
-  positive-bg: oklch(0.968 0.041 143)   # green-50, positive 표면 배경 (#E5FCE3)
-  informative-bg: oklch(0.973 0.014 248)   # blue-50, informative 표면 배경 (#EEF7FF)
-  warning-bg: oklch(0.974 0.012 17)   # red-50, warning 표면 배경 (#FFF5F5)
-  delay-bg: oklch(0.977 0.011 49)   # orange-50, delay 표면 배경 (#FFF6F2)
+  # 각 상태색과 짝지는 표면 배경 틴트 (해당 컬러 10단계의 50) — 카탈로그 보조 이름, 상류 발행 이름 아님
+  positive-bg: oklch(0.968 0.041 143)   # 상류 발행 이름 아님 · green-50 값, positive 표면 배경 (#E5FCE3)
+  informative-bg: oklch(0.973 0.014 248)   # 상류 발행 이름 아님 · blue-50 값, informative 표면 배경 (#EEF7FF)
+  warning-bg: oklch(0.974 0.012 17)   # 상류 발행 이름 아님 · red-50 값, warning 표면 배경 (#FFF5F5)
+  delay-bg: oklch(0.977 0.011 49)   # 상류 발행 이름 아님 · orange-50 값, delay 표면 배경 (#FFF6F2)
   # Service Brand — Smile 시리즈 (G마켓과 동일 위계의 브랜드 색상)
   smile: oklch(0.315 0.103 279)   # 스마일배송·페이·카드 (#282864)
   smilepay-sub: oklch(0.379 0.154 276)   # 스마일페이 브랜드 배경 (#313191)
@@ -186,23 +188,47 @@ fonts:
 
 ## Brand & Style
 
+> **프로비넌스 정정(2026-11-01).** 이 문서가 GDS 판을 v1.3.0 으로 적던 것을 v1.0.0 으로 고쳤다. 종전 v1.3.0 은 brand/colors 페이지 머리에 붙은 그 페이지의 판 표기("1.3.0 · 26 Aug, 2021")였다 [src:1]. 다크 모드 미발행 주장이 인용하는 Color 페이지와 Foundation 페이지는 사이드바에 "Version 1.0.0 · 업데이트 2021.08.26" 을 적어서, 시스템 판을 1.0.0 으로 읽었다 [src:27][src:32].
+
 Gmarket Design System(GDS)은 지마켓(G마켓)의 디자인 시스템이며, 브랜드명(지마켓 / Gmarket)과 디자인 시스템명은 별개의 이름이다 [src:5][src:31]. 지마켓은 한국의 오픈마켓형 이커머스 서비스로, 고객과 상품·고객과 고객을 연결하는 쇼핑 경험의 "연결 주체(connection)"를 핵심 키워드로 삼는다 [src:5]. 브랜드 본질 가치는 'Connection(연결)'을 중심으로 Center(시장과 고객 일상의 중심), Forward(이커머스 흐름 선도), Variety(고객 각각의 삶에 맞는 다채로운 제안) 세 하위 가치로 구성된다 [src:5].
 
 GDS는 모바일 앱(iOS·Android, 1차 표면)·모바일 웹·PC 웹 전반의 디자인 일관성 표준화를 목표로 하며, 모바일 우선(mobile-first)으로 설계됐다 [src:33][src:31]. 운영 원칙은 일관성(브랜드 정체성·사용성), 확장성(공동 라이브러리 자산), 효율성(재사용성·생산성) 세 가지다 [src:31]. 시각 톤은 밝고 깨끗하며 정렬된 인상이다 — 기본 캔버스가 흰색(`{colors.bg-white}`)이고 그림자를 매우 절제하며, 채도 높은 그린을 포인트로 쓰는 점이 이커머스 시스템치고 라우드한 편이다 [src:27][src:33]. 브랜드 서체 Gmarket Sans는 직관적인 쇼핑 경험을 단순하고 직선적인 형태로 표현하며, 네모 틀에 꽉 채운 기하학적 글자꼴로 정렬된 인상과 친근한 인상을 동시에 준다 [src:4].
 
 주 사용자는 한국 이커머스 오픈마켓 이용자이며, 시안 작업의 기본 타입페이스가 안드로이드 기준(국문 Noto Sans KR, 영문·숫자 Roboto)으로 잡혀 있어 한국 모바일 시장의 안드로이드 우세를 반영한다 [src:30]. 스마일페이·스마일카드·스마일스탬프·스마일클럽·캐치 등 스마일 시리즈가 G마켓 브랜드와 동일 위계의 서브브랜드 색상 체계를 갖는 점, 검색 광고에 'AD' 대신 한글 '광고' 라벨을 쓰는 점이 한국 시장 맥락에 맞춘 설계 결정이다 [src:27][src:14].
 
-**GDS는 라이트 모드 전용 시스템이다.** v1.3.0 공식 사이트와 토큰 CSS 어디에도 다크 팔레트가 발행되어 있지 않으며, 모든 표면 토큰은 흰색 캔버스(`{colors.bg-white}`)를 전제로 한다 [src:27][src:32]. 이 문서는 다크 토큰을 추정하지 않으며, 다크 테마가 필요하다면 다운스트림에서 별도 근거 위에 정의해야 한다.
+**GDS는 라이트 모드 전용 시스템이다.** 공식 사이트(사이드바 표기 Version 1.0.0)와 토큰 CSS 어디에도 다크 팔레트가 발행되어 있지 않으며, 모든 표면 토큰은 흰색 캔버스(`{colors.bg-white}`)를 전제로 한다 [src:27][src:32]. 이 문서는 다크 토큰을 추정하지 않으며, 다크 테마가 필요하다면 다운스트림에서 별도 근거 위에 정의해야 한다.
 
 ## Colors
 
-> **알파 토큰 정정·추가(2026-10-28).** 슬라이드 번호 알약 배경을 black 40% 에서 **30%** 로 고치고 `number-indicator-bg` 로 실었다 — Slides 페이지 그림 9장에 그려진 알약 10개가 모두 검정 30% 채움(`fill-opacity="0.3"`)이고, 40% 는 발행물에서 확인되지 않는 값이었다 [src:23]. 다이얼로그 딤 오버레이 black 50% 도 `overlay` 로 실었다 — 페이지 글("컬러 Black, Opacity 50%")과 그림이 함께 뒷받침한다 [src:12]. 두 값 모두 라이트 전용이며 다크 값은 발행되지 않았다.
+> **역할 대응 대조 결과(2026-11-01).** Color 페이지가 Figma 속성 표로 발행한 역할 13개(Text 5 · Background 4 · Border 4)와 State Colors 4개를 상류와 다시 맞췄다 — 17개 모두 아래 표의 팔레트 단계와 일치했고 어긋난 대응은 없다 [src:27]. 그래서 frontmatter 의 역할을 값 대신 그 단계를 가리키는 참조 행으로 바꿨고, 두 역할이 가리키는 White 를 팔레트 `white` 로 실었다(상류 Black & White 팔레트) [src:27]. 상류는 폼 필드 보더 토큰을 `border-acitve` 로 표기하는데, 이 문서는 오기로 보고 `border-active` 로 싣는다 [src:27]. `text-link` · `text-on-color` · 상태 배경 틴트 4종(`positive-bg` 등)은 상류 발행 이름이 아니라 Claude Design 재현 번들이 붙인 이름이라 참조 행으로 싣지 않고 값으로 둔다. 알파 표면 `number-indicator-bg`(black 30%) · `overlay`(black 50%)는 팔레트 단계가 아니라 불투명도를 거친 값이라 역할 표 밖에 둔다 [src:23][src:12].
 
 GDS 컬러는 "Hex Code보다 컬러명 사용"을 권장하며, WCAG 2.0 기반으로 컬러별 10단계(50–900)를 지원하고 각 컬러의 주요 색상은 500이다 [src:27]. 아래 값은 공개된 hex 토큰을 ko-design-md 표준에 맞게 OKLCH로 변환한 것이며, **라이트 모드 전용으로 다크 변형은 존재하지 않는다** [src:27][src:32].
 
 브랜드 핵심 색상은 의도적으로 구별되는 그린 1색·블루 3색 구조다 — 세 블루(`cta`, `blue-500`, `blue-800`)는 각각 전환 동선·신뢰 정보·브랜드 라벨이라는 다른 역할을 가지므로 하나로 병합하지 않는다 [src:1][src:27][src:33].
 
 `{colors.green-500}`(Gmarket Green)이 색상 축이며, positive/active-state(쿠폰·할인 혜택·체크박스 checked·토글 on·바텀 내비 활성 아이콘·탭 숫자)에 쓴다 [src:27][src:32]. 단, **primary 액션·선택(selected) 상태의 중립색은 `{colors.text-primary}`(gray-900)** — primary 버튼·기본 필터칩 active·탭 Selection Indicator·라디오 단일선택은 green이 아니라 gray-900이다 [src:10][src:21]. 즉 색은 gray-900(선택/primary)·green(positive)·`{colors.cta}`(전환) 셋이 역할을 나눠 가진다. 세 블루는 역할이 분리되어 있다 — `{colors.cta}`는 깊은 네이비-블루로 buy/pay 버튼·장바구니 뱃지 등 전환 동선 한정, `{colors.blue-500}`은 별점·공식 태그 등 신뢰(informative) 색상, `{colors.blue-800}`은 아이템 카드의 공식 브랜드 라벨 색상이다 [src:1][src:27][src:16]. 상태색은 Positive·Informative·Warning·Delay 4종을 각 컬러 10단계의 500으로 지정한다 [src:27]. 회색 램프는 채도 0의 순수 그레이이며, 텍스트는 `{colors.text-cto}`(상품명·가격 숫자)→`{colors.text-primary}`→`{colors.text-secondary}`→`{colors.text-tertiary}`→`{colors.text-caption}` 5단계로 위계를 잡는다 [src:27]. 브랜드 키워드 '연결'을 표현하는 `{colors.green-500}` → `oklch(0.729 0.139 174)` → `{colors.blue-500}` linear 그라디언트는 UI 크롬이 아닌 히어로·브랜드 표면(홈 배너 등)에만 쓴다 [src:1][src:33].
+
+GDS는 팔레트 위에 쓰임새 이름의 역할 계층을 발행한다 — Color 페이지의 Text · Background · Border 표가 역할 토큰마다 가리키는 팔레트 단계를 적고, State Colors 가 상태 4종을 각 컬러의 500 으로 지정한다 [src:27]. 라이트 전용 시스템이라 다크 짝은 없다 [src:27].
+
+| 역할 | 팔레트 | 쓰임 |
+| --- | --- | --- |
+| `text-cto` | `{colors.black}` | 상품명·가격(숫자 한정, '원' 별도) 텍스트 [src:27] |
+| `text-primary` | `{colors.gray-900}` | 제목·본문 텍스트 [src:27] |
+| `text-secondary` | `{colors.gray-700}` | 본문의 하위 위계인 서브 본문 텍스트 [src:27] |
+| `text-tertiary` | `{colors.gray-500}` | 설명·비활성 텍스트(할인 전 가격·품절) [src:27] |
+| `text-caption` | `{colors.gray-400}` | 법적 규제 텍스트(푸터 저작권·약관) [src:27] |
+| `bg-white` | `{colors.white}` | 전체 앱의 기본 배경 [src:27] |
+| `bg-off-white` | `{colors.gray-100}` | 앱의 두 번째 기본 배경 [src:27] |
+| `bg-divider` | `{colors.gray-200}` | 디바이더 라인 [src:27] |
+| `bg-card-ui` | `{colors.gray-50}` | 목록과 유사한 항목 구분 배경(푸터·카드 UI 내 배경) [src:27] |
+| `border-active` | `{colors.gray-900}` | 활성화 시 테두리(폼 필드) — 상류 토큰 표기는 `border-acitve` [src:27] |
+| `border-tertiary` | `{colors.gray-300}` | 콘텐츠 배경의 테두리 [src:27] |
+| `border-secondary` | `{colors.gray-400}` | secondary 버튼의 테두리 [src:27] |
+| `border-white` | `{colors.white}` | 배경에 썸네일이 있을 때의 테두리 [src:27] |
+| `positive` | `{colors.green-500}` | 쿠폰·사은품 혜택 안내와 활성화 텍스트 [src:27] |
+| `informative` | `{colors.blue-500}` | 별점·공식 태그 등 신뢰 [src:27] |
+| `warning` | `{colors.red-500}` | 취소·탈퇴 등 주의와 에러 [src:27] |
+| `delay` | `{colors.orange-500}` | 배송 지연 [src:27] |
 
 ## Typography
 
@@ -544,7 +570,7 @@ CTA·Primary보다 낮은 위계의 보조 행동용이다 [src:10]. 보더는 `
 
 **Don't** 공개된 컴포넌트 목록에 없는 HeroCard, PromoBanner 같은 이름을 GDS 컴포넌트처럼 만들지 않는다 [src:6].
 
-**Don't** 다크 모드 토큰을 추정해서 만들지 않는다 — GDS v1.3.0은 라이트 모드 전용이며 공개된 다크 팔레트가 없다 [src:27][src:32].
+**Don't** 다크 모드 토큰을 추정해서 만들지 않는다 — GDS v1.0.0은 라이트 모드 전용이며 공개된 다크 팔레트가 없다 [src:27][src:32].
 
 **Don't** 색상 값을 hex로 다시 적지 않는다 — 이 카탈로그의 정규 표현은 OKLCH이며, Gmarket Green은 UI 토큰 기준 `{colors.green-500}`(#00C400 환산)이지 인쇄 규정값 #00C01E가 아니다 [src:1][src:27].
 
@@ -576,8 +602,9 @@ CTA·Primary보다 낮은 위계의 보조 행동용이다 [src:10]. 보더는 `
 
 ## Known Gaps
 
-- **다크 모드 미공개.** GDS v1.3.0은 라이트 모드 전용이며, 모든 표면·그림자 토큰의 다크 대응값이 공개되지 않았다 — 다크 테마가 필요하면 다운스트림에서 별도 정의해야 한다 [src:27][src:32].
+- **다크 모드 미공개.** GDS v1.0.0은 라이트 모드 전용이며, 모든 표면·그림자 토큰의 다크 대응값이 공개되지 않았다 — 다크 테마가 필요하면 다운스트림에서 별도 정의해야 한다 [src:27][src:32].
 - **헤딩 weight — canonical은 Medium(500).** 공식 타이포그래피 표는 Heading 1~4를 Regular(400)로 기재하나, canonical 번들이 Medium(500)으로 확정했고 이 문서 토큰 블록도 500을 따른다 — 원 표기 400을 함께 기록한다 [src:30][src:32].
+- **판 표기 불일치.** 사이트 사이드바는 GDS 를 Version 1.0.0(업데이트 2021.08.26)으로 적지만 brand/colors 페이지 머리는 그 페이지 판을 1.3.0 으로 적는다 — 상류 안에서 두 표기가 갈리며, 이 문서는 사이드바를 시스템 판으로 읽는다 [src:1][src:27][src:32].
 - **Gmarket Green hex 불일치.** 디자인 시스템 토큰(foundation)은 `#00C400`, 브랜드 인쇄/온라인 규정 표는 `#00C01E`로 표기한다 — 이 문서는 UI 토큰 기준값 `#00C400`을 채택했으나 두 1차 소스 간 불일치 자체는 미해소다 [src:1][src:27].
 - **자간 토큰 부재.** 줄 높이는 canonical 번들이 정의했으나(tight 1.25 / normal 1.45 / relaxed 1.6), letter-spacing 토큰은 여전히 공개 자료에 surfaced되지 않았다 [src:30].
 - **OKLCH 변환값.** 모든 색상은 공개 hex 토큰을 OKLCH로 변환한 것이며, 원본 시스템은 hex로 게시한다 — 미세한 변환 오차가 있을 수 있다 [src:27][src:32].
