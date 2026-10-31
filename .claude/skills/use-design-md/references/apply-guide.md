@@ -69,11 +69,12 @@ corrects an earlier version of the entry — nothing to apply):
 - A `dark-` prefix marks a dark-theme value. Its light pair is usually the same key
   without the prefix, or with `light-` in its place: `dark-grey-900` ↔ `grey-900`,
   `dark-gray-00` ↔ `light-gray-00`.
-- A `-dark` *suffix* is a shade, not a theme — a darker step used in the light theme
-  (`positive-dark`, `primary-dark`), usually in a `-dark` / `-middle` / `-light` ladder
-  under one group label (`  ## …` row). Every dark-theme value carries the `dark-` prefix
-  instead (`primary-dark` ↔ `dark-primary-dark`). The token's trailing comment, the Colors
-  prose and Known Gaps confirm it.
+- A `-dark` *suffix* is, in the catalogue today, a shade rather than a theme — a darker
+  step used in the light theme (`positive-dark`, `primary-dark`), usually in a `-dark` /
+  `-middle` / `-light` ladder under one group label (`  ## …` row). The catalogue's
+  dark-theme values carry the `dark-` prefix instead (`primary-dark` ↔ `dark-primary-dark`).
+  No check enforces that, so don't decide from the name alone: the token's trailing
+  comment, the Colors prose and Known Gaps confirm which it is.
 - A quoted `"{colors.x}"` value is a reference row: it resolves to key `x` in the same
   map, and `x` may itself be a reference — follow the chain to a literal value. Role rows
   point at palette steps this way, light and dark alike. Like `fonts:`, reference rows
@@ -82,7 +83,7 @@ corrects an earlier version of the entry — nothing to apply):
 - Wire both values to one token name in the target's dark-mode mechanism (a custom-property
   theme block, `prefers-color-scheme`, Tailwind's `dark:` variant, …), so components switch
   without code changes.
-- A dark pair can meet only through a role row and its dark twin
+- Some dark pairs meet only through a role row and its dark twin
   (`color-background-canvas` → `color-white`, `dark-color-background-canvas` →
   `dark-canvas`). Before deciding a token has none, check same-stem neighbours, their
   comments and the role rows that point at it.
