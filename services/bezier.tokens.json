@@ -77,13 +77,31 @@
       "group": "Accent global hues"
     },
     {
+      "name": "purple-300",
+      "value": "oklch(0.670 0.205 299)",
+      "note": "#a970ff",
+      "group": "Accent global hues"
+    },
+    {
       "name": "purple-400",
       "value": "oklch(0.591 0.208 297)",
       "group": "Accent global hues"
     },
     {
+      "name": "pink-300",
+      "value": "oklch(0.722 0.192 336)",
+      "note": "#ec6fd3",
+      "group": "Accent global hues"
+    },
+    {
       "name": "pink-400",
       "value": "oklch(0.637 0.208 339)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "navy-300",
+      "value": "oklch(0.649 0.102 276)",
+      "note": "#7e89cd",
       "group": "Accent global hues"
     },
     {
@@ -109,6 +127,12 @@
     {
       "name": "olive-400",
       "value": "oklch(0.730 0.160 113)",
+      "group": "Accent global hues"
+    },
+    {
+      "name": "teal-300",
+      "value": "oklch(0.787 0.123 186)",
+      "note": "#40d3c5",
       "group": "Accent global hues"
     },
     {
@@ -141,6 +165,30 @@
       "group": "Accent alpha tints"
     },
     {
+      "name": "blue-400-30",
+      "value": "oklch(0.554 0.214 280 / 0.30)",
+      "note": "#6157ea4d",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "blue-300-45",
+      "value": "oklch(0.615 0.211 277 / 0.45)",
+      "note": "#6b6eff73",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "blue-400-0",
+      "value": "oklch(0.554 0.214 280 / 0)",
+      "note": "#6157ea00",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "blue-300-0",
+      "value": "oklch(0.615 0.211 277 / 0)",
+      "note": "#6b6eff00",
+      "group": "Accent alpha tints"
+    },
+    {
       "name": "cobalt-400-10",
       "value": "oklch(0.643 0.150 248 / 0.10)",
       "note": "#3292e31a",
@@ -162,6 +210,18 @@
       "name": "cobalt-300-30",
       "value": "oklch(0.724 0.125 245 / 0.30)",
       "note": "#5cadef4d",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "cobalt-400-0",
+      "value": "oklch(0.643 0.150 248 / 0)",
+      "note": "#3292e300",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "cobalt-300-0",
+      "value": "oklch(0.724 0.125 245 / 0)",
+      "note": "#5cadef00",
       "group": "Accent alpha tints"
     },
     {
@@ -189,6 +249,18 @@
       "group": "Accent alpha tints"
     },
     {
+      "name": "green-400-0",
+      "value": "oklch(0.652 0.168 150 / 0)",
+      "note": "#20ab5500",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "green-300-0",
+      "value": "oklch(0.724 0.162 150 / 0)",
+      "note": "#4bc16c00",
+      "group": "Accent alpha tints"
+    },
+    {
       "name": "red-400-10",
       "value": "oklch(0.634 0.177 20 / 0.10)",
       "note": "#e1535d1a",
@@ -210,6 +282,18 @@
       "name": "red-300-30",
       "value": "oklch(0.677 0.180 23 / 0.30)",
       "note": "#f260604d",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "red-400-0",
+      "value": "oklch(0.634 0.177 20 / 0)",
+      "note": "#e1535d00",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "red-300-0",
+      "value": "oklch(0.677 0.180 23 / 0)",
+      "note": "#f2606000",
       "group": "Accent alpha tints"
     },
     {
@@ -237,6 +321,24 @@
       "group": "Accent alpha tints"
     },
     {
+      "name": "orange-400-30",
+      "value": "oklch(0.698 0.156 55 / 0.30)",
+      "note": "#e67f2b4d",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "orange-400-0",
+      "value": "oklch(0.698 0.156 55 / 0)",
+      "note": "#e67f2b00",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "orange-300-0",
+      "value": "oklch(0.764 0.148 58 / 0)",
+      "note": "#f7984700",
+      "group": "Accent alpha tints"
+    },
+    {
       "name": "yellow-400-10",
       "value": "oklch(0.789 0.161 82 / 0.10)",
       "note": "#edae0d1a",
@@ -258,6 +360,18 @@
       "name": "yellow-300-30",
       "value": "oklch(0.824 0.160 88 / 0.30)",
       "note": "#f0be274d",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "yellow-400-0",
+      "value": "oklch(0.789 0.161 82 / 0)",
+      "note": "#edae0d00",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "yellow-300-0",
+      "value": "oklch(0.824 0.160 88 / 0)",
+      "note": "#f0be2700",
       "group": "Accent alpha tints"
     },
     {
@@ -285,6 +399,18 @@
       "group": "Accent alpha tints"
     },
     {
+      "name": "olive-400-0",
+      "value": "oklch(0.730 0.160 113 / 0)",
+      "note": "#a9b11000",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "olive-300-0",
+      "value": "oklch(0.784 0.167 115 / 0)",
+      "note": "#b7c42700",
+      "group": "Accent alpha tints"
+    },
+    {
       "name": "teal-400-10",
       "value": "oklch(0.690 0.118 190 / 0.10)",
       "note": "#09b2ac1a",
@@ -306,6 +432,18 @@
       "name": "teal-300-30",
       "value": "oklch(0.787 0.123 186 / 0.30)",
       "note": "#40d3c54d",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "teal-400-0",
+      "value": "oklch(0.690 0.118 190 / 0)",
+      "note": "#09b2ac00",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "teal-300-0",
+      "value": "oklch(0.787 0.123 186 / 0)",
+      "note": "#40d3c500",
       "group": "Accent alpha tints"
     },
     {
@@ -333,6 +471,18 @@
       "group": "Accent alpha tints"
     },
     {
+      "name": "navy-400-0",
+      "value": "oklch(0.469 0.147 273 / 0)",
+      "note": "#424fab00",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "navy-300-0",
+      "value": "oklch(0.607 0.118 276 / 0)",
+      "note": "#6f7bc800",
+      "group": "Accent alpha tints"
+    },
+    {
       "name": "purple-400-10",
       "value": "oklch(0.591 0.208 297 / 0.10)",
       "note": "#8e57e71a",
@@ -357,6 +507,18 @@
       "group": "Accent alpha tints"
     },
     {
+      "name": "purple-400-0",
+      "value": "oklch(0.591 0.208 297 / 0)",
+      "note": "#8e57e700",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "purple-300-0",
+      "value": "oklch(0.670 0.205 299 / 0)",
+      "note": "#a970ff00",
+      "group": "Accent alpha tints"
+    },
+    {
       "name": "pink-400-10",
       "value": "oklch(0.637 0.208 338 / 0.10)",
       "note": "#d64bb51a",
@@ -378,6 +540,18 @@
       "name": "pink-300-30",
       "value": "oklch(0.722 0.192 336 / 0.30)",
       "note": "#ec6fd34d",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "pink-400-0",
+      "value": "oklch(0.637 0.208 338 / 0)",
+      "note": "#d64bb500",
+      "group": "Accent alpha tints"
+    },
+    {
+      "name": "pink-300-0",
+      "value": "oklch(0.722 0.192 336 / 0)",
+      "note": "#ec6fd300",
       "group": "Accent alpha tints"
     },
     {
@@ -421,8 +595,20 @@
       "group": "Neutral global"
     },
     {
+      "name": "grey-650",
+      "value": "oklch(0.469 0.008 286)",
+      "note": "#5a5a5f",
+      "group": "Neutral global"
+    },
+    {
       "name": "grey-700",
       "value": "oklch(0.354 0.007 286)",
+      "group": "Neutral global"
+    },
+    {
+      "name": "grey-750",
+      "value": "oklch(0.315 0.007 286)",
+      "note": "#313135",
       "group": "Neutral global"
     },
     {
@@ -442,6 +628,12 @@
       "group": "Neutral global"
     },
     {
+      "name": "grey-950",
+      "value": "oklch(0.219 0.004 286)",
+      "note": "#1a1a1c",
+      "group": "Neutral global"
+    },
+    {
       "name": "grey-100-90",
       "value": "oklch(0.976 0.001 286 / 0.90)",
       "note": "#f7f7f8e6 · 라이트 bg-lounge",
@@ -457,6 +649,30 @@
       "name": "grey-200-80",
       "value": "oklch(0.952 0.001 286 / 0.80)",
       "note": "#efeff0cc · 라이트 bg-gnb",
+      "group": "Neutral global"
+    },
+    {
+      "name": "grey-200-90",
+      "value": "oklch(0.952 0.001 286 / 0.90)",
+      "note": "#efeff0e6",
+      "group": "Neutral global"
+    },
+    {
+      "name": "grey-750-90",
+      "value": "oklch(0.315 0.007 286 / 0.90)",
+      "note": "#313135e6",
+      "group": "Neutral global"
+    },
+    {
+      "name": "grey-800-90",
+      "value": "oklch(0.283 0.007 286 / 0.90)",
+      "note": "#29292de6",
+      "group": "Neutral global"
+    },
+    {
+      "name": "grey-850-90",
+      "value": "oklch(0.261 0.004 286 / 0.90)",
+      "note": "#242426e6",
       "group": "Neutral global"
     },
     {
@@ -480,6 +696,18 @@
       "name": "black-40",
       "value": "oklch(0 0 0 / 0.40)",
       "note": "text-neutral-lighter / icon-neutral",
+      "group": "Neutral global"
+    },
+    {
+      "name": "black-30",
+      "value": "oklch(0 0 0 / 0.30)",
+      "note": "#0000004d",
+      "group": "Neutral global"
+    },
+    {
+      "name": "black-22",
+      "value": "oklch(0 0 0 / 0.22)",
+      "note": "#00000038",
       "group": "Neutral global"
     },
     {
@@ -510,6 +738,18 @@
       "name": "black-3",
       "value": "oklch(0 0 0 / 0.03)",
       "note": "#00000008 · 라이트 bg-black-lightest",
+      "group": "Neutral global"
+    },
+    {
+      "name": "black-1",
+      "value": "oklch(0 0 0 / 0.01)",
+      "note": "#00000003",
+      "group": "Neutral global"
+    },
+    {
+      "name": "black-0",
+      "value": "oklch(0 0 0 / 0)",
+      "note": "#00000000",
       "group": "Neutral global"
     },
     {
@@ -563,6 +803,18 @@
       "name": "white-5",
       "value": "oklch(1 0 0 / 0.05)",
       "note": "#ffffff0d · 다크 bg-black-lightest",
+      "group": "Neutral global"
+    },
+    {
+      "name": "white-3",
+      "value": "oklch(1 0 0 / 0.03)",
+      "note": "#ffffff08",
+      "group": "Neutral global"
+    },
+    {
+      "name": "white-0",
+      "value": "oklch(1 0 0 / 0)",
+      "note": "#ffffff00",
       "group": "Neutral global"
     },
     {
@@ -792,6 +1044,1962 @@
       "value": "oklch(1 0 0)",
       "group": "Semantic bg-*·txt-* (stable tier)",
       "ref": "white-100"
+    },
+    {
+      "name": "text-action",
+      "value": "oklch(0.554 0.214 280)",
+      "group": "Semantic text (beta tier)",
+      "ref": "blue-400"
+    },
+    {
+      "name": "dark-text-action",
+      "value": "oklch(0.665 0.181 280)",
+      "group": "Semantic text (beta tier)",
+      "ref": "blue-300"
+    },
+    {
+      "name": "text-success",
+      "value": "oklch(0.652 0.168 150)",
+      "group": "Semantic text (beta tier)",
+      "ref": "green-400"
+    },
+    {
+      "name": "dark-text-success",
+      "value": "oklch(0.732 0.157 150)",
+      "group": "Semantic text (beta tier)",
+      "ref": "green-300"
+    },
+    {
+      "name": "text-highlight",
+      "value": "oklch(0.643 0.150 248)",
+      "group": "Semantic text (beta tier)",
+      "ref": "cobalt-400"
+    },
+    {
+      "name": "dark-text-highlight",
+      "value": "oklch(0.724 0.125 245)",
+      "group": "Semantic text (beta tier)",
+      "ref": "cobalt-300"
+    },
+    {
+      "name": "text-warning",
+      "value": "oklch(0.698 0.156 55)",
+      "group": "Semantic text (beta tier)",
+      "ref": "orange-400"
+    },
+    {
+      "name": "dark-text-warning",
+      "value": "oklch(0.764 0.148 58)",
+      "group": "Semantic text (beta tier)",
+      "ref": "orange-300"
+    },
+    {
+      "name": "text-critical",
+      "value": "oklch(0.634 0.177 20)",
+      "group": "Semantic text (beta tier)",
+      "ref": "red-400"
+    },
+    {
+      "name": "dark-text-critical",
+      "value": "oklch(0.690 0.172 23)",
+      "group": "Semantic text (beta tier)",
+      "ref": "red-300"
+    },
+    {
+      "name": "text-neutral-heaviest",
+      "value": "oklch(0 0 0)",
+      "group": "Semantic text (beta tier)",
+      "ref": "black-100"
+    },
+    {
+      "name": "dark-text-neutral-heaviest",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic text (beta tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "text-neutral",
+      "value": "oklch(0 0 0 / 0.85)",
+      "group": "Semantic text (beta tier)",
+      "ref": "black-85"
+    },
+    {
+      "name": "dark-text-neutral",
+      "value": "oklch(1 0 0 / 0.80)",
+      "group": "Semantic text (beta tier)",
+      "ref": "white-80"
+    },
+    {
+      "name": "text-neutral-light",
+      "value": "oklch(0 0 0 / 0.60)",
+      "group": "Semantic text (beta tier)",
+      "ref": "black-60"
+    },
+    {
+      "name": "dark-text-neutral-light",
+      "value": "oklch(1 0 0 / 0.60)",
+      "group": "Semantic text (beta tier)",
+      "ref": "white-60"
+    },
+    {
+      "name": "text-neutral-lighter",
+      "value": "oklch(0 0 0 / 0.40)",
+      "group": "Semantic text (beta tier)",
+      "ref": "black-40"
+    },
+    {
+      "name": "dark-text-neutral-lighter",
+      "value": "oklch(1 0 0 / 0.40)",
+      "group": "Semantic text (beta tier)",
+      "ref": "white-40"
+    },
+    {
+      "name": "text-accent-blue",
+      "value": "oklch(0.554 0.214 280)",
+      "group": "Semantic text (beta tier)",
+      "ref": "blue-400"
+    },
+    {
+      "name": "dark-text-accent-blue",
+      "value": "oklch(0.665 0.181 280)",
+      "group": "Semantic text (beta tier)",
+      "ref": "blue-300"
+    },
+    {
+      "name": "text-accent-cobalt",
+      "value": "oklch(0.643 0.150 248)",
+      "group": "Semantic text (beta tier)",
+      "ref": "cobalt-400"
+    },
+    {
+      "name": "dark-text-accent-cobalt",
+      "value": "oklch(0.724 0.125 245)",
+      "group": "Semantic text (beta tier)",
+      "ref": "cobalt-300"
+    },
+    {
+      "name": "text-accent-green",
+      "value": "oklch(0.652 0.168 150)",
+      "group": "Semantic text (beta tier)",
+      "ref": "green-400"
+    },
+    {
+      "name": "dark-text-accent-green",
+      "value": "oklch(0.732 0.157 150)",
+      "group": "Semantic text (beta tier)",
+      "ref": "green-300"
+    },
+    {
+      "name": "text-accent-red",
+      "value": "oklch(0.634 0.177 20)",
+      "group": "Semantic text (beta tier)",
+      "ref": "red-400"
+    },
+    {
+      "name": "dark-text-accent-red",
+      "value": "oklch(0.690 0.172 23)",
+      "group": "Semantic text (beta tier)",
+      "ref": "red-300"
+    },
+    {
+      "name": "text-accent-orange",
+      "value": "oklch(0.698 0.156 55)",
+      "group": "Semantic text (beta tier)",
+      "ref": "orange-400"
+    },
+    {
+      "name": "dark-text-accent-orange",
+      "value": "oklch(0.764 0.148 58)",
+      "group": "Semantic text (beta tier)",
+      "ref": "orange-300"
+    },
+    {
+      "name": "text-accent-yellow",
+      "value": "oklch(0.789 0.161 82)",
+      "group": "Semantic text (beta tier)",
+      "ref": "yellow-400"
+    },
+    {
+      "name": "dark-text-accent-yellow",
+      "value": "oklch(0.824 0.160 88)",
+      "group": "Semantic text (beta tier)",
+      "ref": "yellow-300"
+    },
+    {
+      "name": "text-accent-olive",
+      "value": "oklch(0.784 0.167 115)",
+      "group": "Semantic text (beta tier)",
+      "ref": "olive-300"
+    },
+    {
+      "name": "dark-text-accent-olive",
+      "value": "oklch(0.784 0.167 115)",
+      "group": "Semantic text (beta tier)",
+      "ref": "olive-300"
+    },
+    {
+      "name": "text-accent-teal",
+      "value": "oklch(0.690 0.118 191)",
+      "group": "Semantic text (beta tier)",
+      "ref": "teal-400"
+    },
+    {
+      "name": "dark-text-accent-teal",
+      "value": "oklch(0.787 0.123 186)",
+      "group": "Semantic text (beta tier)",
+      "ref": "teal-300"
+    },
+    {
+      "name": "text-accent-navy",
+      "value": "oklch(0.469 0.147 273)",
+      "group": "Semantic text (beta tier)",
+      "ref": "navy-400"
+    },
+    {
+      "name": "dark-text-accent-navy",
+      "value": "oklch(0.649 0.102 276)",
+      "group": "Semantic text (beta tier)",
+      "ref": "navy-300"
+    },
+    {
+      "name": "text-accent-purple",
+      "value": "oklch(0.591 0.208 297)",
+      "group": "Semantic text (beta tier)",
+      "ref": "purple-400"
+    },
+    {
+      "name": "dark-text-accent-purple",
+      "value": "oklch(0.670 0.205 299)",
+      "group": "Semantic text (beta tier)",
+      "ref": "purple-300"
+    },
+    {
+      "name": "text-accent-pink",
+      "value": "oklch(0.637 0.208 339)",
+      "group": "Semantic text (beta tier)",
+      "ref": "pink-400"
+    },
+    {
+      "name": "dark-text-accent-pink",
+      "value": "oklch(0.722 0.192 336)",
+      "group": "Semantic text (beta tier)",
+      "ref": "pink-300"
+    },
+    {
+      "name": "text-absolute-white",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic text (beta tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "dark-text-absolute-white",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic text (beta tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "text-absolute-black",
+      "value": "oklch(0 0 0)",
+      "group": "Semantic text (beta tier)",
+      "ref": "black-100"
+    },
+    {
+      "name": "dark-text-absolute-black",
+      "value": "oklch(0 0 0)",
+      "group": "Semantic text (beta tier)",
+      "ref": "black-100"
+    },
+    {
+      "name": "text-inverse",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic text (beta tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "dark-text-inverse",
+      "value": "oklch(0 0 0 / 0.85)",
+      "group": "Semantic text (beta tier)",
+      "ref": "black-85"
+    },
+    {
+      "name": "icon-action",
+      "value": "oklch(0.554 0.214 280)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "blue-400"
+    },
+    {
+      "name": "dark-icon-action",
+      "value": "oklch(0.665 0.181 280)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "blue-300"
+    },
+    {
+      "name": "icon-success",
+      "value": "oklch(0.652 0.168 150)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "green-400"
+    },
+    {
+      "name": "dark-icon-success",
+      "value": "oklch(0.732 0.157 150)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "green-300"
+    },
+    {
+      "name": "icon-highlight",
+      "value": "oklch(0.643 0.150 248)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "cobalt-400"
+    },
+    {
+      "name": "dark-icon-highlight",
+      "value": "oklch(0.724 0.125 245)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "cobalt-300"
+    },
+    {
+      "name": "icon-warning",
+      "value": "oklch(0.698 0.156 55)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "orange-400"
+    },
+    {
+      "name": "dark-icon-warning",
+      "value": "oklch(0.764 0.148 58)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "orange-300"
+    },
+    {
+      "name": "icon-critical",
+      "value": "oklch(0.634 0.177 20)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "red-400"
+    },
+    {
+      "name": "dark-icon-critical",
+      "value": "oklch(0.690 0.172 23)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "red-300"
+    },
+    {
+      "name": "icon-neutral",
+      "value": "oklch(0 0 0 / 0.40)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "black-40"
+    },
+    {
+      "name": "dark-icon-neutral",
+      "value": "oklch(1 0 0 / 0.40)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "white-40"
+    },
+    {
+      "name": "icon-neutral-heavy",
+      "value": "oklch(0 0 0 / 0.60)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "black-60"
+    },
+    {
+      "name": "dark-icon-neutral-heavy",
+      "value": "oklch(1 0 0 / 0.60)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "white-60"
+    },
+    {
+      "name": "icon-neutral-heavier",
+      "value": "oklch(0 0 0 / 0.85)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "black-85"
+    },
+    {
+      "name": "dark-icon-neutral-heavier",
+      "value": "oklch(1 0 0 / 0.80)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "white-80"
+    },
+    {
+      "name": "icon-accent-blue",
+      "value": "oklch(0.554 0.214 280)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "blue-400"
+    },
+    {
+      "name": "dark-icon-accent-blue",
+      "value": "oklch(0.665 0.181 280)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "blue-300"
+    },
+    {
+      "name": "icon-accent-cobalt",
+      "value": "oklch(0.643 0.150 248)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "cobalt-400"
+    },
+    {
+      "name": "dark-icon-accent-cobalt",
+      "value": "oklch(0.724 0.125 245)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "cobalt-300"
+    },
+    {
+      "name": "icon-accent-green",
+      "value": "oklch(0.652 0.168 150)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "green-400"
+    },
+    {
+      "name": "dark-icon-accent-green",
+      "value": "oklch(0.732 0.157 150)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "green-300"
+    },
+    {
+      "name": "icon-accent-red",
+      "value": "oklch(0.634 0.177 20)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "red-400"
+    },
+    {
+      "name": "dark-icon-accent-red",
+      "value": "oklch(0.690 0.172 23)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "red-300"
+    },
+    {
+      "name": "icon-accent-orange",
+      "value": "oklch(0.698 0.156 55)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "orange-400"
+    },
+    {
+      "name": "dark-icon-accent-orange",
+      "value": "oklch(0.764 0.148 58)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "orange-300"
+    },
+    {
+      "name": "icon-accent-yellow",
+      "value": "oklch(0.789 0.161 82)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "yellow-400"
+    },
+    {
+      "name": "dark-icon-accent-yellow",
+      "value": "oklch(0.824 0.160 88)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "yellow-300"
+    },
+    {
+      "name": "icon-accent-olive",
+      "value": "oklch(0.730 0.160 113)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "olive-400"
+    },
+    {
+      "name": "dark-icon-accent-olive",
+      "value": "oklch(0.784 0.167 115)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "olive-300"
+    },
+    {
+      "name": "icon-accent-teal",
+      "value": "oklch(0.690 0.118 191)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "teal-400"
+    },
+    {
+      "name": "dark-icon-accent-teal",
+      "value": "oklch(0.787 0.123 186)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "teal-300"
+    },
+    {
+      "name": "icon-accent-navy",
+      "value": "oklch(0.469 0.147 273)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "navy-400"
+    },
+    {
+      "name": "dark-icon-accent-navy",
+      "value": "oklch(0.649 0.102 276)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "navy-300"
+    },
+    {
+      "name": "icon-accent-purple",
+      "value": "oklch(0.591 0.208 297)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "purple-400"
+    },
+    {
+      "name": "dark-icon-accent-purple",
+      "value": "oklch(0.670 0.205 299)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "purple-300"
+    },
+    {
+      "name": "icon-accent-pink",
+      "value": "oklch(0.637 0.208 339)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "pink-400"
+    },
+    {
+      "name": "dark-icon-accent-pink",
+      "value": "oklch(0.722 0.192 336)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "pink-300"
+    },
+    {
+      "name": "icon-absolute-white",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "dark-icon-absolute-white",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "icon-absolute-black",
+      "value": "oklch(0 0 0)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "black-100"
+    },
+    {
+      "name": "dark-icon-absolute-black",
+      "value": "oklch(0 0 0)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "black-100"
+    },
+    {
+      "name": "icon-inverse-heavier",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "dark-icon-inverse-heavier",
+      "value": "oklch(0 0 0 / 0.85)",
+      "group": "Semantic icon (beta tier)",
+      "ref": "black-85"
+    },
+    {
+      "name": "fill-neutral",
+      "value": "oklch(0 0 0 / 0.08)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "black-8"
+    },
+    {
+      "name": "dark-fill-neutral",
+      "value": "oklch(1 0 0 / 0.12)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "white-12"
+    },
+    {
+      "name": "fill-neutral-heaviest",
+      "value": "oklch(0 0 0 / 0.85)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "black-85"
+    },
+    {
+      "name": "dark-fill-neutral-heaviest",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "fill-neutral-heavier",
+      "value": "oklch(0 0 0 / 0.40)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "black-40"
+    },
+    {
+      "name": "dark-fill-neutral-heavier",
+      "value": "oklch(1 0 0 / 0.40)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "white-40"
+    },
+    {
+      "name": "fill-neutral-heavy",
+      "value": "oklch(0 0 0 / 0.15)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "black-15"
+    },
+    {
+      "name": "dark-fill-neutral-heavy",
+      "value": "oklch(1 0 0 / 0.20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "white-20"
+    },
+    {
+      "name": "fill-neutral-light",
+      "value": "oklch(0 0 0 / 0.05)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "black-5"
+    },
+    {
+      "name": "dark-fill-neutral-light",
+      "value": "oklch(1 0 0 / 0.08)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "white-8"
+    },
+    {
+      "name": "fill-neutral-lighter",
+      "value": "oklch(0 0 0 / 0.03)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "black-3"
+    },
+    {
+      "name": "dark-fill-neutral-lighter",
+      "value": "oklch(1 0 0 / 0.05)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "white-5"
+    },
+    {
+      "name": "fill-neutral-lightest",
+      "value": "oklch(0 0 0 / 0.01)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "black-1"
+    },
+    {
+      "name": "dark-fill-neutral-lightest",
+      "value": "oklch(1 0 0 / 0.03)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "white-3"
+    },
+    {
+      "name": "fill-neutral-transparent",
+      "value": "oklch(0 0 0 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "black-0"
+    },
+    {
+      "name": "dark-fill-neutral-transparent",
+      "value": "oklch(1 0 0 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "white-0"
+    },
+    {
+      "name": "fill-action",
+      "value": "oklch(0.554 0.214 280)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "blue-400"
+    },
+    {
+      "name": "dark-fill-action",
+      "value": "oklch(0.665 0.181 280)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "blue-300"
+    },
+    {
+      "name": "fill-action-light",
+      "value": "oklch(0.554 0.214 280 / 0.20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "blue-400-20"
+    },
+    {
+      "name": "dark-fill-action-light",
+      "value": "oklch(0.615 0.211 277 / 0.30)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "blue-300-30"
+    },
+    {
+      "name": "fill-action-lighter",
+      "value": "oklch(0.554 0.214 280 / 0.10)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "blue-400-10"
+    },
+    {
+      "name": "dark-fill-action-lighter",
+      "value": "oklch(0.615 0.211 277 / 0.18)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "blue-300-18"
+    },
+    {
+      "name": "fill-action-transparent",
+      "value": "oklch(0.554 0.214 280 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "blue-400-0"
+    },
+    {
+      "name": "dark-fill-action-transparent",
+      "value": "oklch(0.615 0.211 277 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "blue-300-0"
+    },
+    {
+      "name": "fill-success",
+      "value": "oklch(0.652 0.168 150)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "green-400"
+    },
+    {
+      "name": "dark-fill-success",
+      "value": "oklch(0.732 0.157 150)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "green-300"
+    },
+    {
+      "name": "fill-success-light",
+      "value": "oklch(0.652 0.168 150 / 0.20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "green-400-20"
+    },
+    {
+      "name": "dark-fill-success-light",
+      "value": "oklch(0.724 0.162 150 / 0.30)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "green-300-30"
+    },
+    {
+      "name": "fill-success-lighter",
+      "value": "oklch(0.652 0.168 150 / 0.10)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "green-400-10"
+    },
+    {
+      "name": "dark-fill-success-lighter",
+      "value": "oklch(0.724 0.162 150 / 0.18)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "green-300-18"
+    },
+    {
+      "name": "fill-success-transparent",
+      "value": "oklch(0.652 0.168 150 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "green-400-0"
+    },
+    {
+      "name": "dark-fill-success-transparent",
+      "value": "oklch(0.724 0.162 150 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "green-300-0"
+    },
+    {
+      "name": "fill-highlight",
+      "value": "oklch(0.643 0.150 248)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "cobalt-400"
+    },
+    {
+      "name": "dark-fill-highlight",
+      "value": "oklch(0.724 0.125 245)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "cobalt-300"
+    },
+    {
+      "name": "fill-highlight-light",
+      "value": "oklch(0.643 0.150 248 / 0.20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "cobalt-400-20"
+    },
+    {
+      "name": "dark-fill-highlight-light",
+      "value": "oklch(0.724 0.125 245 / 0.30)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "cobalt-300-30"
+    },
+    {
+      "name": "fill-highlight-lighter",
+      "value": "oklch(0.643 0.150 248 / 0.10)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "cobalt-400-10"
+    },
+    {
+      "name": "dark-fill-highlight-lighter",
+      "value": "oklch(0.724 0.125 245 / 0.18)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "cobalt-300-18"
+    },
+    {
+      "name": "fill-highlight-transparent",
+      "value": "oklch(0.643 0.150 248 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "cobalt-400-0"
+    },
+    {
+      "name": "dark-fill-highlight-transparent",
+      "value": "oklch(0.724 0.125 245 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "cobalt-300-0"
+    },
+    {
+      "name": "fill-warning",
+      "value": "oklch(0.698 0.156 55)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "orange-400"
+    },
+    {
+      "name": "dark-fill-warning",
+      "value": "oklch(0.764 0.148 58)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "orange-300"
+    },
+    {
+      "name": "fill-warning-light",
+      "value": "oklch(0.698 0.156 55 / 0.20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "orange-400-20"
+    },
+    {
+      "name": "dark-fill-warning-light",
+      "value": "oklch(0.764 0.148 58 / 0.30)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "orange-300-30"
+    },
+    {
+      "name": "fill-warning-lighter",
+      "value": "oklch(0.698 0.156 55 / 0.10)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "orange-400-10"
+    },
+    {
+      "name": "dark-fill-warning-lighter",
+      "value": "oklch(0.764 0.148 58 / 0.18)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "orange-300-18"
+    },
+    {
+      "name": "fill-warning-transparent",
+      "value": "oklch(0.698 0.156 55 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "orange-400-0"
+    },
+    {
+      "name": "dark-fill-warning-transparent",
+      "value": "oklch(0.764 0.148 58 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "orange-300-0"
+    },
+    {
+      "name": "fill-critical",
+      "value": "oklch(0.634 0.177 20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "red-400"
+    },
+    {
+      "name": "dark-fill-critical",
+      "value": "oklch(0.690 0.172 23)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "red-300"
+    },
+    {
+      "name": "fill-critical-light",
+      "value": "oklch(0.634 0.177 20 / 0.20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "red-400-20"
+    },
+    {
+      "name": "dark-fill-critical-light",
+      "value": "oklch(0.677 0.180 23 / 0.30)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "red-300-30"
+    },
+    {
+      "name": "fill-critical-lighter",
+      "value": "oklch(0.634 0.177 20 / 0.10)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "red-400-10"
+    },
+    {
+      "name": "dark-fill-critical-lighter",
+      "value": "oklch(0.677 0.180 23 / 0.18)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "red-300-18"
+    },
+    {
+      "name": "fill-critical-transparent",
+      "value": "oklch(0.634 0.177 20 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "red-400-0"
+    },
+    {
+      "name": "dark-fill-critical-transparent",
+      "value": "oklch(0.677 0.180 23 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "red-300-0"
+    },
+    {
+      "name": "fill-grey-light",
+      "value": "oklch(0.995 0.003 286)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "grey-25"
+    },
+    {
+      "name": "dark-fill-grey-light",
+      "value": "oklch(0.232 0.006 286)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "grey-900"
+    },
+    {
+      "name": "fill-grey",
+      "value": "oklch(0.988 0 286)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "grey-50"
+    },
+    {
+      "name": "dark-fill-grey",
+      "value": "oklch(0.261 0.004 286)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "grey-850"
+    },
+    {
+      "name": "fill-grey-heavy",
+      "value": "oklch(0.976 0.001 286)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "grey-100"
+    },
+    {
+      "name": "dark-fill-grey-heavy",
+      "value": "oklch(0.283 0.007 286)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "grey-800"
+    },
+    {
+      "name": "fill-grey-heavier",
+      "value": "oklch(0.952 0.001 286)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "grey-200"
+    },
+    {
+      "name": "dark-fill-grey-heavier",
+      "value": "oklch(0.315 0.007 286)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "grey-750"
+    },
+    {
+      "name": "fill-accent-blue",
+      "value": "oklch(0.554 0.214 280 / 0.10)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "blue-400-10"
+    },
+    {
+      "name": "dark-fill-accent-blue",
+      "value": "oklch(0.615 0.211 277 / 0.18)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "blue-300-18"
+    },
+    {
+      "name": "fill-accent-blue-heavy",
+      "value": "oklch(0.554 0.214 280 / 0.20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "blue-400-20"
+    },
+    {
+      "name": "dark-fill-accent-blue-heavy",
+      "value": "oklch(0.615 0.211 277 / 0.30)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "blue-300-30"
+    },
+    {
+      "name": "fill-accent-blue-heavier",
+      "value": "oklch(0.554 0.214 280)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "blue-400"
+    },
+    {
+      "name": "dark-fill-accent-blue-heavier",
+      "value": "oklch(0.665 0.181 280)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "blue-300"
+    },
+    {
+      "name": "fill-accent-blue-transparent",
+      "value": "oklch(0.554 0.214 280 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "blue-400-0"
+    },
+    {
+      "name": "dark-fill-accent-blue-transparent",
+      "value": "oklch(0.615 0.211 277 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "blue-300-0"
+    },
+    {
+      "name": "fill-accent-cobalt",
+      "value": "oklch(0.643 0.150 248 / 0.10)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "cobalt-400-10"
+    },
+    {
+      "name": "dark-fill-accent-cobalt",
+      "value": "oklch(0.724 0.125 245 / 0.18)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "cobalt-300-18"
+    },
+    {
+      "name": "fill-accent-cobalt-heavy",
+      "value": "oklch(0.643 0.150 248 / 0.20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "cobalt-400-20"
+    },
+    {
+      "name": "dark-fill-accent-cobalt-heavy",
+      "value": "oklch(0.724 0.125 245 / 0.30)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "cobalt-300-30"
+    },
+    {
+      "name": "fill-accent-cobalt-heavier",
+      "value": "oklch(0.643 0.150 248)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "cobalt-400"
+    },
+    {
+      "name": "dark-fill-accent-cobalt-heavier",
+      "value": "oklch(0.724 0.125 245)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "cobalt-300"
+    },
+    {
+      "name": "fill-accent-cobalt-transparent",
+      "value": "oklch(0.643 0.150 248 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "cobalt-400-0"
+    },
+    {
+      "name": "dark-fill-accent-cobalt-transparent",
+      "value": "oklch(0.724 0.125 245 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "cobalt-300-0"
+    },
+    {
+      "name": "fill-accent-green",
+      "value": "oklch(0.652 0.168 150 / 0.10)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "green-400-10"
+    },
+    {
+      "name": "dark-fill-accent-green",
+      "value": "oklch(0.724 0.162 150 / 0.18)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "green-300-18"
+    },
+    {
+      "name": "fill-accent-green-heavy",
+      "value": "oklch(0.652 0.168 150 / 0.20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "green-400-20"
+    },
+    {
+      "name": "dark-fill-accent-green-heavy",
+      "value": "oklch(0.724 0.162 150 / 0.30)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "green-300-30"
+    },
+    {
+      "name": "fill-accent-green-heavier",
+      "value": "oklch(0.652 0.168 150)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "green-400"
+    },
+    {
+      "name": "dark-fill-accent-green-heavier",
+      "value": "oklch(0.732 0.157 150)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "green-300"
+    },
+    {
+      "name": "fill-accent-green-transparent",
+      "value": "oklch(0.652 0.168 150 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "green-400-0"
+    },
+    {
+      "name": "dark-fill-accent-green-transparent",
+      "value": "oklch(0.724 0.162 150 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "green-300-0"
+    },
+    {
+      "name": "fill-accent-red",
+      "value": "oklch(0.634 0.177 20 / 0.10)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "red-400-10"
+    },
+    {
+      "name": "dark-fill-accent-red",
+      "value": "oklch(0.677 0.180 23 / 0.18)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "red-300-18"
+    },
+    {
+      "name": "fill-accent-red-heavy",
+      "value": "oklch(0.634 0.177 20 / 0.20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "red-400-20"
+    },
+    {
+      "name": "dark-fill-accent-red-heavy",
+      "value": "oklch(0.677 0.180 23 / 0.30)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "red-300-30"
+    },
+    {
+      "name": "fill-accent-red-heavier",
+      "value": "oklch(0.634 0.177 20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "red-400"
+    },
+    {
+      "name": "dark-fill-accent-red-heavier",
+      "value": "oklch(0.690 0.172 23)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "red-300"
+    },
+    {
+      "name": "fill-accent-red-transparent",
+      "value": "oklch(0.634 0.177 20 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "red-400-0"
+    },
+    {
+      "name": "dark-fill-accent-red-transparent",
+      "value": "oklch(0.677 0.180 23 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "red-300-0"
+    },
+    {
+      "name": "fill-accent-orange",
+      "value": "oklch(0.698 0.156 55 / 0.10)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "orange-400-10"
+    },
+    {
+      "name": "dark-fill-accent-orange",
+      "value": "oklch(0.764 0.148 58 / 0.18)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "orange-300-18"
+    },
+    {
+      "name": "fill-accent-orange-heavy",
+      "value": "oklch(0.698 0.156 55 / 0.20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "orange-400-20"
+    },
+    {
+      "name": "dark-fill-accent-orange-heavy",
+      "value": "oklch(0.764 0.148 58 / 0.30)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "orange-300-30"
+    },
+    {
+      "name": "fill-accent-orange-heavier",
+      "value": "oklch(0.698 0.156 55)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "orange-400"
+    },
+    {
+      "name": "dark-fill-accent-orange-heavier",
+      "value": "oklch(0.764 0.148 58)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "orange-300"
+    },
+    {
+      "name": "fill-accent-orange-transparent",
+      "value": "oklch(0.698 0.156 55 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "orange-400-0"
+    },
+    {
+      "name": "dark-fill-accent-orange-transparent",
+      "value": "oklch(0.764 0.148 58 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "orange-300-0"
+    },
+    {
+      "name": "fill-accent-yellow",
+      "value": "oklch(0.789 0.161 82 / 0.10)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "yellow-400-10"
+    },
+    {
+      "name": "dark-fill-accent-yellow",
+      "value": "oklch(0.824 0.160 88 / 0.18)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "yellow-300-18"
+    },
+    {
+      "name": "fill-accent-yellow-heavy",
+      "value": "oklch(0.789 0.161 82 / 0.20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "yellow-400-20"
+    },
+    {
+      "name": "dark-fill-accent-yellow-heavy",
+      "value": "oklch(0.824 0.160 88 / 0.30)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "yellow-300-30"
+    },
+    {
+      "name": "fill-accent-yellow-heavier",
+      "value": "oklch(0.789 0.161 82)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "yellow-400"
+    },
+    {
+      "name": "dark-fill-accent-yellow-heavier",
+      "value": "oklch(0.824 0.160 88)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "yellow-300"
+    },
+    {
+      "name": "fill-accent-yellow-transparent",
+      "value": "oklch(0.789 0.161 82 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "yellow-400-0"
+    },
+    {
+      "name": "dark-fill-accent-yellow-transparent",
+      "value": "oklch(0.824 0.160 88 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "yellow-300-0"
+    },
+    {
+      "name": "fill-accent-olive",
+      "value": "oklch(0.730 0.160 113 / 0.10)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "olive-400-10"
+    },
+    {
+      "name": "dark-fill-accent-olive",
+      "value": "oklch(0.784 0.167 115 / 0.18)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "olive-300-18"
+    },
+    {
+      "name": "fill-accent-olive-heavy",
+      "value": "oklch(0.730 0.160 113 / 0.20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "olive-400-20"
+    },
+    {
+      "name": "dark-fill-accent-olive-heavy",
+      "value": "oklch(0.784 0.167 115 / 0.30)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "olive-300-30"
+    },
+    {
+      "name": "fill-accent-olive-heavier",
+      "value": "oklch(0.730 0.160 113)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "olive-400"
+    },
+    {
+      "name": "dark-fill-accent-olive-heavier",
+      "value": "oklch(0.784 0.167 115)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "olive-300"
+    },
+    {
+      "name": "fill-accent-olive-transparent",
+      "value": "oklch(0.730 0.160 113 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "olive-400-0"
+    },
+    {
+      "name": "dark-fill-accent-olive-transparent",
+      "value": "oklch(0.784 0.167 115 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "olive-300-0"
+    },
+    {
+      "name": "fill-accent-teal",
+      "value": "oklch(0.690 0.118 190 / 0.10)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "teal-400-10"
+    },
+    {
+      "name": "dark-fill-accent-teal",
+      "value": "oklch(0.787 0.123 186 / 0.18)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "teal-300-18"
+    },
+    {
+      "name": "fill-accent-teal-heavy",
+      "value": "oklch(0.690 0.118 190 / 0.20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "teal-400-20"
+    },
+    {
+      "name": "dark-fill-accent-teal-heavy",
+      "value": "oklch(0.787 0.123 186 / 0.30)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "teal-300-30"
+    },
+    {
+      "name": "fill-accent-teal-heavier",
+      "value": "oklch(0.690 0.118 191)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "teal-400"
+    },
+    {
+      "name": "dark-fill-accent-teal-heavier",
+      "value": "oklch(0.787 0.123 186)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "teal-300"
+    },
+    {
+      "name": "fill-accent-teal-transparent",
+      "value": "oklch(0.690 0.118 190 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "teal-400-0"
+    },
+    {
+      "name": "dark-fill-accent-teal-transparent",
+      "value": "oklch(0.787 0.123 186 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "teal-300-0"
+    },
+    {
+      "name": "fill-accent-navy",
+      "value": "oklch(0.469 0.147 273 / 0.10)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "navy-400-10"
+    },
+    {
+      "name": "dark-fill-accent-navy",
+      "value": "oklch(0.607 0.118 276 / 0.18)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "navy-300-18"
+    },
+    {
+      "name": "fill-accent-navy-heavy",
+      "value": "oklch(0.469 0.147 273 / 0.20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "navy-400-20"
+    },
+    {
+      "name": "dark-fill-accent-navy-heavy",
+      "value": "oklch(0.607 0.118 276 / 0.30)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "navy-300-30"
+    },
+    {
+      "name": "fill-accent-navy-heavier",
+      "value": "oklch(0.469 0.147 273)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "navy-400"
+    },
+    {
+      "name": "dark-fill-accent-navy-heavier",
+      "value": "oklch(0.649 0.102 276)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "navy-300"
+    },
+    {
+      "name": "fill-accent-navy-transparent",
+      "value": "oklch(0.469 0.147 273 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "navy-400-0"
+    },
+    {
+      "name": "dark-fill-accent-navy-transparent",
+      "value": "oklch(0.607 0.118 276 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "navy-300-0"
+    },
+    {
+      "name": "fill-accent-purple",
+      "value": "oklch(0.591 0.208 297 / 0.10)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "purple-400-10"
+    },
+    {
+      "name": "dark-fill-accent-purple",
+      "value": "oklch(0.670 0.205 299 / 0.18)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "purple-300-18"
+    },
+    {
+      "name": "fill-accent-purple-heavy",
+      "value": "oklch(0.591 0.208 297 / 0.20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "purple-400-20"
+    },
+    {
+      "name": "dark-fill-accent-purple-heavy",
+      "value": "oklch(0.670 0.205 299 / 0.30)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "purple-300-30"
+    },
+    {
+      "name": "fill-accent-purple-heavier",
+      "value": "oklch(0.591 0.208 297)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "purple-400"
+    },
+    {
+      "name": "dark-fill-accent-purple-heavier",
+      "value": "oklch(0.670 0.205 299)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "purple-300"
+    },
+    {
+      "name": "fill-accent-purple-transparent",
+      "value": "oklch(0.591 0.208 297 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "purple-400-0"
+    },
+    {
+      "name": "dark-fill-accent-purple-transparent",
+      "value": "oklch(0.670 0.205 299 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "purple-300-0"
+    },
+    {
+      "name": "fill-accent-pink",
+      "value": "oklch(0.637 0.208 338 / 0.10)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "pink-400-10"
+    },
+    {
+      "name": "dark-fill-accent-pink",
+      "value": "oklch(0.722 0.192 336 / 0.18)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "pink-300-18"
+    },
+    {
+      "name": "fill-accent-pink-heavy",
+      "value": "oklch(0.637 0.208 338 / 0.20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "pink-400-20"
+    },
+    {
+      "name": "dark-fill-accent-pink-heavy",
+      "value": "oklch(0.722 0.192 336 / 0.30)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "pink-300-30"
+    },
+    {
+      "name": "fill-accent-pink-heavier",
+      "value": "oklch(0.637 0.208 339)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "pink-400"
+    },
+    {
+      "name": "dark-fill-accent-pink-heavier",
+      "value": "oklch(0.722 0.192 336)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "pink-300"
+    },
+    {
+      "name": "fill-accent-pink-transparent",
+      "value": "oklch(0.637 0.208 338 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "pink-400-0"
+    },
+    {
+      "name": "dark-fill-accent-pink-transparent",
+      "value": "oklch(0.722 0.192 336 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "pink-300-0"
+    },
+    {
+      "name": "fill-absolute-white",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "dark-fill-absolute-white",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "fill-absolute-white-light",
+      "value": "oklch(1 0 0 / 0.20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "white-20"
+    },
+    {
+      "name": "dark-fill-absolute-white-light",
+      "value": "oklch(1 0 0 / 0.20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "white-20"
+    },
+    {
+      "name": "fill-absolute-white-transparent",
+      "value": "oklch(1 0 0 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "white-0"
+    },
+    {
+      "name": "dark-fill-absolute-white-transparent",
+      "value": "oklch(1 0 0 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "white-0"
+    },
+    {
+      "name": "fill-absolute-black",
+      "value": "oklch(0 0 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "black-100"
+    },
+    {
+      "name": "dark-fill-absolute-black",
+      "value": "oklch(0 0 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "black-100"
+    },
+    {
+      "name": "fill-absolute-black-light",
+      "value": "oklch(0 0 0 / 0.20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "black-20"
+    },
+    {
+      "name": "dark-fill-absolute-black-light",
+      "value": "oklch(0 0 0 / 0.20)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "black-20"
+    },
+    {
+      "name": "fill-absolute-black-transparent",
+      "value": "oklch(0 0 0 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "black-0"
+    },
+    {
+      "name": "dark-fill-absolute-black-transparent",
+      "value": "oklch(0 0 0 / 0)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "black-0"
+    },
+    {
+      "name": "fill-bright",
+      "value": "oklch(0.995 0.003 286)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "grey-25"
+    },
+    {
+      "name": "dark-fill-bright",
+      "value": "oklch(0.469 0.008 286)",
+      "group": "Semantic fill (beta tier)",
+      "ref": "grey-650"
+    },
+    {
+      "name": "border-neutral",
+      "value": "oklch(0 0 0 / 0.08)",
+      "group": "Semantic border (beta tier)",
+      "ref": "black-8"
+    },
+    {
+      "name": "dark-border-neutral",
+      "value": "oklch(1 0 0 / 0.12)",
+      "group": "Semantic border (beta tier)",
+      "ref": "white-12"
+    },
+    {
+      "name": "border-neutral-heavy",
+      "value": "oklch(0 0 0 / 0.15)",
+      "group": "Semantic border (beta tier)",
+      "ref": "black-15"
+    },
+    {
+      "name": "dark-border-neutral-heavy",
+      "value": "oklch(1 0 0 / 0.20)",
+      "group": "Semantic border (beta tier)",
+      "ref": "white-20"
+    },
+    {
+      "name": "border-neutral-heavier",
+      "value": "oklch(0 0 0 / 0.40)",
+      "group": "Semantic border (beta tier)",
+      "ref": "black-40"
+    },
+    {
+      "name": "dark-border-neutral-heavier",
+      "value": "oklch(1 0 0 / 0.40)",
+      "group": "Semantic border (beta tier)",
+      "ref": "white-40"
+    },
+    {
+      "name": "border-detach",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic border (beta tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "dark-border-detach",
+      "value": "oklch(0.232 0.006 286)",
+      "group": "Semantic border (beta tier)",
+      "ref": "grey-900"
+    },
+    {
+      "name": "border-detach-highest",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic border (beta tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "dark-border-detach-highest",
+      "value": "oklch(0.315 0.007 286)",
+      "group": "Semantic border (beta tier)",
+      "ref": "grey-750"
+    },
+    {
+      "name": "border-detach-higher",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic border (beta tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "dark-border-detach-higher",
+      "value": "oklch(0.283 0.007 286)",
+      "group": "Semantic border (beta tier)",
+      "ref": "grey-800"
+    },
+    {
+      "name": "border-detach-high",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic border (beta tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "dark-border-detach-high",
+      "value": "oklch(0.261 0.004 286)",
+      "group": "Semantic border (beta tier)",
+      "ref": "grey-850"
+    },
+    {
+      "name": "border-detach-low",
+      "value": "oklch(0.988 0 286)",
+      "group": "Semantic border (beta tier)",
+      "ref": "grey-50"
+    },
+    {
+      "name": "dark-border-detach-low",
+      "value": "oklch(0.219 0.004 286)",
+      "group": "Semantic border (beta tier)",
+      "ref": "grey-950"
+    },
+    {
+      "name": "border-absolute-white",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic border (beta tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "dark-border-absolute-white",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic border (beta tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "surface",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic surface (beta tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "dark-surface",
+      "value": "oklch(0.232 0.006 286)",
+      "group": "Semantic surface (beta tier)",
+      "ref": "grey-900"
+    },
+    {
+      "name": "surface-highest",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic surface (beta tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "dark-surface-highest",
+      "value": "oklch(0.315 0.007 286)",
+      "group": "Semantic surface (beta tier)",
+      "ref": "grey-750"
+    },
+    {
+      "name": "surface-higher",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic surface (beta tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "dark-surface-higher",
+      "value": "oklch(0.283 0.007 286)",
+      "group": "Semantic surface (beta tier)",
+      "ref": "grey-800"
+    },
+    {
+      "name": "surface-high",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic surface (beta tier)",
+      "ref": "white-100"
+    },
+    {
+      "name": "dark-surface-high",
+      "value": "oklch(0.261 0.004 286)",
+      "group": "Semantic surface (beta tier)",
+      "ref": "grey-850"
+    },
+    {
+      "name": "surface-low",
+      "value": "oklch(0.988 0 286)",
+      "group": "Semantic surface (beta tier)",
+      "ref": "grey-50"
+    },
+    {
+      "name": "dark-surface-low",
+      "value": "oklch(0.219 0.004 286)",
+      "group": "Semantic surface (beta tier)",
+      "ref": "grey-950"
+    },
+    {
+      "name": "surface-glass",
+      "value": "oklch(1 0 0 / 0.90)",
+      "group": "Semantic surface (beta tier)",
+      "ref": "white-90"
+    },
+    {
+      "name": "dark-surface-glass",
+      "value": "oklch(0.283 0.007 286 / 0.90)",
+      "group": "Semantic surface (beta tier)",
+      "ref": "grey-800-90"
+    },
+    {
+      "name": "surface-glass-highest",
+      "value": "oklch(0.952 0.001 286 / 0.90)",
+      "group": "Semantic surface (beta tier)",
+      "ref": "grey-200-90"
+    },
+    {
+      "name": "dark-surface-glass-highest",
+      "value": "oklch(0.315 0.007 286 / 0.90)",
+      "group": "Semantic surface (beta tier)",
+      "ref": "grey-750-90"
+    },
+    {
+      "name": "surface-glass-higher",
+      "value": "oklch(0.976 0.001 286 / 0.90)",
+      "group": "Semantic surface (beta tier)",
+      "ref": "grey-100-90"
+    },
+    {
+      "name": "dark-surface-glass-higher",
+      "value": "oklch(0.283 0.007 286 / 0.90)",
+      "group": "Semantic surface (beta tier)",
+      "ref": "grey-800-90"
+    },
+    {
+      "name": "surface-glass-high",
+      "value": "oklch(1 0 0 / 0.90)",
+      "group": "Semantic surface (beta tier)",
+      "ref": "white-90"
+    },
+    {
+      "name": "dark-surface-glass-high",
+      "value": "oklch(0.261 0.004 286 / 0.90)",
+      "group": "Semantic surface (beta tier)",
+      "ref": "grey-850-90"
+    },
+    {
+      "name": "dim-absolute-black",
+      "value": "oklch(0 0 0 / 0.40)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "black-40"
+    },
+    {
+      "name": "dark-dim-absolute-black",
+      "value": "oklch(0 0 0 / 0.40)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "black-40"
+    },
+    {
+      "name": "dim-absolute-black-heavy",
+      "value": "oklch(0 0 0 / 0.60)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "black-60"
+    },
+    {
+      "name": "dark-dim-absolute-black-heavy",
+      "value": "oklch(0 0 0 / 0.60)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "black-60"
+    },
+    {
+      "name": "dim-absolute-white",
+      "value": "oklch(1 0 0 / 0.40)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "white-40"
+    },
+    {
+      "name": "dark-dim-absolute-white",
+      "value": "oklch(1 0 0 / 0.40)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "white-40"
+    },
+    {
+      "name": "dim-absolute-white-heavy",
+      "value": "oklch(1 0 0 / 0.60)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "white-60"
+    },
+    {
+      "name": "dark-dim-absolute-white-heavy",
+      "value": "oklch(1 0 0 / 0.60)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "white-60"
+    },
+    {
+      "name": "gradient-green",
+      "value": "oklch(0.652 0.168 150)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "green-400"
+    },
+    {
+      "name": "dark-gradient-green",
+      "value": "oklch(0.652 0.168 150)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "green-400"
+    },
+    {
+      "name": "gradient-green-heavy",
+      "value": "oklch(0.732 0.157 150)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "green-300"
+    },
+    {
+      "name": "dark-gradient-green-heavy",
+      "value": "oklch(0.732 0.157 150)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "green-300"
+    },
+    {
+      "name": "state-default",
+      "value": "oklch(0 0 0 / 0.15)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "black-15"
+    },
+    {
+      "name": "dark-state-default",
+      "value": "oklch(1 0 0 / 0.20)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "white-20"
+    },
+    {
+      "name": "state-action",
+      "value": "oklch(0.554 0.214 280)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "blue-400"
+    },
+    {
+      "name": "dark-state-action",
+      "value": "oklch(0.665 0.181 280)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "blue-300"
+    },
+    {
+      "name": "state-action-light",
+      "value": "oklch(0.554 0.214 280 / 0.30)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "blue-400-30"
+    },
+    {
+      "name": "dark-state-action-light",
+      "value": "oklch(0.615 0.211 277 / 0.45)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "blue-300-45"
+    },
+    {
+      "name": "state-warning",
+      "value": "oklch(0.698 0.156 55)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "orange-400"
+    },
+    {
+      "name": "dark-state-warning",
+      "value": "oklch(0.764 0.148 58)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "orange-300"
+    },
+    {
+      "name": "state-warning-light",
+      "value": "oklch(0.698 0.156 55 / 0.30)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "orange-400-30"
+    },
+    {
+      "name": "dark-state-warning-light",
+      "value": "oklch(0.764 0.148 58 / 0.30)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "orange-300-30"
+    },
+    {
+      "name": "elevation-xlarge",
+      "value": "oklch(0 0 0 / 0.30)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "black-30"
+    },
+    {
+      "name": "dark-elevation-xlarge",
+      "value": "oklch(0 0 0 / 0.30)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "black-30"
+    },
+    {
+      "name": "elevation-large",
+      "value": "oklch(0 0 0 / 0.22)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "black-22"
+    },
+    {
+      "name": "dark-elevation-large",
+      "value": "oklch(0 0 0 / 0.22)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "black-22"
+    },
+    {
+      "name": "elevation-medium",
+      "value": "oklch(0 0 0 / 0.15)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "black-15"
+    },
+    {
+      "name": "dark-elevation-medium",
+      "value": "oklch(0 0 0 / 0.15)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "black-15"
+    },
+    {
+      "name": "elevation-small",
+      "value": "oklch(0 0 0 / 0.08)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "black-8"
+    },
+    {
+      "name": "dark-elevation-small",
+      "value": "oklch(0 0 0 / 0.08)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "black-8"
+    },
+    {
+      "name": "elevation-base",
+      "value": "oklch(0 0 0 / 0.05)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "black-5"
+    },
+    {
+      "name": "dark-elevation-base",
+      "value": "oklch(0 0 0 / 0.05)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "black-5"
+    },
+    {
+      "name": "elevation-base-inner",
+      "value": "oklch(1 0 0 / 0.12)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "white-12"
+    },
+    {
+      "name": "dark-elevation-base-inner",
+      "value": "oklch(1 0 0 / 0.12)",
+      "group": "Semantic dim·gradient·state·elevation (beta tier)",
+      "ref": "white-12"
     }
   ],
   "typography": [

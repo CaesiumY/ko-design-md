@@ -182,14 +182,23 @@ const CASES: Record<string, { title: string; check: () => void }> = {
     },
   },
   bezier: {
-    title: "stable-tier roles, single-reference cells, light and `dark-` twin",
+    title:
+      "stable `bg-*`/`txt-*` and beta `--color-*` roles, light and `dark-` twin",
     check: () => {
       const { literals, refs, tableRows } = load("bezier")
-      // The roles are the stable tier's; the palette is the beta tier's. A cell
-      // whose stable step differs in value from the beta step of the same name
-      // (`grey-900`) is written as prose and falls out here, as does one
-      // pointing at a step the entry does not carry (`black-3`, `grey-50-80`).
+      // Two published role layers share one palette, which is the beta tier's.
+      // Every beta role cell names one beta step, so each has its row. A stable
+      // cell whose step differs in value from the beta step of the same name
+      // (`grey-900`, `grey-800-80`) is written as prose and falls out here.
       const expected = singleReferenceRoles(tableRows)
+      // Both layers' tables must have parsed, or a dropped one would pass.
+      const layers = [/^(bg|txt)-/, /^(text|icon|fill|border|surface)\b/]
+      for (const layer of layers) {
+        expect(
+          [...expected.keys()].some((key) => layer.test(key)),
+          `bezier: ${layer} roles`
+        ).toBe(true)
+      }
       expectRowsToMatch("bezier", expected, refs, literals)
     },
   },
