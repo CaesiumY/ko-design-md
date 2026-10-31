@@ -515,8 +515,8 @@
     --c-olive-300:#b7c427; --c-olive-400:#a9b110;
     --c-teal-300:#40d3c5; --c-teal-400:#09b2ac; --c-teal-500:#068e95;
     --c-navy-400:#424fab; --c-purple-400:#8e57e7; --c-purple-500:#6735b6;
-    /* md 토큰 아님 — 상류 bezier-tokens 0.6.0 beta `color-pink-300`(다크 `text-accent-pink`). 다크 분홍 틴트 위 글자에만 쓴다.
-       md 에 실리거나 상류가 바뀌면 대비를 다시 잰다(#552). */
+    /* md 토큰 `pink-300`(#ec6fd3) — 상류 bezier-tokens 0.6.0 beta `color-pink-300`(다크 `text-accent-pink`). 다크 분홍 틴트 위 글자에만 쓴다.
+       상류가 바뀌면 대비를 다시 잰다(#552). */
     --c-pink-300:#ec6fd3; --c-pink-400:#d64bb5; --c-pink-500:#b0369e;
 
     --c-grey-25:#fdfdff; --c-grey-50:#fbfbfb; --c-grey-100:#f7f7f8;
@@ -554,7 +554,7 @@
        md 토큰 `{hue}-300-30`·`blue-300-18` — 상류 bezier-tokens 0.6.0 beta 다크 사다리: 라이트의 20% 틴트
        (`fill-accent-*-heavy`)는 다크에서 `color-{hue}-300-30`, 라이트의 10%(`fill-accent-blue`)는 `color-blue-300-18`.
        hover `fill-accent-blue-heavy-hovered`(#8184ff4d)는 md 토큰 아님. blue·green·red·navy 는 이 반투명 값의 기준 RGB 가
-       불투명 300 색과 다르다(blue 는 #8082ff 가 아니라 #6b6eff · navy-300 은 md 에 없다) — 300 색의 30% 로 다시 계산하지 말고
+       불투명 300 색과 다르다(blue 는 #8082ff 가 아니라 #6b6eff · navy 는 md `navy-300` #7e89cd 가 아니라 #6f7bc8) — 300 색의 30% 로 다시 계산하지 말고
        md 토큰 값을 옮길 것. 상류가 바뀌면 대비를 다시 잰다(#552). */
     --txt-accent-blue:var(--c-blue-300);
     --fill-accent-blue-heavy:rgba(107,110,255,.30);   --fill-accent-blue:rgba(107,110,255,.18);
