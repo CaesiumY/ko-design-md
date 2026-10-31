@@ -2,24 +2,16 @@
 name: 배달의민족
 slug: baemin
 category: delivery
-last_updated: "2026-10-25"
+last_updated: "2026-11-01"
 created_at: 2026-05-18
 lang: ko
 logo: https://getdesign.kr/logos/baemin.svg
 colors:
-  semantic-discount: "{colors.red}"   # 23% 할인 칩 — 단색
-  semantic-coupon: "{colors.orange}"   # 쿠폰 티켓
-  semantic-point: "{colors.yellow}"   # 포인트 코인
-  semantic-frozen: "{colors.frozen}"   # B마트 냉동 인디케이터
-  semantic-baemin-pay: "{colors.pink}"   # 배민페이
-  semantic-hangrut: "{colors.navy}"   # 한그릇 프로모션 / 음식배달 헤더
-  semantic-mint-tag: "{colors.primary-tint}"   # NEW·신규·환영 칩
-  semantic-toast-bg: "{colors.bg-inverse}"   # 검정 캡슐 토스트 (90% opacity)
   ## Brand mint
   # 현재 프라이머리 — 2024 Baemin 2.0 리브랜드 적용 [src:1]
   primary: oklch(0.88 0.18 178)   # 히어로 풀블리드·CTA·라이더 헬멧·카테고리 강조
   primary-hover: oklch(0.69 0.13 184)   # 버튼 hover/pressed (mint-deep)
-  primary-tint: oklch(0.97 0.05 178)   # 옅은 민트 배경 (체크리스트 등)
+  primary-tint: oklch(0.97 0.05 178)   # 옅은 민트 배경 (체크리스트 등) · NEW·신규·환영 칩
   primary-legacy: oklch(0.72 0.10 187)   # 레거시 민트 (pre-2024, 호환용)
   # Mint scale 050 → 900
   mint-050: oklch(0.99 0.03 178)
@@ -52,7 +44,7 @@ colors:
   bg-surface: oklch(1.00 0 0)   # 카드·시트 표면
   bg-subtle: oklch(0.96 0.00 286)   # 보조 배경 (입력 chips)
   bg-pressed: oklch(0.94 0.00 286)   # press 상태
-  bg-inverse: oklch(0.18 0 0)   # 블랙 캡슐 (near-black)
+  bg-inverse: oklch(0.18 0 0)   # 블랙 캡슐 (near-black) · 토스트 배경은 90% 불투명도로
   fg-1: oklch(0.18 0 0)   # 주요 텍스트 (near-black)
   fg-2: oklch(0.34 0 0)   # 보조 텍스트
   fg-3: oklch(0.55 0 0)   # 3차 텍스트 / placeholder
@@ -183,7 +175,7 @@ fonts:
 
 ## Colors
 
-> **토큰 승격(2026-10-25).** `### rating` 의 별점 금색을 frontmatter 토큰 `{colors.star-gold}` 로 올렸다. 값은 본문이 적던 OKLCH 그대로이고, 함께 적혀 있던 hex 병기는 그 OKLCH 와 다른(더 밝은) 색을 가리켜 뺐다. 이 값도 다른 정량값처럼 핸드오프 번들 관찰값이다(`## Known Gaps`).
+> **역할 이름 판정(2026-11-01).** frontmatter 에 있던 `semantic-*` 참조 행 8개(`semantic-discount` 등)를 뺐다. 이 이름은 핸드오프 번들의 쓰임별 별칭(`--tag-mint-bg` 등)을 이 문서가 옮기면서 스스로 붙인 이름이고, 번들도 우아한형제들의 발행물이 아니라 Claude Design 의 재구성이다. 배민 웹이 배포하는 CSS [src:14] 에도, 사장님 사이트(ceo.baemin.com)와 우아한형제들 사이트 [src:2] 의 CSS 에도 `semantic-*` 이름은 없다. 브랜드가 발행한 역할 이름이 아니므로 역할 참조 행으로 싣지 않고, 쓰임별 대응은 아래 표와 각 팔레트 토큰 줄 주석에만 둔다. 배민 웹이 실제로 배포하는 역할 계층(`--sem-*` → `--ref-color-*`)은 이 문서 팔레트와 다른 값이라 아직 싣지 못했다(`## Known Gaps`).
 
 색 시스템의 중심은 **2024 리브랜드 민트 `{colors.primary}`**와 **딥 네이비 `{colors.navy}`**, 그리고 따뜻한 회색 뉴트럴 스택이다. 핸드오프 `colors_and_type.css`가 토큰 표면을 명시한다.
 
@@ -191,11 +183,22 @@ fonts:
 
 배민은 순수 검정·순백을 피한다. 페이지 배경은 본화이트, 텍스트는 near-black이다.
 
-### Semantic alias (의미별 매핑)
+### 쓰임별 색 대응
 
-product-facing 색은 시맨틱 alias로 호출하는 것이 권장된다. raw 토큰(`{colors.red}` 등)은 새 role을 만들 때만 직접 참조한다 — 토스 TDS의 base/semantic 분리 원칙과 동일하다. 핸드오프 `colors_and_type.css` §3-5는 `--tag-mint-bg: var(--baemin-mint-tint)` 형식으로 raw 민트·빨강·네이비를 product-meaning 별칭에 묶어 둔다. 다음은 그 매핑을 본 문서 토큰 어휘로 옮긴 표다.
+핸드오프 `colors_and_type.css` §3-5는 `--tag-mint-bg: var(--baemin-mint-tint)` 형식으로 raw 민트·빨강·네이비를 쓰임별 별칭에 묶어 둔다. 다음은 그 대응을 본 문서 토큰 어휘로 옮긴 표다. 별칭 이름은 번들 재구성의 것이라 토큰으로 싣지 않고 쓰임만 적는다.
 
-새 컴포넌트를 추가할 때는 raw 컬러를 직접 박지 말고 위 시맨틱 슬롯 중 하나에 정렬하는 것을 우선한다. 의미 매핑이 비어 있는 경우(`semantic-success` 등)에는 핸드오프 토큰을 늘리기 전에 기존 alias로 표현 가능한지 한 번 더 검토한다.
+| 쓰임 | 토큰 |
+| --- | --- |
+| 할인 칩 (23% 등, 단색) | `{colors.red}` |
+| 쿠폰 티켓 | `{colors.orange}` |
+| 포인트 코인 | `{colors.yellow}` |
+| B마트 냉동 인디케이터 | `{colors.frozen}` |
+| 배민페이 | `{colors.pink}` |
+| 한그릇 프로모션 · 음식배달 헤더 | `{colors.navy}` |
+| NEW·신규·환영 칩 | `{colors.primary-tint}` |
+| 검정 캡슐 토스트 | `{colors.bg-inverse}` 90% 불투명도 |
+
+새 컴포넌트를 추가할 때는 raw 컬러를 직접 박지 말고 위 쓰임 중 하나에 정렬하는 것을 우선한다. 맞는 쓰임이 없으면(성공 상태 등) 토큰을 늘리기 전에 기존 대응으로 표현 가능한지 한 번 더 검토한다.
 
 ## Typography
 
@@ -865,6 +868,7 @@ iOS 상태표시줄 아래 위치하는 검색 화면 헤더. 좌측 `←` back,
 - **WORK 폰트 미반영**: 2024 *Baemin 2.0* 리브랜드와 함께 공개된 자체 폰트 WORK는 외부 공개 배포가 확인되지 않아 본 문서 디스플레이 스택은 여전히 BM 한나체 시리즈를 기준으로 한다. 실제 신규 앱에서 헤드라인 폰트가 WORK로 교체됐는지 확인 필요 [src:1].
 - **민트 hex 표기 다원화**: 2010년대 후반 The PR 기사의 `#5EBEBB` 표기는 현행 디지털 프라이머리(`#0CEFD3` ≈ `oklch(0.854 0.154 180)`, Baemin 2.0)나 레거시 디지털 민트(`#2AC1BC`) 어느 쪽과도 정확히 일치하지 않는다 — 인쇄·홍보 자산용 다른 표기로 추정되며 디지털 토큰 적용 시 핸드오프 값을 우선한다 [src:3].
 - **마스코트 SVG 미포함**: 배달이친구들(독고배달이·메이배달이·냥이배달이 등 15종) 공식 SVG는 외부 배포되지 않아 핸드오프는 image-slot placeholder만 제공한다 [src:1][src:9][src:4].
+- **배포된 역할 계층 미수록 (2026-11-01)**: 배민 웹이 싣는 스타일시트는 팔레트 `--ref-color-*`(`mint1`~`mint8` 등 단계마다 라이트·다크 두 값)와 그 위의 역할 층 `--sem-base-color-*`·`--sem-mint-color-*`, 컴포넌트 층 `--com-*` 을 커스텀 프로퍼티로 배포한다 [src:14]. 역할 가운데 일부는 팔레트 단계 하나를 가리키고(`--sem-mint-color-systemMainPrimary: var(--ref-color-mint5)` — `mint5` 의 값은 위 「민트 hex 표기 다원화」의 현행 디지털 프라이머리 hex 와 같다), 나머지는 hex·rgba 값을 직접 갖는다. 이 문서의 팔레트는 핸드오프 번들 값이라 그 단계들과 이름도 값도 다르다 — 이 역할 계층을 본문 표와 참조 행으로 실으려면 배포 팔레트를 먼저 다시 실어야 하며, 그 재감사는 아직 하지 않았다.
 - **아이콘 시스템 단일화 미확인**: 핸드오프는 UI 라인 아이콘을 Lucide로 대체하되 SUBSTITUTION FLAG를 표시한다. 실제 배민은 (1) UI 라인 아이콘, (2) 3D 미니어처 카테고리, (3) 벡터 일러스트 배민스토어, (4) 손그림 라인 마케팅의 4종을 혼용 — 통합 아이콘 시스템은 공개되지 않았다 [src:1].
 
 ## References
@@ -882,3 +886,4 @@ iOS 상태표시줄 아래 위치하는 검색 화면 헤더. 좌측 `←` back,
 11. https://noonnu.cc/en/font_page/55 — 도현체 SIL OFL 1.1 라이선스
 12. https://www.newswatch.kr/news/articleView.html?idxno=57219 — 배달이친구들 한명수 CCO 인용
 13. https://www.iconsumer.or.kr/news/articleView.html?idxno=4988 — 배민 폰트 마케팅, B급 문화 페르소나
+14. https://www.baemin.com — 배민 웹. 페이지가 싣는 `_next/static/css/` 스타일시트(해시 파일명이라 페이지에서 찾아 연다)가 `--ref-color-*`·`--sem-*`·`--com-*` 커스텀 프로퍼티를 담는다.
