@@ -104,7 +104,6 @@ _Avoid_: 시맨틱 토큰(단독), 역할 표(층 전체 뜻으로)
 
 **역할 참조 행 (role reference row)**:
 역할 계층의 대응 하나를 frontmatter `colors:` 에 별칭 토큰으로 적은 줄(`bg-brand-solid: "{colors.carrot-600}"`). 토큰 사이드카에는 가리키는 색으로 풀려 `ref` 와 함께 실리고, Tokens 탭에서는 역할 카드가 된다.
-_Avoid_: 시맨틱 별칭
 
 **토큰 노트 (token note)**:
 토큰 하나에 붙은 짧은 단서 — 쓰임새, 또는 발행값과의 차이.
