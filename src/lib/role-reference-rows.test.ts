@@ -273,6 +273,17 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       expectRowsToMatch("ridi", expected, refs, literals)
     },
   },
+  "vapor-ui": {
+    title: "every published alias, light and `dark-` twin",
+    check: () => {
+      const { literals, refs, tableRows } = load("vapor-ui")
+      // `color-foreground-inverse` points at `color-white` in both cells: the
+      // dark block redefines white to the same value, so the twin aliases the
+      // unprefixed key.
+      const expected = singleReferenceRoles(tableRows)
+      expectRowsToMatch("vapor-ui", expected, refs, literals)
+    },
+  },
 }
 
 describe("role reference rows agree with the body role tables", () => {
@@ -301,8 +312,8 @@ describe("role reference rows agree with the body role tables", () => {
     // Detected by shape, not by listing: a reference row whose key — less a
     // `dark-` prefix, and with codeit's `text-` / `background-` read as `txt-` /
     // `bg-` — is a backticked name in the first column of the entry's own `## Colors`
-    // tables. Older reference rows elsewhere (toss's role chains, vapor-ui's
-    // aliases) name no table role and are not caught. A role table written
+    // tables. Older reference rows elsewhere (toss's role chains) name no
+    // table role and are not caught. A role table written
     // without backticks, or with the role outside the first column, is not
     // seen either — .claude/rules/catalog.md states that shape.
     const docsName = (key: string): string =>

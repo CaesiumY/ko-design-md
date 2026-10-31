@@ -86,8 +86,8 @@ corrects an earlier version of the entry — nothing to apply):
   theme block, `prefers-color-scheme`, Tailwind's `dark:` variant, …), so components switch
   without code changes.
 - Some dark pairs meet only through a role row and its dark twin
-  (`color-background-canvas` → `color-white`, `dark-color-background-canvas` →
-  `dark-canvas`). Before deciding a token has none, check same-stem neighbours, their
+  (`color-background-overlay-100` → `canvas`, `dark-color-background-overlay-100` →
+  `dark-gray-100`). Before deciding a token has none, check same-stem neighbours, their
   comments and the role rows that point at it.
 - No dark pair means one of two things. Some tokens are theme-invariant by design (e.g. a
   `static-*` family). Others simply weren't published — Known Gaps may say so, but not

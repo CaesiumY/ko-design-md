@@ -1,12 +1,12 @@
 {
   "colors": [
     {
-      "name": "color-background-canvas",
+      "name": "color-background-canvas-100",
       "value": "oklch(1.000 0.000 0)",
-      "ref": "color-white"
+      "ref": "canvas"
     },
     {
-      "name": "dark-color-background-canvas",
+      "name": "dark-color-background-canvas-100",
       "value": "oklch(0.256 0.000 0)",
       "ref": "dark-canvas"
     },
@@ -23,7 +23,7 @@
     {
       "name": "color-background-overlay-100",
       "value": "oklch(1.000 0.000 0)",
-      "ref": "color-white"
+      "ref": "canvas"
     },
     {
       "name": "dark-color-background-overlay-100",
@@ -329,6 +329,27 @@
       "name": "dark-color-foreground-normal-200",
       "value": "oklch(0.985 0.000 0)",
       "ref": "dark-gray-900"
+    },
+    {
+      "name": "color-foreground-inverse",
+      "value": "oklch(1.000 0.000 0)",
+      "ref": "color-white"
+    },
+    {
+      "name": "dark-color-foreground-inverse",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "상류 다크 블록이 white 를 라이트와 같은 값으로 다시 정의한다",
+      "ref": "color-white"
+    },
+    {
+      "name": "color-border-normal",
+      "value": "oklch(0.910 0.000 0)",
+      "ref": "gray-100"
+    },
+    {
+      "name": "dark-color-border-normal",
+      "value": "oklch(0.489 0.000 0)",
+      "ref": "dark-gray-300"
     },
     {
       "name": "color-border-primary",
@@ -1077,6 +1098,12 @@
       "name": "color-black",
       "value": "oklch(0.000 0.000 0)",
       "note": "#000000",
+      "group": "Base palette"
+    },
+    {
+      "name": "canvas",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "#FFFFFF · 상류가 color-white 와 같은 값을 발행한다",
       "group": "Base palette"
     },
     {
