@@ -169,7 +169,7 @@ colors:
   ## Semantic bg-*·txt-* (stable tier)
   # 기본 tier 역할 중 상류가 위 팔레트와 같은 값의 원시값 하나를 가리키는 쪽만 싣는다 [src:3].
   # 기본 tier 의 grey-50/700/800/850/900 과 그 알파 단계는 위 beta 값과 달라 그 단계를 가리키는 쪽은 본문 표에만 둔다.
-  txt-white-normal: "{colors.white-100}"
+  txt-white-normal: "{colors.white-100}"   # 다크는 기본 tier grey-900 — 같은 이름 beta 단계와 값이 달라 dark- 행 없음 (본문 표에 기본 tier 값)
   txt-black-dark: "{colors.black-40}"
   dark-txt-black-dark: "{colors.white-40}"
   txt-black-darker: "{colors.black-60}"
@@ -178,11 +178,11 @@ colors:
   dark-txt-black-darkest: "{colors.white-80}"
   txt-black-pure: "{colors.black-100}"
   dark-txt-black-pure: "{colors.white-100}"
-  bg-grey-lighter: "{colors.grey-100}"
-  bg-grey-light: "{colors.grey-200}"
+  bg-grey-lighter: "{colors.grey-100}"   # 다크는 기본 tier grey-800 — 같은 이름 beta 단계와 값이 달라 dark- 행 없음 (본문 표에 기본 tier 값)
+  bg-grey-light: "{colors.grey-200}"   # 다크는 기본 tier grey-700 — 같은 이름 beta 단계와 값이 달라 dark- 행 없음 (본문 표에 기본 tier 값)
   bg-grey-dark: "{colors.grey-500}"
   dark-bg-grey-dark: "{colors.grey-500}"
-  dark-bg-grey-darkest: "{colors.white-100}"
+  dark-bg-grey-darkest: "{colors.white-100}"   # 라이트는 기본 tier grey-900 — 같은 이름 beta 단계와 값이 달라 라이트 행 없음 (본문 표에 기본 tier 값)
   bg-black-lightest: "{colors.black-3}"
   dark-bg-black-lightest: "{colors.white-5}"
   bg-black-lighter: "{colors.black-5}"
@@ -195,18 +195,18 @@ colors:
   dark-bg-black-darker: "{colors.white-40}"
   bg-black-darkest: "{colors.black-60}"
   dark-bg-black-darkest: "{colors.white-60}"
-  bg-lounge: "{colors.grey-100-90}"
-  bg-header-float: "{colors.white-90}"
-  bg-header: "{colors.white-100}"
-  bg-navi: "{colors.grey-100-80}"
-  bg-gnb: "{colors.grey-200-80}"
+  bg-lounge: "{colors.grey-100-90}"   # 다크는 기본 tier grey-800-90 — 같은 이름 beta 단계와 값이 달라 dark- 행 없음 (본문 표에 기본 tier 값)
+  bg-header-float: "{colors.white-90}"   # 다크는 기본 tier grey-800-80 — 같은 이름 beta 단계와 값이 달라 dark- 행 없음 (본문 표에 기본 tier 값)
+  bg-header: "{colors.white-100}"   # 다크는 기본 tier grey-800 — 같은 이름 beta 단계와 값이 달라 dark- 행 없음 (본문 표에 기본 tier 값)
+  bg-navi: "{colors.grey-100-80}"   # 다크는 기본 tier grey-800-80 — 같은 이름 beta 단계와 값이 달라 dark- 행 없음 (본문 표에 기본 tier 값)
+  bg-gnb: "{colors.grey-200-80}"   # 다크는 기본 tier grey-700-80 — 같은 이름 beta 단계와 값이 달라 dark- 행 없음 (본문 표에 기본 tier 값)
   bg-white-dim-light: "{colors.white-20}"
   dark-bg-white-dim-light: "{colors.black-20}"
   bg-white-dim-dark: "{colors.white-60}"
   dark-bg-white-dim-dark: "{colors.black-60}"
-  bg-white-low: "{colors.white-100}"
-  bg-white-normal: "{colors.white-100}"
-  bg-white-high: "{colors.white-100}"
+  bg-white-low: "{colors.white-100}"   # 다크는 기본 tier grey-800 — 같은 이름 beta 단계와 값이 달라 dark- 행 없음 (본문 표에 기본 tier 값)
+  bg-white-normal: "{colors.white-100}"   # 다크는 기본 tier grey-900 — 같은 이름 beta 단계와 값이 달라 dark- 행 없음 (본문 표에 기본 tier 값)
+  bg-white-high: "{colors.white-100}"   # 다크는 기본 tier grey-700 — 같은 이름 beta 단계와 값이 달라 dark- 행 없음 (본문 표에 기본 tier 값)
   ## Semantic text (beta tier)
   text-action: "{colors.blue-400}"
   dark-text-action: "{colors.blue-300}"
@@ -624,7 +624,7 @@ Bezier는 채널톡의 사내 제품 UI를 외부에 그대로 공개한 드문 
 
 ## Colors
 
-> **대조 결과·역할 표 추가(2026-11-01).** 아래 「Semantic」 표는 같은 패키지 0.6.0 이 발행한 역할 층 두 벌을 싣는다 — 기본 tier `dist/css/styles.css` 의 `--bg-*`·`--txt-*` 27개와 beta tier `dist/beta/css/styles.css` 의 `--color-*` 역할 346개이고, 둘 다 라이트(`:root`·`[data-bezier-theme="light"]`)·다크(`[data-bezier-theme="dark"]`) 블록에서 대응을 직접 옮겼다 [src:3]. beta 역할 가운데 163개는 두 테마 모두 beta 원시값 하나를 가리켜 326칸 전부가 frontmatter 참조 행이다. 가리키는 원시값 130개 가운데 이 문서에 이미 있던 88개는 상류와 ΔE ≤ 0.002 로 맞았고, 없던 42개는 상류 값으로 더했다. 나머지 183개(`-hovered` 173개와 hovered 가 아닌 `chart-theme-default-*` 10개)는 상류가 두 테마 모두 원시값을 가리키지 않고 hex 를 직접 적어 가리킬 팔레트 토큰이 상류에 없으므로, 참조 행 없이 표에만 OKLCH 로 실었다(hex 는 저장소 변환기로 옮겼다). 그중 19개(`fill-*-transparent-hovered` 계열)는 hex 가 원시값과 같지만 상류가 그 원시값을 가리키는 것은 아니어서, 칸에 그렇게 적고 참조 행을 두지 않았다. 기본 tier 역할은 기본 tier 원시값을 가리키는데 이 절의 팔레트는 beta tier 라, 두 tier 를 원시값마다 hex 로 맞대 봤다 — `black-*`·`white-*` 알파 단계와 `grey-100/200/500`·`grey-100-80/90`·`grey-200-80` 은 같은 값이고, `grey-50/700/800/850/900` 과 그 알파 단계(`grey-50-80`·`grey-700-80`·`grey-800-80/90`·`grey-850-80`)는 다르다. 그래서 기본 tier 는 같은 값의 원시값을 가리키는 칸(38개)만 참조 행으로 싣고, 값이 다른 grey 단계를 가리키는 칸(16개)은 표에만 두었다. 참조 행이 아닌 팔레트 색 토큰 142개는 published `@channel.io/bezier-tokens` 0.6.0의 `dist/beta/css/styles.css`에서 나온다 [src:3]. 비공개 핸드오프 번들에서 온 43개도 이 배포물과 **전부 ΔE ≤ 0.02**로 일치한다 — 번들 값이 공개 배포물로 재현된다. 상류 원시값 블록에서 직접 옮긴 99개(accent 틴트 `{hue}-400-0/10/20`·`{hue}-300-0/18/30`·`blue-400-30`·`blue-300-45`·`orange-400-30` 69개, 불투명 `navy/purple/pink/teal-300` 4개, `grey-650/750/950` 3개, grey 알파 7개, `black-*`·`white-*` 알파 16개)는 상류 이름을 그대로 쓰고 알파는 이름이 말하는 백분율로 적었으며(`white-8` 은 `/ 0.08`), 줄 끝에 상류 hex를 적어 `audit:oklch`가 줄마다 대조한다(상류가 `#fff3`처럼 줄여 쓴 값은 8자리로 풀어 적었다). 같은 파일과 대조해 아래 「Accent global hues」의 틴트 서술을 상류 이름에 맞췄다 — 기본 `fill-accent-{hue}`는 10%(다크 `{hue}-300-18`)이고 20%는 `fill-accent-{hue}-heavy`(다크 `{hue}-300-30`)다 [src:3]. 다만 **tier를 구분해 읽어야 한다**: 이 절의 색은 beta tier이고, 아래 Typography·Rounded·Spacing 절의 값은 기본(stable) tier다. 같은 토큰 이름이 tier마다 다른 값을 가진다 — `grey-900`이 stable에서는 `#242428` ≈ `oklch(0.262 0.007 286)`, beta에서는 `#1d1d20` ≈ `oklch(0.232 0.006 286)`이다. beta에는 stable에 없는 `grey-25/300/400/600/650/750/950`이 있고, 반대로 `radius-44`·`radius-42-p`는 stable에만 있다.
+> **대조 결과·역할 표 추가(2026-11-01).** 아래 「Semantic」 표는 같은 패키지 0.6.0 이 발행한 역할 층 두 벌을 싣는다 — 기본 tier `dist/css/styles.css` 의 `--bg-*`·`--txt-*` 27개와 beta tier `dist/beta/css/styles.css` 의 `--color-*` 역할 346개이고, 둘 다 라이트(`:root`·`[data-bezier-theme="light"]`)·다크(`[data-bezier-theme="dark"]`) 블록에서 대응을 직접 옮겼다 [src:3]. beta 역할 가운데 163개는 두 테마 모두 beta 원시값 하나를 가리켜 326칸 전부가 frontmatter 참조 행이다. 가리키는 원시값 130개 가운데 이번 재감사 전부터 이 문서에 있던 84개는 상류와 ΔE ≤ 0.002 로 맞았고, 46개는 이번에 상류 값으로 더했다(그중 `black-3`·`black-20`·`white-5`·`grey-100-90` 4개는 기본 tier 도 같은 hex 로 발행한 단계다). 나머지 183개(`-hovered` 173개와 hovered 가 아닌 `chart-theme-default-*` 10개)는 상류가 두 테마 모두 원시값을 가리키지 않고 hex 를 직접 적어 가리킬 팔레트 토큰이 상류에 없으므로, 참조 행 없이 표에만 OKLCH 로 실었다(hex 는 저장소 변환기로 옮겼다). 그중 19개(`fill-*-transparent-hovered` 계열)는 hex 가 원시값과 같지만 상류가 그 원시값을 가리키는 것은 아니어서, 칸에 그렇게 적고 참조 행을 두지 않았다. 기본 tier 역할은 기본 tier 원시값을 가리키는데 이 절의 팔레트는 beta tier 라, 두 tier 를 원시값마다 hex 로 맞대 봤다 — `black-*`·`white-*` 알파 단계와 `grey-100/200/500`·`grey-100-80/90`·`grey-200-80` 은 같은 값이고, `grey-50/700/800/850/900` 과 그 알파 단계(`grey-50-80`·`grey-700-80`·`grey-800-80/90`·`grey-850-80`)는 다르다. 그래서 기본 tier 는 같은 값의 원시값을 가리키는 칸(38개)만 참조 행으로 싣고, 값이 다른 grey 단계를 가리키는 칸(16개)은 표에만 두었다. 참조 행이 아닌 팔레트 색 토큰 142개는 published `@channel.io/bezier-tokens` 0.6.0의 `dist/beta/css/styles.css`에서 나온다 [src:3]. 비공개 핸드오프 번들에서 온 43개도 이 배포물과 **전부 ΔE ≤ 0.02**로 일치한다 — 번들 값이 공개 배포물로 재현된다. 상류 원시값 블록에서 직접 옮긴 99개(accent 틴트 `{hue}-400-0/10/20`·`{hue}-300-0/18/30`·`blue-400-30`·`blue-300-45`·`orange-400-30` 69개, 불투명 `navy/purple/pink/teal-300` 4개, `grey-650/750/950` 3개, grey 알파 7개, `black-*`·`white-*` 알파 16개)는 상류 이름을 그대로 쓰고 알파는 이름이 말하는 백분율로 적었으며(`white-8` 은 `/ 0.08`), 줄 끝에 상류 hex를 적어 `audit:oklch`가 줄마다 대조한다(상류가 `#fff3`처럼 줄여 쓴 값은 8자리로 풀어 적었다). 같은 파일과 대조해 아래 「Accent global hues」의 틴트 서술을 상류 이름에 맞췄다 — 기본 `fill-accent-{hue}`는 10%(다크 `{hue}-300-18`)이고 20%는 `fill-accent-{hue}-heavy`(다크 `{hue}-300-30`)다 [src:3]. 다만 **tier를 구분해 읽어야 한다**: 이 절의 색은 beta tier이고, 아래 Typography·Rounded·Spacing 절의 값은 기본(stable) tier다. 같은 토큰 이름이 tier마다 다른 값을 가진다 — `grey-900`이 stable에서는 `#242428` ≈ `oklch(0.262 0.007 286)`, beta에서는 `#1d1d20` ≈ `oklch(0.232 0.006 286)`이다. beta에는 stable에 없는 `grey-25/300/400/600/650/750/950`이 있고, 반대로 `radius-44`·`radius-42-p`는 stable에만 있다.
 
 Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3계층 토큰 구조다 [src:3][src:2]. 글로벌은 원시 색값이고, 시맨틱(`--bg-*`, `--txt-*`, `--color-*`)은 테마별로 다른 글로벌을 참조한다 [src:2][src:3]. `--bg-*`·`--txt-*` 는 기본 tier 의 시맨틱 이름이고, `--color-` 는 beta tier 의 이름 앞붙임이다 — beta 는 원시값(`--color-grey-900`)과 시맨틱(`--color-text-neutral`)이 같은 앞붙임을 쓴다 [src:3]. 특징은 navy·purple·pink·red·orange·yellow·olive·green·teal·cobalt·blue 11개 hue를 각각 300/400/500 명도 + 알파 변형으로 갖춘 무지개 액센트 팔레트다 [src:3][src:4].
 

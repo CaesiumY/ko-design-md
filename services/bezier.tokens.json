@@ -820,6 +820,7 @@
     {
       "name": "txt-white-normal",
       "value": "oklch(1 0 0)",
+      "note": "다크는 기본 tier grey-900 — 같은 이름 beta 단계와 값이 달라 dark- 행 없음 (본문 표에 기본 tier 값)",
       "group": "Semantic bg-*·txt-* (stable tier)",
       "ref": "white-100"
     },
@@ -874,12 +875,14 @@
     {
       "name": "bg-grey-lighter",
       "value": "oklch(0.976 0.001 286)",
+      "note": "다크는 기본 tier grey-800 — 같은 이름 beta 단계와 값이 달라 dark- 행 없음 (본문 표에 기본 tier 값)",
       "group": "Semantic bg-*·txt-* (stable tier)",
       "ref": "grey-100"
     },
     {
       "name": "bg-grey-light",
       "value": "oklch(0.952 0.001 286)",
+      "note": "다크는 기본 tier grey-700 — 같은 이름 beta 단계와 값이 달라 dark- 행 없음 (본문 표에 기본 tier 값)",
       "group": "Semantic bg-*·txt-* (stable tier)",
       "ref": "grey-200"
     },
@@ -898,6 +901,7 @@
     {
       "name": "dark-bg-grey-darkest",
       "value": "oklch(1 0 0)",
+      "note": "라이트는 기본 tier grey-900 — 같은 이름 beta 단계와 값이 달라 라이트 행 없음 (본문 표에 기본 tier 값)",
       "group": "Semantic bg-*·txt-* (stable tier)",
       "ref": "white-100"
     },
@@ -976,30 +980,35 @@
     {
       "name": "bg-lounge",
       "value": "oklch(0.976 0.001 286 / 0.90)",
+      "note": "다크는 기본 tier grey-800-90 — 같은 이름 beta 단계와 값이 달라 dark- 행 없음 (본문 표에 기본 tier 값)",
       "group": "Semantic bg-*·txt-* (stable tier)",
       "ref": "grey-100-90"
     },
     {
       "name": "bg-header-float",
       "value": "oklch(1 0 0 / 0.90)",
+      "note": "다크는 기본 tier grey-800-80 — 같은 이름 beta 단계와 값이 달라 dark- 행 없음 (본문 표에 기본 tier 값)",
       "group": "Semantic bg-*·txt-* (stable tier)",
       "ref": "white-90"
     },
     {
       "name": "bg-header",
       "value": "oklch(1 0 0)",
+      "note": "다크는 기본 tier grey-800 — 같은 이름 beta 단계와 값이 달라 dark- 행 없음 (본문 표에 기본 tier 값)",
       "group": "Semantic bg-*·txt-* (stable tier)",
       "ref": "white-100"
     },
     {
       "name": "bg-navi",
       "value": "oklch(0.976 0.001 286 / 0.80)",
+      "note": "다크는 기본 tier grey-800-80 — 같은 이름 beta 단계와 값이 달라 dark- 행 없음 (본문 표에 기본 tier 값)",
       "group": "Semantic bg-*·txt-* (stable tier)",
       "ref": "grey-100-80"
     },
     {
       "name": "bg-gnb",
       "value": "oklch(0.952 0.001 286 / 0.80)",
+      "note": "다크는 기본 tier grey-700-80 — 같은 이름 beta 단계와 값이 달라 dark- 행 없음 (본문 표에 기본 tier 값)",
       "group": "Semantic bg-*·txt-* (stable tier)",
       "ref": "grey-200-80"
     },
@@ -1030,18 +1039,21 @@
     {
       "name": "bg-white-low",
       "value": "oklch(1 0 0)",
+      "note": "다크는 기본 tier grey-800 — 같은 이름 beta 단계와 값이 달라 dark- 행 없음 (본문 표에 기본 tier 값)",
       "group": "Semantic bg-*·txt-* (stable tier)",
       "ref": "white-100"
     },
     {
       "name": "bg-white-normal",
       "value": "oklch(1 0 0)",
+      "note": "다크는 기본 tier grey-900 — 같은 이름 beta 단계와 값이 달라 dark- 행 없음 (본문 표에 기본 tier 값)",
       "group": "Semantic bg-*·txt-* (stable tier)",
       "ref": "white-100"
     },
     {
       "name": "bg-white-high",
       "value": "oklch(1 0 0)",
+      "note": "다크는 기본 tier grey-700 — 같은 이름 beta 단계와 값이 달라 dark- 행 없음 (본문 표에 기본 tier 값)",
       "group": "Semantic bg-*·txt-* (stable tier)",
       "ref": "white-100"
     },
