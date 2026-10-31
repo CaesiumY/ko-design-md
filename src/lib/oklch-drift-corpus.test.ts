@@ -134,11 +134,11 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
   // (--primary, --dark-black, …), so no PREVIEW_TOKEN_ALIASES rule is needed.
   "samsung-one-ui": 7,
   "seed-design": 27,
-  // 40 → 28 (#630): socar's roles became reference rows, which carry no
+  // 40 → 30 (#630): socar's roles became reference rows, which carry no
   // `oklch` for the gate to read, so the preview's 24 role properties now read
   // `var(--sf-<palette step>)` and are no longer compared; the 12 palette steps
-  // they point at were added to the preview and are.
-  socar: 28,
+  // they point at, and the two press overlays, were added to the preview and are.
+  socar: 30,
   teamsparta: 18,
   toss: 27,
   "vapor-ui": 36,

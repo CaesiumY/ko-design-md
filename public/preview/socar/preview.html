@@ -59,6 +59,8 @@
       --sf-divider-regular: var(--sf-gray-200);
       --sf-white: oklch(1.000 0.000 0);
       --sf-black: oklch(0.000 0.000 0);
+      --sf-pressed-regular: oklch(0.217 0.022 261 / 0.06);
+      --sf-pressed-dark-regular: oklch(0.965 0.007 277 / 0.66);
 
       --sf-status-information-weak: var(--sf-blue-50);
       --sf-status-information-regular: var(--sf-blue-500);
@@ -743,10 +745,8 @@
       position: absolute;
       inset: 0;
       border-radius: inherit;
-      background: oklch(0.000 0.000 0 / 0.08);
+      background: var(--sf-pressed-dark-regular);
     }
-
-    .sf-action.tertiary.is-pressed::after { background: oklch(0.217 0.022 261 / 0.06); }
 
     .sf-action[disabled],
     .sf-action.is-disabled {
@@ -990,7 +990,7 @@
       user-select: none;
     }
 
-    .control-row.is-pressed { transform: scale(0.97); background: oklch(0.217 0.022 261 / 0.06); }
+    .control-row.is-pressed { transform: scale(0.97); background: var(--sf-pressed-regular); }
     .control-row.dis { color: var(--sf-text-disabled); cursor: not-allowed; }
 
     .ck-box, .rd-box {
@@ -1553,6 +1553,8 @@
       --sf-divider-regular: var(--sf-gray-200);
       --sf-white: oklch(1.000 0.000 0);
       --sf-black: oklch(0.000 0.000 0);
+      --sf-pressed-regular: oklch(0.217 0.022 261 / 0.06);
+      --sf-pressed-dark-regular: oklch(0.965 0.007 277 / 0.66);
 
       --sf-status-information-weak: var(--sf-blue-50);
       --sf-status-information-regular: var(--sf-blue-500);
@@ -2164,9 +2166,8 @@
       position: absolute;
       inset: 0;
       border-radius: inherit;
-      background: oklch(0.000 0.000 0 / 0.08);
+      background: var(--sf-pressed-dark-regular);
     }
-[data-theme="dark"] .sf-action.tertiary.is-pressed::after { background: oklch(0.217 0.022 261 / 0.06); }
 [data-theme="dark"] .sf-action[disabled], [data-theme="dark"] .sf-action.is-disabled {
       color: var(--sf-text-disabled);
       background: var(--sf-background-regular);
@@ -2378,7 +2379,7 @@
       cursor: pointer;
       user-select: none;
     }
-[data-theme="dark"] .control-row.is-pressed { transform: scale(0.97); background: oklch(0.217 0.022 261 / 0.06); }
+[data-theme="dark"] .control-row.is-pressed { transform: scale(0.97); background: var(--sf-pressed-regular); }
 [data-theme="dark"] .control-row.dis { color: var(--sf-text-disabled); cursor: not-allowed; }
 [data-theme="dark"] .ck-box, [data-theme="dark"] .rd-box {
       width: 20px;

@@ -4,7 +4,7 @@
       "name": "primary",
       "value": "oklch(0.599 0.220 258)",
       "note": "명세의 대표색 역할 — text-primary(gray-800 본문색)와 다른 축",
-      "ref": "primary-regular"
+      "ref": "blue-500"
     },
     {
       "name": "primary-regular",
@@ -408,12 +408,12 @@
     {
       "name": "pressed-regular",
       "value": "oklch(0.217 0.022 261 / 0.06)",
-      "note": "press-ripple · gray-1000 의 6%"
+      "note": "row press (chip · checkbox · selection box) · gray-1000 의 6%"
     },
     {
       "name": "pressed-dark-regular",
       "value": "oklch(0.965 0.007 277 / 0.66)",
-      "note": "press-ripple on dark fill · gray-100 의 66%"
+      "note": "button press-ripple, lightens · gray-100 의 66%"
     }
   ],
   "typography": [

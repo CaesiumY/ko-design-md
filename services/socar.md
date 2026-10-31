@@ -9,7 +9,7 @@ lang: ko
 logo: https://getdesign.kr/logos/socar.png
 colors:
   # Brand / primary (action) — 역할은 아래 팔레트 단계를 가리킨다
-  primary: "{colors.primary-regular}"   # 명세의 대표색 역할 — text-primary(gray-800 본문색)와 다른 축
+  primary: "{colors.blue-500}"   # 명세의 대표색 역할 — text-primary(gray-800 본문색)와 다른 축
   primary-regular: "{colors.blue-500}"
   primary-strong: "{colors.blue-600}"   # pressed
   primary-heavy: "{colors.blue-700}"   # heaviest
@@ -98,8 +98,8 @@ colors:
   location-return: "{colors.indigo-700}"   # return marker
   # Overlay utilities (translucent) — 팔레트 단계가 아니라 rgba 리터럴로 발행된다
   dimmed-regular: oklch(0.217 0.022 261 / 0.44)   # modal/sheet dim · gray-1000 의 44%
-  pressed-regular: oklch(0.217 0.022 261 / 0.06)   # press-ripple · gray-1000 의 6%
-  pressed-dark-regular: oklch(0.965 0.007 277 / 0.66)   # press-ripple on dark fill · gray-100 의 66%
+  pressed-regular: oklch(0.217 0.022 261 / 0.06)   # row press (chip · checkbox · selection box) · gray-1000 의 6%
+  pressed-dark-regular: oklch(0.965 0.007 277 / 0.66)   # button press-ripple, lightens · gray-100 의 66%
 typography:
   # token: size px / line-height px / weight
   display1:   # letter-spacing 0
@@ -251,7 +251,7 @@ SOCAR Frame 2.0(쏘카프레임 2.0)는 쏘카의 디자인 시스템이며, 브
 
 > **역할 대조(2026-11-01).** 역할 → 팔레트 대응을 배포 코드와 다시 맞췄다. 공식 사이트가 싣는 Tailwind 프리셋 번들 [src:38]은 시맨틱 역할 40개를 모두 팔레트 단계 하나로 정의한다(`"text-strong": v["gray-1000"]` 꼴). 이 문서가 싣던 역할 39개와 대조해 **값 불일치는 0개**였고, 어긋난 것은 세 가지였다 — 상태 역할 12개가 발행 접두 없이 실려 있었고(`information-weak` → 발행명 `status-information-weak`), 발행 역할 `service-socar`(→ `blue-500`)가 빠져 있었고, `pressed-dark-regular` 의 값이 발행값(`gray-100` 의 66%)이 아니라 검정 8%였다. 셋 다 발행대로 고쳤다. 역할은 이제 아래 표와 frontmatter 참조 행 두 벌로 실리며, 역할이 가리키는 팔레트 단계 20개를 frontmatter 에 더했다 — 값은 [src:4] 의 hex 를 변환해 역할 줄에 있던 값 그대로다.
 >
-> **오버레이 3개는 역할 계층이 아니다.** `dimmed-regular`·`pressed-regular`·`pressed-dark-regular` 는 같은 번들이 팔레트를 가리키지 않고 rgba 리터럴 유틸리티(`.bg-dimmed-regular` 등)로 발행하며, Colors 표 [src:4]에는 없다. 그래서 참조 행을 싣지 않는다 — 아래 표에 알파 값만 적고, frontmatter 에는 리터럴로 둔다.
+> **오버레이는 역할 계층이 아니다.** 같은 번들은 팔레트를 가리키지 않는 rgba 리터럴 유틸리티 6개(`.bg-dimmed-regular` 등)를 따로 발행하며, 이것들은 Colors 표 [src:4]에 없다. 그래서 참조 행을 싣지 않는다. 이 문서는 컴포넌트 서술이 쓰는 셋(`dimmed-regular`·`pressed-regular`·`pressed-dark-regular`)만 아래 표에 알파 값으로 적고 frontmatter 에 리터럴로 둔다. 나머지 셋(`cameradimmed-regular` gray-1000 의 74% · `pressed-light-regular` 불투명 gray-100 · `pressed-dark-weak` gray-1000 의 6%)은 확인한 버튼 컴포넌트 번들 [src:39]이 쓰지 않고 이 문서의 컴포넌트도 부르지 않아 싣지 않았다.
 >
 > **검증 방법.** `socarframe.socar.kr` 은 어떤 경로든 평범한 GET 에 같은 166자 셸을 돌려주므로 [src:4] 의 이름과 hex 는 페이지를 렌더해야 읽힌다. 역할이 어느 팔레트 단계를 가리키는지는 렌더된 표에도 없고 [src:38] 번들에만 있다. 프리셋을 담은 패키지 `@socar-inc/socar-frame-foundation` 은 공개 npm 레지스트리에 없다(E404).
 
@@ -304,8 +304,8 @@ SOCAR Frame 2.0은 공식 Colors 페이지에 전체 토큰 세트를 게시하�
 | `location-rental` | `{colors.blue-500}` | 지도 픽업 마커 |
 | `location-return` | `{colors.indigo-700}` | 지도 반납 마커 |
 | `dimmed-regular` | `{colors.gray-1000}` 의 44% — rgba 리터럴 유틸리티, 참조 아님 | 모달 · 시트 딤 |
-| `pressed-regular` | `{colors.gray-1000}` 의 6% — rgba 리터럴 유틸리티, 참조 아님 | 밝은 표면의 눌림 리플 |
-| `pressed-dark-regular` | `{colors.gray-100}` 의 66% — rgba 리터럴 유틸리티, 참조 아님 | 진한 fill 위의 눌림 리플 |
+| `pressed-regular` | `{colors.gray-1000}` 의 6% — rgba 리터럴 유틸리티, 참조 아님 | 칩 · 체크박스 · 선택 카드의 눌림 배경 |
+| `pressed-dark-regular` | `{colors.gray-100}` 의 66% — rgba 리터럴 유틸리티, 참조 아님 | 버튼류 눌림 리플(밝게 덮는다) |
 
 ## Typography
 
@@ -390,7 +390,7 @@ styleType outlined는 흰 배경 + 1px `{colors.divider-regular}` 보더로 구�
 
 ### action-button-pressed
 
-ActionButton의 눌림 상태는 별도 시각 상태로 다룬다 — 시그니처 press feedback에 따라 표면이 `:active`에서 92%로 축소되고, 진한 fill 위에서는 `{colors.pressed-dark-regular}` 리플 오버레이가 크기별 radius에 클리핑되어 함께 뜬다 [src:1][src:14]. loading은 `{colors.gray-100}` 필 + Lottie 로더로 전환하며 클릭을 막고, disabled는 불투명도 변화 없이 `{colors.gray-100}` 배경 / `{colors.text-disabled}` 텍스트로 재색칠한다 [src:14].
+ActionButton의 눌림 상태는 별도 시각 상태로 다룬다 — 시그니처 press feedback에 따라 표면이 `:active`에서 92%로 축소되고, styleType·variant와 관계없이 `{colors.pressed-dark-regular}`(gray-100 66%, 표면을 밝게 덮는다) 리플 오버레이가 크기별 radius에 클리핑되어 함께 뜬다 [src:1][src:14][src:39]. loading은 `{colors.gray-100}` 필 + Lottie 로더로 전환하며 클릭을 막고, disabled는 불투명도 변화 없이 `{colors.gray-100}` 배경 / `{colors.text-disabled}` 텍스트로 재색칠한다 [src:14].
 
 ```tsx
 <ActionButton styleType="fill" variant="primary" loading />
@@ -729,3 +729,4 @@ const ok = await Alert.open({ variant: "dialog", title: "예약을 취소할까�
 36. https://socarframe.socar.kr/ux-principles/release-checklist
 37. https://socarframe.socar.kr/ux-principles/trade-off-rules
 38. https://socarframe.socar.kr/assets/js/common.d1ee1bdb.js — 공식 사이트가 싣는 Tailwind 프리셋 번들. 시맨틱 역할 → 팔레트 단계 정의(`"text-strong": v["gray-1000"]` 꼴)와 오버레이 유틸리티(`.bg-dimmed-regular` 등 rgba 리터럴)가 여기 있다. 파일 이름이 빌드 해시라 사이트를 다시 배포하면 이 경로는 사라질 수 있다 — 그때는 [src:4] 페이지가 불러오는 `common.*.js` 를 찾는다.
+39. https://socarframe.socar.kr/assets/js/9746.d6ce0de6.js — 공식 사이트의 컴포넌트 번들(ActionButton · TextButton · IconButton 소스). 눌림 리플 클래스 `active:after:tw-bg-pressed-dark-regular` 가 variant 분기 밖에 있다. 파일 이름이 빌드 해시라 재배포되면 사라질 수 있다 — 그때는 [src:14] 페이지가 불러오는 청크에서 찾는다.
