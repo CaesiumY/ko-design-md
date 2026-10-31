@@ -50,6 +50,12 @@ export function TokenCardSection({
   // shadows were briefly exempt and seed-design showed six chips for three
   // tokens, the dark trio drawn nearly opaque on light tiles.
   const cardColors = lightTokensOnly(colors)
+  // A reference row (`ref`) is a role pointing at a palette key. Roles skip the
+  // palette curation below — a role named like a ramp step
+  // (`color-background-canvas-200`) or painted a neutral grey is exactly what
+  // curation folds away, and the role layer is what the reader came to scan.
+  const palette = cardColors.filter((c) => c.ref === undefined)
+  const roles = cardColors.filter((c) => c.ref !== undefined)
   const cardElevation = lightTokensOnly(tokens.elevation ?? [])
   if (
     cardColors.length === 0 &&
@@ -62,7 +68,8 @@ export function TokenCardSection({
   }
 
   const counts: Array<[number, string]> = [
-    [cardColors.length, "Colors"],
+    [palette.length, "Colors"],
+    [roles.length, "Roles"],
     [typography.length, "Type"],
     [spacing.length, "Spacing"],
     [radius.length, "Radii"],
@@ -87,7 +94,8 @@ export function TokenCardSection({
         </p>
       </div>
 
-      {cardColors.length > 0 && <ColorBlock colors={cardColors} slug={slug} />}
+      {palette.length > 0 && <ColorBlock colors={palette} slug={slug} />}
+      {roles.length > 0 && <RoleBlock roles={roles} slug={slug} />}
       {typography.length > 0 && <TypeBlock items={typography} />}
       {(spacing.length > 0 || radius.length > 0) && (
         <ScaleBlock spacing={spacing} radius={radius} />
@@ -209,6 +217,40 @@ function ColorBlock({
         <MoreDetails count={hidden.length} label="colors">
           <div className="space-y-6">
             {hiddenGroups.map(renderColorGroup(slug))}
+          </div>
+        </MoreDetails>
+      )}
+    </div>
+  )
+}
+
+// Roles keep document order and their group headings. A long role layer —
+// ridi carries 121 light roles, seed-design 73 under no heading — collapses its
+// tail by the same rule as the flat lists, never by palette curation.
+function RoleBlock({
+  roles,
+  slug,
+}: {
+  roles: Array<ColorToken>
+  slug: string
+}) {
+  const collapse = roles.length - FLAT_LIMIT > MIN_COLLAPSE
+  const visible = collapse ? roles.slice(0, FLAT_LIMIT) : roles
+  const hidden = collapse ? roles.slice(FLAT_LIMIT) : []
+  return (
+    <div className="mt-10">
+      <SubLabel>Roles</SubLabel>
+      <div className="mt-4 space-y-6">
+        {groupByOrder(visible, (c) => c.group ?? "").map(
+          renderColorGroup(slug)
+        )}
+      </div>
+      {hidden.length > 0 && (
+        <MoreDetails count={hidden.length} label="roles">
+          <div className="space-y-6">
+            {groupByOrder(hidden, (c) => c.group ?? "").map(
+              renderColorGroup(slug)
+            )}
           </div>
         </MoreDetails>
       )}

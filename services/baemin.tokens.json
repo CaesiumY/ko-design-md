@@ -1,6 +1,54 @@
 {
   "colors": [
     {
+      "name": "semantic-discount",
+      "value": "oklch(0.63 0.24 27)",
+      "note": "23% 할인 칩 — 단색",
+      "ref": "red"
+    },
+    {
+      "name": "semantic-coupon",
+      "value": "oklch(0.71 0.17 32)",
+      "note": "쿠폰 티켓",
+      "ref": "orange"
+    },
+    {
+      "name": "semantic-point",
+      "value": "oklch(0.93 0.20 100)",
+      "note": "포인트 코인",
+      "ref": "yellow"
+    },
+    {
+      "name": "semantic-frozen",
+      "value": "oklch(0.69 0.18 240)",
+      "note": "B마트 냉동 인디케이터",
+      "ref": "frozen"
+    },
+    {
+      "name": "semantic-baemin-pay",
+      "value": "oklch(0.66 0.24 4)",
+      "note": "배민페이",
+      "ref": "pink"
+    },
+    {
+      "name": "semantic-hangrut",
+      "value": "oklch(0.30 0.13 286)",
+      "note": "한그릇 프로모션 / 음식배달 헤더",
+      "ref": "navy"
+    },
+    {
+      "name": "semantic-mint-tag",
+      "value": "oklch(0.97 0.05 178)",
+      "note": "NEW·신규·환영 칩",
+      "ref": "primary-tint"
+    },
+    {
+      "name": "semantic-toast-bg",
+      "value": "oklch(0.18 0 0)",
+      "note": "검정 캡슐 토스트 (90% opacity)",
+      "ref": "bg-inverse"
+    },
+    {
       "name": "primary",
       "value": "oklch(0.88 0.18 178)",
       "note": "히어로 풀블리드·CTA·라이더 헬멧·카테고리 강조",

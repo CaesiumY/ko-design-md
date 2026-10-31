@@ -193,6 +193,35 @@ describe("lightTokensOnly", () => {
     expect(kept.every((x) => x.group === "Semantic alias — Light")).toBe(true)
   })
 
+  it("keeps a light token whose group heading only mentions the dark theme", () => {
+    // ridi's light role groups read "… — dark- 행은 발행된 다크 짝이나 …" and
+    // banksalad's "… 테마 고정 · dark- 짝 없음": prose about the dark twins,
+    // over light tokens. Reading the heading alone dropped 138 light role cards
+    // once the sidecar carried reference rows. A heading only decides when the
+    // name cannot — when the same name is listed twice.
+    const colors = [
+      c(
+        "background-primary",
+        "oklch(1 0 0)",
+        "시맨틱 background (층 A) — dark- 행은 발행된 다크 짝이나 미확인"
+      ),
+      c(
+        "dark-background-primary",
+        "oklch(0.2 0 0)",
+        "시맨틱 background (층 A) — dark- 행은 발행된 다크 짝이나 미확인"
+      ),
+      c(
+        "status-red",
+        "oklch(0.6 0.2 25)",
+        "status (테마 고정 · dark- 짝 없음)"
+      ),
+    ]
+    expect(lightTokensOnly(colors).map((x) => x.name)).toEqual([
+      "background-primary",
+      "status-red",
+    ])
+  })
+
   it("recognises a Korean 다크 group label too", () => {
     const colors = [
       c("gray-00", "oklch(1 0 0)", "프리미티브 스케일 — 라이트 테마"),

@@ -134,7 +134,10 @@ export function curateColors(colors: Array<ColorToken>): {
 //      a dark group label (`## Semantic alias — Dark` over a second `bg-canvas`),
 //      where the name alone can't tell the themes apart. No entry does today:
 //      wanted, which once did, prefixes its dark aliases (`dark-bg-canvas`), and
-//      the catalogue writes every dark twin with the prefix (#625).
+//      the catalogue writes every dark twin with the prefix (#625). So the
+//      heading is read only for a name listed twice. Read for every token, it
+//      dropped 138 light role cards (ridi 120, banksalad 18) whose headings
+//      merely talk about the dark twins — "dark- 행은 …", "dark- 짝 없음".
 const DARK_NAME_PREFIX = /^dark-/
 const DARK_GROUP = /(^|[\s—-])dark($|[\s—-])|다크/i
 
@@ -160,7 +163,15 @@ const DARK_GROUP = /(^|[\s—-])dark($|[\s—-])|다크/i
 export function lightTokensOnly<T extends { name: string; group?: string }>(
   tokens: Array<T>
 ): Array<T> {
+  const seen = new Set<string>()
+  const repeated = new Set<string>()
+  for (const t of tokens) {
+    if (seen.has(t.name)) repeated.add(t.name)
+    seen.add(t.name)
+  }
   return tokens.filter(
-    (t) => !DARK_NAME_PREFIX.test(t.name) && !DARK_GROUP.test(t.group ?? "")
+    (t) =>
+      !DARK_NAME_PREFIX.test(t.name) &&
+      !(repeated.has(t.name) && DARK_GROUP.test(t.group ?? ""))
   )
 }

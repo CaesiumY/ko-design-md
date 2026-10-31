@@ -163,6 +163,13 @@
       "group": "blue — 브랜드 램프"
     },
     {
+      "name": "primary",
+      "value": "oklch(0.651 0.191 252.8)",
+      "note": "명세의 대표색 역할 — SystemColor brand 와 같은 값 · 본문 표의 텍스트 역할 primary(neutral600)와 다르다",
+      "group": "blue — 브랜드 램프",
+      "ref": "blue500"
+    },
+    {
       "name": "blue500",
       "value": "oklch(0.651 0.191 252.8)",
       "note": "#1890FF",
@@ -779,6 +786,309 @@
       "value": "oklch(0.737 0.075 102.0)",
       "note": "#B3AC74",
       "group": "dark murky 12색 램프 500 대표값"
+    },
+    {
+      "name": "brand",
+      "value": "oklch(0.651 0.191 252.8)",
+      "group": "SystemColor — 브랜드 · 상태 시맨틱 (라이트 참조)",
+      "ref": "blue500"
+    },
+    {
+      "name": "link",
+      "value": "oklch(0.548 0.185 256.3)",
+      "group": "SystemColor — 브랜드 · 상태 시맨틱 (라이트 참조)",
+      "ref": "blue600"
+    },
+    {
+      "name": "info",
+      "value": "oklch(0.651 0.191 252.8)",
+      "group": "SystemColor — 브랜드 · 상태 시맨틱 (라이트 참조)",
+      "ref": "blue500"
+    },
+    {
+      "name": "success",
+      "value": "oklch(0.717 0.228 141.5)",
+      "group": "SystemColor — 브랜드 · 상태 시맨틱 (라이트 참조)",
+      "ref": "green500"
+    },
+    {
+      "name": "warning",
+      "value": "oklch(0.782 0.163 74.8)",
+      "group": "SystemColor — 브랜드 · 상태 시맨틱 (라이트 참조)",
+      "ref": "gold500"
+    },
+    {
+      "name": "danger",
+      "value": "oklch(0.673 0.214 24.5)",
+      "group": "SystemColor — 브랜드 · 상태 시맨틱 (라이트 참조)",
+      "ref": "red400"
+    },
+    {
+      "name": "ready",
+      "value": "oklch(0.729 0.160 60.7)",
+      "group": "InterviewColor — 면접 진행 상태 시맨틱 (라이트 참조)",
+      "ref": "orange500"
+    },
+    {
+      "name": "request",
+      "value": "oklch(0.640 0.000 0)",
+      "group": "InterviewColor — 면접 진행 상태 시맨틱 (라이트 참조)",
+      "ref": "gray300"
+    },
+    {
+      "name": "complete",
+      "value": "oklch(0.805 0.000 0)",
+      "group": "InterviewColor — 면접 진행 상태 시맨틱 (라이트 참조)",
+      "ref": "gray200"
+    },
+    {
+      "name": "changeRequest",
+      "value": "oklch(0.673 0.214 24.5)",
+      "group": "InterviewColor — 면접 진행 상태 시맨틱 (라이트 참조)",
+      "ref": "red400"
+    },
+    {
+      "name": "disabled",
+      "value": "oklch(0.000 0.000 0 / 0.25)",
+      "note": "텍스트 사다리의 25% 단계 — 이름이 겹치지 않아 싣는다",
+      "group": "SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (라이트 참조)",
+      "ref": "neutral300"
+    },
+    {
+      "name": "border1",
+      "value": "oklch(0.000 0.000 0 / 0.06)",
+      "group": "SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (라이트 참조)",
+      "ref": "neutral75"
+    },
+    {
+      "name": "border2",
+      "value": "oklch(0.000 0.000 0 / 0.11)",
+      "group": "SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (라이트 참조)",
+      "ref": "neutral100"
+    },
+    {
+      "name": "border3",
+      "value": "oklch(0.000 0.000 0 / 0.18)",
+      "group": "SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (라이트 참조)",
+      "ref": "neutral200"
+    },
+    {
+      "name": "border4",
+      "value": "oklch(0.000 0.000 0 / 0.45)",
+      "group": "SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (라이트 참조)",
+      "ref": "neutral400"
+    },
+    {
+      "name": "border5",
+      "value": "oklch(0.000 0.000 0 / 0.6)",
+      "group": "SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (라이트 참조)",
+      "ref": "neutral500"
+    },
+    {
+      "name": "background1",
+      "value": "oklch(0.000 0.000 0 / 0.02)",
+      "group": "SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (라이트 참조)",
+      "ref": "neutral25"
+    },
+    {
+      "name": "background2",
+      "value": "oklch(0.000 0.000 0 / 0.04)",
+      "group": "SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (라이트 참조)",
+      "ref": "neutral50"
+    },
+    {
+      "name": "background3",
+      "value": "oklch(0.000 0.000 0 / 0.06)",
+      "group": "SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (라이트 참조)",
+      "ref": "neutral75"
+    },
+    {
+      "name": "background4",
+      "value": "oklch(0.000 0.000 0 / 0.11)",
+      "group": "SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (라이트 참조)",
+      "ref": "neutral100"
+    },
+    {
+      "name": "effect1",
+      "value": "oklch(0.000 0.000 0 / 0.06)",
+      "group": "SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (라이트 참조)",
+      "ref": "neutral75"
+    },
+    {
+      "name": "effect2",
+      "value": "oklch(0.000 0.000 0 / 0.11)",
+      "group": "SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (라이트 참조)",
+      "ref": "neutral100"
+    },
+    {
+      "name": "effect3",
+      "value": "oklch(0.000 0.000 0 / 0.18)",
+      "group": "SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (라이트 참조)",
+      "ref": "neutral200"
+    },
+    {
+      "name": "effect4",
+      "value": "oklch(0.000 0.000 0 / 0.25)",
+      "group": "SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (라이트 참조)",
+      "ref": "neutral300"
+    },
+    {
+      "name": "baseBackground",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "다크 짝은 같은 단계가 아니라 dark-gray25 를 가리킨다(아래 dark-baseBackground)",
+      "group": "SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (라이트 참조)",
+      "ref": "gray0"
+    },
+    {
+      "name": "dark-brand",
+      "value": "oklch(0.627 0.170 249.0)",
+      "group": "dark SystemColor — 브랜드 · 상태 시맨틱 (다크 참조)",
+      "ref": "dark-blue500"
+    },
+    {
+      "name": "dark-link",
+      "value": "oklch(0.708 0.142 243.8)",
+      "group": "dark SystemColor — 브랜드 · 상태 시맨틱 (다크 참조)",
+      "ref": "dark-blue600"
+    },
+    {
+      "name": "dark-info",
+      "value": "oklch(0.627 0.170 249.0)",
+      "group": "dark SystemColor — 브랜드 · 상태 시맨틱 (다크 참조)",
+      "ref": "dark-blue500"
+    },
+    {
+      "name": "dark-success",
+      "value": "oklch(0.661 0.157 140.5)",
+      "group": "dark SystemColor — 브랜드 · 상태 시맨틱 (다크 참조)",
+      "ref": "dark-green500"
+    },
+    {
+      "name": "dark-warning",
+      "value": "oklch(0.739 0.139 82.7)",
+      "group": "dark SystemColor — 브랜드 · 상태 시맨틱 (다크 참조)",
+      "ref": "dark-gold500"
+    },
+    {
+      "name": "dark-danger",
+      "value": "oklch(0.610 0.173 21.0)",
+      "group": "dark SystemColor — 브랜드 · 상태 시맨틱 (다크 참조)",
+      "ref": "dark-red400"
+    },
+    {
+      "name": "dark-ready",
+      "value": "oklch(0.713 0.131 67.4)",
+      "group": "dark InterviewColor — 면접 진행 상태 시맨틱 (다크 참조)",
+      "ref": "dark-orange500"
+    },
+    {
+      "name": "dark-request",
+      "value": "oklch(0.640 0.000 0)",
+      "group": "dark InterviewColor — 면접 진행 상태 시맨틱 (다크 참조)",
+      "ref": "dark-gray300"
+    },
+    {
+      "name": "dark-complete",
+      "value": "oklch(0.464 0.000 0)",
+      "group": "dark InterviewColor — 면접 진행 상태 시맨틱 (다크 참조)",
+      "ref": "dark-gray200"
+    },
+    {
+      "name": "dark-changeRequest",
+      "value": "oklch(0.610 0.173 21.0)",
+      "group": "dark InterviewColor — 면접 진행 상태 시맨틱 (다크 참조)",
+      "ref": "dark-red400"
+    },
+    {
+      "name": "dark-disabled",
+      "value": "oklch(1.000 0.000 0 / 0.25)",
+      "group": "dark SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (다크 참조)",
+      "ref": "dark-neutral300"
+    },
+    {
+      "name": "dark-border1",
+      "value": "oklch(1.000 0.000 0 / 0.06)",
+      "group": "dark SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (다크 참조)",
+      "ref": "dark-neutral75"
+    },
+    {
+      "name": "dark-border2",
+      "value": "oklch(1.000 0.000 0 / 0.11)",
+      "group": "dark SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (다크 참조)",
+      "ref": "dark-neutral100"
+    },
+    {
+      "name": "dark-border3",
+      "value": "oklch(1.000 0.000 0 / 0.18)",
+      "group": "dark SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (다크 참조)",
+      "ref": "dark-neutral200"
+    },
+    {
+      "name": "dark-border4",
+      "value": "oklch(1.000 0.000 0 / 0.45)",
+      "group": "dark SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (다크 참조)",
+      "ref": "dark-neutral400"
+    },
+    {
+      "name": "dark-border5",
+      "value": "oklch(1.000 0.000 0 / 0.6)",
+      "group": "dark SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (다크 참조)",
+      "ref": "dark-neutral500"
+    },
+    {
+      "name": "dark-background1",
+      "value": "oklch(1.000 0.000 0 / 0.02)",
+      "group": "dark SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (다크 참조)",
+      "ref": "dark-neutral25"
+    },
+    {
+      "name": "dark-background2",
+      "value": "oklch(1.000 0.000 0 / 0.04)",
+      "group": "dark SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (다크 참조)",
+      "ref": "dark-neutral50"
+    },
+    {
+      "name": "dark-background3",
+      "value": "oklch(1.000 0.000 0 / 0.06)",
+      "group": "dark SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (다크 참조)",
+      "ref": "dark-neutral75"
+    },
+    {
+      "name": "dark-background4",
+      "value": "oklch(1.000 0.000 0 / 0.11)",
+      "group": "dark SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (다크 참조)",
+      "ref": "dark-neutral100"
+    },
+    {
+      "name": "dark-effect1",
+      "value": "oklch(1.000 0.000 0 / 0.06)",
+      "group": "dark SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (다크 참조)",
+      "ref": "dark-neutral75"
+    },
+    {
+      "name": "dark-effect2",
+      "value": "oklch(1.000 0.000 0 / 0.11)",
+      "group": "dark SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (다크 참조)",
+      "ref": "dark-neutral100"
+    },
+    {
+      "name": "dark-effect3",
+      "value": "oklch(1.000 0.000 0 / 0.18)",
+      "group": "dark SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (다크 참조)",
+      "ref": "dark-neutral200"
+    },
+    {
+      "name": "dark-effect4",
+      "value": "oklch(1.000 0.000 0 / 0.25)",
+      "group": "dark SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (다크 참조)",
+      "ref": "dark-neutral300"
+    },
+    {
+      "name": "dark-baseBackground",
+      "value": "oklch(0.205 0.000 0)",
+      "note": "다크에서 라이트와 다른 단계를 고르는 유일한 역할 (배포본 DARK_SEMANTIC)",
+      "group": "dark SemanticTheme — 텍스트 · 보더 · 배경 · 이펙트 (다크 참조)",
+      "ref": "dark-gray25"
     }
   ],
   "typography": [

@@ -1,6 +1,406 @@
 {
   "colors": [
     {
+      "name": "color-background-canvas",
+      "value": "oklch(1.000 0.000 0)",
+      "ref": "color-white"
+    },
+    {
+      "name": "dark-color-background-canvas",
+      "value": "oklch(0.256 0.000 0)",
+      "ref": "dark-canvas"
+    },
+    {
+      "name": "color-background-canvas-200",
+      "value": "oklch(0.976 0.000 0)",
+      "ref": "gray-050"
+    },
+    {
+      "name": "dark-color-background-canvas-200",
+      "value": "oklch(0.277 0.000 0)",
+      "ref": "dark-gray-050"
+    },
+    {
+      "name": "color-background-overlay-100",
+      "value": "oklch(1.000 0.000 0)",
+      "ref": "color-white"
+    },
+    {
+      "name": "dark-color-background-overlay-100",
+      "value": "oklch(0.333 0.000 0)",
+      "ref": "dark-gray-100"
+    },
+    {
+      "name": "color-background-primary-100",
+      "value": "oklch(0.910 0.048 242)",
+      "ref": "blue-100"
+    },
+    {
+      "name": "dark-color-background-primary-100",
+      "value": "oklch(0.296 0.183 264)",
+      "ref": "dark-blue-050"
+    },
+    {
+      "name": "color-background-primary-200",
+      "value": "oklch(0.573 0.189 260)",
+      "ref": "blue-500"
+    },
+    {
+      "name": "dark-color-background-primary-200",
+      "value": "oklch(0.633 0.169 255)",
+      "ref": "dark-blue-500"
+    },
+    {
+      "name": "color-background-secondary-100",
+      "value": "oklch(0.976 0.000 0)",
+      "ref": "gray-050"
+    },
+    {
+      "name": "dark-color-background-secondary-100",
+      "value": "oklch(0.277 0.000 0)",
+      "ref": "dark-gray-050"
+    },
+    {
+      "name": "color-background-secondary-200",
+      "value": "oklch(0.910 0.000 0)",
+      "ref": "gray-100"
+    },
+    {
+      "name": "dark-color-background-secondary-200",
+      "value": "oklch(0.398 0.000 0)",
+      "ref": "dark-gray-200"
+    },
+    {
+      "name": "color-background-success-100",
+      "value": "oklch(0.903 0.058 167)",
+      "ref": "green-100"
+    },
+    {
+      "name": "dark-color-background-success-100",
+      "value": "oklch(0.271 0.069 154)",
+      "ref": "dark-green-050"
+    },
+    {
+      "name": "color-background-success-200",
+      "value": "oklch(0.554 0.112 167)",
+      "ref": "green-500"
+    },
+    {
+      "name": "dark-color-background-success-200",
+      "value": "oklch(0.614 0.114 168)",
+      "ref": "dark-green-500"
+    },
+    {
+      "name": "color-background-warning-100",
+      "value": "oklch(0.913 0.048 46)",
+      "ref": "orange-100"
+    },
+    {
+      "name": "dark-color-background-warning-100",
+      "value": "oklch(0.296 0.121 29)",
+      "ref": "dark-orange-050"
+    },
+    {
+      "name": "color-background-warning-200",
+      "value": "oklch(0.588 0.187 39)",
+      "ref": "orange-500"
+    },
+    {
+      "name": "dark-color-background-warning-200",
+      "value": "oklch(0.649 0.185 44)",
+      "ref": "dark-orange-500"
+    },
+    {
+      "name": "color-background-danger-100",
+      "value": "oklch(0.915 0.044 20)",
+      "ref": "red-100"
+    },
+    {
+      "name": "dark-color-background-danger-100",
+      "value": "oklch(0.291 0.120 29)",
+      "ref": "dark-red-050"
+    },
+    {
+      "name": "color-background-danger-200",
+      "value": "oklch(0.591 0.197 22)",
+      "ref": "red-500"
+    },
+    {
+      "name": "dark-color-background-danger-200",
+      "value": "oklch(0.654 0.198 21)",
+      "ref": "dark-red-500"
+    },
+    {
+      "name": "color-background-hint-100",
+      "value": "oklch(0.910 0.000 0)",
+      "ref": "gray-100"
+    },
+    {
+      "name": "dark-color-background-hint-100",
+      "value": "oklch(0.398 0.000 0)",
+      "ref": "dark-gray-200"
+    },
+    {
+      "name": "color-background-hint-200",
+      "value": "oklch(0.478 0.000 0)",
+      "ref": "gray-600"
+    },
+    {
+      "name": "dark-color-background-hint-200",
+      "value": "oklch(0.728 0.000 0)",
+      "ref": "dark-gray-600"
+    },
+    {
+      "name": "color-background-contrast-100",
+      "value": "oklch(0.715 0.000 0)",
+      "ref": "gray-300"
+    },
+    {
+      "name": "dark-color-background-contrast-100",
+      "value": "oklch(0.894 0.000 0)",
+      "ref": "dark-gray-800"
+    },
+    {
+      "name": "color-background-contrast-200",
+      "value": "oklch(0.345 0.000 0)",
+      "ref": "gray-800"
+    },
+    {
+      "name": "dark-color-background-contrast-200",
+      "value": "oklch(0.489 0.000 0)",
+      "ref": "dark-gray-300"
+    },
+    {
+      "name": "color-foreground-primary-100",
+      "value": "oklch(0.488 0.189 260)",
+      "ref": "blue-600"
+    },
+    {
+      "name": "dark-color-foreground-primary-100",
+      "value": "oklch(0.724 0.140 248)",
+      "ref": "dark-blue-600"
+    },
+    {
+      "name": "color-foreground-primary-200",
+      "value": "oklch(0.428 0.187 261)",
+      "ref": "blue-700"
+    },
+    {
+      "name": "dark-color-foreground-primary-200",
+      "value": "oklch(0.800 0.110 243)",
+      "ref": "dark-blue-700"
+    },
+    {
+      "name": "color-foreground-secondary-100",
+      "value": "oklch(0.345 0.000 0)",
+      "ref": "gray-800"
+    },
+    {
+      "name": "dark-color-foreground-secondary-100",
+      "value": "oklch(0.802 0.000 0)",
+      "ref": "dark-gray-700"
+    },
+    {
+      "name": "color-foreground-secondary-200",
+      "value": "oklch(0.269 0.000 0)",
+      "ref": "gray-900"
+    },
+    {
+      "name": "dark-color-foreground-secondary-200",
+      "value": "oklch(0.985 0.000 0)",
+      "ref": "dark-gray-900"
+    },
+    {
+      "name": "color-foreground-success-100",
+      "value": "oklch(0.470 0.101 164)",
+      "ref": "green-600"
+    },
+    {
+      "name": "dark-color-foreground-success-100",
+      "value": "oklch(0.710 0.118 168)",
+      "ref": "dark-green-600"
+    },
+    {
+      "name": "color-foreground-success-200",
+      "value": "oklch(0.407 0.090 162)",
+      "ref": "green-700"
+    },
+    {
+      "name": "dark-color-foreground-success-200",
+      "value": "oklch(0.788 0.123 168)",
+      "ref": "dark-green-700"
+    },
+    {
+      "name": "color-foreground-warning-100",
+      "value": "oklch(0.503 0.188 33)",
+      "ref": "orange-600"
+    },
+    {
+      "name": "dark-color-foreground-warning-100",
+      "value": "oklch(0.740 0.147 46)",
+      "ref": "dark-orange-600"
+    },
+    {
+      "name": "color-foreground-warning-200",
+      "value": "oklch(0.439 0.180 29)",
+      "ref": "orange-700"
+    },
+    {
+      "name": "dark-color-foreground-warning-200",
+      "value": "oklch(0.812 0.105 45)",
+      "ref": "dark-orange-700"
+    },
+    {
+      "name": "color-foreground-danger-100",
+      "value": "oklch(0.505 0.196 24)",
+      "ref": "red-600"
+    },
+    {
+      "name": "dark-color-foreground-danger-100",
+      "value": "oklch(0.745 0.150 21)",
+      "ref": "dark-red-600"
+    },
+    {
+      "name": "color-foreground-danger-200",
+      "value": "oklch(0.439 0.180 28)",
+      "ref": "red-700"
+    },
+    {
+      "name": "dark-color-foreground-danger-200",
+      "value": "oklch(0.815 0.105 20)",
+      "ref": "dark-red-700"
+    },
+    {
+      "name": "color-foreground-hint-100",
+      "value": "oklch(0.478 0.000 0)",
+      "ref": "gray-600"
+    },
+    {
+      "name": "dark-color-foreground-hint-100",
+      "value": "oklch(0.728 0.000 0)",
+      "ref": "dark-gray-600"
+    },
+    {
+      "name": "color-foreground-hint-200",
+      "value": "oklch(0.417 0.000 0)",
+      "ref": "gray-700"
+    },
+    {
+      "name": "dark-color-foreground-hint-200",
+      "value": "oklch(0.802 0.000 0)",
+      "ref": "dark-gray-700"
+    },
+    {
+      "name": "color-foreground-contrast-100",
+      "value": "oklch(0.345 0.000 0)",
+      "ref": "gray-800"
+    },
+    {
+      "name": "dark-color-foreground-contrast-100",
+      "value": "oklch(0.398 0.000 0)",
+      "ref": "dark-gray-200"
+    },
+    {
+      "name": "color-foreground-contrast-200",
+      "value": "oklch(0.269 0.000 0)",
+      "ref": "gray-900"
+    },
+    {
+      "name": "dark-color-foreground-contrast-200",
+      "value": "oklch(0.489 0.000 0)",
+      "ref": "dark-gray-300"
+    },
+    {
+      "name": "color-foreground-normal-100",
+      "value": "oklch(0.417 0.000 0)",
+      "ref": "gray-700"
+    },
+    {
+      "name": "dark-color-foreground-normal-100",
+      "value": "oklch(0.802 0.000 0)",
+      "ref": "dark-gray-700"
+    },
+    {
+      "name": "color-foreground-normal-200",
+      "value": "oklch(0.269 0.000 0)",
+      "ref": "gray-900"
+    },
+    {
+      "name": "dark-color-foreground-normal-200",
+      "value": "oklch(0.985 0.000 0)",
+      "ref": "dark-gray-900"
+    },
+    {
+      "name": "color-border-primary",
+      "value": "oklch(0.573 0.189 260)",
+      "ref": "blue-500"
+    },
+    {
+      "name": "dark-color-border-primary",
+      "value": "oklch(0.573 0.189 260)",
+      "ref": "dark-blue-400"
+    },
+    {
+      "name": "color-border-secondary",
+      "value": "oklch(0.827 0.000 0)",
+      "ref": "gray-200"
+    },
+    {
+      "name": "dark-color-border-secondary",
+      "value": "oklch(0.398 0.000 0)",
+      "ref": "dark-gray-200"
+    },
+    {
+      "name": "color-border-success",
+      "value": "oklch(0.554 0.112 167)",
+      "ref": "green-500"
+    },
+    {
+      "name": "dark-color-border-success",
+      "value": "oklch(0.517 0.107 166)",
+      "ref": "dark-green-400"
+    },
+    {
+      "name": "color-border-warning",
+      "value": "oklch(0.588 0.187 39)",
+      "ref": "orange-500"
+    },
+    {
+      "name": "dark-color-border-warning",
+      "value": "oklch(0.554 0.188 36)",
+      "ref": "dark-orange-400"
+    },
+    {
+      "name": "color-border-danger",
+      "value": "oklch(0.591 0.197 22)",
+      "ref": "red-500"
+    },
+    {
+      "name": "dark-color-border-danger",
+      "value": "oklch(0.557 0.197 23)",
+      "ref": "dark-red-400"
+    },
+    {
+      "name": "color-border-hint",
+      "value": "oklch(0.478 0.000 0)",
+      "ref": "gray-600"
+    },
+    {
+      "name": "dark-color-border-hint",
+      "value": "oklch(0.531 0.000 0)",
+      "ref": "dark-gray-400"
+    },
+    {
+      "name": "color-border-contrast",
+      "value": "oklch(0.345 0.000 0)",
+      "ref": "gray-800"
+    },
+    {
+      "name": "dark-color-border-contrast",
+      "value": "oklch(0.531 0.000 0)",
+      "ref": "dark-gray-400"
+    },
+    {
       "name": "gray-050",
       "value": "oklch(0.976 0.000 0)",
       "note": "#F7F7F7",
@@ -89,6 +489,13 @@
       "value": "oklch(0.669 0.158 252)",
       "note": "#4198F2",
       "group": "Base palette"
+    },
+    {
+      "name": "primary",
+      "value": "oklch(0.573 0.189 260)",
+      "note": "명세의 대표색 역할 — color-foreground-primary-100·200(blue-600·700)과 다른 값",
+      "group": "Base palette",
+      "ref": "blue-500"
     },
     {
       "name": "blue-500",

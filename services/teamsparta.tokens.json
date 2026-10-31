@@ -1,6 +1,71 @@
 {
   "colors": [
     {
+      "name": "bg-canvas",
+      "value": "oklch(1.000 0.000 0)",
+      "ref": "white"
+    },
+    {
+      "name": "bg-subtle",
+      "value": "oklch(0.979 0.003 265)",
+      "note": "라이트 테마 값 — 다크 짝은 이 문서에 없다. 다크 화면에 그대로 쓰지 말 것",
+      "ref": "gray-50"
+    },
+    {
+      "name": "bg-surface",
+      "value": "oklch(1.000 0.000 0)",
+      "ref": "white"
+    },
+    {
+      "name": "dark-bg-canvas",
+      "value": "oklch(0.164 0.011 268)",
+      "ref": "gray-900"
+    },
+    {
+      "name": "dark-bg-surface",
+      "value": "oklch(0.164 0.007 271)",
+      "ref": "gray-950"
+    },
+    {
+      "name": "fg-primary",
+      "value": "oklch(0.164 0.011 268)",
+      "note": "라이트 테마 값 — 다크 짝은 이 문서에 없다. 다크 화면에 그대로 쓰지 말 것",
+      "ref": "gray-900"
+    },
+    {
+      "name": "fg-secondary",
+      "value": "oklch(0.569 0.011 267)",
+      "note": "라이트 테마 값 — 다크 짝은 이 문서에 없다. 다크 화면에 그대로 쓰지 말 것",
+      "ref": "gray-500"
+    },
+    {
+      "name": "fg-inverse",
+      "value": "oklch(1.000 0.000 0)",
+      "ref": "white"
+    },
+    {
+      "name": "border-default",
+      "value": "oklch(0.910 0.007 269)",
+      "ref": "gray-200"
+    },
+    {
+      "name": "border-muted",
+      "value": "oklch(0.954 0.005 258)",
+      "ref": "gray-100"
+    },
+    {
+      "name": "badge-red-bg",
+      "value": "oklch(0.944 0.029 7)",
+      "ref": "brand-red-soft"
+    },
+    {
+      "name": "primary",
+      "value": "oklch(0.621 0.251 24)",
+      "note": "명세의 대표색 역할 — 텍스트 축의 fg-primary(gray-900)와 다른 축",
+      "group": "Brand & interaction",
+      "ref": "brand-red"
+    },
+    {
       "name": "brand-red",
       "value": "oklch(0.621 0.251 24)",
       "note": "#FA0030 — 라이브 발행값 stack semantic-brand-default, 워드마크·primary CTA·progress highlight",

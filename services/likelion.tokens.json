@@ -31,6 +31,12 @@
       "group": "Primary (오렌지 시그니처)"
     },
     {
+      "name": "primary",
+      "value": "oklch(0.69 0.209 42)",
+      "group": "Primary (오렌지 시그니처)",
+      "ref": "primary-500"
+    },
+    {
       "name": "primary-500",
       "value": "oklch(0.69 0.209 42)",
       "note": "#FF6000 브랜드 시그니처",
@@ -137,6 +143,72 @@
       "value": "oklch(1 0 0)",
       "note": "#FFFFFF",
       "group": "Semantic (bg/fg/border)"
+    },
+    {
+      "name": "bg-white",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic (bg/fg/border)",
+      "ref": "white"
+    },
+    {
+      "name": "bg-normal",
+      "value": "oklch(0.97 0.003 270)",
+      "group": "Semantic (bg/fg/border)",
+      "ref": "gray-100"
+    },
+    {
+      "name": "bg-primary",
+      "value": "oklch(0.69 0.209 42)",
+      "group": "Semantic (bg/fg/border)",
+      "ref": "primary-500"
+    },
+    {
+      "name": "bg-primary-weak",
+      "value": "oklch(0.96 0.022 54)",
+      "group": "Semantic (bg/fg/border)",
+      "ref": "primary-50"
+    },
+    {
+      "name": "fg-white",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic (bg/fg/border)",
+      "ref": "white"
+    },
+    {
+      "name": "fg-primary",
+      "value": "oklch(0.69 0.209 42)",
+      "group": "Semantic (bg/fg/border)",
+      "ref": "primary-500"
+    },
+    {
+      "name": "fg-normal",
+      "value": "oklch(0.35 0.029 261)",
+      "group": "Semantic (bg/fg/border)",
+      "ref": "gray-800"
+    },
+    {
+      "name": "fg-disabled",
+      "value": "oklch(0.78 0.014 252)",
+      "group": "Semantic (bg/fg/border)",
+      "ref": "gray-400"
+    },
+    {
+      "name": "border-primary",
+      "value": "oklch(0.69 0.209 42)",
+      "group": "Semantic (bg/fg/border)",
+      "ref": "primary-500"
+    },
+    {
+      "name": "border-normal",
+      "value": "oklch(0.87 0.010 253)",
+      "group": "Semantic (bg/fg/border)",
+      "ref": "gray-300"
+    },
+    {
+      "name": "border-weak",
+      "value": "oklch(0.93 0.005 255)",
+      "group": "Semantic (bg/fg/border)",
+      "ref": "gray-200"
     }
   ],
   "typography": [

@@ -1,6 +1,13 @@
 {
   "colors": [
     {
+      "name": "primary",
+      "value": "oklch(0.439 0.240 296)",
+      "note": "명세의 대표색 역할 — text-purple-primary·background-primary 등 역할 토큰과 다른 축",
+      "group": "브랜드 및 리터럴 토큰",
+      "ref": "codeit-violet"
+    },
+    {
       "name": "codeit-violet",
       "value": "oklch(0.439 0.240 296)",
       "note": "#6500C3 공식(PANTONE 2090 C); 번들 purple-90은 #6500c2로 1-unit 차이",
@@ -1079,6 +1086,107 @@
       "value": "oklch(0.980 0.034 145)",
       "note": "#ebffeb",
       "group": "프리미티브 스케일 — 다크 테마"
+    },
+    {
+      "name": "text-purple-primary",
+      "value": "oklch(0.490 0.261 296)",
+      "note": "docs 표기 txt-purple-primary",
+      "group": "시맨틱 역할 — 팔레트 참조",
+      "ref": "light-purple-80"
+    },
+    {
+      "name": "text-purple-secondary",
+      "value": "oklch(0.582 0.273 300)",
+      "note": "docs 표기 txt-purple-secondary",
+      "group": "시맨틱 역할 — 팔레트 참조",
+      "ref": "light-purple-60"
+    },
+    {
+      "name": "background-primary",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "docs 표기 bg-primary",
+      "group": "시맨틱 역할 — 팔레트 참조",
+      "ref": "light-gray-00"
+    },
+    {
+      "name": "background-secondary",
+      "value": "oklch(0.988 0.000 0)",
+      "note": "docs 표기 bg-secondary",
+      "group": "시맨틱 역할 — 팔레트 참조",
+      "ref": "light-gray-05"
+    },
+    {
+      "name": "background-tertiary",
+      "value": "oklch(0.974 0.003 286)",
+      "note": "docs 표기 bg-tertiary",
+      "group": "시맨틱 역할 — 팔레트 참조",
+      "ref": "light-gray-10"
+    },
+    {
+      "name": "background-purple-primary",
+      "value": "oklch(0.958 0.028 313)",
+      "note": "docs 표기 bg-purple-primary — 라이트 대응. 다크는 팔레트 밖의 purple-opacity-15(purple-60 @ 15%)로 갈아탄다",
+      "group": "시맨틱 역할 — 팔레트 참조",
+      "ref": "light-purple-05"
+    },
+    {
+      "name": "border-primary",
+      "value": "oklch(0.320 0.007 297)",
+      "group": "시맨틱 역할 — 팔레트 참조",
+      "ref": "light-gray-100"
+    },
+    {
+      "name": "status-positive",
+      "value": "oklch(0.648 0.202 145)",
+      "group": "시맨틱 역할 — 팔레트 참조",
+      "ref": "light-green-70"
+    },
+    {
+      "name": "dark-text-purple-primary",
+      "value": "oklch(0.762 0.147 309)",
+      "note": "docs 표기 txt-purple-primary (다크)",
+      "group": "시맨틱 역할 — 팔레트 참조",
+      "ref": "dark-purple-20"
+    },
+    {
+      "name": "dark-text-purple-secondary",
+      "value": "oklch(0.714 0.191 308)",
+      "note": "docs 표기 txt-purple-secondary (다크)",
+      "group": "시맨틱 역할 — 팔레트 참조",
+      "ref": "dark-purple-30"
+    },
+    {
+      "name": "dark-background-primary",
+      "value": "oklch(0.225 0.026 274)",
+      "note": "docs 표기 bg-primary (다크)",
+      "group": "시맨틱 역할 — 팔레트 참조",
+      "ref": "dark-gray-00"
+    },
+    {
+      "name": "dark-background-secondary",
+      "value": "oklch(0.250 0.023 274)",
+      "note": "docs 표기 bg-secondary (다크)",
+      "group": "시맨틱 역할 — 팔레트 참조",
+      "ref": "dark-gray-05"
+    },
+    {
+      "name": "dark-background-tertiary",
+      "value": "oklch(0.276 0.026 275)",
+      "note": "docs 표기 bg-tertiary (다크)",
+      "group": "시맨틱 역할 — 팔레트 참조",
+      "ref": "dark-gray-10"
+    },
+    {
+      "name": "dark-border-primary",
+      "value": "oklch(0.976 0.001 286)",
+      "group": "시맨틱 역할 — 팔레트 참조",
+      "ref": "dark-gray-100"
+    },
+    {
+      "name": "dark-status-positive",
+      "value": "oklch(0.892 0.145 145)",
+      "group": "시맨틱 역할 — 팔레트 참조",
+      "ref": "dark-green-70"
     }
   ],
   "typography": [

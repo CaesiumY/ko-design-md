@@ -184,12 +184,20 @@ describe("readFrontmatter on the catalogue", () => {
     "%s: colour rows carry the sidecar's name, value, note and group",
     (slug) => {
       const rows = entryRows(read(slug), "colors")
-      for (const [token, row] of inOrder(sidecar(slug).colors, rows)) {
+      const colors = sidecar(slug).colors
+      for (const [token, row] of inOrder(colors, rows)) {
+        // A reference row (`"{colors.x}"`) carries the key it names as `ref`
+        // and, as its value, whatever the token it names carries (#626).
+        const ref = collapsed(row)?.match(/^\{colors\.([^{}]+)\}$/)?.[1]
         expect(token).toEqual({
           name: row?.key,
-          value: collapsed(row),
+          value:
+            ref === undefined
+              ? collapsed(row)
+              : colors.find((c) => c.name === ref)?.value,
           ...(note(row) === undefined ? {} : { note: note(row) }),
           ...(row?.group === undefined ? {} : { group: row.group }),
+          ...(ref === undefined ? {} : { ref }),
         })
       }
     }

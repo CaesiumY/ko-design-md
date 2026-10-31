@@ -1,6 +1,12 @@
 {
   "colors": [
     {
+      "name": "primary",
+      "value": "oklch(0.599 0.220 258)",
+      "note": "명세의 대표색 역할 — text-primary(gray-800 본문색)와 다른 축",
+      "ref": "primary-regular"
+    },
+    {
       "name": "primary-regular",
       "value": "oklch(0.599 0.220 258)",
       "note": "#0078FF · service-socar / blue-500"

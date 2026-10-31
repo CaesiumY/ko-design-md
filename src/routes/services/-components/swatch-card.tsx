@@ -33,6 +33,13 @@ export function SwatchCard({
   // at all. Keeping it out of the label also keeps that string short enough to
   // be a usable voice-control target (WCAG 2.5.3).
   const noteId = useId()
+  // A role card names the palette key it points at, on the same terms as the
+  // note: visible as a line, heard through aria-describedby. The copy target is
+  // still the colour shown — a role is used by its value.
+  const refId = useId()
+  const describedBy =
+    [token.ref && refId, token.note && noteId].filter(Boolean).join(" ") ||
+    undefined
 
   return (
     <>
@@ -40,7 +47,7 @@ export function SwatchCard({
         type="button"
         onClick={copy}
         aria-label={`${token.name} 복사 — ${token.value}`}
-        aria-describedby={token.note ? noteId : undefined}
+        aria-describedby={describedBy}
         className={CARD_CLASS}
       >
         <span
@@ -52,6 +59,14 @@ export function SwatchCard({
           <span className="block text-[13px] leading-tight font-bold text-foreground">
             {token.name}
           </span>
+          {token.ref && (
+            <span
+              id={refId}
+              className="mt-0.5 block font-mono text-[10px] break-all text-muted-foreground"
+            >
+              → {token.ref}
+            </span>
+          )}
           <span className="mt-1 flex items-center gap-1 font-mono text-[10px] break-all text-muted-foreground">
             {copied ? (
               <>

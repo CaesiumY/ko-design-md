@@ -191,6 +191,51 @@ describe("SwatchCard", () => {
     expect(screen.getByText("복사됨")).toBeTruthy()
   })
 
+  describe("a role card (a reference row)", () => {
+    const ROLE = {
+      name: "bg-canvas",
+      value: "oklch(0.98 0 0)",
+      ref: "gray-050",
+    }
+
+    it("shows the palette key the role points at", () => {
+      stubClipboard(vi.fn().mockResolvedValue(undefined))
+
+      render(<SwatchCard slug="demo" token={ROLE} />)
+
+      expect(screen.getByText("→ gray-050")).toBeTruthy()
+    })
+
+    it("copies the colour it shows, not the key it points at", async () => {
+      const writeText = vi.fn().mockResolvedValue(undefined)
+      stubClipboard(writeText)
+
+      render(<SwatchCard slug="demo" token={ROLE} />)
+      await clickCard()
+
+      expect(writeText).toHaveBeenCalledWith("oklch(0.98 0 0)")
+    })
+
+    // The button's label replaces its content for a screen reader, so the
+    // arrow line alone would be silent — the same reason the note rides
+    // aria-describedby.
+    it("tells a screen reader where the role points, beside its note", () => {
+      stubClipboard(vi.fn().mockResolvedValue(undefined))
+
+      render(
+        <SwatchCard slug="demo" token={{ ...ROLE, note: "페이지 바탕" }} />
+      )
+      const ids = screen
+        .getByRole("button")
+        .getAttribute("aria-describedby")
+        ?.split(" ")
+
+      expect(
+        ids?.map((id) => document.getElementById(id)?.textContent)
+      ).toEqual(["→ gray-050", "페이지 바탕"])
+    })
+  })
+
   it("names the token and its value for screen readers", () => {
     stubClipboard(vi.fn().mockResolvedValue(undefined))
 

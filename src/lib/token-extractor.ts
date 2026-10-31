@@ -42,24 +42,71 @@ interface RawLine {
 const COLOR_VALUE =
   /^(?:oklch|oklab|rgba?|hsla?|hwb|lab|lch|color)\(|^#[0-9a-fA-F]{3,8}$/
 
+/** A reference row's value once YAML has undone its quotes: `{colors.x}`. */
+const COLOR_REF = /^\{colors\.([^{}]+)\}$/
+
+/** The value the reference row `name` ends at, following references to
+ *  references. Throws rather than return nothing: a role left out of the
+ *  sidecar would pass `tokens:check`, which compares the sidecar with this
+ *  function's own output. */
+function resolveRef(
+  valueOf: Map<string, string>,
+  name: string,
+  ref: string
+): string {
+  const path = [name]
+  let from = name
+  let key = ref
+  for (;;) {
+    if (path.includes(key)) {
+      throw new Error(
+        `colors.${name} never reaches a colour: ${[...path, key].join(" → ")}`
+      )
+    }
+    path.push(key)
+    const value = valueOf.get(key)
+    if (value === undefined) {
+      throw new Error(
+        `colors.${from} points at colors.${key}, which colors: does not have`
+      )
+    }
+    const next = value.match(COLOR_REF)?.[1]
+    if (next === undefined) {
+      if (COLOR_VALUE.test(value)) return value
+      throw new Error(
+        `colors.${name} ends at colors.${key}, whose value ${value} is not a colour`
+      )
+    }
+    from = key
+    key = next
+  }
+}
+
 function parseColors(rows: Array<RawLine>): Array<ColorToken> {
+  const valueOf = new Map(rows.map((r) => [r.key, r.value]))
   const out: Array<ColorToken> = []
   for (const r of rows) {
     // dark-* primitives ARE extracted so the sidecar holds the full palette and a
     // token copy can reproduce dark mode. The card VIEW filters them to light at
-    // render time (token-curation.lightColorsOnly) — the light/full split lives at
-    // the component boundary, not in the data.
+    // render time (token-curation.lightTokensOnly) — the light/full split lives
+    // at the component boundary, not in the data.
     //
-    // Aliases (`{colors.x}`) carry no swatch, so they are still excluded here
-    // and remain in the md prose. Anything else this drops — a bare token name,
-    // a number, a named colour, an upper-case function — the draft validator
-    // blocks in `colors:` (`non-oklch-token-value`, #597), so it never ships.
-    if (!COLOR_VALUE.test(r.value)) continue
+    // A reference row (`"{colors.x}"`) is a role naming a palette key. It is
+    // carried with the colour it resolves to, so the role layer reaches the
+    // sidecar and the Tokens tab instead of living only in the md.
+    const ref = r.value.match(COLOR_REF)?.[1]
+    const raw = ref === undefined ? r.value : resolveRef(valueOf, r.key, ref)
+    // Anything else this drops — a bare token name, a number, a named colour,
+    // an upper-case function — the draft validator blocks in `colors:`
+    // (`non-oklch-token-value`, #597), so it never ships.
+    if (!COLOR_VALUE.test(raw)) continue
     // Collapse the author's column-alignment spaces (`0.000 0.000 0   / 0.08`)
     // so the machine-readable value is canonical. CSS color functions are
     // whitespace-insensitive, so this never changes the rendered color.
-    const value = r.value.replace(/\s+/g, " ")
-    out.push(clean({ name: r.key, value, note: r.note, group: r.group }))
+    const value = raw.replace(/\s+/g, " ")
+    // `ref` goes last: JSON.stringify keeps insertion order, and a literal
+    // token's bytes in the committed sidecars must not move.
+    out.push(clean({ name: r.key, value, note: r.note, group: r.group, ref }))
   }
   return out
 }
@@ -343,6 +390,9 @@ function frontmatterTypography(keys: Array<FrontmatterKey>): Array<TypeToken> {
  * Throws when the frontmatter is not valid YAML, naming the line: a partial
  * read would be a sidecar `tokens:check` then confirms. The draft validator
  * reports the same input as `frontmatter-yaml-invalid`.
+ *
+ * Throws, too, when a `colors:` reference row does not end at a colour — a
+ * missing key, a loop, a non-colour value — naming the row.
  */
 export function extractTokensFromMarkdown(text: string): ServiceTokens {
   const read = readFrontmatter(text)
