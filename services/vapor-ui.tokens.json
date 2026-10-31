@@ -1769,7 +1769,7 @@
     {
       "name": "dark-canvas",
       "value": "oklch(0.256 0.000 0)",
-      "note": "#232323",
+      "note": "#232323 · 상류 color-canvas 의 다크 값",
       "group": "Dark palette"
     }
   ],

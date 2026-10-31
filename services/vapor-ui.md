@@ -343,7 +343,7 @@ colors:
   dark-violet-800: oklch(0.902 0.060 306)   # #E8D5FF
   dark-violet-900: oklch(0.983 0.010 305)   # #FBF8FF
   # Canvas — canvas 의 다크 값
-  dark-canvas: oklch(0.256 0.000 0)   # #232323
+  dark-canvas: oklch(0.256 0.000 0)   # #232323 · 상류 color-canvas 의 다크 값
 typography:
   # size → fontSize / lineHeight
   size-025:
