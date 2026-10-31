@@ -224,9 +224,9 @@ function ColorBlock({
   )
 }
 
-// Roles keep document order and their group headings. A long role layer —
-// ridi carries 121 light roles, seed-design 73 under no heading — collapses its
-// tail by the same rule as the flat lists, never by palette curation.
+// Roles keep document order and their group headings, and are shown whole: the
+// role layer is what a reader scans this block for, so even a long one is not
+// folded behind a disclosure the way a palette's tail is.
 function RoleBlock({
   roles,
   slug,
@@ -234,26 +234,12 @@ function RoleBlock({
   roles: Array<ColorToken>
   slug: string
 }) {
-  const collapse = roles.length - FLAT_LIMIT > MIN_COLLAPSE
-  const visible = collapse ? roles.slice(0, FLAT_LIMIT) : roles
-  const hidden = collapse ? roles.slice(FLAT_LIMIT) : []
   return (
     <div className="mt-10">
       <SubLabel>Roles</SubLabel>
       <div className="mt-4 space-y-6">
-        {groupByOrder(visible, (c) => c.group ?? "").map(
-          renderColorGroup(slug)
-        )}
+        {groupByOrder(roles, (c) => c.group ?? "").map(renderColorGroup(slug))}
       </div>
-      {hidden.length > 0 && (
-        <MoreDetails count={hidden.length} label="roles">
-          <div className="space-y-6">
-            {groupByOrder(hidden, (c) => c.group ?? "").map(
-              renderColorGroup(slug)
-            )}
-          </div>
-        </MoreDetails>
-      )}
     </div>
   )
 }

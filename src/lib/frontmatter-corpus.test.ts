@@ -187,7 +187,9 @@ describe("readFrontmatter on the catalogue", () => {
       const colors = sidecar(slug).colors
       for (const [token, row] of inOrder(colors, rows)) {
         // A reference row (`"{colors.x}"`) carries the key it names as `ref`
-        // and, as its value, whatever the token it names carries (#626).
+        // and, as its value, whatever the token it names carries (#626). The
+        // pattern is written out rather than imported from the extractor, so a
+        // misread there is not inherited here.
         const ref = collapsed(row)?.match(/^\{colors\.([^{}]+)\}$/)?.[1]
         expect(token).toEqual({
           name: row?.key,

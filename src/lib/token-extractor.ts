@@ -54,16 +54,16 @@ function resolveRef(
   name: string,
   ref: string
 ): string {
-  const path = [name]
+  const chain = [name]
   let from = name
   let key = ref
   for (;;) {
-    if (path.includes(key)) {
+    if (chain.includes(key)) {
       throw new Error(
-        `colors.${name} never reaches a colour: ${[...path, key].join(" → ")}`
+        `colors.${name} never reaches a colour: ${[...chain, key].join(" → ")}`
       )
     }
-    path.push(key)
+    chain.push(key)
     const value = valueOf.get(key)
     if (value === undefined) {
       throw new Error(

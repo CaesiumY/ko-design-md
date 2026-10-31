@@ -84,6 +84,27 @@ describe("TokenCardSection — role cards", () => {
       )
     ).toBeTruthy()
   })
+
+  // The role layer is what a reader scans this block for, so a long one is
+  // shown whole rather than behind a disclosure — a palette's long tail is
+  // folded, a role layer is not.
+  it("shows a long role layer whole, with none behind a disclosure", () => {
+    const roles = Array.from({ length: 40 }, (_, i) => ({
+      name: `role-${i}`,
+      value: "oklch(0.95 0 0)",
+      ref: "gray-100",
+    }))
+    render(
+      <TokenCardSection
+        slug="demo"
+        tokens={tokens({ colors: [...gray, ...roles] })}
+      />
+    )
+
+    const cards = screen.getAllByRole("button", { name: /^role-\d+ 복사/ })
+    expect(cards).toHaveLength(40)
+    expect(cards.filter((b) => b.closest("details"))).toHaveLength(0)
+  })
 })
 
 describe("TokenCardSection — dark roles", () => {

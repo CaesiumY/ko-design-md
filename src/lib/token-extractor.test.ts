@@ -101,7 +101,7 @@ describe("colors", () => {
     // itself drops. A quoted reference row is read; see the next block.
     // dark-* tokens ARE extracted, though — the sidecar carries the full
     // palette so a token copy can reproduce dark mode; the card VIEW filters them
-    // to light at render time (see token-curation.lightColorsOnly), not here.
+    // to light at render time (see token-curation.lightTokensOnly), not here.
     expect(colors.map((c) => c.name)).toEqual(["primary", "dark-bg"])
   })
 
