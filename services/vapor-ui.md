@@ -218,7 +218,7 @@ colors:
   color-white: oklch(1.000 0.000 0)   # #FFFFFF
   color-black: oklch(0.000 0.000 0)   # #000000
   # Canvas — 표면 역할(canvas-100 · overlay-100)이 가리키는 상류 color-canvas
-  canvas: oklch(1.000 0.000 0)   # #FFFFFF · 상류가 color-white 와 같은 값을 발행한다
+  canvas: oklch(1.000 0.000 0)   # #FFFFFF · 상류 color-canvas — color-white 와 같은 값
   ## Dark palette
   # 상류는 다크에서 램프 자체를 재정의한다 — 번호가 커질수록 밝아진다
   # Gray

@@ -1103,7 +1103,7 @@
     {
       "name": "canvas",
       "value": "oklch(1.000 0.000 0)",
-      "note": "#FFFFFF · 상류가 color-white 와 같은 값을 발행한다",
+      "note": "#FFFFFF · 상류 color-canvas — color-white 와 같은 값",
       "group": "Base palette"
     },
     {
