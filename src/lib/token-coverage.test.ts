@@ -81,10 +81,11 @@ interface Coverage {
 //
 // `annotated: 0` is a fact about the entry, not a broken regex: baemin
 // comments its colours in prose with no hex, so `audit:oklch` has nothing to
-// judge there. bezier annotates only the alpha steps taken from the beta
-// tier of `@channel.io/bezier-tokens` (#569); the steps from the handoff bundle
-// stay unannotated. toss annotates only the steps whose name maps to
-// Toss's published `@toss/tds-colors` (15 light + 15 `dark-*`); its bundle-only
+// judge there. bezier annotates only the steps taken from the beta tier of
+// `@channel.io/bezier-tokens` (#569, #628); the 43 steps from the handoff
+// bundle stay unannotated, so drift 142 = annotated 99 + 43. Its 364 role
+// reference rows carry no literal and count in neither. toss annotates only
+// the steps whose name maps to Toss's published `@toss/tds-colors` (15 light + 15 `dark-*`); its bundle-only
 // steps stay unannotated. teamsparta likewise annotates only the three reds
 // corrected to the live sites' `--stack-semantic-*` values. `drift: 0` is a
 // different claim and is refused below.
@@ -92,7 +93,7 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   "11st": { annotated: 31, judged: 31, drift: 33 },
   baemin: { annotated: 0, judged: 0, drift: 38 },
   banksalad: { annotated: 187, judged: 187, drift: 187 },
-  bezier: { annotated: 51, judged: 51, drift: 94 },
+  bezier: { annotated: 99, judged: 99, drift: 142 },
   class101: { annotated: 98, judged: 98, drift: 98 },
   codeit: { annotated: 180, judged: 173, drift: 180, webfont: true },
   gmarket: { annotated: 87, judged: 87, drift: 91 },

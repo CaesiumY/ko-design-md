@@ -181,6 +181,29 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       expectRowsToMatch("banksalad", expected, refs, literals)
     },
   },
+  bezier: {
+    title:
+      "stable `bg-*`/`txt-*` and beta `--color-*` roles, light and `dark-` twin",
+    check: () => {
+      const { literals, refs, tableRows } = load("bezier")
+      // Two published role layers share one palette, which is the beta tier's.
+      // Only the beta role cells that name one beta step have a row; the 183
+      // beta roles upstream writes as hex (`*-hovered`, `chart-theme-default-*`)
+      // are OKLCH literals in the table and fall out here. So does a stable
+      // cell whose step differs in value from the beta step of the same name
+      // (`grey-900`, `grey-800-80`), which is written as prose.
+      const expected = singleReferenceRoles(tableRows)
+      // Both layers' tables must have parsed, or a dropped one would pass.
+      const layers = [/^(bg|txt)-/, /^(text|icon|fill|border|surface)\b/]
+      for (const layer of layers) {
+        expect(
+          [...expected.keys()].some((key) => layer.test(key)),
+          `bezier: ${layer} roles`
+        ).toBe(true)
+      }
+      expectRowsToMatch("bezier", expected, refs, literals)
+    },
+  },
   "seed-design": {
     title: "every role, light and `dark-` twin",
     check: () => {
