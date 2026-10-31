@@ -21,11 +21,6 @@
       "note": "Blue-800, 공식 브랜드 라벨 색상 (#0231A6)"
     },
     {
-      "name": "bg-white",
-      "value": "oklch(1.000 0.000 0)",
-      "note": "Gmarket White, 전체 앱 기본 배경 (#FFFFFF)"
-    },
-    {
       "name": "green-50",
       "value": "oklch(0.968 0.041 143)",
       "note": "(#E5FCE3)"
@@ -266,74 +261,121 @@
       "note": "(#000000)"
     },
     {
+      "name": "white",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "Gmarket White (#FFFFFF)"
+    },
+    {
       "name": "text-cto",
       "value": "oklch(0.000 0.000 0)",
-      "note": "Black, 상품명·가격 숫자 한정 ('원'은 별도) (#000000)"
+      "note": "상품명·가격 숫자 한정 ('원'은 별도)",
+      "ref": "black"
     },
     {
       "name": "text-primary",
       "value": "oklch(0.244 0.000 0)",
-      "note": "gray-900, 제목·본문 (#222222)"
+      "note": "제목·본문",
+      "ref": "gray-900"
     },
     {
       "name": "text-secondary",
       "value": "oklch(0.493 0.000 0)",
-      "note": "gray-700, 서브 본문 (#616161)"
+      "note": "서브 본문",
+      "ref": "gray-700"
     },
     {
       "name": "text-tertiary",
       "value": "oklch(0.699 0.000 0)",
-      "note": "gray-500, 설명·비활성 (할인 전 가격·품절) (#9E9E9E)"
+      "note": "설명·비활성 (할인 전 가격·품절)",
+      "ref": "gray-500"
     },
     {
       "name": "text-caption",
       "value": "oklch(0.792 0.000 0)",
-      "note": "gray-400, 법적 규제 텍스트 (#BDBDBD)"
+      "note": "법적 규제 텍스트",
+      "ref": "gray-400"
     },
     {
-      "name": "text-link",
-      "value": "oklch(0.534 0.214 260)",
-      "note": "blue-600, 링크·텍스트 버튼 색상 (#0062E5)"
-    },
-    {
-      "name": "text-on-color",
+      "name": "bg-white",
       "value": "oklch(1.000 0.000 0)",
-      "note": "white, 컬러 표면 위 텍스트 (#FFFFFF)"
+      "note": "전체 앱 기본 배경",
+      "ref": "white"
     },
     {
       "name": "bg-off-white",
       "value": "oklch(0.970 0.000 0)",
-      "note": "gray-100, 페이지·모달 2차 배경 (#F5F5F5)"
-    },
-    {
-      "name": "bg-card-ui",
-      "value": "oklch(0.985 0.000 0)",
-      "note": "gray-50, 카드 UI 내 배경·푸터 (#FAFAFA)"
+      "note": "페이지·모달 2차 배경",
+      "ref": "gray-100"
     },
     {
       "name": "bg-divider",
       "value": "oklch(0.944 0.000 0)",
-      "note": "gray-200, 디바이더 라인 (#EEEEEE)"
+      "note": "디바이더 라인",
+      "ref": "gray-200"
+    },
+    {
+      "name": "bg-card-ui",
+      "value": "oklch(0.985 0.000 0)",
+      "note": "카드 UI 내 배경·푸터",
+      "ref": "gray-50"
     },
     {
       "name": "border-active",
       "value": "oklch(0.244 0.000 0)",
-      "note": "gray-900, 폼 필드 포커스 보더 (#222222)"
-    },
-    {
-      "name": "border-secondary",
-      "value": "oklch(0.792 0.000 0)",
-      "note": "gray-400, secondary 버튼 보더 (#BDBDBD)"
+      "note": "폼 필드 포커스 보더 (상류 토큰 표기는 border-acitve)",
+      "ref": "gray-900"
     },
     {
       "name": "border-tertiary",
       "value": "oklch(0.899 0.000 0)",
-      "note": "gray-300, 콘텐츠 배경 보더 (#E0E0E0)"
+      "note": "콘텐츠 배경 보더",
+      "ref": "gray-300"
+    },
+    {
+      "name": "border-secondary",
+      "value": "oklch(0.792 0.000 0)",
+      "note": "secondary 버튼 보더",
+      "ref": "gray-400"
     },
     {
       "name": "border-white",
       "value": "oklch(1.000 0.000 0)",
-      "note": "White, 썸네일 위 보더 (#FFFFFF)"
+      "note": "썸네일 위 보더",
+      "ref": "white"
+    },
+    {
+      "name": "positive",
+      "value": "oklch(0.711 0.242 142)",
+      "note": "쿠폰·사은품 혜택·활성화 텍스트",
+      "ref": "green-500"
+    },
+    {
+      "name": "informative",
+      "value": "oklch(0.608 0.211 257)",
+      "note": "별점·공식 태그 신뢰",
+      "ref": "blue-500"
+    },
+    {
+      "name": "warning",
+      "value": "oklch(0.615 0.229 27)",
+      "note": "취소·탈퇴 등 주의·에러",
+      "ref": "red-500"
+    },
+    {
+      "name": "delay",
+      "value": "oklch(0.668 0.210 39)",
+      "note": "배송 지연",
+      "ref": "orange-500"
+    },
+    {
+      "name": "text-link",
+      "value": "oklch(0.534 0.214 260)",
+      "note": "blue-600 값, 링크·텍스트 버튼 색상 (#0062E5)"
+    },
+    {
+      "name": "text-on-color",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "white 값, 컬러 표면 위 텍스트 (#FFFFFF)"
     },
     {
       "name": "number-indicator-bg",
@@ -344,26 +386,6 @@
       "name": "overlay",
       "value": "oklch(0.000 0.000 0 / 0.50)",
       "note": "black 50%, 다이얼로그 딤 오버레이 [src:12] (#00000080)"
-    },
-    {
-      "name": "positive",
-      "value": "oklch(0.711 0.242 142)",
-      "note": "green-500, 쿠폰·사은품 혜택·활성화 텍스트"
-    },
-    {
-      "name": "informative",
-      "value": "oklch(0.608 0.211 257)",
-      "note": "blue-500, 별점·공식 태그 신뢰"
-    },
-    {
-      "name": "warning",
-      "value": "oklch(0.615 0.229 27)",
-      "note": "red-500, 취소·탈퇴 등 주의·에러"
-    },
-    {
-      "name": "delay",
-      "value": "oklch(0.668 0.210 39)",
-      "note": "orange-500, 배송 지연"
     },
     {
       "name": "positive-bg",

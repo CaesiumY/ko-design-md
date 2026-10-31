@@ -114,7 +114,10 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
   bezier: 0,
   class101: 14,
   codeit: 8,
-  gmarket: 27,
+  // 27 → 25 (#629): the twelve role properties now take `var()` of the palette
+  // steps the md reference rows name, and the gate compares those ten steps
+  // instead — two role pairs share gray-900 and gray-400.
+  gmarket: 25,
   greeting: 13,
   // POP's two tokens are deliberately absent from the preview CSS — the entry
   // records that GS Retail licenses that mark from Samsung Securities and asks
