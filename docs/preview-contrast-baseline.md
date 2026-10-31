@@ -219,6 +219,10 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | bezier | dark | non-text | 42 | 45 | 11 | 4 | 1 |
 | bezier | light | text | 175 | 349 | 54 | 9 | 11 |
 | bezier | light | non-text | 41 | 44 | 18 | 9 | 1 |
+| chzzk | dark | text | 48 | 79 | 3 | 0 | 2 |
+| chzzk | dark | non-text | 2 | 2 | 0 | 0 | 0 |
+| chzzk | light | text | 48 | 79 | 4 | 0 | 2 |
+| chzzk | light | non-text | 2 | 2 | 0 | 0 | 0 |
 | class101 | dark | text | 97 | 160 | 24 | 0 | 7 |
 | class101 | dark | non-text | 16 | 18 | 7 | 1 | 4 |
 | class101 | light | text | 97 | 160 | 33 | 2 | 7 |
@@ -251,6 +255,10 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | kyobobook | dark | non-text | 13 | 13 | 5 | 0 | 1 |
 | kyobobook | light | text | 102 | 167 | 23 | 0 | 16 |
 | kyobobook | light | non-text | 13 | 13 | 5 | 3 | 1 |
+| laftel | dark | text | 32 | 52 | 6 | 0 | 0 |
+| laftel | dark | non-text | 2 | 2 | 0 | 1 | 0 |
+| laftel | light | text | 32 | 52 | 15 | 0 | 0 |
+| laftel | light | non-text | 2 | 2 | 1 | 1 | 0 |
 | lg-electronics | dark | text | 282 | 564 | 10 | 9 | 12 |
 | lg-electronics | dark | non-text | 22 | 33 | 13 | 0 | 1 |
 | lg-electronics | light | text | 280 | 564 | 20 | 30 | 7 |
