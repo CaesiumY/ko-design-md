@@ -589,10 +589,9 @@ export function evaluateText(sample: RawTextSample): Measurement {
   )
   const ceiling = readings.reduce((a, b) => (b.strongest < a.strongest ? b : a))
   // Where along a gradient the text sits is not known, so the run is judged
-  // only when both ends of its interval agree. Then the verdict rests on the
-  // line that caps it — a plain line failing at 4.00 fails the run however a
-  // split gradient line beside it falls. When the ends disagree the run is
-  // held, carrying the weakest it could be.
+  // only when both ends of its interval agree — a plain line failing at 4.00
+  // fails the run however a split gradient line beside it falls. When the ends
+  // disagree the run is held. Which pair it then reports is settled below.
   const settled =
     judge(floor.weakest.ratio, threshold) ===
     judge(ceiling.strongest, threshold)
