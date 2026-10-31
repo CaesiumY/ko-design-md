@@ -3,23 +3,23 @@ name: 팀스파르타
 slug: teamsparta
 category: education
 logo: https://getdesign.kr/logos/teamsparta-favicon.png
-last_updated: "2026-09-24"
+last_updated: "2026-10-31"
 created_at: "2026-05-13"
 lang: ko
 colors:
-  bg-canvas-light: "{colors.white}"
-  bg-subtle-light: "{colors.gray-50}"
-  bg-surface-light: "{colors.white}"
-  bg-canvas-dark: "{colors.gray-900}"
-  bg-surface-dark: "{colors.gray-950}"
-  fg-primary-light: "{colors.gray-900}"
-  fg-secondary-light: "{colors.gray-500}"
+  bg-canvas: "{colors.white}"
+  bg-subtle: "{colors.gray-50}"   # 라이트 테마 값 — 다크 짝은 이 문서에 없다. 다크 화면에 그대로 쓰지 말 것
+  bg-surface: "{colors.white}"
+  dark-bg-canvas: "{colors.gray-900}"
+  dark-bg-surface: "{colors.gray-950}"
+  fg-primary: "{colors.gray-900}"   # 라이트 테마 값 — 다크 짝은 이 문서에 없다. 다크 화면에 그대로 쓰지 말 것
+  fg-secondary: "{colors.gray-500}"   # 라이트 테마 값 — 다크 짝은 이 문서에 없다. 다크 화면에 그대로 쓰지 말 것
   fg-inverse: "{colors.white}"
   border-default: "{colors.gray-200}"
   border-muted: "{colors.gray-100}"
   badge-red-bg: "{colors.brand-red-soft}"
   ## Brand & interaction
-  primary: "{colors.brand-red}"   # 명세의 대표색 역할 — 텍스트 축의 fg-primary-light(gray-900)와 다른 축
+  primary: "{colors.brand-red}"   # 명세의 대표색 역할 — 텍스트 축의 fg-primary(gray-900)와 다른 축
   brand-red: oklch(0.621 0.251 24)   # #FA0030 — 라이브 발행값 stack semantic-brand-default, 워드마크·primary CTA·progress highlight
   brand-red-dark: oklch(0.556 0.225 24)   # #D80028 — 라이브 발행값 stack semantic-brand-strong. primary CTA hover/pressed 역할은 번들 배정이며 라이브 CTA hover 로는 관측되지 않았다
   brand-red-soft: oklch(0.944 0.029 7)   # red badge and subtle alert surface

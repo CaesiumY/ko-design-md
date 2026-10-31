@@ -75,10 +75,9 @@ const SPEC_COLOR_ROLES = new Set([
   "neutral",
 ])
 
-// A reference row's key less its theme marking: the `dark-` prefix this form
-// uses, or the `-dark` suffix vapor-ui's older aliases use.
-const bare = (key: string): string =>
-  key.replace(/^dark-/, "").replace(/-dark$/, "")
+// A reference row's key less its theme marking — the `dark-` prefix, the one
+// spelling the catalogue uses for a dark twin (#625).
+const bare = (key: string): string => key.replace(/^dark-/, "")
 
 const spans = (cell: string): Array<string> =>
   [...cell.matchAll(/`([^`]+)`/g)].map((m) => m[1])
@@ -300,8 +299,8 @@ describe("role reference rows agree with the body role tables", () => {
 
   it("has a case for every entry whose reference rows alias its role table", () => {
     // Detected by shape, not by listing: a reference row whose key — less a
-    // `dark-` prefix or `-dark` suffix, in either spelling codeit uses — is a
-    // backticked name in the first column of the entry's own `## Colors`
+    // `dark-` prefix, and with codeit's `text-` / `background-` read as `txt-` /
+    // `bg-` — is a backticked name in the first column of the entry's own `## Colors`
     // tables. Older reference rows elsewhere (toss's role chains, vapor-ui's
     // aliases) name no table role and are not caught. A role table written
     // without backticks, or with the role outside the first column, is not

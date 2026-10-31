@@ -11,7 +11,7 @@
       "note": "#0072de · Light 테마 값 · 무버전 발행 페이지, 2019 가이드라인과 일치"
     },
     {
-      "name": "primary-dark-on-dark",
+      "name": "dark-primary-dark",
       "value": "oklch(0.661 0.182 256.7)",
       "note": "#3e91ff · Dark 테마의 Primary dark 값 · 무버전 페이지, 2019 가이드라인과 일치"
     },
@@ -31,7 +31,7 @@
       "note": "#000000 · Light 테마의 Black · One UI 2(2019) 발행값"
     },
     {
-      "name": "black-dark",
+      "name": "dark-black",
       "value": "oklch(0.134 0 0)",
       "note": "#080808 · Dark 테마 팔레트의 Black(Light 테마는 순흑) · One UI 2(2019) 발행값"
     }

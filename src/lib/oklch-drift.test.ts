@@ -13,8 +13,9 @@ brand:   oklch(0.62 0.24 27) # #FF0038
 `
 
 describe("readDefinitions", () => {
-  // A design.md may restate the same semantic alias per theme — `wanted` does,
-  // under `### Semantic alias — Light` and `— Dark`. With no theme context to
+  // A design.md may restate the same semantic alias per theme — `wanted` once
+  // did, under `### Semantic alias — Light` and `— Dark` (it now prefixes the
+  // dark side, `dark-bg-canvas`; this fixture keeps the shape). With no theme context to
   // choose with, the old last-wins behaviour handed the gate the DARK value
   // while it compares a LIGHT preview, and every such token reported a
   // disagreement that did not exist.
