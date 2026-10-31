@@ -52,3 +52,17 @@ Every expectation on it is derived by hand in `FORM_ANCHORS`
 (`scripts/audit-contrast-oracle.ts`) from achromatic OKLCH, whose relative
 luminance is L³. The same condition holds: edit this file, and re-derive
 those; never paste the measurer's new output into them.
+
+## `gradient-backdrop.html`
+
+Another synthetic document under the same rule (#402). It covers text and a
+non-text surface over a `background-image`, which the sweep judges by every
+colour the image can paint rather than holding outright. No text in the
+samsung file sits on a gradient, and the file cannot gain one.
+
+Every expectation on it is derived by hand in `GRADIENT_ANCHORS`
+(`scripts/audit-contrast-oracle.ts`): each gradient runs between two
+achromatic OKLCH colours, so it is grey in either interpolation space, its
+luminance runs monotonically from one end to the other, and the weakest colour
+is an end stop with luminance L³. The same condition holds: edit this file,
+and re-derive those; never paste the measurer's new output into them.

@@ -318,15 +318,15 @@ describe("evaluateText", () => {
   })
 
   it("withholds a verdict when something blocks the reading", () => {
-    // A gradient in the stack means the sampled point is one of many colours,
-    // so a single ratio cannot speak for the run. The number is still reported
-    // — a reader wants to see it — but the verdict is not pass or fail.
+    // A filter on the text means the colours read are the ones before it, so a
+    // single ratio cannot speak for the run. The number is still reported — a
+    // reader wants to see it — but the verdict is not pass or fail.
     const got = evaluateText({
       fontSizePx: 16,
       fontWeight: 400,
       fg: opaque(0, 0, 0),
       lines: [{ stack: [opaque(255, 255, 255)], blockers: [] }],
-      blockers: ["gradient"],
+      blockers: ["filter"],
     })
     expect(got.verdict).toBe("indeterminate")
     expect(got.ratio).toBeCloseTo(21, 5)
@@ -597,7 +597,7 @@ describe("evaluateText — a blocker belongs to the line it came from", () => {
   const twoLines = (
     lines: Array<{
       stack: Array<ReturnType<typeof opaque>>
-      blockers: Array<"gradient" | "overlay">
+      blockers: Array<"pseudo-background" | "overlay">
     }>
   ) =>
     evaluateText({
@@ -610,13 +610,13 @@ describe("evaluateText — a blocker belongs to the line it came from", () => {
 
   it("does not let a stronger line's blocker withhold the verdict", () => {
     // The run wraps. The first line is the weak one and sits on a plain
-    // surface; the second is stronger and happens to sit over a gradient.
-    // Taking the union would hold the whole run for a gradient that has
-    // nothing to do with the line the verdict rests on — reporting nothing
-    // where there is a real failure to report.
+    // surface; the second is stronger and happens to sit over a painted
+    // `::before`. Taking the union would hold the whole run for a
+    // pseudo-element that has nothing to do with the line the verdict rests on
+    // — reporting nothing where there is a real failure to report.
     const got = twoLines([
       { stack: [opaque(80, 80, 80)], blockers: [] },
-      { stack: [opaque(255, 255, 255)], blockers: ["gradient"] },
+      { stack: [opaque(255, 255, 255)], blockers: ["pseudo-background"] },
     ])
     expect(got.verdict).toBe("fail")
     expect(got.blockers).toEqual([])
@@ -624,11 +624,11 @@ describe("evaluateText — a blocker belongs to the line it came from", () => {
 
   it("does hold when the blocker is on the line the verdict rests on", () => {
     const got = twoLines([
-      { stack: [opaque(80, 80, 80)], blockers: ["gradient"] },
+      { stack: [opaque(80, 80, 80)], blockers: ["pseudo-background"] },
       { stack: [opaque(255, 255, 255)], blockers: [] },
     ])
     expect(got.verdict).toBe("indeterminate")
-    expect(got.blockers).toContain("gradient")
+    expect(got.blockers).toContain("pseudo-background")
   })
 
   it("keeps a blocker that belongs to the whole node, whichever line wins", () => {
@@ -653,10 +653,10 @@ describe("evaluateText — a blocker belongs to the line it came from", () => {
       fontSizePx: 16,
       fontWeight: 400,
       fg: opaque(0, 0, 0),
-      blockers: ["gradient"],
-      lines: [{ stack: [opaque(80, 80, 80)], blockers: ["gradient"] }],
+      blockers: ["pseudo-background"],
+      lines: [{ stack: [opaque(80, 80, 80)], blockers: ["pseudo-background"] }],
     })
-    expect(got.blockers).toEqual(["gradient"])
+    expect(got.blockers).toEqual(["pseudo-background"])
   })
 })
 
@@ -958,5 +958,272 @@ describe("controlTextSample — the text a form control shows", () => {
       })
     )
     expect(value?.sample.blockers).not.toContain("text-fill")
+  })
+})
+
+// A layer whose only paint is its `background-image`: a transparent
+// `background-color` reads back as white over white and black over black.
+const painted = (value: string, repeat = "repeat", opacity = 1) => ({
+  onWhite: WHITE,
+  onBlack: BLACK,
+  opacity,
+  image: { value, repeat, clip: "border-box", blend: "normal" },
+})
+
+const textOn = (
+  ...lines: Array<Array<ReturnType<typeof opaque> | ReturnType<typeof painted>>>
+) =>
+  evaluateText({
+    fontSizePx: 16,
+    fontWeight: 400,
+    fg: opaque(0, 0, 0),
+    lines: lines.map((stack) => ({ stack, blockers: [] })),
+    blockers: [],
+  })
+
+describe("a background image is judged by every colour it can paint (#402)", () => {
+  it("passes when every colour of the gradient passes", () => {
+    // Black on #ffffff…#c8c8c8: the weakest end is still 12.8:1.
+    const got = textOn([
+      painted("linear-gradient(rgb(255, 255, 255), rgb(200, 200, 200))"),
+      opaque(255, 255, 255),
+    ])
+    expect(got.verdict).toBe("pass")
+    expect(got.blockers).toEqual([])
+    // The ratio and the pair are the WEAKEST colour's, not the first stop's.
+    expect(got.bg).toBe("#c8c8c8")
+    expect(got.ratio).toBeCloseTo(
+      contrastRatio(BLACK, { r: 200, g: 200, b: 200 }),
+      5
+    )
+  })
+
+  it("fails when every colour of the gradient fails", () => {
+    const got = textOn([
+      painted("linear-gradient(rgb(60, 60, 60), rgb(30, 30, 30))"),
+      opaque(255, 255, 255),
+    ])
+    expect(got.verdict).toBe("fail")
+    expect(got.blockers).toEqual([])
+  })
+
+  it("holds when the colours disagree — where the text sits is not known", () => {
+    const got = textOn([
+      painted("linear-gradient(rgb(0, 0, 0), rgb(255, 255, 255))"),
+      opaque(255, 255, 255),
+    ])
+    expect(got.verdict).toBe("indeterminate")
+    expect(got.blockers).toEqual(["gradient"])
+  })
+
+  it("holds a mix of pass and borderline as well, rather than picking one", () => {
+    // Black on white (21:1) through black on #737373 (4.43:1, inside the
+    // ±0.1 band around 4.5).
+    const got = textOn([
+      painted("linear-gradient(rgb(255, 255, 255), rgb(115, 115, 115))"),
+      opaque(255, 255, 255),
+    ])
+    expect(got.verdict).toBe("indeterminate")
+    expect(got.blockers).toEqual(["gradient"])
+  })
+
+  it("ranks a gradient line by its weakest colour, so it cannot hide behind a plain one", () => {
+    // Ranked by `background-color` alone, the gradient line read as the white
+    // under it (21:1) and lost to nothing; the run was judged on the plain
+    // line and passed while one of its lines sat on dark grey.
+    const got = textOn(
+      [opaque(255, 255, 255)],
+      [
+        painted("linear-gradient(rgb(60, 60, 60), rgb(40, 40, 40))"),
+        opaque(255, 255, 255),
+      ]
+    )
+    expect(got.verdict).toBe("fail")
+    expect(got.bg).toBe("#282828")
+  })
+
+  it("does not let a split gradient line hold a run another line already fails", () => {
+    // Black on #6c6c6c is 4.00:1 — a certain failure. The second line's
+    // gradient runs from white (21:1) to #646464 (3.55:1), so that line alone
+    // is split. However the split falls, the run's weakest line is at most
+    // 4.00, which fails either way: the run fails, and on the plain line's
+    // pair, since that is the one the verdict is certain of.
+    const got = textOn(
+      [opaque(108, 108, 108)],
+      [
+        painted("linear-gradient(rgb(255, 255, 255), rgb(100, 100, 100))"),
+        opaque(255, 255, 255),
+      ]
+    )
+    expect(got.verdict).toBe("fail")
+    expect(got.blockers).toEqual([])
+    expect(got.bg).toBe("#6c6c6c")
+  })
+
+  it("keeps the reasons of every line that could be the weakest", () => {
+    // The gradient line runs from 21:1 down to 4.62:1 and something covers it;
+    // the plain line reads 5.46:1. Both ends pass, but the covered line could
+    // be the weaker one, so its `overlay` still holds the run — exactly as it
+    // did when that line alone was ranked weakest.
+    const got = evaluateText({
+      fontSizePx: 16,
+      fontWeight: 400,
+      fg: opaque(0, 0, 0),
+      lines: [
+        {
+          stack: [
+            painted("linear-gradient(rgb(255, 255, 255), rgb(118, 118, 118))"),
+            opaque(255, 255, 255),
+          ],
+          blockers: ["overlay"],
+        },
+        { stack: [opaque(130, 130, 130)], blockers: [] },
+      ],
+      blockers: [],
+    })
+    expect(got.verdict).toBe("indeterminate")
+    expect(got.blockers).toEqual(["overlay"])
+    expect(got.bg).toBe("#767676")
+  })
+
+  it("lets a certain failure stand whatever holds a line that could be weaker", () => {
+    // The run reads as its weakest line, so a plain line failing at 4.00 caps
+    // it below the threshold. A covered line that might be weaker can only
+    // pull it lower, never lift it to a pass: the `overlay` on it changes
+    // nothing about the verdict.
+    const got = evaluateText({
+      fontSizePx: 16,
+      fontWeight: 400,
+      fg: opaque(0, 0, 0),
+      lines: [
+        { stack: [opaque(108, 108, 108)], blockers: [] },
+        {
+          stack: [
+            painted("linear-gradient(rgb(255, 255, 255), rgb(100, 100, 100))"),
+            opaque(255, 255, 255),
+          ],
+          blockers: ["overlay"],
+        },
+      ],
+      blockers: [],
+    })
+    expect(got.verdict).toBe("fail")
+    expect(got.blockers).toEqual([])
+    expect(got.bg).toBe("#6c6c6c")
+  })
+
+  it("holds a run whose plain line passes when a split line might be weaker", () => {
+    const got = textOn(
+      [opaque(255, 255, 255)],
+      [
+        painted("linear-gradient(rgb(255, 255, 255), rgb(100, 100, 100))"),
+        opaque(255, 255, 255),
+      ]
+    )
+    expect(got.verdict).toBe("indeterminate")
+    expect(got.blockers).toEqual(["gradient"])
+    // The number a held reading carries is the weakest it could be.
+    expect(got.bg).toBe("#646464")
+  })
+
+  it("counts the layer painting nothing where its image is clipped short", () => {
+    // `content-box` leaves a band the image does not reach, and the layer's own
+    // colour is clipped with it — so the band can show whatever is beneath,
+    // here black under black text.
+    const got = textOn([
+      {
+        onWhite: { r: 255, g: 255, b: 255 },
+        onBlack: { r: 255, g: 255, b: 255 },
+        opacity: 1,
+        image: {
+          value: "linear-gradient(rgb(255, 255, 255), rgb(255, 255, 255))",
+          repeat: "repeat",
+          clip: "content-box",
+          blend: "normal",
+        },
+      },
+      opaque(0, 0, 0),
+    ])
+    expect(got.verdict).toBe("indeterminate")
+    expect(got.blockers).toEqual(["gradient"])
+  })
+
+  it("holds an image as `image` and still reports the colour beneath it", () => {
+    const got = textOn([painted('url("a.png")'), opaque(255, 255, 255)])
+    expect(got.verdict).toBe("indeterminate")
+    expect(got.blockers).toEqual(["image"])
+    expect(got.ratio).toBeCloseTo(21, 5)
+  })
+
+  it("counts the bare box too when the tile does not repeat over it", () => {
+    // Every colour of the tile passes under black text, but outside a
+    // non-repeating tile the text sits on the black below.
+    const got = textOn([
+      painted(
+        "linear-gradient(rgb(255, 255, 255), rgb(255, 255, 255))",
+        "no-repeat"
+      ),
+      opaque(0, 0, 0),
+    ])
+    expect(got.verdict).toBe("indeterminate")
+    expect(got.blockers).toEqual(["gradient"])
+  })
+
+  it("holds rather than enumerate a stack of gradients past the cap", () => {
+    const ramp = (r: number) =>
+      painted(`linear-gradient(rgba(${r}, 0, 0, 0.5), rgba(0, ${r}, 255, 0.5))`)
+    const got = textOn([ramp(250), ramp(200), ramp(150), opaque(255, 255, 255)])
+    expect(got.verdict).toBe("indeterminate")
+    expect(got.blockers).toEqual(["gradient"])
+    // Held at the cap, not by a split: the reported number is the stack read
+    // with its images left out, which an enumerated weakest colour is not.
+    expect(got.ratio).toBeCloseTo(21, 5)
+  })
+
+  it("fades the image with the layer's opacity, as it fades the colour", () => {
+    // Black at 50% opacity over white is a mid grey: black text on it fails
+    // where the unfaded black would have been a different failure entirely.
+    const got = textOn([
+      painted("linear-gradient(rgb(0, 0, 0), rgb(0, 0, 0))", "repeat", 0.5),
+      opaque(255, 255, 255),
+    ])
+    expect(got.bg).toBe("#808080")
+    expect(got.opacityApprox).toBe(true)
+  })
+
+  it("judges a non-text surface over a gradient by every colour behind it", () => {
+    const chip = (
+      outer: Array<ReturnType<typeof painted> | ReturnType<typeof opaque>>
+    ) =>
+      evaluateNonText({
+        fill: opaque(0, 0, 0),
+        border: null,
+        outer,
+        blockers: [],
+      })
+    const light = chip([
+      painted("linear-gradient(rgb(255, 255, 255), rgb(220, 220, 220))"),
+      opaque(255, 255, 255),
+    ])
+    expect(light?.verdict).toBe("pass")
+    expect(light?.bg).toBe("#dcdcdc")
+    const mixed = chip([
+      painted("linear-gradient(rgb(255, 255, 255), rgb(0, 0, 0))"),
+      opaque(255, 255, 255),
+    ])
+    expect(mixed?.verdict).toBe("indeterminate")
+    expect(mixed?.blockers).toEqual(["gradient"])
+  })
+
+  it("judges a non-text surface that IS the gradient by each of its colours", () => {
+    const got = evaluateNonText({
+      fill: painted("linear-gradient(rgb(0, 0, 255), rgb(0, 0, 140))"),
+      border: null,
+      outer: [opaque(255, 255, 255)],
+      blockers: [],
+    })
+    expect(got?.verdict).toBe("pass")
+    expect(got?.basis).toBe("fill")
+    expect(got?.fg).toBe("#0000ff")
   })
 })

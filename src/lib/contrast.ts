@@ -9,8 +9,14 @@
 // paints a single token (the pair classifier paints tokens with it, then
 // composites them with `compositeOver` here); it does not parse a computed
 // `oklab()` string, a `color-mix()` or a `var()` chain.
+//
+// The one string that does arrive is a layer's computed `background-image`,
+// which no canvas read can flatten into one colour. `./contrast-gradient` turns
+// it into the set of colours it can paint; everything after that is here.
 
+import { paintableColours, rgbaKey } from "./contrast-gradient"
 import { srgbToLinear } from "./oklch-convert"
+import type { BackgroundImage } from "./contrast-gradient"
 
 /** An opaque sRGB colour, channels on [0, 255]. */
 export interface Rgb {
@@ -116,6 +122,18 @@ export function compositeOver(fg: Rgba, bg: Rgb): Rgb {
   }
 }
 
+/** Source-over of one translucent colour onto another, both left straight. */
+function paintOver(src: Rgba, dst: Rgba): Rgba {
+  const a = src.a + dst.a * (1 - src.a)
+  if (a === 0) return dst
+  return {
+    r: (src.r * src.a + dst.r * dst.a * (1 - src.a)) / a,
+    g: (src.g * src.a + dst.g * dst.a * (1 - src.a)) / a,
+    b: (src.b * src.a + dst.b * dst.a * (1 - src.a)) / a,
+    a,
+  }
+}
+
 /**
  * What a viewer actually sees behind a sample point.
  *
@@ -129,17 +147,7 @@ export function flattenStack(layers: Array<Rgba>): {
   rootTransparent: boolean
 } {
   let acc: Rgba = { r: 0, g: 0, b: 0, a: 0 }
-  for (let i = layers.length - 1; i >= 0; i--) {
-    const src = layers[i]
-    const outA = src.a + acc.a * (1 - src.a)
-    if (outA === 0) continue
-    acc = {
-      r: (src.r * src.a + acc.r * acc.a * (1 - src.a)) / outA,
-      g: (src.g * src.a + acc.g * acc.a * (1 - src.a)) / outA,
-      b: (src.b * src.a + acc.b * acc.a * (1 - src.a)) / outA,
-      a: outA,
-    }
-  }
+  for (let i = layers.length - 1; i >= 0; i--) acc = paintOver(layers[i], acc)
   // Nothing in the document painted an opaque backdrop under this point. The
   // preview is served in an iframe on a page whose chrome is pinned to light
   // (`__root.tsx` hardcodes data-theme="light"), so white is what shows
@@ -222,7 +230,23 @@ export interface RawColor {
  * unverified reading is held, not decided.
  */
 export type Blocker =
+  /**
+   * A `background-image` gradient that could not be judged (#402). One whose
+   * colours all agree on a verdict is judged, not held; this is every other
+   * case:
+   * - its colours disagree — some pass, some do not — and where the text sits
+   *   along it is not known;
+   * - `./contrast-gradient` cannot read it (a colour spelling or interpolation
+   *   space it does not walk, a blend mode, a `text` clip);
+   * - the stack would list more than `MAX_BACKDROPS` backdrops.
+   */
   | "gradient"
+  /**
+   * A `background-image` that is an image (`url()`, or `image-set()`,
+   * `cross-fade()`, `element()`, `paint()`), whose colours cannot be listed
+   * from computed style at all.
+   */
+  | "image"
   | "overlay"
   | "pseudo-background"
   | "text-fill"
@@ -240,12 +264,23 @@ export type Blocker =
    */
   | "inset-shadow"
 
+/**
+ * One element's paint in a backdrop: its `background-color` as a `RawColor`
+ * reads it and, when it has one, its computed `background-image` handed over
+ * as written. The image is not a colour the canvas can read, so it travels as
+ * text and is enumerated on this side, where it can be tested.
+ */
+export interface RawLayer extends RawColor {
+  image?: BackgroundImage
+}
+
 /** One line box of a run: what is behind it, and what stops it being read. */
 export interface RawTextLine {
   /** Topmost first, as `document.elementsFromPoint` returns it. */
-  stack: Array<RawColor>
+  stack: Array<RawLayer>
   /**
-   * Why THIS line cannot be read — a gradient behind it, something over it.
+   * Why THIS line cannot be read — a painted pseudo-element behind it,
+   * something over it.
    * Held per line because a wrapped run can cross a band that one line sits on
    * and another does not.
    */
@@ -446,6 +481,92 @@ function resolve(raw: RawColor): Rgba {
   return { ...recovered, a: recovered.a * raw.opacity }
 }
 
+/**
+ * How many backdrops one reading may enumerate before it is held instead.
+ * Two image layers on one element (a grid drawn as two gradients) already
+ * multiply; a few more in the stack would make the walk the slowest part of
+ * the sweep for a reading that is almost certainly mixed anyway.
+ */
+const MAX_BACKDROPS = 4096
+
+/**
+ * Every colour one layer can paint: its `background-color` with each
+ * combination of its image layers' colours drawn over it, then faded by the
+ * layer's opacity. A layer with no image paints one colour, as before.
+ */
+function layerPaints(layer: RawLayer): Array<Rgba> | Blocker {
+  const image =
+    layer.image === undefined
+      ? ({ kind: "none" } as const)
+      : paintableColours(layer.image)
+  if (image.kind === "blocked") return image.blocker
+  let paints = [recoverAlpha(layer.onWhite, layer.onBlack)]
+  if (image.kind === "colours") {
+    // `background-image` lists its topmost layer first; paint from the bottom.
+    for (const tile of [...image.layers].reverse()) {
+      const next = new Map<string, Rgba>()
+      for (const under of paints) {
+        // Outside a tile that does not fill the box, the box shows what was
+        // under the tile — one more colour the text can sit on.
+        if (!tile.covers) next.set(rgbaKey(under), under)
+        for (const colour of tile.colours) {
+          const out = paintOver(colour, under)
+          next.set(rgbaKey(out), out)
+        }
+        if (next.size > MAX_BACKDROPS) return "gradient"
+      }
+      paints = [...next.values()]
+    }
+  }
+  // Where an image is clipped short of the border box, the colour is clipped
+  // with it and the layer may paint nothing there.
+  if (image.kind === "colours" && image.layers.some((l) => l.clipped)) {
+    paints.push({ r: 0, g: 0, b: 0, a: 0 })
+  }
+  return paints.map((c) => ({ ...c, a: c.a * layer.opacity }))
+}
+
+interface Backdrop {
+  color: Rgb
+  rootTransparent: boolean
+}
+
+/**
+ * Every backdrop a stack can put behind a point, or the reason it cannot be
+ * listed. A blocked stack still carries ONE backdrop — the stack read with its
+ * images left out — because a held reading reports its number all the same.
+ */
+function backdropsOf(stack: Array<RawLayer>): {
+  backdrops: Array<Backdrop>
+  blocker: Blocker | null
+} {
+  const plain = (blocker: Blocker) => ({
+    backdrops: [flattenStack(stack.map(resolve))],
+    blocker,
+  })
+  const perLayer: Array<Array<Rgba>> = []
+  for (const layer of stack) {
+    const paints = layerPaints(layer)
+    if (typeof paints === "string") return plain(paints)
+    perLayer.push(paints)
+  }
+  // The product over the layers, not their positions: which colour of one
+  // gradient sits over which colour of another is geometry this does not know,
+  // so every pairing is a backdrop the text might be on.
+  const count = perLayer.reduce((n, paints) => n * paints.length, 1)
+  if (count > MAX_BACKDROPS) return plain("gradient")
+  let partial: Array<Array<Rgba>> = [[]]
+  for (const paints of perLayer) {
+    partial = partial.flatMap((above) => paints.map((p) => [...above, p]))
+  }
+  const seen = new Map<string, Backdrop>()
+  for (const layers of partial) {
+    const backdrop = flattenStack(layers)
+    seen.set(`${toHex(backdrop.color)}|${backdrop.rootTransparent}`, backdrop)
+  }
+  return { backdrops: [...seen.values()], blocker: null }
+}
+
 export function evaluateText(sample: RawTextSample): Measurement {
   const fg = resolve(sample.fg)
   const threshold = textThreshold(sample.fontSizePx, sample.fontWeight)
@@ -455,35 +576,38 @@ export function evaluateText(sample: RawTextSample): Measurement {
   const lines: Array<RawTextLine> =
     sample.lines.length > 0 ? sample.lines : [{ stack: [], blockers: [] }]
 
-  let worst: {
-    ratio: number
-    rootTransparent: boolean
-    blockers: Array<Blocker>
-    fg: Rgb
-    bg: Rgb
-  } | null = null
-  for (const line of lines) {
-    const backdrop = flattenStack(line.stack.map(resolve))
-    // Composed here rather than at the end: the pair belongs to the line that
-    // wins, and recomposing afterwards would take whichever backdrop the loop
-    // happened to leave behind.
-    const composed = compositeOver(fg, backdrop.color)
-    const ratio = contrastRatio(composed, backdrop.color)
-    if (worst === null || ratio < worst.ratio) {
-      worst = {
-        ratio,
-        rootTransparent: backdrop.rootTransparent,
-        blockers: line.blockers,
-        fg: composed,
-        bg: backdrop.color,
-      }
-    }
-  }
-  // Non-null: `lines` always has at least one entry. Typed from `worst` rather
-  // than by restating its shape, which had already fallen a field behind.
-  const chosen = worst as NonNullable<typeof worst>
+  // A line is an interval, not a point: the weakest and the strongest backdrop
+  // it can have, a plain line's two ends being the same. The run reads as its
+  // weakest LINE, so its contrast lies between the lowest floor and the lowest
+  // ceiling of its lines. Ranking a line by its `background-color` alone let a
+  // gradient line read as the colour under its gradient and lose to a plain
+  // line, so the run was judged on the plain one while the gradient line sat
+  // on something darker.
+  const readings = lines.map((line) => readLine(line, fg))
+  const floor = readings.reduce((a, b) =>
+    b.weakest.ratio < a.weakest.ratio ? b : a
+  )
+  const ceiling = readings.reduce((a, b) => (b.strongest < a.strongest ? b : a))
+  // Where along a gradient the text sits is not known, so the run is judged
+  // only when both ends of its interval agree. Then the verdict rests on the
+  // line that caps it — a plain line failing at 4.00 fails the run however a
+  // split gradient line beside it falls. When the ends disagree the run is
+  // held, carrying the weakest it could be.
+  const settled =
+    judge(floor.weakest.ratio, threshold) ===
+    judge(ceiling.strongest, threshold)
+  // The lines the verdict could rest on: the one that caps the run, and every
+  // line that could be weaker than that cap. A plain run has exactly one, its
+  // weakest line, as before — the comparison is strict so a tie keeps the
+  // first, also as before. A cap that already fails is the exception: the run
+  // reads as its weakest line, so a line that might be weaker can only pull it
+  // lower, and whatever holds that line cannot lift the run to a pass.
+  const capFails = judge(ceiling.strongest, threshold) === "fail"
+  const contenders = readings.filter(
+    (r) => r === ceiling || (!capFails && r.weakest.ratio < ceiling.strongest)
+  )
 
-  // The blockers describe the line the verdict rests on, plus whatever holds
+  // The blockers describe the lines the verdict rests on, plus whatever holds
   // for the whole run. NOT the union of every line's: that would let one
   // unreadable line withhold a verdict the rest of the run can support, which
   // hides failures rather than reporting them. The collector used to hand over
@@ -491,27 +615,68 @@ export function evaluateText(sample: RawTextSample): Measurement {
   const blockers = [
     ...new Set([
       ...sample.blockers,
-      ...chosen.blockers,
-      ...(chosen.rootTransparent ? (["root-transparent"] as const) : []),
+      ...contenders.flatMap((r) => r.blockers),
+      ...(settled ? [] : (["gradient"] as const)),
+      ...(contenders.some((r) => r.rootTransparent)
+        ? (["root-transparent"] as const)
+        : []),
     ]),
   ]
+  // A judged run reports the pair it is certain of; a held one, the weakest it
+  // could be.
+  const chosen = blockers.length === 0 ? ceiling : floor
+  const ratio = chosen.weakest.ratio
   return {
-    ratio: chosen.ratio,
+    ratio,
     threshold,
-    verdict:
-      blockers.length > 0 ? "indeterminate" : judge(chosen.ratio, threshold),
+    verdict: blockers.length > 0 ? "indeterminate" : judge(ratio, threshold),
     blockers,
     opacityApprox:
       sample.fg.opacity < 1 ||
       sample.lines.some((line) => line.stack.some((l) => l.opacity < 1)),
-    fg: toHex(chosen.fg),
-    bg: toHex(chosen.bg),
+    fg: toHex(chosen.weakest.fg),
+    bg: toHex(chosen.weakest.bg),
+  }
+}
+
+/** One line box read over every backdrop its stack can put behind it. */
+function readLine(
+  line: RawTextLine,
+  fg: Rgba
+): {
+  weakest: { ratio: number; fg: Rgb; bg: Rgb }
+  strongest: number
+  rootTransparent: boolean
+  blockers: Array<Blocker>
+} {
+  const { backdrops, blocker } = backdropsOf(line.stack)
+  let weakest: { ratio: number; fg: Rgb; bg: Rgb } | null = null
+  let strongest = 0
+  for (const backdrop of backdrops) {
+    // Composed here rather than at the end: the pair belongs to the backdrop
+    // that wins, and recomposing afterwards would take whichever one the loop
+    // happened to leave behind.
+    const composed = compositeOver(fg, backdrop.color)
+    const ratio = contrastRatio(composed, backdrop.color)
+    if (weakest === null || ratio < weakest.ratio) {
+      weakest = { ratio, fg: composed, bg: backdrop.color }
+    }
+    strongest = Math.max(strongest, ratio)
+  }
+  return {
+    // Non-null: `backdropsOf` always returns at least one backdrop.
+    weakest: weakest as NonNullable<typeof weakest>,
+    strongest,
+    rootTransparent: backdrops.some((b) => b.rootTransparent),
+    // A stack that cannot be listed is read as one backdrop, its images left
+    // out, and ranked by it — the same as any other held line.
+    blockers: blocker === null ? line.blockers : [...line.blockers, blocker],
   }
 }
 
 export interface RawNonTextSample {
   /** The element's own background, or null when it paints none. */
-  fill: RawColor | null
+  fill: RawLayer | null
   /**
    * The element's border colour, or null when it has no border at least 1px
    * wide on any side. The width test is the collector's, because a border of
@@ -519,13 +684,53 @@ export interface RawNonTextSample {
    */
   border: RawColor | null
   /** What is behind the element. Topmost first. */
-  outer: Array<RawColor>
+  outer: Array<RawLayer>
   blockers: Array<Blocker>
 }
 
 export interface NonTextMeasurement extends Measurement {
   /** Which boundary carries the ratio — what a fix would have to move. */
   basis: "fill" | "border"
+}
+
+/** The better of a surface's two boundaries over one backdrop. */
+function bestSeparation(
+  outer: Rgb,
+  fill: Rgba | null,
+  border: Rgba | null
+): { ratio: number; basis: "fill" | "border"; fg: Rgb; bg: Rgb } {
+  const inner = fill === null ? outer : compositeOver(fill, outer)
+  // Each candidate carries the pair it was taken between, not just its number.
+  // A border used to be scored with `Math.max` over its two comparisons, which
+  // answered how well it separates but forgot WHICH separation answered — so a
+  // reported pair would have been free to name the side that lost.
+  const candidates: Array<{
+    ratio: number
+    basis: "fill" | "border"
+    fg: Rgb
+    bg: Rgb
+  }> = []
+  if (fill !== null) {
+    candidates.push({
+      ratio: contrastRatio(inner, outer),
+      basis: "fill",
+      fg: inner,
+      bg: outer,
+    })
+  }
+  if (border !== null) {
+    const against = (bg: Rgb): { ratio: number; fg: Rgb; bg: Rgb } => {
+      const fg = compositeOver(border, bg)
+      return { ratio: contrastRatio(fg, bg), fg, bg }
+    }
+    const outward = against(outer)
+    const inward = against(inner)
+    candidates.push({
+      ...(inward.ratio > outward.ratio ? inward : outward),
+      basis: "border",
+    })
+  }
+  return candidates.reduce((a, b) => (b.ratio > a.ratio ? b : a))
 }
 
 /**
@@ -545,48 +750,45 @@ export function evaluateNonText(
   sample: RawNonTextSample
 ): NonTextMeasurement | null {
   if (sample.fill === null && sample.border === null) return null
-  const outer = flattenStack(sample.outer.map(resolve))
-  const inner =
-    sample.fill === null
-      ? outer.color
-      : compositeOver(resolve(sample.fill), outer.color)
+  const outer = backdropsOf(sample.outer)
+  // The surface's own image is enumerated like a layer behind it. Blocked, it
+  // is read as its `background-color` alone and held for the same reason.
+  const ownPaints = sample.fill === null ? null : layerPaints(sample.fill)
+  const fills =
+    ownPaints === null
+      ? [null]
+      : typeof ownPaints === "string"
+        ? [resolve(sample.fill as RawLayer)]
+        : ownPaints
+  const border = sample.border === null ? null : resolve(sample.border)
 
-  // Each candidate carries the pair it was taken between, not just its number.
-  // A border used to be scored with `Math.max` over its two comparisons, which
-  // answered how well it separates but forgot WHICH separation answered — so a
-  // reported pair would have been free to name the side that lost.
-  const candidates: Array<{
-    ratio: number
-    basis: "fill" | "border"
-    fg: Rgb
-    bg: Rgb
-  }> = []
-  if (sample.fill !== null) {
-    candidates.push({
-      ratio: contrastRatio(inner, outer.color),
-      basis: "fill",
-      fg: inner,
-      bg: outer.color,
-    })
-  }
-  if (sample.border !== null) {
-    const border = resolve(sample.border)
-    const against = (bg: Rgb): { ratio: number; fg: Rgb; bg: Rgb } => {
-      const fg = compositeOver(border, bg)
-      return { ratio: contrastRatio(fg, bg), fg, bg }
+  // Scored once per backdrop and surface colour, then the weakest of those
+  // stands for the element — where the surface sits along the gradient is no
+  // more known than where text does.
+  let worst: ReturnType<typeof bestSeparation> | null = null
+  const verdicts = new Set<Verdict>()
+  for (const backdrop of outer.backdrops) {
+    for (const fill of fills) {
+      const best = bestSeparation(backdrop.color, fill, border)
+      verdicts.add(judge(best.ratio, NON_TEXT_RATIO))
+      if (worst === null || best.ratio < worst.ratio) worst = best
     }
-    const outward = against(outer.color)
-    const inward = against(inner)
-    candidates.push({
-      ...(inward.ratio > outward.ratio ? inward : outward),
-      basis: "border",
-    })
   }
-  const best = candidates.reduce((a, b) => (b.ratio > a.ratio ? b : a))
+  const best = worst as NonNullable<typeof worst>
+  const unread =
+    outer.blocker ??
+    (typeof ownPaints === "string" ? ownPaints : null) ??
+    (verdicts.size > 1 ? "gradient" : null)
 
-  const blockers = outer.rootTransparent
-    ? [...sample.blockers, "root-transparent" as const]
-    : sample.blockers
+  const blockers = [
+    ...new Set([
+      ...sample.blockers,
+      ...(unread === null ? [] : [unread]),
+      ...(outer.backdrops.some((b) => b.rootTransparent)
+        ? (["root-transparent"] as const)
+        : []),
+    ]),
+  ]
   const opacityApprox =
     (sample.fill?.opacity ?? 1) < 1 ||
     (sample.border?.opacity ?? 1) < 1 ||
