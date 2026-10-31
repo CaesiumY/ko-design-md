@@ -16,7 +16,7 @@
     {
       "name": "blue-500",
       "value": "oklch(0.620 0.191 258)",
-      "note": "#3182F6 — TDS 발행값 blue500, 카노니컬 Toss Blue, 화면당 하나의 primary CTA",
+      "note": "#3182F6 — TDS 발행값 blue500, 카노니컬 Toss Blue, 유일한 강조 hue(이 색 채움 CTA 는 화면당 하나)",
       "group": "Brand"
     },
     {
