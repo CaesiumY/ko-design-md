@@ -406,7 +406,7 @@ export const BASELINE_TABLE = `\
 | baemin | light | text | 86 | 157 | 19 | 4 | 2 |
 | baemin | light | non-text | 4 | 15 | 2 | 0 | 0 |
 | banksalad | dark | text | 173 | 381 | 46 | 0 | 5 |
-| banksalad | dark | non-text | 21 | 28 | 15 | 0 | 0 |
+| banksalad | dark | non-text | 17 | 23 | 15 | 0 | 0 |
 | banksalad | light | text | 171 | 381 | 65 | 3 | 5 |
 | banksalad | light | non-text | 17 | 23 | 15 | 0 | 0 |
 | bezier | dark | text | 175 | 349 | 59 | 10 | 11 |
@@ -417,7 +417,7 @@ export const BASELINE_TABLE = `\
 | chzzk | dark | non-text | 2 | 2 | 0 | 0 | 0 |
 | chzzk | light | text | 49 | 78 | 6 | 2 | 2 |
 | chzzk | light | non-text | 2 | 2 | 0 | 0 | 0 |
-| class101 | dark | text | 97 | 160 | 23 | 1 | 7 |
+| class101 | dark | text | 97 | 160 | 24 | 0 | 7 |
 | class101 | dark | non-text | 16 | 18 | 7 | 1 | 4 |
 | class101 | light | text | 97 | 160 | 33 | 2 | 7 |
 | class101 | light | non-text | 15 | 18 | 7 | 3 | 3 |

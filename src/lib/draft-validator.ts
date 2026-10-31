@@ -225,7 +225,7 @@ function oklchHexMismatch(line: string): string | null {
   )
 }
 
-// A re-audit note, per CLAUDE.md: `> **<label>(YYYY-MM-DD).** …`. Only the
+// A re-audit note, per .claude/rules/audit-notes.md: `> **<label>(YYYY-MM-DD).** …`. Only the
 // blockquote, the parenthesised date, and the section-head position are fixed —
 // the label is free text, because a label that says what happened ("팔레트 정정")
 // carries more than one that says a note exists.
@@ -238,11 +238,11 @@ const AUDIT_NOTE = /^>\s*\*\*[^*]*\(\d{4}-\d{2}-\d{2}\)\s*\.?\s*\*\*/
 // the source's release — a static fact References is *supposed* to carry.
 // Synonyms are listed because pinning one word lets the next author write 조회
 // and wonder why the rule stayed quiet; the list is still a list, so a verb
-// outside it passes silently. That limit is documented in CLAUDE.md.
+// outside it passes silently.
 //
 // Two more blind spots, both shared rather than introduced here. Only the
 // date→verb order is matched (`확인일: 2026-08-02` passes), which is the order
-// CLAUDE.md specifies. And the rule rides on `inReferences`, which an `###`
+// the stamp `(YYYY-MM-DD 확인)` takes. And the rule rides on `inReferences`, which an `###`
 // inside References switches off — `parseReferences` stops there too, so the
 // two agree; a References subsection would go unchecked by both, not just this.
 const REF_DATE_STAMP = /\d{4}-\d{2}-\d{2}(?:에)?\s*(?:확인|조회|검증|대조)/
@@ -764,8 +764,12 @@ function segmentPattern(pattern: string): RegExp {
  *     so at least one declared key must match it;
  *   • anything else (`{motion.dur-fast/base/slow}`) is not one reference.
  *
- * Scope — what is judged, and what is deliberately not. The same list is in
- * CLAUDE.md; keep the two in step.
+ * A key is matched in its raw spelling, before YAML normalises it (`1.0`).
+ *
+ * Scope — what is judged, and what is deliberately not. This list is the
+ * canonical copy (.claude/rules/catalog.md points here, and the design-md author
+ * prompt summarises part of it): when a review brings a shape it does not name,
+ * check it against this list before adding a rule.
  *   • `{ns.…}` with a lowercase namespace: the reference syntax itself. A known
  *     map or phantom is judged in every shape (`{motion.a/b/c}` blocks, and so
  *     does a file list starting with a map name, `{colors.ts,fonts.ts}`). Any
@@ -775,10 +779,17 @@ function segmentPattern(pattern: string): RegExp {
  *     packed typo (`{colours.a/b}`) is left.
  *   • A capitalised namespace, only when it is a case slip or near miss of a
  *     known name (`{Colors.primary}` blocks, `{React.Fragment}` is left).
+ *   • `{component.*}` (a `###` heading) and `{group.*}` (notation describing
+ *     the syntax itself) are NON_MAP_NAMESPACES and are not judged.
  *   • A standalone `{word}` naming a map this entry declares (blocks), or
  *     another map, a phantom, a declared key or a text-fence row used in prose
- *     (warns — see the dotless pass below). A whole `colors:` value of that
- *     shape is skipped inside that value: the OKLCH rule blocks it and names
+ *     (warns — see the dotless pass below; a warning, because such words can
+ *     be plain placeholders, and `title`/`body` really are map keys). A Korean
+ *     particle after the braces does not hide it (`{typography}로`). The map
+ *     and declared-key checks also run inside a `text` fence; the fence-row
+ *     check runs in prose only, since `'{company}'` inside a fence is that
+ *     spec's own template syntax. A whole `colors:` value that is a
+ *     standalone `{word}` is skipped inside that value: the OKLCH rule blocks it and names
  *     the fix (#600). The same word in prose is judged as ever.
  *   • Prose and stylesheet fences are read in full; data fences (json) are
  *     not read at all (see DATA_FENCE_LANGUAGES). In a source-code fence,
@@ -788,7 +799,8 @@ function segmentPattern(pattern: string): RegExp {
  *     only this catalog's map names are judged inside a string literal: an
  *     unknown or phantom namespace there may be another token system's alias
  *     (DTCG `"{color.carrot.600}"`, `"{radius.sm}"`). A comment is judged
- *     like prose.
+ *     like prose. A `'` or `"` left open to the end of its line is text, not
+ *     a string (`6.1"`).
  *   • Out of scope by design: bare braces in source code, `#` comments and
  *     HTML text nodes inside a source fence (the frontmatter's `#` comments
  *     are read), template interpolation (`${x.y}`, and SCSS `#{x.y}` in a stylesheet fence), a dotless `{word}`
@@ -1661,7 +1673,7 @@ function scanBody(body: string): BodyScan {
     if (/^#{2,}\s+/.test(line)) inReferences = heading?.[1] === "References"
     // Two boundaries, deliberately different. `inReferences` ends at any
     // `#{2,}` to match `parseReferences`. The audit-note scope is the H2:
-    // CLAUDE.md's "one note per section" means one per `## Colors`, and 9 of 17
+    // "one note per section" means one per `## Colors`, and 9 of 17
     // entries nest `###` inside it — sharing the wider boundary would let a note
     // under a subsection restart the count and pass the very duplicate this
     // rule exists to catch. An H3 is content, so it also ends "first paragraph".

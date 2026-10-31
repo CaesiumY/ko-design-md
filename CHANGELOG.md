@@ -18,6 +18,7 @@
 
 ### Changed
 
+- 에이전트 지침서 `CLAUDE.md` 를 66KB → 9KB 로 — 검사기 메시지·다른 정본과 겹치던 글과 PR 이력을 지우고, 작업별 규칙(카탈로그·감사 메모·프리뷰·E2E·스킬 배선)은 그 파일을 열 때만 읽히는 `.claude/rules/*.md` 로 옮김. `AGENTS.md`·CI 리뷰 프롬프트가 규칙 파일도 읽게 함
 - 용어집 `CONTEXT.md` 를 `GLOSSARY.md` 로 개명 — mattpocock/skills 1.3.0 이 도메인 문서 규약을 바꿔 스킬이 `GLOSSARY.md` 만 찾고, 없으면 조용히 건너뛴다. `docs/agents/issue-tracker.md` 에는 상류 템플릿의 이슈 읽기(`--json`)·서브이슈 연결 변경을 옮김
 - 사이트 문구를 용어집 어휘로 — 목록 열 "Design Systems"·"Tokens" 를 "Brands"·"LLM Tokens"(상세 배지도 "LLM TOKENS") 로 갈라 디자인 토큰 탭과 구분하고, 프리뷰 없음 안내의 "이 서비스는", about·루트 404·llms.txt 머리말의 "원본 design.md"·"패키지 번들"·"원본 hex"(→ 항목이 옮겨 온 hex), about 의 "주장에는 전부 인용" 과장을 고침. 항목 문서를 가리키던 소문자 design.md(복사·다운로드 버튼, 빈 목록 안내, 홈·about·색인 설명, 에이전트용 404)도 DESIGN.md·항목으로 — 사이트 이름 ko/design.md 는 그대로
 - `preview-prose-audit` 스킬·CLAUDE.md 의 판정 서술과 `.agents/product-marketing.md` 용어표를 용어집(`CONTEXT.md`) 어휘로 — "원본"을 상류·번들로 가르고, "상류 미확인"·"미판정"은 유보로, 산문 전체를 가리키던 "캡션"은 프리뷰 산문으로

@@ -3,91 +3,91 @@ name: 구름
 design_system_name: Vapor UI
 slug: vapor-ui
 category: developer
-last_updated: "2026-09-08"
+last_updated: "2026-10-31"
 created_at: "2026-05-10"
 lang: ko
 logo: https://getdesign.kr/logos/goorm.png
 colors:
   color-background-canvas: "{colors.color-white}"
-  color-background-canvas-dark: "{colors.dark-canvas}"
+  dark-color-background-canvas: "{colors.dark-canvas}"
   color-background-canvas-200: "{colors.gray-050}"
-  color-background-canvas-200-dark: "{colors.dark-gray-050}"
+  dark-color-background-canvas-200: "{colors.dark-gray-050}"
   color-background-overlay-100: "{colors.color-white}"
-  color-background-overlay-100-dark: "{colors.dark-gray-100}"
+  dark-color-background-overlay-100: "{colors.dark-gray-100}"
   color-background-primary-100: "{colors.blue-100}"
-  color-background-primary-100-dark: "{colors.dark-blue-050}"
+  dark-color-background-primary-100: "{colors.dark-blue-050}"
   color-background-primary-200: "{colors.blue-500}"
-  color-background-primary-200-dark: "{colors.dark-blue-500}"
+  dark-color-background-primary-200: "{colors.dark-blue-500}"
   color-background-secondary-100: "{colors.gray-050}"
-  color-background-secondary-100-dark: "{colors.dark-gray-050}"
+  dark-color-background-secondary-100: "{colors.dark-gray-050}"
   color-background-secondary-200: "{colors.gray-100}"
-  color-background-secondary-200-dark: "{colors.dark-gray-200}"
+  dark-color-background-secondary-200: "{colors.dark-gray-200}"
   color-background-success-100: "{colors.green-100}"
-  color-background-success-100-dark: "{colors.dark-green-050}"
+  dark-color-background-success-100: "{colors.dark-green-050}"
   color-background-success-200: "{colors.green-500}"
-  color-background-success-200-dark: "{colors.dark-green-500}"
+  dark-color-background-success-200: "{colors.dark-green-500}"
   color-background-warning-100: "{colors.orange-100}"
-  color-background-warning-100-dark: "{colors.dark-orange-050}"
+  dark-color-background-warning-100: "{colors.dark-orange-050}"
   color-background-warning-200: "{colors.orange-500}"
-  color-background-warning-200-dark: "{colors.dark-orange-500}"
+  dark-color-background-warning-200: "{colors.dark-orange-500}"
   color-background-danger-100: "{colors.red-100}"
-  color-background-danger-100-dark: "{colors.dark-red-050}"
+  dark-color-background-danger-100: "{colors.dark-red-050}"
   color-background-danger-200: "{colors.red-500}"
-  color-background-danger-200-dark: "{colors.dark-red-500}"
+  dark-color-background-danger-200: "{colors.dark-red-500}"
   color-background-hint-100: "{colors.gray-100}"
-  color-background-hint-100-dark: "{colors.dark-gray-200}"
+  dark-color-background-hint-100: "{colors.dark-gray-200}"
   color-background-hint-200: "{colors.gray-600}"
-  color-background-hint-200-dark: "{colors.dark-gray-600}"
+  dark-color-background-hint-200: "{colors.dark-gray-600}"
   color-background-contrast-100: "{colors.gray-300}"
-  color-background-contrast-100-dark: "{colors.dark-gray-800}"
+  dark-color-background-contrast-100: "{colors.dark-gray-800}"
   color-background-contrast-200: "{colors.gray-800}"
-  color-background-contrast-200-dark: "{colors.dark-gray-300}"
+  dark-color-background-contrast-200: "{colors.dark-gray-300}"
   color-foreground-primary-100: "{colors.blue-600}"
-  color-foreground-primary-100-dark: "{colors.dark-blue-600}"
+  dark-color-foreground-primary-100: "{colors.dark-blue-600}"
   color-foreground-primary-200: "{colors.blue-700}"
-  color-foreground-primary-200-dark: "{colors.dark-blue-700}"
+  dark-color-foreground-primary-200: "{colors.dark-blue-700}"
   color-foreground-secondary-100: "{colors.gray-800}"
-  color-foreground-secondary-100-dark: "{colors.dark-gray-700}"
+  dark-color-foreground-secondary-100: "{colors.dark-gray-700}"
   color-foreground-secondary-200: "{colors.gray-900}"
-  color-foreground-secondary-200-dark: "{colors.dark-gray-900}"
+  dark-color-foreground-secondary-200: "{colors.dark-gray-900}"
   color-foreground-success-100: "{colors.green-600}"
-  color-foreground-success-100-dark: "{colors.dark-green-600}"
+  dark-color-foreground-success-100: "{colors.dark-green-600}"
   color-foreground-success-200: "{colors.green-700}"
-  color-foreground-success-200-dark: "{colors.dark-green-700}"
+  dark-color-foreground-success-200: "{colors.dark-green-700}"
   color-foreground-warning-100: "{colors.orange-600}"
-  color-foreground-warning-100-dark: "{colors.dark-orange-600}"
+  dark-color-foreground-warning-100: "{colors.dark-orange-600}"
   color-foreground-warning-200: "{colors.orange-700}"
-  color-foreground-warning-200-dark: "{colors.dark-orange-700}"
+  dark-color-foreground-warning-200: "{colors.dark-orange-700}"
   color-foreground-danger-100: "{colors.red-600}"
-  color-foreground-danger-100-dark: "{colors.dark-red-600}"
+  dark-color-foreground-danger-100: "{colors.dark-red-600}"
   color-foreground-danger-200: "{colors.red-700}"
-  color-foreground-danger-200-dark: "{colors.dark-red-700}"
+  dark-color-foreground-danger-200: "{colors.dark-red-700}"
   color-foreground-hint-100: "{colors.gray-600}"
-  color-foreground-hint-100-dark: "{colors.dark-gray-600}"
+  dark-color-foreground-hint-100: "{colors.dark-gray-600}"
   color-foreground-hint-200: "{colors.gray-700}"
-  color-foreground-hint-200-dark: "{colors.dark-gray-700}"
+  dark-color-foreground-hint-200: "{colors.dark-gray-700}"
   color-foreground-contrast-100: "{colors.gray-800}"
-  color-foreground-contrast-100-dark: "{colors.dark-gray-200}"
+  dark-color-foreground-contrast-100: "{colors.dark-gray-200}"
   color-foreground-contrast-200: "{colors.gray-900}"
-  color-foreground-contrast-200-dark: "{colors.dark-gray-300}"
+  dark-color-foreground-contrast-200: "{colors.dark-gray-300}"
   color-foreground-normal-100: "{colors.gray-700}"
-  color-foreground-normal-100-dark: "{colors.dark-gray-700}"
+  dark-color-foreground-normal-100: "{colors.dark-gray-700}"
   color-foreground-normal-200: "{colors.gray-900}"
-  color-foreground-normal-200-dark: "{colors.dark-gray-900}"
+  dark-color-foreground-normal-200: "{colors.dark-gray-900}"
   color-border-primary: "{colors.blue-500}"
-  color-border-primary-dark: "{colors.dark-blue-400}"
+  dark-color-border-primary: "{colors.dark-blue-400}"
   color-border-secondary: "{colors.gray-200}"
-  color-border-secondary-dark: "{colors.dark-gray-200}"
+  dark-color-border-secondary: "{colors.dark-gray-200}"
   color-border-success: "{colors.green-500}"
-  color-border-success-dark: "{colors.dark-green-400}"
+  dark-color-border-success: "{colors.dark-green-400}"
   color-border-warning: "{colors.orange-500}"
-  color-border-warning-dark: "{colors.dark-orange-400}"
+  dark-color-border-warning: "{colors.dark-orange-400}"
   color-border-danger: "{colors.red-500}"
-  color-border-danger-dark: "{colors.dark-red-400}"
+  dark-color-border-danger: "{colors.dark-red-400}"
   color-border-hint: "{colors.gray-600}"
-  color-border-hint-dark: "{colors.dark-gray-400}"
+  dark-color-border-hint: "{colors.dark-gray-400}"
   color-border-contrast: "{colors.gray-800}"
-  color-border-contrast-dark: "{colors.dark-gray-400}"
+  dark-color-border-contrast: "{colors.dark-gray-400}"
   ## Base palette
   # Gray — 표면·텍스트·디바이더의 기반
   gray-050: oklch(0.976 0.000 0)   # #F7F7F7
@@ -449,9 +449,9 @@ Voice는 "factual, didactic, slightly warm"으로 정의된다 [src:5]. 한국�
 
 ## Colors
 
-> **팔레트 정정(2026-09-08).** 배포본 `@vapor-ui/core` 1.3.0 의 `dist/styles/themes.css.ts.vanilla.css` 와 재대조해 **다크 절반을 새로 발행하고 시맨틱 alias 44건을 고쳤다** [src:4]. 종전 판본은 라이트 램프만 싣고 다크를 `-dark` alias 가 라이트 램프의 다른 단계를 가리키는 방식으로 근사했는데, 상류는 **다크에서 램프 자체를 재정의한다** — 11 패밀리 × 10단 전부이고 번호가 커질수록 밝아진다(다크 `gray-600` 은 `#A7A7A7` (≈ oklch(0.728 0.000 0)), `gray-900` 은 `#FAFAFA` (≈ oklch(0.985 0.000 0))). 근사는 일관되게 한 단씩 어두웠고, contrast 계열은 방향까지 뒤집혀 있었다 — `foreground-contrast-200-dark` 가 `#F7F7F7` (≈ oklch(0.976 0.000 0), 밝음)인데 발행값은 `#606060` (≈ oklch(0.489 0.000 0), 중간 회색)이다.
+> **팔레트 정정(2026-09-08).** 배포본 `@vapor-ui/core` 1.3.0 의 `dist/styles/themes.css.ts.vanilla.css` 와 재대조해 **다크 절반을 새로 발행하고 시맨틱 alias 44건을 고쳤다** [src:4]. 종전 판본은 라이트 램프만 싣고 다크는 다크 쪽 alias 가 라이트 램프의 다른 단계를 가리키는 방식으로 근사했는데, 상류는 **다크에서 램프 자체를 재정의한다** — 11 패밀리 × 10단 전부이고 번호가 커질수록 밝아진다(다크 `gray-600` 은 `#A7A7A7` (≈ oklch(0.728 0.000 0)), `gray-900` 은 `#FAFAFA` (≈ oklch(0.985 0.000 0))). 근사는 일관되게 한 단씩 어두웠고, contrast 계열은 방향까지 뒤집혀 있었다 — `foreground-contrast-200` 다크 alias 가 `#F7F7F7` (≈ oklch(0.976 0.000 0), 밝음)인데 발행값은 `#606060` (≈ oklch(0.489 0.000 0), 중간 회색)이다.
 >
-> **이제 `dark-` 접두 램프 111개를 함께 발행한다.** 다크 alias 40개가 전부 그 램프를 가리킨다 — 36개는 라이트 램프의 다른 단계를 가리키던 것을 고쳤고, 비어 있던 `color-background-{primary,success,warning,danger}-100-dark` 4개는 새로 채웠다. 라이트도 4건이 어긋나 함께 고쳤다 — `foreground-primary-100` 은 `blue-500` 이 아니라 `blue-600` 이고, `background-primary-100` 은 `blue-100`, `background-secondary-100`·`-200` 은 각각 `gray-050`·`gray-100` 이다.
+> **이제 `dark-` 접두 램프 111개를 함께 발행한다.** 다크 alias 40개가 전부 그 램프를 가리킨다 — 36개는 라이트 램프의 다른 단계를 가리키던 것을 고쳤고, 비어 있던 `color-background-{primary,success,warning,danger}-100` 의 다크 alias 4개는 새로 채웠다. 라이트도 4건이 어긋나 함께 고쳤다 — `foreground-primary-100` 은 `blue-500` 이 아니라 `blue-600` 이고, `background-primary-100` 은 `blue-100`, `background-secondary-100`·`-200` 은 각각 `gray-050`·`gray-100` 이다.
 >
 > 라이트 램프 110개 자체는 2026-07-29 에 같은 배포본으로 전량 교체한 값 그대로다(그 전에는 핸드오프 번들 추출값이라 46개가 ΔE > 0.05 로 어긋나 있었다). docs 사이트가 서빙하는 팔레트 CSS 청크도 같은 값이라 두 공식 채널이 서로를 확인해 준다 [src:1].
 >
@@ -465,7 +465,7 @@ product-facing 색은 모두 **시맨틱 alias**로 호출하고 raw 팔레트�
 
 위 OKLCH는 `@vapor-ui/core`가 배포하는 hex를 변환한 결과이고, 각 출처 hex는 같은 줄 트레일링 주석에 남겼다 [src:4]. (2026-07-29 이전 리비전은 핸드오프 번들 `colors_and_type.css`의 hex를 옮긴 것이었다 — 위 정정 참조.)
 
-**램프는 테마마다 한 벌씩이다.** 상류는 다크에서 시맨틱 alias 이름을 유지한 채 램프 자체를 다시 정의하므로, frontmatter 도 `dark-` 접두로 두 번째 벌을 발행한다 — `## Base palette` 그룹이 라이트 110개 + `color-white`·`color-black`, `## Dark palette` 그룹이 다크 110개 + `dark-canvas` 다 [src:4]. 다크 램프는 번호가 커질수록 밝아져 라이트의 역순에 가깝다 — 다크 `gray-900` 은 표면이 아니라 본문 글자색 자리이고, 표면은 `dark-gray-050` 쪽이다. `-dark` 접미 alias 는 전부 이 두 번째 벌을 가리킨다. `dark-canvas` 는 상류가 램프와 별개로 두는 `color-canvas` 의 다크 값이다(라이트에서는 `color-white` 와 같은 값이라 따로 발행하지 않는다).
+**램프는 테마마다 한 벌씩이다.** 상류는 다크에서 시맨틱 alias 이름을 유지한 채 램프 자체를 다시 정의하므로, frontmatter 도 `dark-` 접두로 두 번째 벌을 발행한다 — `## Base palette` 그룹이 라이트 110개 + `color-white`·`color-black`, `## Dark palette` 그룹이 다크 110개 + `dark-canvas` 다 [src:4]. 다크 램프는 번호가 커질수록 밝아져 라이트의 역순에 가깝다 — 다크 `gray-900` 은 표면이 아니라 본문 글자색 자리이고, 표면은 `dark-gray-050` 쪽이다. 다크 alias(`dark-color-*`)는 전부 이 두 번째 벌을 가리킨다. `dark-canvas` 는 상류가 램프와 별개로 두는 `color-canvas` 의 다크 값이다(라이트에서는 `color-white` 와 같은 값이라 따로 발행하지 않는다).
 
 ### Semantic alias (light → dark)
 

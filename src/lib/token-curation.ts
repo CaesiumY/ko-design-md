@@ -121,8 +121,7 @@ export function curateColors(colors: Array<ColorToken>): {
   return { visible, hidden }
 }
 
-// Entries mark dark-theme tokens two different ways, and the card filter has to
-// understand both:
+// The card filter recognises a dark-theme token two ways:
 //   1. name prefix   — seed-design writes `dark-gray-00` against a bare
 //      `gray-00`: 112 such pairs across its sidecar, 109 of them colours and 3
 //      shadows (`s1`/`dark-s1`…). Counting only the colours understates what
@@ -131,10 +130,11 @@ export function curateColors(colors: Array<ColorToken>): {
 //      `dark-gray-00`, 78 colours each, no bare name), which is the reason the
 //      test names `dark-` alone: `light-` entries are light tokens and have to
 //      survive it.
-//   2. group heading — wanted writes `### Semantic alias — Dark` and REUSES the
-//      light names (`bg-canvas` exists in both themes), so the name alone can't
-//      tell them apart. Without the group check those 23 dark swatches render in
-//      the light card view as duplicate-named cards.
+//   2. group heading — a defence for an entry that reuses the light names under
+//      a dark group label (`## Semantic alias — Dark` over a second `bg-canvas`),
+//      where the name alone can't tell the themes apart. No entry does today:
+//      wanted, which once did, prefixes its dark aliases (`dark-bg-canvas`), and
+//      the catalogue writes every dark twin with the prefix (#625).
 const DARK_NAME_PREFIX = /^dark-/
 const DARK_GROUP = /(^|[\s—-])dark($|[\s—-])|다크/i
 

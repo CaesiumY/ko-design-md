@@ -6,8 +6,9 @@
 // reaches this file. That split is deliberate — Chromium resolves
 // `color-mix(in oklab, ...)` to an `oklab()` string in computed style, and the
 // catalogue does not resolve that itself. `./oklch-convert`'s `oklabToRgb`
-// paints a single token (the pair classifier composites with it); it does not
-// parse a computed `oklab()` string, a `color-mix()` or a `var()` chain.
+// paints a single token (the pair classifier paints tokens with it, then
+// composites them with `compositeOver` here); it does not parse a computed
+// `oklab()` string, a `color-mix()` or a `var()` chain.
 
 import { srgbToLinear } from "./oklch-convert"
 
@@ -23,7 +24,7 @@ export interface Rgb {
 // are continuous across the whole interval between them — so reusing the
 // catalogue's own `srgbToLinear` costs nothing measurable and keeps one
 // implementation of the gamma decode in the repository, which is the same
-// reason `oklch-convert.ts` is shared by two validators.
+// reason the OKLCH conversions live only in `oklch-convert.ts`.
 const relativeLuminance = (c: Rgb): number =>
   0.2126 * srgbToLinear(c.r / 255) +
   0.7152 * srgbToLinear(c.g / 255) +

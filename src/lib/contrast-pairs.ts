@@ -113,7 +113,7 @@ export const OBSERVED_COLOURS: Readonly<Record<string, ObservedColours>> =
 
 /**
  * Which preview theme a token can be painted in, read off the catalogue's
- * naming (CLAUDE.md 「테마별 팔레트는 이름을 갈라 쓴다」): a `dark-` name is
+ * naming (.claude/rules/catalog.md 「테마별 팔레트는 이름을 갈라 쓴다」): a `dark-` name is
  * the dark side; its light side is the unprefixed name with a declared `dark-`
  * twin, or a `light-` name when the twin drops that prefix (codeit's
  * `light-gray-00` beside `dark-gray-00`); any other name — a ramp step, a
@@ -131,9 +131,9 @@ export const OBSERVED_COLOURS: Readonly<Record<string, ObservedColours>> =
  * `dark-veil: "{colors.ink}"` beside a declared `dark-ink` (the dark theme
  * paints `ink`, read as light).
  * Any other way of naming a theme reads as `both`, which keeps the classifier
- * as wide as it was: a `-dark` suffix whether it marks a theme (samsung-one-ui's
- * `black-dark`, the dark theme's black beside a light `black`) or only a darker
- * shade (gs-shop's `positive-dark`).
+ * as wide as it was. The catalogue writes every dark twin with the prefix
+ * (#625), so a `-dark` suffix is only a darker shade (gs-shop's
+ * `positive-dark`).
  */
 export type TokenTheme = Theme | "both"
 

@@ -12,11 +12,11 @@
        white/black 계열은 One UI 2(2019) 발행값 */
     --primary: oklch(0.617 0.208 255.8);
     --primary-dark: oklch(0.561 0.186 255.2);
-    --primary-dark-on-dark: oklch(0.661 0.182 256.7);
+    --dark-primary-dark: oklch(0.661 0.182 256.7);
     --color-control-activated: oklch(0.661 0.182 256.7);
     --white: oklch(0.985 0 0);
     --black: oklch(0 0 0);
-    --black-dark: oklch(0.134 0 0);
+    --dark-black: oklch(0.134 0 0);
     /* 파생 중립 표면 — 시연용 카탈로그 해석 (md 토큰 아님) */
     --surface-page: oklch(0.967 0 0);
     --surface-card: oklch(0.994 0 0);
@@ -98,7 +98,7 @@
     transition: background 250ms var(--ease-oneui), color 250ms var(--ease-oneui), opacity 250ms var(--ease-oneui);
     min-width: 0;
   }
-  /* 높은 강조 배경 = Primary dark role (다크 테마 값은 primary-dark-on-dark) */
+  /* 높은 강조 배경 = Primary dark role (다크 테마 값은 dark-primary-dark) */
   .btn-contained-high { background: var(--primary-dark); color: var(--on-primary-dark); }
   .btn-contained-high:hover { background: color-mix(in oklab, var(--primary-dark) 85%, var(--black)); }
   .btn-contained-mid { background: var(--surface-gray-btn); color: var(--text-strong); }
@@ -291,7 +291,7 @@
 
   /* ── 액션 토스트 ── */
   .toast-stack { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; min-width: 0; }
-  .toast .act { margin-left: 16px; font-weight: 500; color: var(--primary-dark-on-dark); white-space: nowrap; }
+  .toast .act { margin-left: 16px; font-weight: 500; color: var(--dark-primary-dark); white-space: nowrap; }
 
   /* ── 진행 표시 ── */
   .card-wide { grid-column: 1 / -1; }
@@ -342,14 +342,14 @@
        white/black 계열은 One UI 2(2019) 발행값 */
     --primary: oklch(0.617 0.208 255.8);
     --primary-dark: oklch(0.561 0.186 255.2);
-    --primary-dark-on-dark: oklch(0.661 0.182 256.7);
+    --dark-primary-dark: oklch(0.661 0.182 256.7);
     --color-control-activated: oklch(0.661 0.182 256.7);
     --white: oklch(0.985 0 0);
     --black: oklch(0 0 0);
-    --black-dark: oklch(0.134 0 0);
+    --dark-black: oklch(0.134 0 0);
     /* 파생 중립 표면 — 다크 테마 시연용 카탈로그 해석 (md 토큰 아님).
-       배경은 발행 다크 팔레트의 Black(black-dark), 카드·인셋은 짙은 회색 단계. */
-    --surface-page: var(--black-dark);
+       배경은 발행 다크 팔레트의 Black(dark-black), 카드·인셋은 짙은 회색 단계. */
+    --surface-page: var(--dark-black);
     --surface-card: oklch(0.213 0 0);
     --surface-inset: oklch(0.260 0 0);
     --surface-gray-btn: oklch(0.301 0 0);
@@ -357,8 +357,8 @@
     --text-body: oklch(0.894 0 0);
     --text-sub: oklch(0.686 0 0);
     --hairline: oklch(0.293 0 0);
-    /* 발행 role 스왑: 다크 테마의 Primary dark = primary-dark-on-dark */
-    --accent-text: var(--primary-dark-on-dark);
+    /* 발행 role 스왑: 다크 테마의 Primary dark = dark-primary-dark */
+    --accent-text: var(--dark-primary-dark);
     --ease-oneui: cubic-bezier(0.22, 0.25, 0, 1);
     /* 슬라이더 트랙·선택 컨트롤 테두리·진행 표시 딤 — 다크 시연용 카탈로그 해석 (md 토큰 아님) */
     --track: oklch(0.348 0 0);
@@ -366,7 +366,7 @@
     --control-disabled: oklch(0.48 0 0);
     --scrim: oklch(0 0 0 / 0.5);
     /* 강조 버튼 위 글자 — 다크의 Primary dark 위 흰 글자는 3:1 수준이라 근흑으로 둔다 (카탈로그 해석) */
-    --on-primary-dark: var(--black-dark);
+    --on-primary-dark: var(--dark-black);
   }
 [data-theme="dark"] * { box-sizing: border-box; }
 [data-theme="dark"] body {
@@ -423,9 +423,9 @@
     transition: background 250ms var(--ease-oneui), color 250ms var(--ease-oneui), opacity 250ms var(--ease-oneui);
     min-width: 0;
   }
-/* 높은 강조 배경 = Primary dark role (다크 테마 값은 primary-dark-on-dark) */
-[data-theme="dark"] .btn-contained-high { background: var(--primary-dark-on-dark); color: var(--on-primary-dark); }
-[data-theme="dark"] .btn-contained-high:hover { background: color-mix(in oklab, var(--primary-dark-on-dark) 85%, var(--white)); }
+/* 높은 강조 배경 = Primary dark role (다크 테마 값은 dark-primary-dark) */
+[data-theme="dark"] .btn-contained-high { background: var(--dark-primary-dark); color: var(--on-primary-dark); }
+[data-theme="dark"] .btn-contained-high:hover { background: color-mix(in oklab, var(--dark-primary-dark) 85%, var(--white)); }
 [data-theme="dark"] .btn-contained-mid { background: var(--surface-gray-btn); color: var(--text-strong); }
 [data-theme="dark"] .btn-contained-mid:hover { background: oklch(0.348 0 0); }
 [data-theme="dark"] .btn-flat { background: transparent; color: var(--accent-text); }
@@ -607,7 +607,7 @@
 [data-theme="dark"] .vol-bar .fi { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 6px; background: var(--primary); }
 /* ── 액션 토스트 ── */
 [data-theme="dark"] .toast-stack { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; min-width: 0; }
-[data-theme="dark"] .toast .act { margin-left: 16px; font-weight: 500; color: var(--primary-dark-on-dark); white-space: nowrap; }
+[data-theme="dark"] .toast .act { margin-left: 16px; font-weight: 500; color: var(--dark-primary-dark); white-space: nowrap; }
 /* ── 진행 표시 ── */
 [data-theme="dark"] .card-wide { grid-column: 1 / -1; }
 [data-theme="dark"] .progress-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
