@@ -170,7 +170,7 @@ Measured cost of getting this wrong: `wanted` shipped 21 colliding names, which 
 
 ### Role → palette reference rows
 
-When the brand publishes a role layer on top of its palette (`bg-brand-solid` → `carrot-600`), carry it **twice, always**: as a role table in the body's `## Colors` and as frontmatter reference rows (ADR 0012). How the research describes the layer does not matter — a layer written up only in prose or in token-line comments, or roles that arrived as literal values, still owes both. Live example, `services/seed-design.md`:
+When the brand publishes a role layer on top of its palette (`bg-brand-solid` → `carrot-600`), carry it **twice, always**: as a role table in the body's `## Colors` and as frontmatter reference rows (ADR 0012). How the research describes the layer does not matter — a layer written up only in prose or in token-line comments, or a role the upstream points at a palette step but that arrived as that step's literal value, still owes both. A system with no palette under its roles, where each role holds its value directly, has no role layer and owes neither. Live example, `services/seed-design.md`:
 
 ```yaml
 bg-brand-solid: "{colors.carrot-600}"
@@ -180,7 +180,7 @@ dark-bg-overlay: "{colors.static-black-alpha-700}"
 
 The obligation and its limits:
 
-- **"Published" means a brand publication (public docs, a package) or deployed code defines the role under that name.** Not published, so not owed: a name the catalogue author gave a role observed in a handoff bundle, a name the body itself says is not the official one, and a synthesized name.
+- **"Published" means a brand publication (public docs, a package) or deployed code defines the role under that name.** Not published, so not owed: a name the catalogue author coined for values they observed (in a handoff bundle or in deployed code alike), a name the body itself says is not the official one, and a synthesized name.
 - **The body table is required, with each role name as a backticked span in the first cell.** That is the only place the `CASES` guard below looks.
 - **A reference row only for a role the upstream points at a single palette token.** A role that goes through an opacity ramp stays out even when the value matches — codeit's `txt-primary` points at `gray-100-opacity-100`, not `gray-100`. Such roles, and pairs where the upstream disagrees with the table, stay in the body table only. When the upstream lacks what a row would need — the palette token to point at, or the mapped value — do not invent it; record it in Known Gaps.
 - **Not under a spec `color_roles` name** (`primary` · `secondary` · `tertiary` · `neutral`). Tools read those as brand roles, so a table role named `secondary` (greeting's text colour) must not be published under it. `primary` is allowed only as the brand-colour alias (`primary: "{colors.x}"`, pointing at the colour the brand publishes as its own). A colour the brand itself publishes under one of these names (remember's `secondary`) is not a table role and is unaffected.

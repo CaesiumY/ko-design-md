@@ -517,8 +517,9 @@ covered above are:
   admits (among the spec's eight properties, a quoted reference or one `px`/`em`/`rem` dimension —
   `stitch-format.md`, "Component tokens in the frontmatter `components:` map").
   Exact count of its components.
-- **`CASES`** (`src/lib/role-reference-rows.test.ts`) — when the brand publishes a role layer, which
-  the entry then carries as both a `## Colors` role table and frontmatter reference rows. Not a row but a comparison function written for
+- **`CASES`** (`src/lib/role-reference-rows.test.ts`) — when roles from the body's `## Colors` role
+  table are also carried as frontmatter reference rows, which is always so when the brand publishes
+  a role layer with a role the upstream points at a single palette token. Not a row but a comparison function written for
   the slug; the shape that triggers it is in `stitch-format.md` → "Role → palette reference rows".
 
 All are outside this skill's write scope: the operator edits them by hand, the same as the two above.
