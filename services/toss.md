@@ -10,7 +10,7 @@ colors:
   ## TDS adaptive role
   greyBackground: "{colors.grey-100}"   # TDS Mobile Colors 문서가 lightThemeGrey100 으로 가리키는 회색 바탕 — 다크 값은 다크 grey 단계가 아니라 짝 없음
   ## Brand
-  primary: "{colors.blue-500}"   # 명세의 대표색 역할 — 토스가 발행한 역할 이름이 아니라 카탈로그의 브랜드 대표색 별칭
+  primary: "{colors.blue-500}"
   blue-500: oklch(0.620 0.191 258)   # #3182F6 — TDS 발행값 blue500, 카노니컬 Toss Blue, 화면당 하나의 primary CTA
   blue-600: oklch(0.522 0.176 257)   # pressed-blue 단계 — 번들 고유값, TDS blue600과 다른 색: 명도가 blue700과 blue800 사이이고 가장 가까운 blue700과도 ΔE 0.023
   blue-700: oklch(0.476 0.174 259)   # pressed gradient stop — 번들 고유값, TDS blue700과 다른 색: 가장 가까운 발행 step은 blue800(ΔE 0.012)
@@ -217,7 +217,7 @@ Voice는 **해요체(대화형 존댓말) + 위임형 + 일상어**로 요약된
 
 ## Colors
 
-> **역할 계층 정정(2026-11-01).** 이 항목은 frontmatter에 `fill-brand` → `blue-500` 같은 역할 참조 행 41개(`fill-*`·`text-*`·`border-*`·`overlay-*`·`tds-fg-*`·`tds-bg-*`·`tds-line-*`·`tds-press-overlay`)를 싣고 있었는데, 상류와 다시 대조해 보니 토스가 발행한 역할 이름이 아니어서 모두 뺐다. 이 이름과 대응은 토스 배포물이 아닌 핸드오프 번들의 `colors_and_type.css`에서 왔다. 토스의 컬러 시스템 글은 `fill-brand`를 토큰 이름 짓는 법의 예로만 들 뿐 그 토큰이 어느 팔레트 단계를 가리키는지는 적지 않고 [src:3], 색 토큰 패키지 `@toss/tds-colors` 0.1.0과 TDS Mobile Colors 문서에는 41개 이름이 하나도 없다 [src:12][src:13]. 토스가 실제로 발행한 역할 이름은 그 패키지의 adaptive 배경·선 이름(`background`·`greyBackground`·`hairlineBorder` 등)이다 [src:12]. 그중 팔레트 단계를 이름으로 가리키는 것은 TDS Mobile Colors 문서가 `lightThemeGrey100`으로 적은 라이트 `greyBackground` 하나라서 [src:13] 그것만 참조 행으로 싣고, 나머지는 아래 「TDS 발행 역할」 표에만 둔다. 본문의 컴포넌트 설명은 빠진 역할 이름 대신 팔레트 토큰을 직접 가리킨다. 팔레트 값은 2026-09-24 정정 그대로다 — 발행본과 이름이 대응하는 15개는 토큰 줄에 「TDS 발행값」으로, 번들이 같은 이름을 다른 색에 붙인 10개는 「번들 고유값」으로 적혀 있다 [src:12].
+> **역할 계층 정정(2026-11-01).** 이 항목은 frontmatter에 `fill-brand` → `blue-500` 같은 역할 참조 행 41개(`fill-*`·`text-*`·`border-*`·`overlay-*`·`tds-fg-*`·`tds-bg-*`·`tds-line-*`·`tds-press-overlay`)를 싣고 있었는데, 상류와 다시 대조해 보니 토스가 발행한 역할 이름이 아니어서 모두 뺐다. 이 이름과 대응은 토스 배포물이 아닌 핸드오프 번들의 `colors_and_type.css`에서 왔다. 토스의 컬러 시스템 글은 `fill-brand`를 토큰 이름 짓는 법의 예로만 들 뿐 그 토큰이 어느 팔레트 단계를 가리키는지는 적지 않고 [src:3], 색 토큰 패키지 `@toss/tds-colors` 0.1.0과 TDS Mobile Colors 문서에는 41개 이름이 하나도 없다 [src:12][src:13]. 토스가 실제로 발행한 역할 이름은 그 패키지의 adaptive 배경·선 이름(`background`·`greyBackground`·`hairlineBorder` 등)이다 [src:12]. 그중 팔레트 단계를 이름으로 가리키는 것은 TDS Mobile Colors 문서가 `lightThemeGrey100`으로 적은 라이트 `greyBackground` 하나라서 [src:13] 그것만 참조 행으로 싣고, 나머지는 아래 「TDS 발행 역할」 표에만 둔다. 본문의 컴포넌트 설명은 빠진 역할 이름 대신 팔레트 토큰을 직접 가리킨다 — 가리키는 색은 그대로이고, checkbox 테두리 하나만 `border-strong`(`grey-400`)에서 `grey-300`으로 바뀌었다. 그 문장의 괄호가 원래 `grey-300`이라 적었고 프리뷰의 checkbox도 `grey-300`을 쓴다. 팔레트 값은 2026-09-24 정정 그대로다 — 발행본과 이름이 대응하는 15개는 토큰 줄에 「TDS 발행값」으로, 번들이 같은 이름을 다른 색에 붙인 10개는 「번들 고유값」으로 적혀 있다 [src:12].
 
 TDS 컬러 시스템은 **4계층 구조**로 운영된다 [src:3]:
 
@@ -263,13 +263,13 @@ TDS 컬러 시스템은 **4계층 구조**로 운영된다 [src:3]:
 | 역할 | 라이트 | 다크 | 비고 |
 | --- | --- | --- | --- |
 | `background` | oklch(1.000 0.000 0) | oklch(0.207 0.010 286) | 기본 화면 바탕. 라이트 값은 `white`와 같지만 참조가 아니다 [src:12][src:13] |
-| `greyBackground` | `{colors.grey-100}` | oklch(0.174 0.006 286) | 회색 바탕. 문서가 라이트 값을 `lightThemeGrey100`으로 가리킨다 [src:13]. 다크 값은 다크 grey 단계가 아니다 [src:12] |
+| `greyBackground` | `{colors.grey-100}` | oklch(0.174 0.006 286) | 회색 바탕. 문서가 라이트 값을 `lightThemeGrey100`으로 가리킨다 [src:13]. 패키지 코드는 같은 값을 `lightThemeBackgroundLevelB01`의 별칭으로 두어 다른 이름을 거치므로 [src:12] 참조 행의 근거는 문서다. 다크 값은 다크 grey 단계가 아니다 [src:12] |
 | `layeredBackground` | oklch(1.000 0.000 0) | oklch(0.247 0.013 285) | 겹친 표면. 다크 값은 `dark-grey-50`과 같지만 참조가 아니다 [src:12] |
 | `floatBackground` | oklch(1.000 0.000 0) | oklch(0.297 0.016 285) | 떠 있는 표면. 문서는 `floatedBackground`로 적는다. 다크 값은 `dark-grey-100`과 같지만 참조가 아니다 [src:12][src:13] |
 | `dimmedBackground` | 검정 20% | 검정 56% | 스크림. 불투명도 값이다 [src:12] |
 | `hairlineBorder` | oklch(0.930 0.005 248) | oklch(0.361 0.019 285) | 헤어라인. 값은 `grey-200`·`dark-grey-200`과 같지만 참조가 아니다 [src:12] |
 
-패키지는 같은 값을 다른 이름으로도 싣는다 — `backgroundLevelB01`은 `greyBackground`, `backgroundLevel01`은 `layeredBackground`, `backgroundLevel02`는 `floatBackground`, `backgroundDimmed`는 `dimmedBackground`와 값이 같고, PC 화면 바탕 `pcScreenBg`가 따로 있다(라이트 oklch(0.976 0.003 265), 다크 oklch(0.247 0.013 285)) [src:12]. TDS Mobile Colors 문서는 `layeredBackground`·`floatedBackground`의 다크 견본을 각각 `background`·`greyBackground` 값으로 보여 주어 패키지와 다르다 — 표의 다크 값은 패키지를 따른다 [src:12][src:13].
+패키지는 같은 값을 다른 이름으로도 싣는다 — `backgroundLevelB01`은 `greyBackground`, `backgroundLevel01`은 `layeredBackground`, `backgroundLevel02`는 `floatBackground`, `backgroundDimmed`는 `dimmedBackground`와 값이 같고, PC 화면 바탕 `pcScreenBg`가 따로 있다(라이트 oklch(0.976 0.003 265), 다크 oklch(0.247 0.013 285)) [src:12]. `adaptive` 설명에 함께 실린 `disabledBlue500`(라이트는 `blue100`과 같은 값, 다크는 라이트 `blue500` 값의 20% 불투명도)은 패키지 타입 정의가 deprecated 로 표시해 표에 싣지 않는다 [src:12]. TDS Mobile Colors 문서는 `layeredBackground`·`floatedBackground`의 다크 견본을 각각 `background`·`greyBackground` 값으로 보여 주어 패키지와 다르다 — 표의 다크 값은 패키지를 따른다 [src:12][src:13].
 
 색 대비 자동 보정 — 미니앱이 자체 brand 컬러를 등록할 때, 등록된 색이 색 대비 기준을 충족하지 못하면 원래 색을 최대한 유지하는 선에서 자동 보정된다 [src:6]. 토큰 빌드는 Token Studio(Figma 플러그인) → GitHub PR → 플랫폼별 코드 자동 생성 파이프라인을 거친다 [src:3].
 
@@ -595,7 +595,8 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 
 **Do**
 
-- product-facing 색은 시맨틱·컴포넌트 토큰으로 호출하고, base 팔레트는 새 role을 만들 때만 직접 참조한다 [src:3]. 토스의 시맨틱 토큰 이름과 대응은 공개되지 않았으므로, 이 문서를 적용할 때는 컴포넌트 설명이 가리키는 팔레트 단계(`{colors.blue-500}`, `{colors.grey-900}` 등)를 자기 프로젝트의 역할 토큰에 한 번 묶어 두고 그 이름으로 호출한다.
+- product-facing 색은 시맨틱·컴포넌트 토큰으로 호출하고, base 팔레트는 새 role을 만들 때만 직접 참조한다 [src:3].
+- (카탈로그 권고) 토스의 시맨틱 토큰 이름과 대응은 공개되지 않았으므로, 이 문서를 적용할 때는 컴포넌트 설명이 가리키는 팔레트 단계(`{colors.blue-500}`, `{colors.grey-900}` 등)를 자기 프로젝트의 역할 토큰에 한 번 묶어 두고 그 이름으로 호출한다.
 - 화면당 단일 강조색 정책을 유지한다 — primary CTA는 `{colors.blue-500}` 하나로 통일하고, 보조 액션은 `{colors.grey-100}` 또는 ghost 변형으로 분리한다 [src:3].
 - 화면 최하단 강제 액션은 `{component.bottom-cta}`로, 화면 내부 액션은 `{component.button-primary}`로 분리한다 — 두 컴포넌트의 역할이 다르다.
 - 버튼 라운드는 사이즈와 페어로 운영한다 — XL→`{rounded.radius-xl}` (16), L→`{rounded.radius-l}` (14), M→`{rounded.radius-m}` (12), S→10.
@@ -657,7 +658,7 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 
 ## Known Gaps
 
-- **시맨틱 토큰의 이름과 대응** — 토스의 컬러 시스템 글은 시맨틱 토큰을 Target·Role·Variant 규약으로 짓는다고만 밝히고(`fill-brand`는 이름 예시다) 토큰 목록이나 팔레트 대응은 싣지 않았다 [src:3]. `@toss/tds-colors`가 팔레트 밖에서 이름으로 싣는 색은 adaptive 배경·선 역할과 `tds` 컴포넌트 토큰(`tToastBackground` 등, 값은 리터럴)이고 [src:12], 텍스트·채움·보더 역할은 공개된 이름이 없다. 컴포넌트 토큰은 역할 계층이 아니라 싣지 않는다. 그래서 본 문서는 그런 역할을 참조 행으로 싣지 않고, 컴포넌트 설명에서 팔레트 토큰을 직접 가리킨다. 핸드오프 번들의 `colors_and_type.css`가 쓰던 `--tds-fg-*`·`--tds-bg-*`·`--tds-line-*` 이름은 토스 배포물에 없는 번들 고유 이름이라 싣지 않는다 — 프리뷰는 그 이름을 내부 CSS 변수로만 쓴다.
+- **시맨틱 토큰의 이름과 대응** — 토스의 컬러 시스템 글은 시맨틱 토큰을 Target·Role·Variant 규약으로 짓는다고만 밝히고(`fill-brand`는 이름 예시다) 토큰 목록이나 팔레트 대응은 싣지 않았다 [src:3]. 같은 글의 빌드 오류 로그 스크린샷에 `text-on-fill`·`text-on-fill-brand`가 정의되지 않은 `color.base.static-white`를 참조하는 모습이 비치지만 [src:3], 역할 계층을 정의한 발행물이 아니고 가리키는 대상도 발행 팔레트에 없다. `@toss/tds-colors`가 팔레트 밖에서 이름으로 싣는 색은 adaptive 배경·선 역할과 `tds` 컴포넌트 토큰(`tToastBackground` 등, 값은 리터럴)이다 [src:12]. 텍스트·채움·보더 역할은 이름 일부가 글 스크린샷에 비치지만 목록과 팔레트 대응은 공개되지 않았다. 컴포넌트 토큰은 역할 계층이 아니라 싣지 않는다. 그래서 본 문서는 그런 역할을 참조 행으로 싣지 않고, 컴포넌트 설명에서 팔레트 토큰을 직접 가리킨다. 핸드오프 번들의 `colors_and_type.css`가 쓰던 `--tds-fg-*`·`--tds-bg-*`·`--tds-line-*` 이름은 토스 배포물에 없는 번들 고유 이름이라 싣지 않는다 — 프리뷰는 그 이름을 내부 CSS 변수로만 쓴다.
 - **다크 모드 역할 대응** — 다크 팔레트는 `@toss/tds-colors`의 `colors.dark.css`가 발행하며 [src:12], 본 문서는 이름이 대응하는 15개를 `dark-` 토큰으로 옮겼다. 번들 고유 step 11개(`blue-600`·`blue-700`, `grey-150`, `yellow-400`·`yellow-600`·`yellow-700`, `orange-300`·`orange-400`·`orange-500`, `red-600`, `green-500`)와 알파 토큰(`fg-tertiary` 등)은 발행된 다크 짝이 없어, 프리뷰가 그중 쓰는 값은 여전히 라이트 값에서 파생한 것이다. 발행 역할 가운데 다크 `greyBackground`의 값 oklch(0.174 0.006 286)은 다크 grey 단계가 아니어서 `dark-` 참조 행을 두지 않는다 [src:12].
 - **다크 모드 텍스트 대비** — `colors.dark.css`의 `blue500`·`red500`을 다크 표면 위 본문 크기 텍스트로 쓰면 WCAG 4.5:1에 못 미친다. 프리뷰에서 잰 값으로 `dark-blue-500` 텍스트는 `dark-blue-50` 위 3.84:1, `dark-grey-100` 위 3.87:1이고, `dark-red-500` 텍스트는 `dark-grey-100` 위 3.69:1이다. 토스가 다크 텍스트에 어느 step을 쓰는지는 시맨틱 다크 alias가 공개되지 않아 확인하지 못했으므로, 본 문서와 프리뷰는 발행값을 그대로 둔다.
 - **전체 컬러 step ladder** — `colors_and_type.css`에 노출된 step은 brand(blue 50/500/600/700), grey(50~900 + 150), yellow(300~700), orange(300~500), red(500/600), green(500), navy-900, brown(400~900)이다. 그 외 hue별 step(예: blue-100~400, green-50~400, red-50~400 등)과 teal·purple 팔레트는 `@toss/tds-colors`가 발행하지만 [src:12] 본 문서는 번들이 쓰는 step만 싣고 옮기지 않았다.
