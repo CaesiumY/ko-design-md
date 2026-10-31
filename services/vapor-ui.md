@@ -467,11 +467,11 @@ product-facing 색은 모두 **시맨틱 alias**로 호출하고 raw 팔레트�
 
 위 OKLCH는 `@vapor-ui/core`가 배포하는 hex를 변환한 결과이고, 각 출처 hex는 같은 줄 트레일링 주석에 남겼다 [src:4]. (2026-07-29 이전 리비전은 핸드오프 번들 `colors_and_type.css`의 hex를 옮긴 것이었다.)
 
-**램프는 테마마다 한 벌씩이다.** 상류는 다크에서 시맨틱 alias 이름을 유지한 채 램프 자체를 다시 정의하므로, frontmatter 도 `dark-` 접두로 두 번째 벌을 발행한다 — `## Base palette` 그룹이 라이트 110개 + `color-white`·`color-black`·`canvas`, `## Dark palette` 그룹이 다크 110개 + `dark-canvas` 다 [src:4]. 다크 램프는 번호가 커질수록 밝아져 라이트의 역순에 가깝다 — 다크 `gray-900` 은 표면이 아니라 본문 글자색 자리이고, 표면은 `dark-gray-050` 쪽이다. 다크 alias(`dark-color-*`)는 전부 이 두 번째 벌을 가리킨다. `canvas`·`dark-canvas` 는 상류가 램프와 별개로 두는 `color-canvas` 의 라이트·다크 값이다 — 라이트 값은 `color-white` 와 같지만 상류가 다른 토큰으로 두고 표면 역할은 이쪽을 가리킨다 [src:4]. 상류는 `color-white`·`color-black` 도 다크 블록에서 같은 값으로 다시 정의하므로 이 둘은 `dark-` 짝을 두지 않는다.
+**램프는 테마마다 한 벌씩이다.** 상류는 다크에서 시맨틱 alias 이름을 유지한 채 램프 자체를 다시 정의하므로, frontmatter 도 `dark-` 접두로 두 번째 벌을 발행한다 — `## Base palette` 그룹이 라이트 110개 + `color-white`·`color-black`·`canvas`, `## Dark palette` 그룹이 다크 110개 + `dark-canvas` 다 [src:4]. 다크 램프는 번호가 커질수록 밝아져 라이트의 역순에 가깝다 — 다크 `gray-900` 은 표면이 아니라 본문 글자색 자리이고, 표면은 `dark-gray-050` 쪽이다. 다크 alias(`dark-color-*`)는 전부 이 두 번째 벌을 가리킨다. `canvas`·`dark-canvas` 는 상류가 램프와 별개로 두는 `color-canvas` 의 라이트·다크 값이다 — 라이트 값은 `color-white` 와 같지만 상류가 다른 토큰으로 두고 표면 역할은 이쪽을 가리킨다 [src:4]. 상류 이름은 `color-canvas` 이지만, 같은 묶음의 `color-white`·`color-black` 과 달리 접두를 떼고 `canvas` 로 실었다 — 기존 `dark-canvas` 와 짝을 맞추기 위해서다. 상류는 `color-white`·`color-black` 도 다크 블록에서 같은 값으로 다시 정의하므로 이 둘은 `dark-` 짝을 두지 않는다.
 
 ### Semantic alias (light → dark)
 
-aliases는 raw 토큰 이름만 참조한다 — 값은 base palette에서 유래하므로 별도 색 표기를 두지 않는다. 아래 42개가 배포본이 발행하는 alias 전부이고, 하나하나가 팔레트 토큰 하나를 가리키므로 frontmatter `colors:` 에도 같은 이름의 참조 행(다크는 `dark-` 접두)으로 실려 있다 [src:4].
+aliases는 raw 토큰 이름만 참조한다 — 값은 base palette에서 유래하므로 별도 색 표기를 두지 않는다. 아래 표가 배포본이 발행하는 alias 전부이고, 하나하나가 팔레트 토큰 하나를 가리키므로 frontmatter `colors:` 에도 같은 이름의 참조 행(다크는 `dark-` 접두)으로 실려 있다 [src:4].
 
 | 역할 | 라이트 | 다크 |
 |---|---|---|
@@ -659,7 +659,7 @@ import { Button } from "@vapor-ui/core";
 
 ### button-primary
 
-`<Button colorPalette="primary">` (variant 기본값 `fill`). `{colors.color-background-primary-200}` bg + `{colors.color-white}` 텍스트다. hover·press 는 색을 바꾸지 않고 절 공통의 검정 오버레이만 얹는다 [src:4].
+`<Button colorPalette="primary">` (variant 기본값 `fill`). `{colors.color-background-primary-200}` bg + `{colors.color-foreground-inverse}` 텍스트다. hover·press 는 색을 바꾸지 않고 절 공통의 검정 오버레이만 얹는다 [src:4].
 
 ### button-primary-outline
 
@@ -766,7 +766,7 @@ radius `{rounded.size-borderRadius-300}` (8px) + 1px `{colors.color-border-norma
 
 ### avatar
 
-높이 사다리를 정사각으로 쓴다 — 24 · 32 · 40 · 48px 에 1px `{colors.color-border-normal}` 헤어라인, padding 0 이다. `shape` 는 `square`(기본)와 `circle`(50%) 두 가지이고, **`square` 의 radius 는 사이즈를 따라 커진다** — `sm` `{rounded.size-borderRadius-200}` (6px) · `md` `{rounded.size-borderRadius-300}` (8px) · `lg`·`xl` `{rounded.size-borderRadius-400}` (12px) [src:4]. 이미지가 없을 때의 이니셜은 `{colors.color-white}` 텍스트이며 사이즈별로 12 / 14 / 18 / 20px 이고 **무게가 두 단으로 갈린다** — `sm`·`md` 500, `lg`·`xl` 700 [src:4].
+높이 사다리를 정사각으로 쓴다 — 24 · 32 · 40 · 48px 에 1px `{colors.color-border-normal}` 헤어라인, padding 0 이다. `shape` 는 `square`(기본)와 `circle`(50%) 두 가지이고, **`square` 의 radius 는 사이즈를 따라 커진다** — `sm` `{rounded.size-borderRadius-200}` (6px) · `md` `{rounded.size-borderRadius-300}` (8px) · `lg`·`xl` `{rounded.size-borderRadius-400}` (12px) [src:4]. 이미지가 없을 때의 이니셜은 `{colors.color-foreground-inverse}` 텍스트이며 사이즈별로 12 / 14 / 18 / 20px 이고 **무게가 두 단으로 갈린다** — `sm`·`md` 500, `lg`·`xl` 700 [src:4].
 
 ### table
 
