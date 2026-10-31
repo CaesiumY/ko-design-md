@@ -80,7 +80,8 @@ corrects an earlier version of the entry — nothing to apply):
   point at palette steps this way, light and dark alike. The JSON token sidecar carries
   each reference row as well: its `value` is the colour the chain ends at, and `ref`
   names the key it points at (the first hop), so role and dark-pair wiring can be read
-  from either.
+  from either. `primary: "{colors.x}"` is a reference row too, but it is the brand-colour
+  alias, not a role — treat it as the palette's brand colour.
 - Wire both values to one token name in the target's dark-mode mechanism (a custom-property
   theme block, `prefers-color-scheme`, Tailwind's `dark:` variant, …), so components switch
   without code changes.

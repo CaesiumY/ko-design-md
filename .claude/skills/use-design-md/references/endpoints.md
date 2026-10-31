@@ -74,8 +74,10 @@ Fetch it as SKILL.md "Fetching" says (the full command is in the Example below).
 
 JSON shape: `{ colors[], typography[], spacing[], radius[], elevation?[] }`. Each color
 has `name`/`value` (value usually OKLCH) plus optional `note`/`group`/`ref`. `ref` marks a
-role reference row: it names the key the role points at, and `value` is already the colour
-that reference resolves to, so `colors[]` holds roles as well as the palette. `elevation` holds
+colour reference row: it names the key the row points at, and `value` is already the colour
+that reference resolves to, so `colors[]` holds roles as well as the palette. One reference
+row is not a role: `primary` is the brand-colour alias (the colour the brand publishes as its
+own), so read it with the palette. `elevation` holds
 ready-to-paste CSS `box-shadow` values (comma-joined when a token stacks layers) and is
 **omitted** for entries that publish no shadow values in their frontmatter
 `elevation:` map — read it with `?? []`, not as a guaranteed array. getdesign.kr
