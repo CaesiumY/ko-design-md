@@ -55,7 +55,7 @@ colors:
   ## {{다크 램프가 있으면 이름을 갈라 쓴다 — 한 이름 두 값은 대조를 꺼 버린다}}
   dark-{{token-name}}: oklch({{L C H}})
   {{semantic-alias}}: "{colors.{{token-name}}}"   # 참조는 반드시 인용 — 안 하면 YAML 이 flow mapping 으로 읽어 값이 null 이 된다. 키가 본문 역할 표의 이름이면 여기가 아니라 아래 역할 참조 행 블록에 쓴다
-  ## {{역할 참조 행 — 키가 본문 역할 표의 이름일 때만. 실어도 되는 조건과 CI 등록 의무는 stitch-format.md 「Role → palette reference rows」. 싣지 않으면 이 줄과 아래 두 줄을 지운다}}
+  ## {{역할 참조 행 — 브랜드가 팔레트 위에 역할 계층을 발행했으면 반드시 싣는다(본문 역할 표와 두 벌). "발행"의 범위·단일 토큰 조건·CI 등록 의무는 stitch-format.md 「Role → palette reference rows」. 발행한 역할 계층이 없을 때만 이 줄과 아래 두 줄을 지운다}}
   {{table-role}}: "{colors.{{token-name}}}"
   dark-{{table-role}}: "{colors.dark-{{token-name}}}"   # 상류가 다크 짝을 발행하지 않으면 이 줄만 지운다. 테마 불변 팔레트(static-*)를 가리키는 짝은 지우지 말고 값을 dark- 없는 같은 키로 바꾼다(정본 참조)
 typography:
@@ -95,7 +95,10 @@ components:
 
 {{팔레트의 의도·역할·프로비넌스를 산문으로. **값은 frontmatter 가 갖는다** —
   여기에 다시 나열하면 드리프트하는 두 번째 사본이 된다. 표는 토큰 맵이 담을 수
-  없는 것(용도 매트릭스, 라이트/다크 짝)을 실을 때만 쓴다. 각 주장에 [src:N].}}
+  없는 것(용도 매트릭스, 라이트/다크 짝)을 실을 때만 쓴다. 각 주장에 [src:N].
+  예외 하나 — 브랜드가 팔레트 위에 역할 계층을 발행했으면 역할 표는 의무다. 역할 이름은
+  첫 열에 백틱으로 두고 가리키는 팔레트 토큰을 적는다. frontmatter 역할 참조 행과 두 벌이다
+  (stitch-format.md 「Role → palette reference rows」).}}
 
 ## Typography
 
