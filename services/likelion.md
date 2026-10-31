@@ -3,7 +3,7 @@ name: 멋쟁이사자처럼
 design_system_name: LIKELION Design System
 slug: likelion
 category: education
-last_updated: 2026-08-30
+last_updated: 2026-11-01
 created_at: 2026-08-30
 lang: ko
 logo: https://getdesign.kr/logos/likelion.svg
@@ -33,19 +33,38 @@ colors:
   gray-850: oklch(0.30 0.027 257)     # #262F3C
   gray-900: oklch(0.24 0.024 262)     # #191F28
   gray-950: oklch(0.22 0.007 247)     # #191C1F
-  ## Semantic (bg/fg/border)
-  white: oklch(1 0 0)                 # #FFFFFF
+  ## Semantic (bg/fg/border/info)
+  white: oklch(1 0 0)                 # #FFFFFF 상류 이름은 basic-white
   bg-white: "{colors.white}"
   bg-normal: "{colors.gray-100}"
+  bg-normal-hovered: "{colors.gray-50}"
+  bg-normal-alternative: "{colors.gray-200}"
+  bg-normal-assistive: "{colors.gray-50}"
+  bg-disabled: "{colors.gray-100}"
+  bg-disabled-dark: "{colors.gray-200}" # -dark 는 테마 짝이 아니라 상류의 명도 단계 이름
+  bg-inverted: "{colors.gray-950}"
+  bg-inverted-hovered: "{colors.gray-900}"
   bg-primary: "{colors.primary-500}"
+  bg-primary-hovered: "{colors.primary-600}"
   bg-primary-weak: "{colors.primary-50}"
   fg-white: "{colors.white}"
   fg-primary: "{colors.primary-500}"
+  fg-pressed: "{colors.primary-600}"
+  fg-primary-inverted: "{colors.primary-300}"
+  fg-strong: "{colors.gray-900}"
   fg-normal: "{colors.gray-800}"
+  fg-neutral: "{colors.gray-700}"
+  fg-alternative: "{colors.gray-600}"
+  fg-assistive: "{colors.gray-500}"
   fg-disabled: "{colors.gray-400}"
   border-primary: "{colors.primary-500}"
+  border-strong: "{colors.gray-800}"
   border-normal: "{colors.gray-300}"
   border-weak: "{colors.gray-200}"
+  border-white: "{colors.white}"
+  border-inverted: "{colors.gray-700}"
+  border-inverted-strong: "{colors.gray-600}"
+  info-white: "{colors.white}"
 typography:
   display-d1: # 미확인 — fontWeight/lineHeight는 스케일 범위 안에서 고른 예시 조합
     fontSize: 52px
@@ -112,19 +131,70 @@ rounded:
 
 ## Colors
 
-시그니처는 10단계 오렌지 램프로, 500 단계 `oklch(0.69 0.209 42)`(#FF6000)을 중심으로 밝은 배경용(50~200)과 어두운 강조용(600~900)이 대칭적으로 갈린다 [src:4]. 뉴트럴은 순수 무채색이 아니라 미세하게 푸른 기운이 도는 "gray" 램프(`#F9FAFB`→`#191F28`)로, 오렌지 액센트와 대비되는 차가운 배경 톤을 만든다 [src:4]. 시맨틱 레이어는 배경(`bg-*`)·전경(`fg-*`)·테두리(`border-*`) 세 축으로 나뉘며, `-primary` 접미사가 붙은 토큰은 모두 오렌지 500을 그대로 참조한다 [src:4].
+> **역할 계층 대조 결과(2026-11-01).** 배포 토큰 CSS [src:4] 와 npm `@likelion-design/ui` 1.0.32 의 `dist/colors.css.css` [src:15] 를 다시 받아 대조했다. 두 파일의 `--color-semantic-*` 정의 62개는 한 글자도 다르지 않다. 이전 판이 싣던 역할 11개는 모두 상류 대응과 맞았고(불일치 0), 상류가 이 항목에 실린 팔레트(primary · gray · white) 단계 하나를 가리키는 역할 19개를 더했다. 역할 이름(`bg-normal` · `fg-primary` · `border-primary` 등)은 같은 패키지가 `--color-semantic-` 를 뗀 이름으로 Tailwind 테마 변수와 유틸리티로 발행하는 이름이다 [src:14]. 다크 테마의 시맨틱 정의는 상류에 없다 [src:4][src:15].
+
+시그니처는 10단계 오렌지 램프로, 500 단계 `oklch(0.69 0.209 42)`(#FF6000)을 중심으로 밝은 배경용(50~200)과 어두운 강조용(600~900)이 대칭적으로 갈린다 [src:4]. 뉴트럴은 순수 무채색이 아니라 미세하게 푸른 기운이 도는 "gray" 램프(`#F9FAFB`→`#191F28`)로, 오렌지 액센트와 대비되는 차가운 배경 톤을 만든다 [src:4]. 시맨틱 레이어는 배경(`bg-*`)·전경(`fg-*`)·테두리(`border-*`) 세 축이 중심이고, `info-*` 와 `style-*` 가 곁에 있다 [src:15]. `bg-primary` · `fg-primary` · `border-primary` 는 오렌지 500 을 가리키고, 눌림·호버 상태(`fg-pressed` · `bg-primary-hovered`)는 600, 어두운 바탕 위 강조(`fg-primary-inverted`)는 300 을 가리킨다 [src:4][src:15].
 
 공개 코퍼스는 `--color-*` 커스텀 프로퍼티 199개를 grep으로 확인했고, Foundation 매니페스트가 Primitive/Semantic/Style/Palette 하위 페이지를 추가로 문서화한다고 밝히고 있어 이 수치는 하한선이다 [src:2][src:3].
 
-| 역할 | 토큰 | 용도 |
-| --- | --- | --- |
-| Primary bg/fg/border | `{colors.bg-primary}` / `{colors.fg-primary}` / `{colors.border-primary}` | 1차 CTA, 강조 텍스트, 포커스 테두리 [src:4] |
-| Primary weak bg | `{colors.bg-primary-weak}` | 오렌지 톤 위 배경(배지·태그 배경 등) [src:4] |
-| Normal fg | `{colors.fg-normal}` | 본문 텍스트 [src:4] |
-| Disabled fg | `{colors.fg-disabled}` | 비활성 라벨 [src:4] |
-| Normal / weak border | `{colors.border-normal}` / `{colors.border-weak}` | 입력 필드 기본 테두리 / 구분선 [src:4] |
+아래 표는 frontmatter 참조 행과 **같은 대응의 두 벌**이다. 팔레트 열이 단계 하나인 역할은 frontmatter 에도 `bg-primary: "{colors.primary-500}"` 꼴로 실려 있고, 불투명도 램프를 거치는 역할은 이 표에만 있다. 상류는 역할마다 용도를 따로 문서화하지 않아, 용도는 이름에서만 읽힌다.
 
-값은 위 frontmatter `colors:` 맵이 유일한 정본이다 — 표에 다시 옮겨 적지 않는다.
+**bg**
+
+| 역할 | 팔레트 | 상류 변수 |
+| --- | --- | --- |
+| `bg-white` | `{colors.white}` | `--color-semantic-bg-white` [src:15] |
+| `bg-normal` | `{colors.gray-100}` | `--color-semantic-bg-normal` [src:15] |
+| `bg-normal-hovered` | `{colors.gray-50}` | `--color-semantic-bg-normal-hovered` [src:15] |
+| `bg-normal-alternative` | `{colors.gray-200}` | `--color-semantic-bg-normal-alternative` [src:15] |
+| `bg-normal-assistive` | `{colors.gray-50}` | `--color-semantic-bg-normal-assistive` [src:15] |
+| `bg-disabled` | `{colors.gray-100}` | `--color-semantic-bg-disabled` [src:15] |
+| `bg-disabled-dark` | `{colors.gray-200}` | `--color-semantic-bg-disabled-dark` — `-dark` 는 테마 짝이 아니라 명도 단계 [src:15] |
+| `bg-inverted` | `{colors.gray-950}` | `--color-semantic-bg-inverted` [src:15] |
+| `bg-inverted-hovered` | `{colors.gray-900}` | `--color-semantic-bg-inverted-hovered` [src:15] |
+| `bg-primary` | `{colors.primary-500}` | `--color-semantic-bg-primary` [src:15] |
+| `bg-primary-hovered` | `{colors.primary-600}` | `--color-semantic-bg-primary-hovered` [src:15] |
+| `bg-primary-weak` | `{colors.primary-50}` | `--color-semantic-bg-primary-weak` [src:15] |
+| `bg-primary-disabled` | `{colors.primary-500}` 값 × 24% 불투명도 | `basic-opacity-primary-24` 를 거친다 [src:15] |
+| `bg-weak-primary` | `{colors.primary-500}` 값 × 8% 불투명도 | `basic-opacity-primary-8` 을 거친다 [src:15] |
+| `bg-weak-primary-hovered` | `{colors.primary-500}` 값 × 16% 불투명도 | `basic-opacity-primary-16` 을 거친다 [src:15] |
+| `bg-weak-neutral-light` | `{colors.white}` 값 × 8% 불투명도 | `basic-opacity-neutral-light-8` 을 거친다 [src:15] |
+| `bg-weak-neutral-light-hovered` | `{colors.white}` 값 × 16% 불투명도 | `basic-opacity-neutral-light-16` 을 거친다 [src:15] |
+
+**fg**
+
+| 역할 | 팔레트 | 상류 변수 |
+| --- | --- | --- |
+| `fg-white` | `{colors.white}` | `--color-semantic-fg-white` [src:15] |
+| `fg-primary` | `{colors.primary-500}` | `--color-semantic-fg-primary` [src:15] |
+| `fg-pressed` | `{colors.primary-600}` | `--color-semantic-fg-pressed` [src:15] |
+| `fg-primary-inverted` | `{colors.primary-300}` | `--color-semantic-fg-primary-inverted` [src:15] |
+| `fg-strong` | `{colors.gray-900}` | `--color-semantic-fg-strong` [src:15] |
+| `fg-normal` | `{colors.gray-800}` | `--color-semantic-fg-normal` [src:15] |
+| `fg-neutral` | `{colors.gray-700}` | `--color-semantic-fg-neutral` [src:15] |
+| `fg-alternative` | `{colors.gray-600}` | `--color-semantic-fg-alternative` [src:15] |
+| `fg-assistive` | `{colors.gray-500}` | `--color-semantic-fg-assistive` [src:15] |
+| `fg-disabled` | `{colors.gray-400}` | `--color-semantic-fg-disabled` [src:15] |
+
+**border**
+
+| 역할 | 팔레트 | 상류 변수 |
+| --- | --- | --- |
+| `border-primary` | `{colors.primary-500}` | `--color-semantic-border-primary` [src:15] |
+| `border-strong` | `{colors.gray-800}` | `--color-semantic-border-strong` [src:15] |
+| `border-normal` | `{colors.gray-300}` | `--color-semantic-border-normal` [src:15] |
+| `border-weak` | `{colors.gray-200}` | `--color-semantic-border-weak` [src:15] |
+| `border-white` | `{colors.white}` | `--color-semantic-border-white` [src:15] |
+| `border-inverted` | `{colors.gray-700}` | `--color-semantic-border-inverted` [src:15] |
+| `border-inverted-strong` | `{colors.gray-600}` | `--color-semantic-border-inverted-strong` [src:15] |
+
+**info**
+
+| 역할 | 팔레트 | 상류 변수 |
+| --- | --- | --- |
+| `info-white` | `{colors.white}` | `--color-semantic-info-white` [src:15] |
+
+상류의 시맨틱 역할 가운데 이 항목에 실리지 않은 팔레트를 가리키는 것은 표에 넣지 않았다 — Known Gaps 참고.
 
 ## Typography
 
@@ -237,6 +307,7 @@ Foundation의 Brand Logo 그룹은 컴포넌트가 아니라 자산 규정이지
 - Typography frontmatter의 `fontWeight` 값은 사이즈·굵기·자간 세 스케일이 각 스타일명에 정확히 어떻게 짝지어지는지가 개별 문서화돼 있지 않아 고른 예시 조합이다 [src:4] — 실제 값은 스타일별로 다를 수 있다. `lineHeight`는 코퍼스에 스케일 자체가 공개돼 있지 않아 관례적 비율을 적용한 추정값이며, 각 head row의 `# 미확인` 주석으로 표시해 뒀다.
 - 18개 컴포넌트의 사이즈/색상 변형, 호버·비활성 등 상태별 세부값이 이름 목록 외에는 개별 확인되지 않았다 [src:3].
 - Spacing 14개 중 9개, Radius 11개 중 8개만 코퍼스에서 개별 재확인됐다 — 나머지 스텝 값은 미확인이다 [src:2][src:4].
+- 상류의 시맨틱 역할 가운데 22개는 이 항목에 실리지 않은 팔레트를 가리켜 역할 표와 참조 행에서 빠져 있다 — 색상 계열 역할 14개(`bg-blue` · `fg-red` 등, blue · green · light-green · pink · purple · red · yellow 의 50 / 500 단계), `basic-black` 을 가리키는 `bg-black` · `fg-black` · `border-black` · `info-black` 4개, `info-negative`(red-600) · `info-positive`(light-green-500) 2개, 검정 불투명도 램프를 거치는 `bg-weak-neutral-dark` · `bg-weak-neutral-dark-hovered` 2개다 [src:15]. 상류에는 이 팔레트들이 있으니 [src:4], 싣는 일은 팔레트를 함께 재감사할 몫이다. 팔레트 단계가 아니라 그라데이션·딤 값을 갖는 `--color-semantic-style-*` 5개도 싣지 않았다 [src:15].
 - `@likelion-design/ui`·`@likelion-design/docs-mcp`의 라이선스 상태가 모호하다 — `license` 필드 null, 별도 LICENSE 파일 미게시, 명시적 금지 문구도 미발견으로, 명시적 허용도 명시적 금지도 없는 상태다 [src:6][src:7][src:2].
 
 ## References
@@ -254,3 +325,5 @@ Foundation의 Brand Logo 그룹은 컴포넌트가 아니라 자산 규정이지
 11. https://brunch.co.kr/@likelion/59 — 공식 Brunch 채널 게시물. 톤앤보이스 샘플의 근거.
 12. https://ko.wikipedia.org/wiki/멋쟁이사자처럼 — 브랜드 연혁·트랙 구성·슬로건 개요.
 13. https://designsystem.likelion.net/img/BrandLogo/03_Clearspace.png — Brand Logo 문서의 Clear space 다이어그램 이미지. 여백 사방을 "0.2X"로 표기해, 같은 문서 본문 텍스트의 "8.2배" 서술과 어긋남을 확인하는 근거.
+14. https://unpkg.com/@likelion-design/ui@1.0.32/tailwind.theme.css — npm 패키지의 Tailwind v4 테마 파일. 시맨틱 역할을 `--color-semantic-` 를 뗀 이름의 테마 변수(`--color-fg-primary`)와 유틸리티(`@utility bg-normal`, `@utility border-primary`)로 발행한다.
+15. https://unpkg.com/@likelion-design/ui@1.0.32/dist/colors.css.css — npm 패키지의 색 토큰 CSS. `--color-semantic-*` 역할이 어느 팔레트 변수를 가리키는지의 1차 근거이고, 시맨틱 정의는 [src:4] 와 같다.

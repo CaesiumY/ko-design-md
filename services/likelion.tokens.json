@@ -141,74 +141,189 @@
     {
       "name": "white",
       "value": "oklch(1 0 0)",
-      "note": "#FFFFFF",
-      "group": "Semantic (bg/fg/border)"
+      "note": "#FFFFFF 상류 이름은 basic-white",
+      "group": "Semantic (bg/fg/border/info)"
     },
     {
       "name": "bg-white",
       "value": "oklch(1 0 0)",
-      "group": "Semantic (bg/fg/border)",
+      "group": "Semantic (bg/fg/border/info)",
       "ref": "white"
     },
     {
       "name": "bg-normal",
       "value": "oklch(0.97 0.003 270)",
-      "group": "Semantic (bg/fg/border)",
+      "group": "Semantic (bg/fg/border/info)",
       "ref": "gray-100"
+    },
+    {
+      "name": "bg-normal-hovered",
+      "value": "oklch(0.98 0.002 245)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-50"
+    },
+    {
+      "name": "bg-normal-alternative",
+      "value": "oklch(0.93 0.005 255)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-200"
+    },
+    {
+      "name": "bg-normal-assistive",
+      "value": "oklch(0.98 0.002 245)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-50"
+    },
+    {
+      "name": "bg-disabled",
+      "value": "oklch(0.97 0.003 270)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-100"
+    },
+    {
+      "name": "bg-disabled-dark",
+      "value": "oklch(0.93 0.005 255)",
+      "note": "-dark 는 테마 짝이 아니라 상류의 명도 단계 이름",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-200"
+    },
+    {
+      "name": "bg-inverted",
+      "value": "oklch(0.22 0.007 247)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-950"
+    },
+    {
+      "name": "bg-inverted-hovered",
+      "value": "oklch(0.24 0.024 262)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-900"
     },
     {
       "name": "bg-primary",
       "value": "oklch(0.69 0.209 42)",
-      "group": "Semantic (bg/fg/border)",
+      "group": "Semantic (bg/fg/border/info)",
       "ref": "primary-500"
+    },
+    {
+      "name": "bg-primary-hovered",
+      "value": "oklch(0.58 0.175 42)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "primary-600"
     },
     {
       "name": "bg-primary-weak",
       "value": "oklch(0.96 0.022 54)",
-      "group": "Semantic (bg/fg/border)",
+      "group": "Semantic (bg/fg/border/info)",
       "ref": "primary-50"
     },
     {
       "name": "fg-white",
       "value": "oklch(1 0 0)",
-      "group": "Semantic (bg/fg/border)",
+      "group": "Semantic (bg/fg/border/info)",
       "ref": "white"
     },
     {
       "name": "fg-primary",
       "value": "oklch(0.69 0.209 42)",
-      "group": "Semantic (bg/fg/border)",
+      "group": "Semantic (bg/fg/border/info)",
       "ref": "primary-500"
+    },
+    {
+      "name": "fg-pressed",
+      "value": "oklch(0.58 0.175 42)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "primary-600"
+    },
+    {
+      "name": "fg-primary-inverted",
+      "value": "oklch(0.79 0.135 51)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "primary-300"
+    },
+    {
+      "name": "fg-strong",
+      "value": "oklch(0.24 0.024 262)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-900"
     },
     {
       "name": "fg-normal",
       "value": "oklch(0.35 0.029 261)",
-      "group": "Semantic (bg/fg/border)",
+      "group": "Semantic (bg/fg/border/info)",
       "ref": "gray-800"
+    },
+    {
+      "name": "fg-neutral",
+      "value": "oklch(0.46 0.027 256)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-700"
+    },
+    {
+      "name": "fg-alternative",
+      "value": "oklch(0.56 0.025 257)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-600"
+    },
+    {
+      "name": "fg-assistive",
+      "value": "oklch(0.67 0.021 251)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-500"
     },
     {
       "name": "fg-disabled",
       "value": "oklch(0.78 0.014 252)",
-      "group": "Semantic (bg/fg/border)",
+      "group": "Semantic (bg/fg/border/info)",
       "ref": "gray-400"
     },
     {
       "name": "border-primary",
       "value": "oklch(0.69 0.209 42)",
-      "group": "Semantic (bg/fg/border)",
+      "group": "Semantic (bg/fg/border/info)",
       "ref": "primary-500"
+    },
+    {
+      "name": "border-strong",
+      "value": "oklch(0.35 0.029 261)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-800"
     },
     {
       "name": "border-normal",
       "value": "oklch(0.87 0.010 253)",
-      "group": "Semantic (bg/fg/border)",
+      "group": "Semantic (bg/fg/border/info)",
       "ref": "gray-300"
     },
     {
       "name": "border-weak",
       "value": "oklch(0.93 0.005 255)",
-      "group": "Semantic (bg/fg/border)",
+      "group": "Semantic (bg/fg/border/info)",
       "ref": "gray-200"
+    },
+    {
+      "name": "border-white",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "white"
+    },
+    {
+      "name": "border-inverted",
+      "value": "oklch(0.46 0.027 256)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-700"
+    },
+    {
+      "name": "border-inverted-strong",
+      "value": "oklch(0.56 0.025 257)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-600"
+    },
+    {
+      "name": "info-white",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "white"
     }
   ],
   "typography": [

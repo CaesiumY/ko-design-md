@@ -265,6 +265,23 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       expectRowsToMatch("codeit", expected, refs, literals)
     },
   },
+  likelion: {
+    title: "single-reference roles by the palette column, no dark twin",
+    check: () => {
+      const { literals, refs, tableRows } = load("likelion")
+      // The third column is the upstream variable, not a dark cell —
+      // likelion publishes no dark semantic theme — so only the palette
+      // column is read. Opacity-ramp roles (`… × 8% 불투명도`) carry prose
+      // and fall out.
+      const expected = new Map<string, string>()
+      for (const [roleCell, palette = ""] of tableRows) {
+        const [name] = spans(roleCell)
+        const target = single(palette)
+        if (name && target) expected.set(name, target)
+      }
+      expectRowsToMatch("likelion", expected, refs, literals)
+    },
+  },
   ridi: {
     title: "single-reference roles, light and `dark-` twin",
     check: () => {
