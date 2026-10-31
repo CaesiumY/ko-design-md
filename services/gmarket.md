@@ -96,16 +96,16 @@ colors:
   warning: "{colors.red-500}"   # 취소·탈퇴 등 주의·에러
   delay: "{colors.orange-500}"   # 배송 지연
   # 카탈로그 보조 역할 — 상류 발행 이름이 아니다 (Claude Design 재현 번들이 붙인 이름, 참조 행 아님)
-  text-link: oklch(0.534 0.214 260)   # blue-600 값, 링크·텍스트 버튼 색상 (#0062E5)
-  text-on-color: oklch(1.000 0.000 0)   # white 값, 컬러 표면 위 텍스트 (#FFFFFF)
+  text-link: oklch(0.534 0.214 260)   # 상류 발행 이름 아님 · blue-600 값, 링크·텍스트 버튼 색상 (#0062E5)
+  text-on-color: oklch(1.000 0.000 0)   # 상류 발행 이름 아님 · white 값, 컬러 표면 위 텍스트 (#FFFFFF)
   # Semantic — 검정 알파 표면 (라이트 전용, 다크 값 미발행)
   number-indicator-bg: oklch(0.000 0.000 0 / 0.30)   # black 30%, 슬라이드 Number Indicator 알약 배경 [src:23] (#0000004d)
   overlay: oklch(0.000 0.000 0 / 0.50)   # black 50%, 다이얼로그 딤 오버레이 [src:12] (#00000080)
   # 각 상태색과 짝지는 표면 배경 틴트 (해당 컬러 10단계의 50) — 카탈로그 보조 이름, 상류 발행 이름 아님
-  positive-bg: oklch(0.968 0.041 143)   # green-50, positive 표면 배경 (#E5FCE3)
-  informative-bg: oklch(0.973 0.014 248)   # blue-50, informative 표면 배경 (#EEF7FF)
-  warning-bg: oklch(0.974 0.012 17)   # red-50, warning 표면 배경 (#FFF5F5)
-  delay-bg: oklch(0.977 0.011 49)   # orange-50, delay 표면 배경 (#FFF6F2)
+  positive-bg: oklch(0.968 0.041 143)   # 상류 발행 이름 아님 · green-50 값, positive 표면 배경 (#E5FCE3)
+  informative-bg: oklch(0.973 0.014 248)   # 상류 발행 이름 아님 · blue-50 값, informative 표면 배경 (#EEF7FF)
+  warning-bg: oklch(0.974 0.012 17)   # 상류 발행 이름 아님 · red-50 값, warning 표면 배경 (#FFF5F5)
+  delay-bg: oklch(0.977 0.011 49)   # 상류 발행 이름 아님 · orange-50 값, delay 표면 배경 (#FFF6F2)
   # Service Brand — Smile 시리즈 (G마켓과 동일 위계의 브랜드 색상)
   smile: oklch(0.315 0.103 279)   # 스마일배송·페이·카드 (#282864)
   smilepay-sub: oklch(0.379 0.154 276)   # 스마일페이 브랜드 배경 (#313191)
@@ -194,7 +194,7 @@ GDS는 모바일 앱(iOS·Android, 1차 표면)·모바일 웹·PC 웹 전반의
 
 주 사용자는 한국 이커머스 오픈마켓 이용자이며, 시안 작업의 기본 타입페이스가 안드로이드 기준(국문 Noto Sans KR, 영문·숫자 Roboto)으로 잡혀 있어 한국 모바일 시장의 안드로이드 우세를 반영한다 [src:30]. 스마일페이·스마일카드·스마일스탬프·스마일클럽·캐치 등 스마일 시리즈가 G마켓 브랜드와 동일 위계의 서브브랜드 색상 체계를 갖는 점, 검색 광고에 'AD' 대신 한글 '광고' 라벨을 쓰는 점이 한국 시장 맥락에 맞춘 설계 결정이다 [src:27][src:14].
 
-**GDS는 라이트 모드 전용 시스템이다.** v1.3.0 공식 사이트와 토큰 CSS 어디에도 다크 팔레트가 발행되어 있지 않으며, 모든 표면 토큰은 흰색 캔버스(`{colors.bg-white}`)를 전제로 한다 [src:27][src:32]. 이 문서는 다크 토큰을 추정하지 않으며, 다크 테마가 필요하다면 다운스트림에서 별도 근거 위에 정의해야 한다.
+**GDS는 라이트 모드 전용 시스템이다.** 공식 사이트(사이드바 표기 Version 1.0.0)와 토큰 CSS 어디에도 다크 팔레트가 발행되어 있지 않으며, 모든 표면 토큰은 흰색 캔버스(`{colors.bg-white}`)를 전제로 한다 [src:27][src:32]. 이 문서는 다크 토큰을 추정하지 않으며, 다크 테마가 필요하다면 다운스트림에서 별도 근거 위에 정의해야 한다.
 
 ## Colors
 
@@ -568,7 +568,7 @@ CTA·Primary보다 낮은 위계의 보조 행동용이다 [src:10]. 보더는 `
 
 **Don't** 공개된 컴포넌트 목록에 없는 HeroCard, PromoBanner 같은 이름을 GDS 컴포넌트처럼 만들지 않는다 [src:6].
 
-**Don't** 다크 모드 토큰을 추정해서 만들지 않는다 — GDS v1.3.0은 라이트 모드 전용이며 공개된 다크 팔레트가 없다 [src:27][src:32].
+**Don't** 다크 모드 토큰을 추정해서 만들지 않는다 — GDS v1.0.0은 라이트 모드 전용이며 공개된 다크 팔레트가 없다 [src:27][src:32].
 
 **Don't** 색상 값을 hex로 다시 적지 않는다 — 이 카탈로그의 정규 표현은 OKLCH이며, Gmarket Green은 UI 토큰 기준 `{colors.green-500}`(#00C400 환산)이지 인쇄 규정값 #00C01E가 아니다 [src:1][src:27].
 
@@ -600,7 +600,7 @@ CTA·Primary보다 낮은 위계의 보조 행동용이다 [src:10]. 보더는 `
 
 ## Known Gaps
 
-- **다크 모드 미공개.** GDS v1.3.0은 라이트 모드 전용이며, 모든 표면·그림자 토큰의 다크 대응값이 공개되지 않았다 — 다크 테마가 필요하면 다운스트림에서 별도 정의해야 한다 [src:27][src:32].
+- **다크 모드 미공개.** GDS v1.0.0은 라이트 모드 전용이며, 모든 표면·그림자 토큰의 다크 대응값이 공개되지 않았다 — 다크 테마가 필요하면 다운스트림에서 별도 정의해야 한다 [src:27][src:32].
 - **헤딩 weight — canonical은 Medium(500).** 공식 타이포그래피 표는 Heading 1~4를 Regular(400)로 기재하나, canonical 번들이 Medium(500)으로 확정했고 이 문서 토큰 블록도 500을 따른다 — 원 표기 400을 함께 기록한다 [src:30][src:32].
 - **Gmarket Green hex 불일치.** 디자인 시스템 토큰(foundation)은 `#00C400`, 브랜드 인쇄/온라인 규정 표는 `#00C01E`로 표기한다 — 이 문서는 UI 토큰 기준값 `#00C400`을 채택했으나 두 1차 소스 간 불일치 자체는 미해소다 [src:1][src:27].
 - **자간 토큰 부재.** 줄 높이는 canonical 번들이 정의했으나(tight 1.25 / normal 1.45 / relaxed 1.6), letter-spacing 토큰은 여전히 공개 자료에 surfaced되지 않았다 [src:30].

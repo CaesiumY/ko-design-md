@@ -370,12 +370,12 @@
     {
       "name": "text-link",
       "value": "oklch(0.534 0.214 260)",
-      "note": "blue-600 값, 링크·텍스트 버튼 색상 (#0062E5)"
+      "note": "상류 발행 이름 아님 · blue-600 값, 링크·텍스트 버튼 색상 (#0062E5)"
     },
     {
       "name": "text-on-color",
       "value": "oklch(1.000 0.000 0)",
-      "note": "white 값, 컬러 표면 위 텍스트 (#FFFFFF)"
+      "note": "상류 발행 이름 아님 · white 값, 컬러 표면 위 텍스트 (#FFFFFF)"
     },
     {
       "name": "number-indicator-bg",
@@ -390,22 +390,22 @@
     {
       "name": "positive-bg",
       "value": "oklch(0.968 0.041 143)",
-      "note": "green-50, positive 표면 배경 (#E5FCE3)"
+      "note": "상류 발행 이름 아님 · green-50 값, positive 표면 배경 (#E5FCE3)"
     },
     {
       "name": "informative-bg",
       "value": "oklch(0.973 0.014 248)",
-      "note": "blue-50, informative 표면 배경 (#EEF7FF)"
+      "note": "상류 발행 이름 아님 · blue-50 값, informative 표면 배경 (#EEF7FF)"
     },
     {
       "name": "warning-bg",
       "value": "oklch(0.974 0.012 17)",
-      "note": "red-50, warning 표면 배경 (#FFF5F5)"
+      "note": "상류 발행 이름 아님 · red-50 값, warning 표면 배경 (#FFF5F5)"
     },
     {
       "name": "delay-bg",
       "value": "oklch(0.977 0.011 49)",
-      "note": "orange-50, delay 표면 배경 (#FFF6F2)"
+      "note": "상류 발행 이름 아님 · orange-50 값, delay 표면 배경 (#FFF6F2)"
     },
     {
       "name": "smile",
