@@ -302,9 +302,10 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       ).toBe(true)
       // The `## Colors` audit note and the Semantic paragraph state these row
       // counts in prose (CODING_STANDARDS 「개수」), so they are pinned here: a
-      // row added or dropped must update the prose with the count. The
-      // upstream primitive history (130 = 84 + 46) is a dated record, not a
-      // table count, and stays unpinned.
+      // row added or dropped must update the prose with the count. How many
+      // of the beta targets the entry already carried before the re-audit and
+      // how many it added (84 + 46) is a dated record, not a table count, and
+      // stays unpinned.
       const roleRows = tableRows.filter(
         ([cell]) => !(spans(cell)[0] ?? "").startsWith("{colors.")
       )
@@ -326,6 +327,14 @@ const CASES: Record<string, { title: string; check: () => void }> = {
         rowsWithPrimitiveNote: literalRows.filter((row) =>
           row.slice(1).some((cell) => cell.includes(" — hex 가 "))
         ).length,
+        // Distinct palette keys the beta reference rows point at.
+        betaTargets: new Set(
+          [...refs]
+            .filter(
+              ([key]) => key !== "primary" && !STABLE_ROLE.test(bare(key))
+            )
+            .map(([, to]) => to)
+        ).size,
       }
       expect(proseCounts, "bezier: row counts the prose states").toEqual({
         stableRoles: 27,
@@ -335,6 +344,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
         hovered: 173,
         chart: 10,
         rowsWithPrimitiveNote: 19,
+        betaTargets: 130,
       })
     },
   },
