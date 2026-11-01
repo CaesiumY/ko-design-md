@@ -164,11 +164,13 @@ colors:
   white-3: oklch(1 0 0 / 0.03)   # #ffffff08
   white-0: oklch(1 0 0 / 0)   # #ffffff00
   ## Stable tier palette
-  # 기본 tier(dist/css) 원시값 — 기본 tier bg-*·txt-* 가 가리키는 단계만. 테마마다 다시 정의되지 않아 dark- 판이 없다 [src:3].
+  # 기본 tier(dist/css) 원시값 — 기본 tier 색 역할(bg-*·txt-*·bgtxt-*·bdr-*·shdw-*)이 가리키는 단계만. 테마마다 다시 정의되지 않아 dark- 판이 없다 [src:3].
   stable-black-100: oklch(0 0 0)   # #000000 · 상류 기본 tier --black-100
   stable-black-85: oklch(0 0 0 / 0.85)   # #000000d9 · 상류 기본 tier --black-85
   stable-black-60: oklch(0 0 0 / 0.60)   # #00000099 · 상류 기본 tier --black-60
   stable-black-40: oklch(0 0 0 / 0.40)   # #00000066 · 상류 기본 tier --black-40
+  stable-black-30: oklch(0 0 0 / 0.30)   # #0000004d · 상류 기본 tier --black-30
+  stable-black-22: oklch(0 0 0 / 0.22)   # #00000038 · 상류 기본 tier --black-22
   stable-black-20: oklch(0 0 0 / 0.20)   # #00000033 · 상류 기본 tier --black-20
   stable-black-15: oklch(0 0 0 / 0.15)   # #00000026 · 상류 기본 tier --black-15
   stable-black-8: oklch(0 0 0 / 0.08)   # #00000014 · 상류 기본 tier --black-8
@@ -199,6 +201,105 @@ colors:
   stable-grey-200: oklch(0.952 0.001 286)   # #efeff0 · 상류 기본 tier --grey-200
   stable-grey-100: oklch(0.976 0.001 286)   # #f7f7f8 · 상류 기본 tier --grey-100
   stable-grey-50: oklch(0.991 0 0)   # #fcfcfc · 상류 기본 tier --grey-50
+  stable-navy-400-10: oklch(0.442 0.105 268 / 0.10)   # #3a4f8d1a · 상류 기본 tier --navy-400-10
+  stable-navy-400-20: oklch(0.442 0.105 268 / 0.20)   # #3a4f8d33 · 상류 기본 tier --navy-400-20
+  stable-navy-400-30: oklch(0.442 0.105 268 / 0.30)   # #3a4f8d4d · 상류 기본 tier --navy-400-30
+  stable-navy-300-20: oklch(0.602 0.121 269 / 0.20)   # #647cc933 · 상류 기본 tier --navy-300-20
+  stable-navy-300-30: oklch(0.602 0.121 269 / 0.30)   # #647cc94d · 상류 기본 tier --navy-300-30
+  stable-navy-300-40: oklch(0.602 0.121 269 / 0.40)   # #647cc966 · 상류 기본 tier --navy-300-40
+  stable-navy-500: oklch(0.365 0.054 270)   # #333d5b · 상류 기본 tier --navy-500
+  stable-navy-400: oklch(0.442 0.105 268)   # #3a4f8d · 상류 기본 tier --navy-400
+  stable-navy-300: oklch(0.602 0.121 269)   # #647cc9 · 상류 기본 tier --navy-300
+  stable-purple-400-10: oklch(0.596 0.194 299 / 0.10)   # #915ce01a · 상류 기본 tier --purple-400-10
+  stable-purple-400-20: oklch(0.596 0.194 299 / 0.20)   # #915ce033 · 상류 기본 tier --purple-400-20
+  stable-purple-400-30: oklch(0.596 0.194 299 / 0.30)   # #915ce04d · 상류 기본 tier --purple-400-30
+  stable-purple-300-20: oklch(0.682 0.208 304 / 0.20)   # #b570ff33 · 상류 기본 tier --purple-300-20
+  stable-purple-300-30: oklch(0.682 0.208 304 / 0.30)   # #b570ff4d · 상류 기본 tier --purple-300-30
+  stable-purple-300-40: oklch(0.682 0.208 304 / 0.40)   # #b570ff66 · 상류 기본 tier --purple-300-40
+  stable-purple-500: oklch(0.450 0.207 301)   # #6b23b3 · 상류 기본 tier --purple-500
+  stable-purple-400: oklch(0.596 0.194 299)   # #915ce0 · 상류 기본 tier --purple-400
+  stable-purple-300: oklch(0.682 0.208 304)   # #b570ff · 상류 기본 tier --purple-300
+  stable-pink-400-10: oklch(0.614 0.199 338 / 0.10)   # #cb48ad1a · 상류 기본 tier --pink-400-10
+  stable-pink-400-20: oklch(0.614 0.199 338 / 0.20)   # #cb48ad33 · 상류 기본 tier --pink-400-20
+  stable-pink-400-30: oklch(0.614 0.199 338 / 0.30)   # #cb48ad4d · 상류 기본 tier --pink-400-30
+  stable-pink-300-20: oklch(0.722 0.192 336 / 0.20)   # #ec6fd333 · 상류 기본 tier --pink-300-20
+  stable-pink-300-30: oklch(0.722 0.192 336 / 0.30)   # #ec6fd34d · 상류 기본 tier --pink-300-30
+  stable-pink-300-40: oklch(0.722 0.192 336 / 0.40)   # #ec6fd366 · 상류 기본 tier --pink-300-40
+  stable-pink-500: oklch(0.515 0.187 334)   # #a32e92 · 상류 기본 tier --pink-500
+  stable-pink-400: oklch(0.614 0.199 338)   # #cb48ad · 상류 기본 tier --pink-400
+  stable-pink-300: oklch(0.722 0.192 336)   # #ec6fd3 · 상류 기본 tier --pink-300
+  stable-red-400-10: oklch(0.640 0.191 21 / 0.10)   # #e94e581a · 상류 기본 tier --red-400-10
+  stable-red-400-20: oklch(0.640 0.191 21 / 0.20)   # #e94e5833 · 상류 기본 tier --red-400-20
+  stable-red-400-30: oklch(0.640 0.191 21 / 0.30)   # #e94e584d · 상류 기본 tier --red-400-30
+  stable-red-300-20: oklch(0.691 0.199 24 / 0.20)   # #ff5c5c33 · 상류 기본 tier --red-300-20
+  stable-red-300-30: oklch(0.691 0.199 24 / 0.30)   # #ff5c5c4d · 상류 기본 tier --red-300-30
+  stable-red-300-40: oklch(0.691 0.199 24 / 0.40)   # #ff5c5c66 · 상류 기본 tier --red-300-40
+  stable-red-500: oklch(0.520 0.144 19)   # #ac3e46 · 상류 기본 tier --red-500
+  stable-red-400: oklch(0.640 0.191 21)   # #e94e58 · 상류 기본 tier --red-400
+  stable-red-300: oklch(0.691 0.199 24)   # #ff5c5c · 상류 기본 tier --red-300
+  stable-orange-400-10: oklch(0.717 0.175 55 / 0.10)   # #f4800b1a · 상류 기본 tier --orange-400-10
+  stable-orange-400-20: oklch(0.717 0.175 55 / 0.20)   # #f4800b33 · 상류 기본 tier --orange-400-20
+  stable-orange-400-30: oklch(0.717 0.175 55 / 0.30)   # #f4800b4d · 상류 기본 tier --orange-400-30
+  stable-orange-300-20: oklch(0.809 0.137 62 / 0.20)   # #ffab5c33 · 상류 기본 tier --orange-300-20
+  stable-orange-300-30: oklch(0.809 0.137 62 / 0.30)   # #ffab5c4d · 상류 기본 tier --orange-300-30
+  stable-orange-300-40: oklch(0.809 0.137 62 / 0.40)   # #ffab5c66 · 상류 기본 tier --orange-300-40
+  stable-orange-500: oklch(0.635 0.139 62)   # #c57417 · 상류 기본 tier --orange-500
+  stable-orange-400: oklch(0.717 0.175 55)   # #f4800b · 상류 기본 tier --orange-400
+  stable-orange-300: oklch(0.809 0.137 62)   # #ffab5c · 상류 기본 tier --orange-300
+  stable-yellow-400-10: oklch(0.818 0.146 86 / 0.10)   # #edbc401a · 상류 기본 tier --yellow-400-10
+  stable-yellow-400-20: oklch(0.818 0.146 86 / 0.20)   # #edbc4033 · 상류 기본 tier --yellow-400-20
+  stable-yellow-400-30: oklch(0.818 0.146 86 / 0.30)   # #edbc404d · 상류 기본 tier --yellow-400-30
+  stable-yellow-300-20: oklch(0.880 0.150 91 / 0.20)   # #fdd35333 · 상류 기본 tier --yellow-300-20
+  stable-yellow-300-30: oklch(0.880 0.150 91 / 0.30)   # #fdd3534d · 상류 기본 tier --yellow-300-30
+  stable-yellow-300-40: oklch(0.880 0.150 91 / 0.40)   # #fdd35366 · 상류 기본 tier --yellow-300-40
+  stable-yellow-500: oklch(0.715 0.126 89)   # #c39e37 · 상류 기본 tier --yellow-500
+  stable-yellow-400: oklch(0.818 0.146 86)   # #edbc40 · 상류 기본 tier --yellow-400
+  stable-yellow-300: oklch(0.880 0.150 91)   # #fdd353 · 상류 기본 tier --yellow-300
+  stable-olive-400-10: oklch(0.698 0.124 112 / 0.10)   # #a0a5401a · 상류 기본 tier --olive-400-10
+  stable-olive-400-20: oklch(0.698 0.124 112 / 0.20)   # #a0a54033 · 상류 기본 tier --olive-400-20
+  stable-olive-400-30: oklch(0.698 0.124 112 / 0.30)   # #a0a5404d · 상류 기본 tier --olive-400-30
+  stable-olive-300-20: oklch(0.839 0.161 114 / 0.20)   # #cad54833 · 상류 기본 tier --olive-300-20
+  stable-olive-300-30: oklch(0.839 0.161 114 / 0.30)   # #cad5484d · 상류 기본 tier --olive-300-30
+  stable-olive-300-40: oklch(0.839 0.161 114 / 0.40)   # #cad54866 · 상류 기본 tier --olive-300-40
+  stable-olive-500: oklch(0.598 0.115 112)   # #818628 · 상류 기본 tier --olive-500
+  stable-olive-400: oklch(0.698 0.124 112)   # #a0a540 · 상류 기본 tier --olive-400
+  stable-olive-300: oklch(0.839 0.161 114)   # #cad548 · 상류 기본 tier --olive-300
+  stable-green-400-10: oklch(0.639 0.158 149 / 0.10)   # #31a5521a · 상류 기본 tier --green-400-10
+  stable-green-400-20: oklch(0.639 0.158 149 / 0.20)   # #31a55233 · 상류 기본 tier --green-400-20
+  stable-green-400-30: oklch(0.639 0.158 149 / 0.30)   # #31a5524d · 상류 기본 tier --green-400-30
+  stable-green-300-20: oklch(0.753 0.202 147 / 0.20)   # #3acf5a33 · 상류 기본 tier --green-300-20
+  stable-green-300-30: oklch(0.753 0.202 147 / 0.30)   # #3acf5a4d · 상류 기본 tier --green-300-30
+  stable-green-300-40: oklch(0.753 0.202 147 / 0.40)   # #3acf5a66 · 상류 기본 tier --green-300-40
+  stable-green-500: oklch(0.587 0.125 148)   # #41904f · 상류 기본 tier --green-500
+  stable-green-400: oklch(0.639 0.158 149)   # #31a552 · 상류 기본 tier --green-400
+  stable-green-300: oklch(0.753 0.202 147)   # #3acf5a · 상류 기본 tier --green-300
+  stable-teal-400-10: oklch(0.690 0.121 184 / 0.10)   # #0fb3a31a · 상류 기본 tier --teal-400-10
+  stable-teal-400-20: oklch(0.690 0.121 184 / 0.20)   # #0fb3a333 · 상류 기본 tier --teal-400-20
+  stable-teal-400-30: oklch(0.690 0.121 184 / 0.30)   # #0fb3a34d · 상류 기본 tier --teal-400-30
+  stable-teal-300-20: oklch(0.813 0.131 185 / 0.20)   # #3cddcd33 · 상류 기본 tier --teal-300-20
+  stable-teal-300-30: oklch(0.813 0.131 185 / 0.30)   # #3cddcd4d · 상류 기본 tier --teal-300-30
+  stable-teal-300-40: oklch(0.813 0.131 185 / 0.40)   # #3cddcd66 · 상류 기본 tier --teal-300-40
+  stable-teal-500: oklch(0.634 0.089 178)   # #449c8a · 상류 기본 tier --teal-500
+  stable-teal-400: oklch(0.690 0.121 184)   # #0fb3a3 · 상류 기본 tier --teal-400
+  stable-teal-300: oklch(0.813 0.131 185)   # #3cddcd · 상류 기본 tier --teal-300
+  stable-cobalt-400-10: oklch(0.666 0.146 245 / 0.10)   # #329be71a · 상류 기본 tier --cobalt-400-10
+  stable-cobalt-400-20: oklch(0.666 0.146 245 / 0.20)   # #329be733 · 상류 기본 tier --cobalt-400-20
+  stable-cobalt-400-30: oklch(0.666 0.146 245 / 0.30)   # #329be74d · 상류 기본 tier --cobalt-400-30
+  stable-cobalt-300-20: oklch(0.785 0.135 231 / 0.20)   # #47c8ff33 · 상류 기본 tier --cobalt-300-20
+  stable-cobalt-300-30: oklch(0.785 0.135 231 / 0.30)   # #47c8ff4d · 상류 기본 tier --cobalt-300-30
+  stable-cobalt-300-40: oklch(0.785 0.135 231 / 0.40)   # #47c8ff66 · 상류 기본 tier --cobalt-300-40
+  stable-cobalt-500: oklch(0.564 0.120 248)   # #327ab8 · 상류 기본 tier --cobalt-500
+  stable-cobalt-400: oklch(0.666 0.146 245)   # #329be7 · 상류 기본 tier --cobalt-400
+  stable-cobalt-300: oklch(0.785 0.135 231)   # #47c8ff · 상류 기본 tier --cobalt-300
+  stable-blue-400-10: oklch(0.555 0.223 279 / 0.10)   # #5e56f01a · 상류 기본 tier --blue-400-10
+  stable-blue-400-20: oklch(0.555 0.223 279 / 0.20)   # #5e56f033 · 상류 기본 tier --blue-400-20
+  stable-blue-400-30: oklch(0.555 0.223 279 / 0.30)   # #5e56f04d · 상류 기본 tier --blue-400-30
+  stable-blue-300-20: oklch(0.658 0.181 269 / 0.20)   # #6687ff33 · 상류 기본 tier --blue-300-20
+  stable-blue-300-30: oklch(0.658 0.181 269 / 0.30)   # #6687ff4d · 상류 기본 tier --blue-300-30
+  stable-blue-300-40: oklch(0.658 0.181 269 / 0.40)   # #6687ff66 · 상류 기본 tier --blue-300-40
+  stable-blue-500: oklch(0.476 0.203 280)   # #4e40c9 · 상류 기본 tier --blue-500
+  stable-blue-400: oklch(0.555 0.223 279)   # #5e56f0 · 상류 기본 tier --blue-400
+  stable-blue-300: oklch(0.658 0.181 269)   # #6687ff · 상류 기본 tier --blue-300
   ## Semantic bg-*·txt-* (stable tier)
   txt-white-normal: "{colors.stable-white-100}"
   dark-txt-white-normal: "{colors.stable-grey-900}"
@@ -254,6 +355,161 @@ colors:
   dark-bg-white-normal: "{colors.stable-grey-900}"
   bg-white-high: "{colors.stable-white-100}"
   dark-bg-white-high: "{colors.stable-grey-700}"
+  ## Semantic bgtxt-* (stable tier)
+  bgtxt-absolute-white-lightest: "{colors.stable-white-20}"
+  dark-bgtxt-absolute-white-lightest: "{colors.stable-white-20}"
+  bgtxt-absolute-white-lighter: "{colors.stable-white-40}"
+  dark-bgtxt-absolute-white-lighter: "{colors.stable-white-40}"
+  bgtxt-absolute-white-light: "{colors.stable-white-60}"
+  dark-bgtxt-absolute-white-light: "{colors.stable-white-60}"
+  bgtxt-absolute-white-normal: "{colors.stable-white-90}"
+  dark-bgtxt-absolute-white-normal: "{colors.stable-white-90}"
+  bgtxt-absolute-white-dark: "{colors.stable-white-100}"
+  dark-bgtxt-absolute-white-dark: "{colors.stable-white-100}"
+  bgtxt-absolute-black-lightest: "{colors.stable-black-20}"
+  dark-bgtxt-absolute-black-lightest: "{colors.stable-black-20}"
+  bgtxt-absolute-black-lighter: "{colors.stable-black-40}"
+  dark-bgtxt-absolute-black-lighter: "{colors.stable-black-40}"
+  bgtxt-absolute-black-light: "{colors.stable-black-60}"
+  dark-bgtxt-absolute-black-light: "{colors.stable-black-60}"
+  bgtxt-absolute-black-normal: "{colors.stable-black-85}"
+  dark-bgtxt-absolute-black-normal: "{colors.stable-black-85}"
+  bgtxt-absolute-black-dark: "{colors.stable-black-100}"
+  dark-bgtxt-absolute-black-dark: "{colors.stable-black-100}"
+  bgtxt-navy-lightest: "{colors.stable-navy-400-10}"
+  dark-bgtxt-navy-lightest: "{colors.stable-navy-300-20}"
+  bgtxt-navy-lighter: "{colors.stable-navy-400-20}"
+  dark-bgtxt-navy-lighter: "{colors.stable-navy-300-30}"
+  bgtxt-navy-light: "{colors.stable-navy-400-30}"
+  dark-bgtxt-navy-light: "{colors.stable-navy-300-40}"
+  bgtxt-navy-normal: "{colors.stable-navy-400}"
+  dark-bgtxt-navy-normal: "{colors.stable-navy-300}"
+  bgtxt-navy-dark: "{colors.stable-navy-500}"
+  dark-bgtxt-navy-dark: "{colors.stable-navy-400}"
+  bgtxt-purple-lightest: "{colors.stable-purple-400-10}"
+  dark-bgtxt-purple-lightest: "{colors.stable-purple-300-20}"
+  bgtxt-purple-lighter: "{colors.stable-purple-400-20}"
+  dark-bgtxt-purple-lighter: "{colors.stable-purple-300-30}"
+  bgtxt-purple-light: "{colors.stable-purple-400-30}"
+  dark-bgtxt-purple-light: "{colors.stable-purple-300-40}"
+  bgtxt-purple-normal: "{colors.stable-purple-400}"
+  dark-bgtxt-purple-normal: "{colors.stable-purple-300}"
+  bgtxt-purple-dark: "{colors.stable-purple-500}"
+  dark-bgtxt-purple-dark: "{colors.stable-purple-400}"
+  bgtxt-pink-lightest: "{colors.stable-pink-400-10}"
+  dark-bgtxt-pink-lightest: "{colors.stable-pink-300-20}"
+  bgtxt-pink-lighter: "{colors.stable-pink-400-20}"
+  dark-bgtxt-pink-lighter: "{colors.stable-pink-300-30}"
+  bgtxt-pink-light: "{colors.stable-pink-400-30}"
+  dark-bgtxt-pink-light: "{colors.stable-pink-300-40}"
+  bgtxt-pink-normal: "{colors.stable-pink-400}"
+  dark-bgtxt-pink-normal: "{colors.stable-pink-300}"
+  bgtxt-pink-dark: "{colors.stable-pink-500}"
+  dark-bgtxt-pink-dark: "{colors.stable-pink-400}"
+  bgtxt-red-lightest: "{colors.stable-red-400-10}"
+  dark-bgtxt-red-lightest: "{colors.stable-red-300-20}"
+  bgtxt-red-lighter: "{colors.stable-red-400-20}"
+  dark-bgtxt-red-lighter: "{colors.stable-red-300-30}"
+  bgtxt-red-light: "{colors.stable-red-400-30}"
+  dark-bgtxt-red-light: "{colors.stable-red-300-40}"
+  bgtxt-red-normal: "{colors.stable-red-400}"
+  dark-bgtxt-red-normal: "{colors.stable-red-300}"
+  bgtxt-red-dark: "{colors.stable-red-500}"
+  dark-bgtxt-red-dark: "{colors.stable-red-400}"
+  bgtxt-orange-lightest: "{colors.stable-orange-400-10}"
+  dark-bgtxt-orange-lightest: "{colors.stable-orange-300-20}"
+  bgtxt-orange-lighter: "{colors.stable-orange-400-20}"
+  dark-bgtxt-orange-lighter: "{colors.stable-orange-300-30}"
+  bgtxt-orange-light: "{colors.stable-orange-400-30}"
+  dark-bgtxt-orange-light: "{colors.stable-orange-300-40}"
+  bgtxt-orange-normal: "{colors.stable-orange-400}"
+  dark-bgtxt-orange-normal: "{colors.stable-orange-300}"
+  bgtxt-orange-dark: "{colors.stable-orange-500}"
+  dark-bgtxt-orange-dark: "{colors.stable-orange-400}"
+  bgtxt-yellow-lightest: "{colors.stable-yellow-400-10}"
+  dark-bgtxt-yellow-lightest: "{colors.stable-yellow-300-20}"
+  bgtxt-yellow-lighter: "{colors.stable-yellow-400-20}"
+  dark-bgtxt-yellow-lighter: "{colors.stable-yellow-300-30}"
+  bgtxt-yellow-light: "{colors.stable-yellow-400-30}"
+  dark-bgtxt-yellow-light: "{colors.stable-yellow-300-40}"
+  bgtxt-yellow-normal: "{colors.stable-yellow-400}"
+  dark-bgtxt-yellow-normal: "{colors.stable-yellow-300}"
+  bgtxt-yellow-dark: "{colors.stable-yellow-500}"
+  dark-bgtxt-yellow-dark: "{colors.stable-yellow-400}"
+  bgtxt-olive-lightest: "{colors.stable-olive-400-10}"
+  dark-bgtxt-olive-lightest: "{colors.stable-olive-300-20}"
+  bgtxt-olive-lighter: "{colors.stable-olive-400-20}"
+  dark-bgtxt-olive-lighter: "{colors.stable-olive-300-30}"
+  bgtxt-olive-light: "{colors.stable-olive-400-30}"
+  dark-bgtxt-olive-light: "{colors.stable-olive-300-40}"
+  bgtxt-olive-normal: "{colors.stable-olive-400}"
+  dark-bgtxt-olive-normal: "{colors.stable-olive-300}"
+  bgtxt-olive-dark: "{colors.stable-olive-500}"
+  dark-bgtxt-olive-dark: "{colors.stable-olive-400}"
+  bgtxt-green-lightest: "{colors.stable-green-400-10}"
+  dark-bgtxt-green-lightest: "{colors.stable-green-300-20}"
+  bgtxt-green-lighter: "{colors.stable-green-400-20}"
+  dark-bgtxt-green-lighter: "{colors.stable-green-300-30}"
+  bgtxt-green-light: "{colors.stable-green-400-30}"
+  dark-bgtxt-green-light: "{colors.stable-green-300-40}"
+  bgtxt-green-normal: "{colors.stable-green-400}"
+  dark-bgtxt-green-normal: "{colors.stable-green-300}"
+  bgtxt-green-dark: "{colors.stable-green-500}"
+  dark-bgtxt-green-dark: "{colors.stable-green-400}"
+  bgtxt-teal-lightest: "{colors.stable-teal-400-10}"
+  dark-bgtxt-teal-lightest: "{colors.stable-teal-300-20}"
+  bgtxt-teal-lighter: "{colors.stable-teal-400-20}"
+  dark-bgtxt-teal-lighter: "{colors.stable-teal-300-30}"
+  bgtxt-teal-light: "{colors.stable-teal-400-30}"
+  dark-bgtxt-teal-light: "{colors.stable-teal-300-40}"
+  bgtxt-teal-normal: "{colors.stable-teal-400}"
+  dark-bgtxt-teal-normal: "{colors.stable-teal-300}"
+  bgtxt-teal-dark: "{colors.stable-teal-500}"
+  dark-bgtxt-teal-dark: "{colors.stable-teal-400}"
+  bgtxt-cobalt-lightest: "{colors.stable-cobalt-400-10}"
+  dark-bgtxt-cobalt-lightest: "{colors.stable-cobalt-300-20}"
+  bgtxt-cobalt-lighter: "{colors.stable-cobalt-400-20}"
+  dark-bgtxt-cobalt-lighter: "{colors.stable-cobalt-300-30}"
+  bgtxt-cobalt-light: "{colors.stable-cobalt-400-30}"
+  dark-bgtxt-cobalt-light: "{colors.stable-cobalt-300-40}"
+  bgtxt-cobalt-normal: "{colors.stable-cobalt-400}"
+  dark-bgtxt-cobalt-normal: "{colors.stable-cobalt-300}"
+  bgtxt-cobalt-dark: "{colors.stable-cobalt-500}"
+  dark-bgtxt-cobalt-dark: "{colors.stable-cobalt-400}"
+  bgtxt-blue-lightest: "{colors.stable-blue-400-10}"
+  dark-bgtxt-blue-lightest: "{colors.stable-blue-300-20}"
+  bgtxt-blue-lighter: "{colors.stable-blue-400-20}"
+  dark-bgtxt-blue-lighter: "{colors.stable-blue-300-30}"
+  bgtxt-blue-light: "{colors.stable-blue-400-30}"
+  dark-bgtxt-blue-light: "{colors.stable-blue-300-40}"
+  bgtxt-blue-normal: "{colors.stable-blue-400}"
+  dark-bgtxt-blue-normal: "{colors.stable-blue-300}"
+  bgtxt-blue-dark: "{colors.stable-blue-500}"
+  dark-bgtxt-blue-dark: "{colors.stable-blue-400}"
+  ## Semantic bdr-* (stable tier)
+  bdr-white: "{colors.stable-white-100}"
+  dark-bdr-white: "{colors.stable-grey-700}"
+  bdr-grey-light: "{colors.stable-grey-200}"
+  dark-bdr-grey-light: "{colors.stable-grey-700}"
+  bdr-black-lightest: "{colors.stable-black-3}"
+  dark-bdr-black-lightest: "{colors.stable-white-5}"
+  bdr-black-light: "{colors.stable-black-8}"
+  dark-bdr-black-light: "{colors.stable-white-12}"
+  bdr-black-dark: "{colors.stable-black-15}"
+  dark-bdr-black-dark: "{colors.stable-white-20}"
+  ## Semantic shdw-* (stable tier)
+  shdw-inner-base: "{colors.stable-white-12}"
+  dark-shdw-inner-base: "{colors.stable-white-8}"
+  shdw-base: "{colors.stable-black-5}"
+  dark-shdw-base: "{colors.stable-black-8}"
+  shdw-small: "{colors.stable-black-8}"
+  dark-shdw-small: "{colors.stable-black-15}"
+  shdw-medium: "{colors.stable-black-15}"
+  dark-shdw-medium: "{colors.stable-black-20}"
+  shdw-large: "{colors.stable-black-22}"
+  dark-shdw-large: "{colors.stable-black-40}"
+  shdw-xlarge: "{colors.stable-black-30}"
+  dark-shdw-xlarge: "{colors.stable-black-60}"
   ## Semantic text (beta tier)
   text-action: "{colors.blue-400}"
   dark-text-action: "{colors.blue-300}"
@@ -671,9 +927,9 @@ Bezier는 채널톡의 사내 제품 UI를 외부에 그대로 공개한 드문 
 
 ## Colors
 
-> **대조 결과·역할 표 추가(2026-11-01).** 같은 패키지 0.6.0 은 역할 층을 세 벌(기본·beta·alpha tier) 발행하고, 아래 「Semantic」 표는 그중 두 벌을 싣는다 — 기본 tier `dist/css/styles.css` 의 `--bg-*`·`--txt-*` 27개와 beta tier `dist/beta/css/styles.css` 의 `--color-*` 역할 346개이고, 둘 다 라이트(`:root`·`[data-bezier-theme="light"]`)·다크(`[data-bezier-theme="dark"]`) 블록에서 대응을 직접 옮겼다 [src:3]. alpha tier `dist/alpha/css/styles.css` 의 `--alpha-color-*` 역할 층은 아직 싣지 않았다(알려진 공백). beta 역할 가운데 163개는 두 테마 모두 beta 원시값 하나를 가리켜, 그 칸은 전부 frontmatter 참조 행이다. 가리키는 원시값 130개 가운데 이번 재감사 전부터 이 문서에 있던 84개는 상류와 ΔE ≤ 0.002 로 맞았고, 46개는 이번에 상류 값으로 더했다. 나머지 183개(`-hovered` 173개와 hovered 가 아닌 `chart-theme-default-*` 10개)는 상류가 두 테마 모두 원시값을 가리키지 않고 hex 를 직접 적어 가리킬 팔레트 토큰이 상류에 없으므로, 참조 행 없이 표에만 상류 hex 와 OKLCH(저장소 변환기)로 실었다. 그중 19개(`fill-*-transparent-hovered` 계열)는 hex 가 원시값과 같지만 상류가 그 원시값을 가리키는 것은 아니어서, 칸에 그렇게 적고 참조 행을 두지 않았다. 기본 tier 역할은 기본 tier(`dist/css/styles.css`) 원시값 하나를 가리키고, 그 원시값은 beta 단계와 이름이 같아도 다른 파일의 다른 토큰이다. 그래서 기본 tier 역할이 가리키는 원시값을 `stable-` 앞붙임 팔레트로 따로 싣고(값은 그 파일의 원시값 정의, 줄 끝에 상류 hex), 역할의 라이트·다크 칸을 모두 그 키의 참조 행으로 실었다. 기본 tier 도 beta 처럼 원시값을 테마마다 다시 정의하지 않고 다크 블록이 역할만 다시 가리키므로, `dark-` 짝은 접두 없는 `stable-*` 키를 가리킨다. 두 tier 를 원시값마다 hex 로 맞대 보면 `black-*`·`white-*` 알파 단계와 `grey-100/200/500`·`grey-100-80/90`·`grey-200-80` 은 같은 값이고 `grey-50/700/800/850/900` 과 그 알파 단계(`grey-50-80`·`grey-700-80`·`grey-800-80/90`·`grey-850-80`)는 다르지만, 값이 같아도 beta 키를 가리키지 않는다 — 한쪽 tier 만 바뀌면 조용히 거짓이 되기 때문이다. 참조 행이 아닌 팔레트 색 토큰 174개는 published `@channel.io/bezier-tokens` 0.6.0에서 나온다 — `stable-*` 키는 기본 tier `dist/css/styles.css`, 나머지는 `dist/beta/css/styles.css` 다 [src:3]. 비공개 핸드오프 번들에서 온 43개도 이 배포물과 **전부 ΔE ≤ 0.02**로 일치한다 — 번들 값이 공개 배포물로 재현된다. 상류 원시값 블록에서 직접 옮긴 131개(기본 tier 의 `stable-*` 전부와, beta 의 accent 틴트 `{hue}-400-0/10/20`·`{hue}-300-0/18/30`·`blue-400-30`·`blue-300-45`·`orange-400-30`, 불투명 `navy/purple/pink/teal-300`, `grey-650/750/950`, grey 알파 단계, `black-0/1/3/5/15/20/22/30`·`white-0/3/5/8/20/40/60/80`)는 상류 이름을 그대로 쓰고 알파는 이름이 말하는 백분율로 적었으며(`white-8` 은 `/ 0.08`), 줄 끝에 상류 hex를 적어 `audit:oklch`가 줄마다 대조한다(상류가 `#fff3`처럼 줄여 쓴 값은 8자리로 풀어 적었다). 같은 파일과 대조해 아래 「Accent global hues」의 틴트 서술을 상류 이름에 맞췄다 — 기본 `fill-accent-{hue}`는 10%(다크 `{hue}-300-18`)이고 20%는 `fill-accent-{hue}-heavy`(다크 `{hue}-300-30`)다 [src:3]. 다만 **tier를 구분해 읽어야 한다**: 이 절의 색은 `stable-*` 키를 빼면 beta tier이고, 아래 Typography·Rounded·Spacing 절의 값은 기본(stable) tier다. 같은 토큰 이름이 tier마다 다른 값을 가진다 — `grey-900`이 stable에서는 `#242428` ≈ `oklch(0.262 0.007 286)`, beta에서는 `#1d1d20` ≈ `oklch(0.232 0.006 286)`이다. beta에는 stable에 없는 `grey-25/300/400/600/650/750/950`이 있고, 반대로 `radius-44`·`radius-42-p`는 stable에만 있다.
+> **대조 결과·역할 표 추가(2026-11-01).** 같은 패키지 0.6.0 은 역할 층을 세 벌(기본·beta·alpha tier) 발행하고, 아래 「Semantic」 표는 그중 두 벌을 싣는다 — 기본 tier `dist/css/styles.css` 의 색 역할 103개(`--bg-*`·`--txt-*` 27개, `--bgtxt-*` 65개, `--bdr-*` 5개, `--shdw-*` 6개)와 beta tier `dist/beta/css/styles.css` 의 `--color-*` 역할 346개이고, 둘 다 라이트(`:root`·`[data-bezier-theme="light"]`)·다크(`[data-bezier-theme="dark"]`) 블록에서 대응을 직접 옮겼다 [src:3]. alpha tier `dist/alpha/css/styles.css` 의 `--alpha-color-*` 역할 층은 아직 싣지 않았다(알려진 공백). beta 역할 가운데 163개는 두 테마 모두 beta 원시값 하나를 가리켜, 그 칸은 전부 frontmatter 참조 행이다. 가리키는 원시값 130개 가운데 이번 재감사 전부터 이 문서에 있던 84개는 상류와 ΔE ≤ 0.002 로 맞았고, 46개는 이번에 상류 값으로 더했다. 나머지 183개(`-hovered` 173개와 hovered 가 아닌 `chart-theme-default-*` 10개)는 상류가 두 테마 모두 원시값을 가리키지 않고 hex 를 직접 적어 가리킬 팔레트 토큰이 상류에 없으므로, 참조 행 없이 표에만 상류 hex 와 OKLCH(저장소 변환기)로 실었다. 그중 19개(`fill-*-transparent-hovered` 계열)는 hex 가 원시값과 같지만 상류가 그 원시값을 가리키는 것은 아니어서, 칸에 그렇게 적고 참조 행을 두지 않았다. 기본 tier 역할은 기본 tier(`dist/css/styles.css`) 원시값 하나를 가리키고, 그 원시값은 beta 단계와 이름이 같아도 다른 파일의 다른 토큰이다. 그래서 기본 tier 역할이 가리키는 원시값을 `stable-` 앞붙임 팔레트로 따로 싣고(값은 그 파일의 원시값 정의, 줄 끝에 상류 hex), 역할의 라이트·다크 칸을 모두 그 키의 참조 행으로 실었다. 기본 tier 도 beta 처럼 원시값을 테마마다 다시 정의하지 않고 다크 블록이 역할만 다시 가리키므로, `dark-` 짝은 접두 없는 `stable-*` 키를 가리킨다. 두 tier 를 원시값마다 hex 로 맞대 보면 `black-*`·`white-*` 알파 단계와 `grey-100/200/500`·`grey-100-80/90`·`grey-200-80` 은 같은 값이고 `grey-50/700/800/850/900` 과 그 알파 단계(`grey-50-80`·`grey-700-80`·`grey-800-80/90`·`grey-850-80`)는 다르지만, 값이 같아도 beta 키를 가리키지 않는다 — 한쪽 tier 만 바뀌면 조용히 거짓이 되기 때문이다. 참조 행이 아닌 팔레트 색 토큰 275개는 published `@channel.io/bezier-tokens` 0.6.0에서 나온다 — `stable-*` 키는 기본 tier `dist/css/styles.css`, 나머지는 `dist/beta/css/styles.css` 다 [src:3]. 비공개 핸드오프 번들에서 온 43개도 이 배포물과 **전부 ΔE ≤ 0.02**로 일치한다 — 번들 값이 공개 배포물로 재현된다. 상류 원시값 블록에서 직접 옮긴 232개(기본 tier 의 `stable-*` 전부와, beta 의 accent 틴트 `{hue}-400-0/10/20`·`{hue}-300-0/18/30`·`blue-400-30`·`blue-300-45`·`orange-400-30`, 불투명 `navy/purple/pink/teal-300`, `grey-650/750/950`, grey 알파 단계, `black-0/1/3/5/15/20/22/30`·`white-0/3/5/8/20/40/60/80`)는 상류 이름을 그대로 쓰고 알파는 이름이 말하는 백분율로 적었으며(`white-8` 은 `/ 0.08`), 줄 끝에 상류 hex를 적어 `audit:oklch`가 줄마다 대조한다(상류가 `#fff3`처럼 줄여 쓴 값은 8자리로 풀어 적었다). 같은 파일과 대조해 아래 「Accent global hues」의 틴트 서술을 상류 이름에 맞췄다 — 기본 `fill-accent-{hue}`는 10%(다크 `{hue}-300-18`)이고 20%는 `fill-accent-{hue}-heavy`(다크 `{hue}-300-30`)다 [src:3]. 다만 **tier를 구분해 읽어야 한다**: 이 절의 색은 `stable-*` 키를 빼면 beta tier이고, 아래 Typography·Rounded·Spacing 절의 값은 기본(stable) tier다. 같은 토큰 이름이 tier마다 다른 값을 가진다 — `grey-900`이 stable에서는 `#242428` ≈ `oklch(0.262 0.007 286)`, beta에서는 `#1d1d20` ≈ `oklch(0.232 0.006 286)`이다. beta에는 stable에 없는 `grey-25/300/400/600/650/750/950`이 있고, 반대로 `radius-44`·`radius-42-p`는 stable에만 있다.
 
-Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3계층 토큰 구조다 [src:3][src:2]. 글로벌은 원시 색값이고, 시맨틱(`--bg-*`, `--txt-*`, `--color-*`)은 테마별로 다른 글로벌을 참조한다 [src:2][src:3]. `--bg-*`·`--txt-*` 는 기본 tier 의 시맨틱 이름이고, `--color-` 는 beta tier 의 이름 앞붙임이다 — beta 는 원시값(`--color-grey-900`)과 시맨틱(`--color-text-neutral`)이 같은 앞붙임을 쓴다 [src:3]. 특징은 navy·purple·pink·red·orange·yellow·olive·green·teal·cobalt·blue 11개 hue를 각각 300/400/500 명도 + 알파 변형으로 갖춘 무지개 액센트 팔레트다 [src:3][src:4].
+Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3계층 토큰 구조다 [src:3][src:2]. 글로벌은 원시 색값이고, 시맨틱(`--bg-*`, `--txt-*`, `--color-*`)은 테마별로 다른 글로벌을 참조한다 [src:2][src:3]. `--bg-*`·`--txt-*`·`--bgtxt-*`·`--bdr-*`·`--shdw-*` 는 기본 tier 의 시맨틱 이름이고, `--color-` 는 beta tier 의 이름 앞붙임이다 — beta 는 원시값(`--color-grey-900`)과 시맨틱(`--color-text-neutral`)이 같은 앞붙임을 쓴다 [src:3]. 특징은 navy·purple·pink·red·orange·yellow·olive·green·teal·cobalt·blue 11개 hue를 각각 300/400/500 명도 + 알파 변형으로 갖춘 무지개 액센트 팔레트다 [src:3][src:4].
 
 아래 팔레트의 출처는 셋이다 — 핸드오프 번들 `colors_and_type.css`(Bezier **beta 토큰 팔레트**를 정답으로 삼은 파일)에서 온 43개는 번들 값을 ko-design-md 표준 OKLCH로 변환한 것이고, 나머지 beta 키는 `dist/beta` 원시값 블록에서, `stable-*` 키는 기본 tier `dist/css/styles.css` 에서 직접 옮겼다(감사 메모 참조) — 1차 액션은 indigo-violet 계열 `blue-400`이고, 원본이 hex로 발행돼 OKLCH 변환에 미세한 오차가 있을 수 있다 [src:3].
 
@@ -683,7 +939,7 @@ Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3
 
 ### Semantic (라이트/다크 분리)
 
-시맨틱 토큰은 같은 이름이 테마별로 다른 글로벌을 참조한다 [src:3][src:2]. `@channel.io/bezier-tokens` 는 이 역할 층을 세 벌 발행한다 — 기본 tier 의 `--bg-*`·`--txt-*`(표면·텍스트 27개), beta tier 의 `--color-text-*`·`--color-fill-*` 등(346개 — 원시값을 가리키는 163개와 hex 를 직접 적은 183개), 그리고 alpha tier 의 `--alpha-color-*` 다 [src:3]. 이 문서는 기본·beta 두 벌을 싣고 alpha 는 아직 싣지 않았다(알려진 공백). 두 층은 이름 체계도 다르고(`txt-black-darkest` 대 `text-neutral`) 가리키는 원시값도 각자 자기 tier 의 것이다. 컴포넌트 문서가 부르는 이름은 beta 쪽이고(`--color-fill-accent-green-heavier` 등) [src:2], 기본 tier 이름도 패키지 기본 엔트리로 계속 발행되므로 둘 다 싣는다. 아래 표에서 beta 역할 이름은 상류 CSS 이름에서 `--color-` 를 뗀 것이다(`text-neutral` = `--color-text-neutral`). 칸이 참조 하나뿐이면 그 칸이 frontmatter 참조 행(다크는 `dark-` 앞붙임)으로도 실려 있다. beta 층에서 원시값을 가리키는 역할은 모든 칸이 beta 팔레트의 참조이고, hex 를 직접 적은 역할은 그 값을 상류 hex ≈ OKLCH 로 적은 표에만 있다. 기본 tier 층은 모든 칸이 기본 tier 원시값을 따로 실은 `stable-*` 키의 참조다 — beta 와 값이 같은 단계도 다른 파일의 다른 토큰이라 beta 키를 가리키지 않는다.
+시맨틱 토큰은 같은 이름이 테마별로 다른 글로벌을 참조한다 [src:3][src:2]. `@channel.io/bezier-tokens` 는 이 역할 층을 세 벌 발행한다 — 기본 tier 의 `--bg-*`·`--txt-*`·`--bgtxt-*`·`--bdr-*`·`--shdw-*`(색 역할 103개), beta tier 의 `--color-text-*`·`--color-fill-*` 등(346개 — 원시값을 가리키는 163개와 hex 를 직접 적은 183개), 그리고 alpha tier 의 `--alpha-color-*` 다 [src:3]. 이 문서는 기본·beta 두 벌을 싣고 alpha 는 아직 싣지 않았다(알려진 공백). 두 층은 이름 체계도 다르고(`txt-black-darkest` 대 `text-neutral`) 가리키는 원시값도 각자 자기 tier 의 것이다. 컴포넌트 문서가 부르는 이름은 beta 쪽이고(`--color-fill-accent-green-heavier` 등) [src:2], 기본 tier 이름도 패키지 기본 엔트리로 계속 발행되므로 둘 다 싣는다. 아래 표에서 beta 역할 이름은 상류 CSS 이름에서 `--color-` 를 뗀 것이다(`text-neutral` = `--color-text-neutral`). 칸이 참조 하나뿐이면 그 칸이 frontmatter 참조 행(다크는 `dark-` 앞붙임)으로도 실려 있다. beta 층에서 원시값을 가리키는 역할은 모든 칸이 beta 팔레트의 참조이고, hex 를 직접 적은 역할은 그 값을 상류 hex ≈ OKLCH 로 적은 표에만 있다. 기본 tier 층은 모든 칸이 기본 tier 원시값을 따로 실은 `stable-*` 키의 참조다 — beta 와 값이 같은 단계도 다른 파일의 다른 토큰이라 beta 키를 가리키지 않는다.
 
 - **컴포넌트 토큰**: `--color-fill-*`, `--color-text-*`, `--color-icon-*`, `--color-border-*`, `--color-surface-*`, `--color-state-action-light`, `--color-dim-absolute-black` 네임스페이스로 노출된다 [src:2].
 - foundation `color.mdx`는 토큰을 Global → Light → Dark 3섹션 스와치로 문서화하며, 라이트는 흰 패널·다크는 짙은 `--color-surface` 패널에 렌더해 양 테마 동시 검수를 전제한다 [src:2].
@@ -719,6 +975,97 @@ Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3
 | `bg-white-low` | `{colors.stable-white-100}` | `{colors.stable-grey-800}` |
 | `bg-white-normal` | `{colors.stable-white-100}` | `{colors.stable-grey-900}` |
 | `bg-white-high` | `{colors.stable-white-100}` | `{colors.stable-grey-700}` |
+
+#### 기본 tier 배경·글자 겸용 색 (`bgtxt-*`)
+
+| 역할 | 라이트 | 다크 |
+| --- | --- | --- |
+| `bgtxt-absolute-white-lightest` | `{colors.stable-white-20}` | `{colors.stable-white-20}` |
+| `bgtxt-absolute-white-lighter` | `{colors.stable-white-40}` | `{colors.stable-white-40}` |
+| `bgtxt-absolute-white-light` | `{colors.stable-white-60}` | `{colors.stable-white-60}` |
+| `bgtxt-absolute-white-normal` | `{colors.stable-white-90}` | `{colors.stable-white-90}` |
+| `bgtxt-absolute-white-dark` | `{colors.stable-white-100}` | `{colors.stable-white-100}` |
+| `bgtxt-absolute-black-lightest` | `{colors.stable-black-20}` | `{colors.stable-black-20}` |
+| `bgtxt-absolute-black-lighter` | `{colors.stable-black-40}` | `{colors.stable-black-40}` |
+| `bgtxt-absolute-black-light` | `{colors.stable-black-60}` | `{colors.stable-black-60}` |
+| `bgtxt-absolute-black-normal` | `{colors.stable-black-85}` | `{colors.stable-black-85}` |
+| `bgtxt-absolute-black-dark` | `{colors.stable-black-100}` | `{colors.stable-black-100}` |
+| `bgtxt-navy-lightest` | `{colors.stable-navy-400-10}` | `{colors.stable-navy-300-20}` |
+| `bgtxt-navy-lighter` | `{colors.stable-navy-400-20}` | `{colors.stable-navy-300-30}` |
+| `bgtxt-navy-light` | `{colors.stable-navy-400-30}` | `{colors.stable-navy-300-40}` |
+| `bgtxt-navy-normal` | `{colors.stable-navy-400}` | `{colors.stable-navy-300}` |
+| `bgtxt-navy-dark` | `{colors.stable-navy-500}` | `{colors.stable-navy-400}` |
+| `bgtxt-purple-lightest` | `{colors.stable-purple-400-10}` | `{colors.stable-purple-300-20}` |
+| `bgtxt-purple-lighter` | `{colors.stable-purple-400-20}` | `{colors.stable-purple-300-30}` |
+| `bgtxt-purple-light` | `{colors.stable-purple-400-30}` | `{colors.stable-purple-300-40}` |
+| `bgtxt-purple-normal` | `{colors.stable-purple-400}` | `{colors.stable-purple-300}` |
+| `bgtxt-purple-dark` | `{colors.stable-purple-500}` | `{colors.stable-purple-400}` |
+| `bgtxt-pink-lightest` | `{colors.stable-pink-400-10}` | `{colors.stable-pink-300-20}` |
+| `bgtxt-pink-lighter` | `{colors.stable-pink-400-20}` | `{colors.stable-pink-300-30}` |
+| `bgtxt-pink-light` | `{colors.stable-pink-400-30}` | `{colors.stable-pink-300-40}` |
+| `bgtxt-pink-normal` | `{colors.stable-pink-400}` | `{colors.stable-pink-300}` |
+| `bgtxt-pink-dark` | `{colors.stable-pink-500}` | `{colors.stable-pink-400}` |
+| `bgtxt-red-lightest` | `{colors.stable-red-400-10}` | `{colors.stable-red-300-20}` |
+| `bgtxt-red-lighter` | `{colors.stable-red-400-20}` | `{colors.stable-red-300-30}` |
+| `bgtxt-red-light` | `{colors.stable-red-400-30}` | `{colors.stable-red-300-40}` |
+| `bgtxt-red-normal` | `{colors.stable-red-400}` | `{colors.stable-red-300}` |
+| `bgtxt-red-dark` | `{colors.stable-red-500}` | `{colors.stable-red-400}` |
+| `bgtxt-orange-lightest` | `{colors.stable-orange-400-10}` | `{colors.stable-orange-300-20}` |
+| `bgtxt-orange-lighter` | `{colors.stable-orange-400-20}` | `{colors.stable-orange-300-30}` |
+| `bgtxt-orange-light` | `{colors.stable-orange-400-30}` | `{colors.stable-orange-300-40}` |
+| `bgtxt-orange-normal` | `{colors.stable-orange-400}` | `{colors.stable-orange-300}` |
+| `bgtxt-orange-dark` | `{colors.stable-orange-500}` | `{colors.stable-orange-400}` |
+| `bgtxt-yellow-lightest` | `{colors.stable-yellow-400-10}` | `{colors.stable-yellow-300-20}` |
+| `bgtxt-yellow-lighter` | `{colors.stable-yellow-400-20}` | `{colors.stable-yellow-300-30}` |
+| `bgtxt-yellow-light` | `{colors.stable-yellow-400-30}` | `{colors.stable-yellow-300-40}` |
+| `bgtxt-yellow-normal` | `{colors.stable-yellow-400}` | `{colors.stable-yellow-300}` |
+| `bgtxt-yellow-dark` | `{colors.stable-yellow-500}` | `{colors.stable-yellow-400}` |
+| `bgtxt-olive-lightest` | `{colors.stable-olive-400-10}` | `{colors.stable-olive-300-20}` |
+| `bgtxt-olive-lighter` | `{colors.stable-olive-400-20}` | `{colors.stable-olive-300-30}` |
+| `bgtxt-olive-light` | `{colors.stable-olive-400-30}` | `{colors.stable-olive-300-40}` |
+| `bgtxt-olive-normal` | `{colors.stable-olive-400}` | `{colors.stable-olive-300}` |
+| `bgtxt-olive-dark` | `{colors.stable-olive-500}` | `{colors.stable-olive-400}` |
+| `bgtxt-green-lightest` | `{colors.stable-green-400-10}` | `{colors.stable-green-300-20}` |
+| `bgtxt-green-lighter` | `{colors.stable-green-400-20}` | `{colors.stable-green-300-30}` |
+| `bgtxt-green-light` | `{colors.stable-green-400-30}` | `{colors.stable-green-300-40}` |
+| `bgtxt-green-normal` | `{colors.stable-green-400}` | `{colors.stable-green-300}` |
+| `bgtxt-green-dark` | `{colors.stable-green-500}` | `{colors.stable-green-400}` |
+| `bgtxt-teal-lightest` | `{colors.stable-teal-400-10}` | `{colors.stable-teal-300-20}` |
+| `bgtxt-teal-lighter` | `{colors.stable-teal-400-20}` | `{colors.stable-teal-300-30}` |
+| `bgtxt-teal-light` | `{colors.stable-teal-400-30}` | `{colors.stable-teal-300-40}` |
+| `bgtxt-teal-normal` | `{colors.stable-teal-400}` | `{colors.stable-teal-300}` |
+| `bgtxt-teal-dark` | `{colors.stable-teal-500}` | `{colors.stable-teal-400}` |
+| `bgtxt-cobalt-lightest` | `{colors.stable-cobalt-400-10}` | `{colors.stable-cobalt-300-20}` |
+| `bgtxt-cobalt-lighter` | `{colors.stable-cobalt-400-20}` | `{colors.stable-cobalt-300-30}` |
+| `bgtxt-cobalt-light` | `{colors.stable-cobalt-400-30}` | `{colors.stable-cobalt-300-40}` |
+| `bgtxt-cobalt-normal` | `{colors.stable-cobalt-400}` | `{colors.stable-cobalt-300}` |
+| `bgtxt-cobalt-dark` | `{colors.stable-cobalt-500}` | `{colors.stable-cobalt-400}` |
+| `bgtxt-blue-lightest` | `{colors.stable-blue-400-10}` | `{colors.stable-blue-300-20}` |
+| `bgtxt-blue-lighter` | `{colors.stable-blue-400-20}` | `{colors.stable-blue-300-30}` |
+| `bgtxt-blue-light` | `{colors.stable-blue-400-30}` | `{colors.stable-blue-300-40}` |
+| `bgtxt-blue-normal` | `{colors.stable-blue-400}` | `{colors.stable-blue-300}` |
+| `bgtxt-blue-dark` | `{colors.stable-blue-500}` | `{colors.stable-blue-400}` |
+
+#### 기본 tier 보더 (`bdr-*`)
+
+| 역할 | 라이트 | 다크 |
+| --- | --- | --- |
+| `bdr-white` | `{colors.stable-white-100}` | `{colors.stable-grey-700}` |
+| `bdr-grey-light` | `{colors.stable-grey-200}` | `{colors.stable-grey-700}` |
+| `bdr-black-lightest` | `{colors.stable-black-3}` | `{colors.stable-white-5}` |
+| `bdr-black-light` | `{colors.stable-black-8}` | `{colors.stable-white-12}` |
+| `bdr-black-dark` | `{colors.stable-black-15}` | `{colors.stable-white-20}` |
+
+#### 기본 tier 그림자 색 (`shdw-*`)
+
+| 역할 | 라이트 | 다크 |
+| --- | --- | --- |
+| `shdw-inner-base` | `{colors.stable-white-12}` | `{colors.stable-white-8}` |
+| `shdw-base` | `{colors.stable-black-5}` | `{colors.stable-black-8}` |
+| `shdw-small` | `{colors.stable-black-8}` | `{colors.stable-black-15}` |
+| `shdw-medium` | `{colors.stable-black-15}` | `{colors.stable-black-20}` |
+| `shdw-large` | `{colors.stable-black-22}` | `{colors.stable-black-40}` |
+| `shdw-xlarge` | `{colors.stable-black-30}` | `{colors.stable-black-60}` |
 
 #### beta tier 텍스트 (`text-*`)
 
@@ -1151,7 +1498,7 @@ z-index 레이어는 명시적으로 단계화돼 있다 [src:3][src:2]:
 
 엘리베이션은 `--ev-1`~`--ev-6` 6단계이며, 각 단계가 inner-shadow + base-shadow + 점증하는 blur를 합성한다 — `--ev-3`은 `…, 0 4px 12px 0 var(--shdw-medium)`, `--ev-6`은 `…, 0 12px 60px 0 var(--shdw-xlarge)` 식으로 단계가 올라갈수록 퍼짐이 커진다 [src:3]. 컴포넌트는 `--elevation-1`~`--elevation-4`로 사용하며, 모달이 `--elevation-4`, 토스트·셀렉트가 `--elevation-3`, 배너가 `--elevation-2`다 [src:2].
 
-깊이 언어도 라이트·다크 양 테마를 동등하게 다룬다 — 라이트와 다크가 `--shdw-*`를 black-알파 ↔ white/black-알파로 다르게 매핑해 테마별 그림자 강도를 보정한다 [src:3]. 다크는 별도 후처리가 아니라 그림자 토큰 레벨에서부터 분기되는 1급 테마다 [src:3][src:2].
+깊이 언어도 라이트·다크 양 테마를 동등하게 다룬다 — 라이트와 다크가 `--shdw-*`를 서로 다른 알파 단계로 매핑해 테마별 그림자 강도를 보정한다 — 라이트 `shdw-medium` 은 `{colors.stable-black-15}`, 다크는 `{colors.stable-black-20}` 이고, white 알파는 `shdw-inner-base` 하나다(Colors 절 「기본 tier 그림자 색」 표) [src:3]. 다크는 별도 후처리가 아니라 그림자 토큰 레벨에서부터 분기되는 1급 테마다 [src:3][src:2].
 
 ```text
 # 컴포넌트 노출 단계 (--elevation-1 ~ --elevation-4)

@@ -830,6 +830,18 @@
       "group": "Stable tier palette"
     },
     {
+      "name": "stable-black-30",
+      "value": "oklch(0 0 0 / 0.30)",
+      "note": "#0000004d · 상류 기본 tier --black-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-black-22",
+      "value": "oklch(0 0 0 / 0.22)",
+      "note": "#00000038 · 상류 기본 tier --black-22",
+      "group": "Stable tier palette"
+    },
+    {
       "name": "stable-black-20",
       "value": "oklch(0 0 0 / 0.20)",
       "note": "#00000033 · 상류 기본 tier --black-20",
@@ -1007,6 +1019,600 @@
       "name": "stable-grey-50",
       "value": "oklch(0.991 0 0)",
       "note": "#fcfcfc · 상류 기본 tier --grey-50",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-navy-400-10",
+      "value": "oklch(0.442 0.105 268 / 0.10)",
+      "note": "#3a4f8d1a · 상류 기본 tier --navy-400-10",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-navy-400-20",
+      "value": "oklch(0.442 0.105 268 / 0.20)",
+      "note": "#3a4f8d33 · 상류 기본 tier --navy-400-20",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-navy-400-30",
+      "value": "oklch(0.442 0.105 268 / 0.30)",
+      "note": "#3a4f8d4d · 상류 기본 tier --navy-400-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-navy-300-20",
+      "value": "oklch(0.602 0.121 269 / 0.20)",
+      "note": "#647cc933 · 상류 기본 tier --navy-300-20",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-navy-300-30",
+      "value": "oklch(0.602 0.121 269 / 0.30)",
+      "note": "#647cc94d · 상류 기본 tier --navy-300-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-navy-300-40",
+      "value": "oklch(0.602 0.121 269 / 0.40)",
+      "note": "#647cc966 · 상류 기본 tier --navy-300-40",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-navy-500",
+      "value": "oklch(0.365 0.054 270)",
+      "note": "#333d5b · 상류 기본 tier --navy-500",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-navy-400",
+      "value": "oklch(0.442 0.105 268)",
+      "note": "#3a4f8d · 상류 기본 tier --navy-400",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-navy-300",
+      "value": "oklch(0.602 0.121 269)",
+      "note": "#647cc9 · 상류 기본 tier --navy-300",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-purple-400-10",
+      "value": "oklch(0.596 0.194 299 / 0.10)",
+      "note": "#915ce01a · 상류 기본 tier --purple-400-10",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-purple-400-20",
+      "value": "oklch(0.596 0.194 299 / 0.20)",
+      "note": "#915ce033 · 상류 기본 tier --purple-400-20",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-purple-400-30",
+      "value": "oklch(0.596 0.194 299 / 0.30)",
+      "note": "#915ce04d · 상류 기본 tier --purple-400-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-purple-300-20",
+      "value": "oklch(0.682 0.208 304 / 0.20)",
+      "note": "#b570ff33 · 상류 기본 tier --purple-300-20",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-purple-300-30",
+      "value": "oklch(0.682 0.208 304 / 0.30)",
+      "note": "#b570ff4d · 상류 기본 tier --purple-300-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-purple-300-40",
+      "value": "oklch(0.682 0.208 304 / 0.40)",
+      "note": "#b570ff66 · 상류 기본 tier --purple-300-40",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-purple-500",
+      "value": "oklch(0.450 0.207 301)",
+      "note": "#6b23b3 · 상류 기본 tier --purple-500",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-purple-400",
+      "value": "oklch(0.596 0.194 299)",
+      "note": "#915ce0 · 상류 기본 tier --purple-400",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-purple-300",
+      "value": "oklch(0.682 0.208 304)",
+      "note": "#b570ff · 상류 기본 tier --purple-300",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-pink-400-10",
+      "value": "oklch(0.614 0.199 338 / 0.10)",
+      "note": "#cb48ad1a · 상류 기본 tier --pink-400-10",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-pink-400-20",
+      "value": "oklch(0.614 0.199 338 / 0.20)",
+      "note": "#cb48ad33 · 상류 기본 tier --pink-400-20",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-pink-400-30",
+      "value": "oklch(0.614 0.199 338 / 0.30)",
+      "note": "#cb48ad4d · 상류 기본 tier --pink-400-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-pink-300-20",
+      "value": "oklch(0.722 0.192 336 / 0.20)",
+      "note": "#ec6fd333 · 상류 기본 tier --pink-300-20",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-pink-300-30",
+      "value": "oklch(0.722 0.192 336 / 0.30)",
+      "note": "#ec6fd34d · 상류 기본 tier --pink-300-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-pink-300-40",
+      "value": "oklch(0.722 0.192 336 / 0.40)",
+      "note": "#ec6fd366 · 상류 기본 tier --pink-300-40",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-pink-500",
+      "value": "oklch(0.515 0.187 334)",
+      "note": "#a32e92 · 상류 기본 tier --pink-500",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-pink-400",
+      "value": "oklch(0.614 0.199 338)",
+      "note": "#cb48ad · 상류 기본 tier --pink-400",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-pink-300",
+      "value": "oklch(0.722 0.192 336)",
+      "note": "#ec6fd3 · 상류 기본 tier --pink-300",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-red-400-10",
+      "value": "oklch(0.640 0.191 21 / 0.10)",
+      "note": "#e94e581a · 상류 기본 tier --red-400-10",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-red-400-20",
+      "value": "oklch(0.640 0.191 21 / 0.20)",
+      "note": "#e94e5833 · 상류 기본 tier --red-400-20",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-red-400-30",
+      "value": "oklch(0.640 0.191 21 / 0.30)",
+      "note": "#e94e584d · 상류 기본 tier --red-400-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-red-300-20",
+      "value": "oklch(0.691 0.199 24 / 0.20)",
+      "note": "#ff5c5c33 · 상류 기본 tier --red-300-20",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-red-300-30",
+      "value": "oklch(0.691 0.199 24 / 0.30)",
+      "note": "#ff5c5c4d · 상류 기본 tier --red-300-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-red-300-40",
+      "value": "oklch(0.691 0.199 24 / 0.40)",
+      "note": "#ff5c5c66 · 상류 기본 tier --red-300-40",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-red-500",
+      "value": "oklch(0.520 0.144 19)",
+      "note": "#ac3e46 · 상류 기본 tier --red-500",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-red-400",
+      "value": "oklch(0.640 0.191 21)",
+      "note": "#e94e58 · 상류 기본 tier --red-400",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-red-300",
+      "value": "oklch(0.691 0.199 24)",
+      "note": "#ff5c5c · 상류 기본 tier --red-300",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-orange-400-10",
+      "value": "oklch(0.717 0.175 55 / 0.10)",
+      "note": "#f4800b1a · 상류 기본 tier --orange-400-10",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-orange-400-20",
+      "value": "oklch(0.717 0.175 55 / 0.20)",
+      "note": "#f4800b33 · 상류 기본 tier --orange-400-20",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-orange-400-30",
+      "value": "oklch(0.717 0.175 55 / 0.30)",
+      "note": "#f4800b4d · 상류 기본 tier --orange-400-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-orange-300-20",
+      "value": "oklch(0.809 0.137 62 / 0.20)",
+      "note": "#ffab5c33 · 상류 기본 tier --orange-300-20",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-orange-300-30",
+      "value": "oklch(0.809 0.137 62 / 0.30)",
+      "note": "#ffab5c4d · 상류 기본 tier --orange-300-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-orange-300-40",
+      "value": "oklch(0.809 0.137 62 / 0.40)",
+      "note": "#ffab5c66 · 상류 기본 tier --orange-300-40",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-orange-500",
+      "value": "oklch(0.635 0.139 62)",
+      "note": "#c57417 · 상류 기본 tier --orange-500",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-orange-400",
+      "value": "oklch(0.717 0.175 55)",
+      "note": "#f4800b · 상류 기본 tier --orange-400",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-orange-300",
+      "value": "oklch(0.809 0.137 62)",
+      "note": "#ffab5c · 상류 기본 tier --orange-300",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-yellow-400-10",
+      "value": "oklch(0.818 0.146 86 / 0.10)",
+      "note": "#edbc401a · 상류 기본 tier --yellow-400-10",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-yellow-400-20",
+      "value": "oklch(0.818 0.146 86 / 0.20)",
+      "note": "#edbc4033 · 상류 기본 tier --yellow-400-20",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-yellow-400-30",
+      "value": "oklch(0.818 0.146 86 / 0.30)",
+      "note": "#edbc404d · 상류 기본 tier --yellow-400-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-yellow-300-20",
+      "value": "oklch(0.880 0.150 91 / 0.20)",
+      "note": "#fdd35333 · 상류 기본 tier --yellow-300-20",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-yellow-300-30",
+      "value": "oklch(0.880 0.150 91 / 0.30)",
+      "note": "#fdd3534d · 상류 기본 tier --yellow-300-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-yellow-300-40",
+      "value": "oklch(0.880 0.150 91 / 0.40)",
+      "note": "#fdd35366 · 상류 기본 tier --yellow-300-40",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-yellow-500",
+      "value": "oklch(0.715 0.126 89)",
+      "note": "#c39e37 · 상류 기본 tier --yellow-500",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-yellow-400",
+      "value": "oklch(0.818 0.146 86)",
+      "note": "#edbc40 · 상류 기본 tier --yellow-400",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-yellow-300",
+      "value": "oklch(0.880 0.150 91)",
+      "note": "#fdd353 · 상류 기본 tier --yellow-300",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-olive-400-10",
+      "value": "oklch(0.698 0.124 112 / 0.10)",
+      "note": "#a0a5401a · 상류 기본 tier --olive-400-10",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-olive-400-20",
+      "value": "oklch(0.698 0.124 112 / 0.20)",
+      "note": "#a0a54033 · 상류 기본 tier --olive-400-20",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-olive-400-30",
+      "value": "oklch(0.698 0.124 112 / 0.30)",
+      "note": "#a0a5404d · 상류 기본 tier --olive-400-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-olive-300-20",
+      "value": "oklch(0.839 0.161 114 / 0.20)",
+      "note": "#cad54833 · 상류 기본 tier --olive-300-20",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-olive-300-30",
+      "value": "oklch(0.839 0.161 114 / 0.30)",
+      "note": "#cad5484d · 상류 기본 tier --olive-300-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-olive-300-40",
+      "value": "oklch(0.839 0.161 114 / 0.40)",
+      "note": "#cad54866 · 상류 기본 tier --olive-300-40",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-olive-500",
+      "value": "oklch(0.598 0.115 112)",
+      "note": "#818628 · 상류 기본 tier --olive-500",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-olive-400",
+      "value": "oklch(0.698 0.124 112)",
+      "note": "#a0a540 · 상류 기본 tier --olive-400",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-olive-300",
+      "value": "oklch(0.839 0.161 114)",
+      "note": "#cad548 · 상류 기본 tier --olive-300",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-green-400-10",
+      "value": "oklch(0.639 0.158 149 / 0.10)",
+      "note": "#31a5521a · 상류 기본 tier --green-400-10",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-green-400-20",
+      "value": "oklch(0.639 0.158 149 / 0.20)",
+      "note": "#31a55233 · 상류 기본 tier --green-400-20",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-green-400-30",
+      "value": "oklch(0.639 0.158 149 / 0.30)",
+      "note": "#31a5524d · 상류 기본 tier --green-400-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-green-300-20",
+      "value": "oklch(0.753 0.202 147 / 0.20)",
+      "note": "#3acf5a33 · 상류 기본 tier --green-300-20",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-green-300-30",
+      "value": "oklch(0.753 0.202 147 / 0.30)",
+      "note": "#3acf5a4d · 상류 기본 tier --green-300-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-green-300-40",
+      "value": "oklch(0.753 0.202 147 / 0.40)",
+      "note": "#3acf5a66 · 상류 기본 tier --green-300-40",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-green-500",
+      "value": "oklch(0.587 0.125 148)",
+      "note": "#41904f · 상류 기본 tier --green-500",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-green-400",
+      "value": "oklch(0.639 0.158 149)",
+      "note": "#31a552 · 상류 기본 tier --green-400",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-green-300",
+      "value": "oklch(0.753 0.202 147)",
+      "note": "#3acf5a · 상류 기본 tier --green-300",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-teal-400-10",
+      "value": "oklch(0.690 0.121 184 / 0.10)",
+      "note": "#0fb3a31a · 상류 기본 tier --teal-400-10",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-teal-400-20",
+      "value": "oklch(0.690 0.121 184 / 0.20)",
+      "note": "#0fb3a333 · 상류 기본 tier --teal-400-20",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-teal-400-30",
+      "value": "oklch(0.690 0.121 184 / 0.30)",
+      "note": "#0fb3a34d · 상류 기본 tier --teal-400-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-teal-300-20",
+      "value": "oklch(0.813 0.131 185 / 0.20)",
+      "note": "#3cddcd33 · 상류 기본 tier --teal-300-20",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-teal-300-30",
+      "value": "oklch(0.813 0.131 185 / 0.30)",
+      "note": "#3cddcd4d · 상류 기본 tier --teal-300-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-teal-300-40",
+      "value": "oklch(0.813 0.131 185 / 0.40)",
+      "note": "#3cddcd66 · 상류 기본 tier --teal-300-40",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-teal-500",
+      "value": "oklch(0.634 0.089 178)",
+      "note": "#449c8a · 상류 기본 tier --teal-500",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-teal-400",
+      "value": "oklch(0.690 0.121 184)",
+      "note": "#0fb3a3 · 상류 기본 tier --teal-400",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-teal-300",
+      "value": "oklch(0.813 0.131 185)",
+      "note": "#3cddcd · 상류 기본 tier --teal-300",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-cobalt-400-10",
+      "value": "oklch(0.666 0.146 245 / 0.10)",
+      "note": "#329be71a · 상류 기본 tier --cobalt-400-10",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-cobalt-400-20",
+      "value": "oklch(0.666 0.146 245 / 0.20)",
+      "note": "#329be733 · 상류 기본 tier --cobalt-400-20",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-cobalt-400-30",
+      "value": "oklch(0.666 0.146 245 / 0.30)",
+      "note": "#329be74d · 상류 기본 tier --cobalt-400-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-cobalt-300-20",
+      "value": "oklch(0.785 0.135 231 / 0.20)",
+      "note": "#47c8ff33 · 상류 기본 tier --cobalt-300-20",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-cobalt-300-30",
+      "value": "oklch(0.785 0.135 231 / 0.30)",
+      "note": "#47c8ff4d · 상류 기본 tier --cobalt-300-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-cobalt-300-40",
+      "value": "oklch(0.785 0.135 231 / 0.40)",
+      "note": "#47c8ff66 · 상류 기본 tier --cobalt-300-40",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-cobalt-500",
+      "value": "oklch(0.564 0.120 248)",
+      "note": "#327ab8 · 상류 기본 tier --cobalt-500",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-cobalt-400",
+      "value": "oklch(0.666 0.146 245)",
+      "note": "#329be7 · 상류 기본 tier --cobalt-400",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-cobalt-300",
+      "value": "oklch(0.785 0.135 231)",
+      "note": "#47c8ff · 상류 기본 tier --cobalt-300",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-blue-400-10",
+      "value": "oklch(0.555 0.223 279 / 0.10)",
+      "note": "#5e56f01a · 상류 기본 tier --blue-400-10",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-blue-400-20",
+      "value": "oklch(0.555 0.223 279 / 0.20)",
+      "note": "#5e56f033 · 상류 기본 tier --blue-400-20",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-blue-400-30",
+      "value": "oklch(0.555 0.223 279 / 0.30)",
+      "note": "#5e56f04d · 상류 기본 tier --blue-400-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-blue-300-20",
+      "value": "oklch(0.658 0.181 269 / 0.20)",
+      "note": "#6687ff33 · 상류 기본 tier --blue-300-20",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-blue-300-30",
+      "value": "oklch(0.658 0.181 269 / 0.30)",
+      "note": "#6687ff4d · 상류 기본 tier --blue-300-30",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-blue-300-40",
+      "value": "oklch(0.658 0.181 269 / 0.40)",
+      "note": "#6687ff66 · 상류 기본 tier --blue-300-40",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-blue-500",
+      "value": "oklch(0.476 0.203 280)",
+      "note": "#4e40c9 · 상류 기본 tier --blue-500",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-blue-400",
+      "value": "oklch(0.555 0.223 279)",
+      "note": "#5e56f0 · 상류 기본 tier --blue-400",
+      "group": "Stable tier palette"
+    },
+    {
+      "name": "stable-blue-300",
+      "value": "oklch(0.658 0.181 269)",
+      "note": "#6687ff · 상류 기본 tier --blue-300",
       "group": "Stable tier palette"
     },
     {
@@ -1332,6 +1938,918 @@
       "value": "oklch(0.397 0.002 248)",
       "group": "Semantic bg-*·txt-* (stable tier)",
       "ref": "stable-grey-700"
+    },
+    {
+      "name": "bgtxt-absolute-white-lightest",
+      "value": "oklch(1 0 0 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-white-20"
+    },
+    {
+      "name": "dark-bgtxt-absolute-white-lightest",
+      "value": "oklch(1 0 0 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-white-20"
+    },
+    {
+      "name": "bgtxt-absolute-white-lighter",
+      "value": "oklch(1 0 0 / 0.40)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-white-40"
+    },
+    {
+      "name": "dark-bgtxt-absolute-white-lighter",
+      "value": "oklch(1 0 0 / 0.40)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-white-40"
+    },
+    {
+      "name": "bgtxt-absolute-white-light",
+      "value": "oklch(1 0 0 / 0.60)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-white-60"
+    },
+    {
+      "name": "dark-bgtxt-absolute-white-light",
+      "value": "oklch(1 0 0 / 0.60)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-white-60"
+    },
+    {
+      "name": "bgtxt-absolute-white-normal",
+      "value": "oklch(1 0 0 / 0.90)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-white-90"
+    },
+    {
+      "name": "dark-bgtxt-absolute-white-normal",
+      "value": "oklch(1 0 0 / 0.90)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-white-90"
+    },
+    {
+      "name": "bgtxt-absolute-white-dark",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-white-100"
+    },
+    {
+      "name": "dark-bgtxt-absolute-white-dark",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-white-100"
+    },
+    {
+      "name": "bgtxt-absolute-black-lightest",
+      "value": "oklch(0 0 0 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-black-20"
+    },
+    {
+      "name": "dark-bgtxt-absolute-black-lightest",
+      "value": "oklch(0 0 0 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-black-20"
+    },
+    {
+      "name": "bgtxt-absolute-black-lighter",
+      "value": "oklch(0 0 0 / 0.40)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-black-40"
+    },
+    {
+      "name": "dark-bgtxt-absolute-black-lighter",
+      "value": "oklch(0 0 0 / 0.40)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-black-40"
+    },
+    {
+      "name": "bgtxt-absolute-black-light",
+      "value": "oklch(0 0 0 / 0.60)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-black-60"
+    },
+    {
+      "name": "dark-bgtxt-absolute-black-light",
+      "value": "oklch(0 0 0 / 0.60)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-black-60"
+    },
+    {
+      "name": "bgtxt-absolute-black-normal",
+      "value": "oklch(0 0 0 / 0.85)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-black-85"
+    },
+    {
+      "name": "dark-bgtxt-absolute-black-normal",
+      "value": "oklch(0 0 0 / 0.85)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-black-85"
+    },
+    {
+      "name": "bgtxt-absolute-black-dark",
+      "value": "oklch(0 0 0)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-black-100"
+    },
+    {
+      "name": "dark-bgtxt-absolute-black-dark",
+      "value": "oklch(0 0 0)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-black-100"
+    },
+    {
+      "name": "bgtxt-navy-lightest",
+      "value": "oklch(0.442 0.105 268 / 0.10)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-navy-400-10"
+    },
+    {
+      "name": "dark-bgtxt-navy-lightest",
+      "value": "oklch(0.602 0.121 269 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-navy-300-20"
+    },
+    {
+      "name": "bgtxt-navy-lighter",
+      "value": "oklch(0.442 0.105 268 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-navy-400-20"
+    },
+    {
+      "name": "dark-bgtxt-navy-lighter",
+      "value": "oklch(0.602 0.121 269 / 0.30)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-navy-300-30"
+    },
+    {
+      "name": "bgtxt-navy-light",
+      "value": "oklch(0.442 0.105 268 / 0.30)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-navy-400-30"
+    },
+    {
+      "name": "dark-bgtxt-navy-light",
+      "value": "oklch(0.602 0.121 269 / 0.40)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-navy-300-40"
+    },
+    {
+      "name": "bgtxt-navy-normal",
+      "value": "oklch(0.442 0.105 268)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-navy-400"
+    },
+    {
+      "name": "dark-bgtxt-navy-normal",
+      "value": "oklch(0.602 0.121 269)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-navy-300"
+    },
+    {
+      "name": "bgtxt-navy-dark",
+      "value": "oklch(0.365 0.054 270)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-navy-500"
+    },
+    {
+      "name": "dark-bgtxt-navy-dark",
+      "value": "oklch(0.442 0.105 268)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-navy-400"
+    },
+    {
+      "name": "bgtxt-purple-lightest",
+      "value": "oklch(0.596 0.194 299 / 0.10)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-purple-400-10"
+    },
+    {
+      "name": "dark-bgtxt-purple-lightest",
+      "value": "oklch(0.682 0.208 304 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-purple-300-20"
+    },
+    {
+      "name": "bgtxt-purple-lighter",
+      "value": "oklch(0.596 0.194 299 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-purple-400-20"
+    },
+    {
+      "name": "dark-bgtxt-purple-lighter",
+      "value": "oklch(0.682 0.208 304 / 0.30)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-purple-300-30"
+    },
+    {
+      "name": "bgtxt-purple-light",
+      "value": "oklch(0.596 0.194 299 / 0.30)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-purple-400-30"
+    },
+    {
+      "name": "dark-bgtxt-purple-light",
+      "value": "oklch(0.682 0.208 304 / 0.40)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-purple-300-40"
+    },
+    {
+      "name": "bgtxt-purple-normal",
+      "value": "oklch(0.596 0.194 299)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-purple-400"
+    },
+    {
+      "name": "dark-bgtxt-purple-normal",
+      "value": "oklch(0.682 0.208 304)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-purple-300"
+    },
+    {
+      "name": "bgtxt-purple-dark",
+      "value": "oklch(0.450 0.207 301)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-purple-500"
+    },
+    {
+      "name": "dark-bgtxt-purple-dark",
+      "value": "oklch(0.596 0.194 299)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-purple-400"
+    },
+    {
+      "name": "bgtxt-pink-lightest",
+      "value": "oklch(0.614 0.199 338 / 0.10)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-pink-400-10"
+    },
+    {
+      "name": "dark-bgtxt-pink-lightest",
+      "value": "oklch(0.722 0.192 336 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-pink-300-20"
+    },
+    {
+      "name": "bgtxt-pink-lighter",
+      "value": "oklch(0.614 0.199 338 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-pink-400-20"
+    },
+    {
+      "name": "dark-bgtxt-pink-lighter",
+      "value": "oklch(0.722 0.192 336 / 0.30)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-pink-300-30"
+    },
+    {
+      "name": "bgtxt-pink-light",
+      "value": "oklch(0.614 0.199 338 / 0.30)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-pink-400-30"
+    },
+    {
+      "name": "dark-bgtxt-pink-light",
+      "value": "oklch(0.722 0.192 336 / 0.40)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-pink-300-40"
+    },
+    {
+      "name": "bgtxt-pink-normal",
+      "value": "oklch(0.614 0.199 338)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-pink-400"
+    },
+    {
+      "name": "dark-bgtxt-pink-normal",
+      "value": "oklch(0.722 0.192 336)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-pink-300"
+    },
+    {
+      "name": "bgtxt-pink-dark",
+      "value": "oklch(0.515 0.187 334)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-pink-500"
+    },
+    {
+      "name": "dark-bgtxt-pink-dark",
+      "value": "oklch(0.614 0.199 338)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-pink-400"
+    },
+    {
+      "name": "bgtxt-red-lightest",
+      "value": "oklch(0.640 0.191 21 / 0.10)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-red-400-10"
+    },
+    {
+      "name": "dark-bgtxt-red-lightest",
+      "value": "oklch(0.691 0.199 24 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-red-300-20"
+    },
+    {
+      "name": "bgtxt-red-lighter",
+      "value": "oklch(0.640 0.191 21 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-red-400-20"
+    },
+    {
+      "name": "dark-bgtxt-red-lighter",
+      "value": "oklch(0.691 0.199 24 / 0.30)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-red-300-30"
+    },
+    {
+      "name": "bgtxt-red-light",
+      "value": "oklch(0.640 0.191 21 / 0.30)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-red-400-30"
+    },
+    {
+      "name": "dark-bgtxt-red-light",
+      "value": "oklch(0.691 0.199 24 / 0.40)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-red-300-40"
+    },
+    {
+      "name": "bgtxt-red-normal",
+      "value": "oklch(0.640 0.191 21)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-red-400"
+    },
+    {
+      "name": "dark-bgtxt-red-normal",
+      "value": "oklch(0.691 0.199 24)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-red-300"
+    },
+    {
+      "name": "bgtxt-red-dark",
+      "value": "oklch(0.520 0.144 19)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-red-500"
+    },
+    {
+      "name": "dark-bgtxt-red-dark",
+      "value": "oklch(0.640 0.191 21)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-red-400"
+    },
+    {
+      "name": "bgtxt-orange-lightest",
+      "value": "oklch(0.717 0.175 55 / 0.10)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-orange-400-10"
+    },
+    {
+      "name": "dark-bgtxt-orange-lightest",
+      "value": "oklch(0.809 0.137 62 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-orange-300-20"
+    },
+    {
+      "name": "bgtxt-orange-lighter",
+      "value": "oklch(0.717 0.175 55 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-orange-400-20"
+    },
+    {
+      "name": "dark-bgtxt-orange-lighter",
+      "value": "oklch(0.809 0.137 62 / 0.30)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-orange-300-30"
+    },
+    {
+      "name": "bgtxt-orange-light",
+      "value": "oklch(0.717 0.175 55 / 0.30)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-orange-400-30"
+    },
+    {
+      "name": "dark-bgtxt-orange-light",
+      "value": "oklch(0.809 0.137 62 / 0.40)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-orange-300-40"
+    },
+    {
+      "name": "bgtxt-orange-normal",
+      "value": "oklch(0.717 0.175 55)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-orange-400"
+    },
+    {
+      "name": "dark-bgtxt-orange-normal",
+      "value": "oklch(0.809 0.137 62)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-orange-300"
+    },
+    {
+      "name": "bgtxt-orange-dark",
+      "value": "oklch(0.635 0.139 62)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-orange-500"
+    },
+    {
+      "name": "dark-bgtxt-orange-dark",
+      "value": "oklch(0.717 0.175 55)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-orange-400"
+    },
+    {
+      "name": "bgtxt-yellow-lightest",
+      "value": "oklch(0.818 0.146 86 / 0.10)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-yellow-400-10"
+    },
+    {
+      "name": "dark-bgtxt-yellow-lightest",
+      "value": "oklch(0.880 0.150 91 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-yellow-300-20"
+    },
+    {
+      "name": "bgtxt-yellow-lighter",
+      "value": "oklch(0.818 0.146 86 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-yellow-400-20"
+    },
+    {
+      "name": "dark-bgtxt-yellow-lighter",
+      "value": "oklch(0.880 0.150 91 / 0.30)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-yellow-300-30"
+    },
+    {
+      "name": "bgtxt-yellow-light",
+      "value": "oklch(0.818 0.146 86 / 0.30)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-yellow-400-30"
+    },
+    {
+      "name": "dark-bgtxt-yellow-light",
+      "value": "oklch(0.880 0.150 91 / 0.40)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-yellow-300-40"
+    },
+    {
+      "name": "bgtxt-yellow-normal",
+      "value": "oklch(0.818 0.146 86)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-yellow-400"
+    },
+    {
+      "name": "dark-bgtxt-yellow-normal",
+      "value": "oklch(0.880 0.150 91)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-yellow-300"
+    },
+    {
+      "name": "bgtxt-yellow-dark",
+      "value": "oklch(0.715 0.126 89)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-yellow-500"
+    },
+    {
+      "name": "dark-bgtxt-yellow-dark",
+      "value": "oklch(0.818 0.146 86)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-yellow-400"
+    },
+    {
+      "name": "bgtxt-olive-lightest",
+      "value": "oklch(0.698 0.124 112 / 0.10)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-olive-400-10"
+    },
+    {
+      "name": "dark-bgtxt-olive-lightest",
+      "value": "oklch(0.839 0.161 114 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-olive-300-20"
+    },
+    {
+      "name": "bgtxt-olive-lighter",
+      "value": "oklch(0.698 0.124 112 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-olive-400-20"
+    },
+    {
+      "name": "dark-bgtxt-olive-lighter",
+      "value": "oklch(0.839 0.161 114 / 0.30)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-olive-300-30"
+    },
+    {
+      "name": "bgtxt-olive-light",
+      "value": "oklch(0.698 0.124 112 / 0.30)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-olive-400-30"
+    },
+    {
+      "name": "dark-bgtxt-olive-light",
+      "value": "oklch(0.839 0.161 114 / 0.40)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-olive-300-40"
+    },
+    {
+      "name": "bgtxt-olive-normal",
+      "value": "oklch(0.698 0.124 112)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-olive-400"
+    },
+    {
+      "name": "dark-bgtxt-olive-normal",
+      "value": "oklch(0.839 0.161 114)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-olive-300"
+    },
+    {
+      "name": "bgtxt-olive-dark",
+      "value": "oklch(0.598 0.115 112)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-olive-500"
+    },
+    {
+      "name": "dark-bgtxt-olive-dark",
+      "value": "oklch(0.698 0.124 112)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-olive-400"
+    },
+    {
+      "name": "bgtxt-green-lightest",
+      "value": "oklch(0.639 0.158 149 / 0.10)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-green-400-10"
+    },
+    {
+      "name": "dark-bgtxt-green-lightest",
+      "value": "oklch(0.753 0.202 147 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-green-300-20"
+    },
+    {
+      "name": "bgtxt-green-lighter",
+      "value": "oklch(0.639 0.158 149 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-green-400-20"
+    },
+    {
+      "name": "dark-bgtxt-green-lighter",
+      "value": "oklch(0.753 0.202 147 / 0.30)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-green-300-30"
+    },
+    {
+      "name": "bgtxt-green-light",
+      "value": "oklch(0.639 0.158 149 / 0.30)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-green-400-30"
+    },
+    {
+      "name": "dark-bgtxt-green-light",
+      "value": "oklch(0.753 0.202 147 / 0.40)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-green-300-40"
+    },
+    {
+      "name": "bgtxt-green-normal",
+      "value": "oklch(0.639 0.158 149)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-green-400"
+    },
+    {
+      "name": "dark-bgtxt-green-normal",
+      "value": "oklch(0.753 0.202 147)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-green-300"
+    },
+    {
+      "name": "bgtxt-green-dark",
+      "value": "oklch(0.587 0.125 148)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-green-500"
+    },
+    {
+      "name": "dark-bgtxt-green-dark",
+      "value": "oklch(0.639 0.158 149)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-green-400"
+    },
+    {
+      "name": "bgtxt-teal-lightest",
+      "value": "oklch(0.690 0.121 184 / 0.10)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-teal-400-10"
+    },
+    {
+      "name": "dark-bgtxt-teal-lightest",
+      "value": "oklch(0.813 0.131 185 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-teal-300-20"
+    },
+    {
+      "name": "bgtxt-teal-lighter",
+      "value": "oklch(0.690 0.121 184 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-teal-400-20"
+    },
+    {
+      "name": "dark-bgtxt-teal-lighter",
+      "value": "oklch(0.813 0.131 185 / 0.30)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-teal-300-30"
+    },
+    {
+      "name": "bgtxt-teal-light",
+      "value": "oklch(0.690 0.121 184 / 0.30)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-teal-400-30"
+    },
+    {
+      "name": "dark-bgtxt-teal-light",
+      "value": "oklch(0.813 0.131 185 / 0.40)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-teal-300-40"
+    },
+    {
+      "name": "bgtxt-teal-normal",
+      "value": "oklch(0.690 0.121 184)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-teal-400"
+    },
+    {
+      "name": "dark-bgtxt-teal-normal",
+      "value": "oklch(0.813 0.131 185)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-teal-300"
+    },
+    {
+      "name": "bgtxt-teal-dark",
+      "value": "oklch(0.634 0.089 178)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-teal-500"
+    },
+    {
+      "name": "dark-bgtxt-teal-dark",
+      "value": "oklch(0.690 0.121 184)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-teal-400"
+    },
+    {
+      "name": "bgtxt-cobalt-lightest",
+      "value": "oklch(0.666 0.146 245 / 0.10)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-cobalt-400-10"
+    },
+    {
+      "name": "dark-bgtxt-cobalt-lightest",
+      "value": "oklch(0.785 0.135 231 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-cobalt-300-20"
+    },
+    {
+      "name": "bgtxt-cobalt-lighter",
+      "value": "oklch(0.666 0.146 245 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-cobalt-400-20"
+    },
+    {
+      "name": "dark-bgtxt-cobalt-lighter",
+      "value": "oklch(0.785 0.135 231 / 0.30)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-cobalt-300-30"
+    },
+    {
+      "name": "bgtxt-cobalt-light",
+      "value": "oklch(0.666 0.146 245 / 0.30)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-cobalt-400-30"
+    },
+    {
+      "name": "dark-bgtxt-cobalt-light",
+      "value": "oklch(0.785 0.135 231 / 0.40)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-cobalt-300-40"
+    },
+    {
+      "name": "bgtxt-cobalt-normal",
+      "value": "oklch(0.666 0.146 245)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-cobalt-400"
+    },
+    {
+      "name": "dark-bgtxt-cobalt-normal",
+      "value": "oklch(0.785 0.135 231)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-cobalt-300"
+    },
+    {
+      "name": "bgtxt-cobalt-dark",
+      "value": "oklch(0.564 0.120 248)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-cobalt-500"
+    },
+    {
+      "name": "dark-bgtxt-cobalt-dark",
+      "value": "oklch(0.666 0.146 245)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-cobalt-400"
+    },
+    {
+      "name": "bgtxt-blue-lightest",
+      "value": "oklch(0.555 0.223 279 / 0.10)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-blue-400-10"
+    },
+    {
+      "name": "dark-bgtxt-blue-lightest",
+      "value": "oklch(0.658 0.181 269 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-blue-300-20"
+    },
+    {
+      "name": "bgtxt-blue-lighter",
+      "value": "oklch(0.555 0.223 279 / 0.20)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-blue-400-20"
+    },
+    {
+      "name": "dark-bgtxt-blue-lighter",
+      "value": "oklch(0.658 0.181 269 / 0.30)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-blue-300-30"
+    },
+    {
+      "name": "bgtxt-blue-light",
+      "value": "oklch(0.555 0.223 279 / 0.30)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-blue-400-30"
+    },
+    {
+      "name": "dark-bgtxt-blue-light",
+      "value": "oklch(0.658 0.181 269 / 0.40)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-blue-300-40"
+    },
+    {
+      "name": "bgtxt-blue-normal",
+      "value": "oklch(0.555 0.223 279)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-blue-400"
+    },
+    {
+      "name": "dark-bgtxt-blue-normal",
+      "value": "oklch(0.658 0.181 269)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-blue-300"
+    },
+    {
+      "name": "bgtxt-blue-dark",
+      "value": "oklch(0.476 0.203 280)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-blue-500"
+    },
+    {
+      "name": "dark-bgtxt-blue-dark",
+      "value": "oklch(0.555 0.223 279)",
+      "group": "Semantic bgtxt-* (stable tier)",
+      "ref": "stable-blue-400"
+    },
+    {
+      "name": "bdr-white",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic bdr-* (stable tier)",
+      "ref": "stable-white-100"
+    },
+    {
+      "name": "dark-bdr-white",
+      "value": "oklch(0.397 0.002 248)",
+      "group": "Semantic bdr-* (stable tier)",
+      "ref": "stable-grey-700"
+    },
+    {
+      "name": "bdr-grey-light",
+      "value": "oklch(0.952 0.001 286)",
+      "group": "Semantic bdr-* (stable tier)",
+      "ref": "stable-grey-200"
+    },
+    {
+      "name": "dark-bdr-grey-light",
+      "value": "oklch(0.397 0.002 248)",
+      "group": "Semantic bdr-* (stable tier)",
+      "ref": "stable-grey-700"
+    },
+    {
+      "name": "bdr-black-lightest",
+      "value": "oklch(0 0 0 / 0.03)",
+      "group": "Semantic bdr-* (stable tier)",
+      "ref": "stable-black-3"
+    },
+    {
+      "name": "dark-bdr-black-lightest",
+      "value": "oklch(1 0 0 / 0.05)",
+      "group": "Semantic bdr-* (stable tier)",
+      "ref": "stable-white-5"
+    },
+    {
+      "name": "bdr-black-light",
+      "value": "oklch(0 0 0 / 0.08)",
+      "group": "Semantic bdr-* (stable tier)",
+      "ref": "stable-black-8"
+    },
+    {
+      "name": "dark-bdr-black-light",
+      "value": "oklch(1 0 0 / 0.12)",
+      "group": "Semantic bdr-* (stable tier)",
+      "ref": "stable-white-12"
+    },
+    {
+      "name": "bdr-black-dark",
+      "value": "oklch(0 0 0 / 0.15)",
+      "group": "Semantic bdr-* (stable tier)",
+      "ref": "stable-black-15"
+    },
+    {
+      "name": "dark-bdr-black-dark",
+      "value": "oklch(1 0 0 / 0.20)",
+      "group": "Semantic bdr-* (stable tier)",
+      "ref": "stable-white-20"
+    },
+    {
+      "name": "shdw-inner-base",
+      "value": "oklch(1 0 0 / 0.12)",
+      "group": "Semantic shdw-* (stable tier)",
+      "ref": "stable-white-12"
+    },
+    {
+      "name": "dark-shdw-inner-base",
+      "value": "oklch(1 0 0 / 0.08)",
+      "group": "Semantic shdw-* (stable tier)",
+      "ref": "stable-white-8"
+    },
+    {
+      "name": "shdw-base",
+      "value": "oklch(0 0 0 / 0.05)",
+      "group": "Semantic shdw-* (stable tier)",
+      "ref": "stable-black-5"
+    },
+    {
+      "name": "dark-shdw-base",
+      "value": "oklch(0 0 0 / 0.08)",
+      "group": "Semantic shdw-* (stable tier)",
+      "ref": "stable-black-8"
+    },
+    {
+      "name": "shdw-small",
+      "value": "oklch(0 0 0 / 0.08)",
+      "group": "Semantic shdw-* (stable tier)",
+      "ref": "stable-black-8"
+    },
+    {
+      "name": "dark-shdw-small",
+      "value": "oklch(0 0 0 / 0.15)",
+      "group": "Semantic shdw-* (stable tier)",
+      "ref": "stable-black-15"
+    },
+    {
+      "name": "shdw-medium",
+      "value": "oklch(0 0 0 / 0.15)",
+      "group": "Semantic shdw-* (stable tier)",
+      "ref": "stable-black-15"
+    },
+    {
+      "name": "dark-shdw-medium",
+      "value": "oklch(0 0 0 / 0.20)",
+      "group": "Semantic shdw-* (stable tier)",
+      "ref": "stable-black-20"
+    },
+    {
+      "name": "shdw-large",
+      "value": "oklch(0 0 0 / 0.22)",
+      "group": "Semantic shdw-* (stable tier)",
+      "ref": "stable-black-22"
+    },
+    {
+      "name": "dark-shdw-large",
+      "value": "oklch(0 0 0 / 0.40)",
+      "group": "Semantic shdw-* (stable tier)",
+      "ref": "stable-black-40"
+    },
+    {
+      "name": "shdw-xlarge",
+      "value": "oklch(0 0 0 / 0.30)",
+      "group": "Semantic shdw-* (stable tier)",
+      "ref": "stable-black-30"
+    },
+    {
+      "name": "dark-shdw-xlarge",
+      "value": "oklch(0 0 0 / 0.60)",
+      "group": "Semantic shdw-* (stable tier)",
+      "ref": "stable-black-60"
     },
     {
       "name": "text-action",

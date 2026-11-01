@@ -83,7 +83,7 @@ interface Coverage {
 // comments its colours in prose with no hex, so `audit:oklch` has nothing to
 // judge there. bezier annotates only the steps taken from the beta tier and
 // the stable tier (`stable-*`) of `@channel.io/bezier-tokens` (#569, #628);
-// the 43 bundle steps stay unannotated, so drift 174 = annotated 131 + 43;
+// the 43 bundle steps stay unannotated, so drift 275 = annotated 232 + 43;
 // role rows count in neither. toss annotates only the steps whose name maps to
 // Toss's published `@toss/tds-colors` (15 light + 15 `dark-*`); its bundle-only
 // steps stay unannotated. teamsparta likewise annotates only the three reds
@@ -93,7 +93,7 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   "11st": { annotated: 31, judged: 31, drift: 33 },
   baemin: { annotated: 0, judged: 0, drift: 38 },
   banksalad: { annotated: 187, judged: 187, drift: 187 },
-  bezier: { annotated: 131, judged: 131, drift: 174 },
+  bezier: { annotated: 232, judged: 232, drift: 275 },
   class101: { annotated: 98, judged: 98, drift: 98 },
   codeit: { annotated: 180, judged: 173, drift: 180, webfont: true },
   gmarket: { annotated: 87, judged: 87, drift: 91 },

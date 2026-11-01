@@ -189,8 +189,9 @@ const CASES: Record<string, { title: string; check: () => void }> = {
     check: () => {
       const { literals, refs, tableRows } = load("bezier")
       // Two published role layers, each pointing at its own tier's primitives.
-      // The stable tier's are carried as `stable-*` keys, so a stable `bg-*` /
-      // `txt-*` role aliases a `stable-*` key and a beta role a beta step —
+      // The stable tier's are carried as `stable-*` keys, so a stable colour
+      // role (`bg-*` · `txt-*` · `bgtxt-*` · `bdr-*` · `shdw-*`) aliases a
+      // `stable-*` key and a beta role a beta step —
       // never across, even where the values match. Neither tier redefines a
       // primitive per theme, so a `dark-` twin points at an unprefixed key.
       // The beta roles upstream writes as hex (`*-hovered`,
@@ -198,7 +199,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       // out here.
       // A stable-tier role name, matched on the bare name (no backticks, no
       // `dark-` prefix) in both the table and the rows.
-      const STABLE_ROLE = /^(bg|txt)-/
+      const STABLE_ROLE = /^(bg|txt|bgtxt|bdr|shdw)-/
       const STABLE_KEY = /^stable-/
       const stableRows = tableRows.filter(([cell]) =>
         STABLE_ROLE.test(spans(cell)[0] ?? "")
@@ -317,6 +318,13 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       )
       const proseCounts = {
         stableRoles: stableRows.length,
+        ...Object.fromEntries(
+          ["bg", "txt", "bgtxt", "bdr", "shdw"].map((family) => [
+            `stable-${family}`,
+            stableRows.filter(([c]) => spans(c)[0]?.startsWith(`${family}-`))
+              .length,
+          ])
+        ),
         betaRoles: betaRows.length,
         betaReferenceRoles: betaRows.length - literalRows.length,
         betaLiteralRoles: literalRows.length,
@@ -337,7 +345,12 @@ const CASES: Record<string, { title: string; check: () => void }> = {
         ).size,
       }
       expect(proseCounts, "bezier: row counts the prose states").toEqual({
-        stableRoles: 27,
+        stableRoles: 103,
+        "stable-bg": 22,
+        "stable-txt": 5,
+        "stable-bgtxt": 65,
+        "stable-bdr": 5,
+        "stable-shdw": 6,
         betaRoles: 346,
         betaReferenceRoles: 163,
         betaLiteralRoles: 183,
