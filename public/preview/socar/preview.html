@@ -59,6 +59,7 @@
       --sf-divider-regular: var(--sf-gray-200);
       --sf-white: oklch(1.000 0.000 0);
       --sf-black: oklch(0.000 0.000 0);
+      --sf-dimmed-regular: oklch(0.217 0.022 261 / 0.44);
       --sf-pressed-regular: oklch(0.217 0.022 261 / 0.06);
       --sf-pressed-dark-regular: oklch(0.965 0.007 277 / 0.66);
 
@@ -1240,7 +1241,7 @@
       overflow: hidden;
     }
 
-    .sheet-backdrop { position: absolute; inset: 0; background: oklch(0.217 0.022 261 / 0.44); }
+    .sheet-backdrop { position: absolute; inset: 0; background: var(--sf-dimmed-regular); }
 
     .sheet {
       position: absolute;
@@ -1269,7 +1270,7 @@
       overflow: hidden;
     }
 
-    .alert-demo .alert-backdrop { position: absolute; inset: 0; background: oklch(0.217 0.022 261 / 0.44); }
+    .alert-demo .alert-backdrop { position: absolute; inset: 0; background: var(--sf-dimmed-regular); }
 
     .alert-card {
       position: relative;
@@ -1553,6 +1554,7 @@
       --sf-divider-regular: var(--sf-gray-200);
       --sf-white: oklch(1.000 0.000 0);
       --sf-black: oklch(0.000 0.000 0);
+      --sf-dimmed-regular: oklch(0.217 0.022 261 / 0.44);
       --sf-pressed-regular: oklch(0.217 0.022 261 / 0.06);
       --sf-pressed-dark-regular: oklch(0.965 0.007 277 / 0.66);
 
@@ -2592,7 +2594,7 @@
       background: var(--sf-background-regular);
       overflow: hidden;
     }
-[data-theme="dark"] .sheet-backdrop { position: absolute; inset: 0; background: oklch(0.217 0.022 261 / 0.44); }
+[data-theme="dark"] .sheet-backdrop { position: absolute; inset: 0; background: var(--sf-dimmed-regular); }
 [data-theme="dark"] .sheet {
       position: absolute;
       left: 0;
@@ -2617,7 +2619,7 @@
       background: var(--sf-background-regular);
       overflow: hidden;
     }
-[data-theme="dark"] .alert-demo .alert-backdrop { position: absolute; inset: 0; background: oklch(0.217 0.022 261 / 0.44); }
+[data-theme="dark"] .alert-demo .alert-backdrop { position: absolute; inset: 0; background: var(--sf-dimmed-regular); }
 [data-theme="dark"] .alert-card {
       position: relative;
       width: min(100%, 280px);

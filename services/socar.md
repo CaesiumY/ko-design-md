@@ -3,13 +3,12 @@ name: 쏘카
 design_system_name: SOCAR Frame 2.0
 slug: socar
 category: mobility
-last_updated: "2026-11-01"
+last_updated: "2026-11-02"
 created_at: "2026-05-22"
 lang: ko
 logo: https://getdesign.kr/logos/socar.png
 colors:
   # Brand / primary (action) — 역할은 아래 팔레트 단계를 가리킨다
-  primary: "{colors.blue-500}"   # 명세의 대표색 역할 — text-primary(gray-800 본문색)와 다른 축
   primary-regular: "{colors.blue-500}"
   primary-strong: "{colors.blue-600}"   # pressed
   primary-heavy: "{colors.blue-700}"   # heaviest
@@ -22,6 +21,7 @@ colors:
   blue-50: oklch(0.966 0.017 248)   # #EBF5FF
   blue-100: oklch(0.931 0.035 247)   # #D6EBFF
   blue-200: oklch(0.832 0.089 247)   # #99CEFF · input focus border
+  primary: "{colors.blue-500}"   # 명세의 대표색 역할 — text-primary(gray-800 본문색)와 다른 축
   blue-500: oklch(0.599 0.220 258)   # #0078FF
   blue-600: oklch(0.569 0.237 260)   # #0069FF
   blue-700: oklch(0.498 0.226 262)   # #0052E0
@@ -97,9 +97,9 @@ colors:
   location-rental: "{colors.blue-500}"   # pickup marker
   location-return: "{colors.indigo-700}"   # return marker
   # Overlay utilities (translucent) — 팔레트 단계가 아니라 rgba 리터럴로 발행된다
-  dimmed-regular: oklch(0.217 0.022 261 / 0.44)   # modal/sheet dim · gray-1000 의 44%
-  pressed-regular: oklch(0.217 0.022 261 / 0.06)   # row press (chip · checkbox · selection box) · gray-1000 의 6%
-  pressed-dark-regular: oklch(0.965 0.007 277 / 0.66)   # button press-ripple, lightens · gray-100 의 66%
+  dimmed-regular: oklch(0.217 0.022 261 / 0.44)   # modal/sheet dim · gray-1000 의 44% · 공식 Colors 표에 없음
+  pressed-regular: oklch(0.217 0.022 261 / 0.06)   # row press (chip · checkbox · selection box) · gray-1000 의 6% · 공식 Colors 표에 없음
+  pressed-dark-regular: oklch(0.965 0.007 277 / 0.66)   # button press-ripple, lightens · gray-100 의 66% · 공식 Colors 표에 없음
 typography:
   # token: size px / line-height px / weight
   display1:   # letter-spacing 0
@@ -251,7 +251,7 @@ SOCAR Frame 2.0(쏘카프레임 2.0)는 쏘카의 디자인 시스템이며, 브
 
 > **역할 대조(2026-11-01).** 역할 → 팔레트 대응을 배포 코드와 다시 맞췄다. 공식 사이트가 싣는 Tailwind 프리셋 번들 [src:38]은 시맨틱 역할 40개를 모두 팔레트 단계 하나로 정의한다(`"text-strong": v["gray-1000"]` 꼴). 이 문서가 싣던 역할 39개와 대조해 **값 불일치는 0개**였고, 어긋난 것은 세 가지였다 — 상태 역할 12개가 발행 접두 없이 실려 있었고(`information-weak` → 발행명 `status-information-weak`), 발행 역할 `service-socar`(→ `blue-500`)가 빠져 있었고, `pressed-dark-regular` 의 값이 발행값(`gray-100` 의 66%)이 아니라 검정 8%였다. 셋 다 발행대로 고쳤다. 역할은 이제 아래 표와 frontmatter 참조 행 두 벌로 실리며, 역할이 가리키는 팔레트 단계 20개를 frontmatter 에 더했다 — 값은 [src:4] 의 hex 를 변환해 역할 줄에 있던 값 그대로다.
 >
-> **오버레이는 역할 계층이 아니다.** 같은 번들은 팔레트를 가리키지 않는 rgba 리터럴 유틸리티 6개(`.bg-dimmed-regular` 등)를 따로 발행하며, 이것들은 Colors 표 [src:4]에 없다. 그래서 참조 행을 싣지 않는다. 이 문서는 컴포넌트 서술이 쓰는 셋(`dimmed-regular`·`pressed-regular`·`pressed-dark-regular`)만 아래 표에 알파 값으로 적고 frontmatter 에 리터럴로 둔다. 나머지 셋(`cameradimmed-regular` gray-1000 의 74% · `pressed-light-regular` 불투명 gray-100 · `pressed-dark-weak` gray-1000 의 6%)은 확인한 버튼 컴포넌트 번들 [src:39]이 쓰지 않고 이 문서의 컴포넌트도 부르지 않아 싣지 않았다.
+> **오버레이는 역할 계층이 아니다.** 아래 표의 마지막 세 행은 참조 행 없이 표에만 두는 행이다. 같은 번들은 팔레트를 가리키지 않는 rgba 리터럴 유틸리티 6개(`.bg-dimmed-regular` 등)를 따로 발행하며, 이것들은 Colors 표 [src:4]에 없다. 그래서 참조 행을 싣지 않는다. 이 문서는 컴포넌트 서술이 쓰는 셋(`dimmed-regular`·`pressed-regular`·`pressed-dark-regular`)만 아래 표에 알파 값으로 적고 frontmatter 에 리터럴로 둔다. 나머지 셋(`cameradimmed-regular` gray-1000 의 74% · `pressed-light-regular` 불투명 gray-100 · `pressed-dark-weak` gray-1000 의 6%)은 확인한 버튼 컴포넌트 번들 [src:39]이 쓰지 않고 이 문서의 컴포넌트도 부르지 않아 싣지 않았다.
 >
 > **검증 방법.** `socarframe.socar.kr` 은 어떤 경로든 평범한 GET 에 같은 166자 셸을 돌려주므로 [src:4] 의 이름과 hex 는 페이지를 렌더해야 읽힌다. 역할이 어느 팔레트 단계를 가리키는지는 렌더된 표에도 없고 [src:38] 번들에만 있다. 프리셋을 담은 패키지 `@socar-inc/socar-frame-foundation` 은 공개 npm 레지스트리에 없다(E404).
 
@@ -259,7 +259,7 @@ SOCAR Frame 2.0은 공식 Colors 페이지에 전체 토큰 세트를 게시하�
 
 색상 축은 채도 높은 파랑(`{colors.primary-regular}`)이며, 동일 hue를 strong/heavy로 단계화해 눌림 상태를 표현한다 [src:4]. `{colors.primary-regular}`(blue-500)는 유일한 브랜드 색이고, strong/heavy는 press·강한 CTA 용도일 뿐 장식에 쓰지 않는다 [src:4][src:9]. 회색 램프는 순수 회색이 아니라 푸른 기가 옅게 도는 톤이라 전체 온도가 차갑게 읽힌다 [src:1][src:4]. 상태색은 information / positive / caution / negative를 각각 weak·regular·strong 3단계로 분리하며 — weak는 틴트 표면, regular는 아이콘/텍스트 — 배지·알림 점에는 `{colors.notification-red}`를 사용한다 [src:4][src:1]. accent는 10개의 범주형 램프로 차종·위치·상태를 태깅하는 용도이며, 한 화면에 두 개의 accent가 동시에 나오는 일은 드물다 [src:4]. 모빌리티 도메인 토큰으로 픽업 마커 `{colors.location-rental}`와 반납 마커 `{colors.location-return}`가 별도로 정의되어, 쏘카존 기반 지도 UI를 색으로 구분한다 [src:4][src:2].
 
-역할 이름과 가리키는 팔레트 단계는 [src:38] 의 프리셋 정의 그대로이고, 값은 [src:4] 의 hex 와 같다.
+참조 행 40개는 역할 이름과 가리키는 팔레트 단계가 [src:38] 의 프리셋 정의 그대로이고, 값은 [src:4] 의 hex 와 같다. 마지막 오버레이 세 행은 참조 행이 없는 표 전용 행으로, 값은 [src:38] 의 rgba 리터럴이다.
 
 | 역할 | 팔레트 | 쓰임 |
 | --- | --- | --- |
@@ -342,7 +342,7 @@ SOCAR Frame 2.0의 깊이 언어는 절제되어 있다 — 표면 분리는 드
 
 형태 언어는 정돈된 기하 구조 위에 넉넉한 반경을 얹는 방식이다 [src:4][src:6]. 칩은 완전한 pill, 카드와 시트는 12–24px 반경을 일관되게 써서 접근하기 쉽되 질서 있는 인상을 만든다 — 유기적이라기보다 기하적이다 [src:4][src:6]. 그라데이션은 없고 모든 표면은 플랫 필이며, 차량·위치 썸네일 이미지는 항상 radius-300/400 카드 안에 마스킹되어 앱 크롬 안에서 full-bleed로 깔리지 않는다 [src:1][src:5].
 
-시각적 절제는 표면 처리에서도 드러난다 — 곡선은 모서리 반경으로만 표현되고, 표면 구분은 곡면이나 그림자가 아니라 1px 헤어라인과 배경 워시로 처리된다 [src:1]. 시그니처 인터랙션은 press feedback이다 — 인터랙티브 표면이 `:active`에서 92%로 축소되고 `::after` 리플 오버레이가 함께 뜬다(`active:tw-scale-[92%]` + `active:after:tw-bg-pressed-dark-regular`, 리플 radius는 컴포넌트 radius에 클리핑) [src:1]. 텍스트 인접 행(chip / checkbox / radio)은 94–96%로 더 약하게 축소한다 [src:1]. 모션은 짧고 표준적이다 — `duration-100`(100ms), `duration-150`(150ms), `ease-standard`(`cubic-bezier(0.42, 0, 0.58, 1)`)이며, spring/bounce나 화면 전환 페이드는 없다 [src:1]. hover 상태는 사실상 존재하지 않고 press가 모든 피드백을 담당한다 [src:1].
+시각적 절제는 표면 처리에서도 드러난다 — 곡선은 모서리 반경으로만 표현되고, 표면 구분은 곡면이나 그림자가 아니라 1px 헤어라인과 배경 워시로 처리된다 [src:1]. 시그니처 인터랙션은 press feedback이다 — 버튼류(ActionButton · TextButton · IconButton)는 `:active`에서 92%로 축소되고 `{colors.pressed-dark-regular}` `::after` 리플 오버레이가 함께 뜬다(`active:tw-scale-[92%]` + `active:after:tw-bg-pressed-dark-regular`, 리플 radius는 컴포넌트 radius에 클리핑) [src:1][src:39]. 텍스트 인접 행(chip / checkbox / radio)과 선택 카드는 94–96%로 더 약하게 축소하고 `{colors.pressed-regular}` 배경을 깐다 [src:1][src:19][src:20][src:22]. 모션은 짧고 표준적이다 — `duration-100`(100ms), `duration-150`(150ms), `ease-standard`(`cubic-bezier(0.42, 0, 0.58, 1)`)이며, spring/bounce나 화면 전환 페이드는 없다 [src:1]. hover 상태는 사실상 존재하지 않고 press가 모든 피드백을 담당한다 [src:1].
 
 ## Components
 
@@ -390,7 +390,7 @@ styleType outlined는 흰 배경 + 1px `{colors.divider-regular}` 보더로 구�
 
 ### action-button-pressed
 
-ActionButton의 눌림 상태는 별도 시각 상태로 다룬다 — 시그니처 press feedback에 따라 표면이 `:active`에서 92%로 축소되고, styleType·variant와 관계없이 `{colors.pressed-dark-regular}`(gray-100 66%, 표면을 밝게 덮는다) 리플 오버레이가 크기별 radius에 클리핑되어 함께 뜬다 [src:1][src:14][src:39]. loading은 `{colors.gray-100}` 필 + Lottie 로더로 전환하며 클릭을 막고, disabled는 불투명도 변화 없이 `{colors.gray-100}` 배경 / `{colors.text-disabled}` 텍스트로 재색칠한다 [src:14].
+ActionButton의 눌림 상태는 별도 시각 상태로 다룬다 — 시그니처 press feedback에 따라 표면이 `:active`에서 92%로 축소되고, styleType·variant와 관계없이 `{colors.pressed-dark-regular}`(gray-100 66%, 표면을 밝게 덮는다) 리플 오버레이가 크기별 radius에 클리핑되어 함께 뜬다 [src:1][src:14][src:38][src:39]. loading은 `{colors.gray-100}` 필 + Lottie 로더로 전환하며 클릭을 막고, disabled는 불투명도 변화 없이 `{colors.gray-100}` 배경 / `{colors.text-disabled}` 텍스트로 재색칠한다 [src:14].
 
 ```tsx
 <ActionButton styleType="fill" variant="primary" loading />
@@ -646,7 +646,7 @@ const ok = await Alert.open({ variant: "dialog", title: "예약을 취소할까�
 
 **Do** CTA 카피는 동사로 시작하고 마침표·느낌표 없이, 한국어 정중체(`-요`/`합니다`)로 주어를 생략해 쓴다(예: `예약하기`, `자세히 보기`, `다음에`, `취소`) [src:9][src:11].
 
-**Do** 모든 인터랙티브 표면에 press feedback을 건다 — `scale(0.92)` + `{colors.pressed-dark-regular}` 리플이 표준이며, 텍스트 인접 행(chip/checkbox/radio)은 94–96%로 약하게 둔다 [src:1].
+**Do** 누를 수 있는 표면에 press feedback을 건다 — 버튼류는 `scale(0.92)` + `{colors.pressed-dark-regular}` 리플, 텍스트 인접 행(chip/checkbox/radio)과 선택 카드는 94–96% 축소 + `{colors.pressed-regular}` 배경이 표준이다 [src:1][src:39][src:19][src:20][src:22].
 
 **Do** ActionButton은 `styleType`·`variant`·`size`를 명시해 구현하고, 한 화면의 primary slot은 하나만 둔다 [src:14][src:1].
 
@@ -687,7 +687,7 @@ const ok = await Alert.open({ variant: "dialog", title: "예약을 취소할까�
 - **다크 모드 미공개.** SOCAR Frame 2.0은 라이트 모드 전용이며, 모든 표면·그림자 토큰의 다크 대응값이 공개되지 않았다 — 다크 테마가 필요하면 다운스트림에서 별도 정의해야 한다 [src:1][src:4].
 - **명시적 breakpoint 시스템 부재.** 375px 모바일 폭을 기준 컨텍스트로 두지만, 제품 토큰에 데스크톱 레이아웃 분기를 위한 미디어 쿼리 breakpoint는 surfaced되지 않았다 — 문서 사이트의 데스크톱 레이아웃은 제품 토큰 세트가 아니다 [src:1].
 - **부분 스펙 컴포넌트.** 코퍼스는 19개 컴포넌트를 완전 build-grade로, 5개(SelectionBox · SegmentedControl · TopAppBar · Alert · Snackbar)를 부분 스펙으로 문서화한다 — 데모 래퍼 중첩 또는 포털/트랜션트 렌더링 탓에 이들의 전체 variant·선택 보더·표시 시간 등 일부 computed 값은 doc 페이지·스크린샷과 함께 재구성해야 한다 [src:5][src:18][src:3].
-- **OKLCH 변환값.** 모든 색상은 공개 hex 토큰을 OKLCH로 변환한 것이며, 원본 시스템은 hex로 게시한다 — 미세한 변환 오차가 있을 수 있다 [src:4].
+- **OKLCH 변환값.** 오버레이 셋을 뺀 모든 색상은 공개 hex 토큰을 OKLCH로 변환한 것이며, 원본 시스템은 hex로 게시한다 — 미세한 변환 오차가 있을 수 있다 [src:4]. 오버레이 셋(`dimmed-regular`·`pressed-regular`·`pressed-dark-regular`)은 rgba 리터럴을 변환한 것이다 [src:38].
 
 ## References
 
@@ -729,4 +729,4 @@ const ok = await Alert.open({ variant: "dialog", title: "예약을 취소할까�
 36. https://socarframe.socar.kr/ux-principles/release-checklist
 37. https://socarframe.socar.kr/ux-principles/trade-off-rules
 38. https://socarframe.socar.kr/assets/js/common.d1ee1bdb.js — 공식 사이트가 싣는 Tailwind 프리셋 번들. 시맨틱 역할 → 팔레트 단계 정의(`"text-strong": v["gray-1000"]` 꼴)와 오버레이 유틸리티(`.bg-dimmed-regular` 등 rgba 리터럴)가 여기 있다. 파일 이름이 빌드 해시라 사이트를 다시 배포하면 이 경로는 사라질 수 있다 — 그때는 [src:4] 페이지가 불러오는 `common.*.js` 를 찾는다.
-39. https://socarframe.socar.kr/assets/js/9746.d6ce0de6.js — 공식 사이트의 컴포넌트 번들(ActionButton · TextButton · IconButton 소스). 눌림 리플 클래스 `active:after:tw-bg-pressed-dark-regular` 가 variant 분기 밖에 있다. 파일 이름이 빌드 해시라 재배포되면 사라질 수 있다 — 그때는 [src:14] 페이지가 불러오는 청크에서 찾는다.
+39. https://socarframe.socar.kr/assets/js/9746.d6ce0de6.js — 공식 사이트의 컴포넌트 번들(ActionButton · TextButton · IconButton 소스). 파일 이름이 빌드 해시라 재배포되면 사라질 수 있다 — 그때는 [src:14] 페이지가 불러오는 청크에서 찾는다.
