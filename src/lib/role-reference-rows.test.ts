@@ -183,25 +183,33 @@ const CASES: Record<string, { title: string; check: () => void }> = {
   },
   bezier: {
     title:
-      "stable `bg-*`/`txt-*` and beta `--color-*` roles, light and `dark-` twin",
+      "beta `--color-*` roles, light and `dark-` twin; stable table owes none",
     check: () => {
       const { literals, refs, tableRows } = load("bezier")
-      // Two published role layers share one palette, which is the beta tier's.
-      // Only the beta role cells that name one beta step have a row; the beta
-      // roles upstream writes as hex (`*-hovered`, `chart-theme-default-*`)
-      // are OKLCH literals in the table and fall out here. So does a stable
-      // cell whose step differs in value from the beta step of the same name
-      // (`grey-900`, `grey-800-80`): it holds the stable value (hex ≈ OKLCH),
-      // not a single reference.
+      // Two published role layers, one palette — the beta tier's. Stable
+      // `bg-*` / `txt-*` roles point at stable primitives, so every stable
+      // cell holds the stable value (hex ≈ OKLCH), never a `{colors.x}`, and
+      // owes no row even where the value matches a beta step. Among the beta
+      // roles only the cells that name one beta step have a row; the roles
+      // upstream writes as hex (`*-hovered`, `chart-theme-default-*`) are
+      // OKLCH literals and fall out here.
       const expected = singleReferenceRoles(tableRows)
-      // Both layers' tables must have parsed, or a dropped one would pass.
-      const layers = [/^(bg|txt)-/, /^(text|icon|fill|border|surface)\b/]
-      for (const layer of layers) {
-        expect(
-          [...expected.keys()].some((key) => layer.test(key)),
-          `bezier: ${layer} roles`
-        ).toBe(true)
-      }
+      // Both layers' tables must have parsed, or a dropped one would pass:
+      // the stable one by its rows, the beta one by the rows it owes.
+      expect(
+        tableRows.some(([cell]) => /^`(bg|txt)-/.test(cell)),
+        "bezier: stable `bg-*` / `txt-*` table rows"
+      ).toBe(true)
+      expect(
+        [...expected.keys()].some((key) =>
+          /^(dark-)?(text|icon|fill|border|surface)\b/.test(key)
+        ),
+        "bezier: beta role rows"
+      ).toBe(true)
+      expect(
+        [...expected.keys()].filter((key) => /^(dark-)?(bg|txt)-/.test(key)),
+        "bezier: stable cells must not reference the beta palette"
+      ).toEqual([])
       expectRowsToMatch("bezier", expected, refs, literals)
     },
   },
