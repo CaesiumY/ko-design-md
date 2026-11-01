@@ -60,8 +60,10 @@ export type PaintedImage =
 /**
  * Points sampled on each run between two stops, per space. Contrast moves
  * smoothly along the path, so what sampling can miss is a sliver at an
- * extremum between two samples — far smaller than the ±0.1 band `judge`
- * leaves around every threshold. Recorded as a Known gap all the same.
+ * extremum between two samples. That sliver is smaller than the ±0.1 band
+ * `judge` leaves around every threshold, so a verdict cannot move two steps —
+ * but right at a band's edge it can move one (pass ↔ borderline,
+ * borderline ↔ fail). Recorded as a Known gap.
  */
 const SAMPLES = 16
 
