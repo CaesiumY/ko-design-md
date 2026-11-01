@@ -808,205 +808,205 @@
     {
       "name": "stable-black-100",
       "value": "oklch(0 0 0)",
-      "note": "#000000",
+      "note": "#000000 · 상류 기본 tier --black-100",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-black-85",
       "value": "oklch(0 0 0 / 0.85)",
-      "note": "#000000d9",
+      "note": "#000000d9 · 상류 기본 tier --black-85",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-black-60",
       "value": "oklch(0 0 0 / 0.60)",
-      "note": "#00000099",
+      "note": "#00000099 · 상류 기본 tier --black-60",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-black-40",
       "value": "oklch(0 0 0 / 0.40)",
-      "note": "#00000066",
+      "note": "#00000066 · 상류 기본 tier --black-40",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-black-20",
       "value": "oklch(0 0 0 / 0.20)",
-      "note": "#00000033",
+      "note": "#00000033 · 상류 기본 tier --black-20",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-black-15",
       "value": "oklch(0 0 0 / 0.15)",
-      "note": "#00000026",
+      "note": "#00000026 · 상류 기본 tier --black-15",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-black-8",
       "value": "oklch(0 0 0 / 0.08)",
-      "note": "#00000014",
+      "note": "#00000014 · 상류 기본 tier --black-8",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-black-5",
       "value": "oklch(0 0 0 / 0.05)",
-      "note": "#0000000d",
+      "note": "#0000000d · 상류 기본 tier --black-5",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-black-3",
       "value": "oklch(0 0 0 / 0.03)",
-      "note": "#00000008",
+      "note": "#00000008 · 상류 기본 tier --black-3",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-white-100",
       "value": "oklch(1 0 0)",
-      "note": "#ffffff",
+      "note": "#ffffff · 상류 기본 tier --white-100",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-white-90",
       "value": "oklch(1 0 0 / 0.90)",
-      "note": "#ffffffe6",
+      "note": "#ffffffe6 · 상류 기본 tier --white-90",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-white-80",
       "value": "oklch(1 0 0 / 0.80)",
-      "note": "#ffffffcc",
+      "note": "#ffffffcc · 상류 기본 tier --white-80",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-white-60",
       "value": "oklch(1 0 0 / 0.60)",
-      "note": "#ffffff99",
+      "note": "#ffffff99 · 상류 기본 tier --white-60",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-white-40",
       "value": "oklch(1 0 0 / 0.40)",
-      "note": "#ffffff66",
+      "note": "#ffffff66 · 상류 기본 tier --white-40",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-white-20",
       "value": "oklch(1 0 0 / 0.20)",
-      "note": "#ffffff33",
+      "note": "#ffffff33 · 상류 기본 tier --white-20",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-white-12",
       "value": "oklch(1 0 0 / 0.12)",
-      "note": "#ffffff1f",
+      "note": "#ffffff1f · 상류 기본 tier --white-12",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-white-8",
       "value": "oklch(1 0 0 / 0.08)",
-      "note": "#ffffff14",
+      "note": "#ffffff14 · 상류 기본 tier --white-8",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-white-5",
       "value": "oklch(1 0 0 / 0.05)",
-      "note": "#ffffff0d",
+      "note": "#ffffff0d · 상류 기본 tier --white-5",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-grey-850-80",
       "value": "oklch(0.289 0.004 265 / 0.80)",
-      "note": "#2a2b2dcc",
+      "note": "#2a2b2dcc · 상류 기본 tier --grey-850-80",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-grey-800-80",
       "value": "oklch(0.317 0.004 265 / 0.80)",
-      "note": "#313234cc",
+      "note": "#313234cc · 상류 기본 tier --grey-800-80",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-grey-800-90",
       "value": "oklch(0.317 0.004 265 / 0.90)",
-      "note": "#313234e6",
+      "note": "#313234e6 · 상류 기본 tier --grey-800-90",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-grey-700-80",
       "value": "oklch(0.397 0.002 248 / 0.80)",
-      "note": "#464748cc",
+      "note": "#464748cc · 상류 기본 tier --grey-700-80",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-grey-200-80",
       "value": "oklch(0.952 0.001 286 / 0.80)",
-      "note": "#efeff0cc",
+      "note": "#efeff0cc · 상류 기본 tier --grey-200-80",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-grey-100-80",
       "value": "oklch(0.976 0.001 286 / 0.80)",
-      "note": "#f7f7f8cc",
+      "note": "#f7f7f8cc · 상류 기본 tier --grey-100-80",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-grey-100-90",
       "value": "oklch(0.976 0.001 286 / 0.90)",
-      "note": "#f7f7f8e6",
+      "note": "#f7f7f8e6 · 상류 기본 tier --grey-100-90",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-grey-50-80",
       "value": "oklch(0.991 0 0 / 0.80)",
-      "note": "#fcfcfccc",
+      "note": "#fcfcfccc · 상류 기본 tier --grey-50-80",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-grey-900",
       "value": "oklch(0.262 0.007 286)",
-      "note": "#242428",
+      "note": "#242428 · 상류 기본 tier --grey-900",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-grey-850",
       "value": "oklch(0.289 0.004 265)",
-      "note": "#2a2b2d",
+      "note": "#2a2b2d · 상류 기본 tier --grey-850",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-grey-800",
       "value": "oklch(0.317 0.004 265)",
-      "note": "#313234",
+      "note": "#313234 · 상류 기본 tier --grey-800",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-grey-700",
       "value": "oklch(0.397 0.002 248)",
-      "note": "#464748",
+      "note": "#464748 · 상류 기본 tier --grey-700",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-grey-500",
       "value": "oklch(0.729 0.004 286)",
-      "note": "#a7a7aa",
+      "note": "#a7a7aa · 상류 기본 tier --grey-500",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-grey-200",
       "value": "oklch(0.952 0.001 286)",
-      "note": "#efeff0",
+      "note": "#efeff0 · 상류 기본 tier --grey-200",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-grey-100",
       "value": "oklch(0.976 0.001 286)",
-      "note": "#f7f7f8",
+      "note": "#f7f7f8 · 상류 기본 tier --grey-100",
       "group": "Stable tier palette"
     },
     {
       "name": "stable-grey-50",
       "value": "oklch(0.991 0 0)",
-      "note": "#fcfcfc",
+      "note": "#fcfcfc · 상류 기본 tier --grey-50",
       "group": "Stable tier palette"
     },
     {

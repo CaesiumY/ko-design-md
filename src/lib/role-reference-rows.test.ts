@@ -235,14 +235,14 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       // The literal cells write the upstream hex beside its OKLCH
       // (`#9698ffff ≈ \`oklch(…)\``). `audit:oklch` does not read tables
       // (draft-validator.ts `scanBody` table note), so the pair is held here
-      // with that gate's own tolerances: ΔE always, alpha when both sides
-      // declare it. Every cell that is not one reference must have this
-      // shape, so a malformed cell fails instead of dropping out of the
-      // comparison: a 6- or 8-digit hex (the table has no shorthand), a
-      // backticked OKLCH, and nothing after but the note the 19 rows whose
-      // hex equals a primitive carry.
+      // with that gate's own tolerances. Every cell that is not one reference
+      // must have this shape, so a malformed cell fails instead of dropping out
+      // of the comparison: a 6- or 8-digit hex (the table has no shorthand), a
+      // backticked OKLCH, and nothing after but the note a cell whose hex
+      // equals an upstream primitive carries — naming either a palette key of
+      // this entry or an upstream step it does not carry.
       const LITERAL_CELL =
-        /^(#[0-9a-f]{6}(?:[0-9a-f]{2})?) ≈ `(oklch\([^)`]*\))`(?: — hex 가 원시값 `[a-z0-9-]+` 그대로, 참조 아님)?$/i
+        /^(#[0-9a-f]{6}(?:[0-9a-f]{2})?) ≈ `(oklch\([^)`]*\))`(?: — hex 가 (?:원시값 `([a-z0-9-]+)`|상류 원시값 `([a-z0-9-]+)`\(이 문서에 싣지 않은 단계\)) 그대로, 참조 아님)?$/i
       const literalCells = tableRows.flatMap(([roleCell, ...cells]) =>
         cells
           .filter((cell) => single(cell) === undefined)
@@ -259,23 +259,47 @@ const CASES: Record<string, { title: string; check: () => void }> = {
         "bezier: literal cells parsed"
       ).toBeGreaterThan(0)
       const pairs = literalCells.map(({ cell }) => {
-        const [, hex, oklch] = LITERAL_CELL.exec(cell) ?? []
-        return { cell, hex, oklch }
+        const [, hex, oklch, carried, uncarried] = LITERAL_CELL.exec(cell) ?? []
+        return { cell, hex, oklch, carried, uncarried }
       })
+      // ΔE always. Alpha always too: an 8-digit hex below `ff` needs the
+      // OKLCH to carry that alpha, so a dropped `/ 0.30` fails.
       const off = pairs.filter(({ hex, oklch }) => {
         const want = hexToOklab(hex)
         const wrote = parseOklch(oklch)
         if (!want || !wrote) return true
         const alphaOff =
-          want.alpha != null &&
-          wrote.alpha != null &&
-          Math.abs(want.alpha - wrote.alpha) > ALPHA_TOLERANCE
+          Math.abs((want.alpha ?? 1) - (wrote.alpha ?? 1)) > ALPHA_TOLERANCE
         return deltaE(wrote.lab, want.lab) > DELTA_E_TOLERANCE || alphaOff
       })
       expect(
         off.map(({ cell }) => cell),
         "bezier: table OKLCH must match its upstream hex"
       ).toEqual([])
+      // The note's primitive: a palette key must carry the same hex on its
+      // line; a step named as uncarried must really be absent from the palette.
+      const raw = readFileSync(join(SERVICES, "bezier.md"), "utf-8")
+      const lineHex = new Map(
+        [
+          ...raw.matchAll(
+            /^ {2}([a-z0-9-]+): oklch\([^)]*\) +# (#[0-9a-f]+)/gm
+          ),
+        ].map((m) => [m[1], m[2].toLowerCase()])
+      )
+      const wrongNote = pairs.flatMap(({ cell, hex, carried, uncarried }) => {
+        if (carried && lineHex.get(carried) !== hex.toLowerCase()) return [cell]
+        if (uncarried && literals.has(uncarried)) return [cell]
+        return []
+      })
+      expect(
+        wrongNote,
+        "bezier: a note's primitive must match the palette or be absent from it"
+      ).toEqual([])
+      expect(
+        pairs.some(({ carried }) => carried) &&
+          pairs.some(({ uncarried }) => uncarried),
+        "bezier: both note forms parsed"
+      ).toBe(true)
     },
   },
   "seed-design": {
