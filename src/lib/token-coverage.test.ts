@@ -83,10 +83,10 @@ interface Coverage {
 // comments its colours in prose with no hex, so `audit:oklch` has nothing to
 // judge there. bezier annotates only the steps taken from the beta tier of
 // `@channel.io/bezier-tokens` (#569, #628); the 43 steps from the handoff
-// bundle stay unannotated, so drift 140 = annotated 97 + 43. Its role
-// reference rows carry no literal and count in neither. toss annotates only
-// the steps whose name maps to Toss's published `@toss/tds-colors` (15 light
-// + 15 `dark-*`); its bundle-only steps stay unannotated. teamsparta likewise annotates only the three reds
+// bundle stay unannotated, so drift 140 = annotated 97 + 43; its role reference
+// rows count in neither. toss annotates only the steps whose name maps to
+// Toss's published `@toss/tds-colors` (15 light + 15 `dark-*`); its bundle-only
+// steps stay unannotated. teamsparta likewise annotates only the three reds
 // corrected to the live sites' `--stack-semantic-*` values. `drift: 0` is a
 // different claim and is refused below.
 const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {

@@ -194,10 +194,13 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       // upstream writes as hex (`*-hovered`, `chart-theme-default-*`) are
       // OKLCH literals and fall out here.
       const expected = singleReferenceRoles(tableRows)
+      // A stable-tier role name, matched on the bare name (no backticks, no
+      // `dark-` prefix) in both the table and the rows.
+      const STABLE_ROLE = /^(bg|txt)-/
       // Both layers' tables must have parsed, or a dropped one would pass:
       // the stable one by its rows, the beta one by the rows it owes.
       expect(
-        tableRows.some(([cell]) => /^`(bg|txt)-/.test(cell)),
+        tableRows.some(([cell]) => STABLE_ROLE.test(spans(cell)[0] ?? "")),
         "bezier: stable `bg-*` / `txt-*` table rows"
       ).toBe(true)
       expect(
@@ -207,7 +210,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
         "bezier: beta role rows"
       ).toBe(true)
       expect(
-        [...expected.keys()].filter((key) => /^(dark-)?(bg|txt)-/.test(key)),
+        [...expected.keys()].filter((key) => STABLE_ROLE.test(bare(key))),
         "bezier: stable cells must not reference the beta palette"
       ).toEqual([])
       expectRowsToMatch("bezier", expected, refs, literals)
