@@ -526,6 +526,13 @@ function layerPaints(layer: RawLayer): Array<Rgba> | Blocker {
   return paints.map((c) => ({ ...c, a: c.a * layer.opacity }))
 }
 
+/**
+ * The reason to name when several layers cannot be listed. An image cannot be
+ * enumerated at all, so it outranks a gradient that merely could not be read.
+ */
+const strongerOf = (reasons: Array<Blocker>): Blocker =>
+  reasons.includes("image") ? "image" : reasons[0]
+
 interface Backdrop {
   color: Rgb
   rootTransparent: boolean
@@ -545,11 +552,15 @@ function backdropsOf(stack: Array<RawLayer>): {
     blocker,
   })
   const perLayer: Array<Array<Rgba>> = []
+  const blocked: Array<Blocker> = []
   for (const layer of stack) {
     const paints = layerPaints(layer)
-    if (typeof paints === "string") return plain(paints)
-    perLayer.push(paints)
+    if (typeof paints === "string") blocked.push(paints)
+    else perLayer.push(paints)
   }
+  // Every layer is read before giving up, so an image anywhere in the stack is
+  // named — it is the stronger reason, as it is within one element.
+  if (blocked.length > 0) return plain(strongerOf(blocked))
   // The product over the layers, not their positions: which colour of one
   // gradient sits over which colour of another is geometry this does not know,
   // so every pairing is a backdrop the text might be on.
@@ -776,10 +787,16 @@ export function evaluateNonText(
     }
   }
   const best = worst as NonNullable<typeof worst>
+  const unreadable = [
+    ...(outer.blocker === null ? [] : [outer.blocker]),
+    ...(typeof ownPaints === "string" ? [ownPaints] : []),
+  ]
   const unread =
-    outer.blocker ??
-    (typeof ownPaints === "string" ? ownPaints : null) ??
-    (verdicts.size > 1 ? "gradient" : null)
+    unreadable.length > 0
+      ? strongerOf(unreadable)
+      : verdicts.size > 1
+        ? "gradient"
+        : null
 
   const blockers = [
     ...new Set([

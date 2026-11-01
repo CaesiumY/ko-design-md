@@ -1164,6 +1164,28 @@ describe("a background image is judged by every colour it can paint (#402)", () 
     expect(got.blockers).toEqual(["gradient"])
   })
 
+  it("names the image when a stack holds for an image under an unreadable gradient", () => {
+    // The top layer blends, which holds it as `gradient`; an ancestor under it
+    // paints an image. An image is the stronger reason wherever in the stack it
+    // sits, not only within one element.
+    const blended = {
+      ...painted("linear-gradient(rgb(0, 0, 0), rgb(255, 255, 255))"),
+      image: {
+        value: "linear-gradient(rgb(0, 0, 0), rgb(255, 255, 255))",
+        repeat: "repeat",
+        clip: "border-box",
+        blend: "multiply",
+      },
+    }
+    const got = textOn([
+      blended,
+      painted('url("a.png")'),
+      opaque(255, 255, 255),
+    ])
+    expect(got.verdict).toBe("indeterminate")
+    expect(got.blockers).toEqual(["image"])
+  })
+
   it("holds an image as `image` and still reports the colour beneath it", () => {
     const got = textOn([painted('url("a.png")'), opaque(255, 255, 255)])
     expect(got.verdict).toBe("indeterminate")
