@@ -675,7 +675,7 @@ Bezier는 채널톡의 사내 제품 UI를 외부에 그대로 공개한 드문 
 
 Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3계층 토큰 구조다 [src:3][src:2]. 글로벌은 원시 색값이고, 시맨틱(`--bg-*`, `--txt-*`, `--color-*`)은 테마별로 다른 글로벌을 참조한다 [src:2][src:3]. `--bg-*`·`--txt-*` 는 기본 tier 의 시맨틱 이름이고, `--color-` 는 beta tier 의 이름 앞붙임이다 — beta 는 원시값(`--color-grey-900`)과 시맨틱(`--color-text-neutral`)이 같은 앞붙임을 쓴다 [src:3]. 특징은 navy·purple·pink·red·orange·yellow·olive·green·teal·cobalt·blue 11개 hue를 각각 300/400/500 명도 + 알파 변형으로 갖춘 무지개 액센트 팔레트다 [src:3][src:4].
 
-아래 값은 핸드오프 번들 `colors_and_type.css`가 정답으로 삼은 Bezier **beta 토큰 팔레트**를 ko-design-md 표준 OKLCH로 변환한 것이다 — 1차 액션은 indigo-violet 계열 `blue-400`이고, 원본이 hex로 발행돼 OKLCH 변환에 미세한 오차가 있을 수 있다 [src:3].
+아래 값 가운데 `stable-*` 를 뺀 팔레트는 핸드오프 번들 `colors_and_type.css`가 정답으로 삼은 Bezier **beta 토큰 팔레트**를 ko-design-md 표준 OKLCH로 변환한 것이고, `stable-*` 키는 기본 tier `dist/css/styles.css` 에서 직접 옮겼다 — 1차 액션은 indigo-violet 계열 `blue-400`이고, 원본이 hex로 발행돼 OKLCH 변환에 미세한 오차가 있을 수 있다 [src:3].
 
 ### Accent global hues (300/400/500 core)
 
@@ -1493,6 +1493,7 @@ Bezier는 앱 셸/뷰포트 브레이크포인트를 토큰으로 발행하지 �
 - **beta 팔레트는 이제 검증됐다(2026-07-29 정정).** 이 항목은 원래 "beta 팔레트 값 상당수가 공개 URL로 직접 교차검증되지 않는다"고 적고 있었으나, 실제로 대조해 보니 당시 이 문서의 색 토큰 전부가 `@channel.io/bezier-tokens` 0.6.0의 beta 엔트리와 ΔE ≤ 0.02로 일치했다(Colors 절 참조). 남은 공백은 **컴포넌트 정본 스펙**(Banner/Toast 처리 등)이며, 이쪽은 Storybook 개별 docs를 `?path=/docs/<id>`로 열어 대조해야 한다 [src:3][src:2].
 - **시맨틱 다크 원시값은 이제 실렸다(2026-10-28 정정).** 이 항목은 원래 "다크 측이 참조하는 일부 white-알파 원시값의 정확한 단계는 코퍼스에서 전부 발췌되지 않았다"고 적고 있었으나, 상류 beta 엔트리에서 그 단계를 확인해 다크 글자·중립 채움이 가리키는 `white-8/20/40/60/80`, 라이트 중립 채움의 `black-5/15`, accent 채움 사다리를 frontmatter에 실었다(Colors 절 참조) [src:3].
 - **alpha tier 역할 층은 아직 싣지 않았다(2026-11-01).** 상류 0.6.0 은 `dist/alpha/css/styles.css` 로 `--alpha-color-fg-*`·`--alpha-color-bg-*`·`--alpha-color-surface-*` 등 세 번째 역할 층을 발행하고, 역할은 `var(--alpha-color-…)` 로 alpha 원시값을 가리킨다(일부는 다른 alpha 역할을 가리킨다 — `primary-bg-normal` → `bg-blue-normal`). 원시값은 테마마다 다시 정의되지 않는다 [src:3]. 이 문서는 아직 그 층을 싣지 않았다. 싣는다면 `stable-*` 처럼 tier 를 가르는 `alpha-` 앞붙임 팔레트에 alpha 원시값을 싣고, 역할을 그 키의 참조 행과 본문 표로 싣는다.
+- **hex 를 직접 적은 beta 역할은 참조 행이 없다(2026-11-01).** beta 테마 블록의 `-hovered` 역할과 hovered 가 아닌 `chart-theme-default-*` 는 상류가 두 테마 모두 원시값을 거치지 않고 hex 를 직접 적어, 가리킬 팔레트 토큰이 상류에 없다. 그래서 본문 표에만 `#hex ≈ oklch(…)` 로 싣고, frontmatter 참조 행과 사이드카(Tokens 탭·use-design-md 가 읽는 토큰 JSON)에는 없다. hex 가 원시값과 같은 칸(`fill-*-transparent-hovered` 계열의 `{hue}-400-10`·`{hue}-300-10`·`black-5`·`white-5`)도 상류가 그 원시값을 가리키는 것이 아니라 참조가 아니다 [src:3].
 - **beta 역할이 가리키지 않는 투명 단계는 싣지 않았다(2026-11-01).** beta 역할이 가리키는 원시값은 모두 실었다(`{hue}-400-0`·`{hue}-300-0`·`blue-400-30`·`blue-300-45`·`orange-400-30` 포함). 어느 역할도 가리키지 않는 나머지 — 색상 알파(`{hue}-300-10`·`{hue}-400-5`, blue 밖의 `{hue}-300-45`, blue·orange 밖의 `{hue}-400-30`)와 중립색 알파(`grey-50/100/200/700/800/850-80`·`grey-700-90`·`grey-900-0/90`·`white-22/30/50`·`black-50/70`) — 는 싣지 않았다 [src:3].
 - **모바일 리플로우 미관찰.** 제공 스크린샷이 데스크톱 Storybook 캔버스 한정이라, 실제 모바일 웹/네이티브에서의 컴포넌트 리플로우·접힘 거동은 직접 확인되지 않았다 [src:2].
 
