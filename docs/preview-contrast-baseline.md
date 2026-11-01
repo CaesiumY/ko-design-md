@@ -205,7 +205,7 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | 양쪽의 `elements` | 참고 — 행이 래칫 단위이므로 카드 사본이 늘어도 막지 않는다 |
 
 **참고 열은 갱신이 강제되지 않으므로 낡을 수 있다.** 마지막으로 전수 갱신한 것은
-2026-10-02 이다. 게이트는 warn 행에도 붙여넣을 줄을 출력하므로, 낡은 것을 보면 그 줄로
+2026-11-01 이다(run `41245850047`). 게이트는 warn 행에도 붙여넣을 줄을 출력하므로, 낡은 것을 보면 그 줄로
 갱신하면 된다. 이미 분류된 항목의 `fail`·`borderline` 을 바꾸면(텍스트·비텍스트 모두) 같은 아티팩트로
 `pnpm audit:contrast:pairs` 를 돌려 아래 두 분류표와 테스트의 `CLASSIFIED_RUN` 도 함께 바꾼다(「게이트는
 이것을 어떻게 다루나」).
@@ -216,9 +216,9 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 
 | slug | theme | kind | measured | elements | fail | borderline | indeterminate |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 11st | dark | text | 90 | 175 | 7 | 0 | 11 |
+| 11st | dark | text | 90 | 175 | 10 | 0 | 8 |
 | 11st | dark | non-text | 14 | 19 | 5 | 0 | 2 |
-| 11st | light | text | 90 | 175 | 24 | 17 | 11 |
+| 11st | light | text | 90 | 175 | 27 | 17 | 8 |
 | 11st | light | non-text | 14 | 19 | 6 | 0 | 2 |
 | baemin | dark | text | 86 | 157 | 8 | 0 | 2 |
 | baemin | dark | non-text | 4 | 15 | 2 | 0 | 0 |
@@ -240,9 +240,9 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | codeit | dark | non-text | 27 | 38 | 14 | 4 | 0 |
 | codeit | light | text | 147 | 224 | 41 | 1 | 0 |
 | codeit | light | non-text | 27 | 38 | 15 | 1 | 0 |
-| gmarket | dark | text | 130 | 206 | 0 | 0 | 9 |
-| gmarket | dark | non-text | 11 | 15 | 4 | 0 | 3 |
-| gmarket | light | text | 130 | 206 | 43 | 0 | 9 |
+| gmarket | dark | text | 133 | 209 | 6 | 0 | 5 |
+| gmarket | dark | non-text | 11 | 15 | 4 | 0 | 2 |
+| gmarket | light | text | 133 | 209 | 52 | 0 | 3 |
 | gmarket | light | non-text | 11 | 15 | 6 | 0 | 3 |
 | greeting | dark | text | 200 | 479 | 24 | 26 | 0 |
 | greeting | dark | non-text | 95 | 152 | 55 | 0 | 0 |
@@ -252,19 +252,19 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | gs-retail | dark | non-text | 16 | 32 | 9 | 0 | 0 |
 | gs-retail | light | text | 77 | 144 | 2 | 0 | 0 |
 | gs-retail | light | non-text | 16 | 32 | 14 | 0 | 0 |
-| gs-shop | dark | text | 130 | 248 | 0 | 0 | 19 |
-| gs-shop | dark | non-text | 30 | 44 | 3 | 0 | 8 |
-| gs-shop | light | text | 130 | 248 | 30 | 2 | 19 |
-| gs-shop | light | non-text | 30 | 44 | 7 | 0 | 8 |
+| gs-shop | dark | text | 130 | 248 | 0 | 0 | 3 |
+| gs-shop | dark | non-text | 30 | 44 | 7 | 0 | 2 |
+| gs-shop | light | text | 130 | 248 | 38 | 2 | 8 |
+| gs-shop | light | non-text | 30 | 44 | 7 | 0 | 6 |
 | krds | dark | text | 142 | 289 | 1 | 0 | 5 |
 | krds | dark | non-text | 18 | 25 | 7 | 0 | 1 |
 | krds | light | text | 140 | 281 | 7 | 29 | 5 |
 | krds | light | non-text | 17 | 21 | 5 | 0 | 1 |
-| kyobobook | dark | text | 102 | 167 | 0 | 0 | 16 |
-| kyobobook | dark | non-text | 13 | 13 | 5 | 0 | 1 |
-| kyobobook | light | text | 102 | 167 | 23 | 0 | 16 |
-| kyobobook | light | non-text | 13 | 13 | 5 | 3 | 1 |
-| lg-electronics | dark | text | 282 | 564 | 10 | 9 | 12 |
+| kyobobook | dark | text | 102 | 167 | 0 | 0 | 4 |
+| kyobobook | dark | non-text | 13 | 13 | 6 | 0 | 0 |
+| kyobobook | light | text | 102 | 167 | 25 | 0 | 5 |
+| kyobobook | light | non-text | 13 | 13 | 5 | 3 | 0 |
+| lg-electronics | dark | text | 282 | 564 | 10 | 9 | 7 |
 | lg-electronics | dark | non-text | 22 | 33 | 13 | 0 | 1 |
 | lg-electronics | light | text | 280 | 564 | 20 | 30 | 7 |
 | lg-electronics | light | non-text | 22 | 33 | 12 | 0 | 1 |
@@ -272,9 +272,9 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | likelion | dark | non-text | 21 | 21 | 14 | 0 | 0 |
 | likelion | light | text | 92 | 194 | 35 | 1 | 0 |
 | likelion | light | non-text | 21 | 21 | 14 | 7 | 0 |
-| line-design-system | dark | text | 103 | 224 | 10 | 0 | 14 |
+| line-design-system | dark | text | 103 | 224 | 10 | 0 | 13 |
 | line-design-system | dark | non-text | 41 | 55 | 16 | 0 | 3 |
-| line-design-system | light | text | 103 | 224 | 43 | 12 | 14 |
+| line-design-system | light | text | 103 | 224 | 43 | 12 | 13 |
 | line-design-system | light | non-text | 42 | 56 | 34 | 0 | 3 |
 | nol | dark | text | 198 | 420 | 0 | 0 | 11 |
 | nol | dark | non-text | 17 | 19 | 3 | 4 | 1 |
@@ -284,22 +284,22 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | remember | dark | non-text | 3 | 8 | 1 | 0 | 0 |
 | remember | light | text | 99 | 184 | 40 | 0 | 3 |
 | remember | light | non-text | 3 | 8 | 2 | 0 | 0 |
-| ridi | dark | text | 194 | 512 | 64 | 0 | 47 |
-| ridi | dark | non-text | 20 | 25 | 14 | 0 | 6 |
-| ridi | light | text | 194 | 512 | 39 | 31 | 47 |
-| ridi | light | non-text | 19 | 24 | 11 | 0 | 6 |
+| ridi | dark | text | 194 | 512 | 64 | 0 | 26 |
+| ridi | dark | non-text | 20 | 25 | 18 | 0 | 2 |
+| ridi | light | text | 194 | 512 | 39 | 31 | 26 |
+| ridi | light | non-text | 19 | 24 | 11 | 0 | 2 |
 | samsung-one-ui | dark | text | 52 | 108 | 0 | 0 | 1 |
 | samsung-one-ui | dark | non-text | 25 | 29 | 9 | 6 | 3 |
 | samsung-one-ui | light | text | 52 | 108 | 0 | 2 | 1 |
 | samsung-one-ui | light | non-text | 25 | 29 | 18 | 1 | 3 |
-| seed-design | dark | text | 130 | 268 | 3 | 1 | 3 |
+| seed-design | dark | text | 131 | 268 | 4 | 1 | 2 |
 | seed-design | dark | non-text | 31 | 57 | 15 | 1 | 0 |
-| seed-design | light | text | 130 | 268 | 67 | 1 | 3 |
+| seed-design | light | text | 131 | 268 | 68 | 1 | 2 |
 | seed-design | light | non-text | 29 | 57 | 16 | 8 | 0 |
 | socar | dark | text | 145 | 246 | 57 | 0 | 9 |
-| socar | dark | non-text | 20 | 28 | 7 | 0 | 2 |
+| socar | dark | non-text | 20 | 28 | 9 | 0 | 0 |
 | socar | light | text | 145 | 246 | 58 | 0 | 9 |
-| socar | light | non-text | 18 | 26 | 7 | 0 | 2 |
+| socar | light | non-text | 18 | 26 | 9 | 0 | 0 |
 | teamsparta | dark | text | 82 | 114 | 9 | 0 | 0 |
 | teamsparta | dark | non-text | 12 | 14 | 3 | 0 | 3 |
 | teamsparta | light | text | 82 | 114 | 20 | 16 | 0 |
@@ -312,17 +312,17 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | vapor-ui | dark | non-text | 22 | 31 | 17 | 0 | 0 |
 | vapor-ui | light | text | 134 | 265 | 1 | 14 | 3 |
 | vapor-ui | light | non-text | 22 | 31 | 11 | 1 | 0 |
-| wanted | dark | text | 134 | 234 | 20 | 0 | 7 |
-| wanted | dark | non-text | 22 | 22 | 5 | 0 | 2 |
-| wanted | light | text | 134 | 234 | 39 | 2 | 7 |
-| wanted | light | non-text | 22 | 22 | 10 | 0 | 2 |
-| yeogi | dark | text | 70 | 94 | 5 | 5 | 3 |
-| yeogi | dark | non-text | 14 | 14 | 7 | 0 | 2 |
-| yeogi | light | text | 70 | 94 | 34 | 2 | 3 |
-| yeogi | light | non-text | 13 | 13 | 6 | 0 | 2 |
-| zigbang | dark | text | 219 | 366 | 39 | 0 | 8 |
+| wanted | dark | text | 134 | 234 | 20 | 0 | 6 |
+| wanted | dark | non-text | 22 | 22 | 5 | 0 | 1 |
+| wanted | light | text | 134 | 234 | 39 | 2 | 6 |
+| wanted | light | non-text | 22 | 22 | 10 | 0 | 1 |
+| yeogi | dark | text | 70 | 94 | 5 | 5 | 2 |
+| yeogi | dark | non-text | 14 | 14 | 9 | 0 | 0 |
+| yeogi | light | text | 70 | 94 | 34 | 2 | 2 |
+| yeogi | light | non-text | 13 | 13 | 8 | 0 | 0 |
+| zigbang | dark | text | 219 | 366 | 40 | 0 | 6 |
 | zigbang | dark | non-text | 34 | 40 | 11 | 1 | 2 |
-| zigbang | light | text | 219 | 366 | 86 | 0 | 7 |
+| zigbang | light | text | 219 | 366 | 87 | 0 | 5 |
 | zigbang | light | non-text | 34 | 40 | 22 | 2 | 2 |
 
 합계는 **의도적으로 적지 않는다.** 동시에 열린 카탈로그 PR끼리 서로를 깨뜨리지 않으려면
@@ -330,17 +330,19 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 
 ## 유보 사유
 
-판정을 보류한 읽기의 내역이다. 한 행이 두 사유를 함께 가질 수 있다.
+판정을 보류한 읽기의 내역이다(run `41245850047`). 한 행이 두 사유를 함께 가질 수 있다. 수치는 sweep 출력의
+`held for:` 줄이고, 테스트가 고정하지 않으므로 재집계 때 함께 갱신한다.
 
 | 사유 | 건수 |
 | --- | --- |
-| gradient | 203 |
-| pseudo-background | 140 |
-| overlay | 40 |
-| filter | 22 |
+| pseudo-background | 214 |
+| gradient | 88 |
+| overlay | 60 |
+| filter | 26 |
 | inset-shadow | 4 |
 | root-transparent | 4 |
 | text-fill | 2 |
+| image | 0 |
 
 - `gradient` — 배경(또는 스택 중간의 어떤 층)이 그라디언트를 그리는데, 그 그라디언트가 칠할 수
   있는 색들의 판정이 갈린다(#402). 글자가 그라디언트의 어느 부분 위에 있는지는 모르므로, 어떤 색에서는
@@ -523,7 +525,7 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 선언하면(폼 컨트롤이면 `disabled` 속성도 된다 — `:disabled` 는 폼 컨트롤에만 맞는다) 래칫이 내려가고
 게이트가 그 줄을 갱신하라고 말한다. 그게 래칫이 작동하는 모습이다.
 
-## 발행색끼리의 경계선 (2026-09-27 · 재집계 2026-10-28)
+## 발행색끼리의 경계선 (2026-09-27 · 재집계 2026-11-01)
 
 `borderline` 은 두 가지를 한 이름으로 담는다 — 고치면 되는 것과, 색을 옮기면 **발행값을
 버리게 되는** 것. 후자의 사례가 samsung 의 라이트 강조 버튼(4.51:1, 발행 `primary-dark`
@@ -534,7 +536,7 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 가를 수 있다 — `readDefinitions` 로 발행 OKLCH 를 읽고 측정 hex 를 `hexToOklab` 으로
 옮겨 `deltaE` 로 잰다. 그 절차가 `src/lib/contrast-pairs.ts` 이고, 이 절과 다음 절의 표는
 **CI 의 `contrast` 잡이 올린 아티팩트**에 그것을 돌린 출력이다 — 로컬 sweep 으로 답하면 기록된
-표가 서술하는 것과 다른 렌더에 대해 답하게 된다. 입력은 run `40553630012`(#621 의 head `b230831` — bezier·codeit·greeting·class101·gmarket 의 발행 반투명·다크 색을 frontmatter 토큰으로 실은 재집계)다.
+표가 서술하는 것과 다른 렌더에 대해 답하게 된다. 입력은 run `41245850047`(#642 의 head `0fcd93d` — 그라디언트 위 읽기를 그 그라디언트가 칠할 수 있는 색 전부로 판정하게 바꾼 재집계)다.
 그 뒤에 더해진 항목은 다음 재집계 때 두 표에 들어가고, 그전까지는 표에 없다(아래 「게이트는 이것을 어떻게 다루나」). 미달과
 경계선이 모두 0 인 항목도 표에 없다.
 
@@ -546,7 +548,7 @@ pnpm audit:contrast:pairs --findings <폴더>/contrast-findings.json
 **허용폭은 고르지 않고 데이터에서 읽었다.** 이 절을 처음 쓸 때(borderline 258행)의 514개 색 읽기의 최근접 토큰 거리는 366개가
 `d ≤ 0.002` 에 몰려 있고 **0.002와 0.005 사이가 정확히 비어 있다.** 그 아래가 8비트 양자화
 폭 안의 토큰 일치이고 위는 토큰 근처이되 그 토큰이 아닌 색이다. 0.01로 느슨하게 잡으면
-samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다. 2026-10-16 집계와 두 재집계(run `40245106559` · 2026-10-26, run `40553630012` · 2026-10-28)의
+samsung 의 `#fdfdfd` 가 `white`(#fafafa)에 붙어 거짓 일치가 된다. 2026-10-16 집계와 세 재집계(run `40245106559` · 2026-10-26, run `40553630012` · 2026-10-28, run `41245850047` · 2026-11-01)의
 `borderline` 읽기에서도 그 구간은 비어 있었다(미달 읽기에서는 아니었다 — 다음 절). 그 구간에 든 읽기의
 수는 위 명령이 표마다 `readings …` 줄로 낸다.
 
@@ -623,7 +625,7 @@ gs-shop 이 "라이브 실측 · 공식 문서와 불일치"·"공식 문서에 
   글자 합성 거리는 0.006 까지 비어 있었다. 허용폭은 넓히지 않았으므로 이 2행은 `one-token` 에 남는다.
 
 합성 쪽의 띠도 위 명령이 직접 낸다 — `readings …` 줄의 `nearest composite there` 가 어떤 토큰과도 직접 맞지 않은
-읽기 중 최근접 합성이 0.002~0.005 에 든 수다. 2026-10-16 집계와 두 재집계(run `40245106559` · 2026-10-26, run `40553630012` · 2026-10-28)에서 이 띠는
+읽기 중 최근접 합성이 0.002~0.005 에 든 수다. 2026-10-16 집계와 세 재집계(run `40245106559` · 2026-10-26, run `40553630012` · 2026-10-28, run `41245850047` · 2026-11-01)에서 이 띠는
 `borderline` 읽기에서는 비었고 `fail` 읽기에서는 비지 않았다(직접 대조의 띠와 같은 모양). 재집계에서 이 수가 크게 늘면 허용폭을
 다시 볼 때다. 2026-10-26 재집계에서 wanted 가 반투명 토큰(배지 바탕 · 버튼 인터랙션 층)을 새로 실으며 `fail` 쪽 띠가 한때
 늘었으나, 합성을 행의 테마로 좁힌(위 「테마」 항) 뒤 다시 줄었다 — 늘어난 몫은 테마가 엇갈린 합성이었다. 허용폭은 그대로다.
@@ -699,18 +701,18 @@ warn 만)이라 갱신이 강제되지 않고, 두 분류표의 비텍스트 행
 지워도 대조를 피하지 못한다. 재집계할 때는 그 목록을 위 명령이 출력하는 `classified run` 줄로 통째로 바꾼다 —
 테스트가 그 run 번호를 이 절의 입력 run 번호와 대조한다.
 
-## 미달의 발행색 분류 (2026-10-16 · 재집계 2026-10-28)
+## 미달의 발행색 분류 (2026-10-16 · 재집계 2026-11-01)
 
 이슈 #397. `fail` 행을 위 절과 같은 절차·같은 네 칸·같은 아티팩트로 가른 것이다. 미달을 줄이는 작업을
 슬러그별로 시작하기 전에, 그 수정이 발행값끼리의 쌍을 건드리는 것인지를 먼저 갈라 두려는 표다.
 
 **허용폭의 빈 띠가 여기서는 비어 있지 않았다.** 0.002 는 `borderline` 읽기에서 0.002~0.005 가 비어 있어서
-읽은 값인데, 2026-10-16 집계와 두 재집계(run `40245106559` · 2026-10-26, run `40553630012` · 2026-10-28)의 `fail` 색 읽기에는 그 구간에 든 것이 있었다.
+읽은 값인데, 2026-10-16 집계와 세 재집계(run `40245106559` · 2026-10-26, run `40553630012` · 2026-10-28, run `41245850047` · 2026-11-01)의 `fail` 색 읽기에는 그 구간에 든 것이 있었다.
 이슈가 허용폭을 고정했으므로 바꾸지 않았다. 0.002 는 엄한 쪽이라 `both-published` 를 적게 센다 — 0.005 로 넓히면 그 칸이 는다.
 아래 caveat 의 합성 오차와 같은 방향이다. 그 구간의 읽기 수와 0.005 에서의 `both-published` 는 위 명령이 표와 함께
 `readings …` 줄로 낸다.
 
-**결과: `fail` 2013행 중 1674행이 두 색 모두 발행 토큰인 쌍이다.**
+**결과: `fail` 2065행 중 1697행이 두 색 모두 발행 토큰인 쌍이다.**
 
 **이 수도 위 절과 같은 두 방향의 오차를 진다.** 겹친 반투명 층·`opacity` 가 낀 표면은 입력이 모두 발행
 토큰이어도 `one-token`·`no-token` 칸에 들어가고(발행 쌍을 적게 센다), 우연히 토큰이나 합성 근처에 떨어진
@@ -719,7 +721,7 @@ warn 만)이라 갱신이 강제되지 않고, 두 분류표의 비텍스트 행
 
 | slug | kind | both-published | observed-pair | one-token | no-token | total |
 | --- | --- | --- | --- | --- | --- | --- |
-| 11st | text | 24 | 0 | 7 | 0 | 31 |
+| 11st | text | 30 | 0 | 7 | 0 | 37 |
 | 11st | non-text | 5 | 0 | 1 | 5 | 11 |
 | baemin | text | 17 | 0 | 8 | 2 | 27 |
 | baemin | non-text | 1 | 0 | 0 | 3 | 4 |
@@ -731,18 +733,18 @@ warn 만)이라 갱신이 강제되지 않고, 두 분류표의 비텍스트 행
 | class101 | non-text | 14 | 0 | 0 | 0 | 14 |
 | codeit | text | 42 | 0 | 0 | 0 | 42 |
 | codeit | non-text | 15 | 0 | 14 | 0 | 29 |
-| gmarket | text | 43 | 0 | 0 | 0 | 43 |
+| gmarket | text | 43 | 0 | 5 | 10 | 58 |
 | gmarket | non-text | 6 | 0 | 0 | 4 | 10 |
 | greeting | text | 76 | 0 | 2 | 2 | 80 |
 | greeting | non-text | 109 | 0 | 15 | 4 | 128 |
 | gs-retail | text | 4 | 0 | 0 | 0 | 4 |
 | gs-retail | non-text | 2 | 0 | 9 | 12 | 23 |
-| gs-shop | text | 23 | 7 | 0 | 0 | 30 |
-| gs-shop | non-text | 6 | 1 | 0 | 3 | 10 |
+| gs-shop | text | 25 | 7 | 6 | 0 | 38 |
+| gs-shop | non-text | 6 | 1 | 0 | 7 | 14 |
 | krds | text | 6 | 0 | 1 | 1 | 8 |
 | krds | non-text | 4 | 0 | 2 | 6 | 12 |
-| kyobobook | text | 23 | 0 | 0 | 0 | 23 |
-| kyobobook | non-text | 5 | 0 | 0 | 5 | 10 |
+| kyobobook | text | 25 | 0 | 0 | 0 | 25 |
+| kyobobook | non-text | 5 | 0 | 0 | 6 | 11 |
 | lg-electronics | text | 13 | 17 | 0 | 0 | 30 |
 | lg-electronics | non-text | 5 | 20 | 0 | 0 | 25 |
 | likelion | text | 35 | 0 | 0 | 0 | 35 |
@@ -754,12 +756,12 @@ warn 만)이라 갱신이 강제되지 않고, 두 분류표의 비텍스트 행
 | remember | text | 47 | 0 | 0 | 0 | 47 |
 | remember | non-text | 3 | 0 | 0 | 0 | 3 |
 | ridi | text | 91 | 0 | 8 | 4 | 103 |
-| ridi | non-text | 23 | 0 | 2 | 0 | 25 |
+| ridi | non-text | 27 | 0 | 2 | 0 | 29 |
 | samsung-one-ui | non-text | 0 | 0 | 13 | 14 | 27 |
-| seed-design | text | 70 | 0 | 0 | 0 | 70 |
+| seed-design | text | 71 | 0 | 1 | 0 | 72 |
 | seed-design | non-text | 31 | 0 | 0 | 0 | 31 |
 | socar | text | 115 | 0 | 0 | 0 | 115 |
-| socar | non-text | 14 | 0 | 0 | 0 | 14 |
+| socar | non-text | 18 | 0 | 0 | 0 | 18 |
 | teamsparta | text | 24 | 0 | 5 | 0 | 29 |
 | teamsparta | non-text | 3 | 0 | 3 | 0 | 6 |
 | toss | text | 68 | 0 | 11 | 0 | 79 |
@@ -769,16 +771,17 @@ warn 만)이라 갱신이 강제되지 않고, 두 분류표의 비텍스트 행
 | wanted | text | 50 | 0 | 2 | 7 | 59 |
 | wanted | non-text | 8 | 0 | 7 | 0 | 15 |
 | yeogi | text | 33 | 0 | 5 | 1 | 39 |
-| yeogi | non-text | 4 | 0 | 2 | 7 | 13 |
-| zigbang | text | 125 | 0 | 0 | 0 | 125 |
+| yeogi | non-text | 6 | 0 | 3 | 8 | 17 |
+| zigbang | text | 127 | 0 | 0 | 0 | 127 |
 | zigbang | non-text | 33 | 0 | 0 | 0 | 33 |
 
-**어느 슬러그부터 (2026-10-28 재집계 기준).** 고칠 수 있는 칸(`one-token`·`no-token`)이 큰 쪽은 텍스트에서
-bezier 이고 line-design-system · ridi · toss · baemin 이 뒤따른다(수는 위 표에 있다). 단 #550 의 슬러그 티켓으로 이미 처리한 슬러그는, 텍스트
+**어느 슬러그부터 (2026-11-01 재집계 기준).** 고칠 수 있는 칸(`one-token`·`no-token`)이 큰 쪽은 텍스트에서
+bezier 이고 line-design-system · gmarket · ridi · toss · baemin 이 뒤따른다(수는 위 표에 있다). 단 #550 의 슬러그 티켓으로 이미 처리한 슬러그는, 텍스트
 칸이 행마다 처리를 마친 뒤의 남은 행일 수 있다 — 무엇으로 처리했는지는 그 티켓의 PR 본문에 있고, 이 문단에는 쌓지
 않는다(비텍스트 칸은 그 티켓들이 따로 다루지 않았다 — 선언으로 함께 빠진 행은 있다). 비텍스트에서는 samsung-one-ui(미달
 전부가 이 두 칸) · gs-retail · greeting · line-design-system · likelion · codeit 순이다. 반대로 socar · zigbang · remember ·
-class101 와 codeit · gmarket · kyobobook · seed-design 의 텍스트는 미달 전부가 `both-published` 라, 고치지 않고 두는 대상이다(아래
+class101 은 텍스트·비텍스트 모두, codeit · gs-retail · kyobobook · likelion 은 텍스트만, seed-design · toss 는 비텍스트만
+미달 전부가 `both-published` 라, 고치지 않고 두는 대상이다(아래
 「미달을 고칠 때」). lg-electronics 와 nol 은 미달 대부분이 `observed-pair` 다. 위 caveat 때문에, 고칠 수 있는 칸에서
 시작하더라도 행마다 합성 경로를 먼저 본다.
 
