@@ -4,6 +4,8 @@ import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
 import { findKey, readFrontmatter } from "./frontmatter"
 import { splitFrontmatter } from "./frontmatter-fence"
+import { deltaE, hexToOklab, parseOklch } from "./oklch-convert"
+import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
 
 // The entries in CASES below publish a semantic role layer twice (#435): as a
 // Markdown table in `## Colors` — the reader's copy, carrying `[src:N]` — and
@@ -230,6 +232,34 @@ const CASES: Record<string, { title: string; check: () => void }> = {
         "bezier: beta roles must not reference `stable-*` keys"
       ).toEqual([])
       expectRowsToMatch("bezier", expected, refs, literals)
+      // The literal cells write the upstream hex beside its OKLCH
+      // (`#9698ffff ≈ \`oklch(…)\``). `audit:oklch` does not read tables
+      // (draft-validator.ts `scanBody` table note), so the pair is held here
+      // with that gate's own tolerances: ΔE always, alpha when both sides
+      // declare it.
+      const pairs = tableRows.flatMap((row) =>
+        row.slice(1).flatMap((cell) => {
+          const m = /^(#[0-9a-f]{6,8}) ≈ `(oklch\([^)]*\))`/i.exec(cell)
+          return m ? [{ cell, hex: m[1], oklch: m[2] }] : []
+        })
+      )
+      expect(pairs.length, "bezier: hex ≈ OKLCH cells parsed").toBeGreaterThan(
+        0
+      )
+      const off = pairs.filter(({ hex, oklch }) => {
+        const want = hexToOklab(hex)
+        const wrote = parseOklch(oklch)
+        if (!want || !wrote) return true
+        const alphaOff =
+          want.alpha != null &&
+          wrote.alpha != null &&
+          Math.abs(want.alpha - wrote.alpha) > ALPHA_TOLERANCE
+        return deltaE(wrote.lab, want.lab) > DELTA_E_TOLERANCE || alphaOff
+      })
+      expect(
+        off.map(({ cell }) => cell),
+        "bezier: table OKLCH must match its upstream hex"
+      ).toEqual([])
     },
   },
   "seed-design": {
