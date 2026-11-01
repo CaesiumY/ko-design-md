@@ -10,115 +10,115 @@ logo: https://getdesign.kr/logos/bezier.png
 colors:
   ## Accent global hues
   # Blue — 제품 1차 액션 (indigo-violet, primary)
-  blue-300: oklch(0.665 0.181 280)
-  blue-400: oklch(0.554 0.214 280)   # primary
-  blue-500: oklch(0.483 0.229 280)
+  blue-300: oklch(0.665 0.181 280)   # 상류 beta --color-blue-300
+  blue-400: oklch(0.554 0.214 280)   # primary · 상류 beta --color-blue-400
+  blue-500: oklch(0.483 0.229 280)   # 상류 beta --color-blue-500
   # Green — 성공 / 폼 선택 상태 (체크박스·라디오·스위치·슬라이더)
-  green-300: oklch(0.732 0.157 150)
-  green-400: oklch(0.652 0.168 150)
-  green-500: oklch(0.562 0.100 160)
+  green-300: oklch(0.732 0.157 150)   # 상류 beta --color-green-300
+  green-400: oklch(0.652 0.168 150)   # 상류 beta --color-green-400
+  green-500: oklch(0.562 0.100 160)   # 상류 beta --color-green-500
   # Red — 에러 / 위험
-  red-300: oklch(0.690 0.172 23)
-  red-400: oklch(0.634 0.177 20)
-  red-500: oklch(0.541 0.166 21)
+  red-300: oklch(0.690 0.172 23)   # 상류 beta --color-red-300
+  red-400: oklch(0.634 0.177 20)   # 상류 beta --color-red-400
+  red-500: oklch(0.541 0.166 21)   # 상류 beta --color-red-500
   # Orange — 경고 (인풋 invalid box-shadow)
-  orange-300: oklch(0.764 0.148 58)
-  orange-400: oklch(0.698 0.156 55)
-  orange-500: oklch(0.600 0.146 54)
+  orange-300: oklch(0.764 0.148 58)   # 상류 beta --color-orange-300
+  orange-400: oklch(0.698 0.156 55)   # 상류 beta --color-orange-400
+  orange-500: oklch(0.600 0.146 54)   # 상류 beta --color-orange-500
   # Cobalt — 정보 강조 (highlight)
-  cobalt-300: oklch(0.724 0.125 245)
-  cobalt-400: oklch(0.643 0.150 248)
-  cobalt-500: oklch(0.570 0.156 257)
+  cobalt-300: oklch(0.724 0.125 245)   # 상류 beta --color-cobalt-300
+  cobalt-400: oklch(0.643 0.150 248)   # 상류 beta --color-cobalt-400
+  cobalt-500: oklch(0.570 0.156 257)   # 상류 beta --color-cobalt-500
   # 단일 코어 액센트 (주로 400; tag·상태 칩용 300 일부)
-  purple-300: oklch(0.670 0.205 299)   # #a970ff
-  purple-400: oklch(0.591 0.208 297)
+  purple-300: oklch(0.670 0.205 299)   # #a970ff · 상류 beta --color-purple-300
+  purple-400: oklch(0.591 0.208 297)   # 상류 beta --color-purple-400
   pink-300: oklch(0.722 0.192 336)   # #ec6fd3
-  pink-400: oklch(0.637 0.208 339)
-  navy-300: oklch(0.649 0.102 276)   # #7e89cd
-  navy-400: oklch(0.469 0.147 273)
-  yellow-300: oklch(0.824 0.160 88)
-  yellow-400: oklch(0.789 0.161 82)
-  olive-300: oklch(0.784 0.167 115)
-  olive-400: oklch(0.730 0.160 113)
-  teal-300: oklch(0.787 0.123 186)   # #40d3c5
-  teal-400: oklch(0.690 0.118 191)
+  pink-400: oklch(0.637 0.208 339)   # 상류 beta --color-pink-400
+  navy-300: oklch(0.649 0.102 276)   # #7e89cd · 상류 beta --color-navy-300
+  navy-400: oklch(0.469 0.147 273)   # 상류 beta --color-navy-400
+  yellow-300: oklch(0.824 0.160 88)   # 상류 beta --color-yellow-300
+  yellow-400: oklch(0.789 0.161 82)   # 상류 beta --color-yellow-400
+  olive-300: oklch(0.784 0.167 115)   # 상류 beta --color-olive-300
+  olive-400: oklch(0.730 0.160 113)   # 상류 beta --color-olive-400
+  teal-300: oklch(0.787 0.123 186)   # #40d3c5 · 상류 beta --color-teal-300
+  teal-400: oklch(0.690 0.118 191)   # 상류 beta --color-teal-400
   ## Accent alpha tints
   # 상류 beta 원시값 이름 그대로 [src:3] — 두 테마가 함께 쓰는 원시값이라 dark- 접두가 없다.
   # fill-accent-{hue} = 라이트 {hue}-400-10 · 다크 {hue}-300-18, -heavy = 라이트 {hue}-400-20 · 다크 {hue}-300-30.
   # 300-18/30 의 기준 RGB 는 blue·green·red·navy 에서 상류 불투명 300 과 다르다(예: blue #6b6eff 대 #8082ff — 상류에도 그 RGB 의 불투명 판은 없다).
   # {hue}-400-0·{hue}-300-0 은 완전 투명 단계(fill-*-transparent), blue-400-30·blue-300-45·orange-400-30 은 state-action-light·state-warning-light 가 가리킨다.
-  blue-400-10: oklch(0.554 0.214 280 / 0.10)   # #6157ea1a
-  blue-400-20: oklch(0.554 0.214 280 / 0.20)   # #6157ea33
+  blue-400-10: oklch(0.554 0.214 280 / 0.10)   # #6157ea1a · 상류 beta --color-blue-400-10
+  blue-400-20: oklch(0.554 0.214 280 / 0.20)   # #6157ea33 · 상류 beta --color-blue-400-20
   blue-300-18: oklch(0.615 0.211 277 / 0.18)   # #6b6eff2e
-  blue-300-30: oklch(0.615 0.211 277 / 0.30)   # #6b6eff4d
-  blue-400-30: oklch(0.554 0.214 280 / 0.30)   # #6157ea4d
+  blue-300-30: oklch(0.615 0.211 277 / 0.30)   # #6b6eff4d · 상류 beta --color-blue-300-30
+  blue-400-30: oklch(0.554 0.214 280 / 0.30)   # #6157ea4d · 상류 beta --color-blue-400-30
   blue-300-45: oklch(0.615 0.211 277 / 0.45)   # #6b6eff73
   blue-400-0: oklch(0.554 0.214 280 / 0)   # #6157ea00
   blue-300-0: oklch(0.615 0.211 277 / 0)   # #6b6eff00
-  cobalt-400-10: oklch(0.643 0.150 248 / 0.10)   # #3292e31a
-  cobalt-400-20: oklch(0.643 0.150 248 / 0.20)   # #3292e333
+  cobalt-400-10: oklch(0.643 0.150 248 / 0.10)   # #3292e31a · 상류 beta --color-cobalt-400-10
+  cobalt-400-20: oklch(0.643 0.150 248 / 0.20)   # #3292e333 · 상류 beta --color-cobalt-400-20
   cobalt-300-18: oklch(0.724 0.125 245 / 0.18)   # #5cadef2e
-  cobalt-300-30: oklch(0.724 0.125 245 / 0.30)   # #5cadef4d
+  cobalt-300-30: oklch(0.724 0.125 245 / 0.30)   # #5cadef4d · 상류 beta --color-cobalt-300-30
   cobalt-400-0: oklch(0.643 0.150 248 / 0)   # #3292e300
   cobalt-300-0: oklch(0.724 0.125 245 / 0)   # #5cadef00
-  green-400-10: oklch(0.652 0.168 150 / 0.10)   # #20ab551a
-  green-400-20: oklch(0.652 0.168 150 / 0.20)   # #20ab5533
+  green-400-10: oklch(0.652 0.168 150 / 0.10)   # #20ab551a · 상류 beta --color-green-400-10
+  green-400-20: oklch(0.652 0.168 150 / 0.20)   # #20ab5533 · 상류 beta --color-green-400-20
   green-300-18: oklch(0.724 0.162 150 / 0.18)   # #4bc16c2e
-  green-300-30: oklch(0.724 0.162 150 / 0.30)   # #4bc16c4d
+  green-300-30: oklch(0.724 0.162 150 / 0.30)   # #4bc16c4d · 상류 beta --color-green-300-30
   green-400-0: oklch(0.652 0.168 150 / 0)   # #20ab5500
   green-300-0: oklch(0.724 0.162 150 / 0)   # #4bc16c00
-  red-400-10: oklch(0.634 0.177 20 / 0.10)   # #e1535d1a
-  red-400-20: oklch(0.634 0.177 20 / 0.20)   # #e1535d33
+  red-400-10: oklch(0.634 0.177 20 / 0.10)   # #e1535d1a · 상류 beta --color-red-400-10
+  red-400-20: oklch(0.634 0.177 20 / 0.20)   # #e1535d33 · 상류 beta --color-red-400-20
   red-300-18: oklch(0.677 0.180 23 / 0.18)   # #f260602e
-  red-300-30: oklch(0.677 0.180 23 / 0.30)   # #f260604d
+  red-300-30: oklch(0.677 0.180 23 / 0.30)   # #f260604d · 상류 beta --color-red-300-30
   red-400-0: oklch(0.634 0.177 20 / 0)   # #e1535d00
   red-300-0: oklch(0.677 0.180 23 / 0)   # #f2606000
-  orange-400-10: oklch(0.698 0.156 55 / 0.10)   # #e67f2b1a
-  orange-400-20: oklch(0.698 0.156 55 / 0.20)   # #e67f2b33
+  orange-400-10: oklch(0.698 0.156 55 / 0.10)   # #e67f2b1a · 상류 beta --color-orange-400-10
+  orange-400-20: oklch(0.698 0.156 55 / 0.20)   # #e67f2b33 · 상류 beta --color-orange-400-20
   orange-300-18: oklch(0.764 0.148 58 / 0.18)   # #f798472e
-  orange-300-30: oklch(0.764 0.148 58 / 0.30)   # #f798474d
-  orange-400-30: oklch(0.698 0.156 55 / 0.30)   # #e67f2b4d
+  orange-300-30: oklch(0.764 0.148 58 / 0.30)   # #f798474d · 상류 beta --color-orange-300-30
+  orange-400-30: oklch(0.698 0.156 55 / 0.30)   # #e67f2b4d · 상류 beta --color-orange-400-30
   orange-400-0: oklch(0.698 0.156 55 / 0)   # #e67f2b00
   orange-300-0: oklch(0.764 0.148 58 / 0)   # #f7984700
-  yellow-400-10: oklch(0.789 0.161 82 / 0.10)   # #edae0d1a
-  yellow-400-20: oklch(0.789 0.161 82 / 0.20)   # #edae0d33
+  yellow-400-10: oklch(0.789 0.161 82 / 0.10)   # #edae0d1a · 상류 beta --color-yellow-400-10
+  yellow-400-20: oklch(0.789 0.161 82 / 0.20)   # #edae0d33 · 상류 beta --color-yellow-400-20
   yellow-300-18: oklch(0.824 0.160 88 / 0.18)   # #f0be272e
-  yellow-300-30: oklch(0.824 0.160 88 / 0.30)   # #f0be274d
+  yellow-300-30: oklch(0.824 0.160 88 / 0.30)   # #f0be274d · 상류 beta --color-yellow-300-30
   yellow-400-0: oklch(0.789 0.161 82 / 0)   # #edae0d00
   yellow-300-0: oklch(0.824 0.160 88 / 0)   # #f0be2700
-  olive-400-10: oklch(0.730 0.160 113 / 0.10)   # #a9b1101a
-  olive-400-20: oklch(0.730 0.160 113 / 0.20)   # #a9b11033
+  olive-400-10: oklch(0.730 0.160 113 / 0.10)   # #a9b1101a · 상류 beta --color-olive-400-10
+  olive-400-20: oklch(0.730 0.160 113 / 0.20)   # #a9b11033 · 상류 beta --color-olive-400-20
   olive-300-18: oklch(0.784 0.167 115 / 0.18)   # #b7c4272e
-  olive-300-30: oklch(0.784 0.167 115 / 0.30)   # #b7c4274d
+  olive-300-30: oklch(0.784 0.167 115 / 0.30)   # #b7c4274d · 상류 beta --color-olive-300-30
   olive-400-0: oklch(0.730 0.160 113 / 0)   # #a9b11000
   olive-300-0: oklch(0.784 0.167 115 / 0)   # #b7c42700
-  teal-400-10: oklch(0.690 0.118 190 / 0.10)   # #09b2ac1a
-  teal-400-20: oklch(0.690 0.118 190 / 0.20)   # #09b2ac33
+  teal-400-10: oklch(0.690 0.118 190 / 0.10)   # #09b2ac1a · 상류 beta --color-teal-400-10
+  teal-400-20: oklch(0.690 0.118 190 / 0.20)   # #09b2ac33 · 상류 beta --color-teal-400-20
   teal-300-18: oklch(0.787 0.123 186 / 0.18)   # #40d3c52e
-  teal-300-30: oklch(0.787 0.123 186 / 0.30)   # #40d3c54d
+  teal-300-30: oklch(0.787 0.123 186 / 0.30)   # #40d3c54d · 상류 beta --color-teal-300-30
   teal-400-0: oklch(0.690 0.118 190 / 0)   # #09b2ac00
   teal-300-0: oklch(0.787 0.123 186 / 0)   # #40d3c500
-  navy-400-10: oklch(0.469 0.147 273 / 0.10)   # #424fab1a
-  navy-400-20: oklch(0.469 0.147 273 / 0.20)   # #424fab33
+  navy-400-10: oklch(0.469 0.147 273 / 0.10)   # #424fab1a · 상류 beta --color-navy-400-10
+  navy-400-20: oklch(0.469 0.147 273 / 0.20)   # #424fab33 · 상류 beta --color-navy-400-20
   navy-300-18: oklch(0.607 0.118 276 / 0.18)   # #6f7bc82e
-  navy-300-30: oklch(0.607 0.118 276 / 0.30)   # #6f7bc84d
+  navy-300-30: oklch(0.607 0.118 276 / 0.30)   # #6f7bc84d · 상류 beta --color-navy-300-30
   navy-400-0: oklch(0.469 0.147 273 / 0)   # #424fab00
   navy-300-0: oklch(0.607 0.118 276 / 0)   # #6f7bc800
-  purple-400-10: oklch(0.591 0.208 297 / 0.10)   # #8e57e71a
-  purple-400-20: oklch(0.591 0.208 297 / 0.20)   # #8e57e733
+  purple-400-10: oklch(0.591 0.208 297 / 0.10)   # #8e57e71a · 상류 beta --color-purple-400-10
+  purple-400-20: oklch(0.591 0.208 297 / 0.20)   # #8e57e733 · 상류 beta --color-purple-400-20
   purple-300-18: oklch(0.670 0.205 299 / 0.18)   # #a970ff2e
-  purple-300-30: oklch(0.670 0.205 299 / 0.30)   # #a970ff4d
+  purple-300-30: oklch(0.670 0.205 299 / 0.30)   # #a970ff4d · 상류 beta --color-purple-300-30
   purple-400-0: oklch(0.591 0.208 297 / 0)   # #8e57e700
   purple-300-0: oklch(0.670 0.205 299 / 0)   # #a970ff00
-  pink-400-10: oklch(0.637 0.208 338 / 0.10)   # #d64bb51a
-  pink-400-20: oklch(0.637 0.208 338 / 0.20)   # #d64bb533
+  pink-400-10: oklch(0.637 0.208 338 / 0.10)   # #d64bb51a · 상류 beta --color-pink-400-10
+  pink-400-20: oklch(0.637 0.208 338 / 0.20)   # #d64bb533 · 상류 beta --color-pink-400-20
   pink-300-18: oklch(0.722 0.192 336 / 0.18)   # #ec6fd32e
   pink-300-30: oklch(0.722 0.192 336 / 0.30)   # #ec6fd34d
   pink-400-0: oklch(0.637 0.208 338 / 0)   # #d64bb500
   pink-300-0: oklch(0.722 0.192 336 / 0)   # #ec6fd300
   ## Neutral global
   grey-25: oklch(0.995 0.003 286)
-  grey-50: oklch(0.988 0 286)
+  grey-50: oklch(0.988 0 286)   # 상류 beta --color-grey-50
   grey-100: oklch(0.976 0.001 286)
   grey-200: oklch(0.952 0.001 286)
   grey-300: oklch(0.913 0.003 286)
@@ -126,17 +126,17 @@ colors:
   grey-500: oklch(0.729 0.004 286)
   grey-600: oklch(0.578 0.008 286)
   grey-650: oklch(0.469 0.008 286)   # #5a5a5f
-  grey-700: oklch(0.354 0.007 286)
+  grey-700: oklch(0.354 0.007 286)   # 상류 beta --color-grey-700
   grey-750: oklch(0.315 0.007 286)   # #313135
-  grey-800: oklch(0.283 0.007 286)
-  grey-850: oklch(0.261 0.004 286)
-  grey-900: oklch(0.232 0.006 286)   # 다크 표면 기본 (더 짙은 grey-950 은 다크 surface-low·border-detach-low 가 가리킨다)
+  grey-800: oklch(0.283 0.007 286)   # 상류 beta --color-grey-800
+  grey-850: oklch(0.261 0.004 286)   # 상류 beta --color-grey-850
+  grey-900: oklch(0.232 0.006 286)   # 다크 표면 기본 (더 짙은 grey-950 은 다크 surface-low·border-detach-low 가 가리킨다) · 상류 beta --color-grey-900
   grey-950: oklch(0.219 0.004 286)   # #1a1a1c
   # grey 알파 단계 — beta 원시값.
   grey-100-90: oklch(0.976 0.001 286 / 0.90)   # #f7f7f8e6 · 라이트 surface-glass-higher
   grey-200-90: oklch(0.952 0.001 286 / 0.90)   # #efeff0e6
   grey-750-90: oklch(0.315 0.007 286 / 0.90)   # #313135e6
-  grey-800-90: oklch(0.283 0.007 286 / 0.90)   # #29292de6
+  grey-800-90: oklch(0.283 0.007 286 / 0.90)   # #29292de6 · 상류 beta --color-grey-800-90
   grey-850-90: oklch(0.261 0.004 286 / 0.90)   # #242426e6
   # 텍스트·보더·딤은 고정 grey가 아니라 alpha-black 위계로 쌓는다 (Bezier 시그니처)
   black-100: oklch(0 0 0)

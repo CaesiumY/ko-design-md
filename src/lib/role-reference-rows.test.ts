@@ -316,6 +316,22 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       const literalRows = betaRows.filter(([, light = "", dark = ""]) =>
         [light, dark].every((cell) => single(cell) === undefined)
       )
+      // A beta role row is either two single references or two literal cells.
+      // A row with one of each would pass both checks above — the reference
+      // half against its row, the literal half against its hex — so it is
+      // refused here.
+      const mixedRows = betaRows
+        .filter(([, light = "", dark = ""]) => {
+          const refsInRow = [light, dark].filter(
+            (cell) => single(cell) !== undefined
+          ).length
+          return refsInRow === 1
+        })
+        .map(([cell]) => spans(cell)[0])
+      expect(
+        mixedRows,
+        "bezier: beta rows must be all-reference or all-literal"
+      ).toEqual([])
       const proseCounts = {
         stableRoles: stableRows.length,
         ...Object.fromEntries(

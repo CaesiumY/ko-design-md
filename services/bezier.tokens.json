@@ -3,88 +3,103 @@
     {
       "name": "blue-300",
       "value": "oklch(0.665 0.181 280)",
+      "note": "상류 beta --color-blue-300",
       "group": "Accent global hues"
     },
     {
       "name": "blue-400",
       "value": "oklch(0.554 0.214 280)",
-      "note": "primary",
+      "note": "primary · 상류 beta --color-blue-400",
       "group": "Accent global hues"
     },
     {
       "name": "blue-500",
       "value": "oklch(0.483 0.229 280)",
+      "note": "상류 beta --color-blue-500",
       "group": "Accent global hues"
     },
     {
       "name": "green-300",
       "value": "oklch(0.732 0.157 150)",
+      "note": "상류 beta --color-green-300",
       "group": "Accent global hues"
     },
     {
       "name": "green-400",
       "value": "oklch(0.652 0.168 150)",
+      "note": "상류 beta --color-green-400",
       "group": "Accent global hues"
     },
     {
       "name": "green-500",
       "value": "oklch(0.562 0.100 160)",
+      "note": "상류 beta --color-green-500",
       "group": "Accent global hues"
     },
     {
       "name": "red-300",
       "value": "oklch(0.690 0.172 23)",
+      "note": "상류 beta --color-red-300",
       "group": "Accent global hues"
     },
     {
       "name": "red-400",
       "value": "oklch(0.634 0.177 20)",
+      "note": "상류 beta --color-red-400",
       "group": "Accent global hues"
     },
     {
       "name": "red-500",
       "value": "oklch(0.541 0.166 21)",
+      "note": "상류 beta --color-red-500",
       "group": "Accent global hues"
     },
     {
       "name": "orange-300",
       "value": "oklch(0.764 0.148 58)",
+      "note": "상류 beta --color-orange-300",
       "group": "Accent global hues"
     },
     {
       "name": "orange-400",
       "value": "oklch(0.698 0.156 55)",
+      "note": "상류 beta --color-orange-400",
       "group": "Accent global hues"
     },
     {
       "name": "orange-500",
       "value": "oklch(0.600 0.146 54)",
+      "note": "상류 beta --color-orange-500",
       "group": "Accent global hues"
     },
     {
       "name": "cobalt-300",
       "value": "oklch(0.724 0.125 245)",
+      "note": "상류 beta --color-cobalt-300",
       "group": "Accent global hues"
     },
     {
       "name": "cobalt-400",
       "value": "oklch(0.643 0.150 248)",
+      "note": "상류 beta --color-cobalt-400",
       "group": "Accent global hues"
     },
     {
       "name": "cobalt-500",
       "value": "oklch(0.570 0.156 257)",
+      "note": "상류 beta --color-cobalt-500",
       "group": "Accent global hues"
     },
     {
       "name": "purple-300",
       "value": "oklch(0.670 0.205 299)",
-      "note": "#a970ff",
+      "note": "#a970ff · 상류 beta --color-purple-300",
       "group": "Accent global hues"
     },
     {
       "name": "purple-400",
       "value": "oklch(0.591 0.208 297)",
+      "note": "상류 beta --color-purple-400",
       "group": "Accent global hues"
     },
     {
@@ -96,60 +111,67 @@
     {
       "name": "pink-400",
       "value": "oklch(0.637 0.208 339)",
+      "note": "상류 beta --color-pink-400",
       "group": "Accent global hues"
     },
     {
       "name": "navy-300",
       "value": "oklch(0.649 0.102 276)",
-      "note": "#7e89cd",
+      "note": "#7e89cd · 상류 beta --color-navy-300",
       "group": "Accent global hues"
     },
     {
       "name": "navy-400",
       "value": "oklch(0.469 0.147 273)",
+      "note": "상류 beta --color-navy-400",
       "group": "Accent global hues"
     },
     {
       "name": "yellow-300",
       "value": "oklch(0.824 0.160 88)",
+      "note": "상류 beta --color-yellow-300",
       "group": "Accent global hues"
     },
     {
       "name": "yellow-400",
       "value": "oklch(0.789 0.161 82)",
+      "note": "상류 beta --color-yellow-400",
       "group": "Accent global hues"
     },
     {
       "name": "olive-300",
       "value": "oklch(0.784 0.167 115)",
+      "note": "상류 beta --color-olive-300",
       "group": "Accent global hues"
     },
     {
       "name": "olive-400",
       "value": "oklch(0.730 0.160 113)",
+      "note": "상류 beta --color-olive-400",
       "group": "Accent global hues"
     },
     {
       "name": "teal-300",
       "value": "oklch(0.787 0.123 186)",
-      "note": "#40d3c5",
+      "note": "#40d3c5 · 상류 beta --color-teal-300",
       "group": "Accent global hues"
     },
     {
       "name": "teal-400",
       "value": "oklch(0.690 0.118 191)",
+      "note": "상류 beta --color-teal-400",
       "group": "Accent global hues"
     },
     {
       "name": "blue-400-10",
       "value": "oklch(0.554 0.214 280 / 0.10)",
-      "note": "#6157ea1a",
+      "note": "#6157ea1a · 상류 beta --color-blue-400-10",
       "group": "Accent alpha tints"
     },
     {
       "name": "blue-400-20",
       "value": "oklch(0.554 0.214 280 / 0.20)",
-      "note": "#6157ea33",
+      "note": "#6157ea33 · 상류 beta --color-blue-400-20",
       "group": "Accent alpha tints"
     },
     {
@@ -161,13 +183,13 @@
     {
       "name": "blue-300-30",
       "value": "oklch(0.615 0.211 277 / 0.30)",
-      "note": "#6b6eff4d",
+      "note": "#6b6eff4d · 상류 beta --color-blue-300-30",
       "group": "Accent alpha tints"
     },
     {
       "name": "blue-400-30",
       "value": "oklch(0.554 0.214 280 / 0.30)",
-      "note": "#6157ea4d",
+      "note": "#6157ea4d · 상류 beta --color-blue-400-30",
       "group": "Accent alpha tints"
     },
     {
@@ -191,13 +213,13 @@
     {
       "name": "cobalt-400-10",
       "value": "oklch(0.643 0.150 248 / 0.10)",
-      "note": "#3292e31a",
+      "note": "#3292e31a · 상류 beta --color-cobalt-400-10",
       "group": "Accent alpha tints"
     },
     {
       "name": "cobalt-400-20",
       "value": "oklch(0.643 0.150 248 / 0.20)",
-      "note": "#3292e333",
+      "note": "#3292e333 · 상류 beta --color-cobalt-400-20",
       "group": "Accent alpha tints"
     },
     {
@@ -209,7 +231,7 @@
     {
       "name": "cobalt-300-30",
       "value": "oklch(0.724 0.125 245 / 0.30)",
-      "note": "#5cadef4d",
+      "note": "#5cadef4d · 상류 beta --color-cobalt-300-30",
       "group": "Accent alpha tints"
     },
     {
@@ -227,13 +249,13 @@
     {
       "name": "green-400-10",
       "value": "oklch(0.652 0.168 150 / 0.10)",
-      "note": "#20ab551a",
+      "note": "#20ab551a · 상류 beta --color-green-400-10",
       "group": "Accent alpha tints"
     },
     {
       "name": "green-400-20",
       "value": "oklch(0.652 0.168 150 / 0.20)",
-      "note": "#20ab5533",
+      "note": "#20ab5533 · 상류 beta --color-green-400-20",
       "group": "Accent alpha tints"
     },
     {
@@ -245,7 +267,7 @@
     {
       "name": "green-300-30",
       "value": "oklch(0.724 0.162 150 / 0.30)",
-      "note": "#4bc16c4d",
+      "note": "#4bc16c4d · 상류 beta --color-green-300-30",
       "group": "Accent alpha tints"
     },
     {
@@ -263,13 +285,13 @@
     {
       "name": "red-400-10",
       "value": "oklch(0.634 0.177 20 / 0.10)",
-      "note": "#e1535d1a",
+      "note": "#e1535d1a · 상류 beta --color-red-400-10",
       "group": "Accent alpha tints"
     },
     {
       "name": "red-400-20",
       "value": "oklch(0.634 0.177 20 / 0.20)",
-      "note": "#e1535d33",
+      "note": "#e1535d33 · 상류 beta --color-red-400-20",
       "group": "Accent alpha tints"
     },
     {
@@ -281,7 +303,7 @@
     {
       "name": "red-300-30",
       "value": "oklch(0.677 0.180 23 / 0.30)",
-      "note": "#f260604d",
+      "note": "#f260604d · 상류 beta --color-red-300-30",
       "group": "Accent alpha tints"
     },
     {
@@ -299,13 +321,13 @@
     {
       "name": "orange-400-10",
       "value": "oklch(0.698 0.156 55 / 0.10)",
-      "note": "#e67f2b1a",
+      "note": "#e67f2b1a · 상류 beta --color-orange-400-10",
       "group": "Accent alpha tints"
     },
     {
       "name": "orange-400-20",
       "value": "oklch(0.698 0.156 55 / 0.20)",
-      "note": "#e67f2b33",
+      "note": "#e67f2b33 · 상류 beta --color-orange-400-20",
       "group": "Accent alpha tints"
     },
     {
@@ -317,13 +339,13 @@
     {
       "name": "orange-300-30",
       "value": "oklch(0.764 0.148 58 / 0.30)",
-      "note": "#f798474d",
+      "note": "#f798474d · 상류 beta --color-orange-300-30",
       "group": "Accent alpha tints"
     },
     {
       "name": "orange-400-30",
       "value": "oklch(0.698 0.156 55 / 0.30)",
-      "note": "#e67f2b4d",
+      "note": "#e67f2b4d · 상류 beta --color-orange-400-30",
       "group": "Accent alpha tints"
     },
     {
@@ -341,13 +363,13 @@
     {
       "name": "yellow-400-10",
       "value": "oklch(0.789 0.161 82 / 0.10)",
-      "note": "#edae0d1a",
+      "note": "#edae0d1a · 상류 beta --color-yellow-400-10",
       "group": "Accent alpha tints"
     },
     {
       "name": "yellow-400-20",
       "value": "oklch(0.789 0.161 82 / 0.20)",
-      "note": "#edae0d33",
+      "note": "#edae0d33 · 상류 beta --color-yellow-400-20",
       "group": "Accent alpha tints"
     },
     {
@@ -359,7 +381,7 @@
     {
       "name": "yellow-300-30",
       "value": "oklch(0.824 0.160 88 / 0.30)",
-      "note": "#f0be274d",
+      "note": "#f0be274d · 상류 beta --color-yellow-300-30",
       "group": "Accent alpha tints"
     },
     {
@@ -377,13 +399,13 @@
     {
       "name": "olive-400-10",
       "value": "oklch(0.730 0.160 113 / 0.10)",
-      "note": "#a9b1101a",
+      "note": "#a9b1101a · 상류 beta --color-olive-400-10",
       "group": "Accent alpha tints"
     },
     {
       "name": "olive-400-20",
       "value": "oklch(0.730 0.160 113 / 0.20)",
-      "note": "#a9b11033",
+      "note": "#a9b11033 · 상류 beta --color-olive-400-20",
       "group": "Accent alpha tints"
     },
     {
@@ -395,7 +417,7 @@
     {
       "name": "olive-300-30",
       "value": "oklch(0.784 0.167 115 / 0.30)",
-      "note": "#b7c4274d",
+      "note": "#b7c4274d · 상류 beta --color-olive-300-30",
       "group": "Accent alpha tints"
     },
     {
@@ -413,13 +435,13 @@
     {
       "name": "teal-400-10",
       "value": "oklch(0.690 0.118 190 / 0.10)",
-      "note": "#09b2ac1a",
+      "note": "#09b2ac1a · 상류 beta --color-teal-400-10",
       "group": "Accent alpha tints"
     },
     {
       "name": "teal-400-20",
       "value": "oklch(0.690 0.118 190 / 0.20)",
-      "note": "#09b2ac33",
+      "note": "#09b2ac33 · 상류 beta --color-teal-400-20",
       "group": "Accent alpha tints"
     },
     {
@@ -431,7 +453,7 @@
     {
       "name": "teal-300-30",
       "value": "oklch(0.787 0.123 186 / 0.30)",
-      "note": "#40d3c54d",
+      "note": "#40d3c54d · 상류 beta --color-teal-300-30",
       "group": "Accent alpha tints"
     },
     {
@@ -449,13 +471,13 @@
     {
       "name": "navy-400-10",
       "value": "oklch(0.469 0.147 273 / 0.10)",
-      "note": "#424fab1a",
+      "note": "#424fab1a · 상류 beta --color-navy-400-10",
       "group": "Accent alpha tints"
     },
     {
       "name": "navy-400-20",
       "value": "oklch(0.469 0.147 273 / 0.20)",
-      "note": "#424fab33",
+      "note": "#424fab33 · 상류 beta --color-navy-400-20",
       "group": "Accent alpha tints"
     },
     {
@@ -467,7 +489,7 @@
     {
       "name": "navy-300-30",
       "value": "oklch(0.607 0.118 276 / 0.30)",
-      "note": "#6f7bc84d",
+      "note": "#6f7bc84d · 상류 beta --color-navy-300-30",
       "group": "Accent alpha tints"
     },
     {
@@ -485,13 +507,13 @@
     {
       "name": "purple-400-10",
       "value": "oklch(0.591 0.208 297 / 0.10)",
-      "note": "#8e57e71a",
+      "note": "#8e57e71a · 상류 beta --color-purple-400-10",
       "group": "Accent alpha tints"
     },
     {
       "name": "purple-400-20",
       "value": "oklch(0.591 0.208 297 / 0.20)",
-      "note": "#8e57e733",
+      "note": "#8e57e733 · 상류 beta --color-purple-400-20",
       "group": "Accent alpha tints"
     },
     {
@@ -503,7 +525,7 @@
     {
       "name": "purple-300-30",
       "value": "oklch(0.670 0.205 299 / 0.30)",
-      "note": "#a970ff4d",
+      "note": "#a970ff4d · 상류 beta --color-purple-300-30",
       "group": "Accent alpha tints"
     },
     {
@@ -521,13 +543,13 @@
     {
       "name": "pink-400-10",
       "value": "oklch(0.637 0.208 338 / 0.10)",
-      "note": "#d64bb51a",
+      "note": "#d64bb51a · 상류 beta --color-pink-400-10",
       "group": "Accent alpha tints"
     },
     {
       "name": "pink-400-20",
       "value": "oklch(0.637 0.208 338 / 0.20)",
-      "note": "#d64bb533",
+      "note": "#d64bb533 · 상류 beta --color-pink-400-20",
       "group": "Accent alpha tints"
     },
     {
@@ -562,6 +584,7 @@
     {
       "name": "grey-50",
       "value": "oklch(0.988 0 286)",
+      "note": "상류 beta --color-grey-50",
       "group": "Neutral global"
     },
     {
@@ -603,6 +626,7 @@
     {
       "name": "grey-700",
       "value": "oklch(0.354 0.007 286)",
+      "note": "상류 beta --color-grey-700",
       "group": "Neutral global"
     },
     {
@@ -614,17 +638,19 @@
     {
       "name": "grey-800",
       "value": "oklch(0.283 0.007 286)",
+      "note": "상류 beta --color-grey-800",
       "group": "Neutral global"
     },
     {
       "name": "grey-850",
       "value": "oklch(0.261 0.004 286)",
+      "note": "상류 beta --color-grey-850",
       "group": "Neutral global"
     },
     {
       "name": "grey-900",
       "value": "oklch(0.232 0.006 286)",
-      "note": "다크 표면 기본 (더 짙은 grey-950 은 다크 surface-low·border-detach-low 가 가리킨다)",
+      "note": "다크 표면 기본 (더 짙은 grey-950 은 다크 surface-low·border-detach-low 가 가리킨다) · 상류 beta --color-grey-900",
       "group": "Neutral global"
     },
     {
@@ -654,7 +680,7 @@
     {
       "name": "grey-800-90",
       "value": "oklch(0.283 0.007 286 / 0.90)",
-      "note": "#29292de6",
+      "note": "#29292de6 · 상류 beta --color-grey-800-90",
       "group": "Neutral global"
     },
     {
