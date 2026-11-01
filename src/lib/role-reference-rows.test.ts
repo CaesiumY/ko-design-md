@@ -183,35 +183,51 @@ const CASES: Record<string, { title: string; check: () => void }> = {
   },
   bezier: {
     title:
-      "beta `--color-*` roles, light and `dark-` twin; stable table owes none",
+      "stable roles to `stable-*`, beta roles to beta steps, light and `dark-` twin",
     check: () => {
       const { literals, refs, tableRows } = load("bezier")
-      // Two published role layers, one palette — the beta tier's. Stable
-      // `bg-*` / `txt-*` roles point at stable primitives, so every stable
-      // cell holds the stable value (hex ≈ OKLCH), never a `{colors.x}`, and
-      // owes no row even where the value matches a beta step. Among the beta
-      // roles only the cells that name one beta step have a row; the roles
-      // upstream writes as hex (`*-hovered`, `chart-theme-default-*`) are
-      // OKLCH literals and fall out here.
-      const expected = singleReferenceRoles(tableRows)
+      // Two published role layers, each pointing at its own tier's primitives.
+      // The stable tier's are carried as `stable-*` keys, so a stable `bg-*` /
+      // `txt-*` role aliases a `stable-*` key and a beta role a beta step —
+      // never across, even where the values match. Neither tier redefines a
+      // primitive per theme, so a `dark-` twin points at an unprefixed key.
+      // The beta roles upstream writes as hex (`*-hovered`,
+      // `chart-theme-default-*`) are literal values (hex ≈ OKLCH) and fall
+      // out here.
       // A stable-tier role name, matched on the bare name (no backticks, no
       // `dark-` prefix) in both the table and the rows.
       const STABLE_ROLE = /^(bg|txt)-/
-      // Both layers' tables must have parsed, or a dropped one would pass:
-      // the stable one by its rows, the beta one by the rows it owes.
+      const STABLE_KEY = /^stable-/
+      const stableRows = tableRows.filter(([cell]) =>
+        STABLE_ROLE.test(spans(cell)[0] ?? "")
+      )
+      // Both layers' tables must have parsed, or a dropped one would pass.
+      expect(stableRows.length, "bezier: stable table rows").toBeGreaterThan(0)
+      // Every stable cell is exactly one `stable-*` reference: a beta key, a
+      // value, or a reference with words after it all fail here.
+      const loose = stableRows.flatMap(([roleCell, light = "", dark = ""]) =>
+        [light, dark]
+          .filter((cell) => !STABLE_KEY.test(single(cell) ?? ""))
+          .map((cell) => `${spans(roleCell)[0]}: ${cell}`)
+      )
       expect(
-        tableRows.some(([cell]) => STABLE_ROLE.test(spans(cell)[0] ?? "")),
-        "bezier: stable `bg-*` / `txt-*` table rows"
-      ).toBe(true)
+        loose,
+        "bezier: stable cells must each be one `{colors.stable-*}`"
+      ).toEqual([])
+      const expected = singleReferenceRoles(tableRows)
       expect(
         [...expected.keys()].some((key) =>
-          /^(dark-)?(text|icon|fill|border|surface)\b/.test(key)
+          /^(text|icon|fill|border|surface)\b/.test(bare(key))
         ),
         "bezier: beta role rows"
       ).toBe(true)
       expect(
-        [...expected.keys()].filter((key) => STABLE_ROLE.test(bare(key))),
-        "bezier: stable cells must not reference the beta palette"
+        [...expected]
+          .filter(
+            ([key, to]) => !STABLE_ROLE.test(bare(key)) && STABLE_KEY.test(to)
+          )
+          .map(([key]) => key),
+        "bezier: beta roles must not reference `stable-*` keys"
       ).toEqual([])
       expectRowsToMatch("bezier", expected, refs, literals)
     },
