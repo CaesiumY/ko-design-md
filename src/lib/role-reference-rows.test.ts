@@ -277,9 +277,10 @@ const CASES: Record<string, { title: string; check: () => void }> = {
     title: "published adaptive roles, single-reference cells only",
     check: () => {
       const { literals, refs, tableRows } = load("toss")
-      // `@toss/tds-colors` defines its adaptive roles as hex literals; only the
-      // light `greyBackground` is named against a palette step (the TDS Mobile
-      // Colors page's `lightThemeGrey100`). Hex and opacity cells fall out.
+      // `@toss/tds-colors` defines its adaptive roles as hex or rgba literals;
+      // only the light `greyBackground` is named against a palette step (the
+      // TDS Mobile Colors page's `lightThemeGrey100`). Literal-value and
+      // opacity cells fall out.
       const expected = singleReferenceRoles(tableRows)
       expectRowsToMatch("toss", expected, refs, literals)
     },

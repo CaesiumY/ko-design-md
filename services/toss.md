@@ -2,7 +2,7 @@
 name: 토스
 slug: toss
 category: finance
-last_updated: "2026-11-01"
+last_updated: "2026-11-02"
 created_at: "2026-05-11"
 lang: ko
 logo: https://getdesign.kr/logos/toss.png
@@ -48,11 +48,11 @@ colors:
   brown-500: oklch(0.535 0.073 39)
   brown-400: oklch(0.659 0.097 41)
   ## Semantic alpha tokens
-  fg-tertiary: oklch(0.155 0.060 261 / 0.58)   # 흐린 본문 텍스트
-  fg-quaternary: oklch(0.155 0.060 261 / 0.28)   # placeholder
-  line-subtle: oklch(0.000 0.000 0 / 0.08)   # 그레이 배경 위 카드 보더
-  bg-overlay: oklch(0.000 0.000 0 / 0.56)   # bottom-sheet scrim
-  press-overlay: oklch(0.000 0.000 0 / 0.26)   # 보편 pressed-state tint
+  fg-tertiary: oklch(0.155 0.060 261 / 0.58)   # 흐린 본문 텍스트 — 번들 고유 이름(토스 배포물에 없음)
+  fg-quaternary: oklch(0.155 0.060 261 / 0.28)   # placeholder — 번들 고유 이름(토스 배포물에 없음)
+  line-subtle: oklch(0.000 0.000 0 / 0.08)   # 그레이 배경 위 카드 보더 — 번들 고유 이름(토스 배포물에 없음)
+  bg-overlay: oklch(0.000 0.000 0 / 0.56)   # bottom-sheet scrim — 번들 고유 이름(토스 배포물에 없음)
+  press-overlay: oklch(0.000 0.000 0 / 0.26)   # 보편 pressed-state tint — 번들 고유 이름(토스 배포물에 없음)
   ## Dark palette (TDS adaptive)
   dark-blue-500: oklch(0.630 0.192 258)   # #3485FA — TDS 발행값 blue500 (colors.dark.css)
   dark-blue-50: oklch(0.300 0.062 267)   # #202C4D — TDS 발행값 blue50 (colors.dark.css)

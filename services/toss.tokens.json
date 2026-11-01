@@ -203,31 +203,31 @@
     {
       "name": "fg-tertiary",
       "value": "oklch(0.155 0.060 261 / 0.58)",
-      "note": "흐린 본문 텍스트",
+      "note": "흐린 본문 텍스트 — 번들 고유 이름(토스 배포물에 없음)",
       "group": "Semantic alpha tokens"
     },
     {
       "name": "fg-quaternary",
       "value": "oklch(0.155 0.060 261 / 0.28)",
-      "note": "placeholder",
+      "note": "placeholder — 번들 고유 이름(토스 배포물에 없음)",
       "group": "Semantic alpha tokens"
     },
     {
       "name": "line-subtle",
       "value": "oklch(0.000 0.000 0 / 0.08)",
-      "note": "그레이 배경 위 카드 보더",
+      "note": "그레이 배경 위 카드 보더 — 번들 고유 이름(토스 배포물에 없음)",
       "group": "Semantic alpha tokens"
     },
     {
       "name": "bg-overlay",
       "value": "oklch(0.000 0.000 0 / 0.56)",
-      "note": "bottom-sheet scrim",
+      "note": "bottom-sheet scrim — 번들 고유 이름(토스 배포물에 없음)",
       "group": "Semantic alpha tokens"
     },
     {
       "name": "press-overlay",
       "value": "oklch(0.000 0.000 0 / 0.26)",
-      "note": "보편 pressed-state tint",
+      "note": "보편 pressed-state tint — 번들 고유 이름(토스 배포물에 없음)",
       "group": "Semantic alpha tokens"
     },
     {
