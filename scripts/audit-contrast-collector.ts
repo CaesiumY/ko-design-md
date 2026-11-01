@@ -7,7 +7,12 @@
 // readings back, leaving `src/lib/contrast.ts` the only place that arithmetic
 // lives. A second copy in here could not be reached by `pnpm test`.
 
-import type { Blocker, RawColor, RawControl } from "../src/lib/contrast"
+import type {
+  Blocker,
+  RawColor,
+  RawControl,
+  RawLayer,
+} from "../src/lib/contrast"
 
 export interface CollectedText {
   path: string
@@ -26,19 +31,20 @@ export interface CollectedText {
   fg: RawColor
   /**
    * One entry per line box, each with the backdrop behind it AND the reasons
-   * that line alone cannot be read. `evaluateText` judges the weakest line and
-   * reports only its reasons.
+   * that line alone cannot be read. `evaluateText` judges the run from every
+   * line's range of possible backdrops and keeps only the reasons of the lines
+   * its verdict could rest on.
    */
-  lines: Array<{ stack: Array<RawColor>; blockers: Array<Blocker> }>
+  lines: Array<{ stack: Array<RawLayer>; blockers: Array<Blocker> }>
   /** Reasons that hold for the whole run, whichever line is judged. */
   blockers: Array<Blocker>
 }
 
 export interface CollectedNonText {
   path: string
-  fill: RawColor | null
+  fill: RawLayer | null
   border: RawColor | null
-  outer: Array<RawColor>
+  outer: Array<RawLayer>
   blockers: Array<Blocker>
 }
 
@@ -184,6 +190,23 @@ export function collectContrast(): Collected {
     return value
   }
 
+  // A layer's `background-image` and the longhands that decide where and how it
+  // paints, handed across as computed style writes them. Nothing is decided
+  // about them here — whether it is a gradient that can be enumerated or an
+  // image that cannot is `contrast-gradient.ts`'s to say, where that answer
+  // can be tested (#402).
+  const imageOf = (cs: CSSStyleDeclaration): Pick<RawLayer, "image"> =>
+    cs.backgroundImage === "none"
+      ? {}
+      : {
+          image: {
+            value: cs.backgroundImage,
+            repeat: cs.backgroundRepeat,
+            clip: cs.backgroundClip,
+            blend: cs.backgroundBlendMode,
+          },
+        }
+
   function pathOf(node: Element): string {
     const parts: Array<string> = []
     let cur: Element | null = node
@@ -323,13 +346,13 @@ export function collectContrast(): Collected {
     y: number,
     from: Element
   ): {
-    stack: Array<RawColor>
+    stack: Array<RawLayer>
     blockers: Set<Blocker>
     /** Nothing to read here: the point does not reach `from` at all. */
     occluded: boolean
   } {
     const blockers = new Set<Blocker>()
-    const stack: Array<RawColor> = []
+    const stack: Array<RawLayer> = []
     if (coveredByOverlay(x, y, from)) blockers.add("overlay")
     const hit = document.elementsFromPoint(x, y)
     const index = hit.indexOf(from)
@@ -347,13 +370,16 @@ export function collectContrast(): Collected {
     }
     for (const el of hit.slice(index)) {
       const cs = getComputedStyle(el)
-      if (cs.backgroundImage !== "none") blockers.add("gradient")
       if (hasPaintedPseudo(el)) blockers.add("pseudo-background")
       for (const b of paintBlockers(cs, el.getBoundingClientRect())) {
         blockers.add(b)
       }
       const colour = readColour(cs.backgroundColor)
-      const layer: RawColor = { ...colour, opacity: opacityOf(el) }
+      const layer: RawLayer = {
+        ...colour,
+        opacity: opacityOf(el),
+        ...imageOf(cs),
+      }
       stack.push(layer)
       // Nothing below an opaque layer contributes. The opacity test matters as
       // much as the colour's: an opaque paint inside a faded subtree still lets
@@ -437,21 +463,21 @@ export function collectContrast(): Collected {
       blockers.add(b)
     }
 
-    // Each line box can sit on a different backdrop. The one closest in
-    // lightness to the text is kept, so a run that crosses a light band and a
-    // dark one is reported at its weakest line rather than averaged.
-    // Every line box is carried across and `evaluateText` picks the weakest
-    // by composed contrast. Choosing here is not possible: the only thing a
-    // cheap in-page comparison has is the raw channels, and black on #ff0000
-    // (5.25:1) and black on #0000ff (2.44:1) have the same channel sum — the
-    // failing line would be discarded whenever the passing one came first.
+    // Each line box can sit on a different backdrop, so a run that crosses a
+    // light band and a dark one is judged by its weakest line rather than
+    // averaged. Every line box is carried across and `evaluateText` judges the
+    // run by composed contrast, from each line's range of possible backdrops.
+    // Choosing here is not possible: the only thing a cheap in-page comparison
+    // has is the raw channels, and black on #ff0000 (5.25:1) and black on
+    // #0000ff (2.44:1) have the same channel sum — the failing line would be
+    // discarded whenever the passing one came first.
     //
     // Each line keeps its OWN blockers rather than adding them to the node's
-    // set. Merging them was the defect: a gradient behind the line that is not
-    // the weakest would hold a verdict the weakest line can support, which
-    // hides a failure instead of reporting it — the exact outcome
-    // `evaluateText`'s comment says it avoids.
-    const lines: Array<{ stack: Array<RawColor>; blockers: Array<Blocker> }> =
+    // set. Merging them was the defect: an overlay over a line the verdict
+    // cannot rest on would hold a verdict the other lines support, which hides
+    // a failure instead of reporting it — the exact outcome `evaluateText`'s
+    // comment says it avoids.
+    const lines: Array<{ stack: Array<RawLayer>; blockers: Array<Blocker> }> =
       []
     for (const r of rects) {
       const px = r.left + r.width / 2
@@ -626,9 +652,7 @@ export function collectContrast(): Collected {
     if (rect.width * rect.height > viewportArea * 0.01) continue
     if (el.children.length > 2) continue
 
-    const fill = isTransparent(cs.backgroundColor)
-      ? null
-      : { ...readColour(cs.backgroundColor), opacity: opacityOf(el) }
+    const paintsColour = !isTransparent(cs.backgroundColor)
     // A border only draws a boundary where it has width. Computed style still
     // reports a colour for a zero-width border, so the width decides.
     let border: RawColor | null = null
@@ -640,10 +664,18 @@ export function collectContrast(): Collected {
         break
       }
     }
-    if (fill === null && border === null) continue
-    // A background image is a colour this cannot read, the same as behind text.
+    // Which elements are measured is decided by colour and border alone, as it
+    // was before images were read: an image-only surface with no border is
+    // still not one of them (a Known gap).
+    if (!paintsColour && border === null) continue
+    // A surface's own image is part of its fill — over a transparent colour,
+    // it is the whole fill — and is enumerated with it, as behind text.
+    const own = imageOf(cs)
+    const fill: RawLayer | null =
+      paintsColour || own.image !== undefined
+        ? { ...readColour(cs.backgroundColor), opacity: opacityOf(el), ...own }
+        : null
     const blockers = new Set<Blocker>()
-    if (cs.backgroundImage !== "none") blockers.add("gradient")
     for (const b of paintBlockers(cs, rect)) blockers.add(b)
 
     bringIntoView(el)
@@ -664,11 +696,10 @@ export function collectContrast(): Collected {
     if (hit.slice(0, index).some((front) => !el.contains(front))) {
       blockers.add("overlay")
     }
-    const outer: Array<RawColor> = []
+    const outer: Array<RawLayer> = []
     if (coveredByOverlay(cx, cy, el)) blockers.add("overlay")
     for (const behind of hit.slice(index + 1)) {
       const bcs = getComputedStyle(behind)
-      if (bcs.backgroundImage !== "none") blockers.add("gradient")
       if (hasPaintedPseudo(behind)) blockers.add("pseudo-background")
       // The same four tests the text path's `backdropAt` runs on every layer.
       // These two were missing here, so a surface sitting over a filtered or
@@ -679,7 +710,11 @@ export function collectContrast(): Collected {
         blockers.add(b)
       }
       const colour = readColour(bcs.backgroundColor)
-      const layer: RawColor = { ...colour, opacity: opacityOf(behind) }
+      const layer: RawLayer = {
+        ...colour,
+        opacity: opacityOf(behind),
+        ...imageOf(bcs),
+      }
       outer.push(layer)
       if (isOpaque(colour) && layer.opacity >= 1) break
     }
