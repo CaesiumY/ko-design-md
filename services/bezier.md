@@ -675,7 +675,7 @@ Bezier는 채널톡의 사내 제품 UI를 외부에 그대로 공개한 드문 
 
 Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3계층 토큰 구조다 [src:3][src:2]. 글로벌은 원시 색값이고, 시맨틱(`--bg-*`, `--txt-*`, `--color-*`)은 테마별로 다른 글로벌을 참조한다 [src:2][src:3]. `--bg-*`·`--txt-*` 는 기본 tier 의 시맨틱 이름이고, `--color-` 는 beta tier 의 이름 앞붙임이다 — beta 는 원시값(`--color-grey-900`)과 시맨틱(`--color-text-neutral`)이 같은 앞붙임을 쓴다 [src:3]. 특징은 navy·purple·pink·red·orange·yellow·olive·green·teal·cobalt·blue 11개 hue를 각각 300/400/500 명도 + 알파 변형으로 갖춘 무지개 액센트 팔레트다 [src:3][src:4].
 
-아래 값 가운데 `stable-*` 를 뺀 팔레트는 핸드오프 번들 `colors_and_type.css`가 정답으로 삼은 Bezier **beta 토큰 팔레트**를 ko-design-md 표준 OKLCH로 변환한 것이고, `stable-*` 키는 기본 tier `dist/css/styles.css` 에서 직접 옮겼다 — 1차 액션은 indigo-violet 계열 `blue-400`이고, 원본이 hex로 발행돼 OKLCH 변환에 미세한 오차가 있을 수 있다 [src:3].
+아래 팔레트의 출처는 셋이다 — 핸드오프 번들 `colors_and_type.css`(Bezier **beta 토큰 팔레트**를 정답으로 삼은 파일)에서 온 43개는 번들 값을 ko-design-md 표준 OKLCH로 변환한 것이고, 나머지 beta 키는 `dist/beta` 원시값 블록에서, `stable-*` 키는 기본 tier `dist/css/styles.css` 에서 직접 옮겼다(감사 메모 참조) — 1차 액션은 indigo-violet 계열 `blue-400`이고, 원본이 hex로 발행돼 OKLCH 변환에 미세한 오차가 있을 수 있다 [src:3].
 
 ### Accent global hues (300/400/500 core)
 

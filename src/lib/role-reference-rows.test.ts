@@ -300,6 +300,42 @@ const CASES: Record<string, { title: string; check: () => void }> = {
           pairs.some(({ uncarried }) => uncarried),
         "bezier: both note forms parsed"
       ).toBe(true)
+      // The `## Colors` audit note and the Semantic paragraph state these row
+      // counts in prose (CODING_STANDARDS 「개수」), so they are pinned here: a
+      // row added or dropped must update the prose with the count. The
+      // upstream primitive history (130 = 84 + 46) is a dated record, not a
+      // table count, and stays unpinned.
+      const roleRows = tableRows.filter(
+        ([cell]) => !(spans(cell)[0] ?? "").startsWith("{colors.")
+      )
+      const betaRows = roleRows.filter(
+        ([cell]) => !STABLE_ROLE.test(spans(cell)[0] ?? "")
+      )
+      const literalRows = betaRows.filter(([, light = "", dark = ""]) =>
+        [light, dark].every((cell) => single(cell) === undefined)
+      )
+      const proseCounts = {
+        stableRoles: stableRows.length,
+        betaRoles: betaRows.length,
+        betaReferenceRoles: betaRows.length - literalRows.length,
+        betaLiteralRoles: literalRows.length,
+        hovered: literalRows.filter(([c]) => /-hovered`$/.test(c)).length,
+        chart: literalRows.filter(([c]) =>
+          /^`chart-theme-default-\d+`$/.test(c)
+        ).length,
+        rowsWithPrimitiveNote: literalRows.filter((row) =>
+          row.slice(1).some((cell) => cell.includes(" — hex 가 "))
+        ).length,
+      }
+      expect(proseCounts, "bezier: row counts the prose states").toEqual({
+        stableRoles: 27,
+        betaRoles: 346,
+        betaReferenceRoles: 163,
+        betaLiteralRoles: 183,
+        hovered: 173,
+        chart: 10,
+        rowsWithPrimitiveNote: 19,
+      })
     },
   },
   "seed-design": {
