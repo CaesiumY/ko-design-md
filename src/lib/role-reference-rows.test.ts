@@ -236,16 +236,32 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       // (`#9698ffff ≈ \`oklch(…)\``). `audit:oklch` does not read tables
       // (draft-validator.ts `scanBody` table note), so the pair is held here
       // with that gate's own tolerances: ΔE always, alpha when both sides
-      // declare it.
-      const pairs = tableRows.flatMap((row) =>
-        row.slice(1).flatMap((cell) => {
-          const m = /^(#[0-9a-f]{6,8}) ≈ `(oklch\([^)]*\))`/i.exec(cell)
-          return m ? [{ cell, hex: m[1], oklch: m[2] }] : []
-        })
+      // declare it. Every cell that is not one reference must have this
+      // shape, so a malformed cell fails instead of dropping out of the
+      // comparison: a 6- or 8-digit hex (the table has no shorthand), a
+      // backticked OKLCH, and nothing after but the note the 19 rows whose
+      // hex equals a primitive carry.
+      const LITERAL_CELL =
+        /^(#[0-9a-f]{6}(?:[0-9a-f]{2})?) ≈ `(oklch\([^)`]*\))`(?: — hex 가 원시값 `[a-z0-9-]+` 그대로, 참조 아님)?$/i
+      const literalCells = tableRows.flatMap(([roleCell, ...cells]) =>
+        cells
+          .filter((cell) => single(cell) === undefined)
+          .map((cell) => ({ role: spans(roleCell)[0], cell }))
       )
-      expect(pairs.length, "bezier: hex ≈ OKLCH cells parsed").toBeGreaterThan(
-        0
-      )
+      expect(
+        literalCells
+          .filter(({ cell }) => !LITERAL_CELL.test(cell))
+          .map(({ role, cell }) => `${role}: ${cell}`),
+        "bezier: non-reference cells must be `#hex ≈ \\`oklch(…)\\``"
+      ).toEqual([])
+      expect(
+        literalCells.length,
+        "bezier: literal cells parsed"
+      ).toBeGreaterThan(0)
+      const pairs = literalCells.map(({ cell }) => {
+        const [, hex, oklch] = LITERAL_CELL.exec(cell) ?? []
+        return { cell, hex, oklch }
+      })
       const off = pairs.filter(({ hex, oklch }) => {
         const want = hexToOklab(hex)
         const wrote = parseOklch(oklch)
