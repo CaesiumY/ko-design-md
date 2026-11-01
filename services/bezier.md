@@ -1108,7 +1108,7 @@ Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3
 
 #### alpha 엔트리
 
-별도 `@channel.io/bezier-tokens/alpha` 엔트리(`dist/alpha`)가 세 번째 tier 다 — 이름의 alpha 는 반투명 채널이 아니라 beta 와 나란한 차세대 라인을 뜻하고, `--alpha-color-fg-*`·`--alpha-color-bg-*`·`--alpha-color-surface-*` 등의 역할 층과 그 원시값을 따로 발행한다 [src:3]. 이 문서는 아직 이 층을 싣지 않았다(알려진 공백).
+별도 `@channel.io/bezier-tokens/alpha` 엔트리(`dist/alpha`)가 세 번째 tier 다 — 이름의 alpha 는 반투명 채널이 아니라 tier 이름이다. `dist/alpha` 는 `dist/beta`·`dist/css` 와 나란한 배포 경로로, `--alpha-color-fg-*`·`--alpha-color-bg-*`·`--alpha-color-surface-*`·`--alpha-color-shadow-*` 등의 역할 층과 그 원시값을 따로 발행한다 [src:3]. 이 문서는 아직 이 층을 싣지 않았다(알려진 공백).
 
 ## Typography
 
