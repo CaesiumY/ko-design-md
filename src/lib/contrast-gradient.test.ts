@@ -95,6 +95,19 @@ describe("paintableColours", () => {
     expect(colours.some((c) => near(c, 127.5, 0, 127.5))).toBe(true)
   })
 
+  it("walks Oklab from a stop's own value, before sRGB clips it", () => {
+    // `color(srgb 1.2 0 0)` paints as red once clipped, but the Oklab path
+    // starts from the unclipped colour, so its midpoints are not red's.
+    const outside = coloursOf(
+      "linear-gradient(in oklab, color(srgb 1.2 0 0), rgb(255, 255, 255))"
+    )
+    const red = coloursOf(
+      "linear-gradient(in oklab, rgb(255, 0, 0), rgb(255, 255, 255))"
+    )
+    expect(outside).not.toEqual(red)
+    expect(outside.some((c) => near(c, 255, 0, 0))).toBe(true)
+  })
+
   it("ignores a colour hint, which moves where a colour lands but not which", () => {
     const hinted = coloursOf(
       "linear-gradient(rgb(255, 0, 0), 30%, rgb(0, 0, 255))"
@@ -193,6 +206,8 @@ describe("paintableColours", () => {
       // writes one, which is exactly why it is not read as setup either: a
       // first stop mistaken for a direction would drop a colour from the set.
       "linear-gradient(red, rgb(0, 0, 255))",
+      // A negative sRGB channel, whose curve `srgbToLinear` does not extend.
+      "linear-gradient(color(srgb -0.2 0 0), rgb(255, 255, 255))",
       "linear-gradient(rgb(0, 0, 0)",
     ]) {
       expect(paintableColours(bg(image))).toEqual(HELD)

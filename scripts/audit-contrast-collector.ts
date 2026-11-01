@@ -463,20 +463,20 @@ export function collectContrast(): Collected {
       blockers.add(b)
     }
 
-    // Each line box can sit on a different backdrop. The one closest in
-    // lightness to the text is kept, so a run that crosses a light band and a
-    // dark one is reported at its weakest line rather than averaged.
-    // Every line box is carried across and `evaluateText` picks the weakest
-    // by composed contrast. Choosing here is not possible: the only thing a
-    // cheap in-page comparison has is the raw channels, and black on #ff0000
-    // (5.25:1) and black on #0000ff (2.44:1) have the same channel sum — the
-    // failing line would be discarded whenever the passing one came first.
+    // Each line box can sit on a different backdrop, so a run that crosses a
+    // light band and a dark one is judged by its weakest line rather than
+    // averaged. Every line box is carried across and `evaluateText` judges the
+    // run by composed contrast, from each line's range of possible backdrops.
+    // Choosing here is not possible: the only thing a cheap in-page comparison
+    // has is the raw channels, and black on #ff0000 (5.25:1) and black on
+    // #0000ff (2.44:1) have the same channel sum — the failing line would be
+    // discarded whenever the passing one came first.
     //
     // Each line keeps its OWN blockers rather than adding them to the node's
-    // set. Merging them was the defect: a gradient behind the line that is not
-    // the weakest would hold a verdict the weakest line can support, which
-    // hides a failure instead of reporting it — the exact outcome
-    // `evaluateText`'s comment says it avoids.
+    // set. Merging them was the defect: an overlay over a line the verdict
+    // cannot rest on would hold a verdict the other lines support, which hides
+    // a failure instead of reporting it — the exact outcome `evaluateText`'s
+    // comment says it avoids.
     const lines: Array<{ stack: Array<RawLayer>; blockers: Array<Blocker> }> =
       []
     for (const r of rects) {

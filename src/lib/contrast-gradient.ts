@@ -304,13 +304,16 @@ function readColour(text: string): Stop | null {
       text
     )
   if (srgb !== null) {
-    const channel = (v: string): number => Math.min(255, Math.max(0, +v * 255))
-    const rgb = {
-      r: channel(srgb[1]),
-      g: channel(srgb[2]),
-      b: channel(srgb[3]),
-    }
-    return { rgb, lab: rgbToOklab(rgb), alpha: alphaOf(srgb[4]) }
+    // The Oklab path starts from the value as written, outside sRGB if it is;
+    // only the sRGB stop is clipped, the way the sweep's Chromium paints it.
+    const raw = { r: +srgb[1] * 255, g: +srgb[2] * 255, b: +srgb[3] * 255 }
+    // A negative channel would go through `srgbToLinear`'s linear segment,
+    // which is not the sign-symmetric curve CSS extends sRGB with, so the
+    // Oklab path would start from the wrong colour. Held rather than misread.
+    if (raw.r < 0 || raw.g < 0 || raw.b < 0) return null
+    const clip = (v: number): number => Math.min(255, Math.max(0, v))
+    const rgb = { r: clip(raw.r), g: clip(raw.g), b: clip(raw.b) }
+    return { rgb, lab: rgbToOklab(raw), alpha: alphaOf(srgb[4]) }
   }
   return null
 }
