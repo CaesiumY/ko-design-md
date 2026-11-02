@@ -265,6 +265,23 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       expectRowsToMatch("codeit", expected, refs, literals)
     },
   },
+  likelion: {
+    title: "single-reference roles by the palette column, no dark twin",
+    check: () => {
+      const { literals, refs, tableRows } = load("likelion")
+      // Opacity-ramp and gradient roles carry prose and fall out. The third
+      // column is the upstream variable, not a dark cell — likelion publishes
+      // no dark semantic theme — and is never one bare reference, so the
+      // shared reader yields no `dark-` expectation from it. Pinned, so a
+      // future edit to that column cannot demand a phantom twin.
+      const expected = singleReferenceRoles(tableRows)
+      expect(
+        [...expected.keys()].filter((key) => key.startsWith("dark-")),
+        "likelion: dark twins read from the upstream-variable column"
+      ).toEqual([])
+      expectRowsToMatch("likelion", expected, refs, literals)
+    },
+  },
   ridi: {
     title: "single-reference roles, light and `dark-` twin",
     check: () => {
