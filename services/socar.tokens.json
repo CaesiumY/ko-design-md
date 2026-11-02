@@ -408,7 +408,7 @@
     {
       "name": "pressed-regular",
       "value": "oklch(0.217 0.022 261 / 0.06)",
-      "note": "row press (chip · checkbox · selection box) · gray-1000 의 6% · 공식 Colors 표에 없음"
+      "note": "row press (chip · checkbox · radio · selection box) · gray-1000 의 6% · 공식 Colors 표에 없음"
     },
     {
       "name": "pressed-dark-regular",

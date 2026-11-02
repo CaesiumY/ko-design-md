@@ -141,9 +141,11 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
   "seed-design": 27,
   // 40 → 31 (#630): socar's roles became reference rows, which carry no
   // `oklch` for the gate to read, so the preview's 24 role properties now read
-  // `var(--sf-<palette step>)` and are no longer compared; the 12 palette steps
-  // they point at, and the three overlays (dim and two press), were added to
-  // the preview and are. 40 − 24 + 12 + 3.
+  // `var(--sf-<palette step>)` and are no longer compared here — which step
+  // each role points at is checked by the socar case in
+  // role-reference-rows.test.ts; the 12 palette steps they point at, and the
+  // three overlays (dim and two press), were added to the preview and are.
+  // 40 − 24 + 12 + 3.
   socar: 31,
   teamsparta: 18,
   toss: 27,

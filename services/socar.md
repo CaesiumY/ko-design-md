@@ -98,7 +98,7 @@ colors:
   location-return: "{colors.indigo-700}"   # return marker
   # Overlay utilities (translucent) — 팔레트 단계가 아니라 rgba 리터럴로 발행된다
   dimmed-regular: oklch(0.217 0.022 261 / 0.44)   # modal/sheet dim · gray-1000 의 44% · 공식 Colors 표에 없음
-  pressed-regular: oklch(0.217 0.022 261 / 0.06)   # row press (chip · checkbox · selection box) · gray-1000 의 6% · 공식 Colors 표에 없음
+  pressed-regular: oklch(0.217 0.022 261 / 0.06)   # row press (chip · checkbox · radio · selection box) · gray-1000 의 6% · 공식 Colors 표에 없음
   pressed-dark-regular: oklch(0.965 0.007 277 / 0.66)   # button press-ripple, lightens · gray-100 의 66% · 공식 Colors 표에 없음
 typography:
   # token: size px / line-height px / weight
@@ -304,7 +304,7 @@ SOCAR Frame 2.0은 공식 Colors 페이지에 전체 토큰 세트를 게시하�
 | `location-rental` | `{colors.blue-500}` | 지도 픽업 마커 |
 | `location-return` | `{colors.indigo-700}` | 지도 반납 마커 |
 | `dimmed-regular` | `{colors.gray-1000}` 의 44% — rgba 리터럴 유틸리티, 참조 아님 | 모달 · 시트 딤 |
-| `pressed-regular` | `{colors.gray-1000}` 의 6% — rgba 리터럴 유틸리티, 참조 아님 | 칩 · 체크박스 · 선택 카드의 눌림 배경 |
+| `pressed-regular` | `{colors.gray-1000}` 의 6% — rgba 리터럴 유틸리티, 참조 아님 | 칩 · 체크박스 · 라디오 · 선택 카드의 눌림 배경 |
 | `pressed-dark-regular` | `{colors.gray-100}` 의 66% — rgba 리터럴 유틸리티, 참조 아님 | 버튼류 눌림 리플(밝게 덮는다) |
 
 ## Typography
@@ -342,7 +342,7 @@ SOCAR Frame 2.0의 깊이 언어는 절제되어 있다 — 표면 분리는 드
 
 형태 언어는 정돈된 기하 구조 위에 넉넉한 반경을 얹는 방식이다 [src:4][src:6]. 칩은 완전한 pill, 카드와 시트는 12–24px 반경을 일관되게 써서 접근하기 쉽되 질서 있는 인상을 만든다 — 유기적이라기보다 기하적이다 [src:4][src:6]. 그라데이션은 없고 모든 표면은 플랫 필이며, 차량·위치 썸네일 이미지는 항상 radius-300/400 카드 안에 마스킹되어 앱 크롬 안에서 full-bleed로 깔리지 않는다 [src:1][src:5].
 
-시각적 절제는 표면 처리에서도 드러난다 — 곡선은 모서리 반경으로만 표현되고, 표면 구분은 곡면이나 그림자가 아니라 1px 헤어라인과 배경 워시로 처리된다 [src:1]. 시그니처 인터랙션은 press feedback이다 — 버튼류(ActionButton · TextButton · IconButton)는 `:active`에서 92%로 축소되고 `{colors.pressed-dark-regular}` `::after` 리플 오버레이가 함께 뜬다(`active:tw-scale-[92%]` + `active:after:tw-bg-pressed-dark-regular`, 리플 radius는 컴포넌트 radius에 클리핑) [src:1][src:39]. 텍스트 인접 행(chip / checkbox / radio)과 선택 카드는 94–96%로 더 약하게 축소하고 `{colors.pressed-regular}` 배경을 깐다 [src:1][src:19][src:20][src:22]. 모션은 짧고 표준적이다 — `duration-100`(100ms), `duration-150`(150ms), `ease-standard`(`cubic-bezier(0.42, 0, 0.58, 1)`)이며, spring/bounce나 화면 전환 페이드는 없다 [src:1]. hover 상태는 사실상 존재하지 않고 press가 모든 피드백을 담당한다 [src:1].
+시각적 절제는 표면 처리에서도 드러난다 — 곡선은 모서리 반경으로만 표현되고, 표면 구분은 곡면이나 그림자가 아니라 1px 헤어라인과 배경 워시로 처리된다 [src:1]. 시그니처 인터랙션은 press feedback이다 — 버튼류(ActionButton · TextButton · IconButton)는 `:active`에서 92%로 축소되고 `{colors.pressed-dark-regular}` `::after` 리플 오버레이가 함께 뜬다(`active:tw-scale-[92%]` + `active:after:tw-bg-pressed-dark-regular`, 리플 radius는 컴포넌트 radius에 클리핑) [src:1][src:39]. 텍스트 인접 행(chip / checkbox / radio)과 선택 카드는 94–96%로 더 약하게 축소하고 `{colors.pressed-regular}` 배경을 깐다 [src:1][src:19][src:20][src:21][src:22]. 모션은 짧고 표준적이다 — `duration-100`(100ms), `duration-150`(150ms), `ease-standard`(`cubic-bezier(0.42, 0, 0.58, 1)`)이며, spring/bounce나 화면 전환 페이드는 없다 [src:1]. hover 상태는 사실상 존재하지 않고 press가 모든 피드백을 담당한다 [src:1].
 
 ## Components
 
@@ -646,7 +646,7 @@ const ok = await Alert.open({ variant: "dialog", title: "예약을 취소할까�
 
 **Do** CTA 카피는 동사로 시작하고 마침표·느낌표 없이, 한국어 정중체(`-요`/`합니다`)로 주어를 생략해 쓴다(예: `예약하기`, `자세히 보기`, `다음에`, `취소`) [src:9][src:11].
 
-**Do** 누를 수 있는 표면에 press feedback을 건다 — 버튼류는 `scale(0.92)` + `{colors.pressed-dark-regular}` 리플, 텍스트 인접 행(chip/checkbox/radio)과 선택 카드는 94–96% 축소 + `{colors.pressed-regular}` 배경이 표준이다 [src:1][src:39][src:19][src:20][src:22].
+**Do** 누를 수 있는 표면에 press feedback을 건다 — 버튼류는 `scale(0.92)` + `{colors.pressed-dark-regular}` 리플, 텍스트 인접 행(chip/checkbox/radio)과 선택 카드는 94–96% 축소 + `{colors.pressed-regular}` 배경이 표준이다 [src:1][src:39][src:19][src:20][src:21][src:22].
 
 **Do** ActionButton은 `styleType`·`variant`·`size`를 명시해 구현하고, 한 화면의 primary slot은 하나만 둔다 [src:14][src:1].
 
