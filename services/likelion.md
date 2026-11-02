@@ -3,7 +3,7 @@ name: 멋쟁이사자처럼
 design_system_name: LIKELION Design System
 slug: likelion
 category: education
-last_updated: 2026-11-01
+last_updated: 2026-11-02
 created_at: 2026-08-30
 lang: ko
 logo: https://getdesign.kr/logos/likelion.svg
