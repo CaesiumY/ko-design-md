@@ -287,6 +287,24 @@ const CASES: Record<string, { title: string; check: () => void }> = {
         if (name && target) expected.set(name, target)
       }
       expectRowsToMatch("socar", expected, refs, literals)
+      // The `## Colors` audit note and the table's lead sentence state these
+      // counts in prose, so they are pinned here: a row added or dropped must
+      // update the prose with the count. The 20 palette steps added on
+      // 2026-11-01 are a dated record in the audit note, not a count of the
+      // document, and stay unpinned.
+      const proseCounts = {
+        referenceRows: [...refs.keys()].filter((key) => key !== "primary")
+          .length,
+        tableRows: tableRows.length,
+        tableOnlyRows: tableRows.filter(
+          ([, paletteCell = ""]) => single(paletteCell) === undefined
+        ).length,
+      }
+      expect(proseCounts, "socar: counts the prose states").toEqual({
+        referenceRows: 40,
+        tableRows: 43,
+        tableOnlyRows: 3,
+      })
     },
   },
 }
