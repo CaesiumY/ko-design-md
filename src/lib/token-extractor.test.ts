@@ -124,8 +124,8 @@ describe("colors", () => {
     const blue = colors.find((c) => c.name === "blue-500")
     expect(blue?.value).toBe("oklch(0.620 0.191 258)")
     expect(blue?.note).toContain("카노니컬")
-    // ~37 light swatches plus 15 `dark-*` TDS values; the semantic aliases
-    // ride beside them as reference tokens and are counted apart.
+    // ~37 light swatches plus 15 `dark-*` TDS values; the published role row
+    // rides beside them as a reference token and is counted apart.
     const literals = colors.filter((c) => c.ref === undefined)
     expect(literals.length).toBeGreaterThan(45)
     expect(literals.length).toBeLessThan(60)
@@ -138,12 +138,12 @@ describe("colors", () => {
     )
   })
 
-  it("carries a semantic alias as a reference token (toss fill-brand)", () => {
+  it("carries a role row as a reference token (toss greyBackground)", () => {
     const { colors } = extractTokensFromMarkdown(loadRaw("toss"))
-    expect(colors.find((c) => c.name === "fill-brand")).toEqual({
-      name: "fill-brand",
-      value: "oklch(0.620 0.191 258)",
-      ref: "blue-500",
+    expect(colors.find((c) => c.name === "greyBackground")).toMatchObject({
+      name: "greyBackground",
+      value: "oklch(0.966 0.003 248)",
+      ref: "grey-100",
     })
   })
 
