@@ -4,6 +4,8 @@ import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
 import { findKey, readFrontmatter } from "./frontmatter"
 import { splitFrontmatter } from "./frontmatter-fence"
+import { deltaE, hexToOklab, parseOklch } from "./oklch-convert"
+import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
 
 // The entries in CASES below publish a semantic role layer twice (#435): as a
 // Markdown table in `## Colors` — the reader's copy, carrying `[src:N]` — and
@@ -179,6 +181,200 @@ const CASES: Record<string, { title: string; check: () => void }> = {
         }
       }
       expectRowsToMatch("banksalad", expected, refs, literals)
+    },
+  },
+  bezier: {
+    title:
+      "stable roles to `stable-*`, beta roles to beta steps, light and `dark-` twin",
+    check: () => {
+      const { literals, refs, tableRows } = load("bezier")
+      // Two published role layers, each pointing at its own tier's primitives.
+      // The stable tier's are carried as `stable-*` keys, so a stable colour
+      // role (`bg-*` · `txt-*` · `bgtxt-*` · `bdr-*` · `shdw-*`) aliases a
+      // `stable-*` key and a beta role a beta step —
+      // never across, even where the values match. Neither tier redefines a
+      // primitive per theme, so a `dark-` twin points at an unprefixed key.
+      // The beta roles upstream writes as hex (`*-hovered`,
+      // `chart-theme-default-*`) are literal values (hex ≈ OKLCH) and fall
+      // out here.
+      // A stable-tier role name, matched on the bare name (no backticks, no
+      // `dark-` prefix) in both the table and the rows.
+      const STABLE_ROLE = /^(bg|txt|bgtxt|bdr|shdw)-/
+      const STABLE_KEY = /^stable-/
+      const stableRows = tableRows.filter(([cell]) =>
+        STABLE_ROLE.test(spans(cell)[0] ?? "")
+      )
+      // Both layers' tables must have parsed, or a dropped one would pass.
+      expect(stableRows.length, "bezier: stable table rows").toBeGreaterThan(0)
+      // Every stable cell is exactly one `stable-*` reference: a beta key, a
+      // value, or a reference with words after it all fail here.
+      const loose = stableRows.flatMap(([roleCell, light = "", dark = ""]) =>
+        [light, dark]
+          .filter((cell) => !STABLE_KEY.test(single(cell) ?? ""))
+          .map((cell) => `${spans(roleCell)[0]}: ${cell}`)
+      )
+      expect(
+        loose,
+        "bezier: stable cells must each be one `{colors.stable-*}`"
+      ).toEqual([])
+      const expected = singleReferenceRoles(tableRows)
+      expect(
+        [...expected.keys()].some((key) =>
+          /^(text|icon|fill|border|surface)\b/.test(bare(key))
+        ),
+        "bezier: beta role rows"
+      ).toBe(true)
+      expect(
+        [...expected]
+          .filter(
+            ([key, to]) => !STABLE_ROLE.test(bare(key)) && STABLE_KEY.test(to)
+          )
+          .map(([key]) => key),
+        "bezier: beta roles must not reference `stable-*` keys"
+      ).toEqual([])
+      expectRowsToMatch("bezier", expected, refs, literals)
+      // The literal cells write the upstream hex beside its OKLCH
+      // (`#9698ffff ≈ \`oklch(…)\``). `audit:oklch` does not read tables
+      // (draft-validator.ts `scanBody` table note), so the pair is held here
+      // with that gate's own tolerances. Every cell that is not one reference
+      // must have this shape, so a malformed cell fails instead of dropping out
+      // of the comparison: a 6- or 8-digit hex (the table has no shorthand), a
+      // backticked OKLCH, and nothing after but the note a cell whose hex
+      // equals an upstream primitive carries — naming either a palette key of
+      // this entry or an upstream step it does not carry.
+      const LITERAL_CELL =
+        /^(#[0-9a-f]{6}(?:[0-9a-f]{2})?) ≈ `(oklch\([^)`]*\))`(?: — hex 가 (?:원시값 `([a-z0-9-]+)`|상류 원시값 `([a-z0-9-]+)`\(이 문서에 싣지 않은 단계\)) 그대로, 참조 아님)?$/i
+      const literalCells = tableRows.flatMap(([roleCell, ...cells]) =>
+        cells
+          .filter((cell) => single(cell) === undefined)
+          .map((cell) => ({ role: spans(roleCell)[0], cell }))
+      )
+      expect(
+        literalCells
+          .filter(({ cell }) => !LITERAL_CELL.test(cell))
+          .map(({ role, cell }) => `${role}: ${cell}`),
+        "bezier: non-reference cells must be `#hex ≈ \\`oklch(…)\\``"
+      ).toEqual([])
+      expect(
+        literalCells.length,
+        "bezier: literal cells parsed"
+      ).toBeGreaterThan(0)
+      const pairs = literalCells.map(({ cell }) => {
+        const [, hex, oklch, carried, uncarried] = LITERAL_CELL.exec(cell) ?? []
+        return { cell, hex, oklch, carried, uncarried }
+      })
+      // ΔE always. Alpha always too: an 8-digit hex below `ff` needs the
+      // OKLCH to carry that alpha, so a dropped `/ 0.30` fails.
+      const off = pairs.filter(({ hex, oklch }) => {
+        const want = hexToOklab(hex)
+        const wrote = parseOklch(oklch)
+        if (!want || !wrote) return true
+        const alphaOff =
+          Math.abs((want.alpha ?? 1) - (wrote.alpha ?? 1)) > ALPHA_TOLERANCE
+        return deltaE(wrote.lab, want.lab) > DELTA_E_TOLERANCE || alphaOff
+      })
+      expect(
+        off.map(({ cell }) => cell),
+        "bezier: table OKLCH must match its upstream hex"
+      ).toEqual([])
+      // The note's primitive: a palette key must carry the same hex on its
+      // line; a step named as uncarried must really be absent from the palette.
+      const raw = readFileSync(join(SERVICES, "bezier.md"), "utf-8")
+      const lineHex = new Map(
+        [
+          ...raw.matchAll(
+            /^ {2}([a-z0-9-]+): oklch\([^)]*\) +# (#[0-9a-f]+)/gm
+          ),
+        ].map((m) => [m[1], m[2].toLowerCase()])
+      )
+      const wrongNote = pairs.flatMap(({ cell, hex, carried, uncarried }) => {
+        if (carried && lineHex.get(carried) !== hex.toLowerCase()) return [cell]
+        if (uncarried && literals.has(uncarried)) return [cell]
+        return []
+      })
+      expect(
+        wrongNote,
+        "bezier: a note's primitive must match the palette or be absent from it"
+      ).toEqual([])
+      expect(
+        pairs.some(({ carried }) => carried) &&
+          pairs.some(({ uncarried }) => uncarried),
+        "bezier: both note forms parsed"
+      ).toBe(true)
+      // The `## Colors` audit note and the Semantic paragraph state these row
+      // counts in prose (CODING_STANDARDS 「개수」), so they are pinned here: a
+      // row added or dropped must update the prose with the count. How many
+      // of the beta targets the entry already carried before the re-audit and
+      // how many it added (84 + 46) is a dated record, not a table count, and
+      // stays unpinned.
+      const roleRows = tableRows.filter(
+        ([cell]) => !(spans(cell)[0] ?? "").startsWith("{colors.")
+      )
+      const betaRows = roleRows.filter(
+        ([cell]) => !STABLE_ROLE.test(spans(cell)[0] ?? "")
+      )
+      const literalRows = betaRows.filter(([, light = "", dark = ""]) =>
+        [light, dark].every((cell) => single(cell) === undefined)
+      )
+      // A beta role row is either two single references or two literal cells.
+      // A row with one of each would pass both checks above — the reference
+      // half against its row, the literal half against its hex — so it is
+      // refused here.
+      const mixedRows = betaRows
+        .filter(([, light = "", dark = ""]) => {
+          const refsInRow = [light, dark].filter(
+            (cell) => single(cell) !== undefined
+          ).length
+          return refsInRow === 1
+        })
+        .map(([cell]) => spans(cell)[0])
+      expect(
+        mixedRows,
+        "bezier: beta rows must be all-reference or all-literal"
+      ).toEqual([])
+      const proseCounts = {
+        stableRoles: stableRows.length,
+        ...Object.fromEntries(
+          ["bg", "txt", "bgtxt", "bdr", "shdw"].map((family) => [
+            `stable-${family}`,
+            stableRows.filter(([c]) => spans(c)[0]?.startsWith(`${family}-`))
+              .length,
+          ])
+        ),
+        betaRoles: betaRows.length,
+        betaReferenceRoles: betaRows.length - literalRows.length,
+        betaLiteralRoles: literalRows.length,
+        hovered: literalRows.filter(([c]) => /-hovered`$/.test(c)).length,
+        chart: literalRows.filter(([c]) =>
+          /^`chart-theme-default-\d+`$/.test(c)
+        ).length,
+        rowsWithPrimitiveNote: literalRows.filter((row) =>
+          row.slice(1).some((cell) => cell.includes(" — hex 가 "))
+        ).length,
+        // Distinct palette keys the beta reference rows point at.
+        betaTargets: new Set(
+          [...refs]
+            .filter(
+              ([key]) => key !== "primary" && !STABLE_ROLE.test(bare(key))
+            )
+            .map(([, to]) => to)
+        ).size,
+      }
+      expect(proseCounts, "bezier: row counts the prose states").toEqual({
+        stableRoles: 103,
+        "stable-bg": 22,
+        "stable-txt": 5,
+        "stable-bgtxt": 65,
+        "stable-bdr": 5,
+        "stable-shdw": 6,
+        betaRoles: 346,
+        betaReferenceRoles: 163,
+        betaLiteralRoles: 183,
+        hovered: 173,
+        chart: 10,
+        rowsWithPrimitiveNote: 19,
+        betaTargets: 130,
+      })
     },
   },
   "seed-design": {
