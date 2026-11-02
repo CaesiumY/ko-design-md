@@ -79,9 +79,10 @@ interface Coverage {
 // the failure messages below print the measured numbers, and nothing else in
 // the repo does.
 //
-// `annotated: 0` is a fact about the entry, not a broken regex: baemin
-// comments its colours in prose with no hex, so `audit:oklch` has nothing to
-// judge there. bezier annotates only the alpha steps taken from the beta
+// `annotated: 0` is a fact about the entry, not a broken regex: baemin's
+// token lines carry no hex annotation; the deployed hex sits only on a
+// standalone comment line, which is not judged, so `audit:oklch` has nothing
+// to judge there. bezier annotates only the alpha steps taken from the beta
 // tier of `@channel.io/bezier-tokens` (#569); the steps from the handoff bundle
 // stay unannotated. toss annotates only the steps whose name maps to
 // Toss's published `@toss/tds-colors` (15 light + 15 `dark-*`); its bundle-only
@@ -103,7 +104,7 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   krds: { annotated: 44, judged: 44, drift: 55 },
   kyobobook: { annotated: 26, judged: 26, drift: 56 },
   "lg-electronics": { annotated: 67, judged: 67, drift: 67 },
-  likelion: { annotated: 23, judged: 23, drift: 23 },
+  likelion: { annotated: 39, judged: 39, drift: 39 },
   "line-design-system": { annotated: 24, judged: 24, drift: 24 },
   nol: { annotated: 37, judged: 37, drift: 39 },
   remember: { annotated: 76, judged: 76, drift: 76 },
