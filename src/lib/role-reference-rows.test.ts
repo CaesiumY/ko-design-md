@@ -199,6 +199,21 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       expectRowsToMatch("seed-design", expected, refs, literals)
     },
   },
+  gmarket: {
+    title: "light-only roles, each one palette step",
+    check: () => {
+      const { literals, refs, tableRows } = load("gmarket")
+      // GDS publishes no dark palette, so the table has no dark column and no
+      // role owes a `dark-` twin. Its third column is usage prose, which
+      // `single` never reads as a reference.
+      const expected = singleReferenceRoles(tableRows)
+      expect(
+        [...expected.keys()].filter((key) => key.startsWith("dark-")),
+        "gmarket: dark twins in a light-only system"
+      ).toEqual([])
+      expectRowsToMatch("gmarket", expected, refs, literals)
+    },
+  },
   greeting: {
     title: "roles light and `dark-` twin, brand alias off the text ladder",
     check: () => {
@@ -265,12 +280,41 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       expectRowsToMatch("codeit", expected, refs, literals)
     },
   },
+  likelion: {
+    title: "single-reference roles by the palette column, no dark twin",
+    check: () => {
+      const { literals, refs, tableRows } = load("likelion")
+      // Opacity-ramp and gradient roles carry prose and fall out. The third
+      // column is the upstream variable, not a dark cell — likelion publishes
+      // no dark semantic theme — and is never one bare reference, so the
+      // shared reader yields no `dark-` expectation from it. Pinned, so a
+      // future edit to that column cannot demand a phantom twin.
+      const expected = singleReferenceRoles(tableRows)
+      expect(
+        [...expected.keys()].filter((key) => key.startsWith("dark-")),
+        "likelion: dark twins read from the upstream-variable column"
+      ).toEqual([])
+      expectRowsToMatch("likelion", expected, refs, literals)
+    },
+  },
   ridi: {
     title: "single-reference roles, light and `dark-` twin",
     check: () => {
       const { literals, refs, tableRows } = load("ridi")
       const expected = singleReferenceRoles(tableRows)
       expectRowsToMatch("ridi", expected, refs, literals)
+    },
+  },
+  teamsparta: {
+    title: "stack-tokens roles, light and `dark-` twin on one palette",
+    check: () => {
+      const { literals, refs, tableRows } = load("teamsparta")
+      // `@teamsparta/stack-tokens` primitives do not change with the theme, so
+      // a `dark-` twin points at an unprefixed step. Cells through an alpha ramp
+      // (`neutralBlueAlpha[15]`) or a literal (`brand-faint`) are not single
+      // references and fall out.
+      const expected = singleReferenceRoles(tableRows)
+      expectRowsToMatch("teamsparta", expected, refs, literals)
     },
   },
   toss: {
@@ -283,6 +327,17 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       // opacity cells fall out.
       const expected = singleReferenceRoles(tableRows)
       expectRowsToMatch("toss", expected, refs, literals)
+    },
+  },
+  "vapor-ui": {
+    title: "every published alias, light and `dark-` twin",
+    check: () => {
+      const { literals, refs, tableRows } = load("vapor-ui")
+      // `color-foreground-inverse` points at `color-white` in both cells: the
+      // dark block redefines white to the same value, so the twin aliases the
+      // unprefixed key.
+      const expected = singleReferenceRoles(tableRows)
+      expectRowsToMatch("vapor-ui", expected, refs, literals)
     },
   },
 }
@@ -313,8 +368,7 @@ describe("role reference rows agree with the body role tables", () => {
     // Detected by shape, not by listing: a reference row whose key — less a
     // `dark-` prefix, and with codeit's `text-` / `background-` read as `txt-` /
     // `bg-` — is a backticked name in the first column of the entry's own `## Colors`
-    // tables. Older reference rows elsewhere (vapor-ui's aliases) name no
-    // table role and are not caught. A role table written
+    // tables. A reference row whose key names no table role is not caught. A role table written
     // without backticks, or with the role outside the first column, is not
     // seen either — .claude/rules/catalog.md states that shape.
     const docsName = (key: string): string =>

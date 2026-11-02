@@ -141,74 +141,405 @@
     {
       "name": "white",
       "value": "oklch(1 0 0)",
-      "note": "#FFFFFF",
-      "group": "Semantic (bg/fg/border)"
+      "note": "#FFFFFF 상류 이름은 basic-white",
+      "group": "Basic (상류 basic-*)"
+    },
+    {
+      "name": "black",
+      "value": "oklch(0.00 0.000 0)",
+      "note": "#000000 상류 이름은 basic-black",
+      "group": "Basic (상류 basic-*)"
+    },
+    {
+      "name": "blue-50",
+      "value": "oklch(0.96 0.022 235)",
+      "note": "#E5F5FF",
+      "group": "Hue (시맨틱 역할이 가리키는 단계만 — 상류 램프는 계열마다 50~900)"
+    },
+    {
+      "name": "blue-500",
+      "value": "oklch(0.67 0.179 256)",
+      "note": "#3D94FF",
+      "group": "Hue (시맨틱 역할이 가리키는 단계만 — 상류 램프는 계열마다 50~900)"
+    },
+    {
+      "name": "green-50",
+      "value": "oklch(0.97 0.024 181)",
+      "note": "#E4FAF5",
+      "group": "Hue (시맨틱 역할이 가리키는 단계만 — 상류 램프는 계열마다 50~900)"
+    },
+    {
+      "name": "green-500",
+      "value": "oklch(0.65 0.115 182)",
+      "note": "#0DA796",
+      "group": "Hue (시맨틱 역할이 가리키는 단계만 — 상류 램프는 계열마다 50~900)"
+    },
+    {
+      "name": "light-green-50",
+      "value": "oklch(0.98 0.036 126)",
+      "note": "#F2FDE3",
+      "group": "Hue (시맨틱 역할이 가리키는 단계만 — 상류 램프는 계열마다 50~900)"
+    },
+    {
+      "name": "light-green-500",
+      "value": "oklch(0.70 0.179 129)",
+      "note": "#79B116",
+      "group": "Hue (시맨틱 역할이 가리키는 단계만 — 상류 램프는 계열마다 50~900)"
+    },
+    {
+      "name": "pink-50",
+      "value": "oklch(0.98 0.020 326)",
+      "note": "#FFF3FF",
+      "group": "Hue (시맨틱 역할이 가리키는 단계만 — 상류 램프는 계열마다 50~900)"
+    },
+    {
+      "name": "pink-500",
+      "value": "oklch(0.66 0.148 350)",
+      "note": "#D3689F",
+      "group": "Hue (시맨틱 역할이 가리키는 단계만 — 상류 램프는 계열마다 50~900)"
+    },
+    {
+      "name": "purple-50",
+      "value": "oklch(0.96 0.024 313)",
+      "note": "#F9EFFF",
+      "group": "Hue (시맨틱 역할이 가리키는 단계만 — 상류 램프는 계열마다 50~900)"
+    },
+    {
+      "name": "purple-500",
+      "value": "oklch(0.67 0.152 308)",
+      "note": "#AF79DD",
+      "group": "Hue (시맨틱 역할이 가리키는 단계만 — 상류 램프는 계열마다 50~900)"
+    },
+    {
+      "name": "red-50",
+      "value": "oklch(0.97 0.015 2)",
+      "note": "#FDF0F3",
+      "group": "Hue (시맨틱 역할이 가리키는 단계만 — 상류 램프는 계열마다 50~900)"
+    },
+    {
+      "name": "red-500",
+      "value": "oklch(0.66 0.207 25)",
+      "note": "#F64C4C",
+      "group": "Hue (시맨틱 역할이 가리키는 단계만 — 상류 램프는 계열마다 50~900)"
+    },
+    {
+      "name": "red-600",
+      "value": "oklch(0.59 0.220 23)",
+      "note": "#E12337",
+      "group": "Hue (시맨틱 역할이 가리키는 단계만 — 상류 램프는 계열마다 50~900)"
+    },
+    {
+      "name": "yellow-50",
+      "value": "oklch(0.98 0.027 91)",
+      "note": "#FFF8E4",
+      "group": "Hue (시맨틱 역할이 가리키는 단계만 — 상류 램프는 계열마다 50~900)"
+    },
+    {
+      "name": "yellow-500",
+      "value": "oklch(0.83 0.171 80)",
+      "note": "#FFB700",
+      "group": "Hue (시맨틱 역할이 가리키는 단계만 — 상류 램프는 계열마다 50~900)"
     },
     {
       "name": "bg-white",
       "value": "oklch(1 0 0)",
-      "group": "Semantic (bg/fg/border)",
+      "group": "Semantic (bg/fg/border/info)",
       "ref": "white"
     },
     {
       "name": "bg-normal",
       "value": "oklch(0.97 0.003 270)",
-      "group": "Semantic (bg/fg/border)",
+      "group": "Semantic (bg/fg/border/info)",
       "ref": "gray-100"
+    },
+    {
+      "name": "bg-normal-hovered",
+      "value": "oklch(0.98 0.002 245)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-50"
+    },
+    {
+      "name": "bg-normal-alternative",
+      "value": "oklch(0.93 0.005 255)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-200"
+    },
+    {
+      "name": "bg-normal-assistive",
+      "value": "oklch(0.98 0.002 245)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-50"
+    },
+    {
+      "name": "bg-disabled",
+      "value": "oklch(0.97 0.003 270)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-100"
+    },
+    {
+      "name": "bg-disabled-dark",
+      "value": "oklch(0.93 0.005 255)",
+      "note": "-dark 는 테마 짝이 아니라 상류의 명도 단계 이름",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-200"
+    },
+    {
+      "name": "bg-inverted",
+      "value": "oklch(0.22 0.007 247)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-950"
+    },
+    {
+      "name": "bg-inverted-hovered",
+      "value": "oklch(0.24 0.024 262)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-900"
     },
     {
       "name": "bg-primary",
       "value": "oklch(0.69 0.209 42)",
-      "group": "Semantic (bg/fg/border)",
+      "group": "Semantic (bg/fg/border/info)",
       "ref": "primary-500"
+    },
+    {
+      "name": "bg-primary-hovered",
+      "value": "oklch(0.58 0.175 42)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "primary-600"
     },
     {
       "name": "bg-primary-weak",
       "value": "oklch(0.96 0.022 54)",
-      "group": "Semantic (bg/fg/border)",
+      "group": "Semantic (bg/fg/border/info)",
       "ref": "primary-50"
+    },
+    {
+      "name": "bg-black",
+      "value": "oklch(0.00 0.000 0)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "black"
+    },
+    {
+      "name": "bg-blue",
+      "value": "oklch(0.96 0.022 235)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "blue-50"
+    },
+    {
+      "name": "bg-green",
+      "value": "oklch(0.97 0.024 181)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "green-50"
+    },
+    {
+      "name": "bg-lightgreen",
+      "value": "oklch(0.98 0.036 126)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "light-green-50"
+    },
+    {
+      "name": "bg-pink",
+      "value": "oklch(0.98 0.020 326)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "pink-50"
+    },
+    {
+      "name": "bg-purple",
+      "value": "oklch(0.96 0.024 313)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "purple-50"
+    },
+    {
+      "name": "bg-red",
+      "value": "oklch(0.97 0.015 2)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "red-50"
+    },
+    {
+      "name": "bg-yellow",
+      "value": "oklch(0.98 0.027 91)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "yellow-50"
     },
     {
       "name": "fg-white",
       "value": "oklch(1 0 0)",
-      "group": "Semantic (bg/fg/border)",
+      "group": "Semantic (bg/fg/border/info)",
       "ref": "white"
     },
     {
       "name": "fg-primary",
       "value": "oklch(0.69 0.209 42)",
-      "group": "Semantic (bg/fg/border)",
+      "group": "Semantic (bg/fg/border/info)",
       "ref": "primary-500"
+    },
+    {
+      "name": "fg-pressed",
+      "value": "oklch(0.58 0.175 42)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "primary-600"
+    },
+    {
+      "name": "fg-primary-inverted",
+      "value": "oklch(0.79 0.135 51)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "primary-300"
+    },
+    {
+      "name": "fg-strong",
+      "value": "oklch(0.24 0.024 262)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-900"
     },
     {
       "name": "fg-normal",
       "value": "oklch(0.35 0.029 261)",
-      "group": "Semantic (bg/fg/border)",
+      "group": "Semantic (bg/fg/border/info)",
       "ref": "gray-800"
+    },
+    {
+      "name": "fg-neutral",
+      "value": "oklch(0.46 0.027 256)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-700"
+    },
+    {
+      "name": "fg-alternative",
+      "value": "oklch(0.56 0.025 257)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-600"
+    },
+    {
+      "name": "fg-assistive",
+      "value": "oklch(0.67 0.021 251)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-500"
     },
     {
       "name": "fg-disabled",
       "value": "oklch(0.78 0.014 252)",
-      "group": "Semantic (bg/fg/border)",
+      "group": "Semantic (bg/fg/border/info)",
       "ref": "gray-400"
+    },
+    {
+      "name": "fg-black",
+      "value": "oklch(0.00 0.000 0)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "black"
+    },
+    {
+      "name": "fg-blue",
+      "value": "oklch(0.67 0.179 256)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "blue-500"
+    },
+    {
+      "name": "fg-green",
+      "value": "oklch(0.65 0.115 182)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "green-500"
+    },
+    {
+      "name": "fg-lightgreen",
+      "value": "oklch(0.70 0.179 129)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "light-green-500"
+    },
+    {
+      "name": "fg-pink",
+      "value": "oklch(0.66 0.148 350)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "pink-500"
+    },
+    {
+      "name": "fg-purple",
+      "value": "oklch(0.67 0.152 308)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "purple-500"
+    },
+    {
+      "name": "fg-red",
+      "value": "oklch(0.66 0.207 25)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "red-500"
+    },
+    {
+      "name": "fg-yellow",
+      "value": "oklch(0.83 0.171 80)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "yellow-500"
     },
     {
       "name": "border-primary",
       "value": "oklch(0.69 0.209 42)",
-      "group": "Semantic (bg/fg/border)",
+      "group": "Semantic (bg/fg/border/info)",
       "ref": "primary-500"
+    },
+    {
+      "name": "border-strong",
+      "value": "oklch(0.35 0.029 261)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-800"
     },
     {
       "name": "border-normal",
       "value": "oklch(0.87 0.010 253)",
-      "group": "Semantic (bg/fg/border)",
+      "group": "Semantic (bg/fg/border/info)",
       "ref": "gray-300"
     },
     {
       "name": "border-weak",
       "value": "oklch(0.93 0.005 255)",
-      "group": "Semantic (bg/fg/border)",
+      "group": "Semantic (bg/fg/border/info)",
       "ref": "gray-200"
+    },
+    {
+      "name": "border-white",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "white"
+    },
+    {
+      "name": "border-inverted",
+      "value": "oklch(0.46 0.027 256)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-700"
+    },
+    {
+      "name": "border-inverted-strong",
+      "value": "oklch(0.56 0.025 257)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "gray-600"
+    },
+    {
+      "name": "border-black",
+      "value": "oklch(0.00 0.000 0)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "black"
+    },
+    {
+      "name": "info-white",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "white"
+    },
+    {
+      "name": "info-black",
+      "value": "oklch(0.00 0.000 0)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "black"
+    },
+    {
+      "name": "info-negative",
+      "value": "oklch(0.59 0.220 23)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "red-600"
+    },
+    {
+      "name": "info-positive",
+      "value": "oklch(0.70 0.179 129)",
+      "group": "Semantic (bg/fg/border/info)",
+      "ref": "light-green-500"
     }
   ],
   "typography": [
