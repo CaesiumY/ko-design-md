@@ -79,30 +79,33 @@ interface Coverage {
 // the failure messages below print the measured numbers, and nothing else in
 // the repo does.
 //
-// `annotated: 0` is a fact about the entry, not a broken regex: baemin
-// comments its colours in prose with no hex, so `audit:oklch` has nothing to
-// judge there. bezier annotates only the alpha steps taken from the beta
-// tier of `@channel.io/bezier-tokens` (#569); the steps from the handoff bundle
-// stay unannotated. toss annotates only the steps whose name maps to
+// `annotated: 0` is a fact about the entry, not a broken regex: baemin's
+// token lines carry no hex annotation; the deployed hex sits only on a
+// standalone comment line, which is not judged, so `audit:oklch` has nothing
+// to judge there. bezier annotates only the steps taken from the beta tier and
+// the stable tier (`stable-*`) of `@channel.io/bezier-tokens` (#569, #628);
+// the 43 bundle steps stay unannotated, so drift 275 = annotated 232 + 43;
+// role rows count in neither. toss annotates only the steps whose name maps to
 // Toss's published `@toss/tds-colors` (15 light + 15 `dark-*`); its bundle-only
 // steps stay unannotated. teamsparta likewise annotates only the three reds
-// corrected to the live sites' `--stack-semantic-*` values. `drift: 0` is a
+// corrected to the live sites' `--stack-semantic-*` values and the 45
+// `@teamsparta/stack-tokens` steps its role layer points at. `drift: 0` is a
 // different claim and is refused below.
 const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   "11st": { annotated: 31, judged: 31, drift: 33 },
   baemin: { annotated: 0, judged: 0, drift: 38 },
   banksalad: { annotated: 187, judged: 187, drift: 187 },
-  bezier: { annotated: 51, judged: 51, drift: 94 },
+  bezier: { annotated: 232, judged: 232, drift: 275 },
   class101: { annotated: 98, judged: 98, drift: 98 },
   codeit: { annotated: 180, judged: 173, drift: 180, webfont: true },
-  gmarket: { annotated: 87, judged: 87, drift: 91 },
+  gmarket: { annotated: 75, judged: 75, drift: 75 },
   greeting: { annotated: 112, judged: 112, drift: 130 },
   "gs-retail": { annotated: 23, judged: 23, drift: 23 },
   "gs-shop": { annotated: 52, judged: 52, drift: 52 },
   krds: { annotated: 44, judged: 44, drift: 55 },
   kyobobook: { annotated: 26, judged: 26, drift: 56 },
   "lg-electronics": { annotated: 67, judged: 67, drift: 67 },
-  likelion: { annotated: 23, judged: 23, drift: 23 },
+  likelion: { annotated: 39, judged: 39, drift: 39 },
   "line-design-system": { annotated: 24, judged: 24, drift: 24 },
   nol: { annotated: 37, judged: 37, drift: 39 },
   remember: { annotated: 76, judged: 76, drift: 76 },
@@ -112,9 +115,9 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   // 39 role literals became reference rows (no `oklch` of their own) and the
   // 20 palette steps they point at were added (#630): 56 − 39 + 20, 59 − 39 + 20.
   socar: { annotated: 37, judged: 37, drift: 40 },
-  teamsparta: { annotated: 3, judged: 3, drift: 28 },
+  teamsparta: { annotated: 48, judged: 48, drift: 73 },
   toss: { annotated: 30, judged: 30, drift: 52 },
-  "vapor-ui": { annotated: 223, judged: 223, drift: 223 },
+  "vapor-ui": { annotated: 224, judged: 224, drift: 224 },
   wanted: { annotated: 29, judged: 28, drift: 121, webfont: true },
   yeogi: { annotated: 51, judged: 51, drift: 73, webfont: true },
   zigbang: { annotated: 37, judged: 37, drift: 43 },

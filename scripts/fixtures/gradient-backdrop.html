@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>text and a non-text surface over a background image</title>
+    <!--
+      Synthetic, written for scripts/audit-contrast-oracle.ts (#402). See
+      scripts/fixtures/README.md: the expectations are derived from this CSS by
+      hand, so a change here changes the derivation in the oracle too.
+
+      Every panel is 300x120 — over 1% of the 976x800 viewport, so no panel
+      is measured as a non-text surface itself. The text panels carry one run of
+      black 16px text over a gradient or an image painted on a transparent
+      `background-color`; the last carries a 12x12 dot, which qualifies for the
+      non-text pass. Every colour is an achromatic OKLCH, whose relative
+      luminance is L³, and a gradient between two greys stays grey in either
+      interpolation space, so each weakest colour is an end stop.
+    -->
+    <style>
+      body {
+        margin: 0;
+        padding: 24px;
+        background: oklch(1 0 0);
+      }
+      .pass,
+      .fail,
+      .mixed,
+      .image,
+      .dots {
+        width: 300px;
+        height: 120px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .pass {
+        background: linear-gradient(to right, oklch(1 0 0), oklch(0.8 0 0));
+      }
+      .fail {
+        background: linear-gradient(to right, oklch(0.4 0 0), oklch(0.3 0 0));
+      }
+      .mixed {
+        background: linear-gradient(to right, oklch(1 0 0), oklch(0.3 0 0));
+      }
+      .image {
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='white'/%3E%3C/svg%3E");
+      }
+      .dots {
+        background: linear-gradient(to right, oklch(1 0 0), oklch(0.95 0 0));
+      }
+      .t {
+        color: oklch(0 0 0);
+        font: 400 16px / 1.5 sans-serif;
+      }
+      .dot {
+        display: block;
+        width: 12px;
+        height: 12px;
+        background: oklch(0.6 0 0);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="pass"><span class="t">Sample text</span></div>
+    <div class="fail"><span class="t">Sample text</span></div>
+    <div class="mixed"><span class="t">Sample text</span></div>
+    <div class="image"><span class="t">Sample text</span></div>
+    <div class="dots"><span class="dot"></span></div>
+  </body>
+</html>

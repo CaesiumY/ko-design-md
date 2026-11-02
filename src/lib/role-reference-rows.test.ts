@@ -4,6 +4,8 @@ import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
 import { findKey, readFrontmatter } from "./frontmatter"
 import { splitFrontmatter } from "./frontmatter-fence"
+import { deltaE, hexToOklab, parseOklch } from "./oklch-convert"
+import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
 
 // The entries in CASES below publish a semantic role layer twice (#435): as a
 // Markdown table in `## Colors` — the reader's copy, carrying `[src:N]` — and
@@ -181,6 +183,200 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       expectRowsToMatch("banksalad", expected, refs, literals)
     },
   },
+  bezier: {
+    title:
+      "stable roles to `stable-*`, beta roles to beta steps, light and `dark-` twin",
+    check: () => {
+      const { literals, refs, tableRows } = load("bezier")
+      // Two published role layers, each pointing at its own tier's primitives.
+      // The stable tier's are carried as `stable-*` keys, so a stable colour
+      // role (`bg-*` · `txt-*` · `bgtxt-*` · `bdr-*` · `shdw-*`) aliases a
+      // `stable-*` key and a beta role a beta step —
+      // never across, even where the values match. Neither tier redefines a
+      // primitive per theme, so a `dark-` twin points at an unprefixed key.
+      // The beta roles upstream writes as hex (`*-hovered`,
+      // `chart-theme-default-*`) are literal values (hex ≈ OKLCH) and fall
+      // out here.
+      // A stable-tier role name, matched on the bare name (no backticks, no
+      // `dark-` prefix) in both the table and the rows.
+      const STABLE_ROLE = /^(bg|txt|bgtxt|bdr|shdw)-/
+      const STABLE_KEY = /^stable-/
+      const stableRows = tableRows.filter(([cell]) =>
+        STABLE_ROLE.test(spans(cell)[0] ?? "")
+      )
+      // Both layers' tables must have parsed, or a dropped one would pass.
+      expect(stableRows.length, "bezier: stable table rows").toBeGreaterThan(0)
+      // Every stable cell is exactly one `stable-*` reference: a beta key, a
+      // value, or a reference with words after it all fail here.
+      const loose = stableRows.flatMap(([roleCell, light = "", dark = ""]) =>
+        [light, dark]
+          .filter((cell) => !STABLE_KEY.test(single(cell) ?? ""))
+          .map((cell) => `${spans(roleCell)[0]}: ${cell}`)
+      )
+      expect(
+        loose,
+        "bezier: stable cells must each be one `{colors.stable-*}`"
+      ).toEqual([])
+      const expected = singleReferenceRoles(tableRows)
+      expect(
+        [...expected.keys()].some((key) =>
+          /^(text|icon|fill|border|surface)\b/.test(bare(key))
+        ),
+        "bezier: beta role rows"
+      ).toBe(true)
+      expect(
+        [...expected]
+          .filter(
+            ([key, to]) => !STABLE_ROLE.test(bare(key)) && STABLE_KEY.test(to)
+          )
+          .map(([key]) => key),
+        "bezier: beta roles must not reference `stable-*` keys"
+      ).toEqual([])
+      expectRowsToMatch("bezier", expected, refs, literals)
+      // The literal cells write the upstream hex beside its OKLCH
+      // (`#9698ffff ≈ \`oklch(…)\``). `audit:oklch` does not read tables
+      // (draft-validator.ts `scanBody` table note), so the pair is held here
+      // with that gate's own tolerances. Every cell that is not one reference
+      // must have this shape, so a malformed cell fails instead of dropping out
+      // of the comparison: a 6- or 8-digit hex (the table has no shorthand), a
+      // backticked OKLCH, and nothing after but the note a cell whose hex
+      // equals an upstream primitive carries — naming either a palette key of
+      // this entry or an upstream step it does not carry.
+      const LITERAL_CELL =
+        /^(#[0-9a-f]{6}(?:[0-9a-f]{2})?) ≈ `(oklch\([^)`]*\))`(?: — hex 가 (?:원시값 `([a-z0-9-]+)`|상류 원시값 `([a-z0-9-]+)`\(이 문서에 싣지 않은 단계\)) 그대로, 참조 아님)?$/i
+      const literalCells = tableRows.flatMap(([roleCell, ...cells]) =>
+        cells
+          .filter((cell) => single(cell) === undefined)
+          .map((cell) => ({ role: spans(roleCell)[0], cell }))
+      )
+      expect(
+        literalCells
+          .filter(({ cell }) => !LITERAL_CELL.test(cell))
+          .map(({ role, cell }) => `${role}: ${cell}`),
+        "bezier: non-reference cells must be `#hex ≈ \\`oklch(…)\\``"
+      ).toEqual([])
+      expect(
+        literalCells.length,
+        "bezier: literal cells parsed"
+      ).toBeGreaterThan(0)
+      const pairs = literalCells.map(({ cell }) => {
+        const [, hex, oklch, carried, uncarried] = LITERAL_CELL.exec(cell) ?? []
+        return { cell, hex, oklch, carried, uncarried }
+      })
+      // ΔE always. Alpha always too: an 8-digit hex below `ff` needs the
+      // OKLCH to carry that alpha, so a dropped `/ 0.30` fails.
+      const off = pairs.filter(({ hex, oklch }) => {
+        const want = hexToOklab(hex)
+        const wrote = parseOklch(oklch)
+        if (!want || !wrote) return true
+        const alphaOff =
+          Math.abs((want.alpha ?? 1) - (wrote.alpha ?? 1)) > ALPHA_TOLERANCE
+        return deltaE(wrote.lab, want.lab) > DELTA_E_TOLERANCE || alphaOff
+      })
+      expect(
+        off.map(({ cell }) => cell),
+        "bezier: table OKLCH must match its upstream hex"
+      ).toEqual([])
+      // The note's primitive: a palette key must carry the same hex on its
+      // line; a step named as uncarried must really be absent from the palette.
+      const raw = readFileSync(join(SERVICES, "bezier.md"), "utf-8")
+      const lineHex = new Map(
+        [
+          ...raw.matchAll(
+            /^ {2}([a-z0-9-]+): oklch\([^)]*\) +# (#[0-9a-f]+)/gm
+          ),
+        ].map((m) => [m[1], m[2].toLowerCase()])
+      )
+      const wrongNote = pairs.flatMap(({ cell, hex, carried, uncarried }) => {
+        if (carried && lineHex.get(carried) !== hex.toLowerCase()) return [cell]
+        if (uncarried && literals.has(uncarried)) return [cell]
+        return []
+      })
+      expect(
+        wrongNote,
+        "bezier: a note's primitive must match the palette or be absent from it"
+      ).toEqual([])
+      expect(
+        pairs.some(({ carried }) => carried) &&
+          pairs.some(({ uncarried }) => uncarried),
+        "bezier: both note forms parsed"
+      ).toBe(true)
+      // The `## Colors` audit note and the Semantic paragraph state these row
+      // counts in prose (CODING_STANDARDS 「개수」), so they are pinned here: a
+      // row added or dropped must update the prose with the count. How many
+      // of the beta targets the entry already carried before the re-audit and
+      // how many it added (84 + 46) is a dated record, not a table count, and
+      // stays unpinned.
+      const roleRows = tableRows.filter(
+        ([cell]) => !(spans(cell)[0] ?? "").startsWith("{colors.")
+      )
+      const betaRows = roleRows.filter(
+        ([cell]) => !STABLE_ROLE.test(spans(cell)[0] ?? "")
+      )
+      const literalRows = betaRows.filter(([, light = "", dark = ""]) =>
+        [light, dark].every((cell) => single(cell) === undefined)
+      )
+      // A beta role row is either two single references or two literal cells.
+      // A row with one of each would pass both checks above — the reference
+      // half against its row, the literal half against its hex — so it is
+      // refused here.
+      const mixedRows = betaRows
+        .filter(([, light = "", dark = ""]) => {
+          const refsInRow = [light, dark].filter(
+            (cell) => single(cell) !== undefined
+          ).length
+          return refsInRow === 1
+        })
+        .map(([cell]) => spans(cell)[0])
+      expect(
+        mixedRows,
+        "bezier: beta rows must be all-reference or all-literal"
+      ).toEqual([])
+      const proseCounts = {
+        stableRoles: stableRows.length,
+        ...Object.fromEntries(
+          ["bg", "txt", "bgtxt", "bdr", "shdw"].map((family) => [
+            `stable-${family}`,
+            stableRows.filter(([c]) => spans(c)[0]?.startsWith(`${family}-`))
+              .length,
+          ])
+        ),
+        betaRoles: betaRows.length,
+        betaReferenceRoles: betaRows.length - literalRows.length,
+        betaLiteralRoles: literalRows.length,
+        hovered: literalRows.filter(([c]) => /-hovered`$/.test(c)).length,
+        chart: literalRows.filter(([c]) =>
+          /^`chart-theme-default-\d+`$/.test(c)
+        ).length,
+        rowsWithPrimitiveNote: literalRows.filter((row) =>
+          row.slice(1).some((cell) => cell.includes(" — hex 가 "))
+        ).length,
+        // Distinct palette keys the beta reference rows point at.
+        betaTargets: new Set(
+          [...refs]
+            .filter(
+              ([key]) => key !== "primary" && !STABLE_ROLE.test(bare(key))
+            )
+            .map(([, to]) => to)
+        ).size,
+      }
+      expect(proseCounts, "bezier: row counts the prose states").toEqual({
+        stableRoles: 103,
+        "stable-bg": 22,
+        "stable-txt": 5,
+        "stable-bgtxt": 65,
+        "stable-bdr": 5,
+        "stable-shdw": 6,
+        betaRoles: 346,
+        betaReferenceRoles: 163,
+        betaLiteralRoles: 183,
+        hovered: 173,
+        chart: 10,
+        rowsWithPrimitiveNote: 19,
+        betaTargets: 130,
+      })
+    },
+  },
   "seed-design": {
     title: "every role, light and `dark-` twin",
     check: () => {
@@ -197,6 +393,21 @@ const CASES: Record<string, { title: string; check: () => void }> = {
         expected.set(`dark-${name}`, d.startsWith("static-") ? d : `dark-${d}`)
       }
       expectRowsToMatch("seed-design", expected, refs, literals)
+    },
+  },
+  gmarket: {
+    title: "light-only roles, each one palette step",
+    check: () => {
+      const { literals, refs, tableRows } = load("gmarket")
+      // GDS publishes no dark palette, so the table has no dark column and no
+      // role owes a `dark-` twin. Its third column is usage prose, which
+      // `single` never reads as a reference.
+      const expected = singleReferenceRoles(tableRows)
+      expect(
+        [...expected.keys()].filter((key) => key.startsWith("dark-")),
+        "gmarket: dark twins in a light-only system"
+      ).toEqual([])
+      expectRowsToMatch("gmarket", expected, refs, literals)
     },
   },
   greeting: {
@@ -265,6 +476,23 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       expectRowsToMatch("codeit", expected, refs, literals)
     },
   },
+  likelion: {
+    title: "single-reference roles by the palette column, no dark twin",
+    check: () => {
+      const { literals, refs, tableRows } = load("likelion")
+      // Opacity-ramp and gradient roles carry prose and fall out. The third
+      // column is the upstream variable, not a dark cell — likelion publishes
+      // no dark semantic theme — and is never one bare reference, so the
+      // shared reader yields no `dark-` expectation from it. Pinned, so a
+      // future edit to that column cannot demand a phantom twin.
+      const expected = singleReferenceRoles(tableRows)
+      expect(
+        [...expected.keys()].filter((key) => key.startsWith("dark-")),
+        "likelion: dark twins read from the upstream-variable column"
+      ).toEqual([])
+      expectRowsToMatch("likelion", expected, refs, literals)
+    },
+  },
   ridi: {
     title: "single-reference roles, light and `dark-` twin",
     check: () => {
@@ -307,6 +535,41 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       })
     },
   },
+  teamsparta: {
+    title: "stack-tokens roles, light and `dark-` twin on one palette",
+    check: () => {
+      const { literals, refs, tableRows } = load("teamsparta")
+      // `@teamsparta/stack-tokens` primitives do not change with the theme, so
+      // a `dark-` twin points at an unprefixed step. Cells through an alpha ramp
+      // (`neutralBlueAlpha[15]`) or a literal (`brand-faint`) are not single
+      // references and fall out.
+      const expected = singleReferenceRoles(tableRows)
+      expectRowsToMatch("teamsparta", expected, refs, literals)
+    },
+  },
+  toss: {
+    title: "published adaptive roles, single-reference cells only",
+    check: () => {
+      const { literals, refs, tableRows } = load("toss")
+      // `@toss/tds-colors` defines its adaptive roles as hex or rgba literals;
+      // only the light `greyBackground` is named against a palette step (the
+      // TDS Mobile Colors page's `lightThemeGrey100`). Literal-value and
+      // opacity cells fall out.
+      const expected = singleReferenceRoles(tableRows)
+      expectRowsToMatch("toss", expected, refs, literals)
+    },
+  },
+  "vapor-ui": {
+    title: "every published alias, light and `dark-` twin",
+    check: () => {
+      const { literals, refs, tableRows } = load("vapor-ui")
+      // `color-foreground-inverse` points at `color-white` in both cells: the
+      // dark block redefines white to the same value, so the twin aliases the
+      // unprefixed key.
+      const expected = singleReferenceRoles(tableRows)
+      expectRowsToMatch("vapor-ui", expected, refs, literals)
+    },
+  },
 }
 
 describe("role reference rows agree with the body role tables", () => {
@@ -335,8 +598,7 @@ describe("role reference rows agree with the body role tables", () => {
     // Detected by shape, not by listing: a reference row whose key — less a
     // `dark-` prefix, and with codeit's `text-` / `background-` read as `txt-` /
     // `bg-` — is a backticked name in the first column of the entry's own `## Colors`
-    // tables. Older reference rows elsewhere (toss's role chains, vapor-ui's
-    // aliases) name no table role and are not caught. A role table written
+    // tables. A reference row whose key names no table role is not caught. A role table written
     // without backticks, or with the role outside the first column, is not
     // seen either — .claude/rules/catalog.md states that shape.
     const docsName = (key: string): string =>
