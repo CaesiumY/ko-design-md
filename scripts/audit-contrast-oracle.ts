@@ -22,10 +22,12 @@
 // No shipped preview has the shape either. Six of them declare `filter` and
 // none puts it behind a small text-free surface — toss filters its buttons,
 // which carry their own label, so its filter is caught on the TEXT path. So
-// the branch is covered by a second, synthetic fixture (#399), written for
-// this check alone. Its authority is of a different kind and the two are kept
-// apart: nothing in it is a record of a past defect, and every expectation on
-// it is derived from its CSS by hand, next to the anchor that claims it.
+// the branch is covered by a synthetic fixture (#399), written for this check
+// alone. Its authority is of a different kind and the two are kept apart:
+// nothing in it is a record of a past defect, and every expectation on it is
+// derived from its CSS by hand, next to the anchor that claims it. Form-control
+// text (#400) and readings over a background image (#402) are covered the
+// same way, each by a synthetic fixture of its own.
 
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
@@ -56,6 +58,7 @@ const SYNTHETIC_FILE = join(
   "nontext-behind-paint-blockers.html"
 )
 const FORM_FILE = join("scripts", "fixtures", "form-control-text.html")
+const GRADIENT_FILE = join("scripts", "fixtures", "gradient-backdrop.html")
 const ORACLE_URL_PATH = "/__oracle/preview.html"
 const ORACLE_WIDTH = 976
 /** Wide enough to absorb 8-bit quantisation, tight enough to catch a drift. */
@@ -331,6 +334,84 @@ const SYNTHETIC_ANCHORS: Array<PathAnchor> = [
 ]
 
 /**
+ * The background-image fixture's claims (#402): a gradient is judged by every
+ * colour it can paint, and held when those colours disagree.
+ *
+ * Every colour is an achromatic OKLCH, so relative luminance is L³, the text
+ * is black (luminance 0) and each ratio is (L³ + 0.05) / 0.05 at the weakest
+ * stop. A gradient between two greys is grey in either interpolation space and
+ * its luminance runs monotonically between them, so the weakest colour is an
+ * end stop and no sample point is needed to find it:
+ *
+ * - `.pass` runs from L 1 to L 0.8: 0.8³ = 0.512, so (0.512 + 0.05) / 0.05 =
+ *   11.24 at its weakest — every colour passes 4.5:1.
+ * - `.fail` runs from L 0.4 to L 0.3: 0.3³ = 0.027, so 1.54 — every colour
+ *   fails.
+ * - `.mixed` runs from L 1 (21:1) to L 0.3 (1.54:1), so the colours disagree
+ *   and the reading is held. No ratio is claimed: what is asserted is that
+ *   the verdict is withheld.
+ * - `.image` paints an image, whose colours cannot be listed, so it is held
+ *   as `image`. The ratio it still carries is the stack read with the image
+ *   left out — the white body, 21:1.
+ * - The dot (L 0.6, 0.216) sits on a panel from L 1 to L 0.95: 0.95³ =
+ *   0.857, so (0.857 + 0.05) / (0.216 + 0.05) = 3.41 at the weakest end, over
+ *   3:1. It is the only anchor on the walk over the layers BEHIND a non-text
+ *   surface with an image on one of them.
+ */
+const GRADIENT_ANCHORS: Array<PathAnchor> = [
+  {
+    id: "text on a gradient whose every colour passes",
+    pathEnds: "div.pass > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "pass",
+    blockers: [],
+    ratio: 11.24,
+  },
+  {
+    id: "text on a gradient whose every colour fails",
+    pathEnds: "div.fail > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "fail",
+    blockers: [],
+    ratio: 1.54,
+  },
+  {
+    id: "text on a gradient whose colours disagree",
+    pathEnds: "div.mixed > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["gradient"],
+  },
+  {
+    id: "text on an image",
+    pathEnds: "div.image > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["image"],
+    ratio: 21,
+  },
+  {
+    id: "dot on a gradient panel whose every colour passes",
+    pathEnds: "div.dots > span.dot",
+    theme: "light",
+    state: "default",
+    kind: "non-text",
+    basis: "fill",
+    verdict: "pass",
+    blockers: [],
+    ratio: 3.41,
+  },
+]
+
+/**
  * The form-control fixture's claims (#400): text that is on screen but that
  * the text pass does not measure, so the collector has to read it from the
  * control.
@@ -537,6 +618,7 @@ export async function selfCheck(root: string): Promise<CheckResult> {
   const fixture = readFileSync(join(root, FIXTURE_FILE), "utf8")
   const syntheticFixture = readFileSync(join(root, SYNTHETIC_FILE), "utf8")
   const formFixture = readFileSync(join(root, FORM_FILE), "utf8")
+  const gradientFixture = readFileSync(join(root, GRADIENT_FILE), "utf8")
   const server = await serveStatic(`${root}/public`)
   const browser = await chromium.launch()
   const lines: Array<string> = []
@@ -693,6 +775,9 @@ export async function selfCheck(root: string): Promise<CheckResult> {
       `fixture: ${SYNTHETIC_FILE} (${syntheticFixture.length} bytes, synthetic)`
     )
     lines.push(`fixture: ${FORM_FILE} (${formFixture.length} bytes, synthetic)`)
+    lines.push(
+      `fixture: ${GRADIENT_FILE} (${gradientFixture.length} bytes, synthetic)`
+    )
     const base = `http://127.0.0.1:${server.port}`
     for (const current of VARIANTS) {
       variant = current
@@ -735,6 +820,14 @@ export async function selfCheck(root: string): Promise<CheckResult> {
         formFixture
       )
       for (const anchor of FORM_ANCHORS) checkPath(form, anchor)
+
+      heading("a background image, judged by every colour it can paint")
+      const gradient = await collect(
+        `${base}${ORACLE_URL_PATH}?fixture=gradient`,
+        "oracle-gradient",
+        gradientFixture
+      )
+      for (const anchor of GRADIENT_ANCHORS) checkPath(gradient, anchor)
 
       // `CSS.forcePseudoState` is accepted and ignored when it is handed a
       // node id the document no longer has, so a hover pass can look like it
