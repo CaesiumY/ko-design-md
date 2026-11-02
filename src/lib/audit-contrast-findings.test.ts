@@ -144,3 +144,63 @@ describe("toFindings — the text a form control shows", () => {
     expect(run("결제 수단")[0].source).toBeUndefined()
   })
 })
+
+describe("toFindings — a background image travels with its layer (#402)", () => {
+  // The collector hands each layer's computed `background-*` longhands across
+  // as text; the judgement is made on this side. Without this path the image
+  // never reaches it and the text reads as the white under it.
+  const onImage = (value: string): Collected => ({
+    text: [
+      {
+        path: "div > p",
+        text: "Sample text",
+        fontSizePx: 16,
+        fontWeight: 400,
+        fg: black,
+        lines: [
+          {
+            stack: [
+              {
+                onWhite: { r: 255, g: 255, b: 255 },
+                onBlack: { r: 0, g: 0, b: 0 },
+                opacity: 1,
+                image: {
+                  value,
+                  repeat: "repeat",
+                  clip: "border-box",
+                  blend: "normal",
+                },
+              },
+              white,
+            ],
+            blockers: [],
+          },
+        ],
+        blockers: [],
+      },
+    ],
+    nonText: [],
+    overlayCandidates: 0,
+  })
+  const judged = (value: string) =>
+    toFindings(onImage(value), {
+      slug: "toss",
+      theme: "light",
+      width: 976,
+      state: "default",
+    })
+
+  it("judges text on a gradient every colour of which fails", () => {
+    const [finding] = judged(
+      "linear-gradient(rgb(60, 60, 60), rgb(30, 30, 30))"
+    )
+    expect(finding.verdict).toBe("fail")
+    expect(finding.blockers).toEqual([])
+  })
+
+  it("holds text on an image as `image`", () => {
+    const [finding] = judged('url("a.png")')
+    expect(finding.verdict).toBe("indeterminate")
+    expect(finding.blockers).toEqual(["image"])
+  })
+})
