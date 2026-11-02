@@ -3,6 +3,7 @@ import { join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
 import { findKey, readFrontmatter } from "./frontmatter"
+import { alignToPreviewNames } from "./oklch-drift"
 import { splitFrontmatter } from "./frontmatter-fence"
 import { deltaE, hexToOklab, parseOklch } from "./oklch-convert"
 import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
@@ -499,6 +500,116 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       const { literals, refs, tableRows } = load("ridi")
       const expected = singleReferenceRoles(tableRows)
       expectRowsToMatch("ridi", expected, refs, literals)
+    },
+  },
+  socar: {
+    title: "light-only roles, one palette step each",
+    check: () => {
+      const { literals, refs, tableRows } = load("socar")
+      // SOCAR Frame is light-only, so the table has no dark column: its third
+      // column is where the role is used, which singleReferenceRoles would read
+      // as a dark cell. Only the role and its palette cell are compared.
+      const expected = new Map<string, string>()
+      for (const [roleCell, paletteCell = ""] of tableRows) {
+        const [name] = spans(roleCell)
+        const target = single(paletteCell)
+        if (name && target) expected.set(name, target)
+      }
+      expectRowsToMatch("socar", expected, refs, literals)
+      // The `## Colors` audit note and the table's lead sentence state these
+      // counts in prose, so they are pinned here: a row added or dropped must
+      // update the prose with the count. The 20 palette steps added on
+      // 2026-11-01 are a dated record in the audit note, not a count of the
+      // document, and stay unpinned.
+      const proseCounts = {
+        referenceRows: [...refs.keys()].filter((key) => key !== "primary")
+          .length,
+        tableRows: tableRows.length,
+        tableOnlyRows: tableRows.filter(
+          ([, paletteCell = ""]) => single(paletteCell) === undefined
+        ).length,
+      }
+      expect(proseCounts, "socar: counts the prose states").toEqual({
+        referenceRows: 40,
+        tableRows: 43,
+        tableOnlyRows: 3,
+      })
+      // The preview declares roles as `--sf-text-primary: var(--sf-gray-800)`.
+      // The drift gate reads only `oklch(…)` declarations, so nothing else
+      // checks that a role property points at the step its md row names — a
+      // role repointed at another step passed every gate. Read from the md
+      // rows: each role's preview property must point at the same step, a
+      // role the preview never declares is listed, and so is one it declares
+      // as a literal instead of a palette reference.
+      const preview = readFileSync(
+        join(SERVICES, "..", "public", "preview", "socar", "preview.html"),
+        "utf-8"
+      ).replace(/\r\n/g, "\n")
+      const block = (opener: string): Map<string, string> => {
+        const start = preview.indexOf(opener)
+        expect(start, `socar preview: ${opener} block`).toBeGreaterThan(-1)
+        const body = preview.slice(start, preview.indexOf("}", start))
+        return new Map(
+          [...body.matchAll(/--([\w-]+):\s*([^;]+);/g)].map((m) => [
+            m[1],
+            m[2].trim(),
+          ])
+        )
+      }
+      // md name → preview property name, by the drift gate's own socar rule.
+      const previewName = (md: string): string =>
+        [...alignToPreviewNames(new Map([[md, ""]]), "socar").keys()].find(
+          (key) => key !== md
+        ) ?? md
+      const light = block(":root {")
+      const missing: Array<string> = []
+      const literal: Array<string> = []
+      const pointed = new Map<string, string>()
+      for (const [role, step] of refs) {
+        if (role === "primary") continue
+        const declared = light.get(previewName(role))
+        if (declared === undefined) {
+          missing.push(role)
+          continue
+        }
+        const target = /^var\(--([\w-]+)\)$/.exec(declared)?.[1]
+        if (target === undefined) literal.push(role)
+        else pointed.set(previewName(role), target)
+        if (target !== undefined)
+          expect(target, `socar preview: ${role}`).toBe(previewName(step))
+      }
+      expect(pointed.size, "socar preview: roles compared").toBe(24)
+      expect(literal, "socar preview: roles declared as literals").toEqual([])
+      // The preview demonstrates only some roles. Listed so a role that
+      // starts or stops being declared is a visible change to this list.
+      expect(missing.sort(), "socar preview: roles not declared").toEqual([
+        "accent-cyan",
+        "accent-green",
+        "accent-indigo",
+        "accent-lightblue",
+        "accent-lime",
+        "accent-magenta",
+        "accent-orange",
+        "accent-red",
+        "accent-redorange",
+        "border-weak",
+        "divider-weak",
+        "service-socar",
+        "status-caution-strong",
+        "status-information-strong",
+        "status-negative-strong",
+        "status-positive-strong",
+      ])
+      // SOCAR Frame is light-only: the dark half keeps SOCAR's light values on
+      // its cards and darkens only the page shell, so its `--sf-*` block
+      // restates the light one. Measured equal, and held equal — a dark-only
+      // repointing would otherwise slip past the light comparison above.
+      const dark = block('[data-theme="dark"] {')
+      for (const [name, target] of pointed) {
+        expect(dark.get(name), `socar preview dark: ${name}`).toBe(
+          `var(--${target})`
+        )
+      }
     },
   },
   teamsparta: {
