@@ -112,6 +112,7 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
   // Not a naming problem and not fixable by one: bezier's preview declares no
   // `oklch` at all — it is hex — so there is nothing for a name rule to reach.
   bezier: 0,
+  chzzk: 17,
   class101: 14,
   codeit: 8,
   // 27 → 25 (#629): the twelve role properties now take `var()` of the palette
@@ -129,6 +130,7 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
   "gs-shop": 52,
   krds: 33,
   kyobobook: 41,
+  laftel: 16,
   "lg-electronics": 67,
   likelion: 23,
   "line-design-system": 24,
