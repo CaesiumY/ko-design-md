@@ -47,6 +47,7 @@
     "validate:previews": "tsx scripts/validate-preview.ts",
     "validate:spec": "tsx scripts/validate-spec.ts",
     "check:last-updated": "tsx scripts/check-last-updated.ts",
+    "gates": "tsx scripts/gates.ts",
     "build": "pnpm run build:og && vite build",
     "preview": "vite preview",
     "test": "vitest run",

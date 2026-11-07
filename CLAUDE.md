@@ -7,19 +7,17 @@ TanStack Start 사이트(getdesign.kr)가 이를 서빙하고, `/design-md` 스�
 ## 검증 커맨드 (CI 게이트와 동일)
 
 ```bash
-pnpm typecheck && pnpm lint && pnpm format:check
-pnpm test               # vitest — .claude/{worktrees,cache}/ 와 e2e/ 는 제외됨
-pnpm validate:catalog   # services/*.md 전수: frontmatter·섹션 순서·OKLCH·인용 무결성
-pnpm validate:previews  # public/preview/*/ 전수: 구조 block + 반응형·움직임 줄이기 휴리스틱 warn
-pnpm tokens:check       # services/*.tokens.json 이 소스 md 와 일치하는지 (drift 게이트)
-pnpm audit:oklch        # OKLCH↔병기 hex 일치 + 프리뷰가 md 정의와 어긋나지 않는지
-pnpm check:last-updated # 이 브랜치가 바꾼 services/*.md 의 last_updated 가 최신인지
-pnpm validate:spec      # 로컬 진단용 출력. 실제 게이트는 pnpm test 안의
-                        # google-designmd-corpus.test.ts (같은 공식 린터를 vitest 로)
+pnpm gates              # CI build 잡이 pnpm build 전에 돌리는 검사 전부를 같은 순서로.
+                        # 첫 실패에서 멈추고 그 단계 이름을 찍는다. 목록은 src/lib/gates.ts,
+                        # CI 와 어긋나면 pnpm test 가 막는다. 날짜 검사의 기준은 origin/main
 pnpm build              # build:og + vite build
 pnpm test:http          # pnpm build 뒤 빌드된 Nitro 서버 HTTP 회귀 검사
 pnpm test:e2e           # E2E 스모크 — 빌드된 서버 + Chromium, CI 는 별도 e2e 잡
+pnpm validate:spec      # 로컬 진단용 출력. 실제 게이트는 pnpm test 안의
+                        # google-designmd-corpus.test.ts (같은 공식 린터를 vitest 로)
 ```
+
+`pnpm gates` 의 단계는 하나씩도 돌릴 수 있다(`pnpm test`, `pnpm validate:catalog` 등, 목록은 `src/lib/gates.ts`).
 
 단일 파일 검사: `pnpm validate:draft <file.md> [--slug X --expected-logo <url> --lang ko]`,
 `pnpm validate:previews --slug <slug> --verbose`. **검증기 메시지가 막는 이유와 고치는 법을 말한다** — 막히면
@@ -51,7 +49,7 @@ pnpm test:e2e           # E2E 스모크 — 빌드된 서버 + Chromium, CI 는 
   PowerShell here-string `@'…'@`을 Bash에 쓰면 리터럴 `@`가 박히는 것도 같은 계열이다.
 - 무관 파일 대량 재포맷은 별도 `style:` PR로 분리.
 - **머지 직전 `origin/main`을 가져와 합본 상태에서 게이트를 다시 돌린다** —
-  `git fetch origin && git merge origin/main --no-commit --no-ff` → 게이트 → `git merge --abort`.
+  `git fetch origin && git merge origin/main --no-commit --no-ff` → `pnpm gates` → `git merge --abort`.
   PR 단위 CI 는 각 브랜치를 자기 base 에서 돌리므로, 둘 다 green 인데 합치면 깨지는 경우(예: 슬러그별 표가
   새로 생긴 경우)를 못 잡는다. **나중에 머지하는 브랜치가 수정을 싣는다.**
 
