@@ -11,7 +11,13 @@ import {
   recoverAlpha,
   textThreshold,
 } from "./contrast"
-import type { RawColor, RawControl } from "./contrast"
+import type {
+  Blocker,
+  Measurement,
+  RawColor,
+  RawControl,
+  RawLayer,
+} from "./contrast"
 
 const WHITE = { r: 255, g: 255, b: 255 }
 const BLACK = { r: 0, g: 0, b: 0 }
@@ -1263,5 +1269,203 @@ describe("a background image is judged by every colour it can paint (#402)", () 
     expect(got?.verdict).toBe("pass")
     expect(got?.basis).toBe("fill")
     expect(got?.fg).toBe("#0000ff")
+  })
+})
+
+// A run reads as its weakest line, so adding a line can lower its contrast or
+// leave it, never raise it. #642's review broke that three times, each time
+// caught by a probe written for the occasion and thrown away after. These
+// tests keep the probe: every small bundle of lines from a fixed grid, with
+// every other line of the grid added to it.
+const grey = (v: number) => opaque(v, v, v)
+const fade = (from: number, to: number): Array<RawLayer> => [
+  painted(
+    `linear-gradient(rgb(${from}, ${from}, ${from}), rgb(${to}, ${to}, ${to}))`
+  ),
+  grey(255),
+]
+
+/**
+ * Lines with no reason of their own, named by what black body text reads on
+ * them alone. Plain and gradient lines, around each side of the 4.5:1 bar and
+ * inside its band.
+ */
+const GRID: Record<string, Array<RawLayer>> = {
+  "plain 108": [grey(108)],
+  "plain 112": [grey(112)],
+  "plain 116": [grey(116)],
+  "plain 118": [grey(118)],
+  "plain 130": [grey(130)],
+  "plain 255": [grey(255)],
+  "gradient 60→30": fade(60, 30),
+  "gradient 108→115": fade(108, 115),
+  "gradient 115→117": fade(115, 117),
+  "gradient 255→118": fade(255, 118),
+  "gradient 255→100": fade(255, 100),
+}
+
+const runOf = (
+  lines: Array<{ name: string; blockers: Array<Blocker> }>,
+  stacks: Record<string, Array<RawLayer>>
+) =>
+  evaluateText({
+    fontSizePx: 16,
+    fontWeight: 400,
+    fg: grey(0),
+    lines: lines.map(({ name, blockers }) => ({
+      stack: stacks[name],
+      blockers,
+    })),
+    blockers: [],
+  })
+
+const gridRun = (names: Array<string>) =>
+  runOf(
+    names.map((name) => ({ name, blockers: [] })),
+    GRID
+  )
+
+const reading = (names: Array<string>, m: Measurement) =>
+  `{${names.join(" + ")}} ${m.verdict} ${m.ratio.toFixed(2)}` +
+  (m.blockers.length > 0 ? ` [${m.blockers.join(", ")}]` : "")
+
+interface Addition {
+  bundle: Array<string>
+  line: string
+  /** The bundle with the line added, in the order the run was read. */
+  order: Array<string>
+  before: Measurement
+  alone: Measurement
+  after: Measurement
+}
+
+/**
+ * Every bundle of up to three grid lines, with each line not in it added — at
+ * the end and at the start, since nothing about a run's reading should depend
+ * on which line box came first.
+ */
+function additions(): Array<Addition> {
+  const names = Object.keys(GRID)
+  const bundles: Array<Array<string>> = []
+  for (let mask = 1; mask < 1 << names.length; mask++) {
+    const bundle = names.filter((_, i) => mask & (1 << i))
+    if (bundle.length <= 3) bundles.push(bundle)
+  }
+  const alone = new Map(names.map((n) => [n, gridRun([n])]))
+  const out: Array<Addition> = []
+  for (const bundle of bundles) {
+    const before = gridRun(bundle)
+    for (const line of names) {
+      if (bundle.includes(line)) continue
+      for (const order of [
+        [...bundle, line],
+        [line, ...bundle],
+      ]) {
+        out.push({
+          bundle,
+          line,
+          order,
+          before,
+          alone: alone.get(line) as Measurement,
+          after: gridRun(order),
+        })
+      }
+    }
+  }
+  return out
+}
+
+describe("adding a line can only lower a run's contrast (#653)", () => {
+  const all = additions()
+  const change = (a: Addition) =>
+    `${reading(a.bundle, a.before)}, adding ${reading([a.line], a.alone)} → ` +
+    reading(a.order, a.after)
+
+  it("reads every grid line alone as the verdict its value puts it at", () => {
+    // Without a fail, a borderline, a pass and a held line among them, one of
+    // the properties below would be checked against nothing.
+    const verdicts = Object.fromEntries(
+      Object.keys(GRID).map((n) => [n, gridRun([n]).verdict])
+    )
+    expect(verdicts).toEqual({
+      "plain 108": "fail", // 4.00:1
+      "plain 112": "fail", // 4.24:1, just under the band
+      "plain 116": "borderline", // 4.49:1
+      "plain 118": "pass", // 4.62:1, just over the band
+      "plain 130": "pass", // 5.46:1
+      "plain 255": "pass",
+      "gradient 60→30": "fail",
+      "gradient 108→115": "indeterminate", // fail at one end, borderline at the other
+      "gradient 115→117": "borderline",
+      "gradient 255→118": "pass",
+      "gradient 255→100": "indeterminate", // pass at one end, fail at the other
+    })
+  })
+
+  it("keeps a certain failure failing, whatever line is added", () => {
+    const failing = all.filter((a) => a.before.verdict === "fail")
+    // Checked against something, gradient bundles included.
+    expect(
+      failing.some((a) => a.bundle.some((n) => n.startsWith("gradient")))
+    ).toBe(true)
+    const broken = failing.filter((a) => a.after.verdict !== "fail").map(change)
+    expect(broken).toEqual([])
+  })
+
+  it("passes a run with a line added only when the bundle and the line each passed", () => {
+    const passing = all.filter((a) => a.after.verdict === "pass")
+    expect(passing.some((a) => a.line.startsWith("gradient"))).toBe(true)
+    const broken = passing
+      .filter((a) => a.before.verdict !== "pass" || a.alone.verdict !== "pass")
+      .map(change)
+    expect(broken).toEqual([])
+  })
+})
+
+// Both properties break today when a line is held for a reason of its own —
+// something over it, here an `overlay`. Such a line is still ranked by the one
+// reading it has, as if that reading were true: it can become the run's cap,
+// and then its reason holds a run that was already a certain failure, or it
+// ranks as strong and its reason is dropped from a run it might drag below the
+// bar. The two cases below pin that as it is now. Of the two, the false pass is
+// the dangerous one: a hold sends the run to a person, a pass sends it nowhere.
+// When the ranking is fixed (#402's pseudo-element background share touches
+// exactly this), these tests fail: move the cases into the grid above.
+describe("known gap: a line held for its own reason breaks both properties (#653)", () => {
+  const stacks = {
+    "plain 90": [grey(90)],
+    "plain 108": [grey(108)],
+    "plain 130": [grey(130)],
+    "plain 200": [grey(200)],
+  }
+  const plain = (name: string) => ({ name, blockers: [] as Array<Blocker> })
+  const covered = (name: string) => ({
+    name,
+    blockers: ["overlay"] as Array<Blocker>,
+  })
+  const closed = "the gap is closed: move this case into the grid above"
+
+  it("still holds a certain failure once a covered line is added (over-hold)", () => {
+    const before = runOf([plain("plain 108")], stacks)
+    expect(before.verdict).toBe("fail") // 4.00:1
+    const after = runOf([plain("plain 108"), covered("plain 90")], stacks)
+    // Should fail: the plain line caps the run at 4.00 whatever is over the
+    // other one. The covered line reads weaker, so it is ranked as the cap,
+    // and its `overlay` holds the run.
+    expect(after.verdict, closed).toBe("indeterminate")
+    expect(after.blockers, closed).toEqual(["overlay"])
+  })
+
+  it("still passes a run once a covered line it cannot read is added (false pass)", () => {
+    const before = runOf([plain("plain 130")], stacks)
+    expect(before.verdict).toBe("pass") // 5.46:1
+    const alone = runOf([covered("plain 200")], stacks)
+    expect(alone.verdict).toBe("indeterminate")
+    const after = runOf([plain("plain 130"), covered("plain 200")], stacks)
+    // Should hold: what is under the overlay is not known, so the covered line
+    // could be the weakest. It reads 12.55:1 as measured, ranks as stronger
+    // than the plain line, and its reason is dropped.
+    expect(after.verdict, closed).toBe("pass")
+    expect(after.blockers, closed).toEqual([])
   })
 })

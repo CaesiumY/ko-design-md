@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest"
 import { readPreviewSlugs } from "../../scripts/audit-contrast-slugs"
 import { BASELINE_TABLE, CONTRAST_BASELINE } from "./contrast-baseline"
 import { OBSERVED_COLOURS, paletteOf, parsePairTable } from "./contrast-pairs"
-import { renderTotalsTable } from "./contrast-report"
+import { parseHeldReasons, renderTotalsTable } from "./contrast-report"
 import type { PairTally } from "./contrast-pairs"
 
 // The recorded contrast baseline against the repository it describes.
@@ -163,7 +163,7 @@ describe("the published-pair tables against the recorded totals", () => {
   }
 
   const HOW =
-    "rerun `pnpm audit:contrast:pairs --findings <contrast-findings.json>` on the contrast-report artifact of the CI run the totals came from, and in docs/preview-contrast-baseline.md's published-pair sections paste both tables and replace CLASSIFIED_RUN in this test with the 'classified run' line the command prints (then `pnpm format`), write the run id in both CLASSIFIED_RUN.run and the borderline section's '입력은 run' line, and update what the tests here do not hold: the commit, and the dated observations and 'which slug first' paragraph beside the tables"
+    "rerun `pnpm audit:contrast:pairs --findings <contrast-findings.json>` on the contrast-report artifact of the CI run the totals came from; in docs/preview-contrast-baseline.md paste the borderline and fail tables into the published-pair sections and the indeterminate block (the hold-reason table with its '보류 행 수' line) into the '유보 사유' section, and replace CLASSIFIED_RUN in this test with the 'classified run' line the command prints (then `pnpm format`); write the run id in CLASSIFIED_RUN.run, the borderline section's '입력은 run' line and the '보류 행 수' line; and update what the tests here do not hold: the commit, and the dated observations and 'which slug first' paragraph beside the tables"
 
   const cases = [
     {
@@ -286,6 +286,36 @@ describe("the published-pair tables against the recorded totals", () => {
     expect(section(cases[0].heading)).toContain(
       `분류한 \`borderline\` ${total}행을`
     )
+  })
+
+  describe("the hold-reason table", () => {
+    // The per-reason counts cannot be recomputed without the artifact, so what
+    // is tied here is what can be: the held-row line under the table against
+    // the recorded totals, and the run it names against the run the pair
+    // tables came from. A totals table that moved without the reason table
+    // being printed again from the same artifact fails one of the two.
+    const reasons = () => parseHeldReasons(section("## 유보 사유"))
+
+    it("names the run the pair tables were classified from", () => {
+      expect(
+        reasons().run,
+        `the hold-reason table records another run than the pair tables — ${HOW}`
+      ).toBe(CLASSIFIED_RUN.run)
+    })
+
+    it("counts as many held rows as the recorded totals' indeterminate column", () => {
+      // Not the sum of the table: a row held for two reasons is under both.
+      // Over the classified slugs only, for the reason the pair tables are —
+      // an entry added after the run is left out until the next rerun.
+      const slugs = classified()
+      const recorded = CONTRAST_BASELINE.filter((r) =>
+        slugs.has(r.slug)
+      ).reduce((n, r) => n + r.indeterminate, 0)
+      expect(
+        reasons().held,
+        `the held-row count under the hold-reason table no longer matches the recorded totals' indeterminate column — ${HOW}`
+      ).toBe(recorded)
+    })
   })
 })
 
