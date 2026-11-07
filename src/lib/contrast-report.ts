@@ -429,3 +429,103 @@ export function blockerTally(
     .map(([blocker, count]) => ({ blocker, count }))
     .sort((a, b) => b.count - a.count || a.blocker.localeCompare(b.blocker))
 }
+
+/**
+ * The hold-reason table `docs/preview-contrast-baseline.md` publishes, and the
+ * run it was read from.
+ *
+ * `held` is the number of held rows, not the sum of `tally`: a row held for two
+ * reasons is counted once here and once under each reason there. It is the
+ * number the corpus test ties to the recorded totals' `indeterminate` column,
+ * which the per-reason counts cannot be tied to without the artifact.
+ */
+export interface HeldReasons {
+  tally: Array<{ blocker: Blocker; count: number }>
+  held: number
+  run: string
+}
+
+/**
+ * The tally and held-row count of rows already folded by `dedupeFindings` —
+ * the same fold and the same `blockerTally` the sweep's `held for:` line is
+ * made from, so the log and the document cannot count differently. A reason
+ * that held nothing has no row, as it has no entry on that line.
+ */
+export function heldReasons(
+  findings: Array<DedupedFinding>
+): Omit<HeldReasons, "run"> {
+  return {
+    tally: blockerTally(findings),
+    held: findings.filter((f) => f.verdict === "indeterminate").length,
+  }
+}
+
+const HELD_REASON_COLUMNS = ["사유", "건수"]
+
+const heldRowsLine = (held: number, run: string): string =>
+  `보류 행 수: ${held} (run \`${run}\`)`
+
+/**
+ * The table and the held-row line under it, as one block to paste over the
+ * one in the document's 「유보 사유」 section.
+ */
+export function renderHeldReasons(r: HeldReasons): string {
+  return [
+    `| ${HELD_REASON_COLUMNS.join(" | ")} |`,
+    `| ${HELD_REASON_COLUMNS.map(() => "---").join(" | ")} |`,
+    ...r.tally.map((t) => `| ${t.blocker} | ${t.count} |`),
+    "",
+    heldRowsLine(r.held, r.run),
+  ].join("\n")
+}
+
+const HELD_ROWS_LINE = /^보류 행 수: (\d+) \(run `(\d+)`\)$/
+
+/**
+ * A block `renderHeldReasons` wrote, read back from text that holds it — the
+ * document section, or the block alone. The header is checked, every row must
+ * have a reason and a whole count, no reason may appear twice, and the
+ * held-row line must be there exactly once with a run id, not the command's
+ * placeholder. A hand edit is an error here rather than a number the corpus
+ * test compares in good faith.
+ */
+export function parseHeldReasons(text: string): HeldReasons {
+  const lines = text.split("\n").map((l) => l.trim())
+  const cellsOf = (l: string): Array<string> =>
+    l
+      .slice(1, -1)
+      .split("|")
+      .map((c) => c.trim())
+  const start = lines.findIndex((l) => l.startsWith("|"))
+  const header = start === -1 ? [] : cellsOf(lines[start])
+  if (header.join("|") !== HELD_REASON_COLUMNS.join("|")) {
+    throw new Error(
+      `hold-reason table header is ${JSON.stringify(header)}, expected ${JSON.stringify(HELD_REASON_COLUMNS)}`
+    )
+  }
+  let end = start
+  while (end + 1 < lines.length && lines[end + 1].startsWith("|")) end += 1
+  const seen = new Set<string>()
+  const tally = lines.slice(start + 2, end + 1).map((l) => {
+    const c = cellsOf(l)
+    if (c.length !== 2 || !/^[a-z-]+$/.test(c[0]) || !/^\d+$/.test(c[1])) {
+      throw new Error(
+        `hold-reason table row ${JSON.stringify(l)} is not a reason and a whole count`
+      )
+    }
+    if (seen.has(c[0])) {
+      throw new Error(`hold-reason table row for ${c[0]} is written twice`)
+    }
+    seen.add(c[0])
+    return { blocker: c[0] as Blocker, count: Number(c[1]) }
+  })
+  const held = lines
+    .map((l) => HELD_ROWS_LINE.exec(l))
+    .filter((m) => m !== null)
+  if (held.length !== 1) {
+    throw new Error(
+      `expected one line "${heldRowsLine(0, "<run id>").replace("0", "<n>")}" with a run id, found ${held.length}`
+    )
+  }
+  return { tally, held: Number(held[0][1]), run: held[0][2] }
+}

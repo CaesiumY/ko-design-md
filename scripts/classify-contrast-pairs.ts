@@ -1,6 +1,7 @@
 // Classify the recorded contrast shortfalls by whether they are pairs of brand
-// colours (#397), and print the two tables `docs/preview-contrast-baseline.md`
-// publishes — `borderline` and `fail` — ready to paste.
+// colours (#397), and print the three tables `docs/preview-contrast-baseline.md`
+// publishes from one artifact — `borderline` and `fail`, and the reasons rows
+// were held for with the held-row count under it (#654) — ready to paste.
 //
 //   pnpm audit:contrast:pairs --findings <contrast-findings.json>
 //
@@ -29,7 +30,11 @@ import {
   tallyPairs,
   toleranceBand,
 } from "../src/lib/contrast-pairs"
-import { dedupeFindings } from "../src/lib/contrast-report"
+import {
+  dedupeFindings,
+  heldReasons,
+  renderHeldReasons,
+} from "../src/lib/contrast-report"
 import type { PairTally, Palette } from "../src/lib/contrast-pairs"
 import type { Finding } from "../src/lib/contrast-report"
 
@@ -205,6 +210,11 @@ function main(): void {
       `readings ${band.readings}, nearest token in (${PUBLISHED_PAIR_TOLERANCE}, ${WIDER_TOLERANCE}]: ${band.inBand} · nearest composite there, no token matched: ${band.compositeInBand} · both-published at ${WIDER_TOLERANCE}: ${wider.bothPublished}\n`
     )
   }
+  // The same fold and tally as the sweep's `held for:` line, so this table and
+  // that line cannot disagree. The run id is left for whoever pastes it, as on
+  // the `classified run` line above.
+  console.log(`### indeterminate\n`)
+  console.log(renderHeldReasons({ ...heldReasons(rows), run: "<run id>" }))
 }
 
 main()
