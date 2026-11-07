@@ -86,6 +86,11 @@
       "note": "#5B92F4"
     },
     {
+      "name": "primary",
+      "value": "oklch(0.575 0.214 261)",
+      "ref": "primary-50"
+    },
+    {
       "name": "primary-50",
       "value": "oklch(0.575 0.214 261)",
       "note": "#256EF4 — brand blue, focus outline, primary button"

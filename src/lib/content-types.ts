@@ -70,13 +70,17 @@ export type SiteFrontmatter = Partial<
  */
 export interface ColorToken {
   name: string
-  /** Renderable color string (OKLCH/hex/rgb). Aliases are intentionally excluded
-   *  from the card sidecar — they stay in the design.md prose. */
+  /** Renderable color string (OKLCH/hex/rgb). A reference row carries the
+   *  colour its reference resolves to, so a reader never follows `ref` to
+   *  paint. */
   value: string
   /** Usage note lifted from the YAML inline comment, when present. */
   note?: string
   /** Subsection the token was grouped under (### heading), when present. */
   group?: string
+  /** The `colors:` key a reference row (`"{colors.x}"`) points at — the first
+   *  hop, not the end of a chain. Only reference rows carry it. */
+  ref?: string
 }
 
 export interface TypeToken {

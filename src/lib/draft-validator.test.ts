@@ -2205,6 +2205,62 @@ function rulesFor(raw: string): Array<string> {
   return validateDraft(raw, OPTS).issues.map((i) => i.rule)
 }
 
+describe("colour reference rows the sidecar cannot resolve", () => {
+  // The extractor refuses these rather than drop the row (#626); the draft
+  // gate has to say so at Stage 6a2, not leave it to `pnpm tokens:build`.
+  it("blocks references that loop, naming the loop", () => {
+    const { issues } = validateDraft(
+      draftWithFrontmatterColors([
+        "primary: oklch(0.62 0.19 258)",
+        'fg-default: "{colors.fg-strong}"',
+        'fg-strong: "{colors.fg-default}"',
+      ]),
+      OPTS
+    )
+    const loop = issues.find((i) => i.rule === "unresolvable-colour-ref")
+    expect(loop?.severity).toBe("block")
+    expect(loop?.fix).toContain("fg-default → fg-strong → fg-default")
+  })
+
+  // A missing key is `unresolved-token-ref`'s to name, and a non-colour end is
+  // blocked on its own row by the OKLCH rule — one cause, one message.
+  it("leaves a missing key and a non-colour end to the rules that already block them", () => {
+    const missing = rulesFor(
+      draftWithFrontmatterColors([
+        "primary: oklch(0.62 0.19 258)",
+        'bg-canvas: "{colors.gray-05}"',
+      ])
+    )
+    expect(missing).toContain("unresolved-token-ref")
+    expect(missing).not.toContain("unresolvable-colour-ref")
+
+    const nonColour = rulesFor(
+      draftWithFrontmatterColors([
+        "primary: oklch(0.62 0.19 258)",
+        "disabled-opacity: 0.30",
+        'fg-disabled: "{colors.disabled-opacity}"',
+      ])
+    )
+    expect(nonColour).toContain("non-oklch-token-value")
+    expect(nonColour).not.toContain("unresolvable-colour-ref")
+  })
+
+  // One run names every problem: a missing key earlier in the map must not
+  // hide a loop below it, and a loop is named once, not once per row in it.
+  it("names a loop even behind a missing key, once per loop", () => {
+    const rules = rulesFor(
+      draftWithFrontmatterColors([
+        "primary: oklch(0.62 0.19 258)",
+        'bg-canvas: "{colors.nope}"',
+        'fg-default: "{colors.fg-strong}"',
+        'fg-strong: "{colors.fg-default}"',
+      ])
+    )
+    expect(rules).toContain("unresolved-token-ref")
+    expect(rules.filter((r) => r === "unresolvable-colour-ref")).toHaveLength(1)
+  })
+})
+
 describe("token rules read the frontmatter maps", () => {
   it("blocks a hex value in the colors map", () => {
     expect(rulesFor(draftWithFrontmatterColors(["brand: #3182F6"]))).toContain(

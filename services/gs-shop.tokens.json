@@ -1,6 +1,13 @@
 {
   "colors": [
     {
+      "name": "primary",
+      "value": "oklch(0.600 0.219 258)",
+      "note": "명세의 대표색 역할 — content-primary(본문 글자색)·bg-primary(캔버스)와 다른 축",
+      "group": "Brand — Primary (Dynamic Blue)",
+      "ref": "primary-default"
+    },
+    {
       "name": "primary-default",
       "value": "oklch(0.600 0.219 258)",
       "note": "#0F78FF · 헤더 로고 SVG 6개 path 의 fill 과 같은 값",

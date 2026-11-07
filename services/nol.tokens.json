@@ -1,6 +1,13 @@
 {
   "colors": [
     {
+      "name": "primary",
+      "value": "oklch(0.526 0.264 269.0)",
+      "note": "명세 대표색 별칭 — 발행 놀 블루를 가리킨다 · 서비스 CTA 파랑 primary-main 과 다른 값",
+      "group": "발행 팔레트 — NOL 브랜드 컬러 · 놀유니버스 기업 컬러 (nol-universe.com 에셋 센터)",
+      "ref": "nol-blue"
+    },
+    {
       "name": "nol-blue",
       "value": "oklch(0.526 0.264 269.0)",
       "note": "#3549FF · 발행 · NOL 브랜드 컬러 '놀 블루'(페이지 표기 NOL UNIVERSE BLUE) · RGB 53 73 255 · CMYK C95 M60 Y0 K0 · PMS 2728C",

@@ -1045,6 +1045,1225 @@
       "group": "원시 — gray 23단 (--base-color-gray-*, 모든 단이 B ≥ R 인 쿨 그레이)"
     },
     {
+      "name": "green-bg",
+      "value": "oklch(0.969 0.014 174.2)",
+      "group": "시맨틱 계열 슬롯 — green (--semantic-color-green-*)",
+      "ref": "green-95"
+    },
+    {
+      "name": "dark-green-bg",
+      "value": "oklch(0.224 0.046 164.9)",
+      "group": "시맨틱 계열 슬롯 — green (--semantic-color-green-*)",
+      "ref": "green-20"
+    },
+    {
+      "name": "green-weak",
+      "value": "oklch(0.922 0.038 171.5)",
+      "group": "시맨틱 계열 슬롯 — green (--semantic-color-green-*)",
+      "ref": "green-90"
+    },
+    {
+      "name": "dark-green-weak",
+      "value": "oklch(0.342 0.075 160.6)",
+      "group": "시맨틱 계열 슬롯 — green (--semantic-color-green-*)",
+      "ref": "green-30"
+    },
+    {
+      "name": "green-normal",
+      "value": "oklch(0.648 0.149 158.8)",
+      "group": "시맨틱 계열 슬롯 — green (--semantic-color-green-*)",
+      "ref": "green-50"
+    },
+    {
+      "name": "dark-green-normal",
+      "value": "oklch(0.678 0.143 161.5)",
+      "group": "시맨틱 계열 슬롯 — green (--semantic-color-green-*)",
+      "ref": "green-60"
+    },
+    {
+      "name": "green-strong",
+      "value": "oklch(0.500 0.112 159.8)",
+      "group": "시맨틱 계열 슬롯 — green (--semantic-color-green-*)",
+      "ref": "green-40"
+    },
+    {
+      "name": "dark-green-strong",
+      "value": "oklch(0.740 0.122 165.3)",
+      "group": "시맨틱 계열 슬롯 — green (--semantic-color-green-*)",
+      "ref": "green-70"
+    },
+    {
+      "name": "green-heavy",
+      "value": "oklch(0.342 0.075 160.6)",
+      "group": "시맨틱 계열 슬롯 — green (--semantic-color-green-*)",
+      "ref": "green-30"
+    },
+    {
+      "name": "dark-green-heavy",
+      "value": "oklch(0.846 0.076 168.9)",
+      "group": "시맨틱 계열 슬롯 — green (--semantic-color-green-*)",
+      "ref": "green-80"
+    },
+    {
+      "name": "mint-bg",
+      "value": "oklch(0.971 0.012 197.0)",
+      "group": "시맨틱 계열 슬롯 — mint (--semantic-color-mint-*)",
+      "ref": "mint-95"
+    },
+    {
+      "name": "dark-mint-bg",
+      "value": "oklch(0.225 0.036 185.7)",
+      "group": "시맨틱 계열 슬롯 — mint (--semantic-color-mint-*)",
+      "ref": "mint-20"
+    },
+    {
+      "name": "mint-weak",
+      "value": "oklch(0.924 0.032 189.3)",
+      "group": "시맨틱 계열 슬롯 — mint (--semantic-color-mint-*)",
+      "ref": "mint-90"
+    },
+    {
+      "name": "dark-mint-weak",
+      "value": "oklch(0.339 0.057 186.0)",
+      "group": "시맨틱 계열 슬롯 — mint (--semantic-color-mint-*)",
+      "ref": "mint-30"
+    },
+    {
+      "name": "mint-normal",
+      "value": "oklch(0.644 0.111 185.6)",
+      "group": "시맨틱 계열 슬롯 — mint (--semantic-color-mint-*)",
+      "ref": "mint-50"
+    },
+    {
+      "name": "dark-mint-normal",
+      "value": "oklch(0.674 0.110 186.4)",
+      "group": "시맨틱 계열 슬롯 — mint (--semantic-color-mint-*)",
+      "ref": "mint-60"
+    },
+    {
+      "name": "mint-strong",
+      "value": "oklch(0.498 0.085 186.2)",
+      "group": "시맨틱 계열 슬롯 — mint (--semantic-color-mint-*)",
+      "ref": "mint-40"
+    },
+    {
+      "name": "dark-mint-strong",
+      "value": "oklch(0.741 0.098 187.7)",
+      "group": "시맨틱 계열 슬롯 — mint (--semantic-color-mint-*)",
+      "ref": "mint-70"
+    },
+    {
+      "name": "mint-heavy",
+      "value": "oklch(0.339 0.057 186.0)",
+      "group": "시맨틱 계열 슬롯 — mint (--semantic-color-mint-*)",
+      "ref": "mint-30"
+    },
+    {
+      "name": "dark-mint-heavy",
+      "value": "oklch(0.846 0.062 189.6)",
+      "group": "시맨틱 계열 슬롯 — mint (--semantic-color-mint-*)",
+      "ref": "mint-80"
+    },
+    {
+      "name": "sky-bg",
+      "value": "oklch(0.968 0.013 208.8)",
+      "group": "시맨틱 계열 슬롯 — sky (--semantic-color-sky-*)",
+      "ref": "sky-95"
+    },
+    {
+      "name": "dark-sky-bg",
+      "value": "oklch(0.225 0.035 211.4)",
+      "group": "시맨틱 계열 슬롯 — sky (--semantic-color-sky-*)",
+      "ref": "sky-20"
+    },
+    {
+      "name": "sky-weak",
+      "value": "oklch(0.924 0.030 209.6)",
+      "group": "시맨틱 계열 슬롯 — sky (--semantic-color-sky-*)",
+      "ref": "sky-90"
+    },
+    {
+      "name": "dark-sky-weak",
+      "value": "oklch(0.343 0.057 213.0)",
+      "group": "시맨틱 계열 슬롯 — sky (--semantic-color-sky-*)",
+      "ref": "sky-30"
+    },
+    {
+      "name": "sky-normal",
+      "value": "oklch(0.647 0.111 214.5)",
+      "group": "시맨틱 계열 슬롯 — sky (--semantic-color-sky-*)",
+      "ref": "sky-50"
+    },
+    {
+      "name": "dark-sky-normal",
+      "value": "oklch(0.678 0.109 212.4)",
+      "group": "시맨틱 계열 슬롯 — sky (--semantic-color-sky-*)",
+      "ref": "sky-60"
+    },
+    {
+      "name": "sky-strong",
+      "value": "oklch(0.500 0.085 214.7)",
+      "group": "시맨틱 계열 슬롯 — sky (--semantic-color-sky-*)",
+      "ref": "sky-40"
+    },
+    {
+      "name": "dark-sky-strong",
+      "value": "oklch(0.742 0.095 210.3)",
+      "group": "시맨틱 계열 슬롯 — sky (--semantic-color-sky-*)",
+      "ref": "sky-70"
+    },
+    {
+      "name": "sky-heavy",
+      "value": "oklch(0.343 0.057 213.0)",
+      "group": "시맨틱 계열 슬롯 — sky (--semantic-color-sky-*)",
+      "ref": "sky-30"
+    },
+    {
+      "name": "dark-sky-heavy",
+      "value": "oklch(0.850 0.060 209.5)",
+      "group": "시맨틱 계열 슬롯 — sky (--semantic-color-sky-*)",
+      "ref": "sky-80"
+    },
+    {
+      "name": "light-blue-bg",
+      "value": "oklch(0.961 0.015 235.4)",
+      "group": "시맨틱 계열 슬롯 — light-blue (--semantic-color-light-blue-*)",
+      "ref": "light-blue-95"
+    },
+    {
+      "name": "dark-light-blue-bg",
+      "value": "oklch(0.212 0.045 239.7)",
+      "group": "시맨틱 계열 슬롯 — light-blue (--semantic-color-light-blue-*)",
+      "ref": "light-blue-20"
+    },
+    {
+      "name": "light-blue-weak",
+      "value": "oklch(0.915 0.034 235.9)",
+      "group": "시맨틱 계열 슬롯 — light-blue (--semantic-color-light-blue-*)",
+      "ref": "light-blue-90"
+    },
+    {
+      "name": "dark-light-blue-weak",
+      "value": "oklch(0.324 0.075 243.3)",
+      "group": "시맨틱 계열 슬롯 — light-blue (--semantic-color-light-blue-*)",
+      "ref": "light-blue-30"
+    },
+    {
+      "name": "light-blue-normal",
+      "value": "oklch(0.610 0.154 245.9)",
+      "group": "시맨틱 계열 슬롯 — light-blue (--semantic-color-light-blue-*)",
+      "ref": "light-blue-50"
+    },
+    {
+      "name": "dark-light-blue-normal",
+      "value": "oklch(0.643 0.144 242.9)",
+      "group": "시맨틱 계열 슬롯 — light-blue (--semantic-color-light-blue-*)",
+      "ref": "light-blue-60"
+    },
+    {
+      "name": "light-blue-strong",
+      "value": "oklch(0.473 0.117 245.1)",
+      "group": "시맨틱 계열 슬롯 — light-blue (--semantic-color-light-blue-*)",
+      "ref": "light-blue-40"
+    },
+    {
+      "name": "dark-light-blue-strong",
+      "value": "oklch(0.713 0.118 239.1)",
+      "group": "시맨틱 계열 슬롯 — light-blue (--semantic-color-light-blue-*)",
+      "ref": "light-blue-70"
+    },
+    {
+      "name": "light-blue-heavy",
+      "value": "oklch(0.324 0.075 243.3)",
+      "group": "시맨틱 계열 슬롯 — light-blue (--semantic-color-light-blue-*)",
+      "ref": "light-blue-30"
+    },
+    {
+      "name": "dark-light-blue-heavy",
+      "value": "oklch(0.833 0.070 236.2)",
+      "group": "시맨틱 계열 슬롯 — light-blue (--semantic-color-light-blue-*)",
+      "ref": "light-blue-80"
+    },
+    {
+      "name": "deep-blue-bg",
+      "value": "oklch(0.957 0.015 260.7)",
+      "group": "시맨틱 계열 슬롯 — deep-blue (--semantic-color-deep-blue-*)",
+      "ref": "deep-blue-95"
+    },
+    {
+      "name": "dark-deep-blue-bg",
+      "value": "oklch(0.257 0.061 257.8)",
+      "group": "시맨틱 계열 슬롯 — deep-blue (--semantic-color-deep-blue-*)",
+      "ref": "deep-blue-20"
+    },
+    {
+      "name": "deep-blue-weak",
+      "value": "oklch(0.912 0.031 258.9)",
+      "group": "시맨틱 계열 슬롯 — deep-blue (--semantic-color-deep-blue-*)",
+      "ref": "deep-blue-90"
+    },
+    {
+      "name": "dark-deep-blue-weak",
+      "value": "oklch(0.355 0.092 258.0)",
+      "group": "시맨틱 계열 슬롯 — deep-blue (--semantic-color-deep-blue-*)",
+      "ref": "deep-blue-30"
+    },
+    {
+      "name": "deep-blue-normal",
+      "value": "oklch(0.571 0.164 258.3)",
+      "group": "시맨틱 계열 슬롯 — deep-blue (--semantic-color-deep-blue-*)",
+      "ref": "deep-blue-50"
+    },
+    {
+      "name": "dark-deep-blue-normal",
+      "value": "oklch(0.612 0.147 257.8)",
+      "group": "시맨틱 계열 슬롯 — deep-blue (--semantic-color-deep-blue-*)",
+      "ref": "deep-blue-60"
+    },
+    {
+      "name": "deep-blue-strong",
+      "value": "oklch(0.444 0.122 258.3)",
+      "group": "시맨틱 계열 슬롯 — deep-blue (--semantic-color-deep-blue-*)",
+      "ref": "deep-blue-40"
+    },
+    {
+      "name": "dark-deep-blue-strong",
+      "value": "oklch(0.694 0.112 258.0)",
+      "group": "시맨틱 계열 슬롯 — deep-blue (--semantic-color-deep-blue-*)",
+      "ref": "deep-blue-70"
+    },
+    {
+      "name": "deep-blue-heavy",
+      "value": "oklch(0.355 0.092 258.0)",
+      "group": "시맨틱 계열 슬롯 — deep-blue (--semantic-color-deep-blue-*)",
+      "ref": "deep-blue-30"
+    },
+    {
+      "name": "dark-deep-blue-heavy",
+      "value": "oklch(0.826 0.062 257.5)",
+      "group": "시맨틱 계열 슬롯 — deep-blue (--semantic-color-deep-blue-*)",
+      "ref": "deep-blue-80"
+    },
+    {
+      "name": "indigo-bg",
+      "value": "oklch(0.954 0.016 278.5)",
+      "group": "시맨틱 계열 슬롯 — indigo (--semantic-color-indigo-*)",
+      "ref": "indigo-95"
+    },
+    {
+      "name": "dark-indigo-bg",
+      "value": "oklch(0.243 0.068 273.2)",
+      "group": "시맨틱 계열 슬롯 — indigo (--semantic-color-indigo-*)",
+      "ref": "indigo-20"
+    },
+    {
+      "name": "indigo-weak",
+      "value": "oklch(0.908 0.033 278.2)",
+      "group": "시맨틱 계열 슬롯 — indigo (--semantic-color-indigo-*)",
+      "ref": "indigo-90"
+    },
+    {
+      "name": "dark-indigo-weak",
+      "value": "oklch(0.333 0.105 272.3)",
+      "group": "시맨틱 계열 슬롯 — indigo (--semantic-color-indigo-*)",
+      "ref": "indigo-30"
+    },
+    {
+      "name": "indigo-normal",
+      "value": "oklch(0.534 0.185 271.2)",
+      "group": "시맨틱 계열 슬롯 — indigo (--semantic-color-indigo-*)",
+      "ref": "indigo-50"
+    },
+    {
+      "name": "dark-indigo-normal",
+      "value": "oklch(0.579 0.165 272.7)",
+      "group": "시맨틱 계열 슬롯 — indigo (--semantic-color-indigo-*)",
+      "ref": "indigo-60"
+    },
+    {
+      "name": "indigo-strong",
+      "value": "oklch(0.417 0.138 271.5)",
+      "group": "시맨틱 계열 슬롯 — indigo (--semantic-color-indigo-*)",
+      "ref": "indigo-40"
+    },
+    {
+      "name": "dark-indigo-strong",
+      "value": "oklch(0.718 0.106 276.2)",
+      "group": "시맨틱 계열 슬롯 — indigo (--semantic-color-indigo-*)",
+      "ref": "indigo-70"
+    },
+    {
+      "name": "indigo-heavy",
+      "value": "oklch(0.333 0.105 272.3)",
+      "group": "시맨틱 계열 슬롯 — indigo (--semantic-color-indigo-*)",
+      "ref": "indigo-30"
+    },
+    {
+      "name": "dark-indigo-heavy",
+      "value": "oklch(0.814 0.068 276.5)",
+      "group": "시맨틱 계열 슬롯 — indigo (--semantic-color-indigo-*)",
+      "ref": "indigo-80"
+    },
+    {
+      "name": "violet-bg",
+      "value": "oklch(0.951 0.017 293.1)",
+      "group": "시맨틱 계열 슬롯 — violet (--semantic-color-violet-*)",
+      "ref": "violet-95"
+    },
+    {
+      "name": "dark-violet-bg",
+      "value": "oklch(0.239 0.072 284.2)",
+      "group": "시맨틱 계열 슬롯 — violet (--semantic-color-violet-*)",
+      "ref": "violet-20"
+    },
+    {
+      "name": "violet-weak",
+      "value": "oklch(0.905 0.035 291.0)",
+      "group": "시맨틱 계열 슬롯 — violet (--semantic-color-violet-*)",
+      "ref": "violet-90"
+    },
+    {
+      "name": "dark-violet-weak",
+      "value": "oklch(0.363 0.127 283.3)",
+      "group": "시맨틱 계열 슬롯 — violet (--semantic-color-violet-*)",
+      "ref": "violet-30"
+    },
+    {
+      "name": "violet-normal",
+      "value": "oklch(0.518 0.192 282.2)",
+      "group": "시맨틱 계열 슬롯 — violet (--semantic-color-violet-*)",
+      "ref": "violet-50"
+    },
+    {
+      "name": "dark-violet-normal",
+      "value": "oklch(0.565 0.173 284.0)",
+      "group": "시맨틱 계열 슬롯 — violet (--semantic-color-violet-*)",
+      "ref": "violet-60"
+    },
+    {
+      "name": "violet-strong",
+      "value": "oklch(0.442 0.161 282.4)",
+      "group": "시맨틱 계열 슬롯 — violet (--semantic-color-violet-*)",
+      "ref": "violet-40"
+    },
+    {
+      "name": "dark-violet-strong",
+      "value": "oklch(0.758 0.093 288.9)",
+      "group": "시맨틱 계열 슬롯 — violet (--semantic-color-violet-*)",
+      "ref": "violet-70"
+    },
+    {
+      "name": "violet-heavy",
+      "value": "oklch(0.363 0.127 283.3)",
+      "group": "시맨틱 계열 슬롯 — violet (--semantic-color-violet-*)",
+      "ref": "violet-30"
+    },
+    {
+      "name": "dark-violet-heavy",
+      "value": "oklch(0.855 0.054 289.9)",
+      "group": "시맨틱 계열 슬롯 — violet (--semantic-color-violet-*)",
+      "ref": "violet-80"
+    },
+    {
+      "name": "purple-bg",
+      "value": "oklch(0.946 0.022 300.2)",
+      "group": "시맨틱 계열 슬롯 — purple (--semantic-color-purple-*)",
+      "ref": "purple-95"
+    },
+    {
+      "name": "dark-purple-bg",
+      "value": "oklch(0.253 0.075 293.9)",
+      "group": "시맨틱 계열 슬롯 — purple (--semantic-color-purple-*)",
+      "ref": "purple-20"
+    },
+    {
+      "name": "purple-weak",
+      "value": "oklch(0.912 0.037 299.2)",
+      "group": "시맨틱 계열 슬롯 — purple (--semantic-color-purple-*)",
+      "ref": "purple-90"
+    },
+    {
+      "name": "dark-purple-weak",
+      "value": "oklch(0.391 0.130 293.1)",
+      "group": "시맨틱 계열 슬롯 — purple (--semantic-color-purple-*)",
+      "ref": "purple-30"
+    },
+    {
+      "name": "purple-normal",
+      "value": "oklch(0.559 0.198 292.7)",
+      "group": "시맨틱 계열 슬롯 — purple (--semantic-color-purple-*)",
+      "ref": "purple-50"
+    },
+    {
+      "name": "dark-purple-normal",
+      "value": "oklch(0.600 0.180 294.2)",
+      "group": "시맨틱 계열 슬롯 — purple (--semantic-color-purple-*)",
+      "ref": "purple-60"
+    },
+    {
+      "name": "purple-strong",
+      "value": "oklch(0.476 0.166 293.0)",
+      "group": "시맨틱 계열 슬롯 — purple (--semantic-color-purple-*)",
+      "ref": "purple-40"
+    },
+    {
+      "name": "dark-purple-strong",
+      "value": "oklch(0.732 0.117 297.0)",
+      "group": "시맨틱 계열 슬롯 — purple (--semantic-color-purple-*)",
+      "ref": "purple-70"
+    },
+    {
+      "name": "purple-heavy",
+      "value": "oklch(0.391 0.130 293.1)",
+      "group": "시맨틱 계열 슬롯 — purple (--semantic-color-purple-*)",
+      "ref": "purple-30"
+    },
+    {
+      "name": "dark-purple-heavy",
+      "value": "oklch(0.822 0.078 298.8)",
+      "group": "시맨틱 계열 슬롯 — purple (--semantic-color-purple-*)",
+      "ref": "purple-80"
+    },
+    {
+      "name": "orchid-bg",
+      "value": "oklch(0.953 0.023 317.1)",
+      "group": "시맨틱 계열 슬롯 — orchid (--semantic-color-orchid-*)",
+      "ref": "orchid-95"
+    },
+    {
+      "name": "dark-orchid-bg",
+      "value": "oklch(0.222 0.055 316.4)",
+      "group": "시맨틱 계열 슬롯 — orchid (--semantic-color-orchid-*)",
+      "ref": "orchid-20"
+    },
+    {
+      "name": "orchid-weak",
+      "value": "oklch(0.924 0.040 317.0)",
+      "group": "시맨틱 계열 슬롯 — orchid (--semantic-color-orchid-*)",
+      "ref": "orchid-90"
+    },
+    {
+      "name": "dark-orchid-weak",
+      "value": "oklch(0.338 0.095 315.9)",
+      "group": "시맨틱 계열 슬롯 — orchid (--semantic-color-orchid-*)",
+      "ref": "orchid-30"
+    },
+    {
+      "name": "orchid-normal",
+      "value": "oklch(0.638 0.200 316.1)",
+      "group": "시맨틱 계열 슬롯 — orchid (--semantic-color-orchid-*)",
+      "ref": "orchid-50"
+    },
+    {
+      "name": "dark-orchid-normal",
+      "value": "oklch(0.670 0.182 316.2)",
+      "group": "시맨틱 계열 슬롯 — orchid (--semantic-color-orchid-*)",
+      "ref": "orchid-60"
+    },
+    {
+      "name": "orchid-strong",
+      "value": "oklch(0.442 0.132 316.4)",
+      "group": "시맨틱 계열 슬롯 — orchid (--semantic-color-orchid-*)",
+      "ref": "orchid-40"
+    },
+    {
+      "name": "dark-orchid-strong",
+      "value": "oklch(0.740 0.142 316.6)",
+      "group": "시맨틱 계열 슬롯 — orchid (--semantic-color-orchid-*)",
+      "ref": "orchid-70"
+    },
+    {
+      "name": "orchid-heavy",
+      "value": "oklch(0.338 0.095 315.9)",
+      "group": "시맨틱 계열 슬롯 — orchid (--semantic-color-orchid-*)",
+      "ref": "orchid-30"
+    },
+    {
+      "name": "dark-orchid-heavy",
+      "value": "oklch(0.850 0.080 316.7)",
+      "group": "시맨틱 계열 슬롯 — orchid (--semantic-color-orchid-*)",
+      "ref": "orchid-80"
+    },
+    {
+      "name": "magenta-bg",
+      "value": "oklch(0.953 0.022 336.8)",
+      "group": "시맨틱 계열 슬롯 — magenta (--semantic-color-magenta-*)",
+      "ref": "magenta-95"
+    },
+    {
+      "name": "dark-magenta-bg",
+      "value": "oklch(0.226 0.052 341.6)",
+      "group": "시맨틱 계열 슬롯 — magenta (--semantic-color-magenta-*)",
+      "ref": "magenta-20"
+    },
+    {
+      "name": "magenta-weak",
+      "value": "oklch(0.925 0.038 338.1)",
+      "group": "시맨틱 계열 슬롯 — magenta (--semantic-color-magenta-*)",
+      "ref": "magenta-90"
+    },
+    {
+      "name": "dark-magenta-weak",
+      "value": "oklch(0.342 0.094 343.1)",
+      "group": "시맨틱 계열 슬롯 — magenta (--semantic-color-magenta-*)",
+      "ref": "magenta-30"
+    },
+    {
+      "name": "magenta-normal",
+      "value": "oklch(0.649 0.195 343.3)",
+      "group": "시맨틱 계열 슬롯 — magenta (--semantic-color-magenta-*)",
+      "ref": "magenta-50"
+    },
+    {
+      "name": "dark-magenta-normal",
+      "value": "oklch(0.679 0.178 342.7)",
+      "group": "시맨틱 계열 슬롯 — magenta (--semantic-color-magenta-*)",
+      "ref": "magenta-60"
+    },
+    {
+      "name": "magenta-strong",
+      "value": "oklch(0.450 0.129 342.7)",
+      "group": "시맨틱 계열 슬롯 — magenta (--semantic-color-magenta-*)",
+      "ref": "magenta-40"
+    },
+    {
+      "name": "dark-magenta-strong",
+      "value": "oklch(0.777 0.118 340.1)",
+      "group": "시맨틱 계열 슬롯 — magenta (--semantic-color-magenta-*)",
+      "ref": "magenta-70"
+    },
+    {
+      "name": "magenta-heavy",
+      "value": "oklch(0.342 0.094 343.1)",
+      "group": "시맨틱 계열 슬롯 — magenta (--semantic-color-magenta-*)",
+      "ref": "magenta-30"
+    },
+    {
+      "name": "dark-magenta-heavy",
+      "value": "oklch(0.849 0.078 339.6)",
+      "group": "시맨틱 계열 슬롯 — magenta (--semantic-color-magenta-*)",
+      "ref": "magenta-80"
+    },
+    {
+      "name": "pink-bg",
+      "value": "oklch(0.950 0.021 358.7)",
+      "group": "시맨틱 계열 슬롯 — pink (--semantic-color-pink-*)",
+      "ref": "pink-95"
+    },
+    {
+      "name": "dark-pink-bg",
+      "value": "oklch(0.280 0.069 0.7)",
+      "group": "시맨틱 계열 슬롯 — pink (--semantic-color-pink-*)",
+      "ref": "pink-20"
+    },
+    {
+      "name": "pink-weak",
+      "value": "oklch(0.921 0.034 354.9)",
+      "group": "시맨틱 계열 슬롯 — pink (--semantic-color-pink-*)",
+      "ref": "pink-90"
+    },
+    {
+      "name": "dark-pink-weak",
+      "value": "oklch(0.392 0.103 2.1)",
+      "group": "시맨틱 계열 슬롯 — pink (--semantic-color-pink-*)",
+      "ref": "pink-30"
+    },
+    {
+      "name": "pink-normal",
+      "value": "oklch(0.639 0.182 3.1)",
+      "group": "시맨틱 계열 슬롯 — pink (--semantic-color-pink-*)",
+      "ref": "pink-50"
+    },
+    {
+      "name": "dark-pink-normal",
+      "value": "oklch(0.668 0.166 1.3)",
+      "group": "시맨틱 계열 슬롯 — pink (--semantic-color-pink-*)",
+      "ref": "pink-60"
+    },
+    {
+      "name": "pink-strong",
+      "value": "oklch(0.494 0.136 3.1)",
+      "group": "시맨틱 계열 슬롯 — pink (--semantic-color-pink-*)",
+      "ref": "pink-40"
+    },
+    {
+      "name": "dark-pink-strong",
+      "value": "oklch(0.770 0.107 358.6)",
+      "group": "시맨틱 계열 슬롯 — pink (--semantic-color-pink-*)",
+      "ref": "pink-70"
+    },
+    {
+      "name": "pink-heavy",
+      "value": "oklch(0.392 0.103 2.1)",
+      "group": "시맨틱 계열 슬롯 — pink (--semantic-color-pink-*)",
+      "ref": "pink-30"
+    },
+    {
+      "name": "dark-pink-heavy",
+      "value": "oklch(0.844 0.071 356.2)",
+      "group": "시맨틱 계열 슬롯 — pink (--semantic-color-pink-*)",
+      "ref": "pink-80"
+    },
+    {
+      "name": "coral-bg",
+      "value": "oklch(0.951 0.020 25.2)",
+      "group": "시맨틱 계열 슬롯 — coral (--semantic-color-coral-*)",
+      "ref": "coral-95"
+    },
+    {
+      "name": "dark-coral-bg",
+      "value": "oklch(0.229 0.046 23.4)",
+      "group": "시맨틱 계열 슬롯 — coral (--semantic-color-coral-*)",
+      "ref": "coral-20"
+    },
+    {
+      "name": "coral-weak",
+      "value": "oklch(0.926 0.031 20.2)",
+      "group": "시맨틱 계열 슬롯 — coral (--semantic-color-coral-*)",
+      "ref": "coral-90"
+    },
+    {
+      "name": "dark-coral-weak",
+      "value": "oklch(0.349 0.083 24.3)",
+      "group": "시맨틱 계열 슬롯 — coral (--semantic-color-coral-*)",
+      "ref": "coral-30"
+    },
+    {
+      "name": "coral-normal",
+      "value": "oklch(0.662 0.176 25.1)",
+      "group": "시맨틱 계열 슬롯 — coral (--semantic-color-coral-*)",
+      "ref": "coral-50"
+    },
+    {
+      "name": "dark-coral-normal",
+      "value": "oklch(0.690 0.158 23.9)",
+      "group": "시맨틱 계열 슬롯 — coral (--semantic-color-coral-*)",
+      "ref": "coral-60"
+    },
+    {
+      "name": "coral-strong",
+      "value": "oklch(0.512 0.132 25.2)",
+      "group": "시맨틱 계열 슬롯 — coral (--semantic-color-coral-*)",
+      "ref": "coral-40"
+    },
+    {
+      "name": "dark-coral-strong",
+      "value": "oklch(0.783 0.102 21.9)",
+      "group": "시맨틱 계열 슬롯 — coral (--semantic-color-coral-*)",
+      "ref": "coral-70"
+    },
+    {
+      "name": "coral-heavy",
+      "value": "oklch(0.349 0.083 24.3)",
+      "group": "시맨틱 계열 슬롯 — coral (--semantic-color-coral-*)",
+      "ref": "coral-30"
+    },
+    {
+      "name": "dark-coral-heavy",
+      "value": "oklch(0.854 0.065 20.9)",
+      "group": "시맨틱 계열 슬롯 — coral (--semantic-color-coral-*)",
+      "ref": "coral-80"
+    },
+    {
+      "name": "red-bg",
+      "value": "oklch(0.972 0.011 10.3)",
+      "group": "시맨틱 계열 슬롯 — red (--semantic-color-red-*)",
+      "ref": "red-95"
+    },
+    {
+      "name": "dark-red-bg",
+      "value": "oklch(0.209 0.053 17.3)",
+      "group": "시맨틱 계열 슬롯 — red (--semantic-color-red-*)",
+      "ref": "red-20"
+    },
+    {
+      "name": "red-weak",
+      "value": "oklch(0.954 0.019 9.3)",
+      "group": "시맨틱 계열 슬롯 — red (--semantic-color-red-*)",
+      "ref": "red-90"
+    },
+    {
+      "name": "dark-red-weak",
+      "value": "oklch(0.317 0.096 18.7)",
+      "group": "시맨틱 계열 슬롯 — red (--semantic-color-red-*)",
+      "ref": "red-30"
+    },
+    {
+      "name": "red-normal",
+      "value": "oklch(0.600 0.199 20.6)",
+      "group": "시맨틱 계열 슬롯 — red (--semantic-color-red-*)",
+      "ref": "red-50"
+    },
+    {
+      "name": "dark-red-normal",
+      "value": "oklch(0.628 0.182 18.6)",
+      "group": "시맨틱 계열 슬롯 — red (--semantic-color-red-*)",
+      "ref": "red-60"
+    },
+    {
+      "name": "red-strong",
+      "value": "oklch(0.510 0.168 20.4)",
+      "group": "시맨틱 계열 슬롯 — red (--semantic-color-red-*)",
+      "ref": "red-40"
+    },
+    {
+      "name": "dark-red-strong",
+      "value": "oklch(0.698 0.142 15.5)",
+      "group": "시맨틱 계열 슬롯 — red (--semantic-color-red-*)",
+      "ref": "red-70"
+    },
+    {
+      "name": "red-heavy",
+      "value": "oklch(0.317 0.096 18.7)",
+      "group": "시맨틱 계열 슬롯 — red (--semantic-color-red-*)",
+      "ref": "red-30"
+    },
+    {
+      "name": "dark-red-heavy",
+      "value": "oklch(0.821 0.078 11.9)",
+      "group": "시맨틱 계열 슬롯 — red (--semantic-color-red-*)",
+      "ref": "red-80"
+    },
+    {
+      "name": "orange-bg",
+      "value": "oklch(0.965 0.016 58.6)",
+      "group": "시맨틱 계열 슬롯 — orange (--semantic-color-orange-*)",
+      "ref": "orange-95"
+    },
+    {
+      "name": "dark-orange-bg",
+      "value": "oklch(0.233 0.046 53.6)",
+      "group": "시맨틱 계열 슬롯 — orange (--semantic-color-orange-*)",
+      "ref": "orange-20"
+    },
+    {
+      "name": "orange-weak",
+      "value": "oklch(0.930 0.033 57.1)",
+      "group": "시맨틱 계열 슬롯 — orange (--semantic-color-orange-*)",
+      "ref": "orange-90"
+    },
+    {
+      "name": "dark-orange-weak",
+      "value": "oklch(0.355 0.078 51.6)",
+      "group": "시맨틱 계열 슬롯 — orange (--semantic-color-orange-*)",
+      "ref": "orange-30"
+    },
+    {
+      "name": "orange-normal",
+      "value": "oklch(0.674 0.164 49.4)",
+      "group": "시맨틱 계열 슬롯 — orange (--semantic-color-orange-*)",
+      "ref": "orange-50"
+    },
+    {
+      "name": "dark-orange-normal",
+      "value": "oklch(0.702 0.151 51.4)",
+      "group": "시맨틱 계열 슬롯 — orange (--semantic-color-orange-*)",
+      "ref": "orange-60"
+    },
+    {
+      "name": "orange-strong",
+      "value": "oklch(0.521 0.124 49.9)",
+      "group": "시맨틱 계열 슬롯 — orange (--semantic-color-orange-*)",
+      "ref": "orange-40"
+    },
+    {
+      "name": "dark-orange-strong",
+      "value": "oklch(0.794 0.102 54.4)",
+      "group": "시맨틱 계열 슬롯 — orange (--semantic-color-orange-*)",
+      "ref": "orange-70"
+    },
+    {
+      "name": "orange-heavy",
+      "value": "oklch(0.355 0.078 51.6)",
+      "group": "시맨틱 계열 슬롯 — orange (--semantic-color-orange-*)",
+      "ref": "orange-30"
+    },
+    {
+      "name": "dark-orange-heavy",
+      "value": "oklch(0.861 0.066 56.2)",
+      "group": "시맨틱 계열 슬롯 — orange (--semantic-color-orange-*)",
+      "ref": "orange-80"
+    },
+    {
+      "name": "mustard-bg",
+      "value": "oklch(0.967 0.016 79.4)",
+      "group": "시맨틱 계열 슬롯 — mustard (--semantic-color-mustard-*)",
+      "ref": "mustard-95"
+    },
+    {
+      "name": "dark-mustard-bg",
+      "value": "oklch(0.233 0.041 78.3)",
+      "group": "시맨틱 계열 슬롯 — mustard (--semantic-color-mustard-*)",
+      "ref": "mustard-20"
+    },
+    {
+      "name": "mustard-weak",
+      "value": "oklch(0.932 0.032 81.0)",
+      "group": "시맨틱 계열 슬롯 — mustard (--semantic-color-mustard-*)",
+      "ref": "mustard-90"
+    },
+    {
+      "name": "dark-mustard-weak",
+      "value": "oklch(0.355 0.068 75.5)",
+      "group": "시맨틱 계열 슬롯 — mustard (--semantic-color-mustard-*)",
+      "ref": "mustard-30"
+    },
+    {
+      "name": "mustard-normal",
+      "value": "oklch(0.675 0.137 74.0)",
+      "group": "시맨틱 계열 슬롯 — mustard (--semantic-color-mustard-*)",
+      "ref": "mustard-50"
+    },
+    {
+      "name": "dark-mustard-normal",
+      "value": "oklch(0.723 0.141 75.4)",
+      "group": "시맨틱 계열 슬롯 — mustard (--semantic-color-mustard-*)",
+      "ref": "mustard-60"
+    },
+    {
+      "name": "mustard-strong",
+      "value": "oklch(0.521 0.104 74.4)",
+      "group": "시맨틱 계열 슬롯 — mustard (--semantic-color-mustard-*)",
+      "ref": "mustard-40"
+    },
+    {
+      "name": "dark-mustard-strong",
+      "value": "oklch(0.801 0.096 80.9)",
+      "group": "시맨틱 계열 슬롯 — mustard (--semantic-color-mustard-*)",
+      "ref": "mustard-70"
+    },
+    {
+      "name": "mustard-heavy",
+      "value": "oklch(0.355 0.068 75.5)",
+      "group": "시맨틱 계열 슬롯 — mustard (--semantic-color-mustard-*)",
+      "ref": "mustard-30"
+    },
+    {
+      "name": "dark-mustard-heavy",
+      "value": "oklch(0.865 0.065 80.7)",
+      "group": "시맨틱 계열 슬롯 — mustard (--semantic-color-mustard-*)",
+      "ref": "mustard-80"
+    },
+    {
+      "name": "gray-bg",
+      "value": "oklch(0.982 0.003 264.5)",
+      "group": "시맨틱 계열 슬롯 — gray (--semantic-color-gray-*, 다크 bg 만 25단)",
+      "ref": "gray-95"
+    },
+    {
+      "name": "dark-gray-bg",
+      "value": "oklch(0.284 0.012 264.4)",
+      "note": "다른 계열의 다크 bg 는 20단이고 gray 만 25단이다",
+      "group": "시맨틱 계열 슬롯 — gray (--semantic-color-gray-*, 다크 bg 만 25단)",
+      "ref": "gray-25"
+    },
+    {
+      "name": "gray-weak",
+      "value": "oklch(0.948 0.006 255.5)",
+      "group": "시맨틱 계열 슬롯 — gray (--semantic-color-gray-*, 다크 bg 만 25단)",
+      "ref": "gray-90"
+    },
+    {
+      "name": "dark-gray-weak",
+      "value": "oklch(0.336 0.015 264.3)",
+      "group": "시맨틱 계열 슬롯 — gray (--semantic-color-gray-*, 다크 bg 만 25단)",
+      "ref": "gray-30"
+    },
+    {
+      "name": "gray-normal",
+      "value": "oklch(0.656 0.022 264.4)",
+      "group": "시맨틱 계열 슬롯 — gray (--semantic-color-gray-*, 다크 bg 만 25단)",
+      "ref": "gray-50"
+    },
+    {
+      "name": "dark-gray-normal",
+      "value": "oklch(0.721 0.017 262.7)",
+      "group": "시맨틱 계열 슬롯 — gray (--semantic-color-gray-*, 다크 bg 만 25단)",
+      "ref": "gray-60"
+    },
+    {
+      "name": "gray-strong",
+      "value": "oklch(0.515 0.021 258.4)",
+      "group": "시맨틱 계열 슬롯 — gray (--semantic-color-gray-*, 다크 bg 만 25단)",
+      "ref": "gray-40"
+    },
+    {
+      "name": "dark-gray-strong",
+      "value": "oklch(0.781 0.013 259.8)",
+      "group": "시맨틱 계열 슬롯 — gray (--semantic-color-gray-*, 다크 bg 만 25단)",
+      "ref": "gray-70"
+    },
+    {
+      "name": "gray-heavy",
+      "value": "oklch(0.336 0.015 264.3)",
+      "group": "시맨틱 계열 슬롯 — gray (--semantic-color-gray-*, 다크 bg 만 25단)",
+      "ref": "gray-30"
+    },
+    {
+      "name": "dark-gray-heavy",
+      "value": "oklch(0.875 0.011 261.8)",
+      "group": "시맨틱 계열 슬롯 — gray (--semantic-color-gray-*, 다크 bg 만 25단)",
+      "ref": "gray-80"
+    },
+    {
+      "name": "text-strong",
+      "value": "oklch(0.222 0.008 264.4)",
+      "group": "시맨틱 역할 — text (--semantic-color-text-*)",
+      "ref": "gray-20"
+    },
+    {
+      "name": "dark-text-strong",
+      "value": "oklch(0.970 0.004 271.4)",
+      "group": "시맨틱 역할 — text (--semantic-color-text-*)",
+      "ref": "gray-93"
+    },
+    {
+      "name": "text-normal",
+      "value": "oklch(0.284 0.012 264.4)",
+      "group": "시맨틱 역할 — text (--semantic-color-text-*)",
+      "ref": "gray-25"
+    },
+    {
+      "name": "dark-text-normal",
+      "value": "oklch(0.912 0.009 264.5)",
+      "group": "시맨틱 역할 — text (--semantic-color-text-*)",
+      "ref": "gray-84"
+    },
+    {
+      "name": "text-neutral",
+      "value": "oklch(0.515 0.021 258.4)",
+      "group": "시맨틱 역할 — text (--semantic-color-text-*)",
+      "ref": "gray-40"
+    },
+    {
+      "name": "dark-text-neutral",
+      "value": "oklch(0.721 0.017 262.7)",
+      "group": "시맨틱 역할 — text (--semantic-color-text-*)",
+      "ref": "gray-60"
+    },
+    {
+      "name": "text-alternative",
+      "value": "oklch(0.721 0.017 262.7)",
+      "group": "시맨틱 역할 — text (--semantic-color-text-*)",
+      "ref": "gray-60"
+    },
+    {
+      "name": "dark-text-alternative",
+      "value": "oklch(0.473 0.021 261.3)",
+      "group": "시맨틱 역할 — text (--semantic-color-text-*)",
+      "ref": "gray-38"
+    },
+    {
+      "name": "text-disable",
+      "value": "oklch(0.875 0.011 261.8)",
+      "group": "시맨틱 역할 — text (--semantic-color-text-*)",
+      "ref": "gray-80"
+    },
+    {
+      "name": "dark-text-disable",
+      "value": "oklch(0.387 0.016 251.8)",
+      "group": "시맨틱 역할 — text (--semantic-color-text-*)",
+      "ref": "gray-32"
+    },
+    {
+      "name": "text-highlight",
+      "value": "oklch(1.000 0.000 0.0)",
+      "group": "시맨틱 역할 — text (--semantic-color-text-*)",
+      "ref": "gray-100"
+    },
+    {
+      "name": "dark-text-highlight",
+      "value": "oklch(0.222 0.008 264.4)",
+      "group": "시맨틱 역할 — text (--semantic-color-text-*)",
+      "ref": "gray-20"
+    },
+    {
+      "name": "background-white",
+      "value": "oklch(1.000 0.000 0.0)",
+      "group": "시맨틱 역할 — background (--semantic-color-background-*)",
+      "ref": "gray-100"
+    },
+    {
+      "name": "dark-background-white",
+      "value": "oklch(0.222 0.008 264.4)",
+      "group": "시맨틱 역할 — background (--semantic-color-background-*)",
+      "ref": "gray-20"
+    },
+    {
+      "name": "background-gray",
+      "value": "oklch(0.976 0.003 264.5)",
+      "group": "시맨틱 역할 — background (--semantic-color-background-*)",
+      "ref": "gray-94"
+    },
+    {
+      "name": "dark-background-gray",
+      "value": "oklch(0.163 0.003 248.0)",
+      "group": "시맨틱 역할 — background (--semantic-color-background-*)",
+      "ref": "gray-10"
+    },
+    {
+      "name": "background-layer1",
+      "value": "oklch(1.000 0.000 0.0)",
+      "group": "시맨틱 역할 — background (--semantic-color-background-*)",
+      "ref": "gray-100"
+    },
+    {
+      "name": "dark-background-layer1",
+      "value": "oklch(0.252 0.010 268.3)",
+      "group": "시맨틱 역할 — background (--semantic-color-background-*)",
+      "ref": "gray-23"
+    },
+    {
+      "name": "background-layer2",
+      "value": "oklch(0.982 0.003 264.5)",
+      "group": "시맨틱 역할 — background (--semantic-color-background-*)",
+      "ref": "gray-95"
+    },
+    {
+      "name": "dark-background-layer2",
+      "value": "oklch(0.284 0.012 264.4)",
+      "group": "시맨틱 역할 — background (--semantic-color-background-*)",
+      "ref": "gray-25"
+    },
+    {
+      "name": "background-layer3",
+      "value": "oklch(0.964 0.004 271.4)",
+      "group": "시맨틱 역할 — background (--semantic-color-background-*)",
+      "ref": "gray-92"
+    },
+    {
+      "name": "dark-background-layer3",
+      "value": "oklch(0.307 0.013 253.0)",
+      "group": "시맨틱 역할 — background (--semantic-color-background-*)",
+      "ref": "gray-27"
+    },
+    {
+      "name": "line-normal",
+      "value": "oklch(0.960 0.005 258.3)",
+      "group": "시맨틱 역할 — line (--semantic-color-line-*)",
+      "ref": "gray-91"
+    },
+    {
+      "name": "dark-line-normal",
+      "value": "oklch(0.307 0.013 253.0)",
+      "group": "시맨틱 역할 — line (--semantic-color-line-*)",
+      "ref": "gray-27"
+    },
+    {
+      "name": "line-strong",
+      "value": "oklch(0.930 0.007 260.7)",
+      "group": "시맨틱 역할 — line (--semantic-color-line-*)",
+      "ref": "gray-88"
+    },
+    {
+      "name": "dark-line-strong",
+      "value": "oklch(0.387 0.016 251.8)",
+      "group": "시맨틱 역할 — line (--semantic-color-line-*)",
+      "ref": "gray-32"
+    },
+    {
+      "name": "line-neutral",
+      "value": "oklch(0.976 0.003 264.5)",
+      "group": "시맨틱 역할 — line (--semantic-color-line-*)",
+      "ref": "gray-94"
+    },
+    {
+      "name": "dark-line-neutral",
+      "value": "oklch(0.163 0.003 248.0)",
+      "group": "시맨틱 역할 — line (--semantic-color-line-*)",
+      "ref": "gray-10"
+    },
+    {
+      "name": "status-profit",
+      "value": "oklch(0.661 0.164 16.8)",
+      "group": "시맨틱 역할 — status (--semantic-color-status-*, 테마 고정 · dark- 짝 없음)",
+      "ref": "red-65"
+    },
+    {
+      "name": "status-negative",
+      "value": "oklch(0.600 0.199 20.6)",
+      "group": "시맨틱 역할 — status (--semantic-color-status-*, 테마 고정 · dark- 짝 없음)",
+      "ref": "red-50"
+    },
+    {
+      "name": "status-loss",
+      "value": "oklch(0.713 0.118 239.1)",
+      "group": "시맨틱 역할 — status (--semantic-color-status-*, 테마 고정 · dark- 짝 없음)",
+      "ref": "light-blue-70"
+    },
+    {
+      "name": "status-positive",
+      "value": "oklch(0.610 0.154 245.9)",
+      "group": "시맨틱 역할 — status (--semantic-color-status-*, 테마 고정 · dark- 짝 없음)",
+      "ref": "light-blue-50"
+    },
+    {
+      "name": "status-caution",
+      "value": "oklch(0.675 0.137 74.0)",
+      "group": "시맨틱 역할 — status (--semantic-color-status-*, 테마 고정 · dark- 짝 없음)",
+      "ref": "mustard-50"
+    },
+    {
+      "name": "static-black",
+      "value": "oklch(0.000 0.000 0.0)",
+      "group": "시맨틱 역할 — static (--semantic-color-static-*, 테마 고정 · dark- 짝 없음)",
+      "ref": "gray-0"
+    },
+    {
+      "name": "static-strong",
+      "value": "oklch(0.222 0.008 264.4)",
+      "group": "시맨틱 역할 — static (--semantic-color-static-*, 테마 고정 · dark- 짝 없음)",
+      "ref": "gray-20"
+    },
+    {
+      "name": "static-normal",
+      "value": "oklch(0.284 0.012 264.4)",
+      "group": "시맨틱 역할 — static (--semantic-color-static-*, 테마 고정 · dark- 짝 없음)",
+      "ref": "gray-25"
+    },
+    {
+      "name": "static-neutral",
+      "value": "oklch(0.515 0.021 258.4)",
+      "group": "시맨틱 역할 — static (--semantic-color-static-*, 테마 고정 · dark- 짝 없음)",
+      "ref": "gray-40"
+    },
+    {
+      "name": "static-alternative",
+      "value": "oklch(0.721 0.017 262.7)",
+      "group": "시맨틱 역할 — static (--semantic-color-static-*, 테마 고정 · dark- 짝 없음)",
+      "ref": "gray-60"
+    },
+    {
+      "name": "static-assistive",
+      "value": "oklch(0.875 0.011 261.8)",
+      "group": "시맨틱 역할 — static (--semantic-color-static-*, 테마 고정 · dark- 짝 없음)",
+      "ref": "gray-80"
+    },
+    {
+      "name": "static-disable",
+      "value": "oklch(0.948 0.006 255.5)",
+      "group": "시맨틱 역할 — static (--semantic-color-static-*, 테마 고정 · dark- 짝 없음)",
+      "ref": "gray-90"
+    },
+    {
+      "name": "static-white",
+      "value": "oklch(1.000 0.000 0.0)",
+      "group": "시맨틱 역할 — static (--semantic-color-static-*, 테마 고정 · dark- 짝 없음)",
+      "ref": "gray-100"
+    },
+    {
+      "name": "alpha",
+      "value": "oklch(0.163 0.003 248.0)",
+      "group": "시맨틱 역할 — alpha (--semantic-color-alpha)",
+      "ref": "gray-10"
+    },
+    {
+      "name": "dark-alpha",
+      "value": "oklch(1.000 0.000 0.0)",
+      "group": "시맨틱 역할 — alpha (--semantic-color-alpha)",
+      "ref": "gray-100"
+    },
+    {
       "name": "legacy-green-100",
       "value": "oklch(0.706 0.156 160.2)",
       "note": "#13BD7E — 옛 --color-green-100(= highlight-000). 다크에서도 같은 값. 대표색 아님",

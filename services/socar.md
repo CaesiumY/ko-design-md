@@ -3,22 +3,29 @@ name: 쏘카
 design_system_name: SOCAR Frame 2.0
 slug: socar
 category: mobility
-last_updated: "2026-08-22"
+last_updated: "2026-11-02"
 created_at: "2026-05-22"
 lang: ko
 logo: https://getdesign.kr/logos/socar.png
 colors:
-  # Brand / primary (action)
-  primary: "{colors.primary-regular}"   # 명세의 대표색 역할 — text-primary(gray-800 본문색)와 다른 축
-  primary-regular: oklch(0.599 0.220 258)   # #0078FF · service-socar / blue-500
-  primary-strong: oklch(0.569 0.237 260)   # #0069FF · pressed / blue-600
-  primary-heavy: oklch(0.498 0.226 262)   # #0052E0 · heaviest / blue-700
-  service-business: oklch(0.388 0.193 263)   # #0033A9 · SOCAR Business / blue-900
-  # Blue ramp (brand axis; named steps used by components)
+  # Brand / primary (action) — 역할은 아래 팔레트 단계를 가리킨다
+  primary-regular: "{colors.blue-500}"
+  primary-strong: "{colors.blue-600}"   # pressed
+  primary-heavy: "{colors.blue-700}"   # heaviest
+  service-socar: "{colors.blue-500}"   # 쏘카 카셰어링
+  service-business: "{colors.blue-900}"   # SOCAR Business
+  # Common
+  white: oklch(1.000 0.000 0)   # #FFFFFF · body background
+  black: oklch(0.000 0.000 0)   # #000000
+  # Blue ramp (brand axis)
   blue-50: oklch(0.966 0.017 248)   # #EBF5FF
   blue-100: oklch(0.931 0.035 247)   # #D6EBFF
   blue-200: oklch(0.832 0.089 247)   # #99CEFF · input focus border
-  blue-500: oklch(0.599 0.220 258)   # #0078FF · = primary-regular
+  primary: "{colors.blue-500}"   # 명세의 대표색 역할 — text-primary(gray-800 본문색)와 다른 축
+  blue-500: oklch(0.599 0.220 258)   # #0078FF
+  blue-600: oklch(0.569 0.237 260)   # #0069FF
+  blue-700: oklch(0.498 0.226 262)   # #0052E0
+  blue-900: oklch(0.388 0.193 263)   # #0033A9
   # Neutral grays (faintly blue-tinted ramp)
   gray-50: oklch(0.983 0.003 286)   # #F9F9FB
   gray-100: oklch(0.965 0.007 277)   # #F2F3F8
@@ -31,52 +38,68 @@ colors:
   gray-800: oklch(0.372 0.035 258)   # #354153
   gray-900: oklch(0.302 0.027 258)   # #262F3C
   gray-1000: oklch(0.217 0.022 261)   # #141A24
+  # Status and accent ramps (the steps the roles point at)
+  green-50: oklch(0.976 0.031 160)   # #E6FEF0
+  green-500: oklch(0.740 0.171 159)   # #04CA81
+  green-600: oklch(0.701 0.151 163)   # #00BB83
+  orange-50: oklch(0.980 0.025 89)   # #FFF8E6
+  orange-500: oklch(0.744 0.181 56)   # #FF8800
+  orange-600: oklch(0.714 0.186 51)   # #FA7900
+  red-50: oklch(0.968 0.017 4)   # #FFF0F3
+  red-500: oklch(0.659 0.229 18)   # #FF3A5B
+  red-600: oklch(0.618 0.242 21)   # #F51441
+  lightblue-500: oklch(0.716 0.165 240)   # #00AEFF
+  purple-500: oklch(0.643 0.210 293)   # #956BFF
+  redorange-500: oklch(0.709 0.194 45)   # #FF7017
+  indigo-500: oklch(0.586 0.225 270)   # #4B68FF
+  indigo-700: oklch(0.503 0.251 268)   # #2C46F0
+  magenta-500: oklch(0.681 0.231 358)   # #FF4397
+  lime-500: oklch(0.793 0.213 131)   # #8AD510
+  cyan-500: oklch(0.762 0.130 204)   # #01C9D7
   # Semantic — text
-  text-strong: oklch(0.217 0.022 261)   # #141A24 · gray-1000
-  text-primary: oklch(0.372 0.035 258)   # #354153 · gray-800, default body text
-  text-secondary: oklch(0.553 0.028 260)   # #697383 · gray-600
-  text-tertiary: oklch(0.708 0.025 264)   # #99A1B1 · gray-500
-  text-disabled: oklch(0.792 0.024 267)   # #B4BBCB · gray-400
+  text-strong: "{colors.gray-1000}"
+  text-primary: "{colors.gray-800}"   # default body text
+  text-secondary: "{colors.gray-600}"
+  text-tertiary: "{colors.gray-500}"
+  text-disabled: "{colors.gray-400}"
   # Semantic — surface / structure
-  background-regular: oklch(0.965 0.007 277)   # #F2F3F8 · app-surface wash
-  border-regular: oklch(0.931 0.010 267)   # #E5E8EF
-  border-weak: oklch(0.965 0.007 277)   # #F2F3F8
-  divider-regular: oklch(0.931 0.010 267)   # #E5E8EF
-  divider-weak: oklch(0.965 0.007 277)   # #F2F3F8
-  white: oklch(1.000 0.000 0)   # #FFFFFF · body background
-  black: oklch(0.000 0.000 0)   # #000000
-  # Semantic — overlay (translucent)
-  dimmed-regular: oklch(0.217 0.022 261 / 0.44)   # modal/sheet dim · gray-1000의 알파 변형 · 공식 Colors 표에 없음
-  pressed-regular: oklch(0.217 0.022 261 / 0.06)   # press-ripple · gray-1000의 알파 변형 · 공식 Colors 표에 없음
-  pressed-dark-regular: oklch(0.000 0.000 0 / 0.08)   # press-ripple on dark fill · 공식 Colors 표에 없음
+  background-regular: "{colors.gray-100}"   # app-surface wash
+  border-weak: "{colors.gray-100}"
+  border-regular: "{colors.gray-200}"
+  divider-weak: "{colors.gray-100}"
+  divider-regular: "{colors.gray-200}"
   # Semantic — status (weak / regular / strong)
-  information-weak: oklch(0.966 0.017 248)   # #EBF5FF · 발행명은 status-information-weak
-  information-regular: oklch(0.599 0.220 258)   # #0078FF · 발행명은 status-information-regular
-  information-strong: oklch(0.569 0.237 260)   # #0069FF · 발행명은 status-information-strong
-  positive-weak: oklch(0.976 0.031 160)   # #E6FEF0 · 발행명은 status-positive-weak
-  positive-regular: oklch(0.740 0.171 159)   # #04CA81 · 발행명은 status-positive-regular
-  positive-strong: oklch(0.701 0.151 163)   # #00BB83 · 발행명은 status-positive-strong
-  caution-weak: oklch(0.980 0.025 89)   # #FFF8E6 · 발행명은 status-caution-weak
-  caution-regular: oklch(0.744 0.181 56)   # #FF8800 · 발행명은 status-caution-regular
-  caution-strong: oklch(0.714 0.186 51)   # #FA7900 · 발행명은 status-caution-strong
-  negative-weak: oklch(0.968 0.017 4)   # #FFF0F3 · 발행명은 status-negative-weak
-  negative-regular: oklch(0.659 0.229 18)   # #FF3A5B · 발행명은 status-negative-regular
-  negative-strong: oklch(0.618 0.242 21)   # #F51441 · 발행명은 status-negative-strong
-  notification-red: oklch(0.659 0.229 18)   # #FF3A5B · badge / notification dot
+  status-information-weak: "{colors.blue-50}"
+  status-information-regular: "{colors.blue-500}"
+  status-information-strong: "{colors.blue-600}"
+  status-positive-weak: "{colors.green-50}"
+  status-positive-regular: "{colors.green-500}"
+  status-positive-strong: "{colors.green-600}"
+  status-caution-weak: "{colors.orange-50}"
+  status-caution-regular: "{colors.orange-500}"
+  status-caution-strong: "{colors.orange-600}"
+  status-negative-weak: "{colors.red-50}"
+  status-negative-regular: "{colors.red-500}"
+  status-negative-strong: "{colors.red-600}"
+  notification-red: "{colors.red-500}"   # badge / notification dot
   # Semantic — accent (one representative step per hue)
-  accent-red: oklch(0.659 0.229 18)   # #FF3A5B
-  accent-orange: oklch(0.744 0.181 56)   # #FF8800
-  accent-green: oklch(0.740 0.171 159)   # #04CA81
-  accent-lightblue: oklch(0.716 0.165 240)   # #00AEFF
-  accent-purple: oklch(0.643 0.210 293)   # #956BFF
-  accent-redorange: oklch(0.709 0.194 45)   # #FF7017
-  accent-indigo: oklch(0.586 0.225 270)   # #4B68FF
-  accent-magenta: oklch(0.681 0.231 358)   # #FF4397
-  accent-lime: oklch(0.793 0.213 131)   # #8AD510
-  accent-cyan: oklch(0.762 0.130 204)   # #01C9D7
+  accent-red: "{colors.red-500}"
+  accent-orange: "{colors.orange-500}"
+  accent-green: "{colors.green-500}"
+  accent-lightblue: "{colors.lightblue-500}"
+  accent-purple: "{colors.purple-500}"
+  accent-redorange: "{colors.redorange-500}"
+  accent-indigo: "{colors.indigo-500}"
+  accent-magenta: "{colors.magenta-500}"
+  accent-lime: "{colors.lime-500}"
+  accent-cyan: "{colors.cyan-500}"
   # Semantic — domain-specific (mobility)
-  location-rental: oklch(0.599 0.220 258)   # #0078FF · pickup marker
-  location-return: oklch(0.503 0.251 268)   # #2C46F0 · return marker / indigo-700
+  location-rental: "{colors.blue-500}"   # pickup marker
+  location-return: "{colors.indigo-700}"   # return marker
+  # Overlay utilities (translucent) — 팔레트 단계가 아니라 rgba 리터럴로 발행된다
+  dimmed-regular: oklch(0.217 0.022 261 / 0.44)   # modal/sheet dim · gray-1000 의 44% · 공식 Colors 표에 없음
+  pressed-regular: oklch(0.217 0.022 261 / 0.06)   # row press (chip · checkbox · radio · selection box) · gray-1000 의 6% · 공식 Colors 표에 없음
+  pressed-dark-regular: oklch(0.965 0.007 277 / 0.66)   # button press-ripple, lightens · gray-100 의 66% · 공식 Colors 표에 없음
 typography:
   # token: size px / line-height px / weight
   display1:   # letter-spacing 0
@@ -214,7 +237,7 @@ elevation:
 
 ## Brand & Style
 
-SOCAR Frame 2.0(쏘카프레임 2.0)는 쏘카의 디자인 시스템이며, 브랜드명(쏘카 / SOCAR)과 디자인 시스템명은 별개의 이름이다 [src:9][src:5]. 쏘카는 한국 최대 카셰어링 서비스이며, 전국의 쏘카존(공용 차량 거점)을 기반으로 단기·왕복 차량 대여를 제공하는 한국형 모빌리티 플랫폼이다 [src:1][src:2]. 소비자용 카셰어링 제품과 SOCAR Business 라인을 함께 운영하며, 두 서비스는 토큰 세트에 `service-socar`(= `{colors.primary-regular}`)와 `{colors.service-business}` 색으로 각각 기록되어 있다 [src:4].
+SOCAR Frame 2.0(쏘카프레임 2.0)는 쏘카의 디자인 시스템이며, 브랜드명(쏘카 / SOCAR)과 디자인 시스템명은 별개의 이름이다 [src:9][src:5]. 쏘카는 한국 최대 카셰어링 서비스이며, 전국의 쏘카존(공용 차량 거점)을 기반으로 단기·왕복 차량 대여를 제공하는 한국형 모빌리티 플랫폼이다 [src:1][src:2]. 소비자용 카셰어링 제품과 SOCAR Business 라인을 함께 운영하며, 두 서비스는 토큰 세트에 `{colors.service-socar}`와 `{colors.service-business}` 색으로 각각 기록되어 있다 [src:4].
 
 시스템의 핵심 가치는 "가장 쏘카다운, 가장 효율적인"이며, UX 원칙은 "복잡함을 덜어내고 본질에 집중합니다 — 더 뺄 것이 없을 때까지 덜어냅니다"로 요약된다 [src:9][src:11]. 디자인 원칙 문서는 점진적 개선을 표방해(Legacy & Consistency) 시각 언어를 절제된 방향으로 고정한다 [src:9]. 시각 톤은 차갑고 차분하며 신뢰 지향적이다 — 채도 높은 파랑(`{colors.primary-regular}`)과 푸른 기가 도는 회색 램프가 밝은 표면 위에 놓이는 구조이며, 장식보다 정보 위계가 앞선다 [src:1][src:4].
 
@@ -226,17 +249,63 @@ SOCAR Frame 2.0(쏘카프레임 2.0)는 쏘카의 디자인 시스템이며, 브
 
 ## Colors
 
-> **팔레트 정정(2026-08-02).** 이 절의 값은 원래 공개 hex를 손으로 OKLCH 변환한 것이었고, 그 변환이 부정확했다 — 발행값과 짝지을 수 있는 **56개**(전체 59개 중 발행 표에 없는 3개 제외) 가운데 **39개가 게이트 허용 오차(ΔE 0.01)를 넘었다**(최대 `blue-200` 0.054, `accent-magenta` 0.056). 색이 다른 게 아니라 변환 잔차였고, 문서 스스로 "공개된 hex 토큰을 변환한 것"이라 적고 있었으므로 값이 서술을 따라가지 못한 상태였다.
+> **역할 대조(2026-11-01).** 역할 → 팔레트 대응을 배포 코드와 다시 맞췄다. 공식 사이트가 싣는 Tailwind 프리셋 번들 [src:38]은 시맨틱 역할 40개를 모두 팔레트 단계 하나로 정의한다(`"text-strong": v["gray-1000"]` 꼴). 이 문서가 싣던 역할 39개와 대조해 **값 불일치는 0개**였고, 어긋난 것은 세 가지였다 — 상태 역할 12개가 발행 접두 없이 실려 있었고(`information-weak` → 발행명 `status-information-weak`), 발행 역할 `service-socar`(→ `blue-500`)가 빠져 있었고, `pressed-dark-regular` 의 값이 발행값(`gray-100` 의 66%)이 아니라 검정 8%였다. 셋 다 발행대로 고쳤다. 역할은 이제 아래 표와 frontmatter 참조 행 두 벌로 실리며, 역할이 가리키는 팔레트 단계 20개를 frontmatter 에 더했다 — 값은 [src:4] 의 hex 를 변환해 역할 줄에 있던 값 그대로다.
 >
-> **이제 56개 전부가 발행 hex의 정확한 변환값이다** [src:4]. 각 줄에 출처 hex를 병기해 `audit:oklch` 판정 대상으로 들였다 — 이 파일은 병기가 없어 **판정 대상이 0개**였고 지금은 56개다. 다음 드리프트는 CI가 잡는다.
+> **오버레이는 역할 계층이 아니다.** 아래 표의 마지막 세 행은 참조 행 없이 표에만 두는 행이다. 같은 번들은 팔레트를 가리키지 않는 rgba 리터럴 유틸리티 6개(`.bg-dimmed-regular` 등)를 따로 발행하며, 이것들은 Colors 표 [src:4]에 없다. 그래서 참조 행을 싣지 않는다. 이 문서는 컴포넌트 서술이 쓰는 셋(`dimmed-regular`·`pressed-regular`·`pressed-dark-regular`)만 아래 표에 알파 값으로 적고 frontmatter 에 리터럴로 둔다. 나머지 셋(`cameradimmed-regular` gray-1000 의 74% · `pressed-light-regular` 불투명 gray-100 · `pressed-dark-weak` gray-1000 의 6%)은 확인한 버튼 컴포넌트 번들 [src:39]이 쓰지 않고 이 문서의 컴포넌트도 부르지 않아 싣지 않았다.
 >
-> **시맨틱 상태 토큰 12개는 이름이 다르다.** 이 문서는 `information-weak` 식으로 적지만 발행명은 `status-` 접두사가 붙은 `status-information-weak`다. 값은 같으므로 참조명만 어긋난 것이고, 그대로 복사하면 존재하지 않는 토큰을 부르게 된다 — 각 토큰 줄에 발행명을 병기했다. `dimmed-regular`·`pressed-regular`·`pressed-dark-regular` 3개는 Colors 표에 없어 병기할 발행값이 없다.
->
-> **검증 방법을 남겨 둔다.** `socarframe.socar.kr`은 어떤 경로를 요청하든 **똑같은 166자 셸**을 돌려준다 — 루트든 `/development/foundation/Colors`든 응답 텍스트가 동일하고 토큰 이름은 사이트 번들에도 없다. 이 문서에서 233건의 인용이 그 도메인을 가리키므로, 인용 대부분이 200을 반환하면서도 **자동 재검사로는 아무것도 확인되지 않는다.** 위 대조는 페이지를 실제로 렌더해서 얻은 것이다.
+> **검증 방법.** `socarframe.socar.kr` 은 어떤 경로든 평범한 GET 에 같은 166자 셸을 돌려주므로 [src:4] 의 이름과 hex 는 페이지를 렌더해야 읽힌다. 역할이 어느 팔레트 단계를 가리키는지는 렌더된 표에도 없고 [src:38] 번들에만 있다. 프리셋을 담은 패키지 `@socar-inc/socar-frame-foundation` 은 공개 npm 레지스트리에 없다(E404).
 
-SOCAR Frame 2.0은 공식 Colors 페이지에 전체 토큰 세트를 게시하며, 색상 클래스는 `tw-{bg|text|border|fill}-{name}-{step}` 패턴을 따른다 [src:4][src:1]. 아래 값은 공개된 hex 토큰을 ko-design-md 표준에 맞게 OKLCH로 변환한 것이며, **라이트 모드 전용으로 다크 변형은 존재하지 않는다** [src:4][src:1].
+SOCAR Frame 2.0은 공식 Colors 페이지에 전체 토큰 세트를 게시하며, 색상 클래스는 `tw-{bg|text|border|fill}-{name}-{step}` 패턴을 따른다 [src:4][src:1]. 팔레트 값은 공개된 hex 토큰을 ko-design-md 표준에 맞게 OKLCH로 변환한 것이며, **라이트 모드 전용으로 다크 변형은 존재하지 않는다** [src:4][src:1]. 시맨틱 토큰은 값을 따로 갖지 않고 팔레트 단계 하나를 가리키는 역할 계층이다 [src:38].
 
 색상 축은 채도 높은 파랑(`{colors.primary-regular}`)이며, 동일 hue를 strong/heavy로 단계화해 눌림 상태를 표현한다 [src:4]. `{colors.primary-regular}`(blue-500)는 유일한 브랜드 색이고, strong/heavy는 press·강한 CTA 용도일 뿐 장식에 쓰지 않는다 [src:4][src:9]. 회색 램프는 순수 회색이 아니라 푸른 기가 옅게 도는 톤이라 전체 온도가 차갑게 읽힌다 [src:1][src:4]. 상태색은 information / positive / caution / negative를 각각 weak·regular·strong 3단계로 분리하며 — weak는 틴트 표면, regular는 아이콘/텍스트 — 배지·알림 점에는 `{colors.notification-red}`를 사용한다 [src:4][src:1]. accent는 10개의 범주형 램프로 차종·위치·상태를 태깅하는 용도이며, 한 화면에 두 개의 accent가 동시에 나오는 일은 드물다 [src:4]. 모빌리티 도메인 토큰으로 픽업 마커 `{colors.location-rental}`와 반납 마커 `{colors.location-return}`가 별도로 정의되어, 쏘카존 기반 지도 UI를 색으로 구분한다 [src:4][src:2].
+
+참조 행 40개는 역할 이름과 가리키는 팔레트 단계가 [src:38] 의 프리셋 정의 그대로이고, 값은 [src:4] 의 hex 와 같다. 마지막 오버레이 세 행은 참조 행이 없는 표 전용 행으로, 값은 [src:38] 의 rgba 리터럴이다.
+
+| 역할 | 팔레트 | 쓰임 |
+| --- | --- | --- |
+| `text-strong` | `{colors.gray-1000}` | 제목 · 강조 텍스트 |
+| `text-primary` | `{colors.gray-800}` | 본문 기본 텍스트 |
+| `text-secondary` | `{colors.gray-600}` | 보조 텍스트 |
+| `text-tertiary` | `{colors.gray-500}` | 도움말 · 카운터 |
+| `text-disabled` | `{colors.gray-400}` | 비활성 텍스트 |
+| `primary-regular` | `{colors.blue-500}` | 주 행동 |
+| `primary-strong` | `{colors.blue-600}` | 눌림 · 강한 CTA |
+| `primary-heavy` | `{colors.blue-700}` | 가장 진한 단계 |
+| `service-socar` | `{colors.blue-500}` | 쏘카 카셰어링 서비스 색 |
+| `service-business` | `{colors.blue-900}` | SOCAR Business 서비스 색 |
+| `background-regular` | `{colors.gray-100}` | 앱 표면 워시 |
+| `border-weak` | `{colors.gray-100}` | 약한 보더 |
+| `border-regular` | `{colors.gray-200}` | 기본 보더 |
+| `divider-weak` | `{colors.gray-100}` | 약한 디바이더 |
+| `divider-regular` | `{colors.gray-200}` | 기본 디바이더 |
+| `status-information-weak` | `{colors.blue-50}` | 정보 틴트 표면 |
+| `status-information-regular` | `{colors.blue-500}` | 정보 아이콘 · 텍스트 |
+| `status-information-strong` | `{colors.blue-600}` | 정보 강조 |
+| `status-positive-weak` | `{colors.green-50}` | 성공 틴트 표면 |
+| `status-positive-regular` | `{colors.green-500}` | 성공 아이콘 · 텍스트 |
+| `status-positive-strong` | `{colors.green-600}` | 성공 강조 |
+| `status-caution-weak` | `{colors.orange-50}` | 주의 틴트 표면 |
+| `status-caution-regular` | `{colors.orange-500}` | 주의 아이콘 · 텍스트 |
+| `status-caution-strong` | `{colors.orange-600}` | 주의 강조 |
+| `status-negative-weak` | `{colors.red-50}` | 오류 틴트 표면 |
+| `status-negative-regular` | `{colors.red-500}` | 오류 아이콘 · 텍스트 |
+| `status-negative-strong` | `{colors.red-600}` | 오류 강조 |
+| `notification-red` | `{colors.red-500}` | 배지 · 알림 점 |
+| `accent-red` | `{colors.red-500}` | 범주 태깅 |
+| `accent-orange` | `{colors.orange-500}` | 범주 태깅 |
+| `accent-green` | `{colors.green-500}` | 범주 태깅 |
+| `accent-lightblue` | `{colors.lightblue-500}` | 범주 태깅 |
+| `accent-purple` | `{colors.purple-500}` | 범주 태깅 |
+| `accent-redorange` | `{colors.redorange-500}` | 범주 태깅 |
+| `accent-indigo` | `{colors.indigo-500}` | 범주 태깅 |
+| `accent-magenta` | `{colors.magenta-500}` | 범주 태깅 |
+| `accent-lime` | `{colors.lime-500}` | 범주 태깅 |
+| `accent-cyan` | `{colors.cyan-500}` | 범주 태깅 |
+| `location-rental` | `{colors.blue-500}` | 지도 픽업 마커 |
+| `location-return` | `{colors.indigo-700}` | 지도 반납 마커 |
+| `dimmed-regular` | `{colors.gray-1000}` 의 44% — rgba 리터럴 유틸리티, 참조 아님 | 모달 · 시트 딤 |
+| `pressed-regular` | `{colors.gray-1000}` 의 6% — rgba 리터럴 유틸리티, 참조 아님 | 칩 · 체크박스 · 라디오 · 선택 카드의 눌림 배경 |
+| `pressed-dark-regular` | `{colors.gray-100}` 의 66% — rgba 리터럴 유틸리티, 참조 아님 | 버튼류 눌림 리플(밝게 덮는다) |
 
 ## Typography
 
@@ -273,7 +342,7 @@ SOCAR Frame 2.0의 깊이 언어는 절제되어 있다 — 표면 분리는 드
 
 형태 언어는 정돈된 기하 구조 위에 넉넉한 반경을 얹는 방식이다 [src:4][src:6]. 칩은 완전한 pill, 카드와 시트는 12–24px 반경을 일관되게 써서 접근하기 쉽되 질서 있는 인상을 만든다 — 유기적이라기보다 기하적이다 [src:4][src:6]. 그라데이션은 없고 모든 표면은 플랫 필이며, 차량·위치 썸네일 이미지는 항상 radius-300/400 카드 안에 마스킹되어 앱 크롬 안에서 full-bleed로 깔리지 않는다 [src:1][src:5].
 
-시각적 절제는 표면 처리에서도 드러난다 — 곡선은 모서리 반경으로만 표현되고, 표면 구분은 곡면이나 그림자가 아니라 1px 헤어라인과 배경 워시로 처리된다 [src:1]. 시그니처 인터랙션은 press feedback이다 — 인터랙티브 표면이 `:active`에서 92%로 축소되고 `::after` 리플 오버레이가 함께 뜬다(`active:tw-scale-[92%]` + `active:after:tw-bg-pressed-dark-regular`, 리플 radius는 컴포넌트 radius에 클리핑) [src:1]. 텍스트 인접 행(chip / checkbox / radio)은 94–96%로 더 약하게 축소한다 [src:1]. 모션은 짧고 표준적이다 — `duration-100`(100ms), `duration-150`(150ms), `ease-standard`(`cubic-bezier(0.42, 0, 0.58, 1)`)이며, spring/bounce나 화면 전환 페이드는 없다 [src:1]. hover 상태는 사실상 존재하지 않고 press가 모든 피드백을 담당한다 [src:1].
+시각적 절제는 표면 처리에서도 드러난다 — 곡선은 모서리 반경으로만 표현되고, 표면 구분은 곡면이나 그림자가 아니라 1px 헤어라인과 배경 워시로 처리된다 [src:1]. 시그니처 인터랙션은 press feedback이다 — 버튼류(ActionButton · TextButton · IconButton)는 `:active`에서 92%로 축소되고 `{colors.pressed-dark-regular}` `::after` 리플 오버레이가 함께 뜬다(`active:tw-scale-[92%]` + `active:after:tw-bg-pressed-dark-regular`, 리플 radius는 컴포넌트 radius에 클리핑) [src:1][src:39]. 텍스트 인접 행(chip / checkbox / radio)과 선택 카드는 94–96%로 더 약하게 축소하고 `{colors.pressed-regular}` 배경을 깐다 [src:1][src:19][src:20][src:21][src:22]. 모션은 짧고 표준적이다 — `duration-100`(100ms), `duration-150`(150ms), `ease-standard`(`cubic-bezier(0.42, 0, 0.58, 1)`)이며, spring/bounce나 화면 전환 페이드는 없다 [src:1]. hover 상태는 사실상 존재하지 않고 press가 모든 피드백을 담당한다 [src:1].
 
 ## Components
 
@@ -321,7 +390,7 @@ styleType outlined는 흰 배경 + 1px `{colors.divider-regular}` 보더로 구�
 
 ### action-button-pressed
 
-ActionButton의 눌림 상태는 별도 시각 상태로 다룬다 — 시그니처 press feedback에 따라 표면이 `:active`에서 92%로 축소되고, 진한 fill 위에서는 `{colors.pressed-dark-regular}` 리플 오버레이가 크기별 radius에 클리핑되어 함께 뜬다 [src:1][src:14]. loading은 `{colors.gray-100}` 필 + Lottie 로더로 전환하며 클릭을 막고, disabled는 불투명도 변화 없이 `{colors.gray-100}` 배경 / `{colors.text-disabled}` 텍스트로 재색칠한다 [src:14].
+ActionButton의 눌림 상태는 별도 시각 상태로 다룬다 — 시그니처 press feedback에 따라 표면이 `:active`에서 92%로 축소되고, styleType·variant와 관계없이 `{colors.pressed-dark-regular}`(gray-100 66%, 표면을 밝게 덮는다) 리플 오버레이가 크기별 radius에 클리핑되어 함께 뜬다 [src:1][src:14][src:38][src:39]. loading은 `{colors.gray-100}` 필 + Lottie 로더로 전환하며 클릭을 막고, disabled는 불투명도 변화 없이 `{colors.gray-100}` 배경 / `{colors.text-disabled}` 텍스트로 재색칠한다 [src:14].
 
 ```tsx
 <ActionButton styleType="fill" variant="primary" loading />
@@ -577,7 +646,7 @@ const ok = await Alert.open({ variant: "dialog", title: "예약을 취소할까�
 
 **Do** CTA 카피는 동사로 시작하고 마침표·느낌표 없이, 한국어 정중체(`-요`/`합니다`)로 주어를 생략해 쓴다(예: `예약하기`, `자세히 보기`, `다음에`, `취소`) [src:9][src:11].
 
-**Do** 모든 인터랙티브 표면에 press feedback을 건다 — `scale(0.92)` + `{colors.pressed-dark-regular}` 리플이 표준이며, 텍스트 인접 행(chip/checkbox/radio)은 94–96%로 약하게 둔다 [src:1].
+**Do** 누를 수 있는 표면에 press feedback을 건다 — 버튼류는 `scale(0.92)` + `{colors.pressed-dark-regular}` 리플, 텍스트 인접 행(chip/checkbox/radio)과 선택 카드는 94–96% 축소 + `{colors.pressed-regular}` 배경이 표준이다 [src:1][src:39][src:19][src:20][src:21][src:22].
 
 **Do** ActionButton은 `styleType`·`variant`·`size`를 명시해 구현하고, 한 화면의 primary slot은 하나만 둔다 [src:14][src:1].
 
@@ -618,7 +687,7 @@ const ok = await Alert.open({ variant: "dialog", title: "예약을 취소할까�
 - **다크 모드 미공개.** SOCAR Frame 2.0은 라이트 모드 전용이며, 모든 표면·그림자 토큰의 다크 대응값이 공개되지 않았다 — 다크 테마가 필요하면 다운스트림에서 별도 정의해야 한다 [src:1][src:4].
 - **명시적 breakpoint 시스템 부재.** 375px 모바일 폭을 기준 컨텍스트로 두지만, 제품 토큰에 데스크톱 레이아웃 분기를 위한 미디어 쿼리 breakpoint는 surfaced되지 않았다 — 문서 사이트의 데스크톱 레이아웃은 제품 토큰 세트가 아니다 [src:1].
 - **부분 스펙 컴포넌트.** 코퍼스는 19개 컴포넌트를 완전 build-grade로, 5개(SelectionBox · SegmentedControl · TopAppBar · Alert · Snackbar)를 부분 스펙으로 문서화한다 — 데모 래퍼 중첩 또는 포털/트랜션트 렌더링 탓에 이들의 전체 variant·선택 보더·표시 시간 등 일부 computed 값은 doc 페이지·스크린샷과 함께 재구성해야 한다 [src:5][src:18][src:3].
-- **OKLCH 변환값.** 모든 색상은 공개 hex 토큰을 OKLCH로 변환한 것이며, 원본 시스템은 hex로 게시한다 — 미세한 변환 오차가 있을 수 있다 [src:4].
+- **OKLCH 변환값.** 오버레이 셋을 뺀 모든 색상은 공개 hex 토큰을 OKLCH로 변환한 것이며, 원본 시스템은 hex로 게시한다 — 미세한 변환 오차가 있을 수 있다 [src:4]. 오버레이 셋(`dimmed-regular`·`pressed-regular`·`pressed-dark-regular`)은 rgba 리터럴을 변환한 것이다 [src:38].
 
 ## References
 
@@ -659,3 +728,5 @@ const ok = await Alert.open({ variant: "dialog", title: "예약을 취소할까�
 35. https://socarframe.socar.kr/development/components/Haptic
 36. https://socarframe.socar.kr/ux-principles/release-checklist
 37. https://socarframe.socar.kr/ux-principles/trade-off-rules
+38. https://socarframe.socar.kr/assets/js/common.d1ee1bdb.js — 공식 사이트가 싣는 Tailwind 프리셋 번들. 시맨틱 역할 → 팔레트 단계 정의(`"text-strong": v["gray-1000"]` 꼴)와 오버레이 유틸리티(`.bg-dimmed-regular` 등 rgba 리터럴)가 여기 있다. 파일 이름이 빌드 해시라 사이트를 다시 배포하면 이 경로는 사라질 수 있다 — 그때는 [src:4] 페이지가 불러오는 `common.*.js` 를 찾는다.
+39. https://socarframe.socar.kr/assets/js/9746.d6ce0de6.js — 공식 사이트의 컴포넌트 번들(ActionButton · TextButton · IconButton 소스). 파일 이름이 빌드 해시라 재배포되면 사라질 수 있다 — 그때는 [src:14] 페이지가 불러오는 청크에서 찾는다.

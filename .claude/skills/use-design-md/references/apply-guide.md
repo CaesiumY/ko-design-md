@@ -77,16 +77,19 @@ corrects an earlier version of the entry — nothing to apply):
   comment, the Colors prose and Known Gaps confirm which it is.
 - A quoted `"{colors.x}"` value is a reference row: it resolves to key `x` in the same
   map, and `x` may itself be a reference — follow the chain to a literal value. Role rows
-  point at palette steps this way, light and dark alike. Like `fonts:`, reference rows
-  live only in the DESIGN.md frontmatter — the JSON token sidecar carries the palette
-  values without them, so build role and dark-pair wiring from the md.
+  point at palette steps this way, light and dark alike. The JSON token sidecar carries
+  each reference row as well: its `value` is the colour the chain ends at, and `ref`
+  names the key it points at (the first hop), so role and dark-pair wiring can be read
+  from either. `primary: "{colors.x}"` is a reference row too, but it is the brand-colour
+  alias, not a role — treat it as the palette's brand colour.
 - Wire both values to one token name in the target's dark-mode mechanism (a custom-property
   theme block, `prefers-color-scheme`, Tailwind's `dark:` variant, …), so components switch
   without code changes.
-- Some dark pairs meet only through a role row and its dark twin
-  (`color-background-canvas` → `color-white`, `dark-color-background-canvas` →
-  `dark-canvas`). Before deciding a token has none, check same-stem neighbours, their
-  comments and the role rows that point at it.
+- For a role, read its own `dark-` row; do not derive it from the light step's same-stem
+  dark token. `color-background-overlay-100` → `canvas`, but
+  `dark-color-background-overlay-100` → `dark-gray-100`, not `dark-canvas`.
+- For a palette token, look for its `dark-` same-stem neighbour and read their comments.
+  Before deciding it has no dark pair, also check the role rows that point at it.
 - No dark pair means one of two things. Some tokens are theme-invariant by design (e.g. a
   `static-*` family). Others simply weren't published — Known Gaps may say so, but not
   every entry does. A dark value you fill in for those is your inference (SKILL.md "Scope

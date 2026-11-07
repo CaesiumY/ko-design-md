@@ -50,6 +50,16 @@ export function TokenCardSection({
   // shadows were briefly exempt and seed-design showed six chips for three
   // tokens, the dark trio drawn nearly opaque on light tiles.
   const cardColors = lightTokensOnly(colors)
+  // A reference row (`ref`) is a role pointing at a palette key. Roles skip the
+  // palette curation below — a role named like a ramp step
+  // (`color-background-canvas-200`) or painted a neutral grey is exactly what
+  // curation folds away, and the role layer is what the reader came to scan.
+  // `primary` is the exception: the catalogue allows that spec name only as the
+  // brand-colour alias, the colour the brand publishes as its own, so it stays
+  // with the palette (its card still shows the arrow).
+  const isRole = (c: ColorToken) => c.ref !== undefined && c.name !== "primary"
+  const palette = cardColors.filter((c) => !isRole(c))
+  const roles = cardColors.filter(isRole)
   const cardElevation = lightTokensOnly(tokens.elevation ?? [])
   if (
     cardColors.length === 0 &&
@@ -62,7 +72,8 @@ export function TokenCardSection({
   }
 
   const counts: Array<[number, string]> = [
-    [cardColors.length, "Colors"],
+    [palette.length, "Colors"],
+    [roles.length, "Roles"],
     [typography.length, "Type"],
     [spacing.length, "Spacing"],
     [radius.length, "Radii"],
@@ -87,7 +98,8 @@ export function TokenCardSection({
         </p>
       </div>
 
-      {cardColors.length > 0 && <ColorBlock colors={cardColors} slug={slug} />}
+      {palette.length > 0 && <ColorBlock colors={palette} slug={slug} />}
+      {roles.length > 0 && <RoleBlock roles={roles} slug={slug} />}
       {typography.length > 0 && <TypeBlock items={typography} />}
       {(spacing.length > 0 || radius.length > 0) && (
         <ScaleBlock spacing={spacing} radius={radius} />
@@ -212,6 +224,26 @@ function ColorBlock({
           </div>
         </MoreDetails>
       )}
+    </div>
+  )
+}
+
+// Roles keep document order and their group headings, and are shown whole: the
+// role layer is what a reader scans this block for, so even a long one is not
+// folded behind a disclosure the way a palette's tail is.
+function RoleBlock({
+  roles,
+  slug,
+}: {
+  roles: Array<ColorToken>
+  slug: string
+}) {
+  return (
+    <div className="mt-10">
+      <SubLabel>Roles</SubLabel>
+      <div className="mt-4 space-y-6">
+        {groupByOrder(roles, (c) => c.group ?? "").map(renderColorGroup(slug))}
+      </div>
     </div>
   )
 }

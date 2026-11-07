@@ -59,7 +59,7 @@ advisory 로 다룬다(warn 만 내고 10점 총점은 건드리지 않는다). 
 | --- | --- |
 | `seed-design` | 번들 **없음** — 브랜드 발행물(공개 문서·npm 패키지)에서 직접 만들었다 |
 | `class101` | 번들 **있으나 상류 아님** — 번들 README가 스스로를 *"a faithful recreation of CLASS101's open-source Vibrant Design System"* 이라 적고, 출처로 크롤 코퍼스 58쪽 · `vibrant-design.com` · `github.com/pedaling/opensource`(MIT)를 든다. md도 같은 공개 출처 48개를 인용 190개로 쓴다 — **둘이 형제다.** 판정은 브랜드 발행물(공개 문서·오픈소스 코드)로 한다 |
-| `vapor-ui` | 번들에서 **만들었으나 전량 뒤집혔다** — md 머리말이 번들을 1차 출처로 밝혔지만 References 5개는 전부 공개(`vapor-ui.goorm.io` · goorm 블로그 · Figma Community · npm · 공개 저장소 `goorm-dev/vapor-ui`). 번들값이 공개 발행값과 크게 어긋나 **토큰 절과 컴포넌트 절을 차례로 교체했다** — `## Colors` 110개(2026-07-29), 그리고 `## Typography` · `## Spacing` · `## Rounded` · `## Elevation & Depth` · `## Components`(2026-08-17, 이슈 292번). 판정은 npm `@vapor-ui/core` 1.3.0 배포본과 **문서 사이트가 서빙하는 CSS 청크** 둘로 하며, 이 둘이 서로를 확인해 준다. 문서 사이트의 props 표는 지연 로드라 수치 출처로 쓸 수 없다 |
+| `vapor-ui` | 번들에서 **만들었으나 전량 뒤집혔다** — md 머리말이 번들을 1차 출처로 밝혔지만 References 는 전부 공개(`vapor-ui.goorm.io` · goorm 블로그 · Figma Community · jsDelivr 의 버전 고정 `@vapor-ui/core` 배포본 · 공개 저장소 `goorm-dev/vapor-ui`). 번들값이 공개 발행값과 크게 어긋나 **토큰 절과 컴포넌트 절을 차례로 교체했다** — `## Colors` 110개(2026-07-29), 그리고 `## Typography` · `## Spacing` · `## Rounded` · `## Elevation & Depth` · `## Components`(2026-08-17, 이슈 292번). 판정 기준은 `@vapor-ui/core` 1.3.0 배포본 하나다(jsDelivr 버전 고정, md 의 `[src:4]`). **문서 사이트가 서빙하는 CSS 청크**는 크기·타이포그래피·그림자 토큰에서 같은 값을 내놓지만 색은 이미 1.7.0 값을 서빙하므로 색 판정에는 쓰지 않는다(md 도입부·`## Known Gaps`). 문서 사이트의 props 표는 지연 로드라 수치 출처로 쓸 수 없다 |
 
 | `wanted` | 번들 **있고 상류가 맞으나 항목에 따라 진다** — md 가 번들이 아니라 브랜드 발행물(몽타주 문서)을 대조한 블록이 있고, 그 자리에서는 번들 README 가 브랜드 발행값과 어긋난다. 아래 타입 스타일 수 사례 |
 

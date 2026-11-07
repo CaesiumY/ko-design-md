@@ -115,7 +115,12 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
   chzzk: 17,
   class101: 14,
   codeit: 8,
-  gmarket: 27,
+  // 27 → 25 (#629): the twelve role properties now take `var()` of the palette
+  // steps the md reference rows name, and the gate compares those ten steps
+  // instead — two role pairs share gray-900 and gray-400. What no gate checks
+  // since then: the preview's role → step mapping itself, because the md side
+  // drops reference rows and the preview side reads no `var()` (tool follow-up).
+  gmarket: 25,
   greeting: 13,
   // POP's two tokens are deliberately absent from the preview CSS — the entry
   // records that GS Retail licenses that mark from Samsung Securities and asks
@@ -136,7 +141,14 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
   // (--primary, --dark-black, …), so no PREVIEW_TOKEN_ALIASES rule is needed.
   "samsung-one-ui": 7,
   "seed-design": 27,
-  socar: 40,
+  // 40 → 31 (#630): socar's roles became reference rows, which carry no
+  // `oklch` for the gate to read, so the preview's 24 role properties now read
+  // `var(--sf-<palette step>)` and are no longer compared here — which step
+  // each role points at is checked by the socar case in
+  // role-reference-rows.test.ts; the 12 palette steps they point at, and the
+  // three overlays (dim and two press), were added to the preview and are.
+  // 40 − 24 + 12 + 3.
+  socar: 31,
   teamsparta: 18,
   toss: 27,
   "vapor-ui": 36,

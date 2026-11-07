@@ -631,6 +631,371 @@
       "note": "#e82c45"
     },
     {
+      "name": "bg-brand-solid",
+      "value": "oklch(0.696 0.204 43)",
+      "ref": "carrot-600"
+    },
+    {
+      "name": "bg-brand-solid-pressed",
+      "value": "oklch(0.618 0.195 40)",
+      "ref": "carrot-700"
+    },
+    {
+      "name": "bg-brand-weak",
+      "value": "oklch(0.970 0.016 47)",
+      "ref": "carrot-100"
+    },
+    {
+      "name": "bg-brand-weak-pressed",
+      "value": "oklch(0.946 0.031 52)",
+      "ref": "carrot-200"
+    },
+    {
+      "name": "bg-critical-solid",
+      "value": "oklch(0.640 0.233 28)",
+      "ref": "red-700"
+    },
+    {
+      "name": "bg-critical-solid-pressed",
+      "value": "oklch(0.537 0.206 29)",
+      "ref": "red-800"
+    },
+    {
+      "name": "bg-critical-weak",
+      "value": "oklch(0.965 0.014 17)",
+      "ref": "red-100"
+    },
+    {
+      "name": "bg-critical-weak-pressed",
+      "value": "oklch(0.946 0.024 18)",
+      "ref": "red-200"
+    },
+    {
+      "name": "bg-disabled",
+      "value": "oklch(0.967 0.002 248)",
+      "ref": "gray-200"
+    },
+    {
+      "name": "bg-informative-solid",
+      "value": "oklch(0.606 0.205 258)",
+      "ref": "blue-700"
+    },
+    {
+      "name": "bg-informative-solid-pressed",
+      "value": "oklch(0.510 0.185 259)",
+      "ref": "blue-800"
+    },
+    {
+      "name": "bg-informative-weak",
+      "value": "oklch(0.970 0.014 255)",
+      "ref": "blue-100"
+    },
+    {
+      "name": "bg-informative-weak-pressed",
+      "value": "oklch(0.942 0.023 256)",
+      "ref": "blue-200"
+    },
+    {
+      "name": "bg-layer-basement",
+      "value": "oklch(0.967 0.002 248)",
+      "ref": "gray-200"
+    },
+    {
+      "name": "bg-layer-default",
+      "value": "oklch(1.000 0.000 0)",
+      "ref": "gray-00"
+    },
+    {
+      "name": "bg-layer-default-pressed",
+      "value": "oklch(0.979 0.002 248)",
+      "ref": "gray-100"
+    },
+    {
+      "name": "bg-layer-fill",
+      "value": "oklch(0.979 0.002 248)",
+      "ref": "gray-100"
+    },
+    {
+      "name": "bg-layer-floating",
+      "value": "oklch(1.000 0.000 0)",
+      "ref": "gray-00"
+    },
+    {
+      "name": "bg-layer-floating-pressed",
+      "value": "oklch(0.979 0.002 248)",
+      "ref": "gray-100"
+    },
+    {
+      "name": "bg-neutral-inverted",
+      "value": "oklch(0.307 0.017 256)",
+      "ref": "gray-900"
+    },
+    {
+      "name": "bg-neutral-inverted-pressed",
+      "value": "oklch(0.477 0.028 264)",
+      "ref": "gray-800"
+    },
+    {
+      "name": "bg-neutral-solid",
+      "value": "oklch(0.226 0.008 264)",
+      "ref": "gray-1000"
+    },
+    {
+      "name": "bg-neutral-solid-muted",
+      "value": "oklch(0.477 0.028 264)",
+      "ref": "gray-800"
+    },
+    {
+      "name": "bg-neutral-solid-muted-pressed",
+      "value": "oklch(0.307 0.017 256)",
+      "ref": "gray-900"
+    },
+    {
+      "name": "bg-neutral-weak",
+      "value": "oklch(0.967 0.002 248)",
+      "ref": "gray-200"
+    },
+    {
+      "name": "bg-neutral-weak-alpha",
+      "value": "oklch(0.000 0.000 0 / 0.047)",
+      "ref": "static-black-alpha-200"
+    },
+    {
+      "name": "bg-neutral-weak-alpha-pressed",
+      "value": "oklch(0.000 0.000 0 / 0.063)",
+      "ref": "static-black-alpha-300"
+    },
+    {
+      "name": "bg-neutral-weak-pressed",
+      "value": "oklch(0.952 0.003 265)",
+      "ref": "gray-300"
+    },
+    {
+      "name": "bg-overlay",
+      "value": "oklch(0.000 0.000 0 / 0.455)",
+      "ref": "static-black-alpha-700"
+    },
+    {
+      "name": "bg-overlay-muted",
+      "value": "oklch(0.000 0.000 0 / 0.173)",
+      "ref": "static-black-alpha-500"
+    },
+    {
+      "name": "bg-positive-solid",
+      "value": "oklch(0.585 0.115 170)",
+      "ref": "green-700"
+    },
+    {
+      "name": "bg-positive-solid-pressed",
+      "value": "oklch(0.499 0.095 174)",
+      "ref": "green-800"
+    },
+    {
+      "name": "bg-positive-weak",
+      "value": "oklch(0.974 0.015 176)",
+      "ref": "green-100"
+    },
+    {
+      "name": "bg-positive-weak-pressed",
+      "value": "oklch(0.949 0.035 167)",
+      "ref": "green-200"
+    },
+    {
+      "name": "bg-transparent-pressed",
+      "value": "oklch(0.000 0.000 0 / 0.027)",
+      "ref": "static-black-alpha-100"
+    },
+    {
+      "name": "bg-transparent-selected",
+      "value": "oklch(0.000 0.000 0 / 0.047)",
+      "ref": "static-black-alpha-200"
+    },
+    {
+      "name": "bg-transparent-selected-pressed",
+      "value": "oklch(0.000 0.000 0 / 0.063)",
+      "ref": "static-black-alpha-300"
+    },
+    {
+      "name": "bg-warning-solid",
+      "value": "oklch(0.898 0.141 95)",
+      "ref": "yellow-300"
+    },
+    {
+      "name": "bg-warning-solid-pressed",
+      "value": "oklch(0.835 0.146 93)",
+      "ref": "yellow-400"
+    },
+    {
+      "name": "bg-warning-weak",
+      "value": "oklch(0.976 0.034 92)",
+      "ref": "yellow-100"
+    },
+    {
+      "name": "bg-warning-weak-pressed",
+      "value": "oklch(0.950 0.071 95)",
+      "ref": "yellow-200"
+    },
+    {
+      "name": "fg-brand",
+      "value": "oklch(0.696 0.204 43)",
+      "ref": "carrot-600"
+    },
+    {
+      "name": "fg-brand-contrast",
+      "value": "oklch(0.618 0.195 40)",
+      "ref": "carrot-700"
+    },
+    {
+      "name": "fg-critical",
+      "value": "oklch(0.640 0.233 28)",
+      "ref": "red-700"
+    },
+    {
+      "name": "fg-critical-contrast",
+      "value": "oklch(0.426 0.159 31)",
+      "ref": "red-900"
+    },
+    {
+      "name": "fg-disabled",
+      "value": "oklch(0.867 0.007 269)",
+      "ref": "gray-500"
+    },
+    {
+      "name": "fg-informative",
+      "value": "oklch(0.606 0.205 258)",
+      "ref": "blue-700"
+    },
+    {
+      "name": "fg-informative-contrast",
+      "value": "oklch(0.408 0.145 259)",
+      "ref": "blue-900"
+    },
+    {
+      "name": "fg-neutral",
+      "value": "oklch(0.226 0.008 264)",
+      "ref": "gray-1000"
+    },
+    {
+      "name": "fg-neutral-inverted",
+      "value": "oklch(1.000 0.000 0)",
+      "ref": "gray-00"
+    },
+    {
+      "name": "fg-neutral-muted",
+      "value": "oklch(0.477 0.028 264)",
+      "ref": "gray-800"
+    },
+    {
+      "name": "fg-neutral-subtle",
+      "value": "oklch(0.636 0.015 262)",
+      "ref": "gray-700"
+    },
+    {
+      "name": "fg-placeholder",
+      "value": "oklch(0.766 0.010 267)",
+      "ref": "gray-600"
+    },
+    {
+      "name": "fg-positive",
+      "value": "oklch(0.585 0.115 170)",
+      "ref": "green-700"
+    },
+    {
+      "name": "fg-positive-contrast",
+      "value": "oklch(0.399 0.073 175)",
+      "ref": "green-900"
+    },
+    {
+      "name": "fg-warning",
+      "value": "oklch(0.592 0.109 85)",
+      "ref": "yellow-700"
+    },
+    {
+      "name": "fg-warning-contrast",
+      "value": "oklch(0.375 0.052 81)",
+      "ref": "yellow-900"
+    },
+    {
+      "name": "stroke-brand-solid",
+      "value": "oklch(0.618 0.195 40)",
+      "ref": "carrot-700"
+    },
+    {
+      "name": "stroke-brand-weak",
+      "value": "oklch(0.903 0.055 48)",
+      "ref": "carrot-300"
+    },
+    {
+      "name": "stroke-critical-solid",
+      "value": "oklch(0.640 0.233 28)",
+      "ref": "red-700"
+    },
+    {
+      "name": "stroke-critical-weak",
+      "value": "oklch(0.905 0.047 21)",
+      "ref": "red-300"
+    },
+    {
+      "name": "stroke-focus-ring",
+      "value": "oklch(0.688 0.163 261)",
+      "ref": "blue-600"
+    },
+    {
+      "name": "stroke-informative-solid",
+      "value": "oklch(0.606 0.205 258)",
+      "ref": "blue-700"
+    },
+    {
+      "name": "stroke-informative-weak",
+      "value": "oklch(0.897 0.043 256)",
+      "ref": "blue-300"
+    },
+    {
+      "name": "stroke-neutral-contrast",
+      "value": "oklch(0.226 0.008 264)",
+      "ref": "gray-1000"
+    },
+    {
+      "name": "stroke-neutral-muted",
+      "value": "oklch(0.000 0.000 0 / 0.063)",
+      "ref": "static-black-alpha-300"
+    },
+    {
+      "name": "stroke-neutral-solid",
+      "value": "oklch(0.477 0.028 264)",
+      "ref": "gray-800"
+    },
+    {
+      "name": "stroke-neutral-subtle",
+      "value": "oklch(0.000 0.000 0 / 0.047)",
+      "ref": "static-black-alpha-200"
+    },
+    {
+      "name": "stroke-neutral-weak",
+      "value": "oklch(0.901 0.007 269)",
+      "ref": "gray-400"
+    },
+    {
+      "name": "stroke-positive-solid",
+      "value": "oklch(0.585 0.115 170)",
+      "ref": "green-700"
+    },
+    {
+      "name": "stroke-positive-weak",
+      "value": "oklch(0.894 0.059 164)",
+      "ref": "green-300"
+    },
+    {
+      "name": "stroke-warning-solid",
+      "value": "oklch(0.592 0.109 85)",
+      "ref": "yellow-700"
+    },
+    {
+      "name": "stroke-warning-weak",
+      "value": "oklch(0.898 0.141 95)",
+      "ref": "yellow-300"
+    },
+    {
       "name": "dark-gray-00",
       "value": "oklch(0.000 0.000 0)",
       "note": "#000000"
@@ -1144,6 +1509,371 @@
       "name": "dark-manner-temp-l9-text",
       "value": "oklch(0.706 0.183 28)",
       "note": "#fe6a5d"
+    },
+    {
+      "name": "dark-bg-brand-solid",
+      "value": "oklch(0.696 0.204 43)",
+      "ref": "dark-carrot-700"
+    },
+    {
+      "name": "dark-bg-brand-solid-pressed",
+      "value": "oklch(0.787 0.137 50)",
+      "ref": "dark-carrot-800"
+    },
+    {
+      "name": "dark-bg-brand-weak",
+      "value": "oklch(0.274 0.022 42)",
+      "ref": "dark-carrot-100"
+    },
+    {
+      "name": "dark-bg-brand-weak-pressed",
+      "value": "oklch(0.322 0.056 41)",
+      "ref": "dark-carrot-200"
+    },
+    {
+      "name": "dark-bg-critical-solid",
+      "value": "oklch(0.635 0.230 30)",
+      "ref": "dark-red-600"
+    },
+    {
+      "name": "dark-bg-critical-solid-pressed",
+      "value": "oklch(0.714 0.180 28)",
+      "ref": "dark-red-700"
+    },
+    {
+      "name": "dark-bg-critical-weak",
+      "value": "oklch(0.274 0.023 19)",
+      "ref": "dark-red-100"
+    },
+    {
+      "name": "dark-bg-critical-weak-pressed",
+      "value": "oklch(0.324 0.062 24)",
+      "ref": "dark-red-200"
+    },
+    {
+      "name": "dark-bg-disabled",
+      "value": "oklch(0.301 0.013 267)",
+      "ref": "dark-gray-300"
+    },
+    {
+      "name": "dark-bg-informative-solid",
+      "value": "oklch(0.609 0.181 254)",
+      "ref": "dark-blue-600"
+    },
+    {
+      "name": "dark-bg-informative-solid-pressed",
+      "value": "oklch(0.695 0.157 249)",
+      "ref": "dark-blue-700"
+    },
+    {
+      "name": "dark-bg-informative-weak",
+      "value": "oklch(0.280 0.051 272)",
+      "ref": "dark-blue-100"
+    },
+    {
+      "name": "dark-bg-informative-weak-pressed",
+      "value": "oklch(0.320 0.062 258)",
+      "ref": "dark-blue-200"
+    },
+    {
+      "name": "dark-bg-layer-basement",
+      "value": "oklch(0.000 0.000 0)",
+      "ref": "dark-gray-00"
+    },
+    {
+      "name": "dark-bg-layer-default",
+      "value": "oklch(0.205 0.008 275)",
+      "ref": "dark-gray-100"
+    },
+    {
+      "name": "dark-bg-layer-default-pressed",
+      "value": "oklch(0.301 0.013 267)",
+      "ref": "dark-gray-300"
+    },
+    {
+      "name": "dark-bg-layer-fill",
+      "value": "oklch(0.243 0.011 261)",
+      "ref": "dark-gray-200"
+    },
+    {
+      "name": "dark-bg-layer-floating",
+      "value": "oklch(0.243 0.011 261)",
+      "ref": "dark-gray-200"
+    },
+    {
+      "name": "dark-bg-layer-floating-pressed",
+      "value": "oklch(0.301 0.013 267)",
+      "ref": "dark-gray-300"
+    },
+    {
+      "name": "dark-bg-neutral-inverted",
+      "value": "oklch(0.967 0.002 248)",
+      "ref": "dark-gray-1000"
+    },
+    {
+      "name": "dark-bg-neutral-inverted-pressed",
+      "value": "oklch(0.901 0.007 269)",
+      "ref": "dark-gray-800"
+    },
+    {
+      "name": "dark-bg-neutral-solid",
+      "value": "oklch(0.301 0.013 267)",
+      "ref": "dark-gray-300"
+    },
+    {
+      "name": "dark-bg-neutral-solid-muted",
+      "value": "oklch(0.360 0.016 266)",
+      "ref": "dark-gray-400"
+    },
+    {
+      "name": "dark-bg-neutral-solid-muted-pressed",
+      "value": "oklch(0.488 0.017 264)",
+      "ref": "dark-gray-500"
+    },
+    {
+      "name": "dark-bg-neutral-weak",
+      "value": "oklch(0.301 0.013 267)",
+      "ref": "dark-gray-300"
+    },
+    {
+      "name": "dark-bg-neutral-weak-alpha",
+      "value": "oklch(1.000 0.000 0 / 0.125)",
+      "ref": "static-white-alpha-200"
+    },
+    {
+      "name": "dark-bg-neutral-weak-alpha-pressed",
+      "value": "oklch(1.000 0.000 0 / 0.18)",
+      "ref": "static-white-alpha-300"
+    },
+    {
+      "name": "dark-bg-neutral-weak-pressed",
+      "value": "oklch(0.360 0.016 266)",
+      "ref": "dark-gray-400"
+    },
+    {
+      "name": "dark-bg-overlay",
+      "value": "oklch(0.000 0.000 0 / 0.455)",
+      "ref": "static-black-alpha-700"
+    },
+    {
+      "name": "dark-bg-overlay-muted",
+      "value": "oklch(0.000 0.000 0 / 0.173)",
+      "ref": "static-black-alpha-500"
+    },
+    {
+      "name": "dark-bg-positive-solid",
+      "value": "oklch(0.512 0.105 164)",
+      "ref": "dark-green-500"
+    },
+    {
+      "name": "dark-bg-positive-solid-pressed",
+      "value": "oklch(0.594 0.118 165)",
+      "ref": "dark-green-600"
+    },
+    {
+      "name": "dark-bg-positive-weak",
+      "value": "oklch(0.271 0.014 173)",
+      "ref": "dark-green-100"
+    },
+    {
+      "name": "dark-bg-positive-weak-pressed",
+      "value": "oklch(0.312 0.032 169)",
+      "ref": "dark-green-200"
+    },
+    {
+      "name": "dark-bg-transparent-pressed",
+      "value": "oklch(1.000 0.000 0 / 0.051)",
+      "ref": "static-white-alpha-50"
+    },
+    {
+      "name": "dark-bg-transparent-selected",
+      "value": "oklch(1.000 0.000 0 / 0.09)",
+      "ref": "static-white-alpha-100"
+    },
+    {
+      "name": "dark-bg-transparent-selected-pressed",
+      "value": "oklch(1.000 0.000 0 / 0.125)",
+      "ref": "static-white-alpha-200"
+    },
+    {
+      "name": "dark-bg-warning-solid",
+      "value": "oklch(0.779 0.119 85)",
+      "ref": "dark-yellow-800"
+    },
+    {
+      "name": "dark-bg-warning-solid-pressed",
+      "value": "oklch(0.870 0.076 93)",
+      "ref": "dark-yellow-900"
+    },
+    {
+      "name": "dark-bg-warning-weak",
+      "value": "oklch(0.281 0.028 83)",
+      "ref": "dark-yellow-100"
+    },
+    {
+      "name": "dark-bg-warning-weak-pressed",
+      "value": "oklch(0.327 0.046 80)",
+      "ref": "dark-yellow-200"
+    },
+    {
+      "name": "dark-fg-brand",
+      "value": "oklch(0.696 0.204 43)",
+      "ref": "dark-carrot-700"
+    },
+    {
+      "name": "dark-fg-brand-contrast",
+      "value": "oklch(0.696 0.204 43)",
+      "ref": "dark-carrot-700"
+    },
+    {
+      "name": "dark-fg-critical",
+      "value": "oklch(0.714 0.180 28)",
+      "ref": "dark-red-700"
+    },
+    {
+      "name": "dark-fg-critical-contrast",
+      "value": "oklch(0.868 0.059 21)",
+      "ref": "dark-red-900"
+    },
+    {
+      "name": "dark-fg-disabled",
+      "value": "oklch(0.488 0.017 264)",
+      "ref": "dark-gray-500"
+    },
+    {
+      "name": "dark-fg-informative",
+      "value": "oklch(0.695 0.157 249)",
+      "ref": "dark-blue-700"
+    },
+    {
+      "name": "dark-fg-informative-contrast",
+      "value": "oklch(0.869 0.060 253)",
+      "ref": "dark-blue-900"
+    },
+    {
+      "name": "dark-fg-neutral",
+      "value": "oklch(0.967 0.002 248)",
+      "ref": "dark-gray-1000"
+    },
+    {
+      "name": "dark-fg-neutral-inverted",
+      "value": "oklch(0.205 0.008 275)",
+      "ref": "dark-gray-100"
+    },
+    {
+      "name": "dark-fg-neutral-muted",
+      "value": "oklch(0.901 0.007 269)",
+      "ref": "dark-gray-800"
+    },
+    {
+      "name": "dark-fg-neutral-subtle",
+      "value": "oklch(0.766 0.010 267)",
+      "ref": "dark-gray-700"
+    },
+    {
+      "name": "dark-fg-placeholder",
+      "value": "oklch(0.636 0.015 262)",
+      "ref": "dark-gray-600"
+    },
+    {
+      "name": "dark-fg-positive",
+      "value": "oklch(0.679 0.139 163)",
+      "ref": "dark-green-700"
+    },
+    {
+      "name": "dark-fg-positive-contrast",
+      "value": "oklch(0.859 0.096 164)",
+      "ref": "dark-green-900"
+    },
+    {
+      "name": "dark-fg-warning",
+      "value": "oklch(0.693 0.137 78)",
+      "ref": "dark-yellow-700"
+    },
+    {
+      "name": "dark-fg-warning-contrast",
+      "value": "oklch(0.870 0.076 93)",
+      "ref": "dark-yellow-900"
+    },
+    {
+      "name": "dark-stroke-brand-solid",
+      "value": "oklch(0.696 0.204 43)",
+      "ref": "dark-carrot-700"
+    },
+    {
+      "name": "dark-stroke-brand-weak",
+      "value": "oklch(0.387 0.089 40)",
+      "ref": "dark-carrot-300"
+    },
+    {
+      "name": "dark-stroke-critical-solid",
+      "value": "oklch(0.714 0.180 28)",
+      "ref": "dark-red-700"
+    },
+    {
+      "name": "dark-stroke-critical-weak",
+      "value": "oklch(0.390 0.108 25)",
+      "ref": "dark-red-300"
+    },
+    {
+      "name": "dark-stroke-focus-ring",
+      "value": "oklch(0.609 0.181 254)",
+      "ref": "dark-blue-600"
+    },
+    {
+      "name": "dark-stroke-informative-solid",
+      "value": "oklch(0.695 0.157 249)",
+      "ref": "dark-blue-700"
+    },
+    {
+      "name": "dark-stroke-informative-weak",
+      "value": "oklch(0.379 0.098 256)",
+      "ref": "dark-blue-300"
+    },
+    {
+      "name": "dark-stroke-neutral-contrast",
+      "value": "oklch(0.967 0.002 248)",
+      "ref": "dark-gray-1000"
+    },
+    {
+      "name": "dark-stroke-neutral-muted",
+      "value": "oklch(1.000 0.000 0 / 0.09)",
+      "ref": "static-white-alpha-100"
+    },
+    {
+      "name": "dark-stroke-neutral-solid",
+      "value": "oklch(0.901 0.007 269)",
+      "ref": "dark-gray-800"
+    },
+    {
+      "name": "dark-stroke-neutral-subtle",
+      "value": "oklch(1.000 0.000 0 / 0.051)",
+      "ref": "static-white-alpha-50"
+    },
+    {
+      "name": "dark-stroke-neutral-weak",
+      "value": "oklch(0.360 0.016 266)",
+      "ref": "dark-gray-400"
+    },
+    {
+      "name": "dark-stroke-positive-solid",
+      "value": "oklch(0.679 0.139 163)",
+      "ref": "dark-green-700"
+    },
+    {
+      "name": "dark-stroke-positive-weak",
+      "value": "oklch(0.371 0.053 169)",
+      "ref": "dark-green-300"
+    },
+    {
+      "name": "dark-stroke-warning-solid",
+      "value": "oklch(0.693 0.137 78)",
+      "ref": "dark-yellow-700"
+    },
+    {
+      "name": "dark-stroke-warning-weak",
+      "value": "oklch(0.379 0.064 80)",
+      "ref": "dark-yellow-300"
     }
   ],
   "typography": [

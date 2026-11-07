@@ -44,6 +44,128 @@ describe("TokenCardSection", () => {
   })
 })
 
+describe("TokenCardSection — role cards", () => {
+  // A brand hue and a grey ramp the palette curation folds behind its
+  // disclosure, plus a role that points into the ramp. The role is named like a
+  // ramp step and is neutral — both reasons curation hides a palette swatch.
+  const gray = [
+    { name: "brand", value: "oklch(0.6 0.19 258)" },
+    ...Array.from({ length: 10 }, (_, i) => ({
+      name: `gray-${(i + 1) * 100}`,
+      value: `oklch(${0.95 - i * 0.08} 0 0)`,
+    })),
+  ]
+  const role = {
+    name: "color-background-canvas-200",
+    value: "oklch(0.95 0 0)",
+    ref: "gray-100",
+  }
+
+  it("shows a role in its own block, outside the palette's folded tail", () => {
+    render(
+      <TokenCardSection
+        slug="demo"
+        tokens={tokens({ colors: [...gray, role] })}
+      />
+    )
+
+    const card = screen.getByRole("button", {
+      name: /^color-background-canvas-200 복사/,
+    })
+    expect(card.closest("details")).toBeNull()
+    expect(
+      screen.getByRole("button", { name: /^gray-100 복사/ }).closest("details")
+    ).toBeTruthy()
+    // The badge counts roles apart from the palette they point into.
+    expect(
+      screen.getByText(
+        (_, el) =>
+          el?.tagName === "P" && el.textContent === "11 Colors · 1 Roles"
+      )
+    ).toBeTruthy()
+  })
+
+  // The role layer is what a reader scans this block for, so a long one is
+  // shown whole rather than behind a disclosure — a palette's long tail is
+  // folded, a role layer is not.
+  it("shows a long role layer whole, with none behind a disclosure", () => {
+    const roles = Array.from({ length: 40 }, (_, i) => ({
+      name: `role-${i}`,
+      value: "oklch(0.95 0 0)",
+      ref: "gray-100",
+    }))
+    render(
+      <TokenCardSection
+        slug="demo"
+        tokens={tokens({ colors: [...gray, ...roles] })}
+      />
+    )
+
+    const cards = screen.getAllByRole("button", { name: /^role-\d+ 복사/ })
+    expect(cards).toHaveLength(40)
+    expect(cards.filter((b) => b.closest("details"))).toHaveLength(0)
+  })
+
+  // `primary: "{colors.x}"` is the brand-colour alias the catalogue allows
+  // under that spec name — the colour the brand publishes as its own, not a
+  // role from a role table. It sits with the palette, arrow and all.
+  it("keeps the primary brand-colour alias with the palette, not the roles", () => {
+    render(
+      <TokenCardSection
+        slug="demo"
+        tokens={tokens({
+          colors: [
+            ...gray,
+            { name: "primary", value: "oklch(0.6 0.19 258)", ref: "brand" },
+            role,
+          ],
+        })}
+      />
+    )
+
+    expect(screen.getByText("→ brand")).toBeTruthy()
+    expect(
+      screen.getByText(
+        (_, el) =>
+          el?.tagName === "P" && el.textContent === "12 Colors · 1 Roles"
+      )
+    ).toBeTruthy()
+    const roles = screen.getByText("Roles", { selector: "p" }).parentElement
+    expect(roles?.textContent).not.toContain("primary")
+  })
+})
+
+describe("TokenCardSection — dark roles", () => {
+  it("leaves a dark- role out of the light-only card view and its count", () => {
+    render(
+      <TokenCardSection
+        slug="demo"
+        tokens={tokens({
+          colors: [
+            { name: "gray-050", value: "oklch(0.98 0 0)" },
+            { name: "dark-gray-050", value: "oklch(0.2 0 0)" },
+            { name: "bg-canvas", value: "oklch(0.98 0 0)", ref: "gray-050" },
+            {
+              name: "dark-bg-canvas",
+              value: "oklch(0.2 0 0)",
+              ref: "dark-gray-050",
+            },
+          ],
+        })}
+      />
+    )
+
+    expect(screen.getByRole("button", { name: /^bg-canvas 복사/ })).toBeTruthy()
+    expect(screen.queryByRole("button", { name: /^dark-bg-canvas/ })).toBeNull()
+    expect(
+      screen.getByText(
+        (_, el) =>
+          el?.tagName === "P" && el.textContent === "1 Colors · 1 Roles"
+      )
+    ).toBeTruthy()
+  })
+})
+
 describe("TokenCardSection — elevation", () => {
   it("renders a shadow chip carrying the full value as a live box-shadow", () => {
     const value = "0 4px 12px oklch(0 0 0 / 0.08)"

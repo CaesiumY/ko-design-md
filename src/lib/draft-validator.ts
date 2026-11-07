@@ -20,6 +20,7 @@ import { conflictingDefinitions } from "./oklch-drift"
 import { KNOWN_SPEC_LIMITATIONS } from "./spec-limitations"
 import { LOGO_TAKEDOWNS } from "./logo-takedowns"
 import {
+  ColorRefError,
   TYPE_STYLE_PROPERTIES,
   extractTokensFromMarkdown,
   isShadowValue,
@@ -2341,8 +2342,12 @@ const SCHEMA_KEY_RULES: ReadonlySet<string> = new Set([
  * function (`OKLCH(…)`, `RGB(…)`). `non-oklch-token-value` blocks each such
  * row where it is written (#597); this measures what the two readers actually
  * resolve, so a palette of nothing else also says its sidecar would be empty.
- * Only the empty case: alias rows the linter resolves are left out of the
- * sidecar by design, so the two counts differ in a sound entry.
+ * Only the empty case: the two readers count differently in a sound entry, so
+ * a lower sidecar count is not a finding.
+ *
+ * It also names the one reference-row failure no other check sees — a loop of
+ * `"{colors.…}"` rows, which the extractor refuses (#626) and the linter
+ * passes without a finding, so it would surface only at `pnpm tokens:build`.
  *
  * A map whose shape already blocks — a row holding a map
  * (`noncanonical-token-indent`), or the map or a row written as an alias
@@ -2365,9 +2370,19 @@ function checkSidecarColours(
   let carried: number
   try {
     carried = extractTokensFromMarkdown(raw).colors.length
-  } catch {
-    // A frontmatter the shared reader refuses is the read gate's to name.
-    return []
+  } catch (e) {
+    // A frontmatter the shared reader refuses is the read gate's to name; a
+    // missing key and a non-colour end are blocked by their own rules.
+    if (!(e instanceof ColorRefError)) return []
+    return e.problems
+      .filter((p) => p.kind === "loop")
+      .map((p) =>
+        block(
+          "unresolvable-colour-ref",
+          "tokens",
+          `${p.message}. The token sidecar behind the Tokens tab and \`use-design-md\` carries each reference row as the colour it ends at, so a loop leaves those rows with no colour to carry.`
+        )
+      )
   }
   if (carried > 0) return []
   const listed = `${names
