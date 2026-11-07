@@ -23,6 +23,12 @@ import type { PairTally } from "./contrast-pairs"
 const ROOT = process.cwd()
 const DOC = path.join(ROOT, "docs", "preview-contrast-baseline.md")
 const PREVIEW_DIR = path.join(ROOT, "public", "preview")
+const CLASSIFIED_RUN_FILE = path.join(
+  ROOT,
+  "src",
+  "lib",
+  "contrast-classified-run.json"
+)
 
 // A `w/crlf` checkout hands back \r\n and the table would not be found in a
 // document that holds it verbatim. The same Windows-only false failure
@@ -41,6 +47,31 @@ const tableInDoc = (): string => {
   let end = start
   while (end + 1 < lines.length && lines[end + 1].startsWith("|")) end += 1
   return lines.slice(start, end + 1).join("\n")
+}
+
+/**
+ * The classified-run record, read whole and refused when it is not the shape
+ * the assertions below take for granted: a run id of digits (not the
+ * `<run id>` placeholder), and the slugs sorted and without repeats, as the
+ * command that measured them lists them.
+ */
+const readClassifiedRun = (): { run: string; slugs: Array<string> } => {
+  const { run, slugs } = (JSON.parse(read(CLASSIFIED_RUN_FILE)) ??
+    // eslint-disable-next-line no-restricted-syntax -- A JSON file is untyped external input until the checks below narrow it.
+    {}) as Record<string, unknown>
+  const strings = (v: typeof slugs): v is Array<string> =>
+    Array.isArray(v) && v.every((s) => typeof s === "string")
+  if (
+    typeof run !== "string" ||
+    !/^\d+$/.test(run) ||
+    !strings(slugs) ||
+    slugs.join("\n") !== [...new Set(slugs)].sort().join("\n")
+  ) {
+    throw new Error(
+      `${CLASSIFIED_RUN_FILE} is not { run: "<digits>", slugs: [sorted, unique slugs] }`
+    )
+  }
+  return { run, slugs }
 }
 
 describe("the recorded table", () => {
@@ -163,7 +194,7 @@ describe("the published-pair tables against the recorded totals", () => {
   }
 
   const HOW =
-    "rerun `pnpm audit:contrast:pairs --findings <contrast-findings.json>` on the contrast-report artifact of the CI run the totals came from; in docs/preview-contrast-baseline.md paste the borderline and fail tables into the published-pair sections and the indeterminate block (the hold-reason table with its '보류 행 수' line) into the '유보 사유' section, and replace CLASSIFIED_RUN in this test with the 'classified run' line the command prints (then `pnpm format`); write the run id in CLASSIFIED_RUN.run, the borderline section's '입력은 run' line and the '보류 행 수' line; and update what the tests here do not hold: the commit, and the dated observations and 'which slug first' paragraph beside the tables"
+    "rerun `pnpm audit:contrast:pairs --findings <contrast-findings.json>` on the contrast-report artifact of the CI run the totals came from; in docs/preview-contrast-baseline.md paste the borderline and fail tables into the published-pair sections and the indeterminate block (the hold-reason table with its '보류 행 수' line) into the '유보 사유' section, and replace src/lib/contrast-classified-run.json with the 'classified run' record the command prints; write the run id in that file's run, the borderline section's '입력은 run' line and the '보류 행 수' line; and update what the tests here do not hold: the commit, and the dated observations and 'which slug first' paragraph beside the tables"
 
   const cases = [
     {
@@ -181,45 +212,15 @@ describe("the published-pair tables against the recorded totals", () => {
   // A slug in neither set is an entry added after that run, and is left out
   // rather than failed: a new entry adds its baseline rows from CI's gate
   // output, and making it also rerun this classification would add one more
-  // per-slug registry the onboarding skill does not know about. Whoever reruns
-  // REPLACES this whole object with the `classified run` line the command
-  // prints — it is a record of one artifact, not a list to edit — and the test
-  // below holds its run id to the one the document names, and every slug on a
-  // table to this list. A rerun that keeps the old slugs is still caught when
-  // a newly measured entry has rows; one whose new entries all have no rows
-  // yet is not — the rerun step above is what keeps the list whole.
-  const CLASSIFIED_RUN = {
-    run: "41245850047",
-    slugs: [
-      "11st",
-      "baemin",
-      "banksalad",
-      "bezier",
-      "class101",
-      "codeit",
-      "gmarket",
-      "greeting",
-      "gs-retail",
-      "gs-shop",
-      "krds",
-      "kyobobook",
-      "lg-electronics",
-      "likelion",
-      "line-design-system",
-      "nol",
-      "remember",
-      "ridi",
-      "samsung-one-ui",
-      "seed-design",
-      "socar",
-      "teamsparta",
-      "toss",
-      "vapor-ui",
-      "wanted",
-      "yeogi",
-      "zigbang",
-    ],
-  }
+  // per-slug registry the onboarding skill does not know about. The record is
+  // data, in `contrast-classified-run.json`, so rewriting it rewrites no test:
+  // whoever reruns REPLACES the whole file — it is a record of one artifact,
+  // not a list to edit — and the test below holds its run id to the one the
+  // document names, and every slug on a table to this list. A rerun that keeps
+  // the old slugs is still caught when a newly measured entry has rows; one
+  // whose new entries all have no rows yet is not — the rerun step above is
+  // what keeps the list whole.
+  const CLASSIFIED_RUN = readClassifiedRun()
   const classified = (): Set<string> =>
     new Set([
       ...CLASSIFIED_RUN.slugs,
@@ -247,7 +248,7 @@ describe("the published-pair tables against the recorded totals", () => {
       .filter((slug) => !pinned.has(slug))
     expect(
       [...new Set(unpinned)],
-      `slugs on a pair table but not in CLASSIFIED_RUN — ${HOW}`
+      `slugs on a pair table but not in contrast-classified-run.json — ${HOW}`
     ).toEqual([])
   })
 

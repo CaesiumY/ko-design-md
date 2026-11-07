@@ -180,13 +180,13 @@ function main(): void {
   }
 
   const rows = dedupeFindings(raw)
-  // Every slug the artifact measured, for the corpus test's `CLASSIFIED_RUN`:
+  // Every slug the artifact measured, for `src/lib/contrast-classified-run.json`:
   // the entries classified by this run, held from then on even when their rows
   // later leave both tables. The run id is not in the findings, so it is left
   // for whoever pastes this to fill in.
   const slugs = [...new Set(raw.map((f) => f.slug))].sort()
   console.log(
-    `classified run: { run: "<run id>", slugs: ${JSON.stringify(slugs)} }\n`
+    `classified run (src/lib/contrast-classified-run.json):\n${JSON.stringify({ run: "<run id>", slugs }, null, 2)}\n`
   )
   for (const verdict of VERDICTS) {
     const tally = tallyPairs(rows, paletteFor, verdict)
