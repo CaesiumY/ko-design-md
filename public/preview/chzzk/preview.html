@@ -112,6 +112,11 @@
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px 14px; }
   .card { min-width: 0; }
   .thumb { position: relative; border-radius: 12px; background: var(--thumb); aspect-ratio: 16 / 9; display: grid; place-items: center; color: var(--ink-3); font-size: 11px; font-weight: 500; overflow: hidden; }
+  .thumb::before { content: ""; position: absolute; inset: 0; background-color: oklch(0 0 0 / 0); transition: background-color .2s cubic-bezier(.65, 0, .35, 1); pointer-events: none; }
+  .thumb:hover::before { background-color: oklch(0 0 0 / 0.5); }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
   .badge { display: inline-flex; align-items: center; height: 20px; padding: 0 4px; border-radius: 4px; font-size: 12px; line-height: 20px; font-weight: 700; color: var(--chz-white); }
   .b-live { background: var(--chz-live-red); }
   .b-replay { background: var(--chz-replay-violet); }

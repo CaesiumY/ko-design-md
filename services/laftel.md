@@ -2,13 +2,13 @@
 name: 라프텔
 slug: laftel
 category: content
-last_updated: 2026-10-31
+last_updated: 2026-11-07
 created_at: 2026-10-27
 lang: ko
 logo: https://getdesign.kr/logos/laftel.png
 colors:
   ## Brand
-  point: oklch(0.626 0.211 285.3)               # #816BFF 포인트 보라. 활성 칩·진행바·N 배지·활성 네비 링크·작품 라벨(선독점 등), 두 테마 공통
+  point: oklch(0.626 0.211 285.3)               # #816BFF 포인트 보라. 활성 칩, 진행바, N 배지, 활성 네비 링크, 작품 라벨(선독점 등)과 보라로 채운 1차 버튼, 두 테마 공통
   point-slight-1: oklch(0.954 0.024 293.6)      # #F0EDFF --button-slight-1·--background-highlight 라이트
   point-slight-2: oklch(0.886 0.06 291.4)       # #D9D3FF --button-slight-2 라이트
   ## Background (라이트)
@@ -123,7 +123,7 @@ components:
     backgroundColor: "{colors.white}"
     textColor: "{colors.fg-1}"
     rounded: "{rounded.radius-xs}"
-    height: 44.6px
+    height: 45px
     width: 114px
   button-secondary:
     backgroundColor: "{colors.dark-bg-1}"
@@ -157,7 +157,7 @@ components:
     width: 580px
   poster-card:
     textColor: "{colors.dark-fg-1}"
-    rounded: "{rounded.radius-sm}"
+    rounded: "{rounded.radius-xs}"
     width: 222px
 ---
 
@@ -169,15 +169,15 @@ components:
 
 라프텔 프로덕트 디자인팀은 디자인 원칙을 네 줄로 요약해 공개한다 — "덕후를 행복하게", "논리적이고 분명하게", "위트가 있는 디테일", "친숙하게, 필요한 곳에는 혁신적으로" [src:2][src:3]. 서비스의 시각 인상은 이 네 문장이 그대로 뒷받침한다. 덕후라면 누구든 "찐이야"라고 느낄 수 있는 곳을 만든다는 첫 원칙이 타깃을, 일관성이 목적이 되지 않도록 균형을 잡는다는 마지막 원칙이 보편성과 융통성의 태도를 정한다 [src:3].
 
-위트는 푸밍이라는 자체 캐릭터와 유머러스한 카피로 구현된다 [src:3]. 카피 작성 방식은 UX 라이팅 가이드 글로 따로 공개돼 있다 [src:5]. 보라색 반원 몸통에 감은 눈과 미소를 가진 푸밍은 로고 자산으로도 쓰인다 [src:6]. 디자인 시스템은 타이포그래피·아이콘·UI 컴포넌트를 "만들어나가는 중"이라고 밝히며, 색은 모드와 무관한 Basic Color와 모드에 따라 전환되는 Theme Color로 나뉜다 [src:2][src:4]. 공개된 디자인 시스템 사이트나 브랜드 가이드는 없고, 이 문서의 값은 서비스가 내려보내는 CSS 변수와 렌더된 화면의 계산 스타일에서 읽었다 [src:1].
+위트는 푸밍이라는 자체 캐릭터와 유머러스한 카피로 구현된다 [src:3]. 카피 작성 방식은 UX 라이팅 가이드 글로 따로 공개돼 있다 [src:5]. 보라색 반원 몸통에 감은 눈과 미소를 가진 푸밍은 로고 자산으로도 쓰인다 [src:6]. 디자인 시스템은 타이포그래피, 아이콘, UI 컴포넌트 등을 정의하며 "만들어 나가고 있습니다"라고 밝히고 [src:2], 색은 모드와 무관한 Basic Color와 모드에 따라 전환되는 Theme Color로 나뉜다 [src:4]. 공개된 디자인 시스템 사이트나 브랜드 가이드는 찾지 못했고, 이 문서의 값은 서비스가 내려보내는 CSS 변수와 렌더된 화면의 계산 스타일에서 읽었다 [src:1].
 
 ## Colors
 
 색은 `--background-*`, `--foreground-*`, `--border-*`, `--button-*` 네 계열의 시맨틱 변수로 발행되고, 같은 이름에 라이트·다크 두 값이 `prefers-color-scheme`으로 주입된다 [src:1]. 이 카탈로그는 라이트를 기본 이름으로, 다크를 `dark-` 접두로 나눠 적는다. 앱 안의 수동 테마 토글은 확인하지 못했다 [src:1].
 
-브랜드 포인트는 `{colors.point}`(보라) 하나다. 컴포넌트에는 대부분 리터럴로 쓰여 다크에서도 같은 값이다 — 시맨틱 변수 중에는 `--foreground-slight`가 라이트에서 같은 보라지만 다크에서는 흰색으로 바뀐다. 활성 요일 탭, 활성 칩, "N" 뱃지, 진행바 채움, 활성 네비 링크, 멤버십 "현재 이용 중" 라벨, 선독점·ONLY 같은 작품 라벨 배경이 이 색을 쓴다 [src:1]. 라이트의 `{colors.point-slight-1}`·`{colors.point-slight-2}`는 보라 틴트로 하이라이트와 보조 버튼에 들어간다 [src:1]. 다크에서는 같은 자리가 불투명한 틴트가 아니라 중립 회색 `{colors.dark-button-slight}`로 바뀐다 [src:1].
+브랜드 포인트는 `{colors.point}`(보라) 하나다. 컴포넌트에는 대부분 리터럴로 쓰여 다크에서도 같은 값이다 — 시맨틱 변수 중에는 `--foreground-slight`가 라이트에서 같은 보라지만 다크에서는 흰색으로 바뀐다. 활성 요일 탭, 활성 칩, "N" 뱃지, 진행바 채움, 활성 네비 링크, 선독점, ONLY 같은 작품 라벨 배경, 그리고 보라로 채운 1차 버튼이 이 색을 쓴다 [src:1]. 번들의 primary 버튼 변형은 이 보라로 채우고 hover 때 더 진한 보라(팔레트 이름 `PURPLE700`)로 바뀌는데, 404 화면의 "홈으로 이동"(160×56px, radius 4px)이 이 변형이고 hover 변화도 그대로 확인됐다 [src:1]. 비로그인 구독 CTA인 /membership/landing의 "멤버십 시작하기" 알약(251×56px, radius 40px)은 같은 보라로 채우지만 랜딩 페이지 전용 컴포넌트이고, hover 전후 색이 같았다 [src:1]. 라이트의 `{colors.point-slight-1}`, `{colors.point-slight-2}`는 보라 틴트로 하이라이트와 보조 버튼에 들어간다 [src:1]. 다크에서는 보조 버튼 자리가 중립 회색 `{colors.dark-button-slight}`로 바뀌고, 하이라이트 자리(`--background-highlight`)는 반투명 보라가 된다(토큰으로 옮기지 않았다, Known Gaps) [src:1].
 
-중립은 순수 무채색이다. 다크 캔버스는 `{colors.dark-bg-1}`(홈 히어로 위 투명 헤더 제외)이고 그 아래 순검정 `{colors.dark-bg-2}`가 깔린다 — 라이트와 달리 다크에서는 "2번 배경"이 1번보다 더 어둡다 [src:1]. 토스트와 보라 회색 버튼은 남보라를 띤 `{colors.dark-bg-toast}` 계열이다 [src:1]. UP 뱃지는 `{colors.badge-red}`를 쓴다. 실시간 방송 카드의 LIVE 뱃지도 빨강 면이지만 UP과 다른 순빨강 리터럴이다 [src:1]. 성공·경고 시맨틱 변수는 공개되지 않았다 [src:1].
+중립은 순수 무채색이다. 다크 캔버스는 `{colors.dark-bg-1}`(홈 히어로 위 투명 헤더 제외)이고 그 아래 순검정 `{colors.dark-bg-2}`가 깔린다. 두 테마 모두 "2번 배경"이 1번보다 한 단계 깊다 — 다크에서는 2번이 순검정이고, 3번과 4번(`{colors.dark-bg-3}`, `{colors.dark-bg-4}`)은 1번보다 밝다 [src:1]. 토스트와 보라 회색 버튼은 남보라를 띤 `{colors.dark-bg-toast}` 계열이다 [src:1]. UP 뱃지는 `{colors.badge-red}`를 쓴다. 실시간 방송 카드의 LIVE 뱃지도 빨강 면이지만 UP과 다른 순빨강 리터럴이다 [src:1]. 발행된 시맨틱 변수 목록에서 성공, 경고 계열은 찾지 못했다 [src:1].
 
 ## Typography
 
@@ -191,15 +191,15 @@ components:
 
 ## Rounded
 
-radius도 토큰이 없고 스타일시트에 3·4·7·8·10·14·16·18·20px, `0.25rem`·`0.25em`·`1rem`, `50%`·`9999px`가 흩어져 있다 [src:1]. 대표값은 카드 썸네일·검색창·멤버십 카드·필터 버튼 4px, 칩 `9999px`, 진행바 16px, 컬렉션 안 버튼·뱃지 `0.25em`(약 3px)이다. 요일 탭·아이콘 버튼·점 인디케이터·"N" 뱃지는 `50%` 원형인데, 이 값은 `rounded:` 토큰으로 옮기지 않았다.
+radius도 토큰이 없고 스타일시트에 3, 4, 7, 8, 10, 14, 16, 18, 20px, `0.25rem`, `0.25em`, `1rem`, `50%`, `9999px`가 흩어져 있다 [src:1]. 대표값은 검색창, 멤버십 카드, 필터 버튼 4px, 칩 `9999px`, 진행바 16px, 컬렉션 안 카드 썸네일, 버튼, 뱃지 `0.25em`(1440px에서 약 3px)이다. 요일 탭, 아이콘 버튼, 점 인디케이터, "N" 뱃지는 `50%` 원형인데, 이 값은 `rounded:` 토큰으로 옮기지 않았다.
 
 ## Elevation & Depth
 
-공개된 elevation 체계가 없다. 관찰된 `box-shadow`는 둘이다 — 서브페이지 헤더의 `0 1px 0 0 var(--border-1)`(홈 최상단에서는 투명 처리돼 사라진다)과, 헤더 검색을 열면 뜨는 인기 검색어 드롭다운의 `0 0 16px var(--shadow-basic)`(라이트 검정 25%, 다크 50%, 1px `--border-1` 보더와 `0.25rem` radius를 함께 쓴다)이다 [src:1]. `--shadow-dropdown` 변수를 쓰는 규칙은 확인하지 못했다 [src:1]. 깊이는 대부분 `{colors.dark-bg-1}` → `{colors.dark-bg-3}`의 면 명도 차와 1px 보더로 만들고, 그림자는 떠 있는 드롭다운에만 보인다.
+그림자 색은 `--shadow-basic`과 `--shadow-dropdown` 두 변수로 발행되지만, 변수 목록에 elevation 스케일은 없다 [src:1]. 관찰된 `box-shadow`는 둘이다 — 서브페이지 헤더의 `0 1px 0 0 var(--border-1)`(홈 최상단에서는 투명 처리돼 사라진다)과, 헤더 검색을 열면 뜨는 인기 검색어 드롭다운의 `0 0 16px var(--shadow-basic)`(라이트 검정 25%, 다크 50%, 1px `--border-1` 보더와 `0.25rem` radius를 함께 쓴다)이다 [src:1]. `--shadow-dropdown`(라이트 검정 16%, 다크 60%)은 번들의 드롭다운 리스트(`dropdown__ListBlock`)가 `0 0.125rem 0.5rem var(--shadow-dropdown)`으로 쓰지만, 관찰한 화면에는 마운트되지 않았다 [src:1]. 깊이는 대부분 `{colors.dark-bg-1}` → `{colors.dark-bg-3}`의 면 명도 차와 1px 보더로 만들고, 그림자는 떠 있는 드롭다운에만 보인다.
 
 ## Shapes
 
-둥근 사각은 4px로 조용히 닫고(썸네일·입력·카드), 칩은 완전한 알약, 요일 탭과 아이콘 버튼은 원이다. 푸밍은 둥근 반원 몸통 자체가 이 곡률 언어의 근원으로 읽힌다 [src:6]. 헤더가 홈 최상단에서는 히어로 이미지 위 투명으로, 서브페이지에서는 불투명 면에 하단 1px 선으로 바뀐다 [src:1].
+둥근 사각은 3~4px로 조용히 닫고(썸네일 `0.25em`, 입력, 카드 4px), 칩은 완전한 알약, 요일 탭과 아이콘 버튼은 원이다. 푸밍 마크도 보라색 반원 몸통이라 [src:6] 같은 둥근 곡률 계열에 놓인다. 헤더가 홈 최상단에서는 히어로 이미지 위 투명으로, 서브페이지에서는 불투명 면에 하단 1px 선으로 바뀐다 [src:1].
 
 ## Components
 
@@ -219,7 +219,7 @@ radius도 토큰이 없고 스타일시트에 3·4·7·8·10·14·16·18·20px, 
 
 ### button-cta
 
-히어로 CTA("보러가기")는 흰 배경 `{colors.white}`에 어두운 글자, 높이 약 44.6px, radius `0.25em`이고 hover 배경은 흰색 70%다 [src:1].
+히어로 CTA("보러가기")는 흰 배경 `{colors.white}`에 어두운 글자, 높이 45px(1440px 기준, 글자 크기가 뷰포트에 비례해 함께 변한다), radius `0.25em`이고 hover 배경은 흰색 70%다 [src:1].
 
 ```tsx
 <Button variant="cta">보러가기</Button>
@@ -247,15 +247,15 @@ radius도 토큰이 없고 스타일시트에 3·4·7·8·10·14·16·18·20px, 
 
 ### membership-card
 
-폭 580px, 배경 `{colors.dark-bg-1}`, 보더 `{colors.dark-border-1}`, radius 4px, 안쪽 패딩 24px이다. "현재 이용 중" 라벨은 보라 16px 700이다 [src:1].
+/membership/landing의 상품 카드는 폭 580px, 배경 `{colors.dark-bg-1}`, radius 4px, 안쪽 패딩 24px이다. 보더는 없고, 순검정 페이지(`{colors.dark-bg-2}`) 위에서 면의 명도 차로 구분된다(라이트는 `{colors.bg-2}` 위 `{colors.bg-1}`) [src:1]. 로그인 뒤 화면의 "현재 이용 중" 라벨은 확인하지 못했다.
 
 ### poster-card
 
-폭 222px, 썸네일은 가로형(높이가 폭의 약 55.7%, 16:9에 가깝다)이고 radius 4px이다. 카드 글자는 썸네일 위 배지와 제목(1.125em 400, 최대 두 줄)뿐이다. 진행바는 썸네일 안 하단에 좌·우·아래 12px 들여 겹치는 4.46px 막대이고 radius 16px, 채움은 `{colors.point}`다. hover 때 `cursor: pointer` 외 시각 변화는 확인되지 않았다 [src:1].
+폭 222px, 썸네일은 가로형(높이가 폭의 약 55.7%, 16:9에 가깝다)이고 radius `0.25em`(1440px에서 약 3px)이다. 카드 글자는 썸네일 위 배지와 제목(1.125em 400, 최대 두 줄)뿐이다. 진행바는 썸네일 안 하단에 좌, 우, 아래 12px 들여 겹치는 4.46px 막대이고 radius 16px, 채움은 `{colors.point}`다. hover 때 `cursor: pointer` 외 시각 변화는 확인되지 않았다 [src:1].
 
 ## Do's and Don'ts
 
-**Do** 보라 `{colors.point}`는 신호에만 쓴다 — 활성 상태(칩·탭·네비·진행)와 선독점·ONLY 같은 작품 라벨이 이 색을 쓰고, 면과 본문은 무채색 중립이 맡는다 [src:1].
+**Do** 보라 `{colors.point}`는 신호와 1차 버튼에만 쓴다 — 활성 상태(칩, 탭, 네비, 진행), 선독점, ONLY 같은 작품 라벨, 보라로 채운 1차 버튼(404 "홈으로 이동", 멤버십 랜딩 "멤버십 시작하기")이 이 색을 쓰고, 면과 본문은 무채색 중립이 맡는다 [src:1].
 
 **Do** 다크 캔버스는 순검정 대신 `{colors.dark-bg-1}`을 기본 면으로 하고, 순검정 `{colors.dark-bg-2}`는 한 단계 더 깊은 배경에만 쓴다 [src:1].
 
@@ -271,20 +271,20 @@ radius도 토큰이 없고 스타일시트에 3·4·7·8·10·14·16·18·20px, 
 
 ## Known Gaps
 
-- 공식 브랜드 가이드·디자인 시스템 문서가 없다 — 값은 CSS 변수와 렌더된 계산 스타일에서 읽었다 [src:1].
+- 공식 브랜드 가이드, 디자인 시스템 문서는 찾지 못했다 — 값은 CSS 변수와 렌더된 계산 스타일에서 읽었다 [src:1].
 - 라이트 모드는 대부분 CSS 소스에서 읽었고, 렌더 화면으로는 업로드 공지 버튼 글자색 같은 일부 값만 확인했다 [src:1].
-- 보라의 hover/pressed 전용 셰이드, 성공·경고 시맨틱 색, 비구독 상태의 구독 CTA, 플레이어 UI는 확인하지 못했다 [src:1].
-- 그림자는 관찰된 두 값뿐이고 발행된 체계가 없으며, `rounded`와 `spacing` 토큰은 관찰값을 정리한 것이다 [src:1].
-- 푸밍 정사각 심볼의 독립 SVG와 투명 PNG 원본, 로고 사용 규정은 공개돼 있지 않다 — 로고는 홈이 선언한 apple-touch-icon(152px)이다 [src:6]. 헤더가 쓰는 72×36 "LAFTEL" 워드마크 SVG도 카탈로그 자산으로 옮기지 않았다 [src:1].
-- 라이트에서 `--background-highlight`의 다크 값은 반투명 보라 `rgba(129,107,255,.1)`이어서 토큰으로 옮기지 않았다 [src:1].
+- 보라의 pressed 셰이드, 성공, 경고 시맨틱 색, 플레이어 UI는 확인하지 못했다 [src:1].
+- 관찰한 `box-shadow`는 둘이다. 그림자 색 변수 `--shadow-basic`과 `--shadow-dropdown`은 발행돼 있지만 elevation 스케일은 없고, 번들에는 화면에서 보지 못한 드롭다운 리스트 그림자(`0 0.125rem 0.5rem var(--shadow-dropdown)`)가 더 있다. `rounded`와 `spacing` 토큰은 관찰값을 정리한 것이다 [src:1].
+- favicon과 같은 자세의 푸밍 벡터(SVG) 원본과 로고 사용 규정은 찾지 못했다 — 로고는 홈이 apple-touch-icon으로 선언한 152px 투명 배경 PNG다 [src:1][src:6]. 헤더가 쓰는 72×36 "LAFTEL" 워드마크 SVG도 카탈로그 자산으로 옮기지 않았다 [src:1].
+- `--background-highlight`의 다크 값은 반투명 보라 `rgba(129,107,255,.1)`라 토큰으로 옮기지 않았다 [src:1].
 
 ## References
 
-1. https://laftel.net — 서비스 홈. 인라인 스타일의 시맨틱 색 변수(라이트·다크), 렌더된 화면의 계산 스타일, 헤더·칩·카드 실측과 메타 확인.
+1. https://laftel.net — 서비스 홈과 하위 화면(/daily, /membership/landing, 404). 인라인 스타일의 시맨틱 색 변수(라이트, 다크), 렌더된 화면의 계산 스타일, 헤더, 칩, 카드 실측과 메타, 서비스가 내려보내는 JS 청크의 색 팔레트와 컴포넌트 스타일.
 2. https://blog.laftel.net/post/17 — 라프텔 팀 블로그 "라프텔의 디자인 원칙". 디자인 원칙 4가지와 디자인 시스템 서술.
 3. https://brunch.co.kr/@laftelux/8 — 라프텔 프로덕트 디자인팀 Brunch 원문(2024-04-15). 같은 디자인 원칙.
 4. https://blog.laftel.net/post/11 — 라프텔 팀 블로그 다크모드 제작기. Basic Color와 Theme Color 구분.
 5. https://blog.laftel.net/post/10 — 라프텔 팀 블로그 UX Writing 가이드. 위트 있는 카피 톤.
-6. https://static.laftel.net/favicon-152.png — 푸밍 캐릭터 마크(apple-touch-icon 152px).
+6. https://static.laftel.net/favicon-152.png — 푸밍 캐릭터 마크(apple-touch-icon 152px, 투명 배경 PNG).
 7. https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard.css — 서비스 CSS 청크가 `@import`하는 Pretendard 정적 CSS.
 8. https://laftel.net/finder — 태그검색 페이지. 렌더된 페이지 H1(태그검색)의 계산 스타일.

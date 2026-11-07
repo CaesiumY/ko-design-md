@@ -2,7 +2,7 @@
 name: 치지직
 slug: chzzk
 category: content
-last_updated: 2026-10-31
+last_updated: 2026-11-07
 created_at: 2026-10-27
 lang: ko
 logo: https://getdesign.kr/logos/chzzk.png
@@ -223,21 +223,21 @@ components:
 
 ## Brand & Style
 
-치지직은 "지금, 스트리밍이 시작됩니다"라는 문장으로 자신을 소개하는 라이브 스트리밍 서비스다 [src:1]. 네이버가 2024년 5월 9일 정식 출시했고 [src:6], 브랜딩 글은 글리치와 스파크를 그래픽의 모티프로 삼아 기본형·확장형·분할형 그래픽 시스템을 짠다고 밝힌다 [src:5]. 시각적 인상은 이 두 문장에서 갈린다 — 번개 모양 Z 심볼과 형광에 가까운 네온 그린이 라이브의 순간성을 대신 말한다 [src:3].
+치지직은 "지금, 스트리밍이 시작됩니다"라는 문장으로 자신을 소개하는 라이브 스트리밍 서비스다 [src:1]. 네이버가 2024년 5월 9일 정식 출시했고 [src:6], 브랜딩 글은 글리치와 스파크를 그래픽의 모티프로 삼아 기본형, 확장형, 분할형 그래픽 시스템을 짠다고 밝힌다 [src:5]. 시각적 인상은 이 두 문장에서 갈린다 — 꺾인 Z 심볼과 네온 그린이 브랜드의 얼굴이고 [src:3], 이름에서 따온 스파크, 글리치와 "찰나의 순간"이라는 의미가 로고와 그래픽 전반에 깔린다 [src:5].
 
-기본 테마는 다크다. `html` 클래스는 `theme_dark`와 `light` 둘이고 저장 키는 `localStorage.theme`이며, OS 설정(`prefers-color-scheme`)은 따르지 않는다 [src:2]. 다크 캔버스 `{colors.dark-bg-base}` 위에서 시청자 수·LIVE 배지·후원 버튼 같은 신호가 색 한 가지씩만 맡아 눈에 걸린다. 라이트 테마에서는 네온 대신 한 단계 가라앉은 민트 `{colors.brand-strongest}`를 쓴다 [src:2].
+기본 테마는 다크다. 데스크톱 홈은 `html.theme_dark`(라이트는 `html.light`)로 렌더된다 [src:1]. 홈 HTML 의 인라인 스크립트는 채팅 팝업 경로(`/live/{id}/chat`, `/iframe/live/{id}/chat` 등)에서만 `theme` 쿼리나 `localStorage.theme`을 읽어 `theme_dark`/`light` 클래스와 `data-theme`(`dark`/`light`) 속성을 붙이고, 둘 다 없으면 다크로 둔다(스튜디오 iframe 은 라이트) [src:1]. 컴포넌트 CSS는 `.theme_dark` 선택자로 [src:2], 토큰 층 CSS는 `[data-theme=light]` 선택자로 테마를 가르며 [src:9] — 데스크톱 홈에 이 속성이 붙는지는 확인하지 못했다 — 두 CSS 모두 OS 설정(`prefers-color-scheme`)을 보지 않는다 [src:2][src:9]. 다크 캔버스 `{colors.dark-bg-base}` 위에서 시청자 수, LIVE 배지, 후원 버튼 같은 신호가 색 한 가지씩만 맡아 눈에 걸린다. 라이트 테마에서는 네온 대신 한 단계 가라앉은 민트 `{colors.brand-strongest}`를 쓴다 [src:9].
 
-디자인 토큰은 `--ref-*`(원시값)와 `--sem-*`(의미) 두 층으로 발행돼 있다 — 색 365+374개, 타이포 49+737개, radius·spacing·stroke·elevation까지 한 번들에 묶여 있다 [src:2]. 다만 공개 디자인 시스템 문서는 없고, 이 문서의 값은 서비스가 실제로 내려보내는 CSS 번들과 렌더된 화면의 계산값에서 읽은 것이다 [src:1][src:2].
+디자인 토큰은 `--ref-*`(원시값)와 `--sem-*`(의미) 두 층으로 발행돼 있다 — 색 365+374개, 타이포 49+773개, radius, spacing, stroke, elevation까지 토큰 층 CSS 한 파일에 정의돼 있고 [src:9], 컴포넌트 CSS는 이 토큰을 `var(--sem-*)`로 참조한다 [src:2]. 공개 디자인 시스템 문서는 찾지 못했다. 이 문서의 값은 서비스가 실제로 내려보내는 CSS와 렌더된 화면의 계산값에서 읽은 것이다 [src:1][src:2][src:9].
 
 ## Colors
 
-브랜드 색은 공식 브랜드 가이드가 두 가지로 못 박는다 — 치지직 Neon Green `{colors.brand-neon}`과 치지직 Black `{colors.brand-black}`이며, 가이드는 형태와 색의 변형, 상업적 사용을 금지한다 [src:3][src:4]. 네온 그린은 다크에서만 브랜드 면·텍스트·보더에 그대로 쓰이고, 라이트에서는 면은 `{colors.brand-strongest}`, 글자는 `{colors.brand-text}`·`{colors.brand-text-base}`·`{colors.brand-text-weak}` 세 단계로 내려간다 [src:2].
+브랜드 색은 공식 브랜드 가이드가 두 가지로 못 박는다 — 치지직 Neon Green `{colors.brand-neon}`과 치지직 Black `{colors.brand-black}`이며, 가이드는 형태와 색의 변형, 상업적 사용을 금지한다 [src:3][src:4]. 네온 그린은 다크에서만 브랜드 면, 텍스트, 보더에 그대로 쓰이고, 라이트에서는 면은 `{colors.brand-strongest}`, 글자는 `{colors.brand-text}`, `{colors.brand-text-base}`, `{colors.brand-text-weak}` 세 단계로 내려간다 [src:9].
 
-중립색은 순수 무채색이 아니라 쿨톤이다. 다크의 텍스트 secondary `{colors.dark-text-secondary}`와 tertiary `{colors.dark-text-tertiary}`는 푸른 기가 돌아 네온 그린과 차가운 대비를 만든다 [src:2]. 면은 `{colors.dark-bg-weak}` → `{colors.dark-bg-base}` → `{colors.dark-surface-weaker}` → `{colors.dark-surface-base}`로 한 칸씩 밝아지며 깊이를 대신한다 [src:2].
+중립색은 순수 무채색이 아니라 쿨톤이다. 다크의 텍스트 secondary `{colors.dark-text-secondary}`와 tertiary `{colors.dark-text-tertiary}`는 푸른 기가 돌아 네온 그린과 차가운 대비를 만든다 [src:9]. 면은 `{colors.dark-bg-weak}` → `{colors.dark-bg-base}` → `{colors.dark-surface-weaker}` → `{colors.dark-surface-base}`로 한 칸씩 밝아지며 깊이를 대신한다 [src:9].
 
-기능색은 두 테마에서 같은 값을 쓴다 — LIVE 배지 `{colors.live-red}`, 다시보기와 구독 선물 `{colors.replay-violet}`, 구독 티어 `{colors.subscribe-tier-1}`·`{colors.subscribe-tier-2}` 두 단계 [src:2]. 성공·경고·위험을 이름으로 가진 시맨틱 토큰은 번들에 없다 [src:2].
+기능색은 두 테마에서 같은 값을 쓴다 — LIVE 배지 `{colors.live-red}`, 다시보기와 구독 선물 `{colors.replay-violet}`, 구독 티어 `{colors.subscribe-tier-1}`, `{colors.subscribe-tier-2}` 두 단계 [src:9]. 공용 시맨틱 층(`--sem-*`)에서 성공, 경고, 위험을 이름으로 가진 토큰은 찾지 못했다 — 스포츠 위젯 전용 `--sw-*-success`, `--sw-*-error`만 있다 [src:9]. 컴포넌트 CSS도 그런 이름의 토큰을 참조하지 않는다 [src:2].
 
-상태 오버레이는 두 갈래 토큰이다 — 브랜드로 채운 1차 버튼 같은 밝은 면은 `interaction-darken`, secondary·outlined 버튼과 사이드바 항목 같은 어둡거나 투명한 면은 `interaction-lighten`을 쓴다. darken 은 다크에서 검정 5%(hover)·12%(selected), 라이트에서 흰색 5%·12%이고, lighten 은 반대로 다크 흰색·라이트 검정이다 [src:2]. 적용 방식도 갈린다 — solid 버튼은 `linear-gradient(오버레이, 오버레이)`를 배경 이미지로 얹어 계산된 `backgroundColor`가 그대로지만, outlined 버튼과 사이드바 항목은 `backgroundColor` 자체를 오버레이 색으로 바꾸고, 다른 버튼 계열은 자식 overlay 요소의 배경을 바꾼다 [src:1][src:2].
+상태 오버레이는 두 갈래 토큰이다 — 브랜드로 채운 1차 버튼 같은 밝은 면은 `interaction-darken`, secondary, outlined 버튼과 사이드바 항목 같은 어둡거나 투명한 면은 `interaction-lighten`을 쓴다 [src:2]. darken 은 다크에서 검정 5%(hover), 12%(selected), 라이트에서 흰색 5%, 12%이고, lighten 은 반대로 다크 흰색, 라이트 검정이다 [src:9]. 적용 방식도 갈린다 — solid 버튼은 `linear-gradient(오버레이, 오버레이)`를 배경 이미지로 얹어 계산된 `backgroundColor`가 그대로지만, outlined 버튼과 사이드바 항목은 `backgroundColor` 자체를 오버레이 색으로 바꾸고, 다른 버튼 계열은 자식 overlay 요소의 배경을 바꾼다 [src:1][src:2].
 
 | 역할 | 라이트 | 다크 |
 | --- | --- | --- |
@@ -252,31 +252,31 @@ components:
 
 ## Typography
 
-본문과 UI는 Pretendard Variable이고, 버튼·소제목·채팅 헤더 같은 장식 자리에는 Sandoll Nemony2가 들어간다 [src:2]. Pretendard는 jsDelivr의 가변 서브셋 CSS로 로드된다 [src:7]. 다만 채팅 메시지, 검색 입력, 카테고리 카드·가로형 추천 카드 제목은 시스템 폰트(`-apple-system … Malgun Gothic`)로 렌더링된다 — 스택에 따라 같은 화면 안에서 서체가 둘 섞인다 [src:1][src:2].
+토큰상 기본 서체(`font-style-default`)는 Pretendard 계열이고 장식 서체(`font-style-decorative`)는 Sandoll Nemony2 다. 컴포넌트 CSS 는 `Pretendard Variable, Pretendard, …`와 `Sandoll Nemony2, …` 폴백 스택으로 [src:2], 토큰 층 CSS 는 `Pretendard`와 `Sandoll Nemony2 TTF` 한 이름씩으로 적는다 [src:9]. Nemony는 버튼, 소제목, 채팅 헤더 같은 장식 자리에 들어간다 [src:2]. 반면 전역 기본 규칙(`body, input, textarea, select, button, table, pre`)은 시스템 서체 스택(`-apple-system … Malgun Gothic`)이다 [src:2]. Pretendard는 jsDelivr의 가변 서브셋 CSS로 로드된다 [src:2][src:7]. 렌더된 화면에서도 채팅 메시지, 검색 입력, 카테고리 카드, 가로형 추천 카드 제목은 시스템 폰트로 렌더링된다 — 같은 화면 안에서 서체가 둘 섞인다 [src:1][src:2].
 
-스케일은 label 10~18px, body 12~18px, title 20~26px, display 28~40px 네 그룹이다. Pretendard 단계는 굵기 400~800 다섯 단계에 자간 `-0.3px`이고, Nemony 단계(label·title·display)는 굵기 400 하나에 자간 `0px`다 [src:2]. 라이브 카드 제목은 15px/19px 600(`{typography.label-15}`, Pretendard)이고 색은 `{colors.text-secondary}`(다크 `{colors.dark-text-secondary}`)다. 홈 추천 콘텐츠 패널의 가로형 카드 제목만 15px/21px 500 시스템 폰트(`{typography.body-15}`)로 렌더된다. 상단 탭 링크는 17px/21px 800, LIVE 배지는 12px/20px 700이다 [src:1][src:2]. frontmatter의 스케일은 이 중 화면에서 확인한 대표 단계만 옮겼다.
+스케일은 합성 타이포 토큰 기준으로 label 10~18px, body 12~18px, title 20~26px, display 28~40px 네 그룹이고, TV용 단계(`--sem-typography-tv-*`)가 따로 있다. Pretendard 단계는 굵기 400~800 다섯 단계에 자간 `-0.3px`이고, Nemony 단계는 굵기 400 하나에 자간 `0px`다 [src:9]. 라이브 카드 제목은 15px/19px 600(`{typography.label-15}`, Pretendard)이고 색은 `{colors.text-secondary}`(다크 `{colors.dark-text-secondary}`)다. 홈 추천 콘텐츠 패널의 가로형 카드 제목만 15px/21px 500 시스템 폰트(`{typography.body-15}`)로 렌더된다. 상단 탭 링크는 17px/21px 800, LIVE 배지는 12px/20px 700이다 [src:1][src:2]. frontmatter의 스케일은 이 중 화면에서 확인한 대표 단계만 옮겼다.
 
 Nemony는 한글 서브셋 121조각의 자체 호스팅 woff2로 `font-weight: 400` 하나만 선언돼 있어 단일 CSS 진입점이 없다 [src:2]. 그래서 `font-display-src`는 적지 않았고, 프리뷰는 Pretendard로 폴백한다.
 
 ## Spacing
 
-기준 단위는 2px 증분이다. `--sem-layout-spacing`은 2·4·6·8·10·12·16·20·24·28·32·36px 열두 단계이고, 원시 스케일은 40·48·56·64·72px까지 이어진다 [src:2]. TV용 `--sem-layout-tv-spacing`이 같은 값으로 따로 선언돼 있어 큰 화면 레이아웃이 별도 계통임을 알 수 있다 [src:2]. 헤더 높이는 60px, 사이드바 폭은 240px이다 [src:1].
+기준 단위는 2px 증분이다. `--sem-layout-spacing`은 2, 4, 6, 8, 10, 12, 16, 20, 24, 28, 32, 36px 열두 단계이고, 원시 스케일은 40, 48, 56, 64, 72px까지 이어진다 [src:9]. TV용 `--sem-layout-tv-spacing`이 같은 값으로 따로 선언돼 있어 큰 화면 레이아웃이 별도 계통임을 알 수 있다 [src:9]. 헤더 높이는 60px, 사이드바 폭은 240px이다 [src:1].
 
 ## Rounded
 
-radius는 2px부터 32px까지 아홉 단계와 `circular`(9999px)다 [src:2]. 쓰임새는 뚜렷이 갈린다 — 배지는 4px, 사이드바 항목·채팅 입력은 8px, 라이브 썸네일·모달은 12px, 버튼은 높이 34px에 17px(완전한 알약), 검색창은 19px이다 [src:1]. 버튼과 검색창이 토큰에 없는 17·19px을 쓴다는 점이 특이하다 — 높이의 절반이 곧 radius인 알약 규칙으로 읽힌다.
+radius는 2px부터 32px까지 아홉 단계와 `circular`(9999px)다 [src:9]. 쓰임새는 뚜렷이 갈린다 — 배지는 4px, 사이드바 항목, 채팅 입력은 8px, 라이브 썸네일, 모달은 12px, 버튼은 높이 34px에 17px(완전한 알약), 검색창은 19px이다 [src:1]. 버튼과 검색창이 토큰에 없는 17, 19px을 쓴다는 점이 특이하다 — 높이의 절반이 곧 radius인 알약 규칙으로 읽힌다.
 
 ## Elevation & Depth
 
-그림자는 이중 레이어다. `--sem-elevation-style-N`은 `0 N 3N N base, 0 N N 0 strong`(N=1~7)으로 퍼지는 그림자와 맺히는 그림자를 한 쌍으로 쓴다 [src:2]. 다크에서 base는 검정 20%, strong은 검정 30%이고 라이트는 검정 5%·10%다 [src:2]. 다만 라이브 카드는 hover해도 transform·그림자·opacity가 변하지 않는다 — 깊이는 그림자가 아니라 면의 명도 차로 말한다 [src:1]. 팝오버 그림자 `{elevation.shadow-popover}`는 다크에서만 쓰고, 라이트 팝오버는 그림자 없이 1px `{colors.border-weak}` 테두리로 구분한다 [src:2].
+그림자는 이중 레이어다. `--sem-elevation-style-N`은 `0 N 3N N base, 0 N N 0 strong`(N=1~7)으로 퍼지는 그림자와 맺히는 그림자를 한 쌍으로 쓴다 [src:9]. 다크에서 base는 검정 20%, strong은 검정 30%이고 라이트는 검정 5%, 10%다 [src:9]. 라이브 카드는 썸네일에 hover해도 위치, 그림자, 투명도가 그대로이고, 썸네일 위에 검정 50% 덧씌움이 0.2초에 걸쳐 깔릴 뿐이다 — 깊이는 그림자가 아니라 면의 명도 차로 말한다 [src:1][src:2]. 팝오버 그림자 `{elevation.shadow-popover}`는 다크에서만 쓰고, 라이트 팝오버는 그림자 없이 1px `{colors.border-weak}` 테두리로 구분한다 [src:2].
 
 ## Shapes
 
-번개 Z 심볼은 직각에 가까운 사각, 둥근 사각, 스쿼클 세 모서리 형태로 가이드에 실려 있다 [src:3]. UI는 직각 대신 알약(버튼·검색·칩)과 8~12px 둥근 사각(카드·입력·모달)을 섞는다. stroke는 `0.5·1·1.5·2px` 네 단계이고 `-only-dark` 변형이 라이트에서는 `0px`로 떨어져, 다크에서만 테두리를 긋고 라이트에서는 면 차이로만 구분한다 [src:2].
+꺾인 Z 심볼은 직각에 가까운 사각, 둥근 사각, 스쿼클 세 모서리 형태로 가이드에 실려 있다 [src:3]. UI는 직각 대신 알약(텍스트 버튼, 검색, 필터 칩)과 8~12px 둥근 사각(카드, 입력, 모달)을 섞고, 카드 태그 칩과 배지는 4px, 아이콘 전용 버튼은 6px이다 [src:1]. stroke는 `0.5·1·1.5·2px` 네 단계이고, `-only-dark`, `-only-light` 변형 쌍이 한쪽 테마에서만 `0px`로 떨어져 테마별로 테두리를 가른다 [src:9].
 
 ## Components
 
-다음 값은 렌더된 https://chzzk.naver.com/ 의 계산 스타일이다(다크, 폭 약 1425px) [src:1].
+다음 값은 렌더된 chzzk.naver.com 의 계산 스타일이다(홈, `/lives`, `/category`, `/videos`, `/live/{id}`, 다크 기준, 폭 약 1425px, 라이트 값은 괄호) [src:1].
 
 ### header
 
@@ -288,11 +288,11 @@ radius는 2px부터 32px까지 아홉 단계와 `circular`(9999px)다 [src:2]. �
 
 ### search-field
 
-높이 38px·폭 400px 알약(radius 19px)이다. 면은 투명하고 1px `{colors.border-weak}`(다크 `{colors.dark-border-weak}`) 테두리를 두르며, 오른쪽 끝에 20px 돋보기 버튼이 있다. 입력 글자는 15px/19px 400 시스템 폰트다. 포커스 시 테두리는 다크 `{colors.dark-brand-base}`·라이트 `{colors.brand-strong}`, 캐럿은 다크 `{colors.dark-brand-stronger}`·라이트 `{colors.brand-stronger}`이다 [src:1][src:2].
+높이 38px, 폭 400px 알약(radius 19px)이다. 면은 투명하고 1px `{colors.border-weak}`(다크 `{colors.dark-border-weak}`) 테두리를 두르며, 오른쪽 끝에 20px 돋보기 버튼이 있다. 입력 글자는 15px/19px 400 시스템 폰트다. 포커스 시 테두리는 다크 `{colors.dark-brand-base}`, 라이트 `{colors.brand-strong}`, 캐럿은 다크 `{colors.dark-brand-stronger}`, 라이트 `{colors.brand-stronger}`이다 [src:1][src:2][src:9].
 
 ### button-primary
 
-팔로우 같은 1차 버튼. 다크 `{colors.brand-neon}` 배경에 `{colors.dark-bg-weak}` 글자, 라이트 `{colors.brand-strongest}` 배경에 흰 글자, 높이 34px, radius 17px, 좌우 12px, 글자는 Nemony 14px/18px 400(`{typography.label-nemony-14}`)이다 [src:1][src:2].
+팔로우 같은 1차 버튼. 다크 `{colors.brand-neon}` 배경에 `{colors.dark-bg-weak}` 글자, 라이트 `{colors.brand-strongest}` 배경에 흰 글자, 높이 34px, 좌우 12px, 글자는 Nemony 14px/18px 400(`{typography.label-nemony-14}`)이다 [src:2][src:9]. CSS 클래스의 radius는 8px이지만, 렌더된 팔로우 버튼은 인라인 스타일 `border-radius: 17px`로 높이의 절반인 알약이 된다 [src:1].
 
 ```tsx
 <Button variant="primary" size="large">팔로우</Button>
@@ -316,7 +316,7 @@ LIVE 배지는 `{colors.live-red}` 배경에 흰 글자, 높이 20px, radius 4px
 
 ### live-card
 
-썸네일 폭 372px에 높이 209px(16:9), radius 12px. 제목은 15px/19px 600(`{colors.text-secondary}`), 아래에 채널명이 붙는다. hover 때 시각 변화가 없다 [src:1].
+썸네일 폭 372px에 높이 209px(16:9), radius 12px. 제목은 15px/19px 600(`{colors.text-secondary}`), 아래에 채널명이 붙는다 [src:1]. 썸네일에 hover 하면 카드 위치, 그림자, 투명도는 그대로이고, 썸네일 위에 검정 50% 덧씌움이 0.2초에 걸쳐 깔린다 [src:1][src:2][src:9].
 
 ### chat-input
 
@@ -324,17 +324,17 @@ LIVE 배지는 `{colors.live-red}` 배경에 흰 글자, 높이 20px, radius 4px
 
 ### modal
 
-배경 `{colors.dark-surface-weaker}`, radius 12px, 폭 450px, 안쪽 확인 버튼은 높이 44px·radius 8px의 primary다 [src:1]. 그림자는 `{elevation.shadow-level-6}`(라이트는 검정 5%·10%)이다 [src:1][src:2].
+배경 `{colors.dark-surface-weaker}`, radius 12px, 폭 450px, 안쪽 확인 버튼은 높이 44px, radius 8px의 primary다 [src:1]. 그림자는 `{elevation.shadow-level-6}`(라이트는 검정 5%, 10%)이다 [src:1][src:2][src:9].
 
 ## Do's and Don'ts
 
-**Do** 다크에서 네온 `{colors.brand-neon}`은 1차 버튼 면(팔로우)과 짧은 강조 글자(배너 날짜, 썸네일 위 드롭스 배지)에 쓰고, 넓은 면이나 본문에는 쓰지 않는다. 카드 아래 태그 줄의 강조 칩 글자는 한 단계 낮은 `{colors.dark-brand-strong}`이고, 입력창 포커스 테두리는 한 단계 낮은 `{colors.dark-brand-base}`, 사이드바 현재 메뉴 글자는 `{colors.dark-brand-stronger}`다 [src:1][src:2].
+**Do** 다크에서 네온 `{colors.brand-neon}`은 1차 버튼 면(팔로우)과 짧은 강조 글자(배너 날짜, 썸네일 위 드롭스 배지)에 쓰고, 넓은 면이나 본문에는 쓰지 않는다. 카드 아래 태그 줄의 강조 칩 글자는 한 단계 낮은 `{colors.dark-brand-strong}`이고, 입력창 포커스 테두리는 한 단계 낮은 `{colors.dark-brand-base}`, 사이드바 현재 메뉴 글자는 `{colors.dark-brand-stronger}`다 [src:1][src:2][src:9].
 
-**Do** 상태는 반투명 오버레이(hover 5%·selected 12%)로 표현하되, 밝은 면에는 darken, 어두운 면에는 lighten 쪽을 쓴다. 채운(solid) 버튼은 면 색을 그대로 두고 오버레이를 배경 이미지로 얹는다 [src:2].
+**Do** 상태는 반투명 오버레이(hover 5%, selected 12%)로 표현하되, 밝은 면에는 darken, 어두운 면에는 lighten 쪽을 쓴다. 채운(solid) 버튼은 면 색을 그대로 두고 오버레이를 배경 이미지로 얹는다 [src:2][src:9].
 
-**Do** 버튼·검색·칩은 높이의 절반을 radius로 쓴 알약, 카드·입력·모달은 8~12px 둥근 사각으로 나눠 쓴다 [src:1].
+**Do** 텍스트 버튼, 검색, 필터 칩은 높이의 절반을 radius로 쓴 알약, 카드, 입력, 모달은 8~12px 둥근 사각으로 나눠 쓴다. 단 카드 태그 칩과 LIVE, 시청자 수 배지는 4px, 아이콘 전용 버튼은 6px이다 [src:1].
 
-**Don't** 네온 그린 `{colors.brand-neon}`을 라이트 배경 위 텍스트에 그대로 쓰지 않는다 — 라이트 글자는 `{colors.brand-text}` 계열 세 단계로 내려간다 [src:2].
+**Don't** 네온 그린 `{colors.brand-neon}`을 라이트 배경 위 텍스트에 그대로 쓰지 않는다 — 라이트 글자는 `{colors.brand-text}` 계열 세 단계로 내려간다 [src:9].
 
 **Don't** 치지직의 라이브 방송·후원·구독 티어·채팅 후원 같은 스트리밍 도메인 플로우와 카피를 그대로 가져오지 않는다 — 시각 처리(다크 캔버스, 네온 강조, 알약 버튼)만 차용한다 [src:1].
 
@@ -342,26 +342,28 @@ LIVE 배지는 `{colors.live-red}` 배경에 흰 글자, 높이 20px, radius 4px
 
 ## Responsive Behavior
 
-공개된 브레이크포인트 체계는 없다(no published breakpoint system surfaced). 번들에는 TV 레이아웃용 `--sem-layout-tv-spacing`·`--sem-radius-tv-*` 토큰이 따로 있어 큰 화면은 별도 계통이다 [src:2]. 뷰포트 메타에 `user-scalable=no, maximum-scale=1.0`이 있어 핀치 줌이 막혀 있다 [src:1]. 사이드바 폭은 240px, 헤더 높이는 60px로 관찰된다 [src:1].
+공개된 브레이크포인트 체계는 없다(no published breakpoint system surfaced). 토큰 층 CSS에는 TV 레이아웃용 `--sem-layout-tv-spacing`, `--sem-radius-tv-*` 토큰이 따로 있어 큰 화면은 별도 계통이다 [src:9]. 뷰포트 메타에 `user-scalable=no, maximum-scale=1.0`이 있어 핀치 줌이 막혀 있다 [src:1]. 사이드바 폭은 240px, 헤더 높이는 60px로 관찰된다 [src:1].
 
 ## Known Gaps
 
-- 공식 디자인 시스템 문서가 없다 — 값은 CSS 번들과 렌더된 계산 스타일에서 읽었고, 번들 해시가 바뀌면 달라질 수 있다 [src:1][src:2].
-- 본 방송 플레이어 컨트롤바, 채팅 하단 후원 버튼, 3티어 이상 구독색, TV 레이아웃은 확인하지 못했다 [src:1][src:2].
-- **모바일 웹은 별도 사이트 (2026-10-31)** — 휴대폰 UA 는 m.chzzk.naver.com 으로 넘어가며, 이 사이트는 테마 전환 장치가 없는 다크 전용이고 헤더·하단 탭바·카드 치수가 데스크톱 웹과 다르다. 이 문서의 테마 전환(`theme_dark`/`light`·`localStorage.theme`)과 컴포넌트 값은 데스크톱 웹 기준이다 [src:8].
-- 성공·경고·위험 의미 토큰이 없다 — 위험에 가까운 `{colors.live-red}`만 확인된다 [src:2].
-- 가시적 포커스 링이 없다. 전역 `a, button, input { outline: none }`이고 포커스는 hover 오버레이와 입력창 테두리색으로만 표시된다 [src:2].
-- 로고의 벡터 원본과 보호 영역·최소 크기 수치는 확인하지 못했다 — 가이드의 다운로드 묶음은 PNG뿐이고, 수치는 가이드 이미지에만 있다 [src:3].
-- **헤더 워드마크 자산 없음 (2026-10-31)** — 서비스 헤더는 워드마크 이미지 하나를 쓰지만 가이드 다운로드 묶음은 아이콘 PNG만 있어, 프리뷰 헤더는 아이콘으로 대신한다 [src:1][src:3].
-- 닉네임 색 20종과 역할색(스트리머·매니저·서포터)은 토큰으로 옮기지 않았다 [src:2].
+- 공식 디자인 시스템 문서는 찾지 못했다. 값은 서비스 CSS와 렌더된 계산 스타일에서 읽었고, 두 CSS 모두 해시가 붙은 경로라 배포마다 파일과 값이 바뀔 수 있다 [src:1][src:2][src:9].
+- **컴포넌트 CSS 해시 교체 (2026-11-07)** — 홈은 지금 컴포넌트 CSS 로 `index-BBGwzDvs.css`를 링크하며 [src:2]와 해시가 다르다.
+- 본 방송 플레이어 컨트롤바와 채팅 하단 후원 버튼은 화면에 있으나 수록하지 않았다. 3티어 이상 구독색은 토큰 층에서 찾지 못했고(정의된 것은 티어 1, 2뿐) [src:9], TV 레이아웃은 토큰만 확인하고 화면은 보지 못했다 [src:9].
+- **모바일 웹은 별도 사이트 (2026-10-31)** — 휴대폰 UA 는 m.chzzk.naver.com 으로 넘어가며, 이 사이트는 테마 전환 장치가 없는 다크 전용이고 헤더, 하단 탭바, 카드 치수가 데스크톱 웹과 다르다. 이 문서의 테마 전환(`theme_dark`/`light` 클래스)과 컴포넌트 값은 데스크톱 웹 기준이다 [src:8].
+- 공용 `--sem-*` 층에서 성공, 경고, 위험 의미 토큰은 찾지 못했다(스포츠 위젯 전용 `--sw-*-success`, `--sw-*-error`는 제외) [src:9]. 위험 계열로는 LIVE 배지와 danger 버튼이 함께 쓰는 `{colors.live-red}`만 확인된다 [src:2][src:9].
+- 전역 `a, button, input { outline: none }`으로 outline이 꺼져 있고, 대부분의 포커스는 hover 오버레이와 테두리색 변화로 표시된다 [src:2]. 토큰 층 CSS 의 일부 입력 컴포넌트 규칙(`._input_hsfj4_57:focus-within`)만 2px 내부 링(`inset` box-shadow)을 쓴다 [src:9]. 이 문서가 화면에서 잰 채팅 입력은 `focus-visible`에 오버레이를 얹고, 활성 클래스가 붙으면 의사 요소로 2px 테두리를 그린다 [src:2].
+- 로고 최소 크기는 가이드 이미지에 화면 16px, 인쇄 8mm(기본형 국문, 영문), 22px, 11mm(조합형)로 적혀 있고, 보호 영역은 숫자 없이 x 단위로만 그려져 있다 [src:3]. 아이콘 묶음은 PNG뿐이고, 로고(워드마크) 묶음 세 개의 파일 형식은 확인하지 못해 벡터 원본이 있는지 모른다.
+- **헤더 워드마크 미적용 (2026-11-07)** — 서비스 헤더는 워드마크 이미지 하나를 쓰고 [src:1], 가이드에는 기본형(국문, 영문), 조합형 워드마크 다운로드 묶음이 있다 [src:3]. 묶음의 파일 형식을 확인하지 못해 프리뷰 헤더는 아이콘으로 대신한다.
+- 닉네임 색 20종과 역할색(스트리머, 매니저, 서포터)은 토큰으로 옮기지 않았다 [src:9].
 
 ## References
 
 1. https://chzzk.naver.com/ — 서비스 홈. 렌더된 화면의 계산 스타일과 마크업·메타 확인.
-2. https://ssl.pstatic.net/static/nng/glive/resource/p/static/css/index-DtFlhVVI.css — 서비스 CSS 번들. `--ref-*`·`--sem-*` 토큰, 라이트/다크 정의, 폰트 선언의 1차 근거.
+2. https://ssl.pstatic.net/static/nng/glive/resource/p/static/css/index-DtFlhVVI.css — 서비스의 컴포넌트 클래스 CSS. 컴포넌트 규칙, `.theme_dark` 다크 덮어쓰기, 전역 `font-family`, Pretendard `@import`, Nemony `@font-face`, `font-style-default`, `font-style-decorative` 선언이 있다. 이 파일에 있는 `--ref-*`, `--sem-*` 정의는 `-rgb` 보조 변수와 `font-style` 두 개뿐이고 토큰 층은 [src:9]에 있다. 해시 경로라 바뀔 수 있다.
 3. https://chzzk.gitbook.io/chzzk/resources/brand-guides — 공식 브랜드 가이드. 네온 그린·블랙 컬러 규정, 아이콘 형태, 변형 금지. 로고·아이콘 PNG 다운로드 링크가 있다.
 4. https://help.naver.com/service/30044/contents/23364 — 네이버 고객센터 로고 사용 안내.
 5. https://fficial.naver.com/contentDetail/76 — 치지직 브랜딩 글(2024-05-20). 글리치·스파크 모티프와 그래픽 시스템.
 6. https://www.navercorp.com/media/pressReleasesDetail?seq=31764 — 네이버 보도자료. 2024-05-09 정식 출시.
 7. https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css — Pretendard 가변 서브셋 로드 경로.
 8. https://m.chzzk.naver.com/ — 모바일 웹. 휴대폰 UA 로 chzzk.naver.com 에 접속하면 이 주소로 넘어가며, 데스크톱 웹과 별도의 레이아웃·번들(m/index-*.js)을 쓴다. 렌더해야 읽히는 JS 셸이다.
+9. https://ssl.pstatic.net/static/nng/glive/resource/p/static/css/vendor-JDVjTL6M.css — 서비스 CSS 의 토큰 층. `--ref-*`, `--sem-*` 정의(다크 `:root`, 라이트 `[data-theme=light]`)와 일부 컴포넌트 규칙이 있다. 해시 경로라 바뀔 수 있다.
