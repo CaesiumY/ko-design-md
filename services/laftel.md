@@ -2,7 +2,7 @@
 name: 라프텔
 slug: laftel
 category: content
-last_updated: 2026-11-07
+last_updated: 2026-11-09
 created_at: 2026-10-27
 lang: ko
 logo: https://getdesign.kr/logos/laftel.png
