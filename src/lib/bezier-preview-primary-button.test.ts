@@ -58,14 +58,13 @@ interface Rule {
 }
 
 /**
- * Every innermost rule of a sheet, in source order. A half is a whole
- * document, so only its `<style>` contents are read; a fixture is bare CSS. A
+ * Every innermost rule of a document's `<style>` contents, in source order. A
  * rule inside `@media` comes out as a rule of its own — counted, never
  * dropped, so a conditional override still makes a reader refuse the sheet.
  */
-function rulesOf(sheet: string): Array<Rule> {
-  const styles = [...sheet.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)]
-  const css = (styles.length > 0 ? styles.map((m) => m[1]) : [sheet])
+function rulesOf(html: string): Array<Rule> {
+  const css = [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)]
+    .map((m) => m[1])
     .join("\n")
     .replace(/\/\*[\s\S]*?\*\//g, "")
   return [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(
@@ -114,6 +113,22 @@ const USER_ACTION =
   /:(?:hover|active|focus-visible|focus-within|focus)(?![\w-])/g
 const PSEUDO_ELEMENT =
   /::[\w-]+(?:\([^()]*\))?|:(?:before|after|first-line|first-letter)(?![\w-])/g
+
+/** Whether a user-action pseudo-class sits inside parentheses. */
+function userActionInsideParens(selector: string): boolean {
+  let depth = 0
+  for (let i = 0; i < selector.length; i++) {
+    if (selector[i] === "(") depth += 1
+    else if (selector[i] === ")") depth -= 1
+    else if (depth > 0 && selector[i] === ":") {
+      USER_ACTION.lastIndex = i
+      const m = USER_ACTION.exec(selector)
+      USER_ACTION.lastIndex = 0
+      if (m?.index === i) return true
+    }
+  }
+  return false
+}
 // `@keyframes` steps come out of `rulesOf` as rules too; they style no element.
 const KEYFRAME_STEP = /^(?:from|to|\d+(?:\.\d+)?%)$/
 
@@ -123,16 +138,21 @@ const KEYFRAME_STEP = /^(?:from|to|\d+(?:\.\d+)?%)$/
  * every rule in its `<style>` that declares a `background*` property is
  * matched against them with `Element.matches` — after taking off the
  * user-action pseudo-classes, which are the rule's state. A rule paints a
- * state if it matches any primary button in it. An inline `style` background
- * on a primary button paints both states, and a rule on a primary button's
- * pseudo-element is refused outright: either one can hide the button's own
- * background from a reader of rules.
+ * state if it matches any primary button in it: no user-action state is the
+ * base state, and any state that includes `:hover` (`:hover:focus-visible`, or
+ * `:hover` on an ancestor) is the hover state. States without `:hover`
+ * (`:active`, `:focus-visible`) are not checked — upstream publishes a hovered
+ * value only. An inline `style` background on a primary button paints both
+ * states, and a rule on a primary button's pseudo-element is refused outright:
+ * either one can hide the button's own background from a reader of rules.
  *
  * For each state exactly one rule may paint, it must be exactly `.btn.pri`
  * (plus the state), and it may set one background property. Anything else is
  * refused rather than ordered — which rule wins is the cascade's call, and
  * re-implementing it here is how this reader missed `.btn.l` before. A
- * selector `matches` cannot read fails with its text.
+ * user-action pseudo-class inside parentheses (`:is(:hover)`, `:not(:hover)`)
+ * cannot be taken off without changing what the selector means, so it is
+ * refused too, as is a selector `matches` cannot read, with its text.
  */
 function primaryBackground(html: string, state: State): string {
   const { document } = new JSDOM(html).window
@@ -151,9 +171,13 @@ function primaryBackground(html: string, state: State): string {
     if (backgrounds.length === 0) continue
     for (const selector of rule.selectors) {
       if (KEYFRAME_STEP.test(selector)) continue
-      const states = (selector.match(USER_ACTION) ?? []).sort().join("")
-      const pseudoElement = PSEUDO_ELEMENT.test(selector)
-      PSEUDO_ELEMENT.lastIndex = 0
+      if (userActionInsideParens(selector)) {
+        throw new Error(
+          `\`${selector}\` has a user-action pseudo-class inside parentheses — write the state outside them`
+        )
+      }
+      const states = selector.match(USER_ACTION) ?? []
+      const pseudoElement = (selector.match(PSEUDO_ELEMENT) ?? []).length > 0
       let target = selector
         .replace(USER_ACTION, "")
         .replace(PSEUDO_ELEMENT, "")
@@ -172,7 +196,11 @@ function primaryBackground(html: string, state: State): string {
         )
       }
       const ruleState =
-        states === "" ? "base" : states === ":hover" ? "hover" : undefined
+        states.length === 0
+          ? "base"
+          : states.includes(":hover")
+            ? "hover"
+            : undefined
       if (ruleState === state) painters.push({ selector, backgrounds })
     }
   }
@@ -285,6 +313,18 @@ describe("the painting rule is read off the real primary buttons", () => {
       /more than one rule paints/,
     ],
     [
+      "hover inside a functional pseudo-class",
+      ".btn.pri:is(:hover){background:#6f64f0;}",
+      "hover",
+      /user-action pseudo-class inside/,
+    ],
+    [
+      "hover combined with another user-action state",
+      ".btn.pri:hover:focus-visible{background:#6f64f0;}",
+      "hover",
+      /more than one rule paints/,
+    ],
+    [
       "a pseudo-element",
       ".btn.pri::before{background:#6157ea;}",
       "base",
@@ -312,7 +352,7 @@ describe("the painting rule is read off the real primary buttons", () => {
     expect(() => primaryBackground(html, "base")).toThrow(/sets 2 backgrounds/)
   })
 
-  it("leaves rules that only paint other buttons alone", () => {
+  it("leaves rules for other buttons and for :active alone", () => {
     const html = doc(
       `${BASE}.ib.pri{background:#ff0000;}\n.seg button{background:transparent;}\n.btn.pri:active{background:#000000;}\n`
     )
