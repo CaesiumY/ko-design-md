@@ -24,28 +24,20 @@
 // the download is declined or fails.
 
 import { spawnSync } from "node:child_process"
-import { existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs"
+import { mkdtempSync, readFileSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { createInterface } from "node:readline/promises"
-import { fileURLToPath } from "node:url"
 import { rebaseline } from "../src/lib/contrast-rebaseline"
-import { findingsProblem } from "../src/lib/contrast-report"
+import { isRunId, measuredSlugs } from "../src/lib/contrast-report"
 import { readPreviewSlugs } from "./audit-contrast-slugs"
+import { ROOT, fail, readEntries, readFindings } from "./contrast-artifact-io"
 import type { RecordFiles } from "../src/lib/contrast-rebaseline"
-import type { Finding } from "../src/lib/contrast-report"
-
-const ROOT = fileURLToPath(new URL("..", import.meta.url))
 
 const PATHS: Record<keyof RecordFiles, string> = {
   doc: "docs/preview-contrast-baseline.md",
   baseline: "src/lib/contrast-baseline.ts",
   classifiedRun: "src/lib/contrast-classified-run.json",
-}
-
-function fail(message: string, code = 2): never {
-  console.error(message)
-  process.exit(code)
 }
 
 function parseArgs(argv: Array<string>): { run: string; from?: string } {
@@ -63,7 +55,7 @@ function parseArgs(argv: Array<string>): { run: string; from?: string } {
     else if (run === undefined) run = a
     else fail(`Error: one run id, got ${run} and ${a}`)
   }
-  if (run === undefined || !/^\d+$/.test(run)) {
+  if (run === undefined || !isRunId(run)) {
     fail(
       "Error: usage: pnpm audit:contrast:rebaseline <run id> [--from <folder>] — the CI run whose contrast job uploaded the contrast-report artifact"
     )
@@ -104,32 +96,13 @@ async function download(run: string): Promise<string> {
   return dir
 }
 
-function readFindings(path: string): Array<Finding> {
-  let parsed: ReturnType<typeof JSON.parse>
-  try {
-    parsed = JSON.parse(readFileSync(path, "utf8"))
-  } catch (e) {
-    fail(`Error: could not read ${path}: ${(e as Error).message}`)
-  }
-  const problem = findingsProblem(parsed)
-  if (problem !== null) fail(`Error: ${path} ${problem}`)
-  return parsed as Array<Finding>
-}
-
 async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2))
   const dir = args.from ?? (await download(args.run))
   const findings = readFindings(join(dir, "contrast-findings.json"))
 
   const previewSlugs = readPreviewSlugs(join(ROOT, "public", "preview")).slugs
-  const entries: Record<string, string> = {}
-  for (const slug of new Set([
-    ...previewSlugs,
-    ...findings.map((f) => f.slug),
-  ])) {
-    const file = join(ROOT, "services", `${slug}.md`)
-    if (existsSync(file)) entries[slug] = readFileSync(file, "utf8")
-  }
+  const entries = readEntries([...previewSlugs, ...measuredSlugs(findings)])
 
   // Edited as LF and written back in the file's own line endings, so a
   // `w/crlf` checkout (CLAUDE.md, Windows) is not rewritten line by line.
@@ -159,6 +132,8 @@ async function main(): Promise<void> {
     for (const reason of got.reasons) console.error(`  ${reason}`)
     process.exit(2)
   }
+  // The classification command's notes, from the same reading of the palettes.
+  for (const note of got.notes) console.error(note)
 
   const changed = (Object.keys(PATHS) as Array<keyof RecordFiles>).filter(
     (k) => got.files[k] !== files[k]

@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest"
 import { readPreviewSlugs } from "../../scripts/audit-contrast-slugs"
 import { BASELINE_TABLE, CONTRAST_BASELINE } from "./contrast-baseline"
 import { OBSERVED_COLOURS, paletteOf, parsePairTable } from "./contrast-pairs"
-import { parseHeldReasons, renderTotalsTable } from "./contrast-report"
+import { isRunId, parseHeldReasons, renderTotalsTable } from "./contrast-report"
 import type { PairTally } from "./contrast-pairs"
 
 // The recorded contrast baseline against the repository it describes.
@@ -63,7 +63,7 @@ const readClassifiedRun = (): { run: string; slugs: Array<string> } => {
     Array.isArray(v) && v.every((s) => typeof s === "string")
   if (
     typeof run !== "string" ||
-    !/^\d+$/.test(run) ||
+    !isRunId(run) ||
     !strings(slugs) ||
     slugs.join("\n") !== [...new Set(slugs)].sort().join("\n")
   ) {

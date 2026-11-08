@@ -7,21 +7,23 @@
 // writes the files.
 
 import {
-  OBSERVED_COLOURS,
-  paletteOf,
+  paletteLookup,
+  readArtifactPalettes,
   renderPairTable,
-  splitColourPairs,
+  sumPairTally,
   tallyPairs,
 } from "./contrast-pairs"
 import {
   dedupeFindings,
   heldReasons,
+  isRunId,
+  measuredSlugs,
   parseTotalsTable,
   renderHeldReasons,
   renderTotalsTable,
   totalsBySlug,
 } from "./contrast-report"
-import type { Palette } from "./contrast-pairs"
+import type { ClassifiedVerdict, Palette } from "./contrast-pairs"
 import type { Finding, SlugTotals } from "./contrast-report"
 
 /** The files the record lives in, as text. */
@@ -54,6 +56,11 @@ export type RebaselineResult =
       moved: Array<string>
       /** The judgement prose left for a person; empty when nothing changed. */
       remaining: Array<string>
+      /**
+       * Tokens a palette left out because their form cannot be read, as the
+       * lines the classification command prints for them.
+       */
+      notes: Array<string>
     }
   | { ok: false; reasons: Array<string> }
 
@@ -282,29 +289,29 @@ const remainingWork = (run: string): Array<string> => [
   "the PR body: why the ratchet rows above moved",
 ]
 
-const CLASSIFIED = ["borderline", "fail"] as const
-
 /**
- * Why this artifact cannot be written into this checkout's record, or the
- * palettes its classified rows are read against. The same refusals the
- * classification command makes (`classify-contrast-pairs.ts`), and the two a
- * whole-table rewrite adds: a measured slug this checkout cannot sweep, and a
- * preview the run did not measure, whose recorded rows the rewrite would drop.
+ * Why this artifact cannot be written into this checkout's record, or, when
+ * it can, the palettes its classified rows are read against and the notes on
+ * tokens those palettes left out. The palette reading and its refusals are the
+ * classification command's own (`readArtifactPalettes`); a whole-table
+ * rewrite adds a measured slug this checkout cannot sweep, and a preview the
+ * run did not measure, whose recorded rows the rewrite would drop.
  */
-function check(input: RebaselineInput): {
+function validateArtifactAndReadPalettes(input: RebaselineInput): {
   reasons: Array<string>
   palettes: Map<string, Palette>
+  notes: Array<string>
 } {
   const reasons: Array<string> = []
-  const palettes = new Map<string, Palette>()
-  if (!/^\d+$/.test(input.run)) {
+  if (!isRunId(input.run)) {
     reasons.push(`run id "${input.run}" is not a CI run number`)
   }
   if (input.findings.length === 0) {
-    return { reasons: [...reasons, "the artifact has no findings"], palettes }
+    reasons.push("the artifact has no findings")
+    return { reasons, palettes: new Map(), notes: [] }
   }
 
-  const measured = [...new Set(input.findings.map((f) => f.slug))].sort()
+  const measured = measuredSlugs(input.findings)
   const previews = new Set(input.previewSlugs)
   for (const slug of measured) {
     if (!previews.has(slug)) {
@@ -312,6 +319,8 @@ function check(input: RebaselineInput): {
         `the artifact measured ${slug}, which has no preview in this checkout`
       )
     }
+    // Every measured slug, so the classified ones `readArtifactPalettes`
+    // names as missing are already reported here.
     if (!(slug in input.entries)) {
       reasons.push(
         `the artifact measured ${slug}, which has no services/${slug}.md in this checkout`
@@ -326,84 +335,66 @@ function check(input: RebaselineInput): {
     }
   }
 
-  // Only the rows these tables classify have to carry one pair, as in the
-  // classification command: a `pass` or held row whose widths disagree is not
-  // counted there.
-  const classified = input.findings.filter((f) =>
-    CLASSIFIED.some((v) => v === f.verdict)
-  )
-  const split = splitColourPairs(classified)
-  if (split.length > 0) {
+  const read = readArtifactPalettes(input.findings, input.entries)
+  if (read.split.length > 0) {
     reasons.push(
-      `${split.length} classified row(s) read different colour pairs at different widths, so there is no one pair to classify: ${split.join(", ")}`
+      `${read.split.length} classified row(s) read different colour pairs at different widths, so there is no one pair to classify: ${read.split.join(", ")}`
     )
   }
-  for (const slug of new Set(classified.map((f) => f.slug))) {
-    if (!(slug in input.entries)) continue
-    try {
-      palettes.set(
-        slug,
-        paletteOf(input.entries[slug], OBSERVED_COLOURS[slug] ?? {})
-      )
-    } catch (e) {
-      reasons.push(`${slug}: ${(e as Error).message}`)
-    }
-  }
-  return { reasons, palettes }
+  reasons.push(...read.problems)
+  return { reasons, palettes: read.palettes, notes: read.notes }
 }
 
-export function rebaseline(input: RebaselineInput): RebaselineResult {
-  const { reasons, palettes } = check(input)
-  if (reasons.length > 0) return { ok: false, reasons }
+/** One published-pair table and the two totals its prose states. */
+export interface PairTableValues {
+  table: string
+  /** The rows the table classifies. */
+  total: number
+  /** Of those, the rows whose two colours are both published tokens. */
+  both: number
+}
 
-  // The same fold and the same seeding as the sweep, so the table written here
-  // is the table the gate prints and compares (`audit-contrast-sweep.ts`).
-  const rows = dedupeFindings(input.findings)
-  const totals = renderTotalsTable(
-    totalsBySlug(rows, {
-      slugs: input.previewSlugs,
-      themes: ["light", "dark"],
-    })
-  )
+/** What one run writes into the record's anchored places. */
+export interface RecordValues {
+  run: string
+  /** The totals table, as `renderTotalsTable` writes it. */
+  totals: string
+  borderline: PairTableValues
+  fail: PairTableValues
+  /** The hold-reason block, as `renderHeldReasons` writes it. */
+  held: string
+}
 
-  const paletteFor = (slug: string): Palette => {
-    const p = palettes.get(slug)
-    if (p === undefined) throw new Error(`no palette read for ${slug}`)
-    return p
-  }
-  const pairs = (verdict: "borderline" | "fail") => {
-    const tally = tallyPairs(rows, paletteFor, verdict)
-    return {
-      table: renderPairTable(tally),
-      total: tally.reduce((n, t) => n + t.total, 0),
-      both: tally.reduce((n, t) => n + t.bothPublished, 0),
-    }
-  }
-  const borderline = pairs("borderline")
-  const fail = pairs("fail")
-
-  const at = baselineBody(input.files.baseline)
-  const recorded =
-    at === null ? "" : input.files.baseline.slice(at.body, at.closing)
-  const baseline = replaceBaselineTable(input.files.baseline, totals)
-  const anchors: Array<string> = []
+/**
+ * The document and the constant's file with `values` written into every
+ * anchored place, and the anchors that were missing or doubled; any reason
+ * means neither text is to be written. Exported so a test can hold the
+ * anchors to the real record, not only to the stand-in the tests write.
+ */
+export function rewriteRecord(
+  files: Pick<RecordFiles, "doc" | "baseline">,
+  values: RecordValues
+): { doc: string; baseline: string; reasons: Array<string> } {
+  const reasons: Array<string> = []
+  const baseline = replaceBaselineTable(files.baseline, values.totals)
   if (baseline === null) {
-    anchors.push(
+    reasons.push(
       `src/lib/contrast-baseline.ts has no \`${BASELINE_OPENING.trimEnd()}\` followed by a totals table`
     )
   }
 
-  const doc = new DocEditor(input.files.doc)
-  doc.table(doc.section(TOTALS_SECTION), totals.split("\n")[0], totals)
+  const doc = new DocEditor(files.doc)
+  doc.table(doc.section(TOTALS_SECTION), TOTALS_HEADER, values.totals)
   doc.phrase(
     doc.section(BORDERLINE_SECTION),
     /분류한 `borderline` \d+행을/g,
-    `분류한 \`borderline\` ${borderline.total}행을`
+    `분류한 \`borderline\` ${values.borderline.total}행을`
   )
-  for (const [verdict, heading, counts] of [
-    ["borderline", BORDERLINE_SECTION, borderline],
-    ["fail", FAIL_SECTION, fail],
+  for (const [verdict, heading] of [
+    ["borderline", BORDERLINE_SECTION],
+    ["fail", FAIL_SECTION],
   ] as const) {
+    const counts = values[verdict]
     doc.table(doc.section(heading), PAIR_TABLE_START, counts.table)
     doc.phrase(
       doc.section(heading),
@@ -418,31 +409,69 @@ export function rebaseline(input: RebaselineInput): RebaselineResult {
     doc.section(HELD_SECTION),
     HELD_TABLE_START,
     HELD_ROWS_LINE_START,
-    renderHeldReasons({ ...heldReasons(rows), run: input.run })
+    values.held
   )
   // Only the places that name the run the record is OF. The dated lists of
   // earlier recounts name runs too, and stay as the history they are.
   doc.phrase(
     doc.section(TOTALS_SECTION),
     /이다\(run `\d+`\)/g,
-    `이다(run \`${input.run}\`)`
+    `이다(run \`${values.run}\`)`
   )
   doc.phrase(
     doc.section(BORDERLINE_SECTION),
     /입력은 run `\d+`/g,
-    `입력은 run \`${input.run}\``
+    `입력은 run \`${values.run}\``
   )
 
-  anchors.push(...doc.reasons)
-  if (baseline === null || anchors.length > 0) {
-    return { ok: false, reasons: anchors }
+  reasons.push(...doc.reasons)
+  return { doc: doc.text(), baseline: baseline ?? files.baseline, reasons }
+}
+
+export function rebaseline(input: RebaselineInput): RebaselineResult {
+  const { reasons, palettes, notes } = validateArtifactAndReadPalettes(input)
+  if (reasons.length > 0) return { ok: false, reasons }
+
+  // The same fold and the same seeding as the sweep, so the table written here
+  // is the table the gate prints and compares (`audit-contrast-sweep.ts`).
+  const rows = dedupeFindings(input.findings)
+  const totals = renderTotalsTable(
+    totalsBySlug(rows, {
+      slugs: input.previewSlugs,
+      themes: ["light", "dark"],
+    })
+  )
+
+  const paletteFor = paletteLookup(palettes)
+  const pairs = (verdict: ClassifiedVerdict): PairTableValues => {
+    const tally = tallyPairs(rows, paletteFor, verdict)
+    const sum = sumPairTally(tally)
+    return {
+      table: renderPairTable(tally),
+      total: sum.total,
+      both: sum.bothPublished,
+    }
   }
+  const written = rewriteRecord(input.files, {
+    run: input.run,
+    totals,
+    borderline: pairs("borderline"),
+    fail: pairs("fail"),
+    held: renderHeldReasons({ ...heldReasons(rows), run: input.run }),
+  })
+  if (written.reasons.length > 0) {
+    return { ok: false, reasons: written.reasons }
+  }
+
+  const at = baselineBody(input.files.baseline)
+  const recorded =
+    at === null ? "" : input.files.baseline.slice(at.body, at.closing)
   const files: RecordFiles = {
-    baseline,
-    doc: doc.text(),
+    baseline: written.baseline,
+    doc: written.doc,
     classifiedRun: renderClassifiedRun({
       run: input.run,
-      slugs: [...new Set(input.findings.map((f) => f.slug))].sort(),
+      slugs: measuredSlugs(input.findings),
     }),
   }
   const unchanged = (Object.keys(files) as Array<keyof RecordFiles>).every(
@@ -453,5 +482,6 @@ export function rebaseline(input: RebaselineInput): RebaselineResult {
     files,
     moved: movedRows(parseTotalsTable(recorded), parseTotalsTable(totals)),
     remaining: unchanged ? [] : remainingWork(input.run),
+    notes,
   }
 }

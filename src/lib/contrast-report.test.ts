@@ -331,6 +331,14 @@ describe("the hold-reason table", () => {
     ).toThrow(/gradient/)
   })
 
+  it("refuses a reason the measurer never gives", () => {
+    // Shaped like one, so only a check against the real reasons catches a
+    // typo such as `gradiant`, which would otherwise be read as a reason.
+    expect(() =>
+      parseHeldReasons(block.replace("| gradient | 2 |", "| gradiant | 2 |"))
+    ).toThrow(/gradiant.*not a hold reason/)
+  })
+
   it("refuses a reason written twice", () => {
     expect(() =>
       parseHeldReasons(

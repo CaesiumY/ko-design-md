@@ -5,6 +5,7 @@
 // `contrast.ts` is: the script needs a browser, so anything it owns cannot be
 // covered by `pnpm test`.
 
+import { BLOCKERS, isBlocker } from "./contrast"
 import type { Blocker, ControlTextSource, Verdict } from "./contrast"
 
 export type Theme = "light" | "dark"
@@ -90,6 +91,14 @@ export function findingsProblem(parsed: unknown): string | null {
     ? null
     : `item ${bad} is not a finding (slug, theme, state, kind, path, verdict, ratio, threshold, width, blockers, opacityApprox, basis?, source?, fg, bg) — is it a contrast-findings.json from a run that reports colour pairs?`
 }
+
+/**
+ * Every slug the findings name, sorted and once each: the slugs a run
+ * measured, as `src/lib/contrast-classified-run.json` records them.
+ */
+export const measuredSlugs = (
+  findings: ReadonlyArray<Pick<Finding, "slug">>
+): Array<string> => [...new Set(findings.map((f) => f.slug))].sort()
 
 /** The same element folded across the widths it was seen at. */
 export interface DedupedFinding extends Omit<Finding, "width"> {
@@ -528,7 +537,17 @@ export function renderHeldReasons(r: HeldReasons): string {
   ].join("\n")
 }
 
-const HELD_ROWS_LINE = /^보류 행 수: (\d+) \(run `(\d+)`\)$/
+// What a CI run id looks like: the number GitHub gives a workflow run. The
+// commands' `<run id>` placeholder is not one.
+const RUN_ID = String.raw`\d+`
+
+/** Whether `run` is a CI run number, not a placeholder or a typo. */
+export const isRunId = (run: string): boolean =>
+  new RegExp(`^${RUN_ID}$`).test(run)
+
+const HELD_ROWS_LINE = new RegExp(
+  String.raw`^보류 행 수: (\d+) \(run \`(${RUN_ID})\`\)$`
+)
 
 /**
  * A block `renderHeldReasons` wrote, read back from text that holds it — the
@@ -562,11 +581,17 @@ export function parseHeldReasons(text: string): HeldReasons {
         `hold-reason table row ${JSON.stringify(l)} is not a reason and a whole count`
       )
     }
-    if (seen.has(c[0])) {
-      throw new Error(`hold-reason table row for ${c[0]} is written twice`)
+    const blocker = c[0]
+    if (!isBlocker(blocker)) {
+      throw new Error(
+        `hold-reason table row ${JSON.stringify(l)}: ${blocker} is not a hold reason (${BLOCKERS.join(", ")})`
+      )
     }
-    seen.add(c[0])
-    return { blocker: c[0] as Blocker, count: Number(c[1]) }
+    if (seen.has(blocker)) {
+      throw new Error(`hold-reason table row for ${blocker} is written twice`)
+    }
+    seen.add(blocker)
+    return { blocker, count: Number(c[1]) }
   })
   const held = lines
     .map((l) => HELD_ROWS_LINE.exec(l))

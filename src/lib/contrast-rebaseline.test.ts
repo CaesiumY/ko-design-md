@@ -1,5 +1,9 @@
+import fs from "node:fs"
+import path from "node:path"
 import { describe, expect, it } from "vitest"
-import { rebaseline } from "./contrast-rebaseline"
+import { BASELINE_TABLE } from "./contrast-baseline"
+import { rebaseline, rewriteRecord } from "./contrast-rebaseline"
+import { renderHeldReasons } from "./contrast-report"
 import type { RebaselineInput, RecordFiles } from "./contrast-rebaseline"
 import type { Finding } from "./contrast-report"
 
@@ -392,6 +396,21 @@ describe("rebaseline", () => {
     ])
   })
 
+  it("notes a token it cannot read, in the words the classification command prints", () => {
+    // Left out of the palette, so a pair on it reads as no token: whoever
+    // runs the command has to be told, or the table looks wrong for no reason.
+    const odd = ENTRY.replace(
+      "  paper: oklch(1 0 0)   # #ffffff",
+      "  paper: oklch(1 0 0)   # #ffffff\n  haze: oklch(none 0 0)   # #000000"
+    )
+    expect(
+      ok({ ...INPUT, entries: { ...INPUT.entries, toss: odd } }).notes
+    ).toEqual([
+      "Note: toss defines `haze` in a form this cannot read; it is not in the palette",
+    ])
+    expect(ok(INPUT).notes).toEqual([])
+  })
+
   it("lists the judgement prose it left for a person, naming the run", () => {
     const remaining = ok(INPUT).remaining
     expect(remaining.length).toBeGreaterThan(0)
@@ -404,5 +423,38 @@ describe("rebaseline", () => {
     const again = ok({ ...INPUT, files: once })
     expect(again.moved).toEqual(["ratchet rows moved: none"])
     expect(again.remaining).toEqual([])
+  })
+})
+
+describe("the places it writes, in the real record", () => {
+  // The fixtures above copy the document's phrases by hand, so a wording
+  // change in the real document would pass every test there and fail only at
+  // the next rebaseline. Writing into the real files here finds each anchor
+  // the command looks for, by the command's own lookups.
+  const read = (file: string): string =>
+    fs
+      .readFileSync(path.join(process.cwd(), file), "utf-8")
+      .replace(/\r\n/g, "\n")
+
+  it("finds every anchor once in the document and the constant's file", () => {
+    const emptyPairs = {
+      table: [PAIR_HEADER, PAIR_RULE].join("\n"),
+      total: 0,
+      both: 0,
+    }
+    const got = rewriteRecord(
+      {
+        doc: read("docs/preview-contrast-baseline.md"),
+        baseline: read("src/lib/contrast-baseline.ts"),
+      },
+      {
+        run: "1",
+        totals: BASELINE_TABLE,
+        borderline: emptyPairs,
+        fail: emptyPairs,
+        held: renderHeldReasons({ tally: [], held: 0, run: "1" }),
+      }
+    )
+    expect(got.reasons).toEqual([])
   })
 })
