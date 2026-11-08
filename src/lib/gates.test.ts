@@ -228,6 +228,15 @@ describe("stepListMismatch", () => {
       /position 2.*`b`.*`c`/
     )
   })
+
+  it("names a step either side runs once more than the other", () => {
+    expect(stepListMismatch(["a", "b"], ["a", "b", "b"])).toMatch(
+      /position 3.*`b`/
+    )
+    expect(stepListMismatch(["a", "b", "b"], ["a", "b"])).toMatch(
+      /position 3.*`b`/
+    )
+  })
 })
 
 describe("ciPreBuildSteps outside the steps", () => {

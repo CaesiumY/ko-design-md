@@ -138,7 +138,9 @@ export interface LastUpdatedInput {
   baseRaw: string | null
   /**
    * `YYYY-MM-DD` author date of the latest in-range non-merge commit touching the
-   * file (today when the working tree has uncommitted edits to it).
+   * file (today when the working tree has uncommitted edits to it; in the merge
+   * preflight, only unstaged edits or an unresolved conflict, see
+   * `changedEntries`).
    */
   changedOn: string
   /**

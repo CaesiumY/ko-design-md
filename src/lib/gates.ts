@@ -245,9 +245,15 @@ export function stepListMismatch(
   }
   if (problems.length > 0) return problems.join("; ")
 
-  const at = ci.findIndex((s, i) => s !== gates[i])
-  if (at === -1) return null
-  return `order differs at position ${at + 1}: CI runs \`${ci[at]}\`, gates runs \`${gates[at]}\``
+  // Up to the longer list, so a step one side runs once more shows too.
+  const longer = Math.max(ci.length, gates.length)
+  const at = Array.from({ length: longer }, (_, i) => i).find(
+    (i) => ci[i] !== gates[i]
+  )
+  if (at === undefined) return null
+  const name = (s: string | undefined): string =>
+    s === undefined ? "nothing" : `\`${s}\``
+  return `order differs at position ${at + 1}: CI runs ${name(ci[at])}, gates runs ${name(gates[at])}`
 }
 
 /**

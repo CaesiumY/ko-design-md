@@ -210,7 +210,10 @@ function main(): void {
       .map((l) => l.split(" "))
 
     // An uncommitted edit happened now, whatever the last commit says. Checking
-    // the working tree is what makes this runnable before you commit.
+    // the working tree is what makes this runnable before you commit. In the
+    // merge preflight only an edit left unstaged, or an unresolved conflict,
+    // counts as one (`changedEntries`); a staged change there is judged by the
+    // branch's commit date, and `git merge --abort` discards it either way.
     const issue = checkLastUpdated({
       file,
       raw: readFileSync(file, "utf8"),
@@ -234,6 +237,8 @@ function main(): void {
     // `!dirty` matters as much as the rest: an uncommitted edit cannot carry a
     // trailer yet, so a file whose committed history is all-marked would
     // otherwise let new working-tree changes ride in on the sweep's exemption.
+    // (In the merge preflight `dirty` is only an unstaged edit or a conflict,
+    // as above; a staged one rides on the exemption until the abort drops it.)
     // No in-range commits at all is the same case — nothing marked stands
     // behind the edit.
     //
