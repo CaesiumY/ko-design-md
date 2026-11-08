@@ -704,8 +704,8 @@ describe("role reference rows agree with the body role tables", () => {
   it("passes a role pointing at another role, refuses an undeclared target", () => {
     // .claude/rules/catalog.md (#661): a role the upstream points at another
     // role keeps that hop — bezier alpha's `--alpha-color-primary-bg-normal:
-    // var(--alpha-color-bg-blue-normal)`. No entry carries one yet, so the
-    // fixture holds the acceptance.
+    // var(--alpha-color-bg-blue-normal)`. The fixture holds the acceptance
+    // whether or not an entry carries such a row.
     // A pointed role with no `dark-` twin does not change with the theme, so
     // both twins point at its one key (`bg-absolute-white`).
     const literals = new Set(["blue-300", "blue-400", "white"])
@@ -723,6 +723,15 @@ describe("role reference rows agree with the body role tables", () => {
     expect(() =>
       expectRowsToMatch("fixture", undeclared, new Map(undeclared), literals)
     ).toThrow(/bg-nope/)
+    // Two roles pointing at each other never reach a palette key.
+    const loop = new Map([
+      ...expected,
+      ["bg-loop-a", "bg-loop-b"],
+      ["bg-loop-b", "bg-loop-a"],
+    ])
+    expect(() =>
+      expectRowsToMatch("fixture", loop, new Map(loop), literals)
+    ).toThrow(/bg-loop-b/)
   })
 
   it("refuses a role → role twin that crosses theme", () => {
