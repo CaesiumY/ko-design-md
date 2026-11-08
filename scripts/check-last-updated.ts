@@ -7,9 +7,9 @@
 // left alone. That is what makes a hard failure safe here: the gate can never
 // block a PR over a file the PR did not edit. That holds in the merge
 // preflight too (`git merge origin/main --no-commit --no-ff`, CLAUDE.md): with
-// a merge staged, only what the working tree holds beyond the commit being
-// merged in is judged, and the merge's own staged result is not read as an
-// edit made today.
+// the base merged in but not committed, only what the working tree holds
+// beyond the base is judged, and only a change left unstaged (an unresolved
+// conflict among them) is read as an edit made today.
 //
 // The judgment itself lives in src/lib/last-updated-check.ts, which is pure and
 // unit-tested; this file is the git plumbing around it.
@@ -69,7 +69,8 @@ function today(): string {
 
 function main(): void {
   const base = parseBase(process.argv.slice(2))
-  if (gitOrNull("rev-parse", "--verify", `${base}^{commit}`) === null) {
+  const baseCommit = gitOrNull("rev-parse", "--verify", `${base}^{commit}`)
+  if (baseCommit === null) {
     // A shallow clone that never fetched the base would otherwise report zero
     // changed files and pass — the silent-empty-run failure this repo has been
     // bitten by before (audit:oklch, #188). Fail loudly instead.
@@ -91,19 +92,27 @@ function main(): void {
   //   • diff vs HEAD — uncommitted edits to tracked files;
   //   • ls-files --others — a brand-new entry not yet `git add`ed, which is
   //     exactly what /design-md produces when it onboards a slug.
-  // With a merge staged but not committed (the merge preflight in CLAUDE.md),
-  // diff vs MERGE_HEAD stands in for the first two: what the working tree
-  // holds beyond the commit being merged in is what this branch contributes.
-  // `changedEntries` makes the choice; see its comment.
+  // With the base merged in but not committed (the merge preflight in
+  // CLAUDE.md), diff vs MERGE_HEAD stands in for the first two: what the
+  // working tree holds beyond the base is what this branch contributes. A
+  // merge of any other commit is judged as no merge. `changedEntries` makes
+  // the choice; see its comment.
   const names = (out: string): Array<string> =>
     out
       .split(/\r?\n/)
       .map((l) => l.trim())
       .filter(Boolean)
+  const mergeHead = gitOrNull(
+    "rev-parse",
+    "-q",
+    "--verify",
+    "MERGE_HEAD^{commit}"
+  )
   const merging =
-    gitOrNull("rev-parse", "-q", "--verify", "MERGE_HEAD^{commit}") === null
+    mergeHead === null
       ? null
       : {
+          head: mergeHead.trim(),
           differsFromMergeHead: names(
             git("diff", "--name-only", "MERGE_HEAD", "--", "services")
           ),
@@ -129,7 +138,12 @@ function main(): void {
     status[file] = git("status", "--porcelain", "--", file).slice(0, 2)
   }
 
-  const entries = changedEntries({ ...sources, status, merging })
+  const entries = changedEntries({
+    ...sources,
+    status,
+    base: baseCommit.trim(),
+    merging,
+  })
   const files = entries.map((e) => e.file)
   if (files.length === 0) {
     console.log("[last-updated] no services/*.md changed — nothing to check.")

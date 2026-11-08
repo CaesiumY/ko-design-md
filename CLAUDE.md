@@ -52,7 +52,8 @@ pnpm validate:spec      # 로컬 진단용 출력. 실제 게이트는 pnpm test
   `git fetch origin && git merge origin/main --no-commit --no-ff` → `pnpm gates` → `git merge --abort`.
   PR 단위 CI 는 각 브랜치를 자기 base 에서 돌리므로, 둘 다 green 인데 합치면 깨지는 경우(예: 슬러그별 표가
   새로 생긴 경우)를 못 잡는다. **나중에 머지하는 브랜치가 수정을 싣는다.** 합본 중에는 날짜 검사가 main 에서
-  그대로 들어온 항목을 빼고 이 브랜치가 더한 항목만, 그 커밋 날짜로 본다(손으로 고치거나 충돌을 푼 파일은 오늘 날짜).
+  그대로 들어온 항목을 빼고 이 브랜치가 더한 항목만, 그 커밋 날짜로 본다. 오늘 날짜로 보는 것은 아직 `git add` 하지
+  않은 작업 트리 편집과 풀지 않은 충돌뿐이다.
 
 ## Windows 로컬 주의
 

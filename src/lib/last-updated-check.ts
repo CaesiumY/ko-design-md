@@ -51,12 +51,14 @@ export interface GitChanges {
    * tree); a file missing or `""` is clean.
    */
   status: Readonly<Record<string, string>>
+  /** The commit `base` resolves to. */
+  base: string
   /**
    * Set while a merge is staged but not committed (`MERGE_HEAD` exists): the
-   * files whose working-tree content differs from the commit being merged in
-   * (`diff MERGE_HEAD`).
+   * commit being merged in, and the files whose working-tree content differs
+   * from it (`diff MERGE_HEAD`).
    */
-  merging: { differsFromMergeHead: Array<string> } | null
+  merging: { head: string; differsFromMergeHead: Array<string> } | null
 }
 
 export interface ChangedEntry {
@@ -65,35 +67,39 @@ export interface ChangedEntry {
   edited: boolean
 }
 
-// Both sides added or deleted it, or one side did and the other changed it:
-// a conflict, which whoever resolves it is editing now.
-const UNMERGED = new Set(["DD", "AU", "UD", "UA", "DU", "AA", "UU"])
-
 /**
  * The catalog files this branch changed, each with whether it was edited
  * since its last commit.
  *
  * Ordinarily that is every file a commit, the working tree or a new file
- * changed, and any status at all is an edit. With a merge staged but not
- * committed, as in the merge preflight CLAUDE.md prescribes (`git merge
- * origin/main --no-commit --no-ff`), the working tree also holds what main
- * brings in. A file that matches the commit being merged in is main's, not
- * this branch's, so it is left out; and a merge's own staged result is not an
- * edit, so only a working-tree change past the index or a conflict counts as
- * one. Otherwise main's incoming edits read as edits made today and fail the
- * gate on files this branch never touched.
+ * changed, and any status at all is an edit.
+ *
+ * With the base merged in but not committed, as in the merge preflight
+ * CLAUDE.md prescribes (`git merge origin/main --no-commit --no-ff`), the
+ * working tree also holds what the base brings in. A file that matches the
+ * base is the base's, not this branch's, so it is left out; and the merge's
+ * staged result is not an edit, so only a change left unstaged in the working
+ * tree counts as one. That includes an unresolved conflict, whose `XY` code
+ * always has a working-tree letter; a hand edit or a resolved conflict that
+ * has been added is judged by the branch's commit date. Otherwise the base's
+ * incoming edits read as edits made today and fail the gate on files this
+ * branch never touched.
+ *
+ * A merge of any other commit (a sibling branch, or one stopped on a
+ * conflict) is judged as no merge: a file this branch changed to match that
+ * commit is still this branch's change against the base.
  */
 export function changedEntries(git: GitChanges): Array<ChangedEntry> {
-  const files = git.merging
-    ? [...git.merging.differsFromMergeHead, ...git.untracked]
+  const preflight =
+    git.merging !== null && git.merging.head === git.base ? git.merging : null
+  const files = preflight
+    ? [...preflight.differsFromMergeHead, ...git.untracked]
     : [...git.branch, ...git.uncommitted, ...git.untracked]
   return [...new Set(files.filter((f) => f.endsWith(".md")))]
     .sort()
     .map((file) => {
       const xy = git.status[file] ?? ""
-      const edited = git.merging
-        ? UNMERGED.has(xy) || (xy.length === 2 && xy[1] !== " ")
-        : xy !== ""
+      const edited = preflight ? xy.length === 2 && xy[1] !== " " : xy !== ""
       return { file, edited }
     })
 }

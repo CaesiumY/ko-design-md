@@ -372,6 +372,7 @@ Skip-Last-Updated:
 // edits are then staged in the working tree without being this branch's.
 describe("changedEntries", () => {
   const git = {
+    base: "main",
     branch: ["services/b.md", "services/c.md"],
     uncommitted: ["services/a.md", "services/c.md"],
     untracked: ["services/new.md"],
@@ -383,21 +384,38 @@ describe("changedEntries", () => {
     },
   }
 
+  const WITHOUT_MERGE = [
+    ["services/a.md", true],
+    ["services/b.md", false],
+    ["services/c.md", true],
+    ["services/new.md", true],
+  ]
+
   it("judges every file the branch, the working tree or a new file changed", () => {
     expect(
       changedEntries({ ...git, merging: null }).map((e) => [e.file, e.edited])
-    ).toEqual([
-      ["services/a.md", true],
-      ["services/b.md", false],
-      ["services/c.md", true],
-      ["services/new.md", true],
-    ])
+    ).toEqual(WITHOUT_MERGE)
   })
 
-  describe("with a merge staged but not committed", () => {
+  it("judges a merge of any commit but the base as it judges no merge", () => {
+    // Another branch merged in with --no-commit, or stopped on a conflict: a
+    // file this branch changed to match that branch still has to be judged.
+    expect(
+      changedEntries({
+        ...git,
+        merging: {
+          head: "sibling",
+          differsFromMergeHead: ["services/b.md"],
+        },
+      }).map((e) => [e.file, e.edited])
+    ).toEqual(WITHOUT_MERGE)
+  })
+
+  describe("with the base merged in but not committed", () => {
     // a.md came in from main unchanged; c.md merged cleanly, this branch's
     // edit and main's together; b.md is this branch's alone.
     const merging = {
+      head: "main",
       differsFromMergeHead: ["services/b.md", "services/c.md"],
     }
 
@@ -416,7 +434,9 @@ describe("changedEntries", () => {
       expect(c?.edited).toBe(false)
     })
 
-    it("still reads a hand edit or a conflict as an edit made today", () => {
+    it("reads only an edit left unstaged, or a conflict not yet resolved, as made today", () => {
+      // Once added, a hand edit or a resolved conflict is `M ` like the
+      // merge's own result, and is judged by the branch's commit date.
       for (const status of [" M", "MM", "UU", "AA"]) {
         const got = changedEntries({
           ...git,
