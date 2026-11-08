@@ -597,6 +597,38 @@ colors:
     }
   })
 
+  it("reads no stylesheet out of comments, raw text or a non-CSS <style>", () => {
+    // None of these is applied by a browser, so none may hide the wrong base.
+    const chains = roleChainsForSlug(roles, "socar")
+    const base = `<style>:root { --sf-text-primary: var(--sf-gray-100); }</style>`
+    const fix = `<style>:root { --sf-text-primary: var(--sf-gray-800); }</style>`
+    for (const dead of [
+      `<!-- ${fix} -->`,
+      `<script>const css = "${fix.replace(/"/g, "'")}"</script>`,
+      `<textarea>${fix}</textarea>`,
+      `<title>${fix}</title>`,
+      fix.replace("<style>", '<style type="text/plain">'),
+    ]) {
+      const html = base + dead
+      expect(
+        findRoleChainDrift(html, chains).map((f) => f.preview),
+        dead
+      ).toEqual(["var(--sf-gray-100)"])
+      expect(roleChainCoverage(html, chains), dead).toEqual({
+        chained: 1,
+        literal: 0,
+        scoped: 0,
+      })
+    }
+    // `text/css` is the stylesheet type and is read.
+    expect(
+      findRoleChainDrift(
+        base + fix.replace("<style>", '<style type="text/css">'),
+        chains
+      )
+    ).toEqual([])
+  })
+
   it("reads only the listed selectors as theme roots", () => {
     const chains = roleChainsForSlug(roles, "socar")
     const wrong = (selector: string): string =>

@@ -504,7 +504,9 @@ export interface RoleChainFinding extends DriftFinding {
  * `[data-theme="dark"]`, `:root[data-theme="dark"]` and
  * `html[data-theme="dark"]` for dark, each in a top-level block outside any
  * at-rule, in a `<style>` element with no `media` attribute and not inside
- * `<noscript>` or `<template>`. A role declared under any other selector
+ * `<noscript>` or `<template>`. A `<style>` inside an HTML comment or a
+ * raw-text element (`<script>`, `<textarea>`, `<title>`, …), or one whose
+ * `type` is not `text/css`, is not read at all. A role declared under any other selector
  * (`.inverse`, `:where(.chip)`, `[data-theme="sepia"]`, `:root` inside
  * `@media`) is neither compared nor allowed to hide the root value;
  * `roleChainCoverage` counts it as `scoped`.
@@ -726,19 +728,34 @@ function declarations(previewHtml: string): Array<Declaration> {
   const inside = (before: string, tag: string): boolean =>
     (before.match(new RegExp(`<${tag}\\b`, "gi"))?.length ?? 0) >
     (before.match(new RegExp(`</${tag}\\s*>`, "gi"))?.length ?? 0)
+  //
+  // HTML comments and the bodies of raw-text elements are blanked first: a
+  // `<style>` written inside them is text, not a stylesheet. So is a `<style>`
+  // whose `type` names anything but CSS.
+  const html = previewHtml
+    .replace(/<!--[\s\S]*?(?:-->|$)/g, "")
+    .replace(
+      /<(script|textarea|title|xmp|noembed|noframes)\b[^>]*>[\s\S]*?(?:<\/\1\s*>|$)/gi,
+      ""
+    )
   const blocks = [
-    ...previewHtml.matchAll(/<style\b([^>]*)>([\s\S]*?)<\/style>/gi),
-  ].map((m) => {
-    const before = previewHtml.slice(0, m.index)
+    ...html.matchAll(/<style\b([^>]*)>([\s\S]*?)<\/style>/gi),
+  ].flatMap((m) => {
+    const type = /\btype\s*=\s*["']?([^"'\s>]*)/i.exec(m[1])?.[1]
+    if (type !== undefined && type.toLowerCase() !== "text/css") return []
+    const before = html.slice(0, m.index)
     const conditional =
       /\bmedia\s*=/i.test(m[1]) ||
       inside(before, "noscript") ||
       inside(before, "template")
-    return conditional ? `@conditional-style {\n${m[2]}\n}` : m[2]
+    return [conditional ? `@conditional-style {\n${m[2]}\n}` : m[2]]
   })
-  // With no <style> at all the input is already a stylesheet — every catalogue
-  // preview has one, so this only matters when checking raw CSS directly.
-  const css = stripComments(blocks.length > 0 ? blocks.join("\n") : previewHtml)
+  // With no <style> tag at all the input is already a stylesheet — every
+  // catalogue preview has one, so this only matters when checking raw CSS
+  // directly. A document whose only <style> tags are dead reads as empty.
+  const css = stripComments(
+    /<style\b/i.test(previewHtml) ? blocks.join("\n") : previewHtml
+  )
 
   // Walk braces and declarations in document order. Deciding scope per LINE is
   // not enough: a block that opens and closes on one line would have already
