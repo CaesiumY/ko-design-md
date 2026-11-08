@@ -883,4 +883,15 @@ describe("paletteFingerprint", () => {
       .map(([what]) => what)
     expect(still).toEqual([])
   })
+
+  it("moves when a dark token's value does", () => {
+    // Against an entry that already has the twin, so only the value differs.
+    const withDark = edit(
+      "  ## 관측(미발행)",
+      "  dark-paper: oklch(0.2 0.01 250)\n  ## 관측(미발행)"
+    )
+    expect(
+      fp(withDark.replace("oklch(0.2 0.01 250)", "oklch(0.25 0.01 250)"))
+    ).not.toBe(fp(withDark))
+  })
 })

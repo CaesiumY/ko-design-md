@@ -5,6 +5,7 @@ import { readPreviewSlugs } from "../../scripts/audit-contrast-slugs"
 import { BASELINE_TABLE, CONTRAST_BASELINE } from "./contrast-baseline"
 import {
   OBSERVED_COLOURS,
+  PALETTE_FINGERPRINT,
   paletteFingerprint,
   paletteOf,
   parsePairTable,
@@ -54,9 +55,6 @@ const tableInDoc = (): string => {
   return lines.slice(start, end + 1).join("\n")
 }
 
-/** `paletteFingerprint`'s output: the first 16 hex digits of a SHA-256. */
-const FINGERPRINT = /^[0-9a-f]{16}$/
-
 /**
  * The classified-run record, read whole and refused when it is not the shape
  * the assertions below take for granted: a run id of digits (not the
@@ -80,7 +78,9 @@ const readClassifiedRun = (): {
     typeof v === "object" &&
     v !== null &&
     !Array.isArray(v) &&
-    Object.values(v).every((f) => typeof f === "string" && FINGERPRINT.test(f))
+    Object.values(v).every(
+      (f) => typeof f === "string" && PALETTE_FINGERPRINT.test(f)
+    )
   if (
     typeof run !== "string" ||
     !isRunId(run) ||
@@ -91,7 +91,7 @@ const readClassifiedRun = (): {
     Object.keys(palettes).some((slug) => !slugs.includes(slug))
   ) {
     throw new Error(
-      `${CLASSIFIED_RUN_FILE} is not { run: "<digits>", slugs: [sorted, unique slugs], palettes: { <one of those slugs, in order>: "<16 hex digits>" } } — run \`pnpm audit:contrast:rebaseline <run id>\` rather than editing it`
+      `${CLASSIFIED_RUN_FILE} is not { run: "<digits>", slugs: [sorted, unique slugs], palettes: { <one of those slugs, in order>: "<paletteFingerprint output>" } } — run \`pnpm audit:contrast:rebaseline <run id>\` rather than editing it`
     )
   }
   return { run, slugs, palettes }
@@ -244,13 +244,17 @@ describe("the published-pair tables against the recorded totals", () => {
   // whose new entries all have no rows yet is not — the rerun step above is
   // what keeps the list whole.
   const CLASSIFIED_RUN = readClassifiedRun()
-  const classified = (): Set<string> =>
-    new Set([
-      ...CLASSIFIED_RUN.slugs,
-      ...[...tableIn(cases[0].heading), ...tableIn(cases[1].heading)].map(
-        (t) => t.slug
+  /** Every slug with a row on either pair table, sorted, once each. */
+  const slugsOnTables = (): Array<string> =>
+    [
+      ...new Set(
+        [...tableIn(cases[0].heading), ...tableIn(cases[1].heading)].map(
+          (t) => t.slug
+        )
       ),
-    ])
+    ].sort()
+  const classified = (): Set<string> =>
+    new Set([...CLASSIFIED_RUN.slugs, ...slugsOnTables()])
 
   it("names the run its pinned slug list came from", () => {
     expect(
@@ -263,14 +267,8 @@ describe("the published-pair tables against the recorded totals", () => {
     // Both come from one artifact, so a slug on a table and missing here is a
     // list left over from an earlier run.
     const pinned = new Set(CLASSIFIED_RUN.slugs)
-    const unpinned = [
-      ...tableIn(cases[0].heading),
-      ...tableIn(cases[1].heading),
-    ]
-      .map((t) => t.slug)
-      .filter((slug) => !pinned.has(slug))
     expect(
-      [...new Set(unpinned)],
+      slugsOnTables().filter((slug) => !pinned.has(slug)),
       `slugs on a pair table but not in contrast-classified-run.json — ${HOW}`
     ).toEqual([])
   })
@@ -278,17 +276,10 @@ describe("the published-pair tables against the recorded totals", () => {
   it("fingerprints the palette of exactly the slugs the tables classify", () => {
     // The classification reads a palette for every slug with a borderline or
     // fail row, and those are the slugs on the two tables.
-    const onTables = [
-      ...new Set(
-        [...tableIn(cases[0].heading), ...tableIn(cases[1].heading)].map(
-          (t) => t.slug
-        )
-      ),
-    ].sort()
     expect(
       Object.keys(CLASSIFIED_RUN.palettes),
       `the palette fingerprints in contrast-classified-run.json are not of the slugs on the pair tables — ${HOW}`
-    ).toEqual(onTables)
+    ).toEqual(slugsOnTables())
   })
 
   it("was classified against the palette each entry has now", () => {
@@ -301,18 +292,19 @@ describe("the published-pair tables against the recorded totals", () => {
     // means a table may count a pair under a class it no longer has.
     const moved: Array<string> = []
     for (const [slug, recorded] of Object.entries(CLASSIFIED_RUN.palettes)) {
-      let now: string
       try {
-        now = paletteFingerprint(
+        const now = paletteFingerprint(
           paletteOf(
             read(path.join(ROOT, "services", `${slug}.md`)),
             OBSERVED_COLOURS[slug] ?? {}
           )
         )
+        if (now !== recorded) moved.push(slug)
       } catch (e) {
-        now = (e as Error).message
+        // An entry gone, or an observed listing it no longer has: no palette
+        // to compare is a palette that moved, said with why.
+        moved.push(`${slug} (${(e as Error).message})`)
       }
-      if (now !== recorded) moved.push(slug)
     }
     expect(
       moved,

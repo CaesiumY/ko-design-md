@@ -335,8 +335,15 @@ export function paletteFingerprint(palette: Palette): string {
   return createHash("sha256")
     .update([...lines].sort().join("\n"))
     .digest("hex")
-    .slice(0, 16)
+    .slice(0, FINGERPRINT_DIGITS)
 }
+
+const FINGERPRINT_DIGITS = 16
+
+/** What `paletteFingerprint` returns, for a reader of the record to check. */
+export const PALETTE_FINGERPRINT = new RegExp(
+  `^[0-9a-f]{${FINGERPRINT_DIGITS}}$`
+)
 
 /** Whether a token of `token`'s theme can be painted in a row of `row`'s. */
 const paintableIn = (token: TokenTheme, row: Theme | undefined): boolean =>
