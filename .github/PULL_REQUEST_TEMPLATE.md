@@ -20,7 +20,7 @@
 
 ## 일반 체크
 
-- [ ] `pnpm gates && pnpm build` 통과 (`pnpm gates` 는 CI build 잡이 빌드 전에 돌리는 검사 전부를 같은 순서로 돌린다)
+- [ ] `pnpm gates && pnpm build` 통과 (`pnpm gates` 는 CI build 잡이 빌드 전에 돌리는 검사 전부를 같은 순서로 돌린다. 다른 브랜치 위에 쌓은 PR 은 `pnpm gates --base origin/<그 브랜치>`)
 - [ ] 머지 직전 `origin/main`을 합쳐 본 상태에서 게이트 재실행 (`git merge origin/main --no-commit --no-ff` → `pnpm gates` → `git merge --abort`). PR 단위 CI 는 각 브랜치를 자기 base 에서 돌리므로 둘 다 green 인데 합치면 깨지는 경우를 못 잡는다
 - [ ] (에이전트 작업) 저장소 규칙 준수와 이슈 요구 충족을 따로 보는 로컬 2축 리뷰(방법은 CODING_STANDARDS.md 머리말) 결과가 **마지막 커밋까지** 결함 없음. 리뷰 지적을 반영한 커밋도 다시 리뷰한다 ([CODING_STANDARDS.md](https://github.com/CaesiumY/ko-design-md/blob/main/CODING_STANDARDS.md))
 - [ ] DCO 서명 (`git commit -s`)

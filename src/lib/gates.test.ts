@@ -5,6 +5,7 @@ import {
   GATE_STEPS,
   argsMismatch,
   ciPreBuildSteps,
+  parseGatesArgs,
   runGates,
   stepListMismatch,
   withBase,
@@ -226,6 +227,70 @@ describe("stepListMismatch", () => {
     expect(stepListMismatch(["a", "b", "c"], ["a", "c", "b"])).toMatch(
       /position 2.*`b`.*`c`/
     )
+  })
+})
+
+describe("ciPreBuildSteps outside the steps", () => {
+  it("throws on workflow or build-job settings that change how every step runs", () => {
+    const cases: Array<[string, string]> = [
+      ["env", "env:\n  STRICT: '1'\njobs:"],
+      ["defaults", "defaults:\n  run:\n    working-directory: sub\njobs:"],
+    ]
+    for (const [key, replacement] of cases) {
+      const top = WORKFLOW.replace("jobs:", replacement)
+      expect(() => ciPreBuildSteps(top), key).toThrow(new RegExp(key))
+    }
+    for (const key of ["env", "defaults", "if"]) {
+      const value =
+        key === "if" ? "github.event_name == 'push'" : "\n      X: y"
+      const job = WORKFLOW.replace(
+        "  build:\n",
+        `  build:\n    ${key}: ${value}\n`
+      )
+      expect(() => ciPreBuildSteps(job), key).toThrow(new RegExp(key))
+    }
+  })
+
+  it("lets step keys through that do not change what the check does", () => {
+    const harmless = WORKFLOW.replace(
+      "        run: pnpm typecheck\n",
+      "        run: pnpm typecheck\n        id: types\n        timeout-minutes: 10\n"
+    )
+    expect(ciPreBuildScripts(harmless)).toEqual([
+      "typecheck",
+      "check:last-updated",
+    ])
+  })
+})
+
+describe("parseGatesArgs", () => {
+  it("runs GATE_STEPS as they are with no arguments", () => {
+    expect(parseGatesArgs([])).toBe(GATE_STEPS)
+  })
+
+  it("points the date check at a ref given with --base, CI's HEAD~1 fallback among them", () => {
+    for (const ref of ["origin/claude/x", "HEAD~1"]) {
+      const got = parseGatesArgs(["--base", ref])
+      expect(got).not.toBeNull()
+      expect(got?.find((s) => s.script === "check:last-updated")?.args).toEqual(
+        ["--base", ref]
+      )
+    }
+  })
+
+  it("refuses anything else, a ref the shell or the date check could misread among them", () => {
+    for (const argv of [
+      ["--base"],
+      ["--base", "x;echo"],
+      ["--base", "a b"],
+      ["--base", "--help"],
+      ["--base", "~/x"],
+      ["--base", "HEAD^"],
+      ["--nope"],
+      ["--base", "origin/main", "--extra"],
+    ]) {
+      expect(parseGatesArgs(argv), argv.join(" ")).toBeNull()
+    }
   })
 })
 

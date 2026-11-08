@@ -4,32 +4,27 @@
 //   pnpm gates --base <ref>     # a branch stacked on another: compare with that one
 //
 // Runs each step in src/lib/gates.ts as `pnpm run <script>`, stops at the first
-// failure, and prints that step's name and what it guards. The step list and the run loop live in
-// that module, where they are unit-tested and held to .github/workflows/ci.yml;
-// this file only spawns the processes.
+// failure, and prints that step's name and what it guards. The step list, the
+// argument parsing and the run loop live in that module, where they are
+// unit-tested and held to .github/workflows/ci.yml; this file only spawns the
+// processes.
 import { spawnSync } from "node:child_process"
-import { GATE_STEPS, runGates, withBase } from "../src/lib/gates"
+import { parseGatesArgs, runGates } from "../src/lib/gates"
 
-// The ref goes into a shell command string below, so only the characters a git
-// ref name is made of get through.
-const REF = /^[\w./-]+$/
-
-function stepsFromArgs(argv: ReadonlyArray<string>) {
-  if (argv.length === 0) return GATE_STEPS
-  if (argv.length === 2 && argv[0] === "--base" && REF.test(argv[1])) {
-    return withBase(GATE_STEPS, argv[1])
-  }
+const steps = parseGatesArgs(process.argv.slice(2))
+if (steps === null) {
   console.error("usage: pnpm gates [--base <ref>]")
   process.exit(2)
 }
 
 const code = runGates(
-  stepsFromArgs(process.argv.slice(2)),
+  steps,
   (step) => {
     // A fixed command string through a shell, as in scripts/e2e-server.ts:
     // `pnpm` is `pnpm.cmd` on Windows, which only resolves through one, and an
     // args array alongside `shell: true` is deprecated (DEP0190). Every piece
-    // of the string is a constant from GATE_STEPS, or a ref `REF` admitted.
+    // of the string is a constant from GATE_STEPS, or a ref parseGatesArgs
+    // admitted.
     const command = ["pnpm", "run", step.script, ...(step.args ?? [])].join(" ")
     return spawnSync(command, { stdio: "inherit", shell: true }).status
   },

@@ -83,10 +83,23 @@ const SETUP_ACTIONS = [
 /** `pnpm <script> [args]` on one line, with no chaining or redirection. */
 const ONE_PNPM_SCRIPT = /^pnpm\s+([\w:.-]+)(?:\s+[^&|;<>\n]*)?$/
 
-// The keys a pre-build step may carry. Any other (`if`, `continue-on-error`,
-// `working-directory`, …) changes whether or how the check runs in CI without
-// showing in the line `pnpm gates` mirrors.
-const STEP_KEYS = new Set(["name", "uses", "with", "run", "env"])
+// The keys a pre-build step may carry: what the line shows, and labels or
+// limits that do not change what the check does. Any other (`if`,
+// `continue-on-error`, `working-directory`, …) changes whether or how the
+// check runs in CI without showing in the line `pnpm gates` mirrors.
+const STEP_KEYS = new Set([
+  "name",
+  "id",
+  "timeout-minutes",
+  "uses",
+  "with",
+  "run",
+  "env",
+])
+
+// Settings on the whole workflow or the build job that reach every step the
+// same hidden way.
+const SHARED_KEYS = ["env", "defaults", "if"]
 
 // The fields read here; `Object.keys` still sees every key a step has.
 type YamlScalar = string | number | boolean | null
@@ -107,7 +120,7 @@ function refuseHiddenSettings(step: WorkflowStep, label: string): void {
     if (!STEP_KEYS.has(key)) {
       throw new Error(
         `CI build step \`${label}\` sets \`${key}\`, which \`pnpm gates\` cannot mirror; ` +
-          "drop it, or move the check after `pnpm build`"
+          "drop it from the step"
       )
     }
   }
@@ -144,6 +157,18 @@ export interface CiStep {
 export function ciPreBuildSteps(workflowYaml: string): Array<CiStep> {
   const doc = parse(workflowYaml) as {
     jobs?: { build?: { steps?: Array<WorkflowStep> } }
+  }
+  for (const [where, level] of [
+    ["the workflow", doc],
+    ["the build job", doc.jobs?.build ?? {}],
+  ] as const) {
+    const key = SHARED_KEYS.find((k) => k in level)
+    if (key) {
+      throw new Error(
+        `${where} sets \`${key}\`, which reaches every CI step without showing in the lines \`pnpm gates\` mirrors; ` +
+          "set it on the step that needs it instead"
+      )
+    }
   }
   const steps = doc.jobs?.build?.steps
   if (!Array.isArray(steps)) {
@@ -251,6 +276,27 @@ export function withBase(
     args[at + 1] = ref
     return { ...step, args }
   })
+}
+
+// A ref `pnpm gates --base` passes on. It is joined into a shell command, so
+// only what git ref names are made of gets through, and it must not start with
+// `-` (read as an option) or `~` (expanded by a POSIX shell). `^` is left out
+// because Windows' cmd reads it as an escape.
+const BASE_REF = /^[\w.][\w./~-]*$/
+
+/**
+ * The steps `pnpm gates <argv>` runs: `GATE_STEPS` with no arguments, or with
+ * the date check's base pointed elsewhere by `--base <ref>`. Null for any
+ * other argument list, which the CLI answers with its usage line.
+ */
+export function parseGatesArgs(
+  argv: ReadonlyArray<string>
+): ReadonlyArray<GateStep> | null {
+  if (argv.length === 0) return GATE_STEPS
+  if (argv.length === 2 && argv[0] === "--base" && BASE_REF.test(argv[1])) {
+    return withBase(GATE_STEPS, argv[1])
+  }
+  return null
 }
 
 /** `check:last-updated --base origin/main` — how a step is named in output. */
