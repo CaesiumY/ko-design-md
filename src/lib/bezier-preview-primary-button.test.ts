@@ -79,20 +79,28 @@ function rulesOf(sheet: string): Array<Rule> {
   )
 }
 
-/** `.btn.pri:hover` → its classes and pseudo-classes, order-free. */
-function compound(selector: string): { classes: string; pseudos: string } {
-  const parts = (re: RegExp) =>
-    [...selector.matchAll(re)]
-      .map((m) => m[0])
-      .sort()
-      .join("")
-  return { classes: parts(/\.[\w-]+/g), pseudos: parts(/:[\w-]+/g) }
+/**
+ * `.btn.pri:hover` → its classes and its state pseudo-classes. Functional
+ * pseudo-classes (`:not(.s)`, `:is(…)`) only narrow which buttons a rule
+ * reaches, not which state, so they are dropped — with what is inside them —
+ * and such a rule is read as painting the button.
+ */
+function classesAndState(compound: string): {
+  classes: Set<string>
+  state: string
+} {
+  const bare = compound.replace(/:[\w-]+\([^)]*\)/g, "")
+  return {
+    classes: new Set(bare.match(/\.[\w-]+/g) ?? []),
+    state: (bare.match(/:[\w-]+/g) ?? []).sort().join(""),
+  }
 }
 
 /**
  * A sheet's one declaration of `--name`, following `var()` to a literal.
  * Declared twice anywhere — a later `:root` or a scoped override — is refused:
- * which one reaches the button is the cascade's call, not this reader's.
+ * which one reaches the button is the cascade's call, not this reader's. Only
+ * `<style>` is read; an inline `style="--x:…"` is not (none in the preview).
  */
 function resolveVar(sheet: string, value: string, seen = 0): string {
   const ref = /^var\(\s*(--[\w-]+)\s*\)$/.exec(value.trim())?.[1]
@@ -111,27 +119,31 @@ function resolveVar(sheet: string, value: string, seen = 0): string {
 
 /**
  * The background of the one rule that paints `selector`'s element in that
- * state. Any rule whose last compound carries the same classes (or more) and
- * the same pseudo-classes is a candidate — `.hero .btn.pri` paints these
- * buttons as surely as `.btn.pri` does — and a second candidate setting a
- * background is refused rather than ordered.
+ * state. A candidate is any rule whose last compound is in the same state and
+ * whose classes are a subset or superset of the button's — `.hero .btn.pri`
+ * and `.hero .pri` paint these buttons as surely as `.btn.pri` does. A second
+ * candidate, or a second background property in the one rule, is refused
+ * rather than ordered.
  */
 function ruleBackground(sheet: string, selector: string): string {
-  const want = compound(selector)
+  const want = classesAndState(selector)
   const painting = rulesOf(sheet).flatMap((r) => {
-    const bg = r.declarations.find(([p]) => /^background(-color)?$/.test(p))
-    if (bg === undefined) return []
+    const bgs = r.declarations.filter(([p]) =>
+      /^background(-color|-image)?$/.test(p)
+    )
+    if (bgs.length === 0) return []
     return r.selectors
       .filter((s) => {
-        const last = compound(s.split(/\s*[\s>+~]\s*/).at(-1) ?? "")
+        const last = classesAndState(s.split(/\s*[\s>+~]\s*/).at(-1) ?? "")
+        if (last.state !== want.state || last.classes.size === 0) return false
+        const within = (a: Set<string>, b: Set<string>) =>
+          [...a].every((c) => b.has(c))
         return (
-          last.pseudos === want.pseudos &&
-          want.classes
-            .split(/(?=\.)/)
-            .every((c) => last.classes.split(/(?=\.)/).includes(c))
+          within(last.classes, want.classes) ||
+          within(want.classes, last.classes)
         )
       })
-      .map((s) => ({ selector: s, background: bg[1] }))
+      .map((s) => ({ selector: s, bgs }))
   })
   if (painting.length === 0) {
     throw new Error(`no rule paints \`${selector}\` in this sheet`)
@@ -146,13 +158,20 @@ function ruleBackground(sheet: string, selector: string): string {
       `the rule that paints it is \`${painting[0].selector}\`, not \`${selector}\``
     )
   }
-  return painting[0].background
+  const [{ bgs }] = painting
+  if (bgs.length > 1) {
+    throw new Error(
+      `\`${selector}\` sets ${bgs.length} backgrounds (${bgs.map(([p]) => p).join(", ")}) — keep exactly one`
+    )
+  }
+  return bgs[0][1]
 }
 
 // The cascade applies the LAST matching rule and declaration, not the first
 // (#666 review). A reader that stops at the first match passes a sheet whose
-// later rule re-breaks the button, so these readers refuse any sheet where
-// more than one rule could paint the button or a property is declared twice.
+// later rule re-breaks the button, so these readers refuse a sheet where more
+// than one rule could paint the button, where that rule sets more than one
+// background property, or where a custom property it reads is declared twice.
 describe("the sheet readers do not stop at the first match", () => {
   const BASE = ":root{--x:#8082ff;}\n.btn.pri{background:var(--x);}\n"
 
@@ -180,6 +199,30 @@ describe("the sheet readers do not stop at the first match", () => {
   it("do not take a descendant rule for the button's own rule", () => {
     const sheet = ".hero .btn.pri{background:#6157ea;}\n"
     expect(() => ruleBackground(sheet, ".btn.pri")).toThrow(/not `\.btn\.pri`/)
+  })
+
+  it("refuse a second background in the button's own rule", () => {
+    for (const second of ["background:#ff0000", "background-color:#ff0000"]) {
+      const sheet = `:root{--x:#8082ff;}\n.btn.pri{background:var(--x);${second};}\n`
+      expect(() => ruleBackground(sheet, ".btn.pri")).toThrow(
+        /sets 2 backgrounds/
+      )
+    }
+  })
+
+  it("refuse a later rule that differs only by :not()", () => {
+    const sheet = `${BASE}.btn.pri:not(.s){background:#6157ea;}\n`
+    expect(() => ruleBackground(sheet, ".btn.pri")).toThrow(/more than one/)
+  })
+
+  it("refuse a later rule that names fewer of the button's classes", () => {
+    const sheet = `${BASE}.hero .pri{background:#6157ea;}\n`
+    expect(() => ruleBackground(sheet, ".btn.pri")).toThrow(/more than one/)
+  })
+
+  it("refuse a later background-image on the button", () => {
+    const sheet = `${BASE}.btn.pri{background-image:linear-gradient(red,red);}\n`
+    expect(() => ruleBackground(sheet, ".btn.pri")).toThrow(/more than one/)
   })
 
   it("keep the hover rule apart from the base rule", () => {
