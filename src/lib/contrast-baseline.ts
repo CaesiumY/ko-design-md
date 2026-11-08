@@ -31,7 +31,37 @@ export interface BaselineComparison {
   unrecorded: Array<SlugTotals>
   /** Baseline rows the sweep produced nothing for. */
   missing: Array<Pick<SlugTotals, "slug" | "theme" | "kind">>
+  /** Measured text rows under `MIN_TEXT_ELEMENTS`, recorded or not. */
+  thin: Array<SlugTotals>
 }
+
+/**
+ * The fewest text elements a preview may show per theme.
+ *
+ * A floor on how much a preview shows, not on contrast: ADR 0007's rule against
+ * absolute contrast floors is about the verdict counts, which this leaves to
+ * the ratchet above.
+ *
+ * `elements` is the closest number the sweep has to that, and a crude one: it
+ * counts every copy, so repeating a card raises it — the reason it stays out of
+ * EXACT_FIELDS. It catches a preview that shows little, not one that pads
+ * itself. `measured` folds the copies but cannot separate the cases:
+ * samsung-one-ui keeps 52 distinct rows, chzzk arrived with 48.
+ *
+ * Two external entries arrived with text rows of 79 (chzzk) and 51 (laftel)
+ * elements, the two thinnest in the catalogue by far. No check judged by the
+ * number, so they passed every gate and were only caught by eye. The thinnest
+ * preview kept on its own merits is yeogi at 94, so the floor sits between.
+ * Fixed rather than a share of the median: the median climbs as thicker
+ * entries land, and a moving floor would start failing entries nobody touched.
+ *
+ * Read from the MEASURED rows in `compareToBaseline`, so the CI `contrast` job
+ * holds it, and from the recorded table in the corpus test, so pasting a thin
+ * row fails `pnpm test` too. The recorded check alone would trust whoever
+ * pasted the numbers: `elements` is the one count the exact comparison leaves
+ * out, so a hand-raised value would pass it.
+ */
+export const MIN_TEXT_ELEMENTS = 80
 
 const keyOf = (t: Pick<SlugTotals, "slug" | "theme" | "kind">): string =>
   `${t.slug}|${t.theme}|${t.kind}`
@@ -106,10 +136,14 @@ export function compareToBaseline(
   const blocking: Array<BaselineDiff> = []
   const warnings: Array<BaselineDiff> = []
   const unrecorded: Array<SlugTotals> = []
+  const thin: Array<SlugTotals> = []
 
   for (const m of measured) {
     const key = keyOf(m)
     seen.add(key)
+    // Before the pairing, so a new slug's rows are held to it too: that is the
+    // case the floor exists for, and an unrecorded row is skipped below.
+    if (m.kind === "text" && m.elements < MIN_TEXT_ELEMENTS) thin.push(m)
     const b = recorded.get(key)
     if (b === undefined) {
       unrecorded.push(m)
@@ -149,21 +183,22 @@ export function compareToBaseline(
     .filter((b) => !seen.has(keyOf(b)))
     .map((b) => ({ slug: b.slug, theme: b.theme, kind: b.kind }))
 
-  return { blocking, warnings, unrecorded, missing }
+  return { blocking, warnings, unrecorded, missing, thin }
 }
 
 /**
  * Does the sweep still stand behind the recorded table?
  *
  * Warnings do not enter into it — they exist to be read, not to stop a branch.
- * The three that do are gathered here rather than at the call site so a caller
+ * The four that do are gathered here rather than at the call site so a caller
  * cannot check `blocking` alone and let a new slug through unrecorded.
  */
 export function baselineHolds(c: BaselineComparison): boolean {
   return (
     c.blocking.length === 0 &&
     c.unrecorded.length === 0 &&
-    c.missing.length === 0
+    c.missing.length === 0 &&
+    c.thin.length === 0
   )
 }
 
@@ -253,6 +288,22 @@ export function renderBaselineFailure(
       // them, and a name is harder to search for than the line.
       const was = recordedBy.get(keyOf(m))
       out.push(`    ${was === undefined ? keyOf(m) : lineFor(was)}`)
+    }
+    out.push("")
+  }
+
+  if (c.thin.length > 0) {
+    out.push(
+      `FAIL contrast baseline — ${c.thin.length} text row(s) under ${MIN_TEXT_ELEMENTS} elements, thinner than any preview the catalogue kept.`,
+      "  Add the component states and screen mockups the md describes",
+      "  (.claude/skills/design-md/references/rubric-preview.md). A copied card",
+      "  raises this count without showing more, so it is not the fix.",
+      ""
+    )
+    for (const m of c.thin) {
+      out.push(
+        `    ${m.slug} | ${m.theme} | ${m.kind} — elements ${m.elements}`
+      )
     }
     out.push("")
   }

@@ -14,7 +14,9 @@
 // reported, not blocked. What `--check-baseline` adds is a different question —
 // whether the COUNTS have moved away from the table `contrast-baseline.ts` and
 // `docs/preview-contrast-baseline.md` both publish. A new shortfall moves them,
-// and so does a quiet fix, and both should be said out loud.
+// and so does a quiet fix, and both should be said out loud. It also holds the
+// measured text rows to `MIN_TEXT_ELEMENTS`, a floor on how much a preview
+// shows rather than on contrast.
 //
 // Exit 1 belongs to the self-check alone, which asks whether the measurement
 // itself still works. That is why baseline drift exits 3 and not 1: a broken

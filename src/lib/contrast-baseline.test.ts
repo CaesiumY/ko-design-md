@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 import {
   BASELINE_WIDTHS,
+  MIN_TEXT_ELEMENTS,
   baselineArgConflicts,
   baselineHolds,
   compareToBaseline,
@@ -29,6 +30,7 @@ describe("compareToBaseline", () => {
       warnings: [],
       unrecorded: [],
       missing: [],
+      thin: [],
     })
   })
 
@@ -69,6 +71,54 @@ describe("compareToBaseline", () => {
         measured: 404,
       },
     ])
+  })
+})
+
+describe("compareToBaseline, thin previews", () => {
+  // The floor is read from what the sweep MEASURED. A check on the recorded
+  // table alone trusts whoever pasted the numbers, and `elements` is the one
+  // count the exact comparison leaves out, so a hand-raised value would pass.
+  const thin = row({ elements: MIN_TEXT_ELEMENTS - 1 })
+
+  it("blocks a measured text row under the floor even when the table records the same number", () => {
+    const got = compareToBaseline([thin], [thin])
+    expect(got.thin).toEqual([thin])
+    expect(baselineHolds(got)).toBe(false)
+  })
+
+  it("blocks it when the table claims a thicker preview than the sweep found", () => {
+    const got = compareToBaseline([thin], [row()])
+    expect(got.thin).toEqual([thin])
+    expect(baselineHolds(got)).toBe(false)
+  })
+
+  it("blocks a new slug's thin row as well as reporting it unrecorded", () => {
+    const fresh = row({ slug: "laftel", elements: 51 })
+    const got = compareToBaseline([row(), fresh], [row()])
+    expect(got.thin).toEqual([fresh])
+    expect(got.unrecorded).toEqual([fresh])
+  })
+
+  it("leaves a row exactly at the floor alone", () => {
+    const edge = row({ elements: MIN_TEXT_ELEMENTS })
+    expect(compareToBaseline([edge], [edge]).thin).toEqual([])
+  })
+
+  it("does not apply the floor to non-text", () => {
+    // Non-text counts painted surfaces, a handful per preview; four is normal.
+    const few = row({ kind: "non-text", measured: 4, elements: 4 })
+    expect(compareToBaseline([few], [few]).thin).toEqual([])
+  })
+
+  it("prints the thin rows and what to do about them", () => {
+    const lines = renderBaselineFailure(
+      compareToBaseline([thin], [thin]),
+      [thin],
+      [thin]
+    ).join("\n")
+    expect(lines).toContain(`FAIL contrast baseline — 1 text row(s)`)
+    expect(lines).toContain(`toss | light | text — elements ${thin.elements}`)
+    expect(lines).toContain("rubric-preview.md")
   })
 })
 
