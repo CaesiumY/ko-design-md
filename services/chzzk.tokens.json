@@ -69,7 +69,7 @@
     {
       "name": "brand-text-weak",
       "value": "oklch(0.596 0.13 159)",
-      "note": "#1A9662 라이트 브랜드 텍스트 weak(content-brand-weak), 드롭스·일정 강조",
+      "note": "#1A9662 라이트 브랜드 텍스트 weak(content-brand-weak), 태그 강조 칩, 일정 강조",
       "group": "Brand (라이트 #1BB373 · 다크 네온 #00FFA3)"
     },
     {

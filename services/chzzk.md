@@ -2,7 +2,7 @@
 name: 치지직
 slug: chzzk
 category: content
-last_updated: 2026-11-07
+last_updated: 2026-11-09
 created_at: 2026-10-27
 lang: ko
 logo: https://getdesign.kr/logos/chzzk.png
@@ -19,7 +19,7 @@ colors:
   brand-weakest: oklch(0.963 0.018 170.1)         # #E8F7F1 라이트 브랜드 면 weakest
   brand-text: oklch(0.539 0.106 161.2)            # #23815A 라이트 브랜드 텍스트 strong(content-brand-strong)
   brand-text-base: oklch(0.575 0.127 158.6)       # #168F5C 라이트 브랜드 텍스트 base(content-brand-base), 사이드바 현재 메뉴
-  brand-text-weak: oklch(0.596 0.13 159)          # #1A9662 라이트 브랜드 텍스트 weak(content-brand-weak), 드롭스·일정 강조
+  brand-text-weak: oklch(0.596 0.13 159)          # #1A9662 라이트 브랜드 텍스트 weak(content-brand-weak), 태그 강조 칩, 일정 강조
   dark-brand-stronger: oklch(0.815 0.189 158.4)   # #00E693 다크 브랜드 면 stronger
   dark-brand-strong: oklch(0.745 0.173 158.5)     # #00CC82 다크 브랜드 면 strong
   dark-brand-base: oklch(0.602 0.138 159.2)       # #009962 다크 브랜드 면 base, 포커스 테두리
@@ -298,6 +298,10 @@ radius는 2px부터 32px까지 아홉 단계와 `circular`(9999px)다 [src:9]. �
 <Button variant="primary" size="large">팔로우</Button>
 ```
 
+### button-primary-dark
+
+다크 테마의 팔로우 버튼이다. `{colors.brand-neon}` 배경에 `{colors.dark-bg-weak}` 글자이고, 높이 34px, radius 17px, 글자는 `button-primary`와 같다 [src:1][src:2][src:9].
+
 ### button-secondary
 
 배경 `{colors.dark-surface-base}`(라이트 `{colors.surface-base}`), 글자 `{colors.dark-text-primary}`. 상태는 `lighten` 오버레이다 [src:2].
@@ -328,7 +332,7 @@ LIVE 배지는 `{colors.live-red}` 배경에 흰 글자, 높이 20px, radius 4px
 
 ## Do's and Don'ts
 
-**Do** 다크에서 네온 `{colors.brand-neon}`은 1차 버튼 면(팔로우)과 짧은 강조 글자(배너 날짜, 썸네일 위 드롭스 배지)에 쓰고, 넓은 면이나 본문에는 쓰지 않는다. 카드 아래 태그 줄의 강조 칩 글자는 한 단계 낮은 `{colors.dark-brand-strong}`이고, 입력창 포커스 테두리는 한 단계 낮은 `{colors.dark-brand-base}`, 사이드바 현재 메뉴 글자는 `{colors.dark-brand-stronger}`다 [src:1][src:2][src:9].
+**Do** 다크에서 네온 `{colors.brand-neon}`은 1차 버튼 면(팔로우)과 짧은 강조 글자(배너 날짜, 썸네일 위 드롭스 배지)에 쓰고, 넓은 면이나 본문에는 쓰지 않는다. 카드 아래 태그 줄의 강조 칩 글자는 한 단계 낮은 `{colors.dark-brand-strong}`이고, 입력창 포커스 테두리는 한 단계 낮은 `{colors.dark-brand-base}`, 사이드바 현재 메뉴 글자는 `{colors.dark-brand-stronger}`다 [src:1][src:2][src:9]. 라이트에서 태그 강조 칩은 바탕 없이 `{colors.brand-text-weak}` 글자에 1px `{colors.brand-strong}` 테두리이고, 다크 테두리는 `{colors.dark-brand-base}`다 [src:1]. 썸네일 위 드롭스 배지 글자는 테마를 타지 않는 고정 네온이라 라이트에서도 `{colors.brand-neon}`이다 [src:2][src:9].
 
 **Do** 상태는 반투명 오버레이(hover 5%, selected 12%)로 표현하되, 밝은 면에는 darken, 어두운 면에는 lighten 쪽을 쓴다. 채운(solid) 버튼은 면 색을 그대로 두고 오버레이를 배경 이미지로 얹는다 [src:2][src:9].
 
