@@ -69,7 +69,11 @@ function rulesOf(sheet: string): Array<Rule> {
     .replace(/\/\*[\s\S]*?\*\//g, "")
   return [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(
     ([, prelude, body]) => ({
-      selectors: prelude.split(",").map((s) => s.trim().replace(/\s+/g, " ")),
+      // Only commas outside parentheses separate selectors — the one in
+      // `.btn.pri:not(.s, .l)` does not.
+      selectors: prelude
+        .split(/,(?![^()]*\))/)
+        .map((s) => s.trim().replace(/\s+/g, " ")),
       declarations: body
         .split(";")
         .map((d) => /^\s*([\w-]+)\s*:\s*([\s\S]+?)\s*$/.exec(d))
@@ -80,16 +84,27 @@ function rulesOf(sheet: string): Array<Rule> {
 }
 
 /**
- * `.btn.pri:hover` → its classes and its state pseudo-classes. Functional
- * pseudo-classes (`:not(.s)`, `:is(…)`) only narrow which buttons a rule
- * reaches, not which state, so they are dropped — with what is inside them —
- * and such a rule is read as painting the button.
+ * `.hero .btn.pri:hover` → the classes and state pseudo-classes of the
+ * element it styles (its last compound). Functional pseudo-classes
+ * (`:not(.s, .l)`, `:not(:is(.s))`) are dropped first, with what is inside
+ * them, innermost first — so a space inside them is not read as a combinator,
+ * and such a rule is read as painting the button. That reads `:is(:hover)` as
+ * no state — a gap no preview rule uses today.
  */
-function classesAndState(compound: string): {
+function classesAndState(selector: string): {
   classes: Set<string>
   state: string
 } {
-  const bare = compound.replace(/:[\w-]+\([^)]*\)/g, "")
+  let stripped = selector
+  for (let prev = ""; prev !== stripped;) {
+    prev = stripped
+    stripped = stripped.replace(/:[\w-]+\([^()]*\)/g, "")
+  }
+  const bare =
+    stripped
+      .trim()
+      .split(/\s*[\s>+~]\s*/)
+      .at(-1) ?? ""
   return {
     classes: new Set(bare.match(/\.[\w-]+/g) ?? []),
     state: (bare.match(/:[\w-]+/g) ?? []).sort().join(""),
@@ -128,13 +143,13 @@ function resolveVar(sheet: string, value: string, seen = 0): string {
 function ruleBackground(sheet: string, selector: string): string {
   const want = classesAndState(selector)
   const painting = rulesOf(sheet).flatMap((r) => {
-    const bgs = r.declarations.filter(([p]) =>
+    const backgrounds = r.declarations.filter(([p]) =>
       /^background(-color|-image)?$/.test(p)
     )
-    if (bgs.length === 0) return []
+    if (backgrounds.length === 0) return []
     return r.selectors
       .filter((s) => {
-        const last = classesAndState(s.split(/\s*[\s>+~]\s*/).at(-1) ?? "")
+        const last = classesAndState(s)
         if (last.state !== want.state || last.classes.size === 0) return false
         const within = (a: Set<string>, b: Set<string>) =>
           [...a].every((c) => b.has(c))
@@ -143,7 +158,7 @@ function ruleBackground(sheet: string, selector: string): string {
           within(want.classes, last.classes)
         )
       })
-      .map((s) => ({ selector: s, bgs }))
+      .map((s) => ({ selector: s, backgrounds }))
   })
   if (painting.length === 0) {
     throw new Error(`no rule paints \`${selector}\` in this sheet`)
@@ -158,13 +173,13 @@ function ruleBackground(sheet: string, selector: string): string {
       `the rule that paints it is \`${painting[0].selector}\`, not \`${selector}\``
     )
   }
-  const [{ bgs }] = painting
-  if (bgs.length > 1) {
+  const [{ backgrounds }] = painting
+  if (backgrounds.length > 1) {
     throw new Error(
-      `\`${selector}\` sets ${bgs.length} backgrounds (${bgs.map(([p]) => p).join(", ")}) — keep exactly one`
+      `\`${selector}\` sets ${backgrounds.length} backgrounds (${backgrounds.map(([p]) => p).join(", ")}) — keep exactly one`
     )
   }
-  return bgs[0][1]
+  return backgrounds[0][1]
 }
 
 // The cascade applies the LAST matching rule and declaration, not the first
@@ -211,8 +226,10 @@ describe("the sheet readers do not stop at the first match", () => {
   })
 
   it("refuse a later rule that differs only by :not()", () => {
-    const sheet = `${BASE}.btn.pri:not(.s){background:#6157ea;}\n`
-    expect(() => ruleBackground(sheet, ".btn.pri")).toThrow(/more than one/)
+    for (const not of [":not(.s)", ":not(.s, .l)", ":not(:is(.s))"]) {
+      const sheet = `${BASE}.btn.pri${not}{background:#6157ea;}\n`
+      expect(() => ruleBackground(sheet, ".btn.pri")).toThrow(/more than one/)
+    }
   })
 
   it("refuse a later rule that names fewer of the button's classes", () => {
