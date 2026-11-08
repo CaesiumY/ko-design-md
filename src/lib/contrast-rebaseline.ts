@@ -282,7 +282,7 @@ function movedRows(before: Array<SlugTotals>, after: Array<SlugTotals>) {
  * numbers. Each names where it is.
  */
 const remainingWork = (run: string): Array<string> => [
-  `「슬러그별 총계」: the date in "마지막으로 전수 갱신한 것은 … 이다(run \`${run}\`)" — the day that run measured`,
+  `「슬러그별 총계」: "마지막으로 전수 갱신한 것은 … 이다(run …)" — write run \`${run}\` and the day it measured, together`,
   "「발행색끼리의 경계선」 and 「미달의 발행색 분류」 headings: the recount date",
   `「발행색끼리의 경계선」: what follows "입력은 run \`${run}\`" — the head commit the run measured and what it changed`,
   'the dated recount lists ("세 재집계(run … · date, …)") in both published-pair sections: whether the tolerance bands they describe held in this run (the `readings …` lines of `pnpm audit:contrast:pairs`), and the run with its date if so',
@@ -409,13 +409,11 @@ export function rewriteRecord(
     HELD_ROWS_LINE_START,
     values.held
   )
-  // Only the places that name the run the record is OF. The dated lists of
-  // earlier recounts name runs too, and stay as the history they are.
-  doc.phrase(
-    doc.section(TOTALS_SECTION),
-    new RegExp(String.raw`이다\(run \`${RUN_ID}\`\)`, "g"),
-    `이다(run \`${values.run}\`)`
-  )
+  // Only the run a test ties to the classified run. The totals sentence names
+  // its run beside the day that run measured, which this command cannot know,
+  // so both go to `remainingWork` rather than half of the sentence being
+  // rewritten; the dated lists of earlier recounts name runs too, and stay as
+  // the history they are.
   doc.phrase(
     doc.section(BORDERLINE_SECTION),
     new RegExp(`입력은 run \`${RUN_ID}\``, "g"),

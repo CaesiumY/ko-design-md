@@ -241,7 +241,9 @@ describe("rebaseline", () => {
 
   it("names the run where the record points at its current run, and records the run's slugs", () => {
     const got = ok(INPUT).files
-    expect(got.doc).toContain("2026-11-01 이다(run `222`). 게이트는")
+    // The totals sentence pairs a date with its run, and the command cannot
+    // know the date, so it leaves both for a person instead of half of them.
+    expect(got.doc).toContain("2026-11-01 이다(run `111`). 게이트는")
     expect(got.doc).toContain(
       "입력은 run `222`(#1 의 head `abc1234` — 그 PR 이 바꾼 것)다."
     )
@@ -254,7 +256,6 @@ describe("rebaseline", () => {
     const after = new Set(ok(INPUT).files.doc.split("\n"))
     const gone = DOC.split("\n").filter((l) => !after.has(l))
     expect(gone).toEqual([
-      "2026-11-01 이다(run `111`). 게이트는 warn 행에도 줄을 출력한다.",
       "| baemin | dark | text | 3 | 3 | 0 | 0 | 0 |",
       "| baemin | light | text | 3 | 3 | 0 | 0 | 0 |",
       "| baemin | light | non-text | 0 | 0 | 0 | 0 | 0 |",
@@ -423,6 +424,7 @@ describe("rebaseline", () => {
     expect(remaining.length).toBeGreaterThan(0)
     expect(remaining.join("\n")).toContain("「어느 슬러그부터」")
     expect(remaining.join("\n")).toContain("입력은 run `222`")
+    expect(remaining.join("\n")).toMatch(/「슬러그별 총계」.*run `222`/)
   })
 
   it("says nothing moved and nothing is left when the record already holds the run", () => {
