@@ -14,6 +14,12 @@ export interface GateStep {
   /** A package.json script name, run as `pnpm run <script>`. */
   script: string
   args?: ReadonlyArray<string>
+  /**
+   * The arguments as CI's build job writes them, where that differs from
+   * `args` only in spelling (an environment variable CI sets). Absent, CI must
+   * pass exactly `args`.
+   */
+  ciArgs?: ReadonlyArray<string>
   /** What the step keeps out, printed when it fails. */
   guards: string
 }
@@ -45,12 +51,14 @@ export const GATE_STEPS: ReadonlyArray<GateStep> = [
     guards:
       "public/preview/*/ 전수의 구조(block), 반응형과 움직임 줄이기 휴리스틱(warn)",
   },
-  // CI passes the PR's merge base (or the commit a push replaced). Locally
-  // `origin/main` is that base; when it is missing the script fails loudly and
-  // says to `git fetch origin main`, so the gate cannot pass on zero files.
+  // CI passes the PR's merge base (or the commit a push replaced) through
+  // `$BASE_REF`. Locally `origin/main` is that base; when it is missing the
+  // script fails loudly and says to `git fetch origin main`, so the gate cannot
+  // pass on zero files.
   {
     script: "check:last-updated",
     args: ["--base", "origin/main"],
+    ciArgs: ["--base", '"$BASE_REF"'],
     guards: "이 브랜치가 바꾼 services/*.md 의 last_updated 가 최신인지",
   },
   {
@@ -74,8 +82,15 @@ const SETUP_ACTIONS = [
 /** `pnpm <script> [args]` on one line, with no chaining or redirection. */
 const ONE_PNPM_SCRIPT = /^pnpm\s+([\w:.-]+)(?:\s+[^&|;<>\n]*)?$/
 
+/** One pre-build step as CI writes it: the script and its arguments. */
+export interface CiStep {
+  script: string
+  args: Array<string>
+}
+
 /**
- * The package.json scripts CI's build job runs before `pnpm build`, in order.
+ * The package.json scripts CI's build job runs before `pnpm build`, in order,
+ * each with the arguments its line passes (split on whitespace, as written).
  *
  * The setup actions in `SETUP_ACTIONS` and `pnpm install` prepare the runner
  * and are skipped. Every other step before `pnpm build` must be a single
@@ -85,7 +100,7 @@ const ONE_PNPM_SCRIPT = /^pnpm\s+([\w:.-]+)(?:\s+[^&|;<>\n]*)?$/
  * So does a build job with no `pnpm build`, which would otherwise read every
  * later step as a pre-build one.
  */
-export function ciPreBuildScripts(workflowYaml: string): Array<string> {
+export function ciPreBuildSteps(workflowYaml: string): Array<CiStep> {
   const doc = parse(workflowYaml) as {
     jobs?: { build?: { steps?: Array<{ run?: string; uses?: string }> } }
   }
@@ -93,7 +108,7 @@ export function ciPreBuildScripts(workflowYaml: string): Array<string> {
   if (!Array.isArray(steps)) {
     throw new Error("CI workflow has no `jobs.build.steps` list to read")
   }
-  const scripts: Array<string> = []
+  const scripts: Array<CiStep> = []
   for (const step of steps) {
     if (typeof step.uses === "string") {
       if (SETUP_ACTIONS.includes(step.uses.split("@")[0])) continue
@@ -118,7 +133,9 @@ export function ciPreBuildScripts(workflowYaml: string): Array<string> {
     }
     const script = match[1]
     if (script === "build") return scripts
-    if (script !== "install") scripts.push(script)
+    if (script !== "install") {
+      scripts.push({ script, args: line.split(/\s+/).slice(2) })
+    }
   }
   throw new Error(
     "CI build job has no `pnpm build` step, so its pre-build checks cannot be told apart"
@@ -146,6 +163,31 @@ export function stepListMismatch(
   const at = ci.findIndex((s, i) => s !== gates[i])
   if (at === -1) return null
   return `order differs at position ${at + 1}: CI runs \`${ci[at]}\`, gates runs \`${gates[at]}\``
+}
+
+/**
+ * Null when every CI step that `gates` also runs gets the arguments `gates`
+ * declares for CI (`ciArgs`, else `args`); otherwise a sentence naming each
+ * step whose arguments differ. Steps only one side has are
+ * `stepListMismatch`'s to report.
+ */
+export function argsMismatch(
+  ci: ReadonlyArray<CiStep>,
+  gates: ReadonlyArray<GateStep>
+): string | null {
+  const problems: Array<string> = []
+  for (const step of ci) {
+    const gate = gates.find((g) => g.script === step.script)
+    if (!gate) continue
+    const want = (gate.ciArgs ?? gate.args ?? []).join(" ")
+    const got = step.args.join(" ")
+    if (want !== got) {
+      problems.push(
+        `\`${step.script}\` runs with \`${got}\` in CI but gates expects \`${want}\``
+      )
+    }
+  }
+  return problems.length > 0 ? problems.join("; ") : null
 }
 
 /** `check:last-updated --base origin/main` — how a step is named in output. */

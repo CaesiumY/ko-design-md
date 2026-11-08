@@ -3,7 +3,8 @@ import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 import {
   GATE_STEPS,
-  ciPreBuildScripts,
+  argsMismatch,
+  ciPreBuildSteps,
   runGates,
   stepListMismatch,
 } from "./gates"
@@ -103,7 +104,10 @@ jobs:
       - run: pnpm lint
 `
 
-describe("ciPreBuildScripts", () => {
+const ciPreBuildScripts = (yaml: string): Array<string> =>
+  ciPreBuildSteps(yaml).map((s) => s.script)
+
+describe("ciPreBuildSteps", () => {
   it("lists the build job's pnpm scripts before `pnpm build`, skipping install", () => {
     expect(ciPreBuildScripts(WORKFLOW)).toEqual([
       "typecheck",
@@ -162,6 +166,13 @@ describe("ciPreBuildScripts", () => {
     ])
   })
 
+  it("reads each step's arguments as written in CI", () => {
+    expect(ciPreBuildSteps(WORKFLOW)).toEqual([
+      { script: "typecheck", args: [] },
+      { script: "check:last-updated", args: ["--base", '"$BASE_REF"'] },
+    ])
+  })
+
   it("throws on a pnpm line it cannot read as one script, instead of skipping it", () => {
     const chained = WORKFLOW.replace(
       "run: pnpm typecheck",
@@ -195,11 +206,48 @@ describe("stepListMismatch", () => {
   })
 })
 
+describe("argsMismatch", () => {
+  const gate = (script: string, extra: Partial<GateStep> = {}): GateStep => ({
+    script,
+    guards: "x",
+    ...extra,
+  })
+
+  it("is null when every CI step runs with the arguments gates gives it", () => {
+    expect(
+      argsMismatch(
+        [{ script: "a", args: ["--x"] }],
+        [gate("a", { args: ["--x"] })]
+      )
+    ).toBeNull()
+  })
+
+  it("names a step whose CI arguments gates does not pass", () => {
+    expect(
+      argsMismatch([{ script: "a", args: ["--strict"] }], [gate("a")])
+    ).toMatch(/`a`.*--strict/)
+  })
+
+  it("compares against `ciArgs` where CI spells an argument its own way", () => {
+    const step = gate("a", {
+      args: ["--base", "origin/main"],
+      ciArgs: ["--base", '"$BASE_REF"'],
+    })
+    expect(
+      argsMismatch([{ script: "a", args: ["--base", '"$BASE_REF"'] }], [step])
+    ).toBeNull()
+    expect(
+      argsMismatch([{ script: "a", args: ["--base", '"$OTHER"'] }], [step])
+    ).toMatch(/`a`/)
+  })
+})
+
 describe("pnpm gates ↔ CI build job (contract)", () => {
   const root = process.cwd()
-  const ci = ciPreBuildScripts(
+  const ciSteps = ciPreBuildSteps(
     readFileSync(join(root, ".github/workflows/ci.yml"), "utf8")
   )
+  const ci = ciSteps.map((s) => s.script)
   const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8")) as {
     scripts: Record<string, string>
   }
@@ -217,6 +265,14 @@ describe("pnpm gates ↔ CI build job (contract)", () => {
     expect(
       mismatch,
       `${mismatch} — keep GATE_STEPS in src/lib/gates.ts in step with the build job in .github/workflows/ci.yml`
+    ).toBeNull()
+  })
+
+  it("passes each step the arguments CI passes it", () => {
+    const mismatch = argsMismatch(ciSteps, GATE_STEPS)
+    expect(
+      mismatch,
+      `${mismatch} — keep GATE_STEPS' args (or ciArgs) in step with .github/workflows/ci.yml`
     ).toBeNull()
   })
 
