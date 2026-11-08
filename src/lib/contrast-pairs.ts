@@ -20,7 +20,7 @@
 // CI's rendering.
 
 import { compositeOver } from "./contrast"
-import { keyOf } from "./contrast-report"
+import { keyOf, measuredSlugs } from "./contrast-report"
 import {
   deltaE,
   hexToOklab,
@@ -737,3 +737,100 @@ export function splitColourPairs(findings: Array<Finding>): Array<string> {
   }
   return [...pairs].filter(([, s]) => s.size > 1).map(([k]) => k)
 }
+
+/** The verdicts the published-pair tables classify, in the order printed. */
+export const CLASSIFIED_VERDICTS = ["borderline", "fail"] as const
+
+export type ClassifiedVerdict = (typeof CLASSIFIED_VERDICTS)[number]
+
+const isClassified = (f: Finding): boolean =>
+  CLASSIFIED_VERDICTS.some((v) => v === f.verdict)
+
+/** The four counts and the total of a tally, summed over its rows. */
+export const sumPairTally = (
+  tally: Array<PairTally>
+): Omit<PairTally, "slug" | "kind"> =>
+  tally.reduce(
+    (s, t) => ({
+      bothPublished: s.bothPublished + t.bothPublished,
+      observedPair: s.observedPair + t.observedPair,
+      oneToken: s.oneToken + t.oneToken,
+      noToken: s.noToken + t.noToken,
+      total: s.total + t.total,
+    }),
+    { bothPublished: 0, observedPair: 0, oneToken: 0, noToken: 0, total: 0 }
+  )
+
+/** Why an artifact that measured `slug` cannot be taken by this checkout. */
+export const noEntryReason = (slug: string): string =>
+  `the artifact measured ${slug}, which has no services/${slug}.md in this checkout`
+
+/** What one artifact's classified rows are read against in this checkout. */
+export interface ArtifactPalettes {
+  /** By slug, for every slug with a classified row whose entry was read. */
+  palettes: Map<string, Palette>
+  /**
+   * Fold keys of classified rows that read different colour pairs at
+   * different widths, so have no one pair to classify. A `pass` or held row
+   * whose widths disagree is not classified, so not counted (CI run
+   * 38463871450 has three).
+   */
+  split: Array<string>
+  /**
+   * Why a slug with a classified row cannot be classified here: it has no
+   * entry (`noEntryReason`), or `paletteOf` refused the entry, as
+   * `slug: reason` (a listed observed heading or token it no longer has).
+   */
+  problems: Array<string>
+  /** A token left out of a palette, as the line to print for it. */
+  notes: Array<string>
+}
+
+/**
+ * The palettes an artifact's `borderline` and `fail` rows are classified
+ * against, and what stands in the way. The one reading both the pair
+ * classifier (`classify-contrast-pairs.ts`) and the rebaseline command
+ * (`contrast-rebaseline.ts`) use, so they refuse the same input and tell of
+ * the same unreadable tokens.
+ */
+export function readArtifactPalettes(
+  findings: Array<Finding>,
+  entries: Readonly<Record<string, string>>
+): ArtifactPalettes {
+  const classified = findings.filter(isClassified)
+  const out: ArtifactPalettes = {
+    palettes: new Map(),
+    split: splitColourPairs(classified),
+    problems: [],
+    notes: [],
+  }
+  for (const slug of measuredSlugs(classified)) {
+    if (!Object.hasOwn(entries, slug)) {
+      out.problems.push(noEntryReason(slug))
+      continue
+    }
+    let palette: Palette
+    try {
+      palette = paletteOf(entries[slug], OBSERVED_COLOURS[slug] ?? {})
+    } catch (e) {
+      out.problems.push(`${slug}: ${(e as Error).message}`)
+      continue
+    }
+    for (const name of palette.unreadable) {
+      out.notes.push(
+        `Note: ${slug} defines \`${name}\` in a form this cannot read; it is not in the palette`
+      )
+    }
+    out.palettes.set(slug, palette)
+  }
+  return out
+}
+
+/** `paletteFor` over palettes already read; a slug not among them throws. */
+export const paletteLookup =
+  (palettes: ReadonlyMap<string, Palette>) =>
+  (slug: string): Palette => {
+    const p = palettes.get(slug)
+    if (p === undefined) throw new Error(`no palette read for ${slug}`)
+    return p
+  }

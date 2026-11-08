@@ -264,6 +264,26 @@ export type Blocker =
    */
   | "inset-shadow"
 
+// Every `Blocker`, as a value. A record keyed by the type, so a reason added
+// to the type and not here, or written here and not there, fails to compile.
+const BLOCKER_KEYS: Record<Blocker, true> = {
+  gradient: true,
+  image: true,
+  overlay: true,
+  "pseudo-background": true,
+  "text-fill": true,
+  "root-transparent": true,
+  filter: true,
+  "inset-shadow": true,
+}
+
+/** Every reason a reading can be held for. */
+export const BLOCKERS = Object.keys(BLOCKER_KEYS) as Array<Blocker>
+
+/** Whether `name` is a reason the measurer holds a reading for. */
+export const isBlocker = (name: string): name is Blocker =>
+  Object.hasOwn(BLOCKER_KEYS, name)
+
 /**
  * One element's paint in a backdrop: its `background-color` as a `RawColor`
  * reads it and, when it has one, its computed `background-image` handed over

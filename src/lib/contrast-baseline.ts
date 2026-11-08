@@ -274,7 +274,9 @@ export function renderBaselineFailure(
       "Before editing a number to match, find out what moved it. A fail count that",
       "rose is a shortfall this branch introduced; a measured count that fell is a",
       "surface the collector stopped reaching. The same line belongs in",
-      "src/lib/contrast-baseline.ts and in docs/preview-contrast-baseline.md.",
+      "src/lib/contrast-baseline.ts and in docs/preview-contrast-baseline.md;",
+      "`pnpm audit:contrast:rebaseline <run id>` writes a CI run's lines into",
+      "both, with the tables the document ties to them.",
       "",
       // Said here and not only in the document, because this is the moment
       // someone is about to paste a number. Blocking the font CDN makes the
@@ -403,7 +405,7 @@ export const BASELINE_TABLE = `\
 | 11st | light | non-text | 14 | 19 | 6 | 0 | 2 |
 | baemin | dark | text | 86 | 157 | 8 | 0 | 2 |
 | baemin | dark | non-text | 4 | 15 | 2 | 0 | 0 |
-| baemin | light | text | 86 | 157 | 17 | 6 | 2 |
+| baemin | light | text | 86 | 157 | 19 | 4 | 2 |
 | baemin | light | non-text | 4 | 15 | 2 | 0 | 0 |
 | banksalad | dark | text | 173 | 381 | 46 | 0 | 5 |
 | banksalad | dark | non-text | 17 | 23 | 15 | 0 | 0 |
