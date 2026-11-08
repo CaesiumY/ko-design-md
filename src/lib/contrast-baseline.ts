@@ -274,7 +274,9 @@ export function renderBaselineFailure(
       "Before editing a number to match, find out what moved it. A fail count that",
       "rose is a shortfall this branch introduced; a measured count that fell is a",
       "surface the collector stopped reaching. The same line belongs in",
-      "src/lib/contrast-baseline.ts and in docs/preview-contrast-baseline.md.",
+      "src/lib/contrast-baseline.ts and in docs/preview-contrast-baseline.md;",
+      "`pnpm audit:contrast:rebaseline <run id>` writes a CI run's lines into",
+      "both, with the tables the document ties to them.",
       "",
       // Said here and not only in the document, because this is the moment
       // someone is about to paste a number. Blocking the font CDN makes the

@@ -194,7 +194,7 @@ describe("the published-pair tables against the recorded totals", () => {
   }
 
   const HOW =
-    "rerun `pnpm audit:contrast:pairs --findings <contrast-findings.json>` on the contrast-report artifact of the CI run the totals came from; in docs/preview-contrast-baseline.md paste the borderline and fail tables into the published-pair sections and the indeterminate block (the hold-reason table with its '보류 행 수' line) into the '유보 사유' section, and replace src/lib/contrast-classified-run.json with the 'classified run' record the command prints; write the run id in that file's run, the borderline section's '입력은 run' line and the '보류 행 수' line; and update what the tests here do not hold: the commit, and the dated observations and 'which slug first' paragraph beside the tables"
+    "run `pnpm audit:contrast:rebaseline <run id>` with the CI run the totals came from — it rewrites the totals, both pair tables, the hold-reason table, src/lib/contrast-classified-run.json and the run ids from that run's contrast-report artifact, and lists the dated prose it leaves for you"
 
   const cases = [
     {

@@ -1,7 +1,10 @@
 // Classify the recorded contrast shortfalls by whether they are pairs of brand
 // colours (#397), and print the three tables `docs/preview-contrast-baseline.md`
 // publishes from one artifact — `borderline` and `fail`, and the reasons rows
-// were held for with the held-row count under it (#654) — ready to paste.
+// were held for with the held-row count under it (#654) — to read. Writing
+// them into the record is `pnpm audit:contrast:rebaseline <run id>` (#656),
+// which makes the same tables with the same functions; this command also
+// prints the tolerance bands the document describes, which that one does not.
 //
 //   pnpm audit:contrast:pairs --findings <contrast-findings.json>
 //
@@ -32,6 +35,7 @@ import {
 } from "../src/lib/contrast-pairs"
 import {
   dedupeFindings,
+  findingsProblem,
   heldReasons,
   renderHeldReasons,
 } from "../src/lib/contrast-report"
@@ -78,52 +82,14 @@ function readFindings(path: string): Array<Finding> {
   } catch (e) {
     fail(`Error: could not read ${path}: ${(e as Error).message}`)
   }
-  if (!Array.isArray(parsed)) fail(`Error: ${path} is not a findings array`)
   // Checked here rather than left to fail inside the maths: an artifact from
   // before the colour pair was reported has no `fg`/`bg`, and that should read
-  // as the wrong input (exit 2), not as a crash.
-  const bad = (parsed as Array<unknown>).findIndex(
-    (item) =>
-      typeof item !== "object" ||
-      item === null ||
-      !isFinding(item as Record<string, unknown>)
-  )
-  if (bad !== -1) {
-    fail(
-      `Error: ${path} item ${bad} is not a finding (slug, theme, state, kind, path, verdict, ratio, threshold, width, blockers, opacityApprox, basis?, source?, fg, bg) — is it a contrast-findings.json from a run that reports colour pairs?`
-    )
-  }
+  // as the wrong input (exit 2), not as a crash. A missing field could also
+  // throw deeper in — exit 1, which this script keeps for split colour pairs
+  // alone.
+  const problem = findingsProblem(parsed)
+  if (problem !== null) fail(`Error: ${path} ${problem}`)
   return parsed as Array<Finding>
-}
-
-// Every field the fold (`keyOf`, `dedupeFindings`' sort) and the classifier
-// read, with the type the sweep writes. A missing one either throws deeper in
-// — exit 1, which this script keeps for split colour pairs alone — or, worse,
-// folds rows differently from the sweep that produced them (an `undefined`
-// threshold, a truthy non-boolean `opacityApprox`) and exits 0 with a wrong
-// table. Either way it is the wrong input, exit 2.
-const optionalString = (v: unknown): boolean =>
-  v === undefined || typeof v === "string"
-
-function isFinding(f: Record<string, unknown>): boolean {
-  return (
-    typeof f.slug === "string" &&
-    typeof f.theme === "string" &&
-    typeof f.state === "string" &&
-    typeof f.kind === "string" &&
-    typeof f.path === "string" &&
-    typeof f.verdict === "string" &&
-    typeof f.ratio === "number" &&
-    typeof f.threshold === "number" &&
-    typeof f.width === "number" &&
-    Array.isArray(f.blockers) &&
-    f.blockers.every((b) => typeof b === "string") &&
-    typeof f.opacityApprox === "boolean" &&
-    optionalString(f.basis) &&
-    optionalString(f.source) &&
-    typeof f.fg === "string" &&
-    typeof f.bg === "string"
-  )
 }
 
 const totals = (tally: Array<PairTally>) =>

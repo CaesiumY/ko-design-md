@@ -42,6 +42,55 @@ export interface Finding {
   bg: string
 }
 
+// Every field the fold (`keyOf`, `dedupeFindings`' sort) and the pair
+// classifier read, with the type the sweep writes. A missing one folds rows
+// differently from the sweep that produced them (an `undefined` threshold, a
+// truthy non-boolean `opacityApprox`) and yields a wrong table without an
+// error, so a file that lacks one is the wrong input.
+// eslint-disable-next-line no-restricted-syntax -- Checks one field of a parsed JSON file, untyped external input.
+const optionalString = (v: unknown): boolean =>
+  v === undefined || typeof v === "string"
+
+// eslint-disable-next-line no-restricted-syntax -- Narrows one item of a parsed JSON file, untyped external input.
+const isFinding = (item: unknown): boolean => {
+  if (typeof item !== "object" || item === null) return false
+  // eslint-disable-next-line no-restricted-syntax -- Fields of the item above, still unchecked.
+  const f = item as Record<string, unknown>
+  return (
+    typeof f.slug === "string" &&
+    typeof f.theme === "string" &&
+    typeof f.state === "string" &&
+    typeof f.kind === "string" &&
+    typeof f.path === "string" &&
+    typeof f.verdict === "string" &&
+    typeof f.ratio === "number" &&
+    typeof f.threshold === "number" &&
+    typeof f.width === "number" &&
+    Array.isArray(f.blockers) &&
+    f.blockers.every((b) => typeof b === "string") &&
+    typeof f.opacityApprox === "boolean" &&
+    optionalString(f.basis) &&
+    optionalString(f.source) &&
+    typeof f.fg === "string" &&
+    typeof f.bg === "string"
+  )
+}
+
+/**
+ * Why a parsed `contrast-findings.json` is not findings this module can fold,
+ * or null when it is. For the commands that read CI's artifact
+ * (`classify-contrast-pairs.ts`, `rebaseline-contrast.ts`), which refuse it
+ * rather than print a table from it.
+ */
+// eslint-disable-next-line no-restricted-syntax -- A parsed JSON file is untyped external input.
+export function findingsProblem(parsed: unknown): string | null {
+  if (!Array.isArray(parsed)) return "is not a findings array"
+  const bad = parsed.findIndex((item) => !isFinding(item))
+  return bad === -1
+    ? null
+    : `item ${bad} is not a finding (slug, theme, state, kind, path, verdict, ratio, threshold, width, blockers, opacityApprox, basis?, source?, fg, bg) — is it a contrast-findings.json from a run that reports colour pairs?`
+}
+
 /** The same element folded across the widths it was seen at. */
 export interface DedupedFinding extends Omit<Finding, "width"> {
   widths: Array<number>
