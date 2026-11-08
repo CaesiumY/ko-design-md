@@ -51,24 +51,143 @@ function colorsTableCells(role: string): [string, string] {
   return [cells[2], cells[3]]
 }
 
-/** A sheet's own declaration of `--name`, following `var()` to a literal. */
+interface Rule {
+  selectors: Array<string>
+  declarations: Array<[property: string, value: string]>
+}
+
+/**
+ * Every innermost rule of a sheet, in source order. A half is a whole
+ * document, so only its `<style>` contents are read; a fixture is bare CSS. A
+ * rule inside `@media` comes out as a rule of its own — counted, never
+ * dropped, so a conditional override still makes a reader refuse the sheet.
+ */
+function rulesOf(sheet: string): Array<Rule> {
+  const styles = [...sheet.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)]
+  const css = (styles.length > 0 ? styles.map((m) => m[1]) : [sheet])
+    .join("\n")
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+  return [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(
+    ([, prelude, body]) => ({
+      selectors: prelude.split(",").map((s) => s.trim().replace(/\s+/g, " ")),
+      declarations: body
+        .split(";")
+        .map((d) => /^\s*([\w-]+)\s*:\s*([\s\S]+?)\s*$/.exec(d))
+        .filter((m): m is RegExpExecArray => m !== null)
+        .map((m): [string, string] => [m[1], m[2]]),
+    })
+  )
+}
+
+/** `.btn.pri:hover` → its classes and pseudo-classes, order-free. */
+function compound(selector: string): { classes: string; pseudos: string } {
+  const parts = (re: RegExp) =>
+    [...selector.matchAll(re)]
+      .map((m) => m[0])
+      .sort()
+      .join("")
+  return { classes: parts(/\.[\w-]+/g), pseudos: parts(/:[\w-]+/g) }
+}
+
+/**
+ * A sheet's one declaration of `--name`, following `var()` to a literal.
+ * Declared twice anywhere — a later `:root` or a scoped override — is refused:
+ * which one reaches the button is the cascade's call, not this reader's.
+ */
 function resolveVar(sheet: string, value: string, seen = 0): string {
   const ref = /^var\(\s*(--[\w-]+)\s*\)$/.exec(value.trim())?.[1]
   if (ref === undefined) return value.trim()
   if (seen > 8) throw new Error(`var() chain too deep at ${ref}`)
-  const decl = new RegExp(`(?:^|[\\s;{])${ref}\\s*:\\s*([^;]+);`).exec(sheet)
-  if (decl === null) throw new Error(`${ref} is not declared in this sheet`)
-  return resolveVar(sheet, decl[1], seen + 1)
+  const decls = rulesOf(sheet).flatMap((r) =>
+    r.declarations.filter(([p]) => p === ref).map(([, v]) => v)
+  )
+  if (decls.length !== 1) {
+    throw new Error(
+      `${ref} is declared ${decls.length} times in this sheet — keep exactly one`
+    )
+  }
+  return resolveVar(sheet, decls[0], seen + 1)
 }
 
+/**
+ * The background of the one rule that paints `selector`'s element in that
+ * state. Any rule whose last compound carries the same classes (or more) and
+ * the same pseudo-classes is a candidate — `.hero .btn.pri` paints these
+ * buttons as surely as `.btn.pri` does — and a second candidate setting a
+ * background is refused rather than ordered.
+ */
 function ruleBackground(sheet: string, selector: string): string {
-  const escaped = selector.replace(/[.:]/g, "\\$&")
-  const rule = new RegExp(`(?:^|[\\s}])${escaped}\\s*\\{([^}]*)\\}`).exec(sheet)
-  if (rule === null) throw new Error(`no \`${selector}\` rule in this sheet`)
-  const bg = /background\s*:\s*([^;]+);/.exec(rule[1])
-  if (bg === null) throw new Error(`\`${selector}\` sets no background`)
-  return bg[1]
+  const want = compound(selector)
+  const painting = rulesOf(sheet).flatMap((r) => {
+    const bg = r.declarations.find(([p]) => /^background(-color)?$/.test(p))
+    if (bg === undefined) return []
+    return r.selectors
+      .filter((s) => {
+        const last = compound(s.split(/\s*[\s>+~]\s*/).at(-1) ?? "")
+        return (
+          last.pseudos === want.pseudos &&
+          want.classes
+            .split(/(?=\.)/)
+            .every((c) => last.classes.split(/(?=\.)/).includes(c))
+        )
+      })
+      .map((s) => ({ selector: s, background: bg[1] }))
+  })
+  if (painting.length === 0) {
+    throw new Error(`no rule paints \`${selector}\` in this sheet`)
+  }
+  if (painting.length > 1) {
+    throw new Error(
+      `more than one rule paints \`${selector}\`: ${painting.map((p) => p.selector).join(" | ")}`
+    )
+  }
+  if (painting[0].selector !== selector) {
+    throw new Error(
+      `the rule that paints it is \`${painting[0].selector}\`, not \`${selector}\``
+    )
+  }
+  return painting[0].background
 }
+
+// The cascade applies the LAST matching rule and declaration, not the first
+// (#666 review). A reader that stops at the first match passes a sheet whose
+// later rule re-breaks the button, so these readers refuse any sheet where
+// more than one rule could paint the button or a property is declared twice.
+describe("the sheet readers do not stop at the first match", () => {
+  const BASE = ":root{--x:#8082ff;}\n.btn.pri{background:var(--x);}\n"
+
+  it("read a sheet with one rule and one declaration", () => {
+    expect(resolveVar(BASE, ruleBackground(BASE, ".btn.pri"))).toBe("#8082ff")
+  })
+
+  it("refuse a later rule for the same selector", () => {
+    const sheet = `${BASE}.btn.pri{background:#6157ea;}\n`
+    expect(() => ruleBackground(sheet, ".btn.pri")).toThrow(/more than one/)
+  })
+
+  it("refuse a later redeclaration of the property the rule reads", () => {
+    const sheet = `${BASE}:root{--x:#6157ea;}\n`
+    expect(() => resolveVar(sheet, ruleBackground(sheet, ".btn.pri"))).toThrow(
+      /declared 2 times/
+    )
+  })
+
+  it("refuse a descendant rule that also paints the button", () => {
+    const sheet = `${BASE}.hero .btn.pri{background:#6157ea;}\n`
+    expect(() => ruleBackground(sheet, ".btn.pri")).toThrow(/more than one/)
+  })
+
+  it("do not take a descendant rule for the button's own rule", () => {
+    const sheet = ".hero .btn.pri{background:#6157ea;}\n"
+    expect(() => ruleBackground(sheet, ".btn.pri")).toThrow(/not `\.btn\.pri`/)
+  })
+
+  it("keep the hover rule apart from the base rule", () => {
+    const sheet = `${BASE}.btn.pri:hover{background:#9698ff;}\n`
+    expect(ruleBackground(sheet, ".btn.pri")).toBe("var(--x)")
+    expect(ruleBackground(sheet, ".btn.pri:hover")).toBe("#9698ff")
+  })
+})
 
 describe.each(["light", "dark"] as const)(
   "bezier primary button, %s theme",
