@@ -250,7 +250,9 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       )
       expect(
         literalCells
-          .filter(({ cell }) => !HEX_CELL.test(cell) && !VERBATIM_CELL.test(cell))
+          .filter(
+            ({ cell }) => !HEX_CELL.test(cell) && !VERBATIM_CELL.test(cell)
+          )
           .map(({ role, cell }) => `${role}: ${cell}`),
         "baemin: non-reference cells must be a hex ≈ OKLCH or a verbatim literal"
       ).toEqual([])
@@ -260,7 +262,9 @@ const CASES: Record<string, { title: string; check: () => void }> = {
         const [, hex, oklch] = HEX_CELL.exec(cell) ?? []
         const want = hexToOklab(hex)
         const wrote = parseOklch(oklch)
-        return !want || !wrote || deltaE(wrote.lab, want.lab) > DELTA_E_TOLERANCE
+        return (
+          !want || !wrote || deltaE(wrote.lab, want.lab) > DELTA_E_TOLERANCE
+        )
       })
       expect(
         off.map(({ role, cell }) => `${role}: ${cell}`),
