@@ -122,12 +122,14 @@ function expectRowsToMatch(
 ): void {
   // A target is a palette key, or another role's row that ends at one — the
   // upstream's role → role hop is kept, not collapsed (#661). Walked here so
-  // an undeclared key or a loop fails by name.
+  // an undeclared key or a loop fails by name. A hop goes through role rows
+  // only: the `primary` alias is a reference row but no role.
   const endsAtPalette = (target: string): boolean => {
     const seen = new Set<string>()
     let at: string | undefined = target
     while (at !== undefined && !seen.has(at)) {
       if (literals.has(at)) return true
+      if (at === "primary") return false
       seen.add(at)
       at = refs.get(at)
     }
@@ -732,6 +734,18 @@ describe("role reference rows agree with the body role tables", () => {
     expect(() =>
       expectRowsToMatch("fixture", loop, new Map(loop), literals)
     ).toThrow(/bg-loop-b/)
+    // The #381 `primary` alias is the catalogue's brand-colour label, not a
+    // role the upstream could point at, so a hop through it is no role → role
+    // row — even where it ends at the same palette key.
+    const viaAlias = new Map([...expected, ["bg-x", "primary"]])
+    expect(() =>
+      expectRowsToMatch(
+        "fixture",
+        viaAlias,
+        new Map([...viaAlias, ["primary", "blue-400"]]),
+        literals
+      )
+    ).toThrow(/primary is neither/)
   })
 
   it("refuses a role → role twin that crosses theme", () => {
