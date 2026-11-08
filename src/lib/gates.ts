@@ -7,6 +7,12 @@
 // tree by hand-chaining them, and in #642 one such chain had a wrong log path,
 // ran nothing, and still ended on `exit=0`. A single command that names the
 // step it stopped at cannot fail that way.
+//
+// What the contract guards against is drift: an honest edit to the workflow
+// that `pnpm gates` does not follow. It is not a sandbox against someone who
+// can edit the workflow and wants a check to hide (a lifecycle script run by
+// `pnpm install`, a shell expansion inside an env value); that edit is
+// reviewed like any other, and no reader of YAML could stop it.
 
 import { parse } from "yaml"
 
@@ -93,6 +99,11 @@ const ONE_PNPM_SCRIPT = /^pnpm\s+([\w:.-]+)(?:\s+[^&|;<>\n]*)?$/
  */
 const RUNS_MORE = /[\r\n`]|\$\(|\$\{\{/
 
+// pnpm's own commands, which take the place a script name has in
+// `pnpm <script>`; read as one, the step would show up as a script named
+// `run` that gates lacks, which says nothing about the cause.
+const PNPM_COMMANDS = new Set(["run", "exec", "dlx", "x", "i", "add"])
+
 /** The one form of the install step: it prepares, so it is not mirrored. */
 const INSTALL_ARGS = ["--frozen-lockfile"]
 
@@ -175,7 +186,8 @@ export interface CiStep {
  *
  * The setup actions in `SETUP_ACTIONS` and `pnpm install` prepare the runner
  * and are not mirrored; install is held to the one line `INSTALL_ARGS` spells,
- * so nothing rides past on it. Every other step before `pnpm build` must be a single
+ * so nothing else on that line rides past (what install itself runs, such as
+ * `prepare`, runs on your install too). Every other step before `pnpm build` must be a single
  * `pnpm <script>` line; anything else (another action, a `node` or shell
  * command, a chained line) throws rather than being skipped, because a step
  * this reader silently ignored would be a step `pnpm gates` silently lacks.
@@ -228,10 +240,17 @@ export function ciPreBuildSteps(workflowYaml: string): Array<CiStep> {
       throw new Error(
         `CI build step \`${line}\` is not a single \`pnpm <script>\` line; ` +
           "make each check its own `pnpm <script>` step so `pnpm gates` can mirror it, " +
-          "or move a step that only prepares the runner after `pnpm build` or into a setup action"
+          "or move a step that only prepares the runner after `pnpm build` or into a setup action. " +
+          'A `${{ }}` value belongs in the step\'s `env`, passed to the script as `"$NAME"`'
       )
     }
     const script = match[1]
+    if (PNPM_COMMANDS.has(script)) {
+      throw new Error(
+        `CI build step \`${line}\` uses pnpm's own \`${script}\` command; ` +
+          "write the package.json script name directly (`pnpm <script>`) so `pnpm gates` can mirror it"
+      )
+    }
     if (script === "build") return scripts
     refuseHiddenSettings(step, line)
     const args = line.split(/\s+/).slice(2)

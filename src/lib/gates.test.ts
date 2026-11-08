@@ -205,6 +205,18 @@ describe("ciPreBuildSteps", () => {
     expect(() => ciPreBuildScripts(chained)).toThrow(/typecheck && pnpm lint/)
   })
 
+  it("names a pnpm command where a script name belongs, rather than calling it a missing step", () => {
+    for (const command of ["run", "exec", "dlx", "i"]) {
+      const viaCommand = WORKFLOW.replace(
+        "run: pnpm typecheck",
+        `run: pnpm ${command} typecheck`
+      )
+      expect(() => ciPreBuildScripts(viaCommand), command).toThrow(
+        /pnpm's own `\w+` command/
+      )
+    }
+  })
+
   it("throws on a line that runs more than it names, even behind `pnpm install`", () => {
     for (const run of [
       "|\n          pnpm install\n          node scripts/extra-check.ts",
