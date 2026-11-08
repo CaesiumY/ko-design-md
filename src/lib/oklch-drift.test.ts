@@ -3,7 +3,11 @@ import {
   alignToPreviewNames,
   conflictingDefinitions,
   findPreviewDrift,
+  findRoleChainDrift,
   readDefinitions,
+  readReferenceRows,
+  roleChainCoverage,
+  roleChainsForSlug,
 } from "./oklch-drift"
 
 const md = `
@@ -440,5 +444,163 @@ describe("findPreviewDrift", () => {
       readDefinitions(md)
     )
     expect(found.map((f) => f.name)).toEqual(["gray-06"])
+  })
+})
+
+describe("findRoleChainDrift", () => {
+  // A role published as a reference row (`text-primary: "{colors.gray-800}"`)
+  // carries no `oklch` of its own, so findPreviewDrift never sees it, and the
+  // preview wires it as `--sf-text-primary: var(--sf-gray-800)`. Repointing that
+  // `var()` at another step used to pass every gate.
+  const roles = `---
+colors:
+  gray-800: oklch(0.3 0 0)
+  gray-600: oklch(0.5 0 0)
+  gray-100: oklch(0.95 0 0)
+  text-primary: "{colors.gray-800}"
+  bg-base: "{colors.gray-100}"
+  dark-bg-base: "{colors.gray-800}"
+---
+`
+
+  it("catches a light role wired to another palette step", () => {
+    const found = findRoleChainDrift(
+      ":root { --sf-text-primary: var(--sf-gray-600); --sf-bg-base: var(--sf-gray-100); }",
+      roleChainsForSlug(roles, "socar")
+    )
+    expect(found).toEqual([
+      {
+        name: "sf-text-primary",
+        scope: "light",
+        preview: "var(--sf-gray-600)",
+        expected: "var(--sf-gray-800)",
+      },
+    ])
+  })
+
+  it("holds a dark-scope role to its `dark-` row", () => {
+    const found = findRoleChainDrift(
+      `:root { --sf-bg-base: var(--sf-gray-100); }
+       [data-theme="dark"] { --sf-bg-base: var(--sf-gray-600); }`,
+      roleChainsForSlug(roles, "socar")
+    )
+    expect(found).toEqual([
+      {
+        name: "sf-bg-base",
+        scope: "dark",
+        preview: "var(--sf-gray-600)",
+        expected: "var(--sf-gray-800)",
+      },
+    ])
+  })
+
+  it("holds a role with no `dark-` row to its light step in the dark scope too", () => {
+    // socar is light-only and its preview restates the light wiring under the
+    // dark selector: a repointing there alone must not pass.
+    const found = findRoleChainDrift(
+      `:root { --sf-text-primary: var(--sf-gray-800); }
+       [data-theme="dark"] { --sf-text-primary: var(--sf-gray-100); }`,
+      roleChainsForSlug(roles, "socar")
+    )
+    expect(found.map((f) => `${f.scope} ${f.name}`)).toEqual([
+      "dark sf-text-primary",
+    ])
+  })
+
+  it("accepts a preview wired where the rows point, and leaves literals out", () => {
+    const found = findRoleChainDrift(
+      `:root { --sf-text-primary: var( --sf-gray-800 ); --sf-bg-base: #fff; }
+       [data-theme="dark"] {
+         --sf-text-primary: oklch(0.9 0 0);
+         --sf-bg-base: var(--sf-gray-800);
+       }`,
+      roleChainsForSlug(roles, "socar")
+    )
+    expect(found).toEqual([])
+  })
+
+  it("compares the declaration each scope ends with, as the cascade does", () => {
+    // codeit's shape: the dark half first restates the light wiring under the
+    // dark selector, then overrides it. Only the override paints.
+    const chains = roleChainsForSlug(roles, "socar")
+    const overridden = `[data-theme="dark"] { --sf-bg-base: var(--sf-gray-100); }
+       [data-theme="dark"] { --sf-bg-base: var(--sf-gray-800); }`
+    expect(findRoleChainDrift(overridden, chains)).toEqual([])
+    const reversed = `[data-theme="dark"] { --sf-bg-base: var(--sf-gray-800); }
+       [data-theme="dark"] { --sf-bg-base: var(--sf-gray-100); }`
+    expect(findRoleChainDrift(reversed, chains).map((f) => f.name)).toEqual([
+      "sf-bg-base",
+    ])
+  })
+
+  it("renames palette steps by the slug's own alias rules", () => {
+    // bezier's preview keeps role names bare and prefixes its palette `c-`.
+    const bezier = `---
+colors:
+  grey-50: oklch(0.98 0 0)
+  fill-grey: "{colors.grey-50}"
+---
+`
+    const chains = roleChainsForSlug(bezier, "bezier")
+    expect(chains.light.get("fill-grey")).toEqual(["c-grey-50"])
+  })
+
+  it("accepts a dark step under the name of the palette the dark block redefines", () => {
+    // vapor-ui: `dark-color-background-primary-100: "{colors.dark-blue-050}"`,
+    // and the preview's dark block redefines `--vp-blue-050` rather than
+    // declaring a `--vp-dark-blue-050`.
+    const vapor = `---
+colors:
+  blue-050: oklch(0.97 0.02 260)
+  blue-100: oklch(0.93 0.04 260)
+  dark-blue-050: oklch(0.3 0.05 260)
+  color-background-primary-100: "{colors.blue-100}"
+  dark-color-background-primary-100: "{colors.dark-blue-050}"
+---
+`
+    const chains = roleChainsForSlug(vapor, "vapor-ui")
+    const css = (step: string): string =>
+      `:root { --vp-bg-primary-100: var(--vp-blue-100); }
+       [data-theme="dark"] { --vp-bg-primary-100: var(--vp-${step}); }`
+    expect(findRoleChainDrift(css("blue-050"), chains)).toEqual([])
+    expect(findRoleChainDrift(css("dark-blue-050"), chains)).toEqual([])
+    expect(findRoleChainDrift(css("blue-100"), chains)).toEqual([
+      {
+        name: "vp-bg-primary-100",
+        scope: "dark",
+        preview: "var(--vp-blue-100)",
+        expected: "var(--vp-blue-050)",
+      },
+    ])
+  })
+
+  it("counts compared chains and literal role declarations, once per scope", () => {
+    const chains = roleChainsForSlug(roles, "socar")
+    expect(
+      roleChainCoverage(
+        `:root { --sf-text-primary: var(--sf-gray-800); --sf-bg-base: #fff; }
+         :root { --sf-text-primary: var(--sf-gray-800); --sf-other: #000; }
+         [data-theme="dark"] { --sf-bg-base: var(--sf-gray-800); }`,
+        chains
+      )
+    ).toEqual({ chained: 2, literal: 1 })
+  })
+})
+
+describe("readReferenceRows", () => {
+  it("reads `{colors.x}` rows and nothing else", () => {
+    const doc = `---
+colors:
+  blue-500: oklch(0.6 0.2 260)
+  primary: "{colors.blue-500}"
+  on-primary: "{colors.blue-500} "
+  mix: "color-mix(in oklab, {colors.blue-500} 50%, white)"
+---
+`
+    expect([...readReferenceRows(doc)]).toEqual([["primary", "blue-500"]])
+  })
+
+  it("reads nothing from a frontmatter YAML cannot read", () => {
+    expect(readReferenceRows("---\ncolors: [\n---\n").size).toBe(0)
   })
 })

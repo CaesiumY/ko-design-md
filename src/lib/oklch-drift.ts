@@ -1,4 +1,4 @@
-import { readFrontmatter } from "./frontmatter"
+import { findKey, readFrontmatter } from "./frontmatter"
 import { splitFrontmatter } from "./frontmatter-fence"
 import { LEADING_OKLCH, oklchEntries } from "./oklch-sync"
 // Detect preview CSS that no longer agrees with the design.md it was built from.
@@ -197,9 +197,35 @@ const PREVIEW_TOKEN_ALIASES: Partial<
 > = {
   baemin: [["", "bm-"]],
   banksalad: [["", "bs-"]],
+  // bezier's preview is hex, so no value comparison reaches it; these rules
+  // serve the role-chain check. Its role properties keep their bare md names
+  // (`--fill-grey`) and only the palette families are prefixed (`--c-grey-50`),
+  // so there is one rule per family and no catch-all.
+  bezier: [
+    "blue",
+    "cobalt",
+    "green",
+    "grey",
+    "navy",
+    "olive",
+    "orange",
+    "pink",
+    "purple",
+    "red",
+    "teal",
+    "yellow",
+  ].map((family) => [`${family}-`, `c-${family}-`] as const),
   class101: [["", "c101-"]],
+  // codeit's preview names roles as its docs do (`--ci-txt-*`, `--ci-bg-*`)
+  // where the md rows use the bundle's `text-*` and `background-*`, and
+  // declares one palette (`--ci-purple-80`) whose light values are the md's
+  // `light-` steps and which its dark block redefines. The `dark-` steps get no
+  // rule here: roleChainsForSlug names them for the dark scope itself.
   codeit: [
     ["codeit-", "ci-"],
+    ["text-", "ci-txt-"],
+    ["background-", "ci-bg-"],
+    ["light-", "ci-"],
     ["", "ci-"],
   ],
   gmarket: [["", "gds-"]],
@@ -233,7 +259,14 @@ const PREVIEW_TOKEN_ALIASES: Partial<
     ["", "sp-"],
   ],
   toss: [["", "tds-"]],
-  "vapor-ui": [["", "vp-"]],
+  // The role layer's `color-background-*` and the rest are written short in
+  // the preview (`--vp-bg-primary-100`).
+  "vapor-ui": [
+    ["color-background-", "vp-bg-"],
+    ["color-foreground-", "vp-fg-"],
+    ["color-border-", "vp-border-"],
+    ["", "vp-"],
+  ],
   wanted: [["", "w-"]],
   yeogi: [
     ["yeogi-", "yg-"],
@@ -253,8 +286,8 @@ const PREVIEW_TOKEN_ALIASES: Partial<
  * meaningless on the day they diverge.
  *
  * A slug with no entry gets no aliases, which is correct for `11st` (preview
- * and md already agree) and unavoidable for `bezier` (its preview declares no
- * `oklch` at all — hex — so no naming rule can reach it).
+ * and md already agree). `bezier`'s rules reach no value here — its preview
+ * declares no `oklch` at all, it is hex — and serve the role-chain check.
  *
  * Always returns a NEW map, including in that case. Handing back the caller's
  * own map for some slugs and a copy for others is the kind of contract that
@@ -266,39 +299,117 @@ export function alignToPreviewNames(
   slug: string
 ): Map<string, string> {
   const out = new Map(definitions)
-  const rules = PREVIEW_TOKEN_ALIASES[slug]
-  if (rules === undefined) return out
   const claimedBy = new Map<string, string>()
   const ambiguous = new Set<string>()
   for (const [name, value] of definitions) {
-    for (const [from, to] of rules) {
-      if (from !== "" && !name.startsWith(from)) continue
-      // A catch-all prepend must not double a namespace the md name already
-      // carries — `c101-primary` would otherwise gain `c101-c101-primary`, a
-      // name no preview declares. Restricted to `from === ""` on purpose: a
-      // replacement rule legitimately rewrites names that already start with
-      // its target, which is exactly what `ldsg-color-` -> `ldsg-` does.
-      if (from === "" && name.startsWith(to)) break
-      const alias = to + name.slice(from.length)
-      // An md name outranks any alias, always.
-      if (definitions.has(alias)) break
-      const prior = claimedBy.get(alias)
-      if (prior === undefined) {
-        claimedBy.set(alias, value)
-        out.set(alias, value)
-      } else if (prior !== value) {
-        // Two md names folding onto one alias with different values is the same
-        // ambiguity `readDefinitions` drops, one layer up: whichever md name
-        // came first would win on declaration order alone, and the gate would
-        // compare the preview against a value picked by nothing. Restating the
-        // same value is fine.
-        ambiguous.add(alias)
-      }
-      break
+    const alias = aliasFor(name, slug)
+    // An md name outranks any alias, always.
+    if (alias === undefined || definitions.has(alias)) continue
+    const prior = claimedBy.get(alias)
+    if (prior === undefined) {
+      claimedBy.set(alias, value)
+      out.set(alias, value)
+    } else if (prior !== value) {
+      // Two md names folding onto one alias with different values is the same
+      // ambiguity `readDefinitions` drops, one layer up: whichever md name
+      // came first would win on declaration order alone, and the gate would
+      // compare the preview against a value picked by nothing. Restating the
+      // same value is fine.
+      ambiguous.add(alias)
     }
   }
   for (const alias of ambiguous) out.delete(alias)
   return out
+}
+
+/**
+ * The name `slug`'s preview gives md name `name` by its first matching rule in
+ * `PREVIEW_TOKEN_ALIASES`, or `undefined` when no rule renames it.
+ */
+function aliasFor(name: string, slug: string): string | undefined {
+  for (const [from, to] of PREVIEW_TOKEN_ALIASES[slug] ?? []) {
+    if (from !== "" && !name.startsWith(from)) continue
+    // A catch-all prepend must not double a namespace the md name already
+    // carries — `c101-primary` would otherwise gain `c101-c101-primary`, a
+    // name no preview declares. Restricted to `from === ""` on purpose: a
+    // replacement rule legitimately rewrites names that already start with
+    // its target, which is exactly what `ldsg-color-` -> `ldsg-` does.
+    if (from === "" && name.startsWith(to)) return undefined
+    return to + name.slice(from.length)
+  }
+  return undefined
+}
+
+/**
+ * Reference rows in a design.md's frontmatter `colors:` map — a key whose value
+ * is exactly `{colors.<key>}` — as key → the key it points at.
+ *
+ * `readDefinitions` reads only `oklch(…)` values, so these rows (the role layer
+ * the entry publishes, docs/adr/0012, and the #381 `primary` alias) never
+ * reached the drift gate. A frontmatter YAML cannot read yields nothing, as it
+ * does there.
+ */
+export function readReferenceRows(markdown: string): Map<string, string> {
+  const out = new Map<string, string>()
+  const read = readFrontmatter(markdown)
+  if (!read.ok) return out
+  const colors = findKey(read.keys, "colors")?.value
+  if (colors === null || typeof colors !== "object" || Array.isArray(colors))
+    return out
+  for (const [key, value] of Object.entries(colors)) {
+    if (typeof value !== "string") continue
+    const target = /^\{colors\.([^}]+)\}$/.exec(value)?.[1]
+    if (target !== undefined) out.set(key, target)
+  }
+  return out
+}
+
+/**
+ * Per theme scope, preview role property → the palette properties its `var()`
+ * may point at (the first is the one a finding names).
+ */
+export interface RoleChains {
+  light: Map<string, ReadonlyArray<string>>
+  dark: Map<string, ReadonlyArray<string>>
+}
+
+/**
+ * Which palette property each role property of `slug`'s preview must point at,
+ * per theme scope, read from the md reference rows and renamed by the same
+ * `PREVIEW_TOKEN_ALIASES` rules the value comparison uses.
+ *
+ * A `dark-` row (the one spelling the catalogue uses for a dark twin, #625) is
+ * the role's dark-scope target. A row with no `dark-` twin is the same role in
+ * both themes (a theme-invariant role, or a light-only system), so its dark
+ * redeclaration, when the preview writes one as a `var()`, must point at the
+ * same step. A preview that invents dark values for a light-only system writes
+ * them as literals, which `findRoleChainDrift` does not compare.
+ *
+ * A dark row may point at a `dark-` palette key (`{colors.dark-gray-050}`,
+ * vapor-ui and codeit). Their previews declare one palette and redefine its
+ * steps in the dark block, so in the dark scope the unprefixed step's name
+ * (`--vp-gray-050`) is accepted as well as the prefixed one. This is not an
+ * alias rule on purpose: a `dark-` rule would fold `gray-050` and
+ * `dark-gray-050` onto one name, which alignToPreviewNames drops as ambiguous,
+ * and the light palette comparisons would go with it.
+ */
+export function roleChainsForSlug(markdown: string, slug: string): RoleChains {
+  const rows = readReferenceRows(markdown)
+  const name = (key: string): string => aliasFor(key, slug) ?? key
+  const light = new Map<string, ReadonlyArray<string>>()
+  const dark = new Map<string, ReadonlyArray<string>>()
+  for (const [key, target] of rows) {
+    if (key.startsWith("dark-")) {
+      const step = target.startsWith("dark-")
+        ? [name(target.slice("dark-".length)), name(target)]
+        : [name(target)]
+      dark.set(name(key.slice("dark-".length)), step)
+      continue
+    }
+    light.set(name(key), [name(target)])
+    if (!rows.has(`dark-${key}`)) dark.set(name(key), [name(target)])
+  }
+  return { light, dark }
 }
 
 /**
@@ -335,6 +446,117 @@ export function findPreviewDrift(
   definitions: Map<string, string>
 ): Array<DriftFinding> {
   const findings: Array<DriftFinding> = []
+  for (const { name, value, dark } of declarations(previewHtml)) {
+    if (dark) continue
+    const literal = /^oklch\([^)]*\)/.exec(value)?.[0]
+    if (literal === undefined) continue
+    const expected = definitions.get(name)
+    if (expected === undefined) continue
+    const preview = normalise(literal)
+    if (preview !== expected) findings.push({ name, preview, expected })
+  }
+  return findings
+}
+
+export interface RoleChainFinding extends DriftFinding {
+  scope: "light" | "dark"
+}
+
+/**
+ * Compare where a preview's role properties point against the md reference
+ * rows (`roleChainsForSlug`), in both theme scopes.
+ *
+ * Only a declaration that is exactly one `var(--x)` is compared. A literal is
+ * not a chain (bezier writes its opacity roles as `rgba(…)`, and a preview may
+ * invent dark values for a light-only system), so it is left out, not
+ * reported. `roleChainCoverage` counts both kinds, and
+ * `oklch-drift-corpus.test.ts` pins those counts per slug, so a role whose
+ * `var()` becomes a literal, or a role newly declared as a literal, moves a
+ * pinned number.
+ *
+ * Per scope, the LAST declaration of a property is the one compared: what the
+ * cascade renders for the theme's custom properties. codeit's merged preview
+ * restates its light tokens under the dark selector and then overrides them in
+ * a second dark block; the first, overridden declaration never paints, so
+ * reading it would accuse a correct preview.
+ */
+export function findRoleChainDrift(
+  previewHtml: string,
+  chains: RoleChains
+): Array<RoleChainFinding> {
+  const findings: Array<RoleChainFinding> = []
+  for (const { name, dark, target, expected } of roleDeclarations(
+    previewHtml,
+    chains
+  )) {
+    if (target === undefined || expected.includes(target)) continue
+    findings.push({
+      name,
+      scope: dark ? "dark" : "light",
+      preview: `var(--${target})`,
+      expected: `var(--${expected[0]})`,
+    })
+  }
+  return findings
+}
+
+/**
+ * How many role properties the role-chain check compares (`chained`, wired by
+ * one `var()`) and how many it leaves out as literals (`literal`), counting
+ * each scope's last declaration once.
+ */
+export function roleChainCoverage(
+  previewHtml: string,
+  chains: RoleChains
+): { chained: number; literal: number } {
+  let chained = 0
+  let literal = 0
+  for (const { target } of roleDeclarations(previewHtml, chains)) {
+    if (target === undefined) literal++
+    else chained++
+  }
+  return { chained, literal }
+}
+
+/**
+ * Each scope's last declaration of a role property `chains` names, with the
+ * property its `var()` points at (`undefined` for a literal).
+ */
+function roleDeclarations(
+  previewHtml: string,
+  chains: RoleChains
+): Array<
+  Declaration & {
+    target: string | undefined
+    expected: ReadonlyArray<string>
+  }
+> {
+  const last = new Map<string, Declaration>()
+  for (const d of declarations(previewHtml)) {
+    const key = `${d.dark ? "dark" : "light"} ${d.name}`
+    // Delete first so the map's order is where each property is last declared.
+    last.delete(key)
+    last.set(key, d)
+  }
+  return [...last.values()].flatMap((d) => {
+    const expected = (d.dark ? chains.dark : chains.light).get(d.name)
+    if (expected === undefined) return []
+    const target = /^var\(\s*--([\w-]+)\s*\)$/.exec(d.value)?.[1]
+    return [{ ...d, target, expected }]
+  })
+}
+
+/** One custom-property declaration in a preview's stylesheets. */
+interface Declaration {
+  name: string
+  /** Trimmed. */
+  value: string
+  /** Inside a `[data-theme="dark"]` block. */
+  dark: boolean
+}
+
+/** Every custom-property declaration in a preview's stylesheets, in order. */
+function declarations(previewHtml: string): Array<Declaration> {
   // Brace depth only means "CSS nesting" inside a stylesheet. Counting braces
   // across the whole document would let an inline <script> object literal or a
   // style="{…}" attribute skew the depth and quietly break the dark-scope test —
@@ -349,8 +571,9 @@ export function findPreviewDrift(
   // Walk braces and declarations in document order. Deciding scope per LINE is
   // not enough: a block that opens and closes on one line would have already
   // reset by the time its own declarations were inspected.
-  const TOKEN = /\[data-theme=["']?dark|\{|\}|--([\w-]+):\s*(oklch\([^)]*\))/g
+  const TOKEN = /\[data-theme=["']?dark|\{|\}|--([\w-]+):([^;{}]*)/g
 
+  const out: Array<Declaration> = []
   let depth = 0
   let pendingDark = false
   // Depth at which the enclosing dark block opened, or null when not in one.
@@ -376,14 +599,7 @@ export function findPreviewDrift(
       pendingDark = true
       continue
     }
-    if (darkDepth !== null) continue
-
-    const expected = definitions.get(m[1])
-    if (expected === undefined) continue
-    const preview = normalise(m[2])
-    if (preview !== expected) {
-      findings.push({ name: m[1], preview, expected })
-    }
+    out.push({ name: m[1], value: m[2].trim(), dark: darkDepth !== null })
   }
-  return findings
+  return out
 }

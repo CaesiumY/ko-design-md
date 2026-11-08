@@ -6,7 +6,12 @@ import {
   syncOklchLiterals,
 } from "../src/lib/oklch-sync"
 import { auditOklch } from "../src/lib/oklch-audit"
-import { definitionsForSlug, findPreviewDrift } from "../src/lib/oklch-drift"
+import {
+  definitionsForSlug,
+  findPreviewDrift,
+  findRoleChainDrift,
+  roleChainsForSlug,
+} from "../src/lib/oklch-drift"
 import {
   DARK_PREVIEW_FILE,
   LIGHT_PREVIEW_FILE,
@@ -262,9 +267,9 @@ ${unfixed.length} mismatched token(s) NOT corrected — the value is not ` +
 // gray-07's colour into 11st's `--gray-06` and every gate stayed green.
 let drift = 0
 for (const slug of slugs) {
-  // 라이트 스코프만 검사한다 — 다크는 [data-theme="dark"] 에서 토큰을 설계상
-  // 다른 값으로 재정의하므로 라이트 기준 md 와 비교하면 오탐이 쏟아진다
-  // (이슈 #187, 측정 231건).
+  // 값(oklch) 비교는 라이트 스코프만 본다 — 다크는 [data-theme="dark"] 에서
+  // 토큰을 설계상 다른 값으로 재정의하므로 라이트 기준 md 와 비교하면 오탐이
+  // 쏟아진다(이슈 #187, 측정 231건). 아래 역할 사슬 비교는 다크 스코프도 읽는다.
   //
   // 어느 파일이 라이트 스코프를 갖는지는 resolvePreviewLayout 이 답한다 —
   // 병합 레이아웃(preview.html 하나)에서는 그 한 파일이고, 분리 레이아웃에서는
@@ -293,23 +298,32 @@ for (const slug of slugs) {
   }
   const previewFile = lightScopeFile(layout)
   const preview = path.join(dir, previewFile)
-  const defs = definitionsForSlug(
-    fs.readFileSync(path.join(SERVICES, `${slug}.md`), "utf8"),
-    slug
-  )
-  const found = findPreviewDrift(fs.readFileSync(preview, "utf8"), defs)
-  if (found.length === 0) continue
+  const markdown = fs.readFileSync(path.join(SERVICES, `${slug}.md`), "utf8")
+  const html = fs.readFileSync(preview, "utf8")
+  const found = findPreviewDrift(html, definitionsForSlug(markdown, slug))
+  // 역할 → 팔레트 사슬: md 참조 행(`text-primary: "{colors.gray-800}"`)은
+  // oklch 가 없어 위 비교에 잡히지 않는다. 프리뷰가 역할을 `var()` 로 잇는
+  // 곳에서 그 `var()` 가 참조 행이 가리키는 단계인지 라이트와 다크 둘 다 본다.
+  // 다크 스코프를 읽으므로 분리 레이아웃의 light.html 에서는 다크 짝이 비교되지
+  // 않는다 — 카탈로그는 전부 병합 레이아웃이다.
+  const chained = findRoleChainDrift(html, roleChainsForSlug(markdown, slug))
+  if (found.length + chained.length === 0) continue
   console.log(
-    `\n${slug}/${previewFile} — ${found.length} drifted from ${slug}.md`
+    `\n${slug}/${previewFile} — ${found.length + chained.length} drifted from ${slug}.md`
   )
   for (const d of found) {
     console.log(`  --${d.name.padEnd(24)} ${d.preview}   md says ${d.expected}`)
   }
-  drift += found.length
+  for (const d of chained) {
+    console.log(
+      `  --${d.name.padEnd(24)} ${d.preview}   md reference row says ${d.expected} (${d.scope})`
+    )
+  }
+  drift += found.length + chained.length
 }
 if (drift > 0) {
   console.log(
-    `\n${drift} preview literal(s) disagree with their md definition — ` +
+    `\n${drift} preview declaration(s) disagree with their md definition — ` +
       `edit the preview to match (the md is the source of truth).\n` +
       `  Before editing a preview, check that the md side is not at fault: a ` +
       `token restated under a dark-scoped heading is read as the light ` +

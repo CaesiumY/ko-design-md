@@ -2,8 +2,15 @@ import { existsSync, readFileSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
-import { definitionsForSlug, findPreviewDrift } from "./oklch-drift"
+import {
+  definitionsForSlug,
+  findPreviewDrift,
+  findRoleChainDrift,
+  roleChainCoverage,
+  roleChainsForSlug,
+} from "./oklch-drift"
 import { lightScopeFile, resolvePreviewLayout } from "./preview-layout"
+import type { RoleChains } from "./oklch-drift"
 
 // `oklch-drift.test.ts` proves the algorithm on synthetic strings. Nothing
 // proved it still reaches the catalogue — and for a while it barely did: the
@@ -43,19 +50,34 @@ function consideredCount(html: string): number {
   return findPreviewDrift(html, names).length
 }
 
-/** Declarations that survived the scope rules AND matched an md token name. */
-function matchedCount(html: string, defs: Map<string, string>): number {
+/**
+ * Declarations the gate compares: oklch literals that matched an md token
+ * name, plus role properties wired by `var()` that an md reference row names.
+ */
+function matchedCount(html: string, slug: string): number {
   const names = new Map<string, string>()
-  for (const key of defs.keys()) names.set(key, SENTINEL)
-  return findPreviewDrift(html, names).length
+  for (const key of definitionsFor(slug).keys()) names.set(key, SENTINEL)
+  return findPreviewDrift(html, names).length + chainedCount(html, slug)
 }
 
-// Calls the same function `scripts/audit-oklch.ts` calls, rather than
+/** Role properties whose `var()` the role-chain check compares. */
+function chainedCount(html: string, slug: string): number {
+  return roleChainCoverage(html, chainsFor(slug)).chained
+}
+
+// Calls the same functions `scripts/audit-oklch.ts` calls, rather than
 // assembling the pipeline again here. Rebuilding it would let the script change
 // underneath these assertions while they kept passing — which is the failure
 // this file was written to make impossible, reproduced inside the file itself.
 function definitionsFor(slug: string): Map<string, string> {
   return definitionsForSlug(
+    readFileSync(join(SERVICES, `${slug}.md`), "utf8"),
+    slug
+  )
+}
+
+function chainsFor(slug: string): RoleChains {
+  return roleChainsForSlug(
     readFileSync(join(SERVICES, `${slug}.md`), "utf8"),
     slug
   )
@@ -105,21 +127,31 @@ function slugs(): Array<string> {
 //
 // A slug's count going UP is fine and does not fail — raise its floor when
 // convenient. Going down means something stopped matching.
+//
+// Since #660 a count also holds the role properties the role-chain check
+// compares (`findRoleChainDrift`): a `--role: var(--step)` declaration whose
+// role an md reference row names, in either theme scope. So a role whose
+// `var()` is turned into a literal, or stops being declared, drops the count
+// too. Raised then to what was measured; the per-slug split is light + dark.
 const MATCH_FLOOR: Partial<Record<string, number>> = {
   "11st": 19,
   baemin: 38,
-  banksalad: 181,
-  // Not a naming problem and not fixable by one: bezier's preview declares no
-  // `oklch` at all — it is hex — so there is nothing for a name rule to reach.
-  bezier: 0,
+  // 181 oklch + 108 light and 95 dark role chains (#660).
+  banksalad: 384,
+  // bezier's preview declares no `oklch` at all — it is hex — so only its role
+  // chains are compared: 4 light and 5 dark, read through the per-family
+  // `c-` rules (#660). Its alpha roles are `rgba(…)` literals and stay out.
+  bezier: 9,
   class101: 14,
-  codeit: 8,
+  // 8 → 60 (#660): its docs role names (`txt-`, `bg-`) and its `light-`
+  // palette steps got rules, so the light palette is compared as values (47)
+  // and 13 role chains are compared.
+  codeit: 60,
   // 27 → 25 (#629): the twelve role properties now take `var()` of the palette
   // steps the md reference rows name, and the gate compares those ten steps
-  // instead — two role pairs share gray-900 and gray-400. What no gate checks
-  // since then: the preview's role → step mapping itself, because the md side
-  // drops reference rows and the preview side reads no `var()` (tool follow-up).
-  gmarket: 25,
+  // instead — two role pairs share gray-900 and gray-400. 25 → 37 (#660): the
+  // twelve role chains are compared again, as chains.
+  gmarket: 37,
   greeting: 13,
   // POP's two tokens are deliberately absent from the preview CSS — the entry
   // records that GS Retail licenses that mark from Samsung Securities and asks
@@ -130,29 +162,54 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
   krds: 33,
   kyobobook: 41,
   "lg-electronics": 67,
-  likelion: 23,
+  // 23 oklch + 11 light role chains (#660); the dark half writes literals.
+  likelion: 34,
   "line-design-system": 24,
   nol: 37,
   remember: 39,
-  ridi: 142,
+  // 142 oklch + 31 light and 30 dark role chains (#660).
+  ridi: 203,
   // samsung-one-ui's preview declares the md tokens under their exact md names
   // (--primary, --dark-black, …), so no PREVIEW_TOKEN_ALIASES rule is needed.
   "samsung-one-ui": 7,
   "seed-design": 27,
   // 40 → 31 (#630): socar's roles became reference rows, which carry no
   // `oklch` for the gate to read, so the preview's 24 role properties now read
-  // `var(--sf-<palette step>)` and are no longer compared here — which step
-  // each role points at is checked by the socar case in
-  // role-reference-rows.test.ts; the 12 palette steps they point at, and the
-  // three overlays (dim and two press), were added to the preview and are.
-  // 40 − 24 + 12 + 3.
-  socar: 31,
+  // `var(--sf-<palette step>)` and are no longer compared as values; the 12
+  // palette steps they point at, and the three overlays (dim and two press),
+  // were added to the preview and are. 40 − 24 + 12 + 3. 31 → 79 (#660): the
+  // 24 role chains are compared in the light scope and again in the dark one,
+  // which restates them (SOCAR Frame is light-only).
+  socar: 79,
   teamsparta: 18,
   toss: 27,
-  "vapor-ui": 36,
+  // 36 → 106 (#660): 69 role chains, once the role layer's short preview
+  // names (`color-background-` as `vp-bg-`, and the rest) got rules.
+  "vapor-ui": 106,
   wanted: 53,
   yeogi: 29,
   zigbang: 43,
+}
+
+// Role properties the role-chain check reads, per slug, EXACT (#660): `chained`
+// are wired by one `var()` and compared, `literal` are written as values and
+// left out. Light and dark scopes count separately, last declaration only.
+// Slugs absent here compare none: teamsparta, greeting and seed-design carry
+// reference rows, but their previews wire roles under names of their own
+// (`--text`, `--success`) that no leading-substring rule reaches, and toss's
+// two rows (`primary`, `greyBackground`) are not declared in its preview.
+const ROLE_CHAINS: Record<string, { chained: number; literal: number }> = {
+  banksalad: { chained: 203, literal: 0 },
+  // The 43 literals are its opacity roles, written `rgba(…)`.
+  bezier: { chained: 9, literal: 43 },
+  codeit: { chained: 13, literal: 3 },
+  // GDS and likelion publish no dark palette; the previews' dark halves give
+  // those roles literal dark values of their own.
+  gmarket: { chained: 12, literal: 12 },
+  likelion: { chained: 11, literal: 10 },
+  ridi: { chained: 61, literal: 1 },
+  socar: { chained: 48, literal: 0 },
+  "vapor-ui": { chained: 69, literal: 1 },
 }
 
 describe("oklch-drift — catalogue coverage", () => {
@@ -173,7 +230,7 @@ describe("oklch-drift — catalogue coverage", () => {
     // reader with no way to obtain one — and recording a 0 is refused below.
     const measured = unaccounted.map((slug) => {
       const { html } = lightScope(slug)
-      return `${slug} (matches ${matchedCount(html, definitionsFor(slug))} today)`
+      return `${slug} (matches ${matchedCount(html, slug)} today)`
     })
     expect(
       unaccounted,
@@ -187,7 +244,7 @@ describe("oklch-drift — catalogue coverage", () => {
       const floor = MATCH_FLOOR[slug]
       if (floor === undefined) continue
       const { html } = lightScope(slug)
-      const n = matchedCount(html, definitionsFor(slug))
+      const n = matchedCount(html, slug)
       if (n < floor) regressed.push(`${slug}: ${n} < ${floor}`)
     }
     expect(
@@ -215,14 +272,83 @@ describe("oklch-drift — catalogue coverage", () => {
   it("checks something in every slug the gate can reach", () => {
     // A floor of 0 says "this slug is not checked at all", which is a claim
     // worth making explicit rather than letting it sit in a table of numbers.
-    // Only `bezier` is entitled to it — its preview has no `oklch` for any name
-    // rule to reach. Any other slug at 0 means the gate went quiet on it.
-    const unchecked = all.filter(
-      (s) => s !== "bezier" && (MATCH_FLOOR[s] ?? 0) === 0
-    )
+    // bezier used to be entitled to it — its preview has no `oklch` — until
+    // its role chains were compared (#660). Any slug at 0 means the gate went
+    // quiet on it.
+    const unchecked = all.filter((s) => (MATCH_FLOOR[s] ?? 0) === 0)
     expect(
       unchecked,
-      `these slugs are recorded as matching nothing: ${unchecked.join(", ")}. Only bezier is expected to, because its preview is hex rather than oklch. For anything else, add a rule to PREVIEW_TOKEN_ALIASES instead of recording a zero.`
+      `these slugs are recorded as matching nothing: ${unchecked.join(", ")}. Add a rule to PREVIEW_TOKEN_ALIASES instead of recording a zero.`
     ).toEqual([])
+  })
+
+  it("finds every preview's roles wired where the md reference rows point", () => {
+    // `pnpm audit:oklch` gates this; it is asserted here too so the mutation
+    // below starts from a clean preview, and so `pnpm test` names the role.
+    const drifted = all.flatMap((slug) =>
+      findRoleChainDrift(lightScope(slug).html, chainsFor(slug)).map(
+        (f) => `${slug} ${f.scope} --${f.name}: ${f.preview}, md ${f.expected}`
+      )
+    )
+    expect(drifted).toEqual([])
+  })
+
+  it("compares exactly the role chains recorded per slug", () => {
+    // Exact, unlike MATCH_FLOOR: a rise can be a role newly wired, and a rise in
+    // `literal` is a role newly declared as a value where its md row points at
+    // a palette step, which the chain comparison does not read. #648 pinned
+    // both for socar alone (24 roles compared, none as literals); this keeps
+    // that for every slug.
+    const measured = Object.fromEntries(
+      all
+        .map(
+          (slug) =>
+            [
+              slug,
+              roleChainCoverage(lightScope(slug).html, chainsFor(slug)),
+            ] as const
+        )
+        .filter(([, c]) => c.chained + c.literal > 0)
+    )
+    expect(measured).toEqual(ROLE_CHAINS)
+  })
+
+  it("fails a role wired to another palette step in every slug that has a chain", () => {
+    // The mutation #660 is about, run on the real previews through the real
+    // check: repoint one role's `var()` at another step the same slug's rows
+    // name. Each slug whose role chains are compared must report exactly that
+    // role, so no slug's chain comparison can be silently inert.
+    const reached: Array<string> = []
+    for (const slug of all) {
+      const { html } = lightScope(slug)
+      const chains = chainsFor(slug)
+      if (chainedCount(html, slug) === 0) continue
+      const steps = new Set([...chains.light.values()].map(([step]) => step))
+      // The first light role the preview really wires by `var()`.
+      const wired = [...chains.light].find(([role, [step]]) =>
+        new RegExp(`--${role}:\\s*var\\(--${step}\\)`).test(html)
+      )
+      expect(wired, `${slug}: no light role wired by var()`).toBeDefined()
+      if (wired === undefined) continue
+      const [role, [step]] = wired
+      const other = [...steps].find((s) => s !== step)
+      expect(other, `${slug}: a second palette step`).toBeDefined()
+      const mutated = html.replace(
+        new RegExp(`(--${role}:\\s*)var\\(--${step}\\)`, "g"),
+        `$1var(--${other})`
+      )
+      const found = findRoleChainDrift(mutated, chains)
+      expect(found.length, `${slug}: --${role} repointed`).toBeGreaterThan(0)
+      expect(
+        found.every((f) => f.name === role),
+        `${slug}: only --${role} reported`
+      ).toBe(true)
+      reached.push(slug)
+    }
+    expect(reached).toEqual(
+      Object.entries(ROLE_CHAINS)
+        .filter(([, c]) => c.chained > 0)
+        .map(([slug]) => slug)
+    )
   })
 })
