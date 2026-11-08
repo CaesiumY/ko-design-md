@@ -136,7 +136,11 @@ function slugs(): Array<string> {
 // chain count exactly.
 const MATCH_FLOOR: Partial<Record<string, number>> = {
   "11st": 19,
-  baemin: 38,
+  // 38 → 35 (#663): the ten-step bundle mint ramp gave way to the eight
+  // deployed `--ref-color-mint*` steps, and `--bm-primary` now takes
+  // `var(--bm-mint5)` as the md's `primary` reference row does. 35 → 37
+  // (#660): that `primary` chain is compared, in both theme scopes.
+  baemin: 37,
   // 181 → 384 (#660): its role chains are compared.
   banksalad: 384,
   // bezier's preview declares no `oklch` at all — it is hex — so only its role
@@ -208,6 +212,8 @@ interface RoleChainCount {
   scoped: number
 }
 const ROLE_CHAINS: Partial<Record<string, RoleChainCount>> = {
+  // Its one reference row is the `primary` alias (#663).
+  baemin: { chained: 2, literal: 0, scoped: 0 },
   banksalad: { chained: 203, literal: 0, scoped: 0 },
   // The 43 literals are its opacity roles, written `rgba(…)`.
   bezier: { chained: 9, literal: 43, scoped: 0 },
@@ -356,7 +362,12 @@ describe("oklch-drift — catalogue coverage", () => {
       const { html } = lightScope(slug)
       const chains = chainsFor(slug)
       if (chainedCount(html, slug) === 0) continue
-      const steps = new Set([...chains.light.values()].map(([step]) => step))
+      // Steps the rows name, then the palette the md defines: baemin's one
+      // row (`primary`) names a single step.
+      const steps = new Set([
+        ...[...chains.light.values()].map(([step]) => step),
+        ...definitionsFor(slug).keys(),
+      ])
       // The first light role the preview really wires by `var()`.
       const wired = [...chains.light].find(([role, [step]]) =>
         new RegExp(`--${role}:\\s*var\\(--${step}\\)`).test(html)

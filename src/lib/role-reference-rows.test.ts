@@ -18,8 +18,9 @@ import { ALPHA_TOLERANCE, DELTA_E_TOLERANCE } from "./oklch-tolerance"
 // A re-audit that fixes one copy and not the other would pass every other gate.
 //
 // Pinned in both directions: every table role that maps to a single declared
-// palette token has its row(s) — save one under a spec colour-role name, which
-// stays in the table — and no row exists without a table role behind it.
+// palette token, or to another such role, has its row(s) — save one under a
+// spec colour-role name, which stays in the table — and no row exists without
+// a table role behind it.
 
 const SERVICES = join(
   fileURLToPath(new URL("../..", import.meta.url)),
@@ -90,8 +91,10 @@ const single = (cell: string): string | undefined =>
   /^`\{colors\.([^}]+)\}`$/.exec(cell)?.[1]
 
 // Table roles whose light and dark cells are each one reference: the role's
-// row and its `dark-` twin. Primitives do not change with the theme, so the
-// twin points at an unprefixed palette key.
+// row and its `dark-` twin, keyed as the table writes them. Where the twin
+// points — a `dark-` palette, an unprefixed key, or another role's `dark-`
+// twin — is each entry's own upstream; `expectRowsToMatch` holds only that a
+// role → role twin keeps its theme.
 function singleReferenceRoles(
   tableRows: Array<Array<string>>
 ): Map<string, string> {
@@ -110,18 +113,70 @@ function singleReferenceRoles(
   return expected
 }
 
+// Table roles that change with the theme: a dark cell that is not the light
+// one, whatever it holds — a reference, an opacity ramp, a colour-mix. Read
+// from the table, not from `dark-` rows, because a dark side that is not one
+// reference owes no row. A dark cell of prose that only says the role does
+// not change still reads as themed here, which refuses rather than passes.
+// The third column is read as the dark cell, as `singleReferenceRoles` reads
+// it; a table whose third column is something else (likelion's upstream
+// variable names) reads every role as themed — again the refusing side.
+function themedRoles(tableRows: Array<Array<string>>): Set<string> {
+  const themed = new Set<string>()
+  for (const [roleCell, light = "", dark = ""] of tableRows) {
+    const [name] = spans(roleCell)
+    if (name && dark !== "" && dark !== light) themed.add(name)
+  }
+  return themed
+}
+
 function expectRowsToMatch(
   slug: string,
   expected: Map<string, string>,
   refs: Map<string, string>,
-  literals: Set<string>
+  literals: Set<string>,
+  tableRows: Array<Array<string>>
 ): void {
+  // A target is a palette key, or another role's row that ends at one — the
+  // upstream's role → role hop is kept, not collapsed (#661). Walked here so
+  // an undeclared key or a loop fails by name. A hop goes through role rows
+  // only: the `primary` alias is a reference row but no role.
+  const endsAtPalette = (target: string): boolean => {
+    const seen = new Set<string>()
+    let at: string | undefined = target
+    while (at !== undefined && !seen.has(at)) {
+      if (literals.has(at)) return true
+      if (at === "primary") return false
+      seen.add(at)
+      at = refs.get(at)
+    }
+    return false
+  }
   for (const target of expected.values()) {
     expect(
-      literals.has(target),
-      `${slug}: ${target} is not a palette key`
+      endsAtPalette(target),
+      `${slug}: ${target} is neither a palette key nor a role row that ends at one`
     ).toBe(true)
   }
+  // A role → role row keeps its theme: a light row points at no `dark-` role,
+  // and a `dark-` twin points at the light role only when that role does not
+  // change with the theme — no `dark-` row and no dark cell of its own in the
+  // table. Otherwise the twin points at the role's `dark-` row, or, when the
+  // role's dark side is in the table only, the pointing role's dark side
+  // stays in the table too and owes no row.
+  const themed = themedRoles(tableRows)
+  const crossed = [...expected]
+    .filter(([, to]) => refs.has(to) && !literals.has(to))
+    .filter(([key, to]) =>
+      key.startsWith("dark-")
+        ? !to.startsWith("dark-") && (refs.has(`dark-${to}`) || themed.has(to))
+        : to.startsWith("dark-")
+    )
+    .map(([key, to]) => `${key} points at ${to}`)
+  expect(
+    crossed,
+    `${slug}: role → role twins must keep their theme: ${crossed.join(", ")}`
+  ).toEqual([])
   // A table role under a spec colour-role name stays in the table only
   // (.claude/rules/catalog.md), so it is dropped from what the rows must match. Left in, it
   // would demand the very row refused below.
@@ -180,7 +235,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
           expected.set(`dark-${family}-${slot}`, `${family}-${step}`)
         }
       }
-      expectRowsToMatch("banksalad", expected, refs, literals)
+      expectRowsToMatch("banksalad", expected, refs, literals, tableRows)
     },
   },
   bezier: {
@@ -232,7 +287,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
           .map(([key]) => key),
         "bezier: beta roles must not reference `stable-*` keys"
       ).toEqual([])
-      expectRowsToMatch("bezier", expected, refs, literals)
+      expectRowsToMatch("bezier", expected, refs, literals, tableRows)
       // The literal cells write the upstream hex beside its OKLCH
       // (`#9698ffff ≈ \`oklch(…)\``). `audit:oklch` does not read tables
       // (draft-validator.ts `scanBody` table note), so the pair is held here
@@ -392,7 +447,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
         // `static-*` is theme-invariant, so it has no `dark-` twin to point at.
         expected.set(`dark-${name}`, d.startsWith("static-") ? d : `dark-${d}`)
       }
-      expectRowsToMatch("seed-design", expected, refs, literals)
+      expectRowsToMatch("seed-design", expected, refs, literals, tableRows)
     },
   },
   gmarket: {
@@ -407,7 +462,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
         [...expected.keys()].filter((key) => key.startsWith("dark-")),
         "gmarket: dark twins in a light-only system"
       ).toEqual([])
-      expectRowsToMatch("gmarket", expected, refs, literals)
+      expectRowsToMatch("gmarket", expected, refs, literals, tableRows)
     },
   },
   greeting: {
@@ -449,7 +504,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       // colour — the spec would read body text as the brand's key colour.
       const primary = refs.get("primary")
       if (primary) expect(textColours.has(primary), primary).toBe(false)
-      expectRowsToMatch("greeting", expected, refs, literals)
+      expectRowsToMatch("greeting", expected, refs, literals, tableRows)
     },
   },
   codeit: {
@@ -473,7 +528,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
         // `purple-opacity-15` in the dark bundle — has no palette key to alias.
         if (STEP.test(dark)) expected.set(`dark-${name}`, `dark-${dark}`)
       }
-      expectRowsToMatch("codeit", expected, refs, literals)
+      expectRowsToMatch("codeit", expected, refs, literals, tableRows)
     },
   },
   likelion: {
@@ -490,7 +545,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
         [...expected.keys()].filter((key) => key.startsWith("dark-")),
         "likelion: dark twins read from the upstream-variable column"
       ).toEqual([])
-      expectRowsToMatch("likelion", expected, refs, literals)
+      expectRowsToMatch("likelion", expected, refs, literals, tableRows)
     },
   },
   ridi: {
@@ -498,7 +553,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
     check: () => {
       const { literals, refs, tableRows } = load("ridi")
       const expected = singleReferenceRoles(tableRows)
-      expectRowsToMatch("ridi", expected, refs, literals)
+      expectRowsToMatch("ridi", expected, refs, literals, tableRows)
     },
   },
   socar: {
@@ -514,7 +569,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
         const target = single(paletteCell)
         if (name && target) expected.set(name, target)
       }
-      expectRowsToMatch("socar", expected, refs, literals)
+      expectRowsToMatch("socar", expected, refs, literals, tableRows)
       // The `## Colors` audit note and the table's lead sentence state these
       // counts in prose, so they are pinned here: a row added or dropped must
       // update the prose with the count. The 20 palette steps added on
@@ -551,7 +606,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       // (`neutralBlueAlpha[15]`) or a literal (`brand-faint`) are not single
       // references and fall out.
       const expected = singleReferenceRoles(tableRows)
-      expectRowsToMatch("teamsparta", expected, refs, literals)
+      expectRowsToMatch("teamsparta", expected, refs, literals, tableRows)
     },
   },
   toss: {
@@ -563,7 +618,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       // TDS Mobile Colors page's `lightThemeGrey100`). Literal-value and
       // opacity cells fall out.
       const expected = singleReferenceRoles(tableRows)
-      expectRowsToMatch("toss", expected, refs, literals)
+      expectRowsToMatch("toss", expected, refs, literals, tableRows)
     },
   },
   "vapor-ui": {
@@ -574,7 +629,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       // dark block redefines white to the same value, so the twin aliases the
       // unprefixed key.
       const expected = singleReferenceRoles(tableRows)
-      expectRowsToMatch("vapor-ui", expected, refs, literals)
+      expectRowsToMatch("vapor-ui", expected, refs, literals, tableRows)
     },
   },
 }
@@ -594,11 +649,128 @@ describe("role reference rows agree with the body role tables", () => {
       ["bg-brand", "blue-500"],
     ])
     const tableOnly = new Map([["bg-brand", "blue-500"]])
-    expectRowsToMatch("fixture", expected, tableOnly, literals)
+    expectRowsToMatch("fixture", expected, tableOnly, literals, [])
     const withRow = new Map([...tableOnly, ["secondary", "gray-500"]])
     expect(() =>
-      expectRowsToMatch("fixture", expected, withRow, literals)
+      expectRowsToMatch("fixture", expected, withRow, literals, [])
     ).toThrow(/spec colour-role name/)
+  })
+
+  it("passes a role pointing at another role, refuses an undeclared target", () => {
+    // .claude/rules/catalog.md (#661): a role the upstream points at another
+    // role keeps that hop — bezier alpha's `--alpha-color-primary-bg-normal:
+    // var(--alpha-color-bg-blue-normal)`. The fixture holds the acceptance
+    // whether or not an entry carries such a row.
+    // A pointed role with no `dark-` row and no dark cell in the table (none
+    // is passed here) does not change with the theme, so both twins point at
+    // its one key (`bg-absolute-white`).
+    const literals = new Set(["blue-300", "blue-400", "white"])
+    const expected = new Map([
+      ["bg-blue-normal", "blue-400"],
+      ["dark-bg-blue-normal", "blue-300"],
+      ["primary-bg-normal", "bg-blue-normal"],
+      ["dark-primary-bg-normal", "dark-bg-blue-normal"],
+      ["bg-absolute-white", "white"],
+      ["bg-on-primary", "bg-absolute-white"],
+      ["dark-bg-on-primary", "bg-absolute-white"],
+    ])
+    expectRowsToMatch("fixture", expected, new Map(expected), literals, [])
+    const undeclared = new Map([...expected, ["primary-bg-normal", "bg-nope"]])
+    expect(() =>
+      expectRowsToMatch(
+        "fixture",
+        undeclared,
+        new Map(undeclared),
+        literals,
+        []
+      )
+    ).toThrow(/bg-nope/)
+    // Two roles pointing at each other never reach a palette key.
+    const loop = new Map([
+      ...expected,
+      ["bg-loop-a", "bg-loop-b"],
+      ["bg-loop-b", "bg-loop-a"],
+    ])
+    expect(() =>
+      expectRowsToMatch("fixture", loop, new Map(loop), literals, [])
+    ).toThrow(/bg-loop-b/)
+    // The #381 `primary` alias is the catalogue's brand-colour label, not a
+    // role the upstream could point at, so a hop through it is no role → role
+    // row — even where it ends at the same palette key.
+    const viaAlias = new Map([...expected, ["bg-x", "primary"]])
+    expect(() =>
+      expectRowsToMatch(
+        "fixture",
+        viaAlias,
+        new Map([...viaAlias, ["primary", "blue-400"]]),
+        literals,
+        []
+      )
+    ).toThrow(/primary is neither/)
+  })
+
+  it("refuses a role → role twin that crosses theme", () => {
+    // Upstream writes the hop once per theme block and lets the block pick the
+    // pointed role's colour; the catalogue's keys carry the theme instead. So
+    // a `dark-` twin pointing at a role with a `dark-` twin must point at that
+    // twin — `bg-blue-normal` would hand the dark theme the light colour — and
+    // a light row never points at a `dark-` role.
+    const literals = new Set(["blue-300", "blue-400"])
+    const roles: Array<[string, string]> = [
+      ["bg-blue-normal", "blue-400"],
+      ["dark-bg-blue-normal", "blue-300"],
+    ]
+    for (const [key, to] of [
+      ["dark-primary-bg-normal", "bg-blue-normal"],
+      ["primary-bg-normal", "dark-bg-blue-normal"],
+    ]) {
+      const crossed = new Map([...roles, [key, to]])
+      expect(() =>
+        expectRowsToMatch("fixture", crossed, new Map(crossed), literals, [])
+      ).toThrow(new RegExp(`${key} points at ${to}`))
+    }
+  })
+
+  it("refuses a `dark-` role → role row whose pointed role's dark cell is in the table only", () => {
+    // The pointed role is themed — its table row has a dark cell unlike the
+    // light one — but that cell goes through an opacity ramp, so it owes no
+    // `dark-` reference row. A `dark-` row pointing at the light role would
+    // paint the light colour in dark; the rule keeps the pointing role's dark
+    // side in the table instead.
+    const literals = new Set(["blue-300", "blue-400"])
+    const tableRows = [
+      [
+        "`bg-blue-normal`",
+        "`{colors.blue-400}`",
+        "`{colors.blue-300}` × 불투명도 0.8",
+      ],
+      [
+        "`primary-bg-normal`",
+        "`{colors.bg-blue-normal}`",
+        "`{colors.bg-blue-normal}`",
+      ],
+    ]
+    const expected = singleReferenceRoles(tableRows)
+    expect(() =>
+      expectRowsToMatch(
+        "fixture",
+        expected,
+        new Map(expected),
+        literals,
+        tableRows
+      )
+    ).toThrow(/dark-primary-bg-normal points at bg-blue-normal/)
+    // Kept in the table, the pointing role's dark side owes no row and passes.
+    const tableOnly = [
+      tableRows[0],
+      [
+        "`primary-bg-normal`",
+        "`{colors.bg-blue-normal}`",
+        "`bg-blue-normal` 의 다크 칸을 따른다",
+      ],
+    ]
+    const owed = singleReferenceRoles(tableOnly)
+    expectRowsToMatch("fixture", owed, new Map(owed), literals, tableOnly)
   })
 
   it("has a case for every entry whose reference rows alias its role table", () => {

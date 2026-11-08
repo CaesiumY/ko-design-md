@@ -73,7 +73,7 @@ paths:
   | missing-primary 배열 | `google-designmd-corpus.test.ts` | `primary` 라는 이름의 토큰이 **없을 때** |
   | `KNOWN_SPEC_LIMITATIONS` | `src/lib/spec-limitations.ts` | `%` radius 를 쓸 때 |
   | `COMPONENT_COUNTS` | `google-designmd-corpus.test.ts` | frontmatter `components:` 를 쓸 때 (정확값 — 새 항목은 사실상 늘) |
-  | 역할 표 대조 함수 (`CASES`) | `role-reference-rows.test.ts` | 본문 역할 표의 역할을 frontmatter 참조 행으로도 실을 때 — 브랜드가 역할 계층을 발행했고 상류가 단일 팔레트 토큰을 가리키는 역할이 있으면 늘 그렇다 (양방향 · 등록 누락은 가드가 막는다) |
+  | 역할 표 대조 함수 (`CASES`) | `role-reference-rows.test.ts` | 본문 역할 표의 역할을 frontmatter 참조 행으로도 실을 때 — 브랜드가 역할 계층을 발행했고 상류가 단일 팔레트 토큰이나 다른 역할을 가리키는 역할이 있으면 늘 그렇다 (양방향 · 등록 누락은 가드가 막는다) |
 
   **`PREVIEW_TOKEN_ALIASES` 를 빠뜨리면 조용히 0건 비교가 된다** — 드리프트 게이트가 이름을
   못 맞춰 그 항목에 대해 아무것도 검사하지 않는다. `BASELINE_TABLE` 의 수치는 `pnpm gate:contrast` 의 실패 출력이 만들어 주며 같은 바이트가
@@ -103,9 +103,10 @@ Google Labs 의 DESIGN.md 명세를 **공식 린터로** 판정한다. 명세를
 - **`primary` 라는 이름의 토큰을 지어내지 말 것.** 어느 브랜드 색이 primary 인지는 의미 판단이라, 코퍼스
   테스트가 해당 슬러그 목록을 고정해 둔다. 붙일 때의 형식(브랜드 대표색 별칭):
   - **참조 행 한 줄** `primary: "{colors.x}"` 를 대상 토큰 바로 앞에 둔다. 가리킬 대상은 브랜드가 대표색으로
-    **발행한** 값이지 시맨틱 fill 역할이 아니다(toss 는 `fill-brand` 가 아니라 `blue-500`).
+    **발행한** 값이지 시맨틱 fill 역할이 아니다(likelion 의 `primary` 는 같은 색을 가리키는 역할 `bg-primary` 가
+    아니라 발행 팔레트 `primary-500` 을 가리킨다).
   - **근거는 커밋/PR 본문에** 둔다(인용 번호 + 상류 재확인). 감사 메모 자리가 아니다. 토큰 줄 주석은 같은
-    이름의 다른 뜻 토큰(`text-primary` 등)과 가르는 단서가 필요할 때만 쓴다.
+    이름의 다른 뜻 토큰(socar 의 본문색 `text-primary` 등)과 가르는 단서가 필요할 때만 쓴다.
   - `last_updated` 는 올리지 않고 `Skip-Last-Updated` 트레일러를 단다(`audit-notes.md` 의 날짜 항).
 - **새 항목은 컴포넌트를 명세의 `components:` 맵에도 싣는다**(기존 항목은 소급하지 않는다). 저작 규칙의
   정본은 `stitch-format.md` 의 "Component tokens in the frontmatter `components:` map" 이다. 본문 스펙 펜스
@@ -119,13 +120,44 @@ Google Labs 의 DESIGN.md 명세를 **공식 린터로** 판정한다. 명세를
     작성자가 관찰한 값에 스스로 붙인 이름(번들에서 보았든 배포 코드에서 보았든), 본문이 공식 이름이 아니라고
     밝힌 이름, 합성 이름은 발행이 아니어서 의무 밖이다.
   - **본문 표는 의무이고, 역할 이름은 표 첫 열의 백틱 스팬에 둔다**(가드가 보는 자리 — 아래 「두 벌」 항).
-  - **참조 행은 상류가 역할을 단일 팔레트 토큰으로 가리킬 때만 싣는다.** 불투명도 램프를 거치는 역할은 값이
-    같아도 싣지 않는다(codeit `txt-primary` 는 `gray-100` 이 아니라 `gray-100-opacity-100` 을 가리킨다).
-    이런 역할과, 상류가 표와 어긋나는 짝은 본문 표에만 둔다. 가리킬 팔레트 토큰이나 대응 값이 상류에 없으면
-    지어내지 말고 알려진 공백에 적는다.
-  - **다크 짝은 `dark-` 접두로만 이름 짓고 다크 팔레트를 가리킨다**(`dark-bg-brand-solid` →
-    `dark-carrot-700`). `…-dark` 같은 접미형은 쓰지 않는다. 테마를 타지 않는 팔레트(seed-design `static-*`)를
-    가리키는 짝은 접두 없는 같은 키를 가리킨다.
+  - **참조 행은 상류가 역할을 단일 팔레트 토큰이나 다른 역할 하나로 가리킬 때만 싣는다.** 불투명도 램프를
+    거치는 역할은 값이 같아도 싣지 않는다(codeit `txt-primary` 는 `gray-100` 이 아니라 `gray-100-opacity-100` 을
+    가리킨다). 이런 역할과, 상류가 표와 어긋나는 짝은 본문 표에만 둔다. 가리킬 팔레트 토큰이나 대응 값이
+    상류에 없으면 지어내지 말고 알려진 공백에 적는다.
+  - **상류가 역할을 다른 역할로 가리키면 역할 참조로 싣는다**(2026-11-08 결정, #661). 채널톡 alpha 의
+    `--alpha-color-primary-bg-normal: var(--alpha-color-bg-blue-normal)` 은 `primary-bg-normal:
+    "{colors.bg-blue-normal}"` 꼴로 싣는다. tier 접두는 아래 두 tier 항(팔레트 접두, 역할 이름 접두)을
+    따르므로, 채널톡 alpha 에서는 실제 키가 `alpha-primary-bg-normal: "{colors.alpha-bg-blue-normal}"` 이
+    된다. 끝까지 따라가 팔레트 단계에 걸지 않는다 — 상류의 구조가 그대로 남아, 가운데 역할이 바뀌면 그 역할을
+    가리키는 역할도 함께 따라간다. 토큰 추출기는 참조의 참조를 끝까지 따라가 칠할 색으로 풀고 첫 홉을 `ref` 에
+    둔다. 가리킨 역할도 이 절의 규칙대로 실려 있어야 하고, 그 역할이 참조 행 없이 표에만 있으면(불투명도 램프,
+    상류가 값을 직접 적은 역할) 가리키는 역할도 표에만 둔다. 브랜드 대표색 별칭 `primary` 는 역할이 아니므로
+    대상이 될 수 없다. 다크 짝은 가리킨 역할의 `dark-` 짝을 가리킨다(`dark-primary-bg-normal` →
+    `dark-bg-blue-normal`). 상류는 테마 블록마다 같은 홉을 적고 블록이 색을 고르지만, 카탈로그는 키 이름이
+    테마를 지니므로 접두 없는 역할을 가리키면 다크에 라이트 색이 칠해진다. 가리킨 역할의 다크 쪽이 표에만
+    있으면(다크 칸이 불투명도 램프 등이라 `dark-` 짝 행이 없으면) 가리키는 역할의 다크 쪽도 표에만 둔다. 가리킨
+    역할에 `dark-` 짝 행이 없고 표에도 다크 칸이 없으면(테마를 타지 않는 역할) 두 짝 모두 그 역할을 가리킨다.
+    `role-reference-rows.test.ts` 의 픽스처가 이 꼴을 받아들이고, 테마를 건넌 짝(가리킨 역할의 다크 쪽이 표에만
+    있는 경우 포함)과 `primary` 를 거치거나 팔레트에 닿지 않는 대상을 막는 것을 고정한다.
+  - **다크 짝은 `dark-` 접두로만 이름 짓는다.** `…-dark` 같은 접미형은 쓰지 않는다. 가리키는 곳은 상류가
+    다크 테마에서 그 역할을 무엇으로 칠하는지를 따른다. 팔레트를 테마마다 다시 정의하는 체계는 다크 팔레트를
+    가리킨다(seed-design `dark-bg-brand-solid` → `dark-carrot-700`). 팔레트는 한 벌이고 다크 블록이 역할만 다시
+    가리키는 체계에서는 다크 짝도 `dark-` 없는 키를 가리키며, 라이트와 다른 단계여도 그렇다(bezier 기본 tier
+    `bg-grey-lightest` → `stable-grey-50`, `dark-bg-grey-lightest` → `stable-grey-850`. beta `text-neutral` →
+    `black-85`, `dark-text-neutral` → `white-80`). 테마를 타지 않는
+    팔레트(seed-design `static-*`)를 가리키는 짝은 라이트와 같은 키를 가리킨다(`bg-overlay` 와
+    `dark-bg-overlay` 둘 다 `static-black-alpha-700`).
+  - **브랜드가 역할 계층을 여러 tier 로 발행하면 tier 마다 자기 tier 의 원시값에 건다**(2026-11-02 결정, bezier
+    #647). tier 는 한 패키지가 같은 원시값 이름으로 따로 발행한 토큰 벌이다(채널톡의 기본, beta, alpha). 이름이
+    같아도 tier 가 다르면 값이 다를 수 있는 다른 토큰이므로, 접두 없는 팔레트로 싣는 tier 하나 밖의 tier 는
+    원시값을 tier 접두 팔레트로 따로 싣고 그 tier 역할의 참조 행을 접두 키에 건다 — 채널톡 기본 tier 역할이
+    가리키는 `var(--grey-900)` 은 `stable-grey-900` 이다. 값이 같아도 다른 tier 의 키를 가리키지 않는다. 한
+    tier 만 바뀌면 조용히 거짓이 되기 때문이다. alpha tier 도 같은 꼴로 `alpha-` 를 쓴다.
+  - **tier 의 역할 이름이 이미 실린 역할과 하나라도 겹치면 그 tier 역할 전부에 같은 tier 접두를 붙인다**
+    (2026-11-09 메인테이너 결정, #661 의 PR #667, 처음 적용은 #664). frontmatter 키는 겹칠 수 없기 때문이다 —
+    채널톡 alpha 역할 이름 12개가 이미 실린 기본 tier 역할과 같다. 표 첫 열 이름도 같은 접두를 달고, `dark-` 는
+    그 바깥에 둔다(`dark-alpha-bg-grey-light`). 역할 → 역할 참조도 접두 붙은 이름끼리 잇는다. 위 항의 팔레트
+    접두와는 따로 정한 규칙이다.
   - **명세 `color_roles`(`primary` · `secondary` · `tertiary` · `neutral`)와 같은 이름으로 표의 역할을 싣지 않는다**
     — greeting 의 `primary`~`tertiary` 는 텍스트색인데, 그 이름으로 발행하면 도구가 브랜드 역할로 읽는다.
     `primary` 만은 위의 브랜드 대표색 별칭으로 둘 수 있고, 브랜드가 그 이름으로 발행한 색(remember 의

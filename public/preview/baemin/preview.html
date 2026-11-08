@@ -49,19 +49,17 @@
 <style>
   :root {
     /* === Baemin 2.0 base palette (OKLCH from services/baemin.md) === */
-    /* Mint scale 050 → 900 */
-    --bm-mint-050: oklch(0.99 0.03 178);
-    --bm-mint-100: oklch(0.96 0.07 178);
-    --bm-mint-200: oklch(0.92 0.13 178);
-    --bm-mint-300: oklch(0.91 0.16 178);
-    --bm-mint-400: oklch(0.89 0.18 178);
-    --bm-mint-500: oklch(0.88 0.18 178);  /* primary */
-    --bm-mint-600: oklch(0.69 0.13 184);  /* primary-hover */
-    --bm-mint-700: oklch(0.55 0.10 188);
-    --bm-mint-800: oklch(0.40 0.07 191);
-    --bm-mint-900: oklch(0.24 0.04 194);
+    /* Mint — deployed --ref-color-mint1 → mint8 */
+    --bm-mint1: oklch(0.980 0.028 177);
+    --bm-mint2: oklch(0.943 0.082 177);
+    --bm-mint3: oklch(0.923 0.116 178);
+    --bm-mint4: oklch(0.892 0.153 180);
+    --bm-mint5: oklch(0.854 0.154 180);  /* primary */
+    --bm-mint6: oklch(0.751 0.133 185);
+    --bm-mint7: oklch(0.645 0.112 189);
+    --bm-mint8: oklch(0.533 0.091 193);
 
-    --bm-primary:        oklch(0.88 0.18 178);
+    --bm-primary:        var(--bm-mint5);
     --bm-primary-hover:  oklch(0.69 0.13 184);
     --bm-primary-tint:   oklch(0.97 0.05 178);
     --bm-primary-legacy: oklch(0.72 0.10 187);
@@ -83,7 +81,7 @@
     /* 별점 전용 골드 — 포인트 코인 yellow보다 약간 어둡고 채도 낮음 */
     --bm-star-gold:   oklch(0.82 0.16 85);
 
-    /* Neutrals — 살짝 따뜻한 회색 */
+    /* Neutrals — 번들 무채색 */
     --bm-bg-page:       oklch(0.97 0.00 286);   /* 본화이트 */
     --bm-bg-surface:    oklch(1.00 0 0);
     --bm-bg-subtle:     oklch(0.96 0.00 286);
@@ -125,7 +123,7 @@
     --muted:              var(--bm-bg-subtle);
     --muted-foreground:   var(--bm-fg-2);
     --accent:             var(--bm-primary-tint);
-    --accent-foreground:  var(--bm-mint-700);
+    --accent-foreground:  var(--bm-mint8);
     --border:             var(--bm-border-1);
     --rule-strong:        var(--bm-border-strong);
     --accent-glow:        var(--bm-primary);
@@ -688,7 +686,7 @@
     position: relative;
     aspect-ratio: 1 / 1;
     border-radius: 8px;
-    background: linear-gradient(135deg, var(--bm-mint-100), var(--bm-frozen-tint));
+    background: linear-gradient(135deg, var(--bm-mint2), var(--bm-frozen-tint));
     margin-bottom: 12px;
     overflow: hidden;
   }
@@ -862,7 +860,7 @@
     white-space: nowrap;
   }
   .tag-discount { background: var(--bm-red); color: oklch(1 0 0); }
-  .tag-mint     { background: var(--bm-primary-tint); color: var(--bm-mint-700); }
+  .tag-mint     { background: var(--bm-primary-tint); color: var(--bm-mint8); }
   .tag-purple   { background: var(--bm-navy-tint); color: var(--bm-navy); }
   .tag-frozen-circle {
     width: 28px;
@@ -910,7 +908,7 @@
     padding: 0 8px;
     border-radius: 9999px;
     background: var(--bm-primary-tint);
-    color: var(--bm-mint-700);
+    color: var(--bm-mint8);
     font-family: var(--bm-body);
     font-size: 11px;
     font-weight: 700;
@@ -1300,23 +1298,21 @@
     font-display: swap;
   }
 [data-theme="dark"] {
-    /* === Baemin 2.0 base palette — DARK (추정 토큰: md 는 다크 값을 싣지 않는다) === */
-    /* services/baemin.md에는 다크 모드 토큰이 미공개. 아래는 핸드오프 라이트 토큰을 토대로
-       다크 표면을 추정한 값이며, 프로덕션 적용 전 실제 앱 캡처 확인이 필요하다. */
+    /* === Baemin 2.0 base palette — DARK === */
+    /* 민트 단계는 md 의 배포 팔레트 dark-mint* 값이다. 그 밖의 번들 쓰임색은 md 가 다크 값을
+       싣지 않아, 핸드오프 라이트 토큰을 토대로 다크 표면을 추정한 값이다. */
 
-    /* Mint scale — 다크에서도 브랜드 색은 보존, primary는 채도만 약간 조정 */
-    --bm-mint-050: oklch(0.30 0.04 178);
-    --bm-mint-100: oklch(0.34 0.06 178);
-    --bm-mint-200: oklch(0.52 0.13 178);
-    --bm-mint-300: oklch(0.72 0.16 178);
-    --bm-mint-400: oklch(0.84 0.18 178);
-    --bm-mint-500: oklch(0.88 0.18 178);  /* primary — 브랜드 색 보존 */
-    --bm-mint-600: oklch(0.78 0.15 184);  /* hover (다크에서는 라이트보다 약간 밝게) */
-    --bm-mint-700: oklch(0.78 0.15 188);  /* 다크 표면 위 민트 틴트 ink — 밝게 끌어올림 */
-    --bm-mint-800: oklch(0.46 0.08 191);
-    --bm-mint-900: oklch(0.30 0.05 194);
+    /* Mint — deployed dark --ref-color-mint1 → mint8 (md dark-mint*; mint5 is the same in both) */
+    --bm-mint1: oklch(0.291 0.027 180);
+    --bm-mint2: oklch(0.343 0.062 180);
+    --bm-mint3: oklch(0.469 0.087 178);
+    --bm-mint4: oklch(0.582 0.107 178);
+    --bm-mint5: oklch(0.854 0.154 180);  /* primary */
+    --bm-mint6: oklch(0.804 0.146 180);
+    --bm-mint7: oklch(0.886 0.091 191);
+    --bm-mint8: oklch(0.920 0.100 180);
 
-    --bm-primary:        oklch(0.88 0.18 178);  /* 브랜드 색 보존 */
+    --bm-primary:        var(--bm-mint5);
     --bm-primary-hover:  oklch(0.78 0.15 184);
     --bm-primary-tint:   oklch(0.30 0.06 178);  /* 다크에서는 어두운 민트 표면 */
     --bm-primary-legacy: oklch(0.72 0.10 187);
@@ -1338,7 +1334,7 @@
     /* 별점 전용 골드 — 다크 표면 대비 확보 위해 라이트보다 약간 밝게 */
     --bm-star-gold:   oklch(0.85 0.16 85);
 
-    /* Neutrals — 다크 표면. 브랜드의 따뜻함을 유지하기 위해 cool-gray 대신 near-black */
+    /* Neutrals — 다크 표면 (번들 무채색을 토대로 추정한 near-black) */
     --bm-bg-page:       oklch(0.14 0.00 286);   /* 다크 페이지 배경 (추정) */
     --bm-bg-surface:    oklch(0.18 0.00 286);   /* 카드 표면 */
     --bm-bg-subtle:     oklch(0.22 0.00 286);   /* 보조 배경 */
@@ -1380,7 +1376,7 @@
     --muted:              var(--bm-bg-subtle);
     --muted-foreground:   var(--bm-fg-2);
     --accent:             var(--bm-primary-tint);
-    --accent-foreground:  var(--bm-mint-300);
+    --accent-foreground:  var(--bm-mint8);
     --border:             var(--bm-border-1);
     --rule-strong:        var(--bm-border-strong);
     --accent-glow:        var(--bm-primary);
@@ -1928,7 +1924,7 @@
     position: relative;
     aspect-ratio: 1 / 1;
     border-radius: 8px;
-    background: linear-gradient(135deg, var(--bm-mint-200), var(--bm-frozen));
+    background: linear-gradient(135deg, var(--bm-mint2), var(--bm-frozen));
     margin-bottom: 12px;
     overflow: hidden;
   }
@@ -2104,7 +2100,7 @@
 /* 파생색 되돌림 · 발행값 — 다크용으로 밝힌 빨강 oklch(0.68 0.24 27)을 md red oklch(0.63 0.24 27)로
    (흰 글자 3.48 → 3.93). md red 나 이 칩의 글자색이 바뀌면 다시 잰다. */
 [data-theme="dark"] .tag-discount { background: oklch(0.63 0.24 27); color: oklch(1 0 0); }
-[data-theme="dark"] .tag-mint { background: var(--bm-primary-tint); color: var(--bm-mint-700); }
+[data-theme="dark"] .tag-mint { background: var(--bm-primary-tint); color: var(--bm-mint8); }
 [data-theme="dark"] .tag-purple { background: var(--bm-navy-tint); color: oklch(0.75 0.12 286); }
 [data-theme="dark"] .tag-frozen-circle {
     width: 28px;
@@ -2157,7 +2153,7 @@
     padding: 0 8px;
     border-radius: 9999px;
     background: var(--bm-primary-tint);
-    color: var(--bm-mint-700);
+    color: var(--bm-mint8);
     font-family: var(--bm-body);
     font-size: 11px;
     font-weight: 700;
