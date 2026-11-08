@@ -300,6 +300,7 @@ export function renderBaselineFailure(
       "  Add the component states and screen mockups the md describes",
       "  (.claude/skills/design-md/references/rubric-preview.md). A copied card",
       "  raises this count without showing more, so it is not the fix.",
+      "  Rewriting the table does not clear it: the floor reads the measured count.",
       ""
     )
     for (const m of c.thin) {
@@ -322,7 +323,15 @@ export function renderBaselineFailure(
     out.push("")
   }
 
-  if (out.length > 0) {
+  // Only when a count moved or a row is unpaired: this paragraph is about
+  // pasting CI's numbers into the table, and a thin preview is not cleared by
+  // any rewrite of it — sent here, its reader would paste and stay red.
+  const tableMoved =
+    c.blocking.length > 0 ||
+    c.unrecorded.length > 0 ||
+    c.missing.length > 0 ||
+    c.warnings.length > 0
+  if (tableMoved) {
     out.push(
       "Before editing a number to match, find out what moved it. A fail count that",
       "rose is a shortfall this branch introduced; a measured count that fell is a",

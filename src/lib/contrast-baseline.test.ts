@@ -120,6 +120,29 @@ describe("compareToBaseline, thin previews", () => {
     expect(lines).toContain(`toss | light | text — elements ${thin.elements}`)
     expect(lines).toContain("rubric-preview.md")
   })
+
+  it("does not send a thin-only failure to the table", () => {
+    // The closing paragraph is about pasting CI's numbers into the table, and
+    // no rewrite of the table clears a floor read from the measured count.
+    const lines = renderBaselineFailure(
+      compareToBaseline([thin], [thin]),
+      [thin],
+      [thin]
+    ).join("\n")
+    expect(lines).not.toContain("rebaseline")
+    expect(lines).not.toContain("Take the replacement lines from CI")
+    expect(lines).toContain("Rewriting the table does not clear it")
+  })
+
+  it("still prints the closing paragraph when a count also moved", () => {
+    const moved = { ...thin, fail: thin.fail + 1 }
+    const lines = renderBaselineFailure(
+      compareToBaseline([moved], [thin]),
+      [moved],
+      [thin]
+    ).join("\n")
+    expect(lines).toContain("Take the replacement lines from CI")
+  })
 })
 
 describe("compareToBaseline, rows that do not pair", () => {
