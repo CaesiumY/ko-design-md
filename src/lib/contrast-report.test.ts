@@ -2,8 +2,11 @@ import { describe, expect, it } from "vitest"
 import {
   blockerTally,
   dedupeFindings,
+  heldReasons,
+  parseHeldReasons,
   parseTotalsTable,
   renderFindingsTable,
+  renderHeldReasons,
   renderTotalsTable,
   totalsBySlug,
 } from "./contrast-report"
@@ -263,6 +266,91 @@ describe("blockerTally", () => {
     expect(
       blockerTally(dedupeFindings([at(375, { verdict: "fail" })]))
     ).toEqual([])
+  })
+})
+
+describe("the hold-reason table", () => {
+  // Two held rows, one of them held for two reasons: the table's counts add
+  // to three while the held-row line says two. That gap is why the line exists.
+  const held = dedupeFindings([
+    at(375, { path: "a", verdict: "indeterminate", blockers: ["gradient"] }),
+    at(768, { path: "a", verdict: "indeterminate", blockers: ["gradient"] }),
+    at(375, {
+      path: "b",
+      verdict: "indeterminate",
+      blockers: ["pseudo-background", "gradient"],
+    }),
+    at(375, { path: "c", verdict: "fail", blockers: [] }),
+  ])
+
+  it("is printed as the document publishes it, with the held-row line under it", () => {
+    expect(
+      renderHeldReasons({ ...heldReasons(held), run: "41245850047" })
+    ).toBe(
+      [
+        "| 사유 | 건수 |",
+        "| --- | --- |",
+        "| gradient | 2 |",
+        "| pseudo-background | 1 |",
+        "",
+        "보류 행 수: 2 (run `41245850047`)",
+      ].join("\n")
+    )
+  })
+
+  const block = renderHeldReasons({ ...heldReasons(held), run: "41245850047" })
+
+  it("reads back what it printed", () => {
+    expect(parseHeldReasons(block)).toEqual({
+      tally: [
+        { blocker: "gradient", count: 2 },
+        { blocker: "pseudo-background", count: 1 },
+      ],
+      held: 2,
+      run: "41245850047",
+    })
+  })
+
+  it("refuses a block without the held-row line", () => {
+    // The line is what the corpus test compares; a table pasted without it
+    // would otherwise read as zero held rows.
+    expect(() =>
+      parseHeldReasons(block.split("\n").slice(0, -2).join("\n"))
+    ).toThrow(/보류 행 수/)
+  })
+
+  it("refuses a held-row line still carrying the command's run placeholder", () => {
+    expect(() =>
+      parseHeldReasons(block.replace("41245850047", "<run id>"))
+    ).toThrow(/보류 행 수/)
+  })
+
+  it("refuses a count that is not a whole number", () => {
+    expect(() =>
+      parseHeldReasons(block.replace("| gradient | 2 |", "| gradient | 2a |"))
+    ).toThrow(/gradient/)
+  })
+
+  it("refuses a reason the measurer never gives", () => {
+    // Shaped like one, so only a check against the real reasons catches a
+    // typo such as `gradiant`, which would otherwise be read as a reason.
+    expect(() =>
+      parseHeldReasons(block.replace("| gradient | 2 |", "| gradiant | 2 |"))
+    ).toThrow(/gradiant.*not a hold reason/)
+  })
+
+  it("refuses a reason written twice", () => {
+    expect(() =>
+      parseHeldReasons(
+        block.replace("| gradient | 2 |", "| gradient | 2 |\n| gradient | 1 |")
+      )
+    ).toThrow(/gradient.*twice/)
+  })
+
+  it("refuses a table under another header", () => {
+    expect(() =>
+      parseHeldReasons(block.replace("| 사유 | 건수 |", "| 사유 | 수 |"))
+    ).toThrow(/header/)
   })
 })
 

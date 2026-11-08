@@ -4,6 +4,7 @@ import {
   pairClass,
   paletteOf,
   parsePairTable,
+  readArtifactPalettes,
   readingClass,
   renderPairTable,
   splitColourPairs,
@@ -765,5 +766,23 @@ describe("splitColourPairs", () => {
     const got = splitColourPairs([raw(375), raw(768, { bg: "#fefefe" })])
     expect(got).toHaveLength(1)
     expect(got[0]).toContain("toss")
+  })
+})
+
+describe("readArtifactPalettes", () => {
+  const raw = (over: Partial<Finding>): Finding => {
+    const { widths: _w, occurrences: _o, ...rest } = row({})
+    return { ...rest, width: 375, ...over }
+  }
+
+  it("refuses a classified slug with no entry in the words the rebaseline command uses", () => {
+    // Both commands print this reason; the rebaseline command also gives it
+    // for a measured slug with nothing classified (contrast-rebaseline.ts).
+    expect(
+      readArtifactPalettes([raw({ slug: "gone", verdict: "fail" })], {})
+        .problems
+    ).toEqual([
+      "the artifact measured gone, which has no services/gone.md in this checkout",
+    ])
   })
 })

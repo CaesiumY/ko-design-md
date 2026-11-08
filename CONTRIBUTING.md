@@ -136,8 +136,8 @@ PR 생성 시 자동으로 표시되는 체크리스트와 동일합니다.
 
 **일반 체크**
 
-- [ ] `pnpm typecheck && pnpm lint && pnpm format:check && pnpm test && pnpm build` 통과 (카탈로그 변경 시 `pnpm validate:catalog`·`validate:previews`·`tokens:check`·`audit:oklch`·`check:last-updated` 도)
-- [ ] 머지 직전 `origin/main`을 합쳐 본 상태에서 게이트 재실행 (`git merge origin/main --no-commit --no-ff` → 게이트 → `git merge --abort`). PR 단위 CI 는 각 브랜치를 자기 base 에서 돌리므로 둘 다 green 인데 합치면 깨지는 경우를 못 잡는다
+- [ ] `pnpm gates && pnpm build` 통과 (`pnpm gates` 는 CI build 잡이 빌드 전에 돌리는 검사 전부를 같은 순서로 돌린다. 다른 브랜치 위에 쌓은 PR 은 `pnpm gates --base origin/<그 브랜치>`)
+- [ ] 머지 직전 `origin/main`을 합쳐 본 상태에서 게이트 재실행 (`git merge origin/main --no-commit --no-ff` → `pnpm gates` → `git merge --abort`. 다른 브랜치 위에 쌓은 PR 은 그 브랜치를 합치고 `pnpm gates --base origin/<그 브랜치>`). PR 단위 CI 는 각 브랜치를 자기 base 에서 돌리므로 둘 다 green 인데 합치면 깨지는 경우를 못 잡는다
 - [ ] (에이전트 작업) 저장소 규칙 준수와 이슈 요구 충족을 따로 보는 로컬 2축 리뷰(방법은 CODING_STANDARDS.md 머리말) 결과가 **마지막 커밋까지** 결함 없음. 리뷰 지적을 반영한 커밋도 다시 리뷰한다 ([CODING_STANDARDS.md](./CODING_STANDARDS.md))
 - [ ] DCO 서명 (`git commit -s`)
 - [ ] CONTRIBUTING.md 가이드라인 준수
@@ -169,7 +169,7 @@ git push --force-with-lease
 
 ## 6. 사이트 코드/스킬 자체 기여
 
-- **사이트 코드**: TypeScript + TanStack Start. PR 전 `pnpm typecheck && pnpm lint && pnpm format:check && pnpm test && pnpm build` 통과 필수.
+- **사이트 코드**: TypeScript + TanStack Start. PR 전 `pnpm gates && pnpm build` 통과 필수(위 「일반 체크」와 같다).
 - **스킬 (`.claude/skills/`)**: 영향이 크므로 변경 의도를 이슈에서 먼저 합의해주세요. 특히 `design-md/SKILL.md`의 온보딩 파이프라인이나 reference 문서 (`stitch-format.md`, `rubric-design.md`, `rubric-preview.md`)를 바꾸는 PR은 사전 협의 필수. 스킬을 새로 추가하거나 공개/내부를 바꿀 때는 `src/lib/skill-asset-paths.ts`의 `PUBLIC_SKILLS`·`INTERNAL_SKILLS`에 선언하세요 — `pnpm test`(`src/lib/skill-distribution.test.ts`, CI 게이트)가 디렉터리·각 `SKILL.md`의 `metadata.internal`·`.claude-plugin/marketplace.json`을 서로 대조해, 선언 없이 들어온 스킬이나 마켓플레이스로 새는 내부 스킬을 막습니다.
 - **이슈 템플릿 (`.github/ISSUE_TEMPLATE/*.yml`)**: 새 템플릿을 추가하거나 기존 템플릿의 `labels:`를 바꿀 때는 그 라벨이 레포에 실제로 존재하는지 먼저 확인하세요 (`gh label list`). 존재하지 않는 라벨은 이슈 생성 시 GitHub이 아무 에러 없이 조용히 빼버립니다 — 새 라벨이면 `gh label create`로 만들고 `.github/labels.json`에도 반영해야 `pnpm test`(`src/lib/issue-template-labels.test.ts`, CI 게이트)가 통과합니다.
 

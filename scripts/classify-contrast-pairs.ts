@@ -1,6 +1,11 @@
 // Classify the recorded contrast shortfalls by whether they are pairs of brand
-// colours (#397), and print the two tables `docs/preview-contrast-baseline.md`
-// publishes — `borderline` and `fail` — ready to paste.
+// colours (#397), and print the three tables `docs/preview-contrast-baseline.md`
+// publishes from one artifact — `borderline` and `fail`, and the reasons rows
+// were held for with the held-row count under it (#654) — to read. Writing
+// them into the record is `pnpm audit:contrast:rebaseline <run id>` (#656),
+// which makes the same tables with the same functions and reads the palettes
+// the same way (`readArtifactPalettes`); this command also prints the
+// tolerance bands the document describes, which that one does not.
 //
 //   pnpm audit:contrast:pairs --findings <contrast-findings.json>
 //
@@ -17,34 +22,27 @@
 // colour pairs at different widths, because then the row has no one pair to
 // classify and picking the first width's would be a guess.
 
-import { readFileSync } from "node:fs"
-import { join } from "node:path"
-import { fileURLToPath } from "node:url"
 import {
-  OBSERVED_COLOURS,
+  CLASSIFIED_VERDICTS,
   PUBLISHED_PAIR_TOLERANCE,
-  paletteOf,
+  paletteLookup,
+  readArtifactPalettes,
   renderPairTable,
-  splitColourPairs,
+  sumPairTally,
   tallyPairs,
   toleranceBand,
 } from "../src/lib/contrast-pairs"
-import { dedupeFindings } from "../src/lib/contrast-report"
-import type { PairTally, Palette } from "../src/lib/contrast-pairs"
-import type { Finding } from "../src/lib/contrast-report"
-
-const VERDICTS = ["borderline", "fail"] as const
+import {
+  dedupeFindings,
+  heldReasons,
+  measuredSlugs,
+  renderHeldReasons,
+} from "../src/lib/contrast-report"
+import { fail, readEntries, readFindings } from "./contrast-artifact-io"
 
 // The upper edge of the band the tolerance was read off (see
 // `PUBLISHED_PAIR_TOLERANCE`): where the next cluster of distances began.
 const WIDER_TOLERANCE = 0.005
-
-const ROOT = fileURLToPath(new URL("..", import.meta.url))
-
-function fail(message: string): never {
-  console.error(message)
-  process.exit(2)
-}
 
 function parseArgs(argv: Array<string>): { findings: string } {
   let findings: string | undefined
@@ -66,126 +64,42 @@ function parseArgs(argv: Array<string>): { findings: string } {
   return { findings }
 }
 
-function readFindings(path: string): Array<Finding> {
-  let parsed: unknown
-  try {
-    parsed = JSON.parse(readFileSync(path, "utf8"))
-  } catch (e) {
-    fail(`Error: could not read ${path}: ${(e as Error).message}`)
-  }
-  if (!Array.isArray(parsed)) fail(`Error: ${path} is not a findings array`)
-  // Checked here rather than left to fail inside the maths: an artifact from
-  // before the colour pair was reported has no `fg`/`bg`, and that should read
-  // as the wrong input (exit 2), not as a crash.
-  const bad = (parsed as Array<unknown>).findIndex(
-    (item) =>
-      typeof item !== "object" ||
-      item === null ||
-      !isFinding(item as Record<string, unknown>)
-  )
-  if (bad !== -1) {
-    fail(
-      `Error: ${path} item ${bad} is not a finding (slug, theme, state, kind, path, verdict, ratio, threshold, width, blockers, opacityApprox, basis?, source?, fg, bg) — is it a contrast-findings.json from a run that reports colour pairs?`
-    )
-  }
-  return parsed as Array<Finding>
-}
-
-// Every field the fold (`keyOf`, `dedupeFindings`' sort) and the classifier
-// read, with the type the sweep writes. A missing one either throws deeper in
-// — exit 1, which this script keeps for split colour pairs alone — or, worse,
-// folds rows differently from the sweep that produced them (an `undefined`
-// threshold, a truthy non-boolean `opacityApprox`) and exits 0 with a wrong
-// table. Either way it is the wrong input, exit 2.
-const optionalString = (v: unknown): boolean =>
-  v === undefined || typeof v === "string"
-
-function isFinding(f: Record<string, unknown>): boolean {
-  return (
-    typeof f.slug === "string" &&
-    typeof f.theme === "string" &&
-    typeof f.state === "string" &&
-    typeof f.kind === "string" &&
-    typeof f.path === "string" &&
-    typeof f.verdict === "string" &&
-    typeof f.ratio === "number" &&
-    typeof f.threshold === "number" &&
-    typeof f.width === "number" &&
-    Array.isArray(f.blockers) &&
-    f.blockers.every((b) => typeof b === "string") &&
-    typeof f.opacityApprox === "boolean" &&
-    optionalString(f.basis) &&
-    optionalString(f.source) &&
-    typeof f.fg === "string" &&
-    typeof f.bg === "string"
-  )
-}
-
-const totals = (tally: Array<PairTally>) =>
-  tally.reduce(
-    (s, t) => ({
-      bothPublished: s.bothPublished + t.bothPublished,
-      observedPair: s.observedPair + t.observedPair,
-      oneToken: s.oneToken + t.oneToken,
-      noToken: s.noToken + t.noToken,
-      total: s.total + t.total,
-    }),
-    { bothPublished: 0, observedPair: 0, oneToken: 0, noToken: 0, total: 0 }
-  )
-
 function main(): void {
   const args = parseArgs(process.argv.slice(2))
   const raw = readFindings(args.findings)
+  const slugs = measuredSlugs(raw)
+  const read = readArtifactPalettes(raw, readEntries(slugs))
 
-  // Only the rows this classifies have to carry one pair. A `pass` or an
-  // `indeterminate` row whose widths disagree about the pair is not counted
-  // here (CI run 38463871450 has three), so it is no reason to refuse the run.
-  const split = splitColourPairs(
-    raw.filter((f) => VERDICTS.some((v) => v === f.verdict))
-  )
-  if (split.length > 0) {
+  // Only the rows this classifies have to carry one pair (see
+  // `readArtifactPalettes`), so a `pass` or held row whose widths disagree is
+  // no reason to refuse the run.
+  if (read.split.length > 0) {
     console.error(
-      `Error: ${split.length} folded row(s) read different colour pairs at different widths, so there is no one pair to classify:`
+      `Error: ${read.split.length} folded row(s) read different colour pairs at different widths, so there is no one pair to classify:`
     )
-    for (const key of split) console.error(`  ${key}`)
+    for (const key of read.split) console.error(`  ${key}`)
     process.exit(1)
   }
-
-  const palettes = new Map<string, Palette>()
-  const paletteFor = (slug: string): Palette => {
-    let p = palettes.get(slug)
-    if (p === undefined) {
-      // A slug the artifact names but this checkout has no entry for, or a
-      // listed observed heading or token the entry no longer has, is the wrong input
-      // for this checkout — exit 2 with the reason, not a stack trace.
-      try {
-        const md = readFileSync(join(ROOT, "services", `${slug}.md`), "utf8")
-        p = paletteOf(md, OBSERVED_COLOURS[slug] ?? {})
-      } catch (e) {
-        fail(`Error: ${slug}: ${(e as Error).message}`)
-      }
-      for (const name of p.unreadable) {
-        console.error(
-          `Note: ${slug} defines \`${name}\` in a form this cannot read; it is not in the palette`
-        )
-      }
-      palettes.set(slug, p)
-    }
-    return p
+  // A slug the artifact names but this checkout has no entry for, or a listed
+  // observed heading or token the entry no longer has, is the wrong input for
+  // this checkout — exit 2 with the reason, not a stack trace.
+  if (read.problems.length > 0) {
+    fail(read.problems.map((p) => `Error: ${p}`).join("\n"))
   }
+  for (const note of read.notes) console.error(note)
+  const paletteFor = paletteLookup(read.palettes)
 
   const rows = dedupeFindings(raw)
-  // Every slug the artifact measured, for the corpus test's `CLASSIFIED_RUN`:
+  // Every slug the artifact measured, for `src/lib/contrast-classified-run.json`:
   // the entries classified by this run, held from then on even when their rows
   // later leave both tables. The run id is not in the findings, so it is left
   // for whoever pastes this to fill in.
-  const slugs = [...new Set(raw.map((f) => f.slug))].sort()
   console.log(
-    `classified run: { run: "<run id>", slugs: ${JSON.stringify(slugs)} }\n`
+    `classified run (src/lib/contrast-classified-run.json):\n${JSON.stringify({ run: "<run id>", slugs }, null, 2)}\n`
   )
-  for (const verdict of VERDICTS) {
+  for (const verdict of CLASSIFIED_VERDICTS) {
     const tally = tallyPairs(rows, paletteFor, verdict)
-    const t = totals(tally)
+    const t = sumPairTally(tally)
     console.log(`### ${verdict}\n`)
     console.log(renderPairTable(tally))
     console.log(
@@ -200,11 +114,18 @@ function main(): void {
       PUBLISHED_PAIR_TOLERANCE,
       WIDER_TOLERANCE,
     ])
-    const wider = totals(tallyPairs(rows, paletteFor, verdict, WIDER_TOLERANCE))
+    const wider = sumPairTally(
+      tallyPairs(rows, paletteFor, verdict, WIDER_TOLERANCE)
+    )
     console.log(
       `readings ${band.readings}, nearest token in (${PUBLISHED_PAIR_TOLERANCE}, ${WIDER_TOLERANCE}]: ${band.inBand} · nearest composite there, no token matched: ${band.compositeInBand} · both-published at ${WIDER_TOLERANCE}: ${wider.bothPublished}\n`
     )
   }
+  // The same fold and tally as the sweep's `held for:` line, so this table and
+  // that line cannot disagree. The run id is left for whoever pastes it, as on
+  // the `classified run` line above.
+  console.log(`### indeterminate\n`)
+  console.log(renderHeldReasons({ ...heldReasons(rows), run: "<run id>" }))
 }
 
 main()
