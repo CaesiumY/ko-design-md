@@ -119,6 +119,9 @@ function singleReferenceRoles(
 // from the table, not from `dark-` rows, because a dark side that is not one
 // reference owes no row. A dark cell of prose that only says the role does
 // not change still reads as themed here, which refuses rather than passes.
+// The third column is read as the dark cell, as `singleReferenceRoles` reads
+// it; a table whose third column is something else (likelion's upstream
+// variable names) reads every role as themed — again the refusing side.
 function themedRoles(tableRows: Array<Array<string>>): Set<string> {
   const themed = new Set<string>()
   for (const [roleCell, light = "", dark = ""] of tableRows) {
@@ -728,8 +731,9 @@ describe("role reference rows agree with the body role tables", () => {
     // role keeps that hop — bezier alpha's `--alpha-color-primary-bg-normal:
     // var(--alpha-color-bg-blue-normal)`. The fixture holds the acceptance
     // whether or not an entry carries such a row.
-    // A pointed role with no `dark-` twin does not change with the theme, so
-    // both twins point at its one key (`bg-absolute-white`).
+    // A pointed role with no `dark-` row and no dark cell in the table (none
+    // is passed here) does not change with the theme, so both twins point at
+    // its one key (`bg-absolute-white`).
     const literals = new Set(["blue-300", "blue-400", "white"])
     const expected = new Map([
       ["bg-blue-normal", "blue-400"],
