@@ -7,7 +7,7 @@ import { findKey, readFrontmatter } from "./frontmatter"
 import { splitFrontmatter } from "./frontmatter-fence"
 import { deltaE, hexToOklab, parseOklch } from "./oklch-convert"
 import { DELTA_E_TOLERANCE } from "./oklch-tolerance"
-import { readPreviewHalves } from "./preview-halves"
+import { applyDarkVariants } from "./preview-halves"
 
 // bezier's primary button is the one place where the preview, the md's
 // 「beta hover」 table and upstream must agree on a value that no other gate
@@ -38,7 +38,10 @@ const md = readFileSync(join(ROOT, "services", "bezier.md"), "utf-8").replace(
   /\r\n/g,
   "\n"
 )
-const halves = readPreviewHalves(join(ROOT, "public", "preview", "bezier"))
+const preview = readFileSync(
+  join(ROOT, "public", "preview", "bezier", "preview.html"),
+  "utf-8"
+)
 
 function colorsTableCells(role: string): [string, string] {
   const body = splitFrontmatter(md)?.body ?? ""
@@ -83,28 +86,24 @@ function rulesOf(html: string): Array<Rule> {
   )
 }
 
-/**
- * A sheet's one declaration of `--name`, following `var()` to a literal.
- * Declared twice anywhere — a later `:root` or a scoped override — is refused:
- * which one reaches the button is the cascade's call, not this reader's. Only
- * `<style>` is read; an inline `style="--x:…"` is not (none in the preview).
- */
-function resolveVar(sheet: string, value: string, seen = 0): string {
-  const ref = /^var\(\s*(--[\w-]+)\s*\)$/.exec(value.trim())?.[1]
-  if (ref === undefined) return value.trim()
-  if (seen > 8) throw new Error(`var() chain too deep at ${ref}`)
-  const decls = rulesOf(sheet).flatMap((r) =>
-    r.declarations.filter(([p]) => p === ref).map(([, v]) => v)
-  )
-  if (decls.length !== 1) {
-    throw new Error(
-      `${ref} is declared ${decls.length} times in this sheet — keep exactly one`
-    )
-  }
-  return resolveVar(sheet, decls[0], seen + 1)
-}
-
 type State = "base" | "hover"
+type Theme = "light" | "dark"
+
+const DARK_SCOPE = '[data-theme="dark"]'
+
+/**
+ * The whole preview as the browser shows it in `theme`: every `<style>`
+ * applies, `<html data-theme>` says which theme, and in dark the variant
+ * templates are swapped in the way the runtime does. Not `readPreviewHalves`
+ * — its dark half keeps only the last sheet, while the browser applies the
+ * first one in dark too.
+ */
+function themeDocument(html: string, theme: Theme): Document {
+  const { document } = new JSDOM(html).window
+  document.documentElement.setAttribute("data-theme", theme)
+  if (theme === "dark") applyDarkVariants(document)
+  return document
+}
 
 // Stripped to find the element a rule styles; what is stripped is its state.
 // Only user-action states: `:enabled`, `:last-child` and the like stay in the
@@ -133,33 +132,80 @@ function userActionInsideParens(selector: string): boolean {
 const KEYFRAME_STEP = /^(?:from|to|\d+(?:\.\d+)?%)$/
 
 /**
- * The background of the one rule that paints the primary buttons in `state`
- * (#666 review). Every `.btn.pri` element of the document is collected, and
- * every rule in its `<style>` that declares a `background*` property is
- * matched against them with `Element.matches` — after taking off the
- * user-action pseudo-classes, which are the rule's state. A rule paints a
- * state if it matches any primary button in it: no user-action state is the
- * base state, and any state that includes `:hover` (`:hover:focus-visible`, or
- * `:hover` on an ancestor) is the hover state. States without `:hover`
- * (`:active`, `:focus-visible`) are not checked — upstream publishes a hovered
- * value only. An inline `style` background on a primary button paints both
- * states, and a rule on a primary button's pseudo-element is refused outright:
- * either one can hide the button's own background from a reader of rules.
- *
- * For each state exactly one rule may paint, it must be exactly `.btn.pri`
- * (plus the state), and it may set one background property. Anything else is
- * refused rather than ordered — which rule wins is the cascade's call, and
- * re-implementing it here is how this reader missed `.btn.l` before. A
- * user-action pseudo-class inside parentheses (`:is(:hover)`, `:not(:hover)`)
- * cannot be taken off without changing what the selector means, so it is
- * refused too, as is a selector `matches` cannot read, with its text.
+ * How a selector reads against the document: the element it styles (its
+ * user-action pseudo-classes and pseudo-element taken off), its user-action
+ * state, and whether it styles a pseudo-element. A user-action pseudo-class
+ * inside parentheses (`:is(:hover)`, `:not(:hover)`) cannot be taken off
+ * without changing what the selector means, so it is refused.
  */
-function primaryBackground(html: string, state: State): string {
-  const { document } = new JSDOM(html).window
+function readSelector(selector: string): {
+  target: string
+  states: Array<string>
+  pseudoElement: boolean
+} {
+  if (userActionInsideParens(selector)) {
+    throw new Error(
+      `\`${selector}\` has a user-action pseudo-class inside parentheses — write the state outside them`
+    )
+  }
+  let target = selector
+    .replace(USER_ACTION, "")
+    .replace(PSEUDO_ELEMENT, "")
+    .trim()
+  if (target === "" || /[\s>+~]$/.test(target)) target += "*"
+  return {
+    target,
+    states: selector.match(USER_ACTION) ?? [],
+    pseudoElement: (selector.match(PSEUDO_ELEMENT) ?? []).length > 0,
+  }
+}
+
+/** `Element.matches` for any of `elements`; an unreadable selector fails with its text. */
+function matchesAny(
+  elements: Array<Element>,
+  target: string,
+  selector: string
+): boolean {
+  try {
+    return elements.some((e) => e.matches(target))
+  } catch {
+    throw new Error(`cannot read selector \`${selector}\``)
+  }
+}
+
+function primaryButtons(document: Document): Array<Element> {
   const buttons = [...document.querySelectorAll(".btn.pri")]
   if (buttons.length === 0) {
     throw new Error("no `.btn.pri` element in this document")
   }
+  return buttons
+}
+
+/**
+ * The background the primary buttons get in `theme` and `state`, unresolved
+ * (#666 review). The whole preview is opened as `theme` (`themeDocument`), its
+ * `.btn.pri` elements are collected, and every rule in every `<style>`, in
+ * document order, that declares a `background*` property is matched against
+ * them with `Element.matches` — after taking off the user-action
+ * pseudo-classes, which are the rule's state. A rule paints a state if it
+ * matches any primary button: no user-action state is the base state, and any
+ * state that includes `:hover` (`:hover:focus-visible`, or `:hover` on an
+ * ancestor) is the hover state. States without `:hover` (`:active`,
+ * `:focus-visible`) are not checked — upstream publishes a hovered value
+ * only. An inline `style` background on a primary button paints both states,
+ * and a rule on a primary button's pseudo-element is refused outright.
+ *
+ * The rules that paint a state must be exactly the preview's own, in order:
+ * `.btn.pri` (plus the state) in light, and in dark that rule followed by its
+ * `[data-theme="dark"]` override — the merged layout's one designed
+ * cross-sheet override. Each sets one background property. Anything else is
+ * refused rather than ordered: which rule wins is the cascade's call, and
+ * re-implementing it is how this reader missed `.btn.l` and a dark rule in the
+ * first sheet before.
+ */
+function paintingValue(html: string, theme: Theme, state: State): string {
+  const document = themeDocument(html, theme)
+  const buttons = primaryButtons(document)
   const painters: Array<{
     selector: string
     backgrounds: Array<[string, string]>
@@ -171,25 +217,8 @@ function primaryBackground(html: string, state: State): string {
     if (backgrounds.length === 0) continue
     for (const selector of rule.selectors) {
       if (KEYFRAME_STEP.test(selector)) continue
-      if (userActionInsideParens(selector)) {
-        throw new Error(
-          `\`${selector}\` has a user-action pseudo-class inside parentheses — write the state outside them`
-        )
-      }
-      const states = selector.match(USER_ACTION) ?? []
-      const pseudoElement = (selector.match(PSEUDO_ELEMENT) ?? []).length > 0
-      let target = selector
-        .replace(USER_ACTION, "")
-        .replace(PSEUDO_ELEMENT, "")
-        .trim()
-      if (target === "" || /[\s>+~]$/.test(target)) target += "*"
-      let hits: boolean
-      try {
-        hits = buttons.some((b) => b.matches(target))
-      } catch {
-        throw new Error(`cannot read selector \`${selector}\``)
-      }
-      if (!hits) continue
+      const { target, states, pseudoElement } = readSelector(selector)
+      if (!matchesAny(buttons, target, selector)) continue
       if (pseudoElement) {
         throw new Error(
           `\`${selector}\` paints a pseudo-element of a primary button`
@@ -214,27 +243,151 @@ function primaryBackground(html: string, state: State): string {
     }
   }
   const own = state === "hover" ? ".btn.pri:hover" : ".btn.pri"
-  if (painters.length === 0) {
-    throw new Error(`no rule paints the ${state} state of a primary button`)
-  }
-  if (painters.length > 1) {
+  const expected = theme === "light" ? [own] : [own, `${DARK_SCOPE} ${own}`]
+  const found = painters.map((p) => p.selector)
+  const list = (xs: Array<string>) => xs.map((x) => `\`${x}\``).join(" | ")
+  if (found.length === 0) {
     throw new Error(
-      `more than one rule paints the ${state} state of a primary button: ${painters.map((p) => p.selector).join(" | ")}`
+      `no rule paints the ${state} state of a ${theme} primary button`
     )
   }
-  const [{ selector, backgrounds }] = painters
-  if (selector !== own) {
+  if (found.length > expected.length) {
     throw new Error(
-      `the rule that paints it is \`${selector}\`, not \`${own}\``
+      `more than one rule paints the ${state} state of a ${theme} primary button: ${list(found)} — expected ${list(expected)}`
     )
   }
-  if (backgrounds.length > 1) {
+  if (found.join("\n") !== expected.join("\n")) {
     throw new Error(
-      `\`${own}\` sets ${backgrounds.length} backgrounds (${backgrounds.map(([p]) => p).join(", ")}) — keep exactly one`
+      `the rules that paint the ${state} state of a ${theme} primary button are ${list(found)}, not ${list(expected)}`
     )
   }
-  return backgrounds[0][1]
+  for (const { selector, backgrounds } of painters) {
+    if (backgrounds.length > 1) {
+      throw new Error(
+        `\`${selector}\` sets ${backgrounds.length} backgrounds (${backgrounds.map(([p]) => p).join(", ")}) — keep exactly one`
+      )
+    }
+  }
+  return painters.at(-1)!.backgrounds[0][1]
 }
+
+/**
+ * `value` with every `var(--name)` followed to a literal, as the primary
+ * buttons inherit it in `theme`. A declaration counts if its rule (any
+ * `<style>`, document order) matches `<html>` or a primary button or one of
+ * its ancestors, or if it is inline on one of those. The declarations must be
+ * exactly the preview's own: `:root` in light; in dark `:root`, the
+ * `[data-theme="dark"]` block, or the first overridden by the second. The
+ * last one is the value — anything else, such as a scoped `.hero{--x:…}`, is
+ * refused.
+ */
+function resolveVar(
+  html: string,
+  theme: Theme,
+  value: string,
+  seen = 0
+): string {
+  const ref = /^var\(\s*(--[\w-]+)\s*\)$/.exec(value.trim())?.[1]
+  if (ref === undefined) return value.trim()
+  if (seen > 8) throw new Error(`var() chain too deep at ${ref}`)
+  const document = themeDocument(html, theme)
+  const chain = new Set<Element>([document.documentElement])
+  for (const b of primaryButtons(document)) {
+    for (let e: Element | null = b; e !== null; e = e.parentElement)
+      chain.add(e)
+  }
+  const inherited = [...chain]
+  const declarers: Array<{ selector: string; value: string }> = []
+  for (const rule of rulesOf(html)) {
+    const decls = rule.declarations.filter(([p]) => p === ref)
+    if (decls.length === 0) continue
+    for (const selector of rule.selectors) {
+      if (KEYFRAME_STEP.test(selector)) continue
+      const { target, pseudoElement } = readSelector(selector)
+      if (pseudoElement || !matchesAny(inherited, target, selector)) continue
+      for (const [, v] of decls) declarers.push({ selector, value: v })
+    }
+  }
+  for (const e of inherited) {
+    const inline = new RegExp(`(?:^|;)\\s*${ref}\\s*:\\s*([^;]+)`).exec(
+      e.getAttribute("style") ?? ""
+    )
+    if (inline) declarers.push({ selector: 'style="…"', value: inline[1] })
+  }
+  const found = declarers.map((d) => d.selector).join(" | ")
+  const allowed =
+    theme === "light"
+      ? [":root"]
+      : [":root", DARK_SCOPE, `:root | ${DARK_SCOPE}`]
+  if (!allowed.includes(found)) {
+    throw new Error(
+      `${ref} is declared by ${found || "nothing"} for the ${theme} primary buttons — expected one of ${allowed.map((a) => `\`${a}\``).join(", ")}`
+    )
+  }
+  return resolveVar(html, theme, declarers.at(-1)!.value, seen + 1)
+}
+
+/** The literal background colour the primary buttons get in `theme` and `state`. */
+function primaryColor(html: string, theme: Theme, state: State): string {
+  return resolveVar(html, theme, paintingValue(html, theme, state))
+}
+
+// A preview carries both themes in one file: the first `<style>` is light and
+// the last is `[data-theme="dark"]`-scoped, and in dark the browser applies
+// BOTH. Rules from either sheet compete for the dark buttons (#666 review).
+describe("both sheets compete for the primary buttons of each theme", () => {
+  const LIGHT =
+    ":root{--x:#6157ea;}\n.btn.pri{background:var(--x);}\n.btn.pri:hover{background:#5146e4;}\n"
+  const DARK =
+    '[data-theme="dark"]{--x:#8082ff;}\n[data-theme="dark"] .btn.pri{background:var(--x);}\n[data-theme="dark"] .btn.pri:hover{background:#9698ff;}\n'
+  const BODY =
+    '<button class="btn pri">a</button><button class="btn pri l">b</button>' +
+    '<div class="hero"><button class="btn pri s">c</button></div>'
+  const merged = (lightExtra = "", darkExtra = "") =>
+    `<!doctype html><html data-theme="light"><head><style>${LIGHT}${lightExtra}</style><style>${DARK}${darkExtra}</style></head><body>${BODY}</body></html>`
+
+  it("reads each theme's own rule and variable", () => {
+    const html = merged()
+    expect(primaryColor(html, "light", "base")).toBe("#6157ea")
+    expect(primaryColor(html, "light", "hover")).toBe("#5146e4")
+    expect(primaryColor(html, "dark", "base")).toBe("#8082ff")
+    expect(primaryColor(html, "dark", "hover")).toBe("#9698ff")
+  })
+
+  const refused: Array<[string, string, string, State]> = [
+    [
+      "a dark-scoped rule in the first sheet",
+      '[data-theme="dark"] .btn.pri.l{background:#123456;}',
+      "",
+      "base",
+    ],
+    [
+      "a descendant hover rule in the first sheet",
+      ".hero .btn.pri:hover{background:#123456;}",
+      "",
+      "hover",
+    ],
+    [
+      "a rule that matches every theme but light",
+      ':not([data-theme="light"]) .btn.pri{background:#123456;}',
+      "",
+      "base",
+    ],
+  ]
+  for (const [name, lightExtra, darkExtra, state] of refused) {
+    it(`refuses ${name} in dark`, () => {
+      const html = merged(lightExtra, darkExtra)
+      expect(() => primaryColor(html, "dark", state)).toThrow(
+        /more than one rule paints|rules that paint/
+      )
+    })
+  }
+
+  it("refuses a variable the dark buttons inherit from a scoped rule", () => {
+    const html = merged("", ".hero{--x:#123456;}")
+    expect(() => primaryColor(html, "dark", "base")).toThrow(/--x is declared/)
+  })
+})
 
 describe("the painting rule is read off the real primary buttons", () => {
   const BASE =
@@ -247,8 +400,10 @@ describe("the painting rule is read off the real primary buttons", () => {
 
   it("reads one rule per state and one declaration", () => {
     const html = doc(`${BASE}.ib.pri{background:#ff0000;}\n`)
-    expect(resolveVar(html, primaryBackground(html, "base"))).toBe("#8082ff")
-    expect(primaryBackground(html, "hover")).toBe("#9698ff")
+    expect(
+      resolveVar(html, "light", paintingValue(html, "light", "base"))
+    ).toBe("#8082ff")
+    expect(paintingValue(html, "light", "hover")).toBe("#9698ff")
   })
 
   const refused: Array<[string, string, State, RegExp, string?]> = [
@@ -341,7 +496,7 @@ describe("the painting rule is read off the real primary buttons", () => {
   for (const [name, css, state, error, extra] of refused) {
     it(`refuses ${name}`, () => {
       const html = doc(`${BASE}${css}\n`, BODY + (extra ?? ""))
-      expect(() => primaryBackground(html, state)).toThrow(error)
+      expect(() => paintingValue(html, "light", state)).toThrow(error)
     })
   }
 
@@ -349,34 +504,38 @@ describe("the painting rule is read off the real primary buttons", () => {
     const html = doc(
       BASE.replace("var(--x);", "var(--x);background-color:#ff0000;")
     )
-    expect(() => primaryBackground(html, "base")).toThrow(/sets 2 backgrounds/)
+    expect(() => paintingValue(html, "light", "base")).toThrow(
+      /sets 2 backgrounds/
+    )
   })
 
   it("leaves rules for other buttons and for :active alone", () => {
     const html = doc(
       `${BASE}.ib.pri{background:#ff0000;}\n.seg button{background:transparent;}\n.btn.pri:active{background:#000000;}\n`
     )
-    expect(primaryBackground(html, "base")).toBe("var(--x)")
-    expect(primaryBackground(html, "hover")).toBe("#9698ff")
+    expect(paintingValue(html, "light", "base")).toBe("var(--x)")
+    expect(paintingValue(html, "light", "hover")).toBe("#9698ff")
   })
 
   it("refuses a later redeclaration of the property the rule reads", () => {
     const html = doc(`${BASE}:root{--x:#6157ea;}\n`)
-    expect(() => resolveVar(html, primaryBackground(html, "base"))).toThrow(
-      /declared 2 times/
-    )
+    expect(() =>
+      resolveVar(html, "light", paintingValue(html, "light", "base"))
+    ).toThrow(/--x is declared by :root \| :root for the light/)
   })
 
   it("does not take a descendant rule for the button's own rule", () => {
     const html = doc(
       ".hero .btn.pri{background:#6157ea;}\n.btn.pri:hover{background:#9698ff;}\n"
     )
-    expect(() => primaryBackground(html, "base")).toThrow(/not `\.btn\.pri`/)
+    expect(() => paintingValue(html, "light", "base")).toThrow(
+      /not `\.btn\.pri`/
+    )
   })
 
   it("names a selector it cannot read", () => {
     const html = doc(`${BASE}.btn.pri:no-such-pseudo{background:#6157ea;}\n`)
-    expect(() => primaryBackground(html, "base")).toThrow(
+    expect(() => paintingValue(html, "light", "base")).toThrow(
       /cannot read selector `\.btn\.pri:no-such-pseudo`/
     )
   })
@@ -386,22 +545,14 @@ describe.each(["light", "dark"] as const)(
   "bezier primary button, %s theme",
   (theme) => {
     const want = UPSTREAM[theme]
-    // Thrown by name, so a missing preview fails as that and not as a
-    // "no `.btn.pri` rule" read off an empty string.
-    const sheet = (): string => {
-      if (halves === null) {
-        throw new Error("public/preview/bezier has no readable preview")
-      }
-      return halves[theme]
-    }
 
     it("the preview's base is upstream's fill-accent-blue-heavier", () => {
-      const base = resolveVar(sheet(), primaryBackground(sheet(), "base"))
+      const base = primaryColor(preview, theme, "base")
       expect(base.toLowerCase()).toBe(want.base)
     })
 
     it("the preview's hover is upstream's fill-accent-blue-heavier-hovered", () => {
-      const hover = resolveVar(sheet(), primaryBackground(sheet(), "hover"))
+      const hover = primaryColor(preview, theme, "hover")
       expect(hover.toLowerCase()).toBe(want.hovered)
     })
 
