@@ -597,22 +597,63 @@ colors:
     }
   })
 
-  it("reads `html`, attribute and `:where()` root selectors as theme roots", () => {
+  it("reads only the listed selectors as theme roots", () => {
     const chains = roleChainsForSlug(roles, "socar")
-    for (const selector of [
-      "html",
-      ":root, html",
-      ':root[data-theme="light"]',
-      ":root:where(.x)",
+    const wrong = (selector: string): string =>
+      `${selector} { --sf-text-primary: var(--sf-gray-600); --sf-bg-base: var(--sf-gray-600); }`
+    for (const [selector, scope] of [
+      ["html", "light"],
+      [":root, [data-theme='light']", "light"],
+      ['[data-theme="dark"]', "dark"],
+      ["[data-theme=dark]", "dark"],
+      [':root[data-theme="dark"]', "dark"],
+      ['html[data-theme="dark"]', "dark"],
     ]) {
       expect(
-        findRoleChainDrift(
-          `${selector} { --sf-text-primary: var(--sf-gray-600); }`,
-          chains
-        ).length,
+        findRoleChainDrift(wrong(selector), chains).map((f) => f.scope),
         selector
-      ).toBe(1)
+      ).toContain(scope)
     }
+    // The reviewer's: neither names the theme root, so both are scoped.
+    for (const selector of [":root:where(.never)", '[data-theme="sepia"]']) {
+      const html = `:root { --sf-text-primary: var(--sf-gray-800); }
+        ${wrong(selector)}`
+      expect(findRoleChainDrift(html, chains), selector).toEqual([])
+      expect(roleChainCoverage(html, chains).scoped, selector).toBe(2)
+    }
+  })
+
+  it("refuses to pick between two root forms of one role in one scope", () => {
+    // `:root` outweighs a later `html`, so document order would pick wrongly.
+    const chains = roleChainsForSlug(roles, "socar")
+    const found = findRoleChainDrift(
+      `:root { --sf-text-primary: var(--sf-gray-600); }
+       html { --sf-text-primary: var(--sf-gray-800); }`,
+      chains
+    )
+    expect(found).toEqual([
+      {
+        name: "sf-text-primary",
+        scope: "light",
+        preview:
+          ":root { --sf-text-primary: var(--sf-gray-600) } and html { --sf-text-primary: var(--sf-gray-800) }",
+        expected: "one theme-root declaration",
+        ambiguous: true,
+      },
+    ])
+  })
+
+  it("refuses a light-root declaration after the dark root's", () => {
+    // A later `:root` also wins in the dark theme: same weight, later.
+    const chains = roleChainsForSlug(roles, "socar")
+    const found = findRoleChainDrift(
+      `[data-theme="dark"] { --sf-bg-base: var(--sf-gray-800); }
+       :root { --sf-bg-base: var(--sf-gray-100); }`,
+      chains
+    )
+    expect(found.map((f) => [f.scope, f.name, f.ambiguous])).toEqual([
+      ["light", "sf-bg-base", true],
+    ])
   })
 
   it("does not read a local block as a theme root", () => {

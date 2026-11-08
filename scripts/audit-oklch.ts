@@ -315,6 +315,12 @@ for (const slug of slugs) {
     console.log(`  --${d.name.padEnd(24)} ${d.preview}   md says ${d.expected}`)
   }
   for (const d of chained) {
+    if (d.ambiguous) {
+      console.log(
+        `  --${d.name.padEnd(24)} declared at two theme roots (${d.scope}): ${d.preview} — keep one`
+      )
+      continue
+    }
     console.log(
       `  --${d.name.padEnd(24)} ${d.preview}   md reference row says ${d.expected} (${d.scope})`
     )

@@ -476,6 +476,13 @@ export function findPreviewDrift(
 
 export interface RoleChainFinding extends DriftFinding {
   scope: "light" | "dark"
+  /**
+   * Set when one role is declared under two theme-root forms in one scope, or
+   * at the light root after the dark root: which declaration wins then depends
+   * on selector weight and order, and the check refuses to pick one. `preview`
+   * names the declarations.
+   */
+  ambiguous?: true
 }
 
 /**
@@ -490,25 +497,23 @@ export interface RoleChainFinding extends DriftFinding {
  * `var()` becomes a literal, or a role newly declared as a literal, moves a
  * pinned number.
  *
- * Only THEME-ROOT declarations are the theme's value: a top-level block whose
- * every selector is `:root` or `html` (optionally with one `[data-theme=…]`
- * attribute and then a `:where(…)`) or a bare `[data-theme=…]`, with no
- * `@media`, `@supports` or other at-rule around it (isThemeRoot), in a
- * `<style>` element with no `media` attribute and not inside `<noscript>` or
- * `<template>`. A role redeclared anywhere else (`.inverse { … }`,
- * `:where(.chip) { … }`, `:root` inside `@media` or inside
- * `<style media="…">`) holds only for part of the page, so it is neither compared
- * nor allowed to hide the root value; `roleChainCoverage` counts it as
- * `scoped`.
+ * Only THEME-ROOT declarations are the theme's value, and the theme roots are
+ * an exact list (THEME_ROOTS): `:root` and `html` for light,
+ * `[data-theme="dark"]`, `:root[data-theme="dark"]` and
+ * `html[data-theme="dark"]` for dark, each in a top-level block outside any
+ * at-rule, in a `<style>` element with no `media` attribute and not inside
+ * `<noscript>` or `<template>`. A role declared under any other selector
+ * (`.inverse`, `:where(.chip)`, `[data-theme="sepia"]`, `:root` inside
+ * `@media`) is neither compared nor allowed to hide the root value;
+ * `roleChainCoverage` counts it as `scoped`.
  *
- * Among theme-root declarations of one property in one scope, the last in the
- * document is compared. codeit's merged preview restates its light tokens
- * under the dark selector and then overrides them in a second dark block of the
- * same selector; the first never paints there. That is the cascade only for
- * root selectors of equal specificity, which is what the catalogue writes;
- * two gaps are not modelled: `:root` outweighs a later `html`, and a base
- * `:root` restatement placed after the dark block would win in the dark theme
- * too.
+ * Within one scope and one root form, the last declaration is compared: the
+ * same selector, so document order decides. codeit's merged preview restates
+ * its light tokens under `[data-theme="dark"]` and then overrides them in a
+ * second block of that selector. A role declared under two different root
+ * forms in one scope (`:root` and `html`), or at the light root after the dark
+ * root (where the later `:root` would also win in the dark theme), is reported
+ * as ambiguous instead of guessed at.
  *
  * A role with a `dark-` row that the dark root never redeclares inherits its
  * light `var()` in the dark theme; that declaration is held to the dark row as
@@ -519,11 +524,17 @@ export function findRoleChainDrift(
   previewHtml: string,
   chains: RoleChains
 ): Array<RoleChainFinding> {
-  const findings: Array<RoleChainFinding> = []
-  for (const { name, dark, target, expected } of roleDeclarations(
-    previewHtml,
-    chains
-  ).compared) {
+  const { compared, ambiguous } = roleDeclarations(previewHtml, chains)
+  const findings: Array<RoleChainFinding> = ambiguous.map((a) => ({
+    name: a.name,
+    scope: a.dark ? "dark" : "light",
+    preview: a.declarations
+      .map((d) => `${d.root ?? ""} { --${d.name}: ${d.value} }`)
+      .join(" and "),
+    expected: "one theme-root declaration",
+    ambiguous: true,
+  }))
+  for (const { name, dark, target, expected } of compared) {
     if (target === undefined || expected.includes(target)) continue
     findings.push({
       name,
@@ -553,8 +564,8 @@ export function roleChainCoverage(
 /**
  * Each scope's last theme-root declaration of a role property `chains` names,
  * with the property its `var()` points at (`undefined` for a literal) and the
- * steps it may point at, and the number of role declarations outside
- * theme-root blocks.
+ * steps it may point at; the roles whose theme-root declarations are
+ * ambiguous; and the number of role declarations outside theme-root blocks.
  *
  * A role with a `dark-` row that the dark theme root never redeclares inherits
  * its light declaration in the dark theme, so that declaration is compared
@@ -571,22 +582,36 @@ function roleDeclarations(
       inherited: boolean
     }
   >
+  ambiguous: Array<{
+    name: string
+    dark: boolean
+    declarations: ReadonlyArray<Declaration>
+  }>
   scoped: number
 } {
-  const lastRoot = new Map<string, Declaration>()
+  // Every theme-root declaration of each property, per scope, in order.
+  const atRoot = new Map<string, Array<Declaration>>()
+  const isRole = (d: Declaration): boolean =>
+    (d.dark ? chains.dark : chains.light).has(d.name)
+  // Roles declared at the light root after a dark-root declaration of theirs.
+  const lightAfterDark = new Set<string>()
   let scoped = 0
   for (const d of declarations(previewHtml)) {
-    const role = (d.dark ? chains.dark : chains.light).has(d.name)
-    if (!d.themeRoot) {
-      if (role) scoped++
+    if (d.root === undefined) {
+      if (isRole(d)) scoped++
       continue
     }
+    if (!d.dark && atRoot.has(`dark ${d.name}`)) lightAfterDark.add(d.name)
     const key = `${d.dark ? "dark" : "light"} ${d.name}`
+    const list = atRoot.get(key) ?? []
+    list.push(d)
     // Delete first so the map's order is where each property is last declared.
-    lastRoot.delete(key)
-    lastRoot.set(key, d)
+    atRoot.delete(key)
+    atRoot.set(key, list)
   }
-  const darkRedeclares = (step: string): boolean => lastRoot.has(`dark ${step}`)
+  const lastAt = (key: string): Declaration | undefined =>
+    atRoot.get(key)?.at(-1)
+  const darkRedeclares = (step: string): boolean => atRoot.has(`dark ${step}`)
   const entry = (
     d: Declaration,
     scope: "light" | "dark",
@@ -610,15 +635,34 @@ function roleDeclarations(
       },
     ]
   }
-  const compared = [...lastRoot.values()].flatMap((d) =>
-    entry(d, d.dark ? "dark" : "light", false)
-  )
+  const ambiguous: Array<{
+    name: string
+    dark: boolean
+    declarations: ReadonlyArray<Declaration>
+  }> = []
+  const compared = []
+  for (const list of atRoot.values()) {
+    const last = list[list.length - 1]
+    if (!isRole(last)) continue
+    const forms = new Set(list.map((d) => d.root))
+    const late = !last.dark && lightAfterDark.has(last.name)
+    if (forms.size > 1 || late) {
+      const dark = atRoot.get(`dark ${last.name}`) ?? []
+      ambiguous.push({
+        name: last.name,
+        dark: last.dark,
+        declarations: forms.size > 1 ? list : [...dark, last],
+      })
+      continue
+    }
+    compared.push(...entry(last, last.dark ? "dark" : "light", false))
+  }
   for (const role of chains.paired) {
-    const base = lastRoot.get(`light ${role}`)
-    if (base === undefined || lastRoot.has(`dark ${role}`)) continue
+    const base = lastAt(`light ${role}`)
+    if (base === undefined || atRoot.has(`dark ${role}`)) continue
     compared.push(...entry(base, "dark", true))
   }
-  return { compared, scoped }
+  return { compared, ambiguous, scoped }
 }
 
 /** One custom-property declaration in a preview's stylesheets. */
@@ -628,37 +672,41 @@ interface Declaration {
   value: string
   /** Inside a `[data-theme="dark"]` block. */
   dark: boolean
-  /** In a top-level theme-root block (see findRoleChainDrift). */
-  themeRoot: boolean
+  /** The theme-root selector its block is (THEME_ROOTS), or undefined. */
+  root: string | undefined
 }
 
 /**
- * A selector list every member of which names the document root for a theme:
- * `:root` or `html`, optionally with one `[data-theme=…]` attribute and then a
- * `:where(…)`, or a bare `[data-theme=…]`. A bare `:where(…)` and any
- * combinator (`html [data-theme]`) are not roots.
+ * The selectors a theme's value is declared under, exactly, as
+ * normaliseSelector writes them. Anything else is scoped.
  */
-function isThemeRoot(prelude: string): boolean {
-  if (prelude === "" || prelude.startsWith("@")) return false
-  const THEME = String.raw`\[data-theme=(?:"[\w-]+"|'[\w-]+'|[\w-]+)\]`
-  const ROOT = new RegExp(
-    String.raw`^(?:(?::root|html)(?:${THEME})?(?::where\([^()]*\))?|${THEME})$`
-  )
-  return prelude.split(",").every((s) => ROOT.test(s.trim()))
+const THEME_ROOTS = {
+  light: new Set([
+    ":root",
+    "html",
+    // gmarket's preview declares its light tokens under this selector list.
+    ':root,[data-theme="light"]',
+  ]),
+  dark: new Set([
+    '[data-theme="dark"]',
+    ':root[data-theme="dark"]',
+    'html[data-theme="dark"]',
+  ]),
 }
 
 /**
  * A block's selector with whitespace collapsed and removed only where it
  * cannot be a combinator: inside `[…]` and around `,`. Space before `[` or
- * after `]` is the descendant combinator and is kept.
+ * after `]` is the descendant combinator and is kept. An attribute value is
+ * written in double quotes.
  */
 function normaliseSelector(text: string): string {
   return text
     .replace(/\s+/g, " ")
-    .replace(
-      /\[([^\]]*)\]/g,
-      (_, inner: string) => `[${inner.replace(/ /g, "")}]`
-    )
+    .replace(/\[([^\]]*)\]/g, (_, inner: string) => {
+      const attr = /^([\w-]+)=["']?([^"']*)["']?$/.exec(inner.replace(/ /g, ""))
+      return attr ? `[${attr[1]}="${attr[2]}"]` : `[${inner.replace(/ /g, "")}]`
+    })
     .replace(/ ?, ?/g, ",")
     .trim()
 }
@@ -736,7 +784,11 @@ function declarations(previewHtml: string): Array<Declaration> {
       name: m[1],
       value: m[2].trim(),
       dark: darkDepth !== null,
-      themeRoot: open.length === 1 && isThemeRoot(open[0]),
+      root:
+        open.length === 1 &&
+        THEME_ROOTS[darkDepth !== null ? "dark" : "light"].has(open[0])
+          ? open[0]
+          : undefined,
     })
   }
   return out
