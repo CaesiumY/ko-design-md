@@ -194,7 +194,7 @@ describe("the published-pair tables against the recorded totals", () => {
   }
 
   const HOW =
-    "run `pnpm audit:contrast:rebaseline <run id>` with the CI run the totals came from — it rewrites the totals, both pair tables, the hold-reason table, src/lib/contrast-classified-run.json and the run ids from that run's contrast-report artifact, and lists the dated prose it leaves for you"
+    "run `pnpm audit:contrast:rebaseline <run id>` with the CI run the totals came from — it rewrites the totals, both pair tables, the hold-reason table, src/lib/contrast-classified-run.json and the borderline section's '입력은 run' id from that run's contrast-report artifact, and lists the dated prose it leaves for you (the totals sentence's date and run among it)"
 
   const cases = [
     {

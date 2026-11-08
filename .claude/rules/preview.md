@@ -49,8 +49,8 @@ CI 의 **별도 `contrast` 잡**에서 돈다. 프리뷰 대비를 라이트·�
 측정기 고장 1 · 인자 오류 2 다(정의는 `scripts/audit-contrast.ts`).
 
 **총계 표를 갱신하는 PR 은 발행색 분류표와 보류 사유 표도 함께 다시 낸다** — 그 CI run 번호로
-`pnpm audit:contrast:rebaseline <run id>` 를 돌리면 산출물(`contrast-report`)을 받기 전에 묻고, 기록 전부를 그
-run 으로 다시 쓴 뒤 사람이 쓸 날짜 산문을 남은 일로 찍는다(어긋나면 `pnpm test` 가 막고, 실패 메시지가 이 명령을
+`pnpm audit:contrast:rebaseline <run id>` 를 돌리면 산출물(`contrast-report`)을 받기 전에 묻고, 표와 분류 run
+기록을 그 run 으로 다시 쓴 뒤 사람이 쓸 날짜 산문(총계 문장의 날짜와 run 포함)을 남은 일로 찍는다(어긋나면 `pnpm test` 가 막고, 실패 메시지가 이 명령을
 가리킨다). 새 항목은 다음 재집계까지 면제되므로 온보딩의 등록처는 늘지 않는다. 비텍스트 `fail`·`borderline` 은 `gate:contrast` 가 warn 만 내므로 비텍스트 쪽은 두 표가
 함께 낡을 수 있다.
 
