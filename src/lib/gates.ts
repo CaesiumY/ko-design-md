@@ -86,8 +86,15 @@ const SETUP_ACTIONS = [
 /** `pnpm <script> [args]` on one line, with no chaining or redirection. */
 const ONE_PNPM_SCRIPT = /^pnpm\s+([\w:.-]+)(?:\s+[^&|;<>\n]*)?$/
 
-/** A line break, `$(…)` or a backtick: the line runs another command too. */
-const RUNS_MORE = /[\r\n`]|\$\(/
+/**
+ * A line break, `$(…)`, a backtick, or a `${{ }}` expression (which GitHub
+ * expands before the shell runs, so it can spell either): the line may run
+ * another command too.
+ */
+const RUNS_MORE = /[\r\n`]|\$\(|\$\{\{/
+
+/** The one form of the install step: it prepares, so it is not mirrored. */
+const INSTALL_ARGS = ["--frozen-lockfile"]
 
 // The keys a pre-build step may carry: what the line shows, and labels or
 // limits that do not change what the check does. Any other (`if`,
@@ -167,7 +174,8 @@ export interface CiStep {
  * each with the arguments its line passes (split on whitespace, as written).
  *
  * The setup actions in `SETUP_ACTIONS` and `pnpm install` prepare the runner
- * and are skipped. Every other step before `pnpm build` must be a single
+ * and are not mirrored; install is held to the one line `INSTALL_ARGS` spells,
+ * so nothing rides past on it. Every other step before `pnpm build` must be a single
  * `pnpm <script>` line; anything else (another action, a `node` or shell
  * command, a chained line) throws rather than being skipped, because a step
  * this reader silently ignored would be a step `pnpm gates` silently lacks.
@@ -214,8 +222,7 @@ export function ciPreBuildSteps(workflowYaml: string): Array<CiStep> {
     }
     const line = step.run.trim()
     // A second line, or a command substitution, runs more than the script the
-    // line names, and would ride past even on `pnpm install`, whose arguments
-    // are not compared. A plain variable such as `"$BASE_REF"` is an argument.
+    // line names. A plain variable such as `"$BASE_REF"` is an argument.
     const match = RUNS_MORE.test(line) ? null : ONE_PNPM_SCRIPT.exec(line)
     if (!match) {
       throw new Error(
@@ -227,8 +234,16 @@ export function ciPreBuildSteps(workflowYaml: string): Array<CiStep> {
     const script = match[1]
     if (script === "build") return scripts
     refuseHiddenSettings(step, line)
+    const args = line.split(/\s+/).slice(2)
     if (script !== "install") {
-      scripts.push({ script, args: line.split(/\s+/).slice(2) })
+      scripts.push({ script, args })
+    } else if (args.join(" ") !== INSTALL_ARGS.join(" ")) {
+      // `pnpm gates` does not run install, so its line is held to one form
+      // rather than compared; anything else on it would go unmirrored.
+      throw new Error(
+        `CI build step \`${line}\` is not \`pnpm install ${INSTALL_ARGS.join(" ")}\`; ` +
+          "keep install to that line, or update INSTALL_ARGS in src/lib/gates.ts if the change only prepares the runner"
+      )
     }
   }
   throw new Error(

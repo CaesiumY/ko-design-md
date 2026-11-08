@@ -210,6 +210,10 @@ describe("ciPreBuildSteps", () => {
       "|\n          pnpm install\n          node scripts/extra-check.ts",
       "pnpm install $(node scripts/extra-check.ts)",
       "pnpm install `node scripts/extra-check.ts`",
+      // GitHub expands `${{ }}` before the shell runs, so this is `$(…)` too.
+      `"pnpm install \${{ format('{0}(node scripts/extra-check.ts)', '$') }}"`,
+      // Install's arguments are pinned, so anything past them is refused.
+      "pnpm install --frozen-lockfile scripts/extra-check.ts",
     ]) {
       const hidden = WORKFLOW.replace(
         "run: pnpm install --frozen-lockfile",
