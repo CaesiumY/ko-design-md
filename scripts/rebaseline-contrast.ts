@@ -7,7 +7,10 @@
 // Without `--from` it asks before running `gh run download <run id> -n
 // contrast-report` into a new temporary folder, and refuses outside a terminal
 // rather than download unasked. `--from` reads `contrast-findings.json` from a
-// folder that command already filled.
+// folder that command already filled. The artifact carries no run id, so
+// whether that folder really is `<run id>`'s is not checked: the id given is
+// what the record will name, and passing another run's folder writes that
+// run's numbers under it.
 //
 // One run's findings rewrite every place the record holds them: the totals
 // table in `src/lib/contrast-baseline.ts` and its copy in
@@ -59,7 +62,7 @@ function parseArgs(argv: Array<string>): { run: string; from?: string } {
   }
   if (run === undefined || !isRunId(run)) {
     fail(
-      "Error: usage: pnpm audit:contrast:rebaseline <run id> [--from <folder>] — the CI run whose contrast job uploaded the contrast-report artifact"
+      "Error: usage: pnpm audit:contrast:rebaseline <run id> [--from <folder>] — the CI run whose contrast job uploaded the contrast-report artifact (a --from folder must hold that same run's artifact; it is not checked)"
     )
   }
   return { run, from }
