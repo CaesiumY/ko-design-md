@@ -230,8 +230,8 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | banksalad | dark | non-text | 17 | 23 | 15 | 0 | 0 |
 | banksalad | light | text | 171 | 381 | 65 | 3 | 5 |
 | banksalad | light | non-text | 17 | 23 | 15 | 0 | 0 |
-| bezier | dark | text | 175 | 349 | 59 | 10 | 11 |
-| bezier | dark | non-text | 42 | 45 | 11 | 4 | 1 |
+| bezier | dark | text | 175 | 349 | 58 | 11 | 11 |
+| bezier | dark | non-text | 42 | 45 | 10 | 2 | 1 |
 | bezier | light | text | 175 | 349 | 54 | 9 | 11 |
 | bezier | light | non-text | 41 | 44 | 18 | 9 | 1 |
 | class101 | dark | text | 97 | 160 | 24 | 0 | 7 |
@@ -535,12 +535,12 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 버리게 되는** 것. 후자의 사례가 samsung 의 라이트 강조 버튼(4.51:1, 발행 `primary-dark`
 위 흰 글자)이고, 그 파일은 값을 고치지 않고 가드 주석을 달았다.
 
-분류한 `borderline` 317행을 `services/{slug}.md` frontmatter `colors:` 와 대조했다. 측정된
+분류한 `borderline` 316행을 `services/{slug}.md` frontmatter `colors:` 와 대조했다. 측정된
 색 쌍이 모든 읽기에 실리므로(`--json-out` 의 `fg`/`bg`, 리포트 표의 `색` 열) 기계로
 가를 수 있다 — `readDefinitions` 로 발행 OKLCH 를 읽고 측정 hex 를 `hexToOklab` 으로
 옮겨 `deltaE` 로 잰다. 그 절차가 `src/lib/contrast-pairs.ts` 이고, 이 절과 다음 절의 표는
 **CI 의 `contrast` 잡이 올린 아티팩트**에 그것을 돌린 출력이다 — 로컬 sweep 으로 답하면 기록된
-표가 서술하는 것과 다른 렌더에 대해 답하게 된다. 입력은 run `41245850047`(#642 의 head `0fcd93d` — 그라디언트 위 읽기를 그 그라디언트가 칠할 수 있는 색 전부로 판정하게 바꾼 재집계)다.
+표가 서술하는 것과 다른 렌더에 대해 답하게 된다. 입력은 run `42501623687`(#670 의 head `aa2e368` — bezier 다크 프리뷰의 표면과 회색 채움을 md 참조 행대로 고친 재집계)다. 그 전 재집계 run `41245850047`(#642 의 head `0fcd93d` — 그라디언트 위 읽기를 그 그라디언트가 칠할 수 있는 색 전부로 판정하게 바꾼 재집계)과 달라진 것은 두 표의 bezier 네 행뿐이다.
 그 뒤에 더해진 항목은 다음 재집계 때 두 표에 들어가고, 그전까지는 표에 없다(아래 「게이트는 이것을 어떻게 다루나」). 미달과
 경계선이 모두 0 인 항목도 표에 없다.
 
@@ -639,7 +639,7 @@ gs-shop 이 "라이브 실측 · 공식 문서와 불일치"·"공식 문서에 
 `observed-pair` 칸 없이)으로 같은 아티팩트를 돌리면 옛 표가 슬러그마다 그대로 나온다 — 이 스크립트가 그
 절차를 구현한다는 근거다.
 
-**결과: `borderline` 317행 중 237행이 두 색 모두 발행 토큰인 쌍이다.**
+**결과: `borderline` 316행 중 236행이 두 색 모두 발행 토큰인 쌍이다.**
 
 **이 수에는 두 방향의 오차가 있다.** 위 합성 대조는 반투명 토큰 **하나를** 불투명 색 하나 위에 얹은 경우만
 알아본다. 반투명 층이 둘 이상 겹친 배경, 프리뷰가 `opacity` 를 얹은 표면, 아래 색이 토큰이 아닌 합성은 **모든
@@ -653,8 +653,8 @@ gs-shop 이 "라이브 실측 · 공식 문서와 불일치"·"공식 문서에 
 | 11st | text | 17 | 0 | 0 | 0 | 17 |
 | baemin | text | 3 | 0 | 1 | 0 | 4 |
 | banksalad | text | 3 | 0 | 0 | 0 | 3 |
-| bezier | text | 13 | 0 | 6 | 0 | 19 |
-| bezier | non-text | 13 | 0 | 0 | 0 | 13 |
+| bezier | text | 14 | 0 | 6 | 0 | 20 |
+| bezier | non-text | 11 | 0 | 0 | 0 | 11 |
 | class101 | text | 2 | 0 | 0 | 0 | 2 |
 | class101 | non-text | 4 | 0 | 0 | 0 | 4 |
 | codeit | text | 2 | 0 | 0 | 0 | 2 |
@@ -716,7 +716,7 @@ warn 만)이라 갱신이 강제되지 않고, 두 분류표의 비텍스트 행
 아래 caveat 의 합성 오차와 같은 방향이다. 그 구간의 읽기 수와 0.005 에서의 `both-published` 는 위 명령이 표와 함께
 `readings …` 줄로 낸다.
 
-**결과: `fail` 2065행 중 1697행이 두 색 모두 발행 토큰인 쌍이다.**
+**결과: `fail` 2063행 중 1703행이 두 색 모두 발행 토큰인 쌍이다.**
 
 **이 수도 위 절과 같은 두 방향의 오차를 진다.** 겹친 반투명 층·`opacity` 가 낀 표면은 입력이 모두 발행
 토큰이어도 `one-token`·`no-token` 칸에 들어가고(발행 쌍을 적게 센다), 우연히 토큰이나 합성 근처에 떨어진
@@ -731,8 +731,8 @@ warn 만)이라 갱신이 강제되지 않고, 두 분류표의 비텍스트 행
 | baemin | non-text | 1 | 0 | 0 | 3 | 4 |
 | banksalad | text | 108 | 0 | 1 | 2 | 111 |
 | banksalad | non-text | 22 | 0 | 4 | 4 | 30 |
-| bezier | text | 93 | 0 | 19 | 1 | 113 |
-| bezier | non-text | 27 | 0 | 2 | 0 | 29 |
+| bezier | text | 98 | 0 | 13 | 1 | 112 |
+| bezier | non-text | 28 | 0 | 0 | 0 | 28 |
 | class101 | text | 57 | 0 | 0 | 0 | 57 |
 | class101 | non-text | 14 | 0 | 0 | 0 | 14 |
 | codeit | text | 42 | 0 | 0 | 0 | 42 |
@@ -779,12 +779,12 @@ warn 만)이라 갱신이 강제되지 않고, 두 분류표의 비텍스트 행
 | zigbang | text | 127 | 0 | 0 | 0 | 127 |
 | zigbang | non-text | 33 | 0 | 0 | 0 | 33 |
 
-**어느 슬러그부터 (2026-11-01 재집계 기준).** 고칠 수 있는 칸(`one-token`·`no-token`)이 큰 쪽은 텍스트에서
-bezier 이고 line-design-system · gmarket · ridi · toss · baemin 이 뒤따른다(수는 위 표에 있다). 단 #550 의 슬러그 티켓으로 이미 처리한 슬러그는, 텍스트
+**어느 슬러그부터 (2026-11-09 재집계 기준).** 고칠 수 있는 칸(`one-token`·`no-token`)이 큰 쪽은 텍스트에서
+line-design-system 이고 gmarket, bezier, ridi, toss, baemin 이 뒤따른다(수는 위 표에 있다). 단 #550 의 슬러그 티켓으로 이미 처리한 슬러그는, 텍스트
 칸이 행마다 처리를 마친 뒤의 남은 행일 수 있다 — 무엇으로 처리했는지는 그 티켓의 PR 본문에 있고, 이 문단에는 쌓지
 않는다(비텍스트 칸은 그 티켓들이 따로 다루지 않았다 — 선언으로 함께 빠진 행은 있다). 비텍스트에서는 samsung-one-ui(미달
 전부가 이 두 칸) · gs-retail · greeting · line-design-system · likelion · codeit 순이다. 반대로 socar · zigbang · remember ·
-class101 은 텍스트·비텍스트 모두, codeit · gs-retail · kyobobook · likelion 은 텍스트만, seed-design · toss 는 비텍스트만
+class101 은 텍스트·비텍스트 모두, codeit · gs-retail · kyobobook · likelion 은 텍스트만, seed-design, toss, bezier 는 비텍스트만
 미달 전부가 `both-published` 라, 고치지 않고 두는 대상이다(아래
 「미달을 고칠 때」). lg-electronics 와 nol 은 미달 대부분이 `observed-pair` 다. 위 caveat 때문에, 고칠 수 있는 칸에서
 시작하더라도 행마다 합성 경로를 먼저 본다.
