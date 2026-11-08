@@ -97,9 +97,24 @@ const STEP_KEYS = new Set([
   "env",
 ])
 
-// Settings on the whole workflow or the build job that reach every step the
-// same hidden way.
-const SHARED_KEYS = ["env", "defaults", "if"]
+// The keys the workflow and the build job may carry, by the same rule as
+// `STEP_KEYS`: any other (`env`, `defaults`, `if`, `continue-on-error`,
+// `container`, `strategy`, …) reaches every step the same hidden way.
+const WORKFLOW_KEYS = new Set([
+  "name",
+  "run-name",
+  "on",
+  "concurrency",
+  "permissions",
+  "jobs",
+])
+const JOB_KEYS = new Set([
+  "name",
+  "runs-on",
+  "steps",
+  "timeout-minutes",
+  "permissions",
+])
 
 // The fields read here; `Object.keys` still sees every key a step has.
 type YamlScalar = string | number | boolean | null
@@ -158,15 +173,15 @@ export function ciPreBuildSteps(workflowYaml: string): Array<CiStep> {
   const doc = parse(workflowYaml) as {
     jobs?: { build?: { steps?: Array<WorkflowStep> } }
   }
-  for (const [where, level] of [
-    ["the workflow", doc],
-    ["the build job", doc.jobs?.build ?? {}],
+  for (const [where, level, allowed] of [
+    ["the workflow", doc, WORKFLOW_KEYS],
+    ["the build job", doc.jobs?.build ?? {}, JOB_KEYS],
   ] as const) {
-    const key = SHARED_KEYS.find((k) => k in level)
+    const key = Object.keys(level).find((k) => !allowed.has(k))
     if (key) {
       throw new Error(
         `${where} sets \`${key}\`, which reaches every CI step without showing in the lines \`pnpm gates\` mirrors; ` +
-          "set it on the step that needs it instead"
+          "drop it, or add it to WORKFLOW_KEYS or JOB_KEYS in src/lib/gates.ts if it does not change how the checks run"
       )
     }
   }

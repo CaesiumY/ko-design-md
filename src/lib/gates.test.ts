@@ -240,15 +240,33 @@ describe("ciPreBuildSteps outside the steps", () => {
       const top = WORKFLOW.replace("jobs:", replacement)
       expect(() => ciPreBuildSteps(top), key).toThrow(new RegExp(key))
     }
-    for (const key of ["env", "defaults", "if"]) {
+    for (const key of [
+      "env",
+      "defaults",
+      "if",
+      "continue-on-error",
+      "container",
+      "strategy",
+    ]) {
       const value =
-        key === "if" ? "github.event_name == 'push'" : "\n      X: y"
+        key === "if" || key === "continue-on-error" ? "true" : "\n      X: y"
       const job = WORKFLOW.replace(
         "  build:\n",
         `  build:\n    ${key}: ${value}\n`
       )
       expect(() => ciPreBuildSteps(job), key).toThrow(new RegExp(key))
     }
+  })
+
+  it("lets workflow and job keys through that do not change what a check does", () => {
+    const harmless = WORKFLOW.replace(
+      "jobs:\n  build:\n",
+      "name: CI\nrun-name: ci\npermissions:\n  contents: read\njobs:\n  build:\n    name: build\n    timeout-minutes: 30\n    permissions:\n      contents: read\n"
+    )
+    expect(ciPreBuildScripts(harmless)).toEqual([
+      "typecheck",
+      "check:last-updated",
+    ])
   })
 
   it("lets step keys through that do not change what the check does", () => {
