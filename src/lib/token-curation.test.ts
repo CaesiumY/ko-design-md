@@ -28,6 +28,13 @@ describe("rampStep", () => {
     })
   })
 
+  it("parses unhyphenated steps, as baemin's deployed palette names them", () => {
+    // www.baemin.com ships `--ref-color-mint8`, `--ref-color-gray12`; the
+    // catalogue keeps those upstream names, so the ramp has no hyphen.
+    expect(rampStep("mint8")).toEqual({ family: "mint", step: 8 })
+    expect(rampStep("gray12")).toEqual({ family: "gray", step: 12 })
+  })
+
   it("returns null for named (non-numbered) tokens", () => {
     expect(rampStep("primary")).toBeNull()
     expect(rampStep("service-amazon")).toBeNull()
@@ -122,6 +129,70 @@ describe("curateColors", () => {
     expect(vis).not.toContain("overlay")
     // no token is dropped or duplicated
     expect(visible.length + hidden.length).toBe(colors.length)
+  })
+
+  it("collapses an unhyphenated ramp to its anchor like a hyphenated one", () => {
+    const steps = [1, 2, 3, 4, 5, 6, 7, 8].map((n) =>
+      c(`red${n}`, `oklch(${(0.95 - n * 0.08).toFixed(2)} 0.2 25)`)
+    )
+    const named = [
+      c("navy", "oklch(0.30 0.13 286)"),
+      c("pink", "oklch(0.66 0.24 4)"),
+    ]
+    const { visible, hidden } = curateColors([...steps, ...named])
+    expect(visible.map((x) => x.name)).toEqual(["red4", "navy", "pink"])
+    expect(hidden.map((x) => x.name)).toEqual([
+      "red1",
+      "red2",
+      "red3",
+      "red5",
+      "red6",
+      "red7",
+      "red8",
+    ])
+  })
+
+  it("keeps unhyphenated numbered names that are not a lightness ramp as named colours", () => {
+    // zigbang numbers its colours per hue without ordering them by lightness:
+    // `orange1` is the accent and `orange2` its near-white tint. Folding them
+    // to a median anchor would hide the accent behind the tint.
+    const colors = [
+      c("orange1", "oklch(0.700 0.202 44)"),
+      c("orange2", "oklch(0.980 0.013 64)"),
+      c("orange3", "oklch(0.946 0.032 55)"),
+      c("navy1", "oklch(0.298 0.090 257)"),
+      c("navy2", "oklch(0.937 0.012 248)"),
+      // neutral filler so the tail is long enough to stay collapsed
+      ...[10, 30, 50, 70, 90, 95, 99].map((n) =>
+        c(`gray${n}`, `oklch(${n / 100} 0 0)`)
+      ),
+    ]
+    const { visible, hidden } = curateColors(colors)
+    expect(visible.map((x) => x.name)).toEqual(["orange1", "navy1"])
+    expect(hidden.map((x) => x.name)).toContain("orange2")
+  })
+
+  it("does not read a two-colour unhyphenated pair as a ramp", () => {
+    // Two values always move one way, so the lightness test says nothing
+    // about a pair. zigbang's `red1`/`red2` are an accent and its tint; had
+    // the tint taken number 1, the median anchor would have hidden the accent.
+    const colors = [
+      c("teal1", "oklch(0.97 0.02 190)"),
+      c("teal2", "oklch(0.60 0.15 190)"),
+      ...[10, 30, 50, 70, 90, 95, 99].map((n) =>
+        c(`gray${n}`, `oklch(${n / 100} 0 0)`)
+      ),
+    ]
+    const { visible } = curateColors(colors)
+    expect(visible.map((x) => x.name)).toEqual(["teal2"])
+  })
+
+  it("folds a camelCase unhyphenated ramp (greeting's murkyBlue200…)", () => {
+    const steps = [100, 200, 300, 400, 500, 600, 700, 800].map((n) =>
+      c(`murkyBlue${n}`, `oklch(${(0.95 - n / 1000).toFixed(2)} 0.08 250)`)
+    )
+    const { visible } = curateColors(steps)
+    expect(visible.map((x) => x.name)).toEqual(["murkyBlue400"])
   })
 
   it("falls back to the first few swatches for a fully neutral (monochrome) palette", () => {
