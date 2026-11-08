@@ -107,7 +107,10 @@ function slugs(): Array<string> {
 // convenient. Going down means something stopped matching.
 const MATCH_FLOOR: Partial<Record<string, number>> = {
   "11st": 19,
-  baemin: 38,
+  // 38 → 35 (#663): the ten-step bundle mint ramp gave way to the eight
+  // deployed `--ref-color-mint*` steps, and `--bm-primary` now takes
+  // `var(--bm-mint5)` as the md's `primary` reference row does.
+  baemin: 35,
   banksalad: 181,
   // Not a naming problem and not fixable by one: bezier's preview declares no
   // `oklch` at all — it is hex — so there is nothing for a name rule to reach.
