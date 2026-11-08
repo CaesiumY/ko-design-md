@@ -3,7 +3,7 @@ name: 채널톡
 design_system_name: Bezier Design System
 slug: bezier
 category: developer
-last_updated: "2026-11-02"
+last_updated: "2026-11-08"
 created_at: "2026-06-03"
 lang: ko
 logo: https://getdesign.kr/logos/bezier.png
@@ -1529,7 +1529,7 @@ elevation-4: 모달
 <Button colorVariant="blue" styleVariant="primary" size="m">Click me</Button>
 ```
 
-- **button-primary** (`styleVariant="primary"`) — 채워진 1차 액션. 배경에 `{colors.blue-400}` 계열 accent fill, 텍스트는 흰색으로 페이지의 주 행동을 담당한다 [src:2][src:3]. 다만 `{colors.blue-400}` 은 라이트 기준이다 — 상류 beta 의 `fill-accent-blue-heavier` 는 라이트 `{colors.blue-400}`·다크 `{colors.blue-300}` 이다 [src:3]. 프리뷰는 다크 바탕도 `blue-400` 으로 두어 이 다크 값과 다르다(Known Gaps 「프리뷰 다크 기본 버튼 hover 값이 상류와 다르다」 참조).
+- **button-primary** (`styleVariant="primary"`) — 채워진 1차 액션. 배경에 `{colors.blue-400}` 계열 accent fill, 텍스트는 흰색으로 페이지의 주 행동을 담당한다 [src:2][src:3]. 다만 `{colors.blue-400}` 은 라이트 기준이다 — 상류 beta 의 `fill-accent-blue-heavier` 는 라이트 `{colors.blue-400}`·다크 `{colors.blue-300}` 이다 [src:3].
 - **button-secondary** (`styleVariant="secondary"`) — 채도를 낮춘 2차 액션. primary와 구조를 공유하되 fill 무게를 낮춰 보조 행동에 쓴다 [src:2].
 - **button-floating** — CTA/Floating 스토리의 떠 있는 변종으로 `--elevation-2`/`--elevation-3`로 표면에서 부양시킨다 [src:2].
 
@@ -1842,7 +1842,6 @@ Bezier는 앱 셸/뷰포트 브레이크포인트를 토큰으로 발행하지 �
 - **alpha tier 역할 층은 아직 싣지 않았다(2026-11-01).** 상류 0.6.0 은 `dist/alpha/css/styles.css` 로 `--alpha-color-fg-*`·`--alpha-color-bg-*`·`--alpha-color-surface-*` 등 세 번째 역할 층을 발행하고, 역할은 `var(--alpha-color-…)` 로 alpha 원시값을 가리킨다(일부는 다른 alpha 역할을 가리킨다 — `primary-bg-normal` → `bg-blue-normal`). 원시값은 테마마다 다시 정의되지 않는다 [src:3]. 이 문서는 아직 그 층을 싣지 않았다. 싣는다면 `stable-*` 처럼 tier 를 가르는 `alpha-` 앞붙임 팔레트에 alpha 원시값을 싣고, 역할을 그 키의 참조 행과 본문 표로 싣는다.
 - **hex 를 직접 적은 beta 역할은 참조 행이 없다(2026-11-01).** beta 테마 블록의 `-hovered` 역할과 hovered 가 아닌 `chart-theme-default-*` 는 상류가 두 테마 모두 원시값을 거치지 않고 hex 를 직접 적어, 가리킬 팔레트 토큰이 상류에 없다. 그래서 본문 표에만 `#hex ≈ oklch(…)` 로 싣고, frontmatter 참조 행과 사이드카(Tokens 탭·use-design-md 가 읽는 토큰 JSON)에는 없다. hex 가 원시값과 같은 칸(`fill-*-transparent-hovered` 계열의 `{hue}-400-10`·`{hue}-300-10`·`black-5`·`white-5`)도 상류가 그 원시값을 가리키는 것이 아니라 참조가 아니다 [src:3].
 - **beta 역할이 가리키지 않는 투명 단계는 싣지 않았다(2026-11-01).** beta 역할이 가리키는 원시값은 모두 실었다(`{hue}-400-0`·`{hue}-300-0`·`blue-400-30`·`blue-300-45`·`orange-400-30` 포함). 어느 역할도 가리키지 않는 나머지 — 색상 알파(`{hue}-300-10`·`{hue}-400-5`, blue 밖의 `{hue}-300-45`, blue·orange 밖의 `{hue}-400-30`)와 중립색 알파(`grey-50/100/200/700/800/850-80`·`grey-700-90`·`grey-900-0/90`·`white-22/30/50`·`black-50/70`) — 는 싣지 않았다 [src:3].
-- **프리뷰 다크 기본 버튼 hover 값이 상류와 다르다(2026-11-02).** 프리뷰 다크 `--fill-accent-blue-heavier-hovered` 는 #6f64f0 ≈ `oklch(0.590 0.203 282)` 인데, Colors 절 「beta hover」 표와 상류 beta 다크 `color-fill-accent-blue-heavier-hovered` 는 #9698ff ≈ `oklch(0.722 0.148 281)` 이다(상류 값은 2026-11-01 캐시 기준) [src:3]. 프리뷰는 다크 기본 버튼 바탕을 `{colors.blue-400}` 으로 두지만 상류 다크 `fill-accent-blue-heavier` 는 `{colors.blue-300}` 이라, 바탕도 함께 다시 맞출 대상이다. 표 칸과 프리뷰 값이라 `audit:oklch` 는 이 어긋남을 보지 않는다.
 - **모바일 리플로우 미관찰.** 제공 스크린샷이 데스크톱 Storybook 캔버스 한정이라, 실제 모바일 웹/네이티브에서의 컴포넌트 리플로우·접힘 거동은 직접 확인되지 않았다 [src:2].
 
 ## References
