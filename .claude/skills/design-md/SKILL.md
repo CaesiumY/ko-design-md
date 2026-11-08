@@ -519,7 +519,7 @@ covered above are:
   Exact count of its components.
 - **`CASES`** (`src/lib/role-reference-rows.test.ts`) — when roles from the body's `## Colors` role
   table are also carried as frontmatter reference rows, which is always so when the brand publishes
-  a role layer with a role the upstream points at a single palette token. Not a row but a comparison function written for
+  a role layer with a role the upstream points at a single palette token or at another role. Not a row but a comparison function written for
   the slug; the shape that triggers it is in `stitch-format.md` → "Role → palette reference rows".
 
 All are outside this skill's write scope: the operator edits them by hand, the same as the two above.
