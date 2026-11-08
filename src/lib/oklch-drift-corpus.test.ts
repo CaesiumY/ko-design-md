@@ -326,9 +326,10 @@ describe("oklch-drift — catalogue coverage", () => {
     ])
     const moved = [...slugsOf]
       .sort()
-      .filter(
-        (slug) =>
-          JSON.stringify(measured[slug]) !== JSON.stringify(ROLE_CHAINS[slug])
+      .filter((slug) =>
+        (["chained", "literal", "scoped"] as const).some(
+          (field) => measured[slug]?.[field] !== ROLE_CHAINS[slug]?.[field]
+        )
       )
     // Print the row to paste, as MATCH_FLOOR does: nothing else in the repo
     // reports these numbers.
