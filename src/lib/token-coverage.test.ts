@@ -79,10 +79,11 @@ interface Coverage {
 // the failure messages below print the measured numbers, and nothing else in
 // the repo does.
 //
-// `annotated: 0` is a fact about the entry, not a broken regex: baemin's
-// token lines carry no hex annotation; the deployed hex sits only on a
-// standalone comment line, which is not judged, so `audit:oklch` has nothing
-// to judge there. bezier annotates only the steps taken from the beta tier and
+// baemin annotates only the palette taken from www.baemin.com's deployed
+// `--ref-color-*` (#663): 86 light steps and the 75 `dark-*` steps whose dark
+// value differs. Its 27 handoff-bundle usage colours carry no hex, so
+// drift 188 = annotated 161 + 27; `primary` is a reference row and counts in
+// neither. bezier annotates only the steps taken from the beta tier and
 // the stable tier (`stable-*`) of `@channel.io/bezier-tokens` (#569, #628);
 // the 43 bundle steps stay unannotated, so drift 275 = annotated 232 + 43;
 // role rows count in neither. toss annotates only the steps whose name maps to
@@ -93,7 +94,7 @@ interface Coverage {
 // different claim and is refused below.
 const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   "11st": { annotated: 31, judged: 31, drift: 33 },
-  baemin: { annotated: 0, judged: 0, drift: 38 },
+  baemin: { annotated: 161, judged: 161, drift: 188 },
   banksalad: { annotated: 187, judged: 187, drift: 187 },
   bezier: { annotated: 232, judged: 232, drift: 275 },
   class101: { annotated: 98, judged: 98, drift: 98 },

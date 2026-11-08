@@ -2,29 +2,203 @@
 name: 배달의민족
 slug: baemin
 category: delivery
-last_updated: "2026-11-02"
+last_updated: "2026-11-08"
 created_at: 2026-05-18
 lang: ko
 logo: https://getdesign.kr/logos/baemin.svg
 colors:
-  ## Brand mint
-  # 현재 프라이머리 — 2024 Baemin 2.0 리브랜드 적용 [src:1]
-  # 배포 CSS `--ref-color-mint5` 는 #0CEFD3 (≈ oklch(0.854 0.154 180)) [src:14] — 아래 primary·mint-500 은 번들 값이라 다르다
-  primary: oklch(0.88 0.18 178)   # 히어로 풀블리드·CTA·라이더 헬멧·카테고리 강조 · 배포 CSS `--ref-color-mint5` 와 값이 다름 — Known Gaps 참조
-  primary-hover: oklch(0.69 0.13 184)   # 버튼 hover/pressed (mint-deep)
-  primary-tint: oklch(0.97 0.05 178)   # 옅은 민트 배경 (체크리스트 등) · NEW·신규·환영 칩
-  primary-legacy: oklch(0.72 0.10 187)   # 레거시 민트 (pre-2024, 호환용)
-  # Mint scale 050 → 900 (번들 10단계 — 배포 CSS 는 mint1~mint8 8단계라 mint5 밖은 단계 대응이 분명하지 않다)
-  mint-050: oklch(0.99 0.03 178)
-  mint-100: oklch(0.96 0.07 178)
-  mint-200: oklch(0.92 0.13 178)
-  mint-300: oklch(0.91 0.16 178)
-  mint-400: oklch(0.89 0.18 178)
-  mint-500: oklch(0.88 0.18 178)   # = primary · 배포 CSS `--ref-color-mint5` 와 값이 다름 — Known Gaps 참조
-  mint-600: oklch(0.69 0.13 184)   # = primary-hover
-  mint-700: oklch(0.55 0.10 188)
-  mint-800: oklch(0.40 0.07 191)
-  mint-900: oklch(0.24 0.04 194)
+  ## Deployed palette
+  # 배민 웹 배포 CSS `--ref-color-*` [src:14] — 라이트 값. 같은 단계의 다크 값은 아래 `dark-` 묶음
+  # mint
+  mint1: oklch(0.980 0.028 177)   # #e6fff8
+  mint2: oklch(0.943 0.082 177)   # #b0ffeb
+  mint3: oklch(0.923 0.116 178)   # #87ffe5
+  mint4: oklch(0.892 0.153 180)   # #35fcdf
+  primary: "{colors.mint5}"
+  mint5: oklch(0.854 0.154 180)   # #0cefd3 · 브랜드 대표색 — 민트 테마의 시스템 메인 역할이 가리키는 단계 [src:14]
+  mint6: oklch(0.751 0.133 185)   # #00c9b9
+  mint7: oklch(0.645 0.112 189)   # #00a39b
+  mint8: oklch(0.533 0.091 193)   # #007d7b
+  # gray — 라이트는 번호가 커질수록 어둡다
+  gray1: oklch(0.969 0.003 248)   # #f3f5f7
+  gray2: oklch(0.924 0.003 248)   # #e4e6e8
+  gray3: oklch(0.878 0.004 248)   # #d5d7d9
+  gray4: oklch(0.766 0.004 248)   # #b1b3b5
+  gray5: oklch(0.682 0.004 248)   # #97999b
+  gray6: oklch(0.599 0.004 248)   # #7e8082
+  gray7: oklch(0.509 0.004 248)   # #646668
+  gray8: oklch(0.419 0.004 248)   # #4b4d4f
+  gray9: oklch(0.320 0.005 248)   # #313335
+  gray10: oklch(0.276 0.005 248)   # #26282a
+  gray11: oklch(0.242 0.005 248)   # #1e2022
+  gray12: oklch(0.216 0.005 248)   # #181a1c
+  # red
+  red1: oklch(0.963 0.018 13)   # #ffeeef
+  red2: oklch(0.920 0.041 16)   # #ffdadb
+  red3: oklch(0.764 0.141 20)   # #ff8b8d
+  red4: oklch(0.699 0.192 23)   # #ff6262
+  red5: oklch(0.660 0.227 27)   # #ff403e
+  red6: oklch(0.592 0.225 28)   # #e52420
+  red7: oklch(0.516 0.186 27)   # #bb2523
+  red8: oklch(0.362 0.119 26)   # #6f1a19
+  # orange
+  orange1: oklch(0.976 0.015 61)   # #fff5ed
+  orange2: oklch(0.935 0.041 60)   # #ffe4cf
+  orange3: oklch(0.839 0.116 64)   # #ffba77
+  orange4: oklch(0.783 0.158 62)   # #ff9e3b
+  orange5: oklch(0.738 0.183 55)   # #ff8400
+  orange6: oklch(0.696 0.203 43)   # #ff6610
+  orange7: oklch(0.546 0.165 42)   # #bb4500
+  orange8: oklch(0.375 0.109 44)   # #6e2800
+  # yellow
+  yellow1: oklch(0.989 0.020 98)   # #fffced
+  yellow2: oklch(0.956 0.082 98)   # #fff2b2
+  yellow3: oklch(0.923 0.134 97)   # #ffe677
+  yellow4: oklch(0.888 0.167 94)   # #ffd73b
+  yellow5: oklch(0.854 0.175 88)   # #ffc600
+  yellow6: oklch(0.762 0.156 88)   # #dbaa00
+  yellow7: oklch(0.666 0.136 89)   # #b68e00
+  yellow8: oklch(0.462 0.094 89)   # #6e5500
+  # green
+  green1: oklch(0.980 0.021 161)   # #edfdf4
+  green2: oklch(0.933 0.060 161)   # #c6f6dc
+  green3: oklch(0.844 0.130 160)   # #77e6af
+  green4: oklch(0.769 0.160 159)   # #3bd28d
+  green5: oklch(0.690 0.170 155)   # #00b96b
+  green6: oklch(0.617 0.151 155)   # #009f5c
+  green7: oklch(0.539 0.131 156)   # #00844d
+  green8: oklch(0.380 0.090 157)   # #00502e
+  # blue
+  blue1: oklch(0.971 0.015 242)   # #edf7ff
+  blue2: oklch(0.929 0.035 251)   # #d7eaff
+  blue3: oklch(0.774 0.120 250)   # #77bbff
+  blue4: oklch(0.685 0.170 254)   # #449bff
+  blue5: oklch(0.609 0.213 258)   # #1a7cff
+  blue6: oklch(0.545 0.195 258)   # #086ade
+  blue7: oklch(0.479 0.164 258)   # #0f59b7
+  blue8: oklch(0.338 0.111 258)   # #09356f
+  # purple
+  purple1: oklch(0.958 0.020 280)   # #eef0ff
+  purple2: oklch(0.901 0.049 283)   # #d9dbff
+  purple3: oklch(0.751 0.130 278)   # #9ca5ff
+  purple4: oklch(0.635 0.199 278)   # #7476ff
+  purple5: oklch(0.570 0.240 278)   # #5f57ff
+  purple6: oklch(0.492 0.291 277)   # #4d1aff
+  purple7: oklch(0.398 0.245 276)   # #3605c6
+  purple8: oklch(0.314 0.124 278)   # #26246e
+  # pink
+  pink1: oklch(0.966 0.024 336)   # #ffeefa
+  pink2: oklch(0.928 0.049 341)   # #ffdbf1
+  pink3: oklch(0.785 0.160 345)   # #ff8cd1
+  pink4: oklch(0.721 0.207 349)   # #fd63ba
+  pink5: oklch(0.659 0.229 352)   # #f13fa1
+  pink6: oklch(0.589 0.212 352)   # #d2308b
+  pink7: oklch(0.516 0.183 351)   # #af2874
+  pink8: oklch(0.363 0.127 351)   # #6b1646
+  # brown
+  brown1: oklch(0.974 0.008 56)   # #fbf5f1
+  brown2: oklch(0.932 0.017 56)   # #f2e6de
+  brown3: oklch(0.789 0.053 54)   # #d6b29b
+  brown4: oklch(0.699 0.070 55)   # #c19374
+  brown5: oklch(0.604 0.084 56)   # #a8744f
+  brown6: oklch(0.542 0.073 57)   # #906444
+  brown7: oklch(0.476 0.063 56)   # #785339
+  brown8: oklch(0.338 0.041 57)   # #483222
+  # white · black
+  white: oklch(1.000 0.000 0)   # #ffffff
+  black: oklch(0.000 0.000 0)   # #000000
+  ## Deployed palette — dark
+  # 다크 값이 라이트와 다른 단계만 싣는다. 회색을 뺀 각 색의 5단계와 white · black 은 두 테마 값이 같아 `dark-` 짝이 없다
+  # mint
+  dark-mint1: oklch(0.291 0.027 180)   # #1c302c
+  dark-mint2: oklch(0.343 0.062 180)   # #01433a
+  dark-mint3: oklch(0.469 0.087 178)   # #006a5a
+  dark-mint4: oklch(0.582 0.107 178)   # #008f7b
+  dark-mint6: oklch(0.804 0.146 180)   # #00ddc2
+  dark-mint7: oklch(0.886 0.091 191)   # #8eede8
+  dark-mint8: oklch(0.920 0.100 180)   # #95fbe7
+  # gray — 다크는 번호 순서가 뒤집힌다(dark-gray1 이 가장 어둡다)
+  dark-gray1: oklch(0.216 0.005 248)   # #181a1c
+  dark-gray2: oklch(0.242 0.005 248)   # #1e2022
+  dark-gray3: oklch(0.276 0.005 248)   # #26282a
+  dark-gray4: oklch(0.320 0.005 248)   # #313335
+  dark-gray5: oklch(0.419 0.004 248)   # #4b4d4f
+  dark-gray6: oklch(0.509 0.004 248)   # #646668
+  dark-gray7: oklch(0.599 0.004 248)   # #7e8082
+  dark-gray8: oklch(0.682 0.004 248)   # #97999b
+  dark-gray9: oklch(0.766 0.004 248)   # #b1b3b5
+  dark-gray10: oklch(0.878 0.004 248)   # #d5d7d9
+  dark-gray11: oklch(0.924 0.003 248)   # #e4e6e8
+  dark-gray12: oklch(0.969 0.003 248)   # #f3f5f7
+  # red
+  dark-red1: oklch(0.291 0.024 23)   # #372726
+  dark-red2: oklch(0.315 0.072 27)   # #50211d
+  dark-red3: oklch(0.424 0.127 26)   # #862a26
+  dark-red4: oklch(0.574 0.167 26)   # #c84640
+  dark-red6: oklch(0.777 0.131 27)   # #ff9489
+  dark-red7: oklch(0.845 0.085 23)   # #ffb7b2
+  dark-red8: oklch(0.897 0.054 27)   # #ffd0ca
+  # orange
+  dark-orange1: oklch(0.289 0.017 56)   # #322923
+  dark-orange2: oklch(0.331 0.042 57)   # #463020
+  dark-orange3: oklch(0.428 0.080 54)   # #714221
+  dark-orange4: oklch(0.572 0.107 54)   # #a86535
+  dark-orange6: oklch(0.794 0.141 58)   # #ffa359
+  dark-orange7: oklch(0.859 0.099 64)   # #ffc38b
+  dark-orange8: oklch(0.922 0.047 56)   # #ffdec8
+  # yellow
+  dark-yellow1: oklch(0.303 0.019 85)   # #332e24
+  dark-yellow2: oklch(0.322 0.043 87)   # #3d3218
+  dark-yellow3: oklch(0.431 0.078 88)   # #624d13
+  dark-yellow4: oklch(0.569 0.096 87)   # #8f732b
+  dark-yellow6: oklch(0.888 0.134 88)   # #ffd569
+  dark-yellow7: oklch(0.915 0.104 89)   # #ffe091
+  dark-yellow8: oklch(0.934 0.071 87)   # #fee7b3
+  # green
+  dark-green1: oklch(0.300 0.021 153)   # #263129
+  dark-green2: oklch(0.331 0.040 156)   # #243c2d
+  dark-green3: oklch(0.457 0.086 156)   # #286542
+  dark-green4: oklch(0.557 0.115 155)   # #2e8755
+  dark-green6: oklch(0.788 0.170 155)   # #44d989
+  dark-green7: oklch(0.878 0.150 155)   # #7bf4ac
+  dark-green8: oklch(0.909 0.094 155)   # #aef4c6
+  # blue
+  dark-blue1: oklch(0.307 0.037 258)   # #243042
+  dark-blue2: oklch(0.333 0.075 258)   # #1c365c
+  dark-blue3: oklch(0.451 0.122 258)   # #255498
+  dark-blue4: oklch(0.556 0.153 258)   # #3471cb
+  dark-blue6: oklch(0.772 0.118 255)   # #80b8ff
+  dark-blue7: oklch(0.835 0.084 255)   # #a4ccff
+  dark-blue8: oklch(0.908 0.046 253)   # #cce3ff
+  # purple
+  dark-purple1: oklch(0.275 0.037 277)   # #23263a
+  dark-purple2: oklch(0.331 0.088 278)   # #2c2f62
+  dark-purple3: oklch(0.438 0.144 278)   # #42449f
+  dark-purple4: oklch(0.536 0.179 278)   # #595bd2
+  dark-purple6: oklch(0.776 0.115 277)   # #a4afff
+  dark-purple7: oklch(0.849 0.076 279)   # #c2c9ff
+  dark-purple8: oklch(0.911 0.043 275)   # #d9e0ff
+  # pink
+  dark-pink1: oklch(0.275 0.032 352)   # #342129
+  dark-pink2: oklch(0.320 0.071 351)   # #4d2237
+  dark-pink3: oklch(0.427 0.125 352)   # #7f2b56
+  dark-pink4: oklch(0.575 0.170 352)   # #bf4484
+  dark-pink6: oklch(0.782 0.154 349)   # #ff8cc8
+  dark-pink7: oklch(0.842 0.105 349)   # #ffafd6
+  dark-pink8: oklch(0.902 0.061 349)   # #ffcfe5
+  # brown
+  dark-brown1: oklch(0.288 0.008 59)   # #2e2a27
+  dark-brown2: oklch(0.324 0.016 59)   # #3a322c
+  dark-brown3: oklch(0.420 0.036 55)   # #5d483a
+  dark-brown4: oklch(0.549 0.055 54)   # #8b6953
+  dark-brown6: oklch(0.806 0.069 56)   # #e3b595
+  dark-brown7: oklch(0.857 0.050 54)   # #ebc8b2
+  dark-brown8: oklch(0.918 0.032 55)   # #f6dfd0
+  ## Bundle mint usage
+  # 이 아래는 핸드오프 번들의 쓰임별 색이다(배포 팔레트 아님) — 배포 단계에 대응을 짓지 않고 번들 값 그대로 둔다
+  primary-hover: oklch(0.69 0.13 184)   # 버튼 hover/pressed (mint-deep) · 번들 값
+  primary-tint: oklch(0.97 0.05 178)   # 옅은 민트 배경 (체크리스트 등) · NEW·신규·환영 칩 · 번들 값
+  primary-legacy: oklch(0.72 0.10 187)   # 레거시 민트 (pre-2024, 호환용) · 번들 값
   ## Deep navy & accents
   navy: oklch(0.30 0.13 286)   # 앱 음식배달 탭 헤더·한그릇 프로모션
   navy-deep: oklch(0.27 0.13 287)
@@ -147,7 +321,7 @@ fonts:
   font-display-cursive: BM GLIM   # "그림글자" — 배달이 마스코트가 한글 신체를 이룸 [src:12]
 ---
 
-> 본 문서는 Claude Design이 사용자가 제공한 배달의민족 스크린샷과 공개 브랜드 자료를 토대로 재구성한 **핸드오프 디자인 시스템 번들**(`handoff/design-system/`, README·SKILL·`colors_and_type.css`·preview HTML·chat 트레일)을 1차 출처로 합성한 결과이며, 우아한형제들이 공식 배포한 Figma·코드베이스가 아니다. 2024년 *Baemin 2.0* 리브랜드와 한명수 CCO·김봉진 의장 발언, 폰트 라이선스 사이트 등 공개 웹 자료를 보조 출처로 사용했다. 토큰을 그대로 코드에 옮기기 전 실제 앱 캡처와 1~3px·1~2단계 hex 채도 편차를 한 번 더 비교할 것을 권장한다.
+> 본 문서의 색 팔레트(frontmatter 의 `Deployed palette` 묶음)는 배민 웹이 배포하는 스타일시트의 `--ref-color-*` 값을 옮긴 것이다 [src:14]. 그 밖의 토큰과 서술은 Claude Design이 사용자가 제공한 배달의민족 스크린샷과 공개 브랜드 자료를 토대로 재구성한 **핸드오프 디자인 시스템 번들**(`handoff/design-system/`, README·SKILL·`colors_and_type.css`·preview HTML·chat 트레일)을 1차 출처로 합성한 결과이며, 우아한형제들이 공식 배포한 Figma·코드베이스가 아니다. 2024년 *Baemin 2.0* 리브랜드와 한명수 CCO·김봉진 의장 발언, 폰트 라이선스 사이트 등 공개 웹 자료를 보조 출처로 사용했다. 번들 토큰을 그대로 코드에 옮기기 전 실제 앱 캡처와 1~3px·1~2단계 hex 채도 편차를 한 번 더 비교할 것을 권장한다.
 
 ## Brand & Style
 
@@ -159,7 +333,7 @@ fonts:
 
 ### Baemin 2.0 리브랜드 (2024)
 
-2024년 7월, 15주년에 맞춰 대규모 시각 개편 *Baemin 2.0*이 단행됐다. 7월 9일 신규 앱 아이콘, 7월 22일 신규 컬러·폰트가 차례로 공개됐고, 핵심 변화는 두 가지다. 첫째, 프라이머리 민트가 라이터·새츄레이션 높은 톤으로 교체됐다(`#0CEFD3`). 이 hex를 그대로 변환하면 `oklch(0.854 0.154 180)`이지만, 본 문서의 `{colors.primary}`는 번들이 정의한 `oklch(0.88 0.18 178)`로 **정확한 변환값이 아니라 근사치**다 — 번들이 스크린샷 재구성 기반이라 생긴 편차이며, 값을 임의로 덮어쓰지 않고 차이만 기록해 둔다. 둘째, 한나체를 대체할 자체 폰트 **WORK**가 공개됐다 — "한글의 사선 획을 블록 형태로 단순화"한 단순·명료한 디자인이다. 김범석 대표는 *"다양한 이해관계자들과 다시 한 번 뜨거운 순간을 가지기 위해 리브랜드를 결정했다"*고 코멘트했다 [src:1]. 다만 핸드오프 번들은 WORK가 외부 공개 배포되지 않은 시점에 작성됐기 때문에 본 문서의 디스플레이 폰트 스택은 여전히 BM 한나체 시리즈를 기준으로 한다 — 프로덕션 적용 전 실제 앱에서 한 번 더 확인해야 한다.
+2024년 7월, 15주년에 맞춰 대규모 시각 개편 *Baemin 2.0*이 단행됐다. 7월 9일 신규 앱 아이콘, 7월 22일 신규 컬러·폰트가 차례로 공개됐고, 핵심 변화는 두 가지다. 첫째, 프라이머리 민트가 기존 민트보다 밝은 민트로 교체됐다 [src:1]. 배민 웹이 배포하는 팔레트에서 이 민트는 `mint5`(`#0CEFD3` ≈ `oklch(0.854 0.154 180)`)이고 [src:14], 본 문서의 `{colors.primary}`는 이 단계를 가리킨다. 둘째, 한나체를 대체할 자체 폰트 **WORK**가 공개됐다 — "한글의 사선 획을 블록 형태로 단순화"한 단순·명료한 디자인이다. 김범석 대표는 *"다양한 이해관계자들과 다시 한 번 뜨거운 순간을 가지기 위해 리브랜드를 결정했다"*고 코멘트했다 [src:1]. 다만 핸드오프 번들은 WORK가 외부 공개 배포되지 않은 시점에 작성됐기 때문에 본 문서의 디스플레이 폰트 스택은 여전히 BM 한나체 시리즈를 기준으로 한다 — 프로덕션 적용 전 실제 앱에서 한 번 더 확인해야 한다.
 
 ### 한국적 맥락
 
@@ -175,9 +349,13 @@ fonts:
 
 ## Colors
 
-> **역할 이름 판정(2026-11-01).** frontmatter 에 있던 `semantic-*` 참조 행 8개(`semantic-discount` 등)를 뺐다. 이 이름은 핸드오프 번들의 쓰임별 별칭(`--tag-mint-bg` 등)을 이 문서가 옮기면서 스스로 붙인 이름이고, 번들도 우아한형제들의 발행물이 아니라 Claude Design 의 재구성이다. 배민 웹 [src:14] 과 사장님 사이트 [src:15] 가 배포하는 CSS 에 `semantic-*` 이름은 없다. 브랜드가 발행한 역할 이름이 아니므로 역할 참조 행으로 싣지 않고, 쓰임별 대응은 아래 표와 각 팔레트 토큰 줄 주석에만 둔다. 배민 웹이 따로 배포하는 역할 계층(`--sem-*` → `--ref-color-*`)은 두 벌로 실어야 하는 발행 계층이지만, 이 문서 팔레트를 배포 팔레트로 다시 실어야 해서 후속 작업으로 나눴다(`## Known Gaps`).
+> **팔레트 정정(2026-11-08).** frontmatter 팔레트를 배민 웹 배포 CSS 의 `--ref-color-*` 로 다시 실었다 [src:14]. 대조한 파일은 페이지가 싣는 `_next/static/css/1904f6c9a75d9ac2.css`(SHA-256 `579721314e5299b12eb2d506f2f81e08261cc329ef9ee0486571109c837a2ff4`)이고, 2026-11-01 조사 때 받아 둔 사본과 바이트가 같다. 이 파일은 팔레트를 네 블록에 선언한다 — `base` 테마와 `mint` 테마 각각의 라이트와 다크다. 두 테마의 팔레트는 라이트끼리, 다크끼리 87개 선언이 값까지 모두 같다. 테마는 팔레트의 축이 아니라 그 위 역할 층(`--sem-base-*`, `--sem-mint-*`)에만 있는 축이어서, 팔레트 키에는 테마 표시를 붙이지 않고 라이트와 다크만 `dark-` 로 가른다. 라이트는 페이지 `body` 에 걸린 블록이고, 다크는 걸리지 않은 짝 블록이다. 라이트 87개 가운데 색 단계가 아닌 `transparent`(`hsla(0,0%,100%,0)`, hex 가 없다)를 뺀 86개를 싣고, 다크는 라이트와 값이 다른 75개를 `dark-` 로 싣는다. 두 테마 값이 같은 11개(회색을 뺀 각 색의 5단계, `white`, `black`)는 다크 짝 없이 같은 키를 쓴다. 실은 161줄은 모두 줄의 hex 와 대조해 불일치가 0이다. 번들 값과의 관계는 셋으로 갈린다. 번들 민트 10단계(`mint-050`~`mint-900`)는 배포 민트 8단계와 같은 색을 다른 이름과 값으로 재구성한 것이라 **철회**했다. `primary` 는 배포 `mint5` 를 가리키는 참조 행으로 **대체**했다. `primary-hover` 와 네이비, 액센트, 뉴트럴 같은 번들 쓰임색은 배포 단계와 이름이 맞지 않아 대응을 짓지 않고 번들 값 그대로 **병기**한다. 본문의 민트 칩 글자색은 철회한 번들 `mint-700` 에서 값이 가장 가까운 배포 `mint8`(OKLab 거리 0.021)로 옮겼다. 아래 쓰임별 대응 표의 이름은 번들 재구성의 것이어서 브랜드가 발행한 역할 이름이 아니다. 배포된 역할 계층(`--sem-*`)은 후속 작업이 싣고, 사장님 사이트 [src:15] 의 `blue` 테마는 싣지 않는다(`## Known Gaps`).
 
-색 시스템의 중심은 **2024 리브랜드 민트 `{colors.primary}`**와 **딥 네이비 `{colors.navy}`**, 그리고 따뜻한 회색 뉴트럴 스택이다. 핸드오프 `colors_and_type.css`가 토큰 표면을 명시한다.
+색 시스템의 중심은 **2024 리브랜드 민트 `{colors.primary}`**(배포 `mint5`)와 **딥 네이비 `{colors.navy}`**, 그리고 따뜻한 회색 뉴트럴 스택이다. 팔레트는 배민 웹 배포 CSS 의 단계 이름(`mint1`~`mint8`, `gray1`~`gray12` 등)을 그대로 쓰고, 네이비와 액센트, 뉴트럴 같은 쓰임색은 핸드오프 `colors_and_type.css`의 값이다.
+
+### 배포 팔레트
+
+단계 번호는 바탕에 가까운 쪽에서 먼 쪽으로 간다. 라이트에서는 1단계가 가장 밝고, 다크에서는 1단계가 가장 어둡다. 회색을 뺀 각 색의 5단계는 두 테마 값이 같다 [src:14].
 
 ### Neutrals (살짝 따뜻한 회색)
 
@@ -495,11 +673,11 @@ B마트 상품 카드. 1:1 정사각 썸네일(`{rounded.md}`) + 좌상단 빨�
 
 ### tag-discount
 
-높이 22px의 `{rounded.pill}` 칩, 11px / 700 폰트. 빨강 할인 칩은 `{colors.red}` 배경 + 흰 글자(`23%`), 민트 칩은 `{colors.primary-tint}` 배경 + `{colors.mint-700}` 텍스트, 보라 칩은 `{colors.navy-tint}` + `{colors.navy}` 텍스트, 냉동 칩은 `{colors.frozen}` 원(28×28).
+높이 22px의 `{rounded.pill}` 칩, 11px / 700 폰트. 빨강 할인 칩은 `{colors.red}` 배경 + 흰 글자(`23%`), 민트 칩은 `{colors.primary-tint}` 배경 + `{colors.mint8}` 텍스트, 보라 칩은 `{colors.navy-tint}` + `{colors.navy}` 텍스트, 냉동 칩은 `{colors.frozen}` 원(28×28).
 
 ```tsx
 <Tag kind="discount" bg={`{colors.red}`} fg="white">23%</Tag>
-<Tag kind="mint"     bg={`{colors.primary-tint}`} fg={`{colors.mint-700}`}>NEW</Tag>
+<Tag kind="mint"     bg={`{colors.primary-tint}`} fg={`{colors.mint8}`}>NEW</Tag>
 <Tag kind="purple"   bg={`{colors.navy-tint}`} fg={`{colors.navy}`}>한그릇</Tag>
 <Tag kind="frozen"   bg={`{colors.frozen}`} fg="white" shape="circle" size={28} />
 ```
@@ -510,13 +688,13 @@ B마트 상품 카드. 1:1 정사각 썸네일(`{rounded.md}`) + 좌상단 빨�
 
 - **냉동 인디케이터** — 32px 원형(`{rounded.circle}`), `{colors.frozen}` 배경 + 흰 `냉동` 11px 800. `{component.product-card}` 썸네일 안에서는 26~28px로 축소돼 우상단에 겹친다.
 - **NEW 뱃지** — 18px 높이, 패딩 0 6px, `{colors.pink}` 배경 + 흰 글자, 9px 800, `{rounded.pill}`, letter-spacing 0.04em. 신규·미확인 항목 표식(예: `My배민` 설정의 `배민페이 등록` 옆 `NEW`).
-- **민트 분류 태그** — 22px, `{colors.primary-tint}` 배경 + `{colors.mint-700}` 텍스트, 11px 700(`이마트슈퍼무배`, `✓ 5회 구매한 상품`).
+- **민트 분류 태그** — 22px, `{colors.primary-tint}` 배경 + `{colors.mint8}` 텍스트, 11px 700(`이마트슈퍼무배`, `✓ 5회 구매한 상품`).
 - **핑크 아웃라인 태그** — 22px, `{colors.bg-surface}` 흰 배경 + 1px `{colors.pink}` 보더 + `{colors.pink}` 텍스트, 11px 700(`혼밥추천`). 채움 대신 보더로 약한 강조를 만든다.
 
 ```tsx
 <TagFrozen shape="circle" size={32} bg={`{colors.frozen}`} fg="white">냉동</TagFrozen>
 <BadgeNew bg={`{colors.pink}`} fg="white" tracking="0.04em">NEW</BadgeNew>
-<Tag bg={`{colors.primary-tint}`} fg={`{colors.mint-700}`}>이마트슈퍼무배</Tag>
+<Tag bg={`{colors.primary-tint}`} fg={`{colors.mint8}`}>이마트슈퍼무배</Tag>
 <Tag bg={`{colors.bg-surface}`} border={`1px {colors.pink}`} fg={`{colors.pink}`}>혼밥추천</Tag>
 ```
 
@@ -863,13 +1041,14 @@ iOS 상태표시줄 아래 위치하는 검색 화면 헤더. 좌측 `←` back,
 
 ## Known Gaps
 
-- **토큰 출처는 핸드오프 번들**: 이 문서의 토큰은 배민 웹이 배포하는 값이 아니라, Claude Design이 스크린샷과 공개 자료를 토대로 재구성한 핸드오프 번들 값이다. 우아한형제들이 공식 배포한 Figma·코드베이스에서 옮긴 것이 아니어서 실제 프로덕션과 1~3px·1~2단계 hex 채도 편차가 있을 수 있다. 배포 팔레트와의 차이는 아래 「배포된 역할 계층 미수록」을 본다.
+- **팔레트 밖 토큰은 핸드오프 번들 값**: 팔레트(`Deployed palette` 묶음)는 배민 웹이 배포하는 값이지만 [src:14], 번들 쓰임색(네이비·액센트·뉴트럴 등)과 타이포그래피·스페이싱·라운드·엘리베이션 토큰은 Claude Design이 스크린샷과 공개 자료를 토대로 재구성한 핸드오프 번들 값이다. 우아한형제들이 공식 배포한 Figma·코드베이스에서 옮긴 것이 아니어서 실제 프로덕션과 1~3px·1~2단계 hex 채도 편차가 있을 수 있다. 번들 쓰임색을 배포 팔레트 단계에 대응시키지 않은 이유는 `## Colors` 첫머리 메모에 있다.
 - **철회된 부재 주장 (2026-11-01)** — 종전 판본은 이 자리에 "공식 토큰 시스템 미배포"라고 적었으나, 배민 웹은 팔레트·역할·컴포넌트 토큰(`--ref-color-*`·`--sem-*`·`--com-*`)을 배포 CSS 로 싣는다 [src:14]. 아래 「배포된 역할 계층 미수록」 참조.
-- **인용 없는 정량값 = 번들 관찰값 (2026-07-26 정리)**: 색 스케일·스페이싱·라운드·엘리베이션·모션 등 본문의 정량 서술 대부분은 위 핸드오프 번들에서 나온 것이며 공개 URL로 대조할 수 없다. 종전 판본은 이들에 `brandfetch.com/baemin.com`을 인용으로 달아 두었으나, 그 페이지는 브랜드 메타데이터 조회 서비스여서 **핸드오프 번들 내부 토큰을 담고 있었다고 보기 어렵고**(문장 자체가 "handoff §3-5", "핸드오프 가이드의 표현이다"라고 출처를 밝힌다), **현재는 웹 프런트엔드가 전 경로 404**다 — 2026-07-26 확인 기준 apex `/`까지 Apache 기본 404이며, 다만 `docs.brandfetch.com`·`status.brandfetch.io`는 200이고 `api.brandfetch.io`는 401을 반환하므로 서비스가 폐업한 것은 아니다. 공개 출처가 담지 않은 주장에 공개 URL을 붙이는 것은 인용 정책 위반이므로 해당 인용 78건을 제거했다 — **인용 표시가 없는 정량값은 번들 관찰값으로 읽으면 된다.** 프로덕션 적용 전 실제 앱 캡처와 대조할 것.
+- **인용 없는 정량값 = 번들 관찰값 (2026-07-26 정리)**: 번들 쓰임색·스페이싱·라운드·엘리베이션·모션 등 본문의 정량 서술 대부분은 위 핸드오프 번들에서 나온 것이며 공개 URL로 대조할 수 없다. 종전 판본은 이들에 `brandfetch.com/baemin.com`을 인용으로 달아 두었으나, 그 페이지는 브랜드 메타데이터 조회 서비스여서 **핸드오프 번들 내부 토큰을 담고 있었다고 보기 어렵고**(문장 자체가 "handoff §3-5", "핸드오프 가이드의 표현이다"라고 출처를 밝힌다), **현재는 웹 프런트엔드가 전 경로 404**다 — 2026-07-26 확인 기준 apex `/`까지 Apache 기본 404이며, 다만 `docs.brandfetch.com`·`status.brandfetch.io`는 200이고 `api.brandfetch.io`는 401을 반환하므로 서비스가 폐업한 것은 아니다. 공개 출처가 담지 않은 주장에 공개 URL을 붙이는 것은 인용 정책 위반이므로 해당 인용 78건을 제거했다 — **인용 표시가 없는 정량값은 번들 관찰값으로 읽으면 된다.** 프로덕션 적용 전 실제 앱 캡처와 대조할 것.
 - **WORK 폰트 미반영**: 2024 *Baemin 2.0* 리브랜드와 함께 공개된 자체 폰트 WORK는 외부 공개 배포가 확인되지 않아 본 문서 디스플레이 스택은 여전히 BM 한나체 시리즈를 기준으로 한다. 실제 신규 앱에서 헤드라인 폰트가 WORK로 교체됐는지 확인 필요 [src:1].
-- **민트 hex 표기 다원화**: 2010년대 후반 The PR 기사의 `#5EBEBB` 표기는 현행 디지털 프라이머리(`#0CEFD3` ≈ `oklch(0.854 0.154 180)`, Baemin 2.0)나 레거시 디지털 민트(`#2AC1BC`) 어느 쪽과도 정확히 일치하지 않는다 — 인쇄·홍보 자산용 다른 표기로 추정된다 [src:3]. 이 문서의 디지털 토큰은 핸드오프 값이며, 배민 웹이 배포하는 팔레트 값과의 차이는 아래 「배포된 역할 계층 미수록」을 본다.
+- **민트 hex 표기 다원화**: 2010년대 후반 The PR 기사의 `#5EBEBB` 표기는 현행 디지털 프라이머리(배포 팔레트 `mint5` ≈ `oklch(0.854 0.154 180)`, Baemin 2.0)나 레거시 디지털 민트(`#2AC1BC`) 어느 쪽과도 정확히 일치하지 않는다 — 인쇄·홍보 자산용 다른 표기로 추정된다 [src:3].
 - **마스코트 SVG 미포함**: 배달이친구들(독고배달이·메이배달이·냥이배달이 등 15종) 공식 SVG는 외부 배포되지 않아 핸드오프는 image-slot placeholder만 제공한다 [src:1][src:9][src:4].
-- **배포된 역할 계층 미수록 (2026-11-01)**: 배민 웹이 싣는 스타일시트는 팔레트 `--ref-color-*`(`mint1`~`mint8` 등 단계마다 라이트·다크 두 값)와 그 위의 역할 층 `--sem-base-color-*`·`--sem-mint-color-*`, 컴포넌트 층 `--com-*` 을 커스텀 프로퍼티로 배포한다 [src:14]. 역할 가운데 35개(`sem-base` 17 · `sem-mint` 18, 선언으로는 37개 — 두 역할은 테마마다 다른 단계를 가리킨다)는 팔레트 단계 하나를 가리키고(`--sem-mint-color-systemMainPrimary: var(--ref-color-mint5)` — `mint5` 의 값은 위 「민트 hex 표기 다원화」의 현행 디지털 프라이머리 hex 와 같다), 나머지는 hex·rgba·hsla 값이나 `transparent` 를 직접 갖는다. 이 계층은 상류에 있다 — 배포 코드가 그 이름으로 정의한 역할이라 카탈로그 정책상 본문 역할 표와 frontmatter 참조 행 두 벌로 실어야 하는 발행 계층이다. 다만 이 문서의 팔레트는 핸드오프 번들 값이라 배포 단계들과 이름도 값도 달라, 싣기 전에 팔레트를 배포 값으로 다시 실어야 한다. 그 일이 커서 사용자 결정(2026-11-01)으로 후속 작업으로 나눴다. 단계 대응이 분명한 것은 브랜드 hex 와 같은 `mint5` ↔ `{colors.primary}`·`{colors.mint-500}` 뿐이고(번들 10단계 대 배포 8단계), 그 두 토큰 줄에 값이 다르다는 단서를 달았다. 사장님 사이트 [src:15] 도 같은 역할 어휘(`--sem-blue-color-system-main-primary` 처럼 이름만 케밥 표기)로 `--sem-blue-*` → `--ref-blue-*` 계층을 배포한다 — 팔레트를 가리키는 역할 18개(선언 19개). 같은 브랜드가 같은 체계의 다른 테마로 발행한 계층이라 같은 후속 작업에서 다루고, 어느 테마(`base`·`mint`·`blue`)를 실을지는 그 작업이 정한다.
+- **배포된 역할 계층 미수록 (2026-11-08)**: 배민 웹이 싣는 스타일시트는 팔레트 `--ref-color-*` 위에 역할 층 `--sem-base-color-*`·`--sem-mint-color-*` 과 컴포넌트 층 `--com-*` 을 커스텀 프로퍼티로 배포한다 [src:14]. 역할 가운데 35개(`sem-base` 17 · `sem-mint` 18, 선언으로는 37개 — 두 역할은 라이트와 다크가 다른 단계를 가리킨다)는 팔레트 단계 하나를 가리키고(`--sem-mint-color-systemMainPrimary: var(--ref-color-mint5)`), 나머지는 hex·rgba·hsla 값이나 `transparent` 를 직접 갖는다. 배포 코드가 그 이름으로 정의한 역할이라 카탈로그 정책상 본문 역할 표와 frontmatter 참조 행 두 벌로 실어야 하는 발행 계층이다. 그 선행 작업인 팔레트 재수록은 끝났고(2026-11-08, `## Colors` 첫머리 메모), 역할 층은 후속 작업으로 나눴다. 실을 테마는 배민 웹의 `base` 와 `mint` 둘이다(메인테이너 결정, 2026-11-08).
+- **사장님 사이트 `blue` 테마 미수록 (2026-11-08)**: 사장님 사이트 [src:15] 도 같은 역할 어휘(`--sem-blue-color-system-main-primary` 처럼 이름만 케밥 표기)로 팔레트 `--ref-blue-color-*` 와 그 위 역할 층 `--sem-blue-*` 을 배포한다 — 팔레트를 가리키는 역할 18개(선언 19개). 같은 브랜드가 같은 체계의 다른 테마로 발행한 계층이지만, 이 문서는 배민 웹(www.baemin.com)의 팔레트와 `base`·`mint` 테마만 싣고 사장님 사이트의 팔레트와 `blue` 테마는 싣지 않는다(메인테이너 결정, 2026-11-08).
 - **아이콘 시스템 단일화 미확인**: 핸드오프는 UI 라인 아이콘을 Lucide로 대체하되 SUBSTITUTION FLAG를 표시한다. 실제 배민은 (1) UI 라인 아이콘, (2) 3D 미니어처 카테고리, (3) 벡터 일러스트 배민스토어, (4) 손그림 라인 마케팅의 4종을 혼용 — 통합 아이콘 시스템은 공개되지 않았다 [src:1].
 
 ## References
