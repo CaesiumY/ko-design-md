@@ -33,7 +33,7 @@
     {
       "name": "mint5",
       "value": "oklch(0.854 0.154 180)",
-      "note": "#0cefd3 · 민트 테마의 `systemMainPrimary` 역할이 가리키는 단계 [src:14]",
+      "note": "#0cefd3 — 민트 테마의 `systemMainPrimary` 역할이 가리키는 단계 [src:14]",
       "group": "Deployed palette"
     },
     {
@@ -1041,19 +1041,19 @@
     {
       "name": "primary-hover",
       "value": "oklch(0.69 0.13 184)",
-      "note": "버튼 hover/pressed (mint-deep) · 번들 값",
+      "note": "버튼 hover/pressed (mint-deep), 번들 값",
       "group": "Bundle — mint usage"
     },
     {
       "name": "primary-tint",
       "value": "oklch(0.97 0.05 178)",
-      "note": "옅은 민트 배경 (체크리스트 등) · NEW·신규·환영 칩 · 번들 값",
+      "note": "옅은 민트 배경 (체크리스트 등) · NEW·신규·환영 칩, 번들 값",
       "group": "Bundle — mint usage"
     },
     {
       "name": "primary-legacy",
       "value": "oklch(0.72 0.10 187)",
-      "note": "레거시 민트 (pre-2024, 호환용) · 번들 값",
+      "note": "레거시 민트 (pre-2024, 호환용), 번들 값",
       "group": "Bundle — mint usage"
     },
     {
