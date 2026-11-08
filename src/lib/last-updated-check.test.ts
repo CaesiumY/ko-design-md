@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest"
-import { checkLastUpdated, isExempt } from "./last-updated-check"
+import {
+  changedEntries,
+  changedOn,
+  checkLastUpdated,
+  isExempt,
+} from "./last-updated-check"
 
 // The rule: editing a services/*.md means bumping its `last_updated`. It drives
 // sitemap `lastmod`, RSS ordering, and the home Updated badge, so a stale date
@@ -358,5 +363,85 @@ Skip-Last-Updated: 9개 항목에 같은 한 줄을 넣는 기계 편집
 Skip-Last-Updated:
 `
     expect(isExempt(msg)).toBe(false)
+  })
+})
+
+// Which files the gate judges, and the day each changed on, from what git
+// reports. CLAUDE.md has the gates run once more with main merged in but not
+// committed (`git merge origin/main --no-commit --no-ff`); main's incoming
+// edits are then staged in the working tree without being this branch's.
+describe("changedEntries", () => {
+  const git = {
+    branch: ["services/b.md", "services/c.md"],
+    uncommitted: ["services/a.md", "services/c.md"],
+    untracked: ["services/new.md"],
+    status: {
+      "services/a.md": "M ",
+      "services/b.md": "",
+      "services/c.md": "M ",
+      "services/new.md": "??",
+    },
+  }
+
+  it("judges every file the branch, the working tree or a new file changed", () => {
+    expect(
+      changedEntries({ ...git, merging: null }).map((e) => [e.file, e.edited])
+    ).toEqual([
+      ["services/a.md", true],
+      ["services/b.md", false],
+      ["services/c.md", true],
+      ["services/new.md", true],
+    ])
+  })
+
+  describe("with a merge staged but not committed", () => {
+    // a.md came in from main unchanged; c.md merged cleanly, this branch's
+    // edit and main's together; b.md is this branch's alone.
+    const merging = {
+      differsFromMergeHead: ["services/b.md", "services/c.md"],
+    }
+
+    it("leaves out a file that matches what is being merged in", () => {
+      expect(changedEntries({ ...git, merging }).map((e) => e.file)).toEqual([
+        "services/b.md",
+        "services/c.md",
+        "services/new.md",
+      ])
+    })
+
+    it("does not read a merge's own staged result as an edit made today", () => {
+      const c = changedEntries({ ...git, merging }).find(
+        (e) => e.file === "services/c.md"
+      )
+      expect(c?.edited).toBe(false)
+    })
+
+    it("still reads a hand edit or a conflict as an edit made today", () => {
+      for (const status of [" M", "MM", "UU", "AA"]) {
+        const got = changedEntries({
+          ...git,
+          status: { ...git.status, "services/c.md": status },
+          merging,
+        }).find((e) => e.file === "services/c.md")
+        expect([status, got?.edited]).toEqual([status, true])
+      }
+    })
+  })
+})
+
+describe("changedOn", () => {
+  it("is the latest commit's date for a file not edited since", () => {
+    expect(
+      changedOn({ edited: false, committed: "2026-11-05", today: "2026-11-08" })
+    ).toBe("2026-11-05")
+  })
+
+  it("is today for a file edited since, or never committed", () => {
+    expect(
+      changedOn({ edited: true, committed: "2026-11-05", today: "2026-11-08" })
+    ).toBe("2026-11-08")
+    expect(
+      changedOn({ edited: false, committed: null, today: "2026-11-08" })
+    ).toBe("2026-11-08")
   })
 })
