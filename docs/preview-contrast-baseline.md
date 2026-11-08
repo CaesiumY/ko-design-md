@@ -204,7 +204,7 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 | text 의 `measured` `fail` `borderline` `indeterminate` | **강제** — 슬러그별 양방향 정확값 |
 | non-text 의 `measured` | **강제** — 플로어(기록값보다 내려가면 block, 올라가는 건 통과) |
 | non-text 의 `fail` `borderline` `indeterminate` | 참고 — 어긋나면 warn 으로 출력만 |
-| text 의 `elements` | **하한만 강제** — 측정값이 `MIN_TEXT_ELEMENTS`(80) 아래면 block(새 슬러그 포함). 그 위에서 어긋나는 것은 warn 으로 출력만 |
+| text 의 `elements` | **하한만 강제** — 측정값이 `MIN_TEXT_ELEMENTS` 아래면 block(새 슬러그 포함, ADR 0013). 그 위에서 어긋나는 것은 warn 으로 출력만 |
 | non-text 의 `elements` | 참고 — 행이 래칫 단위이므로 카드 사본이 늘어도 막지 않는다 |
 
 **참고 열은 갱신이 강제되지 않으므로 낡을 수 있다.** 마지막으로 전수 갱신한 것은

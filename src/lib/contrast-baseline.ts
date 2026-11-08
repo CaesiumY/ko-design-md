@@ -46,12 +46,14 @@ export interface BaselineComparison {
  * counts every copy, so repeating a card raises it — the reason it stays out of
  * EXACT_FIELDS. It catches a preview that shows little, not one that pads
  * itself. `measured` folds the copies but cannot separate the cases:
- * samsung-one-ui keeps 52 distinct rows, chzzk arrived with 48.
+ * on 2026-11-09 samsung-one-ui kept 52 distinct rows, and chzzk arrived with 48.
  *
  * Two external entries arrived with text rows of 79 (chzzk) and 51 (laftel)
  * elements, the two thinnest in the catalogue by far. No check judged by the
  * number, so they passed every gate and were only caught by eye. The thinnest
- * preview kept on its own merits is yeogi at 94, so the floor sits between.
+ * preview kept on its own merits was yeogi at 94 on 2026-11-09, so the floor
+ * sits between. Those are the numbers the floor was chosen against, not a
+ * record of the table: see ADR 0013.
  * Fixed rather than a share of the median: the median climbs as thicker
  * entries land, and a moving floor would start failing entries nobody touched.
  *
