@@ -198,7 +198,7 @@ function primaryBackground(html: string, state: State): string {
       const ruleState =
         states.length === 0
           ? "base"
-          : states.includes(":hover")
+          : states.some((s) => s === ":hover")
             ? "hover"
             : undefined
       if (ruleState === state) painters.push({ selector, backgrounds })
