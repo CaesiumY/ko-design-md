@@ -85,10 +85,11 @@ interface Coverage {
 // baemin annotates only the palette taken from www.baemin.com's deployed
 // `--ref-color-*` (#663): each step in its light and its `dark-*` block. Its
 // 27 handoff-bundle usage colours carry no hex, so drift 199 = annotated
-// 172 + 27; `primary` is a reference row and counts in neither. bezier annotates only the steps taken from the beta tier and
-// the stable tier (`stable-*`) of `@channel.io/bezier-tokens` (#569, #628);
-// the 43 bundle steps stay unannotated, so drift 275 = annotated 232 + 43;
-// role rows count in neither. toss annotates only the steps whose name maps to
+// 172 + 27; `primary` is a reference row and counts in neither. bezier
+// annotates only the steps taken from the beta, stable (`stable-*`) and alpha
+// (`alpha-*`) tiers of `@channel.io/bezier-tokens` (#569, #628, #664); the 43
+// bundle steps stay unannotated, so drift 482 = annotated 439 + 43; role rows
+// count in neither. toss annotates only the steps whose name maps to
 // Toss's published `@toss/tds-colors` (15 light + 15 `dark-*`); its bundle-only
 // steps stay unannotated. teamsparta likewise annotates only the three reds
 // corrected to the live sites' `--stack-semantic-*` values and the 45
@@ -98,7 +99,7 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   "11st": { annotated: 31, judged: 31, drift: 33 },
   baemin: { annotated: 172, judged: 172, drift: 199, references: 1 },
   banksalad: { annotated: 187, judged: 187, drift: 187, references: 203 },
-  bezier: { annotated: 232, judged: 232, drift: 275, references: 532 },
+  bezier: { annotated: 439, judged: 439, drift: 482, references: 1004 },
   chzzk: { annotated: 50, judged: 50, drift: 50 },
   class101: { annotated: 98, judged: 98, drift: 98 },
   codeit: {

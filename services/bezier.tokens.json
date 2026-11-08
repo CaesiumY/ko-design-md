@@ -1642,6 +1642,1248 @@
       "group": "Stable tier palette"
     },
     {
+      "name": "alpha-blue-300",
+      "value": "oklch(0.714 0.140 268)",
+      "note": "#7d9efa, 상류 alpha tier --alpha-color-blue-300",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-blue-400",
+      "value": "oklch(0.607 0.211 279)",
+      "note": "#6d6afc, 상류 alpha tier --alpha-color-blue-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-blue-500",
+      "value": "oklch(0.525 0.206 279)",
+      "note": "#5950dc, 상류 alpha tier --alpha-color-blue-500",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-blue-400-30",
+      "value": "oklch(0.607 0.211 279 / 0.30)",
+      "note": "#6d6afc4d, 상류 alpha tier --alpha-color-blue-400-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-blue-400-20",
+      "value": "oklch(0.607 0.211 279 / 0.20)",
+      "note": "#6d6afc33, 상류 alpha tier --alpha-color-blue-400-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-blue-400-10",
+      "value": "oklch(0.607 0.211 279 / 0.10)",
+      "note": "#6d6afc1a, 상류 alpha tier --alpha-color-blue-400-10",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-blue-400-0",
+      "value": "oklch(0.607 0.211 279 / 0.00)",
+      "note": "#6d6afc00, 상류 alpha tier --alpha-color-blue-400-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-blue-300-45",
+      "value": "oklch(0.714 0.140 268 / 0.45)",
+      "note": "#7d9efa73, 상류 alpha tier --alpha-color-blue-300-45",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-blue-300-30",
+      "value": "oklch(0.714 0.140 268 / 0.30)",
+      "note": "#7d9efa4d, 상류 alpha tier --alpha-color-blue-300-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-blue-300-15",
+      "value": "oklch(0.714 0.140 268 / 0.15)",
+      "note": "#7d9efa26, 상류 alpha tier --alpha-color-blue-300-15",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-blue-300-0",
+      "value": "oklch(0.714 0.140 268 / 0.00)",
+      "note": "#7d9efa00, 상류 alpha tier --alpha-color-blue-300-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-cobalt-300",
+      "value": "oklch(0.762 0.113 245)",
+      "note": "#71b9f5, 상류 alpha tier --alpha-color-cobalt-300",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-cobalt-400",
+      "value": "oklch(0.657 0.141 255)",
+      "note": "#5093e5, 상류 alpha tier --alpha-color-cobalt-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-cobalt-500",
+      "value": "oklch(0.559 0.161 261)",
+      "note": "#3870d1, 상류 alpha tier --alpha-color-cobalt-500",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-cobalt-400-30",
+      "value": "oklch(0.657 0.141 255 / 0.30)",
+      "note": "#5093e54d, 상류 alpha tier --alpha-color-cobalt-400-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-cobalt-400-20",
+      "value": "oklch(0.657 0.141 255 / 0.20)",
+      "note": "#5093e533, 상류 alpha tier --alpha-color-cobalt-400-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-cobalt-400-10",
+      "value": "oklch(0.657 0.141 255 / 0.10)",
+      "note": "#5093e51a, 상류 alpha tier --alpha-color-cobalt-400-10",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-cobalt-400-0",
+      "value": "oklch(0.657 0.141 255 / 0.00)",
+      "note": "#5093e500, 상류 alpha tier --alpha-color-cobalt-400-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-cobalt-300-45",
+      "value": "oklch(0.762 0.113 245 / 0.45)",
+      "note": "#71b9f573, 상류 alpha tier --alpha-color-cobalt-300-45",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-cobalt-300-30",
+      "value": "oklch(0.762 0.113 245 / 0.30)",
+      "note": "#71b9f54d, 상류 alpha tier --alpha-color-cobalt-300-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-cobalt-300-15",
+      "value": "oklch(0.762 0.113 245 / 0.15)",
+      "note": "#71b9f526, 상류 alpha tier --alpha-color-cobalt-300-15",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-cobalt-300-0",
+      "value": "oklch(0.762 0.113 245 / 0.00)",
+      "note": "#71b9f500, 상류 alpha tier --alpha-color-cobalt-300-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-green-300",
+      "value": "oklch(0.765 0.145 149)",
+      "note": "#68cc7f, 상류 alpha tier --alpha-color-green-300",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-green-400",
+      "value": "oklch(0.668 0.144 152)",
+      "note": "#40ad67, 상류 alpha tier --alpha-color-green-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-green-500",
+      "value": "oklch(0.562 0.100 160)",
+      "note": "#358761, 상류 alpha tier --alpha-color-green-500",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-green-400-30",
+      "value": "oklch(0.668 0.144 152 / 0.30)",
+      "note": "#40ad674d, 상류 alpha tier --alpha-color-green-400-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-green-400-20",
+      "value": "oklch(0.668 0.144 152 / 0.20)",
+      "note": "#40ad6733, 상류 alpha tier --alpha-color-green-400-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-green-400-10",
+      "value": "oklch(0.668 0.144 152 / 0.10)",
+      "note": "#40ad671a, 상류 alpha tier --alpha-color-green-400-10",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-green-400-0",
+      "value": "oklch(0.668 0.144 152 / 0.00)",
+      "note": "#40ad6700, 상류 alpha tier --alpha-color-green-400-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-green-300-45",
+      "value": "oklch(0.765 0.145 149 / 0.45)",
+      "note": "#68cc7f73, 상류 alpha tier --alpha-color-green-300-45",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-green-300-30",
+      "value": "oklch(0.765 0.145 149 / 0.30)",
+      "note": "#68cc7f4d, 상류 alpha tier --alpha-color-green-300-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-green-300-15",
+      "value": "oklch(0.765 0.145 149 / 0.15)",
+      "note": "#68cc7f26, 상류 alpha tier --alpha-color-green-300-15",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-green-300-0",
+      "value": "oklch(0.765 0.145 149 / 0.00)",
+      "note": "#68cc7f00, 상류 alpha tier --alpha-color-green-300-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-red-300",
+      "value": "oklch(0.765 0.140 21)",
+      "note": "#ff8c8c, 상류 alpha tier --alpha-color-red-300",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-red-400",
+      "value": "oklch(0.651 0.171 23)",
+      "note": "#e55c5c, 상류 alpha tier --alpha-color-red-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-red-500",
+      "value": "oklch(0.541 0.166 21)",
+      "note": "#bc3a42, 상류 alpha tier --alpha-color-red-500",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-red-400-30",
+      "value": "oklch(0.651 0.171 23 / 0.30)",
+      "note": "#e55c5c4d, 상류 alpha tier --alpha-color-red-400-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-red-400-20",
+      "value": "oklch(0.651 0.171 23 / 0.20)",
+      "note": "#e55c5c33, 상류 alpha tier --alpha-color-red-400-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-red-400-10",
+      "value": "oklch(0.651 0.171 23 / 0.10)",
+      "note": "#e55c5c1a, 상류 alpha tier --alpha-color-red-400-10",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-red-400-0",
+      "value": "oklch(0.651 0.171 23 / 0.00)",
+      "note": "#e55c5c00, 상류 alpha tier --alpha-color-red-400-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-red-300-45",
+      "value": "oklch(0.765 0.140 21 / 0.45)",
+      "note": "#ff8c8c73, 상류 alpha tier --alpha-color-red-300-45",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-red-300-30",
+      "value": "oklch(0.765 0.140 21 / 0.30)",
+      "note": "#ff8c8c4d, 상류 alpha tier --alpha-color-red-300-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-red-300-15",
+      "value": "oklch(0.765 0.140 21 / 0.15)",
+      "note": "#ff8c8c26, 상류 alpha tier --alpha-color-red-300-15",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-red-300-0",
+      "value": "oklch(0.765 0.140 21 / 0.00)",
+      "note": "#ff8c8c00, 상류 alpha tier --alpha-color-red-300-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-black-0",
+      "value": "oklch(0 0 0 / 0.00)",
+      "note": "#00000000, 상류 alpha tier --alpha-color-black-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-black-3",
+      "value": "oklch(0 0 0 / 0.03)",
+      "note": "#00000008, 상류 alpha tier --alpha-color-black-3",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-black-5",
+      "value": "oklch(0 0 0 / 0.05)",
+      "note": "#0000000d, 상류 alpha tier --alpha-color-black-5",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-black-8",
+      "value": "oklch(0 0 0 / 0.08)",
+      "note": "#00000014, 상류 alpha tier --alpha-color-black-8",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-black-15",
+      "value": "oklch(0 0 0 / 0.15)",
+      "note": "#00000026, 상류 alpha tier --alpha-color-black-15",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-black-20",
+      "value": "oklch(0 0 0 / 0.20)",
+      "note": "#00000033, 상류 alpha tier --alpha-color-black-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-black-22",
+      "value": "oklch(0 0 0 / 0.22)",
+      "note": "#00000038, 상류 alpha tier --alpha-color-black-22",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-black-30",
+      "value": "oklch(0 0 0 / 0.30)",
+      "note": "#0000004d, 상류 alpha tier --alpha-color-black-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-black-40",
+      "value": "oklch(0 0 0 / 0.40)",
+      "note": "#00000066, 상류 alpha tier --alpha-color-black-40",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-black-60",
+      "value": "oklch(0 0 0 / 0.60)",
+      "note": "#00000099, 상류 alpha tier --alpha-color-black-60",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-black-85",
+      "value": "oklch(0 0 0 / 0.85)",
+      "note": "#000000d9, 상류 alpha tier --alpha-color-black-85",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-black-100",
+      "value": "oklch(0 0 0)",
+      "note": "#000000, 상류 alpha tier --alpha-color-black-100",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-white-0",
+      "value": "oklch(1 0 0 / 0.00)",
+      "note": "#ffffff00, 상류 alpha tier --alpha-color-white-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-white-5",
+      "value": "oklch(1 0 0 / 0.05)",
+      "note": "#ffffff0d, 상류 alpha tier --alpha-color-white-5",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-white-8",
+      "value": "oklch(1 0 0 / 0.08)",
+      "note": "#ffffff14, 상류 alpha tier --alpha-color-white-8",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-white-12",
+      "value": "oklch(1 0 0 / 0.12)",
+      "note": "#ffffff1f, 상류 alpha tier --alpha-color-white-12",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-white-20",
+      "value": "oklch(1 0 0 / 0.20)",
+      "note": "#ffffff33, 상류 alpha tier --alpha-color-white-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-white-40",
+      "value": "oklch(1 0 0 / 0.40)",
+      "note": "#ffffff66, 상류 alpha tier --alpha-color-white-40",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-white-60",
+      "value": "oklch(1 0 0 / 0.60)",
+      "note": "#ffffff99, 상류 alpha tier --alpha-color-white-60",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-white-80",
+      "value": "oklch(1 0 0 / 0.80)",
+      "note": "#ffffffcc, 상류 alpha tier --alpha-color-white-80",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-white-90",
+      "value": "oklch(1 0 0 / 0.90)",
+      "note": "#ffffffe6, 상류 alpha tier --alpha-color-white-90",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-white-100",
+      "value": "oklch(1 0 0)",
+      "note": "#ffffff, 상류 alpha tier --alpha-color-white-100",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-orange-300",
+      "value": "oklch(0.791 0.139 55)",
+      "note": "#ffa15e, 상류 alpha tier --alpha-color-orange-300",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-orange-400",
+      "value": "oklch(0.698 0.156 55)",
+      "note": "#e67f2b, 상류 alpha tier --alpha-color-orange-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-orange-500",
+      "value": "oklch(0.600 0.146 54)",
+      "note": "#c1630d, 상류 alpha tier --alpha-color-orange-500",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-orange-400-30",
+      "value": "oklch(0.698 0.156 55 / 0.30)",
+      "note": "#e67f2b4d, 상류 alpha tier --alpha-color-orange-400-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-orange-400-20",
+      "value": "oklch(0.698 0.156 55 / 0.20)",
+      "note": "#e67f2b33, 상류 alpha tier --alpha-color-orange-400-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-orange-400-10",
+      "value": "oklch(0.698 0.156 55 / 0.10)",
+      "note": "#e67f2b1a, 상류 alpha tier --alpha-color-orange-400-10",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-orange-400-0",
+      "value": "oklch(0.698 0.156 55 / 0.00)",
+      "note": "#e67f2b00, 상류 alpha tier --alpha-color-orange-400-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-orange-300-45",
+      "value": "oklch(0.791 0.139 55 / 0.45)",
+      "note": "#ffa15e73, 상류 alpha tier --alpha-color-orange-300-45",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-orange-300-30",
+      "value": "oklch(0.791 0.139 55 / 0.30)",
+      "note": "#ffa15e4d, 상류 alpha tier --alpha-color-orange-300-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-orange-300-15",
+      "value": "oklch(0.791 0.139 55 / 0.15)",
+      "note": "#ffa15e26, 상류 alpha tier --alpha-color-orange-300-15",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-orange-300-0",
+      "value": "oklch(0.791 0.139 55 / 0.00)",
+      "note": "#ffa15e00, 상류 alpha tier --alpha-color-orange-300-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-yellow-300",
+      "value": "oklch(0.853 0.161 89)",
+      "note": "#f9c835, 상류 alpha tier --alpha-color-yellow-300",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-yellow-400",
+      "value": "oklch(0.789 0.161 82)",
+      "note": "#edae0d, 상류 alpha tier --alpha-color-yellow-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-yellow-500",
+      "value": "oklch(0.682 0.140 83)",
+      "note": "#c38f00, 상류 alpha tier --alpha-color-yellow-500",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-yellow-400-30",
+      "value": "oklch(0.789 0.161 82 / 0.30)",
+      "note": "#edae0d4d, 상류 alpha tier --alpha-color-yellow-400-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-yellow-400-20",
+      "value": "oklch(0.789 0.161 82 / 0.20)",
+      "note": "#edae0d33, 상류 alpha tier --alpha-color-yellow-400-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-yellow-400-10",
+      "value": "oklch(0.789 0.161 82 / 0.10)",
+      "note": "#edae0d1a, 상류 alpha tier --alpha-color-yellow-400-10",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-yellow-400-0",
+      "value": "oklch(0.789 0.161 82 / 0.00)",
+      "note": "#edae0d00, 상류 alpha tier --alpha-color-yellow-400-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-yellow-300-45",
+      "value": "oklch(0.853 0.161 89 / 0.45)",
+      "note": "#f9c83573, 상류 alpha tier --alpha-color-yellow-300-45",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-yellow-300-30",
+      "value": "oklch(0.853 0.161 89 / 0.30)",
+      "note": "#f9c8354d, 상류 alpha tier --alpha-color-yellow-300-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-yellow-300-15",
+      "value": "oklch(0.853 0.161 89 / 0.15)",
+      "note": "#f9c83526, 상류 alpha tier --alpha-color-yellow-300-15",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-yellow-300-0",
+      "value": "oklch(0.853 0.161 89 / 0.00)",
+      "note": "#f9c83500, 상류 alpha tier --alpha-color-yellow-300-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-pink-300",
+      "value": "oklch(0.722 0.192 336)",
+      "note": "#ec6fd3, 상류 alpha tier --alpha-color-pink-300",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-pink-400",
+      "value": "oklch(0.637 0.208 338)",
+      "note": "#d64bb5, 상류 alpha tier --alpha-color-pink-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-pink-500",
+      "value": "oklch(0.549 0.194 334)",
+      "note": "#b0369e, 상류 alpha tier --alpha-color-pink-500",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-pink-400-30",
+      "value": "oklch(0.637 0.208 338 / 0.30)",
+      "note": "#d64bb54d, 상류 alpha tier --alpha-color-pink-400-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-pink-400-20",
+      "value": "oklch(0.637 0.208 338 / 0.20)",
+      "note": "#d64bb533, 상류 alpha tier --alpha-color-pink-400-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-pink-400-10",
+      "value": "oklch(0.637 0.208 338 / 0.10)",
+      "note": "#d64bb51a, 상류 alpha tier --alpha-color-pink-400-10",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-pink-400-0",
+      "value": "oklch(0.637 0.208 338 / 0.00)",
+      "note": "#d64bb500, 상류 alpha tier --alpha-color-pink-400-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-pink-300-45",
+      "value": "oklch(0.722 0.192 336 / 0.45)",
+      "note": "#ec6fd373, 상류 alpha tier --alpha-color-pink-300-45",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-pink-300-30",
+      "value": "oklch(0.722 0.192 336 / 0.30)",
+      "note": "#ec6fd34d, 상류 alpha tier --alpha-color-pink-300-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-pink-300-15",
+      "value": "oklch(0.722 0.192 336 / 0.15)",
+      "note": "#ec6fd326, 상류 alpha tier --alpha-color-pink-300-15",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-pink-300-0",
+      "value": "oklch(0.722 0.192 336 / 0.00)",
+      "note": "#ec6fd300, 상류 alpha tier --alpha-color-pink-300-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-purple-300",
+      "value": "oklch(0.709 0.177 299)",
+      "note": "#b184ff, 상류 alpha tier --alpha-color-purple-300",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-purple-400",
+      "value": "oklch(0.591 0.208 297)",
+      "note": "#8e57e7, 상류 alpha tier --alpha-color-purple-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-purple-500",
+      "value": "oklch(0.467 0.191 296)",
+      "note": "#6735b6, 상류 alpha tier --alpha-color-purple-500",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-purple-400-30",
+      "value": "oklch(0.591 0.208 297 / 0.30)",
+      "note": "#8e57e74d, 상류 alpha tier --alpha-color-purple-400-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-purple-400-20",
+      "value": "oklch(0.591 0.208 297 / 0.20)",
+      "note": "#8e57e733, 상류 alpha tier --alpha-color-purple-400-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-purple-400-10",
+      "value": "oklch(0.591 0.208 297 / 0.10)",
+      "note": "#8e57e71a, 상류 alpha tier --alpha-color-purple-400-10",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-purple-400-0",
+      "value": "oklch(0.591 0.208 297 / 0.00)",
+      "note": "#8e57e700, 상류 alpha tier --alpha-color-purple-400-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-purple-300-45",
+      "value": "oklch(0.709 0.177 299 / 0.45)",
+      "note": "#b184ff73, 상류 alpha tier --alpha-color-purple-300-45",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-purple-300-30",
+      "value": "oklch(0.709 0.177 299 / 0.30)",
+      "note": "#b184ff4d, 상류 alpha tier --alpha-color-purple-300-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-purple-300-15",
+      "value": "oklch(0.709 0.177 299 / 0.15)",
+      "note": "#b184ff26, 상류 alpha tier --alpha-color-purple-300-15",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-purple-300-0",
+      "value": "oklch(0.709 0.177 299 / 0.00)",
+      "note": "#b184ff00, 상류 alpha tier --alpha-color-purple-300-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-navy-300",
+      "value": "oklch(0.634 0.121 275)",
+      "note": "#7683d3, 상류 alpha tier --alpha-color-navy-300",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-navy-400",
+      "value": "oklch(0.469 0.147 273)",
+      "note": "#424fab, 상류 alpha tier --alpha-color-navy-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-navy-500",
+      "value": "oklch(0.387 0.131 277)",
+      "note": "#353888, 상류 alpha tier --alpha-color-navy-500",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-navy-400-30",
+      "value": "oklch(0.469 0.147 273 / 0.30)",
+      "note": "#424fab4d, 상류 alpha tier --alpha-color-navy-400-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-navy-400-20",
+      "value": "oklch(0.469 0.147 273 / 0.20)",
+      "note": "#424fab33, 상류 alpha tier --alpha-color-navy-400-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-navy-400-10",
+      "value": "oklch(0.469 0.147 273 / 0.10)",
+      "note": "#424fab1a, 상류 alpha tier --alpha-color-navy-400-10",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-navy-400-0",
+      "value": "oklch(0.469 0.147 273 / 0.00)",
+      "note": "#424fab00, 상류 alpha tier --alpha-color-navy-400-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-navy-300-45",
+      "value": "oklch(0.634 0.121 275 / 0.45)",
+      "note": "#7683d373, 상류 alpha tier --alpha-color-navy-300-45",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-navy-300-30",
+      "value": "oklch(0.634 0.121 275 / 0.30)",
+      "note": "#7683d34d, 상류 alpha tier --alpha-color-navy-300-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-navy-300-15",
+      "value": "oklch(0.634 0.121 275 / 0.15)",
+      "note": "#7683d326, 상류 alpha tier --alpha-color-navy-300-15",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-navy-300-0",
+      "value": "oklch(0.634 0.121 275 / 0.00)",
+      "note": "#7683d300, 상류 alpha tier --alpha-color-navy-300-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-teal-300",
+      "value": "oklch(0.787 0.123 186)",
+      "note": "#40d3c5, 상류 alpha tier --alpha-color-teal-300",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-teal-400",
+      "value": "oklch(0.690 0.118 190)",
+      "note": "#09b2ac, 상류 alpha tier --alpha-color-teal-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-teal-500",
+      "value": "oklch(0.589 0.099 201)",
+      "note": "#068e95, 상류 alpha tier --alpha-color-teal-500",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-teal-400-30",
+      "value": "oklch(0.690 0.118 190 / 0.30)",
+      "note": "#09b2ac4d, 상류 alpha tier --alpha-color-teal-400-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-teal-400-20",
+      "value": "oklch(0.690 0.118 190 / 0.20)",
+      "note": "#09b2ac33, 상류 alpha tier --alpha-color-teal-400-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-teal-400-10",
+      "value": "oklch(0.690 0.118 190 / 0.10)",
+      "note": "#09b2ac1a, 상류 alpha tier --alpha-color-teal-400-10",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-teal-400-0",
+      "value": "oklch(0.690 0.118 190 / 0.00)",
+      "note": "#09b2ac00, 상류 alpha tier --alpha-color-teal-400-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-teal-300-45",
+      "value": "oklch(0.787 0.123 186 / 0.45)",
+      "note": "#40d3c573, 상류 alpha tier --alpha-color-teal-300-45",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-teal-300-30",
+      "value": "oklch(0.787 0.123 186 / 0.30)",
+      "note": "#40d3c54d, 상류 alpha tier --alpha-color-teal-300-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-teal-300-15",
+      "value": "oklch(0.787 0.123 186 / 0.15)",
+      "note": "#40d3c526, 상류 alpha tier --alpha-color-teal-300-15",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-teal-300-0",
+      "value": "oklch(0.787 0.123 186 / 0.00)",
+      "note": "#40d3c500, 상류 alpha tier --alpha-color-teal-300-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-olive-300",
+      "value": "oklch(0.838 0.176 115)",
+      "note": "#c8d630, 상류 alpha tier --alpha-color-olive-300",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-olive-400",
+      "value": "oklch(0.730 0.160 113)",
+      "note": "#a9b110, 상류 alpha tier --alpha-color-olive-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-olive-500",
+      "value": "oklch(0.577 0.118 112)",
+      "note": "#7b801c, 상류 alpha tier --alpha-color-olive-500",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-olive-400-30",
+      "value": "oklch(0.730 0.160 113 / 0.30)",
+      "note": "#a9b1104d, 상류 alpha tier --alpha-color-olive-400-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-olive-400-20",
+      "value": "oklch(0.730 0.160 113 / 0.20)",
+      "note": "#a9b11033, 상류 alpha tier --alpha-color-olive-400-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-olive-400-10",
+      "value": "oklch(0.730 0.160 113 / 0.10)",
+      "note": "#a9b1101a, 상류 alpha tier --alpha-color-olive-400-10",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-olive-400-0",
+      "value": "oklch(0.730 0.160 113 / 0.00)",
+      "note": "#a9b11000, 상류 alpha tier --alpha-color-olive-400-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-olive-300-45",
+      "value": "oklch(0.838 0.176 115 / 0.45)",
+      "note": "#c8d63073, 상류 alpha tier --alpha-color-olive-300-45",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-olive-300-30",
+      "value": "oklch(0.838 0.176 115 / 0.30)",
+      "note": "#c8d6304d, 상류 alpha tier --alpha-color-olive-300-30",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-olive-300-15",
+      "value": "oklch(0.838 0.176 115 / 0.15)",
+      "note": "#c8d63026, 상류 alpha tier --alpha-color-olive-300-15",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-olive-300-0",
+      "value": "oklch(0.838 0.176 115 / 0.00)",
+      "note": "#c8d63000, 상류 alpha tier --alpha-color-olive-300-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-grey-50",
+      "value": "oklch(0.991 0 0)",
+      "note": "#fcfcfc, 상류 alpha tier --alpha-color-grey-50",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-grey-100",
+      "value": "oklch(0.976 0.001 286)",
+      "note": "#f7f7f8, 상류 alpha tier --alpha-color-grey-100",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-grey-200",
+      "value": "oklch(0.952 0.001 286)",
+      "note": "#efeff0, 상류 alpha tier --alpha-color-grey-200",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-grey-400",
+      "value": "oklch(0.855 0.003 286)",
+      "note": "#cfcfd1, 상류 alpha tier --alpha-color-grey-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-grey-500",
+      "value": "oklch(0.729 0.004 286)",
+      "note": "#a7a7aa, 상류 alpha tier --alpha-color-grey-500",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-grey-600",
+      "value": "oklch(0.583 0 0)",
+      "note": "#7b7b7b, 상류 alpha tier --alpha-color-grey-600",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-grey-700",
+      "value": "oklch(0.397 0.002 248)",
+      "note": "#464748, 상류 alpha tier --alpha-color-grey-700",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-grey-800",
+      "value": "oklch(0.317 0.004 265)",
+      "note": "#313234, 상류 alpha tier --alpha-color-grey-800",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-grey-850",
+      "value": "oklch(0.289 0.004 265)",
+      "note": "#2a2b2d, 상류 alpha tier --alpha-color-grey-850",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-grey-900",
+      "value": "oklch(0.262 0.007 286)",
+      "note": "#242428, 상류 alpha tier --alpha-color-grey-900",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-grey-950",
+      "value": "oklch(0.219 0.004 286)",
+      "note": "#1a1a1c, 상류 alpha tier --alpha-color-grey-950",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-grey-900-0",
+      "value": "oklch(0.262 0.007 286 / 0.00)",
+      "note": "#24242800, 상류 alpha tier --alpha-color-grey-900-0",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-grey-alpha-850-80",
+      "value": "oklch(0.289 0.004 265 / 0.80)",
+      "note": "#2a2b2dcc, 상류 alpha tier --alpha-color-grey-alpha-850-80",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-grey-alpha-800-80",
+      "value": "oklch(0.317 0.004 265 / 0.80)",
+      "note": "#313234cc, 상류 alpha tier --alpha-color-grey-alpha-800-80",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-grey-alpha-700-80",
+      "value": "oklch(0.397 0.002 248 / 0.80)",
+      "note": "#464748cc, 상류 alpha tier --alpha-color-grey-alpha-700-80",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-grey-alpha-200-80",
+      "value": "oklch(0.952 0.001 286 / 0.80)",
+      "note": "#efeff0cc, 상류 alpha tier --alpha-color-grey-alpha-200-80",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-grey-alpha-100-80",
+      "value": "oklch(0.976 0.001 286 / 0.80)",
+      "note": "#f7f7f8cc, 상류 alpha tier --alpha-color-grey-alpha-100-80",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-grey-alpha-50-80",
+      "value": "oklch(0.991 0 0 / 0.80)",
+      "note": "#fcfcfccc, 상류 alpha tier --alpha-color-grey-alpha-50-80",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-grey-alpha-100-90",
+      "value": "oklch(0.976 0.001 286 / 0.90)",
+      "note": "#f7f7f8e6, 상류 alpha tier --alpha-color-grey-alpha-100-90",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-grey-alpha-800-90",
+      "value": "oklch(0.317 0.004 265 / 0.90)",
+      "note": "#313234e6, 상류 alpha tier --alpha-color-grey-alpha-800-90",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-blue-400",
+      "value": "oklch(0.611 0.159 279)",
+      "note": "#7175e0, 상류 alpha tier --alpha-color-shade-blue-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-blue-600",
+      "value": "oklch(0.459 0.089 278)",
+      "note": "#4c5289, 상류 alpha tier --alpha-color-shade-blue-600",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-blue-400-20",
+      "value": "oklch(0.611 0.159 279 / 0.20)",
+      "note": "#7175e033, 상류 alpha tier --alpha-color-shade-blue-400-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-blue-600-40",
+      "value": "oklch(0.459 0.089 278 / 0.40)",
+      "note": "#4c528966, 상류 alpha tier --alpha-color-shade-blue-600-40",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-cobalt-400",
+      "value": "oklch(0.716 0.120 242)",
+      "note": "#57ace8, 상류 alpha tier --alpha-color-shade-cobalt-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-cobalt-600",
+      "value": "oklch(0.489 0.065 259)",
+      "note": "#4a6185, 상류 alpha tier --alpha-color-shade-cobalt-600",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-cobalt-400-20",
+      "value": "oklch(0.716 0.120 242 / 0.20)",
+      "note": "#57ace833, 상류 alpha tier --alpha-color-shade-cobalt-400-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-cobalt-600-40",
+      "value": "oklch(0.489 0.065 259 / 0.40)",
+      "note": "#4a618566, 상류 alpha tier --alpha-color-shade-cobalt-600-40",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-teal-400",
+      "value": "oklch(0.684 0.083 192)",
+      "note": "#55aaa7, 상류 alpha tier --alpha-color-shade-teal-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-teal-600",
+      "value": "oklch(0.527 0.051 214)",
+      "note": "#47737d, 상류 alpha tier --alpha-color-shade-teal-600",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-teal-400-20",
+      "value": "oklch(0.684 0.083 192 / 0.20)",
+      "note": "#55aaa733, 상류 alpha tier --alpha-color-shade-teal-400-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-teal-600-40",
+      "value": "oklch(0.527 0.051 214 / 0.40)",
+      "note": "#47737d66, 상류 alpha tier --alpha-color-shade-teal-600-40",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-red-400",
+      "value": "oklch(0.661 0.148 18)",
+      "note": "#de6870, 상류 alpha tier --alpha-color-shade-red-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-red-600",
+      "value": "oklch(0.482 0.106 17)",
+      "note": "#904248, 상류 alpha tier --alpha-color-shade-red-600",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-red-400-20",
+      "value": "oklch(0.661 0.148 18 / 0.20)",
+      "note": "#de687033, 상류 alpha tier --alpha-color-shade-red-400-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-red-600-40",
+      "value": "oklch(0.482 0.106 17 / 0.40)",
+      "note": "#90424866, 상류 alpha tier --alpha-color-shade-red-600-40",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-green-400",
+      "value": "oklch(0.690 0.108 154)",
+      "note": "#62af7c, 상류 alpha tier --alpha-color-shade-green-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-green-600",
+      "value": "oklch(0.538 0.067 157)",
+      "note": "#4c7a5e, 상류 alpha tier --alpha-color-shade-green-600",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-green-400-20",
+      "value": "oklch(0.690 0.108 154 / 0.20)",
+      "note": "#62af7c33, 상류 alpha tier --alpha-color-shade-green-400-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-green-600-40",
+      "value": "oklch(0.538 0.067 157 / 0.40)",
+      "note": "#4c7a5e66, 상류 alpha tier --alpha-color-shade-green-600-40",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-olive-400",
+      "value": "oklch(0.713 0.110 111)",
+      "note": "#a5a953, 상류 alpha tier --alpha-color-shade-olive-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-olive-600",
+      "value": "oklch(0.549 0.085 111)",
+      "note": "#737638, 상류 alpha tier --alpha-color-shade-olive-600",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-olive-400-20",
+      "value": "oklch(0.713 0.110 111 / 0.20)",
+      "note": "#a5a95333, 상류 alpha tier --alpha-color-shade-olive-400-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-olive-600-40",
+      "value": "oklch(0.549 0.085 111 / 0.40)",
+      "note": "#73763866, 상류 alpha tier --alpha-color-shade-olive-600-40",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-yellow-400",
+      "value": "oklch(0.786 0.142 80)",
+      "note": "#e8ae3c, 상류 alpha tier --alpha-color-shade-yellow-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-yellow-600",
+      "value": "oklch(0.529 0.090 93)",
+      "note": "#7d6a26, 상류 alpha tier --alpha-color-shade-yellow-600",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-yellow-400-20",
+      "value": "oklch(0.786 0.142 80 / 0.20)",
+      "note": "#e8ae3c33, 상류 alpha tier --alpha-color-shade-yellow-400-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-yellow-600-40",
+      "value": "oklch(0.529 0.090 93 / 0.40)",
+      "note": "#7d6a2666, 상류 alpha tier --alpha-color-shade-yellow-600-40",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-orange-400",
+      "value": "oklch(0.715 0.132 57)",
+      "note": "#e08c48, 상류 alpha tier --alpha-color-shade-orange-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-orange-600",
+      "value": "oklch(0.511 0.082 58)",
+      "note": "#895a34, 상류 alpha tier --alpha-color-shade-orange-600",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-orange-400-20",
+      "value": "oklch(0.715 0.132 57 / 0.20)",
+      "note": "#e08c4833, 상류 alpha tier --alpha-color-shade-orange-400-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-orange-600-40",
+      "value": "oklch(0.511 0.082 58 / 0.40)",
+      "note": "#895a3466, 상류 alpha tier --alpha-color-shade-orange-600-40",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-pink-400",
+      "value": "oklch(0.671 0.165 337)",
+      "note": "#d369ba, 상류 alpha tier --alpha-color-shade-pink-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-pink-600",
+      "value": "oklch(0.478 0.117 337)",
+      "note": "#854075, 상류 alpha tier --alpha-color-shade-pink-600",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-pink-400-20",
+      "value": "oklch(0.671 0.165 337 / 0.20)",
+      "note": "#d369ba33, 상류 alpha tier --alpha-color-shade-pink-400-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-pink-600-40",
+      "value": "oklch(0.478 0.117 337 / 0.40)",
+      "note": "#85407566, 상류 alpha tier --alpha-color-shade-pink-600-40",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-purple-400",
+      "value": "oklch(0.641 0.174 299)",
+      "note": "#9d6fe5, 상류 alpha tier --alpha-color-shade-purple-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-purple-600",
+      "value": "oklch(0.441 0.091 300)",
+      "note": "#5b467d, 상류 alpha tier --alpha-color-shade-purple-600",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-purple-400-20",
+      "value": "oklch(0.641 0.174 299 / 0.20)",
+      "note": "#9d6fe533, 상류 alpha tier --alpha-color-shade-purple-400-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-purple-600-40",
+      "value": "oklch(0.441 0.091 300 / 0.40)",
+      "note": "#5b467d66, 상류 alpha tier --alpha-color-shade-purple-600-40",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-navy-400",
+      "value": "oklch(0.545 0.111 276)",
+      "note": "#5f69b0, 상류 alpha tier --alpha-color-shade-navy-400",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-navy-600",
+      "value": "oklch(0.361 0.047 277)",
+      "note": "#373b56, 상류 alpha tier --alpha-color-shade-navy-600",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-navy-400-20",
+      "value": "oklch(0.545 0.111 276 / 0.20)",
+      "note": "#5f69b033, 상류 alpha tier --alpha-color-shade-navy-400-20",
+      "group": "Alpha tier palette"
+    },
+    {
+      "name": "alpha-shade-navy-600-40",
+      "value": "oklch(0.361 0.047 277 / 0.40)",
+      "note": "#373b5666, 상류 alpha tier --alpha-color-shade-navy-600-40",
+      "group": "Alpha tier palette"
+    },
+    {
       "name": "txt-white-normal",
       "value": "oklch(1 0 0)",
       "group": "Semantic bg-*·txt-* (stable tier)",
@@ -4832,6 +6074,2838 @@
       "value": "oklch(1 0 0 / 0.12)",
       "group": "Semantic dim·gradient·state·elevation (beta tier)",
       "ref": "white-12"
+    },
+    {
+      "name": "alpha-fg-black-pure",
+      "value": "oklch(0 0 0)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-black-100"
+    },
+    {
+      "name": "dark-alpha-fg-black-pure",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-white-100"
+    },
+    {
+      "name": "alpha-fg-black-darkest",
+      "value": "oklch(0 0 0 / 0.85)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-black-85"
+    },
+    {
+      "name": "dark-alpha-fg-black-darkest",
+      "value": "oklch(1 0 0 / 0.80)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-white-80"
+    },
+    {
+      "name": "alpha-fg-black-darker",
+      "value": "oklch(0 0 0 / 0.60)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-black-60"
+    },
+    {
+      "name": "dark-alpha-fg-black-darker",
+      "value": "oklch(1 0 0 / 0.60)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-white-60"
+    },
+    {
+      "name": "alpha-fg-black-dark",
+      "value": "oklch(0 0 0 / 0.40)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-black-40"
+    },
+    {
+      "name": "dark-alpha-fg-black-dark",
+      "value": "oklch(1 0 0 / 0.40)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-white-40"
+    },
+    {
+      "name": "alpha-fg-black-light",
+      "value": "oklch(0 0 0 / 0.15)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-black-15"
+    },
+    {
+      "name": "dark-alpha-fg-black-light",
+      "value": "oklch(1 0 0 / 0.20)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-white-20"
+    },
+    {
+      "name": "alpha-fg-black-lightest",
+      "value": "oklch(0 0 0 / 0.08)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-black-8"
+    },
+    {
+      "name": "dark-alpha-fg-black-lightest",
+      "value": "oklch(1 0 0 / 0.12)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-white-12"
+    },
+    {
+      "name": "alpha-fg-white-normal",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-white-100"
+    },
+    {
+      "name": "dark-alpha-fg-white-normal",
+      "value": "oklch(0.262 0.007 286)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-grey-900"
+    },
+    {
+      "name": "alpha-fg-blue-normal",
+      "value": "oklch(0.607 0.211 279)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-blue-400"
+    },
+    {
+      "name": "dark-alpha-fg-blue-normal",
+      "value": "oklch(0.714 0.140 268)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-blue-300"
+    },
+    {
+      "name": "alpha-fg-blue-light",
+      "value": "oklch(0.607 0.211 279 / 0.30)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-blue-400-30"
+    },
+    {
+      "name": "dark-alpha-fg-blue-light",
+      "value": "oklch(0.714 0.140 268 / 0.45)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-blue-300-45"
+    },
+    {
+      "name": "alpha-fg-blue-dark",
+      "value": "oklch(0.525 0.206 279)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-blue-500"
+    },
+    {
+      "name": "dark-alpha-fg-blue-dark",
+      "value": "oklch(0.714 0.140 268)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-blue-300"
+    },
+    {
+      "name": "alpha-fg-cobalt-normal",
+      "value": "oklch(0.657 0.141 255)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-cobalt-400"
+    },
+    {
+      "name": "dark-alpha-fg-cobalt-normal",
+      "value": "oklch(0.762 0.113 245)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-cobalt-300"
+    },
+    {
+      "name": "alpha-fg-cobalt-light",
+      "value": "oklch(0.657 0.141 255 / 0.30)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-cobalt-400-30"
+    },
+    {
+      "name": "dark-alpha-fg-cobalt-light",
+      "value": "oklch(0.762 0.113 245 / 0.45)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-cobalt-300-45"
+    },
+    {
+      "name": "alpha-fg-cobalt-dark",
+      "value": "oklch(0.559 0.161 261)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-cobalt-500"
+    },
+    {
+      "name": "dark-alpha-fg-cobalt-dark",
+      "value": "oklch(0.762 0.113 245)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-cobalt-300"
+    },
+    {
+      "name": "alpha-fg-red-normal",
+      "value": "oklch(0.651 0.171 23)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-red-400"
+    },
+    {
+      "name": "dark-alpha-fg-red-normal",
+      "value": "oklch(0.765 0.140 21)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-red-300"
+    },
+    {
+      "name": "alpha-fg-red-light",
+      "value": "oklch(0.651 0.171 23 / 0.30)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-red-400-30"
+    },
+    {
+      "name": "dark-alpha-fg-red-light",
+      "value": "oklch(0.765 0.140 21 / 0.45)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-red-300-45"
+    },
+    {
+      "name": "alpha-fg-red-dark",
+      "value": "oklch(0.541 0.166 21)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-red-500"
+    },
+    {
+      "name": "dark-alpha-fg-red-dark",
+      "value": "oklch(0.765 0.140 21)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-red-300"
+    },
+    {
+      "name": "alpha-fg-orange-normal",
+      "value": "oklch(0.698 0.156 55)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-orange-400"
+    },
+    {
+      "name": "dark-alpha-fg-orange-normal",
+      "value": "oklch(0.791 0.139 55)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-orange-300"
+    },
+    {
+      "name": "alpha-fg-orange-light",
+      "value": "oklch(0.698 0.156 55 / 0.30)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-orange-400-30"
+    },
+    {
+      "name": "dark-alpha-fg-orange-light",
+      "value": "oklch(0.791 0.139 55 / 0.45)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-orange-300-45"
+    },
+    {
+      "name": "alpha-fg-orange-dark",
+      "value": "oklch(0.600 0.146 54)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-orange-500"
+    },
+    {
+      "name": "dark-alpha-fg-orange-dark",
+      "value": "oklch(0.791 0.139 55)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-orange-300"
+    },
+    {
+      "name": "alpha-fg-green-normal",
+      "value": "oklch(0.668 0.144 152)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-green-400"
+    },
+    {
+      "name": "dark-alpha-fg-green-normal",
+      "value": "oklch(0.765 0.145 149)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-green-300"
+    },
+    {
+      "name": "alpha-fg-green-light",
+      "value": "oklch(0.668 0.144 152 / 0.30)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-green-400-30"
+    },
+    {
+      "name": "dark-alpha-fg-green-light",
+      "value": "oklch(0.765 0.145 149 / 0.45)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-green-300-45"
+    },
+    {
+      "name": "alpha-fg-green-dark",
+      "value": "oklch(0.562 0.100 160)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-green-500"
+    },
+    {
+      "name": "dark-alpha-fg-green-dark",
+      "value": "oklch(0.765 0.145 149)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-green-300"
+    },
+    {
+      "name": "alpha-fg-teal-normal",
+      "value": "oklch(0.690 0.118 190)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-teal-400"
+    },
+    {
+      "name": "dark-alpha-fg-teal-normal",
+      "value": "oklch(0.787 0.123 186)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-teal-300"
+    },
+    {
+      "name": "alpha-fg-teal-light",
+      "value": "oklch(0.690 0.118 190 / 0.30)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-teal-400-30"
+    },
+    {
+      "name": "dark-alpha-fg-teal-light",
+      "value": "oklch(0.787 0.123 186 / 0.45)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-teal-300-45"
+    },
+    {
+      "name": "alpha-fg-teal-dark",
+      "value": "oklch(0.589 0.099 201)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-teal-500"
+    },
+    {
+      "name": "dark-alpha-fg-teal-dark",
+      "value": "oklch(0.787 0.123 186)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-teal-300"
+    },
+    {
+      "name": "alpha-fg-olive-normal",
+      "value": "oklch(0.730 0.160 113)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-olive-400"
+    },
+    {
+      "name": "dark-alpha-fg-olive-normal",
+      "value": "oklch(0.838 0.176 115)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-olive-300"
+    },
+    {
+      "name": "alpha-fg-olive-light",
+      "value": "oklch(0.730 0.160 113 / 0.30)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-olive-400-30"
+    },
+    {
+      "name": "dark-alpha-fg-olive-light",
+      "value": "oklch(0.838 0.176 115 / 0.45)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-olive-300-45"
+    },
+    {
+      "name": "alpha-fg-olive-dark",
+      "value": "oklch(0.577 0.118 112)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-olive-500"
+    },
+    {
+      "name": "dark-alpha-fg-olive-dark",
+      "value": "oklch(0.838 0.176 115)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-olive-300"
+    },
+    {
+      "name": "alpha-fg-yellow-normal",
+      "value": "oklch(0.789 0.161 82)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-yellow-400"
+    },
+    {
+      "name": "dark-alpha-fg-yellow-normal",
+      "value": "oklch(0.853 0.161 89)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-yellow-300"
+    },
+    {
+      "name": "alpha-fg-yellow-light",
+      "value": "oklch(0.789 0.161 82 / 0.30)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-yellow-400-30"
+    },
+    {
+      "name": "dark-alpha-fg-yellow-light",
+      "value": "oklch(0.853 0.161 89 / 0.45)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-yellow-300-45"
+    },
+    {
+      "name": "alpha-fg-yellow-dark",
+      "value": "oklch(0.682 0.140 83)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-yellow-500"
+    },
+    {
+      "name": "dark-alpha-fg-yellow-dark",
+      "value": "oklch(0.853 0.161 89)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-yellow-300"
+    },
+    {
+      "name": "alpha-fg-pink-normal",
+      "value": "oklch(0.637 0.208 338)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-pink-400"
+    },
+    {
+      "name": "dark-alpha-fg-pink-normal",
+      "value": "oklch(0.722 0.192 336)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-pink-300"
+    },
+    {
+      "name": "alpha-fg-pink-light",
+      "value": "oklch(0.637 0.208 338 / 0.30)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-pink-400-30"
+    },
+    {
+      "name": "dark-alpha-fg-pink-light",
+      "value": "oklch(0.722 0.192 336 / 0.45)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-pink-300-45"
+    },
+    {
+      "name": "alpha-fg-pink-dark",
+      "value": "oklch(0.549 0.194 334)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-pink-500"
+    },
+    {
+      "name": "dark-alpha-fg-pink-dark",
+      "value": "oklch(0.722 0.192 336)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-pink-300"
+    },
+    {
+      "name": "alpha-fg-purple-normal",
+      "value": "oklch(0.591 0.208 297)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-purple-400"
+    },
+    {
+      "name": "dark-alpha-fg-purple-normal",
+      "value": "oklch(0.709 0.177 299)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-purple-300"
+    },
+    {
+      "name": "alpha-fg-purple-light",
+      "value": "oklch(0.591 0.208 297 / 0.30)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-purple-400-30"
+    },
+    {
+      "name": "dark-alpha-fg-purple-light",
+      "value": "oklch(0.709 0.177 299 / 0.45)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-purple-300-45"
+    },
+    {
+      "name": "alpha-fg-purple-dark",
+      "value": "oklch(0.467 0.191 296)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-purple-500"
+    },
+    {
+      "name": "dark-alpha-fg-purple-dark",
+      "value": "oklch(0.709 0.177 299)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-purple-300"
+    },
+    {
+      "name": "alpha-fg-navy-normal",
+      "value": "oklch(0.469 0.147 273)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-navy-400"
+    },
+    {
+      "name": "dark-alpha-fg-navy-normal",
+      "value": "oklch(0.634 0.121 275)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-navy-300"
+    },
+    {
+      "name": "alpha-fg-navy-light",
+      "value": "oklch(0.469 0.147 273 / 0.30)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-navy-400-30"
+    },
+    {
+      "name": "dark-alpha-fg-navy-light",
+      "value": "oklch(0.634 0.121 275 / 0.45)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-navy-300-45"
+    },
+    {
+      "name": "alpha-fg-navy-dark",
+      "value": "oklch(0.387 0.131 277)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-navy-500"
+    },
+    {
+      "name": "dark-alpha-fg-navy-dark",
+      "value": "oklch(0.634 0.121 275)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-navy-300"
+    },
+    {
+      "name": "alpha-fg-absolute-black-dark",
+      "value": "oklch(0 0 0)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-black-100"
+    },
+    {
+      "name": "dark-alpha-fg-absolute-black-dark",
+      "value": "oklch(0 0 0)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-black-100"
+    },
+    {
+      "name": "alpha-fg-absolute-black-normal",
+      "value": "oklch(0 0 0 / 0.85)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-black-85"
+    },
+    {
+      "name": "dark-alpha-fg-absolute-black-normal",
+      "value": "oklch(0 0 0 / 0.85)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-black-85"
+    },
+    {
+      "name": "alpha-fg-absolute-black-light",
+      "value": "oklch(0 0 0 / 0.60)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-black-60"
+    },
+    {
+      "name": "dark-alpha-fg-absolute-black-light",
+      "value": "oklch(0 0 0 / 0.60)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-black-60"
+    },
+    {
+      "name": "alpha-fg-absolute-black-lighter",
+      "value": "oklch(0 0 0 / 0.40)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-black-40"
+    },
+    {
+      "name": "dark-alpha-fg-absolute-black-lighter",
+      "value": "oklch(0 0 0 / 0.40)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-black-40"
+    },
+    {
+      "name": "alpha-fg-absolute-black-lightest",
+      "value": "oklch(0 0 0 / 0.20)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-black-20"
+    },
+    {
+      "name": "dark-alpha-fg-absolute-black-lightest",
+      "value": "oklch(0 0 0 / 0.20)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-black-20"
+    },
+    {
+      "name": "alpha-fg-absolute-white-dark",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-white-100"
+    },
+    {
+      "name": "dark-alpha-fg-absolute-white-dark",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-white-100"
+    },
+    {
+      "name": "alpha-fg-absolute-white-normal",
+      "value": "oklch(1 0 0 / 0.90)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-white-90"
+    },
+    {
+      "name": "dark-alpha-fg-absolute-white-normal",
+      "value": "oklch(1 0 0 / 0.90)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-white-90"
+    },
+    {
+      "name": "alpha-fg-absolute-white-light",
+      "value": "oklch(1 0 0 / 0.60)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-white-60"
+    },
+    {
+      "name": "dark-alpha-fg-absolute-white-light",
+      "value": "oklch(1 0 0 / 0.60)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-white-60"
+    },
+    {
+      "name": "alpha-fg-absolute-white-lighter",
+      "value": "oklch(1 0 0 / 0.40)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-white-40"
+    },
+    {
+      "name": "dark-alpha-fg-absolute-white-lighter",
+      "value": "oklch(1 0 0 / 0.40)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-white-40"
+    },
+    {
+      "name": "alpha-fg-absolute-white-lightest",
+      "value": "oklch(1 0 0 / 0.20)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-white-20"
+    },
+    {
+      "name": "dark-alpha-fg-absolute-white-lightest",
+      "value": "oklch(1 0 0 / 0.20)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-white-20"
+    },
+    {
+      "name": "alpha-fg-grey-darkest",
+      "value": "oklch(0.262 0.007 286)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-grey-900"
+    },
+    {
+      "name": "dark-alpha-fg-grey-darkest",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-white-100"
+    },
+    {
+      "name": "alpha-fg-grey-dark",
+      "value": "oklch(0.729 0.004 286)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-grey-500"
+    },
+    {
+      "name": "dark-alpha-fg-grey-dark",
+      "value": "oklch(0.729 0.004 286)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-grey-500"
+    },
+    {
+      "name": "alpha-fg-grey-normal",
+      "value": "oklch(0.855 0.003 286)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-grey-400"
+    },
+    {
+      "name": "dark-alpha-fg-grey-normal",
+      "value": "oklch(0.583 0 0)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-grey-600"
+    },
+    {
+      "name": "alpha-fg-grey-light",
+      "value": "oklch(0.952 0.001 286)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-grey-200"
+    },
+    {
+      "name": "dark-alpha-fg-grey-light",
+      "value": "oklch(0.397 0.002 248)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-grey-700"
+    },
+    {
+      "name": "alpha-fg-grey-lighter",
+      "value": "oklch(0.976 0.001 286)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-grey-100"
+    },
+    {
+      "name": "dark-alpha-fg-grey-lighter",
+      "value": "oklch(0.317 0.004 265)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-grey-800"
+    },
+    {
+      "name": "alpha-fg-grey-lightest",
+      "value": "oklch(0.991 0 0)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-grey-50"
+    },
+    {
+      "name": "dark-alpha-fg-grey-lightest",
+      "value": "oklch(0.289 0.004 265)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-grey-850"
+    },
+    {
+      "name": "alpha-fg-grey-alpha-darker",
+      "value": "oklch(0.952 0.001 286 / 0.80)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-grey-alpha-200-80"
+    },
+    {
+      "name": "dark-alpha-fg-grey-alpha-darker",
+      "value": "oklch(0.317 0.004 265 / 0.90)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-grey-alpha-800-90"
+    },
+    {
+      "name": "alpha-fg-grey-alpha-dark",
+      "value": "oklch(0.976 0.001 286 / 0.80)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-grey-alpha-100-80"
+    },
+    {
+      "name": "dark-alpha-fg-grey-alpha-dark",
+      "value": "oklch(0.317 0.004 265 / 0.80)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-grey-alpha-800-80"
+    },
+    {
+      "name": "alpha-fg-grey-alpha-light",
+      "value": "oklch(0.991 0 0 / 0.80)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-grey-alpha-50-80"
+    },
+    {
+      "name": "dark-alpha-fg-grey-alpha-light",
+      "value": "oklch(0.289 0.004 265 / 0.80)",
+      "group": "Semantic fg (alpha tier)",
+      "ref": "alpha-grey-alpha-850-80"
+    },
+    {
+      "name": "alpha-bg-black-darkest",
+      "value": "oklch(0 0 0 / 0.60)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-60"
+    },
+    {
+      "name": "dark-alpha-bg-black-darkest",
+      "value": "oklch(0 0 0 / 0.60)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-60"
+    },
+    {
+      "name": "alpha-bg-black-darker",
+      "value": "oklch(0 0 0 / 0.40)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-40"
+    },
+    {
+      "name": "dark-alpha-bg-black-darker",
+      "value": "oklch(1 0 0 / 0.40)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-40"
+    },
+    {
+      "name": "alpha-bg-black-dark",
+      "value": "oklch(0 0 0 / 0.15)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-15"
+    },
+    {
+      "name": "dark-alpha-bg-black-dark",
+      "value": "oklch(1 0 0 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-20"
+    },
+    {
+      "name": "alpha-bg-black-light",
+      "value": "oklch(0 0 0 / 0.08)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-8"
+    },
+    {
+      "name": "dark-alpha-bg-black-light",
+      "value": "oklch(1 0 0 / 0.12)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-12"
+    },
+    {
+      "name": "alpha-bg-black-lighter",
+      "value": "oklch(0 0 0 / 0.05)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-5"
+    },
+    {
+      "name": "dark-alpha-bg-black-lighter",
+      "value": "oklch(1 0 0 / 0.08)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-8"
+    },
+    {
+      "name": "alpha-bg-black-lightest",
+      "value": "oklch(0 0 0 / 0.03)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-3"
+    },
+    {
+      "name": "dark-alpha-bg-black-lightest",
+      "value": "oklch(1 0 0 / 0.05)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-5"
+    },
+    {
+      "name": "alpha-bg-black-transparent",
+      "value": "oklch(0 0 0 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-0"
+    },
+    {
+      "name": "dark-alpha-bg-black-transparent",
+      "value": "oklch(1 0 0 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-0"
+    },
+    {
+      "name": "alpha-bg-grey-darkest",
+      "value": "oklch(0.262 0.007 286)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-900"
+    },
+    {
+      "name": "dark-alpha-bg-grey-darkest",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-100"
+    },
+    {
+      "name": "alpha-bg-grey-dark",
+      "value": "oklch(0.729 0.004 286)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-500"
+    },
+    {
+      "name": "dark-alpha-bg-grey-dark",
+      "value": "oklch(0.729 0.004 286)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-500"
+    },
+    {
+      "name": "alpha-bg-grey-light",
+      "value": "oklch(0.952 0.001 286)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-200"
+    },
+    {
+      "name": "dark-alpha-bg-grey-light",
+      "value": "oklch(0.397 0.002 248)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-700"
+    },
+    {
+      "name": "alpha-bg-grey-lighter",
+      "value": "oklch(0.976 0.001 286)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-100"
+    },
+    {
+      "name": "dark-alpha-bg-grey-lighter",
+      "value": "oklch(0.317 0.004 265)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-800"
+    },
+    {
+      "name": "alpha-bg-grey-lightest",
+      "value": "oklch(0.991 0 0)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-50"
+    },
+    {
+      "name": "dark-alpha-bg-grey-lightest",
+      "value": "oklch(0.289 0.004 265)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-850"
+    },
+    {
+      "name": "alpha-bg-grey-transparent",
+      "value": "oklch(0.262 0.007 286 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-900-0"
+    },
+    {
+      "name": "dark-alpha-bg-grey-transparent",
+      "value": "oklch(1 0 0 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-0"
+    },
+    {
+      "name": "alpha-bg-grey-normal",
+      "value": "oklch(0.855 0.003 286)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-400"
+    },
+    {
+      "name": "dark-alpha-bg-grey-normal",
+      "value": "oklch(0.583 0 0)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-600"
+    },
+    {
+      "name": "alpha-bg-grey-alpha-darkest",
+      "value": "oklch(0.952 0.001 286 / 0.80)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-alpha-200-80"
+    },
+    {
+      "name": "dark-alpha-bg-grey-alpha-darkest",
+      "value": "oklch(0.397 0.002 248 / 0.80)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-alpha-700-80"
+    },
+    {
+      "name": "alpha-bg-grey-alpha-darker",
+      "value": "oklch(0.976 0.001 286 / 0.90)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-alpha-100-90"
+    },
+    {
+      "name": "dark-alpha-bg-grey-alpha-darker",
+      "value": "oklch(0.317 0.004 265 / 0.90)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-alpha-800-90"
+    },
+    {
+      "name": "alpha-bg-grey-alpha-dark",
+      "value": "oklch(0.976 0.001 286 / 0.80)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-alpha-100-80"
+    },
+    {
+      "name": "dark-alpha-bg-grey-alpha-dark",
+      "value": "oklch(0.317 0.004 265 / 0.80)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-alpha-800-80"
+    },
+    {
+      "name": "alpha-bg-grey-alpha-light",
+      "value": "oklch(0.991 0 0 / 0.80)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-alpha-50-80"
+    },
+    {
+      "name": "dark-alpha-bg-grey-alpha-light",
+      "value": "oklch(0.289 0.004 265 / 0.80)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-alpha-850-80"
+    },
+    {
+      "name": "alpha-bg-white-highest",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-100"
+    },
+    {
+      "name": "dark-alpha-bg-white-highest",
+      "value": "oklch(0.397 0.002 248)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-700"
+    },
+    {
+      "name": "alpha-bg-white-higher",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-100"
+    },
+    {
+      "name": "dark-alpha-bg-white-higher",
+      "value": "oklch(0.317 0.004 265)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-800"
+    },
+    {
+      "name": "alpha-bg-white-normal",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-100"
+    },
+    {
+      "name": "dark-alpha-bg-white-normal",
+      "value": "oklch(0.262 0.007 286)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-900"
+    },
+    {
+      "name": "alpha-bg-white-transparent",
+      "value": "oklch(1 0 0 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-0"
+    },
+    {
+      "name": "dark-alpha-bg-white-transparent",
+      "value": "oklch(1 0 0 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-0"
+    },
+    {
+      "name": "alpha-bg-white-alpha-lightest",
+      "value": "oklch(1 0 0 / 0.90)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-90"
+    },
+    {
+      "name": "dark-alpha-bg-white-alpha-lightest",
+      "value": "oklch(0.317 0.004 265 / 0.80)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-grey-alpha-800-80"
+    },
+    {
+      "name": "alpha-bg-white-alpha-lighter",
+      "value": "oklch(1 0 0 / 0.60)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-60"
+    },
+    {
+      "name": "dark-alpha-bg-white-alpha-lighter",
+      "value": "oklch(0 0 0 / 0.60)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-60"
+    },
+    {
+      "name": "alpha-bg-white-alpha-light",
+      "value": "oklch(1 0 0 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-20"
+    },
+    {
+      "name": "dark-alpha-bg-white-alpha-light",
+      "value": "oklch(0 0 0 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-20"
+    },
+    {
+      "name": "alpha-bg-white-alpha-transparent",
+      "value": "oklch(1 0 0 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-0"
+    },
+    {
+      "name": "dark-alpha-bg-white-alpha-transparent",
+      "value": "oklch(0 0 0 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-0"
+    },
+    {
+      "name": "alpha-bg-blue-normal",
+      "value": "oklch(0.607 0.211 279)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-blue-400"
+    },
+    {
+      "name": "dark-alpha-bg-blue-normal",
+      "value": "oklch(0.714 0.140 268)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-blue-300"
+    },
+    {
+      "name": "alpha-bg-blue-light",
+      "value": "oklch(0.607 0.211 279 / 0.30)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-blue-400-30"
+    },
+    {
+      "name": "dark-alpha-bg-blue-light",
+      "value": "oklch(0.714 0.140 268 / 0.45)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-blue-300-45"
+    },
+    {
+      "name": "alpha-bg-blue-lighter",
+      "value": "oklch(0.607 0.211 279 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-blue-400-20"
+    },
+    {
+      "name": "dark-alpha-bg-blue-lighter",
+      "value": "oklch(0.714 0.140 268 / 0.30)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-blue-300-30"
+    },
+    {
+      "name": "alpha-bg-blue-lightest",
+      "value": "oklch(0.607 0.211 279 / 0.10)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-blue-400-10"
+    },
+    {
+      "name": "dark-alpha-bg-blue-lightest",
+      "value": "oklch(0.714 0.140 268 / 0.15)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-blue-300-15"
+    },
+    {
+      "name": "alpha-bg-blue-dark",
+      "value": "oklch(0.525 0.206 279)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-blue-500"
+    },
+    {
+      "name": "dark-alpha-bg-blue-dark",
+      "value": "oklch(0.607 0.211 279)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-blue-400"
+    },
+    {
+      "name": "alpha-bg-blue-shade-lighter",
+      "value": "oklch(0.611 0.159 279 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-blue-400-20"
+    },
+    {
+      "name": "dark-alpha-bg-blue-shade-lighter",
+      "value": "oklch(0.459 0.089 278 / 0.40)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-blue-600-40"
+    },
+    {
+      "name": "alpha-bg-blue-shade-normal",
+      "value": "oklch(0.611 0.159 279)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-blue-400"
+    },
+    {
+      "name": "dark-alpha-bg-blue-shade-normal",
+      "value": "oklch(0.459 0.089 278)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-blue-600"
+    },
+    {
+      "name": "alpha-bg-blue-transparent",
+      "value": "oklch(0.607 0.211 279 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-blue-400-0"
+    },
+    {
+      "name": "dark-alpha-bg-blue-transparent",
+      "value": "oklch(0.714 0.140 268 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-blue-300-0"
+    },
+    {
+      "name": "alpha-bg-cobalt-normal",
+      "value": "oklch(0.657 0.141 255)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-cobalt-400"
+    },
+    {
+      "name": "dark-alpha-bg-cobalt-normal",
+      "value": "oklch(0.762 0.113 245)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-cobalt-300"
+    },
+    {
+      "name": "alpha-bg-cobalt-light",
+      "value": "oklch(0.657 0.141 255 / 0.30)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-cobalt-400-30"
+    },
+    {
+      "name": "dark-alpha-bg-cobalt-light",
+      "value": "oklch(0.762 0.113 245 / 0.45)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-cobalt-300-45"
+    },
+    {
+      "name": "alpha-bg-cobalt-lighter",
+      "value": "oklch(0.657 0.141 255 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-cobalt-400-20"
+    },
+    {
+      "name": "dark-alpha-bg-cobalt-lighter",
+      "value": "oklch(0.762 0.113 245 / 0.30)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-cobalt-300-30"
+    },
+    {
+      "name": "alpha-bg-cobalt-lightest",
+      "value": "oklch(0.657 0.141 255 / 0.10)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-cobalt-400-10"
+    },
+    {
+      "name": "dark-alpha-bg-cobalt-lightest",
+      "value": "oklch(0.762 0.113 245 / 0.15)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-cobalt-300-15"
+    },
+    {
+      "name": "alpha-bg-cobalt-dark",
+      "value": "oklch(0.559 0.161 261)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-cobalt-500"
+    },
+    {
+      "name": "dark-alpha-bg-cobalt-dark",
+      "value": "oklch(0.657 0.141 255)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-cobalt-400"
+    },
+    {
+      "name": "alpha-bg-cobalt-shade-lighter",
+      "value": "oklch(0.716 0.120 242 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-cobalt-400-20"
+    },
+    {
+      "name": "dark-alpha-bg-cobalt-shade-lighter",
+      "value": "oklch(0.489 0.065 259 / 0.40)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-cobalt-600-40"
+    },
+    {
+      "name": "alpha-bg-cobalt-shade-normal",
+      "value": "oklch(0.716 0.120 242)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-cobalt-400"
+    },
+    {
+      "name": "dark-alpha-bg-cobalt-shade-normal",
+      "value": "oklch(0.489 0.065 259)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-cobalt-600"
+    },
+    {
+      "name": "alpha-bg-cobalt-transparent",
+      "value": "oklch(0.657 0.141 255 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-cobalt-400-0"
+    },
+    {
+      "name": "dark-alpha-bg-cobalt-transparent",
+      "value": "oklch(0.762 0.113 245 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-cobalt-300-0"
+    },
+    {
+      "name": "alpha-bg-red-normal",
+      "value": "oklch(0.651 0.171 23)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-red-400"
+    },
+    {
+      "name": "dark-alpha-bg-red-normal",
+      "value": "oklch(0.765 0.140 21)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-red-300"
+    },
+    {
+      "name": "alpha-bg-red-light",
+      "value": "oklch(0.651 0.171 23 / 0.30)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-red-400-30"
+    },
+    {
+      "name": "dark-alpha-bg-red-light",
+      "value": "oklch(0.765 0.140 21 / 0.45)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-red-300-45"
+    },
+    {
+      "name": "alpha-bg-red-lighter",
+      "value": "oklch(0.651 0.171 23 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-red-400-20"
+    },
+    {
+      "name": "dark-alpha-bg-red-lighter",
+      "value": "oklch(0.765 0.140 21 / 0.30)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-red-300-30"
+    },
+    {
+      "name": "alpha-bg-red-lightest",
+      "value": "oklch(0.651 0.171 23 / 0.10)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-red-400-10"
+    },
+    {
+      "name": "dark-alpha-bg-red-lightest",
+      "value": "oklch(0.765 0.140 21 / 0.15)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-red-300-15"
+    },
+    {
+      "name": "alpha-bg-red-dark",
+      "value": "oklch(0.541 0.166 21)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-red-500"
+    },
+    {
+      "name": "dark-alpha-bg-red-dark",
+      "value": "oklch(0.651 0.171 23)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-red-400"
+    },
+    {
+      "name": "alpha-bg-red-shade-lighter",
+      "value": "oklch(0.661 0.148 18 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-red-400-20"
+    },
+    {
+      "name": "dark-alpha-bg-red-shade-lighter",
+      "value": "oklch(0.482 0.106 17 / 0.40)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-red-600-40"
+    },
+    {
+      "name": "alpha-bg-red-shade-normal",
+      "value": "oklch(0.661 0.148 18)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-red-400"
+    },
+    {
+      "name": "dark-alpha-bg-red-shade-normal",
+      "value": "oklch(0.482 0.106 17)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-red-600"
+    },
+    {
+      "name": "alpha-bg-red-transparent",
+      "value": "oklch(0.651 0.171 23 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-red-400-0"
+    },
+    {
+      "name": "dark-alpha-bg-red-transparent",
+      "value": "oklch(0.765 0.140 21 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-red-300-0"
+    },
+    {
+      "name": "alpha-bg-orange-normal",
+      "value": "oklch(0.698 0.156 55)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-orange-400"
+    },
+    {
+      "name": "dark-alpha-bg-orange-normal",
+      "value": "oklch(0.791 0.139 55)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-orange-300"
+    },
+    {
+      "name": "alpha-bg-orange-light",
+      "value": "oklch(0.698 0.156 55 / 0.30)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-orange-400-30"
+    },
+    {
+      "name": "dark-alpha-bg-orange-light",
+      "value": "oklch(0.791 0.139 55 / 0.45)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-orange-300-45"
+    },
+    {
+      "name": "alpha-bg-orange-lighter",
+      "value": "oklch(0.698 0.156 55 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-orange-400-20"
+    },
+    {
+      "name": "dark-alpha-bg-orange-lighter",
+      "value": "oklch(0.791 0.139 55 / 0.30)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-orange-300-30"
+    },
+    {
+      "name": "alpha-bg-orange-lightest",
+      "value": "oklch(0.698 0.156 55 / 0.10)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-orange-400-10"
+    },
+    {
+      "name": "dark-alpha-bg-orange-lightest",
+      "value": "oklch(0.791 0.139 55 / 0.15)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-orange-300-15"
+    },
+    {
+      "name": "alpha-bg-orange-dark",
+      "value": "oklch(0.600 0.146 54)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-orange-500"
+    },
+    {
+      "name": "dark-alpha-bg-orange-dark",
+      "value": "oklch(0.698 0.156 55)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-orange-400"
+    },
+    {
+      "name": "alpha-bg-orange-shade-lighter",
+      "value": "oklch(0.715 0.132 57 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-orange-400-20"
+    },
+    {
+      "name": "dark-alpha-bg-orange-shade-lighter",
+      "value": "oklch(0.511 0.082 58 / 0.40)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-orange-600-40"
+    },
+    {
+      "name": "alpha-bg-orange-shade-normal",
+      "value": "oklch(0.715 0.132 57)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-orange-400"
+    },
+    {
+      "name": "dark-alpha-bg-orange-shade-normal",
+      "value": "oklch(0.511 0.082 58)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-orange-600"
+    },
+    {
+      "name": "alpha-bg-orange-transparent",
+      "value": "oklch(0.698 0.156 55 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-orange-400-0"
+    },
+    {
+      "name": "dark-alpha-bg-orange-transparent",
+      "value": "oklch(0.791 0.139 55 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-orange-300-0"
+    },
+    {
+      "name": "alpha-bg-green-normal",
+      "value": "oklch(0.668 0.144 152)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-green-400"
+    },
+    {
+      "name": "dark-alpha-bg-green-normal",
+      "value": "oklch(0.765 0.145 149)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-green-300"
+    },
+    {
+      "name": "alpha-bg-green-light",
+      "value": "oklch(0.668 0.144 152 / 0.30)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-green-400-30"
+    },
+    {
+      "name": "dark-alpha-bg-green-light",
+      "value": "oklch(0.765 0.145 149 / 0.45)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-green-300-45"
+    },
+    {
+      "name": "alpha-bg-green-lighter",
+      "value": "oklch(0.668 0.144 152 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-green-400-20"
+    },
+    {
+      "name": "dark-alpha-bg-green-lighter",
+      "value": "oklch(0.765 0.145 149 / 0.30)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-green-300-30"
+    },
+    {
+      "name": "alpha-bg-green-lightest",
+      "value": "oklch(0.668 0.144 152 / 0.10)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-green-400-10"
+    },
+    {
+      "name": "dark-alpha-bg-green-lightest",
+      "value": "oklch(0.765 0.145 149 / 0.15)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-green-300-15"
+    },
+    {
+      "name": "alpha-bg-green-dark",
+      "value": "oklch(0.562 0.100 160)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-green-500"
+    },
+    {
+      "name": "dark-alpha-bg-green-dark",
+      "value": "oklch(0.668 0.144 152)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-green-400"
+    },
+    {
+      "name": "alpha-bg-green-shade-lighter",
+      "value": "oklch(0.690 0.108 154 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-green-400-20"
+    },
+    {
+      "name": "dark-alpha-bg-green-shade-lighter",
+      "value": "oklch(0.538 0.067 157 / 0.40)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-green-600-40"
+    },
+    {
+      "name": "alpha-bg-green-shade-normal",
+      "value": "oklch(0.690 0.108 154)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-green-400"
+    },
+    {
+      "name": "dark-alpha-bg-green-shade-normal",
+      "value": "oklch(0.538 0.067 157)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-green-600"
+    },
+    {
+      "name": "alpha-bg-green-transparent",
+      "value": "oklch(0.668 0.144 152 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-green-400-0"
+    },
+    {
+      "name": "dark-alpha-bg-green-transparent",
+      "value": "oklch(0.765 0.145 149 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-green-300-0"
+    },
+    {
+      "name": "alpha-bg-teal-normal",
+      "value": "oklch(0.690 0.118 190)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-teal-400"
+    },
+    {
+      "name": "dark-alpha-bg-teal-normal",
+      "value": "oklch(0.787 0.123 186)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-teal-300"
+    },
+    {
+      "name": "alpha-bg-teal-light",
+      "value": "oklch(0.690 0.118 190 / 0.30)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-teal-400-30"
+    },
+    {
+      "name": "dark-alpha-bg-teal-light",
+      "value": "oklch(0.787 0.123 186 / 0.45)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-teal-300-45"
+    },
+    {
+      "name": "alpha-bg-teal-lighter",
+      "value": "oklch(0.690 0.118 190 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-teal-400-20"
+    },
+    {
+      "name": "dark-alpha-bg-teal-lighter",
+      "value": "oklch(0.787 0.123 186 / 0.30)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-teal-300-30"
+    },
+    {
+      "name": "alpha-bg-teal-lightest",
+      "value": "oklch(0.690 0.118 190 / 0.10)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-teal-400-10"
+    },
+    {
+      "name": "dark-alpha-bg-teal-lightest",
+      "value": "oklch(0.787 0.123 186 / 0.15)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-teal-300-15"
+    },
+    {
+      "name": "alpha-bg-teal-dark",
+      "value": "oklch(0.589 0.099 201)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-teal-500"
+    },
+    {
+      "name": "dark-alpha-bg-teal-dark",
+      "value": "oklch(0.690 0.118 190)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-teal-400"
+    },
+    {
+      "name": "alpha-bg-teal-shade-lighter",
+      "value": "oklch(0.684 0.083 192 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-teal-400-20"
+    },
+    {
+      "name": "dark-alpha-bg-teal-shade-lighter",
+      "value": "oklch(0.527 0.051 214 / 0.40)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-teal-600-40"
+    },
+    {
+      "name": "alpha-bg-teal-shade-normal",
+      "value": "oklch(0.684 0.083 192)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-teal-400"
+    },
+    {
+      "name": "dark-alpha-bg-teal-shade-normal",
+      "value": "oklch(0.527 0.051 214)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-teal-600"
+    },
+    {
+      "name": "alpha-bg-teal-transparent",
+      "value": "oklch(0.690 0.118 190 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-teal-400-0"
+    },
+    {
+      "name": "dark-alpha-bg-teal-transparent",
+      "value": "oklch(0.787 0.123 186 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-teal-300-0"
+    },
+    {
+      "name": "alpha-bg-olive-normal",
+      "value": "oklch(0.730 0.160 113)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-olive-400"
+    },
+    {
+      "name": "dark-alpha-bg-olive-normal",
+      "value": "oklch(0.838 0.176 115)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-olive-300"
+    },
+    {
+      "name": "alpha-bg-olive-light",
+      "value": "oklch(0.730 0.160 113 / 0.30)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-olive-400-30"
+    },
+    {
+      "name": "dark-alpha-bg-olive-light",
+      "value": "oklch(0.838 0.176 115 / 0.45)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-olive-300-45"
+    },
+    {
+      "name": "alpha-bg-olive-lighter",
+      "value": "oklch(0.730 0.160 113 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-olive-400-20"
+    },
+    {
+      "name": "dark-alpha-bg-olive-lighter",
+      "value": "oklch(0.838 0.176 115 / 0.30)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-olive-300-30"
+    },
+    {
+      "name": "alpha-bg-olive-lightest",
+      "value": "oklch(0.730 0.160 113 / 0.10)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-olive-400-10"
+    },
+    {
+      "name": "dark-alpha-bg-olive-lightest",
+      "value": "oklch(0.838 0.176 115 / 0.15)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-olive-300-15"
+    },
+    {
+      "name": "alpha-bg-olive-dark",
+      "value": "oklch(0.577 0.118 112)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-olive-500"
+    },
+    {
+      "name": "dark-alpha-bg-olive-dark",
+      "value": "oklch(0.730 0.160 113)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-olive-400"
+    },
+    {
+      "name": "alpha-bg-olive-shade-lighter",
+      "value": "oklch(0.713 0.110 111 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-olive-400-20"
+    },
+    {
+      "name": "dark-alpha-bg-olive-shade-lighter",
+      "value": "oklch(0.549 0.085 111 / 0.40)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-olive-600-40"
+    },
+    {
+      "name": "alpha-bg-olive-shade-normal",
+      "value": "oklch(0.713 0.110 111)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-olive-400"
+    },
+    {
+      "name": "dark-alpha-bg-olive-shade-normal",
+      "value": "oklch(0.549 0.085 111)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-olive-600"
+    },
+    {
+      "name": "alpha-bg-olive-transparent",
+      "value": "oklch(0.730 0.160 113 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-olive-400-0"
+    },
+    {
+      "name": "dark-alpha-bg-olive-transparent",
+      "value": "oklch(0.838 0.176 115 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-olive-300-0"
+    },
+    {
+      "name": "alpha-bg-yellow-normal",
+      "value": "oklch(0.789 0.161 82)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-yellow-400"
+    },
+    {
+      "name": "dark-alpha-bg-yellow-normal",
+      "value": "oklch(0.853 0.161 89)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-yellow-300"
+    },
+    {
+      "name": "alpha-bg-yellow-light",
+      "value": "oklch(0.789 0.161 82 / 0.30)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-yellow-400-30"
+    },
+    {
+      "name": "dark-alpha-bg-yellow-light",
+      "value": "oklch(0.853 0.161 89 / 0.45)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-yellow-300-45"
+    },
+    {
+      "name": "alpha-bg-yellow-lighter",
+      "value": "oklch(0.789 0.161 82 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-yellow-400-20"
+    },
+    {
+      "name": "dark-alpha-bg-yellow-lighter",
+      "value": "oklch(0.853 0.161 89 / 0.30)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-yellow-300-30"
+    },
+    {
+      "name": "alpha-bg-yellow-lightest",
+      "value": "oklch(0.789 0.161 82 / 0.10)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-yellow-400-10"
+    },
+    {
+      "name": "dark-alpha-bg-yellow-lightest",
+      "value": "oklch(0.853 0.161 89 / 0.15)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-yellow-300-15"
+    },
+    {
+      "name": "alpha-bg-yellow-dark",
+      "value": "oklch(0.682 0.140 83)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-yellow-500"
+    },
+    {
+      "name": "dark-alpha-bg-yellow-dark",
+      "value": "oklch(0.789 0.161 82)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-yellow-400"
+    },
+    {
+      "name": "alpha-bg-yellow-shade-lighter",
+      "value": "oklch(0.786 0.142 80 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-yellow-400-20"
+    },
+    {
+      "name": "dark-alpha-bg-yellow-shade-lighter",
+      "value": "oklch(0.529 0.090 93 / 0.40)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-yellow-600-40"
+    },
+    {
+      "name": "alpha-bg-yellow-shade-normal",
+      "value": "oklch(0.786 0.142 80)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-yellow-400"
+    },
+    {
+      "name": "dark-alpha-bg-yellow-shade-normal",
+      "value": "oklch(0.529 0.090 93)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-yellow-600"
+    },
+    {
+      "name": "alpha-bg-yellow-transparent",
+      "value": "oklch(0.789 0.161 82 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-yellow-400-0"
+    },
+    {
+      "name": "dark-alpha-bg-yellow-transparent",
+      "value": "oklch(0.853 0.161 89 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-yellow-300-0"
+    },
+    {
+      "name": "alpha-bg-pink-normal",
+      "value": "oklch(0.637 0.208 338)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-pink-400"
+    },
+    {
+      "name": "dark-alpha-bg-pink-normal",
+      "value": "oklch(0.722 0.192 336)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-pink-300"
+    },
+    {
+      "name": "alpha-bg-pink-light",
+      "value": "oklch(0.637 0.208 338 / 0.30)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-pink-400-30"
+    },
+    {
+      "name": "dark-alpha-bg-pink-light",
+      "value": "oklch(0.722 0.192 336 / 0.45)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-pink-300-45"
+    },
+    {
+      "name": "alpha-bg-pink-lighter",
+      "value": "oklch(0.637 0.208 338 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-pink-400-20"
+    },
+    {
+      "name": "dark-alpha-bg-pink-lighter",
+      "value": "oklch(0.722 0.192 336 / 0.30)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-pink-300-30"
+    },
+    {
+      "name": "alpha-bg-pink-lightest",
+      "value": "oklch(0.637 0.208 338 / 0.10)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-pink-400-10"
+    },
+    {
+      "name": "dark-alpha-bg-pink-lightest",
+      "value": "oklch(0.722 0.192 336 / 0.15)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-pink-300-15"
+    },
+    {
+      "name": "alpha-bg-pink-dark",
+      "value": "oklch(0.549 0.194 334)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-pink-500"
+    },
+    {
+      "name": "dark-alpha-bg-pink-dark",
+      "value": "oklch(0.637 0.208 338)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-pink-400"
+    },
+    {
+      "name": "alpha-bg-pink-shade-lighter",
+      "value": "oklch(0.671 0.165 337 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-pink-400-20"
+    },
+    {
+      "name": "dark-alpha-bg-pink-shade-lighter",
+      "value": "oklch(0.478 0.117 337 / 0.40)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-pink-600-40"
+    },
+    {
+      "name": "alpha-bg-pink-shade-normal",
+      "value": "oklch(0.671 0.165 337)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-pink-400"
+    },
+    {
+      "name": "dark-alpha-bg-pink-shade-normal",
+      "value": "oklch(0.478 0.117 337)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-pink-600"
+    },
+    {
+      "name": "alpha-bg-pink-transparent",
+      "value": "oklch(0.637 0.208 338 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-pink-400-0"
+    },
+    {
+      "name": "dark-alpha-bg-pink-transparent",
+      "value": "oklch(0.722 0.192 336 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-pink-300-0"
+    },
+    {
+      "name": "alpha-bg-purple-normal",
+      "value": "oklch(0.591 0.208 297)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-purple-400"
+    },
+    {
+      "name": "dark-alpha-bg-purple-normal",
+      "value": "oklch(0.709 0.177 299)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-purple-300"
+    },
+    {
+      "name": "alpha-bg-purple-light",
+      "value": "oklch(0.591 0.208 297 / 0.30)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-purple-400-30"
+    },
+    {
+      "name": "dark-alpha-bg-purple-light",
+      "value": "oklch(0.709 0.177 299 / 0.45)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-purple-300-45"
+    },
+    {
+      "name": "alpha-bg-purple-lighter",
+      "value": "oklch(0.591 0.208 297 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-purple-400-20"
+    },
+    {
+      "name": "dark-alpha-bg-purple-lighter",
+      "value": "oklch(0.709 0.177 299 / 0.30)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-purple-300-30"
+    },
+    {
+      "name": "alpha-bg-purple-lightest",
+      "value": "oklch(0.591 0.208 297 / 0.10)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-purple-400-10"
+    },
+    {
+      "name": "dark-alpha-bg-purple-lightest",
+      "value": "oklch(0.709 0.177 299 / 0.15)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-purple-300-15"
+    },
+    {
+      "name": "alpha-bg-purple-dark",
+      "value": "oklch(0.467 0.191 296)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-purple-500"
+    },
+    {
+      "name": "dark-alpha-bg-purple-dark",
+      "value": "oklch(0.591 0.208 297)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-purple-400"
+    },
+    {
+      "name": "alpha-bg-purple-shade-lighter",
+      "value": "oklch(0.641 0.174 299 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-purple-400-20"
+    },
+    {
+      "name": "dark-alpha-bg-purple-shade-lighter",
+      "value": "oklch(0.441 0.091 300 / 0.40)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-purple-600-40"
+    },
+    {
+      "name": "alpha-bg-purple-shade-normal",
+      "value": "oklch(0.641 0.174 299)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-purple-400"
+    },
+    {
+      "name": "dark-alpha-bg-purple-shade-normal",
+      "value": "oklch(0.441 0.091 300)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-purple-600"
+    },
+    {
+      "name": "alpha-bg-purple-transparent",
+      "value": "oklch(0.591 0.208 297 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-purple-400-0"
+    },
+    {
+      "name": "dark-alpha-bg-purple-transparent",
+      "value": "oklch(0.709 0.177 299 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-purple-300-0"
+    },
+    {
+      "name": "alpha-bg-navy-normal",
+      "value": "oklch(0.469 0.147 273)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-navy-400"
+    },
+    {
+      "name": "dark-alpha-bg-navy-normal",
+      "value": "oklch(0.634 0.121 275)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-navy-300"
+    },
+    {
+      "name": "alpha-bg-navy-light",
+      "value": "oklch(0.469 0.147 273 / 0.30)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-navy-400-30"
+    },
+    {
+      "name": "dark-alpha-bg-navy-light",
+      "value": "oklch(0.634 0.121 275 / 0.45)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-navy-300-45"
+    },
+    {
+      "name": "alpha-bg-navy-lighter",
+      "value": "oklch(0.469 0.147 273 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-navy-400-20"
+    },
+    {
+      "name": "dark-alpha-bg-navy-lighter",
+      "value": "oklch(0.634 0.121 275 / 0.30)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-navy-300-30"
+    },
+    {
+      "name": "alpha-bg-navy-lightest",
+      "value": "oklch(0.469 0.147 273 / 0.10)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-navy-400-10"
+    },
+    {
+      "name": "dark-alpha-bg-navy-lightest",
+      "value": "oklch(0.634 0.121 275 / 0.15)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-navy-300-15"
+    },
+    {
+      "name": "alpha-bg-navy-dark",
+      "value": "oklch(0.387 0.131 277)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-navy-500"
+    },
+    {
+      "name": "dark-alpha-bg-navy-dark",
+      "value": "oklch(0.469 0.147 273)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-navy-400"
+    },
+    {
+      "name": "alpha-bg-navy-shade-lighter",
+      "value": "oklch(0.545 0.111 276 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-navy-400-20"
+    },
+    {
+      "name": "dark-alpha-bg-navy-shade-lighter",
+      "value": "oklch(0.361 0.047 277 / 0.40)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-navy-600-40"
+    },
+    {
+      "name": "alpha-bg-navy-shade-normal",
+      "value": "oklch(0.545 0.111 276)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-navy-400"
+    },
+    {
+      "name": "dark-alpha-bg-navy-shade-normal",
+      "value": "oklch(0.361 0.047 277)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-shade-navy-600"
+    },
+    {
+      "name": "alpha-bg-navy-transparent",
+      "value": "oklch(0.469 0.147 273 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-navy-400-0"
+    },
+    {
+      "name": "dark-alpha-bg-navy-transparent",
+      "value": "oklch(0.634 0.121 275 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-navy-300-0"
+    },
+    {
+      "name": "alpha-bg-absolute-black-dark",
+      "value": "oklch(0 0 0)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-100"
+    },
+    {
+      "name": "dark-alpha-bg-absolute-black-dark",
+      "value": "oklch(0 0 0)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-100"
+    },
+    {
+      "name": "alpha-bg-absolute-black-normal",
+      "value": "oklch(0 0 0 / 0.85)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-85"
+    },
+    {
+      "name": "dark-alpha-bg-absolute-black-normal",
+      "value": "oklch(0 0 0 / 0.85)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-85"
+    },
+    {
+      "name": "alpha-bg-absolute-black-light",
+      "value": "oklch(0 0 0 / 0.60)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-60"
+    },
+    {
+      "name": "dark-alpha-bg-absolute-black-light",
+      "value": "oklch(0 0 0 / 0.60)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-60"
+    },
+    {
+      "name": "alpha-bg-absolute-black-lighter",
+      "value": "oklch(0 0 0 / 0.40)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-40"
+    },
+    {
+      "name": "dark-alpha-bg-absolute-black-lighter",
+      "value": "oklch(0 0 0 / 0.40)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-40"
+    },
+    {
+      "name": "alpha-bg-absolute-black-lightest",
+      "value": "oklch(0 0 0 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-20"
+    },
+    {
+      "name": "dark-alpha-bg-absolute-black-lightest",
+      "value": "oklch(0 0 0 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-20"
+    },
+    {
+      "name": "alpha-bg-absolute-black-transparent",
+      "value": "oklch(0 0 0 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-0"
+    },
+    {
+      "name": "dark-alpha-bg-absolute-black-transparent",
+      "value": "oklch(0 0 0 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-black-0"
+    },
+    {
+      "name": "alpha-bg-absolute-white-dark",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-100"
+    },
+    {
+      "name": "dark-alpha-bg-absolute-white-dark",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-100"
+    },
+    {
+      "name": "alpha-bg-absolute-white-normal",
+      "value": "oklch(1 0 0 / 0.90)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-90"
+    },
+    {
+      "name": "dark-alpha-bg-absolute-white-normal",
+      "value": "oklch(1 0 0 / 0.90)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-90"
+    },
+    {
+      "name": "alpha-bg-absolute-white-light",
+      "value": "oklch(1 0 0 / 0.60)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-60"
+    },
+    {
+      "name": "dark-alpha-bg-absolute-white-light",
+      "value": "oklch(1 0 0 / 0.60)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-60"
+    },
+    {
+      "name": "alpha-bg-absolute-white-lighter",
+      "value": "oklch(1 0 0 / 0.40)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-40"
+    },
+    {
+      "name": "dark-alpha-bg-absolute-white-lighter",
+      "value": "oklch(1 0 0 / 0.40)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-40"
+    },
+    {
+      "name": "alpha-bg-absolute-white-lightest",
+      "value": "oklch(1 0 0 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-20"
+    },
+    {
+      "name": "dark-alpha-bg-absolute-white-lightest",
+      "value": "oklch(1 0 0 / 0.20)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-20"
+    },
+    {
+      "name": "alpha-bg-absolute-white-transparent",
+      "value": "oklch(1 0 0 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-0"
+    },
+    {
+      "name": "dark-alpha-bg-absolute-white-transparent",
+      "value": "oklch(1 0 0 / 0.00)",
+      "group": "Semantic bg (alpha tier)",
+      "ref": "alpha-white-0"
+    },
+    {
+      "name": "alpha-surface-lowest",
+      "value": "oklch(0.976 0.001 286)",
+      "group": "Semantic surface, shadow (alpha tier)",
+      "ref": "alpha-grey-100"
+    },
+    {
+      "name": "dark-alpha-surface-lowest",
+      "value": "oklch(0.289 0.004 265)",
+      "group": "Semantic surface, shadow (alpha tier)",
+      "ref": "alpha-grey-850"
+    },
+    {
+      "name": "alpha-surface-lower",
+      "value": "oklch(0.991 0 0)",
+      "group": "Semantic surface, shadow (alpha tier)",
+      "ref": "alpha-grey-50"
+    },
+    {
+      "name": "dark-alpha-surface-lower",
+      "value": "oklch(0.262 0.007 286)",
+      "group": "Semantic surface, shadow (alpha tier)",
+      "ref": "alpha-grey-900"
+    },
+    {
+      "name": "alpha-surface-normal",
+      "value": "oklch(1 0 0)",
+      "group": "Semantic surface, shadow (alpha tier)",
+      "ref": "alpha-white-100"
+    },
+    {
+      "name": "dark-alpha-surface-normal",
+      "value": "oklch(0.219 0.004 286)",
+      "group": "Semantic surface, shadow (alpha tier)",
+      "ref": "alpha-grey-950"
+    },
+    {
+      "name": "alpha-shadow-xlarge",
+      "value": "oklch(0 0 0 / 0.30)",
+      "group": "Semantic surface, shadow (alpha tier)",
+      "ref": "alpha-black-30"
+    },
+    {
+      "name": "dark-alpha-shadow-xlarge",
+      "value": "oklch(0 0 0 / 0.60)",
+      "group": "Semantic surface, shadow (alpha tier)",
+      "ref": "alpha-black-60"
+    },
+    {
+      "name": "alpha-shadow-large",
+      "value": "oklch(0 0 0 / 0.22)",
+      "group": "Semantic surface, shadow (alpha tier)",
+      "ref": "alpha-black-22"
+    },
+    {
+      "name": "dark-alpha-shadow-large",
+      "value": "oklch(0 0 0 / 0.40)",
+      "group": "Semantic surface, shadow (alpha tier)",
+      "ref": "alpha-black-40"
+    },
+    {
+      "name": "alpha-shadow-medium",
+      "value": "oklch(0 0 0 / 0.15)",
+      "group": "Semantic surface, shadow (alpha tier)",
+      "ref": "alpha-black-15"
+    },
+    {
+      "name": "dark-alpha-shadow-medium",
+      "value": "oklch(0 0 0 / 0.20)",
+      "group": "Semantic surface, shadow (alpha tier)",
+      "ref": "alpha-black-20"
+    },
+    {
+      "name": "alpha-shadow-small",
+      "value": "oklch(0 0 0 / 0.08)",
+      "group": "Semantic surface, shadow (alpha tier)",
+      "ref": "alpha-black-8"
+    },
+    {
+      "name": "dark-alpha-shadow-small",
+      "value": "oklch(0 0 0 / 0.15)",
+      "group": "Semantic surface, shadow (alpha tier)",
+      "ref": "alpha-black-15"
+    },
+    {
+      "name": "alpha-shadow-base",
+      "value": "oklch(0 0 0 / 0.05)",
+      "group": "Semantic surface, shadow (alpha tier)",
+      "ref": "alpha-black-5"
+    },
+    {
+      "name": "dark-alpha-shadow-base",
+      "value": "oklch(0 0 0 / 0.08)",
+      "group": "Semantic surface, shadow (alpha tier)",
+      "ref": "alpha-black-8"
+    },
+    {
+      "name": "alpha-shadow-base-inner",
+      "value": "oklch(1 0 0 / 0.12)",
+      "group": "Semantic surface, shadow (alpha tier)",
+      "ref": "alpha-white-12"
+    },
+    {
+      "name": "dark-alpha-shadow-base-inner",
+      "value": "oklch(1 0 0 / 0.08)",
+      "group": "Semantic surface, shadow (alpha tier)",
+      "ref": "alpha-white-8"
+    },
+    {
+      "name": "alpha-dim-black-light",
+      "value": "oklch(0 0 0 / 0.20)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-absolute-black-lightest"
+    },
+    {
+      "name": "dark-alpha-dim-black-light",
+      "value": "oklch(0 0 0 / 0.20)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-absolute-black-lightest"
+    },
+    {
+      "name": "alpha-dim-black-normal",
+      "value": "oklch(0 0 0 / 0.40)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-absolute-black-lighter"
+    },
+    {
+      "name": "dark-alpha-dim-black-normal",
+      "value": "oklch(0 0 0 / 0.40)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-absolute-black-lighter"
+    },
+    {
+      "name": "alpha-primary-bg-normal",
+      "value": "oklch(0.607 0.211 279)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-blue-normal"
+    },
+    {
+      "name": "dark-alpha-primary-bg-normal",
+      "value": "oklch(0.714 0.140 268)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-blue-normal"
+    },
+    {
+      "name": "alpha-primary-bg-light",
+      "value": "oklch(0.607 0.211 279 / 0.30)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-blue-light"
+    },
+    {
+      "name": "dark-alpha-primary-bg-light",
+      "value": "oklch(0.714 0.140 268 / 0.45)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-blue-light"
+    },
+    {
+      "name": "alpha-primary-bg-lighter",
+      "value": "oklch(0.607 0.211 279 / 0.20)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-blue-lighter"
+    },
+    {
+      "name": "dark-alpha-primary-bg-lighter",
+      "value": "oklch(0.714 0.140 268 / 0.30)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-blue-lighter"
+    },
+    {
+      "name": "alpha-primary-bg-lightest",
+      "value": "oklch(0.607 0.211 279 / 0.10)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-blue-lightest"
+    },
+    {
+      "name": "dark-alpha-primary-bg-lightest",
+      "value": "oklch(0.714 0.140 268 / 0.15)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-blue-lightest"
+    },
+    {
+      "name": "alpha-primary-bg-dark",
+      "value": "oklch(0.525 0.206 279)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-blue-dark"
+    },
+    {
+      "name": "dark-alpha-primary-bg-dark",
+      "value": "oklch(0.607 0.211 279)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-blue-dark"
+    },
+    {
+      "name": "alpha-primary-fg-normal",
+      "value": "oklch(0.607 0.211 279)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-fg-blue-normal"
+    },
+    {
+      "name": "dark-alpha-primary-fg-normal",
+      "value": "oklch(0.714 0.140 268)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-fg-blue-normal"
+    },
+    {
+      "name": "alpha-primary-fg-light",
+      "value": "oklch(0.607 0.211 279 / 0.30)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-fg-blue-light"
+    },
+    {
+      "name": "dark-alpha-primary-fg-light",
+      "value": "oklch(0.714 0.140 268 / 0.45)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-fg-blue-light"
+    },
+    {
+      "name": "alpha-primary-fg-dark",
+      "value": "oklch(0.525 0.206 279)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-fg-blue-dark"
+    },
+    {
+      "name": "dark-alpha-primary-fg-dark",
+      "value": "oklch(0.714 0.140 268)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-fg-blue-dark"
+    },
+    {
+      "name": "alpha-critical-bg-dark",
+      "value": "oklch(0.541 0.166 21)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-red-dark"
+    },
+    {
+      "name": "dark-alpha-critical-bg-dark",
+      "value": "oklch(0.651 0.171 23)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-red-dark"
+    },
+    {
+      "name": "alpha-critical-bg-normal",
+      "value": "oklch(0.651 0.171 23)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-fg-red-normal"
+    },
+    {
+      "name": "dark-alpha-critical-bg-normal",
+      "value": "oklch(0.765 0.140 21)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-fg-red-normal"
+    },
+    {
+      "name": "alpha-critical-bg-light",
+      "value": "oklch(0.651 0.171 23 / 0.30)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-red-light"
+    },
+    {
+      "name": "dark-alpha-critical-bg-light",
+      "value": "oklch(0.765 0.140 21 / 0.45)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-red-light"
+    },
+    {
+      "name": "alpha-critical-bg-lighter",
+      "value": "oklch(0.651 0.171 23 / 0.20)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-red-lighter"
+    },
+    {
+      "name": "dark-alpha-critical-bg-lighter",
+      "value": "oklch(0.765 0.140 21 / 0.30)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-red-lighter"
+    },
+    {
+      "name": "alpha-critical-bg-lightest",
+      "value": "oklch(0.651 0.171 23 / 0.10)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-red-lightest"
+    },
+    {
+      "name": "dark-alpha-critical-bg-lightest",
+      "value": "oklch(0.765 0.140 21 / 0.15)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-red-lightest"
+    },
+    {
+      "name": "alpha-critical-fg-normal",
+      "value": "oklch(0.651 0.171 23)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-fg-red-normal"
+    },
+    {
+      "name": "dark-alpha-critical-fg-normal",
+      "value": "oklch(0.765 0.140 21)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-fg-red-normal"
+    },
+    {
+      "name": "alpha-critical-fg-light",
+      "value": "oklch(0.651 0.171 23 / 0.30)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-fg-red-light"
+    },
+    {
+      "name": "dark-alpha-critical-fg-light",
+      "value": "oklch(0.765 0.140 21 / 0.45)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-fg-red-light"
+    },
+    {
+      "name": "alpha-critical-fg-dark",
+      "value": "oklch(0.541 0.166 21)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-fg-red-dark"
+    },
+    {
+      "name": "dark-alpha-critical-fg-dark",
+      "value": "oklch(0.765 0.140 21)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-fg-red-dark"
+    },
+    {
+      "name": "alpha-warning-bg-dark",
+      "value": "oklch(0.600 0.146 54)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-orange-dark"
+    },
+    {
+      "name": "dark-alpha-warning-bg-dark",
+      "value": "oklch(0.698 0.156 55)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-orange-dark"
+    },
+    {
+      "name": "alpha-warning-bg-normal",
+      "value": "oklch(0.698 0.156 55)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-orange-normal"
+    },
+    {
+      "name": "dark-alpha-warning-bg-normal",
+      "value": "oklch(0.791 0.139 55)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-orange-normal"
+    },
+    {
+      "name": "alpha-warning-bg-light",
+      "value": "oklch(0.698 0.156 55 / 0.30)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-orange-light"
+    },
+    {
+      "name": "dark-alpha-warning-bg-light",
+      "value": "oklch(0.791 0.139 55 / 0.45)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-orange-light"
+    },
+    {
+      "name": "alpha-warning-bg-lighter",
+      "value": "oklch(0.698 0.156 55 / 0.20)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-orange-lighter"
+    },
+    {
+      "name": "dark-alpha-warning-bg-lighter",
+      "value": "oklch(0.791 0.139 55 / 0.30)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-orange-lighter"
+    },
+    {
+      "name": "alpha-warning-bg-lightest",
+      "value": "oklch(0.698 0.156 55 / 0.10)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-orange-lightest"
+    },
+    {
+      "name": "dark-alpha-warning-bg-lightest",
+      "value": "oklch(0.791 0.139 55 / 0.15)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-orange-lightest"
+    },
+    {
+      "name": "alpha-warning-fg-normal",
+      "value": "oklch(0.698 0.156 55)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-fg-orange-normal"
+    },
+    {
+      "name": "dark-alpha-warning-fg-normal",
+      "value": "oklch(0.791 0.139 55)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-fg-orange-normal"
+    },
+    {
+      "name": "alpha-warning-fg-light",
+      "value": "oklch(0.698 0.156 55 / 0.30)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-fg-orange-light"
+    },
+    {
+      "name": "dark-alpha-warning-fg-light",
+      "value": "oklch(0.791 0.139 55 / 0.45)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-fg-orange-light"
+    },
+    {
+      "name": "alpha-warning-fg-dark",
+      "value": "oklch(0.600 0.146 54)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-fg-orange-dark"
+    },
+    {
+      "name": "dark-alpha-warning-fg-dark",
+      "value": "oklch(0.791 0.139 55)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-fg-orange-dark"
+    },
+    {
+      "name": "alpha-accent-bg-dark",
+      "value": "oklch(0.559 0.161 261)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-cobalt-dark"
+    },
+    {
+      "name": "dark-alpha-accent-bg-dark",
+      "value": "oklch(0.657 0.141 255)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-cobalt-dark"
+    },
+    {
+      "name": "alpha-accent-bg-normal",
+      "value": "oklch(0.657 0.141 255)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-cobalt-normal"
+    },
+    {
+      "name": "dark-alpha-accent-bg-normal",
+      "value": "oklch(0.762 0.113 245)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-cobalt-normal"
+    },
+    {
+      "name": "alpha-accent-bg-light",
+      "value": "oklch(0.657 0.141 255 / 0.30)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-cobalt-light"
+    },
+    {
+      "name": "dark-alpha-accent-bg-light",
+      "value": "oklch(0.762 0.113 245 / 0.45)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-cobalt-light"
+    },
+    {
+      "name": "alpha-accent-bg-lighter",
+      "value": "oklch(0.657 0.141 255 / 0.20)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-cobalt-lighter"
+    },
+    {
+      "name": "dark-alpha-accent-bg-lighter",
+      "value": "oklch(0.762 0.113 245 / 0.30)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-cobalt-lighter"
+    },
+    {
+      "name": "alpha-accent-bg-lightest",
+      "value": "oklch(0.657 0.141 255 / 0.10)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-cobalt-lightest"
+    },
+    {
+      "name": "dark-alpha-accent-bg-lightest",
+      "value": "oklch(0.762 0.113 245 / 0.15)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-cobalt-lightest"
+    },
+    {
+      "name": "alpha-accent-fg-normal",
+      "value": "oklch(0.657 0.141 255)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-fg-cobalt-normal"
+    },
+    {
+      "name": "dark-alpha-accent-fg-normal",
+      "value": "oklch(0.762 0.113 245)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-fg-cobalt-normal"
+    },
+    {
+      "name": "alpha-accent-fg-light",
+      "value": "oklch(0.657 0.141 255 / 0.30)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-fg-cobalt-light"
+    },
+    {
+      "name": "dark-alpha-accent-fg-light",
+      "value": "oklch(0.762 0.113 245 / 0.45)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-fg-cobalt-light"
+    },
+    {
+      "name": "alpha-accent-fg-dark",
+      "value": "oklch(0.559 0.161 261)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-fg-cobalt-dark"
+    },
+    {
+      "name": "dark-alpha-accent-fg-dark",
+      "value": "oklch(0.762 0.113 245)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-fg-cobalt-dark"
+    },
+    {
+      "name": "alpha-success-bg-dark",
+      "value": "oklch(0.562 0.100 160)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-green-dark"
+    },
+    {
+      "name": "dark-alpha-success-bg-dark",
+      "value": "oklch(0.668 0.144 152)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-green-dark"
+    },
+    {
+      "name": "alpha-success-bg-normal",
+      "value": "oklch(0.668 0.144 152)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-green-normal"
+    },
+    {
+      "name": "dark-alpha-success-bg-normal",
+      "value": "oklch(0.765 0.145 149)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-green-normal"
+    },
+    {
+      "name": "alpha-success-bg-light",
+      "value": "oklch(0.668 0.144 152 / 0.30)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-green-light"
+    },
+    {
+      "name": "dark-alpha-success-bg-light",
+      "value": "oklch(0.765 0.145 149 / 0.45)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-green-light"
+    },
+    {
+      "name": "alpha-success-bg-lighter",
+      "value": "oklch(0.668 0.144 152 / 0.20)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-green-lighter"
+    },
+    {
+      "name": "dark-alpha-success-bg-lighter",
+      "value": "oklch(0.765 0.145 149 / 0.30)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-green-lighter"
+    },
+    {
+      "name": "alpha-success-bg-lightest",
+      "value": "oklch(0.668 0.144 152 / 0.10)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-bg-green-lightest"
+    },
+    {
+      "name": "dark-alpha-success-bg-lightest",
+      "value": "oklch(0.765 0.145 149 / 0.15)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-bg-green-lightest"
+    },
+    {
+      "name": "alpha-success-fg-normal",
+      "value": "oklch(0.668 0.144 152)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-fg-green-normal"
+    },
+    {
+      "name": "dark-alpha-success-fg-normal",
+      "value": "oklch(0.765 0.145 149)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-fg-green-normal"
+    },
+    {
+      "name": "alpha-success-fg-light",
+      "value": "oklch(0.668 0.144 152 / 0.30)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-fg-green-light"
+    },
+    {
+      "name": "dark-alpha-success-fg-light",
+      "value": "oklch(0.765 0.145 149 / 0.45)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-fg-green-light"
+    },
+    {
+      "name": "alpha-success-fg-dark",
+      "value": "oklch(0.562 0.100 160)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "alpha-fg-green-dark"
+    },
+    {
+      "name": "dark-alpha-success-fg-dark",
+      "value": "oklch(0.765 0.145 149)",
+      "group": "Semantic role → role (alpha tier)",
+      "ref": "dark-alpha-fg-green-dark"
     }
   ],
   "typography": [
