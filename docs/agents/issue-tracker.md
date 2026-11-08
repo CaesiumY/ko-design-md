@@ -30,7 +30,7 @@ GitHub 은 이슈와 PR 이 번호 공간을 공유하므로 `#42` 만으로는 
 
 외부 기여자의 포크 PR 은 두 가지 승인 대기에 걸린다. 둘은 성격이 달라 다르게 다룬다.
 
-- **GitHub Actions 는 실행 승인으로 돌린다.** 포크 PR 의 워크플로 실행은 메인테이너가 승인하기 전까지 `action_required` 로 멈춘다. 승인에는 비용이 들지 않고 기여자를 팀원으로 받을 필요도 없다. 포크의 head 브랜치 이름은 `gh pr view <PR 번호> --json headRefName` 으로 먼저 확인한다(`main` 같은 흔한 이름이면 다른 실행이 섞이므로 결과의 커밋을 PR 의 head 와 대조한다). 대기 중인 실행은 `gh run list --branch <그 이름> --status action_required --json databaseId,workflowName,headSha` 으로 찾고, `gh api -X POST repos/CaesiumY/ko-design-md/actions/runs/<databaseId>/approve` 로 하나씩 승인한다. 승인은 사용자가 그 PR 에 허락했을 때만 하고, 커밋이 새로 푸시되면 새 실행이 다시 대기에 걸리므로 그때마다 다시 승인한다.
+- **GitHub Actions 는 실행 승인으로 돌린다.** 포크 PR 의 워크플로 실행은 메인테이너가 승인하기 전까지 `action_required` 로 멈춘다. 승인에는 비용이 들지 않고 기여자를 팀원으로 받을 필요도 없다. 먼저 `gh pr view <PR 번호> --json headRefName,headRefOid` 로 포크의 head 브랜치 이름과 head 커밋을 확인한다. 대기 중인 실행은 `gh run list --branch <headRefName> --status action_required --json databaseId,workflowName,headSha` 으로 찾고, `headSha` 가 `headRefOid` 와 같은 실행만 `gh api -X POST repos/CaesiumY/ko-design-md/actions/runs/<databaseId>/approve` 로 하나씩 승인한다. 브랜치 이름만으로 고르면 `main` 같은 흔한 이름에서 다른 포크의 실행까지 섞인다. 승인은 사용자가 그 PR 에 허락했을 때만 하고, 커밋이 새로 푸시되면 새 실행이 다시 대기에 걸리므로 그때마다 다시 승인한다.
 - **Vercel 의 "Authorize Fork Deployment" 는 누르지 않는다.** 포크 코드를 팀 권한으로 빌드하는 승인이라 외부 PR 에는 주지 않는다. 미리보기 배포가 없으면 Vercel 체크가 실패로 남는다. main 에는 필수 검사 설정이 없어 머지는 막히지 않으니, 머지 판단은 Actions 의 `build`, `contrast`, `e2e`, `dco` 결과로 한다. 화면 확인은 PR 브랜치를 받아 로컬 개발 서버로 한다.
 
 ## 스킬이 "이슈 트래커에 발행하라" 고 할 때
