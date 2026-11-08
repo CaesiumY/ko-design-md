@@ -574,6 +574,29 @@ colors:
     ])
   })
 
+  it("does not let a conditional <style> element hide a wrong base value", () => {
+    // The @media bypass again, written as HTML: a `media` attribute, or a
+    // stylesheet that only applies inside <noscript> or <template>.
+    const chains = roleChainsForSlug(roles, "socar")
+    const base = `<style>:root { --sf-text-primary: var(--sf-gray-100); }</style>`
+    for (const conditional of [
+      `<style media="(min-width: 1000px)">:root { --sf-text-primary: var(--sf-gray-800); }</style>`,
+      `<noscript><style>:root { --sf-text-primary: var(--sf-gray-800); }</style></noscript>`,
+      `<template><style>:root { --sf-text-primary: var(--sf-gray-800); }</style></template>`,
+    ]) {
+      const html = base + conditional
+      expect(findRoleChainDrift(html, chains), conditional).toEqual([
+        {
+          name: "sf-text-primary",
+          scope: "light",
+          preview: "var(--sf-gray-100)",
+          expected: "var(--sf-gray-800)",
+        },
+      ])
+      expect(roleChainCoverage(html, chains).scoped, conditional).toBe(1)
+    }
+  })
+
   it("reads `html`, attribute and `:where()` root selectors as theme roots", () => {
     const chains = roleChainsForSlug(roles, "socar")
     for (const selector of [

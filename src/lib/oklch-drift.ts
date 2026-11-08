@@ -493,9 +493,11 @@ export interface RoleChainFinding extends DriftFinding {
  * Only THEME-ROOT declarations are the theme's value: a top-level block whose
  * every selector is `:root` or `html` (optionally with one `[data-theme=…]`
  * attribute and then a `:where(…)`) or a bare `[data-theme=…]`, with no
- * `@media`, `@supports` or other at-rule around it (isThemeRoot). A role
- * redeclared anywhere else (`.inverse { … }`, `:where(.chip) { … }`, or `:root`
- * inside `@media`) holds only for part of the page, so it is neither compared
+ * `@media`, `@supports` or other at-rule around it (isThemeRoot), in a
+ * `<style>` element with no `media` attribute and not inside `<noscript>` or
+ * `<template>`. A role redeclared anywhere else (`.inverse { … }`,
+ * `:where(.chip) { … }`, `:root` inside `@media` or inside
+ * `<style media="…">`) holds only for part of the page, so it is neither compared
  * nor allowed to hide the root value; `roleChainCoverage` counts it as
  * `scoped`.
  *
@@ -667,9 +669,23 @@ function declarations(previewHtml: string): Array<Declaration> {
   // across the whole document would let an inline <script> object literal or a
   // style="{…}" attribute skew the depth and quietly break the dark-scope test —
   // a silent miss in the very gate written to catch other gates' silent misses.
+  //
+  // A <style> element that applies only conditionally (a `media` attribute, or
+  // inside <noscript> or <template>) is wrapped in an at-rule here, so its
+  // declarations are never a theme root, as an `@media` block's are not.
+  const inside = (before: string, tag: string): boolean =>
+    (before.match(new RegExp(`<${tag}\\b`, "gi"))?.length ?? 0) >
+    (before.match(new RegExp(`</${tag}\\s*>`, "gi"))?.length ?? 0)
   const blocks = [
-    ...previewHtml.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi),
-  ].map((m) => m[1])
+    ...previewHtml.matchAll(/<style\b([^>]*)>([\s\S]*?)<\/style>/gi),
+  ].map((m) => {
+    const before = previewHtml.slice(0, m.index)
+    const conditional =
+      /\bmedia\s*=/i.test(m[1]) ||
+      inside(before, "noscript") ||
+      inside(before, "template")
+    return conditional ? `@conditional-style {\n${m[2]}\n}` : m[2]
+  })
   // With no <style> at all the input is already a stylesheet — every catalogue
   // preview has one, so this only matters when checking raw CSS directly.
   const css = stripComments(blocks.length > 0 ? blocks.join("\n") : previewHtml)
