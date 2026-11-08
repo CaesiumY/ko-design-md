@@ -172,6 +172,29 @@ describe("curateColors", () => {
     expect(hidden.map((x) => x.name)).toContain("orange2")
   })
 
+  it("does not read a two-colour unhyphenated pair as a ramp", () => {
+    // Two values always move one way, so the lightness test says nothing
+    // about a pair. zigbang's `red1`/`red2` are an accent and its tint; had
+    // the tint taken number 1, the median anchor would have hidden the accent.
+    const colors = [
+      c("teal1", "oklch(0.97 0.02 190)"),
+      c("teal2", "oklch(0.60 0.15 190)"),
+      ...[10, 30, 50, 70, 90, 95, 99].map((n) =>
+        c(`gray${n}`, `oklch(${n / 100} 0 0)`)
+      ),
+    ]
+    const { visible } = curateColors(colors)
+    expect(visible.map((x) => x.name)).toEqual(["teal2"])
+  })
+
+  it("folds a camelCase unhyphenated ramp (greeting's murkyBlue200…)", () => {
+    const steps = [100, 200, 300, 400, 500, 600, 700, 800].map((n) =>
+      c(`murkyBlue${n}`, `oklch(${(0.95 - n / 1000).toFixed(2)} 0.08 250)`)
+    )
+    const { visible } = curateColors(steps)
+    expect(visible.map((x) => x.name)).toEqual(["murkyBlue400"])
+  })
+
   it("falls back to the first few swatches for a fully neutral (monochrome) palette", () => {
     // 20 grayscale steps, every one below NEUTRAL_CHROMA → zero chromatic
     // signature. The card must still open with something, not an empty headline.

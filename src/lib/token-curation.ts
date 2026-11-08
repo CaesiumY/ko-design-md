@@ -45,21 +45,28 @@ export function isAlphaColor(value: string): boolean {
  * A numbered scale step (`gray-100`, `blue-500`, `gray-1000`, `mint8`) →
  * {family, step}.
  *
- * The unhyphenated form is a bare lowercase word followed by the number:
- * baemin keeps www.baemin.com's deployed `--ref-color-*` names (`mint8`,
- * `gray12`), and without this each step read as its own signature colour and
- * filled the headline. The family must be letters only so a name that merely
- * ends in a digit after other parts stays out of it. The name alone does not
- * make it a ramp — `rampMembers` also asks the values (see there).
+ * The unhyphenated form is a word of letters followed by the number: baemin
+ * keeps www.baemin.com's deployed `--ref-color-*` names (`mint8`, `gray12`)
+ * and greeting writes `blue100` and `murkyBlue200`. Without it each step read
+ * as its own signature colour and filled the headline. The family must be
+ * letters only so a name that merely ends in a digit after other parts stays
+ * out of it. The name alone does not make it a ramp — `rampMembers` also asks
+ * the values (see there).
  */
 export function rampStep(
   name: string
 ): { family: string; step: number } | null {
-  // \d{1,4} so 4-digit steps (gray-1000, carrot-1000) collapse with their ramp
-  // instead of reading as a standalone named token.
-  const m = name.match(/^(.*)-(\d{1,4})$/) ?? name.match(/^([a-z]+)(\d{1,4})$/)
+  const m = name.match(HYPHENATED_STEP) ?? name.match(BARE_STEP)
   return m ? { family: m[1], step: Number(m[2]) } : null
 }
+
+// \d{1,4} so 4-digit steps (gray-1000, carrot-1000) collapse with their ramp
+// instead of reading as a standalone named token.
+const HYPHENATED_STEP = /^(.*)-(\d{1,4})$/
+const BARE_STEP = /^([a-z][a-zA-Z]*)(\d{1,4})$/
+// A pair always moves one way, so the lightness test below says nothing about
+// it: zigbang's `red1`/`red2` are an accent and its tint, not a ramp.
+const MIN_BARE_RAMP = 3
 
 const OKLCH_LIGHTNESS = /^oklch\(\s*([\d.]+)(%?)/i
 
@@ -73,13 +80,14 @@ function lightness(value: string): number | null {
  * Which colours are steps of a numbered ramp, by name → {family, step}.
  *
  * A hyphenated step (`gray-100`) is a ramp step by its name, as it always was.
- * An unhyphenated one (`mint8`) is only when its family's lightness moves one
- * way, strictly, along the step numbers. The catalogue writes both shapes of
- * unhyphenated name: baemin's `mint1`…`mint8` and greeting's `blue100`…
- * `blue900` are lightness ramps, but zigbang numbers each hue's colours without
- * ordering them (`orange1` is its accent, `orange2` the near-white tint), and
- * folding those to a median step hid the accent behind its tint. A family with
- * a value whose lightness cannot be read is not treated as a ramp.
+ * An unhyphenated one (`mint8`) is only when its family has at least
+ * MIN_BARE_RAMP steps and their lightness moves one way, strictly, along the
+ * step numbers. The catalogue writes both shapes of unhyphenated name:
+ * baemin's `mint1`…`mint8` and greeting's `blue100`…`blue900` are lightness
+ * ramps, but zigbang numbers each hue's colours without ordering them
+ * (`orange1` is its accent, `orange2` the near-white tint), and folding those
+ * to a median step hid the accent behind its tint. A family with a value whose
+ * lightness cannot be read is not treated as a ramp.
  */
 export function rampMembers(
   colors: Array<ColorToken>
@@ -90,20 +98,20 @@ export function rampMembers(
     Array<{ name: string; step: number; l: number | null }>
   >()
   for (const c of colors) {
-    if (/-(\d{1,4})$/.test(c.name)) {
-      const r = rampStep(c.name)
-      if (r) out.set(c.name, r)
+    const hyphenated = c.name.match(HYPHENATED_STEP)
+    if (hyphenated) {
+      out.set(c.name, { family: hyphenated[1], step: Number(hyphenated[2]) })
       continue
     }
-    const r = rampStep(c.name)
-    if (!r) continue
-    const arr = bare.get(r.family) ?? []
-    arr.push({ name: c.name, step: r.step, l: lightness(c.value) })
-    bare.set(r.family, arr)
+    const m = c.name.match(BARE_STEP)
+    if (!m) continue
+    const arr = bare.get(m[1]) ?? []
+    arr.push({ name: c.name, step: Number(m[2]), l: lightness(c.value) })
+    bare.set(m[1], arr)
   }
   for (const [family, arr] of bare) {
     const ls = [...arr].sort((a, b) => a.step - b.step).map((x) => x.l)
-    if (ls.length < 2 || ls.some((l) => l === null)) continue
+    if (ls.length < MIN_BARE_RAMP || ls.some((l) => l === null)) continue
     const diffs = ls.slice(1).map((l, i) => (l as number) - (ls[i] as number))
     if (!diffs.every((d) => d > 0) && !diffs.every((d) => d < 0)) continue
     for (const x of arr) out.set(x.name, { family, step: x.step })
@@ -117,8 +125,14 @@ export function rampMembers(
  * for the whole hue in the signature palette; the rest of the ladder collapses.
  */
 export function rampAnchors(colors: Array<ColorToken>): Set<string> {
+  return anchorsOf(rampMembers(colors))
+}
+
+function anchorsOf(
+  members: Map<string, { family: string; step: number }>
+): Set<string> {
   const fams = new Map<string, Array<{ name: string; step: number }>>()
-  for (const [name, r] of rampMembers(colors)) {
+  for (const [name, r] of members) {
     const arr = fams.get(r.family) ?? []
     arr.push({ name, step: r.step })
     fams.set(r.family, arr)
@@ -157,8 +171,8 @@ export function curateColors(colors: Array<ColorToken>): {
   visible: Array<ColorToken>
   hidden: Array<ColorToken>
 } {
-  const anchors = rampAnchors(colors)
   const members = rampMembers(colors)
+  const anchors = anchorsOf(members)
   const visible: Array<ColorToken> = []
   const hidden: Array<ColorToken> = []
   for (const c of colors) {
