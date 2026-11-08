@@ -209,7 +209,7 @@ border 만 선언하므로 후보가 각각 하나로 CSS 에서 확정된다.
 **참고 열은 갱신이 강제되지 않으므로 낡을 수 있다.** 마지막으로 전수 갱신한 것은
 2026-11-09 이다(run `42503190439`). 게이트는 warn 행에도 붙여넣을 줄을 출력하므로, 낡은 것을 보면 그 줄로
 갱신하면 된다. 이미 분류된 항목의 `fail`, `borderline`, `indeterminate` 을 바꾸면(텍스트·비텍스트 모두) 그 수를 낸 CI
-run 번호로 `pnpm audit:contrast:rebaseline <run id>` 를 돌린다. 그 항목의 팔레트(`colors:` 나 관찰색 목록)만 바꾼 PR 도
+run 번호로 `pnpm audit:contrast:rebaseline <run id>` 를 돌린다. 분류표에 행이 있는 항목의 팔레트(`colors:` 나 관찰색 목록)만 바꾼 PR 도
 그 PR 의 CI run 으로 같은 명령을 돌린다(「발행색끼리의 경계선」 절 끝). 산출물을 받기 전에 묻고, 이 표와
 `BASELINE_TABLE`, 아래 두 분류표, 「유보 사유」의 표와 보류 행 수 줄, 분류 run 기록(`src/lib/contrast-classified-run.json`),
 분류표 절의 run 번호를 그 run 으로 함께 다시 쓴다(「게이트는 이것을 어떻게 다루나」). 이 문단의 날짜와 run 처럼
