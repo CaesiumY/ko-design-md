@@ -154,6 +154,35 @@ describe("the recorded table against public/preview/", () => {
     ).map((r) => `${r.slug} ${r.theme}`)
     expect(empty).toEqual([])
   })
+
+  it("records no text row thinner than the thinnest preview the catalogue accepted", () => {
+    // A floor on how much a preview shows, not on contrast: ADR 0007's rule
+    // against absolute contrast floors is about the verdict counts, which this
+    // does not touch.
+    //
+    // `elements` is the closest number this table has to that, and a crude
+    // one: it counts every copy, so repeating a card raises it (why the gate
+    // only warns when it moves; see EXACT_FIELDS). It catches a preview that
+    // shows little, not one that pads itself. `measured` folds the copies but
+    // cannot separate the cases: samsung-one-ui keeps 52 distinct rows, chzzk
+    // arrived with 48.
+    //
+    // Two external entries arrived with text rows of 79 (chzzk) and 51
+    // (laftel) elements, the two thinnest in the catalogue by far. No check
+    // judged by the number, so they passed every gate and were only caught by
+    // eye. The thinnest preview kept on its own merits is yeogi at 94, so the
+    // floor sits between the two. A fixed number rather than a share of the
+    // median: the median climbs as thicker entries land, and a moving floor
+    // would start failing entries nobody touched.
+    const MIN_TEXT_ELEMENTS = 80
+    const thin = CONTRAST_BASELINE.filter(
+      (r) => r.kind === "text" && r.elements < MIN_TEXT_ELEMENTS
+    ).map((r) => `${r.slug} ${r.theme}: ${r.elements}`)
+    expect(
+      thin,
+      `A preview shows fewer than ${MIN_TEXT_ELEMENTS} text elements per theme, thinner than any the catalogue kept. Add the component states and screen mockups the md describes (.claude/skills/design-md/references/rubric-preview.md), push, and record the rows the CI contrast job measures — do not lower the number to pass.`
+    ).toEqual([])
+  })
 })
 
 describe("the published-pair tables against the recorded totals", () => {
