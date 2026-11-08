@@ -273,8 +273,13 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       // The fourth column names the palette step a literal hex equals
       // (`라이트 \`gray1\``, `다크 \`dark-gray12\``) — the value is the
       // step's, but upstream writes it as a literal, so it is no reference.
-      // Each named step must carry that very hex on its frontmatter line.
-      const raw = readFileSync(join(SERVICES, "baemin.md"), "utf-8")
+      // Each named step must carry that very hex on its frontmatter line, and
+      // a hex that some step of the cell's theme carries must name it — the
+      // prose says the column does, so a dropped note fails too.
+      const raw = readFileSync(join(SERVICES, "baemin.md"), "utf-8").replace(
+        /\r\n/g,
+        "\n"
+      )
       const lineHex = new Map(
         [
           ...raw.matchAll(
@@ -295,6 +300,14 @@ const CASES: Record<string, { title: string; check: () => void }> = {
         ] as const) {
           const named = new RegExp(`${side} \`([a-z0-9-]+)\``).exec(note)?.[1]
           const hex = HEX_CELL.exec(cell)?.[1]
+          const sameStep = [...lineHex].find(
+            ([key, value]) =>
+              hex !== undefined &&
+              value === long(hex) &&
+              key.startsWith("dark-") === (side === "다크")
+          )?.[0]
+          if (sameStep !== undefined && named === undefined)
+            wrongNote.push(`${spans(roleCell)[0]}: ${side} ${sameStep} unnamed`)
           if (named === undefined) continue
           notes.push(named)
           if (hex === undefined || lineHex.get(named) !== long(hex))

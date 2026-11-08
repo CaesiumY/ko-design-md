@@ -444,7 +444,7 @@ fonts:
 
 ### 배포 역할
 
-배민 웹은 팔레트 위에 테마 역할 층 둘을 배포한다 [src:14]. 두 테마는 역할 이름 대부분이 같고 고르는 색이 다르다. 시스템 메인 역할이 `base` 에서는 보라(`purple4`), `mint` 에서는 브랜드 민트(`mint5`)를 가리킨다. 표의 역할 이름은 상류 이름(`--sem-mint-color-systemMainPrimary`)의 테마와 역할 부분을 이은 것이다(`mint-systemMainPrimary`).
+배민 웹은 팔레트 위에 테마 역할 층 둘을 배포한다 [src:14]. 두 테마는 역할 이름 대부분이 같고 고르는 색이 다르다. 시스템 메인 역할이 `base` 에서는 보라(`purple4`), `mint` 에서는 브랜드 민트(`mint5`)를 가리킨다. 이 문서의 대표색 `{colors.primary}` 가 그 `mint5` 이므로, 브랜드 민트를 주색으로 쓰는 화면은 `mint-` 역할에서 고른다. 표의 역할 이름은 상류 이름(`--sem-mint-color-systemMainPrimary`)의 테마와 역할 부분을 이은 것이다(`mint-systemMainPrimary`).
 
 참조 칸(`{colors.mint5}` 꼴)은 상류가 팔레트 단계를 가리키는 선언이고, frontmatter 에 같은 대응의 참조 행이 있다. 나머지 칸은 상류가 값을 직접 적은 선언이라 표에만 있다. hex 는 OKLCH 를 곁들이고, rgba, hsla, `transparent` 는 상류 표기 그대로 옮겼다. 비고 칸은 직접 적은 hex 가 팔레트 단계와 값이 같을 때 그 단계를 적는다. 값은 같아도 상류가 참조로 적지 않았으므로 참조 행이 없다.
 
@@ -578,7 +578,7 @@ fonts:
 | NEW·신규·환영 칩 | `{colors.primary-tint}` |
 | 검정 캡슐 토스트 | `{colors.bg-inverse}` 90% 불투명도 |
 
-새 컴포넌트를 추가할 때는 raw 컬러를 직접 박지 말고 위 쓰임 중 하나에 정렬하는 것을 우선한다. 맞는 쓰임이 없으면(성공 상태 등) 새 토큰을 만들지 말고 `### 배포 역할` 의 역할(성공 상태라면 `positivePrimary`)에서 고르고, 거기에도 없을 때 팔레트 토큰에서 고른다.
+새 컴포넌트를 추가할 때는 raw 컬러를 직접 박지 말고 위 쓰임 중 하나에 정렬하는 것을 우선한다. 맞는 쓰임이 없으면(성공 상태 등) 새 토큰을 만들지 말고 `### 배포 역할` 의 역할(성공 상태라면 `mint-positivePrimary` 나 `base-positivePrimary`)에서 고르고, 거기에도 없을 때 팔레트 토큰에서 고른다.
 
 ## Typography
 
