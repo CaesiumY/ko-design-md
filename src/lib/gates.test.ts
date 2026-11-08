@@ -204,6 +204,20 @@ describe("ciPreBuildSteps", () => {
     )
     expect(() => ciPreBuildScripts(chained)).toThrow(/typecheck && pnpm lint/)
   })
+
+  it("throws on a line that runs more than it names, even behind `pnpm install`", () => {
+    for (const run of [
+      "|\n          pnpm install\n          node scripts/extra-check.ts",
+      "pnpm install $(node scripts/extra-check.ts)",
+      "pnpm install `node scripts/extra-check.ts`",
+    ]) {
+      const hidden = WORKFLOW.replace(
+        "run: pnpm install --frozen-lockfile",
+        `run: ${run}`
+      )
+      expect(() => ciPreBuildScripts(hidden), run).toThrow(/extra-check/)
+    }
+  })
 })
 
 describe("stepListMismatch", () => {

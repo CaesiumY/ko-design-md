@@ -86,6 +86,9 @@ const SETUP_ACTIONS = [
 /** `pnpm <script> [args]` on one line, with no chaining or redirection. */
 const ONE_PNPM_SCRIPT = /^pnpm\s+([\w:.-]+)(?:\s+[^&|;<>\n]*)?$/
 
+/** A line break, `$(…)` or a backtick: the line runs another command too. */
+const RUNS_MORE = /[\r\n`]|\$\(/
+
 // The keys a pre-build step may carry: what the line shows, and labels or
 // limits that do not change what the check does. Any other (`if`,
 // `continue-on-error`, `working-directory`, …) changes whether or how the
@@ -210,7 +213,10 @@ export function ciPreBuildSteps(workflowYaml: string): Array<CiStep> {
       )
     }
     const line = step.run.trim()
-    const match = ONE_PNPM_SCRIPT.exec(line)
+    // A second line, or a command substitution, runs more than the script the
+    // line names, and would ride past even on `pnpm install`, whose arguments
+    // are not compared. A plain variable such as `"$BASE_REF"` is an argument.
+    const match = RUNS_MORE.test(line) ? null : ONE_PNPM_SCRIPT.exec(line)
     if (!match) {
       throw new Error(
         `CI build step \`${line}\` is not a single \`pnpm <script>\` line; ` +
