@@ -65,13 +65,13 @@
     --fill-accent-olive-heavy:rgba(169,177,16,.20);
 
     /* md 「Colors」 beta hover 표 값(참조 행 없는 표 값) — 상류 bezier-tokens 0.6.0 beta `fill-accent-blue-heavy-hovered`
-       (#5146e4 30%)와 `fill-accent-blue-heavier-hovered`(#5146e4). 기본 버튼 바탕은 md 참조 행
-       `fill-accent-blue-heavier`(라이트 `{colors.blue-400}`)다. 다크 짝은 다크 블록에 있다.
-       두 테마의 바탕과 hover 를 src/lib/bezier-preview-primary-button.test.ts 가 md 표와 상류에 대조한다.
+       (#5146e4 30%)와 `fill-accent-blue-heavier-hovered`(#5146e4). 라이트 값은 md 표와 같다.
        상류가 바뀌면 대비를 다시 잰다(#552). */
     --fill-accent-blue-heavy-hovered:rgba(81,70,228,.30);
-    --fill-accent-blue-heavier:var(--c-blue-400);
     --fill-accent-blue-heavier-hovered:#5146e4;
+    /* 기본 버튼 바탕 — md 참조 행 `fill-accent-blue-heavier`(라이트 `{colors.blue-400}`). 다크 짝은 다크 블록에 있다.
+       두 테마의 바탕과 hover 를 src/lib/bezier-preview-primary-button.test.ts 가 md 표와 상류에 대조한다. */
+    --fill-accent-blue-heavier:var(--c-blue-400);
 
     /* ── Surfaces ──────────────────────────────────────────────────────────── */
     --surface:#ffffff;
@@ -205,7 +205,7 @@
         border-radius:var(--radius-10); font:700 14px/18px var(--font-sans); white-space:nowrap;
         transition:background-color var(--motion-fast); }
   .btn .ic{ width:20px; height:20px; }
-  .btn.pri{ background:var(--fill-accent-blue-heavier); color:#fff; }
+  .btn.pri{ background:var(--fill-accent-blue-heavier); color:var(--primary-foreground); }
   .btn.pri:hover{ background:var(--fill-accent-blue-heavier-hovered); }
   .btn.grey{ background:var(--fill-neutral-heaviest); color:#fff; }
   .btn.sec{ background:var(--fill-accent-blue-heavy); color:var(--c-blue-400); }
@@ -576,7 +576,8 @@
     --fill-accent-blue-heavy-hovered:rgba(129,132,255,.30);
     /* 기본 버튼 바탕은 md 참조 행 `dark-fill-accent-blue-heavier`(`{colors.blue-300}`), hover 는 md 「beta hover」 표의
        다크 값 `oklch(0.722 0.148 281)` — 상류 bezier-tokens 0.6.0 beta 다크 `fill-accent-blue-heavier`(blue-300)와
-       `fill-accent-blue-heavier-hovered`(#9698ff) 그대로다(#662). */
+       `fill-accent-blue-heavier-hovered`(#9698ff) 그대로다(#662). 이 짝은 기본 버튼(`.btn.pri`)에만 쓴다 —
+       아이콘 버튼·FAB·`--primary` 의 blue-400 은 md 가 이 역할에 묶지 않은 다른 컴포넌트라 그대로 둔다. */
     --fill-accent-blue-heavier:var(--c-blue-300);
     --fill-accent-blue-heavier-hovered:#9698ff;
 
@@ -703,7 +704,7 @@
         border-radius:var(--radius-10); font:700 14px/18px var(--font-sans); white-space:nowrap;
         transition:background-color var(--motion-fast); }
 [data-theme="dark"] .btn .ic { width:20px; height:20px; }
-[data-theme="dark"] .btn.pri { background:var(--fill-accent-blue-heavier); color:#fff; }
+[data-theme="dark"] .btn.pri { background:var(--fill-accent-blue-heavier); color:var(--primary-foreground); }
 [data-theme="dark"] .btn.pri:hover { background:var(--fill-accent-blue-heavier-hovered); }
 [data-theme="dark"] .btn.grey { background:var(--fill-neutral-heaviest); color:var(--c-grey-900); }
 [data-theme="dark"] .btn.sec { background:var(--fill-accent-blue-heavy); color:var(--c-blue-300); }

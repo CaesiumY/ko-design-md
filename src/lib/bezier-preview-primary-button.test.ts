@@ -74,19 +74,25 @@ describe.each(["light", "dark"] as const)(
   "bezier primary button, %s theme",
   (theme) => {
     const want = UPSTREAM[theme]
-    const sheet = halves?.[theme] ?? ""
-
-    it("the preview reads as a merged or split file", () => {
-      expect(halves).not.toBeNull()
-    })
+    // Thrown by name, so a missing preview fails as that and not as a
+    // "no `.btn.pri` rule" read off an empty string.
+    const sheet = (): string => {
+      if (halves === null) {
+        throw new Error("public/preview/bezier has no readable preview")
+      }
+      return halves[theme]
+    }
 
     it("the preview's base is upstream's fill-accent-blue-heavier", () => {
-      const base = resolveVar(sheet, ruleBackground(sheet, ".btn.pri"))
+      const base = resolveVar(sheet(), ruleBackground(sheet(), ".btn.pri"))
       expect(base.toLowerCase()).toBe(want.base)
     })
 
     it("the preview's hover is upstream's fill-accent-blue-heavier-hovered", () => {
-      const hover = resolveVar(sheet, ruleBackground(sheet, ".btn.pri:hover"))
+      const hover = resolveVar(
+        sheet(),
+        ruleBackground(sheet(), ".btn.pri:hover")
+      )
       expect(hover.toLowerCase()).toBe(want.hovered)
     })
 
