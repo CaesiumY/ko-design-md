@@ -3,7 +3,7 @@
 //   pnpm gates
 //
 // Runs each step in src/lib/gates.ts as `pnpm run <script>`, stops at the first
-// failure, and prints that step's name. The step list and the run loop live in
+// failure, and prints that step's name and what it guards. The step list and the run loop live in
 // that module, where they are unit-tested and held to .github/workflows/ci.yml;
 // this file only spawns the processes.
 import { spawnSync } from "node:child_process"

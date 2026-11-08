@@ -132,6 +132,25 @@ describe("ciPreBuildScripts", () => {
     expect(() => ciPreBuildScripts(action)).toThrow(/some\/lint-action/)
   })
 
+  it("throws on a pre-build step with neither `run` nor `uses`", () => {
+    const bare = WORKFLOW.replace(
+      "      - name: Type check\n",
+      "      - name: Only env\n        env:\n          X: y\n      - name: Type check\n"
+    )
+    expect(() => ciPreBuildScripts(bare)).toThrow(/neither `run` nor `uses`/)
+  })
+
+  it("stops reading at `pnpm build`, so steps after it are not its concern", () => {
+    const after = WORKFLOW.replace(
+      "        run: pnpm test:http\n",
+      "        run: pnpm test:http\n      - uses: some/deploy-action@v1\n      - run: node scripts/report.mjs\n"
+    )
+    expect(ciPreBuildScripts(after)).toEqual([
+      "typecheck",
+      "check:last-updated",
+    ])
+  })
+
   it("lets the setup actions through", () => {
     const setup = WORKFLOW.replace(
       "      - uses: actions/checkout@v7\n",

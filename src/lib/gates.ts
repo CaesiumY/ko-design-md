@@ -34,7 +34,7 @@ export const GATE_STEPS: ReadonlyArray<GateStep> = [
   {
     script: "test",
     guards:
-      "vitest 전체(.claude/worktrees, .claude/cache, e2e 는 제외). 계약 테스트와 기준선 대조 포함",
+      "vitest 전체(제외 경로는 vite.config.ts). 계약 테스트와 기준선 대조 포함",
   },
   {
     script: "validate:catalog",
@@ -112,7 +112,8 @@ export function ciPreBuildScripts(workflowYaml: string): Array<string> {
     if (!match) {
       throw new Error(
         `CI build step \`${line}\` is not a single \`pnpm <script>\` line; ` +
-          "split it into one step per script so `pnpm gates` can mirror it"
+          "make each check its own `pnpm <script>` step so `pnpm gates` can mirror it, " +
+          "or move a step that only prepares the runner after `pnpm build` or into a setup action"
       )
     }
     const script = match[1]
