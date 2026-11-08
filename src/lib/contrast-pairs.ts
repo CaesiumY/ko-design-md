@@ -19,6 +19,7 @@
 // the artifact CI uploads, never a local sweep — the recorded tables describe
 // CI's rendering.
 
+import { createHash } from "node:crypto"
 import { compositeOver } from "./contrast"
 import { keyOf, measuredSlugs } from "./contrast-report"
 import {
@@ -302,6 +303,39 @@ export function paletteOf(
     })
   }
   return { entries, translucent, unreadable }
+}
+
+/**
+ * A short digest of what the classification reads from a palette, so a pair
+ * table can be tied to the palette it was classified against (#669): the
+ * classified-run record keeps one per classified slug, and the corpus test
+ * reads the entry again and compares.
+ *
+ * Only what `pairClass` uses goes in — each token's colour (Oklab, or the
+ * 8-bit paint of a translucent one), whether it is observed, and its theme.
+ * Names do not: no classification reads one, so renaming a token, reordering
+ * the map or writing the same colour another way leaves the tables as they
+ * were and the digest with them. Oklab is rounded to 1e-6, far inside
+ * `PUBLISHED_PAIR_TOLERANCE`, so two spellings of one colour that parse a
+ * float's last bit apart are not read as a change.
+ */
+export function paletteFingerprint(palette: Palette): string {
+  // `+ 0` folds a rounded -0 into 0, so it prints as "0".
+  const n = (x: number): string => String(Math.round(x * 1e6) / 1e6 + 0)
+  const lines = new Set([
+    ...palette.entries.map(
+      (e) =>
+        `opaque ${n(e.lab.L)} ${n(e.lab.a)} ${n(e.lab.b)} ${e.observed} ${e.theme}`
+    ),
+    ...palette.translucent.map(
+      (t) =>
+        `translucent ${t.paint.r} ${t.paint.g} ${t.paint.b} ${Math.round(t.paint.a * 255)} ${t.observed} ${t.theme}`
+    ),
+  ])
+  return createHash("sha256")
+    .update([...lines].sort().join("\n"))
+    .digest("hex")
+    .slice(0, 16)
 }
 
 /** Whether a token of `token`'s theme can be painted in a row of `row`'s. */
