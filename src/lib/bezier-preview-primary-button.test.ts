@@ -62,8 +62,11 @@ interface Rule {
 
 /**
  * Every innermost rule of a document's `<style>` contents, in source order. A
- * rule inside `@media` comes out as a rule of its own — counted, never
- * dropped, so a conditional override still makes a reader refuse the sheet.
+ * rule inside `@media` comes out as a rule of its own, its condition dropped:
+ * an extra rule under a condition is still counted and refused, but the
+ * preview's own rule wrapped in one (`@media print`, `<style media>`) reads as
+ * unconditional. `!important` is not weighed either — a light rule carrying it
+ * fails the light comparison, not the dark one. Both are stated limits.
  */
 function rulesOf(html: string): Array<Rule> {
   const css = [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)]
