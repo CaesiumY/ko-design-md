@@ -45,7 +45,7 @@ paths:
 CI 의 **별도 `contrast` 잡**에서 돈다. 프리뷰 대비를 라이트·다크 × 4폭으로 전수 재고
 `docs/preview-contrast-baseline.md` 의 총계 표와 대조해, 개별 미달이 아니라 **그 수가 움직였는지**만
 막는다(ADR 0007). 대비와 별개로, 텍스트 요소가 하한 `MIN_TEXT_ELEMENTS` 미만인 얇은 프리뷰도 막는다(ADR 0013). **수치는 CI 가 정본이다** — 폰트 폴백이 OS 마다 달라 줄바꿈과 판정이 바뀔 수 있다.
-로컬에서 돌리려면 `pnpm exec playwright install chromium` 이 선행이고, 종료 코드는 어긋남 3 · `--self-check` 의
+로컬에서 돌리려면 `pnpm exec playwright install chromium` 이 선행이고, 종료 코드는 어긋남 또는 얇은 프리뷰 3 · `--self-check` 의
 측정기 고장 1 · 인자 오류 2 다(정의는 `scripts/audit-contrast.ts`).
 
 **총계 표를 갱신하는 PR 은 발행색 분류표와 보류 사유 표도 함께 다시 낸다** — 그 CI run 번호로
