@@ -73,7 +73,10 @@ export const GATE_STEPS: ReadonlyArray<GateStep> = [
 ]
 
 // Steps that only prepare the runner. Anything else before `pnpm build` must be
-// a check `pnpm gates` can run, so it is read or refused, never skipped.
+// a check `pnpm gates` can run, so it is read or refused, never skipped. What
+// these actions are given (`with:`, such as the Node version or checkout
+// depth) sets up CI's environment, which `pnpm gates` cannot copy because it
+// runs in yours; that is outside what this contract holds.
 const SETUP_ACTIONS = [
   "actions/checkout",
   "pnpm/action-setup",

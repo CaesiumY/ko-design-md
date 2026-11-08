@@ -11,6 +11,7 @@ pnpm gates              # CI build 잡이 pnpm build 전에 돌리는 검사 전
                         # 첫 실패에서 멈추고 그 단계 이름과 그 단계가 막는 것을 찍는다.
                         # 단계와 설명은 src/lib/gates.ts 의 GATE_STEPS, CI 에 그 밖의 단계가
                         # 끼거나 목록, 인자, 단계와 job 의 설정이 어긋나면 pnpm test 가 막는다.
+                        # 준비 액션의 with(Node 버전 등)는 CI 환경이라 대조 밖이다
                         # 날짜 검사의 기준은 origin/main, 다른 브랜치 위에 쌓은 브랜치는
                         # pnpm gates --base origin/<그 브랜치>
 pnpm build              # build:og + vite build
