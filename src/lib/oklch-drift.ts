@@ -215,6 +215,7 @@ const PREVIEW_TOKEN_ALIASES: Partial<
     "teal",
     "yellow",
   ].map((family) => [`${family}-`, `c-${family}-`] as const),
+  chzzk: [["", "chz-"]],
   class101: [["", "c101-"]],
   // codeit's preview names roles as its docs do (`--ci-txt-*`, `--ci-bg-*`)
   // where the md rows use the bundle's `text-*` and `background-*`, and
@@ -237,6 +238,7 @@ const PREVIEW_TOKEN_ALIASES: Partial<
   "gs-shop": [["", "gs-"]],
   krds: [["", "krds-"]],
   kyobobook: [["", "kds-"]],
+  laftel: [["", "lft-"]],
   "lg-electronics": [["", "lg-"]],
   likelion: [["", "ll-"]],
   "line-design-system": [

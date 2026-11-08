@@ -147,6 +147,7 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
   // chains are compared, read through the per-family `c-` rules (#660). Its
   // alpha roles are `rgba(…)` literals and stay out.
   bezier: 9,
+  chzzk: 17,
   class101: 14,
   // 8 → 60 (#660): its docs role names (`txt-`, `bg-`) and its `light-`
   // palette steps got rules, so its light palette is compared as values and
@@ -166,6 +167,7 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
   "gs-shop": 52,
   krds: 33,
   kyobobook: 41,
+  laftel: 16,
   "lg-electronics": 67,
   // 23 → 34 (#660): its light role chains; the dark half writes literals.
   likelion: 34,

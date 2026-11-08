@@ -99,6 +99,7 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   baemin: { annotated: 172, judged: 172, drift: 199, references: 1 },
   banksalad: { annotated: 187, judged: 187, drift: 187, references: 203 },
   bezier: { annotated: 232, judged: 232, drift: 275, references: 532 },
+  chzzk: { annotated: 50, judged: 50, drift: 50 },
   class101: { annotated: 98, judged: 98, drift: 98 },
   codeit: {
     annotated: 180,
@@ -113,6 +114,7 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   "gs-shop": { annotated: 52, judged: 52, drift: 52, references: 1 },
   krds: { annotated: 44, judged: 44, drift: 55, references: 1 },
   kyobobook: { annotated: 26, judged: 26, drift: 56, references: 1 },
+  laftel: { annotated: 32, judged: 32, drift: 32 },
   "lg-electronics": { annotated: 67, judged: 67, drift: 67 },
   likelion: { annotated: 39, judged: 39, drift: 39, references: 51 },
   "line-design-system": { annotated: 24, judged: 24, drift: 24, references: 1 },
