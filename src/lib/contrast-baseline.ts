@@ -405,7 +405,7 @@ export const BASELINE_TABLE = `\
 | 11st | light | non-text | 14 | 19 | 6 | 0 | 2 |
 | baemin | dark | text | 86 | 157 | 8 | 0 | 2 |
 | baemin | dark | non-text | 4 | 15 | 2 | 0 | 0 |
-| baemin | light | text | 86 | 157 | 19 | 4 | 2 |
+| baemin | light | text | 86 | 157 | 17 | 6 | 2 |
 | baemin | light | non-text | 4 | 15 | 2 | 0 | 0 |
 | banksalad | dark | text | 173 | 381 | 46 | 0 | 5 |
 | banksalad | dark | non-text | 17 | 23 | 15 | 0 | 0 |
@@ -415,6 +415,10 @@ export const BASELINE_TABLE = `\
 | bezier | dark | non-text | 42 | 45 | 11 | 4 | 1 |
 | bezier | light | text | 175 | 349 | 54 | 9 | 11 |
 | bezier | light | non-text | 41 | 44 | 18 | 9 | 1 |
+| chzzk | dark | text | 139 | 300 | 9 | 1 | 3 |
+| chzzk | dark | non-text | 4 | 4 | 1 | 0 | 0 |
+| chzzk | light | text | 141 | 300 | 16 | 0 | 3 |
+| chzzk | light | non-text | 4 | 4 | 2 | 0 | 0 |
 | class101 | dark | text | 97 | 160 | 24 | 0 | 7 |
 | class101 | dark | non-text | 16 | 18 | 7 | 1 | 4 |
 | class101 | light | text | 97 | 160 | 33 | 2 | 7 |
@@ -447,6 +451,10 @@ export const BASELINE_TABLE = `\
 | kyobobook | dark | non-text | 13 | 13 | 6 | 0 | 0 |
 | kyobobook | light | text | 102 | 167 | 25 | 0 | 5 |
 | kyobobook | light | non-text | 13 | 13 | 5 | 3 | 0 |
+| laftel | dark | text | 105 | 299 | 19 | 0 | 0 |
+| laftel | dark | non-text | 5 | 17 | 1 | 3 | 0 |
+| laftel | light | text | 105 | 299 | 24 | 0 | 0 |
+| laftel | light | non-text | 5 | 17 | 2 | 3 | 0 |
 | lg-electronics | dark | text | 282 | 564 | 10 | 9 | 7 |
 | lg-electronics | dark | non-text | 22 | 33 | 13 | 0 | 1 |
 | lg-electronics | light | text | 280 | 564 | 20 | 30 | 7 |
