@@ -77,9 +77,11 @@ corrects an earlier version of the entry — nothing to apply):
   comment, the Colors prose and Known Gaps confirm which it is.
 - A quoted `"{colors.x}"` value is a reference row: it resolves to key `x` in the same
   map, and `x` may itself be a reference — follow the chain to a literal value. Role rows
-  point at palette steps this way, light and dark alike. The JSON token sidecar carries
+  point at palette steps this way, light and dark alike, and a role may point at another
+  role (`primary-bg-normal: "{colors.bg-blue-normal}"`). The JSON token sidecar carries
   each reference row as well: its `value` is the colour the chain ends at, and `ref`
-  names the key it points at (the first hop), so role and dark-pair wiring can be read
+  names the key it points at (the first hop, which may be a role rather than a palette
+  step), so role and dark-pair wiring can be read
   from either. `primary: "{colors.x}"` is a reference row too, but it is the brand-colour
   alias, not a role — treat it as the palette's brand colour.
 - Wire both values to one token name in the target's dark-mode mechanism (a custom-property
