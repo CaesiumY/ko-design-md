@@ -125,7 +125,7 @@ Google Labs 의 DESIGN.md 명세를 **공식 린터로** 판정한다. 명세를
     상류에 없으면 지어내지 말고 알려진 공백에 적는다.
   - **상류가 역할을 다른 역할로 가리키면 역할 참조로 싣는다**(2026-11-08 결정, #661). 채널톡 alpha 의
     `--alpha-color-primary-bg-normal: var(--alpha-color-bg-blue-normal)` 은 `primary-bg-normal:
-    "{colors.bg-blue-normal}"` 꼴로 싣는다. tier 접두는 아래 tier 항을 따르므로, 채널톡 alpha 에서는 실제 키가
+    "{colors.bg-blue-normal}"` 꼴로 싣는다. tier 접두는 아래 두 tier 항(팔레트 접두, 역할 이름 접두)을 따르므로, 채널톡 alpha 에서는 실제 키가
     `alpha-primary-bg-normal: "{colors.alpha-bg-blue-normal}"` 이 된다. 끝까지 따라가 팔레트 단계에 걸지
     않는다 — 상류의 구조가 그대로 남아, 가운데 역할이 바뀌면 그 역할을 가리키는 역할도 함께 따라간다. 토큰
     추출기는 참조의 참조를 끝까지 따라가 칠할 색으로 풀고 첫 홉을 `ref` 에 둔다. 가리킨 역할도 이 절의
