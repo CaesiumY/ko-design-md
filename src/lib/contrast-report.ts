@@ -5,6 +5,7 @@
 // `contrast.ts` is: the script needs a browser, so anything it owns cannot be
 // covered by `pnpm test`.
 
+import { BLOCKERS, isBlocker } from "./contrast"
 import type { Blocker, ControlTextSource, Verdict } from "./contrast"
 
 export type Theme = "light" | "dark"
@@ -41,6 +42,63 @@ export interface Finding {
   fg: string
   bg: string
 }
+
+// Every field the fold (`keyOf`, `dedupeFindings`' sort) and the pair
+// classifier read, with the type the sweep writes. A missing one folds rows
+// differently from the sweep that produced them (an `undefined` threshold, a
+// truthy non-boolean `opacityApprox`) and yields a wrong table without an
+// error, so a file that lacks one is the wrong input.
+// eslint-disable-next-line no-restricted-syntax -- Checks one field of a parsed JSON file, untyped external input.
+const optionalString = (v: unknown): boolean =>
+  v === undefined || typeof v === "string"
+
+// eslint-disable-next-line no-restricted-syntax -- Narrows one item of a parsed JSON file, untyped external input.
+const isFinding = (item: unknown): boolean => {
+  if (typeof item !== "object" || item === null) return false
+  // eslint-disable-next-line no-restricted-syntax -- Fields of the item above, still unchecked.
+  const f = item as Record<string, unknown>
+  return (
+    typeof f.slug === "string" &&
+    typeof f.theme === "string" &&
+    typeof f.state === "string" &&
+    typeof f.kind === "string" &&
+    typeof f.path === "string" &&
+    typeof f.verdict === "string" &&
+    typeof f.ratio === "number" &&
+    typeof f.threshold === "number" &&
+    typeof f.width === "number" &&
+    Array.isArray(f.blockers) &&
+    f.blockers.every((b) => typeof b === "string") &&
+    typeof f.opacityApprox === "boolean" &&
+    optionalString(f.basis) &&
+    optionalString(f.source) &&
+    typeof f.fg === "string" &&
+    typeof f.bg === "string"
+  )
+}
+
+/**
+ * Why a parsed `contrast-findings.json` is not findings this module can fold,
+ * or null when it is. For the commands that read CI's artifact
+ * (`classify-contrast-pairs.ts`, `rebaseline-contrast.ts`), which refuse it
+ * rather than print a table from it.
+ */
+// eslint-disable-next-line no-restricted-syntax -- A parsed JSON file is untyped external input.
+export function findingsProblem(parsed: unknown): string | null {
+  if (!Array.isArray(parsed)) return "is not a findings array"
+  const bad = parsed.findIndex((item) => !isFinding(item))
+  return bad === -1
+    ? null
+    : `item ${bad} is not a finding (slug, theme, state, kind, path, verdict, ratio, threshold, width, blockers, opacityApprox, basis?, source?, fg, bg) — is it a contrast-findings.json from a run that reports colour pairs?`
+}
+
+/**
+ * Every slug the findings name, sorted and once each: the slugs a run
+ * measured, as `src/lib/contrast-classified-run.json` records them.
+ */
+export const measuredSlugs = (
+  findings: ReadonlyArray<Pick<Finding, "slug">>
+): Array<string> => [...new Set(findings.map((f) => f.slug))].sort()
 
 /** The same element folded across the widths it was seen at. */
 export interface DedupedFinding extends Omit<Finding, "width"> {
@@ -428,4 +486,123 @@ export function blockerTally(
   return [...counts.entries()]
     .map(([blocker, count]) => ({ blocker, count }))
     .sort((a, b) => b.count - a.count || a.blocker.localeCompare(b.blocker))
+}
+
+/**
+ * The hold-reason table `docs/preview-contrast-baseline.md` publishes, and the
+ * run it was read from.
+ *
+ * `held` is the number of held rows, not the sum of `tally`: a row held for two
+ * reasons is counted once here and once under each reason there. It is the
+ * number the corpus test ties to the recorded totals' `indeterminate` column,
+ * which the per-reason counts cannot be tied to without the artifact.
+ */
+export interface HeldReasons {
+  tally: Array<{ blocker: Blocker; count: number }>
+  held: number
+  run: string
+}
+
+/**
+ * The tally and held-row count of rows already folded by `dedupeFindings` —
+ * the same fold and the same `blockerTally` the sweep's `held for:` line is
+ * made from, so the log and the document cannot count differently. A reason
+ * that held nothing has no row, as it has no entry on that line.
+ */
+export function heldReasons(
+  findings: Array<DedupedFinding>
+): Omit<HeldReasons, "run"> {
+  return {
+    tally: blockerTally(findings),
+    held: findings.filter((f) => f.verdict === "indeterminate").length,
+  }
+}
+
+const HELD_REASON_COLUMNS = ["사유", "건수"]
+
+const heldRowsLine = (held: number, run: string): string =>
+  `보류 행 수: ${held} (run \`${run}\`)`
+
+/**
+ * The table and the held-row line under it, as one block to paste over the
+ * one in the document's 「유보 사유」 section.
+ */
+export function renderHeldReasons(r: HeldReasons): string {
+  return [
+    `| ${HELD_REASON_COLUMNS.join(" | ")} |`,
+    `| ${HELD_REASON_COLUMNS.map(() => "---").join(" | ")} |`,
+    ...r.tally.map((t) => `| ${t.blocker} | ${t.count} |`),
+    "",
+    heldRowsLine(r.held, r.run),
+  ].join("\n")
+}
+
+/**
+ * What a CI run id looks like, as a regular-expression source to build the
+ * patterns that find one in text: the number GitHub gives a workflow run. The
+ * commands' `<run id>` placeholder is not one.
+ */
+export const RUN_ID = String.raw`\d+`
+
+/** Whether `run` is a CI run number, not a placeholder or a typo. */
+export const isRunId = (run: string): boolean =>
+  new RegExp(`^${RUN_ID}$`).test(run)
+
+const HELD_ROWS_LINE = new RegExp(
+  String.raw`^보류 행 수: (\d+) \(run \`(${RUN_ID})\`\)$`
+)
+
+/**
+ * A block `renderHeldReasons` wrote, read back from text that holds it — the
+ * document section, or the block alone. The header is checked, every row must
+ * have a reason and a whole count, no reason may appear twice, and the
+ * held-row line must be there exactly once with a run id, not the command's
+ * placeholder. A hand edit is an error here rather than a number the corpus
+ * test compares in good faith.
+ */
+export function parseHeldReasons(text: string): HeldReasons {
+  const lines = text.split("\n").map((l) => l.trim())
+  const cellsOf = (l: string): Array<string> =>
+    l
+      .slice(1, -1)
+      .split("|")
+      .map((c) => c.trim())
+  const start = lines.findIndex((l) => l.startsWith("|"))
+  const header = start === -1 ? [] : cellsOf(lines[start])
+  if (header.join("|") !== HELD_REASON_COLUMNS.join("|")) {
+    throw new Error(
+      `hold-reason table header is ${JSON.stringify(header)}, expected ${JSON.stringify(HELD_REASON_COLUMNS)}`
+    )
+  }
+  let end = start
+  while (end + 1 < lines.length && lines[end + 1].startsWith("|")) end += 1
+  const seen = new Set<string>()
+  const tally = lines.slice(start + 2, end + 1).map((l) => {
+    const c = cellsOf(l)
+    if (c.length !== 2 || !/^[a-z-]+$/.test(c[0]) || !/^\d+$/.test(c[1])) {
+      throw new Error(
+        `hold-reason table row ${JSON.stringify(l)} is not a reason and a whole count`
+      )
+    }
+    const blocker = c[0]
+    if (!isBlocker(blocker)) {
+      throw new Error(
+        `hold-reason table row ${JSON.stringify(l)}: ${blocker} is not a hold reason (${BLOCKERS.join(", ")})`
+      )
+    }
+    if (seen.has(blocker)) {
+      throw new Error(`hold-reason table row for ${blocker} is written twice`)
+    }
+    seen.add(blocker)
+    return { blocker, count: Number(c[1]) }
+  })
+  const held = lines
+    .map((l) => HELD_ROWS_LINE.exec(l))
+    .filter((m) => m !== null)
+  if (held.length !== 1) {
+    throw new Error(
+      `expected one line "${heldRowsLine(0, "<run id>").replace("0", "<n>")}" with a run id, found ${held.length}`
+    )
+  }
+  return { tally, held: Number(held[0][1]), run: held[0][2] }
 }

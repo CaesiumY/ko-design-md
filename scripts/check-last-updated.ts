@@ -5,7 +5,11 @@
 // Judges only the services/*.md files this branch changed against `--base`
 // (default `origin/main`), so an entry with an old date that nobody touched is
 // left alone. That is what makes a hard failure safe here: the gate can never
-// block a PR over a file the PR did not edit.
+// block a PR over a file the PR did not edit. That holds in the merge
+// preflight too (`git merge origin/main --no-commit --no-ff`, CLAUDE.md): with
+// the base merged in but not committed, only what the working tree holds
+// beyond the base is judged, and only a change left unstaged (an unresolved
+// conflict among them) is read as an edit made today.
 //
 // The judgment itself lives in src/lib/last-updated-check.ts, which is pure and
 // unit-tested; this file is the git plumbing around it.
@@ -13,7 +17,12 @@
 // Exits 1 when any file fails.
 import { execFileSync } from "node:child_process"
 import { existsSync, readFileSync } from "node:fs"
-import { checkLastUpdated, isExempt } from "../src/lib/last-updated-check"
+import {
+  changedEntries,
+  changedOn,
+  checkLastUpdated,
+  isExempt,
+} from "../src/lib/last-updated-check"
 import type { LastUpdatedIssue } from "../src/lib/last-updated-check"
 
 function git(...args: Array<string>): string {
@@ -60,7 +69,8 @@ function today(): string {
 
 function main(): void {
   const base = parseBase(process.argv.slice(2))
-  if (gitOrNull("rev-parse", "--verify", `${base}^{commit}`) === null) {
+  const baseCommit = gitOrNull("rev-parse", "--verify", `${base}^{commit}`)
+  if (baseCommit === null) {
     // A shallow clone that never fetched the base would otherwise report zero
     // changed files and pass — the silent-empty-run failure this repo has been
     // bitten by before (audit:oklch, #188). Fail loudly instead.
@@ -82,17 +92,59 @@ function main(): void {
   //   • diff vs HEAD — uncommitted edits to tracked files;
   //   • ls-files --others — a brand-new entry not yet `git add`ed, which is
   //     exactly what /design-md produces when it onboards a slug.
-  const changed = [
-    git("diff", "--name-only", `${base}...HEAD`, "--", "services"),
-    git("diff", "--name-only", "HEAD", "--", "services"),
-    git("ls-files", "--others", "--exclude-standard", "--", "services"),
-  ]
-    .join("\n")
-    .split(/\r?\n/)
-    .map((l) => l.trim())
-    .filter((l) => l.endsWith(".md"))
+  // With the base merged in but not committed (the merge preflight in
+  // CLAUDE.md), diff vs MERGE_HEAD stands in for the first two: what the
+  // working tree holds beyond the base is what this branch contributes. A
+  // merge of any other commit is judged as no merge. `changedEntries` makes
+  // the choice; see its comment.
+  const names = (out: string): Array<string> =>
+    out
+      .split(/\r?\n/)
+      .map((l) => l.trim())
+      .filter(Boolean)
+  const mergeHead = gitOrNull(
+    "rev-parse",
+    "-q",
+    "--verify",
+    "MERGE_HEAD^{commit}"
+  )
+  const merging =
+    mergeHead === null
+      ? null
+      : {
+          head: mergeHead.trim(),
+          differsFromMergeHead: names(
+            git("diff", "--name-only", "MERGE_HEAD", "--", "services")
+          ),
+        }
+  const sources = {
+    branch: names(
+      git("diff", "--name-only", `${base}...HEAD`, "--", "services")
+    ),
+    uncommitted: names(git("diff", "--name-only", "HEAD", "--", "services")),
+    untracked: names(
+      git("ls-files", "--others", "--exclude-standard", "--", "services")
+    ),
+  }
+  const status: Record<string, string> = {}
+  for (const file of new Set([
+    ...sources.branch,
+    ...sources.uncommitted,
+    ...sources.untracked,
+    ...(merging?.differsFromMergeHead ?? []),
+  ])) {
+    // The `XY` code, untrimmed: its leading blank is what says the index,
+    // not the working tree, holds the change.
+    status[file] = git("status", "--porcelain", "--", file).slice(0, 2)
+  }
 
-  const files = [...new Set(changed)].sort()
+  const entries = changedEntries({
+    ...sources,
+    status,
+    base: baseCommit.trim(),
+    merging,
+  })
+  const files = entries.map((e) => e.file)
   if (files.length === 0) {
     console.log("[last-updated] no services/*.md changed — nothing to check.")
     return
@@ -125,7 +177,7 @@ function main(): void {
   const issues: Array<LastUpdatedIssue> = []
   const exempted: Array<LastUpdatedIssue> = []
   const warnings: Array<LastUpdatedIssue> = []
-  for (const file of files) {
+  for (const { file, edited: dirty } of entries) {
     // Deleted in this branch: nothing left to date.
     if (!existsSync(file)) continue
 
@@ -158,15 +210,19 @@ function main(): void {
       .map((l) => l.split(" "))
 
     // An uncommitted edit happened now, whatever the last commit says. Checking
-    // the working tree is what makes this runnable before you commit.
-    const dirty = git("status", "--porcelain", "--", file).trim() !== ""
-    const changedOn = dirty || !touching[0] ? today() : touching[0][1]
-
+    // the working tree is what makes this runnable before you commit. In the
+    // merge preflight only an edit left unstaged, or an unresolved conflict,
+    // counts as one (`changedEntries`); a staged change there is judged by the
+    // branch's commit date, and `git merge --abort` discards it either way.
     const issue = checkLastUpdated({
       file,
       raw: readFileSync(file, "utf8"),
       baseRaw: gitOrNull("show", `${base}:${file}`),
-      changedOn,
+      changedOn: changedOn({
+        edited: dirty,
+        committed: touching[0]?.[1] ?? null,
+        today: today(),
+      }),
       today: today(),
     })
     if (!issue) continue
@@ -181,6 +237,8 @@ function main(): void {
     // `!dirty` matters as much as the rest: an uncommitted edit cannot carry a
     // trailer yet, so a file whose committed history is all-marked would
     // otherwise let new working-tree changes ride in on the sweep's exemption.
+    // (In the merge preflight `dirty` is only an unstaged edit or a conflict,
+    // as above; a staged one rides on the exemption until the abort drops it.)
     // No in-range commits at all is the same case — nothing marked stands
     // behind the edit.
     //

@@ -38,6 +38,84 @@ export function isExempt(commitMessages: string): boolean {
   return /^Skip-Last-Updated:[ \t]*\S/m.test(commitMessages)
 }
 
+/** What git reports about the catalog files, gathered by the script. */
+export interface GitChanges {
+  /** Changed by this branch's commits: `diff base...HEAD`. */
+  branch: Array<string>
+  /** Changed in the index or working tree: `diff HEAD`. */
+  uncommitted: Array<string>
+  /** New and not yet added: `ls-files --others`. */
+  untracked: Array<string>
+  /**
+   * `status --porcelain`'s two-letter `XY` code by file (index, then working
+   * tree); a file missing or `""` is clean.
+   */
+  status: Readonly<Record<string, string>>
+  /** The commit `base` resolves to. */
+  base: string
+  /**
+   * Set while a merge is staged but not committed (`MERGE_HEAD` exists): the
+   * commit being merged in, and the files whose working-tree content differs
+   * from it (`diff MERGE_HEAD`).
+   */
+  merging: { head: string; differsFromMergeHead: Array<string> } | null
+}
+
+export interface ChangedEntry {
+  file: string
+  /** Changed in the working tree since the last commit, so changed today. */
+  edited: boolean
+}
+
+/**
+ * The catalog files this branch changed, each with whether it was edited
+ * since its last commit.
+ *
+ * Ordinarily that is every file a commit, the working tree or a new file
+ * changed, and any status at all is an edit.
+ *
+ * With the base merged in but not committed, as in the merge preflight
+ * CLAUDE.md prescribes (`git merge origin/main --no-commit --no-ff`), the
+ * working tree also holds what the base brings in. A file that matches the
+ * base is the base's, not this branch's, so it is left out; and the merge's
+ * staged result is not an edit, so only a change left unstaged in the working
+ * tree counts as one. That includes an unresolved conflict, whose `XY` code
+ * always has a working-tree letter; a hand edit or a resolved conflict that
+ * has been added is judged by the branch's commit date. Otherwise the base's
+ * incoming edits read as edits made today and fail the gate on files this
+ * branch never touched.
+ *
+ * A merge of any other commit (a sibling branch, or one stopped on a
+ * conflict) is judged as no merge: a file this branch changed to match that
+ * commit is still this branch's change against the base.
+ */
+export function changedEntries(git: GitChanges): Array<ChangedEntry> {
+  const preflight =
+    git.merging !== null && git.merging.head === git.base ? git.merging : null
+  const files = preflight
+    ? [...preflight.differsFromMergeHead, ...git.untracked]
+    : [...git.branch, ...git.uncommitted, ...git.untracked]
+  return [...new Set(files.filter((f) => f.endsWith(".md")))]
+    .sort()
+    .map((file) => {
+      const xy = git.status[file] ?? ""
+      const edited = preflight ? xy.length === 2 && xy[1] !== " " : xy !== ""
+      return { file, edited }
+    })
+}
+
+/**
+ * The day a file changed on: today when it was edited since its last commit
+ * or never committed, else the author date of the latest commit touching it.
+ */
+export function changedOn(r: {
+  edited: boolean
+  committed: string | null
+  today: string
+}): string {
+  return r.edited || r.committed === null ? r.today : r.committed
+}
+
 export interface LastUpdatedIssue {
   file: string
   rule:
@@ -60,7 +138,9 @@ export interface LastUpdatedInput {
   baseRaw: string | null
   /**
    * `YYYY-MM-DD` author date of the latest in-range non-merge commit touching the
-   * file (today when the working tree has uncommitted edits to it).
+   * file (today when the working tree has uncommitted edits to it; in the merge
+   * preflight, only unstaged edits or an unresolved conflict, see
+   * `changedEntries`).
    */
   changedOn: string
   /**
