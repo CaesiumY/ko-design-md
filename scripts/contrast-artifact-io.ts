@@ -1,8 +1,10 @@
 // Reading CI's `contrast-report` artifact and the entries it names, for the
 // two commands that take it: `pnpm audit:contrast:pairs`
 // (`classify-contrast-pairs.ts`) and `pnpm audit:contrast:rebaseline`
-// (`rebaseline-contrast.ts`). Shared so the two refuse the same input in the
-// same words.
+// (`rebaseline-contrast.ts`). Shared so the two read a findings file and the
+// entries the same way, and refuse a findings file they cannot read in the
+// same words. What they refuse in the findings themselves comes from
+// `readArtifactPalettes` (src/lib/contrast-pairs.ts).
 
 import { existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"

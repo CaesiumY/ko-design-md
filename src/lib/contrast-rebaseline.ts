@@ -7,6 +7,7 @@
 // writes the files.
 
 import {
+  noEntryReason,
   paletteLookup,
   readArtifactPalettes,
   renderPairTable,
@@ -14,6 +15,7 @@ import {
   tallyPairs,
 } from "./contrast-pairs"
 import {
+  RUN_ID,
   dedupeFindings,
   heldReasons,
   isRunId,
@@ -319,13 +321,9 @@ function validateArtifactAndReadPalettes(input: RebaselineInput): {
         `the artifact measured ${slug}, which has no preview in this checkout`
       )
     }
-    // Every measured slug, so the classified ones `readArtifactPalettes`
-    // names as missing are already reported here.
-    if (!(slug in input.entries)) {
-      reasons.push(
-        `the artifact measured ${slug}, which has no services/${slug}.md in this checkout`
-      )
-    }
+    // Every measured slug, not only the classified ones `readArtifactPalettes`
+    // refuses, and in its words; the repeat it gives is dropped below.
+    if (!(slug in input.entries)) reasons.push(noEntryReason(slug))
   }
   for (const slug of input.previewSlugs) {
     if (!measured.includes(slug)) {
@@ -341,7 +339,7 @@ function validateArtifactAndReadPalettes(input: RebaselineInput): {
       `${read.split.length} classified row(s) read different colour pairs at different widths, so there is no one pair to classify: ${read.split.join(", ")}`
     )
   }
-  reasons.push(...read.problems)
+  reasons.push(...read.problems.filter((p) => !reasons.includes(p)))
   return { reasons, palettes: read.palettes, notes: read.notes }
 }
 
@@ -415,12 +413,12 @@ export function rewriteRecord(
   // earlier recounts name runs too, and stay as the history they are.
   doc.phrase(
     doc.section(TOTALS_SECTION),
-    /이다\(run `\d+`\)/g,
+    new RegExp(String.raw`이다\(run \`${RUN_ID}\`\)`, "g"),
     `이다(run \`${values.run}\`)`
   )
   doc.phrase(
     doc.section(BORDERLINE_SECTION),
-    /입력은 run `\d+`/g,
+    new RegExp(`입력은 run \`${RUN_ID}\``, "g"),
     `입력은 run \`${values.run}\``
   )
 

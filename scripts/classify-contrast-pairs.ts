@@ -83,14 +83,8 @@ function main(): void {
   // A slug the artifact names but this checkout has no entry for, or a listed
   // observed heading or token the entry no longer has, is the wrong input for
   // this checkout — exit 2 with the reason, not a stack trace.
-  const problems = [
-    ...read.missing.map(
-      (slug) => `${slug}: this checkout has no services/${slug}.md`
-    ),
-    ...read.problems,
-  ]
-  if (problems.length > 0) {
-    fail(problems.map((p) => `Error: ${p}`).join("\n"))
+  if (read.problems.length > 0) {
+    fail(read.problems.map((p) => `Error: ${p}`).join("\n"))
   }
   for (const note of read.notes) console.error(note)
   const paletteFor = paletteLookup(read.palettes)

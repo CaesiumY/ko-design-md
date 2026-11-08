@@ -761,6 +761,10 @@ export const sumPairTally = (
     { bothPublished: 0, observedPair: 0, oneToken: 0, noToken: 0, total: 0 }
   )
 
+/** Why an artifact that measured `slug` cannot be taken by this checkout. */
+export const noEntryReason = (slug: string): string =>
+  `the artifact measured ${slug}, which has no services/${slug}.md in this checkout`
+
 /** What one artifact's classified rows are read against in this checkout. */
 export interface ArtifactPalettes {
   /** By slug, for every slug with a classified row whose entry was read. */
@@ -772,11 +776,10 @@ export interface ArtifactPalettes {
    * 38463871450 has three).
    */
   split: Array<string>
-  /** Slugs with a classified row and no `services/{slug}.md` here. */
-  missing: Array<string>
   /**
-   * `slug: reason` for an entry `paletteOf` refused: a listed observed
-   * heading or token the entry no longer has.
+   * Why a slug with a classified row cannot be classified here: it has no
+   * entry (`noEntryReason`), or `paletteOf` refused the entry, as
+   * `slug: reason` (a listed observed heading or token it no longer has).
    */
   problems: Array<string>
   /** A token left out of a palette, as the line to print for it. */
@@ -798,13 +801,12 @@ export function readArtifactPalettes(
   const out: ArtifactPalettes = {
     palettes: new Map(),
     split: splitColourPairs(classified),
-    missing: [],
     problems: [],
     notes: [],
   }
   for (const slug of measuredSlugs(classified)) {
     if (!Object.hasOwn(entries, slug)) {
-      out.missing.push(slug)
+      out.problems.push(noEntryReason(slug))
       continue
     }
     let palette: Palette

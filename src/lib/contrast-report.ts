@@ -537,9 +537,12 @@ export function renderHeldReasons(r: HeldReasons): string {
   ].join("\n")
 }
 
-// What a CI run id looks like: the number GitHub gives a workflow run. The
-// commands' `<run id>` placeholder is not one.
-const RUN_ID = String.raw`\d+`
+/**
+ * What a CI run id looks like, as a regular-expression source to build the
+ * patterns that find one in text: the number GitHub gives a workflow run. The
+ * commands' `<run id>` placeholder is not one.
+ */
+export const RUN_ID = String.raw`\d+`
 
 /** Whether `run` is a CI run number, not a placeholder or a typo. */
 export const isRunId = (run: string): boolean =>

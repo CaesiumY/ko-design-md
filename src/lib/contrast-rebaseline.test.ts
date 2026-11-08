@@ -307,6 +307,13 @@ describe("rebaseline", () => {
       ])
     })
 
+    it("a classified slug with no entry, once", () => {
+      // The palette reading refuses it too, in the same words; one line says it.
+      expect(refused({ ...INPUT, entries: { baemin: ENTRY } })).toEqual([
+        "the artifact measured toss, which has no services/toss.md in this checkout",
+      ])
+    })
+
     it("a preview the artifact did not measure", () => {
       // An entry added after the run: writing the run's table would delete
       // its four rows.
