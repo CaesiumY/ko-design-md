@@ -1,220 +1,1200 @@
 {
   "colors": [
     {
+      "name": "mint1",
+      "value": "oklch(0.980 0.028 177)",
+      "note": "#e6fff8",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "mint2",
+      "value": "oklch(0.943 0.082 177)",
+      "note": "#b0ffeb",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "mint3",
+      "value": "oklch(0.923 0.116 178)",
+      "note": "#87ffe5",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "mint4",
+      "value": "oklch(0.892 0.153 180)",
+      "note": "#35fcdf",
+      "group": "Deployed palette"
+    },
+    {
       "name": "primary",
-      "value": "oklch(0.88 0.18 178)",
-      "note": "히어로 풀블리드·CTA·라이더 헬멧·카테고리 강조 · 배포 CSS `--ref-color-mint5` 와 값이 다름 — Known Gaps 참조",
-      "group": "Brand mint"
+      "value": "oklch(0.854 0.154 180)",
+      "group": "Deployed palette",
+      "ref": "mint5"
+    },
+    {
+      "name": "mint5",
+      "value": "oklch(0.854 0.154 180)",
+      "note": "#0cefd3 — 민트 테마의 `systemMainPrimary` 역할이 가리키는 단계 [src:14]",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "mint6",
+      "value": "oklch(0.751 0.133 185)",
+      "note": "#00c9b9",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "mint7",
+      "value": "oklch(0.645 0.112 189)",
+      "note": "#00a39b",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "mint8",
+      "value": "oklch(0.533 0.091 193)",
+      "note": "#007d7b",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "gray1",
+      "value": "oklch(0.969 0.003 248)",
+      "note": "#f3f5f7",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "gray2",
+      "value": "oklch(0.924 0.003 248)",
+      "note": "#e4e6e8",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "gray3",
+      "value": "oklch(0.878 0.004 248)",
+      "note": "#d5d7d9",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "gray4",
+      "value": "oklch(0.766 0.004 248)",
+      "note": "#b1b3b5",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "gray5",
+      "value": "oklch(0.682 0.004 248)",
+      "note": "#97999b",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "gray6",
+      "value": "oklch(0.599 0.004 248)",
+      "note": "#7e8082",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "gray7",
+      "value": "oklch(0.509 0.004 248)",
+      "note": "#646668",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "gray8",
+      "value": "oklch(0.419 0.004 248)",
+      "note": "#4b4d4f",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "gray9",
+      "value": "oklch(0.320 0.005 248)",
+      "note": "#313335",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "gray10",
+      "value": "oklch(0.276 0.005 248)",
+      "note": "#26282a",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "gray11",
+      "value": "oklch(0.242 0.005 248)",
+      "note": "#1e2022",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "gray12",
+      "value": "oklch(0.216 0.005 248)",
+      "note": "#181a1c",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "red1",
+      "value": "oklch(0.963 0.018 13)",
+      "note": "#ffeeef",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "red2",
+      "value": "oklch(0.920 0.041 16)",
+      "note": "#ffdadb",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "red3",
+      "value": "oklch(0.764 0.141 20)",
+      "note": "#ff8b8d",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "red4",
+      "value": "oklch(0.699 0.192 23)",
+      "note": "#ff6262",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "red5",
+      "value": "oklch(0.660 0.227 27)",
+      "note": "#ff403e",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "red6",
+      "value": "oklch(0.592 0.225 28)",
+      "note": "#e52420",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "red7",
+      "value": "oklch(0.516 0.186 27)",
+      "note": "#bb2523",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "red8",
+      "value": "oklch(0.362 0.119 26)",
+      "note": "#6f1a19",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "orange1",
+      "value": "oklch(0.976 0.015 61)",
+      "note": "#fff5ed",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "orange2",
+      "value": "oklch(0.935 0.041 60)",
+      "note": "#ffe4cf",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "orange3",
+      "value": "oklch(0.839 0.116 64)",
+      "note": "#ffba77",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "orange4",
+      "value": "oklch(0.783 0.158 62)",
+      "note": "#ff9e3b",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "orange5",
+      "value": "oklch(0.738 0.183 55)",
+      "note": "#ff8400",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "orange6",
+      "value": "oklch(0.696 0.203 43)",
+      "note": "#ff6610",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "orange7",
+      "value": "oklch(0.546 0.165 42)",
+      "note": "#bb4500",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "orange8",
+      "value": "oklch(0.375 0.109 44)",
+      "note": "#6e2800",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "yellow1",
+      "value": "oklch(0.989 0.020 98)",
+      "note": "#fffced",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "yellow2",
+      "value": "oklch(0.956 0.082 98)",
+      "note": "#fff2b2",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "yellow3",
+      "value": "oklch(0.923 0.134 97)",
+      "note": "#ffe677",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "yellow4",
+      "value": "oklch(0.888 0.167 94)",
+      "note": "#ffd73b",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "yellow5",
+      "value": "oklch(0.854 0.175 88)",
+      "note": "#ffc600",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "yellow6",
+      "value": "oklch(0.762 0.156 88)",
+      "note": "#dbaa00",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "yellow7",
+      "value": "oklch(0.666 0.136 89)",
+      "note": "#b68e00",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "yellow8",
+      "value": "oklch(0.462 0.094 89)",
+      "note": "#6e5500",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "green1",
+      "value": "oklch(0.980 0.021 161)",
+      "note": "#edfdf4",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "green2",
+      "value": "oklch(0.933 0.060 161)",
+      "note": "#c6f6dc",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "green3",
+      "value": "oklch(0.844 0.130 160)",
+      "note": "#77e6af",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "green4",
+      "value": "oklch(0.769 0.160 159)",
+      "note": "#3bd28d",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "green5",
+      "value": "oklch(0.690 0.170 155)",
+      "note": "#00b96b",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "green6",
+      "value": "oklch(0.617 0.151 155)",
+      "note": "#009f5c",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "green7",
+      "value": "oklch(0.539 0.131 156)",
+      "note": "#00844d",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "green8",
+      "value": "oklch(0.380 0.090 157)",
+      "note": "#00502e",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "blue1",
+      "value": "oklch(0.971 0.015 242)",
+      "note": "#edf7ff",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "blue2",
+      "value": "oklch(0.929 0.035 251)",
+      "note": "#d7eaff",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "blue3",
+      "value": "oklch(0.774 0.120 250)",
+      "note": "#77bbff",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "blue4",
+      "value": "oklch(0.685 0.170 254)",
+      "note": "#449bff",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "blue5",
+      "value": "oklch(0.609 0.213 258)",
+      "note": "#1a7cff",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "blue6",
+      "value": "oklch(0.545 0.195 258)",
+      "note": "#086ade",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "blue7",
+      "value": "oklch(0.479 0.164 258)",
+      "note": "#0f59b7",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "blue8",
+      "value": "oklch(0.338 0.111 258)",
+      "note": "#09356f",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "purple1",
+      "value": "oklch(0.958 0.020 280)",
+      "note": "#eef0ff",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "purple2",
+      "value": "oklch(0.901 0.049 283)",
+      "note": "#d9dbff",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "purple3",
+      "value": "oklch(0.751 0.130 278)",
+      "note": "#9ca5ff",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "purple4",
+      "value": "oklch(0.635 0.199 278)",
+      "note": "#7476ff",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "purple5",
+      "value": "oklch(0.570 0.240 278)",
+      "note": "#5f57ff",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "purple6",
+      "value": "oklch(0.492 0.291 277)",
+      "note": "#4d1aff",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "purple7",
+      "value": "oklch(0.398 0.245 276)",
+      "note": "#3605c6",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "purple8",
+      "value": "oklch(0.314 0.124 278)",
+      "note": "#26246e",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "pink1",
+      "value": "oklch(0.966 0.024 336)",
+      "note": "#ffeefa",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "pink2",
+      "value": "oklch(0.928 0.049 341)",
+      "note": "#ffdbf1",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "pink3",
+      "value": "oklch(0.785 0.160 345)",
+      "note": "#ff8cd1",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "pink4",
+      "value": "oklch(0.721 0.207 349)",
+      "note": "#fd63ba",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "pink5",
+      "value": "oklch(0.659 0.229 352)",
+      "note": "#f13fa1",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "pink6",
+      "value": "oklch(0.589 0.212 352)",
+      "note": "#d2308b",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "pink7",
+      "value": "oklch(0.516 0.183 351)",
+      "note": "#af2874",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "pink8",
+      "value": "oklch(0.363 0.127 351)",
+      "note": "#6b1646",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "brown1",
+      "value": "oklch(0.974 0.008 56)",
+      "note": "#fbf5f1",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "brown2",
+      "value": "oklch(0.932 0.017 56)",
+      "note": "#f2e6de",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "brown3",
+      "value": "oklch(0.789 0.053 54)",
+      "note": "#d6b29b",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "brown4",
+      "value": "oklch(0.699 0.070 55)",
+      "note": "#c19374",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "brown5",
+      "value": "oklch(0.604 0.084 56)",
+      "note": "#a8744f",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "brown6",
+      "value": "oklch(0.542 0.073 57)",
+      "note": "#906444",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "brown7",
+      "value": "oklch(0.476 0.063 56)",
+      "note": "#785339",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "brown8",
+      "value": "oklch(0.338 0.041 57)",
+      "note": "#483222",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "white",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "#ffffff",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "black",
+      "value": "oklch(0.000 0.000 0)",
+      "note": "#000000",
+      "group": "Deployed palette"
+    },
+    {
+      "name": "dark-mint1",
+      "value": "oklch(0.291 0.027 180)",
+      "note": "#1c302c",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-mint2",
+      "value": "oklch(0.343 0.062 180)",
+      "note": "#01433a",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-mint3",
+      "value": "oklch(0.469 0.087 178)",
+      "note": "#006a5a",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-mint4",
+      "value": "oklch(0.582 0.107 178)",
+      "note": "#008f7b",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-mint5",
+      "value": "oklch(0.854 0.154 180)",
+      "note": "#0cefd3",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-mint6",
+      "value": "oklch(0.804 0.146 180)",
+      "note": "#00ddc2",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-mint7",
+      "value": "oklch(0.886 0.091 191)",
+      "note": "#8eede8",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-mint8",
+      "value": "oklch(0.920 0.100 180)",
+      "note": "#95fbe7",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-gray1",
+      "value": "oklch(0.216 0.005 248)",
+      "note": "#181a1c",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-gray2",
+      "value": "oklch(0.242 0.005 248)",
+      "note": "#1e2022",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-gray3",
+      "value": "oklch(0.276 0.005 248)",
+      "note": "#26282a",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-gray4",
+      "value": "oklch(0.320 0.005 248)",
+      "note": "#313335",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-gray5",
+      "value": "oklch(0.419 0.004 248)",
+      "note": "#4b4d4f",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-gray6",
+      "value": "oklch(0.509 0.004 248)",
+      "note": "#646668",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-gray7",
+      "value": "oklch(0.599 0.004 248)",
+      "note": "#7e8082",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-gray8",
+      "value": "oklch(0.682 0.004 248)",
+      "note": "#97999b",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-gray9",
+      "value": "oklch(0.766 0.004 248)",
+      "note": "#b1b3b5",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-gray10",
+      "value": "oklch(0.878 0.004 248)",
+      "note": "#d5d7d9",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-gray11",
+      "value": "oklch(0.924 0.003 248)",
+      "note": "#e4e6e8",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-gray12",
+      "value": "oklch(0.969 0.003 248)",
+      "note": "#f3f5f7",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-red1",
+      "value": "oklch(0.291 0.024 23)",
+      "note": "#372726",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-red2",
+      "value": "oklch(0.315 0.072 27)",
+      "note": "#50211d",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-red3",
+      "value": "oklch(0.424 0.127 26)",
+      "note": "#862a26",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-red4",
+      "value": "oklch(0.574 0.167 26)",
+      "note": "#c84640",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-red5",
+      "value": "oklch(0.660 0.227 27)",
+      "note": "#ff403e",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-red6",
+      "value": "oklch(0.777 0.131 27)",
+      "note": "#ff9489",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-red7",
+      "value": "oklch(0.845 0.085 23)",
+      "note": "#ffb7b2",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-red8",
+      "value": "oklch(0.897 0.054 27)",
+      "note": "#ffd0ca",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-orange1",
+      "value": "oklch(0.289 0.017 56)",
+      "note": "#322923",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-orange2",
+      "value": "oklch(0.331 0.042 57)",
+      "note": "#463020",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-orange3",
+      "value": "oklch(0.428 0.080 54)",
+      "note": "#714221",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-orange4",
+      "value": "oklch(0.572 0.107 54)",
+      "note": "#a86535",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-orange5",
+      "value": "oklch(0.738 0.183 55)",
+      "note": "#ff8400",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-orange6",
+      "value": "oklch(0.794 0.141 58)",
+      "note": "#ffa359",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-orange7",
+      "value": "oklch(0.859 0.099 64)",
+      "note": "#ffc38b",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-orange8",
+      "value": "oklch(0.922 0.047 56)",
+      "note": "#ffdec8",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-yellow1",
+      "value": "oklch(0.303 0.019 85)",
+      "note": "#332e24",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-yellow2",
+      "value": "oklch(0.322 0.043 87)",
+      "note": "#3d3218",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-yellow3",
+      "value": "oklch(0.431 0.078 88)",
+      "note": "#624d13",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-yellow4",
+      "value": "oklch(0.569 0.096 87)",
+      "note": "#8f732b",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-yellow5",
+      "value": "oklch(0.854 0.175 88)",
+      "note": "#ffc600",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-yellow6",
+      "value": "oklch(0.888 0.134 88)",
+      "note": "#ffd569",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-yellow7",
+      "value": "oklch(0.915 0.104 89)",
+      "note": "#ffe091",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-yellow8",
+      "value": "oklch(0.934 0.071 87)",
+      "note": "#fee7b3",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-green1",
+      "value": "oklch(0.300 0.021 153)",
+      "note": "#263129",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-green2",
+      "value": "oklch(0.331 0.040 156)",
+      "note": "#243c2d",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-green3",
+      "value": "oklch(0.457 0.086 156)",
+      "note": "#286542",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-green4",
+      "value": "oklch(0.557 0.115 155)",
+      "note": "#2e8755",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-green5",
+      "value": "oklch(0.690 0.170 155)",
+      "note": "#00b96b",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-green6",
+      "value": "oklch(0.788 0.170 155)",
+      "note": "#44d989",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-green7",
+      "value": "oklch(0.878 0.150 155)",
+      "note": "#7bf4ac",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-green8",
+      "value": "oklch(0.909 0.094 155)",
+      "note": "#aef4c6",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-blue1",
+      "value": "oklch(0.307 0.037 258)",
+      "note": "#243042",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-blue2",
+      "value": "oklch(0.333 0.075 258)",
+      "note": "#1c365c",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-blue3",
+      "value": "oklch(0.451 0.122 258)",
+      "note": "#255498",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-blue4",
+      "value": "oklch(0.556 0.153 258)",
+      "note": "#3471cb",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-blue5",
+      "value": "oklch(0.609 0.213 258)",
+      "note": "#1a7cff",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-blue6",
+      "value": "oklch(0.772 0.118 255)",
+      "note": "#80b8ff",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-blue7",
+      "value": "oklch(0.835 0.084 255)",
+      "note": "#a4ccff",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-blue8",
+      "value": "oklch(0.908 0.046 253)",
+      "note": "#cce3ff",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-purple1",
+      "value": "oklch(0.275 0.037 277)",
+      "note": "#23263a",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-purple2",
+      "value": "oklch(0.331 0.088 278)",
+      "note": "#2c2f62",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-purple3",
+      "value": "oklch(0.438 0.144 278)",
+      "note": "#42449f",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-purple4",
+      "value": "oklch(0.536 0.179 278)",
+      "note": "#595bd2",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-purple5",
+      "value": "oklch(0.570 0.240 278)",
+      "note": "#5f57ff",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-purple6",
+      "value": "oklch(0.776 0.115 277)",
+      "note": "#a4afff",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-purple7",
+      "value": "oklch(0.849 0.076 279)",
+      "note": "#c2c9ff",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-purple8",
+      "value": "oklch(0.911 0.043 275)",
+      "note": "#d9e0ff",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-pink1",
+      "value": "oklch(0.275 0.032 352)",
+      "note": "#342129",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-pink2",
+      "value": "oklch(0.320 0.071 351)",
+      "note": "#4d2237",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-pink3",
+      "value": "oklch(0.427 0.125 352)",
+      "note": "#7f2b56",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-pink4",
+      "value": "oklch(0.575 0.170 352)",
+      "note": "#bf4484",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-pink5",
+      "value": "oklch(0.659 0.229 352)",
+      "note": "#f13fa1",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-pink6",
+      "value": "oklch(0.782 0.154 349)",
+      "note": "#ff8cc8",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-pink7",
+      "value": "oklch(0.842 0.105 349)",
+      "note": "#ffafd6",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-pink8",
+      "value": "oklch(0.902 0.061 349)",
+      "note": "#ffcfe5",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-brown1",
+      "value": "oklch(0.288 0.008 59)",
+      "note": "#2e2a27",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-brown2",
+      "value": "oklch(0.324 0.016 59)",
+      "note": "#3a322c",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-brown3",
+      "value": "oklch(0.420 0.036 55)",
+      "note": "#5d483a",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-brown4",
+      "value": "oklch(0.549 0.055 54)",
+      "note": "#8b6953",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-brown5",
+      "value": "oklch(0.604 0.084 56)",
+      "note": "#a8744f",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-brown6",
+      "value": "oklch(0.806 0.069 56)",
+      "note": "#e3b595",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-brown7",
+      "value": "oklch(0.857 0.050 54)",
+      "note": "#ebc8b2",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-brown8",
+      "value": "oklch(0.918 0.032 55)",
+      "note": "#f6dfd0",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-white",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "#ffffff",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-black",
+      "value": "oklch(0.000 0.000 0)",
+      "note": "#000000",
+      "group": "Deployed palette — dark"
     },
     {
       "name": "primary-hover",
       "value": "oklch(0.69 0.13 184)",
-      "note": "버튼 hover/pressed (mint-deep)",
-      "group": "Brand mint"
+      "note": "버튼 hover/pressed (mint-deep), 번들 값",
+      "group": "Bundle — mint usage"
     },
     {
       "name": "primary-tint",
       "value": "oklch(0.97 0.05 178)",
-      "note": "옅은 민트 배경 (체크리스트 등) · NEW·신규·환영 칩",
-      "group": "Brand mint"
+      "note": "옅은 민트 배경 (체크리스트 등) · NEW·신규·환영 칩, 번들 값",
+      "group": "Bundle — mint usage"
     },
     {
       "name": "primary-legacy",
       "value": "oklch(0.72 0.10 187)",
-      "note": "레거시 민트 (pre-2024, 호환용)",
-      "group": "Brand mint"
-    },
-    {
-      "name": "mint-050",
-      "value": "oklch(0.99 0.03 178)",
-      "group": "Brand mint"
-    },
-    {
-      "name": "mint-100",
-      "value": "oklch(0.96 0.07 178)",
-      "group": "Brand mint"
-    },
-    {
-      "name": "mint-200",
-      "value": "oklch(0.92 0.13 178)",
-      "group": "Brand mint"
-    },
-    {
-      "name": "mint-300",
-      "value": "oklch(0.91 0.16 178)",
-      "group": "Brand mint"
-    },
-    {
-      "name": "mint-400",
-      "value": "oklch(0.89 0.18 178)",
-      "group": "Brand mint"
-    },
-    {
-      "name": "mint-500",
-      "value": "oklch(0.88 0.18 178)",
-      "note": "= primary · 배포 CSS `--ref-color-mint5` 와 값이 다름 — Known Gaps 참조",
-      "group": "Brand mint"
-    },
-    {
-      "name": "mint-600",
-      "value": "oklch(0.69 0.13 184)",
-      "note": "= primary-hover",
-      "group": "Brand mint"
-    },
-    {
-      "name": "mint-700",
-      "value": "oklch(0.55 0.10 188)",
-      "group": "Brand mint"
-    },
-    {
-      "name": "mint-800",
-      "value": "oklch(0.40 0.07 191)",
-      "group": "Brand mint"
-    },
-    {
-      "name": "mint-900",
-      "value": "oklch(0.24 0.04 194)",
-      "group": "Brand mint"
+      "note": "레거시 민트 (pre-2024, 호환용), 번들 값",
+      "group": "Bundle — mint usage"
     },
     {
       "name": "navy",
       "value": "oklch(0.30 0.13 286)",
       "note": "앱 음식배달 탭 헤더·한그릇 프로모션",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "navy-deep",
       "value": "oklch(0.27 0.13 287)",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "navy-tint",
       "value": "oklch(0.94 0.04 287)",
       "note": "라벤더 칩·공지",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "red",
       "value": "oklch(0.63 0.24 27)",
       "note": "할인 23% 칩 — 절대 그라데이션 아님",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "red-tint",
       "value": "oklch(0.94 0.04 27)",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "orange",
       "value": "oklch(0.71 0.17 32)",
       "note": "쿠폰 티켓",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "yellow",
       "value": "oklch(0.93 0.20 100)",
       "note": "포인트 코인",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "star-gold",
       "value": "oklch(0.82 0.16 85)",
       "note": "별점 ★ 전용 — 포인트 코인 yellow보다 약간 어둡고 채도 낮음",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "pink",
       "value": "oklch(0.66 0.24 4)",
       "note": "배민페이",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "pink-tint",
       "value": "oklch(0.95 0.03 4)",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "frozen",
       "value": "oklch(0.69 0.18 240)",
       "note": "B마트 냉동 인디케이터",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "frozen-tint",
       "value": "oklch(0.94 0.04 240)",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "bg-page",
       "value": "oklch(0.97 0.00 286)",
       "note": "본화이트 — 페이지 배경",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     },
     {
       "name": "bg-surface",
       "value": "oklch(1.00 0 0)",
       "note": "카드·시트 표면",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     },
     {
       "name": "bg-subtle",
       "value": "oklch(0.96 0.00 286)",
       "note": "보조 배경 (입력 chips)",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     },
     {
       "name": "bg-pressed",
       "value": "oklch(0.94 0.00 286)",
       "note": "press 상태",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     },
     {
       "name": "bg-inverse",
       "value": "oklch(0.18 0 0)",
       "note": "블랙 캡슐 (near-black) · 토스트 배경은 90% 불투명도로",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     },
     {
       "name": "fg-1",
       "value": "oklch(0.18 0 0)",
       "note": "주요 텍스트 (near-black)",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     },
     {
       "name": "fg-2",
       "value": "oklch(0.34 0 0)",
       "note": "보조 텍스트",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     },
     {
       "name": "fg-3",
       "value": "oklch(0.55 0 0)",
       "note": "3차 텍스트 / placeholder",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     },
     {
       "name": "fg-4",
       "value": "oklch(0.71 0 0)",
       "note": "disabled / hint",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     },
     {
       "name": "border-1",
       "value": "oklch(0.94 0.00 286)",
       "note": "기본 디바이더",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     },
     {
       "name": "border-2",
       "value": "oklch(0.87 0.00 286)",
       "note": "폼 인풋 보더",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     },
     {
       "name": "border-strong",
       "value": "oklch(0.18 0 0)",
       "note": "손그림 검정 윤곽선",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     }
   ],
   "typography": [
