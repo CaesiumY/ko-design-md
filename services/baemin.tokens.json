@@ -33,7 +33,7 @@
     {
       "name": "mint5",
       "value": "oklch(0.854 0.154 180)",
-      "note": "#0cefd3 · 브랜드 대표색 — 민트 테마의 시스템 메인 역할이 가리키는 단계 [src:14]",
+      "note": "#0cefd3 · 민트 테마의 `systemMainPrimary` 역할이 가리키는 단계 [src:14]",
       "group": "Deployed palette"
     },
     {
@@ -547,6 +547,12 @@
       "group": "Deployed palette — dark"
     },
     {
+      "name": "dark-mint5",
+      "value": "oklch(0.854 0.154 180)",
+      "note": "#0cefd3",
+      "group": "Deployed palette — dark"
+    },
+    {
       "name": "dark-mint6",
       "value": "oklch(0.804 0.146 180)",
       "note": "#00ddc2",
@@ -661,6 +667,12 @@
       "group": "Deployed palette — dark"
     },
     {
+      "name": "dark-red5",
+      "value": "oklch(0.660 0.227 27)",
+      "note": "#ff403e",
+      "group": "Deployed palette — dark"
+    },
+    {
       "name": "dark-red6",
       "value": "oklch(0.777 0.131 27)",
       "note": "#ff9489",
@@ -700,6 +712,12 @@
       "name": "dark-orange4",
       "value": "oklch(0.572 0.107 54)",
       "note": "#a86535",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-orange5",
+      "value": "oklch(0.738 0.183 55)",
+      "note": "#ff8400",
       "group": "Deployed palette — dark"
     },
     {
@@ -745,6 +763,12 @@
       "group": "Deployed palette — dark"
     },
     {
+      "name": "dark-yellow5",
+      "value": "oklch(0.854 0.175 88)",
+      "note": "#ffc600",
+      "group": "Deployed palette — dark"
+    },
+    {
       "name": "dark-yellow6",
       "value": "oklch(0.888 0.134 88)",
       "note": "#ffd569",
@@ -784,6 +808,12 @@
       "name": "dark-green4",
       "value": "oklch(0.557 0.115 155)",
       "note": "#2e8755",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-green5",
+      "value": "oklch(0.690 0.170 155)",
+      "note": "#00b96b",
       "group": "Deployed palette — dark"
     },
     {
@@ -829,6 +859,12 @@
       "group": "Deployed palette — dark"
     },
     {
+      "name": "dark-blue5",
+      "value": "oklch(0.609 0.213 258)",
+      "note": "#1a7cff",
+      "group": "Deployed palette — dark"
+    },
+    {
       "name": "dark-blue6",
       "value": "oklch(0.772 0.118 255)",
       "note": "#80b8ff",
@@ -868,6 +904,12 @@
       "name": "dark-purple4",
       "value": "oklch(0.536 0.179 278)",
       "note": "#595bd2",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-purple5",
+      "value": "oklch(0.570 0.240 278)",
+      "note": "#5f57ff",
       "group": "Deployed palette — dark"
     },
     {
@@ -913,6 +955,12 @@
       "group": "Deployed palette — dark"
     },
     {
+      "name": "dark-pink5",
+      "value": "oklch(0.659 0.229 352)",
+      "note": "#f13fa1",
+      "group": "Deployed palette — dark"
+    },
+    {
       "name": "dark-pink6",
       "value": "oklch(0.782 0.154 349)",
       "note": "#ff8cc8",
@@ -955,6 +1003,12 @@
       "group": "Deployed palette — dark"
     },
     {
+      "name": "dark-brown5",
+      "value": "oklch(0.604 0.084 56)",
+      "note": "#a8744f",
+      "group": "Deployed palette — dark"
+    },
+    {
       "name": "dark-brown6",
       "value": "oklch(0.806 0.069 56)",
       "note": "#e3b595",
@@ -973,162 +1027,174 @@
       "group": "Deployed palette — dark"
     },
     {
+      "name": "dark-white",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "#ffffff",
+      "group": "Deployed palette — dark"
+    },
+    {
+      "name": "dark-black",
+      "value": "oklch(0.000 0.000 0)",
+      "note": "#000000",
+      "group": "Deployed palette — dark"
+    },
+    {
       "name": "primary-hover",
       "value": "oklch(0.69 0.13 184)",
       "note": "버튼 hover/pressed (mint-deep) · 번들 값",
-      "group": "Bundle mint usage"
+      "group": "Bundle — mint usage"
     },
     {
       "name": "primary-tint",
       "value": "oklch(0.97 0.05 178)",
       "note": "옅은 민트 배경 (체크리스트 등) · NEW·신규·환영 칩 · 번들 값",
-      "group": "Bundle mint usage"
+      "group": "Bundle — mint usage"
     },
     {
       "name": "primary-legacy",
       "value": "oklch(0.72 0.10 187)",
       "note": "레거시 민트 (pre-2024, 호환용) · 번들 값",
-      "group": "Bundle mint usage"
+      "group": "Bundle — mint usage"
     },
     {
       "name": "navy",
       "value": "oklch(0.30 0.13 286)",
       "note": "앱 음식배달 탭 헤더·한그릇 프로모션",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "navy-deep",
       "value": "oklch(0.27 0.13 287)",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "navy-tint",
       "value": "oklch(0.94 0.04 287)",
       "note": "라벤더 칩·공지",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "red",
       "value": "oklch(0.63 0.24 27)",
       "note": "할인 23% 칩 — 절대 그라데이션 아님",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "red-tint",
       "value": "oklch(0.94 0.04 27)",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "orange",
       "value": "oklch(0.71 0.17 32)",
       "note": "쿠폰 티켓",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "yellow",
       "value": "oklch(0.93 0.20 100)",
       "note": "포인트 코인",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "star-gold",
       "value": "oklch(0.82 0.16 85)",
       "note": "별점 ★ 전용 — 포인트 코인 yellow보다 약간 어둡고 채도 낮음",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "pink",
       "value": "oklch(0.66 0.24 4)",
       "note": "배민페이",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "pink-tint",
       "value": "oklch(0.95 0.03 4)",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "frozen",
       "value": "oklch(0.69 0.18 240)",
       "note": "B마트 냉동 인디케이터",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "frozen-tint",
       "value": "oklch(0.94 0.04 240)",
-      "group": "Deep navy & accents"
+      "group": "Bundle — deep navy & accents"
     },
     {
       "name": "bg-page",
       "value": "oklch(0.97 0.00 286)",
       "note": "본화이트 — 페이지 배경",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     },
     {
       "name": "bg-surface",
       "value": "oklch(1.00 0 0)",
       "note": "카드·시트 표면",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     },
     {
       "name": "bg-subtle",
       "value": "oklch(0.96 0.00 286)",
       "note": "보조 배경 (입력 chips)",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     },
     {
       "name": "bg-pressed",
       "value": "oklch(0.94 0.00 286)",
       "note": "press 상태",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     },
     {
       "name": "bg-inverse",
       "value": "oklch(0.18 0 0)",
       "note": "블랙 캡슐 (near-black) · 토스트 배경은 90% 불투명도로",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     },
     {
       "name": "fg-1",
       "value": "oklch(0.18 0 0)",
       "note": "주요 텍스트 (near-black)",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     },
     {
       "name": "fg-2",
       "value": "oklch(0.34 0 0)",
       "note": "보조 텍스트",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     },
     {
       "name": "fg-3",
       "value": "oklch(0.55 0 0)",
       "note": "3차 텍스트 / placeholder",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     },
     {
       "name": "fg-4",
       "value": "oklch(0.71 0 0)",
       "note": "disabled / hint",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     },
     {
       "name": "border-1",
       "value": "oklch(0.94 0.00 286)",
       "note": "기본 디바이더",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     },
     {
       "name": "border-2",
       "value": "oklch(0.87 0.00 286)",
       "note": "폼 인풋 보더",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     },
     {
       "name": "border-strong",
       "value": "oklch(0.18 0 0)",
       "note": "손그림 검정 윤곽선",
-      "group": "Neutrals"
+      "group": "Bundle — neutrals"
     }
   ],
   "typography": [

@@ -15,7 +15,7 @@ colors:
   mint3: oklch(0.923 0.116 178)   # #87ffe5
   mint4: oklch(0.892 0.153 180)   # #35fcdf
   primary: "{colors.mint5}"
-  mint5: oklch(0.854 0.154 180)   # #0cefd3 · 브랜드 대표색 — 민트 테마의 시스템 메인 역할이 가리키는 단계 [src:14]
+  mint5: oklch(0.854 0.154 180)   # #0cefd3 · 민트 테마의 `systemMainPrimary` 역할이 가리키는 단계 [src:14]
   mint6: oklch(0.751 0.133 185)   # #00c9b9
   mint7: oklch(0.645 0.112 189)   # #00a39b
   mint8: oklch(0.533 0.091 193)   # #007d7b
@@ -108,12 +108,13 @@ colors:
   white: oklch(1.000 0.000 0)   # #ffffff
   black: oklch(0.000 0.000 0)   # #000000
   ## Deployed palette — dark
-  # 다크 값이 라이트와 다른 단계만 싣는다. 회색을 뺀 각 색의 5단계와 white · black 은 두 테마 값이 같아 `dark-` 짝이 없다
+  # 같은 단계의 다크 값. 회색을 뺀 각 색의 5단계와 white · black 은 라이트와 값이 같지만 상류가 다크 블록에도 선언해 그대로 싣는다
   # mint
   dark-mint1: oklch(0.291 0.027 180)   # #1c302c
   dark-mint2: oklch(0.343 0.062 180)   # #01433a
   dark-mint3: oklch(0.469 0.087 178)   # #006a5a
   dark-mint4: oklch(0.582 0.107 178)   # #008f7b
+  dark-mint5: oklch(0.854 0.154 180)   # #0cefd3
   dark-mint6: oklch(0.804 0.146 180)   # #00ddc2
   dark-mint7: oklch(0.886 0.091 191)   # #8eede8
   dark-mint8: oklch(0.920 0.100 180)   # #95fbe7
@@ -135,6 +136,7 @@ colors:
   dark-red2: oklch(0.315 0.072 27)   # #50211d
   dark-red3: oklch(0.424 0.127 26)   # #862a26
   dark-red4: oklch(0.574 0.167 26)   # #c84640
+  dark-red5: oklch(0.660 0.227 27)   # #ff403e
   dark-red6: oklch(0.777 0.131 27)   # #ff9489
   dark-red7: oklch(0.845 0.085 23)   # #ffb7b2
   dark-red8: oklch(0.897 0.054 27)   # #ffd0ca
@@ -143,6 +145,7 @@ colors:
   dark-orange2: oklch(0.331 0.042 57)   # #463020
   dark-orange3: oklch(0.428 0.080 54)   # #714221
   dark-orange4: oklch(0.572 0.107 54)   # #a86535
+  dark-orange5: oklch(0.738 0.183 55)   # #ff8400
   dark-orange6: oklch(0.794 0.141 58)   # #ffa359
   dark-orange7: oklch(0.859 0.099 64)   # #ffc38b
   dark-orange8: oklch(0.922 0.047 56)   # #ffdec8
@@ -151,6 +154,7 @@ colors:
   dark-yellow2: oklch(0.322 0.043 87)   # #3d3218
   dark-yellow3: oklch(0.431 0.078 88)   # #624d13
   dark-yellow4: oklch(0.569 0.096 87)   # #8f732b
+  dark-yellow5: oklch(0.854 0.175 88)   # #ffc600
   dark-yellow6: oklch(0.888 0.134 88)   # #ffd569
   dark-yellow7: oklch(0.915 0.104 89)   # #ffe091
   dark-yellow8: oklch(0.934 0.071 87)   # #fee7b3
@@ -159,6 +163,7 @@ colors:
   dark-green2: oklch(0.331 0.040 156)   # #243c2d
   dark-green3: oklch(0.457 0.086 156)   # #286542
   dark-green4: oklch(0.557 0.115 155)   # #2e8755
+  dark-green5: oklch(0.690 0.170 155)   # #00b96b
   dark-green6: oklch(0.788 0.170 155)   # #44d989
   dark-green7: oklch(0.878 0.150 155)   # #7bf4ac
   dark-green8: oklch(0.909 0.094 155)   # #aef4c6
@@ -167,6 +172,7 @@ colors:
   dark-blue2: oklch(0.333 0.075 258)   # #1c365c
   dark-blue3: oklch(0.451 0.122 258)   # #255498
   dark-blue4: oklch(0.556 0.153 258)   # #3471cb
+  dark-blue5: oklch(0.609 0.213 258)   # #1a7cff
   dark-blue6: oklch(0.772 0.118 255)   # #80b8ff
   dark-blue7: oklch(0.835 0.084 255)   # #a4ccff
   dark-blue8: oklch(0.908 0.046 253)   # #cce3ff
@@ -175,6 +181,7 @@ colors:
   dark-purple2: oklch(0.331 0.088 278)   # #2c2f62
   dark-purple3: oklch(0.438 0.144 278)   # #42449f
   dark-purple4: oklch(0.536 0.179 278)   # #595bd2
+  dark-purple5: oklch(0.570 0.240 278)   # #5f57ff
   dark-purple6: oklch(0.776 0.115 277)   # #a4afff
   dark-purple7: oklch(0.849 0.076 279)   # #c2c9ff
   dark-purple8: oklch(0.911 0.043 275)   # #d9e0ff
@@ -183,6 +190,7 @@ colors:
   dark-pink2: oklch(0.320 0.071 351)   # #4d2237
   dark-pink3: oklch(0.427 0.125 352)   # #7f2b56
   dark-pink4: oklch(0.575 0.170 352)   # #bf4484
+  dark-pink5: oklch(0.659 0.229 352)   # #f13fa1
   dark-pink6: oklch(0.782 0.154 349)   # #ff8cc8
   dark-pink7: oklch(0.842 0.105 349)   # #ffafd6
   dark-pink8: oklch(0.902 0.061 349)   # #ffcfe5
@@ -191,15 +199,19 @@ colors:
   dark-brown2: oklch(0.324 0.016 59)   # #3a322c
   dark-brown3: oklch(0.420 0.036 55)   # #5d483a
   dark-brown4: oklch(0.549 0.055 54)   # #8b6953
+  dark-brown5: oklch(0.604 0.084 56)   # #a8744f
   dark-brown6: oklch(0.806 0.069 56)   # #e3b595
   dark-brown7: oklch(0.857 0.050 54)   # #ebc8b2
   dark-brown8: oklch(0.918 0.032 55)   # #f6dfd0
-  ## Bundle mint usage
+  # white · black
+  dark-white: oklch(1.000 0.000 0)   # #ffffff
+  dark-black: oklch(0.000 0.000 0)   # #000000
+  ## Bundle — mint usage
   # 이 아래는 핸드오프 번들의 쓰임별 색이다(배포 팔레트 아님) — 배포 단계에 대응을 짓지 않고 번들 값 그대로 둔다
   primary-hover: oklch(0.69 0.13 184)   # 버튼 hover/pressed (mint-deep) · 번들 값
   primary-tint: oklch(0.97 0.05 178)   # 옅은 민트 배경 (체크리스트 등) · NEW·신규·환영 칩 · 번들 값
   primary-legacy: oklch(0.72 0.10 187)   # 레거시 민트 (pre-2024, 호환용) · 번들 값
-  ## Deep navy & accents
+  ## Bundle — deep navy & accents
   navy: oklch(0.30 0.13 286)   # 앱 음식배달 탭 헤더·한그릇 프로모션
   navy-deep: oklch(0.27 0.13 287)
   navy-tint: oklch(0.94 0.04 287)   # 라벤더 칩·공지
@@ -213,7 +225,7 @@ colors:
   pink-tint: oklch(0.95 0.03 4)
   frozen: oklch(0.69 0.18 240)   # B마트 냉동 인디케이터
   frozen-tint: oklch(0.94 0.04 240)
-  ## Neutrals
+  ## Bundle — neutrals
   bg-page: oklch(0.97 0.00 286)   # 본화이트 — 페이지 배경
   bg-surface: oklch(1.00 0 0)   # 카드·시트 표면
   bg-subtle: oklch(0.96 0.00 286)   # 보조 배경 (입력 chips)
@@ -333,7 +345,7 @@ fonts:
 
 ### Baemin 2.0 리브랜드 (2024)
 
-2024년 7월, 15주년에 맞춰 대규모 시각 개편 *Baemin 2.0*이 단행됐다. 7월 9일 신규 앱 아이콘, 7월 22일 신규 컬러·폰트가 차례로 공개됐고, 핵심 변화는 두 가지다. 첫째, 프라이머리 민트가 기존 민트보다 밝은 민트로 교체됐다 [src:1]. 배민 웹이 배포하는 팔레트에서 이 민트는 `mint5`(`#0CEFD3` ≈ `oklch(0.854 0.154 180)`)이고 [src:14], 본 문서의 `{colors.primary}`는 이 단계를 가리킨다. 둘째, 한나체를 대체할 자체 폰트 **WORK**가 공개됐다 — "한글의 사선 획을 블록 형태로 단순화"한 단순·명료한 디자인이다. 김범석 대표는 *"다양한 이해관계자들과 다시 한 번 뜨거운 순간을 가지기 위해 리브랜드를 결정했다"*고 코멘트했다 [src:1]. 다만 핸드오프 번들은 WORK가 외부 공개 배포되지 않은 시점에 작성됐기 때문에 본 문서의 디스플레이 폰트 스택은 여전히 BM 한나체 시리즈를 기준으로 한다 — 프로덕션 적용 전 실제 앱에서 한 번 더 확인해야 한다.
+2024년 7월, 15주년에 맞춰 대규모 시각 개편 *Baemin 2.0*이 단행됐다. 7월 9일 신규 앱 아이콘, 7월 22일 신규 컬러·폰트가 차례로 공개됐고, 핵심 변화는 두 가지다. 첫째, 프라이머리 민트가 기존 민트보다 밝은 민트로 교체됐다 [src:1]. 배민 웹이 배포하는 CSS 에서 민트 테마의 시스템 메인 역할이 가리키는 팔레트 단계는 `mint5`(`#0CEFD3` ≈ `oklch(0.854 0.154 180)`)다 [src:14]. 본 문서는 이 단계를 브랜드 대표색 `{colors.primary}`로 둔다. 둘째, 한나체를 대체할 자체 폰트 **WORK**가 공개됐다 — "한글의 사선 획을 블록 형태로 단순화"한 단순·명료한 디자인이다. 김범석 대표는 *"다양한 이해관계자들과 다시 한 번 뜨거운 순간을 가지기 위해 리브랜드를 결정했다"*고 코멘트했다 [src:1]. 다만 핸드오프 번들은 WORK가 외부 공개 배포되지 않은 시점에 작성됐기 때문에 본 문서의 디스플레이 폰트 스택은 여전히 BM 한나체 시리즈를 기준으로 한다 — 프로덕션 적용 전 실제 앱에서 한 번 더 확인해야 한다.
 
 ### 한국적 맥락
 
@@ -349,17 +361,17 @@ fonts:
 
 ## Colors
 
-> **팔레트 정정(2026-11-08).** frontmatter 팔레트를 배민 웹 배포 CSS 의 `--ref-color-*` 로 다시 실었다 [src:14]. 대조한 파일은 페이지가 싣는 `_next/static/css/1904f6c9a75d9ac2.css`(SHA-256 `579721314e5299b12eb2d506f2f81e08261cc329ef9ee0486571109c837a2ff4`)이고, 2026-11-01 조사 때 받아 둔 사본과 바이트가 같다. 이 파일은 팔레트를 네 블록에 선언한다 — `base` 테마와 `mint` 테마 각각의 라이트와 다크다. 두 테마의 팔레트는 라이트끼리, 다크끼리 87개 선언이 값까지 모두 같다. 테마는 팔레트의 축이 아니라 그 위 역할 층(`--sem-base-*`, `--sem-mint-*`)에만 있는 축이어서, 팔레트 키에는 테마 표시를 붙이지 않고 라이트와 다크만 `dark-` 로 가른다. 라이트는 페이지 `body` 에 걸린 블록이고, 다크는 걸리지 않은 짝 블록이다. 라이트 87개 가운데 색 단계가 아닌 `transparent`(`hsla(0,0%,100%,0)`, hex 가 없다)를 뺀 86개를 싣고, 다크는 라이트와 값이 다른 75개를 `dark-` 로 싣는다. 두 테마 값이 같은 11개(회색을 뺀 각 색의 5단계, `white`, `black`)는 다크 짝 없이 같은 키를 쓴다. 실은 161줄은 모두 줄의 hex 와 대조해 불일치가 0이다. 번들 값과의 관계는 셋으로 갈린다. 번들 민트 10단계(`mint-050`~`mint-900`)는 배포 민트 8단계와 같은 색을 다른 이름과 값으로 재구성한 것이라 **철회**했다. `primary` 는 배포 `mint5` 를 가리키는 참조 행으로 **대체**했다. `primary-hover` 와 네이비, 액센트, 뉴트럴 같은 번들 쓰임색은 배포 단계와 이름이 맞지 않아 대응을 짓지 않고 번들 값 그대로 **병기**한다. 본문의 민트 칩 글자색은 철회한 번들 `mint-700` 에서 값이 가장 가까운 배포 `mint8`(OKLab 거리 0.021)로 옮겼다. 아래 쓰임별 대응 표의 이름은 번들 재구성의 것이어서 브랜드가 발행한 역할 이름이 아니다. 배포된 역할 계층(`--sem-*`)은 후속 작업이 싣고, 사장님 사이트 [src:15] 의 `blue` 테마는 싣지 않는다(`## Known Gaps`).
+> **팔레트 정정(2026-11-08).** frontmatter 팔레트를 배민 웹 배포 CSS 의 `--ref-color-*` 로 다시 실었다 [src:14]. 대조한 파일은 페이지가 싣는 `_next/static/css/1904f6c9a75d9ac2.css`(SHA-256 `579721314e5299b12eb2d506f2f81e08261cc329ef9ee0486571109c837a2ff4`)이고, 이날 페이지에서 다시 받아 잰 해시가 2026-11-01 조사 때 받아 둔 사본과 같다. 이 파일은 팔레트를 네 블록에 선언한다 — `base` 테마와 `mint` 테마 각각의 라이트와 다크다. 두 테마의 팔레트는 라이트끼리, 다크끼리 87개 선언이 값까지 모두 같다. 테마는 팔레트의 축이 아니라 그 위 역할 층(`--sem-base-*`, `--sem-mint-*`)에만 있는 축이어서, 팔레트 키에는 테마 표시를 붙이지 않고 라이트와 다크만 `dark-` 로 가른다. 라이트는 이날 페이지의 `body` 에 클래스로 걸린 블록이고, 다크는 걸리지 않은 짝 블록이다. 87개 가운데 색 단계가 아닌 `transparent`(`hsla(0,0%,100%,0)`, hex 가 없다)를 빼고, 라이트 86개와 다크 86개(`dark-`)를 싣는다. 그중 11개(회색을 뺀 각 색의 5단계, `white`, `black`)는 라이트와 다크 값이 같지만, 상류가 다크 블록에도 선언하므로 다크 짝도 싣는다. 실은 172줄은 모두 줄의 hex 와 대조해 불일치가 0이다. 번들 값과의 관계는 셋으로 갈린다. 번들 민트 10단계(`mint-050`~`mint-900`)는 배포 민트 8단계와 같은 색을 다른 이름과 값으로 재구성한 것이라 **철회**했다. `primary` 는 배포 `mint5` 를 가리키는 참조 행으로 **대체**했다. `primary-hover` 와 네이비, 액센트, 뉴트럴 같은 번들 쓰임색은 배포 단계와 이름이 맞지 않아 대응을 짓지 않고 번들 값 그대로 **병기**한다. 본문의 민트 칩 글자색은 철회한 번들 `mint-700` 에서 값이 가장 가까운 배포 `mint8`(OKLab 거리 0.021)로 옮겼다. 아래 쓰임별 대응 표의 이름은 번들 재구성의 것이어서 브랜드가 발행한 역할 이름이 아니다. 배포된 역할 계층(`--sem-*`)은 후속 작업이 싣고, 사장님 사이트 [src:15] 의 `blue` 테마는 싣지 않는다(`## Known Gaps`).
 
-색 시스템의 중심은 **2024 리브랜드 민트 `{colors.primary}`**(배포 `mint5`)와 **딥 네이비 `{colors.navy}`**, 그리고 따뜻한 회색 뉴트럴 스택이다. 팔레트는 배민 웹 배포 CSS 의 단계 이름(`mint1`~`mint8`, `gray1`~`gray12` 등)을 그대로 쓰고, 네이비와 액센트, 뉴트럴 같은 쓰임색은 핸드오프 `colors_and_type.css`의 값이다.
+색 시스템의 중심은 **2024 리브랜드 민트 `{colors.primary}`**(배포 `mint5`)와 **딥 네이비 `{colors.navy}`**, 그리고 번들의 따뜻한 회색 뉴트럴 스택이다. 팔레트는 배민 웹 배포 CSS 의 단계 이름(`mint1`~`mint8`, `gray1`~`gray12` 등)을 그대로 쓰고, 네이비와 액센트, 뉴트럴 같은 쓰임색은 핸드오프 `colors_and_type.css`의 값이다.
 
 ### 배포 팔레트
 
-단계 번호는 바탕에 가까운 쪽에서 먼 쪽으로 간다. 라이트에서는 1단계가 가장 밝고, 다크에서는 1단계가 가장 어둡다. 회색을 뺀 각 색의 5단계는 두 테마 값이 같다 [src:14].
+단계 번호는 바탕에 가까운 쪽에서 먼 쪽으로 간다. 라이트에서는 1단계가 가장 밝고, 다크에서는 1단계가 가장 어둡다. 회색을 뺀 각 색의 5단계는 라이트와 다크 값이 같다 [src:14]. 배포 회색 `gray1`~`gray12` 는 색조가 아주 옅게 푸른 쪽(OKLCH 색상각 약 248°)이다.
 
 ### Neutrals (살짝 따뜻한 회색)
 
-배민은 순수 검정·순백을 피한다. 페이지 배경은 본화이트, 텍스트는 near-black이다.
+번들 뉴트럴은 순수 검정·순백을 피한다. 페이지 배경은 본화이트, 텍스트는 near-black이다. 배포 팔레트에는 `white`·`black` 과 위 회색 단계가 따로 있고, 배민 웹이 어느 단계를 페이지 배경과 텍스트에 쓰는지는 역할 층이 정한다(`## Known Gaps` 의 역할 계층 항).
 
 ### 쓰임별 색 대응
 
