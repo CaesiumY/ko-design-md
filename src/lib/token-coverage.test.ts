@@ -82,7 +82,8 @@ interface Coverage {
 // baemin annotates only the palette taken from www.baemin.com's deployed
 // `--ref-color-*` (#663): each step in its light and its `dark-*` block. Its
 // 27 handoff-bundle usage colours carry no hex, so drift 199 = annotated
-// 172 + 27; `primary` is a reference row and counts in neither. bezier annotates only the steps taken from the beta tier and
+// 172 + 27; `primary` and the `base-*` / `mint-*` role rows (#665) are
+// reference rows and count in neither. bezier annotates only the steps taken from the beta tier and
 // the stable tier (`stable-*`) of `@channel.io/bezier-tokens` (#569, #628);
 // the 43 bundle steps stay unannotated, so drift 275 = annotated 232 + 43;
 // role rows count in neither. toss annotates only the steps whose name maps to
