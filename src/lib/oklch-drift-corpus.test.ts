@@ -132,25 +132,26 @@ function slugs(): Array<string> {
 // compares (`findRoleChainDrift`): a `--role: var(--step)` declaration whose
 // role an md reference row names, in either theme scope. So a role whose
 // `var()` is turned into a literal, or stops being declared, drops the count
-// too. Raised then to what was measured; the per-slug split is light + dark.
+// too. Raised then to what was measured; ROLE_CHAINS below pins each slug's
+// chain count exactly.
 const MATCH_FLOOR: Partial<Record<string, number>> = {
   "11st": 19,
   baemin: 38,
-  // 181 oklch + 108 light and 95 dark role chains (#660).
+  // 181 → 384 (#660): its role chains are compared.
   banksalad: 384,
   // bezier's preview declares no `oklch` at all — it is hex — so only its role
-  // chains are compared: 4 light and 5 dark, read through the per-family
-  // `c-` rules (#660). Its alpha roles are `rgba(…)` literals and stay out.
+  // chains are compared, read through the per-family `c-` rules (#660). Its
+  // alpha roles are `rgba(…)` literals and stay out.
   bezier: 9,
   class101: 14,
   // 8 → 60 (#660): its docs role names (`txt-`, `bg-`) and its `light-`
-  // palette steps got rules, so the light palette is compared as values (47)
-  // and 13 role chains are compared.
+  // palette steps got rules, so its light palette is compared as values and
+  // its role chains are compared.
   codeit: 60,
   // 27 → 25 (#629): the twelve role properties now take `var()` of the palette
   // steps the md reference rows name, and the gate compares those ten steps
   // instead — two role pairs share gray-900 and gray-400. 25 → 37 (#660): the
-  // twelve role chains are compared again, as chains.
+  // role chains are compared again, as chains.
   gmarket: 37,
   greeting: 13,
   // POP's two tokens are deliberately absent from the preview CSS — the entry
@@ -162,12 +163,12 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
   krds: 33,
   kyobobook: 41,
   "lg-electronics": 67,
-  // 23 oklch + 11 light role chains (#660); the dark half writes literals.
+  // 23 → 34 (#660): its light role chains; the dark half writes literals.
   likelion: 34,
   "line-design-system": 24,
   nol: 37,
   remember: 39,
-  // 142 oklch + 31 light and 30 dark role chains (#660).
+  // 142 → 203 (#660): its role chains are compared.
   ridi: 203,
   // samsung-one-ui's preview declares the md tokens under their exact md names
   // (--primary, --dark-black, …), so no PREVIEW_TOKEN_ALIASES rule is needed.
@@ -178,12 +179,12 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
   // `var(--sf-<palette step>)` and are no longer compared as values; the 12
   // palette steps they point at, and the three overlays (dim and two press),
   // were added to the preview and are. 40 − 24 + 12 + 3. 31 → 79 (#660): the
-  // 24 role chains are compared in the light scope and again in the dark one,
+  // role chains are compared in the light scope and again in the dark one,
   // which restates them (SOCAR Frame is light-only).
   socar: 79,
   teamsparta: 18,
   toss: 27,
-  // 36 → 106 (#660): 69 role chains, once the role layer's short preview
+  // 36 → 106 (#660): its role chains, once the role layer's short preview
   // names (`color-background-` as `vp-bg-`, and the rest) got rules.
   "vapor-ui": 106,
   wanted: 53,
@@ -201,10 +202,12 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
 // reference rows, but their previews wire roles under names of their own
 // (`--text`, `--success`) that no leading-substring rule reaches, and toss's
 // two rows (`primary`, `greyBackground`) are not declared in its preview.
-const ROLE_CHAINS: Record<
-  string,
-  { chained: number; literal: number; scoped: number }
-> = {
+interface RoleChainCount {
+  chained: number
+  literal: number
+  scoped: number
+}
+const ROLE_CHAINS: Partial<Record<string, RoleChainCount>> = {
   banksalad: { chained: 203, literal: 0, scoped: 0 },
   // The 43 literals are its opacity roles, written `rgba(…)`.
   bezier: { chained: 9, literal: 43, scoped: 0 },
@@ -305,18 +308,41 @@ describe("oklch-drift — catalogue coverage", () => {
     // a palette step, which the chain comparison does not read. #648 pinned
     // both for socar alone (24 roles compared, none as literals); this keeps
     // that for every slug.
-    const measured = Object.fromEntries(
-      all
-        .map(
-          (slug) =>
-            [
-              slug,
-              roleChainCoverage(lightScope(slug).html, chainsFor(slug)),
-            ] as const
-        )
-        .filter(([, c]) => c.chained + c.literal + c.scoped > 0)
-    )
-    expect(measured).toEqual(ROLE_CHAINS)
+    const measured: Partial<Record<string, RoleChainCount>> =
+      Object.fromEntries(
+        all
+          .map(
+            (slug) =>
+              [
+                slug,
+                roleChainCoverage(lightScope(slug).html, chainsFor(slug)),
+              ] as const
+          )
+          .filter(([, c]) => c.chained + c.literal + c.scoped > 0)
+      )
+    const slugsOf = new Set([
+      ...Object.keys(measured),
+      ...Object.keys(ROLE_CHAINS),
+    ])
+    const moved = [...slugsOf]
+      .sort()
+      .filter(
+        (slug) =>
+          JSON.stringify(measured[slug]) !== JSON.stringify(ROLE_CHAINS[slug])
+      )
+    // Print the row to paste, as MATCH_FLOOR does: nothing else in the repo
+    // reports these numbers.
+    const rows = moved.map((slug) => {
+      const c = measured[slug]
+      const key = /^[a-z]+$/.test(slug) ? slug : `"${slug}"`
+      return c === undefined
+        ? `  delete the ${slug} row (its preview no longer declares a role a reference row names)`
+        : `  ${key}: { chained: ${c.chained}, literal: ${c.literal}, scoped: ${c.scoped} },`
+    })
+    expect(
+      moved,
+      `ROLE_CHAINS (oklch-drift-corpus.test.ts) records other role-chain counts than the previews give. Before pasting, find out what moved: chained DOWN means a role stopped being wired by var() or stopped being declared at a theme root; literal UP means a role a reference row names is now declared as a value; scoped UP means a role is redeclared outside :root / [data-theme] (it is not compared there). A new entry whose preview declares reference-row roles adds its row. Rows to paste:\n${rows.join("\n")}`
+    ).toEqual([])
   })
 
   it("fails a role wired to another palette step in every slug that has a chain", () => {
@@ -366,9 +392,12 @@ describe("oklch-drift — catalogue coverage", () => {
       }
       reached.push(slug)
     }
-    expect(reached).toEqual(
+    expect(
+      reached,
+      "the slugs whose role-chain mutation was caught differ from the ROLE_CHAINS rows with chained > 0 — fix ROLE_CHAINS first (the test above prints the rows); if that passes, a slug's chains are counted but a repointed role goes unreported, which is a fault in findRoleChainDrift"
+    ).toEqual(
       Object.entries(ROLE_CHAINS)
-        .filter(([, c]) => c.chained > 0)
+        .filter(([, c]) => (c?.chained ?? 0) > 0)
         .map(([slug]) => slug)
     )
   })

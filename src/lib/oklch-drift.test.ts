@@ -465,7 +465,8 @@ colors:
 
   it("catches a light role wired to another palette step", () => {
     const found = findRoleChainDrift(
-      ":root { --sf-text-primary: var(--sf-gray-600); --sf-bg-base: var(--sf-gray-100); }",
+      `:root { --sf-text-primary: var(--sf-gray-600); --sf-bg-base: var(--sf-gray-100); }
+       [data-theme="dark"] { --sf-bg-base: var(--sf-gray-800); }`,
       roleChainsForSlug(roles, "socar")
     )
     expect(found).toEqual([
@@ -591,6 +592,30 @@ colors:
     }
   })
 
+  it("does not read a local block as a theme root", () => {
+    // Each is a later, partial redeclaration with the right step; none may
+    // hide the wrong `:root` value before it, and each is counted as scoped.
+    const chains = roleChainsForSlug(roles, "socar")
+    for (const selector of [
+      ":where(.chip)",
+      'html [data-theme="light"]',
+      ':root [data-theme="light"]',
+      "[data-theme] .card",
+      "html.x",
+      "@supports (color: red) { :root",
+      "@layer base { :root",
+    ]) {
+      const close = selector.includes("{") ? "}}" : "}"
+      const html = `:root { --sf-text-primary: var(--sf-gray-600); }
+        ${selector} { --sf-text-primary: var(--sf-gray-800); ${close}`
+      expect(
+        findRoleChainDrift(html, chains).map((f) => f.name),
+        selector
+      ).toEqual(["sf-text-primary"])
+      expect(roleChainCoverage(html, chains).scoped, selector).toBe(1)
+    }
+  })
+
   it("renames palette steps by the slug's own alias rules", () => {
     // bezier's preview keeps role names bare and prefixes its palette `c-`.
     const bezier = `---
@@ -619,7 +644,10 @@ colors:
     const chains = roleChainsForSlug(vapor, "vapor-ui")
     const css = (step: string): string =>
       `:root { --vp-bg-primary-100: var(--vp-blue-100); }
-       [data-theme="dark"] { --vp-bg-primary-100: var(--vp-${step}); }`
+       [data-theme="dark"] {
+         --vp-blue-050: oklch(0.3 0.05 260);
+         --vp-bg-primary-100: var(--vp-${step});
+       }`
     expect(findRoleChainDrift(css("blue-050"), chains)).toEqual([])
     expect(findRoleChainDrift(css("dark-blue-050"), chains)).toEqual([])
     expect(findRoleChainDrift(css("blue-100"), chains)).toEqual([
@@ -630,6 +658,55 @@ colors:
         expected: "var(--vp-blue-050)",
       },
     ])
+  })
+
+  it("accepts the unprefixed dark step only where the dark root redeclares it", () => {
+    // Without `--vp-blue-050` in the dark block, `var(--vp-blue-050)` there
+    // paints the LIGHT blue-050.
+    const vapor = `---
+colors:
+  blue-050: oklch(0.97 0.02 260)
+  blue-100: oklch(0.93 0.04 260)
+  dark-blue-050: oklch(0.3 0.05 260)
+  color-background-primary-100: "{colors.blue-100}"
+  dark-color-background-primary-100: "{colors.dark-blue-050}"
+---
+`
+    const chains = roleChainsForSlug(vapor, "vapor-ui")
+    const html = (darkPalette: string): string =>
+      `:root { --vp-blue-050: oklch(0.97 0.02 260); --vp-bg-primary-100: var(--vp-blue-100); }
+       [data-theme="dark"] { ${darkPalette} --vp-bg-primary-100: var(--vp-blue-050); }`
+    expect(
+      findRoleChainDrift(html("--vp-blue-050: oklch(0.3 0.05 260);"), chains)
+    ).toEqual([])
+    expect(findRoleChainDrift(html(""), chains)).toEqual([
+      {
+        name: "vp-bg-primary-100",
+        scope: "dark",
+        preview: "var(--vp-blue-050)",
+        expected: "var(--vp-dark-blue-050)",
+      },
+    ])
+  })
+
+  it("holds a role the dark root never redeclares to its `dark-` row", () => {
+    // The dark theme inherits the light `var()`, which is not the dark step.
+    const chains = roleChainsForSlug(roles, "socar")
+    const found = findRoleChainDrift(
+      ":root { --sf-bg-base: var(--sf-gray-100); }",
+      chains
+    )
+    expect(found).toEqual([
+      {
+        name: "sf-bg-base",
+        scope: "dark",
+        preview: "var(--sf-gray-100)",
+        expected: "var(--sf-gray-800)",
+      },
+    ])
+    expect(
+      roleChainCoverage(":root { --sf-bg-base: var(--sf-gray-100); }", chains)
+    ).toEqual({ chained: 2, literal: 0, scoped: 0 })
   })
 
   it("counts compared chains and literal role declarations, once per scope", () => {

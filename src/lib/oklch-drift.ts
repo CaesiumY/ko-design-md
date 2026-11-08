@@ -371,6 +371,14 @@ export function readReferenceRows(markdown: string): Map<string, string> {
 export interface RoleChains {
   light: Map<string, ReadonlyArray<string>>
   dark: Map<string, ReadonlyArray<string>>
+  /** Dark roles that come from a `dark-` row (not theme-invariant ones). */
+  paired: Set<string>
+  /**
+   * Dark role → the candidate read off its `dark-` palette key without the
+   * prefix. It names the dark value only where the dark theme root redeclares
+   * that step, so it is accepted only there.
+   */
+  rebound: Map<string, string>
 }
 
 /**
@@ -388,28 +396,36 @@ export interface RoleChains {
  * A dark row may point at a `dark-` palette key (`{colors.dark-gray-050}`,
  * vapor-ui and codeit). Their previews declare one palette and redefine its
  * steps in the dark block, so in the dark scope the unprefixed step's name
- * (`--vp-gray-050`) is accepted as well as the prefixed one. This is not an
- * alias rule on purpose: a `dark-` rule would fold `gray-050` and
- * `dark-gray-050` onto one name, which alignToPreviewNames drops as ambiguous,
- * and the light palette comparisons would go with it.
+ * (`--vp-gray-050`) is accepted as well as the prefixed one, provided the dark
+ * theme root redeclares it. This is not an alias rule on purpose: a `dark-`
+ * rule would fold `gray-050` and `dark-gray-050` onto one name, which
+ * alignToPreviewNames drops as ambiguous, and the light palette comparisons
+ * would go with it.
  */
 export function roleChainsForSlug(markdown: string, slug: string): RoleChains {
   const rows = readReferenceRows(markdown)
   const name = (key: string): string => aliasFor(key, slug) ?? key
   const light = new Map<string, ReadonlyArray<string>>()
   const dark = new Map<string, ReadonlyArray<string>>()
+  const paired = new Set<string>()
+  const rebound = new Map<string, string>()
   for (const [key, target] of rows) {
     if (key.startsWith("dark-")) {
-      const step = target.startsWith("dark-")
-        ? [name(target.slice("dark-".length)), name(target)]
-        : [name(target)]
-      dark.set(name(key.slice("dark-".length)), step)
+      const role = name(key.slice("dark-".length))
+      paired.add(role)
+      if (target.startsWith("dark-")) {
+        const step = name(target.slice("dark-".length))
+        rebound.set(role, step)
+        dark.set(role, [step, name(target)])
+      } else {
+        dark.set(role, [name(target)])
+      }
       continue
     }
     light.set(name(key), [name(target)])
     if (!rows.has(`dark-${key}`)) dark.set(name(key), [name(target)])
   }
-  return { light, dark }
+  return { light, dark, paired, rebound }
 }
 
 /**
@@ -475,20 +491,27 @@ export interface RoleChainFinding extends DriftFinding {
  * pinned number.
  *
  * Only THEME-ROOT declarations are the theme's value: a top-level block whose
- * every selector is the document root (`:root`, `html`, optionally with a
- * `[data-theme]` attribute or a `:where(…)`) or the bare `[data-theme="dark"]`
- * selector, with no `@media`, `@supports` or other at-rule around it. A role
- * redeclared anywhere else (`.inverse { … }`, or `:root` inside `@media`) holds
- * only for part of the page, so it is neither compared nor allowed to hide the
- * root value; `roleChainCoverage` counts it as `scoped`.
+ * every selector is `:root` or `html` (optionally with one `[data-theme=…]`
+ * attribute and then a `:where(…)`) or a bare `[data-theme=…]`, with no
+ * `@media`, `@supports` or other at-rule around it (isThemeRoot). A role
+ * redeclared anywhere else (`.inverse { … }`, `:where(.chip) { … }`, or `:root`
+ * inside `@media`) holds only for part of the page, so it is neither compared
+ * nor allowed to hide the root value; `roleChainCoverage` counts it as
+ * `scoped`.
  *
  * Among theme-root declarations of one property in one scope, the last in the
  * document is compared. codeit's merged preview restates its light tokens
  * under the dark selector and then overrides them in a second dark block of the
- * same selector; the first never paints there. This is the cascade only for
- * root selectors of equal weight, which is what the catalogue writes: a base
+ * same selector; the first never paints there. That is the cascade only for
+ * root selectors of equal specificity, which is what the catalogue writes;
+ * two gaps are not modelled: `:root` outweighs a later `html`, and a base
  * `:root` restatement placed after the dark block would win in the dark theme
- * too, and is not modelled.
+ * too.
+ *
+ * A role with a `dark-` row that the dark root never redeclares inherits its
+ * light `var()` in the dark theme; that declaration is held to the dark row as
+ * well. A dark target named without its `dark-` prefix counts only where the
+ * dark root redeclares that step (RoleChains.rebound).
  */
 export function findRoleChainDrift(
   previewHtml: string,
@@ -527,8 +550,13 @@ export function roleChainCoverage(
 
 /**
  * Each scope's last theme-root declaration of a role property `chains` names,
- * with the property its `var()` points at (`undefined` for a literal), and the
- * number of role declarations outside theme-root blocks.
+ * with the property its `var()` points at (`undefined` for a literal) and the
+ * steps it may point at, and the number of role declarations outside
+ * theme-root blocks.
+ *
+ * A role with a `dark-` row that the dark theme root never redeclares inherits
+ * its light declaration in the dark theme, so that declaration is compared
+ * against the dark row too (`inherited`).
  */
 function roleDeclarations(
   previewHtml: string,
@@ -538,30 +566,56 @@ function roleDeclarations(
     Declaration & {
       target: string | undefined
       expected: ReadonlyArray<string>
+      inherited: boolean
     }
   >
   scoped: number
 } {
-  const expectedFor = (d: Declaration): ReadonlyArray<string> | undefined =>
-    (d.dark ? chains.dark : chains.light).get(d.name)
-  const last = new Map<string, Declaration>()
+  const lastRoot = new Map<string, Declaration>()
   let scoped = 0
   for (const d of declarations(previewHtml)) {
-    if (expectedFor(d) === undefined) continue
+    const role = (d.dark ? chains.dark : chains.light).has(d.name)
     if (!d.themeRoot) {
-      scoped++
+      if (role) scoped++
       continue
     }
     const key = `${d.dark ? "dark" : "light"} ${d.name}`
     // Delete first so the map's order is where each property is last declared.
-    last.delete(key)
-    last.set(key, d)
+    lastRoot.delete(key)
+    lastRoot.set(key, d)
   }
-  const compared = [...last.values()].map((d) => ({
-    ...d,
-    target: /^var\(\s*--([\w-]+)\s*\)$/.exec(d.value)?.[1],
-    expected: expectedFor(d) ?? [],
-  }))
+  const darkRedeclares = (step: string): boolean => lastRoot.has(`dark ${step}`)
+  const entry = (
+    d: Declaration,
+    scope: "light" | "dark",
+    inherited: boolean
+  ) => {
+    const candidates = (scope === "dark" ? chains.dark : chains.light).get(
+      d.name
+    )
+    if (candidates === undefined) return []
+    const rebound = scope === "dark" ? chains.rebound.get(d.name) : undefined
+    const expected = candidates.filter(
+      (step) => step !== rebound || darkRedeclares(step)
+    )
+    return [
+      {
+        ...d,
+        dark: scope === "dark",
+        target: /^var\(\s*--([\w-]+)\s*\)$/.exec(d.value)?.[1],
+        expected,
+        inherited,
+      },
+    ]
+  }
+  const compared = [...lastRoot.values()].flatMap((d) =>
+    entry(d, d.dark ? "dark" : "light", false)
+  )
+  for (const role of chains.paired) {
+    const base = lastRoot.get(`light ${role}`)
+    if (base === undefined || lastRoot.has(`dark ${role}`)) continue
+    compared.push(...entry(base, "dark", true))
+  }
   return { compared, scoped }
 }
 
@@ -578,20 +632,33 @@ interface Declaration {
 
 /**
  * A selector list every member of which names the document root for a theme:
- * `:root`, `html`, `[data-theme="dark"]`, `html[data-theme="light"]`,
- * `:root:where(…)` and the like.
+ * `:root` or `html`, optionally with one `[data-theme=…]` attribute and then a
+ * `:where(…)`, or a bare `[data-theme=…]`. A bare `:where(…)` and any
+ * combinator (`html [data-theme]`) are not roots.
  */
 function isThemeRoot(prelude: string): boolean {
   if (prelude === "" || prelude.startsWith("@")) return false
-  return prelude
-    .split(",")
-    .map((s) => s.trim())
-    .every(
-      (s) =>
-        /^(?::root|html)?(?:\[data-theme=(["']?)[\w-]+\1\])?(?::where\([^()]*\))?$/.test(
-          s
-        ) && s !== ""
+  const THEME = String.raw`\[data-theme=(?:"[\w-]+"|'[\w-]+'|[\w-]+)\]`
+  const ROOT = new RegExp(
+    String.raw`^(?:(?::root|html)(?:${THEME})?(?::where\([^()]*\))?|${THEME})$`
+  )
+  return prelude.split(",").every((s) => ROOT.test(s.trim()))
+}
+
+/**
+ * A block's selector with whitespace collapsed and removed only where it
+ * cannot be a combinator: inside `[…]` and around `,`. Space before `[` or
+ * after `]` is the descendant combinator and is kept.
+ */
+function normaliseSelector(text: string): string {
+  return text
+    .replace(/\s+/g, " ")
+    .replace(
+      /\[([^\]]*)\]/g,
+      (_, inner: string) => `[${inner.replace(/ /g, "")}]`
     )
+    .replace(/ ?, ?/g, ",")
+    .trim()
 }
 
 /** Every custom-property declaration in a preview's stylesheets, in order. */
@@ -626,13 +693,7 @@ function declarations(previewHtml: string): Array<Declaration> {
     const tok = m[0]
     const end = m.index + tok.length
     if (tok === "{") {
-      open.push(
-        css
-          .slice(segment, m.index)
-          .replace(/\s+/g, " ")
-          .replace(/\s*([[\]=,()])\s*/g, "$1")
-          .trim()
-      )
+      open.push(normaliseSelector(css.slice(segment, m.index)))
       if (pendingDark) {
         darkDepth = open.length
         pendingDark = false
