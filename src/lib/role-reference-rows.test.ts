@@ -263,10 +263,19 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       // role names overlap the stable tier's (`bg-grey-light`), so the whole
       // tier is prefixed, and `dark-` stays outside (`dark-alpha-bg-grey-light`).
       const ALPHA = /^alpha-/
-      const stableRows = tableRows.filter(([cell]) =>
-        STABLE_ROLE.test(spans(cell)[0] ?? "")
-      )
-      // Both layers' tables must have parsed, or a dropped one would pass.
+      // Which tier a bare role name belongs to — the one place that reads it.
+      const tierOf = (name: string): "stable" | "beta" | "alpha" =>
+        ALPHA.test(name) ? "alpha" : STABLE_ROLE.test(name) ? "stable" : "beta"
+      const rowsOf = (
+        tier: "stable" | "beta" | "alpha"
+      ): Array<Array<string>> =>
+        tableRows.filter(([cell]) => {
+          const name = spans(cell)[0] ?? ""
+          return !name.startsWith("{colors.") && tierOf(name) === tier
+        })
+      const stableRows = rowsOf("stable")
+      // Every tier's table must have parsed, or a dropped one would pass —
+      // here for the stable tier, by the pinned counts below for the others.
       expect(stableRows.length, "bezier: stable table rows").toBeGreaterThan(0)
       // Every stable cell is exactly one `stable-*` reference: a beta key, a
       // value, or a reference with words after it all fail here.
@@ -289,17 +298,20 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       expect(
         [...expected]
           .filter(
-            ([key, to]) => !STABLE_ROLE.test(bare(key)) && STABLE_KEY.test(to)
+            ([key, to]) => tierOf(bare(key)) !== "stable" && STABLE_KEY.test(to)
           )
           .map(([key]) => key),
-        "bezier: beta roles must not reference `stable-*` keys"
+        "bezier: beta and alpha roles must not reference `stable-*` keys"
       ).toEqual([])
       // Each tier points inside itself: an alpha role at an `alpha-` primitive
       // or another `alpha-` role, and no other role at an `alpha-` key — even
       // where the hex matches.
       expect(
         [...expected]
-          .filter(([key, to]) => ALPHA.test(bare(key)) !== ALPHA.test(bare(to)))
+          .filter(
+            ([key, to]) =>
+              (tierOf(bare(key)) === "alpha") !== ALPHA.test(bare(to))
+          )
           .map(([key, to]) => `${key} → ${to}`),
         "bezier: alpha roles reference `alpha-*` keys, and only they do"
       ).toEqual([])
@@ -378,17 +390,8 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       // of the beta targets the entry already carried before the re-audit and
       // how many it added (84 + 46) is a dated record, not a table count, and
       // stays unpinned.
-      const roleRows = tableRows.filter(
-        ([cell]) => !(spans(cell)[0] ?? "").startsWith("{colors.")
-      )
-      const alphaRows = roleRows.filter(([cell]) =>
-        ALPHA.test(spans(cell)[0] ?? "")
-      )
-      const betaRows = roleRows.filter(
-        ([cell]) =>
-          !STABLE_ROLE.test(spans(cell)[0] ?? "") &&
-          !ALPHA.test(spans(cell)[0] ?? "")
-      )
+      const alphaRows = rowsOf("alpha")
+      const betaRows = rowsOf("beta")
       const literalOnly = (rows: Array<Array<string>>): Array<Array<string>> =>
         rows.filter(([, light = "", dark = ""]) =>
           [light, dark].every((cell) => single(cell) === undefined)
@@ -413,10 +416,15 @@ const CASES: Record<string, { title: string; check: () => void }> = {
       ).toEqual([])
       // Alpha reference rows, by what their light row points at: an `alpha-`
       // primitive, or another alpha role (the upstream's role → role hop).
-      const alphaRefs = [...refs].filter(([key]) => ALPHA.test(bare(key)))
+      const alphaRefs = [...refs].filter(
+        ([key]) => tierOf(bare(key)) === "alpha"
+      )
       const alphaLightTargets = alphaRefs
         .filter(([key]) => !key.startsWith("dark-"))
         .map(([, to]) => to)
+      const alphaRoleTargets = new Set(
+        alphaRefs.map(([, to]) => bare(to)).filter((to) => refs.has(to))
+      )
       const proseCounts = {
         stableRoles: stableRows.length,
         ...Object.fromEntries(
@@ -440,19 +448,21 @@ const CASES: Record<string, { title: string; check: () => void }> = {
         betaTargets: new Set(
           [...refs]
             .filter(
-              ([key]) =>
-                key !== "primary" &&
-                !STABLE_ROLE.test(bare(key)) &&
-                !ALPHA.test(bare(key))
+              ([key]) => key !== "primary" && tierOf(bare(key)) === "beta"
             )
             .map(([, to]) => to)
         ).size,
         alphaRoles: alphaRows.length,
         alphaReferenceRoles: alphaRows.length - alphaLiteralRows.length,
+        alphaPrimitiveRoles: alphaLightTargets.filter((to) => literals.has(to))
+          .length,
         alphaRoleToRole: alphaLightTargets.filter((to) => refs.has(to)).length,
-        alphaRoleTargets: new Set(
-          alphaRefs.map(([, to]) => bare(to)).filter((to) => refs.has(to))
-        ).size,
+        alphaRoleTargets: alphaRoleTargets.size,
+        // The prose says every pointed role points at a primitive: none of
+        // them is itself a role → role row.
+        alphaRoleTargetsPointingAtRoles: [...alphaRoleTargets].filter((to) =>
+          refs.has(refs.get(to) ?? "")
+        ).length,
         alphaLiteralRoles: alphaLiteralRows.length,
         alphaHovered: alphaLiteralRows.filter(([c]) => /-hovered`$/.test(c))
           .length,
@@ -490,8 +500,10 @@ const CASES: Record<string, { title: string; check: () => void }> = {
         betaTargets: 130,
         alphaRoles: 472,
         alphaReferenceRoles: 236,
+        alphaPrimitiveRoles: 194,
         alphaRoleToRole: 42,
         alphaRoleTargets: 41,
+        alphaRoleTargetsPointingAtRoles: 0,
         alphaLiteralRoles: 236,
         alphaHovered: 236,
         alphaRowsWithPrimitiveNote: 17,
