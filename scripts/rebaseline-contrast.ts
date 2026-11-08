@@ -22,7 +22,8 @@
 //
 // Exit 2 for a bad invocation, unreadable input, or an artifact this checkout
 // cannot take (the reasons are printed and nothing is written); exit 1 when
-// the download is declined or fails.
+// the download is declined (at the prompt, or for want of a terminal to ask
+// in) or fails.
 
 import { spawnSync } from "node:child_process"
 import { mkdtempSync, readFileSync, writeFileSync } from "node:fs"
@@ -77,8 +78,10 @@ async function download(run: string): Promise<string> {
     dir,
   ]
   if (!process.stdin.isTTY) {
+    // No terminal to say yes in is a declined download, not a bad invocation.
     fail(
-      `Error: downloading needs a yes from a terminal. Run it there, or download it yourself (${command("<folder>").join(" ")}) and pass --from <folder>.`
+      `Error: downloading needs a yes from a terminal. Run it there, or download it yourself (${command("<folder>").join(" ")}) and pass --from <folder>.`,
+      1
     )
   }
   const rl = createInterface({ input: process.stdin, output: process.stdout })
