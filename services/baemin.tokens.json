@@ -1039,6 +1039,420 @@
       "group": "Deployed palette — dark"
     },
     {
+      "name": "base-borderInverted",
+      "value": "oklch(1.000 0.000 0)",
+      "group": "Deployed roles — base theme",
+      "ref": "white"
+    },
+    {
+      "name": "base-fillInverted",
+      "value": "oklch(0.000 0.000 0)",
+      "group": "Deployed roles — base theme",
+      "ref": "black"
+    },
+    {
+      "name": "dark-base-fillInverted",
+      "value": "oklch(1.000 0.000 0)",
+      "group": "Deployed roles — base theme",
+      "ref": "dark-white"
+    },
+    {
+      "name": "base-negativePrimary",
+      "value": "oklch(0.660 0.227 27)",
+      "group": "Deployed roles — base theme",
+      "ref": "red5"
+    },
+    {
+      "name": "dark-base-negativePrimary",
+      "value": "oklch(0.660 0.227 27)",
+      "group": "Deployed roles — base theme",
+      "ref": "dark-red5"
+    },
+    {
+      "name": "base-negativeSecondary",
+      "value": "oklch(0.764 0.141 20)",
+      "group": "Deployed roles — base theme",
+      "ref": "red3"
+    },
+    {
+      "name": "dark-base-negativeSecondary",
+      "value": "oklch(0.424 0.127 26)",
+      "group": "Deployed roles — base theme",
+      "ref": "dark-red3"
+    },
+    {
+      "name": "base-negativeTertiary",
+      "value": "oklch(0.920 0.041 16)",
+      "group": "Deployed roles — base theme",
+      "ref": "red2"
+    },
+    {
+      "name": "dark-base-negativeTertiary",
+      "value": "oklch(0.315 0.072 27)",
+      "group": "Deployed roles — base theme",
+      "ref": "dark-red2"
+    },
+    {
+      "name": "base-positivePrimary",
+      "value": "oklch(0.690 0.170 155)",
+      "group": "Deployed roles — base theme",
+      "ref": "green5"
+    },
+    {
+      "name": "dark-base-positivePrimary",
+      "value": "oklch(0.690 0.170 155)",
+      "group": "Deployed roles — base theme",
+      "ref": "dark-green5"
+    },
+    {
+      "name": "base-positiveSecondary",
+      "value": "oklch(0.844 0.130 160)",
+      "group": "Deployed roles — base theme",
+      "ref": "green3"
+    },
+    {
+      "name": "dark-base-positiveSecondary",
+      "value": "oklch(0.457 0.086 156)",
+      "group": "Deployed roles — base theme",
+      "ref": "dark-green3"
+    },
+    {
+      "name": "base-positiveTertiary",
+      "value": "oklch(0.933 0.060 161)",
+      "group": "Deployed roles — base theme",
+      "ref": "green2"
+    },
+    {
+      "name": "dark-base-positiveTertiary",
+      "value": "oklch(0.331 0.040 156)",
+      "group": "Deployed roles — base theme",
+      "ref": "dark-green2"
+    },
+    {
+      "name": "base-systemMainPrimary",
+      "value": "oklch(0.635 0.199 278)",
+      "group": "Deployed roles — base theme",
+      "ref": "purple4"
+    },
+    {
+      "name": "dark-base-systemMainPrimary",
+      "value": "oklch(0.536 0.179 278)",
+      "group": "Deployed roles — base theme",
+      "ref": "dark-purple4"
+    },
+    {
+      "name": "base-systemMainSecondary",
+      "value": "oklch(0.751 0.130 278)",
+      "group": "Deployed roles — base theme",
+      "ref": "purple3"
+    },
+    {
+      "name": "dark-base-systemMainSecondary",
+      "value": "oklch(0.438 0.144 278)",
+      "group": "Deployed roles — base theme",
+      "ref": "dark-purple3"
+    },
+    {
+      "name": "base-systemMainTertiary",
+      "value": "oklch(0.901 0.049 283)",
+      "group": "Deployed roles — base theme",
+      "ref": "purple2"
+    },
+    {
+      "name": "dark-base-systemMainTertiary",
+      "value": "oklch(0.331 0.088 278)",
+      "group": "Deployed roles — base theme",
+      "ref": "dark-purple2"
+    },
+    {
+      "name": "base-systemSubPrimary",
+      "value": "oklch(0.609 0.213 258)",
+      "group": "Deployed roles — base theme",
+      "ref": "blue5"
+    },
+    {
+      "name": "dark-base-systemSubPrimary",
+      "value": "oklch(0.609 0.213 258)",
+      "group": "Deployed roles — base theme",
+      "ref": "dark-blue5"
+    },
+    {
+      "name": "base-systemSubSecondary",
+      "value": "oklch(0.774 0.120 250)",
+      "group": "Deployed roles — base theme",
+      "ref": "blue3"
+    },
+    {
+      "name": "dark-base-systemSubSecondary",
+      "value": "oklch(0.451 0.122 258)",
+      "group": "Deployed roles — base theme",
+      "ref": "dark-blue3"
+    },
+    {
+      "name": "base-systemSubTertiary",
+      "value": "oklch(0.929 0.035 251)",
+      "group": "Deployed roles — base theme",
+      "ref": "blue2"
+    },
+    {
+      "name": "dark-base-systemSubTertiary",
+      "value": "oklch(0.333 0.075 258)",
+      "group": "Deployed roles — base theme",
+      "ref": "dark-blue2"
+    },
+    {
+      "name": "base-warningPrimary",
+      "value": "oklch(0.738 0.183 55)",
+      "group": "Deployed roles — base theme",
+      "ref": "orange5"
+    },
+    {
+      "name": "dark-base-warningPrimary",
+      "value": "oklch(0.738 0.183 55)",
+      "group": "Deployed roles — base theme",
+      "ref": "dark-orange5"
+    },
+    {
+      "name": "base-warningSecondary",
+      "value": "oklch(0.839 0.116 64)",
+      "group": "Deployed roles — base theme",
+      "ref": "orange3"
+    },
+    {
+      "name": "dark-base-warningSecondary",
+      "value": "oklch(0.428 0.080 54)",
+      "group": "Deployed roles — base theme",
+      "ref": "dark-orange3"
+    },
+    {
+      "name": "base-warningTertiary",
+      "value": "oklch(0.935 0.041 60)",
+      "group": "Deployed roles — base theme",
+      "ref": "orange2"
+    },
+    {
+      "name": "dark-base-warningTertiary",
+      "value": "oklch(0.331 0.042 57)",
+      "group": "Deployed roles — base theme",
+      "ref": "dark-orange2"
+    },
+    {
+      "name": "mint-benefitPrimary",
+      "value": "oklch(0.570 0.240 278)",
+      "group": "Deployed roles — mint theme",
+      "ref": "purple5"
+    },
+    {
+      "name": "dark-mint-benefitPrimary",
+      "value": "oklch(0.570 0.240 278)",
+      "group": "Deployed roles — mint theme",
+      "ref": "dark-purple5"
+    },
+    {
+      "name": "mint-benefitSecondary",
+      "value": "oklch(0.492 0.291 277)",
+      "group": "Deployed roles — mint theme",
+      "ref": "purple6"
+    },
+    {
+      "name": "dark-mint-benefitSecondary",
+      "value": "oklch(0.776 0.115 277)",
+      "group": "Deployed roles — mint theme",
+      "ref": "dark-purple6"
+    },
+    {
+      "name": "mint-benefitTertiary",
+      "value": "oklch(0.958 0.020 280)",
+      "group": "Deployed roles — mint theme",
+      "ref": "purple1"
+    },
+    {
+      "name": "dark-mint-benefitTertiary",
+      "value": "oklch(0.275 0.037 277)",
+      "group": "Deployed roles — mint theme",
+      "ref": "dark-purple1"
+    },
+    {
+      "name": "mint-negativePrimary",
+      "value": "oklch(0.660 0.227 27)",
+      "group": "Deployed roles — mint theme",
+      "ref": "red5"
+    },
+    {
+      "name": "dark-mint-negativePrimary",
+      "value": "oklch(0.660 0.227 27)",
+      "group": "Deployed roles — mint theme",
+      "ref": "dark-red5"
+    },
+    {
+      "name": "mint-negativeSecondary",
+      "value": "oklch(0.592 0.225 28)",
+      "group": "Deployed roles — mint theme",
+      "ref": "red6"
+    },
+    {
+      "name": "dark-mint-negativeSecondary",
+      "value": "oklch(0.777 0.131 27)",
+      "group": "Deployed roles — mint theme",
+      "ref": "dark-red6"
+    },
+    {
+      "name": "mint-negativeTertiary",
+      "value": "oklch(0.963 0.018 13)",
+      "group": "Deployed roles — mint theme",
+      "ref": "red1"
+    },
+    {
+      "name": "dark-mint-negativeTertiary",
+      "value": "oklch(0.291 0.024 23)",
+      "group": "Deployed roles — mint theme",
+      "ref": "dark-red1"
+    },
+    {
+      "name": "mint-positivePrimary",
+      "value": "oklch(0.690 0.170 155)",
+      "group": "Deployed roles — mint theme",
+      "ref": "green5"
+    },
+    {
+      "name": "dark-mint-positivePrimary",
+      "value": "oklch(0.690 0.170 155)",
+      "group": "Deployed roles — mint theme",
+      "ref": "dark-green5"
+    },
+    {
+      "name": "mint-positiveSecondary",
+      "value": "oklch(0.617 0.151 155)",
+      "group": "Deployed roles — mint theme",
+      "ref": "green6"
+    },
+    {
+      "name": "dark-mint-positiveSecondary",
+      "value": "oklch(0.788 0.170 155)",
+      "group": "Deployed roles — mint theme",
+      "ref": "dark-green6"
+    },
+    {
+      "name": "mint-positiveTertiary",
+      "value": "oklch(0.980 0.021 161)",
+      "group": "Deployed roles — mint theme",
+      "ref": "green1"
+    },
+    {
+      "name": "dark-mint-positiveTertiary",
+      "value": "oklch(0.300 0.021 153)",
+      "group": "Deployed roles — mint theme",
+      "ref": "dark-green1"
+    },
+    {
+      "name": "mint-systemMainPrimary",
+      "value": "oklch(0.854 0.154 180)",
+      "group": "Deployed roles — mint theme",
+      "ref": "mint5"
+    },
+    {
+      "name": "dark-mint-systemMainPrimary",
+      "value": "oklch(0.854 0.154 180)",
+      "group": "Deployed roles — mint theme",
+      "ref": "dark-mint5"
+    },
+    {
+      "name": "mint-systemMainSecondary",
+      "value": "oklch(0.751 0.133 185)",
+      "group": "Deployed roles — mint theme",
+      "ref": "mint6"
+    },
+    {
+      "name": "dark-mint-systemMainSecondary",
+      "value": "oklch(0.804 0.146 180)",
+      "group": "Deployed roles — mint theme",
+      "ref": "dark-mint6"
+    },
+    {
+      "name": "mint-systemMainTertiary",
+      "value": "oklch(0.980 0.028 177)",
+      "group": "Deployed roles — mint theme",
+      "ref": "mint1"
+    },
+    {
+      "name": "dark-mint-systemMainTertiary",
+      "value": "oklch(0.291 0.027 180)",
+      "group": "Deployed roles — mint theme",
+      "ref": "dark-mint1"
+    },
+    {
+      "name": "mint-systemSubPrimary",
+      "value": "oklch(0.609 0.213 258)",
+      "group": "Deployed roles — mint theme",
+      "ref": "blue5"
+    },
+    {
+      "name": "dark-mint-systemSubPrimary",
+      "value": "oklch(0.772 0.118 255)",
+      "group": "Deployed roles — mint theme",
+      "ref": "dark-blue6"
+    },
+    {
+      "name": "mint-systemSubSecondary",
+      "value": "oklch(0.545 0.195 258)",
+      "group": "Deployed roles — mint theme",
+      "ref": "blue6"
+    },
+    {
+      "name": "dark-mint-systemSubSecondary",
+      "value": "oklch(0.772 0.118 255)",
+      "group": "Deployed roles — mint theme",
+      "ref": "dark-blue6"
+    },
+    {
+      "name": "mint-systemSubTertiary",
+      "value": "oklch(0.971 0.015 242)",
+      "group": "Deployed roles — mint theme",
+      "ref": "blue1"
+    },
+    {
+      "name": "dark-mint-systemSubTertiary",
+      "value": "oklch(0.307 0.037 258)",
+      "group": "Deployed roles — mint theme",
+      "ref": "dark-blue1"
+    },
+    {
+      "name": "mint-warningPrimary",
+      "value": "oklch(0.738 0.183 55)",
+      "group": "Deployed roles — mint theme",
+      "ref": "orange5"
+    },
+    {
+      "name": "dark-mint-warningPrimary",
+      "value": "oklch(0.738 0.183 55)",
+      "group": "Deployed roles — mint theme",
+      "ref": "dark-orange5"
+    },
+    {
+      "name": "mint-warningSecondary",
+      "value": "oklch(0.696 0.203 43)",
+      "group": "Deployed roles — mint theme",
+      "ref": "orange6"
+    },
+    {
+      "name": "dark-mint-warningSecondary",
+      "value": "oklch(0.794 0.141 58)",
+      "group": "Deployed roles — mint theme",
+      "ref": "dark-orange6"
+    },
+    {
+      "name": "mint-warningTertiary",
+      "value": "oklch(0.976 0.015 61)",
+      "group": "Deployed roles — mint theme",
+      "ref": "orange1"
+    },
+    {
+      "name": "dark-mint-warningTertiary",
+      "value": "oklch(0.289 0.017 56)",
+      "group": "Deployed roles — mint theme",
+      "ref": "dark-orange1"
+    },
+    {
       "name": "primary-hover",
       "value": "oklch(0.69 0.13 184)",
       "note": "버튼 hover/pressed (mint-deep), 번들 값",
