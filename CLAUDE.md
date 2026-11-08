@@ -10,7 +10,9 @@ TanStack Start 사이트(getdesign.kr)가 이를 서빙하고, `/design-md` 스�
 pnpm gates              # CI build 잡이 pnpm build 전에 돌리는 검사 전부를 같은 순서로.
                         # 첫 실패에서 멈추고 그 단계 이름과 그 단계가 막는 것을 찍는다.
                         # 단계와 설명은 src/lib/gates.ts 의 GATE_STEPS, CI 에 그 밖의 단계가
-                        # 끼거나 목록이 어긋나면 pnpm test 가 막는다. 날짜 검사의 기준은 origin/main
+                        # 끼거나 목록, 인자, 단계 설정이 어긋나면 pnpm test 가 막는다.
+                        # 날짜 검사의 기준은 origin/main, 다른 브랜치 위에 쌓은 브랜치는
+                        # pnpm gates --base origin/<그 브랜치>
 pnpm build              # build:og + vite build
 pnpm test:http          # pnpm build 뒤 빌드된 Nitro 서버 HTTP 회귀 검사
 pnpm test:e2e           # E2E 스모크 — 빌드된 서버 + Chromium, CI 는 별도 e2e 잡

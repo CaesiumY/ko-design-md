@@ -7,6 +7,7 @@ import {
   ciPreBuildSteps,
   runGates,
   stepListMismatch,
+  withBase,
 } from "./gates"
 import type { GateStep } from "./gates"
 
@@ -166,6 +167,28 @@ describe("ciPreBuildSteps", () => {
     ])
   })
 
+  it("throws on a pre-build step setting what its run line does not show", () => {
+    for (const [key, value] of [
+      ["if", "github.event_name == 'push'"],
+      ["continue-on-error", "true"],
+      ["working-directory", "sub"],
+    ]) {
+      const keyed = WORKFLOW.replace(
+        "        run: pnpm typecheck\n",
+        `        run: pnpm typecheck\n        ${key}: ${value}\n`
+      )
+      expect(() => ciPreBuildSteps(keyed), key).toThrow(new RegExp(key))
+    }
+  })
+
+  it("throws on an env variable its run line does not pass as an argument", () => {
+    const env = WORKFLOW.replace(
+      "        run: pnpm typecheck\n",
+      "        env:\n          STRICT: '1'\n        run: pnpm typecheck\n"
+    )
+    expect(() => ciPreBuildSteps(env)).toThrow(/STRICT/)
+  })
+
   it("reads each step's arguments as written in CI", () => {
     expect(ciPreBuildSteps(WORKFLOW)).toEqual([
       { script: "typecheck", args: [] },
@@ -203,6 +226,18 @@ describe("stepListMismatch", () => {
     expect(stepListMismatch(["a", "b", "c"], ["a", "c", "b"])).toMatch(
       /position 2.*`b`.*`c`/
     )
+  })
+})
+
+describe("withBase", () => {
+  it("points every `--base` at the given ref and leaves other steps alone", () => {
+    const got = withBase(STEPS, "origin/feature")
+    expect(got.map((s) => s.args ?? [])).toEqual([
+      [],
+      [],
+      ["--base", "origin/feature"],
+    ])
+    expect(got[2].ciArgs).toEqual(STEPS[2].ciArgs)
   })
 })
 

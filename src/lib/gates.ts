@@ -52,9 +52,10 @@ export const GATE_STEPS: ReadonlyArray<GateStep> = [
       "public/preview/*/ 전수의 구조(block), 반응형과 움직임 줄이기 휴리스틱(warn)",
   },
   // CI passes the PR's merge base (or the commit a push replaced) through
-  // `$BASE_REF`. Locally `origin/main` is that base; when it is missing the
-  // script fails loudly and says to `git fetch origin main`, so the gate cannot
-  // pass on zero files.
+  // `$BASE_REF`. Locally `origin/main` is that base for a PR on main; a branch
+  // stacked on another passes that one with `pnpm gates --base <ref>`
+  // (`withBase`). When the ref is missing the script fails loudly and says to
+  // fetch it, so the gate cannot pass on zero files.
   {
     script: "check:last-updated",
     args: ["--base", "origin/main"],
@@ -82,6 +83,45 @@ const SETUP_ACTIONS = [
 /** `pnpm <script> [args]` on one line, with no chaining or redirection. */
 const ONE_PNPM_SCRIPT = /^pnpm\s+([\w:.-]+)(?:\s+[^&|;<>\n]*)?$/
 
+// The keys a pre-build step may carry. Any other (`if`, `continue-on-error`,
+// `working-directory`, …) changes whether or how the check runs in CI without
+// showing in the line `pnpm gates` mirrors.
+const STEP_KEYS = new Set(["name", "uses", "with", "run", "env"])
+
+// The fields read here; `Object.keys` still sees every key a step has.
+type YamlScalar = string | number | boolean | null
+interface WorkflowStep {
+  run?: string
+  uses?: string
+  env?: Record<string, YamlScalar>
+}
+
+/**
+ * Throws when a pre-build step sets something its line does not show: a key
+ * outside `STEP_KEYS`, or an `env` variable the run line does not pass as an
+ * argument (one it does pass, like `"$BASE_REF"`, is compared through the
+ * step's `ciArgs`).
+ */
+function refuseHiddenSettings(step: WorkflowStep, label: string): void {
+  for (const key of Object.keys(step)) {
+    if (!STEP_KEYS.has(key)) {
+      throw new Error(
+        `CI build step \`${label}\` sets \`${key}\`, which \`pnpm gates\` cannot mirror; ` +
+          "drop it, or move the check after `pnpm build`"
+      )
+    }
+  }
+  for (const name of Object.keys(step.env ?? {})) {
+    const passed = new RegExp(String.raw`\$\{?${name}\b`)
+    if (typeof step.run !== "string" || !passed.test(step.run)) {
+      throw new Error(
+        `CI build step \`${label}\` sets env \`${name}\` without passing it as an argument, ` +
+          "so `pnpm gates` would run the check differently; pass it in the run line and list it in that step's ciArgs"
+      )
+    }
+  }
+}
+
 /** One pre-build step as CI writes it: the script and its arguments. */
 export interface CiStep {
   script: string
@@ -97,12 +137,13 @@ export interface CiStep {
  * `pnpm <script>` line; anything else (another action, a `node` or shell
  * command, a chained line) throws rather than being skipped, because a step
  * this reader silently ignored would be a step `pnpm gates` silently lacks.
- * So does a build job with no `pnpm build`, which would otherwise read every
- * later step as a pre-build one.
+ * So does a step that sets something its line does not show
+ * (`refuseHiddenSettings`), and a build job with no `pnpm build`, which would
+ * otherwise read every later step as a pre-build one.
  */
 export function ciPreBuildSteps(workflowYaml: string): Array<CiStep> {
   const doc = parse(workflowYaml) as {
-    jobs?: { build?: { steps?: Array<{ run?: string; uses?: string }> } }
+    jobs?: { build?: { steps?: Array<WorkflowStep> } }
   }
   const steps = doc.jobs?.build?.steps
   if (!Array.isArray(steps)) {
@@ -111,7 +152,10 @@ export function ciPreBuildSteps(workflowYaml: string): Array<CiStep> {
   const scripts: Array<CiStep> = []
   for (const step of steps) {
     if (typeof step.uses === "string") {
-      if (SETUP_ACTIONS.includes(step.uses.split("@")[0])) continue
+      if (SETUP_ACTIONS.includes(step.uses.split("@")[0])) {
+        refuseHiddenSettings(step, step.uses)
+        continue
+      }
       throw new Error(
         `CI build step uses \`${step.uses}\`, which \`pnpm gates\` cannot run; ` +
           "make the check a pnpm script, or add the action to SETUP_ACTIONS if it only prepares the runner"
@@ -133,6 +177,7 @@ export function ciPreBuildSteps(workflowYaml: string): Array<CiStep> {
     }
     const script = match[1]
     if (script === "build") return scripts
+    refuseHiddenSettings(step, line)
     if (script !== "install") {
       scripts.push({ script, args: line.split(/\s+/).slice(2) })
     }
@@ -188,6 +233,24 @@ export function argsMismatch(
     }
   }
   return problems.length > 0 ? problems.join("; ") : null
+}
+
+/**
+ * `steps` with every `--base` pointed at `ref`: `pnpm gates --base <ref>` for a
+ * branch stacked on another branch, whose CI compares against that branch
+ * rather than `origin/main`. `ciArgs` is CI's spelling and stays as it is.
+ */
+export function withBase(
+  steps: ReadonlyArray<GateStep>,
+  ref: string
+): Array<GateStep> {
+  return steps.map((step) => {
+    const at = step.args?.indexOf("--base") ?? -1
+    if (!step.args || at === -1) return step
+    const args = [...step.args]
+    args[at + 1] = ref
+    return { ...step, args }
+  })
 }
 
 /** `check:last-updated --base origin/main` — how a step is named in output. */
