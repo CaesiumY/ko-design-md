@@ -874,6 +874,9 @@ describe("paletteFingerprint", () => {
         )
       ),
       "a translucent token's alpha": fp(edit("/ 5%)", "/ 8%)")),
+      // A name is not in the digest, but `paletteOf` reads a theme from it:
+      // `ink` renamed `dark-ink` is painted in the dark theme only.
+      "a rename that changes a theme": fp(edit("ink:", "dark-ink:")),
       "a token added": fp(
         edit("  ## 관측(미발행)", "  line: oklch(0.8 0 0)\n  ## 관측(미발행)")
       ),

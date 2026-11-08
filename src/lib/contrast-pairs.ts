@@ -313,9 +313,12 @@ export function paletteOf(
  *
  * Only what `pairClass` uses goes in — each token's colour (Oklab, or the
  * 8-bit paint of a translucent one), whether it is observed, and its theme.
- * Names do not: no classification reads one, so renaming a token, reordering
- * the map or writing the same colour another way leaves the tables as they
- * were and the digest with them. Oklab is rounded to 1e-6, far inside
+ * Names do not: no classification reads one, so reordering the map, writing
+ * the same colour another way, or renaming a token leaves the tables as they
+ * were and the digest with them — unless the new name changes what `paletteOf`
+ * reads from names: a theme (a `dark-` prefix, or a `dark-` twin gained or
+ * lost) moves the digest, as it may move a table, and a token named in
+ * `OBSERVED_COLOURS` makes `paletteOf` throw. Oklab is rounded to 1e-6, far inside
  * `PUBLISHED_PAIR_TOLERANCE`, so two spellings of one colour that parse a
  * float's last bit apart are not read as a change.
  */
