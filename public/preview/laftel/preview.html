@@ -15,34 +15,53 @@
     --lft-bg-2: oklch(0.976 0 0);
     --lft-bg-3: oklch(0.949 0 0);
     --lft-bg-4: oklch(0.913 0 0);
+    --lft-bg-toast: oklch(0 0 0);
     --lft-fg-1: oklch(0.182 0 0);
     --lft-fg-2: oklch(0.431 0 0);
     --lft-fg-3: oklch(0.633 0 0);
     --lft-fg-4: oklch(0.858 0 0);
     --lft-border-1: oklch(0.949 0 0);
     --lft-border-2: oklch(0.913 0 0);
+    --lft-button-disable: oklch(0.949 0 0);
+    --lft-button-purple-gray: oklch(0.228 0.029 277.9);
     --lft-badge-red: oklch(0.631 0.254 28.8);
     --lft-badge-red-weak: oklch(0.952 0.024 8.2);
     --lft-white: oklch(1 0 0);
 
     --canvas: var(--lft-bg-1);
-    --panel: var(--lft-bg-2);
+    --deep: var(--lft-bg-2);
+    --raise: var(--lft-bg-3);
     --ink: var(--lft-fg-1);
     --ink-2: var(--lft-fg-2);
     --ink-3: var(--lft-fg-3);
+    --ink-4: var(--lft-fg-4);
     --line: var(--lft-border-1);
     --line-2: var(--lft-border-2);
     --accent: var(--lft-point);
     --accent-ink: var(--lft-white);
-    --soft: var(--lft-point-slight-1);
-    --soft-ink: var(--lft-point);
-    --hero-bg: oklch(0.2 0.03 285);
-    --hero-ink: var(--lft-white);
+    --slight-1: var(--lft-point-slight-1);
+    --slight-2: var(--lft-point-slight-2);
+    --slight-ink: var(--lft-fg-2);
+    --hl: var(--lft-point-slight-1);
+    --purple-gray: var(--lft-button-purple-gray);
+    --purple-gray-ink: var(--lft-white);
+    --btn-disable: var(--lft-button-disable);
+    --toast-bg: var(--lft-bg-toast);
+    --toast-ink: var(--lft-white);
+    --badge-ink: var(--lft-white);
+    --shadow-basic: oklch(0 0 0 / 0.25);
+    --shadow-dropdown: oklch(0 0 0 / 0.16);
+    --img-ph: oklch(0.317 0 0);
+    --img-ph-ink: oklch(0.741 0 0);
+    --on-image: var(--lft-white);
+    --on-image-hover: oklch(1 0 0 / 0.8);
     --cta-bg: var(--lft-white);
     --cta-ink: var(--lft-fg-1);
-    --stage: var(--lft-bg-2);
-    --track: oklch(0.913 0 0);
-    --day-off: oklch(0.858 0 0);
+    --cta-hover: oklch(1 0 0 / 0.7);
+    --ring: var(--lft-point);
+    --track: var(--lft-bg-4);
+    --day-off: var(--raise);
+    --day-off-ink: var(--ink-2);
 
     --background: var(--canvas);
     --foreground: var(--ink);
@@ -52,150 +71,549 @@
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--canvas); color: var(--ink); font-family: var(--font); font-size: 16px; line-height: 24px; }
-  button { font-family: inherit; }
+  button, input { font-family: inherit; }
+  button { border: 0; padding: 0; margin: 0; cursor: pointer; }
+  button:focus-visible, input:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+  .ic { display: block; flex: 0 0 auto; }
 
-  .hdr { display: flex; align-items: center; gap: 40px; height: 64px; padding: 0 50px; background: var(--canvas); box-shadow: 0 1px 0 0 var(--line); }
-  .hdr-logo { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+  /* header */
+  .hdr { display: flex; align-items: center; gap: 24px; height: 64px; padding: 0 24px; min-width: 0; transition: background-color .4s, box-shadow .4s; }
+  .hdr.is-sub { background: var(--canvas); box-shadow: 0 1px 0 0 var(--line); color: var(--ink); }
+  .hdr.is-clear { background: transparent; box-shadow: none; color: var(--on-image); }
+  .hdr-logo { display: flex; align-items: center; flex: 0 0 auto; }
   .hdr-logo img { width: 36px; height: 36px; display: block; object-fit: contain; }
   .hdr-nav { display: flex; gap: 24px; flex: 1 1 0; min-width: 0; overflow: hidden; }
-  .hdr-nav span { font-size: 14px; line-height: 21px; font-weight: 700; color: var(--ink); white-space: nowrap; display: inline-flex; align-items: center; gap: 2px; }
-  .hdr-nav span.is-on { color: var(--accent); }
-  .nbadge { min-width: 17px; height: 17px; border-radius: 9999px; background: var(--accent); color: var(--accent-ink); font-size: 10px; line-height: 15px; font-weight: 700; display: inline-grid; place-items: center; padding: 0 3px; margin-left: 2px; }
-  .hdr-search { width: 288px; max-width: 100%; min-width: 0; height: 40px; border-radius: 4px; border: 1px solid var(--line); background: var(--canvas); color: var(--ink-3); font-size: 14px; line-height: 38px; font-weight: 600; display: block; padding: 0 12px 0 16px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-  .hdr-ic { width: 40px; height: 40px; border-radius: 9999px; display: grid; place-items: center; background: transparent; flex: 0 0 auto; font-size: 12px; color: var(--ink-3); }
-  .hdr-menu { display: none; }
+  .navl { font-size: 14px; line-height: 21px; font-weight: 700; white-space: nowrap; display: inline-flex; align-items: center; gap: 2px; color: var(--ink); }
+  .is-clear .navl, .navl.on-img { color: var(--on-image); }
+  .navl.is-on { color: var(--accent); }
+  .navl.on-img.is-hover { color: var(--on-image-hover); }
+  @media (hover: hover) and (pointer: fine) {
+    .is-sub .navl:hover { color: var(--accent); }
+    .is-clear .navl:hover { color: var(--on-image-hover); }
+    .btn-cta:hover { background: var(--cta-hover); }
+  }
+  .login { font-size: 14px; line-height: 21px; font-weight: 800; white-space: nowrap; flex: 0 0 auto; }
+  .nbadge { min-width: 17px; height: 17px; border-radius: 9999px; background: var(--accent); color: var(--primary-foreground); font-size: 10px; line-height: 15px; font-weight: 700; font-style: normal; display: inline-grid; place-items: center; padding: 0 3px; margin-left: 2px; }
+  .s-ic { width: 40px; height: 40px; border-radius: 9999px; display: grid; place-items: center; background: transparent; color: inherit; flex: 0 0 auto; }
 
-  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px 40px; }
-  .hero { margin: 0 -24px 28px; padding: 40px 24px; background: var(--hero-bg); color: var(--hero-ink); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 220px); gap: 24px; align-items: center; }
+  /* hero */
+  .top { position: relative; background: var(--img-ph); color: var(--on-image); }
+  .top-in { max-width: 1120px; margin: 0 auto; }
+  .hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 260px); gap: 24px; align-items: end; padding: 64px 24px 40px; min-height: 360px; }
   .hero h1 { margin: 0 0 8px; font-size: 32px; line-height: 48px; font-weight: 700; }
-  .hero p { margin: 0 0 20px; font-size: 16px; line-height: 24px; opacity: 0.8; }
-  .btn { display: inline-flex; align-items: center; justify-content: center; border-radius: 3px; font-weight: 700; font-size: 14px; line-height: 21px; gap: 8px; }
-  .btn-cta { height: 45px; padding: 9px 13.5px 9px 18px; gap: 0; font-size: 18px; line-height: 27px; background: var(--cta-bg); color: var(--cta-ink); }
-  .btn-cta svg { display: block; flex: 0 0 auto; }
-  .btn-cta.is-hover { background: oklch(1 0 0 / 0.7); }
-  .btn-2 { height: 30px; padding: 0 12px; background: var(--canvas); color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line-2); font-size: 12px; font-weight: 700; }
-  .hero-mark { display: grid; place-items: center; }
-  .hero-mark img { width: 100%; max-width: 160px; height: auto; display: block; }
+  .hero p { margin: 0 0 24px; font-size: 16px; line-height: 24px; }
+  .img-ph-label { color: var(--img-ph-ink); font-size: 12px; line-height: 18px; text-align: right; overflow-wrap: anywhere; }
+  .btn-cta { display: inline-flex; align-items: center; justify-content: center; height: 45px; padding: 9px 13.5px 9px 18px; border-radius: 3px; font-size: 18px; line-height: 27px; font-weight: 700; background: var(--cta-bg); color: var(--cta-ink); }
+  .btn-cta.is-hover { background: var(--cta-hover); }
 
-  .sec { margin: 0 0 48px; min-width: 0; }
-  .sec-h { display: flex; justify-content: flex-start; align-items: center; gap: 8px; margin: 0 0 12px; font-size: 21px; line-height: 31px; font-weight: 700; }
-  .cell-k { margin: 0 0 12px; font-size: 13px; font-weight: 700; color: var(--ink-3); }
+  /* sections and cells */
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px 40px; }
+  .sec { padding: 40px 0 0; min-width: 0; }
+  .sec-head { display: flex; align-items: baseline; gap: 12px; margin: 0 0 16px; }
+  .sec-idx { font-size: 14px; line-height: 21px; font-weight: 700; color: var(--ink-2); }
+  .sec-head h2 { margin: 0; font-size: 24px; line-height: 36px; font-weight: 700; }
+  .cells { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+  .cell { min-width: 0; display: flex; flex-direction: column; gap: 16px; padding: 24px; border: 1px solid var(--line); border-radius: 8px; background: var(--canvas); }
+  .cell.wide { grid-column: 1 / -1; }
+  .kicker { font-size: 14px; line-height: 21px; font-weight: 700; color: var(--ink); }
+  .specs { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+  .spec, .state-label { font-size: 12px; line-height: 18px; font-weight: 400; color: var(--ink-2); overflow-wrap: anywhere; }
+  .states { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 24px; min-width: 0; }
+  .state { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; min-width: 0; max-width: 100%; }
+  .state.full { width: 100%; }
+  .states.is-top { align-items: flex-start; }
+  .catalog-dummy { margin: 0; }
 
+  /* header demo bars */
+  .bar-stage { width: 100%; border-radius: 4px; overflow: hidden; border: 1px solid var(--line); }
+  .bar-stage.on-ph { background: var(--img-ph); border-color: transparent; }
+  .mini-ph { display: inline-flex; align-items: center; gap: 16px; padding: 8px 12px; border-radius: 4px; background: var(--img-ph); }
+
+  /* search */
+  .s-col { display: flex; flex-direction: column; gap: 8px; width: 288px; max-width: 100%; min-width: 0; }
+  .s-ic.is-solid { color: var(--ink); }
+  .s-field { width: 288px; max-width: 100%; height: 40px; border-radius: 4px; border: 1px solid var(--line); background: var(--canvas); color: var(--ink); font-size: 14px; line-height: 21px; font-weight: 600; padding: 0 12px 0 16px; }
+  .s-field::placeholder { color: var(--ink-3); opacity: 1; }
+  .pop { width: 100%; background: var(--canvas); border: 1px solid var(--line); border-radius: 0.25rem; box-shadow: 0 0 16px var(--shadow-basic); padding: 12px 0; }
+  .pop-h { margin: 0 16px 8px; font-size: 14px; line-height: 21px; font-weight: 700; }
+  .pop ol { list-style: none; margin: 0; padding: 0; }
+  .pop li { display: flex; gap: 12px; padding: 4px 16px; font-size: 14px; line-height: 21px; font-weight: 600; min-width: 0; }
+  .pop li b { color: var(--ink); font-weight: 700; flex: 0 0 auto; }
+  .pop li span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pop li.is-hl { background: var(--hl); }
+
+  /* collection block: base font follows viewport width, inside is em */
+  .coll { font-size: 0.82646vw; min-width: 0; }
+  .coll-h { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0 0 1em; }
+  .coll-t { margin: 0; font-size: 1.75em; line-height: 1.5; font-weight: 700; }
+  .btn-sub { display: inline-flex; align-items: center; height: 2.5em; padding: 0 1em; border-radius: 3px; background: var(--canvas); color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line-2); font-size: 1em; line-height: 1.5; font-weight: 700; white-space: nowrap; }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 1.3333em; min-width: 0; }
+  .chip { height: 3em; padding: 0 1em; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; font-size: 1em; line-height: 1.5; font-weight: 700; background: var(--canvas); color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line); white-space: nowrap; }
+  .chip.is-on, .chip[aria-pressed="true"] { background: var(--accent); color: var(--primary-foreground); box-shadow: none; }
+  .chip.is-focus, .day.is-focus { outline: 2px solid var(--ring); outline-offset: 2px; }
   .days { display: flex; gap: 22px; flex-wrap: wrap; margin: 0 0 16px; }
-  .day { width: 45px; height: 45px; border-radius: 9999px; background: var(--day-off); color: var(--lft-white); display: grid; place-items: center; font-size: 18px; line-height: 27px; font-weight: 700; }
-  .day.is-on { background: var(--accent); }
-  .chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 16px; }
-  .chip { height: 36px; padding: 0 12px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; min-width: 72px; font-size: 18px; line-height: 27px; font-weight: 700; background: var(--canvas); color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line); }
-  .chip.is-on { background: var(--accent); color: var(--accent-ink); box-shadow: none; }
-
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; }
-  .card { min-width: 0; }
-  .poster { position: relative; border-radius: 3px; background: var(--lft-bg-3); aspect-ratio: 16 / 9; display: grid; place-items: center; color: var(--ink-3); font-size: 11px; overflow: hidden; }
-  .up { position: absolute; left: 6px; top: 6px; height: 17px; padding: 1px 4px; border-radius: 3px; background: var(--lft-badge-red); color: var(--lft-white); font-size: 10.4px; line-height: 15px; font-weight: 700; }
-  .card h3 { margin: 8px 0 2px; font-size: 13px; line-height: 20px; font-weight: 400; overflow-wrap: anywhere; }
-  .poster .bar { position: absolute; left: 12px; right: 12px; bottom: 12px; height: 4.46px; border-radius: 16px; background: var(--track); overflow: hidden; }
-  .poster .bar i { display: block; height: 100%; width: 40%; background: var(--accent); }
-
-  .duo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
-  .box { border: 1px solid var(--line); border-radius: 4px; padding: 24px; background: var(--canvas); min-width: 0; }
-  .box h4 { margin: 0 0 4px; font-size: 24px; line-height: 36px; font-weight: 700; }
-  .m-stage { background: var(--stage); border-radius: 4px; padding: 16px; }
-  .m-card { background: var(--canvas); border-radius: 4px; padding: 24px; }
-  .m-card h4 { margin: 0 0 12px; }
-  .box .manage { font-size: 18px; line-height: 27px; font-weight: 500; color: var(--ink-3); }
-  .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 12px; }
-  .cta-stage { background: var(--hero-bg); border-radius: 4px; padding: 12px; }
+  .day { width: 45px; height: 45px; border-radius: 9999px; background: var(--day-off); color: var(--day-off-ink); display: grid; place-items: center; font-size: 18px; line-height: 27px; font-weight: 700; flex: 0 0 auto; }
+  .day.is-on, .day[aria-pressed="true"] { background: var(--accent); color: var(--primary-foreground); }
+  .pgrid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1.3333em; }
+  .pcard { min-width: 0; }
+  .poster { position: relative; border-radius: 0.25em; background: var(--raise); aspect-ratio: 1 / 0.557; display: grid; place-items: center; color: var(--ink-2); font-size: 1em; line-height: 1.5; overflow: hidden; text-align: center; }
+  .ptitle { margin: 0.5em 0 0; font-size: 1.125em; line-height: 1.5; font-weight: 400; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; }
+  .up { position: absolute; left: 6px; top: 6px; height: 17px; padding: 1px 4px; border-radius: 3px; background: var(--lft-badge-red); color: var(--badge-ink); font-size: 10.4px; line-height: 15px; font-weight: 700; }
+  .wlabel { position: absolute; left: 6px; top: 6px; height: 17px; padding: 1px 4px; border-radius: 3px; background: var(--accent); color: var(--primary-foreground); font-size: 10.4px; line-height: 15px; font-weight: 700; }
+  .wlabel.in-row, .up.in-row { position: static; display: inline-block; }
+  .pbar { position: absolute; left: 12px; right: 12px; bottom: 12px; height: 4.46px; border-radius: 16px; background: var(--track); overflow: hidden; }
+  .pbar i { display: block; height: 100%; background: var(--accent); }
+  .pbar .w20 { width: 20%; }
+  .pbar .w40 { width: 40%; }
+  .pbar .w75 { width: 75%; }
   .tag-up { display: inline-flex; height: 20px; padding: 0 4px; border-radius: 4px; background: var(--lft-badge-red-weak); color: var(--lft-badge-red); font-size: 12px; line-height: 18px; font-weight: 700; align-items: center; }
 
+  /* buttons */
+  .btn-p { display: inline-flex; align-items: center; justify-content: center; height: 56px; max-width: 100%; background: var(--accent); color: var(--primary-foreground); font-size: 16px; line-height: 24px; font-weight: 700; white-space: nowrap; }
+  .btn-p.sq { width: 160px; border-radius: 4px; }
+  .btn-p.pill { width: 251px; border-radius: 40px; }
+  .btn-p[aria-disabled="true"] { background: var(--btn-disable); color: var(--ink-4); cursor: default; }
+  .cta-stage { display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: flex-end; padding: 16px; border-radius: 4px; background: var(--img-ph); }
+  .cta-stage .state-label { color: var(--img-ph-ink); }
+  .btn-s { display: inline-flex; align-items: center; height: 29.8px; padding: 0 12px; border-radius: 3px; font-size: 12px; line-height: 18px; font-weight: 700; white-space: nowrap; }
+  .btn-s.line { background: var(--canvas); color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line-2); }
+  .btn-s.sl1 { background: var(--slight-1); color: var(--slight-ink); }
+  .btn-s.sl2 { background: var(--slight-2); color: var(--slight-ink); }
+  .btn-s.pg { background: var(--purple-gray); color: var(--purple-gray-ink); }
+  .btn-s[aria-disabled="true"] { background: var(--btn-disable); color: var(--ink-4); cursor: default; }
+
+  /* toast, membership, dropdown */
+  .toast { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; padding: 12px 16px; border-radius: 4px; background: var(--toast-bg); color: var(--toast-ink); font-size: 14px; line-height: 21px; font-weight: 600; }
+  .m-stage { width: 100%; background: var(--deep); border-radius: 4px; padding: 24px 16px; display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; }
+  .m-card { width: 580px; max-width: 100%; background: var(--canvas); border-radius: 4px; padding: 24px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .m-card h4 { margin: 0; font-size: 24px; line-height: 36px; font-weight: 700; }
+  .m-desc { margin: 0; font-size: 18px; line-height: 27px; font-weight: 500; color: var(--ink-2); }
+  .m-price { margin: 8px 0 0; font-size: 16px; line-height: 24px; font-weight: 700; }
+  .dd { display: flex; flex-direction: column; gap: 8px; width: 200px; max-width: 100%; }
+  .dd-trig { display: inline-flex; align-items: center; justify-content: space-between; gap: 8px; height: 40px; padding: 0 12px 0 16px; border-radius: 4px; border: 1px solid var(--line); background: var(--canvas); color: var(--ink); font-size: 14px; line-height: 21px; font-weight: 600; }
+  .dd-list { list-style: none; margin: 0; padding: 8px 0; background: var(--canvas); border-radius: 4px; box-shadow: 0 0.125rem 0.5rem var(--shadow-dropdown); }
+  .dd-list li { padding: 8px 16px; font-size: 14px; line-height: 21px; font-weight: 600; color: var(--ink-2); }
+  .dd-list li.is-on { color: var(--accent); }
+
+  /* screens */
+  .screen-desk { min-width: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--canvas); }
+  .dk-top { background: var(--img-ph); color: var(--on-image); }
+  .dk-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 200px); gap: 16px; align-items: end; padding: 32px 24px 28px; min-height: 240px; }
+  .dk-hero b { display: block; margin: 0 0 16px; font-size: 24px; line-height: 36px; font-weight: 700; }
+  .dk-body { padding: 24px; display: flex; flex-direction: column; gap: 24px; }
+  .phone { width: min(100%, 390px); margin: 0 auto; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--canvas); }
+  .phone .hdr { padding: 0 12px 0 16px; gap: 8px; }
+  .phone .hdr-logo { margin-right: auto; }
+  .ph-body { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+  .ph-title { margin: 0; font-size: 24px; line-height: 36px; font-weight: 700; }
+  .ph-days { display: flex; gap: 8px; flex-wrap: wrap; }
+  .ph-days .day { width: 40px; height: 40px; font-size: 16px; line-height: 24px; }
+  .coll.is-touch { font-size: 16px; }
+  .coll.is-touch .pgrid { grid-template-columns: repeat(auto-fill, minmax(min(120px, 100%), 1fr)); gap: 12px; }
+  .coll.is-touch .chips { margin: 0; }
+  .ph-toast { display: flex; justify-content: center; padding: 0 16px 16px; }
+
+  @media (max-width: 1400px) { .coll { font-size: 0.97871vw; } }
+  @media (max-width: 1024px) { .coll { font-size: 1.20052vw; } }
+  @media (max-width: 834px) {
+    .coll { font-size: 1.55735vw; }
+    .pgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .screen-desk .hdr-nav { display: none; }
+    .screen-desk .hdr-logo { margin-right: auto; }
+  }
   @media (max-width: 720px) {
-    .hero, .duo { grid-template-columns: minmax(0, 1fr); }
+    .cells { grid-template-columns: minmax(0, 1fr); }
+    .cell { padding: 16px; }
+    .hero, .dk-hero { grid-template-columns: minmax(0, 1fr); }
+    .img-ph-label { text-align: left; }
     .hero h1 { font-size: 24px; line-height: 36px; }
     .hdr { padding: 0 12px; gap: 12px; }
     .hdr-nav { display: none; }
     .hdr-logo { margin-right: auto; }
-    .hdr-menu { display: grid; }
-    .sec-h { font-size: 18px; line-height: 27px; }
-    .sec-h .btn-2 { height: 27px; border-radius: 4px; font-size: 13px; }
     .days { gap: 8px; }
     .day { width: 40px; height: 40px; font-size: 16px; line-height: 24px; }
-    .chip { font-size: 13px; line-height: 19.5px; }
-    .up { left: 8px; top: 8px; border-radius: 4px; }
     .wrap { padding: 0 16px 32px; }
-    .hero { margin: 0 -16px 24px; padding: 28px 16px; }
+    .hero { padding: 64px 16px 28px; min-height: 300px; }
+    .dk-body { padding: 16px; }
+    .dk-hero { padding: 24px 16px; min-height: 200px; }
+  }
+  @media (max-width: 480px) {
+    .coll { font-size: 2.12247vw; }
+    .pgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 480px) and (hover: none) and (pointer: coarse) { .coll { font-size: 16px; } }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
   }
 </style>
 <style>
   [data-theme="dark"] {
     --canvas: oklch(0.182 0 0);
-    --panel: oklch(0.317 0 0);
+    --deep: oklch(0 0 0);
+    --raise: oklch(0.317 0 0);
     --ink: oklch(0.976 0 0);
     --ink-2: oklch(0.913 0 0);
     --ink-3: oklch(0.741 0 0);
+    --ink-4: oklch(0.5 0 0);
     --line: oklch(0.317 0 0);
     --line-2: oklch(0.431 0 0);
-    --soft: oklch(0.317 0 0);
-    --soft-ink: oklch(1 0 0);
-    --hero-bg: oklch(0.1 0.02 285);
-    --stage: oklch(0 0 0);
+    --slight-1: oklch(0.317 0 0);
+    --slight-2: oklch(0.317 0 0);
+    --slight-ink: oklch(1 0 0);
+    --hl: oklch(0.626 0.211 285.3 / 0.1);
+    --purple-gray: oklch(0.272 0.033 281.5);
+    --btn-disable: oklch(0.317 0 0);
+    --toast-bg: oklch(0.272 0.033 281.5);
+    --shadow-basic: oklch(0 0 0 / 0.5);
+    --shadow-dropdown: oklch(0 0 0 / 0.6);
     --track: oklch(0.913 0 0);
-    --day-off: oklch(0.5 0 0);
   }
-  [data-theme="dark"] .poster { background: oklch(0.317 0 0); }
-  [data-theme="dark"] .btn-2 { background: oklch(0.182 0 0); }
-  [data-theme="dark"] .chip:not(.is-on) { color: oklch(0.913 0 0); }
 </style>
 </head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
 
-<header class="hdr">
-  <div class="hdr-logo"><img src="/logos/laftel.png" alt="라프텔"></div>
-  <nav class="hdr-nav" aria-label="상단 메뉴"><span class="is-on">태그검색</span><span>요일별 신작</span><span>멤버십</span><span>스토어</span><span>이벤트</span><span>루프<i class="nbadge">N</i></span></nav>
-  <div class="hdr-ic">검색</div>
-  <div class="hdr-ic hdr-menu">메뉴</div>
-</header>
+<div class="top">
+  <div class="top-in">
+    <header class="hdr is-clear">
+      <div class="hdr-logo"><img src="/logos/laftel.png" alt="라프텔"></div>
+      <nav class="hdr-nav" aria-label="상단 메뉴"><span class="navl">태그검색</span><span class="navl">요일별 신작</span><span class="navl">멤버십</span><span class="navl">스토어</span><span class="navl">이벤트</span><span class="navl">루프<i class="nbadge">N</i></span></nav>
+      <button class="s-ic" type="button" aria-label="검색"><svg class="ic" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13.5 13.5L18 18" stroke="currentColor" stroke-width="2"/></svg></button>
+      <span class="login">로그인/가입</span>
+    </header>
+    <section class="hero">
+      <div>
+        <h1>덕후를 위한 모든 애니</h1>
+        <p>보고 싶은 작품을 마음 놓고 즐기세요</p>
+        <span class="btn-cta">보러가기<svg class="ic" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M7 4l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg></span>
+      </div>
+      <span class="img-ph-label">[히어로 작품 이미지 자리]</span>
+    </section>
+  </div>
+</div>
 
 <div class="wrap">
-  <section class="hero">
-    <div>
-      <h1>덕후를 위한 모든 애니</h1>
-      <p>보고 싶은 작품을 고화질로, 마음 놓고 즐기세요</p>
-      <span class="btn btn-cta">보러가기<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M7 4l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg></span>
-    </div>
-    <div class="hero-mark"><img src="/logos/laftel.png" alt=""></div>
-  </section>
+  <section class="sec" aria-labelledby="s1">
+    <div class="sec-head"><span class="sec-idx">01</span><h2 id="s1">헤더와 검색</h2></div>
+    <div class="cells">
+      <div class="cell wide">
+        <span class="kicker">header</span>
+        <div class="state full">
+          <span class="state-label">홈 최상단, 이미지 위 투명</span>
+          <div class="bar-stage on-ph">
+            <div class="hdr is-clear" aria-hidden="true">
+              <span class="hdr-logo"><img src="/logos/laftel.png" alt=""></span>
+              <span class="hdr-nav"><span class="navl">태그검색</span><span class="navl">요일별 신작</span><span class="navl">멤버십</span><span class="navl">스토어</span><span class="navl">이벤트</span><span class="navl">루프<i class="nbadge">N</i></span></span>
+              <span class="s-ic"><svg class="ic" width="20" height="20" viewBox="0 0 20 20"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13.5 13.5L18 18" stroke="currentColor" stroke-width="2"/></svg></span>
+              <span class="login">로그인/가입</span>
+            </div>
+          </div>
+        </div>
+        <div class="state full">
+          <span class="state-label">서브페이지, 불투명 면과 하단 1px 선</span>
+          <div class="bar-stage">
+            <div class="hdr is-sub" aria-hidden="true">
+              <span class="hdr-logo"><img src="/logos/laftel.png" alt=""></span>
+              <span class="hdr-nav"><span class="navl is-on">태그검색</span><span class="navl">요일별 신작</span><span class="navl">멤버십</span><span class="navl">스토어</span><span class="navl">이벤트</span><span class="navl">루프<i class="nbadge">N</i></span></span>
+              <span class="s-ic"><svg class="ic" width="20" height="20" viewBox="0 0 20 20"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13.5 13.5L18 18" stroke="currentColor" stroke-width="2"/></svg></span>
+              <span class="login">로그인/가입</span>
+            </div>
+          </div>
+        </div>
+        <div class="specs">
+          <span class="spec">높이 64</span>
+          <span class="spec">서브페이지 면 bg-1, 선 0 1px 0 0 border-1</span>
+          <template data-theme-variant="dark"><span class="spec">서브페이지 면 dark-bg-1, 선 0 1px 0 0 dark-border-1</span></template>
+          <span class="spec">배경과 그림자 전환 .4s</span>
+          <span class="spec">아이콘 버튼 40 x 40 원형</span>
+        </div>
+      </div>
 
-  <section class="sec">
-    <h2 class="sec-h">요일별 신작 <span class="btn btn-2">업로드 공지</span></h2>
-    <div class="days"><span class="day is-on">월</span><span class="day">화</span><span class="day">수</span><span class="day">목</span><span class="day">금</span><span class="day">토</span><span class="day">일</span></div>
-    <p class="catalog-dummy">작품명·UP 배지·시청 진행률은 레이아웃 시연용 더미 데이터입니다.</p>
-    <div class="grid">
-      <div class="card"><div class="poster"><span class="up">UP</span>썸네일 자리</div><h3>작품 제목 자리</h3></div>
-      <div class="card"><div class="poster">썸네일 자리<div class="bar"><i></i></div></div><h3>두 줄까지 늘어나는 작품 제목 예시</h3></div>
-      <div class="card"><div class="poster"><span class="up">UP</span>썸네일 자리</div><h3>작품 제목</h3></div>
-      <div class="card"><div class="poster">썸네일 자리</div><h3>작품 제목 자리</h3></div>
-      <div class="card"><div class="poster">썸네일 자리</div><h3>작품 제목 자리</h3></div>
-    </div>
-  </section>
+      <div class="cell">
+        <span class="kicker">nav-link</span>
+        <div class="states">
+          <div class="state"><span class="state-label">기본</span><span class="navl">요일별 신작</span></div>
+          <div class="state"><span class="state-label">활성, hover</span><span class="navl is-on">태그검색</span></div>
+          <div class="state"><span class="state-label">N 배지</span><span class="navl">루프<i class="nbadge">N</i></span></div>
+        </div>
+        <div class="states">
+          <div class="state"><span class="state-label">투명 헤더 기본, hover 흰색 80%</span><span class="mini-ph"><span class="navl on-img">멤버십</span><span class="navl on-img is-hover">스토어</span></span></div>
+          <div class="state"><span class="state-label">로그인/가입</span><span class="login">로그인/가입</span></div>
+        </div>
+        <div class="specs"><span class="spec">14 / 21 / 700</span><span class="spec">로그인/가입 14 / 21 / 800</span><span class="spec">활성, hover point</span></div>
+      </div>
 
-  <section class="sec duo">
-    <div class="box">
-      <p class="cell-k">멤버십 카드</p>
-      <p class="catalog-dummy">멤버십 문구는 더미 데이터입니다.</p>
-      <div class="m-stage">
-        <div class="m-card">
-          <h4>멤버십</h4>
-          <span class="manage">내 멤버십 관리</span>
+      <div class="cell">
+        <span class="kicker">search-field</span>
+        <div class="states is-top">
+          <div class="state"><span class="state-label">접힘 40 x 40</span><button class="s-ic is-solid" type="button" aria-label="검색"><svg class="ic" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13.5 13.5L18 18" stroke="currentColor" stroke-width="2"/></svg></button></div>
+          <div class="state s-col">
+            <span class="state-label">펼침 288 x 40, 인기 검색어 드롭다운</span>
+            <input class="s-field" type="search" placeholder="제목(초성), 제작사, 감독으로 검색" aria-label="검색어">
+            <p class="catalog-dummy">인기 검색어와 그 순위는 레이아웃 시연용 더미 데이터입니다.</p>
+            <div class="pop">
+              <p class="pop-h">인기 검색어</p>
+              <ol>
+                <li><b>1</b><span>[검색어 자리]</span></li>
+                <li class="is-hl"><b>2</b><span>[검색어 자리]</span></li>
+                <li><b>3</b><span>[검색어 자리]</span></li>
+                <li><b>4</b><span>[검색어 자리]</span></li>
+                <li><b>5</b><span>[검색어 자리]</span></li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div class="specs">
+          <span class="spec">radius 4, 패딩 0 12 0 16, 입력 14 / 21 / 600</span>
+          <span class="spec">드롭다운 0 0 16px 검정 25%, 보더 1px, radius 0.25rem</span>
+          <template data-theme-variant="dark"><span class="spec">드롭다운 0 0 16px 검정 50%, 보더 1px, radius 0.25rem</span></template>
+          <span class="spec">2번 행 hover 하이라이트 point-slight-1 (가정)</span>
+          <template data-theme-variant="dark"><span class="spec">2번 행 hover 하이라이트 point 10% (가정)</span></template>
+          <span class="spec">항목 글자, 여백 (가정)</span>
         </div>
       </div>
     </div>
-    <div class="box">
-      <p class="cell-k">버튼과 배지</p>
-      <div class="row cta-stage"><span class="btn btn-cta">보러가기<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M7 4l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg></span><span class="btn btn-cta is-hover">hover<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M7 4l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg></span></div>
-      <div class="row"><span class="btn btn-2">업로드 공지</span><span class="tag-up">UP</span><span class="nbadge">N</span></div>
-      <div class="chips"><span class="chip is-on">활성</span><span class="chip">비활성</span></div>
-      <p class="cell-k">검색창(펼침)</p>
-      <div class="hdr-search">제목(초성), 제작사, 감독으로 검색</div>
+  </section>
+
+  <section class="sec" aria-labelledby="s2">
+    <div class="sec-head"><span class="sec-idx">02</span><h2 id="s2">작품 카드와 배지</h2></div>
+    <div class="cells">
+      <div class="cell wide">
+        <span class="kicker">poster-card, 홈 콜렉션</span>
+        <p class="catalog-dummy">장르 칩 이름, 작품 제목, UP 배지, 선독점 라벨, 시청 진행률은 레이아웃 시연용 더미 데이터입니다.</p>
+        <div class="coll">
+          <div class="coll-h"><h3 class="coll-t">요일별 신작</h3><span class="btn-sub">업로드 공지</span></div>
+          <div class="chips"><span class="chip is-on">전체</span><span class="chip">판타지</span><span class="chip">일상</span><span class="chip">개그</span></div>
+          <div class="pgrid">
+            <div class="pcard"><div class="poster"><span class="up">UP</span>[썸네일 자리]</div><p class="ptitle">작품 제목 자리</p></div>
+            <div class="pcard"><div class="poster">[썸네일 자리]<div class="pbar"><i class="w40"></i></div></div><p class="ptitle">두 줄까지 늘어나고 그 뒤는 말줄임으로 잘리는 긴 작품 제목 예시</p></div>
+            <div class="pcard"><div class="poster"><span class="wlabel">선독점</span>[썸네일 자리]</div><p class="ptitle">작품 제목</p></div>
+            <div class="pcard"><div class="poster"><span class="up">UP</span>[썸네일 자리]<div class="pbar"><i class="w75"></i></div></div><p class="ptitle">작품 제목 자리</p></div>
+            <div class="pcard"><div class="poster">[썸네일 자리]</div><p class="ptitle">작품 제목 자리</p></div>
+          </div>
+        </div>
+        <div class="specs">
+          <span class="spec">기준 글자 폭 비례, 1401 이상 0.82646vw</span>
+          <span class="spec">콜렉션 제목 1.75em 700, 카드 제목 1.125em 400 두 줄</span>
+          <span class="spec">카드 폭 222 (1440), 썸네일 높이 55.7%, radius 0.25em</span>
+          <span class="spec">진행바 4.46, 좌우 아래 12 들여, radius 16, 채움 point</span><span class="spec">트랙 색 (가정)</span>
+        </div>
+      </div>
+
+      <div class="cell">
+        <span class="kicker">badge-up, badge-new, 작품 라벨</span>
+        <div class="states">
+          <div class="state"><span class="state-label">UP 카드형</span><span class="up in-row">UP</span></div>
+          <div class="state"><span class="state-label">UP 텍스트형</span><span class="tag-up">UP</span></div>
+          <div class="state"><span class="state-label">N 원형</span><span class="nbadge">N</span></div>
+          <div class="state"><span class="state-label">선독점 (크기 가정)</span><span class="wlabel in-row">선독점</span></div>
+          <div class="state"><span class="state-label">ONLY (크기 가정)</span><span class="wlabel in-row">ONLY</span></div>
+        </div>
+        <div class="specs">
+          <span class="spec">카드형 badge-red, 10.4 / 700, 높이 17, radius 3</span>
+          <span class="spec">텍스트형 badge-red-weak 위 badge-red, 높이 20, radius 4</span>
+          <span class="spec">N 높이 17, 10 / 700</span>
+          <span class="spec">작품 라벨 point 채움</span>
+          <span class="spec">배지 여백, 위치 (가정)</span>
+        </div>
+      </div>
+
+      <div class="cell">
+        <span class="kicker">요일 탭, chip-active, chip-inactive</span>
+        <div class="states">
+          <div class="state"><span class="state-label">활성</span><button class="day" type="button" aria-pressed="true">월</button></div>
+          <div class="state"><span class="state-label">기본 (면, 글자색 가정)</span><button class="day" type="button" aria-pressed="false">화</button></div>
+          <div class="state"><span class="state-label">focus (가정)</span><button class="day is-focus" type="button" aria-pressed="false">수</button></div>
+        </div>
+        <div class="coll">
+          <div class="states">
+            <div class="state"><span class="state-label">활성</span><button class="chip" type="button" aria-pressed="true">전체</button></div>
+            <div class="state"><span class="state-label">비활성</span><button class="chip" type="button" aria-pressed="false">판타지</button></div>
+            <div class="state"><span class="state-label">focus (가정)</span><button class="chip is-focus" type="button" aria-pressed="false">일상</button></div>
+          </div>
+        </div>
+        <div class="specs">
+          <span class="spec">요일 원형 45, 활성 point 위 흰 글자</span><span class="spec">요일 크기, 글자, 간격 (가정)</span><span class="spec">비활성 면 bg-3, 글자 fg-2 (가정)</span><template data-theme-variant="dark"><span class="spec">비활성 면 dark-bg-3, 글자 dark-fg-2 (가정)</span></template>
+          <span class="spec">칩 높이 3em, 패딩 0 1em, 알약 9999px</span><span class="spec">칩 굵기 (가정)</span>
+          <span class="spec">비활성 보더 1px border-1</span>
+          <template data-theme-variant="dark"><span class="spec">비활성 보더 1px dark-border-1</span></template>
+          <span class="spec">focus 링 point 2px (가정)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="s3">
+    <div class="sec-head"><span class="sec-idx">03</span><h2 id="s3">버튼</h2></div>
+    <div class="cells">
+      <div class="cell">
+        <span class="kicker">보라 1차 버튼</span>
+        <div class="states">
+          <div class="state"><span class="state-label">사각 기본</span><button class="btn-p sq" type="button">홈으로 이동</button></div>
+          <div class="state"><span class="state-label">사각 비활성 (가정)</span><button class="btn-p sq" type="button" aria-disabled="true">홈으로 이동</button></div>
+          <div class="state"><span class="state-label">알약 기본</span><button class="btn-p pill" type="button">멤버십 시작하기</button></div>
+        </div>
+        <div class="specs">
+          <span class="spec">사각 160 x 56, radius 4</span>
+          <span class="spec">알약 251 x 56, radius 40</span>
+          <span class="spec">글자 16 / 24 / 700 (가정)</span>
+          <span class="spec">비활성 button-disable, 글자 fg-4</span>
+          <template data-theme-variant="dark"><span class="spec">비활성 dark-button-slight, 글자 dark-fg-4</span></template>
+        </div>
+      </div>
+
+      <div class="cell">
+        <span class="kicker">button-cta</span>
+        <div class="cta-stage">
+          <div class="state"><span class="state-label">기본</span><span class="btn-cta">보러가기<svg class="ic" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M7 4l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg></span></div>
+          <div class="state"><span class="state-label">hover 흰색 70%</span><span class="btn-cta is-hover">보러가기<svg class="ic" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M7 4l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg></span></div>
+        </div>
+        <div class="specs"><span class="spec">흰 면, 글자 fg-1</span><span class="spec">높이 45 (1440), radius 3</span><span class="spec">글자 크기 (가정)</span></div>
+      </div>
+
+      <div class="cell wide">
+        <span class="kicker">button-secondary와 보조 버튼</span>
+        <div class="states">
+          <div class="state"><span class="state-label">테두리 보조</span><span class="btn-s line">업로드 공지</span></div>
+          <div class="state"><span class="state-label">slight-1 (크기, 글자색 가정)</span><span class="btn-s sl1">찜하기</span></div>
+          <div class="state"><span class="state-label">slight-2 (크기, 글자색 가정)</span><span class="btn-s sl2">공유하기</span></div>
+          <template data-theme-variant="dark"><div class="state"><span class="state-label">slight-2 (면, 크기, 글자색 가정)</span><span class="btn-s sl2">공유하기</span></div></template>
+          <div class="state"><span class="state-label">보라 회색 (크기, 글자색 가정)</span><span class="btn-s pg">더보기</span></div>
+          <div class="state"><span class="state-label">비활성 (가정)</span><span class="btn-s" aria-disabled="true">업로드 공지</span></div>
+        </div>
+        <div class="specs">
+          <span class="spec">테두리 보조 1px border-2, 글자 fg-2 1em 700, 높이 29.8, 패딩 0 1em</span>
+          <template data-theme-variant="dark"><span class="spec">테두리 보조 1px dark-border-2, 글자 dark-fg-2 1em 700, 높이 29.8, 패딩 0 1em</span></template>
+          <span class="spec">slight 면 point-slight-1, point-slight-2</span>
+          <template data-theme-variant="dark"><span class="spec">slight 면 dark-button-slight</span></template>
+          <span class="spec">보라 회색 button-purple-gray</span>
+          <template data-theme-variant="dark"><span class="spec">보라 회색 dark-button-purple-gray</span></template>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="s4">
+    <div class="sec-head"><span class="sec-idx">04</span><h2 id="s4">알림과 카드</h2></div>
+    <div class="cells">
+      <div class="cell">
+        <span class="kicker">토스트</span>
+        <p class="catalog-dummy">토스트 문구는 레이아웃 시연용 더미 데이터입니다.</p>
+        <span class="toast">보고싶다 목록에 쏙 넣어 뒀어요</span>
+        <div class="specs">
+          <span class="spec">면 bg-toast</span>
+          <template data-theme-variant="dark"><span class="spec">면 dark-bg-toast</span></template>
+          <span class="spec">글자색, radius, 크기 (가정)</span>
+        </div>
+      </div>
+
+      <div class="cell">
+        <span class="kicker">드롭다운 리스트 (가정)</span>
+        <div class="dd">
+          <span class="dd-trig">최신순<svg class="ic" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 5l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></span>
+          <ul class="dd-list"><li class="is-on">최신순</li><li>인기순</li><li>이름순</li></ul>
+        </div>
+        <div class="specs">
+          <span class="spec">그림자 0 0.125rem 0.5rem 검정 16%</span>
+          <template data-theme-variant="dark"><span class="spec">그림자 0 0.125rem 0.5rem 검정 60%</span></template>
+          <span class="spec">radius, 크기, 선택 글자색 (가정)</span>
+        </div>
+      </div>
+
+      <div class="cell wide">
+        <span class="kicker">membership-card</span>
+        <p class="catalog-dummy">상품명, 혜택 문구, 가격은 레이아웃 시연용 더미 데이터입니다.</p>
+        <div class="m-stage">
+          <div class="m-card">
+            <h4>[상품명] 멤버십</h4>
+            <p class="m-desc">[혜택 문구 자리]</p>
+            <p class="m-price">월 [가격 자리]</p>
+          </div>
+        </div>
+        <div class="specs">
+          <span class="spec">폭 580, 패딩 24, radius 4, 보더 없음</span>
+          <span class="spec">카드 타이틀 24 / 36 / 700</span>
+          <span class="spec">본문 글자, 간격 (가정)</span>
+          <span class="spec">bg-2 페이지 위 bg-1 카드</span>
+          <template data-theme-variant="dark"><span class="spec">dark-bg-2 페이지 위 dark-bg-1 카드</span></template>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="s5">
+    <div class="sec-head"><span class="sec-idx">05</span><h2 id="s5">화면</h2></div>
+    <div class="cells">
+      <div class="cell wide">
+        <span class="kicker">홈, 데스크톱 (배치 가정)</span>
+        <p class="catalog-dummy">히어로 문구, 이어보기 콜렉션 제목과 칩 이름, 작품 제목, UP 배지, 선독점 라벨, 시청 진행률은 레이아웃 시연용 더미 데이터입니다.</p>
+        <div class="screen-desk" role="img" aria-label="라프텔 홈 화면 재현">
+          <div class="dk-top">
+            <div class="hdr is-clear" aria-hidden="true">
+              <span class="hdr-logo"><img src="/logos/laftel.png" alt=""></span>
+              <span class="hdr-nav"><span class="navl">태그검색</span><span class="navl">요일별 신작</span><span class="navl">멤버십</span><span class="navl">스토어</span><span class="navl">이벤트</span><span class="navl">루프<i class="nbadge">N</i></span></span>
+              <span class="s-ic"><svg class="ic" width="20" height="20" viewBox="0 0 20 20"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13.5 13.5L18 18" stroke="currentColor" stroke-width="2"/></svg></span>
+              <span class="login">로그인/가입</span>
+            </div>
+            <div class="dk-hero" aria-hidden="true">
+              <div><b>[작품 홍보 문구 자리]</b><span class="btn-cta">보러가기<svg class="ic" width="18" height="18" viewBox="0 0 18 18"><path d="M7 4l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg></span></div>
+              <span class="img-ph-label">[히어로 작품 이미지 자리]</span>
+            </div>
+          </div>
+          <div class="dk-body" aria-hidden="true">
+            <div class="coll">
+              <div class="coll-h"><span class="coll-t">요일별 신작</span><span class="btn-sub">업로드 공지</span></div>
+              <div class="days"><span class="day is-on">월</span><span class="day">화</span><span class="day">수</span><span class="day">목</span><span class="day">금</span><span class="day">토</span><span class="day">일</span></div>
+              <div class="pgrid">
+                <div class="pcard"><div class="poster"><span class="up">UP</span>[썸네일 자리]</div><p class="ptitle">작품 제목 자리</p></div>
+                <div class="pcard"><div class="poster"><span class="up">UP</span>[썸네일 자리]</div><p class="ptitle">작품 제목 자리</p></div>
+                <div class="pcard"><div class="poster"><span class="wlabel">선독점</span>[썸네일 자리]</div><p class="ptitle">작품 제목 자리</p></div>
+                <div class="pcard"><div class="poster">[썸네일 자리]</div><p class="ptitle">작품 제목 자리</p></div>
+                <div class="pcard"><div class="poster">[썸네일 자리]</div><p class="ptitle">작품 제목 자리</p></div>
+              </div>
+            </div>
+            <div class="coll">
+              <div class="coll-h"><span class="coll-t">이어보기</span></div>
+              <div class="chips"><span class="chip is-on">최근 본</span><span class="chip">보고싶다</span><span class="chip">구매한</span></div>
+              <div class="pgrid">
+                <div class="pcard"><div class="poster">[썸네일 자리]<div class="pbar"><i class="w75"></i></div></div><p class="ptitle">작품 제목 자리</p></div>
+                <div class="pcard"><div class="poster">[썸네일 자리]<div class="pbar"><i class="w40"></i></div></div><p class="ptitle">작품 제목 자리</p></div>
+                <div class="pcard"><div class="poster">[썸네일 자리]<div class="pbar"><i class="w20"></i></div></div><p class="ptitle">작품 제목 자리</p></div>
+                <div class="pcard"><div class="poster">[썸네일 자리]<div class="pbar"><i class="w40"></i></div></div><p class="ptitle">작품 제목 자리</p></div>
+                <div class="pcard"><div class="poster">[썸네일 자리]<div class="pbar"><i class="w75"></i></div></div><p class="ptitle">작품 제목 자리</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cell wide">
+        <span class="kicker">요일별 신작, 모바일 390 (배치 가정)</span>
+        <p class="catalog-dummy">장르 칩 이름, 작품 제목, UP 배지, 선독점 라벨, 시청 진행률, 토스트 문구는 레이아웃 시연용 더미 데이터입니다.</p>
+        <div class="phone" role="img" aria-label="라프텔 요일별 신작 모바일 화면 재현">
+          <div class="hdr is-sub" aria-hidden="true">
+            <span class="hdr-logo"><img src="/logos/laftel.png" alt=""></span>
+            <span class="s-ic"><svg class="ic" width="20" height="20" viewBox="0 0 20 20"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13.5 13.5L18 18" stroke="currentColor" stroke-width="2"/></svg></span>
+            <span class="s-ic"><svg class="ic" width="20" height="20" viewBox="0 0 20 20"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="2"/></svg></span>
+          </div>
+          <div class="ph-body" aria-hidden="true">
+            <span class="ph-title">요일별 신작</span>
+            <div class="ph-days"><span class="day">월</span><span class="day is-on">화</span><span class="day">수</span><span class="day">목</span><span class="day">금</span><span class="day">토</span><span class="day">일</span></div>
+            <div class="coll is-touch">
+              <div class="chips"><span class="chip is-on">전체</span><span class="chip">판타지</span><span class="chip">일상</span></div>
+            </div>
+            <div class="coll is-touch">
+              <div class="pgrid">
+                <div class="pcard"><div class="poster"><span class="up">UP</span>[썸네일 자리]</div><p class="ptitle">작품 제목 자리</p></div>
+                <div class="pcard"><div class="poster">[썸네일 자리]<div class="pbar"><i class="w40"></i></div></div><p class="ptitle">두 줄까지 늘어나는 작품 제목 예시</p></div>
+                <div class="pcard"><div class="poster"><span class="wlabel">선독점</span>[썸네일 자리]</div><p class="ptitle">작품 제목 자리</p></div>
+                <div class="pcard"><div class="poster">[썸네일 자리]</div><p class="ptitle">작품 제목 자리</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="ph-toast" aria-hidden="true"><span class="toast">보고싶다 목록에 쏙 넣어 뒀어요</span></div>
+        </div>
+      </div>
     </div>
   </section>
 </div>

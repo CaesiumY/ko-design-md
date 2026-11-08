@@ -8,23 +8,44 @@
 <script src="/preview/_runtime/iframe.js" defer></script>
 <style>
   :root {
+    --chz-brand-neon: oklch(0.881 0.205 158.3);
+    --chz-brand-black: oklch(0 0 0);
     --chz-brand-strongest: oklch(0.678 0.152 158.3);
+    --chz-brand-stronger: oklch(0.706 0.144 160.2);
     --chz-brand-strong: oklch(0.733 0.132 162.1);
     --chz-brand-text: oklch(0.539 0.106 161.2);
+    --chz-brand-text-base: oklch(0.575 0.127 158.6);
+    --chz-brand-text-weak: oklch(0.596 0.13 159);
     --chz-brand-weak: oklch(0.929 0.037 168.4);
+    --chz-dark-brand-stronger: oklch(0.815 0.189 158.4);
+    --chz-dark-brand-strong: oklch(0.745 0.173 158.5);
+    --chz-dark-brand-base: oklch(0.602 0.138 159.2);
     --chz-bg-base: oklch(1 0 0);
     --chz-bg-weak: oklch(0.982 0 0);
     --chz-surface-weak: oklch(0.958 0.002 247.8);
     --chz-surface-base: oklch(0.911 0.005 286.3);
     --chz-surface-strong: oklch(0.86 0.003 264.5);
     --chz-surface-strongest: oklch(0.195 0.004 264.5);
+    --chz-dark-bg-base: oklch(0.195 0.004 264.5);
+    --chz-dark-bg-weak: oklch(0.168 0.003 248);
+    --chz-dark-surface-weaker: oklch(0.231 0.004 264.5);
+    --chz-dark-surface-weak: oklch(0.251 0.005 248);
+    --chz-dark-surface-base: oklch(0.308 0.006 258.4);
+    --chz-dark-surface-strongest: oklch(0.913 0.011 269.5);
     --chz-text-primary: oklch(0.168 0.003 248);
     --chz-text-secondary: oklch(0.251 0.005 248);
     --chz-text-tertiary: oklch(0.42 0 0);
     --chz-text-weak: oklch(0.538 0.003 264.5);
+    --chz-dark-text-primary: oklch(1 0 0);
+    --chz-dark-text-secondary: oklch(0.913 0.011 269.5);
+    --chz-dark-text-tertiary: oklch(0.721 0.026 265.5);
+    --chz-dark-text-weak: oklch(0.548 0.03 266.4);
     --chz-border-weak: oklch(0.86 0.003 264.5);
+    --chz-dark-border-weak: oklch(0.308 0.006 258.4);
     --chz-live-red: oklch(0.581 0.222 27.8);
     --chz-replay-violet: oklch(0.493 0.223 278.1);
+    --chz-subscribe-tier-1: oklch(0.421 0.187 278.4);
+    --chz-subscribe-tier-2: oklch(0.476 0.231 296.6);
     --chz-white: oklch(1 0 0);
 
     --brand: var(--chz-brand-strongest);
@@ -41,10 +62,24 @@
     --line: var(--chz-border-weak);
     --thumb: var(--chz-surface-base);
     --chip-off: var(--chz-surface-base);
+    --darken-5: oklch(1 0 0 / 0.05);
+    --darken-12: oklch(1 0 0 / 0.12);
+    --lighten-5: oklch(0 0 0 / 0.05);
+    --lighten-12: oklch(0 0 0 / 0.12);
     --hover: oklch(0 0 0 / 0.05);
     --outline-line: oklch(0 0 0 / 0.15);
     --chat-line: var(--chz-surface-base);
-    --chat-h-ink: oklch(0.308 0.006 258.4);
+    --chip-on: var(--chz-surface-strongest);
+    --cur-menu: var(--chz-brand-text-base);
+    --em-strong: var(--chz-brand-text);
+    --em-weak: var(--chz-brand-text-weak);
+    --focus-line: var(--chz-brand-strong);
+    --caret: var(--chz-brand-stronger);
+    --tag-bg: var(--chz-surface-weak);
+    --tab-off: var(--chz-text-weak);
+    --pop-bg: var(--chz-bg-base);
+    --pop-shadow: none;
+    --pop-line: var(--chz-border-weak);
 
     --background: var(--canvas);
     --foreground: var(--ink);
@@ -57,6 +92,7 @@
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--canvas); color: var(--ink); font-family: var(--font); letter-spacing: -0.3px; }
   button { font-family: inherit; letter-spacing: inherit; }
+  svg { display: block; }
 
   .hdr { display: flex; align-items: center; gap: 16px; height: 60px; padding: 0 20px; background: var(--canvas); }
   .hdr-logo { display: flex; align-items: center; flex: 0 0 auto; }
@@ -70,29 +106,37 @@
   .hdr-search svg { width: 20px; height: 20px; flex: 0 0 auto; display: block; color: var(--ink-2); }
   .hdr-actions { display: flex; gap: 8px; flex: 0 0 auto; }
 
-  .btn { height: 34px; padding: 0 12px; border: 0; border-radius: 17px; font-size: 14px; font-weight: 700; line-height: 18px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: default; letter-spacing: 0; }
-  .btn-1 { background: var(--brand); color: var(--brand-ink); }
-  .btn-2 { background: var(--btn-2); color: var(--ink); }
+  .btn { height: 34px; padding: 0 12px; border: 0; border-radius: 17px; font-size: 14px; font-weight: 700; line-height: 18px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: default; letter-spacing: 0; white-space: nowrap; }
+  .btn-1 { background: var(--brand); color: var(--brand-ink); --ov-h: var(--darken-5); --ov-s: var(--darken-12); }
+  .btn-2 { background: var(--btn-2); color: var(--ink); --ov-h: var(--lighten-5); --ov-s: var(--lighten-12); }
   .btn-3 { background: var(--btn-3); color: var(--btn-3-ink); }
   .btn-1, .btn-2, .btn-3 { font-family: var(--font-display); font-weight: 400; }
   .btn-out { background: transparent; color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--outline-line); }
-  .btn-1.is-hover { background-image: linear-gradient(oklch(1 0 0 / 0.05), oklch(1 0 0 / 0.05)); }
-  .btn-1.is-down { background-image: linear-gradient(oklch(1 0 0 / 0.12), oklch(1 0 0 / 0.12)); }
-  .btn.is-off { background: var(--btn-2); color: var(--chz-text-weak); }
+  .btn-1.is-hover, .btn-2.is-hover { background-image: linear-gradient(var(--ov-h), var(--ov-h)); }
+  .btn-1.is-sel, .btn-2.is-sel { background-image: linear-gradient(var(--ov-s), var(--ov-s)); }
+  .btn-out.is-hover { background-color: var(--lighten-5); }
+  .btn-out.is-sel { background-color: var(--lighten-12); }
+  .btn.is-off { background: var(--btn-2); color: var(--chz-text-weak); font-family: var(--font-display); font-weight: 400; }
+  .btn-danger { background: var(--chz-live-red); color: var(--chz-white); }
+  .btn-ic { width: 34px; padding: 0; border-radius: 6px; background: var(--btn-2); color: var(--ink); }
+  .btn-ic svg { width: 20px; height: 20px; }
 
   .shell { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-height: 560px; }
   .side { padding: 16px 20px; background: var(--canvas); }
-  .side-h { margin: 0 6px 8px; font-size: 13px; line-height: 17px; font-weight: 600; color: var(--ink-3); }
-  .side-i { display: flex; align-items: center; gap: 10px; height: 38px; padding: 7px 8px; border-radius: 8px; font-size: 15px; line-height: 19px; font-weight: 600; color: var(--ink-2); }
+  .side-h { margin: 16px 6px 8px; font-size: 13px; line-height: 17px; font-weight: 600; color: var(--ink-3); }
+  .side-i { display: flex; align-items: center; gap: 10px; height: 38px; padding: 7px 8px; border-radius: 8px; font-size: 15px; line-height: 19px; font-weight: 600; color: var(--ink-2); min-width: 0; }
   .side-i.is-on { background: var(--hover); }
+  .side-i.is-sel { background: var(--lighten-12); }
+  .side-i.is-cur { color: var(--cur-menu); }
+  .side-ic { width: 24px; height: 24px; flex: 0 0 auto; display: grid; place-items: center; }
+  .side-ic svg { width: 20px; height: 20px; }
   .side-av { width: 24px; height: 24px; border-radius: 12px; background: var(--thumb); flex: 0 0 auto; display: grid; place-items: center; font-size: 10px; color: var(--ink-3); }
   .side-n { flex: 1 1 0; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .side-l { width: 6px; height: 6px; border-radius: 3px; background: var(--chz-live-red); flex: 0 0 auto; }
 
   .main { padding: 20px 24px 32px; min-width: 0; }
   .hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 24px; align-items: center; padding: 8px 0 28px; }
-  .hero h1 { margin: 0 0 8px; font-size: 40px; line-height: 48px; font-weight: 800; }
-  .hero p { margin: 0 0 16px; font-size: 15px; line-height: 21px; color: var(--ink-3); font-weight: 500; }
+  .hero h1 { margin: 0 0 16px; font-size: 40px; line-height: 48px; font-weight: 800; }
   .hero-cta { display: flex; gap: 8px; flex-wrap: wrap; }
   .hero-stage { border-radius: 12px; background: var(--chz-surface-strongest); aspect-ratio: 16 / 9; display: grid; place-items: center; position: relative; min-width: 0; overflow: hidden; }
   .hero-stage img { width: 28%; height: auto; display: block; }
@@ -107,58 +151,182 @@
   .more-line { flex: 1 1 0; min-width: 0; height: 1px; background: var(--line); }
   .pill-more { flex: 0 0 auto; max-width: 100%; white-space: nowrap; height: 25px; padding: 0 8px 0 11px; border-radius: 13px; box-shadow: inset 0 0 0 1px var(--line); color: var(--ink-3); font-size: 12px; display: inline-flex; align-items: center; font-weight: 600; }
   .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 16px; }
-  .tab { height: 28px; padding: 0 9px; border-radius: 14px; display: inline-flex; align-items: center; font-family: var(--font-display); font-size: 13px; line-height: 16px; font-weight: 400; letter-spacing: 0; background: var(--chip-off); color: var(--ink-3); }
-  .tab.is-on { background: var(--chz-surface-strongest); color: var(--chz-white); }
+  .tab { height: 28px; padding: 0 9px; border-radius: 14px; display: inline-flex; align-items: center; font-family: var(--font-display); font-size: 13px; line-height: 16px; font-weight: 400; letter-spacing: 0; background: var(--chip-off); color: var(--ink-3); white-space: nowrap; }
+  .tab.is-on { background: var(--chip-on); color: var(--chz-white); }
 
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px 14px; }
   .card { min-width: 0; }
   .thumb { position: relative; border-radius: 12px; background: var(--thumb); aspect-ratio: 16 / 9; display: grid; place-items: center; color: var(--ink-3); font-size: 11px; font-weight: 500; overflow: hidden; }
   .thumb::before { content: ""; position: absolute; inset: 0; background-color: oklch(0 0 0 / 0); transition: background-color .2s cubic-bezier(.65, 0, .35, 1); pointer-events: none; }
-  .thumb:hover::before { background-color: oklch(0 0 0 / 0.5); }
+  .thumb:hover::before, .thumb.is-hover::before { background-color: oklch(0 0 0 / 0.5); }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
   }
-  .badge { display: inline-flex; align-items: center; height: 20px; padding: 0 4px; border-radius: 4px; font-size: 12px; line-height: 20px; font-weight: 700; color: var(--chz-white); }
+  .badge { display: inline-flex; align-items: center; height: 20px; padding: 0 4px; border-radius: 4px; font-size: 12px; line-height: 20px; font-weight: 700; color: var(--chz-white); white-space: nowrap; }
   .b-live { background: var(--chz-live-red); }
   .b-replay { background: var(--chz-replay-violet); font-family: var(--font-display); font-size: 11px; font-weight: 400; letter-spacing: 0; }
   .b-view { background: oklch(0 0 0 / 0.8); }
-  .thumb-badges { position: absolute; top: 6px; left: 6px; right: 6px; display: flex; align-items: center; gap: 4px; }
+  .b-drops { background: oklch(0 0 0 / 0.8); color: var(--em-weak); }
+  .b-tier1 { background: var(--chz-subscribe-tier-1); }
+  .b-tier2 { background: var(--chz-subscribe-tier-2); }
+  .thumb-badges { position: absolute; top: 6px; left: 6px; right: 6px; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
   .card h3 { margin: 12px 0 2px; font-size: 15px; line-height: 19px; font-weight: 600; color: var(--ink-2); overflow-wrap: anywhere; }
   .card p { margin: 0; font-size: 14px; line-height: 18px; color: var(--ink-3); font-weight: 600; }
+  .tags { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0 0; }
+  .tag { height: 20px; padding: 0 6px; border-radius: 4px; display: inline-flex; align-items: center; background: var(--tag-bg); color: var(--ink-3); font-size: 12px; line-height: 16px; font-weight: 600; white-space: nowrap; }
+  .tag.is-em { color: var(--em-strong); }
 
-  .duo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
-  .box { border-radius: 12px; background: var(--panel); box-shadow: inset 0 0 0 1px var(--line); padding: 16px; min-width: 0; }
-  .btn-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 12px; }
-  .btn-row small { font-size: 11px; font-weight: 600; color: var(--ink-3); width: 56px; flex: 0 0 auto; }
-
-  .field { display: flex; align-items: center; gap: 8px; height: 38px; border-radius: 19px; background: transparent; box-shadow: inset 0 0 0 1px var(--line); padding: 0 16px; font-family: var(--font-system); letter-spacing: 0; font-size: 15px; line-height: 19px; color: var(--chz-text-weak); margin: 0 0 8px; }
-  .field.is-focus { color: var(--ink); box-shadow: inset 0 0 0 1px var(--chz-brand-strong); }
+  .field { display: flex; align-items: center; gap: 8px; height: 38px; border-radius: 19px; background: transparent; box-shadow: inset 0 0 0 1px var(--line); padding: 0 16px; font-family: var(--font-system); letter-spacing: 0; font-size: 15px; line-height: 19px; color: var(--chz-text-weak); width: 100%; max-width: 400px; min-width: 0; }
+  .field.is-focus, .field.fld-live:focus-within { color: var(--ink); box-shadow: inset 0 0 0 1px var(--focus-line); }
+  .field .caret { width: 2px; height: 19px; margin-left: -6px; background: var(--caret); flex: 0 0 auto; }
+  .field svg { width: 20px; height: 20px; flex: 0 0 auto; margin-left: auto; color: var(--ink-2); }
+  .field-t { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .fld-live input { flex: 1 1 0; min-width: 0; border: 0; padding: 0; background: transparent; font: inherit; letter-spacing: inherit; color: var(--ink); caret-color: var(--caret); outline: none; }
+  .fld-live input::placeholder { color: var(--chz-text-weak); }
 
   .chat { border-radius: 12px; overflow: hidden; background: var(--canvas); box-shadow: inset 0 0 0 1px var(--line); min-width: 0; }
-  .chat-h { height: 44px; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 15px; line-height: 18px; font-weight: 400; letter-spacing: 0; color: var(--chat-h-ink); border-bottom: 1px solid var(--chat-line); }
+  .chat-h { height: 44px; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 15px; line-height: 18px; font-weight: 400; letter-spacing: 0; color: var(--ink-2); border-bottom: 1px solid var(--chat-line); }
   .chat-b { padding: 8px 6px; }
   .msg { padding: 4px 6px; height: 28px; font-family: var(--font-system); letter-spacing: 0; font-size: 14px; line-height: 20px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
   .msg b { font-weight: 700; margin-right: 6px; }
-  .chat-in { display: flex; gap: 8px; align-items: center; margin: 8px; height: 42px; padding: 6px; border-radius: 8px; background: var(--btn-2); }
-  .chat-in span { flex: 1 1 0; min-width: 0; font-size: 14px; color: var(--ink-3); padding-left: 6px; }
+  .chat-in { position: relative; display: flex; gap: 8px; align-items: center; margin: 8px; height: 42px; padding: 6px; border-radius: 8px; background: var(--btn-2); min-width: 0; }
+  .chat-in span { flex: 1 1 0; min-width: 0; font-size: 14px; color: var(--ink-3); padding-left: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chat-in.is-focus { background-image: linear-gradient(var(--lighten-5), var(--lighten-5)); }
+  .chat-in.is-act::after { content: ""; position: absolute; inset: 0; border-radius: 8px; box-shadow: inset 0 0 0 2px var(--focus-line); pointer-events: none; }
+  .chat-in.solo { margin: 0; }
   .chat-send { height: 32px; width: 46px; border-radius: 8px; background: var(--btn-2); color: var(--chz-text-weak); font-size: 13px; display: grid; place-items: center; font-weight: 700; flex: 0 0 auto; box-shadow: inset 0 0 0 1px var(--line); }
+  .chat-in.is-act .chat-send { color: var(--ink-3); }
 
   .modal { max-width: 450px; border-radius: 12px; background: var(--canvas); box-shadow: 0 6px 18px 6px oklch(0 0 0 / 0.05), 0 6px 6px 0 oklch(0 0 0 / 0.1); padding: 24px 20px 20px; }
-  .modal h4 { margin: 0 0 8px; font-size: 20px; line-height: 28px; font-weight: 700; }
+  .modal h4 { margin: 0 0 8px; font-size: 22px; line-height: 30px; font-weight: 700; }
   .modal p { margin: 0 0 20px; font-size: 14px; line-height: 20px; color: var(--ink-3); }
   .modal .btn { width: 100%; height: 44px; border-radius: 8px; padding: 0 20px; font-family: var(--font-display); font-size: 14px; line-height: 18px; font-weight: 400; letter-spacing: 0; }
+
+  /* numbered sections */
+  .doc { padding: 12px 24px 48px; }
+  .dsec { margin: 0 0 40px; }
+  .dsec-head { display: flex; align-items: baseline; gap: 12px; margin: 0 0 16px; }
+  .dsec-idx { font-size: 13px; line-height: 17px; font-weight: 600; color: var(--ink-3); letter-spacing: 0; }
+  .dsec-head h2 { margin: 0; font-size: 22px; line-height: 30px; font-weight: 700; }
+  .cells { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+  .cell { min-width: 0; display: flex; flex-direction: column; gap: 16px; padding: 20px; border-radius: 12px; background: var(--canvas); box-shadow: inset 0 0 0 1px var(--line); }
+  .cell.wide { grid-column: 1 / -1; }
+  .cell > .cell-k { margin: 0; }
+  .cell > .catalog-dummy { margin: 0; }
+  .states { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 20px; min-width: 0; }
+  .state { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; min-width: 0; max-width: 100%; }
+  .state.full { width: 100%; align-items: stretch; }
+  .state-l { font-size: 12px; line-height: 16px; font-weight: 600; color: var(--ink-3); letter-spacing: 0; }
+  .specs { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+  .spec, .hint { font-size: 12px; line-height: 16px; font-weight: 400; color: var(--ink-3); letter-spacing: 0; }
+  .vrows { display: flex; flex-direction: column; gap: 16px; }
+  .vrow { display: grid; grid-template-columns: 136px minmax(0, 1fr); gap: 12px; align-items: end; padding: 0 0 16px; border-bottom: 1px solid var(--line); }
+  .vrow:last-child { border-bottom: 0; padding-bottom: 0; }
+  .vrow-k { font-size: 13px; line-height: 17px; font-weight: 600; color: var(--ink-2); padding-bottom: 8px; }
+
+  .ttabs { display: flex; gap: 4px; flex-wrap: wrap; }
+  .ttab { height: 40px; padding: 0 10px; display: inline-flex; align-items: center; font-size: 17px; line-height: 21px; font-weight: 800; color: var(--tab-off); }
+  .ttab.is-cur { color: var(--ink); }
+
+  .pop-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-width: 0; }
+  .pop { width: 180px; max-width: 100%; padding: 6px; border-radius: 8px; background: var(--pop-bg); box-shadow: var(--pop-shadow); border: 1px solid var(--pop-line); }
+  .pop-i { height: 36px; padding: 0 10px; border-radius: 6px; display: flex; align-items: center; font-size: 14px; line-height: 20px; font-weight: 400; color: var(--ink-2); }
+  .pop-i.is-on { background: var(--lighten-5); color: var(--ink); font-weight: 600; }
+
+  .lc-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 372px)); gap: 16px 20px; }
+  .lc-pair .state { width: 100%; align-items: stretch; }
+
+  .hcard { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 12px; align-items: start; min-width: 0; }
+  .hcard .thumb { border-radius: 8px; }
+  .hcard h3 { margin: 0 0 4px; font-family: var(--font-system); font-size: 15px; line-height: 21px; font-weight: 500; color: var(--ink-2); overflow-wrap: anywhere; }
+  .hcard p { margin: 0; font-size: 13px; line-height: 17px; font-weight: 600; color: var(--ink-3); }
+  .cats { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 12px; }
+  .cat { min-width: 0; }
+  .cat-poster { border-radius: 8px; aspect-ratio: 3 / 4; background: var(--thumb); display: grid; place-items: center; color: var(--ink-3); font-size: 11px; text-align: center; padding: 4px; }
+  .cat b { display: block; margin: 8px 0 2px; font-family: var(--font-system); font-size: 14px; line-height: 20px; font-weight: 700; letter-spacing: 0; overflow-wrap: anywhere; }
+  .cat span { font-size: 12px; line-height: 16px; color: var(--ink-3); }
+
+  .in-stack { display: flex; flex-direction: column; gap: 12px; }
+
+  /* desktop watch mock */
+  .screen-desk { min-width: 0; border-radius: 12px; overflow: hidden; background: var(--canvas); box-shadow: inset 0 0 0 1px var(--line); }
+  .dk-hdr { display: flex; align-items: center; gap: 12px; height: 60px; padding: 0 16px; }
+  .dk-hdr img { height: 28px; width: auto; flex: 0 0 auto; }
+  .dk-hdr .hdr-search { margin: 0 auto; }
+  .dk-hdr .btn { flex: 0 0 auto; }
+  .dk-body { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; padding: 16px; }
+  .dk-main { min-width: 0; }
+  .player { position: relative; aspect-ratio: 16 / 9; border-radius: 12px; background: var(--chz-brand-black); display: grid; place-items: center; color: var(--chz-dark-text-tertiary); font-size: 13px; overflow: hidden; }
+  .player .thumb-badges { top: 12px; left: 12px; right: 12px; }
+  .dk-title { margin: 16px 0 12px; font-size: 22px; line-height: 30px; font-weight: 700; overflow-wrap: anywhere; }
+  .dk-ch { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .dk-av { width: 40px; height: 40px; border-radius: 20px; background: var(--thumb); display: grid; place-items: center; color: var(--ink-3); font-size: 13px; font-weight: 700; flex: 0 0 auto; }
+  .dk-who { flex: 1 1 160px; min-width: 0; }
+  .dk-who b { display: block; font-size: 15px; line-height: 19px; font-weight: 600; color: var(--ink-2); }
+  .dk-who span { display: block; font-size: 13px; line-height: 17px; font-weight: 600; color: var(--ink-3); }
+  .dk-next { display: block; margin-top: 2px; font-size: 13px; line-height: 17px; font-weight: 600; color: var(--em-weak); }
+  .dk-act { display: flex; gap: 8px; flex: 0 0 auto; }
+  .dk-chat { min-width: 0; display: flex; flex-direction: column; }
+  .dk-chat .chat { flex: 1 1 auto; display: flex; flex-direction: column; }
+  .dk-chat .chat-b { flex: 1 1 auto; }
+
+  /* mobile mock (dark only) */
+  .phone { width: min(100%, 390px); margin: 0 auto; padding: 8px; border-radius: 24px; background: var(--panel); box-shadow: inset 0 0 0 1px var(--line); }
+  .m-dark {
+    --canvas: var(--chz-dark-bg-base);
+    --ink: var(--chz-dark-text-primary);
+    --ink-2: var(--chz-dark-text-secondary);
+    --ink-3: var(--chz-dark-text-tertiary);
+    --line: var(--chz-dark-border-weak);
+    --thumb: var(--chz-dark-surface-base);
+    --chip-off: var(--chz-dark-surface-base);
+    --em-weak: var(--chz-brand-neon);
+    --em-strong: var(--chz-dark-brand-strong);
+    --tag-bg: var(--chz-dark-surface-weak);
+    --tab-off: var(--chz-dark-text-weak);
+    background: var(--canvas); color: var(--ink);
+  }
+  .m-dark .tab.is-on { background: var(--chz-dark-surface-strongest); color: var(--chz-dark-bg-weak); }
+  .phone .screen { border-radius: 16px; overflow: hidden; }
+  .m-hdr { display: flex; align-items: center; justify-content: space-between; height: 52px; padding: 0 16px; }
+  .m-hdr img { height: 26px; width: auto; }
+  .m-ics { display: flex; gap: 12px; color: var(--ink-2); }
+  .m-ics svg { width: 22px; height: 22px; }
+  .m-chips { display: flex; gap: 6px; padding: 4px 16px 12px; overflow: hidden; }
+  .m-chips .tab { flex: 0 0 auto; }
+  .m-list { display: grid; gap: 20px; padding: 0 16px 16px; }
+  .m-bar { display: flex; height: 56px; border-top: 1px solid var(--line); }
+  .m-bar span { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 11px; line-height: 14px; font-weight: 600; color: var(--tab-off); letter-spacing: 0; }
+  .m-bar span svg { width: 22px; height: 22px; }
+  .m-bar span.is-cur { color: var(--ink); }
+
+  /* channel head */
+  .ch { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+  .ch-av { width: 72px; height: 72px; border-radius: 36px; background: var(--thumb); display: grid; place-items: center; color: var(--ink-3); font-size: 15px; font-weight: 700; flex: 0 0 auto; }
+  .ch-who { flex: 1 1 180px; min-width: 0; }
+  .ch-name { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 0; font-size: 28px; line-height: 36px; font-weight: 700; overflow-wrap: anywhere; }
+  .ch-meta { margin: 4px 0 0; font-size: 14px; line-height: 20px; color: var(--ink-3); }
+  .ch-act { display: flex; gap: 8px; flex-wrap: wrap; }
 
   @media (max-width: 900px) {
     .shell { grid-template-columns: minmax(0, 1fr); }
     .side { display: none; }
     .hdr-tabs { display: none; }
+    .cells { grid-template-columns: minmax(0, 1fr); }
   }
   @media (max-width: 720px) {
-    .hero, .duo { grid-template-columns: minmax(0, 1fr); }
+    .hero, .lc-pair, .dk-body { grid-template-columns: minmax(0, 1fr); }
     .hero h1 { font-size: 32px; line-height: 40px; }
     .main { padding: 16px 16px 28px; }
+    .doc { padding: 8px 16px 40px; }
+    .cell { padding: 16px; }
     .hdr { padding: 0 12px; gap: 8px; }
     .hdr-theme { display: none; }
+    .vrow { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+    .vrow-k { padding-bottom: 0; }
+    .dk-hdr .hdr-search { display: none; }
+    .dk-hdr { justify-content: space-between; }
+    .hcard { grid-template-columns: 120px minmax(0, 1fr); }
   }
 </style>
 <style>
@@ -179,17 +347,27 @@
     --chip-off: oklch(0.308 0.006 258.4);
     --outline-line: oklch(1 0 0 / 0.15);
     --chat-line: oklch(0.251 0.005 248);
-    --chat-h-ink: oklch(0.913 0.011 269.5);
+    --chip-on: oklch(0.913 0.011 269.5);
     --hover: oklch(1 0 0 / 0.05);
+    --darken-5: oklch(0 0 0 / 0.05);
+    --darken-12: oklch(0 0 0 / 0.12);
+    --lighten-5: oklch(1 0 0 / 0.05);
+    --lighten-12: oklch(1 0 0 / 0.12);
+    --cur-menu: oklch(0.815 0.189 158.4);
+    --em-strong: oklch(0.745 0.173 158.5);
+    --em-weak: oklch(0.881 0.205 158.3);
+    --focus-line: oklch(0.602 0.138 159.2);
+    --caret: oklch(0.815 0.189 158.4);
+    --tag-bg: oklch(0.251 0.005 248);
+    --tab-off: oklch(0.548 0.03 266.4);
+    --pop-bg: oklch(0.231 0.004 264.5);
+    --pop-shadow: 0 4px 4px oklch(0 0 0 / 0.7), 0 0 1px oklch(0 0 0 / 0.7), 0 8px 20px oklch(0 0 0 / 0.5);
+    --pop-line: transparent;
     --chz-text-weak: oklch(0.548 0.03 266.4);
-    --chz-surface-strongest: oklch(0.913 0.011 269.5);
     --chz-white: oklch(1 0 0);
   }
   [data-theme="dark"] .hero-stage { background: oklch(0.168 0.003 248); }
   [data-theme="dark"] .tab.is-on { color: oklch(0.168 0.003 248); }
-  [data-theme="dark"] .btn-1.is-hover { background-image: linear-gradient(oklch(0 0 0 / 0.05), oklch(0 0 0 / 0.05)); }
-  [data-theme="dark"] .btn-1.is-down { background-image: linear-gradient(oklch(0 0 0 / 0.12), oklch(0 0 0 / 0.12)); }
-  [data-theme="dark"] .field.is-focus { box-shadow: inset 0 0 0 1px oklch(0.602 0.138 159.2); }
   [data-theme="dark"] .modal { background: var(--panel); box-shadow: 0 6px 18px 6px oklch(0 0 0 / 0.2), 0 6px 6px 0 oklch(0 0 0 / 0.3); }
 </style>
 </head>
@@ -206,8 +384,12 @@
 
 <div class="shell">
   <aside class="side" aria-label="사이드바">
+    <div class="side-i is-cur"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-6 8 6v8H4z"/></svg></span><span class="side-n">홈</span></div>
+    <div class="side-i"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M10 9.5l4 2.5-4 2.5z" fill="currentColor"/></svg></span><span class="side-n">전체 라이브</span></div>
+    <div class="side-i"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></span><span class="side-n">카테고리</span></div>
+    <div class="side-i"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18"/></svg></span><span class="side-n">동영상</span></div>
     <p class="side-h">팔로잉 채널</p>
-    <p class="catalog-dummy">채널명·방송 상태는 더미 데이터입니다.</p>
+    <p class="catalog-dummy">채널명과 방송 상태는 더미 데이터입니다.</p>
     <div class="side-i is-on"><span class="side-av">A</span><span class="side-n">채널 A</span><span class="side-l"></span></div>
     <div class="side-i"><span class="side-av">B</span><span class="side-n">채널 B</span><span class="side-l"></span></div>
     <div class="side-i"><span class="side-av">C</span><span class="side-n">채널 C</span></div>
@@ -215,10 +397,10 @@
   </aside>
 
   <main class="main">
+    <p class="catalog-dummy">히어로의 LIVE 배지는 레이아웃 시연용 더미 데이터입니다.</p>
     <section class="hero">
       <div>
         <h1>지금, 스트리밍이 시작됩니다</h1>
-        <p>좋아하는 방송을 가장 빠르게 만나는 곳</p>
         <div class="hero-cta"><span class="btn btn-1">라이브 보러가기</span><span class="btn btn-2">팔로우</span></div>
       </div>
       <div class="hero-stage"><span class="badge b-live">LIVE</span><img src="/logos/chzzk.png" alt=""></div>
@@ -227,29 +409,200 @@
     <section class="sec">
       <div class="sec-row"><h2 class="sec-h">추천 라이브</h2><span class="more-link">전체보기</span></div>
       <div class="tabs"><span class="tab is-on">전체</span><span class="tab">게임</span><span class="tab">스포츠</span><span class="tab">엔터</span><span class="tab">기타</span></div>
-      <p class="catalog-dummy">방송 제목·채널명·시청자 수·LIVE 배지·다시보기 배지는 레이아웃 시연용 더미 데이터입니다.</p>
+      <p class="catalog-dummy">방송 제목, 채널명, 시청자 수, LIVE 배지, 다시보기 배지, 드롭스 배지, 태그는 레이아웃 시연용 더미 데이터입니다.</p>
       <div class="grid">
-        <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">1.2천명</span></div>썸네일 자리</div><h3>방송 제목 자리 — 오늘의 라이브</h3><p>채널 A</p></div>
-        <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">830명</span></div>썸네일 자리</div><h3>두 줄까지 늘어나는 방송 제목 예시 텍스트</h3><p>채널 B</p></div>
+        <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">1.2천명</span></div>썸네일 자리</div><h3>방송 제목 자리 — 오늘의 라이브</h3><p>채널 A</p><div class="tags"><span class="tag is-em">드롭스</span><span class="tag">게임 이름</span></div></div>
+        <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">830명</span><span class="badge b-drops">드롭스</span></div>썸네일 자리</div><h3>두 줄까지 늘어나는 방송 제목 예시 텍스트</h3><p>채널 B</p><div class="tags"><span class="tag">토크</span></div></div>
         <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-replay">다시보기</span></div>썸네일 자리</div><h3>다시보기 영상 제목</h3><p>채널 C</p></div>
-        <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">57명</span></div>썸네일 자리</div><h3>새벽 방송</h3><p>채널 D</p></div>
+        <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">57명</span></div>썸네일 자리</div><h3>새벽 방송</h3><p>채널 D</p><div class="tags"><span class="tag">음악</span></div></div>
       </div>
       <div class="more-row"><span class="more-line"></span><span class="pill-more">추천 라이브 더보기</span><span class="more-line"></span></div>
     </section>
+  </main>
+</div>
 
-    <section class="sec duo">
-      <div class="box">
-        <p class="cell-k">버튼</p>
-        <div class="btn-row"><small>기본</small><span class="btn btn-1">팔로우</span><span class="btn btn-2">알림</span><span class="btn btn-3">구독</span></div>
-        <div class="btn-row"><small>hover</small><span class="btn btn-1 is-hover">팔로우</span></div>
-        <div class="btn-row"><small>pressed</small><span class="btn btn-1 is-down">팔로우</span></div>
-        <div class="btn-row"><small>비활성</small><span class="btn is-off" aria-disabled="true">팔로우</span><span class="btn btn-out">아웃라인</span></div>
-        <p class="cell-k">입력</p>
-        <div class="field">검색어를 입력하세요</div>
-        <div class="field is-focus">포커스 상태</div>
+<div class="doc">
+  <section class="dsec" aria-labelledby="s1">
+    <div class="dsec-head"><span class="dsec-idx">01</span><h2 id="s1">버튼</h2></div>
+    <div class="cells">
+      <div class="cell wide">
+        <p class="cell-k">button, 변형과 상태</p>
+        <div class="vrows">
+          <div class="vrow">
+            <span class="vrow-k">primary</span>
+            <div class="states">
+              <div class="state"><span class="state-l">기본</span><span class="btn btn-1">팔로우</span></div>
+              <div class="state"><span class="state-l">hover, darken 5%</span><span class="btn btn-1 is-hover">팔로우</span></div>
+              <div class="state"><span class="state-l">selected, darken 12%</span><span class="btn btn-1 is-sel">팔로우</span></div>
+              <div class="state"><span class="state-l">비활성 (면 가정)</span><span class="btn is-off" aria-disabled="true">팔로우</span></div>
+            </div>
+          </div>
+          <div class="vrow">
+            <span class="vrow-k">secondary</span>
+            <div class="states">
+              <div class="state"><span class="state-l">기본</span><span class="btn btn-2">알림</span></div>
+              <div class="state"><span class="state-l">hover, lighten 5%</span><span class="btn btn-2 is-hover">알림</span></div>
+              <div class="state"><span class="state-l">selected, lighten 12%</span><span class="btn btn-2 is-sel">알림</span></div>
+            </div>
+          </div>
+          <div class="vrow">
+            <span class="vrow-k">tertiary, 라이트 (가정)</span>
+            <template data-theme-variant="dark"><span class="vrow-k">tertiary</span></template>
+            <div class="states">
+              <div class="state"><span class="state-l">기본</span><span class="btn btn-3">구독</span></div>
+            </div>
+          </div>
+          <div class="vrow">
+            <span class="vrow-k">outlined, 테두리와 글자 (가정)</span>
+            <div class="states">
+              <div class="state"><span class="state-l">기본</span><span class="btn btn-out">로그인</span></div>
+              <div class="state"><span class="state-l">hover, 배경색 lighten 5%</span><span class="btn btn-out is-hover">로그인</span></div>
+              <div class="state"><span class="state-l">selected, 배경색 lighten 12%</span><span class="btn btn-out is-sel">로그인</span></div>
+            </div>
+          </div>
+          <div class="vrow">
+            <span class="vrow-k">아이콘 전용, danger (크기와 글자 가정)</span>
+            <div class="states">
+              <div class="state"><span class="state-l">아이콘 전용, radius 6</span><span class="btn btn-ic" role="img" aria-label="알림 설정"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20h4"/></svg></span></div>
+              <div class="state"><span class="state-l">danger, 면 live-red</span><span class="btn btn-danger">차단</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="specs">
+          <span class="spec">높이 34, radius 17, 좌우 12</span>
+          <span class="spec">글자 Nemony 14 / 18 / 400</span>
+          <span class="spec">primary 면 brand-strongest, 글자 white</span>
+          <template data-theme-variant="dark"><span class="spec">primary 면 brand-neon, 글자 dark-bg-weak</span></template>
+          <span class="spec">tertiary 면 surface-strongest, 글자 white (가정)</span>
+          <template data-theme-variant="dark"><span class="spec">tertiary 면 dark-surface-strongest, 글자 dark-bg-weak</span></template>
+        </div>
       </div>
-      <div>
-        <p class="catalog-dummy">채팅 닉네임·메시지는 더미 데이터입니다.</p>
+    </div>
+  </section>
+
+  <section class="dsec" aria-labelledby="s2">
+    <div class="dsec-head"><span class="dsec-idx">02</span><h2 id="s2">탐색과 입력</h2></div>
+    <div class="cells">
+      <div class="cell">
+        <p class="cell-k">nav-item, 사이드바 항목</p>
+        <div class="states">
+          <div class="state"><span class="state-l">기본</span><div class="side-i"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></span><span class="side-n">카테고리</span></div></div>
+          <div class="state"><span class="state-l">hover, lighten 5%</span><div class="side-i is-on"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></span><span class="side-n">카테고리</span></div></div>
+          <div class="state"><span class="state-l">selected, lighten 12%</span><div class="side-i is-sel"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></span><span class="side-n">카테고리</span></div></div>
+          <div class="state"><span class="state-l">현재 메뉴</span><div class="side-i is-cur"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-6 8 6v8H4z"/></svg></span><span class="side-n">홈</span></div></div>
+        </div>
+        <div class="specs">
+          <span class="spec">높이 38, radius 8, 15 / 19 / 600</span>
+          <span class="spec">현재 메뉴 글자 brand-text-base</span>
+          <template data-theme-variant="dark"><span class="spec">현재 메뉴 글자 dark-brand-stronger</span></template>
+          <span class="spec">섹션 제목 13 / 17 / 600</span>
+        </div>
+      </div>
+
+      <div class="cell">
+        <p class="cell-k">상단 탭</p>
+        <div class="states">
+          <div class="state"><span class="state-l">현재, 글자 (가정)</span><div class="ttabs"><span class="ttab is-cur">게임</span></div></div>
+          <div class="state"><span class="state-l">비활성, 라이트 글자 (가정)</span><template data-theme-variant="dark"><span class="state-l">비활성</span></template><div class="ttabs"><span class="ttab">e스포츠</span><span class="ttab">스포츠</span><span class="ttab">엔터+</span></div></div>
+        </div>
+        <div class="specs">
+          <span class="spec">17 / 21 / 800</span>
+          <span class="spec">비활성 글자 text-weak (가정)</span>
+          <template data-theme-variant="dark"><span class="spec">비활성 글자 dark-text-weak</span></template>
+        </div>
+      </div>
+
+      <div class="cell">
+        <p class="cell-k">search-field</p>
+        <div class="in-stack">
+          <div class="state full"><span class="state-l">기본</span><div class="field"><span class="field-t">채널, 라이브, 동영상 검색</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg></div></div>
+          <div class="state full"><span class="state-l">포커스, 테두리와 캐럿</span><div class="field is-focus"><span class="field-t">검색어</span><span class="caret" aria-hidden="true"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg></div></div>
+          <div class="state full"><span class="state-l">직접 입력</span><label class="field fld-live"><input type="text" placeholder="채널, 라이브, 동영상 검색" aria-label="검색 시연"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg></label></div>
+        </div>
+        <div class="specs">
+          <span class="spec">높이 38, 폭 400, radius 19, 15 / 19 / 400 시스템 서체</span>
+          <span class="spec">테두리 border-weak, 포커스 brand-strong, 캐럿 brand-stronger</span>
+          <template data-theme-variant="dark"><span class="spec">테두리 dark-border-weak, 포커스 dark-brand-base, 캐럿 dark-brand-stronger</span></template>
+          <span class="hint">검색창을 눌러 입력해 보세요</span>
+        </div>
+      </div>
+
+      <div class="cell">
+        <p class="cell-k">팝오버, 정렬 메뉴 (치수, 바탕, 선택 항목 가정)</p>
+        <div class="pop-wrap">
+          <span class="btn btn-out">인기순</span>
+          <div class="pop"><div class="pop-i is-on">인기순</div><div class="pop-i">최신순</div><div class="pop-i">시청자 많은 순</div></div>
+        </div>
+        <div class="specs">
+          <span class="spec">그림자 없음, 테두리 1px border-weak</span>
+          <template data-theme-variant="dark"><span class="spec">테두리 없음 (가정), 그림자 shadow-popover 3겹</span></template>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dsec" aria-labelledby="s3">
+    <div class="dsec-head"><span class="dsec-idx">03</span><h2 id="s3">라이브 카드와 배지</h2></div>
+    <div class="cells">
+      <div class="cell wide">
+        <p class="cell-k">live-card, 태그 칩 (칩 바탕, 치수, 글자 가정)</p>
+        <p class="catalog-dummy">방송 제목, 채널명, 시청자 수, LIVE 배지, 드롭스 배지, 태그는 레이아웃 시연용 더미 데이터입니다.</p>
+        <div class="lc-pair">
+          <div class="state"><span class="state-l">기본</span><div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">2,048명</span><span class="badge b-drops">드롭스</span></div>썸네일 자리</div><h3>방송 제목 자리 — 주말 정주행</h3><p>채널 E</p><div class="tags"><span class="tag is-em">드롭스</span><span class="tag">게임 이름</span><span class="tag">한국어</span></div></div></div>
+          <div class="state"><span class="state-l">hover, 덧씌움 검정 50%</span><div class="card"><div class="thumb is-hover"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">2,048명</span><span class="badge b-drops">드롭스</span></div>썸네일 자리</div><h3>방송 제목 자리 — 주말 정주행</h3><p>채널 E</p><div class="tags"><span class="tag is-em">드롭스</span><span class="tag">게임 이름</span><span class="tag">한국어</span></div></div></div>
+        </div>
+        <div class="specs">
+          <span class="spec">썸네일 372 × 209, radius 12</span>
+          <span class="spec">제목 15 / 19 / 600</span>
+          <span class="spec">덧씌움 0.2초</span>
+          <span class="spec">태그 칩 radius 4, 강조 글자 brand-text (가정)</span>
+          <template data-theme-variant="dark"><span class="spec">태그 칩 radius 4, 강조 글자 dark-brand-strong</span></template>
+          <span class="hint">썸네일에 마우스를 올려 보세요</span>
+        </div>
+      </div>
+
+      <div class="cell">
+        <p class="cell-k">badge</p>
+        <p class="catalog-dummy">시청자 수와 재생시간은 레이아웃 시연용 더미 데이터입니다.</p>
+        <div class="states">
+          <div class="state"><span class="state-l">LIVE</span><span class="badge b-live">LIVE</span></div>
+          <div class="state"><span class="state-l">시청자 수</span><span class="badge b-view">1.2천명</span></div>
+          <div class="state"><span class="state-l">재생시간</span><span class="badge b-view">1:42:07</span></div>
+          <div class="state"><span class="state-l">다시보기</span><span class="badge b-replay">다시보기</span></div>
+          <div class="state"><span class="state-l">드롭스, 면 (가정)</span><span class="badge b-drops">드롭스</span></div>
+        </div>
+        <div class="specs">
+          <span class="spec">높이 20, radius 4, 12 / 20 / 700</span>
+          <span class="spec">다시보기 Nemony 11</span>
+          <span class="spec">시청자 수 면 검정 80%</span>
+          <span class="spec">드롭스 글자 brand-text-weak</span>
+          <template data-theme-variant="dark"><span class="spec">드롭스 글자 brand-neon</span></template>
+        </div>
+      </div>
+
+      <div class="cell">
+        <p class="cell-k">가로형 추천 카드, 카테고리 카드 (치수 가정)</p>
+        <p class="catalog-dummy">영상 제목, 채널명, 다시보기 배지, 재생시간, 카테고리 이름, 시청자 수는 레이아웃 시연용 더미 데이터입니다.</p>
+        <div class="hcard"><div class="thumb"><div class="thumb-badges"><span class="badge b-replay">다시보기</span><span class="badge b-view">48:12</span></div>썸네일 자리</div><div><h3>가로형 카드 제목은 시스템 서체로 두 줄까지</h3><p>채널 F</p></div></div>
+        <div class="cats">
+          <div class="cat"><div class="cat-poster">[포스터 자리]</div><b>카테고리 1</b><span>시청자 3.1만</span></div>
+          <div class="cat"><div class="cat-poster">[포스터 자리]</div><b>카테고리 2</b><span>시청자 8,240</span></div>
+          <div class="cat"><div class="cat-poster">[포스터 자리]</div><b>카테고리 3</b><span>시청자 912</span></div>
+        </div>
+        <div class="specs">
+          <span class="spec">가로형 제목 15 / 21 / 500 시스템 서체</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dsec" aria-labelledby="s4">
+    <div class="dsec-head"><span class="dsec-idx">04</span><h2 id="s4">채팅과 모달</h2></div>
+    <div class="cells">
+      <div class="cell">
+        <p class="cell-k">chat-input, 라이트 색, 전송 버튼, 헤더 높이 (가정)</p>
+        <template data-theme-variant="dark"><p class="cell-k">chat-input, 전송 버튼과 헤더 높이 (가정)</p></template>
+        <p class="catalog-dummy">채팅 닉네임과 메시지는 더미 데이터입니다.</p>
         <div class="chat">
           <div class="chat-h">채팅</div>
           <div class="chat-b">
@@ -259,14 +612,119 @@
           </div>
           <div class="chat-in"><span>채팅을 입력해주세요</span><div class="chat-send">전송</div></div>
         </div>
+        <div class="in-stack">
+          <div class="state full"><span class="state-l">포커스, 오버레이 (가정)</span><div class="chat-in solo is-focus"><span>채팅을 입력해주세요</span><div class="chat-send">전송</div></div></div>
+          <div class="state full"><span class="state-l">활성, 2px 테두리 (색 가정)</span><div class="chat-in solo is-act"><span>반가워요</span><div class="chat-send">전송</div></div></div>
+        </div>
+        <div class="specs">
+          <span class="spec">입력 42, radius 8, 패딩 6</span>
+          <span class="spec">메시지 14 / 20 / 400, 행 28</span>
+          <span class="spec">헤더 Nemony 15 / 18</span>
+        </div>
       </div>
-    </section>
 
-    <section class="sec">
-      <p class="cell-k">모달</p>
-      <div class="modal"><h4>알림 설정</h4><p>모달 본문 문구 예시입니다.</p><span class="btn btn-1">확인</span></div>
-    </section>
-  </main>
+      <div class="cell">
+        <p class="cell-k">modal, 라이트 바탕 (가정)</p>
+        <template data-theme-variant="dark"><p class="cell-k">modal</p></template>
+        <div class="modal"><h4>알림 설정</h4><p>모달 본문 문구 예시입니다.</p><span class="btn btn-1">확인</span></div>
+        <div class="specs">
+          <span class="spec">폭 450, radius 12, shadow-level-6</span>
+          <span class="spec">확인 버튼 44, radius 8</span>
+          <span class="spec">제목 22 / 30 / 700 (가정)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dsec" aria-labelledby="s5">
+    <div class="dsec-head"><span class="dsec-idx">05</span><h2 id="s5">화면</h2></div>
+    <div class="cells">
+      <div class="cell wide">
+        <p class="cell-k">라이브 시청, 데스크톱 (채팅 폭, 제목 크기, 전송 버튼, 라이트 구독 버튼과 채팅 색 가정)</p>
+        <template data-theme-variant="dark"><p class="cell-k">라이브 시청, 데스크톱 (채팅 폭, 제목 크기, 전송 버튼 가정)</p></template>
+        <p class="catalog-dummy">방송 제목, 채널명, 시청자 수, 팔로워 수, 다음 방송 일정, 태그, LIVE 배지, 드롭스 배지, 채팅 닉네임과 메시지는 레이아웃 시연용 더미 데이터입니다.</p>
+        <div class="screen-desk" role="img" aria-label="라이브 시청 화면 목업">
+          <div class="dk-hdr">
+            <img src="/logos/chzzk.png" alt="">
+            <span class="hdr-search"><span class="hdr-search-t">채널, 라이브, 동영상 검색</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg></span>
+            <span class="btn btn-out">로그인</span>
+          </div>
+          <div class="dk-body">
+            <div class="dk-main">
+              <div class="player"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">3,402명</span><span class="badge b-drops">드롭스</span></div>[플레이어 자리]</div>
+              <h3 class="dk-title">방송 제목 자리 — 오늘도 끝까지 달립니다</h3>
+              <div class="dk-ch">
+                <span class="dk-av">G</span>
+                <div class="dk-who"><b>채널 G</b><span>팔로워 1.2만명</span><span class="dk-next">다음 방송 11.15 20:00</span></div>
+                <div class="dk-act"><span class="btn btn-1">팔로우</span><span class="btn btn-3">구독</span></div>
+              </div>
+              <div class="tags"><span class="tag is-em">드롭스</span><span class="tag">게임 이름</span><span class="tag">한국어</span></div>
+            </div>
+            <div class="dk-chat">
+              <div class="chat">
+                <div class="chat-h">채팅</div>
+                <div class="chat-b">
+                  <div class="msg"><b>시청자4</b>오늘도 왔어요</div>
+                  <div class="msg"><b>시청자5</b>드롭스 받으러 왔습니다</div>
+                  <div class="msg"><b>시청자6</b>화질 좋네요</div>
+                  <div class="msg"><b>시청자7</b>ㅋㅋㅋ</div>
+                  <div class="msg"><b>시청자8</b>다음 판도 화이팅</div>
+                </div>
+                <div class="chat-in"><span>채팅을 입력해주세요</span><div class="chat-send">전송</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cell">
+        <p class="cell-k">홈, 모바일 390 다크 전용 (치수와 하단 탭 가정)</p>
+        <p class="catalog-dummy">방송 제목, 채널명, 시청자 수, LIVE 배지, 드롭스 배지, 태그는 레이아웃 시연용 더미 데이터입니다.</p>
+        <div class="phone" role="img" aria-label="모바일 홈 목업">
+          <div class="screen m-dark">
+            <div class="m-hdr"><img src="/logos/chzzk.png" alt=""><span class="m-ics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></span></div>
+            <div class="m-chips"><span class="tab is-on">전체</span><span class="tab">게임</span><span class="tab">스포츠</span><span class="tab">엔터</span><span class="tab">기타</span></div>
+            <div class="m-list">
+              <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">5,310명</span><span class="badge b-drops">드롭스</span></div>썸네일 자리</div><h3>모바일 방송 제목 자리</h3><p>채널 H</p><div class="tags"><span class="tag is-em">드롭스</span><span class="tag">게임 이름</span></div></div>
+              <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">640명</span></div>썸네일 자리</div><h3>두 번째 방송 제목 자리</h3><p>채널 I</p></div>
+            </div>
+            <div class="m-bar">
+              <span class="is-cur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-6 8 6v8H4z"/></svg>홈</span>
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>카테고리</span>
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg>팔로잉</span>
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="9" r="4"/><path d="M4 20c1.5-4 4.5-5 8-5s6.5 1 8 5"/></svg>내 정보</span>
+            </div>
+          </div>
+        </div>
+        <div class="specs">
+          <span class="spec">비활성 탭 글자 dark-text-weak</span>
+        </div>
+      </div>
+
+      <div class="cell">
+        <p class="cell-k">채널 머리, 구독 티어 배지 (치수와 라이트 구독 버튼 가정)</p>
+        <template data-theme-variant="dark"><p class="cell-k">채널 머리, 구독 티어 배지 (치수 가정)</p></template>
+        <p class="catalog-dummy">채널명, 팔로워 수, LIVE 배지, 구독 티어, 구독 선물 배지는 레이아웃 시연용 더미 데이터입니다.</p>
+        <div class="ch">
+          <span class="ch-av">J</span>
+          <div class="ch-who">
+            <p class="ch-name">채널 J <span class="badge b-live">LIVE</span></p>
+            <p class="ch-meta">팔로워 4.8만명</p>
+          </div>
+          <div class="ch-act"><span class="btn btn-1">팔로우</span><span class="btn btn-3">구독</span></div>
+        </div>
+        <div class="states">
+          <div class="state"><span class="state-l">구독 티어 1</span><span class="badge b-tier1">티어 1</span></div>
+          <div class="state"><span class="state-l">구독 티어 2</span><span class="badge b-tier2">티어 2</span></div>
+          <div class="state"><span class="state-l">구독 선물</span><span class="badge b-replay">구독 선물</span></div>
+        </div>
+        <div class="specs">
+          <span class="spec">채널명 28 / 36 / 700 (가정)</span>
+          <span class="spec">티어 면 subscribe-tier-1, subscribe-tier-2</span>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>
 </body>
 </html>
