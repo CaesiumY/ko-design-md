@@ -8,8 +8,9 @@ TanStack Start 사이트(getdesign.kr)가 이를 서빙하고, `/design-md` 스�
 
 ```bash
 pnpm gates              # CI build 잡이 pnpm build 전에 돌리는 검사 전부를 같은 순서로.
-                        # 첫 실패에서 멈추고 그 단계 이름을 찍는다. 목록은 src/lib/gates.ts,
-                        # CI 와 어긋나면 pnpm test 가 막는다. 날짜 검사의 기준은 origin/main
+                        # 첫 실패에서 멈추고 그 단계 이름과 그 단계가 막는 것을 찍는다.
+                        # 단계와 설명은 src/lib/gates.ts 의 GATE_STEPS, CI 에 그 밖의 단계가
+                        # 끼거나 목록이 어긋나면 pnpm test 가 막는다. 날짜 검사의 기준은 origin/main
 pnpm build              # build:og + vite build
 pnpm test:http          # pnpm build 뒤 빌드된 Nitro 서버 HTTP 회귀 검사
 pnpm test:e2e           # E2E 스모크 — 빌드된 서버 + Chromium, CI 는 별도 e2e 잡
@@ -17,7 +18,8 @@ pnpm validate:spec      # 로컬 진단용 출력. 실제 게이트는 pnpm test
                         # google-designmd-corpus.test.ts (같은 공식 린터를 vitest 로)
 ```
 
-`pnpm gates` 의 단계는 하나씩도 돌릴 수 있다(`pnpm test`, `pnpm validate:catalog` 등, 목록은 `src/lib/gates.ts`).
+`pnpm gates` 의 단계는 하나씩도 돌릴 수 있다(`pnpm test`, `pnpm validate:catalog` 등). `pnpm test` 는
+`.claude/worktrees`, `.claude/cache`, `e2e/` 를 제외한다.
 
 단일 파일 검사: `pnpm validate:draft <file.md> [--slug X --expected-logo <url> --lang ko]`,
 `pnpm validate:previews --slug <slug> --verbose`. **검증기 메시지가 막는 이유와 고치는 법을 말한다** — 막히면

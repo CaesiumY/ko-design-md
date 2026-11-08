@@ -10,9 +10,13 @@ import {
 import type { GateStep } from "./gates"
 
 const STEPS: ReadonlyArray<GateStep> = [
-  { script: "typecheck" },
-  { script: "lint" },
-  { script: "check:last-updated", args: ["--base", "origin/main"] },
+  { script: "typecheck", guards: "types" },
+  { script: "lint", guards: "lint rules" },
+  {
+    script: "check:last-updated",
+    args: ["--base", "origin/main"],
+    guards: "dates",
+  },
 ]
 
 function harness(codes: Record<string, number>) {
@@ -46,6 +50,11 @@ describe("runGates", () => {
     expect(failed).toHaveLength(1)
     expect(failed[0]).toContain("lint")
     expect(out.some((l) => /passed/.test(l))).toBe(false)
+  })
+
+  it("says what the failing step guards, so the reader knows what broke", () => {
+    const { out } = harness({ lint: 1 })
+    expect(out.find((l) => /FAILED/.test(l))).toContain("lint rules")
   })
 
   it("treats a step with no exit code (killed by a signal) as a failure", () => {
@@ -105,6 +114,33 @@ describe("ciPreBuildScripts", () => {
   it("throws when the build job has no `pnpm build` step to stop at", () => {
     const noBuild = WORKFLOW.replace("run: pnpm build", "run: pnpm vite")
     expect(() => ciPreBuildScripts(noBuild)).toThrow(/pnpm build/)
+  })
+
+  it("throws on a pre-build step that runs something other than a pnpm script", () => {
+    const node = WORKFLOW.replace(
+      "run: pnpm typecheck",
+      "run: node scripts/some-check.mjs"
+    )
+    expect(() => ciPreBuildScripts(node)).toThrow(/some-check\.mjs/)
+  })
+
+  it("throws on a pre-build action that is not one of the known setup actions", () => {
+    const action = WORKFLOW.replace(
+      "      - name: Type check\n",
+      "      - uses: some/lint-action@v1\n      - name: Type check\n"
+    )
+    expect(() => ciPreBuildScripts(action)).toThrow(/some\/lint-action/)
+  })
+
+  it("lets the setup actions through", () => {
+    const setup = WORKFLOW.replace(
+      "      - uses: actions/checkout@v7\n",
+      "      - uses: actions/checkout@v7\n      - uses: pnpm/action-setup@v6\n      - uses: actions/setup-node@v7\n"
+    )
+    expect(ciPreBuildScripts(setup)).toEqual([
+      "typecheck",
+      "check:last-updated",
+    ])
   })
 
   it("throws on a pnpm line it cannot read as one script, instead of skipping it", () => {

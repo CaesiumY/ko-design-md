@@ -14,6 +14,8 @@ export interface GateStep {
   /** A package.json script name, run as `pnpm run <script>`. */
   script: string
   args?: ReadonlyArray<string>
+  /** What the step keeps out, printed when it fails. */
+  guards: string
 }
 
 /**
@@ -22,18 +24,51 @@ export interface GateStep {
  * and the contrast numbers are only canonical when CI records them (ADR 0007).
  */
 export const GATE_STEPS: ReadonlyArray<GateStep> = [
-  { script: "typecheck" },
-  { script: "lint" },
-  { script: "format:check" },
-  { script: "test" },
-  { script: "validate:catalog" },
-  { script: "validate:previews" },
+  { script: "typecheck", guards: "TypeScript 타입 오류" },
+  { script: "lint", guards: "ESLint 규칙 위반" },
+  {
+    script: "format:check",
+    guards:
+      "Prettier 포맷 어긋남(Windows 에서만 실패하면 CLAUDE.md 의 CRLF 판별부터)",
+  },
+  {
+    script: "test",
+    guards:
+      "vitest 전체(.claude/worktrees, .claude/cache, e2e 는 제외). 계약 테스트와 기준선 대조 포함",
+  },
+  {
+    script: "validate:catalog",
+    guards: "services/*.md 전수의 frontmatter, 섹션 순서, OKLCH, 인용 무결성",
+  },
+  {
+    script: "validate:previews",
+    guards:
+      "public/preview/*/ 전수의 구조(block), 반응형과 움직임 줄이기 휴리스틱(warn)",
+  },
   // CI passes the PR's merge base (or the commit a push replaced). Locally
   // `origin/main` is that base; when it is missing the script fails loudly and
   // says to `git fetch origin main`, so the gate cannot pass on zero files.
-  { script: "check:last-updated", args: ["--base", "origin/main"] },
-  { script: "tokens:check" },
-  { script: "audit:oklch" },
+  {
+    script: "check:last-updated",
+    args: ["--base", "origin/main"],
+    guards: "이 브랜치가 바꾼 services/*.md 의 last_updated 가 최신인지",
+  },
+  {
+    script: "tokens:check",
+    guards: "services/*.tokens.json 이 소스 md 와 같은지",
+  },
+  {
+    script: "audit:oklch",
+    guards: "OKLCH 와 병기 hex 의 일치, 프리뷰가 md 정의와 어긋나지 않는지",
+  },
+]
+
+// Steps that only prepare the runner. Anything else before `pnpm build` must be
+// a check `pnpm gates` can run, so it is read or refused, never skipped.
+const SETUP_ACTIONS = [
+  "actions/checkout",
+  "pnpm/action-setup",
+  "actions/setup-node",
 ]
 
 /** `pnpm <script> [args]` on one line, with no chaining or redirection. */
@@ -42,15 +77,17 @@ const ONE_PNPM_SCRIPT = /^pnpm\s+([\w:.-]+)(?:\s+[^&|;<>\n]*)?$/
 /**
  * The package.json scripts CI's build job runs before `pnpm build`, in order.
  *
- * `pnpm install` is setup, not a check, and is skipped. Anything that mentions
- * pnpm but is not a single `pnpm <script>` line throws rather than being
- * skipped — a step this reader silently ignored would be a step `pnpm gates`
- * silently lacks. So does a build job with no `pnpm build`, which would
- * otherwise read every later step as a pre-build one.
+ * The setup actions in `SETUP_ACTIONS` and `pnpm install` prepare the runner
+ * and are skipped. Every other step before `pnpm build` must be a single
+ * `pnpm <script>` line; anything else (another action, a `node` or shell
+ * command, a chained line) throws rather than being skipped, because a step
+ * this reader silently ignored would be a step `pnpm gates` silently lacks.
+ * So does a build job with no `pnpm build`, which would otherwise read every
+ * later step as a pre-build one.
  */
 export function ciPreBuildScripts(workflowYaml: string): Array<string> {
   const doc = parse(workflowYaml) as {
-    jobs?: { build?: { steps?: Array<{ run?: string }> } }
+    jobs?: { build?: { steps?: Array<{ run?: string; uses?: string }> } }
   }
   const steps = doc.jobs?.build?.steps
   if (!Array.isArray(steps)) {
@@ -58,7 +95,18 @@ export function ciPreBuildScripts(workflowYaml: string): Array<string> {
   }
   const scripts: Array<string> = []
   for (const step of steps) {
-    if (typeof step.run !== "string" || !/\bpnpm\b/.test(step.run)) continue
+    if (typeof step.uses === "string") {
+      if (SETUP_ACTIONS.includes(step.uses.split("@")[0])) continue
+      throw new Error(
+        `CI build step uses \`${step.uses}\`, which \`pnpm gates\` cannot run; ` +
+          "make the check a pnpm script, or add the action to SETUP_ACTIONS if it only prepares the runner"
+      )
+    }
+    if (typeof step.run !== "string") {
+      throw new Error(
+        "CI build step has neither `run` nor `uses`, so it cannot be mirrored"
+      )
+    }
     const line = step.run.trim()
     const match = ONE_PNPM_SCRIPT.exec(line)
     if (!match) {
@@ -124,7 +172,9 @@ export function runGates(
     const code = exec(step)
     if (code !== 0) {
       const shown = code === null ? "no exit code" : `exit ${code}`
-      out(`[gates] FAILED at step: ${describeStep(step)} (${shown})`)
+      out(
+        `[gates] FAILED at step: ${describeStep(step)} (${shown}) — ${step.guards}`
+      )
       return code === null ? 1 : code
     }
   }
