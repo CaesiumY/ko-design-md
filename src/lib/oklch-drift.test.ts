@@ -533,6 +533,64 @@ colors:
     ])
   })
 
+  it("does not let a later local selector hide a wrong root value", () => {
+    // The page renders the `:root` value everywhere `.chip` is not.
+    const chains = roleChainsForSlug(roles, "socar")
+    const html = `:root { --sf-text-primary: var(--sf-gray-600); }
+       .chip { --sf-text-primary: var(--sf-gray-800); }`
+    expect(findRoleChainDrift(html, chains).map((f) => f.name)).toEqual([
+      "sf-text-primary",
+    ])
+    expect(roleChainCoverage(html, chains)).toEqual({
+      chained: 1,
+      literal: 0,
+      scoped: 1,
+    })
+  })
+
+  it("does not read a local override as the theme's value", () => {
+    // An inverse band inside a light page is a legitimate re-wiring.
+    const chains = roleChainsForSlug(roles, "socar")
+    const html = `:root { --sf-text-primary: var(--sf-gray-800); }
+       .inverse { --sf-text-primary: var(--sf-gray-100); }
+       [data-theme="dark"] .card { --sf-bg-base: var(--sf-gray-100); }`
+    expect(findRoleChainDrift(html, chains)).toEqual([])
+    expect(roleChainCoverage(html, chains).scoped).toBe(2)
+  })
+
+  it("does not let a conditional root block hide a wrong base value", () => {
+    // Codex's socar reproduction: the base is wrong below 1000px.
+    const chains = roleChainsForSlug(roles, "socar")
+    const html = `:root { --sf-text-primary: var(--sf-gray-100); }
+       @media (min-width: 1000px) { :root { --sf-text-primary: var(--sf-gray-800); } }`
+    expect(findRoleChainDrift(html, chains)).toEqual([
+      {
+        name: "sf-text-primary",
+        scope: "light",
+        preview: "var(--sf-gray-100)",
+        expected: "var(--sf-gray-800)",
+      },
+    ])
+  })
+
+  it("reads `html`, attribute and `:where()` root selectors as theme roots", () => {
+    const chains = roleChainsForSlug(roles, "socar")
+    for (const selector of [
+      "html",
+      ":root, html",
+      ':root[data-theme="light"]',
+      ":root:where(.x)",
+    ]) {
+      expect(
+        findRoleChainDrift(
+          `${selector} { --sf-text-primary: var(--sf-gray-600); }`,
+          chains
+        ).length,
+        selector
+      ).toBe(1)
+    }
+  })
+
   it("renames palette steps by the slug's own alias rules", () => {
     // bezier's preview keeps role names bare and prefixes its palette `c-`.
     const bezier = `---
@@ -583,7 +641,7 @@ colors:
          [data-theme="dark"] { --sf-bg-base: var(--sf-gray-800); }`,
         chains
       )
-    ).toEqual({ chained: 2, literal: 1 })
+    ).toEqual({ chained: 2, literal: 1, scoped: 0 })
   })
 })
 

@@ -193,23 +193,29 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
 
 // Role properties the role-chain check reads, per slug, EXACT (#660): `chained`
 // are wired by one `var()` and compared, `literal` are written as values and
-// left out. Light and dark scopes count separately, last declaration only.
+// left out, both counted once per scope at its last theme-root declaration;
+// `scoped` are role declarations outside a theme-root block (`.inverse { … }`,
+// `:root` inside `@media`), each counted, which the check neither compares nor
+// lets hide the root value. None of the catalogue's previews writes one today.
 // Slugs absent here compare none: teamsparta, greeting and seed-design carry
 // reference rows, but their previews wire roles under names of their own
 // (`--text`, `--success`) that no leading-substring rule reaches, and toss's
 // two rows (`primary`, `greyBackground`) are not declared in its preview.
-const ROLE_CHAINS: Record<string, { chained: number; literal: number }> = {
-  banksalad: { chained: 203, literal: 0 },
+const ROLE_CHAINS: Record<
+  string,
+  { chained: number; literal: number; scoped: number }
+> = {
+  banksalad: { chained: 203, literal: 0, scoped: 0 },
   // The 43 literals are its opacity roles, written `rgba(…)`.
-  bezier: { chained: 9, literal: 43 },
-  codeit: { chained: 13, literal: 3 },
+  bezier: { chained: 9, literal: 43, scoped: 0 },
+  codeit: { chained: 13, literal: 3, scoped: 0 },
   // GDS and likelion publish no dark palette; the previews' dark halves give
   // those roles literal dark values of their own.
-  gmarket: { chained: 12, literal: 12 },
-  likelion: { chained: 11, literal: 10 },
-  ridi: { chained: 61, literal: 1 },
-  socar: { chained: 48, literal: 0 },
-  "vapor-ui": { chained: 69, literal: 1 },
+  gmarket: { chained: 12, literal: 12, scoped: 0 },
+  likelion: { chained: 11, literal: 10, scoped: 0 },
+  ridi: { chained: 61, literal: 1, scoped: 0 },
+  socar: { chained: 48, literal: 0, scoped: 0 },
+  "vapor-ui": { chained: 69, literal: 1, scoped: 0 },
 }
 
 describe("oklch-drift — catalogue coverage", () => {
@@ -308,7 +314,7 @@ describe("oklch-drift — catalogue coverage", () => {
               roleChainCoverage(lightScope(slug).html, chainsFor(slug)),
             ] as const
         )
-        .filter(([, c]) => c.chained + c.literal > 0)
+        .filter(([, c]) => c.chained + c.literal + c.scoped > 0)
     )
     expect(measured).toEqual(ROLE_CHAINS)
   })
@@ -333,16 +339,31 @@ describe("oklch-drift — catalogue coverage", () => {
       const [role, [step]] = wired
       const other = [...steps].find((s) => s !== step)
       expect(other, `${slug}: a second palette step`).toBeDefined()
-      const mutated = html.replace(
-        new RegExp(`(--${role}:\\s*)var\\(--${step}\\)`, "g"),
-        `$1var(--${other})`
-      )
-      const found = findRoleChainDrift(mutated, chains)
-      expect(found.length, `${slug}: --${role} repointed`).toBeGreaterThan(0)
-      expect(
-        found.every((f) => f.name === role),
-        `${slug}: only --${role} reported`
-      ).toBe(true)
+      const declared = new RegExp(`(--${role}:\\s*)var\\(--${step}\\)`)
+      const repoint = `$1var(--${other})`
+      // A correct wiring restated where it holds only for part of the page,
+      // which must not hide the wrong base value.
+      const localFix = `<style>.chip { --${role}: var(--${step}); }
+        @media (min-width: 1000px) { :root { --${role}: var(--${step}); } }</style>`
+      const mutations = {
+        // Every declaration of it, in both scopes.
+        all: html.replace(new RegExp(declared.source, "g"), repoint),
+        // Only the earlier one, the light theme root.
+        earlier: html.replace(declared, repoint),
+        // The earlier one, with a scoped and a conditional fix after it.
+        "earlier + local fix": html.replace(declared, repoint) + localFix,
+      }
+      for (const [kind, mutated] of Object.entries(mutations)) {
+        const found = findRoleChainDrift(mutated, chains)
+        expect(
+          found.length,
+          `${slug} (${kind}): --${role} repointed`
+        ).toBeGreaterThan(0)
+        expect(
+          found.every((f) => f.name === role),
+          `${slug} (${kind}): only --${role} reported`
+        ).toBe(true)
+      }
       reached.push(slug)
     }
     expect(reached).toEqual(

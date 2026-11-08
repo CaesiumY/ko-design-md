@@ -474,11 +474,21 @@ export interface RoleChainFinding extends DriftFinding {
  * `var()` becomes a literal, or a role newly declared as a literal, moves a
  * pinned number.
  *
- * Per scope, the LAST declaration of a property is the one compared: what the
- * cascade renders for the theme's custom properties. codeit's merged preview
- * restates its light tokens under the dark selector and then overrides them in
- * a second dark block; the first, overridden declaration never paints, so
- * reading it would accuse a correct preview.
+ * Only THEME-ROOT declarations are the theme's value: a top-level block whose
+ * every selector is the document root (`:root`, `html`, optionally with a
+ * `[data-theme]` attribute or a `:where(…)`) or the bare `[data-theme="dark"]`
+ * selector, with no `@media`, `@supports` or other at-rule around it. A role
+ * redeclared anywhere else (`.inverse { … }`, or `:root` inside `@media`) holds
+ * only for part of the page, so it is neither compared nor allowed to hide the
+ * root value; `roleChainCoverage` counts it as `scoped`.
+ *
+ * Among theme-root declarations of one property in one scope, the last in the
+ * document is compared. codeit's merged preview restates its light tokens
+ * under the dark selector and then overrides them in a second dark block of the
+ * same selector; the first never paints there. This is the cascade only for
+ * root selectors of equal weight, which is what the catalogue writes: a base
+ * `:root` restatement placed after the dark block would win in the dark theme
+ * too, and is not modelled.
  */
 export function findRoleChainDrift(
   previewHtml: string,
@@ -488,7 +498,7 @@ export function findRoleChainDrift(
   for (const { name, dark, target, expected } of roleDeclarations(
     previewHtml,
     chains
-  )) {
+  ).compared) {
     if (target === undefined || expected.includes(target)) continue
     findings.push({
       name,
@@ -502,48 +512,57 @@ export function findRoleChainDrift(
 
 /**
  * How many role properties the role-chain check compares (`chained`, wired by
- * one `var()`) and how many it leaves out as literals (`literal`), counting
- * each scope's last declaration once.
+ * one `var()`), how many theme-root ones it leaves out as literals (`literal`),
+ * counting each scope's last theme-root declaration once, and how many role
+ * declarations sit outside a theme-root block (`scoped`), each counted.
  */
 export function roleChainCoverage(
   previewHtml: string,
   chains: RoleChains
-): { chained: number; literal: number } {
-  let chained = 0
-  let literal = 0
-  for (const { target } of roleDeclarations(previewHtml, chains)) {
-    if (target === undefined) literal++
-    else chained++
-  }
-  return { chained, literal }
+): { chained: number; literal: number; scoped: number } {
+  const { compared, scoped } = roleDeclarations(previewHtml, chains)
+  const chained = compared.filter((d) => d.target !== undefined).length
+  return { chained, literal: compared.length - chained, scoped }
 }
 
 /**
- * Each scope's last declaration of a role property `chains` names, with the
- * property its `var()` points at (`undefined` for a literal).
+ * Each scope's last theme-root declaration of a role property `chains` names,
+ * with the property its `var()` points at (`undefined` for a literal), and the
+ * number of role declarations outside theme-root blocks.
  */
 function roleDeclarations(
   previewHtml: string,
   chains: RoleChains
-): Array<
-  Declaration & {
-    target: string | undefined
-    expected: ReadonlyArray<string>
-  }
-> {
+): {
+  compared: Array<
+    Declaration & {
+      target: string | undefined
+      expected: ReadonlyArray<string>
+    }
+  >
+  scoped: number
+} {
+  const expectedFor = (d: Declaration): ReadonlyArray<string> | undefined =>
+    (d.dark ? chains.dark : chains.light).get(d.name)
   const last = new Map<string, Declaration>()
+  let scoped = 0
   for (const d of declarations(previewHtml)) {
+    if (expectedFor(d) === undefined) continue
+    if (!d.themeRoot) {
+      scoped++
+      continue
+    }
     const key = `${d.dark ? "dark" : "light"} ${d.name}`
     // Delete first so the map's order is where each property is last declared.
     last.delete(key)
     last.set(key, d)
   }
-  return [...last.values()].flatMap((d) => {
-    const expected = (d.dark ? chains.dark : chains.light).get(d.name)
-    if (expected === undefined) return []
-    const target = /^var\(\s*--([\w-]+)\s*\)$/.exec(d.value)?.[1]
-    return [{ ...d, target, expected }]
-  })
+  const compared = [...last.values()].map((d) => ({
+    ...d,
+    target: /^var\(\s*--([\w-]+)\s*\)$/.exec(d.value)?.[1],
+    expected: expectedFor(d) ?? [],
+  }))
+  return { compared, scoped }
 }
 
 /** One custom-property declaration in a preview's stylesheets. */
@@ -553,6 +572,26 @@ interface Declaration {
   value: string
   /** Inside a `[data-theme="dark"]` block. */
   dark: boolean
+  /** In a top-level theme-root block (see findRoleChainDrift). */
+  themeRoot: boolean
+}
+
+/**
+ * A selector list every member of which names the document root for a theme:
+ * `:root`, `html`, `[data-theme="dark"]`, `html[data-theme="light"]`,
+ * `:root:where(…)` and the like.
+ */
+function isThemeRoot(prelude: string): boolean {
+  if (prelude === "" || prelude.startsWith("@")) return false
+  return prelude
+    .split(",")
+    .map((s) => s.trim())
+    .every(
+      (s) =>
+        /^(?::root|html)?(?:\[data-theme=(["']?)[\w-]+\1\])?(?::where\([^()]*\))?$/.test(
+          s
+        ) && s !== ""
+    )
 }
 
 /** Every custom-property declaration in a preview's stylesheets, in order. */
@@ -570,28 +609,45 @@ function declarations(previewHtml: string): Array<Declaration> {
 
   // Walk braces and declarations in document order. Deciding scope per LINE is
   // not enough: a block that opens and closes on one line would have already
-  // reset by the time its own declarations were inspected.
-  const TOKEN = /\[data-theme=["']?dark|\{|\}|--([\w-]+):([^;{}]*)/g
+  // reset by the time its own declarations were inspected. `;` is a token only
+  // so that the text before each `{` — its selector — can be read back.
+  const TOKEN = /\[data-theme=["']?dark|\{|\}|;|--([\w-]+):([^;{}]*)/g
 
   const out: Array<Declaration> = []
-  let depth = 0
   let pendingDark = false
   // Depth at which the enclosing dark block opened, or null when not in one.
   let darkDepth: number | null = null
+  // The selector (or at-rule prelude) of each open block, outermost first.
+  const open: Array<string> = []
+  // Where the text since the last `{`, `}` or `;` starts.
+  let segment = 0
 
   for (const m of css.matchAll(TOKEN)) {
     const tok = m[0]
+    const end = m.index + tok.length
     if (tok === "{") {
-      depth++
+      open.push(
+        css
+          .slice(segment, m.index)
+          .replace(/\s+/g, " ")
+          .replace(/\s*([[\]=,()])\s*/g, "$1")
+          .trim()
+      )
       if (pendingDark) {
-        darkDepth = depth
+        darkDepth = open.length
         pendingDark = false
       }
+      segment = end
       continue
     }
     if (tok === "}") {
-      if (darkDepth === depth) darkDepth = null
-      depth--
+      if (darkDepth === open.length) darkDepth = null
+      open.pop()
+      segment = end
+      continue
+    }
+    if (tok === ";") {
+      segment = end
       continue
     }
     if (tok.startsWith("[")) {
@@ -599,7 +655,12 @@ function declarations(previewHtml: string): Array<Declaration> {
       pendingDark = true
       continue
     }
-    out.push({ name: m[1], value: m[2].trim(), dark: darkDepth !== null })
+    out.push({
+      name: m[1],
+      value: m[2].trim(),
+      dark: darkDepth !== null,
+      themeRoot: open.length === 1 && isThemeRoot(open[0]),
+    })
   }
   return out
 }
