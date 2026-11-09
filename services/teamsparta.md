@@ -89,7 +89,7 @@ colors:
   ## Bundle-only — 핸드오프 번들 색 가운데 발행 패키지에 대응 값이 없는 것만 (Colors 절 감사 메모 참조)
   interaction-blue: oklch(0.429 0.297 264)   # 번들 전용 — links, ghost action, focus ring source. 발행 원시 팔레트에 같은 값이 없다(가장 가까운 deepBlue[80] 도 ΔE 0.106). sRGB 색역 밖 — 브라우저가 클리핑하며 라이브는 더 낮은 채도를 쓴다(Colors 절 감사 메모 참조)
   focus-ring: oklch(0.429 0.297 264 / 0.32)   # 번들 전용 — interaction-blue 값. 발행 패키지에 포커스 링 토큰이 없다. sRGB 색역 밖(Colors 절 감사 메모 참조)
-  ## Stack palette — @teamsparta/stack-tokens primitiveColor (역할 계층·컴포넌트 토큰·컴포넌트 스펙이 가리키는 단계만)
+  ## Stack palette — @teamsparta/stack-tokens primitiveColor (역할 계층, 컴포넌트 토큰, 컴포넌트 스펙이 가리키는 단계만)
   neutral-0: oklch(1.000 0.000 0.0)   # #FFFFFF — stack-tokens neutral[0]
   neutral-5: oklch(0.982 0.001 286.4)   # #F9F9FA — stack-tokens neutral[5]
   neutral-10: oklch(0.959 0.003 286.3)   # #F1F1F3 — stack-tokens neutral[10]
@@ -303,7 +303,7 @@ components:
     textColor: "{colors.text-secondary}"
   calendar-date-cell-range-middle-hover:
     backgroundColor: "{colors.neutral-30}"
-  ## Bundle components — 패키지에 컴포넌트 토큰이 없어 번들 스펙을 발행 값에 다시 건 것. 링크와 ghost 글자의 파랑(interaction-blue)만 번들 값으로 남는다
+  ## Bundle components — 패키지에 컴포넌트 토큰이 없어 번들 스펙을 발행 값에 다시 건 것. ghost 버튼과 blue 배지 글자의 파랑(interaction-blue)만 번들 값으로 남는다
   button-ghost:
     textColor: "{colors.interaction-blue}"
   button-ghost-hover:
@@ -331,7 +331,7 @@ fonts:
 
 # 팀스파르타 (스파르타클럽) — design.md
 
-> 팀스파르타가 운영하는 스파르타클럽 학습 생태계의 인증 대시보드 디자인 시스템이다. 본 문서는 Claude Design handoff bundle의 `스파르타클럽 Design System` README, `colors_and_type.css`, preview cards, dashboard UI kit, chat transcript를 1차 출처로 합성했다. 공개 공식 사이트와 내일배움캠프, 기업교육, 커리어 surface는 서비스 범위와 브랜드 맥락 확인용 보조 출처로 사용했다 [src:1][src:2][src:3][src:4]. 색 역할 계층, 원시 팔레트, 컴포넌트 토큰은 팀스파르타가 npm에 발행한 토큰 패키지에서 옮겼다 [src:5]. 타이포, 스페이싱, 라운드와 컴포넌트의 크기와 여백은 이 핸드오프 번들에서 재구성했다. 색은 발행 패키지에 대응 값이 없는 번들 파랑 `interaction-blue`와 같은 값의 `focus-ring`만 번들 값으로 남겼다(Colors 절 감사 메모 참조).
+> 팀스파르타가 운영하는 스파르타클럽 학습 생태계의 인증 대시보드 디자인 시스템이다. 본 문서는 Claude Design handoff bundle의 `스파르타클럽 Design System` README, `colors_and_type.css`, preview cards, dashboard UI kit, chat transcript를 1차 출처로 합성했다. 공개 공식 사이트와 내일배움캠프, 기업교육, 커리어 surface는 서비스 범위와 브랜드 맥락 확인용 보조 출처로 사용했다 [src:1][src:2][src:3][src:4]. 색 역할 계층, 원시 팔레트, 컴포넌트 토큰은 팀스파르타가 npm에 발행한 토큰 패키지에서 옮겼다 [src:5]. 타이포, 스페이싱, 라운드와 컴포넌트의 크기와 여백은 이 핸드오프 번들에서 재구성했다. 색은 발행 패키지에 대응 값이 없는 번들 파랑 `interaction-blue`와, 같은 파랑에 투명도를 건 `focus-ring`과 본문의 `input-focus-ring`만 번들 값으로 남겼다(Colors 절 감사 메모 참조).
 
 ## Brand & Style
 
@@ -347,7 +347,7 @@ fonts:
 >
 > **`interaction-blue`는 sRGB 색역 밖이다.** `oklch(0.429 0.297 264)`를 선형 sRGB로 풀면 red 채널이 −0.0002로 음수라, 브라우저는 이 값을 그대로 그리지 못하고 클리핑한다. 라이브 사이트가 쓰는 가장 가까운 파랑은 `#003CDC` = `oklch(0.457 0.245 264)`로 **hue는 같고 채도가 낮은**(색역 안) 값이며 ΔE 0.059 떨어져 있다. 방침대로 값은 그대로 두고 차이만 적는다 — 이 토큰을 참조하는 `focus-ring`과 `input-focus-ring`도 같은 값을 쓰므로 세 줄 모두에 같은 단서를 달았다. 다만 사이드카로 실려 나가는 건 앞의 둘뿐이다 — `input-focus-ring`은 컴포넌트 절에 있어 `tokens:build`의 색 토큰 추출 대상이 아니다.
 
-색은 두 층이다. 역할 계층과 그것이 가리키는 원시 팔레트 단계는 발행 패키지에서 옮겼고, 컴포넌트 토큰이 가리키는 단계(`neutral-40`, `neutral-70`, `orange-red-80`, `green-80`)와 번들 색을 옮겨 간 단계(`sky-blue-10`, `sky-blue-90`, `deep-blue-10`)도 같은 원시 팔레트에서 왔다 [src:5]. 번들에서 온 색은 위 메모가 남긴 파랑뿐이다. 모두 catalog 규약에 따라 OKLCH로 변환해 표기한다. Blue는 interaction/info, red는 brand/CTA, sky blue는 informational active surface, neutral은 dashboard structure를 담당한다.
+색은 두 층이다. 역할 계층과 그것이 가리키는 원시 팔레트 단계는 발행 패키지에서 옮겼고, 컴포넌트 토큰이 가리키는 단계(`neutral-40`, `neutral-70`, `orange-red-80`, `green-80`)와 번들 색을 옮겨 간 단계 가운데 역할이 가리키지 않던 것(`sky-blue-10`, `sky-blue-90`, `deep-blue-10`)도 같은 원시 팔레트에서 왔다 [src:5]. 번들에서 온 색은 위 메모가 남긴 파랑뿐이다. 모두 catalog 규약에 따라 OKLCH로 변환해 표기한다. Blue는 interaction/info, red는 brand/CTA, sky blue는 informational active surface, neutral은 dashboard structure를 담당한다.
 
 ### 역할 계층
 
