@@ -33,7 +33,7 @@
     {
       "name": "mint5",
       "value": "oklch(0.854 0.154 180)",
-      "note": "#0cefd3 — 민트 테마의 `systemMainPrimary` 역할이 가리키는 단계 [src:14]",
+      "note": "#0cefd3 — `mint-systemMainPrimary` 역할이 가리키는 단계 [src:14]",
       "group": "Deployed palette"
     },
     {

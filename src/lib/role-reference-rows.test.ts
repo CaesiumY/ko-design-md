@@ -220,13 +220,27 @@ const CASES: Record<string, { title: string; check: () => void }> = {
         "baemin: table roles must be `base-*` or `mint-*`"
       ).toEqual([])
       const expected = singleReferenceRoles(tableRows)
+      // Rows point at the deployed `--ref-color-*` palette only, never at a
+      // bundle usage colour that shares its look (`red` beside `red5`): the
+      // sidecar's two `Deployed palette` groups are that palette, less the
+      // `primary` alias that sits among them as a reference.
+      const sidecar = JSON.parse(
+        readFileSync(join(SERVICES, "baemin.tokens.json"), "utf-8")
+      ) as { colors: Array<{ name: string; group: string }> }
+      const palette = new Set(
+        sidecar.colors
+          .filter(({ group }) => group.startsWith("Deployed palette"))
+          .map(({ name }) => name)
+          .filter((name) => literals.has(name))
+      )
+      expect(palette.size, "baemin: palette parsed").toBeGreaterThan(0)
       // The palette is redeclared in every dark block with dark values, so a
       // light role points at an unprefixed step and its `dark-` twin at the
       // `dark-` step — never across, and never at another role.
       const crossed = [...expected]
         .filter(
           ([key, to]) =>
-            !literals.has(to) ||
+            !palette.has(to) ||
             key.startsWith("dark-") !== to.startsWith("dark-")
         )
         .map(([key, to]) => `${key} → ${to}`)
@@ -234,7 +248,7 @@ const CASES: Record<string, { title: string; check: () => void }> = {
         crossed,
         "baemin: rows must point at the palette of their own theme"
       ).toEqual([])
-      expectRowsToMatch("baemin", expected, refs, literals, tableRows)
+      expectRowsToMatch("baemin", expected, refs, palette, tableRows)
       // A cell that is not one reference is the upstream literal as declared:
       // a hex beside its OKLCH (`audit:oklch` does not read tables, so the
       // pair is held here with its tolerances), or an `rgba(…)` / `hsla(…)` /
@@ -309,7 +323,13 @@ const CASES: Record<string, { title: string; check: () => void }> = {
             wrongNote.push(`${spans(roleCell)[0]}: ${side} ${sameStep} unnamed`)
           if (named === undefined) continue
           notes.push(named)
-          if (hex === undefined || lineHex.get(named) !== long(hex))
+          // The step belongs to the cell's own theme: `dark-gray1` and
+          // `gray12` share a hex, but a dark cell names the `dark-` one.
+          if (
+            hex === undefined ||
+            lineHex.get(named) !== long(hex) ||
+            named.startsWith("dark-") !== (side === "다크")
+          )
             wrongNote.push(`${spans(roleCell)[0]}: ${side} ${named}`)
         }
       }

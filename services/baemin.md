@@ -15,7 +15,7 @@ colors:
   mint3: oklch(0.923 0.116 178)   # #87ffe5
   mint4: oklch(0.892 0.153 180)   # #35fcdf
   primary: "{colors.mint5}"
-  mint5: oklch(0.854 0.154 180)   # #0cefd3 — 민트 테마의 `systemMainPrimary` 역할이 가리키는 단계 [src:14]
+  mint5: oklch(0.854 0.154 180)   # #0cefd3 — `mint-systemMainPrimary` 역할이 가리키는 단계 [src:14]
   mint6: oklch(0.751 0.133 185)   # #00c9b9
   mint7: oklch(0.645 0.112 189)   # #00a39b
   mint8: oklch(0.533 0.091 193)   # #007d7b
