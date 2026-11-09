@@ -507,8 +507,8 @@ export const BASELINE_TABLE = `\
 | banksalad | dark | non-text | 17 | 23 | 15 | 0 | 0 |
 | banksalad | light | text | 171 | 381 | 65 | 3 | 5 |
 | banksalad | light | non-text | 17 | 23 | 15 | 0 | 0 |
-| bezier | dark | text | 175 | 349 | 71 | 4 | 11 |
-| bezier | dark | non-text | 42 | 45 | 11 | 4 | 1 |
+| bezier | dark | text | 175 | 349 | 70 | 5 | 11 |
+| bezier | dark | non-text | 42 | 45 | 10 | 2 | 1 |
 | bezier | light | text | 175 | 349 | 54 | 9 | 11 |
 | bezier | light | non-text | 41 | 44 | 18 | 9 | 1 |
 | chzzk | dark | text | 139 | 300 | 9 | 1 | 3 |

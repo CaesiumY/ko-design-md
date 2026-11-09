@@ -453,6 +453,10 @@ cd "${repo_root}" && pnpm test src/lib/oklch-drift-corpus.test.ts
 
 That gate compares each preview's `--custom-property: oklch(…)` declarations against the `name: oklch(…)` definitions in `services/{slug}.md`, by **exact name**. Previews almost always namespace their variables (`--tds-blue-500` for md `blue-500`), so each slug declares a rewrite rule in `PREVIEW_TOKEN_ALIASES` (`src/lib/oklch-drift.ts`). Without one, every declaration in this preview is unreachable and the gate silently checks nothing for the new entry — which is what the corpus test refuses to let happen.
 
+The same rules carry a second comparison: when the entry publishes its role layer as reference rows (`text-primary: "{colors.gray-800}"`) and the preview wires a role as `--x-text-primary: var(--x-gray-800)`, the gate checks that the `var()` points at the step the row names — the light scope against the row, the `[data-theme="dark"]` scope against its `dark-` twin (or, with no twin, against the same row). A role wired to another step fails `pnpm audit:oklch`. A role written as a literal is not compared, and neither is one redeclared outside a theme root (`:root`, `html`, `[data-theme="dark"]`, with no `@media` around it; the exact list is `THEME_ROOTS` in `src/lib/oklch-drift.ts`). Declare each role at one root form per theme: the same role under two forms, or at `:root` after the dark block, fails as ambiguous.
+
+`ROLE_CHAINS` in `src/lib/oklch-drift-corpus.test.ts` pins, per entry, how many roles the preview wires by `var()` (`chained`), declares as a value (`literal`) or redeclares outside a theme root (`scoped`). If the new preview declares a role a reference row names, that test fails and prints the row to paste; read why the numbers are what they are before pasting it.
+
 **Stage 9a2's `oklch coverage` metric does not cover this.** It searches the HTML for the design.md's OKLCH *values* as substrings; it never looks at custom-property *names*, and `src/lib/preview-validator.ts` does not consult the drift gate at all. A fully namespaced preview can score 100% coverage at 9a2 and still match zero declarations here.
 
 **And no gate here looks at WHERE a value is painted.** The drift gate compares a preview's
@@ -477,9 +481,9 @@ Three rule shapes are in use, all measured against real entries:
 
 Rules are tried in order, first match wins, and an empty `from` matches anything so it belongs last.
 
-If the test fails with `these slugs have no entry in MATCH_FLOOR`, add the rule, then record the count the failure message prints into `MATCH_FLOOR` (`src/lib/oklch-drift-corpus.test.ts`) — that table is a per-slug floor, so it also has to be raised deliberately rather than guessed. Recording a bare `0` is refused: only `bezier` is entitled to it, because its preview is hex rather than OKLCH and no naming rule can reach it.
+If the test fails with `these slugs have no entry in MATCH_FLOOR`, add the rule, then record the count the failure message prints into `MATCH_FLOOR` (`src/lib/oklch-drift-corpus.test.ts`) — that table is a per-slug floor, so it also has to be raised deliberately rather than guessed. Recording a bare `0` is refused. The count includes the role chains above, which is how `bezier` — whose preview is hex rather than OKLCH — has a floor above zero.
 
-Both files are outside this skill's write scope, so this does not route back to Stage 9a — a human operator running the skill by hand makes these two edits directly. Skipping them does not corrupt the entry; it leaves the drift gate blind to it, and CI fails on the pull request rather than here.
+Both files are outside this skill's write scope, so this does not route back to Stage 9a — a human operator running the skill by hand makes these edits (the rule, the `MATCH_FLOOR` row and, when roles are wired, the `ROLE_CHAINS` row) directly. Skipping them does not corrupt the entry; it leaves the drift gate blind to it, and CI fails on the pull request rather than here.
 
 ### Token coverage row
 

@@ -59,13 +59,14 @@ paths:
 - **본문 `{map.name}` 참조 검사가 읽는 모양과 일부러 읽지 않는 모양의 목록은 `src/lib/draft-validator.ts` 의
   `checkTokenReferences` 주석이 정본이다** — 리뷰가 새 모양을 들고 오면 규칙을 늘리기 전에 그 목록과 대조할 것.
 - **새 항목은 슬러그별 표에 자기 줄을 적는다. 아래가 그 전부이고, 다른 곳엔 통합 목록이
-  없다.** 셋은 늘 필요하고 여섯은 조건부다(그중 `PREVIEW_TOKEN_ALIASES` 와 `COMPONENT_COUNTS` 는 새 항목 거의
+  없다.** 셋은 늘 필요하고 일곱은 조건부다(그중 `PREVIEW_TOKEN_ALIASES` 와 `COMPONENT_COUNTS` 는 새 항목 거의
   전부에 해당한다).
 
   | 등록처 | 위치 | 언제 |
   | --- | --- | --- |
   | `PREVIEW_TOKEN_ALIASES` | `src/lib/oklch-drift.ts` | 프리뷰가 커스텀 프로퍼티를 네임스페이스하면(거의 전부) |
   | `MATCH_FLOOR` | `oklch-drift-corpus.test.ts` | 항상 (하한) |
+  | `ROLE_CHAINS` | `oklch-drift-corpus.test.ts` | 프리뷰가 참조 행의 역할을 `var()` 나 값으로 선언할 때 (정확값 — 실패 메시지가 붙여 넣을 줄을 낸다) |
   | `TOKEN_COVERAGE` | `token-coverage.test.ts` | 항상 (양방향 정확값) |
   | `BASELINE_TABLE` | `contrast-baseline.ts` | 항상 (슬러그마다 **4행**) |
   | `NOTICE` 자산 인벤토리 | `NOTICE` | `public/logos/` 에 새 파일을 놓을 때 (로고 필수라 사실상 늘 — 기존 파일을 재사용할 때만 빠진다) |
