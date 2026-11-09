@@ -189,7 +189,9 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
   // role chains are compared in the light scope and again in the dark one,
   // which restates them (SOCAR Frame is light-only).
   socar: 79,
-  teamsparta: 18,
+  // 18 → 32 (#659): the bundle palette became the published steps, and the
+  // preview declares them under the md names; its role chains are compared.
+  teamsparta: 32,
   toss: 27,
   // 36 → 106 (#660): its role chains, once the role layer's short preview
   // names (`color-background-` as `vp-bg-`, and the rest) got rules.
@@ -205,7 +207,7 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
 // `scoped` are role declarations outside a theme-root block (`.inverse { … }`,
 // `:root` inside `@media`), each counted, which the check neither compares nor
 // lets hide the root value. None of the catalogue's previews writes one today.
-// Slugs absent here compare none: teamsparta, greeting and seed-design carry
+// Slugs absent here compare none: greeting and seed-design carry
 // reference rows, but their previews wire roles under names of their own
 // (`--text`, `--success`) that no leading-substring rule reaches, and toss's
 // two rows (`primary`, `greyBackground`) are not declared in its preview.
@@ -227,6 +229,9 @@ const ROLE_CHAINS: Partial<Record<string, RoleChainCount>> = {
   likelion: { chained: 11, literal: 10, scoped: 0 },
   ridi: { chained: 61, literal: 1, scoped: 0 },
   socar: { chained: 48, literal: 0, scoped: 0 },
+  // The 2 literals are `fill-default` and `fill-subtle` in the dark scope,
+  // whose sccDark cells are opacity ramps (#659).
+  teamsparta: { chained: 24, literal: 2, scoped: 0 },
   // 69 → 71 (#657): the preview's `--vp-bg-canvas` took its md name
   // `--vp-bg-canvas-100`, one chain in each of the two scopes.
   "vapor-ui": { chained: 71, literal: 1, scoped: 0 },

@@ -256,10 +256,7 @@ const PREVIEW_TOKEN_ALIASES: Partial<
   ridi: [["", "ridi-"]],
   "seed-design": [["", "seed-"]],
   socar: [["", "sf-"]],
-  teamsparta: [
-    ["brand-", "sp-"],
-    ["", "sp-"],
-  ],
+  teamsparta: [["", "sp-"]],
   toss: [["", "tds-"]],
   // The role layer's `color-background-*` and the rest are written short in
   // the preview (`--vp-bg-primary-100`).

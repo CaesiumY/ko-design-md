@@ -92,10 +92,10 @@ interface Coverage {
 // unannotated, so drift 482 = annotated 439 + 43; role rows count in neither.
 // toss annotates only the steps whose name maps to
 // Toss's published `@toss/tds-colors` (15 light + 15 `dark-*`); its bundle-only
-// steps stay unannotated. teamsparta likewise annotates only the three reds
-// corrected to the live sites' `--stack-semantic-*` values and the 45
-// `@teamsparta/stack-tokens` steps its role layer points at. `drift: 0` is a
-// different claim and is refused below.
+// steps stay unannotated. teamsparta likewise annotates only the 52
+// `@teamsparta/stack-tokens` steps its role layer, component tokens and specs
+// point at (#659); its 2 bundle-only blues stay unannotated, so drift 54 =
+// annotated 52 + 2. `drift: 0` is a different claim and is refused below.
 const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   "11st": { annotated: 31, judged: 31, drift: 33 },
   baemin: { annotated: 172, judged: 172, drift: 199, references: 70 },
@@ -128,7 +128,7 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   // 39 role literals became reference rows (no `oklch` of their own) and the
   // 20 palette steps they point at were added (#630): 56 − 39 + 20, 59 − 39 + 20.
   socar: { annotated: 37, judged: 37, drift: 40, references: 41 },
-  teamsparta: { annotated: 48, judged: 48, drift: 73, references: 79 },
+  teamsparta: { annotated: 52, judged: 52, drift: 54, references: 79 },
   toss: { annotated: 30, judged: 30, drift: 52, references: 2 },
   "vapor-ui": { annotated: 226, judged: 226, drift: 226, references: 153 },
   wanted: {

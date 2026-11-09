@@ -40,7 +40,9 @@ const COMPONENT_COUNTS: Record<string, number> = {
   chzzk: 12,
   laftel: 11,
   ridi: 11,
-  teamsparta: 10,
+  // 10 → 43 (#659): the `@teamsparta/stack-tokens` component tokens, one row
+  // per state, beside the bundle components re-pointed at published values.
+  teamsparta: 43,
 }
 
 const docs = fs
