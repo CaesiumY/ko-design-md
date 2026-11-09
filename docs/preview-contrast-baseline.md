@@ -217,7 +217,8 @@ run 번호로 `pnpm audit:contrast:rebaseline <run id>` 를 돌린다. 산출물
 
 새 항목은 자기 네 줄(라이트·다크 × 텍스트·비텍스트)을 여기와 `BASELINE_TABLE` 양쪽에
 슬러그 순서대로 적는다. **수치는 CI 가 만든다** — `pnpm gate:contrast` 가 기록에 없는
-슬러그의 네 줄을 그대로 출력하므로 그것을 붙여넣는다.
+슬러그의 네 줄을 그대로 출력하므로 그것을 붙여넣는다. 다만 프리뷰가 하한 `MIN_TEXT_ELEMENTS` 아래면 네 줄 대신
+얇은 프리뷰 절이 찍힌다. 그때는 프리뷰를 먼저 보강하고, 하한을 넘긴 실행이 찍는 줄을 붙여넣는다(ADR 0013).
 
 | slug | theme | kind | measured | elements | fail | borderline | indeterminate |
 | --- | --- | --- | --- | --- | --- | --- | --- |

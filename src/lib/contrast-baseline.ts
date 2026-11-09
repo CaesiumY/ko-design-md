@@ -372,14 +372,16 @@ export function renderBaselineFailure(
     // The closing paragraph can stand beside a thin slug — a healthy new slug
     // or a moved count elsewhere prints it — and the rebaseline it names writes
     // every slug the run measured, the thin one too, which the corpus test then
-    // refuses. Said here so the two sections do not read as one instruction.
+    // refuses. A partial paste by hand is no way round it either: a moved
+    // count of a classified slug is tied to the pair and hold-reason tables,
+    // which only a whole-run rebaseline rewrites. So the order is the answer.
     if (thinSlugs.size > 0) {
       const names = [...thinSlugs].join(", ")
       out.push(
         "",
-        `Not while ${names} ${thinSlugs.size === 1 ? "is" : "are"} under the floor: rebaseline writes every`,
-        "measured slug, and the corpus test refuses a thin row. Paste the other",
-        "lines by hand until the preview clears the floor."
+        `Not yet: ${names} ${thinSlugs.size === 1 ? "is" : "are"} under the floor, and rebaseline writes every`,
+        "measured slug, which the corpus test then refuses. Clear the floor first,",
+        "then take the lines from the CI run that passes it, as above."
       )
     }
   }

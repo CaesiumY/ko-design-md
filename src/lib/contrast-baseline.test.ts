@@ -182,7 +182,27 @@ describe("compareToBaseline, thin previews", () => {
     // rebaseline command it names writes every measured slug — the thin one
     // too — so it has to say which entries to keep out.
     expect(lines).toContain("Take the replacement lines from CI")
-    expect(lines).toContain("Not while laftel is under the floor")
+    expect(lines).toContain("laftel is under the floor")
+    expect(lines).toContain("Clear the floor first")
+    expect(lines).not.toContain("by hand")
+  })
+
+  it("does not suggest a partial hand paste when a recorded count also moved", () => {
+    // A moved count of a classified slug is tied to the pair and hold-reason
+    // tables, which only a whole-run rebaseline rewrites. Pasting that one
+    // line by hand while a thin slug blocks the rebaseline fails the corpus
+    // test instead, so the advice is to clear the floor first and then
+    // rebaseline the run that passes it.
+    const thinFresh = row({ slug: "laftel", elements: 51 })
+    const measured = [row({ fail: 53 }), thinFresh]
+    const lines = renderBaselineFailure(
+      compareToBaseline(measured, [row()]),
+      measured,
+      [row()]
+    ).join("\n")
+    expect(lines).toContain("fail 52 → 53")
+    expect(lines).toContain("Clear the floor first")
+    expect(lines).not.toContain("by hand")
   })
 
   it("still prints the closing paragraph when a count also moved", () => {

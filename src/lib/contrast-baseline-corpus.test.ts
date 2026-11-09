@@ -125,7 +125,7 @@ describe("the recorded table against public/preview/", () => {
   it("records exactly the slugs the sweep can read", () => {
     expect(
       recorded,
-      "A slug measured but not recorded, or recorded but not measured. `pnpm gate:contrast` prints the four lines for the first case; for the second, delete the four lines in the change that removed the preview. Numbers come from CI — see docs/preview-contrast-baseline.md."
+      "A slug measured but not recorded, or recorded but not measured. `pnpm gate:contrast` prints the four lines for the first case (unless the preview is under MIN_TEXT_ELEMENTS: then it prints the thin-preview section instead, and the preview comes first); for the second, delete the four lines in the change that removed the preview. Numbers come from CI — see docs/preview-contrast-baseline.md."
     ).toEqual(found.slugs)
   })
 
