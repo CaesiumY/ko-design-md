@@ -541,7 +541,7 @@ product-facing 색은 모두 **시맨틱 alias**로 호출하고 raw 팔레트�
 
 ### Semantic alias (light → dark)
 
-aliases는 raw 토큰 이름만 참조한다 — 값은 base palette에서 유래하므로 별도 색 표기를 두지 않는다. 아래 두 표가 1.7.0 배포본이 발행하는 alias 76개 전부이고, 하나하나가 팔레트 토큰 하나를 가리키므로 frontmatter `colors:` 에도 같은 이름의 참조 행(다크는 `dark-` 접두)으로 실려 있다 [src:6]. 첫 표는 1.3.0 부터 있던 `-100`/`-200` 이름, 둘째 표는 1.7.0 이 더한 이름이다.
+aliases는 raw 토큰 이름만 참조한다 — 값은 base palette에서 유래하므로 별도 색 표기를 두지 않는다. 아래 두 표가 1.7.0 배포본이 발행하는 alias 76개 전부이고, 하나하나가 팔레트 토큰 하나를 가리키므로 frontmatter `colors:` 에도 같은 이름의 참조 행(다크는 `dark-` 접두)으로 실려 있다 [src:6]. 첫 표는 1.3.0 이 이미 발행한 이름 42개(`-100`/`-200` 단 이름과, 단이 없는 `color-border-*` 와 `color-foreground-inverse`), 둘째 표는 1.7.0 이 더한 이름이다.
 
 | 역할 | 라이트 | 다크 |
 |---|---|---|

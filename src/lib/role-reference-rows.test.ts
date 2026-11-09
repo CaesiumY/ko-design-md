@@ -705,7 +705,9 @@ const CASES: Record<string, { title: string; check: () => void }> = {
     title: "every published alias, light and `dark-` twin",
     check: () => {
       const { literals, refs, tableRows } = load("vapor-ui")
-      // 1.7.0's 76 aliases, the 42 `-100`/`-200` names and the 34 it added.
+      // 1.7.0's 76 aliases: the 42 names 1.3.0 already published (`-100`/`-200`
+      // step names plus the unstepped `border-*` and `foreground-inverse`) and
+      // the 34 it added.
       // Dark twins whose upstream target is white or black (`inverse`,
       // `contrast`, `staticWhite`, `staticBlack`, `canvas-dim`) alias the
       // unprefixed `color-white` / `color-black`: the dark block redefines
