@@ -325,7 +325,7 @@ describe("the published-pair tables against the recorded totals", () => {
     }
     expect(
       moved,
-      `these entries' palettes (their colors map, or their OBSERVED_COLOURS listing) are not the ones run ${CLASSIFIED_RUN.run} classified — run \`pnpm audit:contrast:rebaseline <run id>\` with this branch's CI run (the run of its contrast job), which classifies the pairs again against the palettes as they are and records their fingerprints with the tables`
+      `these entries' palettes are not the ones run ${CLASSIFIED_RUN.run} classified — their colors map or OBSERVED_COLOURS listing changed, or the code that reads them (paletteOf, the OKLCH conversion) did, which can move many fingerprints at once. Run \`pnpm audit:contrast:rebaseline <run id>\` with this branch's CI run (the run of its contrast job), which classifies the pairs again against the palettes as they are and records their fingerprints with the tables`
     ).toEqual([])
   })
 
