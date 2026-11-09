@@ -830,7 +830,7 @@ bezier 이고 line-design-system · gmarket · ridi · toss · wanted 가 뒤따
 전부가 이 두 칸) · gs-retail · greeting · line-design-system · likelion · codeit 순이다. 반대로 socar · zigbang · remember ·
 class101 은 텍스트·비텍스트 모두, codeit · gs-retail · kyobobook · likelion 은 텍스트만, seed-design · toss 와 bezier 는 비텍스트만
 미달 전부가 `both-published` 라, 고치지 않고 두는 대상이다(아래
-「미달을 고칠 때」). 이 재집계에 들어온 laftel 은 텍스트와 비텍스트 모두, chzzk 는 비텍스트만 미달 전부가
+「미달을 고칠 때」). run `42597494828` 재집계에 들어온 laftel 은 텍스트와 비텍스트 모두, chzzk 는 비텍스트만 미달 전부가
 `both-published` 다. run `42700120246` 재집계에서는 팔레트를 발행값으로 옮긴 teamsparta 도 텍스트 미달 전부가 `both-published` 가 됐다. lg-electronics 와 nol 은 미달 대부분이 `observed-pair` 다. 위 caveat 때문에, 고칠 수 있는 칸에서
 시작하더라도 행마다 합성 경로를 먼저 본다.
 
