@@ -599,6 +599,7 @@
     {
       "name": "dark-color-background-canvas-dim",
       "value": "oklch(0.000 0.000 0)",
+      "note": "상류 다크 블록이 white 와 black 을 라이트와 같은 값으로 다시 정의한다",
       "ref": "color-black"
     },
     {
@@ -729,6 +730,7 @@
     {
       "name": "dark-color-foreground-contrast",
       "value": "oklch(1.000 0.000 0)",
+      "note": "상류 다크 블록이 white 와 black 을 라이트와 같은 값으로 다시 정의한다",
       "ref": "color-white"
     },
     {
@@ -749,6 +751,7 @@
     {
       "name": "dark-color-foreground-staticWhite",
       "value": "oklch(1.000 0.000 0)",
+      "note": "상류 다크 블록이 white 와 black 을 라이트와 같은 값으로 다시 정의한다",
       "ref": "color-white"
     },
     {
@@ -759,6 +762,7 @@
     {
       "name": "dark-color-foreground-staticBlack",
       "value": "oklch(0.000 0.000 0)",
+      "note": "상류 다크 블록이 white 와 black 을 라이트와 같은 값으로 다시 정의한다",
       "ref": "color-black"
     },
     {

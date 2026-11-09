@@ -93,7 +93,6 @@ colors:
   color-border-contrast: "{colors.gray-800}"
   dark-color-border-contrast: "{colors.dark-gray-400}"
   # 1.7.0 새 이름 체계 — 접미 없는 이름이 기본, -weak 와 -strong 이 옅고 진한 단, canvas-* 가 표면, static* 이 테마를 타지 않는 글자색
-  # 다크 짝이 color-white 나 color-black 을 가리키는 행은 상류 다크 블록이 두 색을 라이트와 같은 값으로 다시 정의하기 때문이다
   color-background-primary-weak: "{colors.blue-100}"
   dark-color-background-primary-weak: "{colors.dark-blue-100}"
   color-background-primary: "{colors.blue-500}"
@@ -129,7 +128,7 @@ colors:
   color-background-canvas-raised: "{colors.gray-025}"
   dark-color-background-canvas-raised: "{colors.dark-gray-100}"
   color-background-canvas-dim: "{colors.color-black}"
-  dark-color-background-canvas-dim: "{colors.color-black}"
+  dark-color-background-canvas-dim: "{colors.color-black}"   # 상류 다크 블록이 white 와 black 을 라이트와 같은 값으로 다시 정의한다
   color-background-canvas-overlay: "{colors.color-white}"
   dark-color-background-canvas-overlay: "{colors.dark-gray-100}"
   color-background-canvas-inverse: "{colors.gray-800}"
@@ -155,13 +154,13 @@ colors:
   color-foreground-hint: "{colors.gray-500}"
   dark-color-foreground-hint: "{colors.dark-gray-500}"
   color-foreground-contrast: "{colors.color-black}"
-  dark-color-foreground-contrast: "{colors.color-white}"
+  dark-color-foreground-contrast: "{colors.color-white}"   # 상류 다크 블록이 white 와 black 을 라이트와 같은 값으로 다시 정의한다
   color-foreground-normal: "{colors.gray-900}"
   dark-color-foreground-normal: "{colors.dark-gray-900}"
   color-foreground-staticWhite: "{colors.color-white}"
-  dark-color-foreground-staticWhite: "{colors.color-white}"
+  dark-color-foreground-staticWhite: "{colors.color-white}"   # 상류 다크 블록이 white 와 black 을 라이트와 같은 값으로 다시 정의한다
   color-foreground-staticBlack: "{colors.color-black}"
-  dark-color-foreground-staticBlack: "{colors.color-black}"
+  dark-color-foreground-staticBlack: "{colors.color-black}"   # 상류 다크 블록이 white 와 black 을 라이트와 같은 값으로 다시 정의한다
   ## Base palette
   # Gray — 표면·텍스트·디바이더의 기반
   gray-025: oklch(0.985 0.000 0)   # #FAFAFA — 1.7.0 에 새로 생긴 단
@@ -769,7 +768,7 @@ import { Button } from "@vapor-ui/core";
 
 ### button-primary
 
-`<Button colorPalette="primary">` (variant 기본값 `fill`). `{colors.color-background-primary-200}` bg + `{colors.color-foreground-staticWhite}` 텍스트다. hover·press 는 색을 바꾸지 않고 절 공통의 검정 오버레이만 얹는다 [src:4]. 1.3.0 은 글자색 자리에 `color-foreground-inverse` 를 썼는데 그때 inverse 는 두 테마 모두 white 였고 [src:4], 1.7.0 은 inverse 를 다크에서 black 으로 바꾸면서 이 자리를 `color-foreground-staticWhite` 로 옮겼다 [src:6].
+`<Button colorPalette="primary">` (variant 기본값 `fill`). `{colors.color-background-primary-200}` bg + 흰 텍스트다. hover·press 는 색을 바꾸지 않고 절 공통의 검정 오버레이만 얹는다 [src:4]. 흰 텍스트 자리에 1.3.0 은 `color-foreground-inverse` 를 썼는데 그때 inverse 는 두 테마 모두 white 였다 [src:4]. 1.7.0 은 inverse 를 다크에서 black 으로 바꾸면서 이 자리를 `{colors.color-foreground-staticWhite}` 로 옮겼다 [src:6].
 
 ### button-primary-outline
 
@@ -977,7 +976,7 @@ Vapor 시스템은 imagery treatment를 강제하지 않는다. goorm 마케팅 
 - **다크 fill 버튼의 흰 텍스트가 AA 에 못 미친다 (2026-09-08)** — 상류 다크 `background-primary-200`(`#368AED`)·`background-danger-200`(`#F14F5A`) 위에 `### button-primary`·`### button-danger` 가 규정한 흰 텍스트를 얹으면 대비가 3.5:1 로 WCAG AA(4.5:1)에 못 미친다 [src:4]. 라이트(각각 `#2A72E5`·`#DA3944`)는 4.5 를 넘으므로 다크 램프에서만 생기는 문제다. 발행값을 그대로 옮긴 결과이고 값을 바꾸면 브랜드 색을 왜곡하므로 고치지 않는다 — 프리뷰도 같은 조합을 시연한다.
 - **다크에서 `contrast` 의 전경·배경이 같은 값이다 (2026-09-08)** — 상류 다크 블록이 `color-background-contrast-200` 과 `color-foreground-contrast-200` 을 모두 `gray-300`(다크 `#606060`)으로 매핑한다 [src:4]. 라이트에서는 `gray-800`/`gray-900` 으로 갈리므로 다크만의 특성이고, 발행값을 그대로 옮긴 것이다. 둘을 겹쳐 쓰면 대비가 1:1 이 되니 다크에서 contrast 표면 위 텍스트는 `{colors.color-white}` 를 쓴다 — `### button-contrast` 가 그렇게 규정하고 이 문서의 프리뷰도 그 조합을 시연한다. 1.7.0 이 더한 `color-background-contrast`(다크 `dark-gray-800`)와 `color-foreground-contrast`(다크 `color-white`)는 다크에서도 갈린다 [src:6].
 - **Responsive breakpoint 토큰** 자체는 1.3.0 배포본에서 surface되지 않았다 [src:4]. host 앱 측에서 정의하도록 위임된 것으로 추정 — 위 Responsive Behavior 섹션의 분기점은 합리적 권장값이며 Vapor 공식 토큰은 아니다.
-- **`## Components` 는 1.3.0 배포본 기준이다 (2026-11-09)** — 1.7.0 배포본은 스타일을 갖는 컴포넌트를 35개에서 41개로 늘렸고(`alert-dialog`, `meter`, `progress-bar`, `toggle`, `toggle-group`, `toolbar`), 1.3.0 에 있던 35개 가운데 30개는 CSS 파일이 달라졌다 [src:4][src:6]. 컴포넌트 CSS 가 쓰는 alias 도 대부분 1.7.0 의 새 이름으로 옮겨 갔다 [src:6]. 이 문서는 색 기준을 1.7.0 으로 옮기며 뜻이 바뀐 자리(`### button-primary` 와 `### avatar` 의 글자색)만 고쳤다. 달라진 파일이 생성 클래스 해시만 바뀐 것인지 치수와 규약까지 바뀐 것인지는 대조하지 않았다 — 남은 재감사다.
+- **`## Components` 는 1.3.0 배포본 기준이다 (2026-11-09)** — 1.7.0 배포본은 스타일을 갖는 컴포넌트를 35개에서 41개로 늘렸고(`alert-dialog`, `meter`, `progress-bar`, `toggle`, `toggle-group`, `toolbar`), 1.3.0 에 있던 35개 가운데 30개는 CSS 파일이 달라졌다 [src:4][src:6]. 컴포넌트 CSS 가 쓰는 alias 도 대부분 1.7.0 의 새 이름으로 옮겨 갔다 [src:6]. 이 문서는 색 기준을 1.7.0 으로 옮기며 뜻이 바뀐 자리(`### button-primary` 와 `### avatar` 의 글자색)만 고쳤다. 컴포넌트 쪽 규약이 바뀐 사례도 이미 있다 — 1.7.0 의 contrast fill 버튼은 배경을 `color-background-contrast`, 글자색을 `color-foreground-inverse`(다크에서 검정)로 쓰는데 [src:6], `### button-contrast` 와 위 다크 contrast 항목은 1.3.0 규정대로 `contrast-200` 위 흰 글자를 적고 있다 [src:4]. 달라진 파일이 생성 클래스 해시만 바뀐 것인지 치수와 규약까지 바뀐 것인지는 대조하지 않았다 — 남은 재감사다.
 - **Form validation states** — `{component.text-input}` · `{component.checkbox}` · `{component.radio}` · `{component.select}` 가 `invalid` 축을 갖고 그 시각 처리는 확인됐으나, helper text · success state 의 토큰화된 정의는 배포본에 없다 [src:4].
 - **철회된 부재 주장 2건 (2026-08-17)** — 종전 판본은 `## Spacing` 이 "컴포넌트 사이징과 border width는 별도 토큰 그룹으로 분리된다"며 `size-component-*` 4개와 `size-borderWidth-*` 2개를 실었고, `## Rounded` 가 `size-borderRadius-circle` 을 12번째 토큰으로 실었다. **셋 다 존재하지 않는다** — 배포본과 문서 사이트 어디에도 그 이름이 없다 [src:4][src:1]. 컨트롤 높이의 실제 출처는 `size-dimension-*` 이고, 1px·2px 과 `9999px` 는 리터럴로 적힌다.
 - **철회된 부재 주장 1건 (2026-08-16)** — 종전 판본은 "카드 padding 기본값은 시스템이 별도 강제하지 않고 콘텐츠 주도로 결정된다"를 적고, 여기에 "host 팀이 자체 padding ladder를 별도 정의해야 한다"는 권고를 달았다. **지금은 거짓이다** — `@vapor-ui/core` 1.3.0의 `card.css`가 `padding: 16px 24px`(헤더·푸터)와 `padding: 24px`(본문)를 강제한다 [src:4]. 부재 주장이 낳은 권고는 그 주장이 철회되면 함께 무너진다.
@@ -989,6 +988,6 @@ Vapor 시스템은 imagery treatment를 강제하지 않는다. goorm 마케팅 
 1. https://vapor-ui.goorm.io/ — 공식 docs/데모 사이트, goorm 네이밍·운영 컨텍스트.
 2. https://blog.goorm.io/vapor-figma-seoul/ — goorm 공식 블로그 "Vapor at Figma Config Seoul 2025", Vapor Squad 조직(2025년 4월 신설, Squad Lead 최준영, CDO 이태성)·SSOT 자동화·MCP Server 컨텍스트.
 3. https://www.figma.com/community/file/1508829832204351721/vapor-design-system — Vapor Design System Figma Community 파일. 평범한 GET에는 텍스트가 34자뿐인 JS 셸이라 브라우저로 열어야 파일 정보가 보인다.
-4. https://cdn.jsdelivr.net/npm/@vapor-ui/core@1.3.0/ — `@vapor-ui/core` 1.3.0 배포본의 파일 목록(jsDelivr, 버전 고정). 컴포넌트 절의 기준 판이다 — 컴포넌트 치수·무게·radius는 `dist/components/*/*.css.ts.vanilla.css`(35개)와 `dist/styles/mixins/typography.css.ts.vanilla.css`, 크기·타이포그래피·그림자 토큰은 `dist/styles/themes.css.ts.vanilla.css` 다. 색의 기준은 [src:6] 이다.
+4. https://cdn.jsdelivr.net/npm/@vapor-ui/core@1.3.0/ — `@vapor-ui/core` 1.3.0 배포본의 파일 목록(jsDelivr, 버전 고정). 컴포넌트 절의 기준 판이다 — 컴포넌트 치수·무게·radius는 `dist/components/*/*.css.ts.vanilla.css`(35개)와 `dist/styles/mixins/typography.css.ts.vanilla.css`, 크기, 타이포그래피, 그림자 토큰은 `dist/styles/themes.css.ts.vanilla.css` 다. 색의 기준은 [src:6] 이다.
 5. https://github.com/goorm-dev/vapor-ui — GitHub 모노레포(6 패키지 구조: core / hooks / icons / codemod / color-generator / css-generator, README 카피). **루트 URL 하나가 본문 인용의 대부분을 떠받치고 있어**, 개별 주장을 이 링크만으로 확인하기 어렵다. 토큰 값은 [src:4]의 배포 CSS가, 정책·카피 서술은 이 저장소의 README와 docs 소스가 각각 1차 근거다.
 6. https://cdn.jsdelivr.net/npm/@vapor-ui/core@1.7.0/ — `@vapor-ui/core` 1.7.0 배포본의 파일 목록(jsDelivr, 버전 고정). 이 문서 색의 기준 판이다 — 팔레트와 시맨틱 alias 는 `dist/styles/themes.css.ts.vanilla.css`, 컴포넌트가 쓰는 alias 는 `dist/components/*/*.css.ts.vanilla.css`(41개)다. 컴포넌트 치수와 규약의 기준은 [src:4] 다.
