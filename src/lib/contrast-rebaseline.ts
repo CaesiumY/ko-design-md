@@ -8,6 +8,7 @@
 
 import {
   noEntryReason,
+  paletteFingerprint,
   paletteLookup,
   readArtifactPalettes,
   renderPairTable,
@@ -56,7 +57,10 @@ export type RebaselineResult =
       files: RecordFiles
       /** The ratchet rows that moved, as lines to print. */
       moved: Array<string>
-      /** The judgement prose left for a person; empty when nothing changed. */
+      /**
+       * The judgement prose left for a person; empty when neither the
+       * document nor the constant changed.
+       */
       remaining: Array<string>
       /**
        * Tokens a palette left out because their form cannot be read, as the
@@ -83,15 +87,22 @@ const HELD_ROWS_LINE_START = "보류 행 수: "
 
 /**
  * `src/lib/contrast-classified-run.json`: the run the pair tables were
- * classified from and every slug its artifact measured, read by
- * `contrast-baseline-corpus.test.ts`. Written as `JSON.stringify` writes it,
- * so the same record is the same bytes.
+ * classified from, every slug its artifact measured, and the fingerprint of
+ * each palette the classification read (`paletteFingerprint`, by slug), read
+ * by `contrast-baseline-corpus.test.ts`. Written as `JSON.stringify` writes
+ * it, with the palettes in slug order, so the same record is the same bytes.
  */
 export function renderClassifiedRun(r: {
   run: string
   slugs: Array<string>
+  palettes: ReadonlyMap<string, Palette>
 }): string {
-  return `${JSON.stringify({ run: r.run, slugs: r.slugs }, null, 2)}\n`
+  const palettes = Object.fromEntries(
+    [...r.palettes]
+      .sort(([a], [b]) => (a < b ? -1 : 1))
+      .map(([slug, palette]) => [slug, paletteFingerprint(palette)])
+  )
+  return `${JSON.stringify({ run: r.run, slugs: r.slugs, palettes }, null, 2)}\n`
 }
 
 /**
@@ -468,16 +479,20 @@ export function rebaseline(input: RebaselineInput): RebaselineResult {
     classifiedRun: renderClassifiedRun({
       run: input.run,
       slugs: measuredSlugs(input.findings),
+      palettes,
     }),
   }
-  const unchanged = (Object.keys(files) as Array<keyof RecordFiles>).every(
-    (k) => files[k] === input.files[k]
-  )
+  // The prose left for a person describes the tables and the run, all of
+  // which are in the document or the constant; a record that changed only in
+  // its fingerprints (the same run, read against palettes that moved without
+  // moving a table) leaves none of it stale.
+  const tablesUnchanged =
+    files.doc === input.files.doc && files.baseline === input.files.baseline
   return {
     ok: true,
     files,
     moved: movedRows(parseTotalsTable(recorded), parseTotalsTable(totals)),
-    remaining: unchanged ? [] : remainingWork(input.run),
+    remaining: tablesUnchanged ? [] : remainingWork(input.run),
     notes,
   }
 }

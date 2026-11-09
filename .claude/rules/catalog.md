@@ -79,8 +79,13 @@ paths:
   못 맞춰 그 항목에 대해 아무것도 검사하지 않는다. `BASELINE_TABLE` 의 수치는 `pnpm gate:contrast` 의 실패 출력이 만들어 주며 같은 바이트가
   `docs/preview-contrast-baseline.md` 에도 있어야 한다.
 
-  전부 총계가 아니라 슬러그 단위라 동시에 열린 카탈로그 PR 끼리 서로를 깨지 않는다.
+  위 등록처는 전부 총계가 아니라 슬러그 단위라 동시에 열린 카탈로그 PR 끼리 서로를 깨지 않는다.
   **다만 표 자체가 새로 생기는 경우는 막아 주지 않는다** — 루트 `CLAUDE.md` 「기여 관례」의 합본 재검증 항을 볼 것.
+- **기존 항목의 팔레트(`colors:` 나 `OBSERVED_COLOURS` 의 관찰색 목록)를 바꾸면, 그 항목이 발행색 분류표에 행이
+  있는 한 그 PR 의 CI run 으로 `pnpm audit:contrast:rebaseline <run id>` 를 돌린다**(#669). 분류 run 기록이 분류에
+  쓴 팔레트의 지문을 담아, 어긋나면 `pnpm test` 가 그 슬러그 이름으로 막는다. 무엇이 지문을 바꾸는지와, 이 기록이
+  슬러그 단위가 아니라서 재기록하는 PR 끼리 부딪힐 때 어떻게 하는지는 `docs/preview-contrast-baseline.md`
+  「발행색끼리의 경계선」 절 끝에 있다.
 
 ## Google DESIGN.md 표준 (`pnpm validate:spec`)
 

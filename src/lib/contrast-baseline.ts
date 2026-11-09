@@ -31,7 +31,47 @@ export interface BaselineComparison {
   unrecorded: Array<SlugTotals>
   /** Baseline rows the sweep produced nothing for. */
   missing: Array<Pick<SlugTotals, "slug" | "theme" | "kind">>
+  /** Measured text rows under `MIN_TEXT_ELEMENTS`, recorded or not. */
+  thin: Array<SlugTotals>
 }
+
+/**
+ * The fewest text elements a preview may show per theme.
+ *
+ * A floor on how much a preview shows, not on contrast: ADR 0007's rule against
+ * absolute contrast floors is about the verdict counts, which this leaves to
+ * the ratchet above.
+ *
+ * `elements` is the closest number the sweep has to that, and a crude one: it
+ * counts every copy, so repeating a card raises it — the reason it stays out of
+ * EXACT_FIELDS. It catches a preview that shows little, not one that pads
+ * itself. It is also the text the contrast collector READS, not all the text
+ * on screen: disabled (`:disabled`, `[aria-disabled="true"]`), hidden,
+ * opacity-0, clipped-to-a-pixel and covered text is skipped. So declaring a demo
+ * disabled — the path ADR 0007 gives for a disabled state drawn by a class —
+ * lowers the count, and adding disabled states cannot raise it. A preview
+ * that lands under the floor that way is answered the same way as any other:
+ * show more that is read.
+ *
+ * `measured` folds the copies but cannot separate the cases: on 2026-11-09
+ * samsung-one-ui kept 52 distinct rows, and chzzk arrived with 48.
+ *
+ * Two external entries arrived with text rows of 79 (chzzk) and 51 (laftel)
+ * elements, the two thinnest in the catalogue by far. No check judged by the
+ * number, so they passed every gate and were only caught by eye. The thinnest
+ * preview kept on its own merits was yeogi at 94 on 2026-11-09, so the floor
+ * sits between. Those are the numbers the floor was chosen against, not a
+ * record of the table: see ADR 0013.
+ * Fixed rather than a share of the median: the median climbs as thicker
+ * entries land, and a moving floor would start failing entries nobody touched.
+ *
+ * Read from the MEASURED rows in `compareToBaseline`, so the CI `contrast` job
+ * holds it, and from the recorded table in the corpus test, so pasting a thin
+ * row fails `pnpm test` too. The recorded check alone would trust whoever
+ * pasted the numbers: `elements` is the one count the exact comparison leaves
+ * out, so a hand-raised value would pass it.
+ */
+export const MIN_TEXT_ELEMENTS = 80
 
 const keyOf = (t: Pick<SlugTotals, "slug" | "theme" | "kind">): string =>
   `${t.slug}|${t.theme}|${t.kind}`
@@ -106,10 +146,14 @@ export function compareToBaseline(
   const blocking: Array<BaselineDiff> = []
   const warnings: Array<BaselineDiff> = []
   const unrecorded: Array<SlugTotals> = []
+  const thin: Array<SlugTotals> = []
 
   for (const m of measured) {
     const key = keyOf(m)
     seen.add(key)
+    // Before the pairing, so a new slug's rows are held to it too: that is the
+    // case the floor exists for, and an unrecorded row is skipped below.
+    if (m.kind === "text" && m.elements < MIN_TEXT_ELEMENTS) thin.push(m)
     const b = recorded.get(key)
     if (b === undefined) {
       unrecorded.push(m)
@@ -149,21 +193,22 @@ export function compareToBaseline(
     .filter((b) => !seen.has(keyOf(b)))
     .map((b) => ({ slug: b.slug, theme: b.theme, kind: b.kind }))
 
-  return { blocking, warnings, unrecorded, missing }
+  return { blocking, warnings, unrecorded, missing, thin }
 }
 
 /**
  * Does the sweep still stand behind the recorded table?
  *
  * Warnings do not enter into it — they exist to be read, not to stop a branch.
- * The three that do are gathered here rather than at the call site so a caller
+ * The four that do are gathered here rather than at the call site so a caller
  * cannot check `blocking` alone and let a new slug through unrecorded.
  */
 export function baselineHolds(c: BaselineComparison): boolean {
   return (
     c.blocking.length === 0 &&
     c.unrecorded.length === 0 &&
-    c.missing.length === 0
+    c.missing.length === 0 &&
+    c.thin.length === 0
   )
 }
 
@@ -211,6 +256,13 @@ export function renderBaselineFailure(
   const measuredBy = new Map(measured.map((m) => [keyOf(m), m]))
   const recordedBy = new Map(baseline.map((b) => [keyOf(b), b]))
   const out: Array<string> = []
+  // A new entry under the floor is unrecorded AND thin. Its rows are held back
+  // from the ones to paste — all four, or the four-rows-per-slug check in the
+  // corpus test refuses the half that was pasted — because the corpus test
+  // refuses a thin row in the table too. It still fails through `thin`, whose
+  // section says what to do first.
+  const thinSlugs = new Set(c.thin.map((m) => m.slug))
+  const toPaste = c.unrecorded.filter((m) => !thinSlugs.has(m.slug))
 
   const movement = (d: BaselineDiff): string =>
     `    ${d.field} ${d.recorded} → ${d.measured}`
@@ -231,13 +283,13 @@ export function renderBaselineFailure(
     }
   }
 
-  if (c.unrecorded.length > 0) {
+  if (toPaste.length > 0) {
     out.push(
-      `FAIL contrast baseline — ${c.unrecorded.length} row(s) the table does not record.`,
+      `FAIL contrast baseline — ${toPaste.length} row(s) the table does not record.`,
       "  A preview the sweep can read needs its rows in the table. These are them:",
       ""
     )
-    for (const m of c.unrecorded) out.push(`    ${lineFor(m)}`)
+    for (const m of toPaste) out.push(`    ${lineFor(m)}`)
     out.push("")
   }
 
@@ -257,6 +309,27 @@ export function renderBaselineFailure(
     out.push("")
   }
 
+  if (c.thin.length > 0) {
+    out.push(
+      `FAIL contrast baseline — ${c.thin.length} text row(s) under ${MIN_TEXT_ELEMENTS} elements, thinner than any preview the catalogue kept.`,
+      "  Add the non-disabled component states and screen mockups the md describes",
+      "  (.claude/skills/design-md/references/rubric-preview.md). A copied card",
+      "  raises this count without showing more, so it is not the fix.",
+      "  Disabled, hidden, opacity-0, clipped-to-a-pixel and covered text is not counted —",
+      "  the contrast collector skips it — so a disabled state does not raise it.",
+      "  Rewriting the table does not clear it: the floor reads the measured count.",
+      "  A new entry adds its rows to the table only after the preview clears the floor:",
+      "  the next CI run then fails on the rows the table lacks and prints them to paste.",
+      ""
+    )
+    for (const m of c.thin) {
+      out.push(
+        `    ${m.slug} | ${m.theme} | ${m.kind} — elements ${m.elements}`
+      )
+    }
+    out.push("")
+  }
+
   if (c.warnings.length > 0) {
     out.push("warn — reported, not blocking:")
     for (const [key, diffs] of groupBy(c.warnings, keyOf)) {
@@ -269,7 +342,15 @@ export function renderBaselineFailure(
     out.push("")
   }
 
-  if (out.length > 0) {
+  // Only when a count moved or a row is unpaired: this paragraph is about
+  // pasting CI's numbers into the table, and a thin preview is not cleared by
+  // any rewrite of it — sent here, its reader would paste and stay red.
+  const tableMoved =
+    c.blocking.length > 0 ||
+    toPaste.length > 0 ||
+    c.missing.length > 0 ||
+    c.warnings.length > 0
+  if (tableMoved) {
     out.push(
       "Before editing a number to match, find out what moved it. A fail count that",
       "rose is a shortfall this branch introduced; a measured count that fell is a",
@@ -288,6 +369,21 @@ export function renderBaselineFailure(
       "table is what the `contrast` job measures on ubuntu, and a local sweep on",
       "another OS wraps text differently and reports different counts."
     )
+    // The closing paragraph can stand beside a thin slug — a healthy new slug
+    // or a moved count elsewhere prints it — and the rebaseline it names writes
+    // every slug the run measured, the thin one too, which the corpus test then
+    // refuses. A partial paste by hand is no way round it either: a moved
+    // count of a classified slug is tied to the pair and hold-reason tables,
+    // which only a whole-run rebaseline rewrites. So the order is the answer.
+    if (thinSlugs.size > 0) {
+      const names = [...thinSlugs].join(", ")
+      out.push(
+        "",
+        `Not yet: ${names} ${thinSlugs.size === 1 ? "is" : "are"} under the floor, and rebaseline writes every`,
+        "measured slug, which the corpus test then refuses. Clear the floor first,",
+        "then take the lines from the CI run that passes it, as above."
+      )
+    }
   }
   return out
 }
@@ -411,8 +507,8 @@ export const BASELINE_TABLE = `\
 | banksalad | dark | non-text | 17 | 23 | 15 | 0 | 0 |
 | banksalad | light | text | 171 | 381 | 65 | 3 | 5 |
 | banksalad | light | non-text | 17 | 23 | 15 | 0 | 0 |
-| bezier | dark | text | 175 | 349 | 58 | 11 | 11 |
-| bezier | dark | non-text | 42 | 45 | 10 | 2 | 1 |
+| bezier | dark | text | 175 | 349 | 71 | 4 | 11 |
+| bezier | dark | non-text | 42 | 45 | 11 | 4 | 1 |
 | bezier | light | text | 175 | 349 | 54 | 9 | 11 |
 | bezier | light | non-text | 41 | 44 | 18 | 9 | 1 |
 | chzzk | dark | text | 139 | 300 | 9 | 1 | 3 |

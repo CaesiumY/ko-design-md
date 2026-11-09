@@ -44,14 +44,16 @@ paths:
 
 CI 의 **별도 `contrast` 잡**에서 돈다. 프리뷰 대비를 라이트·다크 × 4폭으로 전수 재고
 `docs/preview-contrast-baseline.md` 의 총계 표와 대조해, 개별 미달이 아니라 **그 수가 움직였는지**만
-막는다(ADR 0007). **수치는 CI 가 정본이다** — 폰트 폴백이 OS 마다 달라 줄바꿈과 판정이 바뀔 수 있다.
-로컬에서 돌리려면 `pnpm exec playwright install chromium` 이 선행이고, 종료 코드는 어긋남 3 · `--self-check` 의
+막는다(ADR 0007). 대비와 별개로, 텍스트 요소가 하한 `MIN_TEXT_ELEMENTS` 미만인 얇은 프리뷰도 막는다(ADR 0013). **수치는 CI 가 정본이다** — 폰트 폴백이 OS 마다 달라 줄바꿈과 판정이 바뀔 수 있다.
+로컬에서 돌리려면 `pnpm exec playwright install chromium` 이 선행이고, 종료 코드는 어긋남 또는 얇은 프리뷰 3 · `--self-check` 의
 측정기 고장 1 · 인자 오류 2 다(정의는 `scripts/audit-contrast.ts`).
 
 **총계 표를 갱신하는 PR 은 발행색 분류표와 보류 사유 표도 함께 다시 낸다** — 그 CI run 번호로
 `pnpm audit:contrast:rebaseline <run id>` 를 돌리면 산출물(`contrast-report`)을 받기 전에 묻고, 표와 분류 run
 기록을 그 run 으로 다시 쓴 뒤 사람이 쓸 날짜 산문(총계 문장의 날짜와 run 포함)을 남은 일로 찍는다(어긋나면 `pnpm test` 가 막고, 실패 메시지가 이 명령을
-가리킨다). 새 항목은 다음 재집계까지 면제되므로 온보딩의 등록처는 늘지 않는다. 비텍스트 `fail`·`borderline` 은 `gate:contrast` 가 warn 만 내므로 비텍스트 쪽은 두 표가
+가리킨다). 분류표에 행이 있는 항목의 팔레트(`colors:` 나 관찰색 목록)나 항목을 읽는 코드(`paletteOf`, OKLCH 변환)를 바꾸는 PR 도 그 PR 의 CI run 으로 같은 명령을
+돌린다 — 분류 run 기록이 분류에 쓴 팔레트의 지문을 담고, 어긋나면 `pnpm test` 가 그 슬러그 이름으로 막는다(#669).
+새 항목은 다음 재집계까지 면제되므로 온보딩의 등록처는 늘지 않는다. 비텍스트 `fail`·`borderline` 은 `gate:contrast` 가 warn 만 내므로 비텍스트 쪽은 두 표가
 함께 낡을 수 있다.
 
 스킬 루프 안의 `pnpm audit:contrast:staged`(Stage 9a3, ADR 0009)는 미달을 **warn** 으로만 합친다.

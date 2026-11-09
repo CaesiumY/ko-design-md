@@ -2,6 +2,7 @@ import fs from "node:fs"
 import path from "node:path"
 import { describe, expect, it } from "vitest"
 import { BASELINE_TABLE } from "./contrast-baseline"
+import { paletteFingerprint, paletteOf } from "./contrast-pairs"
 import { rebaseline, rewriteRecord } from "./contrast-rebaseline"
 import { renderHeldReasons } from "./contrast-report"
 import type { RebaselineInput, RecordFiles } from "./contrast-rebaseline"
@@ -181,6 +182,11 @@ const NEW_TOTALS = [
   "| toss | light | non-text | 0 | 0 | 0 | 0 | 0 |",
 ]
 
+// The digest itself is `paletteFingerprint`'s to define (its own tests pin
+// what moves it); here it is only the value the corpus test will compute from
+// toss's entry, so the record must carry this one.
+const TOSS_FINGERPRINT = paletteFingerprint(paletteOf(ENTRY, {}))
+
 const ok = (input: RebaselineInput) => {
   const got = rebaseline(input)
   if (!got.ok) throw new Error(`refused: ${got.reasons.join("; ")}`)
@@ -248,8 +254,38 @@ describe("rebaseline", () => {
       "입력은 run `222`(#1 의 head `abc1234` — 그 PR 이 바꾼 것)다."
     )
     expect(got.classifiedRun).toBe(
-      '{\n  "run": "222",\n  "slugs": [\n    "baemin",\n    "toss"\n  ]\n}\n'
+      `{\n  "run": "222",\n  "slugs": [\n    "baemin",\n    "toss"\n  ],\n  "palettes": {\n    "toss": "${TOSS_FINGERPRINT}"\n  }\n}\n`
     )
+  })
+
+  it("fingerprints the palette of every slug the pair tables classify, and no other", () => {
+    // toss has a fail and a borderline row; baemin was measured but has
+    // neither, so no table row of it depends on its palette.
+    const record = JSON.parse(ok(INPUT).files.classifiedRun) as {
+      palettes: Record<string, string>
+    }
+    expect(Object.keys(record.palettes)).toEqual(["toss"])
+  })
+
+  it("rewrites the record when only a classified slug's palette moved", () => {
+    // A token no reading lands near: both tables come out as they were, so
+    // the fingerprint is the only thing that says the classification was
+    // read again.
+    const once = ok(INPUT).files
+    const moved = ENTRY.replace(
+      "  paper: oklch(1 0 0)   # #ffffff",
+      "  paper: oklch(1 0 0)   # #ffffff\n  line: oklch(0.3 0 0)   # #262626"
+    )
+    const got = ok({
+      ...INPUT,
+      entries: { ...INPUT.entries, toss: moved },
+      files: once,
+    })
+    expect(got.files.doc).toBe(once.doc)
+    expect(got.files.classifiedRun).not.toBe(once.classifiedRun)
+    // The same run's tables, written again as they were: no dated prose
+    // describes a fingerprint, so there is none to leave for a person.
+    expect(got.remaining).toEqual([])
   })
 
   it("leaves every other line of the document as it was, the dated prose among them", () => {

@@ -145,8 +145,9 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
   banksalad: 384,
   // bezier's preview declares no `oklch` at all — it is hex — so only its role
   // chains are compared, read through the per-family `c-` rules (#660). Its
-  // alpha roles are `rgba(…)` literals and stay out.
-  bezier: 9,
+  // alpha roles are `rgba(…)` literals and stay out. 9 → 11: #666 wired
+  // `--fill-accent-blue-heavier` by `var()` in both themes.
+  bezier: 11,
   chzzk: 17,
   class101: 14,
   // 8 → 60 (#660): its docs role names (`txt-`, `bg-`) and its `light-`
@@ -218,7 +219,7 @@ const ROLE_CHAINS: Partial<Record<string, RoleChainCount>> = {
   baemin: { chained: 2, literal: 0, scoped: 0 },
   banksalad: { chained: 203, literal: 0, scoped: 0 },
   // The 43 literals are its opacity roles, written `rgba(…)`.
-  bezier: { chained: 9, literal: 43, scoped: 0 },
+  bezier: { chained: 11, literal: 43, scoped: 0 },
   codeit: { chained: 13, literal: 3, scoped: 0 },
   // GDS and likelion publish no dark palette; the previews' dark halves give
   // those roles literal dark values of their own.
