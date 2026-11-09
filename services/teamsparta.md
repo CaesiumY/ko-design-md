@@ -331,7 +331,7 @@ fonts:
 
 # 팀스파르타 (스파르타클럽) — design.md
 
-> 팀스파르타가 운영하는 스파르타클럽 학습 생태계의 인증 대시보드 디자인 시스템이다. 본 문서는 Claude Design handoff bundle의 `스파르타클럽 Design System` README, `colors_and_type.css`, preview cards, dashboard UI kit, chat transcript를 1차 출처로 합성했다. 공개 공식 사이트와 내일배움캠프, 기업교육, 커리어 surface는 서비스 범위와 브랜드 맥락 확인용 보조 출처로 사용했다 [src:1][src:2][src:3][src:4]. 색 역할 계층, 원시 팔레트, 컴포넌트 토큰은 팀스파르타가 npm에 발행한 토큰 패키지에서 옮겼다 [src:5]. 타이포, 스페이싱, 라운드와 컴포넌트의 크기와 여백은 이 핸드오프 번들에서 재구성했다. 색은 발행 패키지에 대응 값이 없는 번들 파랑(`interaction-blue`)만 번들 값으로 남겼다(Colors 절 감사 메모 참조).
+> 팀스파르타가 운영하는 스파르타클럽 학습 생태계의 인증 대시보드 디자인 시스템이다. 본 문서는 Claude Design handoff bundle의 `스파르타클럽 Design System` README, `colors_and_type.css`, preview cards, dashboard UI kit, chat transcript를 1차 출처로 합성했다. 공개 공식 사이트와 내일배움캠프, 기업교육, 커리어 surface는 서비스 범위와 브랜드 맥락 확인용 보조 출처로 사용했다 [src:1][src:2][src:3][src:4]. 색 역할 계층, 원시 팔레트, 컴포넌트 토큰은 팀스파르타가 npm에 발행한 토큰 패키지에서 옮겼다 [src:5]. 타이포, 스페이싱, 라운드와 컴포넌트의 크기와 여백은 이 핸드오프 번들에서 재구성했다. 색은 발행 패키지에 대응 값이 없는 번들 파랑 `interaction-blue`와 같은 값의 `focus-ring`만 번들 값으로 남겼다(Colors 절 감사 메모 참조).
 
 ## Brand & Style
 
