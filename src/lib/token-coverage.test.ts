@@ -130,7 +130,7 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   socar: { annotated: 37, judged: 37, drift: 40, references: 41 },
   teamsparta: { annotated: 48, judged: 48, drift: 73, references: 79 },
   toss: { annotated: 30, judged: 30, drift: 52, references: 2 },
-  "vapor-ui": { annotated: 224, judged: 224, drift: 224, references: 85 },
+  "vapor-ui": { annotated: 226, judged: 226, drift: 226, references: 153 },
   wanted: {
     annotated: 29,
     judged: 28,

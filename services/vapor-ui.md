@@ -3,15 +3,15 @@ name: 구름
 design_system_name: Vapor UI
 slug: vapor-ui
 category: developer
-last_updated: "2026-11-02"
+last_updated: "2026-11-10"
 created_at: "2026-05-10"
 lang: ko
 logo: https://getdesign.kr/logos/goorm.png
 colors:
   color-background-canvas-100: "{colors.canvas}"
-  dark-color-background-canvas-100: "{colors.dark-canvas}"
+  dark-color-background-canvas-100: "{colors.dark-gray-050}"
   color-background-canvas-200: "{colors.gray-050}"
-  dark-color-background-canvas-200: "{colors.dark-gray-050}"
+  dark-color-background-canvas-200: "{colors.dark-gray-100}"
   color-background-overlay-100: "{colors.canvas}"
   dark-color-background-overlay-100: "{colors.dark-gray-100}"
   color-background-primary-100: "{colors.blue-100}"
@@ -75,7 +75,7 @@ colors:
   color-foreground-normal-200: "{colors.gray-900}"
   dark-color-foreground-normal-200: "{colors.dark-gray-900}"
   color-foreground-inverse: "{colors.color-white}"
-  dark-color-foreground-inverse: "{colors.color-white}"   # 상류 다크 블록이 white 를 라이트와 같은 값으로 다시 정의한다
+  dark-color-foreground-inverse: "{colors.color-black}"   # 상류 다크 블록이 black 을 라이트와 같은 값으로 다시 정의한다
   color-border-normal: "{colors.gray-100}"
   dark-color-border-normal: "{colors.dark-gray-300}"
   color-border-primary: "{colors.blue-500}"
@@ -92,9 +92,80 @@ colors:
   dark-color-border-hint: "{colors.dark-gray-400}"
   color-border-contrast: "{colors.gray-800}"
   dark-color-border-contrast: "{colors.dark-gray-400}"
+  # 1.7.0 새 이름 체계 — 접미 없는 이름이 기본, -weak 와 -strong 이 옅고 진한 단, canvas-* 가 표면, static* 이 테마를 타지 않는 글자색
+  color-background-primary-weak: "{colors.blue-100}"
+  dark-color-background-primary-weak: "{colors.dark-blue-100}"
+  color-background-primary: "{colors.blue-500}"
+  dark-color-background-primary: "{colors.dark-blue-500}"
+  color-background-secondary-weak: "{colors.gray-050}"
+  dark-color-background-secondary-weak: "{colors.dark-gray-100}"
+  color-background-secondary: "{colors.gray-100}"
+  dark-color-background-secondary: "{colors.dark-gray-200}"
+  color-background-success-weak: "{colors.green-100}"
+  dark-color-background-success-weak: "{colors.dark-green-100}"
+  color-background-success: "{colors.green-500}"
+  dark-color-background-success: "{colors.dark-green-500}"
+  color-background-warning-weak: "{colors.orange-100}"
+  dark-color-background-warning-weak: "{colors.dark-orange-100}"
+  color-background-warning: "{colors.orange-500}"
+  dark-color-background-warning: "{colors.dark-orange-500}"
+  color-background-danger-weak: "{colors.red-100}"
+  dark-color-background-danger-weak: "{colors.dark-red-100}"
+  color-background-danger: "{colors.red-500}"
+  dark-color-background-danger: "{colors.dark-red-500}"
+  color-background-hint-weak: "{colors.gray-100}"
+  dark-color-background-hint-weak: "{colors.dark-gray-200}"
+  color-background-hint: "{colors.gray-600}"
+  dark-color-background-hint: "{colors.dark-gray-600}"
+  color-background-contrast-weak: "{colors.gray-500}"
+  dark-color-background-contrast-weak: "{colors.dark-gray-700}"
+  color-background-contrast: "{colors.gray-800}"
+  dark-color-background-contrast: "{colors.dark-gray-800}"
+  color-background-canvas-base: "{colors.color-white}"
+  dark-color-background-canvas-base: "{colors.dark-gray-050}"
+  color-background-canvas-sunken: "{colors.gray-050}"
+  dark-color-background-canvas-sunken: "{colors.dark-gray-025}"
+  color-background-canvas-raised: "{colors.gray-025}"
+  dark-color-background-canvas-raised: "{colors.dark-gray-100}"
+  color-background-canvas-dim: "{colors.color-black}"
+  dark-color-background-canvas-dim: "{colors.color-black}"   # 상류 다크 블록이 white 와 black 을 라이트와 같은 값으로 다시 정의한다
+  color-background-canvas-overlay: "{colors.color-white}"
+  dark-color-background-canvas-overlay: "{colors.dark-gray-100}"
+  color-background-canvas-inverse: "{colors.gray-800}"
+  dark-color-background-canvas-inverse: "{colors.dark-gray-900}"
+  color-foreground-primary: "{colors.blue-600}"
+  dark-color-foreground-primary: "{colors.dark-blue-600}"
+  color-foreground-primary-strong: "{colors.blue-700}"
+  dark-color-foreground-primary-strong: "{colors.dark-blue-700}"
+  color-foreground-secondary: "{colors.gray-700}"
+  dark-color-foreground-secondary: "{colors.dark-gray-700}"
+  color-foreground-success: "{colors.green-600}"
+  dark-color-foreground-success: "{colors.dark-green-600}"
+  color-foreground-success-strong: "{colors.green-700}"
+  dark-color-foreground-success-strong: "{colors.dark-green-700}"
+  color-foreground-warning: "{colors.orange-600}"
+  dark-color-foreground-warning: "{colors.dark-orange-600}"
+  color-foreground-warning-strong: "{colors.orange-700}"
+  dark-color-foreground-warning-strong: "{colors.dark-orange-700}"
+  color-foreground-danger: "{colors.red-600}"
+  dark-color-foreground-danger: "{colors.dark-red-600}"
+  color-foreground-danger-strong: "{colors.red-700}"
+  dark-color-foreground-danger-strong: "{colors.dark-red-700}"
+  color-foreground-hint: "{colors.gray-500}"
+  dark-color-foreground-hint: "{colors.dark-gray-500}"
+  color-foreground-contrast: "{colors.color-black}"
+  dark-color-foreground-contrast: "{colors.color-white}"   # 상류 다크 블록이 white 와 black 을 라이트와 같은 값으로 다시 정의한다
+  color-foreground-normal: "{colors.gray-900}"
+  dark-color-foreground-normal: "{colors.dark-gray-900}"
+  color-foreground-staticWhite: "{colors.color-white}"
+  dark-color-foreground-staticWhite: "{colors.color-white}"   # 상류 다크 블록이 white 와 black 을 라이트와 같은 값으로 다시 정의한다
+  color-foreground-staticBlack: "{colors.color-black}"
+  dark-color-foreground-staticBlack: "{colors.color-black}"   # 상류 다크 블록이 white 와 black 을 라이트와 같은 값으로 다시 정의한다
   ## Base palette
   # Gray — 표면·텍스트·디바이더의 기반
-  gray-050: oklch(0.976 0.000 0)   # #F7F7F7
+  gray-025: oklch(0.985 0.000 0)   # #FAFAFA — 1.7.0 에 새로 생긴 단
+  # gray-050 은 1.3.0 에서 #F7F7F7 이었다
+  gray-050: oklch(0.967 0.000 0)   # #F4F4F4 — 1.7.0 이 바꾼 값
   gray-100: oklch(0.910 0.000 0)   # #E1E1E1
   gray-200: oklch(0.827 0.000 0)   # #C6C6C6
   gray-300: oklch(0.715 0.000 0)   # #A3A3A3
@@ -222,6 +293,7 @@ colors:
   ## Dark palette
   # 상류는 다크에서 램프 자체를 재정의한다 — 번호가 커질수록 밝아진다
   # Gray
+  dark-gray-025: oklch(0.239 0.000 0)   # #1F1F1F — 1.7.0 에 새로 생긴 단
   dark-gray-050: oklch(0.277 0.000 0)   # #282828
   dark-gray-100: oklch(0.333 0.000 0)   # #363636
   dark-gray-200: oklch(0.398 0.000 0)   # #474747
@@ -441,13 +513,13 @@ elevation:
 
 # Vapor UI — design.md
 
-> 한국의 클라우드 IDE/개발자 교육 회사 goorm(구름)이 운영하는 디자인 시스템. goormIDE·goormEDU·goormLEVEL·goorm Cloud·goorm.co 마케팅 사이트가 단일 시각 언어를 공유하도록 설계되었다 [src:1]. 본 문서의 토큰·컴포넌트 값은 공개 배포물이 1차 출처다 — 기준은 `@vapor-ui/core` 1.3.0 배포본이다 [src:4]. goorm 공식 문서 사이트가 서빙하는 CSS 는 크기·타이포그래피·그림자 토큰에서 같은 값을 내놓지만, 색은 이미 더 새 판(1.7.0)의 값을 서빙한다 [src:1] — 차이는 `## Known Gaps` 에 적었다. 초판은 Claude Design 핸드오프 번들에서 합성했으나 그 값이 발행값과 어긋나 `## Colors`(2026-07-29)에 이어 나머지 토큰 절과 `## Components`(2026-08-17)를 전량 교체했다.
+> 한국의 클라우드 IDE/개발자 교육 회사 goorm(구름)이 운영하는 디자인 시스템. goormIDE·goormEDU·goormLEVEL·goorm Cloud·goorm.co 마케팅 사이트가 단일 시각 언어를 공유하도록 설계되었다 [src:1]. 본 문서의 토큰·컴포넌트 값은 공개 배포물이 1차 출처다 — 색(팔레트와 시맨틱 alias)은 `@vapor-ui/core` 1.7.0 배포본 [src:6], 컴포넌트는 1.3.0 배포본 [src:4] 이 기준이다. 여백, 치수, radius, 글자 크기, 줄높이, 무게, 자간, 그림자 토큰은 두 판이 같은 값을 발행하고 [src:4][src:6], goorm 공식 문서 사이트가 서빙하는 CSS 도 색까지 1.7.0 과 같은 값을 내놓는다 [src:1]. 컴포넌트 절을 1.7.0 과 아직 대조하지 않은 것은 `## Known Gaps` 에 적었다. 초판은 Claude Design 핸드오프 번들에서 합성했으나 그 값이 발행값과 어긋나 `## Colors`(2026-07-29)에 이어 나머지 토큰 절과 `## Components`(2026-08-17)를 전량 교체했다.
 
 ## Brand & Style
 
 Vapor는 시스템 자체의 정체성을 **opinionated, light-first, very token-driven, proudly Korean-bilingual** 로 정의한다 [src:5]. opinionated는 디자인 결정이 토큰 레벨에서 강하게 박혀 있다는 뜻이고, light-first는 다크 모드가 동등하게 지원되되 1차 환경은 화이트 캔버스라는 의미다. very token-driven은 product-facing 색상이 모두 시맨틱 alias로만 노출되어 raw 팔레트는 새 role을 만들 때만 직접 참조된다는 정책을 가리킨다 [src:5].
 
-대상 사용자는 세 층위다. 디자이너에게는 Figma 라이브러리(`figma.com/community/file/1508829832204351721`)를 [src:3], 개발자에게는 `@vapor-ui/core` 1.3.0을 중심으로 한 6패키지 모노레포(`goorm-dev/vapor-ui`)를, 그리고 product surface를 운영하는 host 팀에게는 `@vapor-ui/css-generator`를 통해 기본 키 팔레트를 자체 브랜드 색으로 교체할 수 있는 토큰 빌드 파이프라인을 제공한다 [src:4][src:5]. 2025년 4월 전담 조직 Vapor Squad가 신설되어 Squad Lead 최준영, CDO 이태성 체제로 운영된다 [src:2].
+대상 사용자는 세 층위다. 디자이너에게는 Figma 라이브러리(`figma.com/community/file/1508829832204351721`)를 [src:3], 개발자에게는 `@vapor-ui/core`를 중심으로 한 6패키지 모노레포(`goorm-dev/vapor-ui`)를, 그리고 product surface를 운영하는 host 팀에게는 `@vapor-ui/css-generator`를 통해 기본 키 팔레트를 자체 브랜드 색으로 교체할 수 있는 토큰 빌드 파이프라인을 제공한다 [src:4][src:5]. 2025년 4월 전담 조직 Vapor Squad가 신설되어 Squad Lead 최준영, CDO 이태성 체제로 운영된다 [src:2].
 
 전체 무드는 **bright, soft white** 로 요약된다 [src:5]. 정보 밀도가 높은 표면(테이블·코드 패널·폼)은 흰 카드 위에 옅은 페이지 배경, 그리고 1px 헤어라인으로 분리되는 패턴이며, 색은 절제되어 있고 시맨틱 팔레트는 상태(primary CTA, success/warning/danger badge, link blue)에만 사용된다 [src:5]. 시스템 표면 자체에는 **그라디언트, 글래스/블러 효과, 텍스처, 장식 일러스트가 없다** [src:5]. 그라디언트가 등장하는 단 두 곳은 Vapor 워드마크 로고와 Getting Started 페이지의 컨셉 히어로다 [src:5]. 트랜스페어런시·블러는 토스트와 다이얼로그 스크림에만 쓰이고 frosted glass나 `backdrop-filter`는 시스템에서 제외된다 [src:5].
 
@@ -455,23 +527,21 @@ Voice는 "factual, didactic, slightly warm"으로 정의된다 [src:5]. 한국�
 
 ## Colors
 
-> **역할 계층 정정(2026-11-01).** 배포본 `@vapor-ui/core` 1.3.0 의 `dist/styles/themes.css.ts.vanilla.css` 와 시맨틱 alias 를 다시 대조했다 [src:4]. 상류는 alias 42개를 라이트·다크 블록에 각각 정의하고, 84개 짝 가운데 이 문서가 상류 이름으로 싣던 78개 중 77개는 가리키는 팔레트 단계까지 맞았고, 남은 하나(`overlay-100` 라이트)도 값은 같고 가리키는 토큰 이름만 달랐다 — **값 어긋남은 0건이고 어긋남은 이름에만 있었다.** 세 가지를 고쳤다. `color-background-canvas` 는 상류 이름대로 `color-background-canvas-100` 으로 바꿨다. 싣지 않던 `color-border-normal`(라이트 `gray-100` / 다크 `dark-gray-300`)과 `color-foreground-inverse`(두 테마 모두 `white`)를 더했다. `canvas-100`·`overlay-100` 의 라이트 쪽은 상류가 `white` 가 아니라 별도 팔레트 토큰 `color-canvas` 를 가리키므로, 그 토큰을 `canvas` 로 싣고 그쪽을 가리키게 했다 — 값은 `color-white` 와 같다.
->
-> 다크 램프와 기존 다크 alias 의 대응은 2026-09-08 재대조 결과 그대로다. 상류는 다크에서 램프 자체를 다시 정의하므로(번호가 커질수록 밝아진다) 다크 alias 는 `dark-` 접두 팔레트를 가리킨다 — 예외는 `dark-color-foreground-inverse` 하나로, 상류 다크 블록이 `white` 를 라이트와 같은 값으로 다시 정의하므로 접두 없는 `color-white` 를 가리킨다 [src:4].
+> **1.7.0 재감사(2026-11-09).** 기준 판을 1.3.0 에서 npm `latest` 인 `@vapor-ui/core` 1.7.0 으로 옮기고 `dist/styles/themes.css.ts.vanilla.css` 와 다시 대조했다 [src:6]. 상류는 alias 76개를 라이트와 다크 블록에 각각 정의하고, 152짝 모두 팔레트 토큰 하나를 가리킨다. 이 문서가 1.3.0 기준으로 싣던 84짝 가운데 81짝은 1.7.0 에서도 같은 단계를 가리켰고, 다크 셋이 다른 단계로 옮겨 그대로 고쳤다 — `canvas-100` 이 `dark-canvas` 에서 `dark-gray-050` 으로, `canvas-200` 이 `dark-gray-050` 에서 `dark-gray-100` 으로, `foreground-inverse` 가 `color-white` 에서 `color-black` 으로 갔다. 1.7.0 이 더한 새 이름 34개(68짝)는 아래 두 번째 표와 참조 행으로 실었다. 팔레트는 라이트와 다크 모두 `gray-050` 앞에 `gray-025` 단이 새로 생겼고, 라이트 `gray-050` 이 조금 어두워졌으며(1.3.0 의 값은 그 토큰 줄 위 주석에 남겼다), 나머지 팔레트 값은 라이트와 다크 모두 그대로다. 공식 문서 사이트가 서빙하는 CSS 도 같은 1.7.0 값을 내놓는다 [src:1].
 
-Vapor는 두 테마(`light`, `dark`) 위에 11-family 베이스 팔레트를 둔다 — Red, Pink, Grape, Violet, Blue, Cyan, Green, Lime, Yellow, Orange, Gray. 각 패밀리는 `050, 100, 200, 300, 400, 500, 600, 700, 800, 900` 10단계 + `color-white`/`color-black` 상수로 구성된다 [src:5]. 브랜드 primary는 **Blue 500**이며, 카노니컬한 violet은 Vapor 워드마크에만 등장한다 [src:5].
+Vapor는 두 테마(`light`, `dark`) 위에 11-family 베이스 팔레트를 둔다 — Red, Pink, Grape, Violet, Blue, Cyan, Green, Lime, Yellow, Orange, Gray. 각 패밀리는 `050, 100, 200, 300, 400, 500, 600, 700, 800, 900` 10단계 + `color-white`/`color-black` 상수로 구성된다 [src:5]. Gray 만은 1.7.0 에서 `050` 앞에 `025` 단이 더해져 11단계다 [src:6]. 브랜드 primary는 **Blue 500**이며, 카노니컬한 violet은 Vapor 워드마크에만 등장한다 [src:5].
 
-product-facing 색은 모두 **시맨틱 alias**로 호출하고 raw 팔레트는 새 role을 만들 때만 직접 노출된다 — 명명 규칙은 `color-{role}-{intent}-{level}`이며 roles는 `background`/`foreground`/`border`, intents는 `primary, secondary, success, warning, danger, hint, contrast, normal`, level은 `100`(soft) / `200`(strong)이다 [src:5].
+product-facing 색은 모두 **시맨틱 alias**로 호출하고 raw 팔레트는 새 role을 만들 때만 직접 노출된다 — 명명 규칙은 `color-{role}-{intent}-{level}`이며 roles는 `background`/`foreground`/`border`, intents는 `primary, secondary, success, warning, danger, hint, contrast, normal`, level은 `100`(soft) / `200`(strong)이다 [src:5]. 1.7.0 은 이 이름을 그대로 두고 두 번째 이름 체계를 더했다 — 배경은 접미 없는 이름이 기본 단이고 `-weak` 가 옅은 단, 글자색은 접미 없는 이름이 기본 단이고 `-strong` 이 진한 단이며, 표면은 `color-background-canvas-{base, sunken, raised, dim, overlay, inverse}`, 테마를 타지 않는 글자색은 `color-foreground-staticWhite` 와 `color-foreground-staticBlack` 이다 [src:6]. 새 이름은 옛 이름의 별칭이 아니다 — 같은 자리라도 다른 단계를 가리키는 짝이 있다(`color-background-contrast-weak` 는 `gray-500`, `color-background-contrast-100` 은 `gray-300` 이고, 다크 `color-background-primary-weak` 는 `dark-blue-100`, 다크 `color-background-primary-100` 은 `dark-blue-050` 이다) [src:6].
 
-### Base palette (테마별 11 family × 10 step)
+### Base palette (테마별 11 family × 10 step, Gray 는 11 step)
 
-위 OKLCH는 `@vapor-ui/core`가 배포하는 hex를 변환한 결과이고, 각 출처 hex는 같은 줄 트레일링 주석에 남겼다 [src:4]. (2026-07-29 이전 리비전은 핸드오프 번들 `colors_and_type.css`의 hex를 옮긴 것이었다.)
+위 OKLCH는 `@vapor-ui/core` 1.7.0 이 배포하는 hex를 변환한 결과이고, 각 출처 hex는 같은 줄 트레일링 주석에 남겼다 [src:6]. (2026-07-29 이전 리비전은 핸드오프 번들 `colors_and_type.css`의 hex를 옮긴 것이었다.)
 
-**램프는 테마마다 한 벌씩이다.** 상류는 다크에서 시맨틱 alias 이름을 유지한 채 램프 자체를 다시 정의하므로, frontmatter 도 `dark-` 접두로 두 번째 벌을 발행한다 — `## Base palette` 그룹이 라이트 110개 + `color-white`·`color-black`·`canvas`, `## Dark palette` 그룹이 다크 110개 + `dark-canvas` 다 [src:4]. 다크 램프는 번호가 커질수록 밝아져 라이트의 역순에 가깝다 — 다크 `gray-900` 은 표면이 아니라 본문 글자색 자리이고, 표면은 `dark-gray-050` 쪽이다. 다크 alias(`dark-color-*`)는 이 두 번째 벌을 가리킨다 — 예외는 아래의 `color-white` 를 가리키는 `dark-color-foreground-inverse` 하나다. `canvas`·`dark-canvas` 는 상류가 램프와 별개로 두는 `color-canvas` 의 라이트·다크 값이다 — 라이트 값은 `color-white` 와 같지만 상류가 다른 토큰으로 두고 표면 역할은 이쪽을 가리킨다 [src:4]. 상류 이름은 `color-canvas` 이지만, 같은 묶음의 `color-white`·`color-black` 과 달리 접두를 떼고 `canvas` 로 실었다 — 기존 `dark-canvas` 와 짝을 맞추기 위해서다. 상류는 `color-white`·`color-black` 도 다크 블록에서 같은 값으로 다시 정의하므로 이 둘은 `dark-` 짝을 두지 않는다.
+**램프는 테마마다 한 벌씩이다.** 상류는 다크에서 시맨틱 alias 이름을 유지한 채 램프 자체를 다시 정의하므로, frontmatter 도 `dark-` 접두로 두 번째 벌을 발행한다 — `## Base palette` 그룹이 라이트 111개 + `color-white`·`color-black`·`canvas`, `## Dark palette` 그룹이 다크 111개 + `dark-canvas` 다 [src:6]. 다크 램프는 번호가 커질수록 밝아져 라이트의 역순에 가깝다 — 다크 `gray-900` 은 표면이 아니라 본문 글자색 자리이고, 표면은 `dark-gray-025`~`dark-gray-100` 쪽이다. 다크 alias(`dark-color-*`)는 이 두 번째 벌을 가리킨다 — 예외는 상류 다크 블록이 `color-white` 나 `color-black` 을 가리키는 짝으로, 접두 없는 그 두 키를 가리킨다(`foreground-inverse`, `foreground-contrast`, `foreground-staticWhite`, `foreground-staticBlack`, `canvas-dim`). `canvas`·`dark-canvas` 는 상류가 램프와 별개로 두는 `color-canvas` 의 라이트·다크 값이다 — 라이트 값은 `color-white` 와 같지만 상류가 다른 토큰으로 두고, 라이트 `canvas-100` 과 `overlay-100` 은 이쪽을 가리킨다 [src:6]. 1.7.0 의 다크 `canvas-100` 은 `dark-gray-050` 을 가리키므로 `dark-canvas` 를 가리키는 역할은 없다. 상류가 다크 값을 여전히 발행하므로 팔레트에는 남겼다 [src:6]. 상류 이름은 `color-canvas` 이지만, 같은 묶음의 `color-white`·`color-black` 과 달리 접두를 떼고 `canvas` 로 실었다 — 기존 `dark-canvas` 와 짝을 맞추기 위해서다. 상류는 `color-white`·`color-black` 도 다크 블록에서 같은 값으로 다시 정의하므로 이 둘은 `dark-` 짝을 두지 않는다.
 
 ### Semantic alias (light → dark)
 
-aliases는 raw 토큰 이름만 참조한다 — 값은 base palette에서 유래하므로 별도 색 표기를 두지 않는다. 아래 표가 배포본이 발행하는 alias 전부이고, 하나하나가 팔레트 토큰 하나를 가리키므로 frontmatter `colors:` 에도 같은 이름의 참조 행(다크는 `dark-` 접두)으로 실려 있다 [src:4].
+aliases는 raw 토큰 이름만 참조한다 — 값은 base palette에서 유래하므로 별도 색 표기를 두지 않는다. 아래 두 표가 1.7.0 배포본이 발행하는 alias 76개 전부이고, 하나하나가 팔레트 토큰 하나를 가리키므로 frontmatter `colors:` 에도 같은 이름의 참조 행(다크는 `dark-` 접두)으로 실려 있다 [src:6]. 첫 표는 1.3.0 이 이미 발행한 이름 42개(`-100`/`-200` 단 이름과, 단이 없는 `color-border-*` 와 `color-foreground-inverse`), 둘째 표는 1.7.0 이 더한 이름이다.
 
 | 역할 | 라이트 | 다크 |
 |---|---|---|
@@ -489,8 +559,8 @@ aliases는 raw 토큰 이름만 참조한다 — 값은 base palette에서 유�
 | `color-background-hint-200` | `{colors.gray-600}` | `{colors.dark-gray-600}` |
 | `color-background-contrast-100` | `{colors.gray-300}` | `{colors.dark-gray-800}` |
 | `color-background-contrast-200` | `{colors.gray-800}` | `{colors.dark-gray-300}` |
-| `color-background-canvas-100` | `{colors.canvas}` | `{colors.dark-canvas}` |
-| `color-background-canvas-200` | `{colors.gray-050}` | `{colors.dark-gray-050}` |
+| `color-background-canvas-100` | `{colors.canvas}` | `{colors.dark-gray-050}` |
+| `color-background-canvas-200` | `{colors.gray-050}` | `{colors.dark-gray-100}` |
 | `color-background-overlay-100` | `{colors.canvas}` | `{colors.dark-gray-100}` |
 | `color-foreground-primary-100` | `{colors.blue-600}` | `{colors.dark-blue-600}` |
 | `color-foreground-primary-200` | `{colors.blue-700}` | `{colors.dark-blue-700}` |
@@ -508,7 +578,7 @@ aliases는 raw 토큰 이름만 참조한다 — 값은 base palette에서 유�
 | `color-foreground-contrast-200` | `{colors.gray-900}` | `{colors.dark-gray-300}` |
 | `color-foreground-normal-100` | `{colors.gray-700}` | `{colors.dark-gray-700}` |
 | `color-foreground-normal-200` | `{colors.gray-900}` | `{colors.dark-gray-900}` |
-| `color-foreground-inverse` | `{colors.color-white}` | `{colors.color-white}` |
+| `color-foreground-inverse` | `{colors.color-white}` | `{colors.color-black}` |
 | `color-border-normal` | `{colors.gray-100}` | `{colors.dark-gray-300}` |
 | `color-border-primary` | `{colors.blue-500}` | `{colors.dark-blue-400}` |
 | `color-border-secondary` | `{colors.gray-200}` | `{colors.dark-gray-200}` |
@@ -517,6 +587,45 @@ aliases는 raw 토큰 이름만 참조한다 — 값은 base palette에서 유�
 | `color-border-danger` | `{colors.red-500}` | `{colors.dark-red-400}` |
 | `color-border-hint` | `{colors.gray-600}` | `{colors.dark-gray-400}` |
 | `color-border-contrast` | `{colors.gray-800}` | `{colors.dark-gray-400}` |
+
+1.7.0 이 더한 이름 34개다 [src:6].
+
+| 역할 | 라이트 | 다크 |
+|---|---|---|
+| `color-background-primary-weak` | `{colors.blue-100}` | `{colors.dark-blue-100}` |
+| `color-background-primary` | `{colors.blue-500}` | `{colors.dark-blue-500}` |
+| `color-background-secondary-weak` | `{colors.gray-050}` | `{colors.dark-gray-100}` |
+| `color-background-secondary` | `{colors.gray-100}` | `{colors.dark-gray-200}` |
+| `color-background-success-weak` | `{colors.green-100}` | `{colors.dark-green-100}` |
+| `color-background-success` | `{colors.green-500}` | `{colors.dark-green-500}` |
+| `color-background-warning-weak` | `{colors.orange-100}` | `{colors.dark-orange-100}` |
+| `color-background-warning` | `{colors.orange-500}` | `{colors.dark-orange-500}` |
+| `color-background-danger-weak` | `{colors.red-100}` | `{colors.dark-red-100}` |
+| `color-background-danger` | `{colors.red-500}` | `{colors.dark-red-500}` |
+| `color-background-hint-weak` | `{colors.gray-100}` | `{colors.dark-gray-200}` |
+| `color-background-hint` | `{colors.gray-600}` | `{colors.dark-gray-600}` |
+| `color-background-contrast-weak` | `{colors.gray-500}` | `{colors.dark-gray-700}` |
+| `color-background-contrast` | `{colors.gray-800}` | `{colors.dark-gray-800}` |
+| `color-background-canvas-base` | `{colors.color-white}` | `{colors.dark-gray-050}` |
+| `color-background-canvas-sunken` | `{colors.gray-050}` | `{colors.dark-gray-025}` |
+| `color-background-canvas-raised` | `{colors.gray-025}` | `{colors.dark-gray-100}` |
+| `color-background-canvas-dim` | `{colors.color-black}` | `{colors.color-black}` |
+| `color-background-canvas-overlay` | `{colors.color-white}` | `{colors.dark-gray-100}` |
+| `color-background-canvas-inverse` | `{colors.gray-800}` | `{colors.dark-gray-900}` |
+| `color-foreground-primary` | `{colors.blue-600}` | `{colors.dark-blue-600}` |
+| `color-foreground-primary-strong` | `{colors.blue-700}` | `{colors.dark-blue-700}` |
+| `color-foreground-secondary` | `{colors.gray-700}` | `{colors.dark-gray-700}` |
+| `color-foreground-success` | `{colors.green-600}` | `{colors.dark-green-600}` |
+| `color-foreground-success-strong` | `{colors.green-700}` | `{colors.dark-green-700}` |
+| `color-foreground-warning` | `{colors.orange-600}` | `{colors.dark-orange-600}` |
+| `color-foreground-warning-strong` | `{colors.orange-700}` | `{colors.dark-orange-700}` |
+| `color-foreground-danger` | `{colors.red-600}` | `{colors.dark-red-600}` |
+| `color-foreground-danger-strong` | `{colors.red-700}` | `{colors.dark-red-700}` |
+| `color-foreground-hint` | `{colors.gray-500}` | `{colors.dark-gray-500}` |
+| `color-foreground-contrast` | `{colors.color-black}` | `{colors.color-white}` |
+| `color-foreground-normal` | `{colors.gray-900}` | `{colors.dark-gray-900}` |
+| `color-foreground-staticWhite` | `{colors.color-white}` | `{colors.color-white}` |
+| `color-foreground-staticBlack` | `{colors.color-black}` | `{colors.color-black}` |
 
 다크 모드는 `data-vapor-theme="dark"` 속성으로 활성화된다 — 라이트는 `:root` 와 `[data-vapor-theme='light']` 가 함께 받는 기본값이다 [src:4]. host 앱은 `@vapor-ui/css-generator`로 빌드 단계에서 기본 키 팔레트(예: blue 패밀리)를 자체 브랜드 색으로 교체할 수 있어 — Vapor의 시맨틱 alias는 그대로 둔 채 시각적 1차 색만 swap된다 [src:5].
 
@@ -659,7 +768,7 @@ import { Button } from "@vapor-ui/core";
 
 ### button-primary
 
-`<Button colorPalette="primary">` (variant 기본값 `fill`). `{colors.color-background-primary-200}` bg + `{colors.color-foreground-inverse}` 텍스트다. hover·press 는 색을 바꾸지 않고 절 공통의 검정 오버레이만 얹는다 [src:4].
+`<Button colorPalette="primary">` (variant 기본값 `fill`). `{colors.color-background-primary-200}` bg + 흰 텍스트다. hover·press 는 색을 바꾸지 않고 절 공통의 검정 오버레이만 얹는다 [src:4]. 흰 텍스트 자리에 1.3.0 은 `color-foreground-inverse` 를 썼는데 그때 inverse 는 두 테마 모두 white 였다 [src:4]. 1.7.0 은 inverse 를 다크에서 black 으로 바꾸면서 이 자리를 `{colors.color-foreground-staticWhite}` 로 옮겼다 [src:6].
 
 ### button-primary-outline
 
@@ -766,7 +875,7 @@ radius `{rounded.size-borderRadius-300}` (8px) + 1px `{colors.color-border-norma
 
 ### avatar
 
-높이 사다리를 정사각으로 쓴다 — 24 · 32 · 40 · 48px 에 1px `{colors.color-border-normal}` 헤어라인, padding 0 이다. `shape` 는 `square`(기본)와 `circle`(50%) 두 가지이고, **`square` 의 radius 는 사이즈를 따라 커진다** — `sm` `{rounded.size-borderRadius-200}` (6px) · `md` `{rounded.size-borderRadius-300}` (8px) · `lg`·`xl` `{rounded.size-borderRadius-400}` (12px) [src:4]. 이미지가 없을 때의 이니셜은 `{colors.color-foreground-inverse}` 텍스트이며 사이즈별로 12 / 14 / 18 / 20px 이고 **무게가 두 단으로 갈린다** — `sm`·`md` 500, `lg`·`xl` 700 [src:4].
+높이 사다리를 정사각으로 쓴다 — 24 · 32 · 40 · 48px 에 1px `{colors.color-border-normal}` 헤어라인, padding 0 이다. `shape` 는 `square`(기본)와 `circle`(50%) 두 가지이고, **`square` 의 radius 는 사이즈를 따라 커진다** — `sm` `{rounded.size-borderRadius-200}` (6px) · `md` `{rounded.size-borderRadius-300}` (8px) · `lg`·`xl` `{rounded.size-borderRadius-400}` (12px) [src:4]. 이미지가 없을 때의 이니셜은 `{colors.color-foreground-staticWhite}` 텍스트이며(1.3.0 의 `color-foreground-inverse` 자리를 1.7.0 이 이 이름으로 옮겼다 [src:6]) 사이즈별로 12 / 14 / 18 / 20px 이고 **무게가 두 단으로 갈린다** — `sm`·`md` 500, `lg`·`xl` 700 [src:4].
 
 ### table
 
@@ -865,9 +974,9 @@ Vapor 시스템은 imagery treatment를 강제하지 않는다. goorm 마케팅 
 ## Known Gaps
 
 - **다크 fill 버튼의 흰 텍스트가 AA 에 못 미친다 (2026-09-08)** — 상류 다크 `background-primary-200`(`#368AED`)·`background-danger-200`(`#F14F5A`) 위에 `### button-primary`·`### button-danger` 가 규정한 흰 텍스트를 얹으면 대비가 3.5:1 로 WCAG AA(4.5:1)에 못 미친다 [src:4]. 라이트(각각 `#2A72E5`·`#DA3944`)는 4.5 를 넘으므로 다크 램프에서만 생기는 문제다. 발행값을 그대로 옮긴 결과이고 값을 바꾸면 브랜드 색을 왜곡하므로 고치지 않는다 — 프리뷰도 같은 조합을 시연한다.
-- **다크에서 `contrast` 의 전경·배경이 같은 값이다 (2026-09-08)** — 상류 다크 블록이 `color-background-contrast-200` 과 `color-foreground-contrast-200` 을 모두 `gray-300`(다크 `#606060`)으로 매핑한다 [src:4]. 라이트에서는 `gray-800`/`gray-900` 으로 갈리므로 다크만의 특성이고, 발행값을 그대로 옮긴 것이다. 둘을 겹쳐 쓰면 대비가 1:1 이 되니 다크에서 contrast 표면 위 텍스트는 `{colors.color-white}` 를 쓴다 — `### button-contrast` 가 그렇게 규정하고 이 문서의 프리뷰도 그 조합을 시연한다.
+- **다크에서 `contrast` 의 전경·배경이 같은 값이다 (2026-09-08)** — 상류 다크 블록이 `color-background-contrast-200` 과 `color-foreground-contrast-200` 을 모두 `gray-300`(다크 `#606060`)으로 매핑한다 [src:4]. 라이트에서는 `gray-800`/`gray-900` 으로 갈리므로 다크만의 특성이고, 발행값을 그대로 옮긴 것이다. 둘을 겹쳐 쓰면 대비가 1:1 이 되니 다크에서 contrast 표면 위 텍스트는 `{colors.color-white}` 를 쓴다 — `### button-contrast` 가 그렇게 규정하고 이 문서의 프리뷰도 그 조합을 시연한다. 1.7.0 이 더한 `color-background-contrast`(다크 `dark-gray-800`)와 `color-foreground-contrast`(다크 `color-white`)는 다크에서도 갈린다 [src:6].
 - **Responsive breakpoint 토큰** 자체는 1.3.0 배포본에서 surface되지 않았다 [src:4]. host 앱 측에서 정의하도록 위임된 것으로 추정 — 위 Responsive Behavior 섹션의 분기점은 합리적 권장값이며 Vapor 공식 토큰은 아니다.
-- **이 문서는 1.3.0 을 기준으로 하고, 더 새 배포본의 토큰 개편은 반영하지 않았다 (2026-11-01)** — `@vapor-ui/core` 1.7.0 배포본은 `-100`/`-200` alias 를 그대로 두면서 새 이름 체계(`color-background-primary-weak` · `color-foreground-primary-strong` · `color-background-canvas-base` 등) 32개를 더했고, 팔레트에 `gray-025` 를 새로 두며 라이트 `gray-050` 을 `#F7F7F7` (≈ oklch(0.976 0.000 0), 1.3.0 [src:4]) 에서 `#F4F4F4` (≈ oklch(0.967 0.000 0)) 로 바꿨다 [src:6]. 남겨 둔 alias 도 다크 세 개가 다른 단계를 가리킨다 — `canvas-100` 이 `gray-050`, `canvas-200` 이 `gray-100`, `foreground-inverse` 가 `black` 이다 [src:6]. 배포본만이 아니라 공식 문서 사이트도 이미 이 1.7.0 색 값을 서빙한다 [src:1]. 1.7.0 으로 옮기면 기존 팔레트 값 하나(라이트 `gray-050`)와 다크 참조 행 셋(`dark-color-background-canvas-100` · `dark-color-background-canvas-200` · `dark-color-foreground-inverse`)이 바뀌고 새 이름 32개를 실어야 하므로, 사용자 결정(2026-11-01)으로 이 일은 후속 재감사로 나눴다. 이 문서의 값과 역할 표는 1.3.0 배포본과 일치한다.
+- **`## Components` 는 1.3.0 배포본 기준이다 (2026-11-09)** — 1.7.0 배포본은 스타일을 갖는 컴포넌트를 35개에서 41개로 늘렸고(`alert-dialog`, `meter`, `progress-bar`, `toggle`, `toggle-group`, `toolbar`), 1.3.0 에 있던 35개 가운데 30개는 CSS 파일이 달라졌다 [src:4][src:6]. 컴포넌트 CSS 가 쓰는 alias 도 대부분 1.7.0 의 새 이름으로 옮겨 갔다 [src:6]. 이 문서는 색 기준을 1.7.0 으로 옮기며 뜻이 바뀐 자리(`### button-primary` 와 `### avatar` 의 글자색)만 고쳤다. 컴포넌트 쪽 규약이 바뀐 사례도 이미 있다 — 1.7.0 의 contrast fill 버튼은 배경을 `color-background-contrast`, 글자색을 `color-foreground-inverse`(다크에서 검정)로 쓰는데 [src:6], `### button-contrast` 와 위 다크 contrast 항목은 1.3.0 규정대로 `contrast-200` 위 흰 글자를 적고 있다 [src:4]. 달라진 파일이 생성 클래스 해시만 바뀐 것인지 치수와 규약까지 바뀐 것인지는 대조하지 않았다 — 남은 재감사다.
 - **Form validation states** — `{component.text-input}` · `{component.checkbox}` · `{component.radio}` · `{component.select}` 가 `invalid` 축을 갖고 그 시각 처리는 확인됐으나, helper text · success state 의 토큰화된 정의는 배포본에 없다 [src:4].
 - **철회된 부재 주장 2건 (2026-08-17)** — 종전 판본은 `## Spacing` 이 "컴포넌트 사이징과 border width는 별도 토큰 그룹으로 분리된다"며 `size-component-*` 4개와 `size-borderWidth-*` 2개를 실었고, `## Rounded` 가 `size-borderRadius-circle` 을 12번째 토큰으로 실었다. **셋 다 존재하지 않는다** — 배포본과 문서 사이트 어디에도 그 이름이 없다 [src:4][src:1]. 컨트롤 높이의 실제 출처는 `size-dimension-*` 이고, 1px·2px 과 `9999px` 는 리터럴로 적힌다.
 - **철회된 부재 주장 1건 (2026-08-16)** — 종전 판본은 "카드 padding 기본값은 시스템이 별도 강제하지 않고 콘텐츠 주도로 결정된다"를 적고, 여기에 "host 팀이 자체 padding ladder를 별도 정의해야 한다"는 권고를 달았다. **지금은 거짓이다** — `@vapor-ui/core` 1.3.0의 `card.css`가 `padding: 16px 24px`(헤더·푸터)와 `padding: 24px`(본문)를 강제한다 [src:4]. 부재 주장이 낳은 권고는 그 주장이 철회되면 함께 무너진다.
@@ -879,6 +988,6 @@ Vapor 시스템은 imagery treatment를 강제하지 않는다. goorm 마케팅 
 1. https://vapor-ui.goorm.io/ — 공식 docs/데모 사이트, goorm 네이밍·운영 컨텍스트.
 2. https://blog.goorm.io/vapor-figma-seoul/ — goorm 공식 블로그 "Vapor at Figma Config Seoul 2025", Vapor Squad 조직(2025년 4월 신설, Squad Lead 최준영, CDO 이태성)·SSOT 자동화·MCP Server 컨텍스트.
 3. https://www.figma.com/community/file/1508829832204351721/vapor-design-system — Vapor Design System Figma Community 파일. 평범한 GET에는 텍스트가 34자뿐인 JS 셸이라 브라우저로 열어야 파일 정보가 보인다.
-4. https://cdn.jsdelivr.net/npm/@vapor-ui/core@1.3.0/ — `@vapor-ui/core` 1.3.0 배포본의 파일 목록(jsDelivr, 버전 고정). 이 문서의 기준 판이다 — 팔레트는 `dist/styles/themes.css.ts.vanilla.css`, 컴포넌트 치수·무게·radius는 `dist/components/*/*.css.ts.vanilla.css`(35개)와 `dist/styles/mixins/typography.css.ts.vanilla.css`다.
+4. https://cdn.jsdelivr.net/npm/@vapor-ui/core@1.3.0/ — `@vapor-ui/core` 1.3.0 배포본의 파일 목록(jsDelivr, 버전 고정). 컴포넌트 절의 기준 판이다 — 컴포넌트 치수·무게·radius는 `dist/components/*/*.css.ts.vanilla.css`(35개)와 `dist/styles/mixins/typography.css.ts.vanilla.css`, 크기, 타이포그래피, 그림자 토큰은 `dist/styles/themes.css.ts.vanilla.css` 다. 색의 기준은 [src:6] 이다.
 5. https://github.com/goorm-dev/vapor-ui — GitHub 모노레포(6 패키지 구조: core / hooks / icons / codemod / color-generator / css-generator, README 카피). **루트 URL 하나가 본문 인용의 대부분을 떠받치고 있어**, 개별 주장을 이 링크만으로 확인하기 어렵다. 토큰 값은 [src:4]의 배포 CSS가, 정책·카피 서술은 이 저장소의 README와 docs 소스가 각각 1차 근거다.
-6. https://cdn.jsdelivr.net/npm/@vapor-ui/core@1.7.0/dist/styles/themes.css.ts.vanilla.css — `@vapor-ui/core` 1.7.0 배포본의 팔레트·alias CSS(jsDelivr, 버전 고정). 이 문서의 기준 판(1.3.0, [src:4])보다 새 판이라 `## Known Gaps` 의 차이 서술만 받친다.
+6. https://cdn.jsdelivr.net/npm/@vapor-ui/core@1.7.0/ — `@vapor-ui/core` 1.7.0 배포본의 파일 목록(jsDelivr, 버전 고정). 이 문서 색의 기준 판이다 — 팔레트와 시맨틱 alias 는 `dist/styles/themes.css.ts.vanilla.css`, 컴포넌트가 쓰는 alias 는 `dist/components/*/*.css.ts.vanilla.css`(41개)다. 컴포넌트 치수와 규약의 기준은 [src:4] 다.
