@@ -472,25 +472,13 @@
       "name": "interaction-blue",
       "value": "oklch(0.429 0.297 264)",
       "note": "번들 전용 — links, ghost action, focus ring source. 발행 원시 팔레트에 같은 값이 없다(가장 가까운 deepBlue[80] 도 ΔE 0.106). sRGB 색역 밖 — 브라우저가 클리핑하며 라이브는 더 낮은 채도를 쓴다(Colors 절 감사 메모 참조)",
-      "group": "Bundle-only — 핸드오프 번들 색 가운데 발행 패키지에 대응 단계가 없는 것만 (Colors 절 감사 메모 참조)"
-    },
-    {
-      "name": "interaction-blue-soft",
-      "value": "oklch(0.958 0.020 280)",
-      "note": "번들 전용 — ghost hover 표면. interaction-blue 와 한 벌이라 함께 남겼다",
-      "group": "Bundle-only — 핸드오프 번들 색 가운데 발행 패키지에 대응 단계가 없는 것만 (Colors 절 감사 메모 참조)"
+      "group": "Bundle-only — 핸드오프 번들 색 가운데 발행 패키지에 대응 값이 없는 것만 (Colors 절 감사 메모 참조)"
     },
     {
       "name": "focus-ring",
       "value": "oklch(0.429 0.297 264 / 0.32)",
       "note": "번들 전용 — interaction-blue 값. 발행 패키지에 포커스 링 토큰이 없다. sRGB 색역 밖(Colors 절 감사 메모 참조)",
-      "group": "Bundle-only — 핸드오프 번들 색 가운데 발행 패키지에 대응 단계가 없는 것만 (Colors 절 감사 메모 참조)"
-    },
-    {
-      "name": "badge-blue-bg",
-      "value": "oklch(0.932 0.034 286)",
-      "note": "번들 전용 — blue 배지 바탕. interaction-blue 글자와 한 벌이라 함께 남겼다",
-      "group": "Bundle-only — 핸드오프 번들 색 가운데 발행 패키지에 대응 단계가 없는 것만 (Colors 절 감사 메모 참조)"
+      "group": "Bundle-only — 핸드오프 번들 색 가운데 발행 패키지에 대응 값이 없는 것만 (Colors 절 감사 메모 참조)"
     },
     {
       "name": "neutral-0",
@@ -803,6 +791,12 @@
       "name": "sky-blue-90",
       "value": "oklch(0.378 0.066 224.3)",
       "note": "#0B495C — stack-tokens skyBlue[90]",
+      "group": "Stack palette — @teamsparta/stack-tokens primitiveColor (역할 계층·컴포넌트 토큰·컴포넌트 스펙이 가리키는 단계만)"
+    },
+    {
+      "name": "deep-blue-10",
+      "value": "oklch(0.958 0.015 270.0)",
+      "note": "#EDF1FC — stack-tokens deepBlue[10]",
       "group": "Stack palette — @teamsparta/stack-tokens primitiveColor (역할 계층·컴포넌트 토큰·컴포넌트 스펙이 가리키는 단계만)"
     }
   ],

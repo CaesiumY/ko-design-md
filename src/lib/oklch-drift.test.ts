@@ -264,7 +264,7 @@ describe("alignToPreviewNames", () => {
     // `yeogi-red` and a bare `red` both produce `yg-red`. Whichever came first
     // in the md would win on declaration order alone and the gate would compare
     // against a value chosen by nothing. The catalogue has no such collision
-    // today (measured: 0 across all 17 slugs), which is why this is a fixture.
+    // today, which is why this is a fixture.
     const out = alignToPreviewNames(
       defs({ "yeogi-red": "oklch(0.61 0.21 19)", red: "oklch(0.5 0.2 19)" }),
       "yeogi"

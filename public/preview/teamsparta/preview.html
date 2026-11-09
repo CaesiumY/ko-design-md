@@ -36,10 +36,10 @@
     --sp-green-100: oklch(0.387 0.107 143.2);
     --sp-sky-blue-10: oklch(0.959 0.029 215.7);
     --sp-sky-blue-90: oklch(0.378 0.066 224.3);
+    --sp-deep-blue-10: oklch(0.958 0.015 270.0);
+    --sp-blue-20: oklch(0.927 0.037 247.0);
     --sp-interaction-blue: oklch(0.429 0.297 264);
-    --sp-interaction-blue-soft: oklch(0.958 0.020 280);
     --sp-focus-ring: oklch(0.429 0.297 264 / 0.32);
-    --sp-badge-blue-bg: oklch(0.932 0.034 286);
 
     --sp-brand-strong: var(--sp-red-80);
     --sp-brand-default: var(--sp-red-70);
@@ -72,7 +72,7 @@
     --btn-outline-border: var(--sp-brand-default);
     --btn-outline-fg: var(--sp-brand-default);
     --btn-ghost-fg: var(--sp-interaction-blue);
-    --btn-ghost-bg-hover: var(--sp-interaction-blue-soft);
+    --btn-ghost-bg-hover: var(--sp-deep-blue-10);
     --switch-on: var(--sp-brand-default);
     --switch-on-hover: var(--sp-brand-strong);
     --switch-off: var(--sp-neutral-30);
@@ -113,12 +113,12 @@
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 42px; padding: 0 22px; border-radius: 50px; border: 1px solid transparent; font-size: 14px; font-weight: 700; line-height: 1; font-family: inherit; text-decoration: none; }
   .btn-primary { background: var(--btn-primary-bg); color: var(--btn-primary-fg); }
   .btn-primary:hover { background: var(--btn-primary-bg-hover); }
-  .btn-secondary { background: var(--btn-secondary-bg); color: var(--btn-secondary-fg); border-color: var(--btn-secondary-border); }
-  .btn-secondary:hover { background: var(--btn-secondary-bg-hover); }
+  .btn-outline-secondary { background: var(--btn-secondary-bg); color: var(--btn-secondary-fg); border-color: var(--btn-secondary-border); }
+  .btn-outline-secondary:hover { background: var(--btn-secondary-bg-hover); }
   .btn-tertiary { background: var(--btn-tertiary-bg); color: var(--btn-tertiary-fg); }
   .btn-tertiary:hover { background: var(--btn-tertiary-bg-hover); }
-  .btn-outline { background: var(--btn-outline-bg); color: var(--btn-outline-fg); border-color: var(--btn-outline-border); }
-  .btn-outline:hover { background: var(--btn-outline-bg-hover); }
+  .btn-outline-primary { background: var(--btn-outline-bg); color: var(--btn-outline-fg); border-color: var(--btn-outline-border); }
+  .btn-outline-primary:hover { background: var(--btn-outline-bg-hover); }
   .btn-ghost { background: transparent; color: var(--btn-ghost-fg); }
   .btn-ghost:hover { background: var(--btn-ghost-bg-hover); }
   .btn-disabled { background: var(--sp-fill-subtle); color: var(--sp-text-quaternary); cursor: not-allowed; }
@@ -158,7 +158,7 @@
   .pills { display: flex; gap: 6px; flex-wrap: wrap; }
   .pill { display: inline-flex; align-items: center; min-height: 20px; padding: 3px 10px; border-radius: 50px; font-size: 11px; font-weight: 800; }
   .pill.red { background: var(--sp-brand-subtlest); color: var(--sp-brand-strong); }
-  .pill.blue { background: var(--sp-badge-blue-bg); color: var(--sp-interaction-blue); }
+  .pill.blue { background: var(--sp-blue-20); color: var(--sp-interaction-blue); }
   .pill.teal { background: var(--sp-sky-blue-10); color: var(--sp-sky-blue-90); }
   .pill.green { background: var(--sp-green-10); color: var(--sp-green-80); }
   .course-title { margin-top: 5px; font-size: 14px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -250,10 +250,10 @@
     --sp-green-100: oklch(0.387 0.107 143.2);
     --sp-sky-blue-10: oklch(0.959 0.029 215.7);
     --sp-sky-blue-90: oklch(0.378 0.066 224.3);
+    --sp-deep-blue-10: oklch(0.958 0.015 270.0);
+    --sp-blue-20: oklch(0.927 0.037 247.0);
     --sp-interaction-blue: oklch(0.429 0.297 264);
-    --sp-interaction-blue-soft: oklch(0.958 0.020 280);
     --sp-focus-ring: oklch(0.429 0.297 264 / 0.32);
-    --sp-badge-blue-bg: oklch(0.932 0.034 286);
 
     --sp-brand-strong: var(--sp-red-50);
     --sp-brand-default: var(--sp-red-70);
@@ -285,8 +285,8 @@
     --btn-outline-bg-hover: oklch(1.000 0.000 0.0 / 0.12);
     --btn-outline-border: var(--sp-neutral-10);
     --btn-outline-fg: var(--sp-text-primary);
-    /* 다크 해석 — 번들 ghost 는 다크 값이 없고 interaction-blue 글자는 다크 바탕에서 읽히지 않아, 같은 번들 한 벌의 interaction-blue-soft 를 글자색으로 썼다. 다크 --surface 가 바뀌면 다시 잰다. */
-    --btn-ghost-fg: var(--sp-interaction-blue-soft);
+    /* md 토큰 아님 · 파생색 — 번들 ghost 는 다크 값이 없고 interaction-blue 글자는 다크 바탕에서 읽히지 않아 같은 hue 로 밝혔다. hover 바탕도 interaction-blue 에 투명도를 얹은 파생색이다. 다크 --surface 나 interaction-blue 가 바뀌면 다시 잰다. */
+    --btn-ghost-fg: oklch(0.705 0.160 264);
     --btn-ghost-bg-hover: oklch(0.429 0.297 264 / 0.16);
     --switch-on: var(--sp-brand-default);
     --switch-on-hover: var(--sp-brand-strong);
@@ -327,12 +327,12 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 42px; padding: 0 22px; border-radius: 50px; border: 1px solid transparent; font-size: 14px; font-weight: 700; line-height: 1; font-family: inherit; text-decoration: none; }
 [data-theme="dark"] .btn-primary { background: var(--btn-primary-bg); color: var(--btn-primary-fg); }
 [data-theme="dark"] .btn-primary:hover { background: var(--btn-primary-bg-hover); }
-[data-theme="dark"] .btn-secondary { background: var(--btn-secondary-bg); color: var(--btn-secondary-fg); border-color: var(--btn-secondary-border); }
-[data-theme="dark"] .btn-secondary:hover { background: var(--btn-secondary-bg-hover); }
+[data-theme="dark"] .btn-outline-secondary { background: var(--btn-secondary-bg); color: var(--btn-secondary-fg); border-color: var(--btn-secondary-border); }
+[data-theme="dark"] .btn-outline-secondary:hover { background: var(--btn-secondary-bg-hover); }
 [data-theme="dark"] .btn-tertiary { background: var(--btn-tertiary-bg); color: var(--btn-tertiary-fg); }
 [data-theme="dark"] .btn-tertiary:hover { background: var(--btn-tertiary-bg-hover); }
-[data-theme="dark"] .btn-outline { background: var(--btn-outline-bg); color: var(--btn-outline-fg); border-color: var(--btn-outline-border); }
-[data-theme="dark"] .btn-outline:hover { background: var(--btn-outline-bg-hover); }
+[data-theme="dark"] .btn-outline-primary { background: var(--btn-outline-bg); color: var(--btn-outline-fg); border-color: var(--btn-outline-border); }
+[data-theme="dark"] .btn-outline-primary:hover { background: var(--btn-outline-bg-hover); }
 [data-theme="dark"] .btn-ghost { background: transparent; color: var(--btn-ghost-fg); }
 [data-theme="dark"] .btn-ghost:hover { background: var(--btn-ghost-bg-hover); }
 [data-theme="dark"] .btn-disabled { background: var(--sp-fill-subtle); color: var(--sp-text-quaternary); cursor: not-allowed; }
@@ -372,7 +372,7 @@ html[data-theme="dark"], [data-theme="dark"] body {
 [data-theme="dark"] .pills { display: flex; gap: 6px; flex-wrap: wrap; }
 [data-theme="dark"] .pill { display: inline-flex; align-items: center; min-height: 20px; padding: 3px 10px; border-radius: 50px; font-size: 11px; font-weight: 800; }
 [data-theme="dark"] .pill.red { background: var(--sp-brand-subtlest); color: var(--sp-brand-strong); }
-[data-theme="dark"] .pill.blue { background: var(--sp-badge-blue-bg); color: var(--sp-interaction-blue); }
+[data-theme="dark"] .pill.blue { background: var(--sp-blue-20); color: var(--sp-interaction-blue); }
 [data-theme="dark"] .pill.teal { background: var(--sp-sky-blue-10); color: var(--sp-sky-blue-90); }
 [data-theme="dark"] .pill.green { background: var(--sp-green-10); color: var(--sp-green-80); }
 [data-theme="dark"] .course-title { margin-top: 5px; font-size: 14px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -451,7 +451,7 @@ html[data-theme="dark"], [data-theme="dark"] body {
       <h1>완주를 밀어주는 학습 대시보드</h1>
       <div class="actions">
         <a class="btn btn-primary" href="#dashboard">이어서 학습</a>
-        <a class="btn btn-secondary" href="#components">컴포넌트 보기</a>
+        <a class="btn btn-outline-secondary" href="#components">컴포넌트 보기</a>
       </div>
     </div>
   </section>
@@ -530,9 +530,9 @@ html[data-theme="dark"], [data-theme="dark"] body {
           <p class="row-label">Buttons and badges</p>
           <div class="actions" style="margin-top: 0;">
             <button class="btn btn-primary">수강신청</button>
-            <button class="btn btn-secondary">자세히 보기</button>
+            <button class="btn btn-outline-secondary">자세히 보기</button>
             <button class="btn btn-tertiary">임시 저장</button>
-            <button class="btn btn-outline">관심 강의</button>
+            <button class="btn btn-outline-primary">관심 강의</button>
             <button class="btn btn-ghost">로그인</button>
             <button class="btn btn-disabled" aria-disabled="true">신청 완료</button>
           </div>
@@ -555,7 +555,7 @@ html[data-theme="dark"], [data-theme="dark"] body {
       <div class="cards" style="margin-top: 16px;">
         <article class="course-card"><div class="media" style="--card-media: var(--sp-brand-default);">AI 활용 부트캠프</div><div class="card-body"><div class="pills"><span class="pill red">HOT</span><span class="pill teal">국비지원</span></div><h3 style="margin:0;font-size:15px;">오늘 배워 내일 써먹는 ChatGPT 활용법</h3><p class="course-sub">취준생, 직장인에게 필요한 ChatGPT 활용법만 모았다.</p><div class="card-foot"><span>평점 4.8 · 12,430명</span><span class="price">무료</span></div></div></article>
         <article class="course-card"><div class="media" style="--card-media: var(--sp-sky-blue-90);">내일배움캠프</div><div class="card-body"><div class="pills"><span class="pill blue">NEW</span><span class="pill green">모집중</span></div><h3 style="margin:0;font-size:15px;">AI 시대 취업 캠프 · 데이터분석 트랙</h3><p class="course-sub">직무별 AI 포트폴리오부터 인턴십까지 연결한다.</p><div class="card-foot"><span>6월 2일 개강</span><span class="price">국비지원</span></div></div></article>
-        <!-- 파생색 되돌림 · 발행값 — 다크 카드 바탕은 다크용으로 밝힌 --dark-blue 였고, 그것을 만든 interaction-blue(--sp-interaction-blue)로 돌렸다(흰 글자 대비 2.68 → 9.38).
+        <!-- 파생색 되돌림 · md 값 — 다크 카드 바탕은 다크용으로 밝힌 --dark-blue 였고, 그것을 만든 번들 interaction-blue(--sp-interaction-blue)로 돌렸다(흰 글자 대비 2.68 → 9.38).
              라이트와 같은 값이라 다크 교체 템플릿을 걷었다. interaction-blue 가 바뀌거나 측정기 Chromium 의 색역 클리핑이 바뀌면 다시 잰다. -->
         <article class="course-card"><div class="media" style="--card-media: var(--sp-interaction-blue);">스킬업</div><div class="card-body"><div class="pills"><span class="pill teal">실무</span></div><h3 style="margin:0;font-size:15px;">UXUI 포트폴리오 리뉴얼 클래스</h3><p class="course-sub">프로젝트 구조와 화면 설득력을 함께 다듬는다.</p><div class="card-foot"><span>평점 4.6 · 2,451명</span><span class="price">₩168,000</span></div></div></article>
       </div>

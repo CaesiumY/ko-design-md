@@ -86,11 +86,9 @@ colors:
   dark-line-selected: "{colors.neutral-20}"
   dark-fill-inverse-default: "{colors.neutral-0}"
   dark-fill-inverse-subtle: "{colors.neutral-30}"
-  ## Bundle-only — 핸드오프 번들 색 가운데 발행 패키지에 대응 단계가 없는 것만 (Colors 절 감사 메모 참조)
+  ## Bundle-only — 핸드오프 번들 색 가운데 발행 패키지에 대응 값이 없는 것만 (Colors 절 감사 메모 참조)
   interaction-blue: oklch(0.429 0.297 264)   # 번들 전용 — links, ghost action, focus ring source. 발행 원시 팔레트에 같은 값이 없다(가장 가까운 deepBlue[80] 도 ΔE 0.106). sRGB 색역 밖 — 브라우저가 클리핑하며 라이브는 더 낮은 채도를 쓴다(Colors 절 감사 메모 참조)
-  interaction-blue-soft: oklch(0.958 0.020 280)   # 번들 전용 — ghost hover 표면. interaction-blue 와 한 벌이라 함께 남겼다
   focus-ring: oklch(0.429 0.297 264 / 0.32)   # 번들 전용 — interaction-blue 값. 발행 패키지에 포커스 링 토큰이 없다. sRGB 색역 밖(Colors 절 감사 메모 참조)
-  badge-blue-bg: oklch(0.932 0.034 286)   # 번들 전용 — blue 배지 바탕. interaction-blue 글자와 한 벌이라 함께 남겼다
   ## Stack palette — @teamsparta/stack-tokens primitiveColor (역할 계층·컴포넌트 토큰·컴포넌트 스펙이 가리키는 단계만)
   neutral-0: oklch(1.000 0.000 0.0)   # #FFFFFF — stack-tokens neutral[0]
   neutral-5: oklch(0.982 0.001 286.4)   # #F9F9FA — stack-tokens neutral[5]
@@ -144,6 +142,7 @@ colors:
   blue-100: oklch(0.328 0.100 252.6)   # #003566 — stack-tokens blue[100]
   sky-blue-10: oklch(0.959 0.029 215.7)   # #DDF7FE — stack-tokens skyBlue[10]
   sky-blue-90: oklch(0.378 0.066 224.3)   # #0B495C — stack-tokens skyBlue[90]
+  deep-blue-10: oklch(0.958 0.015 270.0)   # #EDF1FC — stack-tokens deepBlue[10]
 typography:
   xs:
     fontFamily: "\"Pretendard Variable\", Pretendard, \"Pretendard Bold Placeholder\", -apple-system, BlinkMacSystemFont, system-ui, \"Malgun Gothic\", \"Apple SD Gothic Neo\", sans-serif"
@@ -276,14 +275,6 @@ components:
     rounded: "{rounded.radius-xs}"
   checkbox-unchecked-hover:
     backgroundColor: "{colors.fill-subtle}"
-  radio-group-checked:
-    backgroundColor: "{colors.fill-default}"
-  radio-group-checked-hover:
-    backgroundColor: "{colors.fill-subtle}"
-  radio-group-unchecked:
-    backgroundColor: "{colors.fill-default}"
-  radio-group-unchecked-hover:
-    backgroundColor: "{colors.fill-subtle}"
   bottom-sheet-grabber:
     backgroundColor: "{colors.neutral-20}"
   calendar-nav-button:
@@ -308,7 +299,7 @@ components:
   button-ghost:
     textColor: "{colors.interaction-blue}"
   button-ghost-hover:
-    backgroundColor: "{colors.interaction-blue-soft}"
+    backgroundColor: "{colors.deep-blue-10}"
   topbar:
     height: 56px
   search:
@@ -318,7 +309,7 @@ components:
     backgroundColor: "{colors.brand-subtlest}"
     textColor: "{colors.brand-strong}"
   pill-blue:
-    backgroundColor: "{colors.badge-blue-bg}"
+    backgroundColor: "{colors.blue-20}"
     textColor: "{colors.interaction-blue}"
   pill-teal:
     backgroundColor: "{colors.sky-blue-10}"
@@ -332,7 +323,7 @@ fonts:
 
 # 팀스파르타 (스파르타클럽) — design.md
 
-> 팀스파르타가 운영하는 스파르타클럽 학습 생태계의 인증 대시보드 디자인 시스템이다. 본 문서는 Claude Design handoff bundle의 `스파르타클럽 Design System` README, `colors_and_type.css`, preview cards, dashboard UI kit, chat transcript를 1차 출처로 합성했다. 공개 공식 사이트와 내일배움캠프, 기업교육, 커리어 surface는 서비스 범위와 브랜드 맥락 확인용 보조 출처로 사용했다 [src:1][src:2][src:3][src:4]. 색 역할 계층, 원시 팔레트, 컴포넌트 토큰은 팀스파르타가 npm에 발행한 토큰 패키지에서 옮겼다 [src:5]. 타이포, 스페이싱, 라운드와 컴포넌트의 크기와 여백은 이 핸드오프 번들에서 재구성했다. 색은 발행 패키지에 대응 값이 없는 번들 파랑 계열만 번들 값으로 남겼다(Colors 절 감사 메모 참조).
+> 팀스파르타가 운영하는 스파르타클럽 학습 생태계의 인증 대시보드 디자인 시스템이다. 본 문서는 Claude Design handoff bundle의 `스파르타클럽 Design System` README, `colors_and_type.css`, preview cards, dashboard UI kit, chat transcript를 1차 출처로 합성했다. 공개 공식 사이트와 내일배움캠프, 기업교육, 커리어 surface는 서비스 범위와 브랜드 맥락 확인용 보조 출처로 사용했다 [src:1][src:2][src:3][src:4]. 색 역할 계층, 원시 팔레트, 컴포넌트 토큰은 팀스파르타가 npm에 발행한 토큰 패키지에서 옮겼다 [src:5]. 타이포, 스페이싱, 라운드와 컴포넌트의 크기와 여백은 이 핸드오프 번들에서 재구성했다. 색은 발행 패키지에 대응 값이 없는 번들 파랑(`interaction-blue`)만 번들 값으로 남겼다(Colors 절 감사 메모 참조).
 
 ## Brand & Style
 
@@ -344,11 +335,11 @@ fonts:
 
 ## Colors
 
-> **번들 팔레트 정리(2026-11-09).** 팀스파르타는 디자인 토큰을 npm 패키지 `@teamsparta/stack-tokens`로 발행한다 [src:5]. 2026-11-09에 조회한 최신판은 2.6.0이다. 이 패키지는 원시 팔레트 `primitiveColor` 위에 역할 계층을 정의한다 — 라이트는 `baseSemanticColor`(스파르타클럽 테마 `sccLight`는 여기에 같은 brand 값만 다시 적는다), 다크는 `sccDark`다. 컴포넌트 토큰은 `baseComponent`가 역할과 원시 단계를 가리켜 정의하고, `sccDark`가 그중 일부를 다시 가리킨다. 내일배움캠프는 역할을 `--stack-semantic-*` 커스텀 프로퍼티로 서빙한다 [src:2]. 아래 역할 표의 45개 역할은 패키지에서 옮겼고, 2026-11-01에 라이트 45개를 내일배움캠프 라이브 값과 hex로 대조하니 불일치는 0개였다. 내일배움캠프 라이브 페이지는 다크 테마 정의가 없어 다크 값은 패키지로만 대조했다. 이번에는 핸드오프 번들에서 온 팔레트를 발행값으로 옮겼다. 번들 회색 `gray-*` 11단계와 `white`, `black`은 지웠고(발행 `neutral-*`와 같은 값은 `gray-400`, `gray-950` 둘뿐이었다), 그 값을 쓰던 자리는 발행 역할(`text-primary`, `background-subtle`, `line-nonClickable` 등)이나 패키지 컴포넌트 토큰으로 옮겼다. 번들 이름으로 발행값을 싣던 `brand-red`, `brand-red-dark`, `danger`는 발행 `red-70`, `red-80`, `orange-red-70`과 같은 값이라 지우고, 대표색 별칭 `primary`가 `red-70`을 가리키게 했다. `success`, `warning`, `modal-backdrop`은 같은 자리를 맡는 발행 역할 `status-success-default`, `status-warning-default`, `dimm-default`로 바꿨고, `info`는 `interaction-blue`와 같은 값의 별칭이라 지웠다. 번들 `teal-strong`은 발행 `skyBlue[90]`과 같은 값이라 `sky-blue-90`으로 바꿨다. red 배지 바탕 `brand-red-soft`는 brand 역할의 가장 옅은 칸 `brand-subtlest`로 옮겼다. 값이 가장 가까운 칸은 `brand-subtler`(`red[20]`)지만, 다크에서 그 칸은 `red[90]`이 되어 글자 `brand-strong`(`red[50]`)과 대비가 무너진다. 나머지 번들 배지색 `badge-teal-bg`, `badge-green-bg`와 green 배지 글자(번들 `success`)는 가장 가까운 발행 단계 `skyBlue[10]`, `green[10]`, `green[80]`으로 옮겼다. 남긴 번들 색은 `interaction-blue`, `interaction-blue-soft`, `focus-ring`, `badge-blue-bg` 넷이다. 발행 원시 팔레트에 같은 값이 없고(가장 가까운 `deepBlue[80]`도 ΔE 0.106), 패키지에 포커스 링이나 배지 토큰도 없어 링크, ghost 액션, 포커스 링, blue 배지의 번들 파랑을 그대로 두었다.
+> **번들 팔레트 정리(2026-11-09).** 팀스파르타는 디자인 토큰을 npm 패키지 `@teamsparta/stack-tokens`로 발행한다 [src:5]. 2026-11-09에 조회한 최신판은 2.6.0이다. 이 패키지는 원시 팔레트 `primitiveColor` 위에 역할 계층을 정의한다 — 라이트는 `baseSemanticColor`(스파르타클럽 테마 `sccLight`는 여기에 같은 brand 값만 다시 적는다), 다크는 `sccDark`다. 컴포넌트 토큰은 `baseComponent`가 역할과 원시 단계를 가리켜 정의하고, `sccDark`가 그중 일부를 다시 가리킨다. 내일배움캠프는 역할을 `--stack-semantic-*` 커스텀 프로퍼티로 서빙한다 [src:2]. 아래 역할 표의 45개 역할은 패키지에서 옮겼고, 2026-11-01에 라이트 45개를 내일배움캠프 라이브 값과 hex로 대조하니 불일치는 0개였다. 내일배움캠프 라이브 페이지는 다크 테마 정의가 없어 다크 값은 패키지로만 대조했다. 이번에는 핸드오프 번들에서 온 팔레트를 발행값으로 옮겼다. 번들 회색 `gray-*` 11단계와 `white`, `black`은 지웠고(발행 `neutral-*`와 같은 값은 `gray-400`, `gray-950` 둘뿐이었다), 그 값을 쓰던 자리는 발행 역할(`text-primary`, `background-subtle`, `line-nonClickable` 등)이나 패키지 컴포넌트 토큰으로 옮겼다. 번들 이름으로 발행값을 싣던 `brand-red`, `brand-red-dark`, `danger`는 발행 `red-70`, `red-80`, `orange-red-70`과 같은 값이라 지우고, 대표색 별칭 `primary`가 `red-70`을 가리키게 했다. `success`, `warning`, `modal-backdrop`은 같은 자리를 맡는 발행 역할 `status-success-default`, `status-warning-default`, `dimm-default`로 바꿨고, `info`는 `interaction-blue`와 같은 값의 별칭이라 지웠다. 번들 `teal-strong`은 발행 `skyBlue[90]`과 같은 값이라 `sky-blue-90`으로 바꿨다. red 배지 바탕 `brand-red-soft`는 brand 역할의 가장 옅은 칸 `brand-subtlest`로 옮겼다. 값이 가장 가까운 칸은 `brand-subtler`(`red[20]`)지만, 다크에서 그 칸은 `red[90]`이 되어 글자 `brand-strong`(`red[50]`)과 대비가 무너진다. 나머지 번들 배지색 `badge-teal-bg`, `badge-green-bg`, `badge-blue-bg`와 green 배지 글자(번들 `success`), ghost hover 표면 `interaction-blue-soft`는 가장 가까운 발행 단계 `skyBlue[10]`, `green[10]`, `blue[20]`, `green[80]`, `deepBlue[10]`으로 옮겼다. 배지 대응은 상류가 정한 것이 아니라 이 카탈로그의 선택이다(Known Gaps). 남긴 번들 색은 `interaction-blue`와 같은 값의 `focus-ring` 둘이다. 발행 원시 팔레트에 가까운 값이 없고(가장 가까운 `deepBlue[80]`도 ΔE 0.106), 패키지에 포커스 링 토큰도 없어 링크, ghost 액션, 포커스 링의 번들 파랑을 그대로 두었다.
 >
 > **`interaction-blue`는 sRGB 색역 밖이다.** `oklch(0.429 0.297 264)`를 선형 sRGB로 풀면 red 채널이 −0.0002로 음수라, 브라우저는 이 값을 그대로 그리지 못하고 클리핑한다. 라이브 사이트가 쓰는 가장 가까운 파랑은 `#003CDC` = `oklch(0.457 0.245 264)`로 **hue는 같고 채도가 낮은**(색역 안) 값이며 ΔE 0.059 떨어져 있다. 방침대로 값은 그대로 두고 차이만 적는다 — 이 토큰을 참조하는 `focus-ring`과 `input-focus-ring`도 같은 값을 쓰므로 세 줄 모두에 같은 단서를 달았다. 다만 사이드카로 실려 나가는 건 앞의 둘뿐이다 — `input-focus-ring`은 컴포넌트 절에 있어 `tokens:build`의 색 토큰 추출 대상이 아니다.
 
-색은 두 층이다. 역할 계층과 그것이 가리키는 원시 팔레트 단계는 발행 패키지에서 옮겼고, 컴포넌트 토큰이 가리키는 단계(`neutral-40`, `neutral-70`, `orange-red-80`, `green-80`)와 번들 색을 옮겨 간 단계(`sky-blue-10`, `sky-blue-90`)도 같은 원시 팔레트에서 왔다 [src:5]. 번들에서 온 색은 위 메모가 남긴 파랑 계열뿐이다. 모두 catalog 규약에 따라 OKLCH로 변환해 표기한다. Blue는 interaction/info, red는 brand/CTA, sky blue는 informational active surface, neutral은 dashboard structure를 담당한다.
+색은 두 층이다. 역할 계층과 그것이 가리키는 원시 팔레트 단계는 발행 패키지에서 옮겼고, 컴포넌트 토큰이 가리키는 단계(`neutral-40`, `neutral-70`, `orange-red-80`, `green-80`)와 번들 색을 옮겨 간 단계(`sky-blue-10`, `sky-blue-90`, `deep-blue-10`)도 같은 원시 팔레트에서 왔다 [src:5]. 번들에서 온 색은 위 메모가 남긴 파랑뿐이다. 모두 catalog 규약에 따라 OKLCH로 변환해 표기한다. Blue는 interaction/info, red는 brand/CTA, sky blue는 informational active surface, neutral은 dashboard structure를 담당한다.
 
 ### 역할 계층
 
@@ -424,7 +415,9 @@ Radius는 세 단계로 제한한다.
 
 ## Elevation & Depth
 
-시스템은 flat-first다. 번들 대시보드는 sidebar, topbar, list row를 shadow 없이 `1px` border로 구조를 만들고, elevation은 dropdown, toast, modal 같은 floating surface에 쓴다. 카드는 예외로, 발행 패키지가 컴포넌트 토큰 `card.shadow`를 두어 라이트는 `elevation1`, 다크(`sccDark`)는 `elevation2`를 가리킨다 [src:5]. 둘 다 검정 알파의 넓고 옅은 그림자다.
+> **그림자 정리(2026-11-09).** 번들 그림자 `shadow-sm`, `shadow-md`, `shadow-lg`는 번들 `gray-900`을 그림자색으로 쓴 번들 값이라 지우고, 패키지가 발행한 `effect.shadow`의 `elevation1`, `elevation2`를 실었다 [src:5]. 패키지 컴포넌트 토큰 가운데 그림자를 가리키는 것은 `card.shadow` 하나다.
+
+시스템은 flat-first다. 번들 대시보드는 sidebar, topbar, list row를 shadow 없이 `1px` border로 구조를 만들고, elevation은 dropdown, toast, modal 같은 floating surface에 쓴다고 적었지만 그 표면들의 그림자는 발행되지 않았다(Known Gaps). 카드는 발행 패키지가 컴포넌트 토큰 `card.shadow`를 두어 라이트는 `elevation1`, 다크(`sccDark`)는 `elevation2`를 가리킨다 [src:5]. 둘 다 검정 알파의 넓고 옅은 그림자다.
 
 Hover elevation은 clickable media card에만 제한적으로 허용한다. Primary CTA는 hover 때 shadow를 키우기보다 red를 어둡게 하고, active/press는 `scale(0.98)`과 shadow 제거로 반응한다.
 
@@ -515,7 +508,7 @@ Shape language는 **rounded dashboard geometry**다. 사각형 컨테이너는 1
 
 Primary는 `button.solidPrimary`다 — brand red 바탕, 흰 글자이고 hover에서 `brand-strong`으로 어두워진다(다크는 `brand-subtle`). 보조 버튼은 패키지의 `solidSecondary`(검은 채움), `solidTertiary`(회색 채움), `outlineSecondary`(흰 바탕과 `neutral-30` 테두리) 셋이고, 오류 행동은 `solidError`, brand 테두리 버튼은 `outlinePrimary`다. 모양은 번들 스펙대로 50px radius, 700 weight이며, 주요 CTA는 `수강신청`, `무료 체험 시작`, `이어서 학습`, `참여하기`처럼 동사 중심으로 작성한다.
 
-Ghost는 패키지에 없는 번들 변형이다. background 없이 interaction blue text를 쓰며 로그인, 보조 이동, link-like action에 쓴다.
+Ghost는 패키지에 없는 번들 변형이다. background 없이 interaction blue text를 쓰고 hover에서 `deep-blue-10` 표면을 깔며 로그인, 보조 이동, link-like action에 쓴다.
 
 ```tsx
 <Button variant="primary" size="md">이어서 학습</Button>
@@ -527,7 +520,7 @@ button-outline-secondary: { bg: neutral-0, border: neutral-30, fg: text-secondar
 button-solid-tertiary: { bg: neutral-20, fg: text-secondary, hover-bg: neutral-30 }
 button-radius: radius-md
 button-focus: focus-ring
-button-ghost: { fg: interaction-blue, hover-bg: interaction-blue-soft }
+button-ghost: { fg: interaction-blue, hover-bg: deep-blue-10 }
 ```
 
 ### Switch
@@ -546,7 +539,7 @@ checkbox-unchecked: { bg: fill-default, border: neutral-40, hover-bg: fill-subtl
 
 ### Radio group, bottom sheet, calendar
 
-라디오 그룹은 선택 점을 `accent`로 칠하고(켜짐 brand red, 꺼짐 `neutral-40`), 바탕은 체크박스와 같은 `fill-default`다. 바텀시트 grabber는 `neutral-20`, 스피너 indicator는 라이트에서 `neutral-100`이다. 캘린더는 선택한 날짜를 `neutral-80` 채움과 반전 글자로, 범위 가운데 날짜를 `neutral-20` 채움으로 표시한다.
+라디오 그룹은 선택 점을 `accent`로 칠하고(켜짐 brand red, 꺼짐 `neutral-40`), 바탕은 체크박스와 같은 `fill-default`다. 라디오 그룹은 frontmatter 맵에 싣지 않는다. 맵에 실을 수 있는 바탕색이 켜짐과 꺼짐에서 같아 상태를 가르지 못하고, 상태를 가르는 `accent`는 맵이 받지 않는 속성이기 때문이다. 바텀시트 grabber는 `neutral-20`, 스피너 indicator는 라이트에서 `neutral-100`이다. 캘린더는 선택한 날짜를 `neutral-80` 채움과 반전 글자로, 범위 가운데 날짜를 `neutral-20` 채움으로 표시한다.
 
 ### Sidebar
 
@@ -582,11 +575,11 @@ card-footer-pin: true
 
 ### Pill and badge
 
-Pill은 50px radius, 11px/700 label, 3px 10px padding을 쓴다. Red badge는 hot/new/primary emphasis, teal은 국비지원/취업 보장 같은 정보성 상태, green은 completion/success, blue는 new/info에 배정한다. 패키지에 배지 토큰이 없어 red는 brand 역할(바탕 `brand-subtlest`, 글자 `brand-strong`)이라 테마를 따라 바뀌고, teal과 green은 번들 값에 가장 가까운 발행 단계, blue는 번들 값이라 두 테마에서 같은 색이다.
+Pill은 50px radius, 11px/700 label, 3px 10px padding을 쓴다. Red badge는 hot/new/primary emphasis, teal은 국비지원/취업 보장 같은 정보성 상태, green은 completion/success, blue는 new/info에 배정한다. 패키지에 배지 토큰이 없어 red는 brand 역할(바탕 `brand-subtlest`, 글자 `brand-strong`)이라 테마를 따라 바뀌고, teal, green, blue는 번들 값에 가장 가까운 발행 단계(blue 글자만 번들 `interaction-blue`)라 두 테마에서 같은 색이다.
 
 ```text
 pill-red:   { bg: brand-subtlest, fg: brand-strong }
-pill-blue:  { bg: badge-blue-bg, fg: interaction-blue }
+pill-blue:  { bg: blue-20, fg: interaction-blue }
 pill-teal:  { bg: sky-blue-10, fg: sky-blue-90 }
 pill-green: { bg: green-10, fg: green-80 }
 ```
@@ -652,7 +645,9 @@ Cards and course rows must preserve scan order: thumbnail → badge/track → ti
 - The blue-vs-red token semantics are documented as a caveat and should be confirmed by the team before production adoption.
 - The dashboard default theme is not confirmed; the bundle authored light mode as default while keeping dark-mode tokens available.
 - No custom icon library was included; Lucide/Heroicons-style outline icons are the documented fallback.
-- The link, ghost-action, focus and blue-badge blue (`interaction-blue`, `interaction-blue-soft`, `focus-ring`, `badge-blue-bg`) is still the handoff bundle's value: `@teamsparta/stack-tokens` publishes no matching palette step, focus-ring token or badge token for it, so it should be confirmed by the team before production adoption.
+- The link, ghost-action and focus blue (`interaction-blue`, `focus-ring`) is still the handoff bundle's value: `@teamsparta/stack-tokens` publishes no nearby palette step and no focus-ring token for it, so it should be confirmed by the team before production adoption.
+- The package publishes no badge tokens. The pill colours here are this catalog's choice, not an upstream mapping: red uses the brand roles, and teal, green and blue use the published steps nearest the bundle's badge colours.
+- The package publishes only the card shadow (`card.shadow` → `elevation1`/`elevation2`). The bundle says floating surfaces (dropdown, toast, modal) are elevated, but no shadow is published for them.
 
 ## References
 
@@ -660,4 +655,4 @@ Cards and course rows must preserve scan order: thumbnail → badge/track → ti
 2. https://nbcamp.spartaclub.kr/ — 내일배움캠프. 색 토큰을 `--stack-semantic-*`·`--stack-primitive-*` CSS 커스텀 프로퍼티로 서빙한다
 3. https://b2b.spartaclub.kr/ — 팀스파르타 기업교육. `axis.spartapartners.ai`로 리다이렉트된다
 4. https://career.spartaclub.kr/ — 팀스파르타 커리어. 외부 채용 플랫폼(Greeting) 위의 페이지라 플랫폼 고유 색 토큰이 섞여 있고, 브랜드 red는 테넌트 테마가 `--primitive-color-brand-500`을 덮어써 넣는다
-5. https://cdn.jsdelivr.net/npm/@teamsparta/stack-tokens@2.6.0/dist/ — 팀스파르타가 npm에 발행한 토큰 패키지 `@teamsparta/stack-tokens` 2.6.0의 배포 파일. 원시 팔레트(`primitiveColor`), 라이트 역할 계층(`baseSemanticColor`), 서비스별 테마(`sccLight`·`sccDark` 등)가 들어 있다
+5. https://cdn.jsdelivr.net/npm/@teamsparta/stack-tokens@2.6.0/dist/ — 팀스파르타가 npm에 발행한 토큰 패키지 `@teamsparta/stack-tokens` 2.6.0의 배포 파일. 원시 팔레트(`primitiveColor`), 라이트 역할 계층(`baseSemanticColor`), 컴포넌트 토큰(`baseComponent`), 그림자(`effect`), 서비스별 테마(`sccLight`, `sccDark` 등)가 들어 있다
