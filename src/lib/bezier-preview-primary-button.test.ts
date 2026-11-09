@@ -61,16 +61,19 @@ interface Rule {
 }
 
 /**
- * Every innermost rule of a document's `<style>` contents, in source order. A
- * rule inside `@media` comes out as a rule of its own, its condition dropped:
- * an extra rule under a condition is still counted and refused, but the
- * preview's own rule wrapped in one (`@media print`, `<style media>`) reads as
- * unconditional. `!important` is not weighed either — a light rule carrying it
- * fails the light comparison, not the dark one. Both are stated limits.
+ * Every innermost rule of the document's `<style>` elements, in document
+ * order — read off the parsed document, so the tag's case does not matter and
+ * a `<style>` inside a `<template>` is not counted. A rule inside an at-rule
+ * (`@media`, `@supports`, `@layer`) comes out as a rule of its own, its
+ * condition dropped: an extra rule under a condition is still counted and
+ * refused, but the preview's own rule wrapped in one (`@media print`,
+ * `<style media>`) reads as unconditional. `!important` is not weighed either
+ * — a light rule carrying it fails the light comparison, not the dark one.
+ * Both are stated limits.
  */
-function rulesOf(html: string): Array<Rule> {
-  const css = [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)]
-    .map((m) => m[1])
+function rulesOf(document: Document): Array<Rule> {
+  const css = [...document.querySelectorAll("style")]
+    .map((s) => s.textContent ?? "")
     .join("\n")
     .replace(/\/\*[\s\S]*?\*\//g, "")
   return [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(
@@ -213,7 +216,7 @@ function paintingValue(html: string, theme: Theme, state: State): string {
     selector: string
     backgrounds: Array<[string, string]>
   }> = []
-  for (const rule of rulesOf(html)) {
+  for (const rule of rulesOf(document)) {
     const backgrounds = rule.declarations.filter(([p]) =>
       /^background(?:-[\w-]+)?$/.test(p)
     )
@@ -301,7 +304,7 @@ function resolveVar(
   }
   const inherited = [...chain]
   const declarers: Array<{ selector: string; value: string }> = []
-  for (const rule of rulesOf(html)) {
+  for (const rule of rulesOf(document)) {
     const decls = rule.declarations.filter(([p]) => p === ref)
     if (decls.length === 0) continue
     for (const selector of rule.selectors) {
@@ -389,6 +392,16 @@ describe("both sheets compete for the primary buttons of each theme", () => {
   it("refuses a variable the dark buttons inherit from a scoped rule", () => {
     const html = merged("", ".hero{--x:#123456;}")
     expect(() => primaryColor(html, "dark", "base")).toThrow(/--x is declared/)
+  })
+
+  it("reads a sheet whose tag is written in capitals", () => {
+    const html = merged().replace(
+      "</head>",
+      "<STYLE>.btn.l{background:#123456;}</STYLE></head>"
+    )
+    expect(() => primaryColor(html, "light", "base")).toThrow(
+      /more than one rule paints/
+    )
   })
 })
 
