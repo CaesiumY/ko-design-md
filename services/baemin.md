@@ -2,7 +2,7 @@
 name: 배달의민족
 slug: baemin
 category: delivery
-last_updated: "2026-11-09"
+last_updated: "2026-11-10"
 created_at: 2026-05-18
 lang: ko
 logo: https://getdesign.kr/logos/baemin.svg
