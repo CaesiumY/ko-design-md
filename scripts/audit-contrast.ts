@@ -14,12 +14,15 @@
 // reported, not blocked. What `--check-baseline` adds is a different question —
 // whether the COUNTS have moved away from the table `contrast-baseline.ts` and
 // `docs/preview-contrast-baseline.md` both publish. A new shortfall moves them,
-// and so does a quiet fix, and both should be said out loud.
+// and so does a quiet fix, and both should be said out loud. It also holds the
+// measured text rows to `MIN_TEXT_ELEMENTS`, a floor on how much a preview
+// shows rather than on contrast.
 //
 // Exit 1 belongs to the self-check alone, which asks whether the measurement
-// itself still works. That is why baseline drift exits 3 and not 1: a broken
-// measurement and a moved number are different findings, and a CI log that
-// spelled them the same way would send a reader to the wrong file.
+// itself still works. That is why baseline drift exits 3 and not 1 (so does a
+// thin preview, ADR 0013): a broken measurement and a moved number are
+// different findings, and a CI log that spelled them the same way would send a
+// reader to the wrong file.
 //
 // It also cannot live inside `src/lib/preview-validator.ts`, which is
 // deliberately dependency-free so the gate cannot fail on a devDependency.
@@ -174,9 +177,10 @@ async function main(): Promise<void> {
     const { selfCheck } = await import("./audit-contrast-oracle")
     const result = await selfCheck(ROOT)
     for (const line of result.lines) console.log(line)
-    // Exit 1 belongs to the self-check alone, and baseline drift exits 3 so the
-    // two never wear the same code. A sweep that merely finds low contrast
-    // still exits 0: those readings are recorded, not blocked.
+    // Exit 1 belongs to the self-check alone, and baseline drift (or a thin
+    // preview, ADR 0013) exits 3 so the two never wear the same code. A sweep
+    // that merely finds low contrast still exits 0: those readings are
+    // recorded, not blocked.
     if (!result.ok) process.exitCode = 1
     return
   }

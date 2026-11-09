@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 import {
   BASELINE_WIDTHS,
+  MIN_TEXT_ELEMENTS,
   baselineArgConflicts,
   baselineHolds,
   compareToBaseline,
@@ -29,6 +30,7 @@ describe("compareToBaseline", () => {
       warnings: [],
       unrecorded: [],
       missing: [],
+      thin: [],
     })
   })
 
@@ -69,6 +71,148 @@ describe("compareToBaseline", () => {
         measured: 404,
       },
     ])
+  })
+})
+
+describe("compareToBaseline, thin previews", () => {
+  // The floor is read from what the sweep MEASURED. A check on the recorded
+  // table alone trusts whoever pasted the numbers, and `elements` is the one
+  // count the exact comparison leaves out, so a hand-raised value would pass.
+  const thin = row({ elements: MIN_TEXT_ELEMENTS - 1 })
+
+  it("blocks a measured text row under the floor even when the table records the same number", () => {
+    const got = compareToBaseline([thin], [thin])
+    expect(got.thin).toEqual([thin])
+    expect(baselineHolds(got)).toBe(false)
+  })
+
+  it("blocks it when the table claims a thicker preview than the sweep found", () => {
+    const got = compareToBaseline([thin], [row()])
+    expect(got.thin).toEqual([thin])
+    expect(baselineHolds(got)).toBe(false)
+  })
+
+  it("blocks a new slug's thin row as well as reporting it unrecorded", () => {
+    const fresh = row({ slug: "laftel", elements: 51 })
+    const got = compareToBaseline([row(), fresh], [row()])
+    expect(got.thin).toEqual([fresh])
+    expect(got.unrecorded).toEqual([fresh])
+  })
+
+  it("leaves a row exactly at the floor alone", () => {
+    const edge = row({ elements: MIN_TEXT_ELEMENTS })
+    expect(compareToBaseline([edge], [edge]).thin).toEqual([])
+  })
+
+  it("does not apply the floor to non-text", () => {
+    // Non-text counts painted surfaces, a handful per preview; four is normal.
+    const few = row({ kind: "non-text", measured: 4, elements: 4 })
+    expect(compareToBaseline([few], [few]).thin).toEqual([])
+  })
+
+  it("prints the thin rows and what to do about them", () => {
+    const lines = renderBaselineFailure(
+      compareToBaseline([thin], [thin]),
+      [thin],
+      [thin]
+    ).join("\n")
+    expect(lines).toContain(`FAIL contrast baseline — 1 text row(s)`)
+    expect(lines).toContain(`toss | light | text — elements ${thin.elements}`)
+    expect(lines).toContain("rubric-preview.md")
+    // The count is the text the contrast collector reads, which skips disabled
+    // text. Pointing at "states" without saying so sends a reader to add
+    // disabled states, which cannot raise it.
+    expect(lines).toContain("non-disabled")
+    expect(lines).toContain("Disabled, hidden")
+  })
+
+  it("does not send a thin-only failure to the table", () => {
+    // The closing paragraph is about pasting CI's numbers into the table, and
+    // no rewrite of the table clears a floor read from the measured count.
+    const lines = renderBaselineFailure(
+      compareToBaseline([thin], [thin]),
+      [thin],
+      [thin]
+    ).join("\n")
+    expect(lines).not.toContain("rebaseline")
+    expect(lines).not.toContain("Take the replacement lines from CI")
+    expect(lines).toContain("Rewriting the table does not clear it")
+  })
+
+  it("keeps a thin new slug out of the rows to paste", () => {
+    // A new entry under the floor is both unrecorded and thin. Listing its
+    // rows to paste, with the closing paragraph that says to paste them, sends
+    // its author to a table the corpus test then refuses. The whole slug is
+    // held back — its non-text rows too, or the four-rows-per-slug check
+    // refuses the half that was pasted.
+    const freshText = row({ slug: "laftel", elements: 51 })
+    const freshNonText = row({
+      slug: "laftel",
+      kind: "non-text",
+      measured: 5,
+      elements: 17,
+    })
+    const measured = [row(), freshText, freshNonText]
+    const lines = renderBaselineFailure(
+      compareToBaseline(measured, [row()]),
+      measured,
+      [row()]
+    ).join("\n")
+    expect(lines).not.toContain("the table does not record")
+    expect(lines).not.toContain(
+      renderTotalsTable([freshNonText]).split("\n")[2]
+    )
+    expect(lines).not.toContain("Take the replacement lines from CI")
+    expect(lines).toContain("only after the preview clears the floor")
+  })
+
+  it("still lists a new slug that is not thin beside one that is", () => {
+    const thinFresh = row({ slug: "laftel", elements: 51 })
+    const fresh = row({ slug: "chzzk" })
+    const measured = [row(), thinFresh, fresh]
+    const lines = renderBaselineFailure(
+      compareToBaseline(measured, [row()]),
+      measured,
+      [row()]
+    ).join("\n")
+    expect(lines).toContain("1 row(s) the table does not record")
+    expect(lines).toContain(renderTotalsTable([fresh]).split("\n")[2])
+    expect(lines).not.toContain(renderTotalsTable([thinFresh]).split("\n")[2])
+    // The closing paragraph is printed for the healthy slug, and the
+    // rebaseline command it names writes every measured slug — the thin one
+    // too — so it has to say which entries to keep out.
+    expect(lines).toContain("Take the replacement lines from CI")
+    expect(lines).toContain("laftel is under the floor")
+    expect(lines).toContain("Clear the floor first")
+    expect(lines).not.toContain("by hand")
+  })
+
+  it("does not suggest a partial hand paste when a recorded count also moved", () => {
+    // A moved count of a classified slug is tied to the pair and hold-reason
+    // tables, which only a whole-run rebaseline rewrites. Pasting that one
+    // line by hand while a thin slug blocks the rebaseline fails the corpus
+    // test instead, so the advice is to clear the floor first and then
+    // rebaseline the run that passes it.
+    const thinFresh = row({ slug: "laftel", elements: 51 })
+    const measured = [row({ fail: 53 }), thinFresh]
+    const lines = renderBaselineFailure(
+      compareToBaseline(measured, [row()]),
+      measured,
+      [row()]
+    ).join("\n")
+    expect(lines).toContain("fail 52 → 53")
+    expect(lines).toContain("Clear the floor first")
+    expect(lines).not.toContain("by hand")
+  })
+
+  it("still prints the closing paragraph when a count also moved", () => {
+    const moved = { ...thin, fail: thin.fail + 1 }
+    const lines = renderBaselineFailure(
+      compareToBaseline([moved], [thin]),
+      [moved],
+      [thin]
+    ).join("\n")
+    expect(lines).toContain("Take the replacement lines from CI")
   })
 })
 

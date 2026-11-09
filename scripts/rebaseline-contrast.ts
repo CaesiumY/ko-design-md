@@ -16,7 +16,8 @@
 // table in `src/lib/contrast-baseline.ts` and its copy in
 // `docs/preview-contrast-baseline.md`, the two published-pair tables and the
 // totals their prose states, the hold-reason table, the classified-run record
-// (`src/lib/contrast-classified-run.json`), and the borderline section's
+// (`src/lib/contrast-classified-run.json`, with the fingerprint of each
+// palette the classification read — #669), and the borderline section's
 // "입력은 run" id; the totals sentence that pairs a run with its date is left
 // for a person. The rewrite itself is `rebaseline` in
 // `src/lib/contrast-rebaseline.ts`; this file only reads, downloads and
