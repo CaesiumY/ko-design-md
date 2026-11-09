@@ -232,7 +232,9 @@ const ROLE_CHAINS: Partial<Record<string, RoleChainCount>> = {
   // The 2 literals are `fill-default` and `fill-subtle` in the dark scope,
   // whose sccDark cells are opacity ramps (#659).
   teamsparta: { chained: 24, literal: 2, scoped: 0 },
-  "vapor-ui": { chained: 69, literal: 1, scoped: 0 },
+  // 69 → 71 (#657): the preview's `--vp-bg-canvas` took its md name
+  // `--vp-bg-canvas-100`, one chain in each of the two scopes.
+  "vapor-ui": { chained: 71, literal: 1, scoped: 0 },
 }
 
 describe("oklch-drift — catalogue coverage", () => {

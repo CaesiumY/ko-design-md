@@ -203,6 +203,165 @@ function expectRowsToMatch(
 // checks the detected entries against these keys, so an entry cannot be
 // listed without a case, nor use the form without being listed.
 const CASES: Record<string, { title: string; check: () => void }> = {
+  baemin: {
+    title:
+      "base and mint theme roles, light to the palette and `dark-` twin to `dark-*`",
+    check: () => {
+      const { literals, refs, tableRows } = load("baemin")
+      // www.baemin.com's stylesheet declares two theme role layers,
+      // `--sem-base-color-*` and `--sem-mint-color-*`, and the page applies
+      // both at once. They share role names (`systemMainPrimary` is
+      // `purple4` in one and `mint5` in the other), so every role carries
+      // its theme as a prefix — in the table's first column and in the key.
+      const ROLE = /^(base|mint)-[a-z][A-Za-z0-9]*$/
+      const names = tableRows.map(([cell]) => spans(cell)[0] ?? "")
+      expect(
+        names.filter((name) => !ROLE.test(name)),
+        "baemin: table roles must be `base-*` or `mint-*`"
+      ).toEqual([])
+      const expected = singleReferenceRoles(tableRows)
+      // Rows point at the deployed `--ref-color-*` palette only, never at a
+      // bundle usage colour that shares its look (`red` beside `red5`): the
+      // sidecar's two `Deployed palette` groups are that palette, less the
+      // `primary` alias that sits among them as a reference.
+      const sidecar = JSON.parse(
+        readFileSync(join(SERVICES, "baemin.tokens.json"), "utf-8")
+      ) as { colors: Array<{ name: string; group: string }> }
+      const palette = new Set(
+        sidecar.colors
+          .filter(({ group }) => group.startsWith("Deployed palette"))
+          .map(({ name }) => name)
+          .filter((name) => literals.has(name))
+      )
+      expect(palette.size, "baemin: palette parsed").toBeGreaterThan(0)
+      // The palette is redeclared in every dark block with dark values, so a
+      // light role points at an unprefixed step and its `dark-` twin at the
+      // `dark-` step — never across, and never at another role.
+      const crossed = [...expected]
+        .filter(
+          ([key, to]) =>
+            !palette.has(to) ||
+            key.startsWith("dark-") !== to.startsWith("dark-")
+        )
+        .map(([key, to]) => `${key} → ${to}`)
+      expect(
+        crossed,
+        "baemin: rows must point at the palette of their own theme"
+      ).toEqual([])
+      expectRowsToMatch("baemin", expected, refs, palette, tableRows)
+      // A cell that is not one reference is the upstream literal as declared:
+      // a hex beside its OKLCH (`audit:oklch` does not read tables, so the
+      // pair is held here with its tolerances), or an `rgba(…)` / `hsla(…)` /
+      // `transparent` value written verbatim.
+      const HEX_CELL = /^`(#[0-9a-f]{3}|#[0-9a-f]{6})` ≈ `(oklch\([^)`]*\))`$/
+      const VERBATIM_CELL = /^`(?:(?:rgba|hsla)\([\d.,%]+\)|transparent)`$/
+      const literalCells = tableRows.flatMap(([roleCell, ...cells]) =>
+        cells
+          .slice(0, 2)
+          .filter((cell) => single(cell) === undefined)
+          .map((cell) => ({ role: spans(roleCell)[0], cell }))
+      )
+      expect(
+        literalCells
+          .filter(
+            ({ cell }) => !HEX_CELL.test(cell) && !VERBATIM_CELL.test(cell)
+          )
+          .map(({ role, cell }) => `${role}: ${cell}`),
+        "baemin: non-reference cells must be a hex ≈ OKLCH or a verbatim literal"
+      ).toEqual([])
+      const hexCells = literalCells.filter(({ cell }) => HEX_CELL.test(cell))
+      expect(hexCells.length, "baemin: hex cells parsed").toBeGreaterThan(0)
+      const off = hexCells.filter(({ cell }) => {
+        const [, hex, oklch] = HEX_CELL.exec(cell) ?? []
+        const want = hexToOklab(hex)
+        const wrote = parseOklch(oklch)
+        return (
+          !want || !wrote || deltaE(wrote.lab, want.lab) > DELTA_E_TOLERANCE
+        )
+      })
+      expect(
+        off.map(({ role, cell }) => `${role}: ${cell}`),
+        "baemin: table OKLCH must match its upstream hex"
+      ).toEqual([])
+      // The fourth column names the palette step a literal hex equals
+      // (`라이트 \`gray1\``, `다크 \`dark-gray12\``) — the value is the
+      // step's, but upstream writes it as a literal, so it is no reference.
+      // Each named step must carry that very hex on its frontmatter line, and
+      // a hex that some step of the cell's theme carries must name it — the
+      // prose says the column does, so a dropped note fails too.
+      const raw = readFileSync(join(SERVICES, "baemin.md"), "utf-8").replace(
+        /\r\n/g,
+        "\n"
+      )
+      const lineHex = new Map(
+        [
+          ...raw.matchAll(
+            /^ {2}([a-z0-9-]+): oklch\([^)]*\) +# (#[0-9a-f]+)/gm
+          ),
+        ].map((m) => [m[1], m[2].toLowerCase()])
+      )
+      const long = (hex: string): string =>
+        hex.length === 4
+          ? `#${[...hex.slice(1)].map((c) => c + c).join("")}`
+          : hex.toLowerCase()
+      const notes: Array<string> = []
+      const wrongNote: Array<string> = []
+      for (const [roleCell, light = "", dark = "", note = ""] of tableRows) {
+        for (const [side, cell] of [
+          ["라이트", light],
+          ["다크", dark],
+        ] as const) {
+          const named = new RegExp(`${side} \`([a-z0-9-]+)\``).exec(note)?.[1]
+          const hex = HEX_CELL.exec(cell)?.[1]
+          const sameStep = [...lineHex].find(
+            ([key, value]) =>
+              hex !== undefined &&
+              value === long(hex) &&
+              key.startsWith("dark-") === (side === "다크")
+          )?.[0]
+          if (sameStep !== undefined && named === undefined)
+            wrongNote.push(`${spans(roleCell)[0]}: ${side} ${sameStep} unnamed`)
+          if (named === undefined) continue
+          notes.push(named)
+          // The step belongs to the cell's own theme: `dark-gray1` and
+          // `gray12` share a hex, but a dark cell names the `dark-` one.
+          if (
+            hex === undefined ||
+            lineHex.get(named) !== long(hex) ||
+            named.startsWith("dark-") !== (side === "다크")
+          )
+            wrongNote.push(`${spans(roleCell)[0]}: ${side} ${named}`)
+        }
+      }
+      expect(
+        wrongNote,
+        "baemin: a note's palette step must carry the cell's hex"
+      ).toEqual([])
+      expect(notes.length, "baemin: notes parsed").toBeGreaterThan(0)
+      // The `## Colors` audit note states these counts in prose
+      // (CODING_STANDARDS 「개수」), so a row added or dropped must update it.
+      const roleWithRows = new Set([...expected.keys()].map(bare))
+      expect(
+        {
+          baseRoles: names.filter((n) => n.startsWith("base-")).length,
+          mintRoles: names.filter((n) => n.startsWith("mint-")).length,
+          rolesWithRows: roleWithRows.size,
+          referenceRows: [...refs.keys()].filter((key) => key !== "primary")
+            .length,
+          lightRowOnly: [...roleWithRows].filter(
+            (role) => !expected.has(`dark-${role}`)
+          ).length,
+        },
+        "baemin: counts the prose states"
+      ).toEqual({
+        baseRoles: 48,
+        mintRoles: 53,
+        rolesWithRows: 35,
+        referenceRows: 69,
+        lightRowOnly: 1,
+      })
+    },
+  },
   banksalad: {
     title: "family slots by the slot table, roles light and `dark-` twin",
     check: () => {
@@ -705,9 +864,13 @@ const CASES: Record<string, { title: string; check: () => void }> = {
     title: "every published alias, light and `dark-` twin",
     check: () => {
       const { literals, refs, tableRows } = load("vapor-ui")
-      // `color-foreground-inverse` points at `color-white` in both cells: the
-      // dark block redefines white to the same value, so the twin aliases the
-      // unprefixed key.
+      // 1.7.0's 76 aliases: the 42 names 1.3.0 already published (`-100`/`-200`
+      // step names plus the unstepped `border-*` and `foreground-inverse`) and
+      // the 34 it added.
+      // Dark twins whose upstream target is white or black (`inverse`,
+      // `contrast`, `staticWhite`, `staticBlack`, `canvas-dim`) alias the
+      // unprefixed `color-white` / `color-black`: the dark block redefines
+      // both to the light values, so no `dark-` key exists for them.
       const expected = singleReferenceRoles(tableRows)
       expectRowsToMatch("vapor-ui", expected, refs, literals, tableRows)
     },

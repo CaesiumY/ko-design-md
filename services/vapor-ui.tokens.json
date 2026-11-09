@@ -7,18 +7,18 @@
     },
     {
       "name": "dark-color-background-canvas-100",
-      "value": "oklch(0.256 0.000 0)",
-      "ref": "dark-canvas"
+      "value": "oklch(0.277 0.000 0)",
+      "ref": "dark-gray-050"
     },
     {
       "name": "color-background-canvas-200",
-      "value": "oklch(0.976 0.000 0)",
+      "value": "oklch(0.967 0.000 0)",
       "ref": "gray-050"
     },
     {
       "name": "dark-color-background-canvas-200",
-      "value": "oklch(0.277 0.000 0)",
-      "ref": "dark-gray-050"
+      "value": "oklch(0.333 0.000 0)",
+      "ref": "dark-gray-100"
     },
     {
       "name": "color-background-overlay-100",
@@ -52,7 +52,7 @@
     },
     {
       "name": "color-background-secondary-100",
-      "value": "oklch(0.976 0.000 0)",
+      "value": "oklch(0.967 0.000 0)",
       "ref": "gray-050"
     },
     {
@@ -337,9 +337,9 @@
     },
     {
       "name": "dark-color-foreground-inverse",
-      "value": "oklch(1.000 0.000 0)",
-      "note": "상류 다크 블록이 white 를 라이트와 같은 값으로 다시 정의한다",
-      "ref": "color-white"
+      "value": "oklch(0.000 0.000 0)",
+      "note": "상류 다크 블록이 black 을 라이트와 같은 값으로 다시 정의한다",
+      "ref": "color-black"
     },
     {
       "name": "color-border-normal",
@@ -422,9 +422,359 @@
       "ref": "dark-gray-400"
     },
     {
+      "name": "color-background-primary-weak",
+      "value": "oklch(0.910 0.048 242)",
+      "ref": "blue-100"
+    },
+    {
+      "name": "dark-color-background-primary-weak",
+      "value": "oklch(0.350 0.184 263)",
+      "ref": "dark-blue-100"
+    },
+    {
+      "name": "color-background-primary",
+      "value": "oklch(0.573 0.189 260)",
+      "ref": "blue-500"
+    },
+    {
+      "name": "dark-color-background-primary",
+      "value": "oklch(0.633 0.169 255)",
+      "ref": "dark-blue-500"
+    },
+    {
+      "name": "color-background-secondary-weak",
+      "value": "oklch(0.967 0.000 0)",
+      "ref": "gray-050"
+    },
+    {
+      "name": "dark-color-background-secondary-weak",
+      "value": "oklch(0.333 0.000 0)",
+      "ref": "dark-gray-100"
+    },
+    {
+      "name": "color-background-secondary",
+      "value": "oklch(0.910 0.000 0)",
+      "ref": "gray-100"
+    },
+    {
+      "name": "dark-color-background-secondary",
+      "value": "oklch(0.398 0.000 0)",
+      "ref": "dark-gray-200"
+    },
+    {
+      "name": "color-background-success-weak",
+      "value": "oklch(0.903 0.058 167)",
+      "ref": "green-100"
+    },
+    {
+      "name": "dark-color-background-success-weak",
+      "value": "oklch(0.324 0.077 157)",
+      "ref": "dark-green-100"
+    },
+    {
+      "name": "color-background-success",
+      "value": "oklch(0.554 0.112 167)",
+      "ref": "green-500"
+    },
+    {
+      "name": "dark-color-background-success",
+      "value": "oklch(0.614 0.114 168)",
+      "ref": "dark-green-500"
+    },
+    {
+      "name": "color-background-warning-weak",
+      "value": "oklch(0.913 0.048 46)",
+      "ref": "orange-100"
+    },
+    {
+      "name": "dark-color-background-warning-weak",
+      "value": "oklch(0.353 0.145 29)",
+      "ref": "dark-orange-100"
+    },
+    {
+      "name": "color-background-warning",
+      "value": "oklch(0.588 0.187 39)",
+      "ref": "orange-500"
+    },
+    {
+      "name": "dark-color-background-warning",
+      "value": "oklch(0.649 0.185 44)",
+      "ref": "dark-orange-500"
+    },
+    {
+      "name": "color-background-danger-weak",
+      "value": "oklch(0.915 0.044 20)",
+      "ref": "red-100"
+    },
+    {
+      "name": "dark-color-background-danger-weak",
+      "value": "oklch(0.353 0.145 29)",
+      "ref": "dark-red-100"
+    },
+    {
+      "name": "color-background-danger",
+      "value": "oklch(0.591 0.197 22)",
+      "ref": "red-500"
+    },
+    {
+      "name": "dark-color-background-danger",
+      "value": "oklch(0.654 0.198 21)",
+      "ref": "dark-red-500"
+    },
+    {
+      "name": "color-background-hint-weak",
+      "value": "oklch(0.910 0.000 0)",
+      "ref": "gray-100"
+    },
+    {
+      "name": "dark-color-background-hint-weak",
+      "value": "oklch(0.398 0.000 0)",
+      "ref": "dark-gray-200"
+    },
+    {
+      "name": "color-background-hint",
+      "value": "oklch(0.478 0.000 0)",
+      "ref": "gray-600"
+    },
+    {
+      "name": "dark-color-background-hint",
+      "value": "oklch(0.728 0.000 0)",
+      "ref": "dark-gray-600"
+    },
+    {
+      "name": "color-background-contrast-weak",
+      "value": "oklch(0.566 0.000 0)",
+      "ref": "gray-500"
+    },
+    {
+      "name": "dark-color-background-contrast-weak",
+      "value": "oklch(0.802 0.000 0)",
+      "ref": "dark-gray-700"
+    },
+    {
+      "name": "color-background-contrast",
+      "value": "oklch(0.345 0.000 0)",
+      "ref": "gray-800"
+    },
+    {
+      "name": "dark-color-background-contrast",
+      "value": "oklch(0.894 0.000 0)",
+      "ref": "dark-gray-800"
+    },
+    {
+      "name": "color-background-canvas-base",
+      "value": "oklch(1.000 0.000 0)",
+      "ref": "color-white"
+    },
+    {
+      "name": "dark-color-background-canvas-base",
+      "value": "oklch(0.277 0.000 0)",
+      "ref": "dark-gray-050"
+    },
+    {
+      "name": "color-background-canvas-sunken",
+      "value": "oklch(0.967 0.000 0)",
+      "ref": "gray-050"
+    },
+    {
+      "name": "dark-color-background-canvas-sunken",
+      "value": "oklch(0.239 0.000 0)",
+      "ref": "dark-gray-025"
+    },
+    {
+      "name": "color-background-canvas-raised",
+      "value": "oklch(0.985 0.000 0)",
+      "ref": "gray-025"
+    },
+    {
+      "name": "dark-color-background-canvas-raised",
+      "value": "oklch(0.333 0.000 0)",
+      "ref": "dark-gray-100"
+    },
+    {
+      "name": "color-background-canvas-dim",
+      "value": "oklch(0.000 0.000 0)",
+      "ref": "color-black"
+    },
+    {
+      "name": "dark-color-background-canvas-dim",
+      "value": "oklch(0.000 0.000 0)",
+      "note": "상류 다크 블록이 white 와 black 을 라이트와 같은 값으로 다시 정의한다",
+      "ref": "color-black"
+    },
+    {
+      "name": "color-background-canvas-overlay",
+      "value": "oklch(1.000 0.000 0)",
+      "ref": "color-white"
+    },
+    {
+      "name": "dark-color-background-canvas-overlay",
+      "value": "oklch(0.333 0.000 0)",
+      "ref": "dark-gray-100"
+    },
+    {
+      "name": "color-background-canvas-inverse",
+      "value": "oklch(0.345 0.000 0)",
+      "ref": "gray-800"
+    },
+    {
+      "name": "dark-color-background-canvas-inverse",
+      "value": "oklch(0.985 0.000 0)",
+      "ref": "dark-gray-900"
+    },
+    {
+      "name": "color-foreground-primary",
+      "value": "oklch(0.488 0.189 260)",
+      "ref": "blue-600"
+    },
+    {
+      "name": "dark-color-foreground-primary",
+      "value": "oklch(0.724 0.140 248)",
+      "ref": "dark-blue-600"
+    },
+    {
+      "name": "color-foreground-primary-strong",
+      "value": "oklch(0.428 0.187 261)",
+      "ref": "blue-700"
+    },
+    {
+      "name": "dark-color-foreground-primary-strong",
+      "value": "oklch(0.800 0.110 243)",
+      "ref": "dark-blue-700"
+    },
+    {
+      "name": "color-foreground-secondary",
+      "value": "oklch(0.417 0.000 0)",
+      "ref": "gray-700"
+    },
+    {
+      "name": "dark-color-foreground-secondary",
+      "value": "oklch(0.802 0.000 0)",
+      "ref": "dark-gray-700"
+    },
+    {
+      "name": "color-foreground-success",
+      "value": "oklch(0.470 0.101 164)",
+      "ref": "green-600"
+    },
+    {
+      "name": "dark-color-foreground-success",
+      "value": "oklch(0.710 0.118 168)",
+      "ref": "dark-green-600"
+    },
+    {
+      "name": "color-foreground-success-strong",
+      "value": "oklch(0.407 0.090 162)",
+      "ref": "green-700"
+    },
+    {
+      "name": "dark-color-foreground-success-strong",
+      "value": "oklch(0.788 0.123 168)",
+      "ref": "dark-green-700"
+    },
+    {
+      "name": "color-foreground-warning",
+      "value": "oklch(0.503 0.188 33)",
+      "ref": "orange-600"
+    },
+    {
+      "name": "dark-color-foreground-warning",
+      "value": "oklch(0.740 0.147 46)",
+      "ref": "dark-orange-600"
+    },
+    {
+      "name": "color-foreground-warning-strong",
+      "value": "oklch(0.439 0.180 29)",
+      "ref": "orange-700"
+    },
+    {
+      "name": "dark-color-foreground-warning-strong",
+      "value": "oklch(0.812 0.105 45)",
+      "ref": "dark-orange-700"
+    },
+    {
+      "name": "color-foreground-danger",
+      "value": "oklch(0.505 0.196 24)",
+      "ref": "red-600"
+    },
+    {
+      "name": "dark-color-foreground-danger",
+      "value": "oklch(0.745 0.150 21)",
+      "ref": "dark-red-600"
+    },
+    {
+      "name": "color-foreground-danger-strong",
+      "value": "oklch(0.439 0.180 28)",
+      "ref": "red-700"
+    },
+    {
+      "name": "dark-color-foreground-danger-strong",
+      "value": "oklch(0.815 0.105 20)",
+      "ref": "dark-red-700"
+    },
+    {
+      "name": "color-foreground-hint",
+      "value": "oklch(0.566 0.000 0)",
+      "ref": "gray-500"
+    },
+    {
+      "name": "dark-color-foreground-hint",
+      "value": "oklch(0.630 0.000 0)",
+      "ref": "dark-gray-500"
+    },
+    {
+      "name": "color-foreground-contrast",
+      "value": "oklch(0.000 0.000 0)",
+      "ref": "color-black"
+    },
+    {
+      "name": "dark-color-foreground-contrast",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "상류 다크 블록이 white 와 black 을 라이트와 같은 값으로 다시 정의한다",
+      "ref": "color-white"
+    },
+    {
+      "name": "color-foreground-normal",
+      "value": "oklch(0.269 0.000 0)",
+      "ref": "gray-900"
+    },
+    {
+      "name": "dark-color-foreground-normal",
+      "value": "oklch(0.985 0.000 0)",
+      "ref": "dark-gray-900"
+    },
+    {
+      "name": "color-foreground-staticWhite",
+      "value": "oklch(1.000 0.000 0)",
+      "ref": "color-white"
+    },
+    {
+      "name": "dark-color-foreground-staticWhite",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "상류 다크 블록이 white 와 black 을 라이트와 같은 값으로 다시 정의한다",
+      "ref": "color-white"
+    },
+    {
+      "name": "color-foreground-staticBlack",
+      "value": "oklch(0.000 0.000 0)",
+      "ref": "color-black"
+    },
+    {
+      "name": "dark-color-foreground-staticBlack",
+      "value": "oklch(0.000 0.000 0)",
+      "note": "상류 다크 블록이 white 와 black 을 라이트와 같은 값으로 다시 정의한다",
+      "ref": "color-black"
+    },
+    {
+      "name": "gray-025",
+      "value": "oklch(0.985 0.000 0)",
+      "note": "#FAFAFA — 1.7.0 에 새로 생긴 단",
+      "group": "Base palette"
+    },
+    {
       "name": "gray-050",
-      "value": "oklch(0.976 0.000 0)",
-      "note": "#F7F7F7",
+      "value": "oklch(0.967 0.000 0)",
+      "note": "#F4F4F4 — 1.7.0 이 바꾼 값",
       "group": "Base palette"
     },
     {
@@ -1105,6 +1455,12 @@
       "value": "oklch(1.000 0.000 0)",
       "note": "#FFFFFF · 상류 color-canvas — color-white 와 같은 값",
       "group": "Base palette"
+    },
+    {
+      "name": "dark-gray-025",
+      "value": "oklch(0.239 0.000 0)",
+      "note": "#1F1F1F — 1.7.0 에 새로 생긴 단",
+      "group": "Dark palette"
     },
     {
       "name": "dark-gray-050",

@@ -2,7 +2,7 @@
 name: 배달의민족
 slug: baemin
 category: delivery
-last_updated: "2026-11-09"
+last_updated: "2026-11-10"
 created_at: 2026-05-18
 lang: ko
 logo: https://getdesign.kr/logos/baemin.svg
@@ -15,7 +15,7 @@ colors:
   mint3: oklch(0.923 0.116 178)   # #87ffe5
   mint4: oklch(0.892 0.153 180)   # #35fcdf
   primary: "{colors.mint5}"
-  mint5: oklch(0.854 0.154 180)   # #0cefd3 — 민트 테마의 `systemMainPrimary` 역할이 가리키는 단계 [src:14]
+  mint5: oklch(0.854 0.154 180)   # #0cefd3 — `mint-systemMainPrimary` 역할이 가리키는 단계 [src:14]
   mint6: oklch(0.751 0.133 185)   # #00c9b9
   mint7: oklch(0.645 0.112 189)   # #00a39b
   mint8: oklch(0.533 0.091 193)   # #007d7b
@@ -206,6 +206,79 @@ colors:
   # white, black
   dark-white: oklch(1.000 0.000 0)   # #ffffff
   dark-black: oklch(0.000 0.000 0)   # #000000
+  ## Deployed roles — base theme
+  # 배민 웹 배포 CSS `--sem-base-color-*` [src:14] 가운데 팔레트 단계 하나를 가리키는 역할. 키 앞 `base-` 는 테마이고, `dark-` 짝은 다크 블록이 가리키는 `dark-` 단계다
+  base-borderInverted: "{colors.white}"
+  base-fillInverted: "{colors.black}"
+  dark-base-fillInverted: "{colors.dark-white}"
+  base-negativePrimary: "{colors.red5}"
+  dark-base-negativePrimary: "{colors.dark-red5}"
+  base-negativeSecondary: "{colors.red3}"
+  dark-base-negativeSecondary: "{colors.dark-red3}"
+  base-negativeTertiary: "{colors.red2}"
+  dark-base-negativeTertiary: "{colors.dark-red2}"
+  base-positivePrimary: "{colors.green5}"
+  dark-base-positivePrimary: "{colors.dark-green5}"
+  base-positiveSecondary: "{colors.green3}"
+  dark-base-positiveSecondary: "{colors.dark-green3}"
+  base-positiveTertiary: "{colors.green2}"
+  dark-base-positiveTertiary: "{colors.dark-green2}"
+  base-systemMainPrimary: "{colors.purple4}"
+  dark-base-systemMainPrimary: "{colors.dark-purple4}"
+  base-systemMainSecondary: "{colors.purple3}"
+  dark-base-systemMainSecondary: "{colors.dark-purple3}"
+  base-systemMainTertiary: "{colors.purple2}"
+  dark-base-systemMainTertiary: "{colors.dark-purple2}"
+  base-systemSubPrimary: "{colors.blue5}"
+  dark-base-systemSubPrimary: "{colors.dark-blue5}"
+  base-systemSubSecondary: "{colors.blue3}"
+  dark-base-systemSubSecondary: "{colors.dark-blue3}"
+  base-systemSubTertiary: "{colors.blue2}"
+  dark-base-systemSubTertiary: "{colors.dark-blue2}"
+  base-warningPrimary: "{colors.orange5}"
+  dark-base-warningPrimary: "{colors.dark-orange5}"
+  base-warningSecondary: "{colors.orange3}"
+  dark-base-warningSecondary: "{colors.dark-orange3}"
+  base-warningTertiary: "{colors.orange2}"
+  dark-base-warningTertiary: "{colors.dark-orange2}"
+  ## Deployed roles — mint theme
+  # 같은 꼴의 `--sem-mint-color-*` [src:14]. 두 테마는 역할 이름이 겹쳐(`systemMainPrimary`) 테마를 키 앞에 붙인다
+  mint-benefitPrimary: "{colors.purple5}"
+  dark-mint-benefitPrimary: "{colors.dark-purple5}"
+  mint-benefitSecondary: "{colors.purple6}"
+  dark-mint-benefitSecondary: "{colors.dark-purple6}"
+  mint-benefitTertiary: "{colors.purple1}"
+  dark-mint-benefitTertiary: "{colors.dark-purple1}"
+  mint-negativePrimary: "{colors.red5}"
+  dark-mint-negativePrimary: "{colors.dark-red5}"
+  mint-negativeSecondary: "{colors.red6}"
+  dark-mint-negativeSecondary: "{colors.dark-red6}"
+  mint-negativeTertiary: "{colors.red1}"
+  dark-mint-negativeTertiary: "{colors.dark-red1}"
+  mint-positivePrimary: "{colors.green5}"
+  dark-mint-positivePrimary: "{colors.dark-green5}"
+  mint-positiveSecondary: "{colors.green6}"
+  dark-mint-positiveSecondary: "{colors.dark-green6}"
+  mint-positiveTertiary: "{colors.green1}"
+  dark-mint-positiveTertiary: "{colors.dark-green1}"
+  mint-systemMainPrimary: "{colors.mint5}"
+  dark-mint-systemMainPrimary: "{colors.dark-mint5}"
+  mint-systemMainSecondary: "{colors.mint6}"
+  dark-mint-systemMainSecondary: "{colors.dark-mint6}"
+  mint-systemMainTertiary: "{colors.mint1}"
+  dark-mint-systemMainTertiary: "{colors.dark-mint1}"
+  mint-systemSubPrimary: "{colors.blue5}"
+  dark-mint-systemSubPrimary: "{colors.dark-blue6}"
+  mint-systemSubSecondary: "{colors.blue6}"
+  dark-mint-systemSubSecondary: "{colors.dark-blue6}"
+  mint-systemSubTertiary: "{colors.blue1}"
+  dark-mint-systemSubTertiary: "{colors.dark-blue1}"
+  mint-warningPrimary: "{colors.orange5}"
+  dark-mint-warningPrimary: "{colors.dark-orange5}"
+  mint-warningSecondary: "{colors.orange6}"
+  dark-mint-warningSecondary: "{colors.dark-orange6}"
+  mint-warningTertiary: "{colors.orange1}"
+  dark-mint-warningTertiary: "{colors.dark-orange1}"
   ## Bundle — mint usage
   # 이 아래는 핸드오프 번들의 쓰임별 색이다(배포 팔레트 아님) — 배포 단계에 대응을 짓지 않고 번들 값 그대로 둔다
   primary-hover: oklch(0.69 0.13 184)   # 버튼 hover/pressed (mint-deep), 번들 값
@@ -361,21 +434,138 @@ fonts:
 
 ## Colors
 
-> **팔레트 정정(2026-11-08).** frontmatter 팔레트를 배민 웹 배포 CSS 의 `--ref-color-*` 로 다시 실었다 [src:14]. 대조한 파일은 페이지가 싣는 `_next/static/css/1904f6c9a75d9ac2.css`(SHA-256 `579721314e5299b12eb2d506f2f81e08261cc329ef9ee0486571109c837a2ff4`)이고, 이날 페이지에서 다시 받아 잰 해시가 2026-11-01 조사 때 받아 둔 사본과 같다. 이 파일은 팔레트를 네 블록에 선언한다 — `base` 테마와 `mint` 테마 각각의 라이트와 다크다. 두 테마의 팔레트는 라이트끼리, 다크끼리 87개 선언이 값까지 모두 같다. 테마는 팔레트의 축이 아니라 그 위 역할 층(`--sem-base-*`, `--sem-mint-*`)에만 있는 축이어서, 팔레트 키에는 테마 표시를 붙이지 않고 라이트와 다크만 `dark-` 로 가른다. 라이트는 이날 페이지의 `body` 에 클래스로 걸린 블록이고, 다크는 걸리지 않은 짝 블록이다. 87개 가운데 색 단계가 아닌 `transparent`(`hsla(0,0%,100%,0)`, hex 가 없다)를 빼고, 라이트 86개와 다크 86개(`dark-`)를 싣는다. 그중 11개(회색을 뺀 각 색의 5단계, `white`, `black`)는 라이트와 다크 값이 같지만, 상류가 다크 블록에도 선언하므로 다크 짝도 싣는다. 실은 172줄은 모두 줄의 hex 와 대조해 불일치가 0이다. 번들 값과의 관계는 셋으로 갈린다. 번들 민트 10단계(`mint-050`~`mint-900`)는 배포 민트 8단계와 같은 색을 다른 이름과 값으로 재구성한 것이라 **철회**했다. `primary` 는 배포 `mint5` 를 가리키는 참조 행으로 **대체**했다. `primary-hover` 와 네이비, 액센트, 뉴트럴 같은 번들 쓰임색은 배포 단계와 이름이 맞지 않아 대응을 짓지 않고 번들 값 그대로 **병기**한다. 본문의 민트 칩 글자색은 철회한 번들 `mint-700` 에서 값이 가장 가까운 배포 `mint8`(OKLab 거리 0.021)로 옮겼다. 아래 쓰임별 대응 표의 이름은 번들 재구성의 것이어서 브랜드가 발행한 역할 이름이 아니다. 배포된 역할 계층(`--sem-*`)은 후속 작업이 싣고, 사장님 사이트 [src:15] 의 `blue` 테마는 싣지 않는다(`## Known Gaps`).
+> **역할 계층 수록(2026-11-09).** frontmatter 팔레트는 배민 웹 배포 CSS 의 `--ref-color-*` 이고, 그 위 역할 층 `--sem-base-color-*`, `--sem-mint-color-*` 를 아래 `### 배포 역할` 표와 frontmatter 참조 행으로 실었다 [src:14]. 대조한 파일은 페이지가 싣는 `_next/static/css/1904f6c9a75d9ac2.css`(SHA-256 `579721314e5299b12eb2d506f2f81e08261cc329ef9ee0486571109c837a2ff4`)이고, 이날 페이지에서 다시 받아 잰 해시가 2026-11-01 조사 때 받아 둔 사본과 같다. 이 파일은 팔레트를 네 블록에 선언한다 — `base` 테마와 `mint` 테마 각각의 라이트와 다크다. 두 테마의 팔레트는 라이트끼리, 다크끼리 87개 선언이 값까지 모두 같다. 테마는 팔레트의 축이 아니라 그 위 역할 층에만 있는 축이어서, 팔레트 키에는 테마 표시를 붙이지 않고 라이트와 다크만 `dark-` 로 가른다. 라이트는 이날 페이지의 `body` 에 클래스로 걸린 블록이고(두 테마의 라이트 블록이 함께 걸려 있다), 다크는 걸리지 않은 짝 블록이다. 87개 가운데 색 단계가 아닌 `transparent`(`hsla(0,0%,100%,0)`, hex 가 없다)를 빼고, 라이트 86개와 다크 86개(`dark-`)를 싣는다. 그중 11개(회색을 뺀 각 색의 5단계, `white`, `black`)는 라이트와 다크 값이 같지만, 상류가 다크 블록에도 선언하므로 다크 짝도 싣는다. 실은 172줄은 모두 줄의 hex 와 대조해 불일치가 0이다. 번들 값과의 관계는 셋으로 갈린다. 번들 민트 10단계(`mint-050`~`mint-900`)는 배포 민트 8단계와 같은 색을 다른 이름과 값으로 재구성한 것이라 **철회**했다. `primary` 는 배포 `mint5` 를 가리키는 참조 행으로 **대체**했다. `primary-hover` 와 네이비, 액센트, 뉴트럴 같은 번들 쓰임색은 배포 단계와 이름이 맞지 않아 대응을 짓지 않고 번들 값 그대로 **병기**한다. 본문의 민트 칩 글자색은 철회한 번들 `mint-700` 에서 값이 가장 가까운 배포 `mint8`(OKLab 거리 0.021)로 옮겼다. 역할 층은 색 말고도 글자 스타일(`textStyle`)과 쌓임 순서(`elevation`)를 담아 이름이 460개다. 이 문서는 색 역할만 싣고, 글자 스타일 354개(테마마다 177개)와 z-index 숫자 5개는 색이 아니어서 싣지 않는다(`## Known Gaps`). 색 역할은 `base` 48개와 `mint` 53개다. 두 테마의 역할 블록이 한 페이지에 함께 걸리고 역할 이름이 겹치므로(`systemMainPrimary` 는 `base` 에서 `purple4`, `mint` 에서 `mint5` 를 가리킨다), 키와 표 첫 열에 테마를 `base-`, `mint-` 로 붙이고 상류의 camelCase 이름은 그대로 둔다. 한 테마만 접두 없이 두지 않은 것은 페이지가 두 테마를 기본과 덮어쓰기가 아니라 나란한 두 이름공간으로 걸기 때문이다. `dark-` 는 테마 접두 바깥에 둔다(`dark-mint-systemMainPrimary`). 101개 역할의 라이트와 다크 선언 202개를 배포 CSS 와 대조해 불일치가 0이다. 그중 35개 역할이 팔레트 단계 하나를 가리켜 참조 행 69줄로도 싣는다. 다크 블록이 팔레트를 다크 값으로 다시 선언하므로 라이트 행은 접두 없는 단계를, `dark-` 짝은 `dark-` 단계를 가리킨다. `base-borderInverted` 는 라이트만 `white` 를 가리키고 다크는 hex 를 직접 적어서, 라이트 행만 싣고 다크 쪽은 표에만 둔다. 나머지 역할은 값을 hex, rgba, hsla, `transparent` 로 직접 적어 표에만 있다. 아래 쓰임별 대응 표의 이름은 번들 재구성의 것이어서 브랜드가 발행한 역할 이름이 아니다. 사장님 사이트 [src:15] 의 `blue` 테마는 싣지 않는다(`## Known Gaps`).
 
 색 시스템의 중심은 **2024 리브랜드 민트 `{colors.primary}`**(배포 `mint5`)와 **딥 네이비 `{colors.navy}`**, 그리고 번들의 무채색 뉴트럴 스택이다. 팔레트는 배민 웹 배포 CSS 의 단계 이름(`mint1`~`mint8`, `gray1`~`gray12` 등)을 그대로 쓰고, 네이비와 액센트, 뉴트럴 같은 쓰임색은 핸드오프 `colors_and_type.css`의 값이다.
 
 ### 배포 팔레트
 
-단계 번호는 바탕에 가까운 쪽에서 먼 쪽으로 간다. 라이트에서는 1단계가 가장 밝고, 다크에서는 1단계가 가장 어둡다. 회색을 뺀 각 색의 5단계는 라이트와 다크 값이 같다 [src:14]. 배포 회색 `gray1`~`gray12` 는 색조가 아주 옅게 푸른 쪽(OKLCH 색상각 약 248°)이다.
+단계 번호는 바탕에 가까운 쪽에서 먼 쪽으로 간다. 라이트에서는 1단계가 가장 밝고, 다크에서는 1단계가 가장 어둡다. 다크 민트만 예외로, 5단계(`dark-mint5`, 브랜드 민트라 라이트와 같은 값)가 6단계(`dark-mint6`)보다 밝다. 회색을 뺀 각 색의 5단계는 라이트와 다크 값이 같다 [src:14]. 배포 회색 `gray1`~`gray12` 는 색조가 아주 옅게 푸른 쪽(OKLCH 색상각 약 248°)이다.
+
+### 배포 역할
+
+배민 웹은 팔레트 위에 테마 역할 층 둘을 배포한다 [src:14]. 두 테마는 역할 이름 대부분이 같고 고르는 색이 다르다. 시스템 메인 역할이 `base` 에서는 보라(`purple4`), `mint` 에서는 브랜드 민트(`mint5`)를 가리킨다. 이 문서의 대표색 `{colors.primary}` 가 그 `mint5` 이므로, 브랜드 민트를 주색으로 쓰는 화면은 `mint-` 역할에서 고른다. 표의 역할 이름은 상류 이름(`--sem-mint-color-systemMainPrimary`)의 테마와 역할 부분을 이은 것이다(`mint-systemMainPrimary`).
+
+참조 칸(`{colors.mint5}` 꼴)은 상류가 팔레트 단계를 가리키는 선언이고, frontmatter 에 같은 대응의 참조 행이 있다. 나머지 칸은 상류가 값을 직접 적은 선언이라 표에만 있다. hex 는 OKLCH 를 곁들이고, rgba, hsla, `transparent` 는 상류 표기 그대로 옮겼다. 비고 칸은 직접 적은 hex 가 팔레트 단계와 값이 같을 때 그 단계를 적는다. 값은 같아도 상류가 참조로 적지 않았으므로 참조 행이 없다.
+
+#### `base` 테마
+
+| 역할 | 라이트 | 다크 | 비고 |
+| --- | --- | --- | --- |
+| `base-borderInverted` | `{colors.white}` | `#181a1c` ≈ `oklch(0.216 0.005 248)` | hex 가 같은 팔레트 단계(참조 아님): 다크 `dark-gray1` |
+| `base-fillInverted` | `{colors.black}` | `{colors.dark-white}` | |
+| `base-negativePrimary` | `{colors.red5}` | `{colors.dark-red5}` | |
+| `base-negativeSecondary` | `{colors.red3}` | `{colors.dark-red3}` | |
+| `base-negativeTertiary` | `{colors.red2}` | `{colors.dark-red2}` | |
+| `base-positivePrimary` | `{colors.green5}` | `{colors.dark-green5}` | |
+| `base-positiveSecondary` | `{colors.green3}` | `{colors.dark-green3}` | |
+| `base-positiveTertiary` | `{colors.green2}` | `{colors.dark-green2}` | |
+| `base-systemMainPrimary` | `{colors.purple4}` | `{colors.dark-purple4}` | |
+| `base-systemMainSecondary` | `{colors.purple3}` | `{colors.dark-purple3}` | |
+| `base-systemMainTertiary` | `{colors.purple2}` | `{colors.dark-purple2}` | |
+| `base-systemSubPrimary` | `{colors.blue5}` | `{colors.dark-blue5}` | |
+| `base-systemSubSecondary` | `{colors.blue3}` | `{colors.dark-blue3}` | |
+| `base-systemSubTertiary` | `{colors.blue2}` | `{colors.dark-blue2}` | |
+| `base-warningPrimary` | `{colors.orange5}` | `{colors.dark-orange5}` | |
+| `base-warningSecondary` | `{colors.orange3}` | `{colors.dark-orange3}` | |
+| `base-warningTertiary` | `{colors.orange2}` | `{colors.dark-orange2}` | |
+| `base-backgroundPrimary` | `#f3f5f7` ≈ `oklch(0.969 0.003 248)` | `#151719` ≈ `oklch(0.203 0.005 248)` | hex 가 같은 팔레트 단계(참조 아님): 라이트 `gray1` |
+| `base-borderDisabled` | `rgba(24,26,28,.08)` | `hsla(210,8%,90%,.08)` | |
+| `base-borderFocusedOnTint` | `rgba(0,0,0,.38)` | `rgba(0,0,0,.38)` | |
+| `base-borderInvertedNone` | `hsla(0,0%,100%,0)` | `rgba(24,26,28,0)` | |
+| `base-borderNone` | `transparent` | `hsla(0,0%,100%,0)` | |
+| `base-borderPrimary` | `#181a1c` ≈ `oklch(0.216 0.005 248)` | `#fff` ≈ `oklch(1.000 0.000 0)` | hex 가 같은 팔레트 단계(참조 아님): 라이트 `gray12`, 다크 `dark-white` |
+| `base-borderSecondary` | `rgba(24,26,28,.18)` | `hsla(210,8%,90%,.14)` | |
+| `base-borderTertiary` | `rgba(24,26,28,.08)` | `hsla(210,8%,90%,.08)` | |
+| `base-fillDisabled` | `rgba(0,0,20,.1)` | `hsla(210,8%,90%,.1)` | |
+| `base-fillHovered` | `rgba(0,0,0,.04)` | `hsla(0,0%,100%,.04)` | |
+| `base-fillHoveredOnInverted` | `hsla(0,0%,100%,.04)` | `rgba(0,0,0,.04)` | |
+| `base-fillInvertedNone` | `transparent` | `hsla(0,0%,100%,0)` | |
+| `base-fillNone` | `rgba(0,0,51,0)` | `hsla(0,0%,100%,0)` | |
+| `base-fillPressed` | `rgba(0,0,0,.08)` | `hsla(0,0%,100%,.08)` | |
+| `base-fillPressedOnInverted` | `hsla(0,0%,100%,.08)` | `rgba(0,0,0,.08)` | |
+| `base-fillPrimary` | `rgba(0,0,51,.04)` | `hsla(210,8%,90%,.04)` | |
+| `base-fillQuaternary` | `hsla(240,3%,49%,.08)` | `hsla(240,3%,49%,.18)` | |
+| `base-fillSecondary` | `rgba(0,0,20,.1)` | `hsla(210,8%,90%,.08)` | |
+| `base-fillTertiary` | `hsla(240,3%,49%,.12)` | `hsla(240,3%,49%,.24)` | |
+| `base-foregroundDisabled` | `rgba(24,26,28,.18)` | `hsla(210,8%,90%,.16)` | |
+| `base-foregroundInverted` | `#fff` ≈ `oklch(1.000 0.000 0)` | `#181a1c` ≈ `oklch(0.216 0.005 248)` | hex 가 같은 팔레트 단계(참조 아님): 라이트 `white`, 다크 `dark-gray1` |
+| `base-foregroundInvertedNone` | `hsla(0,0%,100%,0)` | `rgba(24,26,28,0)` | |
+| `base-foregroundNone` | `rgba(24,26,28,0)` | `hsla(0,0%,100%,0)` | |
+| `base-foregroundPrimary` | `#181a1c` ≈ `oklch(0.216 0.005 248)` | `#fff` ≈ `oklch(1.000 0.000 0)` | hex 가 같은 팔레트 단계(참조 아님): 라이트 `gray12`, 다크 `dark-white` |
+| `base-foregroundQuaternary` | `rgba(24,26,28,.18)` | `hsla(210,8%,90%,.16)` | |
+| `base-foregroundSecondary` | `rgba(24,26,28,.56)` | `hsla(210,8%,90%,.47)` | |
+| `base-foregroundTertiary` | `rgba(24,26,28,.33)` | `hsla(210,8%,90%,.26)` | |
+| `base-overlayPrimary` | `rgba(0,0,0,.3)` | `rgba(0,0,0,.8)` | |
+| `base-separatorPrimary` | `rgba(5,26,46,.05)` | `rgba(209,230,250,.05)` | |
+| `base-surfaceContainer` | `#fff` ≈ `oklch(1.000 0.000 0)` | `#1c1e20` ≈ `oklch(0.234 0.005 248)` | hex 가 같은 팔레트 단계(참조 아님): 라이트 `white` |
+| `base-surfaceNonModal` | `#fff` ≈ `oklch(1.000 0.000 0)` | `#26282a` ≈ `oklch(0.276 0.005 248)` | hex 가 같은 팔레트 단계(참조 아님): 라이트 `white`, 다크 `dark-gray3` |
+
+#### `mint` 테마
+
+| 역할 | 라이트 | 다크 | 비고 |
+| --- | --- | --- | --- |
+| `mint-benefitPrimary` | `{colors.purple5}` | `{colors.dark-purple5}` | |
+| `mint-benefitSecondary` | `{colors.purple6}` | `{colors.dark-purple6}` | |
+| `mint-benefitTertiary` | `{colors.purple1}` | `{colors.dark-purple1}` | |
+| `mint-negativePrimary` | `{colors.red5}` | `{colors.dark-red5}` | |
+| `mint-negativeSecondary` | `{colors.red6}` | `{colors.dark-red6}` | |
+| `mint-negativeTertiary` | `{colors.red1}` | `{colors.dark-red1}` | |
+| `mint-positivePrimary` | `{colors.green5}` | `{colors.dark-green5}` | |
+| `mint-positiveSecondary` | `{colors.green6}` | `{colors.dark-green6}` | |
+| `mint-positiveTertiary` | `{colors.green1}` | `{colors.dark-green1}` | |
+| `mint-systemMainPrimary` | `{colors.mint5}` | `{colors.dark-mint5}` | |
+| `mint-systemMainSecondary` | `{colors.mint6}` | `{colors.dark-mint6}` | |
+| `mint-systemMainTertiary` | `{colors.mint1}` | `{colors.dark-mint1}` | |
+| `mint-systemSubPrimary` | `{colors.blue5}` | `{colors.dark-blue6}` | |
+| `mint-systemSubSecondary` | `{colors.blue6}` | `{colors.dark-blue6}` | |
+| `mint-systemSubTertiary` | `{colors.blue1}` | `{colors.dark-blue1}` | |
+| `mint-warningPrimary` | `{colors.orange5}` | `{colors.dark-orange5}` | |
+| `mint-warningSecondary` | `{colors.orange6}` | `{colors.dark-orange6}` | |
+| `mint-warningTertiary` | `{colors.orange1}` | `{colors.dark-orange1}` | |
+| `mint-backgroundPrimary` | `#f3f5f7` ≈ `oklch(0.969 0.003 248)` | `#151719` ≈ `oklch(0.203 0.005 248)` | hex 가 같은 팔레트 단계(참조 아님): 라이트 `gray1` |
+| `mint-borderDisabled` | `rgba(24,26,28,.11)` | `hsla(210,8%,90%,.08)` | |
+| `mint-borderFocusedOnTint` | `rgba(0,0,0,.38)` | `rgba(0,0,0,.38)` | |
+| `mint-borderInverted` | `#fff` ≈ `oklch(1.000 0.000 0)` | `#000` ≈ `oklch(0.000 0.000 0)` | hex 가 같은 팔레트 단계(참조 아님): 라이트 `white`, 다크 `dark-black` |
+| `mint-borderInvertedNone` | `hsla(0,0%,100%,0)` | `transparent` | |
+| `mint-borderNone` | `transparent` | `hsla(0,0%,100%,0)` | |
+| `mint-borderPrimary` | `#181a1c` ≈ `oklch(0.216 0.005 248)` | `#fff` ≈ `oklch(1.000 0.000 0)` | hex 가 같은 팔레트 단계(참조 아님): 라이트 `gray12`, 다크 `dark-white` |
+| `mint-borderQuaternary` | `rgba(24,26,28,.08)` | `hsla(210,8%,90%,.08)` | |
+| `mint-borderSecondary` | `rgba(24,26,28,.18)` | `hsla(210,8%,90%,.14)` | |
+| `mint-borderTertiary` | `rgba(24,26,28,.11)` | `hsla(210,8%,90%,.1)` | |
+| `mint-fillDisabled` | `rgba(0,0,20,.1)` | `hsla(210,8%,90%,.08)` | |
+| `mint-fillHovered` | `rgba(0,0,0,.04)` | `hsla(0,0%,100%,.04)` | |
+| `mint-fillHoveredOnInverted` | `hsla(0,0%,100%,.04)` | `rgba(0,0,0,.04)` | |
+| `mint-fillInverted` | `#000` ≈ `oklch(0.000 0.000 0)` | `#fff` ≈ `oklch(1.000 0.000 0)` | hex 가 같은 팔레트 단계(참조 아님): 라이트 `black`, 다크 `dark-white` |
+| `mint-fillInvertedNone` | `transparent` | `hsla(0,0%,100%,0)` | |
+| `mint-fillNone` | `transparent` | `hsla(0,0%,100%,0)` | |
+| `mint-fillPressed` | `rgba(0,0,0,.08)` | `hsla(0,0%,100%,.08)` | |
+| `mint-fillPressedOnInverted` | `hsla(0,0%,100%,.1)` | `rgba(0,0,0,.08)` | |
+| `mint-fillPrimary` | `rgba(0,0,51,.04)` | `hsla(210,8%,90%,.04)` | |
+| `mint-fillSecondary` | `rgba(0,0,20,.1)` | `hsla(210,8%,90%,.08)` | |
+| `mint-foregroundDisabled` | `rgba(24,26,28,.18)` | `hsla(210,8%,90%,.16)` | |
+| `mint-foregroundInverted` | `#fff` ≈ `oklch(1.000 0.000 0)` | `#181a1c` ≈ `oklch(0.216 0.005 248)` | hex 가 같은 팔레트 단계(참조 아님): 라이트 `white`, 다크 `dark-gray1` |
+| `mint-foregroundInvertedNone` | `hsla(0,0%,100%,0)` | `transparent` | |
+| `mint-foregroundNone` | `transparent` | `hsla(0,0%,100%,0)` | |
+| `mint-foregroundPrimary` | `#181a1c` ≈ `oklch(0.216 0.005 248)` | `#fff` ≈ `oklch(1.000 0.000 0)` | hex 가 같은 팔레트 단계(참조 아님): 라이트 `gray12`, 다크 `dark-white` |
+| `mint-foregroundQuaternary` | `rgba(24,26,28,.33)` | `hsla(210,8%,90%,.26)` | |
+| `mint-foregroundSecondary` | `rgba(24,26,28,.78)` | `hsla(210,8%,90%,.78)` | |
+| `mint-foregroundTertiary` | `rgba(24,26,28,.56)` | `hsla(210,8%,90%,.47)` | |
+| `mint-overlayPrimary` | `rgba(0,0,0,.5)` | `rgba(0,0,0,.8)` | |
+| `mint-separatorPrimary` | `rgba(24,26,28,.06)` | `hsla(210,8%,90%,.06)` | |
+| `mint-shadowLevel1` | `rgba(0,0,0,.06)` | `rgba(0,0,0,.3)` | |
+| `mint-shadowLevel2` | `rgba(0,0,0,.12)` | `rgba(0,0,0,.5)` | |
+| `mint-shadowLevel3` | `rgba(0,0,0,.18)` | `rgba(0,0,0,.8)` | |
+| `mint-surfaceContainer` | `#fff` ≈ `oklch(1.000 0.000 0)` | `#1c1e20` ≈ `oklch(0.234 0.005 248)` | hex 가 같은 팔레트 단계(참조 아님): 라이트 `white` |
+| `mint-surfaceNonModal` | `#fff` ≈ `oklch(1.000 0.000 0)` | `#26282a` ≈ `oklch(0.276 0.005 248)` | hex 가 같은 팔레트 단계(참조 아님): 라이트 `white`, 다크 `dark-gray3` |
 
 ### Neutrals (번들 무채색)
 
-번들 뉴트럴은 채도가 0인 무채색이다. 페이지 배경 `{colors.bg-page}` 은 순백이 아닌 본화이트, 본문 텍스트 `{colors.fg-1}` 은 순흑이 아닌 near-black 이고, 카드와 시트 표면 `{colors.bg-surface}` 만 순백이다. 배포 팔레트에는 `white`, `black` 과 위 회색 단계가 따로 있고, 배민 웹이 어느 단계를 페이지 배경과 텍스트에 쓰는지는 역할 층이 정한다(`## Known Gaps` 의 역할 계층 항).
+번들 뉴트럴은 채도가 0인 무채색이다. 페이지 배경 `{colors.bg-page}` 은 순백이 아닌 본화이트, 본문 텍스트 `{colors.fg-1}` 은 순흑이 아닌 near-black 이고, 카드와 시트 표면 `{colors.bg-surface}` 만 순백이다. 배포 팔레트에는 `white`, `black` 과 위 회색 단계가 따로 있고, 배민 웹의 페이지 배경과 텍스트는 역할 층이 정한다 — 라이트에서 `base-backgroundPrimary` 는 `gray1` 과, `base-foregroundPrimary` 는 `gray12` 와 값이 같다(`### 배포 역할`).
 
 ### 쓰임별 색 대응
 
-핸드오프 `colors_and_type.css` §3-5는 `--tag-mint-bg: var(--baemin-mint-tint)` 형식으로 raw 민트·빨강·네이비를 쓰임별 별칭에 묶어 둔다. 다음은 그 대응을 본 문서 토큰 어휘로 옮긴 표다. 별칭 이름은 번들 재구성의 것이라 토큰으로 싣지 않고 쓰임만 적는다.
+핸드오프 `colors_and_type.css` §3-5는 `--tag-mint-bg: var(--baemin-mint-tint)` 형식으로 raw 민트·빨강·네이비를 쓰임별 별칭에 묶어 둔다. 다음은 그 대응을 본 문서 토큰 어휘로 옮긴 표다. 별칭 이름은 번들 재구성의 것이라 토큰으로 싣지 않고 쓰임만 적는다. 그래서 위 `### 배포 역할` 표와 달리 첫 열이 역할 이름이 아니라 쓰임이다. 두 표는 서로 다른 층이고 대응을 짓지 않는다 — 이 표가 가리키는 번들 쓰임색은 배포 팔레트 단계가 아니어서(첫머리 메모) 배포 역할의 값과 맞물리지 않는다.
 
 | 쓰임 | 토큰 |
 | --- | --- |
@@ -388,7 +578,7 @@ fonts:
 | NEW·신규·환영 칩 | `{colors.primary-tint}` |
 | 검정 캡슐 토스트 | `{colors.bg-inverse}` 90% 불투명도 |
 
-새 컴포넌트를 추가할 때는 raw 컬러를 직접 박지 말고 위 쓰임 중 하나에 정렬하는 것을 우선한다. 맞는 쓰임이 없으면(성공 상태 등) 새 토큰을 만들지 말고 팔레트 토큰에서 고른다.
+새 컴포넌트를 추가할 때는 raw 컬러를 직접 박지 말고 위 쓰임 중 하나에 정렬하는 것을 우선한다. 맞는 쓰임이 없으면(성공 상태 등) 새 토큰을 만들지 말고 `### 배포 역할` 의 역할(성공 상태라면 `mint-positivePrimary` 나 `base-positivePrimary`)에서 고르고, 거기에도 없을 때 팔레트 토큰에서 고른다.
 
 ## Typography
 
@@ -1023,7 +1213,7 @@ iOS 상태표시줄 아래 위치하는 검색 화면 헤더. 좌측 `←` back,
 - 등급 호명은 `귀한분`·`고마운분` 같은 형용사 + 사용자 이름 형태로 한다 [src:1].
 - placeholder·CTA는 **위트 카피**를 허용한다(`찾는 메뉴가 뭐예요?`, `뚝딱!!`, `함께해요!`). 강조용 느낌표 1개, 마법주문어 예외에 한해 두 개 [src:1].
 - 빈 상태는 점토 한글이나 3D 굿즈 일러스트 중 하나로 채우고, 안내 카피는 작은 회색(`{colors.fg-3}` / `{typography.caption}`)으로 짧게 단다 [src:1].
-- 새 컴포넌트의 색은 `### 쓰임별 색 대응` 의 쓰임에 먼저 맞춘다. 맞는 쓰임이 없으면 새 토큰을 만들지 말고 팔레트 토큰에서 고른다.
+- 새 컴포넌트의 색은 `### 쓰임별 색 대응` 의 쓰임에 먼저 맞춘다. 맞는 쓰임이 없으면 새 토큰을 만들지 말고 `### 배포 역할` 의 역할에서, 거기에도 없으면 팔레트 토큰에서 고른다.
 
 ### Don't
 
@@ -1054,12 +1244,12 @@ iOS 상태표시줄 아래 위치하는 검색 화면 헤더. 좌측 `←` back,
 ## Known Gaps
 
 - **팔레트 밖 토큰은 핸드오프 번들 값**: 팔레트(`Deployed palette` 묶음)는 배민 웹이 배포하는 값이지만 [src:14], 번들 쓰임색(네이비, 액센트, 뉴트럴 등)과 타이포그래피, 스페이싱, 라운드, 엘리베이션 토큰은 Claude Design이 스크린샷과 공개 자료를 토대로 재구성한 핸드오프 번들 값이다. 우아한형제들이 공식 배포한 Figma·코드베이스에서 옮긴 것이 아니어서 실제 프로덕션과 1~3px·1~2단계 hex 채도 편차가 있을 수 있다. 번들 쓰임색을 배포 팔레트 단계에 대응시키지 않은 이유는 `## Colors` 첫머리 메모에 있다.
-- **철회된 부재 주장 (2026-11-01)** — 종전 판본은 이 자리에 "공식 토큰 시스템 미배포"라고 적었으나, 배민 웹은 팔레트·역할·컴포넌트 토큰(`--ref-color-*`·`--sem-*`·`--com-*`)을 배포 CSS 로 싣는다 [src:14]. 아래 「배포된 역할 계층 미수록」 참조.
+- **철회된 부재 주장 (2026-11-01)** — 종전 판본은 이 자리에 "공식 토큰 시스템 미배포"라고 적었으나, 배민 웹은 팔레트·역할·컴포넌트 토큰(`--ref-color-*`·`--sem-*`·`--com-*`)을 배포 CSS 로 싣는다 [src:14]. 팔레트와 색 역할은 `## Colors` 에 실었다.
 - **인용 없는 정량값 = 번들 관찰값 (2026-07-26 정리)**: 번들 쓰임색·스페이싱·라운드·엘리베이션·모션 등 본문의 정량 서술 대부분은 위 핸드오프 번들에서 나온 것이며 공개 URL로 대조할 수 없다. 종전 판본은 이들에 `brandfetch.com/baemin.com`을 인용으로 달아 두었으나, 그 페이지는 브랜드 메타데이터 조회 서비스여서 **핸드오프 번들 내부 토큰을 담고 있었다고 보기 어렵고**(문장 자체가 "handoff §3-5", "핸드오프 가이드의 표현이다"라고 출처를 밝힌다), **현재는 웹 프런트엔드가 전 경로 404**다 — 2026-07-26 확인 기준 apex `/`까지 Apache 기본 404이며, 다만 `docs.brandfetch.com`·`status.brandfetch.io`는 200이고 `api.brandfetch.io`는 401을 반환하므로 서비스가 폐업한 것은 아니다. 공개 출처가 담지 않은 주장에 공개 URL을 붙이는 것은 인용 정책 위반이므로 해당 인용 78건을 제거했다 — **인용 표시가 없는 정량값은 번들 관찰값으로 읽으면 된다.** 프로덕션 적용 전 실제 앱 캡처와 대조할 것.
 - **WORK 폰트 미반영**: 2024 *Baemin 2.0* 리브랜드와 함께 공개된 자체 폰트 WORK는 외부 공개 배포가 확인되지 않아 본 문서 디스플레이 스택은 여전히 BM 한나체 시리즈를 기준으로 한다. 실제 신규 앱에서 헤드라인 폰트가 WORK로 교체됐는지 확인 필요 [src:1].
 - **민트 hex 표기 다원화**: 2010년대 후반 The PR 기사의 `#5EBEBB` 표기는 현행 디지털 프라이머리(배포 팔레트 `mint5` ≈ `oklch(0.854 0.154 180)`, Baemin 2.0)나 레거시 디지털 민트(`#2AC1BC`) 어느 쪽과도 정확히 일치하지 않는다 — 인쇄·홍보 자산용 다른 표기로 추정된다 [src:3].
 - **마스코트 SVG 미포함**: 배달이친구들(독고배달이·메이배달이·냥이배달이 등 15종) 공식 SVG는 외부 배포되지 않아 핸드오프는 image-slot placeholder만 제공한다 [src:1][src:9][src:4].
-- **배포된 역할 계층 미수록 (2026-11-08)**: 배민 웹이 싣는 스타일시트는 팔레트 `--ref-color-*` 위에 역할 층 `--sem-base-color-*`·`--sem-mint-color-*` 과 컴포넌트 층 `--com-*` 을 커스텀 프로퍼티로 배포한다 [src:14]. 역할 가운데 35개(`sem-base` 17 · `sem-mint` 18, 선언으로는 37개 — 두 역할은 라이트와 다크가 다른 단계를 가리킨다)는 팔레트 단계 하나를 가리키고(`--sem-mint-color-systemMainPrimary: var(--ref-color-mint5)`), 나머지는 hex·rgba·hsla 값이나 `transparent` 를 직접 갖는다. 배포 코드가 그 이름으로 정의한 역할이라 카탈로그 정책상 본문 역할 표와 frontmatter 참조 행 두 벌로 실어야 하는 발행 계층이다. 그 선행 작업인 팔레트 재수록은 끝났고(2026-11-08, `## Colors` 첫머리 메모), 역할 층은 후속 작업으로 나눴다. 실을 테마는 배민 웹의 `base` 와 `mint` 둘이다(메인테이너 결정, 2026-11-08).
+- **색이 아닌 역할과 컴포넌트 층 미수록 (2026-11-09)**: 배민 웹 스타일시트의 역할 층은 색 말고도 글자 스타일 `--sem-{base,mint}-textStyle-*` 과 z-index 숫자 `--sem-base-elevation-*` 을 담고, 그 위에 컴포넌트 층 `--com-*` 도 배포한다 [src:14]. 이 문서는 색 역할만 싣는다(`## Colors` 첫머리 메모). 글자 스타일은 본 문서 타이포그래피 스케일(핸드오프 번들 값)과 대조하지 않았다.
 - **사장님 사이트 `blue` 테마 미수록 (2026-11-08)**: 사장님 사이트 [src:15] 도 같은 역할 어휘(`--sem-blue-color-system-main-primary` 처럼 이름만 케밥 표기)로 팔레트 `--ref-blue-color-*` 와 그 위 역할 층 `--sem-blue-*` 을 배포한다 — 팔레트를 가리키는 역할 18개(선언 19개). 같은 브랜드가 같은 체계의 다른 테마로 발행한 계층이지만, 이 문서는 배민 웹(www.baemin.com)의 팔레트와 `base`, `mint` 테마만 싣고 사장님 사이트의 팔레트와 `blue` 테마는 싣지 않는다(메인테이너 결정, 2026-11-08).
 - **아이콘 시스템 단일화 미확인**: 핸드오프는 UI 라인 아이콘을 Lucide로 대체하되 SUBSTITUTION FLAG를 표시한다. 실제 배민은 (1) UI 라인 아이콘, (2) 3D 미니어처 카테고리, (3) 벡터 일러스트 배민스토어, (4) 손그림 라인 마케팅의 4종을 혼용 — 통합 아이콘 시스템은 공개되지 않았다 [src:1].
 
