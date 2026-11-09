@@ -1,10 +1,11 @@
 {
-  "run": "42503190439",
+  "run": "42597494828",
   "slugs": [
     "11st",
     "baemin",
     "banksalad",
     "bezier",
+    "chzzk",
     "class101",
     "codeit",
     "gmarket",
@@ -13,6 +14,7 @@
     "gs-shop",
     "krds",
     "kyobobook",
+    "laftel",
     "lg-electronics",
     "likelion",
     "line-design-system",
@@ -28,5 +30,36 @@
     "wanted",
     "yeogi",
     "zigbang"
-  ]
+  ],
+  "palettes": {
+    "11st": "6eccaa38df6f72fe",
+    "baemin": "ba72b74384a3dbd4",
+    "banksalad": "3ec83d500d4a6a92",
+    "bezier": "b1a3ddfd6f3290d3",
+    "chzzk": "2470a76dc6672905",
+    "class101": "d5f4b3ee779a0878",
+    "codeit": "15416dbb33d4409e",
+    "gmarket": "d3b92a87232798c0",
+    "greeting": "e4dbbfe6eef3f442",
+    "gs-retail": "da3e31e54b8d6a5c",
+    "gs-shop": "405d33c50e04a377",
+    "krds": "e595718b60b13b2a",
+    "kyobobook": "5c09afcc0fd7a5c4",
+    "laftel": "5ad2e530040f433f",
+    "lg-electronics": "2047d6a00a702047",
+    "likelion": "0feea067614b4d94",
+    "line-design-system": "51642184981481c4",
+    "nol": "c3edeecff3e6d1cd",
+    "remember": "29999ad21b2e2294",
+    "ridi": "77e45035791f0a19",
+    "samsung-one-ui": "080ca4a26bafc168",
+    "seed-design": "9c7f42159b8f40d8",
+    "socar": "65de43e8d6c1494e",
+    "teamsparta": "e7c7109581adbb7f",
+    "toss": "aac6c436f0a13ecc",
+    "vapor-ui": "aa26c467445c2a7d",
+    "wanted": "d6d9504e7f6cd1fa",
+    "yeogi": "bc7d8c335588210e",
+    "zigbang": "92f8ee86f79ed6c5"
+  }
 }

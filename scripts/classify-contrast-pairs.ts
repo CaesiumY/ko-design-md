@@ -38,6 +38,7 @@ import {
   measuredSlugs,
   renderHeldReasons,
 } from "../src/lib/contrast-report"
+import { renderClassifiedRun } from "../src/lib/contrast-rebaseline"
 import { fail, readEntries, readFindings } from "./contrast-artifact-io"
 
 // The upper edge of the band the tolerance was read off (see
@@ -90,12 +91,13 @@ function main(): void {
   const paletteFor = paletteLookup(read.palettes)
 
   const rows = dedupeFindings(raw)
-  // Every slug the artifact measured, for `src/lib/contrast-classified-run.json`:
-  // the entries classified by this run, held from then on even when their rows
-  // later leave both tables. The run id is not in the findings, so it is left
-  // for whoever pastes this to fill in.
+  // The record `src/lib/contrast-classified-run.json` holds, as the rebaseline
+  // command writes it: every slug the artifact measured (held from then on
+  // even when their rows later leave both tables) and the fingerprint of each
+  // palette read above (#669). The run id is not in the findings, so it is
+  // left for whoever pastes this to fill in.
   console.log(
-    `classified run (src/lib/contrast-classified-run.json):\n${JSON.stringify({ run: "<run id>", slugs }, null, 2)}\n`
+    `classified run (src/lib/contrast-classified-run.json):\n${renderClassifiedRun({ run: "<run id>", slugs, palettes: read.palettes })}`
   )
   for (const verdict of CLASSIFIED_VERDICTS) {
     const tally = tallyPairs(rows, paletteFor, verdict)

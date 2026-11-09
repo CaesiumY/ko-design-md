@@ -7,7 +7,13 @@ import {
   CONTRAST_BASELINE,
   MIN_TEXT_ELEMENTS,
 } from "./contrast-baseline"
-import { OBSERVED_COLOURS, paletteOf, parsePairTable } from "./contrast-pairs"
+import {
+  OBSERVED_COLOURS,
+  PALETTE_FINGERPRINT,
+  paletteFingerprint,
+  paletteOf,
+  parsePairTable,
+} from "./contrast-pairs"
 import { isRunId, parseHeldReasons, renderTotalsTable } from "./contrast-report"
 import type { PairTally } from "./contrast-pairs"
 
@@ -56,26 +62,43 @@ const tableInDoc = (): string => {
 /**
  * The classified-run record, read whole and refused when it is not the shape
  * the assertions below take for granted: a run id of digits (not the
- * `<run id>` placeholder), and the slugs sorted and without repeats, as the
- * command that measured them lists them.
+ * `<run id>` placeholder), the slugs sorted and without repeats, as the
+ * command that measured them lists them, and a fingerprint of the palette the
+ * classification read for some of those slugs, in slug order.
  */
-const readClassifiedRun = (): { run: string; slugs: Array<string> } => {
-  const { run, slugs } = (JSON.parse(read(CLASSIFIED_RUN_FILE)) ??
+const readClassifiedRun = (): {
+  run: string
+  slugs: Array<string>
+  palettes: Record<string, string>
+} => {
+  const { run, slugs, palettes } = (JSON.parse(read(CLASSIFIED_RUN_FILE)) ??
     // eslint-disable-next-line no-restricted-syntax -- A JSON file is untyped external input until the checks below narrow it.
     {}) as Record<string, unknown>
   const strings = (v: typeof slugs): v is Array<string> =>
     Array.isArray(v) && v.every((s) => typeof s === "string")
+  const sortedSet = (v: Array<string>): boolean =>
+    v.join("\n") === [...new Set(v)].sort().join("\n")
+  const fingerprints = (v: typeof palettes): v is Record<string, string> =>
+    typeof v === "object" &&
+    v !== null &&
+    !Array.isArray(v) &&
+    Object.values(v).every(
+      (f) => typeof f === "string" && PALETTE_FINGERPRINT.test(f)
+    )
   if (
     typeof run !== "string" ||
     !isRunId(run) ||
     !strings(slugs) ||
-    slugs.join("\n") !== [...new Set(slugs)].sort().join("\n")
+    !sortedSet(slugs) ||
+    !fingerprints(palettes) ||
+    !sortedSet(Object.keys(palettes)) ||
+    Object.keys(palettes).some((slug) => !slugs.includes(slug))
   ) {
     throw new Error(
-      `${CLASSIFIED_RUN_FILE} is not { run: "<digits>", slugs: [sorted, unique slugs] }`
+      `${CLASSIFIED_RUN_FILE} is not { run: "<digits>", slugs: [sorted, unique slugs], palettes: { <one of those slugs, in order>: "<paletteFingerprint output>" } } — run \`pnpm audit:contrast:rebaseline <run id>\` rather than editing it`
     )
   }
-  return { run, slugs }
+  return { run, slugs, palettes }
 }
 
 describe("the recorded table", () => {
@@ -238,13 +261,17 @@ describe("the published-pair tables against the recorded totals", () => {
   // whose new entries all have no rows yet is not — the rerun step above is
   // what keeps the list whole.
   const CLASSIFIED_RUN = readClassifiedRun()
-  const classified = (): Set<string> =>
-    new Set([
-      ...CLASSIFIED_RUN.slugs,
-      ...[...tableIn(cases[0].heading), ...tableIn(cases[1].heading)].map(
-        (t) => t.slug
+  /** Every slug with a row on either pair table, sorted, once each. */
+  const slugsOnTables = (): Array<string> =>
+    [
+      ...new Set(
+        [...tableIn(cases[0].heading), ...tableIn(cases[1].heading)].map(
+          (t) => t.slug
+        )
       ),
-    ])
+    ].sort()
+  const classified = (): Set<string> =>
+    new Set([...CLASSIFIED_RUN.slugs, ...slugsOnTables()])
 
   it("names the run its pinned slug list came from", () => {
     expect(
@@ -257,15 +284,48 @@ describe("the published-pair tables against the recorded totals", () => {
     // Both come from one artifact, so a slug on a table and missing here is a
     // list left over from an earlier run.
     const pinned = new Set(CLASSIFIED_RUN.slugs)
-    const unpinned = [
-      ...tableIn(cases[0].heading),
-      ...tableIn(cases[1].heading),
-    ]
-      .map((t) => t.slug)
-      .filter((slug) => !pinned.has(slug))
     expect(
-      [...new Set(unpinned)],
+      slugsOnTables().filter((slug) => !pinned.has(slug)),
       `slugs on a pair table but not in contrast-classified-run.json — ${HOW}`
+    ).toEqual([])
+  })
+
+  it("fingerprints the palette of exactly the slugs the tables classify", () => {
+    // The classification reads a palette for every slug with a borderline or
+    // fail row, and those are the slugs on the two tables.
+    expect(
+      Object.keys(CLASSIFIED_RUN.palettes),
+      `the palette fingerprints in contrast-classified-run.json are not of the slugs on the pair tables — ${HOW}`
+    ).toEqual(slugsOnTables())
+  })
+
+  it("was classified against the palette each entry has now", () => {
+    // #647 changed bezier's colours and the tables went on counting its pairs
+    // against the old ones; every gate passed, because the readings the
+    // tables count are in the CI artifact, not here (#669). What is here is
+    // the palette, so the record keeps a fingerprint of the one each slug was
+    // classified against and this reads the entry again. A palette that moved
+    // — a colour, the observed list, a theme twin, or how the entry is read —
+    // means a table may count a pair under a class it no longer has.
+    const moved: Array<string> = []
+    for (const [slug, recorded] of Object.entries(CLASSIFIED_RUN.palettes)) {
+      try {
+        const now = paletteFingerprint(
+          paletteOf(
+            read(path.join(ROOT, "services", `${slug}.md`)),
+            OBSERVED_COLOURS[slug] ?? {}
+          )
+        )
+        if (now !== recorded) moved.push(slug)
+      } catch (e) {
+        // An entry gone, or an observed listing it no longer has: no palette
+        // to compare is a palette that moved, said with why.
+        moved.push(`${slug} (${(e as Error).message})`)
+      }
+    }
+    expect(
+      moved,
+      `these entries' palettes are not the ones run ${CLASSIFIED_RUN.run} classified — their colors map or OBSERVED_COLOURS listing changed, or the code that reads them (paletteOf, the OKLCH conversion) did, which can move many fingerprints at once. Run \`pnpm audit:contrast:rebaseline <run id>\` with this branch's CI run (the run of its contrast job), which classifies the pairs again against the palettes as they are and records their fingerprints with the tables`
     ).toEqual([])
   })
 

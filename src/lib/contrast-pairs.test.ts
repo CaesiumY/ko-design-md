@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 import {
   PUBLISHED_PAIR_TOLERANCE,
   pairClass,
+  paletteFingerprint,
   paletteOf,
   parsePairTable,
   readArtifactPalettes,
@@ -12,7 +13,12 @@ import {
   toleranceBand,
 } from "./contrast-pairs"
 import { hexToOklab, parseOklch } from "./oklch-convert"
-import type { PairTally, Palette, TokenTheme } from "./contrast-pairs"
+import type {
+  ObservedColours,
+  PairTally,
+  Palette,
+  TokenTheme,
+} from "./contrast-pairs"
 import type { DedupedFinding, Finding } from "./contrast-report"
 
 // #808080 is oklch(0.6 0 0) to well inside the tolerance (achromatic, so the
@@ -784,5 +790,112 @@ describe("readArtifactPalettes", () => {
     ).toEqual([
       "the artifact measured gone, which has no services/gone.md in this checkout",
     ])
+  })
+})
+
+describe("paletteFingerprint", () => {
+  // What the classification reads from an entry, summarised: a pair table
+  // classified against one fingerprint is stale once the entry gives another
+  // (#669). Each case below edits one line of this entry and asks only whether
+  // the fingerprint moved — not what it is.
+  const md = [
+    "---",
+    "name: 예시",
+    "colors:",
+    "  ## 발행 팔레트",
+    "  ink: oklch(0.6 0 0)   # #808080",
+    "  paper: oklch(0.98 0.01 250)   # #f5f8fc",
+    "  ## 관측(미발행)",
+    "  muted: oklch(0.4 0 0)   # #555555",
+    "  veil: oklch(0 0 0 / 5%)   # #0000000D",
+    "typography:",
+    "  body: 16px",
+    "---",
+    "본문",
+  ].join("\n")
+  const observed = { groups: ["관측(미발행)"] }
+  const fp = (m: string, o: ObservedColours = observed): string =>
+    paletteFingerprint(paletteOf(m, o))
+  const edit = (from: string, to: string): string => {
+    expect(md, `the fixture has no line ${from}`).toContain(from)
+    return md.replace(from, to)
+  }
+
+  it("is the same for the same entry and differs when a colour's value does", () => {
+    expect(fp(md)).toBe(fp(md))
+    expect(fp(edit("ink: oklch(0.6 0 0)", "ink: oklch(0.62 0 0)"))).not.toBe(
+      fp(md)
+    )
+  })
+
+  it("stays put for an edit the classification cannot see", () => {
+    const same = {
+      "tokens in another order": md.replace(
+        "  ink: oklch(0.6 0 0)   # #808080\n  paper: oklch(0.98 0.01 250)   # #f5f8fc",
+        "  paper: oklch(0.98 0.01 250)   # #f5f8fc\n  ink: oklch(0.6 0 0)   # #808080"
+      ),
+      "a renamed token": edit("ink:", "text-strong:"),
+      "trailing zeros": edit("oklch(0.6 0 0)", "oklch(0.600 0 0)"),
+      "a hue on a colour with no chroma": edit(
+        "oklch(0.4 0 0)",
+        "oklch(0.4 0 120)"
+      ),
+      // One turn on, the same colour: its Oklab comes out a float's last bits
+      // apart, which is why the digest rounds. These values round together; a
+      // pair straddling a rounding edge would not (`paletteFingerprint`).
+      "a hue a full turn on": edit("0.01 250)", "0.01 610)"),
+      "an alpha as a fraction": edit("/ 5%)", "/ 0.05)"),
+      "the hex comment": edit("# #808080", "# #818181"),
+      "the prose": edit("본문", "다른 본문"),
+      "a field outside colors": edit("body: 16px", "body: 17px"),
+      "a gradient's first stop": edit(
+        "typography:",
+        "gradients:\n  sheen: oklch(0.3 0 0) 0%, oklch(0.9 0 0) 100%\ntypography:"
+      ),
+    }
+    const moved = Object.entries(same)
+      .filter(([, m]) => fp(m) !== fp(md))
+      .map(([what]) => what)
+    expect(moved).toEqual([])
+  })
+
+  it("moves for an edit that changes what a pair is classified as", () => {
+    const changed = {
+      // The same colours, `ink` now observed too. One opaque token only: a
+      // case that also moved `veil` would pass on the translucent half alone.
+      "the observed list": fp(md, { ...observed, tokens: ["ink"] }),
+      // `muted` still observed by name, so only `veil` leaves the list.
+      "a translucent token observed no more": fp(md, { tokens: ["muted"] }),
+      // A reference row makes `paper` the light side of a twin — the dark
+      // theme paints `ink` there — with no colour added or changed.
+      "a token's theme": fp(
+        edit(
+          "  ## 관측(미발행)",
+          '  dark-paper: "{colors.ink}"\n  ## 관측(미발행)'
+        )
+      ),
+      "a translucent token's alpha": fp(edit("/ 5%)", "/ 8%)")),
+      // A name is not in the digest, but `paletteOf` reads a theme from it:
+      // `ink` renamed `dark-ink` is painted in the dark theme only.
+      "a rename that changes a theme": fp(edit("ink:", "dark-ink:")),
+      "a token added": fp(
+        edit("  ## 관측(미발행)", "  line: oklch(0.8 0 0)\n  ## 관측(미발행)")
+      ),
+    }
+    const still = Object.entries(changed)
+      .filter(([, f]) => f === fp(md))
+      .map(([what]) => what)
+    expect(still).toEqual([])
+  })
+
+  it("moves when a dark token's value does", () => {
+    // Against an entry that already has the twin, so only the value differs.
+    const withDark = edit(
+      "  ## 관측(미발행)",
+      "  dark-paper: oklch(0.2 0.01 250)\n  ## 관측(미발행)"
+    )
+    expect(
+      fp(withDark.replace("oklch(0.2 0.01 250)", "oklch(0.25 0.01 250)"))
+    ).not.toBe(fp(withDark))
   })
 })
