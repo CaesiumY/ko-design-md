@@ -314,17 +314,17 @@ export function paletteOf(
  * Only what `pairClass` uses goes in — each token's colour (Oklab, or the
  * 8-bit paint of a translucent one), whether it is observed, and its theme.
  * Names do not: no classification reads one, so reordering the map, writing
- * the same colour another way, or renaming a token leaves the tables as they
- * were and the digest with them — unless the new name changes what `paletteOf`
- * reads from names: a theme (a `dark-` prefix, or a `dark-` twin gained or
- * lost) moves the digest, as it may move a table, and a token named in
- * `OBSERVED_COLOURS` makes `paletteOf` throw. Oklab is rounded to 1e-6, far
- * inside `PUBLISHED_PAIR_TOLERANCE`, so two spellings of one colour that
- * parse a float's last bit apart are almost always read as the same. Not
- * always: rounding to a grid splits two values that straddle a rounding edge
- * (…5e-7), and then a spelling change asks for a rebaseline the tables did not
- * need. That errs only toward blocking, so it is left rather than matched by a
- * tolerance the record could not hold.
+ * the same colour another way (almost always — see the rounding below), or
+ * renaming a token leaves the tables as they were and the digest with them —
+ * unless the new name changes what `paletteOf` reads from names: a theme (a
+ * `dark-` prefix, or a `dark-` twin gained or lost) moves the digest, as it
+ * may move a table, and a token named in `OBSERVED_COLOURS` makes `paletteOf`
+ * throw. Oklab is rounded to 1e-6, far inside `PUBLISHED_PAIR_TOLERANCE`, so
+ * two spellings of one colour that parse a float's last bit apart are almost
+ * always read as the same. Not always: rounding to a grid splits two values
+ * that straddle a rounding edge (…5e-7), and then a spelling change asks for a
+ * rebaseline the tables did not need. That errs only toward blocking, so it is
+ * left rather than matched by a tolerance the record could not hold.
  */
 export function paletteFingerprint(palette: Palette): string {
   // `+ 0` folds a rounded -0 into 0, so it prints as "0".

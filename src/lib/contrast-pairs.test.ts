@@ -841,7 +841,8 @@ describe("paletteFingerprint", () => {
         "oklch(0.4 0 120)"
       ),
       // One turn on, the same colour: its Oklab comes out a float's last bits
-      // apart, which is why the digest rounds.
+      // apart, which is why the digest rounds. These values round together; a
+      // pair straddling a rounding edge would not (`paletteFingerprint`).
       "a hue a full turn on": edit("0.01 250)", "0.01 610)"),
       "an alpha as a fraction": edit("/ 5%)", "/ 0.05)"),
       "the hex comment": edit("# #808080", "# #818181"),
