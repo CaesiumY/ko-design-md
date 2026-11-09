@@ -47,7 +47,7 @@ export interface BaselineComparison {
  * EXACT_FIELDS. It catches a preview that shows little, not one that pads
  * itself. It is also the text the contrast collector READS, not all the text
  * on screen: disabled (`:disabled`, `[aria-disabled="true"]`), hidden,
- * transparent, clipped and covered text is skipped. So declaring a demo
+ * opacity-0, clipped-to-a-pixel and covered text is skipped. So declaring a demo
  * disabled — the path ADR 0007 gives for a disabled state drawn by a class —
  * lowers the count, and adding disabled states cannot raise it. A preview
  * that lands under the floor that way is answered the same way as any other:
@@ -308,7 +308,7 @@ export function renderBaselineFailure(
       "  Add the non-disabled component states and screen mockups the md describes",
       "  (.claude/skills/design-md/references/rubric-preview.md). A copied card",
       "  raises this count without showing more, so it is not the fix.",
-      "  Disabled, hidden, transparent, clipped and covered text is not counted —",
+      "  Disabled, hidden, opacity-0, clipped-to-a-pixel and covered text is not counted —",
       "  the contrast collector skips it — so a disabled state does not raise it.",
       "  Rewriting the table does not clear it: the floor reads the measured count.",
       ""
