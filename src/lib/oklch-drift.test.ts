@@ -457,6 +457,25 @@ describe("findPreviewDrift", () => {
     }
   })
 
+  it("reads past a <template> inside <svg> or <math>", () => {
+    // Inside foreign content a `<template>` tag is an SVG or MathML element
+    // with no content fragment; its children are ordinary children, and the
+    // stylesheet beside it still applies.
+    const sheet = "<style>:root { --gray-06: oklch(0.68 0 0); }</style>"
+    for (const foreign of [
+      "<svg><template></template></svg>",
+      "<svg><template><g></g></template></svg>",
+      "<math><template></template></math>",
+    ]) {
+      expect(
+        findPreviewDrift(foreign + sheet, readDefinitions(md)).map(
+          (f) => f.name
+        ),
+        foreign
+      ).toEqual(["gray-06"])
+    }
+  })
+
   it("reads a quoted attribute value as text, not as markup", () => {
     // A `<style>` written inside an attribute value is not a stylesheet, and
     // a `<script>` there does not swallow the stylesheet after it.

@@ -719,6 +719,8 @@ function normaliseSelector(text: string): string {
 /** Made on first use: one jsdom window serves every parse. */
 let htmlParser: DOMParser | undefined
 
+const XHTML_NAMESPACE = "http://www.w3.org/1999/xhtml"
+
 /**
  * The bodies of a preview's applied `<style>` elements, in document order, as
  * an HTML parser finds them (jsdom). An HTML comment, a raw-text element
@@ -741,8 +743,10 @@ function styleBlocks(previewHtml: string): Array<string> {
   const walk = (parent: ParentNode, conditional: boolean): void => {
     for (const element of parent.children) {
       const tag = element.localName
-      if (tag === "template") {
-        // A <template>'s markup is its content fragment, not its children.
+      // A <template>'s markup is its content fragment, not its children. Inside
+      // <svg> or <math> the tag is a foreign element with no fragment, so it is
+      // walked like any other element (preview-halves.ts makes the same cut).
+      if (tag === "template" && element.namespaceURI === XHTML_NAMESPACE) {
         walk((element as HTMLTemplateElement).content, true)
         continue
       }
