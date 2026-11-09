@@ -98,7 +98,7 @@ interface Coverage {
 // different claim and is refused below.
 const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   "11st": { annotated: 31, judged: 31, drift: 33 },
-  baemin: { annotated: 172, judged: 172, drift: 199, references: 1 },
+  baemin: { annotated: 172, judged: 172, drift: 199, references: 70 },
   banksalad: { annotated: 187, judged: 187, drift: 187, references: 203 },
   bezier: { annotated: 439, judged: 439, drift: 482, references: 1004 },
   chzzk: { annotated: 50, judged: 50, drift: 50 },
