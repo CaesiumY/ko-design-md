@@ -318,8 +318,8 @@ export function renderBaselineFailure(
       "  Disabled, hidden, opacity-0, clipped-to-a-pixel and covered text is not counted —",
       "  the contrast collector skips it — so a disabled state does not raise it.",
       "  Rewriting the table does not clear it: the floor reads the measured count.",
-      "  A new entry adds its rows to the table only after the preview clears the floor;",
-      "  the CI run that passes it prints them.",
+      "  A new entry adds its rows to the table only after the preview clears the floor:",
+      "  the next CI run then fails on the rows the table lacks and prints them to paste.",
       ""
     )
     for (const m of c.thin) {
@@ -369,6 +369,19 @@ export function renderBaselineFailure(
       "table is what the `contrast` job measures on ubuntu, and a local sweep on",
       "another OS wraps text differently and reports different counts."
     )
+    // The closing paragraph can stand beside a thin slug — a healthy new slug
+    // or a moved count elsewhere prints it — and the rebaseline it names writes
+    // every slug the run measured, the thin one too, which the corpus test then
+    // refuses. Said here so the two sections do not read as one instruction.
+    if (thinSlugs.size > 0) {
+      const names = [...thinSlugs].join(", ")
+      out.push(
+        "",
+        `Not while ${names} ${thinSlugs.size === 1 ? "is" : "are"} under the floor: rebaseline writes every`,
+        "measured slug, and the corpus test refuses a thin row. Paste the other",
+        "lines by hand until the preview clears the floor."
+      )
+    }
   }
   return out
 }

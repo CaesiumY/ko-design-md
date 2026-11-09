@@ -178,6 +178,11 @@ describe("compareToBaseline, thin previews", () => {
     expect(lines).toContain("1 row(s) the table does not record")
     expect(lines).toContain(renderTotalsTable([fresh]).split("\n")[2])
     expect(lines).not.toContain(renderTotalsTable([thinFresh]).split("\n")[2])
+    // The closing paragraph is printed for the healthy slug, and the
+    // rebaseline command it names writes every measured slug — the thin one
+    // too — so it has to say which entries to keep out.
+    expect(lines).toContain("Take the replacement lines from CI")
+    expect(lines).toContain("Not while laftel is under the floor")
   })
 
   it("still prints the closing paragraph when a count also moved", () => {

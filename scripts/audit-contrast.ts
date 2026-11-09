@@ -178,8 +178,9 @@ async function main(): Promise<void> {
     const result = await selfCheck(ROOT)
     for (const line of result.lines) console.log(line)
     // Exit 1 belongs to the self-check alone, and baseline drift (or a thin
-    // preview, ADR 0013) exits 3 so the two never wear the same code. A sweep that merely finds low contrast
-    // still exits 0: those readings are recorded, not blocked.
+    // preview, ADR 0013) exits 3 so the two never wear the same code. A sweep
+    // that merely finds low contrast still exits 0: those readings are
+    // recorded, not blocked.
     if (!result.ok) process.exitCode = 1
     return
   }
