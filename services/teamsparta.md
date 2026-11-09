@@ -324,7 +324,7 @@ components:
     textColor: "{colors.sky-blue-90}"
   pill-green:
     backgroundColor: "{colors.green-10}"
-    textColor: "{colors.green-80}"
+    textColor: "{colors.green-90}"
 fonts:
   font-family-mono: "\"JetBrains Mono\", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
 ---
@@ -343,7 +343,7 @@ fonts:
 
 ## Colors
 
-> **번들 팔레트 정리(2026-11-09).** 팀스파르타는 디자인 토큰을 npm 패키지 `@teamsparta/stack-tokens`로 발행한다 [src:5]. 2026-11-09에 조회한 최신판은 2.6.0이다. 이 패키지는 원시 팔레트 `primitiveColor` 위에 역할 계층을 정의한다 — 라이트는 `baseSemanticColor`(스파르타클럽 테마 `sccLight`는 여기에 같은 brand 값만 다시 적는다), 다크는 `sccDark`다. 컴포넌트 토큰은 `baseComponent`가 역할과 원시 단계를 가리켜 정의하고, `sccDark`가 그중 일부를 다시 가리킨다. 내일배움캠프는 역할을 `--stack-semantic-*` 커스텀 프로퍼티로 서빙한다 [src:2]. 아래 역할 표의 45개 역할은 패키지에서 옮겼고, 2026-11-01에 라이트 45개를 내일배움캠프 라이브 값과 hex로 대조하니 불일치는 0개였다. 내일배움캠프 라이브 페이지는 다크 테마 정의가 없어 다크 값은 패키지로만 대조했다. 이번에는 핸드오프 번들에서 온 팔레트를 발행값으로 옮겼다. 번들 회색 `gray-*` 11단계와 `white`, `black`은 지웠고(발행 `neutral-*`와 같은 값은 `gray-400`, `gray-950` 둘뿐이었다), 그 값을 쓰던 자리는 발행 역할(`text-primary`, `background-subtle`, `line-nonClickable` 등)이나 패키지 컴포넌트 토큰으로 옮겼다. 번들 이름으로 발행값을 싣던 `brand-red`, `brand-red-dark`, `danger`는 발행 `red-70`, `red-80`, `orange-red-70`과 같은 값이라 지우고, 대표색 별칭 `primary`가 `red-70`을 가리키게 했다. `success`, `warning`, `modal-backdrop`은 같은 자리를 맡는 발행 역할 `status-success-default`, `status-warning-default`, `dimm-default`로 바꿨고, `info`는 `interaction-blue`와 같은 값의 별칭이라 지웠다. 번들 `teal-strong`은 발행 `skyBlue[90]`과 같은 값이라 `sky-blue-90`으로 바꿨다. red 배지 바탕 `brand-red-soft`는 brand 역할의 가장 옅은 칸 `brand-subtlest`로 옮겼다. 값이 가장 가까운 칸은 `brand-subtler`(`red[20]`)지만, 다크에서 그 칸은 `red[90]`이 되어 글자 `brand-strong`(`red[50]`)과 대비가 무너진다. 나머지 번들 배지색 `badge-teal-bg`, `badge-green-bg`, `badge-blue-bg`와 green 배지 글자(번들 `success`), ghost hover 표면 `interaction-blue-soft`는 가장 가까운 발행 단계 `skyBlue[10]`, `green[10]`, `blue[20]`, `green[80]`, `deepBlue[10]`으로 옮겼다. 배지 대응은 상류가 정한 것이 아니라 이 카탈로그의 선택이다(Known Gaps). 남긴 번들 색은 `interaction-blue`와 같은 값의 `focus-ring` 둘이다. 발행 원시 팔레트에 가까운 값이 없고(가장 가까운 `deepBlue[80]`도 ΔE 0.106), 패키지에 포커스 링 토큰도 없어 링크, ghost 액션, 포커스 링의 번들 파랑을 그대로 두었다.
+> **번들 팔레트 정리(2026-11-09).** 팀스파르타는 디자인 토큰을 npm 패키지 `@teamsparta/stack-tokens`로 발행한다 [src:5]. 2026-11-09에 조회한 최신판은 2.6.0이다. 이 패키지는 원시 팔레트 `primitiveColor` 위에 역할 계층을 정의한다 — 라이트는 `baseSemanticColor`(스파르타클럽 테마 `sccLight`는 여기에 같은 brand 값만 다시 적는다), 다크는 `sccDark`다. 컴포넌트 토큰은 `baseComponent`가 역할과 원시 단계를 가리켜 정의하고, `sccDark`가 그중 일부를 다시 가리킨다. 내일배움캠프는 역할을 `--stack-semantic-*` 커스텀 프로퍼티로 서빙한다 [src:2]. 아래 역할 표의 45개 역할은 패키지에서 옮겼고, 2026-11-01에 라이트 45개를 내일배움캠프 라이브 값과 hex로 대조하니 불일치는 0개였다. 내일배움캠프 라이브 페이지는 다크 테마 정의가 없어 다크 값은 패키지로만 대조했다. 이번에는 핸드오프 번들에서 온 팔레트를 발행값으로 옮겼다. 번들 회색 `gray-*` 11단계와 `white`, `black`은 지웠고(발행 `neutral-*`와 같은 값은 `gray-400`, `gray-950` 둘뿐이었다), 그 값을 쓰던 자리는 발행 역할(`text-primary`, `background-subtle`, `line-nonClickable` 등)이나 패키지 컴포넌트 토큰으로 옮겼다. 번들 이름으로 발행값을 싣던 `brand-red`, `brand-red-dark`, `danger`는 발행 `red-70`, `red-80`, `orange-red-70`과 같은 값이라 지우고, 대표색 별칭 `primary`가 `red-70`을 가리키게 했다. `success`, `warning`, `modal-backdrop`은 같은 자리를 맡는 발행 역할 `status-success-default`, `status-warning-default`, `dimm-default`로 바꿨고, `info`는 `interaction-blue`와 같은 값의 별칭이라 지웠다. 번들 `teal-strong`은 발행 `skyBlue[90]`과 같은 값이라 `sky-blue-90`으로 바꿨다. red 배지 바탕 `brand-red-soft`는 brand 역할의 가장 옅은 칸 `brand-subtlest`로 옮겼다. 값이 가장 가까운 칸은 `brand-subtler`(`red[20]`)지만, 다크에서 그 칸은 `red[90]`이 되어 글자 `brand-strong`(`red[50]`)과 대비가 무너진다. 나머지 번들 배지색 `badge-teal-bg`, `badge-green-bg`, `badge-blue-bg`와 green 배지 글자(번들 `success`), ghost hover 표면 `interaction-blue-soft`는 가장 가까운 발행 단계 `skyBlue[10]`, `green[10]`, `blue[20]`, `green[80]`, `deepBlue[10]`으로 옮겼다. 다만 green 배지 글자는 `green[80]`이 `green[10]` 바탕 위 3.39:1 로 글자 기준에 못 미쳐, 한 단계 어두운 `green[90]`(4.9:1)으로 다시 옮겼다. 배지 대응은 상류가 정한 것이 아니라 이 카탈로그의 선택이다(Known Gaps). 남긴 번들 색은 `interaction-blue`와 같은 값의 `focus-ring` 둘이다. 발행 원시 팔레트에 가까운 값이 없고(가장 가까운 `deepBlue[80]`도 ΔE 0.106), 패키지에 포커스 링 토큰도 없어 링크, ghost 액션, 포커스 링의 번들 파랑을 그대로 두었다.
 >
 > **`interaction-blue`는 sRGB 색역 밖이다.** `oklch(0.429 0.297 264)`를 선형 sRGB로 풀면 red 채널이 −0.0002로 음수라, 브라우저는 이 값을 그대로 그리지 못하고 클리핑한다. 라이브 사이트가 쓰는 가장 가까운 파랑은 `#003CDC` = `oklch(0.457 0.245 264)`로 **hue는 같고 채도가 낮은**(색역 안) 값이며 ΔE 0.059 떨어져 있다. 방침대로 값은 그대로 두고 차이만 적는다 — 이 토큰을 참조하는 `focus-ring`과 `input-focus-ring`도 같은 값을 쓰므로 세 줄 모두에 같은 단서를 달았다. 다만 사이드카로 실려 나가는 건 앞의 둘뿐이다 — `input-focus-ring`은 컴포넌트 절에 있어 `tokens:build`의 색 토큰 추출 대상이 아니다.
 
@@ -583,13 +583,13 @@ card-footer-pin: true
 
 ### Pill and badge
 
-Pill은 50px radius, 11px/700 label, 3px 10px padding을 쓴다. Red badge는 hot/new/primary emphasis, teal은 국비지원/취업 보장 같은 정보성 상태, green은 completion/success, blue는 new/info에 배정한다. 패키지에 배지 토큰이 없어 red는 brand 역할(바탕 `brand-subtlest`, 글자 `brand-strong`)이라 테마를 따라 바뀌고, teal, green, blue는 번들 값에 가장 가까운 발행 단계(blue 글자만 번들 `interaction-blue`)라 두 테마에서 같은 색이다.
+Pill은 50px radius, 11px/700 label, 3px 10px padding을 쓴다. Red badge는 hot/new/primary emphasis, teal은 국비지원/취업 보장 같은 정보성 상태, green은 completion/success, blue는 new/info에 배정한다. 패키지에 배지 토큰이 없어 red는 brand 역할(바탕 `brand-subtlest`, 글자 `brand-strong`)이라 테마를 따라 바뀌고, teal, green, blue는 번들 값에 가장 가까운 발행 단계(green 글자는 대비를 위해 한 단계 어두운 `green-90`, blue 글자는 번들 `interaction-blue`)라 두 테마에서 같은 색이다.
 
 ```text
 pill-red:   { bg: brand-subtlest, fg: brand-strong }
 pill-blue:  { bg: blue-20, fg: interaction-blue }
 pill-teal:  { bg: sky-blue-10, fg: sky-blue-90 }
-pill-green: { bg: green-10, fg: green-80 }
+pill-green: { bg: green-10, fg: green-90 }
 ```
 
 ### Form input
@@ -654,7 +654,7 @@ Cards and course rows must preserve scan order: thumbnail → badge/track → ti
 - The dashboard default theme is not confirmed; the bundle authored light mode as default while keeping dark-mode tokens available.
 - No custom icon library was included; Lucide/Heroicons-style outline icons are the documented fallback.
 - The link, ghost-action and focus blue (`interaction-blue`, `focus-ring`) is still the handoff bundle's value: `@teamsparta/stack-tokens` publishes no nearby palette step and no focus-ring token for it, so it should be confirmed by the team before production adoption.
-- The package publishes no badge tokens. The pill colours here are this catalog's choice, not an upstream mapping: red uses the brand roles, and teal, green and blue use the published steps nearest the bundle's badge colours.
+- The package publishes no badge tokens. The pill colours here are this catalog's choice, not an upstream mapping: red uses the brand roles, and teal, green and blue use the published steps nearest the bundle's badge colours, except the green text, which takes the next darker step (`green-90`) so it reaches 4.5:1 on its background.
 - The package publishes only the card shadow (`card.shadow` → `elevation1`/`elevation2`). The bundle says floating surfaces (dropdown, toast, modal) are elevated, but no shadow is published for them.
 
 ## References
