@@ -629,6 +629,86 @@ colors:
     ).toEqual([])
   })
 
+  it("reads a <style> body's `<!--` as CSS, not as an HTML comment", () => {
+    // <style> is a raw-text element: `<!--` and `-->` inside it are CSS's
+    // CDO and CDC tokens, which the browser drops, applying the rule between.
+    const chains = roleChainsForSlug(roles, "socar")
+    const html = `<style>:root { --sf-text-primary: var(--sf-gray-800); }</style>
+      <style><!-- :root { --sf-text-primary: var(--sf-gray-600); } --></style>`
+    expect(findRoleChainDrift(html, chains).map((f) => f.preview)).toEqual([
+      "var(--sf-gray-600)",
+    ])
+    // The value comparison sees it too, and an unclosed `<!--` in a style
+    // body does not swallow the rest of the document.
+    const values = `<style>:root { content: "<!--"; }</style>
+      <style>:root { --gray-06: oklch(0.68 0 0); }</style>`
+    expect(findPreviewDrift(values, readDefinitions(md))).toEqual([
+      {
+        name: "gray-06",
+        preview: "oklch(0.68 0 0)",
+        expected: "oklch(0.67 0 0)",
+      },
+    ])
+  })
+
+  it("applies a <style> as the browser does by its type and media", () => {
+    // Applied: type absent, empty or `text/css` in any case; media absent,
+    // empty or `all`. `data-type` and `data-media` are other attributes.
+    const chains = roleChainsForSlug(roles, "socar")
+    const base = `<style>:root { --sf-text-primary: var(--sf-gray-800); }</style>`
+    const wrong = ":root { --sf-text-primary: var(--sf-gray-600); }"
+    for (const attrs of [
+      'type=""',
+      'type="TEXT/CSS"',
+      'data-type="text/plain"',
+      'media=""',
+      'media="all"',
+      'data-media="(min-width: 1px)"',
+    ]) {
+      expect(
+        findRoleChainDrift(
+          `${base}<style ${attrs}>${wrong}</style>`,
+          chains
+        ).map((f) => f.preview),
+        attrs
+      ).toEqual(["var(--sf-gray-600)"])
+    }
+    // And the value comparison reads such a block too.
+    expect(
+      findPreviewDrift(
+        '<style data-type="x">:root { --gray-06: oklch(0.68 0 0); }</style>',
+        readDefinitions(md)
+      ).map((f) => f.name)
+    ).toEqual(["gray-06"])
+  })
+
+  it("reads a declaration with space before its colon", () => {
+    const chains = roleChainsForSlug(roles, "socar")
+    expect(
+      findRoleChainDrift(
+        ":root { --sf-text-primary : var(--sf-gray-600); }",
+        chains
+      ).map((f) => f.name)
+    ).toEqual(["sf-text-primary"])
+  })
+
+  it("matches tags in any letter case", () => {
+    const chains = roleChainsForSlug(roles, "socar")
+    const base = `<STYLE>:root { --sf-text-primary: var(--sf-gray-600); }</STYLE>`
+    const fix = ":root { --sf-text-primary: var(--sf-gray-800); }"
+    for (const dead of [
+      `<SCRIPT>"<style>${fix}</style>"</SCRIPT>`,
+      `<Style Media="(min-width: 1px)">${fix}</Style>`,
+      `<NOSCRIPT><style>${fix}</style></NOSCRIPT>`,
+      `<!-- <style>${fix}</style> -->`,
+    ]) {
+      expect(
+        findRoleChainDrift(base + dead, chains).map((f) => f.preview),
+        dead
+      ).toEqual(["var(--sf-gray-600)"])
+    }
+  })
+
   it("reads only the listed selectors as theme roots", () => {
     const chains = roleChainsForSlug(roles, "socar")
     const wrong = (selector: string): string =>

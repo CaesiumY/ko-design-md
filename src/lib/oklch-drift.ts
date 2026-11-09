@@ -503,10 +503,11 @@ export interface RoleChainFinding extends DriftFinding {
  * an exact list (THEME_ROOTS): `:root` and `html` for light,
  * `[data-theme="dark"]`, `:root[data-theme="dark"]` and
  * `html[data-theme="dark"]` for dark, each in a top-level block outside any
- * at-rule, in a `<style>` element with no `media` attribute and not inside
- * `<noscript>` or `<template>`. A `<style>` inside an HTML comment or a
- * raw-text element (`<script>`, `<textarea>`, `<title>`, …), or one whose
- * `type` is not `text/css`, is not read at all. A role declared under any other selector
+ * at-rule, in a `<style>` element whose `media` is absent, empty or `all` and
+ * that is not inside `<noscript>` or `<template>`. A `<style>` inside an HTML
+ * comment or a raw-text element (`<script>`, `<textarea>`, `<title>`, …), or
+ * one whose `type` is set to anything but empty or `text/css`, is not read at
+ * all; a `<!--` inside a `<style>` body is CSS. A role declared under any other selector
  * (`.inverse`, `:where(.chip)`, `[data-theme="sepia"]`, `:root` inside
  * `@media`) is neither compared nor allowed to hide the root value;
  * `roleChainCoverage` counts it as `scoped`.
@@ -715,6 +716,24 @@ function normaliseSelector(text: string): string {
     .trim()
 }
 
+/**
+ * A start tag's attributes by lower-case name, as an HTML tokenizer splits
+ * them: a name begins after whitespace, so `data-type=` is not `type=`. A
+ * name repeated keeps its first value, and a bare name has the value "".
+ */
+function styleAttributes(text: string): Map<string, string> {
+  const out = new Map<string, string>()
+  const ATTR =
+    /(?:^|\s)([^\s"'>/=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g
+  for (const m of text.matchAll(ATTR)) {
+    const name = m[1].toLowerCase()
+    // Unmatched groups are undefined at runtime, whatever the match type says.
+    const values: Array<string | undefined> = [m[2], m[3], m[4]]
+    if (!out.has(name)) out.set(name, values.find((v) => v !== undefined) ?? "")
+  }
+  return out
+}
+
 /** Every custom-property declaration in a preview's stylesheets, in order. */
 function declarations(previewHtml: string): Array<Declaration> {
   // Brace depth only means "CSS nesting" inside a stylesheet. Counting braces
@@ -725,31 +744,41 @@ function declarations(previewHtml: string): Array<Declaration> {
   // A <style> element that applies only conditionally (a `media` attribute, or
   // inside <noscript> or <template>) is wrapped in an at-rule here, so its
   // declarations are never a theme root, as an `@media` block's are not.
-  const inside = (before: string, tag: string): boolean =>
-    (before.match(new RegExp(`<${tag}\\b`, "gi"))?.length ?? 0) >
-    (before.match(new RegExp(`</${tag}\\s*>`, "gi"))?.length ?? 0)
   //
-  // HTML comments and the bodies of raw-text elements are blanked first: a
-  // `<style>` written inside them is text, not a stylesheet. So is a `<style>`
-  // whose `type` names anything but CSS.
-  const html = previewHtml
-    .replace(/<!--[\s\S]*?(?:-->|$)/g, "")
-    .replace(
-      /<(script|textarea|title|xmp|noembed|noframes)\b[^>]*>[\s\S]*?(?:<\/\1\s*>|$)/gi,
-      ""
-    )
-  const blocks = [
-    ...html.matchAll(/<style\b([^>]*)>([\s\S]*?)<\/style>/gi),
-  ].flatMap((m) => {
-    const type = /\btype\s*=\s*["']?([^"'\s>]*)/i.exec(m[1])?.[1]
-    if (type !== undefined && type.toLowerCase() !== "text/css") return []
-    const before = html.slice(0, m.index)
+  // The document is read in one left-to-right pass, as an HTML tokenizer
+  // does: whichever opens first, an HTML comment or a raw-text element
+  // (`<style>` among them), runs to its own end. So a `<style>` written inside
+  // a comment or a `<script>` is text, not a stylesheet, and a `<!--` inside a
+  // `<style>` body is CSS, not a comment. Only `<style>` bodies are kept, and
+  // not one whose `type` names anything but CSS. Comments are stripped only in
+  // the markup between, which is also what the <noscript> / <template> count
+  // reads.
+  const RAW =
+    /<!--[\s\S]*?(?:-->|$)|<(style|script|textarea|title|xmp|noembed|noframes)\b([^>]*)>([\s\S]*?)(?:<\/\1\s*>|$)/gi
+  let markup = ""
+  let from = 0
+  const blocks: Array<string> = []
+  const inside = (tag: string): boolean =>
+    (markup.match(new RegExp(`<${tag}\\b`, "gi"))?.length ?? 0) >
+    (markup.match(new RegExp(`</${tag}\\s*>`, "gi"))?.length ?? 0)
+  for (const m of previewHtml.matchAll(RAW)) {
+    markup += previewHtml.slice(from, m.index)
+    from = m.index + m[0].length
+    if (m[0].startsWith("<!--") || m[1].toLowerCase() !== "style") continue
+    // As the HTML spec applies a <style>: type absent, empty or `text/css`;
+    // media absent, empty or `all` is unconditional.
+    const attrs = styleAttributes(m[2])
+    const type = attrs.get("type")?.trim().toLowerCase()
+    if (type !== undefined && type !== "" && type !== "text/css") continue
+    const media = attrs.get("media")?.trim().toLowerCase()
     const conditional =
-      /\bmedia\s*=/i.test(m[1]) ||
-      inside(before, "noscript") ||
-      inside(before, "template")
-    return [conditional ? `@conditional-style {\n${m[2]}\n}` : m[2]]
-  })
+      (media !== undefined && media !== "" && media !== "all") ||
+      inside("noscript") ||
+      inside("template")
+    // CSS drops CDO and CDC (`<!--`, `-->`) as tokens; blanked to spaces.
+    const body = m[3].replace(/<!--|-->/g, (t) => " ".repeat(t.length))
+    blocks.push(conditional ? `@conditional-style {\n${body}\n}` : body)
+  }
   // With no <style> tag at all the input is already a stylesheet — every
   // catalogue preview has one, so this only matters when checking raw CSS
   // directly. A document whose only <style> tags are dead reads as empty.
@@ -761,7 +790,7 @@ function declarations(previewHtml: string): Array<Declaration> {
   // not enough: a block that opens and closes on one line would have already
   // reset by the time its own declarations were inspected. `;` is a token only
   // so that the text before each `{` — its selector — can be read back.
-  const TOKEN = /\[data-theme=["']?dark|\{|\}|;|--([\w-]+):([^;{}]*)/g
+  const TOKEN = /\[data-theme=["']?dark|\{|\}|;|--([\w-]+)\s*:([^;{}]*)/g
 
   const out: Array<Declaration> = []
   let pendingDark = false

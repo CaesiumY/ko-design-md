@@ -270,6 +270,52 @@ describe("oklch-drift — catalogue coverage", () => {
     ).toEqual([])
   })
 
+  it("hands the value comparison the same declarations as before #660", () => {
+    // #660 rewrote the stylesheet scanner both checks share. For the value
+    // comparison it must change nothing on the real previews: the scanner as
+    // it stood on main (9d78532) is kept below as the reference, and every
+    // light-scope `oklch` declaration it read must still be read, in order.
+    const before = (html: string): Array<string> => {
+      const blocks = [
+        ...html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi),
+      ].map((m) => m[1])
+      const css = (blocks.length > 0 ? blocks.join("\n") : html).replace(
+        /\/\*[\s\S]*?(?:\*\/|$)/g,
+        (m) => m.replace(/[^\n]/g, " ")
+      )
+      const TOKEN =
+        /\[data-theme=["']?dark|\{|\}|--([\w-]+):\s*(oklch\([^)]*\))/g
+      const names: Array<string> = []
+      let depth = 0
+      let pendingDark = false
+      let darkDepth: number | null = null
+      for (const m of css.matchAll(TOKEN)) {
+        const tok = m[0]
+        if (tok === "{") {
+          depth++
+          if (pendingDark) {
+            darkDepth = depth
+            pendingDark = false
+          }
+        } else if (tok === "}") {
+          if (darkDepth === depth) darkDepth = null
+          depth--
+        } else if (tok.startsWith("[")) pendingDark = true
+        else if (darkDepth === null) names.push(m[1])
+      }
+      return names
+    }
+    const changed = all.flatMap((slug) => {
+      const { html } = lightScope(slug)
+      const every = new Map(
+        [...html.matchAll(/--([\w-]+):/g)].map((m) => [m[1], SENTINEL])
+      )
+      const now = findPreviewDrift(html, every).map((f) => f.name)
+      return now.join(" ") === before(html).join(" ") ? [] : [slug]
+    })
+    expect(changed).toEqual([])
+  })
+
   it("reads a nonzero number of declarations out of every preview that has them", () => {
     // Distinct from the check above: a slug can legitimately match no md name,
     // but a preview full of oklch declarations that the scanner sees NONE of is
