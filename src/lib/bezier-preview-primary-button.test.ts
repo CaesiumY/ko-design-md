@@ -73,7 +73,7 @@ interface Rule {
  */
 function rulesOf(document: Document): Array<Rule> {
   const css = [...document.querySelectorAll("style")]
-    .map((s) => s.textContent ?? "")
+    .map((s) => s.textContent)
     .join("\n")
     .replace(/\/\*[\s\S]*?\*\//g, "")
   return [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(
