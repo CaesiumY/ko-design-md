@@ -705,9 +705,11 @@ const CASES: Record<string, { title: string; check: () => void }> = {
     title: "every published alias, light and `dark-` twin",
     check: () => {
       const { literals, refs, tableRows } = load("vapor-ui")
-      // `color-foreground-inverse` points at `color-white` in both cells: the
-      // dark block redefines white to the same value, so the twin aliases the
-      // unprefixed key.
+      // 1.7.0's 76 aliases, the 42 `-100`/`-200` names and the 34 it added.
+      // Dark twins whose upstream target is white or black (`inverse`,
+      // `contrast`, `staticWhite`, `staticBlack`, `canvas-dim`) alias the
+      // unprefixed `color-white` / `color-black`: the dark block redefines
+      // both to the light values, so no `dark-` key exists for them.
       const expected = singleReferenceRoles(tableRows)
       expectRowsToMatch("vapor-ui", expected, refs, literals, tableRows)
     },

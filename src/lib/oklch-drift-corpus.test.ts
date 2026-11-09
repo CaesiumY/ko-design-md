@@ -227,7 +227,9 @@ const ROLE_CHAINS: Partial<Record<string, RoleChainCount>> = {
   likelion: { chained: 11, literal: 10, scoped: 0 },
   ridi: { chained: 61, literal: 1, scoped: 0 },
   socar: { chained: 48, literal: 0, scoped: 0 },
-  "vapor-ui": { chained: 69, literal: 1, scoped: 0 },
+  // 69 → 71 (#657): the preview's `--vp-bg-canvas` took its md name
+  // `--vp-bg-canvas-100`, one chain in each of the two scopes.
+  "vapor-ui": { chained: 71, literal: 1, scoped: 0 },
 }
 
 describe("oklch-drift — catalogue coverage", () => {
