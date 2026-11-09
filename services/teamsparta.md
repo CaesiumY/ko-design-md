@@ -275,6 +275,14 @@ components:
     rounded: "{rounded.radius-xs}"
   checkbox-unchecked-hover:
     backgroundColor: "{colors.fill-subtle}"
+  radio-group-checked:
+    backgroundColor: "{colors.fill-default}"
+  radio-group-checked-hover:
+    backgroundColor: "{colors.fill-subtle}"
+  radio-group-unchecked:
+    backgroundColor: "{colors.fill-default}"
+  radio-group-unchecked-hover:
+    backgroundColor: "{colors.fill-subtle}"
   bottom-sheet-grabber:
     backgroundColor: "{colors.neutral-20}"
   calendar-nav-button:
@@ -539,7 +547,7 @@ checkbox-unchecked: { bg: fill-default, border: neutral-40, hover-bg: fill-subtl
 
 ### Radio group, bottom sheet, calendar
 
-라디오 그룹은 선택 점을 `accent`로 칠하고(켜짐 brand red, 꺼짐 `neutral-40`), 바탕은 체크박스와 같은 `fill-default`다. 라디오 그룹은 frontmatter 맵에 싣지 않는다. 맵에 실을 수 있는 바탕색이 켜짐과 꺼짐에서 같아 상태를 가르지 못하고, 상태를 가르는 `accent`는 맵이 받지 않는 속성이기 때문이다. 바텀시트 grabber는 `neutral-20`, 스피너 indicator는 라이트에서 `neutral-100`이다. 캘린더는 선택한 날짜를 `neutral-80` 채움과 반전 글자로, 범위 가운데 날짜를 `neutral-20` 채움으로 표시한다.
+라디오 그룹은 선택 점을 `accent`로 칠하고(켜짐 brand red, 꺼짐 `neutral-40`), 바탕은 체크박스와 같은 `fill-default`다. 맵에는 바탕색만 실리므로 켜짐과 꺼짐 행이 같은 값이고, 상태를 가르는 `accent`는 맵이 받지 않는 속성이라 위 패키지 컴포넌트 토큰 표에만 있다. 바텀시트 grabber는 `neutral-20`, 스피너 indicator는 라이트에서 `neutral-100`이다. 캘린더는 선택한 날짜를 `neutral-80` 채움과 반전 글자로, 범위 가운데 날짜를 `neutral-20` 채움으로 표시한다.
 
 ### Sidebar
 
