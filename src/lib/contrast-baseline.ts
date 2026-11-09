@@ -256,6 +256,13 @@ export function renderBaselineFailure(
   const measuredBy = new Map(measured.map((m) => [keyOf(m), m]))
   const recordedBy = new Map(baseline.map((b) => [keyOf(b), b]))
   const out: Array<string> = []
+  // A new entry under the floor is unrecorded AND thin. Its rows are held back
+  // from the ones to paste — all four, or the four-rows-per-slug check in the
+  // corpus test refuses the half that was pasted — because the corpus test
+  // refuses a thin row in the table too. It still fails through `thin`, whose
+  // section says what to do first.
+  const thinSlugs = new Set(c.thin.map((m) => m.slug))
+  const toPaste = c.unrecorded.filter((m) => !thinSlugs.has(m.slug))
 
   const movement = (d: BaselineDiff): string =>
     `    ${d.field} ${d.recorded} → ${d.measured}`
@@ -276,13 +283,13 @@ export function renderBaselineFailure(
     }
   }
 
-  if (c.unrecorded.length > 0) {
+  if (toPaste.length > 0) {
     out.push(
-      `FAIL contrast baseline — ${c.unrecorded.length} row(s) the table does not record.`,
+      `FAIL contrast baseline — ${toPaste.length} row(s) the table does not record.`,
       "  A preview the sweep can read needs its rows in the table. These are them:",
       ""
     )
-    for (const m of c.unrecorded) out.push(`    ${lineFor(m)}`)
+    for (const m of toPaste) out.push(`    ${lineFor(m)}`)
     out.push("")
   }
 
@@ -311,6 +318,8 @@ export function renderBaselineFailure(
       "  Disabled, hidden, opacity-0, clipped-to-a-pixel and covered text is not counted —",
       "  the contrast collector skips it — so a disabled state does not raise it.",
       "  Rewriting the table does not clear it: the floor reads the measured count.",
+      "  A new entry adds its rows to the table only after the preview clears the floor;",
+      "  the CI run that passes it prints them.",
       ""
     )
     for (const m of c.thin) {
@@ -338,7 +347,7 @@ export function renderBaselineFailure(
   // any rewrite of it — sent here, its reader would paste and stay red.
   const tableMoved =
     c.blocking.length > 0 ||
-    c.unrecorded.length > 0 ||
+    toPaste.length > 0 ||
     c.missing.length > 0 ||
     c.warnings.length > 0
   if (tableMoved) {

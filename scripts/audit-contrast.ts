@@ -19,9 +19,10 @@
 // shows rather than on contrast.
 //
 // Exit 1 belongs to the self-check alone, which asks whether the measurement
-// itself still works. That is why baseline drift exits 3 and not 1: a broken
-// measurement and a moved number are different findings, and a CI log that
-// spelled them the same way would send a reader to the wrong file.
+// itself still works. That is why baseline drift exits 3 and not 1 (so does a
+// thin preview, ADR 0013): a broken measurement and a moved number are
+// different findings, and a CI log that spelled them the same way would send a
+// reader to the wrong file.
 //
 // It also cannot live inside `src/lib/preview-validator.ts`, which is
 // deliberately dependency-free so the gate cannot fail on a devDependency.
@@ -176,8 +177,8 @@ async function main(): Promise<void> {
     const { selfCheck } = await import("./audit-contrast-oracle")
     const result = await selfCheck(ROOT)
     for (const line of result.lines) console.log(line)
-    // Exit 1 belongs to the self-check alone, and baseline drift exits 3 so the
-    // two never wear the same code. A sweep that merely finds low contrast
+    // Exit 1 belongs to the self-check alone, and baseline drift (or a thin
+    // preview, ADR 0013) exits 3 so the two never wear the same code. A sweep that merely finds low contrast
     // still exits 0: those readings are recorded, not blocked.
     if (!result.ok) process.exitCode = 1
     return

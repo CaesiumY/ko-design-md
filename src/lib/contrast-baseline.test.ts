@@ -139,6 +139,47 @@ describe("compareToBaseline, thin previews", () => {
     expect(lines).toContain("Rewriting the table does not clear it")
   })
 
+  it("keeps a thin new slug out of the rows to paste", () => {
+    // A new entry under the floor is both unrecorded and thin. Listing its
+    // rows to paste, with the closing paragraph that says to paste them, sends
+    // its author to a table the corpus test then refuses. The whole slug is
+    // held back — its non-text rows too, or the four-rows-per-slug check
+    // refuses the half that was pasted.
+    const freshText = row({ slug: "laftel", elements: 51 })
+    const freshNonText = row({
+      slug: "laftel",
+      kind: "non-text",
+      measured: 5,
+      elements: 17,
+    })
+    const measured = [row(), freshText, freshNonText]
+    const lines = renderBaselineFailure(
+      compareToBaseline(measured, [row()]),
+      measured,
+      [row()]
+    ).join("\n")
+    expect(lines).not.toContain("the table does not record")
+    expect(lines).not.toContain(
+      renderTotalsTable([freshNonText]).split("\n")[2]
+    )
+    expect(lines).not.toContain("Take the replacement lines from CI")
+    expect(lines).toContain("only after the preview clears the floor")
+  })
+
+  it("still lists a new slug that is not thin beside one that is", () => {
+    const thinFresh = row({ slug: "laftel", elements: 51 })
+    const fresh = row({ slug: "chzzk" })
+    const measured = [row(), thinFresh, fresh]
+    const lines = renderBaselineFailure(
+      compareToBaseline(measured, [row()]),
+      measured,
+      [row()]
+    ).join("\n")
+    expect(lines).toContain("1 row(s) the table does not record")
+    expect(lines).toContain(renderTotalsTable([fresh]).split("\n")[2])
+    expect(lines).not.toContain(renderTotalsTable([thinFresh]).split("\n")[2])
+  })
+
   it("still prints the closing paragraph when a count also moved", () => {
     const moved = { ...thin, fail: thin.fail + 1 }
     const lines = renderBaselineFailure(
