@@ -2,7 +2,11 @@ import fs from "node:fs"
 import path from "node:path"
 import { describe, expect, it } from "vitest"
 import { readPreviewSlugs } from "../../scripts/audit-contrast-slugs"
-import { BASELINE_TABLE, CONTRAST_BASELINE } from "./contrast-baseline"
+import {
+  BASELINE_TABLE,
+  CONTRAST_BASELINE,
+  MIN_TEXT_ELEMENTS,
+} from "./contrast-baseline"
 import { OBSERVED_COLOURS, paletteOf, parsePairTable } from "./contrast-pairs"
 import { isRunId, parseHeldReasons, renderTotalsTable } from "./contrast-report"
 import type { PairTally } from "./contrast-pairs"
@@ -153,6 +157,19 @@ describe("the recorded table against public/preview/", () => {
       (r) => r.kind === "text" && r.measured === 0
     ).map((r) => `${r.slug} ${r.theme}`)
     expect(empty).toEqual([])
+  })
+
+  it("records no text row thinner than the thinnest preview the catalogue accepted", () => {
+    // The same floor the CI `contrast` job holds the measured rows to; why 80,
+    // and why `elements`, is on MIN_TEXT_ELEMENTS. Checked here as well so a
+    // thin row fails `pnpm test` the moment it is pasted, before CI runs.
+    const thin = CONTRAST_BASELINE.filter(
+      (r) => r.kind === "text" && r.elements < MIN_TEXT_ELEMENTS
+    ).map((r) => `${r.slug} ${r.theme}: ${r.elements}`)
+    expect(
+      thin,
+      `A preview shows fewer than ${MIN_TEXT_ELEMENTS} text elements per theme, thinner than any the catalogue kept. Add the non-disabled component states and screen mockups the md describes (.claude/skills/design-md/references/rubric-preview.md); disabled, hidden and covered text is not counted. Push, and record the rows the CI contrast job measures — do not edit the number to pass; the CI contrast job reads the measured count.`
+    ).toEqual([])
   })
 })
 
