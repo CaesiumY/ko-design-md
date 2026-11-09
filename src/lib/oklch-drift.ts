@@ -1,4 +1,4 @@
-import { readFrontmatter } from "./frontmatter"
+import { findKey, readFrontmatter } from "./frontmatter"
 import { splitFrontmatter } from "./frontmatter-fence"
 import { LEADING_OKLCH, oklchEntries } from "./oklch-sync"
 // Detect preview CSS that no longer agrees with the design.md it was built from.
@@ -197,10 +197,36 @@ const PREVIEW_TOKEN_ALIASES: Partial<
 > = {
   baemin: [["", "bm-"]],
   banksalad: [["", "bs-"]],
+  // bezier's preview is hex, so no value comparison reaches it; these rules
+  // serve the role-chain check. Its role properties keep their bare md names
+  // (`--fill-grey`) and only the palette families are prefixed (`--c-grey-50`),
+  // so there is one rule per family and no catch-all.
+  bezier: [
+    "blue",
+    "cobalt",
+    "green",
+    "grey",
+    "navy",
+    "olive",
+    "orange",
+    "pink",
+    "purple",
+    "red",
+    "teal",
+    "yellow",
+  ].map((family) => [`${family}-`, `c-${family}-`] as const),
   chzzk: [["", "chz-"]],
   class101: [["", "c101-"]],
+  // codeit's preview names roles as its docs do (`--ci-txt-*`, `--ci-bg-*`)
+  // where the md rows use the bundle's `text-*` and `background-*`, and
+  // declares one palette (`--ci-purple-80`) whose light values are the md's
+  // `light-` steps and which its dark block redefines. The `dark-` steps get no
+  // rule here: roleChainsForSlug names them for the dark scope itself.
   codeit: [
     ["codeit-", "ci-"],
+    ["text-", "ci-txt-"],
+    ["background-", "ci-bg-"],
+    ["light-", "ci-"],
     ["", "ci-"],
   ],
   gmarket: [["", "gds-"]],
@@ -235,7 +261,14 @@ const PREVIEW_TOKEN_ALIASES: Partial<
     ["", "sp-"],
   ],
   toss: [["", "tds-"]],
-  "vapor-ui": [["", "vp-"]],
+  // The role layer's `color-background-*` and the rest are written short in
+  // the preview (`--vp-bg-primary-100`).
+  "vapor-ui": [
+    ["color-background-", "vp-bg-"],
+    ["color-foreground-", "vp-fg-"],
+    ["color-border-", "vp-border-"],
+    ["", "vp-"],
+  ],
   wanted: [["", "w-"]],
   yeogi: [
     ["yeogi-", "yg-"],
@@ -255,8 +288,8 @@ const PREVIEW_TOKEN_ALIASES: Partial<
  * meaningless on the day they diverge.
  *
  * A slug with no entry gets no aliases, which is correct for `11st` (preview
- * and md already agree) and unavoidable for `bezier` (its preview declares no
- * `oklch` at all — hex — so no naming rule can reach it).
+ * and md already agree). `bezier`'s rules reach no value here — its preview
+ * declares no `oklch` at all, it is hex — and serve the role-chain check.
  *
  * Always returns a NEW map, including in that case. Handing back the caller's
  * own map for some slugs and a copy for others is the kind of contract that
@@ -268,39 +301,133 @@ export function alignToPreviewNames(
   slug: string
 ): Map<string, string> {
   const out = new Map(definitions)
-  const rules = PREVIEW_TOKEN_ALIASES[slug]
-  if (rules === undefined) return out
   const claimedBy = new Map<string, string>()
   const ambiguous = new Set<string>()
   for (const [name, value] of definitions) {
-    for (const [from, to] of rules) {
-      if (from !== "" && !name.startsWith(from)) continue
-      // A catch-all prepend must not double a namespace the md name already
-      // carries — `c101-primary` would otherwise gain `c101-c101-primary`, a
-      // name no preview declares. Restricted to `from === ""` on purpose: a
-      // replacement rule legitimately rewrites names that already start with
-      // its target, which is exactly what `ldsg-color-` -> `ldsg-` does.
-      if (from === "" && name.startsWith(to)) break
-      const alias = to + name.slice(from.length)
-      // An md name outranks any alias, always.
-      if (definitions.has(alias)) break
-      const prior = claimedBy.get(alias)
-      if (prior === undefined) {
-        claimedBy.set(alias, value)
-        out.set(alias, value)
-      } else if (prior !== value) {
-        // Two md names folding onto one alias with different values is the same
-        // ambiguity `readDefinitions` drops, one layer up: whichever md name
-        // came first would win on declaration order alone, and the gate would
-        // compare the preview against a value picked by nothing. Restating the
-        // same value is fine.
-        ambiguous.add(alias)
-      }
-      break
+    const alias = aliasFor(name, slug)
+    // An md name outranks any alias, always.
+    if (alias === undefined || definitions.has(alias)) continue
+    const prior = claimedBy.get(alias)
+    if (prior === undefined) {
+      claimedBy.set(alias, value)
+      out.set(alias, value)
+    } else if (prior !== value) {
+      // Two md names folding onto one alias with different values is the same
+      // ambiguity `readDefinitions` drops, one layer up: whichever md name
+      // came first would win on declaration order alone, and the gate would
+      // compare the preview against a value picked by nothing. Restating the
+      // same value is fine.
+      ambiguous.add(alias)
     }
   }
   for (const alias of ambiguous) out.delete(alias)
   return out
+}
+
+/**
+ * The name `slug`'s preview gives md name `name` by its first matching rule in
+ * `PREVIEW_TOKEN_ALIASES`, or `undefined` when no rule renames it.
+ */
+function aliasFor(name: string, slug: string): string | undefined {
+  for (const [from, to] of PREVIEW_TOKEN_ALIASES[slug] ?? []) {
+    if (from !== "" && !name.startsWith(from)) continue
+    // A catch-all prepend must not double a namespace the md name already
+    // carries — `c101-primary` would otherwise gain `c101-c101-primary`, a
+    // name no preview declares. Restricted to `from === ""` on purpose: a
+    // replacement rule legitimately rewrites names that already start with
+    // its target, which is exactly what `ldsg-color-` -> `ldsg-` does.
+    if (from === "" && name.startsWith(to)) return undefined
+    return to + name.slice(from.length)
+  }
+  return undefined
+}
+
+/**
+ * Reference rows in a design.md's frontmatter `colors:` map — a key whose value
+ * is exactly `{colors.<key>}` — as key → the key it points at.
+ *
+ * `readDefinitions` reads only `oklch(…)` values, so these rows (the role layer
+ * the entry publishes, docs/adr/0012, and the #381 `primary` alias) never
+ * reached the drift gate. A frontmatter YAML cannot read yields nothing, as it
+ * does there.
+ */
+export function readReferenceRows(markdown: string): Map<string, string> {
+  const out = new Map<string, string>()
+  const read = readFrontmatter(markdown)
+  if (!read.ok) return out
+  const colors = findKey(read.keys, "colors")?.value
+  if (colors === null || typeof colors !== "object" || Array.isArray(colors))
+    return out
+  for (const [key, value] of Object.entries(colors)) {
+    if (typeof value !== "string") continue
+    const target = /^\{colors\.([^}]+)\}$/.exec(value)?.[1]
+    if (target !== undefined) out.set(key, target)
+  }
+  return out
+}
+
+/**
+ * Per theme scope, preview role property → the palette properties its `var()`
+ * may point at (the first is the one a finding names).
+ */
+export interface RoleChains {
+  light: Map<string, ReadonlyArray<string>>
+  dark: Map<string, ReadonlyArray<string>>
+  /** Dark roles that come from a `dark-` row (not theme-invariant ones). */
+  paired: Set<string>
+  /**
+   * Dark role → the candidate read off its `dark-` palette key without the
+   * prefix. It names the dark value only where the dark theme root redeclares
+   * that step, so it is accepted only there.
+   */
+  rebound: Map<string, string>
+}
+
+/**
+ * Which palette property each role property of `slug`'s preview must point at,
+ * per theme scope, read from the md reference rows and renamed by the same
+ * `PREVIEW_TOKEN_ALIASES` rules the value comparison uses.
+ *
+ * A `dark-` row (the one spelling the catalogue uses for a dark twin, #625) is
+ * the role's dark-scope target. A row with no `dark-` twin is the same role in
+ * both themes (a theme-invariant role, or a light-only system), so its dark
+ * redeclaration, when the preview writes one as a `var()`, must point at the
+ * same step. A preview that invents dark values for a light-only system writes
+ * them as literals, which `findRoleChainDrift` does not compare.
+ *
+ * A dark row may point at a `dark-` palette key (`{colors.dark-gray-050}`,
+ * vapor-ui and codeit). Their previews declare one palette and redefine its
+ * steps in the dark block, so in the dark scope the unprefixed step's name
+ * (`--vp-gray-050`) is accepted as well as the prefixed one, provided the dark
+ * theme root redeclares it. This is not an alias rule on purpose: a `dark-`
+ * rule would fold `gray-050` and `dark-gray-050` onto one name, which
+ * alignToPreviewNames drops as ambiguous, and the light palette comparisons
+ * would go with it.
+ */
+export function roleChainsForSlug(markdown: string, slug: string): RoleChains {
+  const rows = readReferenceRows(markdown)
+  const name = (key: string): string => aliasFor(key, slug) ?? key
+  const light = new Map<string, ReadonlyArray<string>>()
+  const dark = new Map<string, ReadonlyArray<string>>()
+  const paired = new Set<string>()
+  const rebound = new Map<string, string>()
+  for (const [key, target] of rows) {
+    if (key.startsWith("dark-")) {
+      const role = name(key.slice("dark-".length))
+      paired.add(role)
+      if (target.startsWith("dark-")) {
+        const step = name(target.slice("dark-".length))
+        rebound.set(role, step)
+        dark.set(role, [step, name(target)])
+      } else {
+        dark.set(role, [name(target)])
+      }
+      continue
+    }
+    light.set(name(key), [name(target)])
+    if (!rows.has(`dark-${key}`)) dark.set(name(key), [name(target)])
+  }
+  return { light, dark, paired, rebound }
 }
 
 /**
@@ -337,40 +464,367 @@ export function findPreviewDrift(
   definitions: Map<string, string>
 ): Array<DriftFinding> {
   const findings: Array<DriftFinding> = []
+  for (const { name, value, dark } of declarations(previewHtml)) {
+    if (dark) continue
+    const literal = /^oklch\([^)]*\)/.exec(value)?.[0]
+    if (literal === undefined) continue
+    const expected = definitions.get(name)
+    if (expected === undefined) continue
+    const preview = normalise(literal)
+    if (preview !== expected) findings.push({ name, preview, expected })
+  }
+  return findings
+}
+
+export interface RoleChainFinding extends DriftFinding {
+  scope: "light" | "dark"
+  /**
+   * Set when one role is declared under two theme-root forms in one scope, or
+   * at the light root after the dark root: which declaration wins then depends
+   * on selector weight and order, and the check refuses to pick one. `preview`
+   * names the declarations.
+   */
+  ambiguous?: true
+}
+
+/**
+ * Compare where a preview's role properties point against the md reference
+ * rows (`roleChainsForSlug`), in both theme scopes.
+ *
+ * Only a declaration that is exactly one `var(--x)` is compared. A literal is
+ * not a chain (bezier writes its opacity roles as `rgba(…)`, and a preview may
+ * invent dark values for a light-only system), so it is left out, not
+ * reported. `roleChainCoverage` counts both kinds, and
+ * `oklch-drift-corpus.test.ts` pins those counts per slug, so a role whose
+ * `var()` becomes a literal, or a role newly declared as a literal, moves a
+ * pinned number.
+ *
+ * Only THEME-ROOT declarations are the theme's value, and the theme roots are
+ * an exact list (THEME_ROOTS): `:root` and `html` for light,
+ * `[data-theme="dark"]`, `:root[data-theme="dark"]` and
+ * `html[data-theme="dark"]` for dark, each in a top-level block outside any
+ * at-rule, in a `<style>` element whose `media` is absent, empty or `all` (any
+ * other media is treated as conditional, `screen` included) and that is not
+ * inside `<noscript>` or `<template>`. A `<style>` inside an HTML
+ * comment or a raw-text element (`<script>`, `<textarea>`, `<title>`, …), or
+ * one whose `type` is set to anything but empty or `text/css`, is not read at
+ * all; a `<!--` inside a `<style>` body is CSS. A role declared under any other selector
+ * (`.inverse`, `:where(.chip)`, `[data-theme="sepia"]`, `:root` inside
+ * `@media`) is neither compared nor allowed to hide the root value;
+ * `roleChainCoverage` counts it as `scoped`.
+ *
+ * Within one scope and one root form, the last declaration is compared: the
+ * same selector, so document order decides. codeit's merged preview restates
+ * its light tokens under `[data-theme="dark"]` and then overrides them in a
+ * second block of that selector. A role declared under two different root
+ * forms in one scope (`:root` and `html`), or at the light root after the dark
+ * root (where the later `:root` would also win in the dark theme), is reported
+ * as ambiguous instead of guessed at.
+ *
+ * A role with a `dark-` row that the dark root never redeclares inherits its
+ * light `var()` in the dark theme; that declaration is held to the dark row as
+ * well. A dark target named without its `dark-` prefix counts only where the
+ * dark root redeclares that step (RoleChains.rebound).
+ */
+export function findRoleChainDrift(
+  previewHtml: string,
+  chains: RoleChains
+): Array<RoleChainFinding> {
+  const { compared, ambiguous } = roleDeclarations(previewHtml, chains)
+  const findings: Array<RoleChainFinding> = ambiguous.map((a) => ({
+    name: a.name,
+    scope: a.dark ? "dark" : "light",
+    preview: a.declarations
+      .map((d) => `${d.root ?? ""} { --${d.name}: ${d.value} }`)
+      .join(" and "),
+    expected: "one theme-root declaration",
+    ambiguous: true,
+  }))
+  for (const { name, dark, target, expected } of compared) {
+    if (target === undefined || expected.includes(target)) continue
+    findings.push({
+      name,
+      scope: dark ? "dark" : "light",
+      preview: `var(--${target})`,
+      expected: `var(--${expected[0]})`,
+    })
+  }
+  return findings
+}
+
+/**
+ * How many role properties the role-chain check compares (`chained`, wired by
+ * one `var()`), how many theme-root ones it leaves out as literals (`literal`),
+ * counting each scope's last theme-root declaration once, and how many role
+ * declarations sit outside a theme-root block (`scoped`), each counted.
+ */
+export function roleChainCoverage(
+  previewHtml: string,
+  chains: RoleChains
+): { chained: number; literal: number; scoped: number } {
+  const { compared, scoped } = roleDeclarations(previewHtml, chains)
+  const chained = compared.filter((d) => d.target !== undefined).length
+  return { chained, literal: compared.length - chained, scoped }
+}
+
+/**
+ * Each scope's last theme-root declaration of a role property `chains` names,
+ * with the property its `var()` points at (`undefined` for a literal) and the
+ * steps it may point at; the roles whose theme-root declarations are
+ * ambiguous; and the number of role declarations outside theme-root blocks.
+ *
+ * A role with a `dark-` row that the dark theme root never redeclares inherits
+ * its light declaration in the dark theme, so that declaration is compared
+ * against the dark row too (`inherited`).
+ */
+function roleDeclarations(
+  previewHtml: string,
+  chains: RoleChains
+): {
+  compared: Array<
+    Declaration & {
+      target: string | undefined
+      expected: ReadonlyArray<string>
+      inherited: boolean
+    }
+  >
+  ambiguous: Array<{
+    name: string
+    dark: boolean
+    declarations: ReadonlyArray<Declaration>
+  }>
+  scoped: number
+} {
+  // Every theme-root declaration of each property, per scope, in order.
+  const atRoot = new Map<string, Array<Declaration>>()
+  const isRole = (d: Declaration): boolean =>
+    (d.dark ? chains.dark : chains.light).has(d.name)
+  // Roles declared at the light root after a dark-root declaration of theirs.
+  const lightAfterDark = new Set<string>()
+  let scoped = 0
+  for (const d of declarations(previewHtml)) {
+    if (d.root === undefined) {
+      if (isRole(d)) scoped++
+      continue
+    }
+    if (!d.dark && atRoot.has(`dark ${d.name}`)) lightAfterDark.add(d.name)
+    const key = `${d.dark ? "dark" : "light"} ${d.name}`
+    const list = atRoot.get(key) ?? []
+    list.push(d)
+    // Delete first so the map's order is where each property is last declared.
+    atRoot.delete(key)
+    atRoot.set(key, list)
+  }
+  const lastAt = (key: string): Declaration | undefined =>
+    atRoot.get(key)?.at(-1)
+  const darkRedeclares = (step: string): boolean => atRoot.has(`dark ${step}`)
+  const entry = (
+    d: Declaration,
+    scope: "light" | "dark",
+    inherited: boolean
+  ) => {
+    const candidates = (scope === "dark" ? chains.dark : chains.light).get(
+      d.name
+    )
+    if (candidates === undefined) return []
+    const rebound = scope === "dark" ? chains.rebound.get(d.name) : undefined
+    const expected = candidates.filter(
+      (step) => step !== rebound || darkRedeclares(step)
+    )
+    return [
+      {
+        ...d,
+        dark: scope === "dark",
+        target: /^var\(\s*--([\w-]+)\s*\)$/.exec(d.value)?.[1],
+        expected,
+        inherited,
+      },
+    ]
+  }
+  const ambiguous: Array<{
+    name: string
+    dark: boolean
+    declarations: ReadonlyArray<Declaration>
+  }> = []
+  const compared = []
+  for (const list of atRoot.values()) {
+    const last = list[list.length - 1]
+    if (!isRole(last)) continue
+    const forms = new Set(list.map((d) => d.root))
+    const late = !last.dark && lightAfterDark.has(last.name)
+    if (forms.size > 1 || late) {
+      const dark = atRoot.get(`dark ${last.name}`) ?? []
+      ambiguous.push({
+        name: last.name,
+        dark: last.dark,
+        declarations: forms.size > 1 ? list : [...dark, last],
+      })
+      continue
+    }
+    compared.push(...entry(last, last.dark ? "dark" : "light", false))
+  }
+  for (const role of chains.paired) {
+    const base = lastAt(`light ${role}`)
+    if (base === undefined || atRoot.has(`dark ${role}`)) continue
+    compared.push(...entry(base, "dark", true))
+  }
+  return { compared, ambiguous, scoped }
+}
+
+/** One custom-property declaration in a preview's stylesheets. */
+interface Declaration {
+  name: string
+  /** Trimmed. */
+  value: string
+  /** Inside a `[data-theme="dark"]` block. */
+  dark: boolean
+  /** The theme-root selector its block is (THEME_ROOTS), or undefined. */
+  root: string | undefined
+}
+
+/**
+ * The selectors a theme's value is declared under, exactly, as
+ * normaliseSelector writes them. Anything else is scoped.
+ */
+const THEME_ROOTS = {
+  light: new Set([
+    ":root",
+    "html",
+    // gmarket's preview declares its light tokens under this selector list.
+    ':root,[data-theme="light"]',
+  ]),
+  dark: new Set([
+    '[data-theme="dark"]',
+    ':root[data-theme="dark"]',
+    'html[data-theme="dark"]',
+  ]),
+}
+
+/**
+ * A block's selector with whitespace collapsed and removed only where it
+ * cannot be a combinator: inside `[…]` and around `,`. Space before `[` or
+ * after `]` is the descendant combinator and is kept. An attribute value is
+ * written in double quotes.
+ */
+function normaliseSelector(text: string): string {
+  return text
+    .replace(/\s+/g, " ")
+    .replace(/\[([^\]]*)\]/g, (_, inner: string) => {
+      const attr = /^([\w-]+)=["']?([^"']*)["']?$/.exec(inner.replace(/ /g, ""))
+      return attr ? `[${attr[1]}="${attr[2]}"]` : `[${inner.replace(/ /g, "")}]`
+    })
+    .replace(/ ?, ?/g, ",")
+    .trim()
+}
+
+/**
+ * A start tag's attributes by lower-case name, as an HTML tokenizer splits
+ * them: a name begins after whitespace, so `data-type=` is not `type=`. A
+ * name repeated keeps its first value, and a bare name has the value "".
+ */
+function styleAttributes(text: string): Map<string, string> {
+  const out = new Map<string, string>()
+  const ATTR =
+    /(?:^|\s)([^\s"'>/=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g
+  for (const m of text.matchAll(ATTR)) {
+    const name = m[1].toLowerCase()
+    // Unmatched groups are undefined at runtime, whatever the match type says.
+    const values: Array<string | undefined> = [m[2], m[3], m[4]]
+    if (!out.has(name)) out.set(name, values.find((v) => v !== undefined) ?? "")
+  }
+  return out
+}
+
+/** Every custom-property declaration in a preview's stylesheets, in order. */
+function declarations(previewHtml: string): Array<Declaration> {
   // Brace depth only means "CSS nesting" inside a stylesheet. Counting braces
   // across the whole document would let an inline <script> object literal or a
   // style="{…}" attribute skew the depth and quietly break the dark-scope test —
   // a silent miss in the very gate written to catch other gates' silent misses.
-  const blocks = [
-    ...previewHtml.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi),
-  ].map((m) => m[1])
-  // With no <style> at all the input is already a stylesheet — every catalogue
-  // preview has one, so this only matters when checking raw CSS directly.
-  const css = stripComments(blocks.length > 0 ? blocks.join("\n") : previewHtml)
+  //
+  // A <style> element that applies only conditionally (a `media` attribute, or
+  // inside <noscript> or <template>) is wrapped in an at-rule here, so its
+  // declarations are never a theme root, as an `@media` block's are not.
+  //
+  // The document is read in one left-to-right pass, as an HTML tokenizer
+  // does: whichever opens first, an HTML comment or a raw-text element
+  // (`<style>` among them), runs to its own end. So a `<style>` written inside
+  // a comment or a `<script>` is text, not a stylesheet, and a `<!--` inside a
+  // `<style>` body is CSS, not a comment. Only `<style>` bodies are kept, and
+  // not one whose `type` names anything but CSS. Comments are stripped only in
+  // the markup between, which is also what the <noscript> / <template> count
+  // reads.
+  const RAW =
+    // A comment ends at `-->` or `--!>`; `<!-->` and `<!--->` end in place.
+    // A raw-text element ends at `</name` followed by space, `/` or `>`.
+    /<!--(?:>|->|[\s\S]*?(?:--!?>|$))|<(style|script|textarea|title|xmp|noembed|noframes)\b([^>]*)>([\s\S]*?)(?:<\/\1(?=[\s/>])[^>]*>|$)/gi
+  let markup = ""
+  let from = 0
+  const blocks: Array<string> = []
+  const inside = (tag: string): boolean =>
+    (markup.match(new RegExp(`<${tag}\\b`, "gi"))?.length ?? 0) >
+    (markup.match(new RegExp(`</${tag}\\s*>`, "gi"))?.length ?? 0)
+  for (const m of previewHtml.matchAll(RAW)) {
+    markup += previewHtml.slice(from, m.index)
+    from = m.index + m[0].length
+    if (m[0].startsWith("<!--") || m[1].toLowerCase() !== "style") continue
+    // A <style> applies when its type is absent, empty or `text/css`, as the
+    // HTML spec has it. Any media other than absent, empty or `all` is treated
+    // as conditional: the query is not evaluated, so even `screen` is.
+    const attrs = styleAttributes(m[2])
+    const type = attrs.get("type")?.trim().toLowerCase()
+    if (type !== undefined && type !== "" && type !== "text/css") continue
+    const media = attrs.get("media")?.trim().toLowerCase()
+    const conditional =
+      (media !== undefined && media !== "" && media !== "all") ||
+      inside("noscript") ||
+      inside("template")
+    // CSS drops CDO and CDC (`<!--`, `-->`) as tokens; blanked to spaces.
+    const body = m[3].replace(/<!--|-->/g, (t) => " ".repeat(t.length))
+    blocks.push(conditional ? `@conditional-style {\n${body}\n}` : body)
+  }
+  // With no <style> tag at all the input is already a stylesheet — every
+  // catalogue preview has one, so this only matters when checking raw CSS
+  // directly. A document whose only <style> tags are dead reads as empty.
+  const css = stripComments(
+    /<style\b/i.test(previewHtml) ? blocks.join("\n") : previewHtml
+  )
 
   // Walk braces and declarations in document order. Deciding scope per LINE is
   // not enough: a block that opens and closes on one line would have already
-  // reset by the time its own declarations were inspected.
-  const TOKEN = /\[data-theme=["']?dark|\{|\}|--([\w-]+):\s*(oklch\([^)]*\))/g
+  // reset by the time its own declarations were inspected. `;` is a token only
+  // so that the text before each `{` — its selector — can be read back.
+  const TOKEN = /\[data-theme=["']?dark|\{|\}|;|--([\w-]+)\s*:([^;{}]*)/g
 
-  let depth = 0
+  const out: Array<Declaration> = []
   let pendingDark = false
   // Depth at which the enclosing dark block opened, or null when not in one.
   let darkDepth: number | null = null
+  // The selector (or at-rule prelude) of each open block, outermost first.
+  const open: Array<string> = []
+  // Where the text since the last `{`, `}` or `;` starts.
+  let segment = 0
 
   for (const m of css.matchAll(TOKEN)) {
     const tok = m[0]
+    const end = m.index + tok.length
     if (tok === "{") {
-      depth++
+      open.push(normaliseSelector(css.slice(segment, m.index)))
       if (pendingDark) {
-        darkDepth = depth
+        darkDepth = open.length
         pendingDark = false
       }
+      segment = end
       continue
     }
     if (tok === "}") {
-      if (darkDepth === depth) darkDepth = null
-      depth--
+      if (darkDepth === open.length) darkDepth = null
+      open.pop()
+      segment = end
+      continue
+    }
+    if (tok === ";") {
+      segment = end
       continue
     }
     if (tok.startsWith("[")) {
@@ -378,14 +832,16 @@ export function findPreviewDrift(
       pendingDark = true
       continue
     }
-    if (darkDepth !== null) continue
-
-    const expected = definitions.get(m[1])
-    if (expected === undefined) continue
-    const preview = normalise(m[2])
-    if (preview !== expected) {
-      findings.push({ name: m[1], preview, expected })
-    }
+    out.push({
+      name: m[1],
+      value: m[2].trim(),
+      dark: darkDepth !== null,
+      root:
+        open.length === 1 &&
+        THEME_ROOTS[darkDepth !== null ? "dark" : "light"].has(open[0])
+          ? open[0]
+          : undefined,
+    })
   }
-  return findings
+  return out
 }

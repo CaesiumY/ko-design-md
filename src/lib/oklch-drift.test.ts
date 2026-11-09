@@ -3,7 +3,11 @@ import {
   alignToPreviewNames,
   conflictingDefinitions,
   findPreviewDrift,
+  findRoleChainDrift,
   readDefinitions,
+  readReferenceRows,
+  roleChainCoverage,
+  roleChainsForSlug,
 } from "./oklch-drift"
 
 const md = `
@@ -440,5 +444,498 @@ describe("findPreviewDrift", () => {
       readDefinitions(md)
     )
     expect(found.map((f) => f.name)).toEqual(["gray-06"])
+  })
+})
+
+describe("findRoleChainDrift", () => {
+  // A role published as a reference row (`text-primary: "{colors.gray-800}"`)
+  // carries no `oklch` of its own, so findPreviewDrift never sees it, and the
+  // preview wires it as `--sf-text-primary: var(--sf-gray-800)`. Repointing that
+  // `var()` at another step used to pass every gate.
+  const roles = `---
+colors:
+  gray-800: oklch(0.3 0 0)
+  gray-600: oklch(0.5 0 0)
+  gray-100: oklch(0.95 0 0)
+  text-primary: "{colors.gray-800}"
+  bg-base: "{colors.gray-100}"
+  dark-bg-base: "{colors.gray-800}"
+---
+`
+
+  it("catches a light role wired to another palette step", () => {
+    const found = findRoleChainDrift(
+      `:root { --sf-text-primary: var(--sf-gray-600); --sf-bg-base: var(--sf-gray-100); }
+       [data-theme="dark"] { --sf-bg-base: var(--sf-gray-800); }`,
+      roleChainsForSlug(roles, "socar")
+    )
+    expect(found).toEqual([
+      {
+        name: "sf-text-primary",
+        scope: "light",
+        preview: "var(--sf-gray-600)",
+        expected: "var(--sf-gray-800)",
+      },
+    ])
+  })
+
+  it("holds a dark-scope role to its `dark-` row", () => {
+    const found = findRoleChainDrift(
+      `:root { --sf-bg-base: var(--sf-gray-100); }
+       [data-theme="dark"] { --sf-bg-base: var(--sf-gray-600); }`,
+      roleChainsForSlug(roles, "socar")
+    )
+    expect(found).toEqual([
+      {
+        name: "sf-bg-base",
+        scope: "dark",
+        preview: "var(--sf-gray-600)",
+        expected: "var(--sf-gray-800)",
+      },
+    ])
+  })
+
+  it("holds a role with no `dark-` row to its light step in the dark scope too", () => {
+    // socar is light-only and its preview restates the light wiring under the
+    // dark selector: a repointing there alone must not pass.
+    const found = findRoleChainDrift(
+      `:root { --sf-text-primary: var(--sf-gray-800); }
+       [data-theme="dark"] { --sf-text-primary: var(--sf-gray-100); }`,
+      roleChainsForSlug(roles, "socar")
+    )
+    expect(found.map((f) => `${f.scope} ${f.name}`)).toEqual([
+      "dark sf-text-primary",
+    ])
+  })
+
+  it("accepts a preview wired where the rows point, and leaves literals out", () => {
+    const found = findRoleChainDrift(
+      `:root { --sf-text-primary: var( --sf-gray-800 ); --sf-bg-base: #fff; }
+       [data-theme="dark"] {
+         --sf-text-primary: oklch(0.9 0 0);
+         --sf-bg-base: var(--sf-gray-800);
+       }`,
+      roleChainsForSlug(roles, "socar")
+    )
+    expect(found).toEqual([])
+  })
+
+  it("compares the declaration each scope ends with, as the cascade does", () => {
+    // codeit's shape: the dark half first restates the light wiring under the
+    // dark selector, then overrides it. Only the override paints.
+    const chains = roleChainsForSlug(roles, "socar")
+    const overridden = `[data-theme="dark"] { --sf-bg-base: var(--sf-gray-100); }
+       [data-theme="dark"] { --sf-bg-base: var(--sf-gray-800); }`
+    expect(findRoleChainDrift(overridden, chains)).toEqual([])
+    const reversed = `[data-theme="dark"] { --sf-bg-base: var(--sf-gray-800); }
+       [data-theme="dark"] { --sf-bg-base: var(--sf-gray-100); }`
+    expect(findRoleChainDrift(reversed, chains).map((f) => f.name)).toEqual([
+      "sf-bg-base",
+    ])
+  })
+
+  it("does not let a later local selector hide a wrong root value", () => {
+    // The page renders the `:root` value everywhere `.chip` is not.
+    const chains = roleChainsForSlug(roles, "socar")
+    const html = `:root { --sf-text-primary: var(--sf-gray-600); }
+       .chip { --sf-text-primary: var(--sf-gray-800); }`
+    expect(findRoleChainDrift(html, chains).map((f) => f.name)).toEqual([
+      "sf-text-primary",
+    ])
+    expect(roleChainCoverage(html, chains)).toEqual({
+      chained: 1,
+      literal: 0,
+      scoped: 1,
+    })
+  })
+
+  it("does not read a local override as the theme's value", () => {
+    // An inverse band inside a light page is a legitimate re-wiring.
+    const chains = roleChainsForSlug(roles, "socar")
+    const html = `:root { --sf-text-primary: var(--sf-gray-800); }
+       .inverse { --sf-text-primary: var(--sf-gray-100); }
+       [data-theme="dark"] .card { --sf-bg-base: var(--sf-gray-100); }`
+    expect(findRoleChainDrift(html, chains)).toEqual([])
+    expect(roleChainCoverage(html, chains).scoped).toBe(2)
+  })
+
+  it("does not let a conditional root block hide a wrong base value", () => {
+    // Codex's socar reproduction: the base is wrong below 1000px.
+    const chains = roleChainsForSlug(roles, "socar")
+    const html = `:root { --sf-text-primary: var(--sf-gray-100); }
+       @media (min-width: 1000px) { :root { --sf-text-primary: var(--sf-gray-800); } }`
+    expect(findRoleChainDrift(html, chains)).toEqual([
+      {
+        name: "sf-text-primary",
+        scope: "light",
+        preview: "var(--sf-gray-100)",
+        expected: "var(--sf-gray-800)",
+      },
+    ])
+  })
+
+  it("does not let a conditional <style> element hide a wrong base value", () => {
+    // The @media bypass again, written as HTML: a `media` attribute, or a
+    // stylesheet that only applies inside <noscript> or <template>.
+    const chains = roleChainsForSlug(roles, "socar")
+    const base = `<style>:root { --sf-text-primary: var(--sf-gray-100); }</style>`
+    for (const conditional of [
+      `<style media="(min-width: 1000px)">:root { --sf-text-primary: var(--sf-gray-800); }</style>`,
+      `<noscript><style>:root { --sf-text-primary: var(--sf-gray-800); }</style></noscript>`,
+      `<template><style>:root { --sf-text-primary: var(--sf-gray-800); }</style></template>`,
+    ]) {
+      const html = base + conditional
+      expect(findRoleChainDrift(html, chains), conditional).toEqual([
+        {
+          name: "sf-text-primary",
+          scope: "light",
+          preview: "var(--sf-gray-100)",
+          expected: "var(--sf-gray-800)",
+        },
+      ])
+      expect(roleChainCoverage(html, chains).scoped, conditional).toBe(1)
+    }
+  })
+
+  it("reads no stylesheet out of comments, raw text or a non-CSS <style>", () => {
+    // None of these is applied by a browser, so none may hide the wrong base.
+    const chains = roleChainsForSlug(roles, "socar")
+    const base = `<style>:root { --sf-text-primary: var(--sf-gray-100); }</style>`
+    const fix = `<style>:root { --sf-text-primary: var(--sf-gray-800); }</style>`
+    for (const dead of [
+      `<!-- ${fix} -->`,
+      `<script>const css = "${fix.replace(/"/g, "'")}"</script>`,
+      `<textarea>${fix}</textarea>`,
+      `<title>${fix}</title>`,
+      fix.replace("<style>", '<style type="text/plain">'),
+    ]) {
+      const html = base + dead
+      expect(
+        findRoleChainDrift(html, chains).map((f) => f.preview),
+        dead
+      ).toEqual(["var(--sf-gray-100)"])
+      expect(roleChainCoverage(html, chains), dead).toEqual({
+        chained: 1,
+        literal: 0,
+        scoped: 0,
+      })
+    }
+    // `text/css` is the stylesheet type and is read.
+    expect(
+      findRoleChainDrift(
+        base + fix.replace("<style>", '<style type="text/css">'),
+        chains
+      )
+    ).toEqual([])
+  })
+
+  it("reads a <style> body's `<!--` as CSS, not as an HTML comment", () => {
+    // <style> is a raw-text element: `<!--` and `-->` inside it are CSS's
+    // CDO and CDC tokens, which the browser drops, applying the rule between.
+    const chains = roleChainsForSlug(roles, "socar")
+    const html = `<style>:root { --sf-text-primary: var(--sf-gray-800); }</style>
+      <style><!-- :root { --sf-text-primary: var(--sf-gray-600); } --></style>`
+    expect(findRoleChainDrift(html, chains).map((f) => f.preview)).toEqual([
+      "var(--sf-gray-600)",
+    ])
+    // The value comparison sees it too, and an unclosed `<!--` in a style
+    // body does not swallow the rest of the document.
+    const values = `<style>:root { content: "<!--"; }</style>
+      <style>:root { --gray-06: oklch(0.68 0 0); }</style>`
+    expect(findPreviewDrift(values, readDefinitions(md))).toEqual([
+      {
+        name: "gray-06",
+        preview: "oklch(0.68 0 0)",
+        expected: "oklch(0.67 0 0)",
+      },
+    ])
+  })
+
+  it("applies a <style> as the browser does by its type and media", () => {
+    // Applied: type absent, empty or `text/css` in any case; media absent,
+    // empty or `all`. `data-type` and `data-media` are other attributes.
+    const chains = roleChainsForSlug(roles, "socar")
+    const base = `<style>:root { --sf-text-primary: var(--sf-gray-800); }</style>`
+    const wrong = ":root { --sf-text-primary: var(--sf-gray-600); }"
+    for (const attrs of [
+      'type=""',
+      'type="TEXT/CSS"',
+      'data-type="text/plain"',
+      'media=""',
+      'media="all"',
+      'data-media="(min-width: 1px)"',
+    ]) {
+      expect(
+        findRoleChainDrift(
+          `${base}<style ${attrs}>${wrong}</style>`,
+          chains
+        ).map((f) => f.preview),
+        attrs
+      ).toEqual(["var(--sf-gray-600)"])
+    }
+    // And the value comparison reads such a block too.
+    expect(
+      findPreviewDrift(
+        '<style data-type="x">:root { --gray-06: oklch(0.68 0 0); }</style>',
+        readDefinitions(md)
+      ).map((f) => f.name)
+    ).toEqual(["gray-06"])
+  })
+
+  it("reads a declaration with space before its colon", () => {
+    const chains = roleChainsForSlug(roles, "socar")
+    expect(
+      findRoleChainDrift(
+        ":root { --sf-text-primary : var(--sf-gray-600); }",
+        chains
+      ).map((f) => f.name)
+    ).toEqual(["sf-text-primary"])
+  })
+
+  it("ends comments and raw-text elements where the HTML tokenizer does", () => {
+    const chains = roleChainsForSlug(roles, "socar")
+    const wrong = `<style>:root { --sf-text-primary: var(--sf-gray-600); }</style>`
+    const right = `<style>:root { --sf-text-primary: var(--sf-gray-800); }</style>`
+    // `<!-->` and `<!--->` are empty comments that end in place, and `--!>`
+    // closes a comment: the stylesheet after each one applies.
+    for (const comment of ["<!-->", "<!--->", "<!-- x --!>"]) {
+      expect(
+        findRoleChainDrift(`${wrong}${comment}${right}<!-- y -->`, chains),
+        comment
+      ).toEqual([])
+    }
+    // `</style x>` and `</style/>` close the element, so the conditional
+    // block after it stays conditional and does not hide the wrong base.
+    for (const end of ["</style x>", "</style/>"]) {
+      const html = `<style>:root { --sf-text-primary: var(--sf-gray-600); }${end}
+        <style media="(min-width: 1px)">:root { --sf-text-primary: var(--sf-gray-800); }</style>`
+      expect(
+        findRoleChainDrift(html, chains).map((f) => f.preview),
+        end
+      ).toEqual(["var(--sf-gray-600)"])
+    }
+  })
+
+  it("matches tags in any letter case", () => {
+    const chains = roleChainsForSlug(roles, "socar")
+    const base = `<STYLE>:root { --sf-text-primary: var(--sf-gray-600); }</STYLE>`
+    const fix = ":root { --sf-text-primary: var(--sf-gray-800); }"
+    for (const dead of [
+      `<SCRIPT>"<style>${fix}</style>"</SCRIPT>`,
+      `<Style Media="(min-width: 1px)">${fix}</Style>`,
+      `<NOSCRIPT><style>${fix}</style></NOSCRIPT>`,
+      `<!-- <style>${fix}</style> -->`,
+    ]) {
+      expect(
+        findRoleChainDrift(base + dead, chains).map((f) => f.preview),
+        dead
+      ).toEqual(["var(--sf-gray-600)"])
+    }
+  })
+
+  it("reads only the listed selectors as theme roots", () => {
+    const chains = roleChainsForSlug(roles, "socar")
+    const wrong = (selector: string): string =>
+      `${selector} { --sf-text-primary: var(--sf-gray-600); --sf-bg-base: var(--sf-gray-600); }`
+    for (const [selector, scope] of [
+      ["html", "light"],
+      [":root, [data-theme='light']", "light"],
+      ['[data-theme="dark"]', "dark"],
+      ["[data-theme=dark]", "dark"],
+      [':root[data-theme="dark"]', "dark"],
+      ['html[data-theme="dark"]', "dark"],
+    ]) {
+      expect(
+        findRoleChainDrift(wrong(selector), chains).map((f) => f.scope),
+        selector
+      ).toContain(scope)
+    }
+    // The reviewer's: neither names the theme root, so both are scoped.
+    for (const selector of [":root:where(.never)", '[data-theme="sepia"]']) {
+      const html = `:root { --sf-text-primary: var(--sf-gray-800); }
+        ${wrong(selector)}`
+      expect(findRoleChainDrift(html, chains), selector).toEqual([])
+      expect(roleChainCoverage(html, chains).scoped, selector).toBe(2)
+    }
+  })
+
+  it("refuses to pick between two root forms of one role in one scope", () => {
+    // `:root` outweighs a later `html`, so document order would pick wrongly.
+    const chains = roleChainsForSlug(roles, "socar")
+    const found = findRoleChainDrift(
+      `:root { --sf-text-primary: var(--sf-gray-600); }
+       html { --sf-text-primary: var(--sf-gray-800); }`,
+      chains
+    )
+    expect(found).toEqual([
+      {
+        name: "sf-text-primary",
+        scope: "light",
+        preview:
+          ":root { --sf-text-primary: var(--sf-gray-600) } and html { --sf-text-primary: var(--sf-gray-800) }",
+        expected: "one theme-root declaration",
+        ambiguous: true,
+      },
+    ])
+  })
+
+  it("refuses a light-root declaration after the dark root's", () => {
+    // A later `:root` also wins in the dark theme: same weight, later.
+    const chains = roleChainsForSlug(roles, "socar")
+    const found = findRoleChainDrift(
+      `[data-theme="dark"] { --sf-bg-base: var(--sf-gray-800); }
+       :root { --sf-bg-base: var(--sf-gray-100); }`,
+      chains
+    )
+    expect(found.map((f) => [f.scope, f.name, f.ambiguous])).toEqual([
+      ["light", "sf-bg-base", true],
+    ])
+  })
+
+  it("does not read a local block as a theme root", () => {
+    // Each is a later, partial redeclaration with the right step; none may
+    // hide the wrong `:root` value before it, and each is counted as scoped.
+    const chains = roleChainsForSlug(roles, "socar")
+    for (const selector of [
+      ":where(.chip)",
+      'html [data-theme="light"]',
+      ':root [data-theme="light"]',
+      "[data-theme] .card",
+      "html.x",
+      "@supports (color: red) { :root",
+      "@layer base { :root",
+    ]) {
+      const close = selector.includes("{") ? "}}" : "}"
+      const html = `:root { --sf-text-primary: var(--sf-gray-600); }
+        ${selector} { --sf-text-primary: var(--sf-gray-800); ${close}`
+      expect(
+        findRoleChainDrift(html, chains).map((f) => f.name),
+        selector
+      ).toEqual(["sf-text-primary"])
+      expect(roleChainCoverage(html, chains).scoped, selector).toBe(1)
+    }
+  })
+
+  it("renames palette steps by the slug's own alias rules", () => {
+    // bezier's preview keeps role names bare and prefixes its palette `c-`.
+    const bezier = `---
+colors:
+  grey-50: oklch(0.98 0 0)
+  fill-grey: "{colors.grey-50}"
+---
+`
+    const chains = roleChainsForSlug(bezier, "bezier")
+    expect(chains.light.get("fill-grey")).toEqual(["c-grey-50"])
+  })
+
+  it("accepts a dark step under the name of the palette the dark block redefines", () => {
+    // vapor-ui: `dark-color-background-primary-100: "{colors.dark-blue-050}"`,
+    // and the preview's dark block redefines `--vp-blue-050` rather than
+    // declaring a `--vp-dark-blue-050`.
+    const vapor = `---
+colors:
+  blue-050: oklch(0.97 0.02 260)
+  blue-100: oklch(0.93 0.04 260)
+  dark-blue-050: oklch(0.3 0.05 260)
+  color-background-primary-100: "{colors.blue-100}"
+  dark-color-background-primary-100: "{colors.dark-blue-050}"
+---
+`
+    const chains = roleChainsForSlug(vapor, "vapor-ui")
+    const css = (step: string): string =>
+      `:root { --vp-bg-primary-100: var(--vp-blue-100); }
+       [data-theme="dark"] {
+         --vp-blue-050: oklch(0.3 0.05 260);
+         --vp-bg-primary-100: var(--vp-${step});
+       }`
+    expect(findRoleChainDrift(css("blue-050"), chains)).toEqual([])
+    expect(findRoleChainDrift(css("dark-blue-050"), chains)).toEqual([])
+    expect(findRoleChainDrift(css("blue-100"), chains)).toEqual([
+      {
+        name: "vp-bg-primary-100",
+        scope: "dark",
+        preview: "var(--vp-blue-100)",
+        expected: "var(--vp-blue-050)",
+      },
+    ])
+  })
+
+  it("accepts the unprefixed dark step only where the dark root redeclares it", () => {
+    // Without `--vp-blue-050` in the dark block, `var(--vp-blue-050)` there
+    // paints the LIGHT blue-050.
+    const vapor = `---
+colors:
+  blue-050: oklch(0.97 0.02 260)
+  blue-100: oklch(0.93 0.04 260)
+  dark-blue-050: oklch(0.3 0.05 260)
+  color-background-primary-100: "{colors.blue-100}"
+  dark-color-background-primary-100: "{colors.dark-blue-050}"
+---
+`
+    const chains = roleChainsForSlug(vapor, "vapor-ui")
+    const html = (darkPalette: string): string =>
+      `:root { --vp-blue-050: oklch(0.97 0.02 260); --vp-bg-primary-100: var(--vp-blue-100); }
+       [data-theme="dark"] { ${darkPalette} --vp-bg-primary-100: var(--vp-blue-050); }`
+    expect(
+      findRoleChainDrift(html("--vp-blue-050: oklch(0.3 0.05 260);"), chains)
+    ).toEqual([])
+    expect(findRoleChainDrift(html(""), chains)).toEqual([
+      {
+        name: "vp-bg-primary-100",
+        scope: "dark",
+        preview: "var(--vp-blue-050)",
+        expected: "var(--vp-dark-blue-050)",
+      },
+    ])
+  })
+
+  it("holds a role the dark root never redeclares to its `dark-` row", () => {
+    // The dark theme inherits the light `var()`, which is not the dark step.
+    const chains = roleChainsForSlug(roles, "socar")
+    const found = findRoleChainDrift(
+      ":root { --sf-bg-base: var(--sf-gray-100); }",
+      chains
+    )
+    expect(found).toEqual([
+      {
+        name: "sf-bg-base",
+        scope: "dark",
+        preview: "var(--sf-gray-100)",
+        expected: "var(--sf-gray-800)",
+      },
+    ])
+    expect(
+      roleChainCoverage(":root { --sf-bg-base: var(--sf-gray-100); }", chains)
+    ).toEqual({ chained: 2, literal: 0, scoped: 0 })
+  })
+
+  it("counts compared chains and literal role declarations, once per scope", () => {
+    const chains = roleChainsForSlug(roles, "socar")
+    expect(
+      roleChainCoverage(
+        `:root { --sf-text-primary: var(--sf-gray-800); --sf-bg-base: #fff; }
+         :root { --sf-text-primary: var(--sf-gray-800); --sf-other: #000; }
+         [data-theme="dark"] { --sf-bg-base: var(--sf-gray-800); }`,
+        chains
+      )
+    ).toEqual({ chained: 2, literal: 1, scoped: 0 })
+  })
+})
+
+describe("readReferenceRows", () => {
+  it("reads `{colors.x}` rows and nothing else", () => {
+    const doc = `---
+colors:
+  blue-500: oklch(0.6 0.2 260)
+  primary: "{colors.blue-500}"
+  on-primary: "{colors.blue-500} "
+  mix: "color-mix(in oklab, {colors.blue-500} 50%, white)"
+---
+`
+    expect([...readReferenceRows(doc)]).toEqual([["primary", "blue-500"]])
+  })
+
+  it("reads nothing from a frontmatter YAML cannot read", () => {
+    expect(readReferenceRows("---\ncolors: [\n---\n").size).toBe(0)
   })
 })

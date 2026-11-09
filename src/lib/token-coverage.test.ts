@@ -2,7 +2,7 @@ import fs from "node:fs"
 import path from "node:path"
 import { describe, expect, it } from "vitest"
 import { auditOklch } from "./oklch-audit"
-import { readDefinitions } from "./oklch-drift"
+import { readDefinitions, readReferenceRows } from "./oklch-drift"
 import { findFontDisplaySrc } from "./preview-validator"
 
 // Coverage ratchets for the token gates.
@@ -71,6 +71,9 @@ interface Coverage {
   judged: number
   /** Names `readDefinitions` resolves for the drift gate, self-conflicts dropped. */
   drift: number
+  /** Reference rows (`role: "{colors.step}"`) `readReferenceRows` resolves for
+   *  the drift gate's role-chain check (#660). Absent means 0. */
+  references?: number
   /** The entry names a display face through a `font-display-src` webfont. */
   webfont?: true
 }
@@ -95,35 +98,47 @@ interface Coverage {
 // different claim and is refused below.
 const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   "11st": { annotated: 31, judged: 31, drift: 33 },
-  baemin: { annotated: 172, judged: 172, drift: 199 },
-  banksalad: { annotated: 187, judged: 187, drift: 187 },
-  bezier: { annotated: 439, judged: 439, drift: 482 },
+  baemin: { annotated: 172, judged: 172, drift: 199, references: 1 },
+  banksalad: { annotated: 187, judged: 187, drift: 187, references: 203 },
+  bezier: { annotated: 439, judged: 439, drift: 482, references: 1004 },
   chzzk: { annotated: 50, judged: 50, drift: 50 },
   class101: { annotated: 98, judged: 98, drift: 98 },
-  codeit: { annotated: 180, judged: 173, drift: 180, webfont: true },
-  gmarket: { annotated: 75, judged: 75, drift: 75 },
-  greeting: { annotated: 112, judged: 112, drift: 130 },
+  codeit: {
+    annotated: 180,
+    judged: 173,
+    drift: 180,
+    references: 16,
+    webfont: true,
+  },
+  gmarket: { annotated: 75, judged: 75, drift: 75, references: 17 },
+  greeting: { annotated: 112, judged: 112, drift: 130, references: 51 },
   "gs-retail": { annotated: 23, judged: 23, drift: 23 },
-  "gs-shop": { annotated: 52, judged: 52, drift: 52 },
-  krds: { annotated: 44, judged: 44, drift: 55 },
-  kyobobook: { annotated: 26, judged: 26, drift: 56 },
+  "gs-shop": { annotated: 52, judged: 52, drift: 52, references: 1 },
+  krds: { annotated: 44, judged: 44, drift: 55, references: 1 },
+  kyobobook: { annotated: 26, judged: 26, drift: 56, references: 1 },
   laftel: { annotated: 32, judged: 32, drift: 32 },
   "lg-electronics": { annotated: 67, judged: 67, drift: 67 },
-  likelion: { annotated: 39, judged: 39, drift: 39 },
-  "line-design-system": { annotated: 24, judged: 24, drift: 24 },
-  nol: { annotated: 37, judged: 37, drift: 39 },
+  likelion: { annotated: 39, judged: 39, drift: 39, references: 51 },
+  "line-design-system": { annotated: 24, judged: 24, drift: 24, references: 1 },
+  nol: { annotated: 37, judged: 37, drift: 39, references: 1 },
   remember: { annotated: 76, judged: 76, drift: 76 },
-  ridi: { annotated: 141, judged: 141, drift: 142 },
+  ridi: { annotated: 141, judged: 141, drift: 142, references: 240 },
   "samsung-one-ui": { annotated: 7, judged: 7, drift: 7, webfont: true },
-  "seed-design": { annotated: 229, judged: 229, drift: 241 },
+  "seed-design": { annotated: 229, judged: 229, drift: 241, references: 146 },
   // 39 role literals became reference rows (no `oklch` of their own) and the
   // 20 palette steps they point at were added (#630): 56 − 39 + 20, 59 − 39 + 20.
-  socar: { annotated: 37, judged: 37, drift: 40 },
-  teamsparta: { annotated: 48, judged: 48, drift: 73 },
-  toss: { annotated: 30, judged: 30, drift: 52 },
-  "vapor-ui": { annotated: 224, judged: 224, drift: 224 },
-  wanted: { annotated: 29, judged: 28, drift: 121, webfont: true },
-  yeogi: { annotated: 51, judged: 51, drift: 73, webfont: true },
+  socar: { annotated: 37, judged: 37, drift: 40, references: 41 },
+  teamsparta: { annotated: 48, judged: 48, drift: 73, references: 79 },
+  toss: { annotated: 30, judged: 30, drift: 52, references: 2 },
+  "vapor-ui": { annotated: 224, judged: 224, drift: 224, references: 85 },
+  wanted: {
+    annotated: 29,
+    judged: 28,
+    drift: 121,
+    references: 1,
+    webfont: true,
+  },
+  yeogi: { annotated: 51, judged: 51, drift: 73, references: 1, webfont: true },
   zigbang: { annotated: 37, judged: 37, drift: 43 },
 }
 // Column sums when the table was written (2026-09-12): annotated 1136, judged
@@ -145,18 +160,22 @@ describe("token gate coverage", () => {
         judged: c.judged,
         drift: readDefinitions(raw).size,
       }
+      const references = readReferenceRows(raw).size
+      if (references > 0) row.references = references
       if (findFontDisplaySrc(raw) !== null) row.webfont = true
       return [slug, row]
     })
   )
 
-  function moved(field: "annotated" | "judged" | "drift"): Array<string> {
+  function moved(
+    field: "annotated" | "judged" | "drift" | "references"
+  ): Array<string> {
     const out: Array<string> = []
     for (const [slug, m] of measured) {
       const row = TOKEN_COVERAGE[slug]
       if (row === undefined) continue // the accounting test reports it
-      if (m[field] !== row[field])
-        out.push(`${slug} ${field} ${row[field]} → ${m[field]}`)
+      if ((m[field] ?? 0) !== (row[field] ?? 0))
+        out.push(`${slug} ${field} ${row[field] ?? 0} → ${m[field] ?? 0}`)
     }
     return out
   }
@@ -179,7 +198,7 @@ describe("token gate coverage", () => {
     const rows = unrecorded
       .map(
         ([slug, m]) =>
-          `  "${slug}": { annotated: ${m.annotated}, judged: ${m.judged}, drift: ${m.drift}${m.webfont ? ", webfont: true" : ""} },`
+          `  "${slug}": { annotated: ${m.annotated}, judged: ${m.judged}, drift: ${m.drift}${m.references ? `, references: ${m.references}` : ""}${m.webfont ? ", webfont: true" : ""} },`
       )
       .join("\n")
     expect(
@@ -213,6 +232,17 @@ describe("token gate coverage", () => {
     expect(
       diffs,
       `recorded → measured: ${diffs.join(", ")}. DOWN with no token deleted usually means a name now disagrees with itself and readDefinitions dropped it — \`pnpm validate:catalog\` names each one. UP with no token added means the reader is matching outside the frontmatter token maps (measured once at +2: teamsparta 29, wanted 112).`
+    ).toEqual([])
+  })
+
+  it("keeps the drift gate reading the reference rows it compares", () => {
+    // `readReferenceRows` is what `roleChainsForSlug` builds the role-chain
+    // comparison from. It reads `{colors.x}` values only; a row it stops
+    // reading is a role whose preview wiring nothing checks any more.
+    const diffs = moved("references")
+    expect(
+      diffs,
+      `recorded → measured: ${diffs.join(", ")}. DOWN with no reference row deleted means readReferenceRows stopped reading rows — a quoting or YAML change in the frontmatter, or the reader itself. UP is legitimate only if THIS change added reference rows to that entry.`
     ).toEqual([])
   })
 

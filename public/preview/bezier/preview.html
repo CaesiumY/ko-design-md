@@ -28,7 +28,7 @@
     --c-grey-25:#fdfdff; --c-grey-50:#fbfbfb; --c-grey-100:#f7f7f8;
     --c-grey-200:#efeff0; --c-grey-300:#e2e2e4; --c-grey-400:#cfcfd1;
     --c-grey-500:#a7a7aa; --c-grey-600:#79797e; --c-grey-700:#3b3b3f;--c-grey-750:#313135;
-    --c-grey-800:#29292d; --c-grey-850:#242426; --c-grey-900:#1d1d20;
+    --c-grey-800:#29292d; --c-grey-850:#242426; --c-grey-900:#1d1d20; --c-grey-950:#1a1a1c;
 
     /* ── Semantic — text (alpha-black hierarchy, Bezier signature) ─────────── */
     --txt-heaviest:#000000;
@@ -66,10 +66,12 @@
 
     /* md 「Colors」 beta hover 표 값(참조 행 없는 표 값) — 상류 bezier-tokens 0.6.0 beta `fill-accent-blue-heavy-hovered`
        (#5146e4 30%)와 `fill-accent-blue-heavier-hovered`(#5146e4). 라이트 값은 md 표와 같다.
-       다크 짝 `--fill-accent-blue-heavier-hovered` 의 #6f64f0 은 md 표 다크 값 `oklch(0.722 0.148 281)`(상류 #9698ff)과 다른 알려진 차이로, 후속 재대조 대상이다(다크 블록 주석 — md Known Gaps 참조).
        상류가 바뀌면 대비를 다시 잰다(#552). */
     --fill-accent-blue-heavy-hovered:rgba(81,70,228,.30);
     --fill-accent-blue-heavier-hovered:#5146e4;
+    /* 기본 버튼 바탕 — md 참조 행 `fill-accent-blue-heavier`(라이트 `{colors.blue-400}`). 다크 짝은 다크 블록에 있다.
+       두 테마의 바탕과 hover 를 src/lib/bezier-preview-primary-button.test.ts 가 md 표와 상류에 대조한다. */
+    --fill-accent-blue-heavier:var(--c-blue-400);
 
     /* ── Surfaces ──────────────────────────────────────────────────────────── */
     --surface:#ffffff;
@@ -203,7 +205,7 @@
         border-radius:var(--radius-10); font:700 14px/18px var(--font-sans); white-space:nowrap;
         transition:background-color var(--motion-fast); }
   .btn .ic{ width:20px; height:20px; }
-  .btn.pri{ background:var(--c-blue-400); color:#fff; }
+  .btn.pri{ background:var(--fill-accent-blue-heavier); color:var(--primary-foreground); }
   .btn.pri:hover{ background:var(--fill-accent-blue-heavier-hovered); }
   .btn.grey{ background:var(--fill-neutral-heaviest); color:#fff; }
   .btn.sec{ background:var(--fill-accent-blue-heavy); color:var(--c-blue-400); }
@@ -525,6 +527,7 @@
     --c-grey-200:#efeff0; --c-grey-300:#e2e2e4; --c-grey-400:#cfcfd1;
     --c-grey-500:#a7a7aa; --c-grey-600:#79797e; --c-grey-700:#3b3b3f;
     --c-grey-750:#313135; --c-grey-800:#29292d; --c-grey-850:#242426; --c-grey-900:#1d1d20;
+    --c-grey-950:#1a1a1c;
 
     /* ── Semantic — text (white-alpha hierarchy on dark, Bezier signature) ──── */
     --txt-heaviest:#ffffff;
@@ -548,9 +551,11 @@
     --fill-neutral-heavy:rgba(255,255,255,.20);
     --fill-neutral-heavier:rgba(255,255,255,.40);
     --fill-neutral-heaviest:#ffffff;
-    --fill-grey:var(--c-grey-800);
-    --fill-grey-light:var(--c-grey-750);
-    --fill-grey-heavy:var(--c-grey-850);
+    /* md 참조 행 `dark-fill-grey*` — 상류 bezier-tokens 0.6.0 beta 다크 `color-fill-grey-light` grey-900,
+       `color-fill-grey` grey-850, `color-fill-grey-heavy` grey-800. */
+    --fill-grey:var(--c-grey-850);
+    --fill-grey-light:var(--c-grey-900);
+    --fill-grey-heavy:var(--c-grey-800);
 
     /* accent fills: lift link/icon text to 300-tier.
        md 토큰 `{hue}-300-30`·`blue-300-18` — 상류 bezier-tokens 0.6.0 beta 다크 사다리: 라이트의 20% 틴트
@@ -572,14 +577,17 @@
     --fill-accent-olive-heavy:rgba(183,196,39,.30);
 
     --fill-accent-blue-heavy-hovered:rgba(129,132,255,.30);
-    /* md 「Colors」 beta hover 표의 다크 값 `oklch(0.722 0.148 281)`(상류 #9698ff)과 다른 알려진 차이(후속 재대조 대상 — md Known Gaps 참조) · 상류 값도 아님(#106 부터 있던 값, 출처 미상). 기본 버튼 바탕을 다크에서도 blue-400 으로 두므로
-       (md 「button-primary」) 그 짝으로 남긴다. 상류 0.6.0 beta 다크는 바탕 `fill-accent-blue-heavier` 가 blue-300,
-       hover 가 #9698ff 다 — 바탕을 상류로 옮길 때 함께 바꾼다. */
-    --fill-accent-blue-heavier-hovered:#6f64f0;
+    /* 기본 버튼 바탕은 md 참조 행 `dark-fill-accent-blue-heavier`(`{colors.blue-300}`), hover 는 md 「beta hover」 표의
+       다크 값 `oklch(0.722 0.148 281)` — 상류 bezier-tokens 0.6.0 beta 다크 `fill-accent-blue-heavier`(blue-300)와
+       `fill-accent-blue-heavier-hovered`(#9698ff) 그대로다(#662). 이 짝은 기본 버튼(`.btn.pri`)에만 쓴다 —
+       아이콘 버튼·FAB·`--primary` 의 blue-400 은 md 가 이 역할에 묶지 않은 다른 컴포넌트라 그대로 둔다. */
+    --fill-accent-blue-heavier:var(--c-blue-300);
+    --fill-accent-blue-heavier-hovered:#9698ff;
 
     /* ── Surfaces (grey-900 ladder) ────────────────────────────────────────── */
-    --surface:var(--c-grey-850);
-    --surface-low:var(--c-grey-900);
+    /* md 참조 행 `dark-surface` grey-900, `dark-surface-low` grey-950 — 상류 bezier-tokens 0.6.0 beta 다크. */
+    --surface:var(--c-grey-900);
+    --surface-low:var(--c-grey-950);
     --bg-page:var(--c-grey-900);
     --bg-glass:rgba(29,29,32,.85);
     --border-neutral:rgba(255,255,255,.08);
@@ -700,7 +708,7 @@
         border-radius:var(--radius-10); font:700 14px/18px var(--font-sans); white-space:nowrap;
         transition:background-color var(--motion-fast); }
 [data-theme="dark"] .btn .ic { width:20px; height:20px; }
-[data-theme="dark"] .btn.pri { background:var(--c-blue-400); color:#fff; }
+[data-theme="dark"] .btn.pri { background:var(--fill-accent-blue-heavier); color:var(--primary-foreground); }
 [data-theme="dark"] .btn.pri:hover { background:var(--fill-accent-blue-heavier-hovered); }
 [data-theme="dark"] .btn.grey { background:var(--fill-neutral-heaviest); color:var(--c-grey-900); }
 [data-theme="dark"] .btn.sec { background:var(--fill-accent-blue-heavy); color:var(--c-blue-300); }
