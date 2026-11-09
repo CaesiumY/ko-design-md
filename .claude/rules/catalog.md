@@ -162,6 +162,11 @@ Google Labs 의 DESIGN.md 명세를 **공식 린터로** 판정한다. 명세를
     채널톡 alpha 역할 이름 12개가 이미 실린 기본 tier 역할과 같다. 표 첫 열 이름도 같은 접두를 달고, `dark-` 는
     그 바깥에 둔다(`dark-alpha-bg-grey-light`). 역할 → 역할 참조도 접두 붙은 이름끼리 잇는다. 위 항의 팔레트
     접두와는 따로 정한 규칙이다.
+  - **기본 테마 없이 나란한 테마 여럿이 같은 역할 이름을 서로 다른 단계에 걸면 모든 테마에 테마 접두를 붙인다**
+    (2026-11-09 메인테이너 결정, 처음 적용은 baemin #665). 테마는 tier 와 다른 축이다 — 같은 팔레트 위에서 역할만
+    다르게 잇는다(배민 웹의 `base` 와 `mint` 는 팔레트 블록이 같고, `systemMainPrimary` 가 각각 `purple4` 와
+    `mint5` 를 가리킨다). 어느 테마도 기본이 아니므로 위 항처럼 한 벌을 접두 없이 남기지 않는다. 테마 이름은
+    상류 그대로 쓰고(`base-systemMainPrimary`), `dark-` 는 그 바깥에 둔다(`dark-mint-systemMainPrimary`).
   - **명세 `color_roles`(`primary` · `secondary` · `tertiary` · `neutral`)와 같은 이름으로 표의 역할을 싣지 않는다**
     — greeting 의 `primary`~`tertiary` 는 텍스트색인데, 그 이름으로 발행하면 도구가 브랜드 역할로 읽는다.
     `primary` 만은 위의 브랜드 대표색 별칭으로 둘 수 있고, 브랜드가 그 이름으로 발행한 색(remember 의
