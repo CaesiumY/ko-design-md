@@ -692,6 +692,30 @@ colors:
     ).toEqual(["sf-text-primary"])
   })
 
+  it("ends comments and raw-text elements where the HTML tokenizer does", () => {
+    const chains = roleChainsForSlug(roles, "socar")
+    const wrong = `<style>:root { --sf-text-primary: var(--sf-gray-600); }</style>`
+    const right = `<style>:root { --sf-text-primary: var(--sf-gray-800); }</style>`
+    // `<!-->` and `<!--->` are empty comments that end in place, and `--!>`
+    // closes a comment: the stylesheet after each one applies.
+    for (const comment of ["<!-->", "<!--->", "<!-- x --!>"]) {
+      expect(
+        findRoleChainDrift(`${wrong}${comment}${right}<!-- y -->`, chains),
+        comment
+      ).toEqual([])
+    }
+    // `</style x>` and `</style/>` close the element, so the conditional
+    // block after it stays conditional and does not hide the wrong base.
+    for (const end of ["</style x>", "</style/>"]) {
+      const html = `<style>:root { --sf-text-primary: var(--sf-gray-600); }${end}
+        <style media="(min-width: 1px)">:root { --sf-text-primary: var(--sf-gray-800); }</style>`
+      expect(
+        findRoleChainDrift(html, chains).map((f) => f.preview),
+        end
+      ).toEqual(["var(--sf-gray-600)"])
+    }
+  })
+
   it("matches tags in any letter case", () => {
     const chains = roleChainsForSlug(roles, "socar")
     const base = `<STYLE>:root { --sf-text-primary: var(--sf-gray-600); }</STYLE>`

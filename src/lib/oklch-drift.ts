@@ -503,8 +503,9 @@ export interface RoleChainFinding extends DriftFinding {
  * an exact list (THEME_ROOTS): `:root` and `html` for light,
  * `[data-theme="dark"]`, `:root[data-theme="dark"]` and
  * `html[data-theme="dark"]` for dark, each in a top-level block outside any
- * at-rule, in a `<style>` element whose `media` is absent, empty or `all` and
- * that is not inside `<noscript>` or `<template>`. A `<style>` inside an HTML
+ * at-rule, in a `<style>` element whose `media` is absent, empty or `all` (any
+ * other media is treated as conditional, `screen` included) and that is not
+ * inside `<noscript>` or `<template>`. A `<style>` inside an HTML
  * comment or a raw-text element (`<script>`, `<textarea>`, `<title>`, …), or
  * one whose `type` is set to anything but empty or `text/css`, is not read at
  * all; a `<!--` inside a `<style>` body is CSS. A role declared under any other selector
@@ -754,7 +755,9 @@ function declarations(previewHtml: string): Array<Declaration> {
   // the markup between, which is also what the <noscript> / <template> count
   // reads.
   const RAW =
-    /<!--[\s\S]*?(?:-->|$)|<(style|script|textarea|title|xmp|noembed|noframes)\b([^>]*)>([\s\S]*?)(?:<\/\1\s*>|$)/gi
+    // A comment ends at `-->` or `--!>`; `<!-->` and `<!--->` end in place.
+    // A raw-text element ends at `</name` followed by space, `/` or `>`.
+    /<!--(?:>|->|[\s\S]*?(?:--!?>|$))|<(style|script|textarea|title|xmp|noembed|noframes)\b([^>]*)>([\s\S]*?)(?:<\/\1(?=[\s/>])[^>]*>|$)/gi
   let markup = ""
   let from = 0
   const blocks: Array<string> = []
@@ -765,8 +768,9 @@ function declarations(previewHtml: string): Array<Declaration> {
     markup += previewHtml.slice(from, m.index)
     from = m.index + m[0].length
     if (m[0].startsWith("<!--") || m[1].toLowerCase() !== "style") continue
-    // As the HTML spec applies a <style>: type absent, empty or `text/css`;
-    // media absent, empty or `all` is unconditional.
+    // A <style> applies when its type is absent, empty or `text/css`, as the
+    // HTML spec has it. Any media other than absent, empty or `all` is treated
+    // as conditional: the query is not evaluated, so even `screen` is.
     const attrs = styleAttributes(m[2])
     const type = attrs.get("type")?.trim().toLowerCase()
     if (type !== undefined && type !== "" && type !== "text/css") continue
