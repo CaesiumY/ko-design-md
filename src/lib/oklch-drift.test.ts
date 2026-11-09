@@ -435,6 +435,47 @@ describe("findPreviewDrift", () => {
     expect(found).toEqual([])
   })
 
+  // The two inputs a late review of PR #670 found the regex scanner read
+  // differently from the HTML tokenizer (#624).
+  it("reads a <style> after a custom element named like a raw-text one", () => {
+    // `<title-card>` is a custom element, not `<title>`: its content is
+    // markup, and the stylesheet after it applies. `<style-guide>` is not a
+    // stylesheet either.
+    const sheet = "<style>:root { --gray-06: oklch(0.68 0 0); }</style>"
+    for (const element of [
+      "<title-card>Toss</title-card>",
+      "<script-runner></script-runner>",
+      "<textarea-field></textarea-field>",
+      "<style-guide>:root { --gray-07: oklch(0.99 0 0); }</style-guide>",
+    ]) {
+      expect(
+        findPreviewDrift(element + sheet, readDefinitions(md)).map(
+          (f) => f.name
+        ),
+        element
+      ).toEqual(["gray-06"])
+    }
+  })
+
+  it("reads a quoted attribute value as text, not as markup", () => {
+    // A `<style>` written inside an attribute value is not a stylesheet, and
+    // a `<script>` there does not swallow the stylesheet after it.
+    const sheet = "<style>:root { --gray-06: oklch(0.68 0 0); }</style>"
+    const fake = "<style>:root { --gray-07: oklch(0.99 0 0); }</style>"
+    for (const element of [
+      `<div data-x="${fake}"></div>`,
+      `<div data-x='<script>'></div>`,
+      `<div title="<!--"></div>`,
+    ]) {
+      expect(
+        findPreviewDrift(element + sheet, readDefinitions(md)).map(
+          (f) => f.name
+        ),
+        element
+      ).toEqual(["gray-06"])
+    }
+  })
+
   it("does not treat an unterminated comment as code", () => {
     // A truncated file must fail closed — reading the rest as CSS would let a
     // half-written comment invent declarations.

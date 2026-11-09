@@ -1,3 +1,4 @@
+import { JSDOM } from "jsdom"
 import { findKey, readFrontmatter } from "./frontmatter"
 import { splitFrontmatter } from "./frontmatter-fence"
 import { LEADING_OKLCH, oklchEntries } from "./oklch-sync"
@@ -502,8 +503,9 @@ export interface RoleChainFinding extends DriftFinding {
  * `html[data-theme="dark"]` for dark, each in a top-level block outside any
  * at-rule, in a `<style>` element whose `media` is absent, empty or `all` (any
  * other media is treated as conditional, `screen` included) and that is not
- * inside `<noscript>` or `<template>`. A `<style>` inside an HTML
- * comment or a raw-text element (`<script>`, `<textarea>`, `<title>`, …), or
+ * inside `<noscript>` or `<template>`. The `<style>` elements are found by an
+ * HTML parser (styleBlocks): one inside an HTML comment, a raw-text element
+ * (`<script>`, `<textarea>`, `<title>`, …) or a quoted attribute value, or
  * one whose `type` is set to anything but empty or `text/css`, is not read at
  * all; a `<!--` inside a `<style>` body is CSS. A role declared under any other selector
  * (`.inverse`, `:where(.chip)`, `[data-theme="sepia"]`, `:root` inside
@@ -714,22 +716,76 @@ function normaliseSelector(text: string): string {
     .trim()
 }
 
+/** Made on first use: one jsdom window serves every parse. */
+let htmlParser: DOMParser | undefined
+
 /**
- * A start tag's attributes by lower-case name, as an HTML tokenizer splits
- * them: a name begins after whitespace, so `data-type=` is not `type=`. A
- * name repeated keeps its first value, and a bare name has the value "".
+ * The bodies of a preview's applied `<style>` elements, in document order, as
+ * an HTML parser finds them (jsdom). An HTML comment, a raw-text element
+ * (`<script>`, `<textarea>`, `<title>`, …) and a quoted attribute value are
+ * text, so a `<style>` written inside one is not a stylesheet, while a custom
+ * element such as `<title-card>` is ordinary markup. A `<!--` inside a
+ * `<style>` body is CSS, not a comment. A `<style>` whose `type` names
+ * anything but CSS is skipped.
+ *
+ * A `<style>` that applies only conditionally (a `media` attribute, or inside
+ * `<noscript>` or `<template>`) is wrapped in an at-rule here, so its
+ * declarations are never a theme root, as an `@media` block's are not.
  */
-function styleAttributes(text: string): Map<string, string> {
-  const out = new Map<string, string>()
-  const ATTR =
-    /(?:^|\s)([^\s"'>/=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g
-  for (const m of text.matchAll(ATTR)) {
-    const name = m[1].toLowerCase()
-    // Unmatched groups are undefined at runtime, whatever the match type says.
-    const values: Array<string | undefined> = [m[2], m[3], m[4]]
-    if (!out.has(name)) out.set(name, values.find((v) => v !== undefined) ?? "")
+function styleBlocks(previewHtml: string): Array<string> {
+  // A DOMParser document has no window, so jsdom builds no stylesheet objects
+  // for it: parsing CSS took half the time and is not what is read here.
+  htmlParser ??= new new JSDOM("").window.DOMParser()
+  const document = htmlParser.parseFromString(previewHtml, "text/html")
+  const blocks: Array<string> = []
+  const walk = (parent: ParentNode, conditional: boolean): void => {
+    for (const element of parent.children) {
+      const tag = element.localName
+      if (tag === "template") {
+        // A <template>'s markup is its content fragment, not its children.
+        walk((element as HTMLTemplateElement).content, true)
+        continue
+      }
+      if (tag !== "style") {
+        walk(element, conditional || tag === "noscript")
+        continue
+      }
+      // A <style> applies when its type is absent, empty or `text/css`, as the
+      // HTML spec has it. Any media other than absent, empty or `all` is
+      // treated as conditional: the query is not evaluated, so even `screen`
+      // is.
+      const type = element.getAttribute("type")?.trim().toLowerCase()
+      if (type !== undefined && type !== "" && type !== "text/css") continue
+      const media = element.getAttribute("media")?.trim().toLowerCase()
+      const applies =
+        !conditional && (media === undefined || media === "" || media === "all")
+      // CSS drops CDO and CDC (`<!--`, `-->`) as tokens; blanked to spaces.
+      const body = element.textContent.replace(/<!--|-->/g, (t) =>
+        " ".repeat(t.length)
+      )
+      blocks.push(applies ? body : `@conditional-style {\n${body}\n}`)
+    }
   }
-  return out
+  walk(document, false)
+  return blocks
+}
+
+/**
+ * styleBlocks joined, remembered for the last few documents. Parsing is the
+ * slow part (a whole HTML tree for each preview), and the value comparison,
+ * the role-chain check and their coverage counts each read the same preview.
+ */
+const stylesheets = new Map<string, string>()
+function stylesheetOf(previewHtml: string): string {
+  const known = stylesheets.get(previewHtml)
+  if (known !== undefined) return known
+  const css = styleBlocks(previewHtml).join("\n")
+  // Oldest first: a Map iterates in insertion order.
+  if (stylesheets.size >= 64) {
+    stylesheets.delete(stylesheets.keys().next().value ?? "")
+  }
+  stylesheets.set(previewHtml, css)
+  return css
 }
 
 /** Every custom-property declaration in a preview's stylesheets, in order. */
@@ -739,52 +795,11 @@ function declarations(previewHtml: string): Array<Declaration> {
   // style="{…}" attribute skew the depth and quietly break the dark-scope test —
   // a silent miss in the very gate written to catch other gates' silent misses.
   //
-  // A <style> element that applies only conditionally (a `media` attribute, or
-  // inside <noscript> or <template>) is wrapped in an at-rule here, so its
-  // declarations are never a theme root, as an `@media` block's are not.
-  //
-  // The document is read in one left-to-right pass, as an HTML tokenizer
-  // does: whichever opens first, an HTML comment or a raw-text element
-  // (`<style>` among them), runs to its own end. So a `<style>` written inside
-  // a comment or a `<script>` is text, not a stylesheet, and a `<!--` inside a
-  // `<style>` body is CSS, not a comment. Only `<style>` bodies are kept, and
-  // not one whose `type` names anything but CSS. Comments are stripped only in
-  // the markup between, which is also what the <noscript> / <template> count
-  // reads.
-  const RAW =
-    // A comment ends at `-->` or `--!>`; `<!-->` and `<!--->` end in place.
-    // A raw-text element ends at `</name` followed by space, `/` or `>`.
-    /<!--(?:>|->|[\s\S]*?(?:--!?>|$))|<(style|script|textarea|title|xmp|noembed|noframes)\b([^>]*)>([\s\S]*?)(?:<\/\1(?=[\s/>])[^>]*>|$)/gi
-  let markup = ""
-  let from = 0
-  const blocks: Array<string> = []
-  const inside = (tag: string): boolean =>
-    (markup.match(new RegExp(`<${tag}\\b`, "gi"))?.length ?? 0) >
-    (markup.match(new RegExp(`</${tag}\\s*>`, "gi"))?.length ?? 0)
-  for (const m of previewHtml.matchAll(RAW)) {
-    markup += previewHtml.slice(from, m.index)
-    from = m.index + m[0].length
-    if (m[0].startsWith("<!--") || m[1].toLowerCase() !== "style") continue
-    // A <style> applies when its type is absent, empty or `text/css`, as the
-    // HTML spec has it. Any media other than absent, empty or `all` is treated
-    // as conditional: the query is not evaluated, so even `screen` is.
-    const attrs = styleAttributes(m[2])
-    const type = attrs.get("type")?.trim().toLowerCase()
-    if (type !== undefined && type !== "" && type !== "text/css") continue
-    const media = attrs.get("media")?.trim().toLowerCase()
-    const conditional =
-      (media !== undefined && media !== "" && media !== "all") ||
-      inside("noscript") ||
-      inside("template")
-    // CSS drops CDO and CDC (`<!--`, `-->`) as tokens; blanked to spaces.
-    const body = m[3].replace(/<!--|-->/g, (t) => " ".repeat(t.length))
-    blocks.push(conditional ? `@conditional-style {\n${body}\n}` : body)
-  }
   // With no <style> tag at all the input is already a stylesheet — every
   // catalogue preview has one, so this only matters when checking raw CSS
   // directly. A document whose only <style> tags are dead reads as empty.
   const css = stripComments(
-    /<style\b/i.test(previewHtml) ? blocks.join("\n") : previewHtml
+    /<style\b/i.test(previewHtml) ? stylesheetOf(previewHtml) : previewHtml
   )
 
   // Walk braces and declarations in document order. Deciding scope per LINE is
