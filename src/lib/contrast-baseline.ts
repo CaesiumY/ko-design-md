@@ -45,8 +45,16 @@ export interface BaselineComparison {
  * `elements` is the closest number the sweep has to that, and a crude one: it
  * counts every copy, so repeating a card raises it — the reason it stays out of
  * EXACT_FIELDS. It catches a preview that shows little, not one that pads
- * itself. `measured` folds the copies but cannot separate the cases:
- * on 2026-11-09 samsung-one-ui kept 52 distinct rows, and chzzk arrived with 48.
+ * itself. It is also the text the contrast collector READS, not all the text
+ * on screen: disabled (`:disabled`, `[aria-disabled="true"]`), hidden,
+ * transparent, clipped and covered text is skipped. So declaring a demo
+ * disabled — the path ADR 0007 gives for a disabled state drawn by a class —
+ * lowers the count, and adding disabled states cannot raise it. A preview
+ * that lands under the floor that way is answered the same way as any other:
+ * show more that is read.
+ *
+ * `measured` folds the copies but cannot separate the cases: on 2026-11-09
+ * samsung-one-ui kept 52 distinct rows, and chzzk arrived with 48.
  *
  * Two external entries arrived with text rows of 79 (chzzk) and 51 (laftel)
  * elements, the two thinnest in the catalogue by far. No check judged by the
@@ -297,9 +305,11 @@ export function renderBaselineFailure(
   if (c.thin.length > 0) {
     out.push(
       `FAIL contrast baseline — ${c.thin.length} text row(s) under ${MIN_TEXT_ELEMENTS} elements, thinner than any preview the catalogue kept.`,
-      "  Add the component states and screen mockups the md describes",
+      "  Add the non-disabled component states and screen mockups the md describes",
       "  (.claude/skills/design-md/references/rubric-preview.md). A copied card",
       "  raises this count without showing more, so it is not the fix.",
+      "  Disabled, hidden, transparent, clipped and covered text is not counted —",
+      "  the contrast collector skips it — so a disabled state does not raise it.",
       "  Rewriting the table does not clear it: the floor reads the measured count.",
       ""
     )

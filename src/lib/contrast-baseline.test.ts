@@ -119,6 +119,11 @@ describe("compareToBaseline, thin previews", () => {
     expect(lines).toContain(`FAIL contrast baseline — 1 text row(s)`)
     expect(lines).toContain(`toss | light | text — elements ${thin.elements}`)
     expect(lines).toContain("rubric-preview.md")
+    // The count is the text the contrast collector reads, which skips disabled
+    // text. Pointing at "states" without saying so sends a reader to add
+    // disabled states, which cannot raise it.
+    expect(lines).toContain("non-disabled")
+    expect(lines).toContain("Disabled, hidden")
   })
 
   it("does not send a thin-only failure to the table", () => {

@@ -168,7 +168,7 @@ describe("the recorded table against public/preview/", () => {
     ).map((r) => `${r.slug} ${r.theme}: ${r.elements}`)
     expect(
       thin,
-      `A preview shows fewer than ${MIN_TEXT_ELEMENTS} text elements per theme, thinner than any the catalogue kept. Add the component states and screen mockups the md describes (.claude/skills/design-md/references/rubric-preview.md), push, and record the rows the CI contrast job measures — do not edit the number to pass; the CI contrast job reads the measured count.`
+      `A preview shows fewer than ${MIN_TEXT_ELEMENTS} text elements per theme, thinner than any the catalogue kept. Add the non-disabled component states and screen mockups the md describes (.claude/skills/design-md/references/rubric-preview.md); disabled, hidden and covered text is not counted. Push, and record the rows the CI contrast job measures — do not edit the number to pass; the CI contrast job reads the measured count.`
     ).toEqual([])
   })
 })
