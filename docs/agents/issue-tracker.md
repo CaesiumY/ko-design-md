@@ -26,6 +26,18 @@
 
 GitHub 은 이슈와 PR 이 번호 공간을 공유하므로 `#42` 만으로는 어느 쪽인지 모른다 — `gh pr view 42` 로 먼저 보고 안 되면 `gh issue view 42`.
 
+## 포크에서 온 PR 의 CI 와 미리보기 배포
+
+외부 기여자의 포크 PR 은 Vercel 포크 배포 승인에 걸리고, 처음 기여하는 사람이면 GitHub Actions 실행 승인에도 걸린다. 둘은 성격이 달라 다르게 다룬다. 이미 머지된 PR 이 있는 기여자의 실행은 승인 없이 바로 돌므로, 그 PR 의 diff 는 머지 전 리뷰에서 읽는다.
+
+- **GitHub Actions 는 실행 승인으로 돌린다.** 처음 기여하는 사람의 포크 PR 은 워크플로 실행이 메인테이너가 승인하기 전까지 `action_required` 로 멈춘다(저장소 설정 `approval_policy: first_time_contributors`, `gh api repos/CaesiumY/ko-design-md/actions/permissions/fork-pr-contributor-approval` 로 확인). 승인에는 비용이 들지 않고 기여자를 팀원으로 받을 필요도 없다. 다만 승인은 포크 코드를 러너에서 돌리는 일이라(`pull_request` 이벤트라 비밀 값은 주어지지 않는다) 읽기, 허락, 승인을 모두 한 커밋에 묶어 아래 순서로 한다.
+  1. `gh pr view <PR 번호> --json headRefOid` 로 head 커밋 SHA 를 받아 적어 둔다. 아래 단계는 모두 이 SHA 하나에 대해 한다.
+  2. `git fetch origin pull/<PR 번호>/head` 뒤 `git diff origin/main...<적어 둔 SHA>` 로 그 커밋까지의 diff 전체를 읽는다. CI 는 의존성 설치부터 설정 파일, 소스, 테스트까지 실행하므로(`.github/workflows/ci.yml` 의 `run:` 단계) 경로 몇 개로 좁히지 않는다.
+  3. 사용자에게 그 SHA 를 보여 주고 허락을 받는다. 허락은 그 SHA 까지다.
+  4. `gh run list --commit <적어 둔 SHA> --status action_required --json databaseId,workflowName` 으로 그 커밋의 대기 실행만 골라 `gh api -X POST repos/CaesiumY/ko-design-md/actions/runs/<databaseId>/approve` 로 하나씩 승인한다. 브랜치 이름으로 고르면 다른 포크의 같은 이름 브랜치나 허락 뒤에 들어온 푸시의 실행까지 섞인다.
+  5. 새 커밋이 푸시되면 그 실행이 다시 대기에 걸리므로 1번부터 다시 한다. 2번은 이전에 읽고 허락받은 SHA 를 이 대화에서 확실히 알 때만 `git diff <그 SHA> <새 SHA>` 로 그 사이를 읽고, 모르면 diff 전체를 다시 읽는다.
+- **Vercel 의 "Authorize Fork Deployment" 는 누르지 않는다.** 포크 코드를 팀 권한으로 빌드하는 승인이라 외부 PR 에는 주지 않는다. 미리보기 배포가 없으면 Vercel 체크가 실패로 남는다. main 에는 필수 검사 설정이 없어 머지는 막히지 않으니, 머지 판단은 Actions 의 `build`, `contrast`, `e2e`, `dco` 결과로 한다. 화면 확인은 PR 브랜치를 받아 로컬 개발 서버로 한다.
+
 ## 스킬이 "이슈 트래커에 발행하라" 고 할 때
 
 GitHub 이슈를 만든다.
