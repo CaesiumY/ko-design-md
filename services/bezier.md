@@ -3,7 +3,7 @@ name: 채널톡
 design_system_name: Bezier Design System
 slug: bezier
 category: developer
-last_updated: "2026-11-02"
+last_updated: "2026-11-09"
 created_at: "2026-06-03"
 lang: ko
 logo: https://getdesign.kr/logos/bezier.png
@@ -300,6 +300,215 @@ colors:
   stable-blue-500: oklch(0.476 0.203 280)   # #4e40c9 · 상류 기본 tier --blue-500
   stable-blue-400: oklch(0.555 0.223 279)   # #5e56f0 · 상류 기본 tier --blue-400
   stable-blue-300: oklch(0.658 0.181 269)   # #6687ff · 상류 기본 tier --blue-300
+  ## Alpha tier palette
+  # alpha tier(dist/alpha) 원시값. alpha tier 역할이 가리키는 단계만 싣는다. 테마마다 다시 정의되지 않아 dark- 판이 없다 [src:3].
+  alpha-blue-300: oklch(0.714 0.140 268)   # #7d9efa, 상류 alpha tier --alpha-color-blue-300
+  alpha-blue-400: oklch(0.607 0.211 279)   # #6d6afc, 상류 alpha tier --alpha-color-blue-400
+  alpha-blue-500: oklch(0.525 0.206 279)   # #5950dc, 상류 alpha tier --alpha-color-blue-500
+  alpha-blue-400-30: oklch(0.607 0.211 279 / 0.30)   # #6d6afc4d, 상류 alpha tier --alpha-color-blue-400-30
+  alpha-blue-400-20: oklch(0.607 0.211 279 / 0.20)   # #6d6afc33, 상류 alpha tier --alpha-color-blue-400-20
+  alpha-blue-400-10: oklch(0.607 0.211 279 / 0.10)   # #6d6afc1a, 상류 alpha tier --alpha-color-blue-400-10
+  alpha-blue-400-0: oklch(0.607 0.211 279 / 0.00)   # #6d6afc00, 상류 alpha tier --alpha-color-blue-400-0
+  alpha-blue-300-45: oklch(0.714 0.140 268 / 0.45)   # #7d9efa73, 상류 alpha tier --alpha-color-blue-300-45
+  alpha-blue-300-30: oklch(0.714 0.140 268 / 0.30)   # #7d9efa4d, 상류 alpha tier --alpha-color-blue-300-30
+  alpha-blue-300-15: oklch(0.714 0.140 268 / 0.15)   # #7d9efa26, 상류 alpha tier --alpha-color-blue-300-15
+  alpha-blue-300-0: oklch(0.714 0.140 268 / 0.00)   # #7d9efa00, 상류 alpha tier --alpha-color-blue-300-0
+  alpha-cobalt-300: oklch(0.762 0.113 245)   # #71b9f5, 상류 alpha tier --alpha-color-cobalt-300
+  alpha-cobalt-400: oklch(0.657 0.141 255)   # #5093e5, 상류 alpha tier --alpha-color-cobalt-400
+  alpha-cobalt-500: oklch(0.559 0.161 261)   # #3870d1, 상류 alpha tier --alpha-color-cobalt-500
+  alpha-cobalt-400-30: oklch(0.657 0.141 255 / 0.30)   # #5093e54d, 상류 alpha tier --alpha-color-cobalt-400-30
+  alpha-cobalt-400-20: oklch(0.657 0.141 255 / 0.20)   # #5093e533, 상류 alpha tier --alpha-color-cobalt-400-20
+  alpha-cobalt-400-10: oklch(0.657 0.141 255 / 0.10)   # #5093e51a, 상류 alpha tier --alpha-color-cobalt-400-10
+  alpha-cobalt-400-0: oklch(0.657 0.141 255 / 0.00)   # #5093e500, 상류 alpha tier --alpha-color-cobalt-400-0
+  alpha-cobalt-300-45: oklch(0.762 0.113 245 / 0.45)   # #71b9f573, 상류 alpha tier --alpha-color-cobalt-300-45
+  alpha-cobalt-300-30: oklch(0.762 0.113 245 / 0.30)   # #71b9f54d, 상류 alpha tier --alpha-color-cobalt-300-30
+  alpha-cobalt-300-15: oklch(0.762 0.113 245 / 0.15)   # #71b9f526, 상류 alpha tier --alpha-color-cobalt-300-15
+  alpha-cobalt-300-0: oklch(0.762 0.113 245 / 0.00)   # #71b9f500, 상류 alpha tier --alpha-color-cobalt-300-0
+  alpha-green-300: oklch(0.765 0.145 149)   # #68cc7f, 상류 alpha tier --alpha-color-green-300
+  alpha-green-400: oklch(0.668 0.144 152)   # #40ad67, 상류 alpha tier --alpha-color-green-400
+  alpha-green-500: oklch(0.562 0.100 160)   # #358761, 상류 alpha tier --alpha-color-green-500
+  alpha-green-400-30: oklch(0.668 0.144 152 / 0.30)   # #40ad674d, 상류 alpha tier --alpha-color-green-400-30
+  alpha-green-400-20: oklch(0.668 0.144 152 / 0.20)   # #40ad6733, 상류 alpha tier --alpha-color-green-400-20
+  alpha-green-400-10: oklch(0.668 0.144 152 / 0.10)   # #40ad671a, 상류 alpha tier --alpha-color-green-400-10
+  alpha-green-400-0: oklch(0.668 0.144 152 / 0.00)   # #40ad6700, 상류 alpha tier --alpha-color-green-400-0
+  alpha-green-300-45: oklch(0.765 0.145 149 / 0.45)   # #68cc7f73, 상류 alpha tier --alpha-color-green-300-45
+  alpha-green-300-30: oklch(0.765 0.145 149 / 0.30)   # #68cc7f4d, 상류 alpha tier --alpha-color-green-300-30
+  alpha-green-300-15: oklch(0.765 0.145 149 / 0.15)   # #68cc7f26, 상류 alpha tier --alpha-color-green-300-15
+  alpha-green-300-0: oklch(0.765 0.145 149 / 0.00)   # #68cc7f00, 상류 alpha tier --alpha-color-green-300-0
+  alpha-red-300: oklch(0.765 0.140 21)   # #ff8c8c, 상류 alpha tier --alpha-color-red-300
+  alpha-red-400: oklch(0.651 0.171 23)   # #e55c5c, 상류 alpha tier --alpha-color-red-400
+  alpha-red-500: oklch(0.541 0.166 21)   # #bc3a42, 상류 alpha tier --alpha-color-red-500
+  alpha-red-400-30: oklch(0.651 0.171 23 / 0.30)   # #e55c5c4d, 상류 alpha tier --alpha-color-red-400-30
+  alpha-red-400-20: oklch(0.651 0.171 23 / 0.20)   # #e55c5c33, 상류 alpha tier --alpha-color-red-400-20
+  alpha-red-400-10: oklch(0.651 0.171 23 / 0.10)   # #e55c5c1a, 상류 alpha tier --alpha-color-red-400-10
+  alpha-red-400-0: oklch(0.651 0.171 23 / 0.00)   # #e55c5c00, 상류 alpha tier --alpha-color-red-400-0
+  alpha-red-300-45: oklch(0.765 0.140 21 / 0.45)   # #ff8c8c73, 상류 alpha tier --alpha-color-red-300-45
+  alpha-red-300-30: oklch(0.765 0.140 21 / 0.30)   # #ff8c8c4d, 상류 alpha tier --alpha-color-red-300-30
+  alpha-red-300-15: oklch(0.765 0.140 21 / 0.15)   # #ff8c8c26, 상류 alpha tier --alpha-color-red-300-15
+  alpha-red-300-0: oklch(0.765 0.140 21 / 0.00)   # #ff8c8c00, 상류 alpha tier --alpha-color-red-300-0
+  alpha-black-0: oklch(0 0 0 / 0.00)   # #00000000, 상류 alpha tier --alpha-color-black-0
+  alpha-black-3: oklch(0 0 0 / 0.03)   # #00000008, 상류 alpha tier --alpha-color-black-3
+  alpha-black-5: oklch(0 0 0 / 0.05)   # #0000000d, 상류 alpha tier --alpha-color-black-5
+  alpha-black-8: oklch(0 0 0 / 0.08)   # #00000014, 상류 alpha tier --alpha-color-black-8
+  alpha-black-15: oklch(0 0 0 / 0.15)   # #00000026, 상류 alpha tier --alpha-color-black-15
+  alpha-black-20: oklch(0 0 0 / 0.20)   # #00000033, 상류 alpha tier --alpha-color-black-20
+  alpha-black-22: oklch(0 0 0 / 0.22)   # #00000038, 상류 alpha tier --alpha-color-black-22
+  alpha-black-30: oklch(0 0 0 / 0.30)   # #0000004d, 상류 alpha tier --alpha-color-black-30
+  alpha-black-40: oklch(0 0 0 / 0.40)   # #00000066, 상류 alpha tier --alpha-color-black-40
+  alpha-black-60: oklch(0 0 0 / 0.60)   # #00000099, 상류 alpha tier --alpha-color-black-60
+  alpha-black-85: oklch(0 0 0 / 0.85)   # #000000d9, 상류 alpha tier --alpha-color-black-85
+  alpha-black-100: oklch(0 0 0)   # #000000, 상류 alpha tier --alpha-color-black-100
+  alpha-white-0: oklch(1 0 0 / 0.00)   # #ffffff00, 상류 alpha tier --alpha-color-white-0
+  alpha-white-5: oklch(1 0 0 / 0.05)   # #ffffff0d, 상류 alpha tier --alpha-color-white-5
+  alpha-white-8: oklch(1 0 0 / 0.08)   # #ffffff14, 상류 alpha tier --alpha-color-white-8
+  alpha-white-12: oklch(1 0 0 / 0.12)   # #ffffff1f, 상류 alpha tier --alpha-color-white-12
+  alpha-white-20: oklch(1 0 0 / 0.20)   # #ffffff33, 상류 alpha tier --alpha-color-white-20
+  alpha-white-40: oklch(1 0 0 / 0.40)   # #ffffff66, 상류 alpha tier --alpha-color-white-40
+  alpha-white-60: oklch(1 0 0 / 0.60)   # #ffffff99, 상류 alpha tier --alpha-color-white-60
+  alpha-white-80: oklch(1 0 0 / 0.80)   # #ffffffcc, 상류 alpha tier --alpha-color-white-80
+  alpha-white-90: oklch(1 0 0 / 0.90)   # #ffffffe6, 상류 alpha tier --alpha-color-white-90
+  alpha-white-100: oklch(1 0 0)   # #ffffff, 상류 alpha tier --alpha-color-white-100
+  alpha-orange-300: oklch(0.791 0.139 55)   # #ffa15e, 상류 alpha tier --alpha-color-orange-300
+  alpha-orange-400: oklch(0.698 0.156 55)   # #e67f2b, 상류 alpha tier --alpha-color-orange-400
+  alpha-orange-500: oklch(0.600 0.146 54)   # #c1630d, 상류 alpha tier --alpha-color-orange-500
+  alpha-orange-400-30: oklch(0.698 0.156 55 / 0.30)   # #e67f2b4d, 상류 alpha tier --alpha-color-orange-400-30
+  alpha-orange-400-20: oklch(0.698 0.156 55 / 0.20)   # #e67f2b33, 상류 alpha tier --alpha-color-orange-400-20
+  alpha-orange-400-10: oklch(0.698 0.156 55 / 0.10)   # #e67f2b1a, 상류 alpha tier --alpha-color-orange-400-10
+  alpha-orange-400-0: oklch(0.698 0.156 55 / 0.00)   # #e67f2b00, 상류 alpha tier --alpha-color-orange-400-0
+  alpha-orange-300-45: oklch(0.791 0.139 55 / 0.45)   # #ffa15e73, 상류 alpha tier --alpha-color-orange-300-45
+  alpha-orange-300-30: oklch(0.791 0.139 55 / 0.30)   # #ffa15e4d, 상류 alpha tier --alpha-color-orange-300-30
+  alpha-orange-300-15: oklch(0.791 0.139 55 / 0.15)   # #ffa15e26, 상류 alpha tier --alpha-color-orange-300-15
+  alpha-orange-300-0: oklch(0.791 0.139 55 / 0.00)   # #ffa15e00, 상류 alpha tier --alpha-color-orange-300-0
+  alpha-yellow-300: oklch(0.853 0.161 89)   # #f9c835, 상류 alpha tier --alpha-color-yellow-300
+  alpha-yellow-400: oklch(0.789 0.161 82)   # #edae0d, 상류 alpha tier --alpha-color-yellow-400
+  alpha-yellow-500: oklch(0.682 0.140 83)   # #c38f00, 상류 alpha tier --alpha-color-yellow-500
+  alpha-yellow-400-30: oklch(0.789 0.161 82 / 0.30)   # #edae0d4d, 상류 alpha tier --alpha-color-yellow-400-30
+  alpha-yellow-400-20: oklch(0.789 0.161 82 / 0.20)   # #edae0d33, 상류 alpha tier --alpha-color-yellow-400-20
+  alpha-yellow-400-10: oklch(0.789 0.161 82 / 0.10)   # #edae0d1a, 상류 alpha tier --alpha-color-yellow-400-10
+  alpha-yellow-400-0: oklch(0.789 0.161 82 / 0.00)   # #edae0d00, 상류 alpha tier --alpha-color-yellow-400-0
+  alpha-yellow-300-45: oklch(0.853 0.161 89 / 0.45)   # #f9c83573, 상류 alpha tier --alpha-color-yellow-300-45
+  alpha-yellow-300-30: oklch(0.853 0.161 89 / 0.30)   # #f9c8354d, 상류 alpha tier --alpha-color-yellow-300-30
+  alpha-yellow-300-15: oklch(0.853 0.161 89 / 0.15)   # #f9c83526, 상류 alpha tier --alpha-color-yellow-300-15
+  alpha-yellow-300-0: oklch(0.853 0.161 89 / 0.00)   # #f9c83500, 상류 alpha tier --alpha-color-yellow-300-0
+  alpha-pink-300: oklch(0.722 0.192 336)   # #ec6fd3, 상류 alpha tier --alpha-color-pink-300
+  alpha-pink-400: oklch(0.637 0.208 338)   # #d64bb5, 상류 alpha tier --alpha-color-pink-400
+  alpha-pink-500: oklch(0.549 0.194 334)   # #b0369e, 상류 alpha tier --alpha-color-pink-500
+  alpha-pink-400-30: oklch(0.637 0.208 338 / 0.30)   # #d64bb54d, 상류 alpha tier --alpha-color-pink-400-30
+  alpha-pink-400-20: oklch(0.637 0.208 338 / 0.20)   # #d64bb533, 상류 alpha tier --alpha-color-pink-400-20
+  alpha-pink-400-10: oklch(0.637 0.208 338 / 0.10)   # #d64bb51a, 상류 alpha tier --alpha-color-pink-400-10
+  alpha-pink-400-0: oklch(0.637 0.208 338 / 0.00)   # #d64bb500, 상류 alpha tier --alpha-color-pink-400-0
+  alpha-pink-300-45: oklch(0.722 0.192 336 / 0.45)   # #ec6fd373, 상류 alpha tier --alpha-color-pink-300-45
+  alpha-pink-300-30: oklch(0.722 0.192 336 / 0.30)   # #ec6fd34d, 상류 alpha tier --alpha-color-pink-300-30
+  alpha-pink-300-15: oklch(0.722 0.192 336 / 0.15)   # #ec6fd326, 상류 alpha tier --alpha-color-pink-300-15
+  alpha-pink-300-0: oklch(0.722 0.192 336 / 0.00)   # #ec6fd300, 상류 alpha tier --alpha-color-pink-300-0
+  alpha-purple-300: oklch(0.709 0.177 299)   # #b184ff, 상류 alpha tier --alpha-color-purple-300
+  alpha-purple-400: oklch(0.591 0.208 297)   # #8e57e7, 상류 alpha tier --alpha-color-purple-400
+  alpha-purple-500: oklch(0.467 0.191 296)   # #6735b6, 상류 alpha tier --alpha-color-purple-500
+  alpha-purple-400-30: oklch(0.591 0.208 297 / 0.30)   # #8e57e74d, 상류 alpha tier --alpha-color-purple-400-30
+  alpha-purple-400-20: oklch(0.591 0.208 297 / 0.20)   # #8e57e733, 상류 alpha tier --alpha-color-purple-400-20
+  alpha-purple-400-10: oklch(0.591 0.208 297 / 0.10)   # #8e57e71a, 상류 alpha tier --alpha-color-purple-400-10
+  alpha-purple-400-0: oklch(0.591 0.208 297 / 0.00)   # #8e57e700, 상류 alpha tier --alpha-color-purple-400-0
+  alpha-purple-300-45: oklch(0.709 0.177 299 / 0.45)   # #b184ff73, 상류 alpha tier --alpha-color-purple-300-45
+  alpha-purple-300-30: oklch(0.709 0.177 299 / 0.30)   # #b184ff4d, 상류 alpha tier --alpha-color-purple-300-30
+  alpha-purple-300-15: oklch(0.709 0.177 299 / 0.15)   # #b184ff26, 상류 alpha tier --alpha-color-purple-300-15
+  alpha-purple-300-0: oklch(0.709 0.177 299 / 0.00)   # #b184ff00, 상류 alpha tier --alpha-color-purple-300-0
+  alpha-navy-300: oklch(0.634 0.121 275)   # #7683d3, 상류 alpha tier --alpha-color-navy-300
+  alpha-navy-400: oklch(0.469 0.147 273)   # #424fab, 상류 alpha tier --alpha-color-navy-400
+  alpha-navy-500: oklch(0.387 0.131 277)   # #353888, 상류 alpha tier --alpha-color-navy-500
+  alpha-navy-400-30: oklch(0.469 0.147 273 / 0.30)   # #424fab4d, 상류 alpha tier --alpha-color-navy-400-30
+  alpha-navy-400-20: oklch(0.469 0.147 273 / 0.20)   # #424fab33, 상류 alpha tier --alpha-color-navy-400-20
+  alpha-navy-400-10: oklch(0.469 0.147 273 / 0.10)   # #424fab1a, 상류 alpha tier --alpha-color-navy-400-10
+  alpha-navy-400-0: oklch(0.469 0.147 273 / 0.00)   # #424fab00, 상류 alpha tier --alpha-color-navy-400-0
+  alpha-navy-300-45: oklch(0.634 0.121 275 / 0.45)   # #7683d373, 상류 alpha tier --alpha-color-navy-300-45
+  alpha-navy-300-30: oklch(0.634 0.121 275 / 0.30)   # #7683d34d, 상류 alpha tier --alpha-color-navy-300-30
+  alpha-navy-300-15: oklch(0.634 0.121 275 / 0.15)   # #7683d326, 상류 alpha tier --alpha-color-navy-300-15
+  alpha-navy-300-0: oklch(0.634 0.121 275 / 0.00)   # #7683d300, 상류 alpha tier --alpha-color-navy-300-0
+  alpha-teal-300: oklch(0.787 0.123 186)   # #40d3c5, 상류 alpha tier --alpha-color-teal-300
+  alpha-teal-400: oklch(0.690 0.118 190)   # #09b2ac, 상류 alpha tier --alpha-color-teal-400
+  alpha-teal-500: oklch(0.589 0.099 201)   # #068e95, 상류 alpha tier --alpha-color-teal-500
+  alpha-teal-400-30: oklch(0.690 0.118 190 / 0.30)   # #09b2ac4d, 상류 alpha tier --alpha-color-teal-400-30
+  alpha-teal-400-20: oklch(0.690 0.118 190 / 0.20)   # #09b2ac33, 상류 alpha tier --alpha-color-teal-400-20
+  alpha-teal-400-10: oklch(0.690 0.118 190 / 0.10)   # #09b2ac1a, 상류 alpha tier --alpha-color-teal-400-10
+  alpha-teal-400-0: oklch(0.690 0.118 190 / 0.00)   # #09b2ac00, 상류 alpha tier --alpha-color-teal-400-0
+  alpha-teal-300-45: oklch(0.787 0.123 186 / 0.45)   # #40d3c573, 상류 alpha tier --alpha-color-teal-300-45
+  alpha-teal-300-30: oklch(0.787 0.123 186 / 0.30)   # #40d3c54d, 상류 alpha tier --alpha-color-teal-300-30
+  alpha-teal-300-15: oklch(0.787 0.123 186 / 0.15)   # #40d3c526, 상류 alpha tier --alpha-color-teal-300-15
+  alpha-teal-300-0: oklch(0.787 0.123 186 / 0.00)   # #40d3c500, 상류 alpha tier --alpha-color-teal-300-0
+  alpha-olive-300: oklch(0.838 0.176 115)   # #c8d630, 상류 alpha tier --alpha-color-olive-300
+  alpha-olive-400: oklch(0.730 0.160 113)   # #a9b110, 상류 alpha tier --alpha-color-olive-400
+  alpha-olive-500: oklch(0.577 0.118 112)   # #7b801c, 상류 alpha tier --alpha-color-olive-500
+  alpha-olive-400-30: oklch(0.730 0.160 113 / 0.30)   # #a9b1104d, 상류 alpha tier --alpha-color-olive-400-30
+  alpha-olive-400-20: oklch(0.730 0.160 113 / 0.20)   # #a9b11033, 상류 alpha tier --alpha-color-olive-400-20
+  alpha-olive-400-10: oklch(0.730 0.160 113 / 0.10)   # #a9b1101a, 상류 alpha tier --alpha-color-olive-400-10
+  alpha-olive-400-0: oklch(0.730 0.160 113 / 0.00)   # #a9b11000, 상류 alpha tier --alpha-color-olive-400-0
+  alpha-olive-300-45: oklch(0.838 0.176 115 / 0.45)   # #c8d63073, 상류 alpha tier --alpha-color-olive-300-45
+  alpha-olive-300-30: oklch(0.838 0.176 115 / 0.30)   # #c8d6304d, 상류 alpha tier --alpha-color-olive-300-30
+  alpha-olive-300-15: oklch(0.838 0.176 115 / 0.15)   # #c8d63026, 상류 alpha tier --alpha-color-olive-300-15
+  alpha-olive-300-0: oklch(0.838 0.176 115 / 0.00)   # #c8d63000, 상류 alpha tier --alpha-color-olive-300-0
+  alpha-grey-50: oklch(0.991 0 0)   # #fcfcfc, 상류 alpha tier --alpha-color-grey-50
+  alpha-grey-100: oklch(0.976 0.001 286)   # #f7f7f8, 상류 alpha tier --alpha-color-grey-100
+  alpha-grey-200: oklch(0.952 0.001 286)   # #efeff0, 상류 alpha tier --alpha-color-grey-200
+  alpha-grey-400: oklch(0.855 0.003 286)   # #cfcfd1, 상류 alpha tier --alpha-color-grey-400
+  alpha-grey-500: oklch(0.729 0.004 286)   # #a7a7aa, 상류 alpha tier --alpha-color-grey-500
+  alpha-grey-600: oklch(0.583 0 0)   # #7b7b7b, 상류 alpha tier --alpha-color-grey-600
+  alpha-grey-700: oklch(0.397 0.002 248)   # #464748, 상류 alpha tier --alpha-color-grey-700
+  alpha-grey-800: oklch(0.317 0.004 265)   # #313234, 상류 alpha tier --alpha-color-grey-800
+  alpha-grey-850: oklch(0.289 0.004 265)   # #2a2b2d, 상류 alpha tier --alpha-color-grey-850
+  alpha-grey-900: oklch(0.262 0.007 286)   # #242428, 상류 alpha tier --alpha-color-grey-900
+  alpha-grey-950: oklch(0.219 0.004 286)   # #1a1a1c, 상류 alpha tier --alpha-color-grey-950
+  alpha-grey-900-0: oklch(0.262 0.007 286 / 0.00)   # #24242800, 상류 alpha tier --alpha-color-grey-900-0
+  alpha-grey-alpha-850-80: oklch(0.289 0.004 265 / 0.80)   # #2a2b2dcc, 상류 alpha tier --alpha-color-grey-alpha-850-80
+  alpha-grey-alpha-800-80: oklch(0.317 0.004 265 / 0.80)   # #313234cc, 상류 alpha tier --alpha-color-grey-alpha-800-80
+  alpha-grey-alpha-700-80: oklch(0.397 0.002 248 / 0.80)   # #464748cc, 상류 alpha tier --alpha-color-grey-alpha-700-80
+  alpha-grey-alpha-200-80: oklch(0.952 0.001 286 / 0.80)   # #efeff0cc, 상류 alpha tier --alpha-color-grey-alpha-200-80
+  alpha-grey-alpha-100-80: oklch(0.976 0.001 286 / 0.80)   # #f7f7f8cc, 상류 alpha tier --alpha-color-grey-alpha-100-80
+  alpha-grey-alpha-50-80: oklch(0.991 0 0 / 0.80)   # #fcfcfccc, 상류 alpha tier --alpha-color-grey-alpha-50-80
+  alpha-grey-alpha-100-90: oklch(0.976 0.001 286 / 0.90)   # #f7f7f8e6, 상류 alpha tier --alpha-color-grey-alpha-100-90
+  alpha-grey-alpha-800-90: oklch(0.317 0.004 265 / 0.90)   # #313234e6, 상류 alpha tier --alpha-color-grey-alpha-800-90
+  alpha-shade-blue-400: oklch(0.611 0.159 279)   # #7175e0, 상류 alpha tier --alpha-color-shade-blue-400
+  alpha-shade-blue-600: oklch(0.459 0.089 278)   # #4c5289, 상류 alpha tier --alpha-color-shade-blue-600
+  alpha-shade-blue-400-20: oklch(0.611 0.159 279 / 0.20)   # #7175e033, 상류 alpha tier --alpha-color-shade-blue-400-20
+  alpha-shade-blue-600-40: oklch(0.459 0.089 278 / 0.40)   # #4c528966, 상류 alpha tier --alpha-color-shade-blue-600-40
+  alpha-shade-cobalt-400: oklch(0.716 0.120 242)   # #57ace8, 상류 alpha tier --alpha-color-shade-cobalt-400
+  alpha-shade-cobalt-600: oklch(0.489 0.065 259)   # #4a6185, 상류 alpha tier --alpha-color-shade-cobalt-600
+  alpha-shade-cobalt-400-20: oklch(0.716 0.120 242 / 0.20)   # #57ace833, 상류 alpha tier --alpha-color-shade-cobalt-400-20
+  alpha-shade-cobalt-600-40: oklch(0.489 0.065 259 / 0.40)   # #4a618566, 상류 alpha tier --alpha-color-shade-cobalt-600-40
+  alpha-shade-teal-400: oklch(0.684 0.083 192)   # #55aaa7, 상류 alpha tier --alpha-color-shade-teal-400
+  alpha-shade-teal-600: oklch(0.527 0.051 214)   # #47737d, 상류 alpha tier --alpha-color-shade-teal-600
+  alpha-shade-teal-400-20: oklch(0.684 0.083 192 / 0.20)   # #55aaa733, 상류 alpha tier --alpha-color-shade-teal-400-20
+  alpha-shade-teal-600-40: oklch(0.527 0.051 214 / 0.40)   # #47737d66, 상류 alpha tier --alpha-color-shade-teal-600-40
+  alpha-shade-red-400: oklch(0.661 0.148 18)   # #de6870, 상류 alpha tier --alpha-color-shade-red-400
+  alpha-shade-red-600: oklch(0.482 0.106 17)   # #904248, 상류 alpha tier --alpha-color-shade-red-600
+  alpha-shade-red-400-20: oklch(0.661 0.148 18 / 0.20)   # #de687033, 상류 alpha tier --alpha-color-shade-red-400-20
+  alpha-shade-red-600-40: oklch(0.482 0.106 17 / 0.40)   # #90424866, 상류 alpha tier --alpha-color-shade-red-600-40
+  alpha-shade-green-400: oklch(0.690 0.108 154)   # #62af7c, 상류 alpha tier --alpha-color-shade-green-400
+  alpha-shade-green-600: oklch(0.538 0.067 157)   # #4c7a5e, 상류 alpha tier --alpha-color-shade-green-600
+  alpha-shade-green-400-20: oklch(0.690 0.108 154 / 0.20)   # #62af7c33, 상류 alpha tier --alpha-color-shade-green-400-20
+  alpha-shade-green-600-40: oklch(0.538 0.067 157 / 0.40)   # #4c7a5e66, 상류 alpha tier --alpha-color-shade-green-600-40
+  alpha-shade-olive-400: oklch(0.713 0.110 111)   # #a5a953, 상류 alpha tier --alpha-color-shade-olive-400
+  alpha-shade-olive-600: oklch(0.549 0.085 111)   # #737638, 상류 alpha tier --alpha-color-shade-olive-600
+  alpha-shade-olive-400-20: oklch(0.713 0.110 111 / 0.20)   # #a5a95333, 상류 alpha tier --alpha-color-shade-olive-400-20
+  alpha-shade-olive-600-40: oklch(0.549 0.085 111 / 0.40)   # #73763866, 상류 alpha tier --alpha-color-shade-olive-600-40
+  alpha-shade-yellow-400: oklch(0.786 0.142 80)   # #e8ae3c, 상류 alpha tier --alpha-color-shade-yellow-400
+  alpha-shade-yellow-600: oklch(0.529 0.090 93)   # #7d6a26, 상류 alpha tier --alpha-color-shade-yellow-600
+  alpha-shade-yellow-400-20: oklch(0.786 0.142 80 / 0.20)   # #e8ae3c33, 상류 alpha tier --alpha-color-shade-yellow-400-20
+  alpha-shade-yellow-600-40: oklch(0.529 0.090 93 / 0.40)   # #7d6a2666, 상류 alpha tier --alpha-color-shade-yellow-600-40
+  alpha-shade-orange-400: oklch(0.715 0.132 57)   # #e08c48, 상류 alpha tier --alpha-color-shade-orange-400
+  alpha-shade-orange-600: oklch(0.511 0.082 58)   # #895a34, 상류 alpha tier --alpha-color-shade-orange-600
+  alpha-shade-orange-400-20: oklch(0.715 0.132 57 / 0.20)   # #e08c4833, 상류 alpha tier --alpha-color-shade-orange-400-20
+  alpha-shade-orange-600-40: oklch(0.511 0.082 58 / 0.40)   # #895a3466, 상류 alpha tier --alpha-color-shade-orange-600-40
+  alpha-shade-pink-400: oklch(0.671 0.165 337)   # #d369ba, 상류 alpha tier --alpha-color-shade-pink-400
+  alpha-shade-pink-600: oklch(0.478 0.117 337)   # #854075, 상류 alpha tier --alpha-color-shade-pink-600
+  alpha-shade-pink-400-20: oklch(0.671 0.165 337 / 0.20)   # #d369ba33, 상류 alpha tier --alpha-color-shade-pink-400-20
+  alpha-shade-pink-600-40: oklch(0.478 0.117 337 / 0.40)   # #85407566, 상류 alpha tier --alpha-color-shade-pink-600-40
+  alpha-shade-purple-400: oklch(0.641 0.174 299)   # #9d6fe5, 상류 alpha tier --alpha-color-shade-purple-400
+  alpha-shade-purple-600: oklch(0.441 0.091 300)   # #5b467d, 상류 alpha tier --alpha-color-shade-purple-600
+  alpha-shade-purple-400-20: oklch(0.641 0.174 299 / 0.20)   # #9d6fe533, 상류 alpha tier --alpha-color-shade-purple-400-20
+  alpha-shade-purple-600-40: oklch(0.441 0.091 300 / 0.40)   # #5b467d66, 상류 alpha tier --alpha-color-shade-purple-600-40
+  alpha-shade-navy-400: oklch(0.545 0.111 276)   # #5f69b0, 상류 alpha tier --alpha-color-shade-navy-400
+  alpha-shade-navy-600: oklch(0.361 0.047 277)   # #373b56, 상류 alpha tier --alpha-color-shade-navy-600
+  alpha-shade-navy-400-20: oklch(0.545 0.111 276 / 0.20)   # #5f69b033, 상류 alpha tier --alpha-color-shade-navy-400-20
+  alpha-shade-navy-600-40: oklch(0.361 0.047 277 / 0.40)   # #373b5666, 상류 alpha tier --alpha-color-shade-navy-600-40
   ## Semantic bg-*·txt-* (stable tier)
   txt-white-normal: "{colors.stable-white-100}"
   dark-txt-white-normal: "{colors.stable-grey-900}"
@@ -842,6 +1051,482 @@ colors:
   dark-elevation-base: "{colors.black-5}"
   elevation-base-inner: "{colors.white-12}"
   dark-elevation-base-inner: "{colors.white-12}"
+  ## Semantic fg (alpha tier)
+  alpha-fg-black-pure: "{colors.alpha-black-100}"
+  dark-alpha-fg-black-pure: "{colors.alpha-white-100}"
+  alpha-fg-black-darkest: "{colors.alpha-black-85}"
+  dark-alpha-fg-black-darkest: "{colors.alpha-white-80}"
+  alpha-fg-black-darker: "{colors.alpha-black-60}"
+  dark-alpha-fg-black-darker: "{colors.alpha-white-60}"
+  alpha-fg-black-dark: "{colors.alpha-black-40}"
+  dark-alpha-fg-black-dark: "{colors.alpha-white-40}"
+  alpha-fg-black-light: "{colors.alpha-black-15}"
+  dark-alpha-fg-black-light: "{colors.alpha-white-20}"
+  alpha-fg-black-lightest: "{colors.alpha-black-8}"
+  dark-alpha-fg-black-lightest: "{colors.alpha-white-12}"
+  alpha-fg-white-normal: "{colors.alpha-white-100}"
+  dark-alpha-fg-white-normal: "{colors.alpha-grey-900}"
+  alpha-fg-blue-normal: "{colors.alpha-blue-400}"
+  dark-alpha-fg-blue-normal: "{colors.alpha-blue-300}"
+  alpha-fg-blue-light: "{colors.alpha-blue-400-30}"
+  dark-alpha-fg-blue-light: "{colors.alpha-blue-300-45}"
+  alpha-fg-blue-dark: "{colors.alpha-blue-500}"
+  dark-alpha-fg-blue-dark: "{colors.alpha-blue-300}"
+  alpha-fg-cobalt-normal: "{colors.alpha-cobalt-400}"
+  dark-alpha-fg-cobalt-normal: "{colors.alpha-cobalt-300}"
+  alpha-fg-cobalt-light: "{colors.alpha-cobalt-400-30}"
+  dark-alpha-fg-cobalt-light: "{colors.alpha-cobalt-300-45}"
+  alpha-fg-cobalt-dark: "{colors.alpha-cobalt-500}"
+  dark-alpha-fg-cobalt-dark: "{colors.alpha-cobalt-300}"
+  alpha-fg-red-normal: "{colors.alpha-red-400}"
+  dark-alpha-fg-red-normal: "{colors.alpha-red-300}"
+  alpha-fg-red-light: "{colors.alpha-red-400-30}"
+  dark-alpha-fg-red-light: "{colors.alpha-red-300-45}"
+  alpha-fg-red-dark: "{colors.alpha-red-500}"
+  dark-alpha-fg-red-dark: "{colors.alpha-red-300}"
+  alpha-fg-orange-normal: "{colors.alpha-orange-400}"
+  dark-alpha-fg-orange-normal: "{colors.alpha-orange-300}"
+  alpha-fg-orange-light: "{colors.alpha-orange-400-30}"
+  dark-alpha-fg-orange-light: "{colors.alpha-orange-300-45}"
+  alpha-fg-orange-dark: "{colors.alpha-orange-500}"
+  dark-alpha-fg-orange-dark: "{colors.alpha-orange-300}"
+  alpha-fg-green-normal: "{colors.alpha-green-400}"
+  dark-alpha-fg-green-normal: "{colors.alpha-green-300}"
+  alpha-fg-green-light: "{colors.alpha-green-400-30}"
+  dark-alpha-fg-green-light: "{colors.alpha-green-300-45}"
+  alpha-fg-green-dark: "{colors.alpha-green-500}"
+  dark-alpha-fg-green-dark: "{colors.alpha-green-300}"
+  alpha-fg-teal-normal: "{colors.alpha-teal-400}"
+  dark-alpha-fg-teal-normal: "{colors.alpha-teal-300}"
+  alpha-fg-teal-light: "{colors.alpha-teal-400-30}"
+  dark-alpha-fg-teal-light: "{colors.alpha-teal-300-45}"
+  alpha-fg-teal-dark: "{colors.alpha-teal-500}"
+  dark-alpha-fg-teal-dark: "{colors.alpha-teal-300}"
+  alpha-fg-olive-normal: "{colors.alpha-olive-400}"
+  dark-alpha-fg-olive-normal: "{colors.alpha-olive-300}"
+  alpha-fg-olive-light: "{colors.alpha-olive-400-30}"
+  dark-alpha-fg-olive-light: "{colors.alpha-olive-300-45}"
+  alpha-fg-olive-dark: "{colors.alpha-olive-500}"
+  dark-alpha-fg-olive-dark: "{colors.alpha-olive-300}"
+  alpha-fg-yellow-normal: "{colors.alpha-yellow-400}"
+  dark-alpha-fg-yellow-normal: "{colors.alpha-yellow-300}"
+  alpha-fg-yellow-light: "{colors.alpha-yellow-400-30}"
+  dark-alpha-fg-yellow-light: "{colors.alpha-yellow-300-45}"
+  alpha-fg-yellow-dark: "{colors.alpha-yellow-500}"
+  dark-alpha-fg-yellow-dark: "{colors.alpha-yellow-300}"
+  alpha-fg-pink-normal: "{colors.alpha-pink-400}"
+  dark-alpha-fg-pink-normal: "{colors.alpha-pink-300}"
+  alpha-fg-pink-light: "{colors.alpha-pink-400-30}"
+  dark-alpha-fg-pink-light: "{colors.alpha-pink-300-45}"
+  alpha-fg-pink-dark: "{colors.alpha-pink-500}"
+  dark-alpha-fg-pink-dark: "{colors.alpha-pink-300}"
+  alpha-fg-purple-normal: "{colors.alpha-purple-400}"
+  dark-alpha-fg-purple-normal: "{colors.alpha-purple-300}"
+  alpha-fg-purple-light: "{colors.alpha-purple-400-30}"
+  dark-alpha-fg-purple-light: "{colors.alpha-purple-300-45}"
+  alpha-fg-purple-dark: "{colors.alpha-purple-500}"
+  dark-alpha-fg-purple-dark: "{colors.alpha-purple-300}"
+  alpha-fg-navy-normal: "{colors.alpha-navy-400}"
+  dark-alpha-fg-navy-normal: "{colors.alpha-navy-300}"
+  alpha-fg-navy-light: "{colors.alpha-navy-400-30}"
+  dark-alpha-fg-navy-light: "{colors.alpha-navy-300-45}"
+  alpha-fg-navy-dark: "{colors.alpha-navy-500}"
+  dark-alpha-fg-navy-dark: "{colors.alpha-navy-300}"
+  alpha-fg-absolute-black-dark: "{colors.alpha-black-100}"
+  dark-alpha-fg-absolute-black-dark: "{colors.alpha-black-100}"
+  alpha-fg-absolute-black-normal: "{colors.alpha-black-85}"
+  dark-alpha-fg-absolute-black-normal: "{colors.alpha-black-85}"
+  alpha-fg-absolute-black-light: "{colors.alpha-black-60}"
+  dark-alpha-fg-absolute-black-light: "{colors.alpha-black-60}"
+  alpha-fg-absolute-black-lighter: "{colors.alpha-black-40}"
+  dark-alpha-fg-absolute-black-lighter: "{colors.alpha-black-40}"
+  alpha-fg-absolute-black-lightest: "{colors.alpha-black-20}"
+  dark-alpha-fg-absolute-black-lightest: "{colors.alpha-black-20}"
+  alpha-fg-absolute-white-dark: "{colors.alpha-white-100}"
+  dark-alpha-fg-absolute-white-dark: "{colors.alpha-white-100}"
+  alpha-fg-absolute-white-normal: "{colors.alpha-white-90}"
+  dark-alpha-fg-absolute-white-normal: "{colors.alpha-white-90}"
+  alpha-fg-absolute-white-light: "{colors.alpha-white-60}"
+  dark-alpha-fg-absolute-white-light: "{colors.alpha-white-60}"
+  alpha-fg-absolute-white-lighter: "{colors.alpha-white-40}"
+  dark-alpha-fg-absolute-white-lighter: "{colors.alpha-white-40}"
+  alpha-fg-absolute-white-lightest: "{colors.alpha-white-20}"
+  dark-alpha-fg-absolute-white-lightest: "{colors.alpha-white-20}"
+  alpha-fg-grey-darkest: "{colors.alpha-grey-900}"
+  dark-alpha-fg-grey-darkest: "{colors.alpha-white-100}"
+  alpha-fg-grey-dark: "{colors.alpha-grey-500}"
+  dark-alpha-fg-grey-dark: "{colors.alpha-grey-500}"
+  alpha-fg-grey-normal: "{colors.alpha-grey-400}"
+  dark-alpha-fg-grey-normal: "{colors.alpha-grey-600}"
+  alpha-fg-grey-light: "{colors.alpha-grey-200}"
+  dark-alpha-fg-grey-light: "{colors.alpha-grey-700}"
+  alpha-fg-grey-lighter: "{colors.alpha-grey-100}"
+  dark-alpha-fg-grey-lighter: "{colors.alpha-grey-800}"
+  alpha-fg-grey-lightest: "{colors.alpha-grey-50}"
+  dark-alpha-fg-grey-lightest: "{colors.alpha-grey-850}"
+  alpha-fg-grey-alpha-darker: "{colors.alpha-grey-alpha-200-80}"
+  dark-alpha-fg-grey-alpha-darker: "{colors.alpha-grey-alpha-800-90}"
+  alpha-fg-grey-alpha-dark: "{colors.alpha-grey-alpha-100-80}"
+  dark-alpha-fg-grey-alpha-dark: "{colors.alpha-grey-alpha-800-80}"
+  alpha-fg-grey-alpha-light: "{colors.alpha-grey-alpha-50-80}"
+  dark-alpha-fg-grey-alpha-light: "{colors.alpha-grey-alpha-850-80}"
+  ## Semantic bg (alpha tier)
+  alpha-bg-black-darkest: "{colors.alpha-black-60}"
+  dark-alpha-bg-black-darkest: "{colors.alpha-black-60}"
+  alpha-bg-black-darker: "{colors.alpha-black-40}"
+  dark-alpha-bg-black-darker: "{colors.alpha-white-40}"
+  alpha-bg-black-dark: "{colors.alpha-black-15}"
+  dark-alpha-bg-black-dark: "{colors.alpha-white-20}"
+  alpha-bg-black-light: "{colors.alpha-black-8}"
+  dark-alpha-bg-black-light: "{colors.alpha-white-12}"
+  alpha-bg-black-lighter: "{colors.alpha-black-5}"
+  dark-alpha-bg-black-lighter: "{colors.alpha-white-8}"
+  alpha-bg-black-lightest: "{colors.alpha-black-3}"
+  dark-alpha-bg-black-lightest: "{colors.alpha-white-5}"
+  alpha-bg-black-transparent: "{colors.alpha-black-0}"
+  dark-alpha-bg-black-transparent: "{colors.alpha-white-0}"
+  alpha-bg-grey-darkest: "{colors.alpha-grey-900}"
+  dark-alpha-bg-grey-darkest: "{colors.alpha-white-100}"
+  alpha-bg-grey-dark: "{colors.alpha-grey-500}"
+  dark-alpha-bg-grey-dark: "{colors.alpha-grey-500}"
+  alpha-bg-grey-light: "{colors.alpha-grey-200}"
+  dark-alpha-bg-grey-light: "{colors.alpha-grey-700}"
+  alpha-bg-grey-lighter: "{colors.alpha-grey-100}"
+  dark-alpha-bg-grey-lighter: "{colors.alpha-grey-800}"
+  alpha-bg-grey-lightest: "{colors.alpha-grey-50}"
+  dark-alpha-bg-grey-lightest: "{colors.alpha-grey-850}"
+  alpha-bg-grey-transparent: "{colors.alpha-grey-900-0}"
+  dark-alpha-bg-grey-transparent: "{colors.alpha-white-0}"
+  alpha-bg-grey-normal: "{colors.alpha-grey-400}"
+  dark-alpha-bg-grey-normal: "{colors.alpha-grey-600}"
+  alpha-bg-grey-alpha-darkest: "{colors.alpha-grey-alpha-200-80}"
+  dark-alpha-bg-grey-alpha-darkest: "{colors.alpha-grey-alpha-700-80}"
+  alpha-bg-grey-alpha-darker: "{colors.alpha-grey-alpha-100-90}"
+  dark-alpha-bg-grey-alpha-darker: "{colors.alpha-grey-alpha-800-90}"
+  alpha-bg-grey-alpha-dark: "{colors.alpha-grey-alpha-100-80}"
+  dark-alpha-bg-grey-alpha-dark: "{colors.alpha-grey-alpha-800-80}"
+  alpha-bg-grey-alpha-light: "{colors.alpha-grey-alpha-50-80}"
+  dark-alpha-bg-grey-alpha-light: "{colors.alpha-grey-alpha-850-80}"
+  alpha-bg-white-highest: "{colors.alpha-white-100}"
+  dark-alpha-bg-white-highest: "{colors.alpha-grey-700}"
+  alpha-bg-white-higher: "{colors.alpha-white-100}"
+  dark-alpha-bg-white-higher: "{colors.alpha-grey-800}"
+  alpha-bg-white-normal: "{colors.alpha-white-100}"
+  dark-alpha-bg-white-normal: "{colors.alpha-grey-900}"
+  alpha-bg-white-transparent: "{colors.alpha-white-0}"
+  dark-alpha-bg-white-transparent: "{colors.alpha-white-0}"
+  alpha-bg-white-alpha-lightest: "{colors.alpha-white-90}"
+  dark-alpha-bg-white-alpha-lightest: "{colors.alpha-grey-alpha-800-80}"
+  alpha-bg-white-alpha-lighter: "{colors.alpha-white-60}"
+  dark-alpha-bg-white-alpha-lighter: "{colors.alpha-black-60}"
+  alpha-bg-white-alpha-light: "{colors.alpha-white-20}"
+  dark-alpha-bg-white-alpha-light: "{colors.alpha-black-20}"
+  alpha-bg-white-alpha-transparent: "{colors.alpha-white-0}"
+  dark-alpha-bg-white-alpha-transparent: "{colors.alpha-black-0}"
+  alpha-bg-blue-normal: "{colors.alpha-blue-400}"
+  dark-alpha-bg-blue-normal: "{colors.alpha-blue-300}"
+  alpha-bg-blue-light: "{colors.alpha-blue-400-30}"
+  dark-alpha-bg-blue-light: "{colors.alpha-blue-300-45}"
+  alpha-bg-blue-lighter: "{colors.alpha-blue-400-20}"
+  dark-alpha-bg-blue-lighter: "{colors.alpha-blue-300-30}"
+  alpha-bg-blue-lightest: "{colors.alpha-blue-400-10}"
+  dark-alpha-bg-blue-lightest: "{colors.alpha-blue-300-15}"
+  alpha-bg-blue-dark: "{colors.alpha-blue-500}"
+  dark-alpha-bg-blue-dark: "{colors.alpha-blue-400}"
+  alpha-bg-blue-shade-lighter: "{colors.alpha-shade-blue-400-20}"
+  dark-alpha-bg-blue-shade-lighter: "{colors.alpha-shade-blue-600-40}"
+  alpha-bg-blue-shade-normal: "{colors.alpha-shade-blue-400}"
+  dark-alpha-bg-blue-shade-normal: "{colors.alpha-shade-blue-600}"
+  alpha-bg-blue-transparent: "{colors.alpha-blue-400-0}"
+  dark-alpha-bg-blue-transparent: "{colors.alpha-blue-300-0}"
+  alpha-bg-cobalt-normal: "{colors.alpha-cobalt-400}"
+  dark-alpha-bg-cobalt-normal: "{colors.alpha-cobalt-300}"
+  alpha-bg-cobalt-light: "{colors.alpha-cobalt-400-30}"
+  dark-alpha-bg-cobalt-light: "{colors.alpha-cobalt-300-45}"
+  alpha-bg-cobalt-lighter: "{colors.alpha-cobalt-400-20}"
+  dark-alpha-bg-cobalt-lighter: "{colors.alpha-cobalt-300-30}"
+  alpha-bg-cobalt-lightest: "{colors.alpha-cobalt-400-10}"
+  dark-alpha-bg-cobalt-lightest: "{colors.alpha-cobalt-300-15}"
+  alpha-bg-cobalt-dark: "{colors.alpha-cobalt-500}"
+  dark-alpha-bg-cobalt-dark: "{colors.alpha-cobalt-400}"
+  alpha-bg-cobalt-shade-lighter: "{colors.alpha-shade-cobalt-400-20}"
+  dark-alpha-bg-cobalt-shade-lighter: "{colors.alpha-shade-cobalt-600-40}"
+  alpha-bg-cobalt-shade-normal: "{colors.alpha-shade-cobalt-400}"
+  dark-alpha-bg-cobalt-shade-normal: "{colors.alpha-shade-cobalt-600}"
+  alpha-bg-cobalt-transparent: "{colors.alpha-cobalt-400-0}"
+  dark-alpha-bg-cobalt-transparent: "{colors.alpha-cobalt-300-0}"
+  alpha-bg-red-normal: "{colors.alpha-red-400}"
+  dark-alpha-bg-red-normal: "{colors.alpha-red-300}"
+  alpha-bg-red-light: "{colors.alpha-red-400-30}"
+  dark-alpha-bg-red-light: "{colors.alpha-red-300-45}"
+  alpha-bg-red-lighter: "{colors.alpha-red-400-20}"
+  dark-alpha-bg-red-lighter: "{colors.alpha-red-300-30}"
+  alpha-bg-red-lightest: "{colors.alpha-red-400-10}"
+  dark-alpha-bg-red-lightest: "{colors.alpha-red-300-15}"
+  alpha-bg-red-dark: "{colors.alpha-red-500}"
+  dark-alpha-bg-red-dark: "{colors.alpha-red-400}"
+  alpha-bg-red-shade-lighter: "{colors.alpha-shade-red-400-20}"
+  dark-alpha-bg-red-shade-lighter: "{colors.alpha-shade-red-600-40}"
+  alpha-bg-red-shade-normal: "{colors.alpha-shade-red-400}"
+  dark-alpha-bg-red-shade-normal: "{colors.alpha-shade-red-600}"
+  alpha-bg-red-transparent: "{colors.alpha-red-400-0}"
+  dark-alpha-bg-red-transparent: "{colors.alpha-red-300-0}"
+  alpha-bg-orange-normal: "{colors.alpha-orange-400}"
+  dark-alpha-bg-orange-normal: "{colors.alpha-orange-300}"
+  alpha-bg-orange-light: "{colors.alpha-orange-400-30}"
+  dark-alpha-bg-orange-light: "{colors.alpha-orange-300-45}"
+  alpha-bg-orange-lighter: "{colors.alpha-orange-400-20}"
+  dark-alpha-bg-orange-lighter: "{colors.alpha-orange-300-30}"
+  alpha-bg-orange-lightest: "{colors.alpha-orange-400-10}"
+  dark-alpha-bg-orange-lightest: "{colors.alpha-orange-300-15}"
+  alpha-bg-orange-dark: "{colors.alpha-orange-500}"
+  dark-alpha-bg-orange-dark: "{colors.alpha-orange-400}"
+  alpha-bg-orange-shade-lighter: "{colors.alpha-shade-orange-400-20}"
+  dark-alpha-bg-orange-shade-lighter: "{colors.alpha-shade-orange-600-40}"
+  alpha-bg-orange-shade-normal: "{colors.alpha-shade-orange-400}"
+  dark-alpha-bg-orange-shade-normal: "{colors.alpha-shade-orange-600}"
+  alpha-bg-orange-transparent: "{colors.alpha-orange-400-0}"
+  dark-alpha-bg-orange-transparent: "{colors.alpha-orange-300-0}"
+  alpha-bg-green-normal: "{colors.alpha-green-400}"
+  dark-alpha-bg-green-normal: "{colors.alpha-green-300}"
+  alpha-bg-green-light: "{colors.alpha-green-400-30}"
+  dark-alpha-bg-green-light: "{colors.alpha-green-300-45}"
+  alpha-bg-green-lighter: "{colors.alpha-green-400-20}"
+  dark-alpha-bg-green-lighter: "{colors.alpha-green-300-30}"
+  alpha-bg-green-lightest: "{colors.alpha-green-400-10}"
+  dark-alpha-bg-green-lightest: "{colors.alpha-green-300-15}"
+  alpha-bg-green-dark: "{colors.alpha-green-500}"
+  dark-alpha-bg-green-dark: "{colors.alpha-green-400}"
+  alpha-bg-green-shade-lighter: "{colors.alpha-shade-green-400-20}"
+  dark-alpha-bg-green-shade-lighter: "{colors.alpha-shade-green-600-40}"
+  alpha-bg-green-shade-normal: "{colors.alpha-shade-green-400}"
+  dark-alpha-bg-green-shade-normal: "{colors.alpha-shade-green-600}"
+  alpha-bg-green-transparent: "{colors.alpha-green-400-0}"
+  dark-alpha-bg-green-transparent: "{colors.alpha-green-300-0}"
+  alpha-bg-teal-normal: "{colors.alpha-teal-400}"
+  dark-alpha-bg-teal-normal: "{colors.alpha-teal-300}"
+  alpha-bg-teal-light: "{colors.alpha-teal-400-30}"
+  dark-alpha-bg-teal-light: "{colors.alpha-teal-300-45}"
+  alpha-bg-teal-lighter: "{colors.alpha-teal-400-20}"
+  dark-alpha-bg-teal-lighter: "{colors.alpha-teal-300-30}"
+  alpha-bg-teal-lightest: "{colors.alpha-teal-400-10}"
+  dark-alpha-bg-teal-lightest: "{colors.alpha-teal-300-15}"
+  alpha-bg-teal-dark: "{colors.alpha-teal-500}"
+  dark-alpha-bg-teal-dark: "{colors.alpha-teal-400}"
+  alpha-bg-teal-shade-lighter: "{colors.alpha-shade-teal-400-20}"
+  dark-alpha-bg-teal-shade-lighter: "{colors.alpha-shade-teal-600-40}"
+  alpha-bg-teal-shade-normal: "{colors.alpha-shade-teal-400}"
+  dark-alpha-bg-teal-shade-normal: "{colors.alpha-shade-teal-600}"
+  alpha-bg-teal-transparent: "{colors.alpha-teal-400-0}"
+  dark-alpha-bg-teal-transparent: "{colors.alpha-teal-300-0}"
+  alpha-bg-olive-normal: "{colors.alpha-olive-400}"
+  dark-alpha-bg-olive-normal: "{colors.alpha-olive-300}"
+  alpha-bg-olive-light: "{colors.alpha-olive-400-30}"
+  dark-alpha-bg-olive-light: "{colors.alpha-olive-300-45}"
+  alpha-bg-olive-lighter: "{colors.alpha-olive-400-20}"
+  dark-alpha-bg-olive-lighter: "{colors.alpha-olive-300-30}"
+  alpha-bg-olive-lightest: "{colors.alpha-olive-400-10}"
+  dark-alpha-bg-olive-lightest: "{colors.alpha-olive-300-15}"
+  alpha-bg-olive-dark: "{colors.alpha-olive-500}"
+  dark-alpha-bg-olive-dark: "{colors.alpha-olive-400}"
+  alpha-bg-olive-shade-lighter: "{colors.alpha-shade-olive-400-20}"
+  dark-alpha-bg-olive-shade-lighter: "{colors.alpha-shade-olive-600-40}"
+  alpha-bg-olive-shade-normal: "{colors.alpha-shade-olive-400}"
+  dark-alpha-bg-olive-shade-normal: "{colors.alpha-shade-olive-600}"
+  alpha-bg-olive-transparent: "{colors.alpha-olive-400-0}"
+  dark-alpha-bg-olive-transparent: "{colors.alpha-olive-300-0}"
+  alpha-bg-yellow-normal: "{colors.alpha-yellow-400}"
+  dark-alpha-bg-yellow-normal: "{colors.alpha-yellow-300}"
+  alpha-bg-yellow-light: "{colors.alpha-yellow-400-30}"
+  dark-alpha-bg-yellow-light: "{colors.alpha-yellow-300-45}"
+  alpha-bg-yellow-lighter: "{colors.alpha-yellow-400-20}"
+  dark-alpha-bg-yellow-lighter: "{colors.alpha-yellow-300-30}"
+  alpha-bg-yellow-lightest: "{colors.alpha-yellow-400-10}"
+  dark-alpha-bg-yellow-lightest: "{colors.alpha-yellow-300-15}"
+  alpha-bg-yellow-dark: "{colors.alpha-yellow-500}"
+  dark-alpha-bg-yellow-dark: "{colors.alpha-yellow-400}"
+  alpha-bg-yellow-shade-lighter: "{colors.alpha-shade-yellow-400-20}"
+  dark-alpha-bg-yellow-shade-lighter: "{colors.alpha-shade-yellow-600-40}"
+  alpha-bg-yellow-shade-normal: "{colors.alpha-shade-yellow-400}"
+  dark-alpha-bg-yellow-shade-normal: "{colors.alpha-shade-yellow-600}"
+  alpha-bg-yellow-transparent: "{colors.alpha-yellow-400-0}"
+  dark-alpha-bg-yellow-transparent: "{colors.alpha-yellow-300-0}"
+  alpha-bg-pink-normal: "{colors.alpha-pink-400}"
+  dark-alpha-bg-pink-normal: "{colors.alpha-pink-300}"
+  alpha-bg-pink-light: "{colors.alpha-pink-400-30}"
+  dark-alpha-bg-pink-light: "{colors.alpha-pink-300-45}"
+  alpha-bg-pink-lighter: "{colors.alpha-pink-400-20}"
+  dark-alpha-bg-pink-lighter: "{colors.alpha-pink-300-30}"
+  alpha-bg-pink-lightest: "{colors.alpha-pink-400-10}"
+  dark-alpha-bg-pink-lightest: "{colors.alpha-pink-300-15}"
+  alpha-bg-pink-dark: "{colors.alpha-pink-500}"
+  dark-alpha-bg-pink-dark: "{colors.alpha-pink-400}"
+  alpha-bg-pink-shade-lighter: "{colors.alpha-shade-pink-400-20}"
+  dark-alpha-bg-pink-shade-lighter: "{colors.alpha-shade-pink-600-40}"
+  alpha-bg-pink-shade-normal: "{colors.alpha-shade-pink-400}"
+  dark-alpha-bg-pink-shade-normal: "{colors.alpha-shade-pink-600}"
+  alpha-bg-pink-transparent: "{colors.alpha-pink-400-0}"
+  dark-alpha-bg-pink-transparent: "{colors.alpha-pink-300-0}"
+  alpha-bg-purple-normal: "{colors.alpha-purple-400}"
+  dark-alpha-bg-purple-normal: "{colors.alpha-purple-300}"
+  alpha-bg-purple-light: "{colors.alpha-purple-400-30}"
+  dark-alpha-bg-purple-light: "{colors.alpha-purple-300-45}"
+  alpha-bg-purple-lighter: "{colors.alpha-purple-400-20}"
+  dark-alpha-bg-purple-lighter: "{colors.alpha-purple-300-30}"
+  alpha-bg-purple-lightest: "{colors.alpha-purple-400-10}"
+  dark-alpha-bg-purple-lightest: "{colors.alpha-purple-300-15}"
+  alpha-bg-purple-dark: "{colors.alpha-purple-500}"
+  dark-alpha-bg-purple-dark: "{colors.alpha-purple-400}"
+  alpha-bg-purple-shade-lighter: "{colors.alpha-shade-purple-400-20}"
+  dark-alpha-bg-purple-shade-lighter: "{colors.alpha-shade-purple-600-40}"
+  alpha-bg-purple-shade-normal: "{colors.alpha-shade-purple-400}"
+  dark-alpha-bg-purple-shade-normal: "{colors.alpha-shade-purple-600}"
+  alpha-bg-purple-transparent: "{colors.alpha-purple-400-0}"
+  dark-alpha-bg-purple-transparent: "{colors.alpha-purple-300-0}"
+  alpha-bg-navy-normal: "{colors.alpha-navy-400}"
+  dark-alpha-bg-navy-normal: "{colors.alpha-navy-300}"
+  alpha-bg-navy-light: "{colors.alpha-navy-400-30}"
+  dark-alpha-bg-navy-light: "{colors.alpha-navy-300-45}"
+  alpha-bg-navy-lighter: "{colors.alpha-navy-400-20}"
+  dark-alpha-bg-navy-lighter: "{colors.alpha-navy-300-30}"
+  alpha-bg-navy-lightest: "{colors.alpha-navy-400-10}"
+  dark-alpha-bg-navy-lightest: "{colors.alpha-navy-300-15}"
+  alpha-bg-navy-dark: "{colors.alpha-navy-500}"
+  dark-alpha-bg-navy-dark: "{colors.alpha-navy-400}"
+  alpha-bg-navy-shade-lighter: "{colors.alpha-shade-navy-400-20}"
+  dark-alpha-bg-navy-shade-lighter: "{colors.alpha-shade-navy-600-40}"
+  alpha-bg-navy-shade-normal: "{colors.alpha-shade-navy-400}"
+  dark-alpha-bg-navy-shade-normal: "{colors.alpha-shade-navy-600}"
+  alpha-bg-navy-transparent: "{colors.alpha-navy-400-0}"
+  dark-alpha-bg-navy-transparent: "{colors.alpha-navy-300-0}"
+  alpha-bg-absolute-black-dark: "{colors.alpha-black-100}"
+  dark-alpha-bg-absolute-black-dark: "{colors.alpha-black-100}"
+  alpha-bg-absolute-black-normal: "{colors.alpha-black-85}"
+  dark-alpha-bg-absolute-black-normal: "{colors.alpha-black-85}"
+  alpha-bg-absolute-black-light: "{colors.alpha-black-60}"
+  dark-alpha-bg-absolute-black-light: "{colors.alpha-black-60}"
+  alpha-bg-absolute-black-lighter: "{colors.alpha-black-40}"
+  dark-alpha-bg-absolute-black-lighter: "{colors.alpha-black-40}"
+  alpha-bg-absolute-black-lightest: "{colors.alpha-black-20}"
+  dark-alpha-bg-absolute-black-lightest: "{colors.alpha-black-20}"
+  alpha-bg-absolute-black-transparent: "{colors.alpha-black-0}"
+  dark-alpha-bg-absolute-black-transparent: "{colors.alpha-black-0}"
+  alpha-bg-absolute-white-dark: "{colors.alpha-white-100}"
+  dark-alpha-bg-absolute-white-dark: "{colors.alpha-white-100}"
+  alpha-bg-absolute-white-normal: "{colors.alpha-white-90}"
+  dark-alpha-bg-absolute-white-normal: "{colors.alpha-white-90}"
+  alpha-bg-absolute-white-light: "{colors.alpha-white-60}"
+  dark-alpha-bg-absolute-white-light: "{colors.alpha-white-60}"
+  alpha-bg-absolute-white-lighter: "{colors.alpha-white-40}"
+  dark-alpha-bg-absolute-white-lighter: "{colors.alpha-white-40}"
+  alpha-bg-absolute-white-lightest: "{colors.alpha-white-20}"
+  dark-alpha-bg-absolute-white-lightest: "{colors.alpha-white-20}"
+  alpha-bg-absolute-white-transparent: "{colors.alpha-white-0}"
+  dark-alpha-bg-absolute-white-transparent: "{colors.alpha-white-0}"
+  ## Semantic surface, shadow (alpha tier)
+  alpha-surface-lowest: "{colors.alpha-grey-100}"
+  dark-alpha-surface-lowest: "{colors.alpha-grey-850}"
+  alpha-surface-lower: "{colors.alpha-grey-50}"
+  dark-alpha-surface-lower: "{colors.alpha-grey-900}"
+  alpha-surface-normal: "{colors.alpha-white-100}"
+  dark-alpha-surface-normal: "{colors.alpha-grey-950}"
+  alpha-shadow-xlarge: "{colors.alpha-black-30}"
+  dark-alpha-shadow-xlarge: "{colors.alpha-black-60}"
+  alpha-shadow-large: "{colors.alpha-black-22}"
+  dark-alpha-shadow-large: "{colors.alpha-black-40}"
+  alpha-shadow-medium: "{colors.alpha-black-15}"
+  dark-alpha-shadow-medium: "{colors.alpha-black-20}"
+  alpha-shadow-small: "{colors.alpha-black-8}"
+  dark-alpha-shadow-small: "{colors.alpha-black-15}"
+  alpha-shadow-base: "{colors.alpha-black-5}"
+  dark-alpha-shadow-base: "{colors.alpha-black-8}"
+  alpha-shadow-base-inner: "{colors.alpha-white-12}"
+  dark-alpha-shadow-base-inner: "{colors.alpha-white-8}"
+  ## Semantic role → role (alpha tier)
+  alpha-dim-black-light: "{colors.alpha-bg-absolute-black-lightest}"
+  dark-alpha-dim-black-light: "{colors.dark-alpha-bg-absolute-black-lightest}"
+  alpha-dim-black-normal: "{colors.alpha-bg-absolute-black-lighter}"
+  dark-alpha-dim-black-normal: "{colors.dark-alpha-bg-absolute-black-lighter}"
+  alpha-primary-bg-normal: "{colors.alpha-bg-blue-normal}"
+  dark-alpha-primary-bg-normal: "{colors.dark-alpha-bg-blue-normal}"
+  alpha-primary-bg-light: "{colors.alpha-bg-blue-light}"
+  dark-alpha-primary-bg-light: "{colors.dark-alpha-bg-blue-light}"
+  alpha-primary-bg-lighter: "{colors.alpha-bg-blue-lighter}"
+  dark-alpha-primary-bg-lighter: "{colors.dark-alpha-bg-blue-lighter}"
+  alpha-primary-bg-lightest: "{colors.alpha-bg-blue-lightest}"
+  dark-alpha-primary-bg-lightest: "{colors.dark-alpha-bg-blue-lightest}"
+  alpha-primary-bg-dark: "{colors.alpha-bg-blue-dark}"
+  dark-alpha-primary-bg-dark: "{colors.dark-alpha-bg-blue-dark}"
+  alpha-primary-fg-normal: "{colors.alpha-fg-blue-normal}"
+  dark-alpha-primary-fg-normal: "{colors.dark-alpha-fg-blue-normal}"
+  alpha-primary-fg-light: "{colors.alpha-fg-blue-light}"
+  dark-alpha-primary-fg-light: "{colors.dark-alpha-fg-blue-light}"
+  alpha-primary-fg-dark: "{colors.alpha-fg-blue-dark}"
+  dark-alpha-primary-fg-dark: "{colors.dark-alpha-fg-blue-dark}"
+  alpha-critical-bg-dark: "{colors.alpha-bg-red-dark}"
+  dark-alpha-critical-bg-dark: "{colors.dark-alpha-bg-red-dark}"
+  alpha-critical-bg-normal: "{colors.alpha-fg-red-normal}"
+  dark-alpha-critical-bg-normal: "{colors.dark-alpha-fg-red-normal}"
+  alpha-critical-bg-light: "{colors.alpha-bg-red-light}"
+  dark-alpha-critical-bg-light: "{colors.dark-alpha-bg-red-light}"
+  alpha-critical-bg-lighter: "{colors.alpha-bg-red-lighter}"
+  dark-alpha-critical-bg-lighter: "{colors.dark-alpha-bg-red-lighter}"
+  alpha-critical-bg-lightest: "{colors.alpha-bg-red-lightest}"
+  dark-alpha-critical-bg-lightest: "{colors.dark-alpha-bg-red-lightest}"
+  alpha-critical-fg-normal: "{colors.alpha-fg-red-normal}"
+  dark-alpha-critical-fg-normal: "{colors.dark-alpha-fg-red-normal}"
+  alpha-critical-fg-light: "{colors.alpha-fg-red-light}"
+  dark-alpha-critical-fg-light: "{colors.dark-alpha-fg-red-light}"
+  alpha-critical-fg-dark: "{colors.alpha-fg-red-dark}"
+  dark-alpha-critical-fg-dark: "{colors.dark-alpha-fg-red-dark}"
+  alpha-warning-bg-dark: "{colors.alpha-bg-orange-dark}"
+  dark-alpha-warning-bg-dark: "{colors.dark-alpha-bg-orange-dark}"
+  alpha-warning-bg-normal: "{colors.alpha-bg-orange-normal}"
+  dark-alpha-warning-bg-normal: "{colors.dark-alpha-bg-orange-normal}"
+  alpha-warning-bg-light: "{colors.alpha-bg-orange-light}"
+  dark-alpha-warning-bg-light: "{colors.dark-alpha-bg-orange-light}"
+  alpha-warning-bg-lighter: "{colors.alpha-bg-orange-lighter}"
+  dark-alpha-warning-bg-lighter: "{colors.dark-alpha-bg-orange-lighter}"
+  alpha-warning-bg-lightest: "{colors.alpha-bg-orange-lightest}"
+  dark-alpha-warning-bg-lightest: "{colors.dark-alpha-bg-orange-lightest}"
+  alpha-warning-fg-normal: "{colors.alpha-fg-orange-normal}"
+  dark-alpha-warning-fg-normal: "{colors.dark-alpha-fg-orange-normal}"
+  alpha-warning-fg-light: "{colors.alpha-fg-orange-light}"
+  dark-alpha-warning-fg-light: "{colors.dark-alpha-fg-orange-light}"
+  alpha-warning-fg-dark: "{colors.alpha-fg-orange-dark}"
+  dark-alpha-warning-fg-dark: "{colors.dark-alpha-fg-orange-dark}"
+  alpha-accent-bg-dark: "{colors.alpha-bg-cobalt-dark}"
+  dark-alpha-accent-bg-dark: "{colors.dark-alpha-bg-cobalt-dark}"
+  alpha-accent-bg-normal: "{colors.alpha-bg-cobalt-normal}"
+  dark-alpha-accent-bg-normal: "{colors.dark-alpha-bg-cobalt-normal}"
+  alpha-accent-bg-light: "{colors.alpha-bg-cobalt-light}"
+  dark-alpha-accent-bg-light: "{colors.dark-alpha-bg-cobalt-light}"
+  alpha-accent-bg-lighter: "{colors.alpha-bg-cobalt-lighter}"
+  dark-alpha-accent-bg-lighter: "{colors.dark-alpha-bg-cobalt-lighter}"
+  alpha-accent-bg-lightest: "{colors.alpha-bg-cobalt-lightest}"
+  dark-alpha-accent-bg-lightest: "{colors.dark-alpha-bg-cobalt-lightest}"
+  alpha-accent-fg-normal: "{colors.alpha-fg-cobalt-normal}"
+  dark-alpha-accent-fg-normal: "{colors.dark-alpha-fg-cobalt-normal}"
+  alpha-accent-fg-light: "{colors.alpha-fg-cobalt-light}"
+  dark-alpha-accent-fg-light: "{colors.dark-alpha-fg-cobalt-light}"
+  alpha-accent-fg-dark: "{colors.alpha-fg-cobalt-dark}"
+  dark-alpha-accent-fg-dark: "{colors.dark-alpha-fg-cobalt-dark}"
+  alpha-success-bg-dark: "{colors.alpha-bg-green-dark}"
+  dark-alpha-success-bg-dark: "{colors.dark-alpha-bg-green-dark}"
+  alpha-success-bg-normal: "{colors.alpha-bg-green-normal}"
+  dark-alpha-success-bg-normal: "{colors.dark-alpha-bg-green-normal}"
+  alpha-success-bg-light: "{colors.alpha-bg-green-light}"
+  dark-alpha-success-bg-light: "{colors.dark-alpha-bg-green-light}"
+  alpha-success-bg-lighter: "{colors.alpha-bg-green-lighter}"
+  dark-alpha-success-bg-lighter: "{colors.dark-alpha-bg-green-lighter}"
+  alpha-success-bg-lightest: "{colors.alpha-bg-green-lightest}"
+  dark-alpha-success-bg-lightest: "{colors.dark-alpha-bg-green-lightest}"
+  alpha-success-fg-normal: "{colors.alpha-fg-green-normal}"
+  dark-alpha-success-fg-normal: "{colors.dark-alpha-fg-green-normal}"
+  alpha-success-fg-light: "{colors.alpha-fg-green-light}"
+  dark-alpha-success-fg-light: "{colors.dark-alpha-fg-green-light}"
+  alpha-success-fg-dark: "{colors.alpha-fg-green-dark}"
+  dark-alpha-success-fg-dark: "{colors.dark-alpha-fg-green-dark}"
 typography:
   # size — 토큰명 숫자 = px (핸드오프 colors_and_type.css는 `--font-size-11:11px`로 표기).
   # 아래 rem은 1rem=10px 루트 가정의 동치값(예: font-size-11 = 11px = 1.1rem@10px-root).
@@ -927,11 +1612,11 @@ Bezier는 채널톡의 사내 제품 UI를 외부에 그대로 공개한 드문 
 
 ## Colors
 
-> **대조 결과·서술 정정·역할 표 추가(2026-11-01).** 같은 패키지 0.6.0 은 역할 층을 세 벌(기본·beta·alpha tier) 발행하고, 아래 「Semantic」 표는 그중 두 벌을 싣는다 — 기본 tier `dist/css/styles.css` 의 색 역할 103개(`--bg-*`·`--txt-*` 27개, `--bgtxt-*` 65개, `--bdr-*` 5개, `--shdw-*` 6개)와 beta tier `dist/beta/css/styles.css` 의 `--color-*` 역할 346개이고, 둘 다 라이트(`:root`·`[data-bezier-theme="light"]`)·다크(`[data-bezier-theme="dark"]`) 블록에서 대응을 직접 옮겼다 [src:3]. alpha tier `dist/alpha/css/styles.css` 의 `--alpha-color-*` 역할 층은 아직 싣지 않았다(알려진 공백). beta 역할 가운데 163개는 두 테마 모두 beta 원시값 하나를 가리켜, 그 칸은 전부 frontmatter 참조 행이다. 가리키는 원시값 130개 가운데 이번 재감사 전부터 이 문서에 있던 84개는 상류와 ΔE ≤ 0.002 로 맞았고, 46개는 이번에 상류 값으로 더했다. 나머지 183개(`-hovered` 173개와 hovered 가 아닌 `chart-theme-default-*` 10개)는 상류가 두 테마 모두 원시값을 가리키지 않고 hex 를 직접 적어 가리킬 팔레트 토큰이 상류에 없으므로, 참조 행 없이 표에만 상류 hex 와 OKLCH(저장소 변환기)로 실었다. 그중 19개(`fill-*-transparent-hovered` 계열)는 hex 가 원시값과 같지만 상류가 그 원시값을 가리키는 것은 아니어서, 칸에 그렇게 적고 참조 행을 두지 않았다. 기본 tier 역할은 기본 tier(`dist/css/styles.css`) 원시값 하나를 가리키고, 그 원시값은 beta 단계와 이름이 같아도 다른 파일의 다른 토큰이다. 그래서 기본 tier 역할이 가리키는 원시값을 `stable-` 앞붙임 팔레트로 따로 싣고(값은 그 파일의 원시값 정의, 줄 끝에 상류 hex), 역할의 라이트·다크 칸을 모두 그 키의 참조 행으로 실었다. 기본 tier 도 beta 처럼 원시값을 테마마다 다시 정의하지 않고 다크 블록이 역할만 다시 가리키므로, `dark-` 짝은 접두 없는 `stable-*` 키를 가리킨다. 두 tier 를 원시값마다 hex 로 맞대 보면, 중립색은 `black-*`·`white-*` 알파 단계와 `grey-100/200/500`·`grey-100-80/90`·`grey-200-80` 이 같은 값이고 `grey-50/700/800/850/900` 과 그 알파 단계(`grey-50-80`·`grey-700-80`·`grey-800-80/90`·`grey-850-80`)는 다르다. 액센트 계열은 대부분 값이 다르고(`pink-300`·`pink-300-30` 은 같다), `{hue}-300-20/40` 처럼 beta 에 없는 단계도 있다. 값이 같아도 beta 키를 가리키지 않는다 — 한쪽 tier 만 바뀌면 조용히 거짓이 되기 때문이다. 참조 행이 아닌 팔레트 색 토큰 275개는 published `@channel.io/bezier-tokens` 0.6.0에서 나온다 — `stable-*` 키는 기본 tier `dist/css/styles.css`, 나머지는 `dist/beta/css/styles.css` 다 [src:3]. 비공개 핸드오프 번들에서 온 43개도 이 배포물과 **전부 ΔE ≤ 0.02**로 일치한다 — 번들 값이 공개 배포물로 재현된다. 상류 원시값 블록에서 직접 옮긴 232개(기본 tier 의 `stable-*` 전부와, beta 의 accent 틴트 `{hue}-400-0/10/20`·`{hue}-300-0/18/30`·`blue-400-30`·`blue-300-45`·`orange-400-30`, 불투명 `navy/purple/pink/teal-300`, `grey-650/750/950`, grey 알파 단계, `black-0/1/3/5/15/20/22/30`·`white-0/3/5/8/20/40/60/80`)는 상류 이름을 그대로 쓰고 알파는 이름이 말하는 백분율로 적었으며(`white-8` 은 `/ 0.08`), 줄 끝에 상류 hex를 적어 `audit:oklch`가 줄마다 대조한다(상류가 `#fff3`처럼 줄여 쓴 값은 8자리로 풀어 적었다). 같은 파일과 대조해 아래 「Accent global hues」의 틴트 서술을 상류 이름에 맞췄다 — 기본 `fill-accent-{hue}`는 10%(다크 `{hue}-300-18`)이고 20%는 `fill-accent-{hue}-heavy`(다크 `{hue}-300-30`)다 [src:3]. 다만 **tier를 구분해 읽어야 한다**: 이 절의 색은 `stable-*` 키를 빼면 beta tier이고, 아래 Typography·Rounded·Spacing 절의 값은 기본(stable) tier다. 같은 토큰 이름이 tier마다 다른 값을 가진다 — `grey-900`이 stable에서는 `#242428` ≈ `oklch(0.262 0.007 286)`, beta에서는 `#1d1d20` ≈ `oklch(0.232 0.006 286)`이다. beta에는 stable에 없는 `grey-25/300/400/600/650/750/950`이 있고, 반대로 `radius-44`·`radius-42-p`는 stable에만 있다.
+> **대조 결과, 서술 정정, 역할 표 추가(2026-11-09).** 같은 패키지 0.6.0 은 역할 층을 세 벌(기본, beta, alpha tier) 발행하고, 아래 「Semantic」 표는 세 벌을 모두 싣는다. 기본 tier `dist/css/styles.css` 의 색 역할 103개(`--bg-*`·`--txt-*` 27개, `--bgtxt-*` 65개, `--bdr-*` 5개, `--shdw-*` 6개), beta tier `dist/beta/css/styles.css` 의 `--color-*` 역할 346개, alpha tier `dist/alpha/css/styles.css` 의 `--alpha-color-*` 역할 472개이고, 셋 다 라이트(`:root`, `[data-bezier-theme="light"]`) 블록과 다크(`[data-bezier-theme="dark"]`) 블록에서 대응을 직접 옮겼다 [src:3]. 세 tier 는 한 tgz 에서 나왔고, npm 레지스트리의 최신판이 여전히 0.6.0 이며 그 shasum 이 대조에 쓴 tgz 와 같음을 이 날짜에 확인했다. beta 역할 가운데 163개는 두 테마 모두 beta 원시값 하나를 가리켜, 그 칸은 전부 frontmatter 참조 행이다. 가리키는 원시값 130개 가운데 2026-11-01 재감사 전부터 이 문서에 있던 84개는 상류와 ΔE ≤ 0.002 로 맞았고, 46개는 그 재감사에서 상류 값으로 더했다. 나머지 183개(`-hovered` 173개와 hovered 가 아닌 `chart-theme-default-*` 10개)는 상류가 두 테마 모두 원시값을 가리키지 않고 hex 를 직접 적어 가리킬 팔레트 토큰이 상류에 없으므로, 참조 행 없이 표에만 상류 hex 와 OKLCH(저장소 변환기)로 실었다. 그중 19개(`fill-*-transparent-hovered` 계열)는 hex 가 원시값과 같지만 상류가 그 원시값을 가리키는 것은 아니어서, 칸에 그렇게 적고 참조 행을 두지 않았다. 기본 tier 역할은 기본 tier(`dist/css/styles.css`) 원시값 하나를 가리키고, 그 원시값은 beta 단계와 이름이 같아도 다른 파일의 다른 토큰이다. 그래서 기본 tier 역할이 가리키는 원시값을 `stable-` 앞붙임 팔레트로 따로 싣고(값은 그 파일의 원시값 정의, 줄 끝에 상류 hex), 역할의 라이트·다크 칸을 모두 그 키의 참조 행으로 실었다. 기본 tier 도 beta 처럼 원시값을 테마마다 다시 정의하지 않고 다크 블록이 역할만 다시 가리키므로, `dark-` 짝은 접두 없는 `stable-*` 키를 가리킨다. alpha tier 역할 472개 가운데 194개는 두 테마 모두 alpha 원시값 하나를 가리키고, 42개는 다른 alpha 역할 하나를 가리키며, 나머지 236개는 모두 `-hovered` 역할로 상류가 두 테마 모두 hex 를 직접 적었다. 다른 역할을 가리키는 42개가 가리키는 역할 41개는 모두 원시값을 가리키는 역할이다. alpha 원시값은 다크 블록이 다시 정의하지 않고, 역할이 가리키는 207개를 `alpha-` 앞붙임 팔레트로 따로 실었다(줄 끝에 상류 hex). alpha 역할 이름 가운데 12개가 이미 실린 역할 이름과 같아서(`bg-grey-light` 등), alpha 역할은 이름에도 모두 `alpha-` 를 앞붙였다. 원시값을 가리키는 alpha 역할은 두 칸 모두 접두 없는 `alpha-*` 원시값 키의 참조 행이고, 다른 역할을 가리키는 alpha 역할은 그 한 단계 건너가는 참조(홉)를 역할 참조로 실었다(다크 짝은 가리킨 역할의 `dark-` 짝을 가리킨다). hex 를 직접 적은 236개는 표에만 있고, 그중 17개는 hex 가 alpha 원시값과 같지만 상류가 그 원시값을 가리키는 것은 아니어서 칸에 그렇게 적었다. 두 tier 를 원시값마다 hex 로 맞대 보면, 중립색은 `black-*`·`white-*` 알파 단계와 `grey-100/200/500`·`grey-100-80/90`·`grey-200-80` 이 같은 값이고 `grey-50/700/800/850/900` 과 그 알파 단계(`grey-50-80`·`grey-700-80`·`grey-800-80/90`·`grey-850-80`)는 다르다. 액센트 계열은 대부분 값이 다르고(`pink-300`·`pink-300-30` 은 같다), `{hue}-300-20/40` 처럼 beta 에 없는 단계도 있다. 값이 같아도 beta 키를 가리키지 않는다 — 한쪽 tier 만 바뀌면 조용히 거짓이 되기 때문이다. 참조 행이 아닌 팔레트 색 토큰 482개는 published `@channel.io/bezier-tokens` 0.6.0에서 나온다 — `stable-*` 키는 기본 tier `dist/css/styles.css`, `alpha-*` 키는 alpha tier `dist/alpha/css/styles.css`, 나머지는 `dist/beta/css/styles.css` 다 [src:3]. 비공개 핸드오프 번들에서 온 43개도 이 배포물과 **전부 ΔE ≤ 0.02**로 일치한다 — 번들 값이 공개 배포물로 재현된다. 상류 원시값 블록에서 직접 옮긴 439개(기본 tier 의 `stable-*` 전부, alpha tier 의 `alpha-*` 전부와, beta 의 accent 틴트 `{hue}-400-0/10/20`·`{hue}-300-0/18/30`·`blue-400-30`·`blue-300-45`·`orange-400-30`, 불투명 `navy/purple/pink/teal-300`, `grey-650/750/950`, grey 알파 단계, `black-0/1/3/5/15/20/22/30`·`white-0/3/5/8/20/40/60/80`)는 상류 이름을 그대로 쓰고 알파는 이름이 말하는 백분율로 적었으며(`white-8` 은 `/ 0.08`), 줄 끝에 상류 hex를 적어 `audit:oklch`가 줄마다 대조한다(상류가 `#fff3`처럼 줄여 쓴 값은 8자리로 풀어 적었다). 같은 파일과 대조해 아래 「Accent global hues」의 틴트 서술을 상류 이름에 맞췄다 — 기본 `fill-accent-{hue}`는 10%(다크 `{hue}-300-18`)이고 20%는 `fill-accent-{hue}-heavy`(다크 `{hue}-300-30`)다 [src:3]. 다만 **tier를 구분해 읽어야 한다**: 이 절의 색은 `stable-*` 키와 `alpha-*` 키를 빼면 beta tier이고, 아래 Typography·Rounded·Spacing 절의 값은 기본(stable) tier다. 같은 토큰 이름이 tier마다 다른 값을 가진다 — `grey-900`이 stable에서는 `#242428` ≈ `oklch(0.262 0.007 286)`, beta에서는 `#1d1d20` ≈ `oklch(0.232 0.006 286)`이다. beta에는 stable에 없는 `grey-25/300/400/600/650/750/950`이 있고, 반대로 `radius-44`·`radius-42-p`는 stable에만 있다.
 
-Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3계층 토큰 구조다 [src:3][src:2]. 글로벌은 원시 색값이고, 시맨틱(`--bg-*`, `--txt-*`, `--color-*`)은 테마별로 다른 글로벌을 참조한다 [src:2][src:3]. `--bg-*`·`--txt-*`·`--bgtxt-*`·`--bdr-*`·`--shdw-*` 는 기본 tier 의 시맨틱 이름이고, `--color-` 는 beta tier 의 이름 앞붙임이다 — beta 는 원시값(`--color-grey-900`)과 시맨틱(`--color-text-neutral`)이 같은 앞붙임을 쓴다 [src:3]. 특징은 navy·purple·pink·red·orange·yellow·olive·green·teal·cobalt·blue 11개 hue를 각각 300/400/500 명도 + 알파 변형으로 갖춘 무지개 액센트 팔레트다 [src:3][src:4].
+Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3계층 토큰 구조다 [src:3][src:2]. 글로벌은 원시 색값이고, 시맨틱(`--bg-*`, `--txt-*`, `--color-*`)은 테마별로 다른 글로벌을 참조한다 [src:2][src:3]. `--bg-*`·`--txt-*`·`--bgtxt-*`·`--bdr-*`·`--shdw-*` 는 기본 tier 의 시맨틱 이름이고, `--color-` 는 beta tier 의 이름 앞붙임이다 — beta 는 원시값(`--color-grey-900`)과 시맨틱(`--color-text-neutral`)이 같은 앞붙임을 쓴다 [src:3]. alpha tier 도 원시값과 시맨틱이 같은 앞붙임 `--alpha-color-` 를 쓴다(`--alpha-color-grey-200`, `--alpha-color-bg-grey-light`) [src:3]. 특징은 navy·purple·pink·red·orange·yellow·olive·green·teal·cobalt·blue 11개 hue를 각각 300/400/500 명도 + 알파 변형으로 갖춘 무지개 액센트 팔레트다 [src:3][src:4].
 
-아래 팔레트의 출처는 셋이다 — 핸드오프 번들 `colors_and_type.css`(Bezier **beta 토큰 팔레트**를 정답으로 삼은 파일)에서 온 43개는 번들 값을 ko-design-md 표준 OKLCH로 변환한 것이고, 나머지 beta 키는 `dist/beta` 원시값 블록에서, `stable-*` 키는 기본 tier `dist/css/styles.css` 에서 직접 옮겼다(감사 메모 참조) — 1차 액션은 indigo-violet 계열 `blue-400`이고, 원본이 hex로 발행돼 OKLCH 변환에 미세한 오차가 있을 수 있다 [src:3].
+아래 팔레트의 출처는 넷이다 — 핸드오프 번들 `colors_and_type.css`(Bezier **beta 토큰 팔레트**를 정답으로 삼은 파일)에서 온 43개는 번들 값을 ko-design-md 표준 OKLCH로 변환한 것이고, 나머지 beta 키는 `dist/beta` 원시값 블록에서, `stable-*` 키는 기본 tier `dist/css/styles.css` 에서, `alpha-*` 키는 alpha tier `dist/alpha/css/styles.css` 에서 직접 옮겼다(감사 메모 참조) — 1차 액션은 indigo-violet 계열 `blue-400`이고, 원본이 hex로 발행돼 OKLCH 변환에 미세한 오차가 있을 수 있다 [src:3].
 
 ### Accent global hues (300/400/500 core)
 
@@ -939,7 +1624,7 @@ Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3
 
 ### Semantic (라이트/다크 분리)
 
-시맨틱 토큰은 같은 이름이 테마별로 다른 글로벌을 참조한다 [src:3][src:2]. `@channel.io/bezier-tokens` 는 이 역할 층을 세 벌 발행한다 — 기본 tier 의 `--bg-*`·`--txt-*`·`--bgtxt-*`·`--bdr-*`·`--shdw-*`(색 역할 103개), beta tier 의 `--color-text-*`·`--color-fill-*` 등(346개 — 원시값을 가리키는 163개와 hex 를 직접 적은 183개), 그리고 alpha tier 의 `--alpha-color-*` 다 [src:3]. 이 문서는 기본·beta 두 벌을 싣고 alpha 는 아직 싣지 않았다(알려진 공백). 두 층은 이름 체계도 다르고(`txt-black-darkest` 대 `text-neutral`) 가리키는 원시값도 각자 자기 tier 의 것이다. 컴포넌트 문서가 부르는 이름은 beta 쪽이고(`--color-fill-accent-green-heavier` 등) [src:2], 기본 tier 이름도 패키지 기본 엔트리로 계속 발행되므로 둘 다 싣는다. 아래 표에서 beta 역할 이름은 상류 CSS 이름에서 `--color-` 를 뗀 것이다(`text-neutral` = `--color-text-neutral`). 칸이 참조 하나뿐이면 그 칸이 frontmatter 참조 행(다크는 `dark-` 앞붙임)으로도 실려 있다. beta 층에서 원시값을 가리키는 역할은 모든 칸이 beta 팔레트의 참조이고, hex 를 직접 적은 역할은 그 값을 상류 hex ≈ OKLCH 로 적은 표에만 있다. 기본 tier 층은 모든 칸이 기본 tier 원시값을 따로 실은 `stable-*` 키의 참조다 — beta 와 값이 같은 단계도 다른 파일의 다른 토큰이라 beta 키를 가리키지 않는다.
+시맨틱 토큰은 같은 이름이 테마별로 다른 글로벌을 참조한다 [src:3][src:2]. `@channel.io/bezier-tokens` 는 이 역할 층을 세 벌 발행한다 — 기본 tier 의 `--bg-*`·`--txt-*`·`--bgtxt-*`·`--bdr-*`·`--shdw-*`(색 역할 103개), beta tier 의 `--color-text-*`·`--color-fill-*` 등(346개 — 원시값을 가리키는 163개와 hex 를 직접 적은 183개), 그리고 alpha tier 의 `--alpha-color-fg-*`, `--alpha-color-bg-*` 등(472개 — 원시값을 가리키는 194개, 다른 alpha 역할을 가리키는 42개, hex 를 직접 적은 236개)이다 [src:3]. 이 문서는 세 벌을 모두 싣는다. 기본 tier 와 beta 는 이름 체계도 다르고(`txt-black-darkest` 대 `text-neutral`) 가리키는 원시값도 각자 자기 tier 의 것이다. 컴포넌트 문서가 부르는 이름은 beta 쪽이고(`--color-fill-accent-green-heavier` 등) [src:2], 기본 tier 이름도 패키지 기본 엔트리로 계속 발행되므로 둘 다 싣는다. 아래 표에서 beta 역할 이름은 상류 CSS 이름에서 `--color-` 를 뗀 것이다(`text-neutral` = `--color-text-neutral`). 칸이 참조 하나뿐이면 그 칸이 frontmatter 참조 행(다크는 `dark-` 앞붙임)으로도 실려 있다. beta 층에서 원시값을 가리키는 역할은 모든 칸이 beta 팔레트의 참조이고, hex 를 직접 적은 역할은 그 값을 상류 hex ≈ OKLCH 로 적은 표에만 있다. 기본 tier 층은 모든 칸이 기본 tier 원시값을 따로 실은 `stable-*` 키의 참조다 — beta 와 값이 같은 단계도 다른 파일의 다른 토큰이라 beta 키를 가리키지 않는다. alpha 층은 역할 이름과 원시값 키에 모두 `alpha-` 를 앞붙이고 자기 tier 의 키만 가리킨다(아래 「alpha 엔트리」).
 
 - **컴포넌트 토큰**: `--color-fill-*`, `--color-text-*`, `--color-icon-*`, `--color-border-*`, `--color-surface-*`, `--color-state-action-light`, `--color-dim-absolute-black` 네임스페이스로 노출된다 [src:2].
 - foundation `color.mdx`는 토큰을 Global → Light → Dark 3섹션 스와치로 문서화하며, 라이트는 흰 패널·다크는 짙은 `--color-surface` 패널에 렌더해 양 테마 동시 검수를 전제한다 [src:2].
@@ -1455,7 +2140,508 @@ Bezier는 글로벌 원시값 → 시맨틱(라이트/다크) → 컴포넌트 3
 
 #### alpha 엔트리
 
-별도 `@channel.io/bezier-tokens/alpha` 엔트리(`dist/alpha`)가 세 번째 tier 다 — 이름의 alpha 는 반투명 채널이 아니라 tier 이름이다. `dist/alpha` 는 `dist/beta`·`dist/css` 와 나란한 배포 경로로, `--alpha-color-fg-*`·`--alpha-color-bg-*`·`--alpha-color-surface-*`·`--alpha-color-shadow-*` 등의 역할 층과 그 원시값을 따로 발행한다 [src:3]. 이 문서는 아직 이 층을 싣지 않았다(알려진 공백).
+별도 `@channel.io/bezier-tokens/alpha` 엔트리(`dist/alpha`)가 세 번째 tier 다 — 이름의 alpha 는 반투명 채널이 아니라 tier 이름이다. `dist/alpha` 는 `dist/beta`, `dist/css` 와 나란한 배포 경로로, `--alpha-color-fg-*`, `--alpha-color-bg-*`, `--alpha-color-surface-*`, `--alpha-color-shadow-*` 등의 역할 층과 그 원시값을 따로 발행한다 [src:3].
+
+아래 표의 역할 이름은 상류 CSS 이름에서 `--alpha-color-` 를 떼고 `alpha-` 를 앞붙인 것이다(`alpha-bg-grey-light` = `--alpha-color-bg-grey-light`). alpha 역할 이름 일부가 기본 tier 역할 이름과 같아(`bg-grey-light`) frontmatter 키가 겹치므로, alpha 역할은 전부 이 접두를 달고 다크 짝은 그 바깥에 `dark-` 를 단다(`dark-alpha-bg-grey-light`). 원시값도 tier 를 가르는 `alpha-` 앞붙임 키로 실려 있고(`alpha-grey-200` = `--alpha-color-grey-200`), 테마마다 다시 정의되지 않으므로 다크 칸도 접두 없는 `alpha-*` 원시값 키를 가리킨다. 칸이 참조 하나뿐이면 그 칸이 frontmatter 참조 행으로도 실려 있다.
+
+상류가 역할을 다른 역할로 가리키면(`--alpha-color-primary-bg-normal: var(--alpha-color-bg-blue-normal)`) 그 한 단계 건너가는 참조(홉)를 끝까지 풀어 원시값에 걸지 않고 역할 참조로 싣는다. 상류는 두 테마 블록에 같은 홉을 적고 블록이 색을 고르지만, 이 문서는 키 이름이 테마를 지니므로 다크 칸은 가리킨 역할의 `dark-` 짝을 가리킨다(`dark-alpha-primary-bg-normal` → `dark-alpha-bg-blue-normal`). `alpha-critical-bg-normal` 은 상류가 배경 역할이 아니라 `fg-red-normal` 을 가리키므로 그대로 옮겼다 [src:3]. `-hovered` 역할은 상류가 두 테마 모두 hex 를 직접 적어 가리킬 팔레트 토큰이 없으므로, beta 의 hover 표처럼 상류 hex ≈ OKLCH(저장소 변환기)로 표에만 실었다.
+
+#### alpha tier 글자색 (`alpha-fg-*`)
+
+| 역할 | 라이트 | 다크 |
+| --- | --- | --- |
+| `alpha-fg-black-pure` | `{colors.alpha-black-100}` | `{colors.alpha-white-100}` |
+| `alpha-fg-black-darkest` | `{colors.alpha-black-85}` | `{colors.alpha-white-80}` |
+| `alpha-fg-black-darker` | `{colors.alpha-black-60}` | `{colors.alpha-white-60}` |
+| `alpha-fg-black-dark` | `{colors.alpha-black-40}` | `{colors.alpha-white-40}` |
+| `alpha-fg-black-light` | `{colors.alpha-black-15}` | `{colors.alpha-white-20}` |
+| `alpha-fg-black-lightest` | `{colors.alpha-black-8}` | `{colors.alpha-white-12}` |
+| `alpha-fg-white-normal` | `{colors.alpha-white-100}` | `{colors.alpha-grey-900}` |
+| `alpha-fg-blue-normal` | `{colors.alpha-blue-400}` | `{colors.alpha-blue-300}` |
+| `alpha-fg-blue-light` | `{colors.alpha-blue-400-30}` | `{colors.alpha-blue-300-45}` |
+| `alpha-fg-blue-dark` | `{colors.alpha-blue-500}` | `{colors.alpha-blue-300}` |
+| `alpha-fg-cobalt-normal` | `{colors.alpha-cobalt-400}` | `{colors.alpha-cobalt-300}` |
+| `alpha-fg-cobalt-light` | `{colors.alpha-cobalt-400-30}` | `{colors.alpha-cobalt-300-45}` |
+| `alpha-fg-cobalt-dark` | `{colors.alpha-cobalt-500}` | `{colors.alpha-cobalt-300}` |
+| `alpha-fg-red-normal` | `{colors.alpha-red-400}` | `{colors.alpha-red-300}` |
+| `alpha-fg-red-light` | `{colors.alpha-red-400-30}` | `{colors.alpha-red-300-45}` |
+| `alpha-fg-red-dark` | `{colors.alpha-red-500}` | `{colors.alpha-red-300}` |
+| `alpha-fg-orange-normal` | `{colors.alpha-orange-400}` | `{colors.alpha-orange-300}` |
+| `alpha-fg-orange-light` | `{colors.alpha-orange-400-30}` | `{colors.alpha-orange-300-45}` |
+| `alpha-fg-orange-dark` | `{colors.alpha-orange-500}` | `{colors.alpha-orange-300}` |
+| `alpha-fg-green-normal` | `{colors.alpha-green-400}` | `{colors.alpha-green-300}` |
+| `alpha-fg-green-light` | `{colors.alpha-green-400-30}` | `{colors.alpha-green-300-45}` |
+| `alpha-fg-green-dark` | `{colors.alpha-green-500}` | `{colors.alpha-green-300}` |
+| `alpha-fg-teal-normal` | `{colors.alpha-teal-400}` | `{colors.alpha-teal-300}` |
+| `alpha-fg-teal-light` | `{colors.alpha-teal-400-30}` | `{colors.alpha-teal-300-45}` |
+| `alpha-fg-teal-dark` | `{colors.alpha-teal-500}` | `{colors.alpha-teal-300}` |
+| `alpha-fg-olive-normal` | `{colors.alpha-olive-400}` | `{colors.alpha-olive-300}` |
+| `alpha-fg-olive-light` | `{colors.alpha-olive-400-30}` | `{colors.alpha-olive-300-45}` |
+| `alpha-fg-olive-dark` | `{colors.alpha-olive-500}` | `{colors.alpha-olive-300}` |
+| `alpha-fg-yellow-normal` | `{colors.alpha-yellow-400}` | `{colors.alpha-yellow-300}` |
+| `alpha-fg-yellow-light` | `{colors.alpha-yellow-400-30}` | `{colors.alpha-yellow-300-45}` |
+| `alpha-fg-yellow-dark` | `{colors.alpha-yellow-500}` | `{colors.alpha-yellow-300}` |
+| `alpha-fg-pink-normal` | `{colors.alpha-pink-400}` | `{colors.alpha-pink-300}` |
+| `alpha-fg-pink-light` | `{colors.alpha-pink-400-30}` | `{colors.alpha-pink-300-45}` |
+| `alpha-fg-pink-dark` | `{colors.alpha-pink-500}` | `{colors.alpha-pink-300}` |
+| `alpha-fg-purple-normal` | `{colors.alpha-purple-400}` | `{colors.alpha-purple-300}` |
+| `alpha-fg-purple-light` | `{colors.alpha-purple-400-30}` | `{colors.alpha-purple-300-45}` |
+| `alpha-fg-purple-dark` | `{colors.alpha-purple-500}` | `{colors.alpha-purple-300}` |
+| `alpha-fg-navy-normal` | `{colors.alpha-navy-400}` | `{colors.alpha-navy-300}` |
+| `alpha-fg-navy-light` | `{colors.alpha-navy-400-30}` | `{colors.alpha-navy-300-45}` |
+| `alpha-fg-navy-dark` | `{colors.alpha-navy-500}` | `{colors.alpha-navy-300}` |
+| `alpha-fg-absolute-black-dark` | `{colors.alpha-black-100}` | `{colors.alpha-black-100}` |
+| `alpha-fg-absolute-black-normal` | `{colors.alpha-black-85}` | `{colors.alpha-black-85}` |
+| `alpha-fg-absolute-black-light` | `{colors.alpha-black-60}` | `{colors.alpha-black-60}` |
+| `alpha-fg-absolute-black-lighter` | `{colors.alpha-black-40}` | `{colors.alpha-black-40}` |
+| `alpha-fg-absolute-black-lightest` | `{colors.alpha-black-20}` | `{colors.alpha-black-20}` |
+| `alpha-fg-absolute-white-dark` | `{colors.alpha-white-100}` | `{colors.alpha-white-100}` |
+| `alpha-fg-absolute-white-normal` | `{colors.alpha-white-90}` | `{colors.alpha-white-90}` |
+| `alpha-fg-absolute-white-light` | `{colors.alpha-white-60}` | `{colors.alpha-white-60}` |
+| `alpha-fg-absolute-white-lighter` | `{colors.alpha-white-40}` | `{colors.alpha-white-40}` |
+| `alpha-fg-absolute-white-lightest` | `{colors.alpha-white-20}` | `{colors.alpha-white-20}` |
+| `alpha-fg-grey-darkest` | `{colors.alpha-grey-900}` | `{colors.alpha-white-100}` |
+| `alpha-fg-grey-dark` | `{colors.alpha-grey-500}` | `{colors.alpha-grey-500}` |
+| `alpha-fg-grey-normal` | `{colors.alpha-grey-400}` | `{colors.alpha-grey-600}` |
+| `alpha-fg-grey-light` | `{colors.alpha-grey-200}` | `{colors.alpha-grey-700}` |
+| `alpha-fg-grey-lighter` | `{colors.alpha-grey-100}` | `{colors.alpha-grey-800}` |
+| `alpha-fg-grey-lightest` | `{colors.alpha-grey-50}` | `{colors.alpha-grey-850}` |
+| `alpha-fg-grey-alpha-darker` | `{colors.alpha-grey-alpha-200-80}` | `{colors.alpha-grey-alpha-800-90}` |
+| `alpha-fg-grey-alpha-dark` | `{colors.alpha-grey-alpha-100-80}` | `{colors.alpha-grey-alpha-800-80}` |
+| `alpha-fg-grey-alpha-light` | `{colors.alpha-grey-alpha-50-80}` | `{colors.alpha-grey-alpha-850-80}` |
+
+#### alpha tier 배경 (`alpha-bg-*`)
+
+| 역할 | 라이트 | 다크 |
+| --- | --- | --- |
+| `alpha-bg-black-darkest` | `{colors.alpha-black-60}` | `{colors.alpha-black-60}` |
+| `alpha-bg-black-darker` | `{colors.alpha-black-40}` | `{colors.alpha-white-40}` |
+| `alpha-bg-black-dark` | `{colors.alpha-black-15}` | `{colors.alpha-white-20}` |
+| `alpha-bg-black-light` | `{colors.alpha-black-8}` | `{colors.alpha-white-12}` |
+| `alpha-bg-black-lighter` | `{colors.alpha-black-5}` | `{colors.alpha-white-8}` |
+| `alpha-bg-black-lightest` | `{colors.alpha-black-3}` | `{colors.alpha-white-5}` |
+| `alpha-bg-black-transparent` | `{colors.alpha-black-0}` | `{colors.alpha-white-0}` |
+| `alpha-bg-grey-darkest` | `{colors.alpha-grey-900}` | `{colors.alpha-white-100}` |
+| `alpha-bg-grey-dark` | `{colors.alpha-grey-500}` | `{colors.alpha-grey-500}` |
+| `alpha-bg-grey-light` | `{colors.alpha-grey-200}` | `{colors.alpha-grey-700}` |
+| `alpha-bg-grey-lighter` | `{colors.alpha-grey-100}` | `{colors.alpha-grey-800}` |
+| `alpha-bg-grey-lightest` | `{colors.alpha-grey-50}` | `{colors.alpha-grey-850}` |
+| `alpha-bg-grey-transparent` | `{colors.alpha-grey-900-0}` | `{colors.alpha-white-0}` |
+| `alpha-bg-grey-normal` | `{colors.alpha-grey-400}` | `{colors.alpha-grey-600}` |
+| `alpha-bg-grey-alpha-darkest` | `{colors.alpha-grey-alpha-200-80}` | `{colors.alpha-grey-alpha-700-80}` |
+| `alpha-bg-grey-alpha-darker` | `{colors.alpha-grey-alpha-100-90}` | `{colors.alpha-grey-alpha-800-90}` |
+| `alpha-bg-grey-alpha-dark` | `{colors.alpha-grey-alpha-100-80}` | `{colors.alpha-grey-alpha-800-80}` |
+| `alpha-bg-grey-alpha-light` | `{colors.alpha-grey-alpha-50-80}` | `{colors.alpha-grey-alpha-850-80}` |
+| `alpha-bg-white-highest` | `{colors.alpha-white-100}` | `{colors.alpha-grey-700}` |
+| `alpha-bg-white-higher` | `{colors.alpha-white-100}` | `{colors.alpha-grey-800}` |
+| `alpha-bg-white-normal` | `{colors.alpha-white-100}` | `{colors.alpha-grey-900}` |
+| `alpha-bg-white-transparent` | `{colors.alpha-white-0}` | `{colors.alpha-white-0}` |
+| `alpha-bg-white-alpha-lightest` | `{colors.alpha-white-90}` | `{colors.alpha-grey-alpha-800-80}` |
+| `alpha-bg-white-alpha-lighter` | `{colors.alpha-white-60}` | `{colors.alpha-black-60}` |
+| `alpha-bg-white-alpha-light` | `{colors.alpha-white-20}` | `{colors.alpha-black-20}` |
+| `alpha-bg-white-alpha-transparent` | `{colors.alpha-white-0}` | `{colors.alpha-black-0}` |
+| `alpha-bg-blue-normal` | `{colors.alpha-blue-400}` | `{colors.alpha-blue-300}` |
+| `alpha-bg-blue-light` | `{colors.alpha-blue-400-30}` | `{colors.alpha-blue-300-45}` |
+| `alpha-bg-blue-lighter` | `{colors.alpha-blue-400-20}` | `{colors.alpha-blue-300-30}` |
+| `alpha-bg-blue-lightest` | `{colors.alpha-blue-400-10}` | `{colors.alpha-blue-300-15}` |
+| `alpha-bg-blue-dark` | `{colors.alpha-blue-500}` | `{colors.alpha-blue-400}` |
+| `alpha-bg-blue-shade-lighter` | `{colors.alpha-shade-blue-400-20}` | `{colors.alpha-shade-blue-600-40}` |
+| `alpha-bg-blue-shade-normal` | `{colors.alpha-shade-blue-400}` | `{colors.alpha-shade-blue-600}` |
+| `alpha-bg-blue-transparent` | `{colors.alpha-blue-400-0}` | `{colors.alpha-blue-300-0}` |
+| `alpha-bg-cobalt-normal` | `{colors.alpha-cobalt-400}` | `{colors.alpha-cobalt-300}` |
+| `alpha-bg-cobalt-light` | `{colors.alpha-cobalt-400-30}` | `{colors.alpha-cobalt-300-45}` |
+| `alpha-bg-cobalt-lighter` | `{colors.alpha-cobalt-400-20}` | `{colors.alpha-cobalt-300-30}` |
+| `alpha-bg-cobalt-lightest` | `{colors.alpha-cobalt-400-10}` | `{colors.alpha-cobalt-300-15}` |
+| `alpha-bg-cobalt-dark` | `{colors.alpha-cobalt-500}` | `{colors.alpha-cobalt-400}` |
+| `alpha-bg-cobalt-shade-lighter` | `{colors.alpha-shade-cobalt-400-20}` | `{colors.alpha-shade-cobalt-600-40}` |
+| `alpha-bg-cobalt-shade-normal` | `{colors.alpha-shade-cobalt-400}` | `{colors.alpha-shade-cobalt-600}` |
+| `alpha-bg-cobalt-transparent` | `{colors.alpha-cobalt-400-0}` | `{colors.alpha-cobalt-300-0}` |
+| `alpha-bg-red-normal` | `{colors.alpha-red-400}` | `{colors.alpha-red-300}` |
+| `alpha-bg-red-light` | `{colors.alpha-red-400-30}` | `{colors.alpha-red-300-45}` |
+| `alpha-bg-red-lighter` | `{colors.alpha-red-400-20}` | `{colors.alpha-red-300-30}` |
+| `alpha-bg-red-lightest` | `{colors.alpha-red-400-10}` | `{colors.alpha-red-300-15}` |
+| `alpha-bg-red-dark` | `{colors.alpha-red-500}` | `{colors.alpha-red-400}` |
+| `alpha-bg-red-shade-lighter` | `{colors.alpha-shade-red-400-20}` | `{colors.alpha-shade-red-600-40}` |
+| `alpha-bg-red-shade-normal` | `{colors.alpha-shade-red-400}` | `{colors.alpha-shade-red-600}` |
+| `alpha-bg-red-transparent` | `{colors.alpha-red-400-0}` | `{colors.alpha-red-300-0}` |
+| `alpha-bg-orange-normal` | `{colors.alpha-orange-400}` | `{colors.alpha-orange-300}` |
+| `alpha-bg-orange-light` | `{colors.alpha-orange-400-30}` | `{colors.alpha-orange-300-45}` |
+| `alpha-bg-orange-lighter` | `{colors.alpha-orange-400-20}` | `{colors.alpha-orange-300-30}` |
+| `alpha-bg-orange-lightest` | `{colors.alpha-orange-400-10}` | `{colors.alpha-orange-300-15}` |
+| `alpha-bg-orange-dark` | `{colors.alpha-orange-500}` | `{colors.alpha-orange-400}` |
+| `alpha-bg-orange-shade-lighter` | `{colors.alpha-shade-orange-400-20}` | `{colors.alpha-shade-orange-600-40}` |
+| `alpha-bg-orange-shade-normal` | `{colors.alpha-shade-orange-400}` | `{colors.alpha-shade-orange-600}` |
+| `alpha-bg-orange-transparent` | `{colors.alpha-orange-400-0}` | `{colors.alpha-orange-300-0}` |
+| `alpha-bg-green-normal` | `{colors.alpha-green-400}` | `{colors.alpha-green-300}` |
+| `alpha-bg-green-light` | `{colors.alpha-green-400-30}` | `{colors.alpha-green-300-45}` |
+| `alpha-bg-green-lighter` | `{colors.alpha-green-400-20}` | `{colors.alpha-green-300-30}` |
+| `alpha-bg-green-lightest` | `{colors.alpha-green-400-10}` | `{colors.alpha-green-300-15}` |
+| `alpha-bg-green-dark` | `{colors.alpha-green-500}` | `{colors.alpha-green-400}` |
+| `alpha-bg-green-shade-lighter` | `{colors.alpha-shade-green-400-20}` | `{colors.alpha-shade-green-600-40}` |
+| `alpha-bg-green-shade-normal` | `{colors.alpha-shade-green-400}` | `{colors.alpha-shade-green-600}` |
+| `alpha-bg-green-transparent` | `{colors.alpha-green-400-0}` | `{colors.alpha-green-300-0}` |
+| `alpha-bg-teal-normal` | `{colors.alpha-teal-400}` | `{colors.alpha-teal-300}` |
+| `alpha-bg-teal-light` | `{colors.alpha-teal-400-30}` | `{colors.alpha-teal-300-45}` |
+| `alpha-bg-teal-lighter` | `{colors.alpha-teal-400-20}` | `{colors.alpha-teal-300-30}` |
+| `alpha-bg-teal-lightest` | `{colors.alpha-teal-400-10}` | `{colors.alpha-teal-300-15}` |
+| `alpha-bg-teal-dark` | `{colors.alpha-teal-500}` | `{colors.alpha-teal-400}` |
+| `alpha-bg-teal-shade-lighter` | `{colors.alpha-shade-teal-400-20}` | `{colors.alpha-shade-teal-600-40}` |
+| `alpha-bg-teal-shade-normal` | `{colors.alpha-shade-teal-400}` | `{colors.alpha-shade-teal-600}` |
+| `alpha-bg-teal-transparent` | `{colors.alpha-teal-400-0}` | `{colors.alpha-teal-300-0}` |
+| `alpha-bg-olive-normal` | `{colors.alpha-olive-400}` | `{colors.alpha-olive-300}` |
+| `alpha-bg-olive-light` | `{colors.alpha-olive-400-30}` | `{colors.alpha-olive-300-45}` |
+| `alpha-bg-olive-lighter` | `{colors.alpha-olive-400-20}` | `{colors.alpha-olive-300-30}` |
+| `alpha-bg-olive-lightest` | `{colors.alpha-olive-400-10}` | `{colors.alpha-olive-300-15}` |
+| `alpha-bg-olive-dark` | `{colors.alpha-olive-500}` | `{colors.alpha-olive-400}` |
+| `alpha-bg-olive-shade-lighter` | `{colors.alpha-shade-olive-400-20}` | `{colors.alpha-shade-olive-600-40}` |
+| `alpha-bg-olive-shade-normal` | `{colors.alpha-shade-olive-400}` | `{colors.alpha-shade-olive-600}` |
+| `alpha-bg-olive-transparent` | `{colors.alpha-olive-400-0}` | `{colors.alpha-olive-300-0}` |
+| `alpha-bg-yellow-normal` | `{colors.alpha-yellow-400}` | `{colors.alpha-yellow-300}` |
+| `alpha-bg-yellow-light` | `{colors.alpha-yellow-400-30}` | `{colors.alpha-yellow-300-45}` |
+| `alpha-bg-yellow-lighter` | `{colors.alpha-yellow-400-20}` | `{colors.alpha-yellow-300-30}` |
+| `alpha-bg-yellow-lightest` | `{colors.alpha-yellow-400-10}` | `{colors.alpha-yellow-300-15}` |
+| `alpha-bg-yellow-dark` | `{colors.alpha-yellow-500}` | `{colors.alpha-yellow-400}` |
+| `alpha-bg-yellow-shade-lighter` | `{colors.alpha-shade-yellow-400-20}` | `{colors.alpha-shade-yellow-600-40}` |
+| `alpha-bg-yellow-shade-normal` | `{colors.alpha-shade-yellow-400}` | `{colors.alpha-shade-yellow-600}` |
+| `alpha-bg-yellow-transparent` | `{colors.alpha-yellow-400-0}` | `{colors.alpha-yellow-300-0}` |
+| `alpha-bg-pink-normal` | `{colors.alpha-pink-400}` | `{colors.alpha-pink-300}` |
+| `alpha-bg-pink-light` | `{colors.alpha-pink-400-30}` | `{colors.alpha-pink-300-45}` |
+| `alpha-bg-pink-lighter` | `{colors.alpha-pink-400-20}` | `{colors.alpha-pink-300-30}` |
+| `alpha-bg-pink-lightest` | `{colors.alpha-pink-400-10}` | `{colors.alpha-pink-300-15}` |
+| `alpha-bg-pink-dark` | `{colors.alpha-pink-500}` | `{colors.alpha-pink-400}` |
+| `alpha-bg-pink-shade-lighter` | `{colors.alpha-shade-pink-400-20}` | `{colors.alpha-shade-pink-600-40}` |
+| `alpha-bg-pink-shade-normal` | `{colors.alpha-shade-pink-400}` | `{colors.alpha-shade-pink-600}` |
+| `alpha-bg-pink-transparent` | `{colors.alpha-pink-400-0}` | `{colors.alpha-pink-300-0}` |
+| `alpha-bg-purple-normal` | `{colors.alpha-purple-400}` | `{colors.alpha-purple-300}` |
+| `alpha-bg-purple-light` | `{colors.alpha-purple-400-30}` | `{colors.alpha-purple-300-45}` |
+| `alpha-bg-purple-lighter` | `{colors.alpha-purple-400-20}` | `{colors.alpha-purple-300-30}` |
+| `alpha-bg-purple-lightest` | `{colors.alpha-purple-400-10}` | `{colors.alpha-purple-300-15}` |
+| `alpha-bg-purple-dark` | `{colors.alpha-purple-500}` | `{colors.alpha-purple-400}` |
+| `alpha-bg-purple-shade-lighter` | `{colors.alpha-shade-purple-400-20}` | `{colors.alpha-shade-purple-600-40}` |
+| `alpha-bg-purple-shade-normal` | `{colors.alpha-shade-purple-400}` | `{colors.alpha-shade-purple-600}` |
+| `alpha-bg-purple-transparent` | `{colors.alpha-purple-400-0}` | `{colors.alpha-purple-300-0}` |
+| `alpha-bg-navy-normal` | `{colors.alpha-navy-400}` | `{colors.alpha-navy-300}` |
+| `alpha-bg-navy-light` | `{colors.alpha-navy-400-30}` | `{colors.alpha-navy-300-45}` |
+| `alpha-bg-navy-lighter` | `{colors.alpha-navy-400-20}` | `{colors.alpha-navy-300-30}` |
+| `alpha-bg-navy-lightest` | `{colors.alpha-navy-400-10}` | `{colors.alpha-navy-300-15}` |
+| `alpha-bg-navy-dark` | `{colors.alpha-navy-500}` | `{colors.alpha-navy-400}` |
+| `alpha-bg-navy-shade-lighter` | `{colors.alpha-shade-navy-400-20}` | `{colors.alpha-shade-navy-600-40}` |
+| `alpha-bg-navy-shade-normal` | `{colors.alpha-shade-navy-400}` | `{colors.alpha-shade-navy-600}` |
+| `alpha-bg-navy-transparent` | `{colors.alpha-navy-400-0}` | `{colors.alpha-navy-300-0}` |
+| `alpha-bg-absolute-black-dark` | `{colors.alpha-black-100}` | `{colors.alpha-black-100}` |
+| `alpha-bg-absolute-black-normal` | `{colors.alpha-black-85}` | `{colors.alpha-black-85}` |
+| `alpha-bg-absolute-black-light` | `{colors.alpha-black-60}` | `{colors.alpha-black-60}` |
+| `alpha-bg-absolute-black-lighter` | `{colors.alpha-black-40}` | `{colors.alpha-black-40}` |
+| `alpha-bg-absolute-black-lightest` | `{colors.alpha-black-20}` | `{colors.alpha-black-20}` |
+| `alpha-bg-absolute-black-transparent` | `{colors.alpha-black-0}` | `{colors.alpha-black-0}` |
+| `alpha-bg-absolute-white-dark` | `{colors.alpha-white-100}` | `{colors.alpha-white-100}` |
+| `alpha-bg-absolute-white-normal` | `{colors.alpha-white-90}` | `{colors.alpha-white-90}` |
+| `alpha-bg-absolute-white-light` | `{colors.alpha-white-60}` | `{colors.alpha-white-60}` |
+| `alpha-bg-absolute-white-lighter` | `{colors.alpha-white-40}` | `{colors.alpha-white-40}` |
+| `alpha-bg-absolute-white-lightest` | `{colors.alpha-white-20}` | `{colors.alpha-white-20}` |
+| `alpha-bg-absolute-white-transparent` | `{colors.alpha-white-0}` | `{colors.alpha-white-0}` |
+
+#### alpha tier 표면, 그림자 색 (`alpha-surface-*`, `alpha-shadow-*`)
+
+| 역할 | 라이트 | 다크 |
+| --- | --- | --- |
+| `alpha-surface-lowest` | `{colors.alpha-grey-100}` | `{colors.alpha-grey-850}` |
+| `alpha-surface-lower` | `{colors.alpha-grey-50}` | `{colors.alpha-grey-900}` |
+| `alpha-surface-normal` | `{colors.alpha-white-100}` | `{colors.alpha-grey-950}` |
+| `alpha-shadow-xlarge` | `{colors.alpha-black-30}` | `{colors.alpha-black-60}` |
+| `alpha-shadow-large` | `{colors.alpha-black-22}` | `{colors.alpha-black-40}` |
+| `alpha-shadow-medium` | `{colors.alpha-black-15}` | `{colors.alpha-black-20}` |
+| `alpha-shadow-small` | `{colors.alpha-black-8}` | `{colors.alpha-black-15}` |
+| `alpha-shadow-base` | `{colors.alpha-black-5}` | `{colors.alpha-black-8}` |
+| `alpha-shadow-base-inner` | `{colors.alpha-white-12}` | `{colors.alpha-white-8}` |
+
+#### alpha tier 역할을 가리키는 역할 (`alpha-dim-*`, `alpha-primary-*`, `alpha-critical-*`, `alpha-warning-*`, `alpha-accent-*`, `alpha-success-*`)
+
+| 역할 | 라이트 | 다크 |
+| --- | --- | --- |
+| `alpha-dim-black-light` | `{colors.alpha-bg-absolute-black-lightest}` | `{colors.dark-alpha-bg-absolute-black-lightest}` |
+| `alpha-dim-black-normal` | `{colors.alpha-bg-absolute-black-lighter}` | `{colors.dark-alpha-bg-absolute-black-lighter}` |
+| `alpha-primary-bg-normal` | `{colors.alpha-bg-blue-normal}` | `{colors.dark-alpha-bg-blue-normal}` |
+| `alpha-primary-bg-light` | `{colors.alpha-bg-blue-light}` | `{colors.dark-alpha-bg-blue-light}` |
+| `alpha-primary-bg-lighter` | `{colors.alpha-bg-blue-lighter}` | `{colors.dark-alpha-bg-blue-lighter}` |
+| `alpha-primary-bg-lightest` | `{colors.alpha-bg-blue-lightest}` | `{colors.dark-alpha-bg-blue-lightest}` |
+| `alpha-primary-bg-dark` | `{colors.alpha-bg-blue-dark}` | `{colors.dark-alpha-bg-blue-dark}` |
+| `alpha-primary-fg-normal` | `{colors.alpha-fg-blue-normal}` | `{colors.dark-alpha-fg-blue-normal}` |
+| `alpha-primary-fg-light` | `{colors.alpha-fg-blue-light}` | `{colors.dark-alpha-fg-blue-light}` |
+| `alpha-primary-fg-dark` | `{colors.alpha-fg-blue-dark}` | `{colors.dark-alpha-fg-blue-dark}` |
+| `alpha-critical-bg-dark` | `{colors.alpha-bg-red-dark}` | `{colors.dark-alpha-bg-red-dark}` |
+| `alpha-critical-bg-normal` | `{colors.alpha-fg-red-normal}` | `{colors.dark-alpha-fg-red-normal}` |
+| `alpha-critical-bg-light` | `{colors.alpha-bg-red-light}` | `{colors.dark-alpha-bg-red-light}` |
+| `alpha-critical-bg-lighter` | `{colors.alpha-bg-red-lighter}` | `{colors.dark-alpha-bg-red-lighter}` |
+| `alpha-critical-bg-lightest` | `{colors.alpha-bg-red-lightest}` | `{colors.dark-alpha-bg-red-lightest}` |
+| `alpha-critical-fg-normal` | `{colors.alpha-fg-red-normal}` | `{colors.dark-alpha-fg-red-normal}` |
+| `alpha-critical-fg-light` | `{colors.alpha-fg-red-light}` | `{colors.dark-alpha-fg-red-light}` |
+| `alpha-critical-fg-dark` | `{colors.alpha-fg-red-dark}` | `{colors.dark-alpha-fg-red-dark}` |
+| `alpha-warning-bg-dark` | `{colors.alpha-bg-orange-dark}` | `{colors.dark-alpha-bg-orange-dark}` |
+| `alpha-warning-bg-normal` | `{colors.alpha-bg-orange-normal}` | `{colors.dark-alpha-bg-orange-normal}` |
+| `alpha-warning-bg-light` | `{colors.alpha-bg-orange-light}` | `{colors.dark-alpha-bg-orange-light}` |
+| `alpha-warning-bg-lighter` | `{colors.alpha-bg-orange-lighter}` | `{colors.dark-alpha-bg-orange-lighter}` |
+| `alpha-warning-bg-lightest` | `{colors.alpha-bg-orange-lightest}` | `{colors.dark-alpha-bg-orange-lightest}` |
+| `alpha-warning-fg-normal` | `{colors.alpha-fg-orange-normal}` | `{colors.dark-alpha-fg-orange-normal}` |
+| `alpha-warning-fg-light` | `{colors.alpha-fg-orange-light}` | `{colors.dark-alpha-fg-orange-light}` |
+| `alpha-warning-fg-dark` | `{colors.alpha-fg-orange-dark}` | `{colors.dark-alpha-fg-orange-dark}` |
+| `alpha-accent-bg-dark` | `{colors.alpha-bg-cobalt-dark}` | `{colors.dark-alpha-bg-cobalt-dark}` |
+| `alpha-accent-bg-normal` | `{colors.alpha-bg-cobalt-normal}` | `{colors.dark-alpha-bg-cobalt-normal}` |
+| `alpha-accent-bg-light` | `{colors.alpha-bg-cobalt-light}` | `{colors.dark-alpha-bg-cobalt-light}` |
+| `alpha-accent-bg-lighter` | `{colors.alpha-bg-cobalt-lighter}` | `{colors.dark-alpha-bg-cobalt-lighter}` |
+| `alpha-accent-bg-lightest` | `{colors.alpha-bg-cobalt-lightest}` | `{colors.dark-alpha-bg-cobalt-lightest}` |
+| `alpha-accent-fg-normal` | `{colors.alpha-fg-cobalt-normal}` | `{colors.dark-alpha-fg-cobalt-normal}` |
+| `alpha-accent-fg-light` | `{colors.alpha-fg-cobalt-light}` | `{colors.dark-alpha-fg-cobalt-light}` |
+| `alpha-accent-fg-dark` | `{colors.alpha-fg-cobalt-dark}` | `{colors.dark-alpha-fg-cobalt-dark}` |
+| `alpha-success-bg-dark` | `{colors.alpha-bg-green-dark}` | `{colors.dark-alpha-bg-green-dark}` |
+| `alpha-success-bg-normal` | `{colors.alpha-bg-green-normal}` | `{colors.dark-alpha-bg-green-normal}` |
+| `alpha-success-bg-light` | `{colors.alpha-bg-green-light}` | `{colors.dark-alpha-bg-green-light}` |
+| `alpha-success-bg-lighter` | `{colors.alpha-bg-green-lighter}` | `{colors.dark-alpha-bg-green-lighter}` |
+| `alpha-success-bg-lightest` | `{colors.alpha-bg-green-lightest}` | `{colors.dark-alpha-bg-green-lightest}` |
+| `alpha-success-fg-normal` | `{colors.alpha-fg-green-normal}` | `{colors.dark-alpha-fg-green-normal}` |
+| `alpha-success-fg-light` | `{colors.alpha-fg-green-light}` | `{colors.dark-alpha-fg-green-light}` |
+| `alpha-success-fg-dark` | `{colors.alpha-fg-green-dark}` | `{colors.dark-alpha-fg-green-dark}` |
+
+#### alpha tier hover 상태 — 상류가 hex 를 직접 적은 역할 (`alpha-*-hovered`)
+
+| 역할 | 라이트 | 다크 |
+| --- | --- | --- |
+| `alpha-fg-black-pure-hovered` | #1c1c1cff ≈ `oklch(0.226 0 0)` | #edededff ≈ `oklch(0.946 0 0)` |
+| `alpha-fg-black-darkest-hovered` | #1c1c1cd9 ≈ `oklch(0.226 0 0 / 0.85)` | #edededcc ≈ `oklch(0.946 0 0 / 0.80)` |
+| `alpha-fg-black-darker-hovered` | #1c1c1c99 ≈ `oklch(0.226 0 0 / 0.60)` | #ededed99 ≈ `oklch(0.946 0 0 / 0.60)` |
+| `alpha-fg-black-dark-hovered` | #1c1c1c66 ≈ `oklch(0.226 0 0 / 0.40)` | #ededed66 ≈ `oklch(0.946 0 0 / 0.40)` |
+| `alpha-fg-black-light-hovered` | #1c1c1c39 ≈ `oklch(0.226 0 0 / 0.22)` | #ededed4d ≈ `oklch(0.946 0 0 / 0.30)` |
+| `alpha-fg-black-lightest-hovered` | #1c1c1c1e ≈ `oklch(0.226 0 0 / 0.12)` | #ededed2f ≈ `oklch(0.946 0 0 / 0.18)` |
+| `alpha-fg-white-normal-hovered` | #edededff ≈ `oklch(0.946 0 0)` | #2e2e33ff ≈ `oklch(0.303 0.009 286)` |
+| `alpha-fg-blue-normal-hovered` | #5551fcff ≈ `oklch(0.551 0.245 276)` | #93aefbff ≈ `oklch(0.761 0.115 269)` |
+| `alpha-fg-blue-light-hovered` | #5551fc4d ≈ `oklch(0.551 0.245 276 / 0.30)` | #93aefb73 ≈ `oklch(0.761 0.115 269 / 0.45)` |
+| `alpha-fg-blue-dark-hovered` | #4b42d5ff ≈ `oklch(0.487 0.216 277)` | #93aefbff ≈ `oklch(0.761 0.115 269)` |
+| `alpha-fg-cobalt-normal-hovered` | #4088dfff ≈ `oklch(0.623 0.150 255)` | #83c4faff ≈ `oklch(0.797 0.102 245)` |
+| `alpha-fg-cobalt-light-hovered` | #4088df4d ≈ `oklch(0.623 0.150 255 / 0.30)` | #83c4fa73 ≈ `oklch(0.797 0.102 245 / 0.45)` |
+| `alpha-fg-cobalt-dark-hovered` | #3268c4ff ≈ `oklch(0.531 0.155 260)` | #83c4faff ≈ `oklch(0.797 0.102 245)` |
+| `alpha-fg-red-normal-hovered` | #df4c4cff ≈ `oklch(0.620 0.183 24)` | #ffa2a2ff ≈ `oklch(0.805 0.111 20)` |
+| `alpha-fg-red-light-hovered` | #df4c4c4d ≈ `oklch(0.620 0.183 24 / 0.30)` | #ffa2a273 ≈ `oklch(0.805 0.111 20 / 0.45)` |
+| `alpha-fg-red-dark-hovered` | #ab3940ff ≈ `oklch(0.511 0.149 21)` | #ffa2a2ff ≈ `oklch(0.805 0.111 20)` |
+| `alpha-fg-orange-normal-hovered` | #df751fff ≈ `oklch(0.672 0.159 53)` | #ffae74ff ≈ `oklch(0.817 0.121 56)` |
+| `alpha-fg-orange-light-hovered` | #df751f4d ≈ `oklch(0.672 0.159 53 / 0.30)` | #ffae7473 ≈ `oklch(0.817 0.121 56 / 0.45)` |
+| `alpha-fg-orange-dark-hovered` | #b15c0fff ≈ `oklch(0.566 0.135 55)` | #ffae74ff ≈ `oklch(0.817 0.121 56)` |
+| `alpha-fg-green-normal-hovered` | #3f9e61ff ≈ `oklch(0.627 0.129 153)` | #74d68bff ≈ `oklch(0.797 0.141 150)` |
+| `alpha-fg-green-light-hovered` | #3f9e614d ≈ `oklch(0.627 0.129 153 / 0.30)` | #74d68b73 ≈ `oklch(0.797 0.141 150 / 0.45)` |
+| `alpha-fg-green-dark-hovered` | #347b5aff ≈ `oklch(0.528 0.089 161)` | #74d68bff ≈ `oklch(0.797 0.141 150)` |
+| `alpha-fg-teal-normal-hovered` | #08a5a0ff ≈ `oklch(0.652 0.111 191)` | #4cdccfff ≈ `oklch(0.815 0.123 186)` |
+| `alpha-fg-teal-light-hovered` | #08a5a04d ≈ `oklch(0.652 0.111 191 / 0.30)` | #4cdccf73 ≈ `oklch(0.815 0.123 186 / 0.45)` |
+| `alpha-fg-teal-dark-hovered` | #06848bff ≈ `oklch(0.559 0.094 201)` | #4cdccfff ≈ `oklch(0.815 0.123 186)` |
+| `alpha-fg-olive-normal-hovered` | #9ba212ff ≈ `oklch(0.684 0.148 113)` | #d2df3dff ≈ `oklch(0.866 0.176 114)` |
+| `alpha-fg-olive-light-hovered` | #9ba2124d ≈ `oklch(0.684 0.148 113 / 0.30)` | #d2df3d73 ≈ `oklch(0.866 0.176 114 / 0.45)` |
+| `alpha-fg-olive-dark-hovered` | #70751cff ≈ `oklch(0.541 0.109 113)` | #d2df3dff ≈ `oklch(0.866 0.176 114)` |
+| `alpha-fg-yellow-normal-hovered` | #d9a010ff ≈ `oklch(0.740 0.150 82)` | #face4aff ≈ `oklch(0.867 0.152 90)` |
+| `alpha-fg-yellow-light-hovered` | #d9a0104d ≈ `oklch(0.740 0.150 82 / 0.30)` | #face4a73 ≈ `oklch(0.867 0.152 90 / 0.45)` |
+| `alpha-fg-yellow-dark-hovered` | #b58500ff ≈ `oklch(0.646 0.133 83)` | #face4aff ≈ `oklch(0.867 0.152 90)` |
+| `alpha-fg-pink-normal-hovered` | #cf3eacff ≈ `oklch(0.610 0.213 339)` | #f27fdbff ≈ `oklch(0.754 0.178 335)` |
+| `alpha-fg-pink-light-hovered` | #cf3eac4d ≈ `oklch(0.610 0.213 339 / 0.30)` | #f27fdb73 ≈ `oklch(0.754 0.178 335 / 0.45)` |
+| `alpha-fg-pink-dark-hovered` | #a03591ff ≈ `oklch(0.517 0.176 334)` | #f27fdbff ≈ `oklch(0.754 0.178 335)` |
+| `alpha-fg-purple-normal-hovered` | #8247e1ff ≈ `oklch(0.553 0.220 296)` | #bf9affff ≈ `oklch(0.759 0.145 300)` |
+| `alpha-fg-purple-light-hovered` | #8247e14d ≈ `oklch(0.553 0.220 296 / 0.30)` | #bf9aff73 ≈ `oklch(0.759 0.145 300 / 0.45)` |
+| `alpha-fg-purple-dark-hovered` | #6135a6ff ≈ `oklch(0.447 0.172 297)` | #bf9affff ≈ `oklch(0.759 0.145 300)` |
+| `alpha-fg-navy-normal-hovered` | #414c9cff ≈ `oklch(0.451 0.129 274)` | #838fdcff ≈ `oklch(0.672 0.115 276)` |
+| `alpha-fg-navy-light-hovered` | #414c9c4d ≈ `oklch(0.451 0.129 274 / 0.30)` | #838fdc73 ≈ `oklch(0.672 0.115 276 / 0.45)` |
+| `alpha-fg-navy-dark-hovered` | #34377cff ≈ `oklch(0.374 0.115 277)` | #838fdcff ≈ `oklch(0.672 0.115 276)` |
+| `alpha-fg-absolute-black-dark-hovered` | #1c1c1cff ≈ `oklch(0.226 0 0)` | #0a0a0aff ≈ `oklch(0.145 0 0)` |
+| `alpha-fg-absolute-black-normal-hovered` | #1c1c1cd9 ≈ `oklch(0.226 0 0 / 0.85)` | #0a0a0ad9 ≈ `oklch(0.145 0 0 / 0.85)` |
+| `alpha-fg-absolute-black-light-hovered` | #1c1c1c99 ≈ `oklch(0.226 0 0 / 0.60)` | #0a0a0a99 ≈ `oklch(0.145 0 0 / 0.60)` |
+| `alpha-fg-absolute-black-lighter-hovered` | #1c1c1c66 ≈ `oklch(0.226 0 0 / 0.40)` | #0a0a0a66 ≈ `oklch(0.145 0 0 / 0.40)` |
+| `alpha-fg-absolute-black-lightest-hovered` | #1c1c1c4d ≈ `oklch(0.226 0 0 / 0.30)` | #0a0a0a4d ≈ `oklch(0.145 0 0 / 0.30)` |
+| `alpha-fg-absolute-white-dark-hovered` | #edededff ≈ `oklch(0.946 0 0)` | #edededff ≈ `oklch(0.946 0 0)` |
+| `alpha-fg-absolute-white-normal-hovered` | #ededede6 ≈ `oklch(0.946 0 0 / 0.90)` | #ededede6 ≈ `oklch(0.946 0 0 / 0.90)` |
+| `alpha-fg-absolute-white-light-hovered` | #ededed99 ≈ `oklch(0.946 0 0 / 0.60)` | #ededed99 ≈ `oklch(0.946 0 0 / 0.60)` |
+| `alpha-fg-absolute-white-lighter-hovered` | #ededed66 ≈ `oklch(0.946 0 0 / 0.40)` | #ededed66 ≈ `oklch(0.946 0 0 / 0.40)` |
+| `alpha-fg-absolute-white-lightest-hovered` | #ededed4d ≈ `oklch(0.946 0 0 / 0.30)` | #ededed4d ≈ `oklch(0.946 0 0 / 0.30)` |
+| `alpha-fg-grey-darkest-hovered` | #42424aff ≈ `oklch(0.382 0.013 286)` | #edededff ≈ `oklch(0.946 0 0)` |
+| `alpha-fg-grey-dark-hovered` | #9b9b9eff ≈ `oklch(0.690 0.004 286)` | #b2b2b5ff ≈ `oklch(0.764 0.004 286)` |
+| `alpha-fg-grey-normal-hovered` | #c0c0c3ff ≈ `oklch(0.809 0.004 286)` | #868686ff ≈ `oklch(0.620 0 0)` |
+| `alpha-fg-grey-light-hovered` | #dedee0ff ≈ `oklch(0.901 0.003 286)` | #505253ff ≈ `oklch(0.437 0.003 229)` |
+| `alpha-fg-grey-lighter-hovered` | #e5e5e8ff ≈ `oklch(0.923 0.004 286)` | #3b3c3fff ≈ `oklch(0.356 0.005 271)` |
+| `alpha-fg-grey-lightest-hovered` | #eaeaeaff ≈ `oklch(0.937 0 0)` | #343538ff ≈ `oklch(0.329 0.005 271)` |
+| `alpha-fg-grey-alpha-darker-hovered` | #dedee0cc ≈ `oklch(0.901 0.003 286 / 0.80)` | #3b3c3fe6 ≈ `oklch(0.356 0.005 271 / 0.90)` |
+| `alpha-fg-grey-alpha-dark-hovered` | #e5e5e8cc ≈ `oklch(0.923 0.004 286 / 0.80)` | #3b3c3fcc ≈ `oklch(0.356 0.005 271 / 0.80)` |
+| `alpha-fg-grey-alpha-light-hovered` | #eaeaeacc ≈ `oklch(0.937 0 0 / 0.80)` | #343538cc ≈ `oklch(0.329 0.005 271 / 0.80)` |
+| `alpha-bg-black-darkest-hovered` | #1c1c1c99 ≈ `oklch(0.226 0 0 / 0.60)` | #0a0a0a99 ≈ `oklch(0.145 0 0 / 0.60)` |
+| `alpha-bg-black-darker-hovered` | #1c1c1c66 ≈ `oklch(0.226 0 0 / 0.40)` | #ededed66 ≈ `oklch(0.946 0 0 / 0.40)` |
+| `alpha-bg-black-dark-hovered` | #1c1c1c39 ≈ `oklch(0.226 0 0 / 0.22)` | #ededed4d ≈ `oklch(0.946 0 0 / 0.30)` |
+| `alpha-bg-black-light-hovered` | #1c1c1c1e ≈ `oklch(0.226 0 0 / 0.12)` | #ededed2f ≈ `oklch(0.946 0 0 / 0.18)` |
+| `alpha-bg-black-lighter-hovered` | #1c1c1c14 ≈ `oklch(0.226 0 0 / 0.08)` | #ededed1e ≈ `oklch(0.946 0 0 / 0.12)` |
+| `alpha-bg-black-lightest-hovered` | #1c1c1c0c ≈ `oklch(0.226 0 0 / 0.05)` | #ededed14 ≈ `oklch(0.946 0 0 / 0.08)` |
+| `alpha-bg-black-transparent-hovered` | #0000000d ≈ `oklch(0 0 0 / 0.05)` — hex 가 원시값 `alpha-black-5` 그대로, 참조 아님 | #ffffff0d ≈ `oklch(1 0 0 / 0.05)` — hex 가 원시값 `alpha-white-5` 그대로, 참조 아님 |
+| `alpha-bg-grey-darkest-hovered` | #42424aff ≈ `oklch(0.382 0.013 286)` | #edededff ≈ `oklch(0.946 0 0)` |
+| `alpha-bg-grey-dark-hovered` | #9b9b9eff ≈ `oklch(0.690 0.004 286)` | #b2b2b5ff ≈ `oklch(0.764 0.004 286)` |
+| `alpha-bg-grey-light-hovered` | #dedee0ff ≈ `oklch(0.901 0.003 286)` | #505253ff ≈ `oklch(0.437 0.003 229)` |
+| `alpha-bg-grey-lighter-hovered` | #e5e5e8ff ≈ `oklch(0.923 0.004 286)` | #3b3c3fff ≈ `oklch(0.356 0.005 271)` |
+| `alpha-bg-grey-lightest-hovered` | #eaeaeaff ≈ `oklch(0.937 0 0)` | #343538ff ≈ `oklch(0.329 0.005 271)` |
+| `alpha-bg-grey-transparent-hovered` | #2424280d ≈ `oklch(0.262 0.007 286 / 0.05)` | #ffffff0d ≈ `oklch(1 0 0 / 0.05)` — hex 가 원시값 `alpha-white-5` 그대로, 참조 아님 |
+| `alpha-bg-grey-normal-hovered` | #c0c0c3ff ≈ `oklch(0.809 0.004 286)` | #868686ff ≈ `oklch(0.620 0 0)` |
+| `alpha-bg-grey-alpha-darkest-hovered` | #dedee0cc ≈ `oklch(0.901 0.003 286 / 0.80)` | #505253cc ≈ `oklch(0.437 0.003 229 / 0.80)` |
+| `alpha-bg-grey-alpha-darker-hovered` | #e5e5e8e6 ≈ `oklch(0.923 0.004 286 / 0.90)` | #3b3c3fe6 ≈ `oklch(0.356 0.005 271 / 0.90)` |
+| `alpha-bg-grey-alpha-dark-hovered` | #e5e5e8cc ≈ `oklch(0.923 0.004 286 / 0.80)` | #3b3c3fcc ≈ `oklch(0.356 0.005 271 / 0.80)` |
+| `alpha-bg-grey-alpha-light-hovered` | #eaeaeacc ≈ `oklch(0.937 0 0 / 0.80)` | #343538cc ≈ `oklch(0.329 0.005 271 / 0.80)` |
+| `alpha-bg-white-highest-hovered` | #edededff ≈ `oklch(0.946 0 0)` | #505253ff ≈ `oklch(0.437 0.003 229)` |
+| `alpha-bg-white-higher-hovered` | #edededff ≈ `oklch(0.946 0 0)` | #3b3c3fff ≈ `oklch(0.356 0.005 271)` |
+| `alpha-bg-white-normal-hovered` | #edededff ≈ `oklch(0.946 0 0)` | #2e2e33ff ≈ `oklch(0.303 0.009 286)` |
+| `alpha-bg-white-transparent-hovered` | #ffffff0d ≈ `oklch(1 0 0 / 0.05)` — hex 가 원시값 `alpha-white-5` 그대로, 참조 아님 | #ffffff0d ≈ `oklch(1 0 0 / 0.05)` — hex 가 원시값 `alpha-white-5` 그대로, 참조 아님 |
+| `alpha-bg-white-alpha-lightest-hovered` | #ededede6 ≈ `oklch(0.946 0 0 / 0.90)` | #3b3c3fcc ≈ `oklch(0.356 0.005 271 / 0.80)` |
+| `alpha-bg-white-alpha-lighter-hovered` | #ededed99 ≈ `oklch(0.946 0 0 / 0.60)` | #0a0a0a99 ≈ `oklch(0.145 0 0 / 0.60)` |
+| `alpha-bg-white-alpha-light-hovered` | #ededed4d ≈ `oklch(0.946 0 0 / 0.30)` | #0a0a0a4d ≈ `oklch(0.145 0 0 / 0.30)` |
+| `alpha-bg-white-alpha-transparent-hovered` | #ffffff0d ≈ `oklch(1 0 0 / 0.05)` — hex 가 원시값 `alpha-white-5` 그대로, 참조 아님 | #0000000d ≈ `oklch(0 0 0 / 0.05)` — hex 가 원시값 `alpha-black-5` 그대로, 참조 아님 |
+| `alpha-bg-blue-normal-hovered` | #5551fcff ≈ `oklch(0.551 0.245 276)` | #93aefbff ≈ `oklch(0.761 0.115 269)` |
+| `alpha-bg-blue-light-hovered` | #5551fc4d ≈ `oklch(0.551 0.245 276 / 0.30)` | #93aefb73 ≈ `oklch(0.761 0.115 269 / 0.45)` |
+| `alpha-bg-blue-lighter-hovered` | #5551fc4d ≈ `oklch(0.551 0.245 276 / 0.30)` | #93aefb4d ≈ `oklch(0.761 0.115 269 / 0.30)` |
+| `alpha-bg-blue-lightest-hovered` | #5551fc27 ≈ `oklch(0.551 0.245 276 / 0.15)` | #93aefb39 ≈ `oklch(0.761 0.115 269 / 0.22)` |
+| `alpha-bg-blue-dark-hovered` | #4b42d5ff ≈ `oklch(0.487 0.216 277)` | #8280fcff ≈ `oklch(0.661 0.179 281)` |
+| `alpha-bg-blue-shade-lighter-hovered` | #6165d94d ≈ `oklch(0.565 0.174 278 / 0.30)` | #4e569d66 ≈ `oklch(0.481 0.114 276 / 0.40)` |
+| `alpha-bg-blue-shade-normal-hovered` | #6165d9ff ≈ `oklch(0.565 0.174 278)` | #4e569dff ≈ `oklch(0.481 0.114 276)` |
+| `alpha-bg-blue-transparent-hovered` | #6d6afc1a ≈ `oklch(0.607 0.211 279 / 0.10)` — hex 가 원시값 `alpha-blue-400-10` 그대로, 참조 아님 | #7d9efa1a ≈ `oklch(0.714 0.140 268 / 0.10)` |
+| `alpha-bg-cobalt-normal-hovered` | #4088dfff ≈ `oklch(0.623 0.150 255)` | #83c4faff ≈ `oklch(0.797 0.102 245)` |
+| `alpha-bg-cobalt-light-hovered` | #4088df4d ≈ `oklch(0.623 0.150 255 / 0.30)` | #83c4fa73 ≈ `oklch(0.797 0.102 245 / 0.45)` |
+| `alpha-bg-cobalt-lighter-hovered` | #4088df4d ≈ `oklch(0.623 0.150 255 / 0.30)` | #83c4fa4d ≈ `oklch(0.797 0.102 245 / 0.30)` |
+| `alpha-bg-cobalt-lightest-hovered` | #4088df27 ≈ `oklch(0.623 0.150 255 / 0.15)` | #83c4fa39 ≈ `oklch(0.797 0.102 245 / 0.22)` |
+| `alpha-bg-cobalt-dark-hovered` | #3268c4ff ≈ `oklch(0.531 0.155 260)` | #5f9eecff ≈ `oklch(0.691 0.133 255)` |
+| `alpha-bg-cobalt-shade-lighter-hovered` | #47a2e24d ≈ `oklch(0.685 0.128 243 / 0.30)` | #4c6a9966 ≈ `oklch(0.522 0.083 259 / 0.40)` |
+| `alpha-bg-cobalt-shade-normal-hovered` | #47a2e2ff ≈ `oklch(0.685 0.128 243)` | #4c6a99ff ≈ `oklch(0.522 0.083 259)` |
+| `alpha-bg-cobalt-transparent-hovered` | #5093e51a ≈ `oklch(0.657 0.141 255 / 0.10)` — hex 가 원시값 `alpha-cobalt-400-10` 그대로, 참조 아님 | #71b9f51a ≈ `oklch(0.762 0.113 245 / 0.10)` |
+| `alpha-bg-red-normal-hovered` | #df4c4cff ≈ `oklch(0.620 0.183 24)` | #ffa2a2ff ≈ `oklch(0.805 0.111 20)` |
+| `alpha-bg-red-light-hovered` | #df4c4c4d ≈ `oklch(0.620 0.183 24 / 0.30)` | #ffa2a273 ≈ `oklch(0.805 0.111 20 / 0.45)` |
+| `alpha-bg-red-lighter-hovered` | #df4c4c4d ≈ `oklch(0.620 0.183 24 / 0.30)` | #ffa2a24d ≈ `oklch(0.805 0.111 20 / 0.30)` |
+| `alpha-bg-red-lightest-hovered` | #df4c4c27 ≈ `oklch(0.620 0.183 24 / 0.15)` | #ffa2a239 ≈ `oklch(0.805 0.111 20 / 0.22)` |
+| `alpha-bg-red-dark-hovered` | #ab3940ff ≈ `oklch(0.511 0.149 21)` | #ec6b6bff ≈ `oklch(0.684 0.160 22)` |
+| `alpha-bg-red-shade-lighter-hovered` | #d758614d ≈ `oklch(0.626 0.160 19 / 0.30)` | #a5434a66 ≈ `oklch(0.516 0.130 19 / 0.40)` |
+| `alpha-bg-red-shade-normal-hovered` | #d75861ff ≈ `oklch(0.626 0.160 19)` | #a5434aff ≈ `oklch(0.516 0.130 19)` |
+| `alpha-bg-red-transparent-hovered` | #e55c5c1a ≈ `oklch(0.651 0.171 23 / 0.10)` — hex 가 원시값 `alpha-red-400-10` 그대로, 참조 아님 | #ff8c8c1a ≈ `oklch(0.765 0.140 21 / 0.10)` |
+| `alpha-bg-orange-normal-hovered` | #df751fff ≈ `oklch(0.672 0.159 53)` | #ffae74ff ≈ `oklch(0.817 0.121 56)` |
+| `alpha-bg-orange-light-hovered` | #df751f4d ≈ `oklch(0.672 0.159 53 / 0.30)` | #ffae7473 ≈ `oklch(0.817 0.121 56 / 0.45)` |
+| `alpha-bg-orange-lighter-hovered` | #df751f4d ≈ `oklch(0.672 0.159 53 / 0.30)` | #ffae744d ≈ `oklch(0.817 0.121 56 / 0.30)` |
+| `alpha-bg-orange-lightest-hovered` | #df751f27 ≈ `oklch(0.672 0.159 53 / 0.15)` | #ffae7439 ≈ `oklch(0.817 0.121 56 / 0.22)` |
+| `alpha-bg-orange-dark-hovered` | #b15c0fff ≈ `oklch(0.566 0.135 55)` | #ee8a39ff ≈ `oklch(0.728 0.153 56)` |
+| `alpha-bg-orange-shade-lighter-hovered` | #d9813a4d ≈ `oklch(0.686 0.137 56 / 0.30)` | #9e643566 ≈ `oklch(0.557 0.098 58 / 0.40)` |
+| `alpha-bg-orange-shade-normal-hovered` | #d9813aff ≈ `oklch(0.686 0.137 56)` | #9e6435ff ≈ `oklch(0.557 0.098 58)` |
+| `alpha-bg-orange-transparent-hovered` | #e67f2b1a ≈ `oklch(0.698 0.156 55 / 0.10)` — hex 가 원시값 `alpha-orange-400-10` 그대로, 참조 아님 | #ffa15e1a ≈ `oklch(0.791 0.139 55 / 0.10)` |
+| `alpha-bg-green-normal-hovered` | #3f9e61ff ≈ `oklch(0.627 0.129 153)` | #74d68bff ≈ `oklch(0.797 0.141 150)` |
+| `alpha-bg-green-light-hovered` | #3f9e614d ≈ `oklch(0.627 0.129 153 / 0.30)` | #74d68b73 ≈ `oklch(0.797 0.141 150 / 0.45)` |
+| `alpha-bg-green-lighter-hovered` | #3f9e614d ≈ `oklch(0.627 0.129 153 / 0.30)` | #74d68b4d ≈ `oklch(0.797 0.141 150 / 0.30)` |
+| `alpha-bg-green-lightest-hovered` | #3f9e6127 ≈ `oklch(0.627 0.129 153 / 0.15)` | #74d68b39 ≈ `oklch(0.797 0.141 150 / 0.22)` |
+| `alpha-bg-green-dark-hovered` | #347b5aff ≈ `oklch(0.528 0.089 161)` | #41c16fff ≈ `oklch(0.721 0.163 152)` |
+| `alpha-bg-green-shade-lighter-hovered` | #5aa4734d ≈ `oklch(0.657 0.105 154 / 0.30)` | #4f8d6766 ≈ `oklch(0.591 0.087 156 / 0.40)` |
+| `alpha-bg-green-shade-normal-hovered` | #5aa473ff ≈ `oklch(0.657 0.105 154)` | #4f8d67ff ≈ `oklch(0.591 0.087 156)` |
+| `alpha-bg-green-transparent-hovered` | #40ad671a ≈ `oklch(0.668 0.144 152 / 0.10)` — hex 가 원시값 `alpha-green-400-10` 그대로, 참조 아님 | #68cc7f1a ≈ `oklch(0.765 0.145 149 / 0.10)` |
+| `alpha-bg-teal-normal-hovered` | #08a5a0ff ≈ `oklch(0.652 0.111 191)` | #4cdccfff ≈ `oklch(0.815 0.123 186)` |
+| `alpha-bg-teal-light-hovered` | #08a5a04d ≈ `oklch(0.652 0.111 191 / 0.30)` | #4cdccf73 ≈ `oklch(0.815 0.123 186 / 0.45)` |
+| `alpha-bg-teal-lighter-hovered` | #08a5a04d ≈ `oklch(0.652 0.111 191 / 0.30)` | #4cdccf4d ≈ `oklch(0.815 0.123 186 / 0.30)` |
+| `alpha-bg-teal-lightest-hovered` | #08a5a027 ≈ `oklch(0.652 0.111 191 / 0.15)` | #4cdccf39 ≈ `oklch(0.815 0.123 186 / 0.22)` |
+| `alpha-bg-teal-dark-hovered` | #06848bff ≈ `oklch(0.559 0.094 201)` | #0ac6c0ff ≈ `oklch(0.747 0.128 191)` |
+| `alpha-bg-teal-shade-lighter-hovered` | #539b984d ≈ `oklch(0.642 0.073 192 / 0.30)` | #49839066 ≈ `oklch(0.576 0.064 214 / 0.40)` |
+| `alpha-bg-teal-shade-normal-hovered` | #539b98ff ≈ `oklch(0.642 0.073 192)` | #498390ff ≈ `oklch(0.576 0.064 214)` |
+| `alpha-bg-teal-transparent-hovered` | #09b2ac1a ≈ `oklch(0.690 0.118 190 / 0.10)` — hex 가 원시값 `alpha-teal-400-10` 그대로, 참조 아님 | #40d3c51a ≈ `oklch(0.787 0.123 186 / 0.10)` |
+| `alpha-bg-olive-normal-hovered` | #9ba212ff ≈ `oklch(0.684 0.148 113)` | #d2df3dff ≈ `oklch(0.866 0.176 114)` |
+| `alpha-bg-olive-light-hovered` | #9ba2124d ≈ `oklch(0.684 0.148 113 / 0.30)` | #d2df3d73 ≈ `oklch(0.866 0.176 114 / 0.45)` |
+| `alpha-bg-olive-lighter-hovered` | #9ba2124d ≈ `oklch(0.684 0.148 113 / 0.30)` | #d2df3d4d ≈ `oklch(0.866 0.176 114 / 0.30)` |
+| `alpha-bg-olive-lightest-hovered` | #9ba21227 ≈ `oklch(0.684 0.148 113 / 0.15)` | #d2df3d39 ≈ `oklch(0.866 0.176 114 / 0.22)` |
+| `alpha-bg-olive-dark-hovered` | #70751cff ≈ `oklch(0.541 0.109 113)` | #c1ca0cff ≈ `oklch(0.805 0.178 113)` |
+| `alpha-bg-olive-shade-lighter-hovered` | #969a514d ≈ `oklch(0.667 0.096 112 / 0.30)` | #86893a66 ≈ `oklch(0.611 0.102 111 / 0.40)` |
+| `alpha-bg-olive-shade-normal-hovered` | #969a51ff ≈ `oklch(0.667 0.096 112)` | #86893aff ≈ `oklch(0.611 0.102 111)` |
+| `alpha-bg-olive-transparent-hovered` | #a9b1101a ≈ `oklch(0.730 0.160 113 / 0.10)` — hex 가 원시값 `alpha-olive-400-10` 그대로, 참조 아님 | #c8d6301a ≈ `oklch(0.838 0.176 115 / 0.10)` |
+| `alpha-bg-yellow-normal-hovered` | #d9a010ff ≈ `oklch(0.740 0.150 82)` | #face4aff ≈ `oklch(0.867 0.152 90)` |
+| `alpha-bg-yellow-light-hovered` | #d9a0104d ≈ `oklch(0.740 0.150 82 / 0.30)` | #face4a73 ≈ `oklch(0.867 0.152 90 / 0.45)` |
+| `alpha-bg-yellow-lighter-hovered` | #d9a0104d ≈ `oklch(0.740 0.150 82 / 0.30)` | #face4a4d ≈ `oklch(0.867 0.152 90 / 0.30)` |
+| `alpha-bg-yellow-lightest-hovered` | #d9a01027 ≈ `oklch(0.740 0.150 82 / 0.15)` | #face4a39 ≈ `oklch(0.867 0.152 90 / 0.22)` |
+| `alpha-bg-yellow-dark-hovered` | #b58500ff ≈ `oklch(0.646 0.133 83)` | #f9b917ff ≈ `oklch(0.823 0.166 83)` |
+| `alpha-bg-yellow-shade-lighter-hovered` | #e2a52d4d ≈ `oklch(0.761 0.145 79 / 0.30)` | #927a2666 ≈ `oklch(0.587 0.104 93 / 0.40)` |
+| `alpha-bg-yellow-shade-normal-hovered` | #e2a52dff ≈ `oklch(0.761 0.145 79)` | #927a26ff ≈ `oklch(0.587 0.104 93)` |
+| `alpha-bg-yellow-transparent-hovered` | #edae0d1a ≈ `oklch(0.789 0.161 82 / 0.10)` — hex 가 원시값 `alpha-yellow-400-10` 그대로, 참조 아님 | #f9c8351a ≈ `oklch(0.853 0.161 89 / 0.10)` |
+| `alpha-bg-pink-normal-hovered` | #cf3eacff ≈ `oklch(0.610 0.213 339)` | #f27fdbff ≈ `oklch(0.754 0.178 335)` |
+| `alpha-bg-pink-light-hovered` | #cf3eac4d ≈ `oklch(0.610 0.213 339 / 0.30)` | #f27fdb73 ≈ `oklch(0.754 0.178 335 / 0.45)` |
+| `alpha-bg-pink-lighter-hovered` | #cf3eac4d ≈ `oklch(0.610 0.213 339 / 0.30)` | #f27fdb4d ≈ `oklch(0.754 0.178 335 / 0.30)` |
+| `alpha-bg-pink-lightest-hovered` | #cf3eac27 ≈ `oklch(0.610 0.213 339 / 0.15)` | #f27fdb39 ≈ `oklch(0.754 0.178 335 / 0.22)` |
+| `alpha-bg-pink-dark-hovered` | #a03591ff ≈ `oklch(0.517 0.176 334)` | #df58bfff ≈ `oklch(0.668 0.203 338)` |
+| `alpha-bg-pink-shade-lighter-hovered` | #cb5bb04d ≈ `oklch(0.638 0.173 338 / 0.30)` | #99428566 ≈ `oklch(0.517 0.142 337 / 0.40)` |
+| `alpha-bg-pink-shade-normal-hovered` | #cb5bb0ff ≈ `oklch(0.638 0.173 338)` | #994285ff ≈ `oklch(0.517 0.142 337)` |
+| `alpha-bg-pink-transparent-hovered` | #d64bb51a ≈ `oklch(0.637 0.208 338 / 0.10)` — hex 가 원시값 `alpha-pink-400-10` 그대로, 참조 아님 | #ec6fd31a ≈ `oklch(0.722 0.192 336 / 0.10)` |
+| `alpha-bg-purple-normal-hovered` | #8247e1ff ≈ `oklch(0.553 0.220 296)` | #bf9affff ≈ `oklch(0.759 0.145 300)` |
+| `alpha-bg-purple-light-hovered` | #8247e14d ≈ `oklch(0.553 0.220 296 / 0.30)` | #bf9aff73 ≈ `oklch(0.759 0.145 300 / 0.45)` |
+| `alpha-bg-purple-lighter-hovered` | #8247e14d ≈ `oklch(0.553 0.220 296 / 0.30)` | #bf9aff4d ≈ `oklch(0.759 0.145 300 / 0.30)` |
+| `alpha-bg-purple-lightest-hovered` | #8247e127 ≈ `oklch(0.553 0.220 296 / 0.15)` | #bf9aff39 ≈ `oklch(0.759 0.145 300 / 0.22)` |
+| `alpha-bg-purple-dark-hovered` | #6135a6ff ≈ `oklch(0.447 0.172 297)` | #9a66eeff ≈ `oklch(0.629 0.197 298)` |
+| `alpha-bg-purple-shade-lighter-hovered` | #905ede4d ≈ `oklch(0.597 0.188 299 / 0.30)` | #64489066 ≈ `oklch(0.465 0.116 300 / 0.40)` |
+| `alpha-bg-purple-shade-normal-hovered` | #905edeff ≈ `oklch(0.597 0.188 299)` | #644890ff ≈ `oklch(0.465 0.116 300)` |
+| `alpha-bg-purple-transparent-hovered` | #8e57e71a ≈ `oklch(0.591 0.208 297 / 0.10)` — hex 가 원시값 `alpha-purple-400-10` 그대로, 참조 아님 | #b184ff1a ≈ `oklch(0.709 0.177 299 / 0.10)` |
+| `alpha-bg-navy-normal-hovered` | #414c9cff ≈ `oklch(0.451 0.129 274)` | #838fdcff ≈ `oklch(0.672 0.115 276)` |
+| `alpha-bg-navy-light-hovered` | #414c9c4d ≈ `oklch(0.451 0.129 274 / 0.30)` | #838fdc73 ≈ `oklch(0.672 0.115 276 / 0.45)` |
+| `alpha-bg-navy-lighter-hovered` | #414c9c4d ≈ `oklch(0.451 0.129 274 / 0.30)` | #838fdc4d ≈ `oklch(0.672 0.115 276 / 0.30)` |
+| `alpha-bg-navy-lightest-hovered` | #414c9c27 ≈ `oklch(0.451 0.129 274 / 0.15)` | #838fdc39 ≈ `oklch(0.672 0.115 276 / 0.22)` |
+| `alpha-bg-navy-dark-hovered` | #34377cff ≈ `oklch(0.374 0.115 277)` | #4353bfff ≈ `oklch(0.492 0.169 272)` |
+| `alpha-bg-navy-shade-lighter-hovered` | #5761a54d ≈ `oklch(0.516 0.108 276 / 0.30)` | #3b416766 ≈ `oklch(0.388 0.065 276 / 0.40)` |
+| `alpha-bg-navy-shade-normal-hovered` | #5761a5ff ≈ `oklch(0.516 0.108 276)` | #3b4167ff ≈ `oklch(0.388 0.065 276)` |
+| `alpha-bg-navy-transparent-hovered` | #424fab1a ≈ `oklch(0.469 0.147 273 / 0.10)` — hex 가 원시값 `alpha-navy-400-10` 그대로, 참조 아님 | #7683d31a ≈ `oklch(0.634 0.121 275 / 0.10)` |
+| `alpha-bg-absolute-black-dark-hovered` | #1c1c1cff ≈ `oklch(0.226 0 0)` | #0a0a0aff ≈ `oklch(0.145 0 0)` |
+| `alpha-bg-absolute-black-normal-hovered` | #1c1c1cd9 ≈ `oklch(0.226 0 0 / 0.85)` | #0a0a0ad9 ≈ `oklch(0.145 0 0 / 0.85)` |
+| `alpha-bg-absolute-black-light-hovered` | #1c1c1c99 ≈ `oklch(0.226 0 0 / 0.60)` | #0a0a0a99 ≈ `oklch(0.145 0 0 / 0.60)` |
+| `alpha-bg-absolute-black-lighter-hovered` | #1c1c1c66 ≈ `oklch(0.226 0 0 / 0.40)` | #0a0a0a66 ≈ `oklch(0.145 0 0 / 0.40)` |
+| `alpha-bg-absolute-black-lightest-hovered` | #1c1c1c4d ≈ `oklch(0.226 0 0 / 0.30)` | #0a0a0a4d ≈ `oklch(0.145 0 0 / 0.30)` |
+| `alpha-bg-absolute-black-transparent-hovered` | #0000000d ≈ `oklch(0 0 0 / 0.05)` — hex 가 원시값 `alpha-black-5` 그대로, 참조 아님 | #0000000d ≈ `oklch(0 0 0 / 0.05)` — hex 가 원시값 `alpha-black-5` 그대로, 참조 아님 |
+| `alpha-bg-absolute-white-dark-hovered` | #edededff ≈ `oklch(0.946 0 0)` | #edededff ≈ `oklch(0.946 0 0)` |
+| `alpha-bg-absolute-white-normal-hovered` | #ededede6 ≈ `oklch(0.946 0 0 / 0.90)` | #ededede6 ≈ `oklch(0.946 0 0 / 0.90)` |
+| `alpha-bg-absolute-white-light-hovered` | #ededed99 ≈ `oklch(0.946 0 0 / 0.60)` | #ededed99 ≈ `oklch(0.946 0 0 / 0.60)` |
+| `alpha-bg-absolute-white-lighter-hovered` | #ededed66 ≈ `oklch(0.946 0 0 / 0.40)` | #ededed66 ≈ `oklch(0.946 0 0 / 0.40)` |
+| `alpha-bg-absolute-white-lightest-hovered` | #ededed4d ≈ `oklch(0.946 0 0 / 0.30)` | #ededed4d ≈ `oklch(0.946 0 0 / 0.30)` |
+| `alpha-bg-absolute-white-transparent-hovered` | #ffffff0d ≈ `oklch(1 0 0 / 0.05)` — hex 가 원시값 `alpha-white-5` 그대로, 참조 아님 | #ffffff0d ≈ `oklch(1 0 0 / 0.05)` — hex 가 원시값 `alpha-white-5` 그대로, 참조 아님 |
+| `alpha-surface-lowest-hovered` | #e5e5e8ff ≈ `oklch(0.923 0.004 286)` | #343538ff ≈ `oklch(0.329 0.005 271)` |
+| `alpha-surface-lower-hovered` | #eaeaeaff ≈ `oklch(0.937 0 0)` | #2e2e33ff ≈ `oklch(0.303 0.009 286)` |
+| `alpha-surface-normal-hovered` | #edededff ≈ `oklch(0.946 0 0)` | #242427ff ≈ `oklch(0.262 0.006 286)` |
+| `alpha-shadow-xlarge-hovered` | #1c1c1c4d ≈ `oklch(0.226 0 0 / 0.30)` | #0a0a0a99 ≈ `oklch(0.145 0 0 / 0.60)` |
+| `alpha-shadow-large-hovered` | #1c1c1c38 ≈ `oklch(0.226 0 0 / 0.22)` | #0a0a0a66 ≈ `oklch(0.145 0 0 / 0.40)` |
+| `alpha-shadow-medium-hovered` | #1c1c1c39 ≈ `oklch(0.226 0 0 / 0.22)` | #0a0a0a4d ≈ `oklch(0.145 0 0 / 0.30)` |
+| `alpha-shadow-small-hovered` | #1c1c1c1e ≈ `oklch(0.226 0 0 / 0.12)` | #0a0a0a39 ≈ `oklch(0.145 0 0 / 0.22)` |
+| `alpha-shadow-base-hovered` | #1c1c1c14 ≈ `oklch(0.226 0 0 / 0.08)` | #0a0a0a1e ≈ `oklch(0.145 0 0 / 0.12)` |
+| `alpha-shadow-base-inner-hovered` | #ededed2f ≈ `oklch(0.946 0 0 / 0.18)` | #ededed1e ≈ `oklch(0.946 0 0 / 0.12)` |
+| `alpha-dim-black-light-hovered` | #1c1c1c4d ≈ `oklch(0.226 0 0 / 0.30)` | #0a0a0a4d ≈ `oklch(0.145 0 0 / 0.30)` |
+| `alpha-dim-black-normal-hovered` | #1c1c1c66 ≈ `oklch(0.226 0 0 / 0.40)` | #0a0a0a66 ≈ `oklch(0.145 0 0 / 0.40)` |
+| `alpha-primary-bg-normal-hovered` | #5551fcff ≈ `oklch(0.551 0.245 276)` | #648bf9ff ≈ `oklch(0.661 0.169 267)` |
+| `alpha-primary-bg-light-hovered` | #5551fc4d ≈ `oklch(0.551 0.245 276 / 0.30)` | #648bf973 ≈ `oklch(0.661 0.169 267 / 0.45)` |
+| `alpha-primary-bg-lighter-hovered` | #5551fc4d ≈ `oklch(0.551 0.245 276 / 0.30)` | #648bf94d ≈ `oklch(0.661 0.169 267 / 0.30)` |
+| `alpha-primary-bg-lightest-hovered` | #5551fc27 ≈ `oklch(0.551 0.245 276 / 0.15)` | #648bf939 ≈ `oklch(0.661 0.169 267 / 0.22)` |
+| `alpha-primary-bg-dark-hovered` | #4b42d5ff ≈ `oklch(0.487 0.216 277)` | #5551fcff ≈ `oklch(0.551 0.245 276)` |
+| `alpha-primary-fg-normal-hovered` | #5551fcff ≈ `oklch(0.551 0.245 276)` | #648bf9ff ≈ `oklch(0.661 0.169 267)` |
+| `alpha-primary-fg-light-hovered` | #5551fc4d ≈ `oklch(0.551 0.245 276 / 0.30)` | #648bf973 ≈ `oklch(0.661 0.169 267 / 0.45)` |
+| `alpha-primary-fg-dark-hovered` | #4b42d5ff ≈ `oklch(0.487 0.216 277)` | #648bf9ff ≈ `oklch(0.661 0.169 267)` |
+| `alpha-critical-bg-dark-hovered` | #ab3940ff ≈ `oklch(0.511 0.149 21)` | #df4c4cff ≈ `oklch(0.620 0.183 24)` |
+| `alpha-critical-bg-normal-hovered` | #df4c4cff ≈ `oklch(0.620 0.183 24)` | #ff7070ff ≈ `oklch(0.719 0.175 23)` |
+| `alpha-critical-bg-light-hovered` | #df4c4c4d ≈ `oklch(0.620 0.183 24 / 0.30)` | #ff707073 ≈ `oklch(0.719 0.175 23 / 0.45)` |
+| `alpha-critical-bg-lighter-hovered` | #df4c4c4d ≈ `oklch(0.620 0.183 24 / 0.30)` | #ff70704d ≈ `oklch(0.719 0.175 23 / 0.30)` |
+| `alpha-critical-bg-lightest-hovered` | #df4c4c27 ≈ `oklch(0.620 0.183 24 / 0.15)` | #ff707039 ≈ `oklch(0.719 0.175 23 / 0.22)` |
+| `alpha-critical-fg-normal-hovered` | #df4c4cff ≈ `oklch(0.620 0.183 24)` | #ff7070ff ≈ `oklch(0.719 0.175 23)` |
+| `alpha-critical-fg-light-hovered` | #df4c4c4d ≈ `oklch(0.620 0.183 24 / 0.30)` | #ff707073 ≈ `oklch(0.719 0.175 23 / 0.45)` |
+| `alpha-critical-fg-dark-hovered` | #ab3940ff ≈ `oklch(0.511 0.149 21)` | #ff7070ff ≈ `oklch(0.719 0.175 23)` |
+| `alpha-warning-bg-dark-hovered` | #b15c0fff ≈ `oklch(0.566 0.135 55)` | #df751fff ≈ `oklch(0.672 0.159 53)` |
+| `alpha-warning-bg-normal-hovered` | #df751fff ≈ `oklch(0.672 0.159 53)` | #ff9346ff ≈ `oklch(0.765 0.158 53)` |
+| `alpha-warning-bg-light-hovered` | #df751f4d ≈ `oklch(0.672 0.159 53 / 0.30)` | #ff934673 ≈ `oklch(0.765 0.158 53 / 0.45)` |
+| `alpha-warning-bg-lighter-hovered` | #df751f4d ≈ `oklch(0.672 0.159 53 / 0.30)` | #ff93464d ≈ `oklch(0.765 0.158 53 / 0.30)` |
+| `alpha-warning-bg-lightest-hovered` | #df751f27 ≈ `oklch(0.672 0.159 53 / 0.15)` | #ff934639 ≈ `oklch(0.765 0.158 53 / 0.22)` |
+| `alpha-warning-fg-normal-hovered` | #df751fff ≈ `oklch(0.672 0.159 53)` | #ff9346ff ≈ `oklch(0.765 0.158 53)` |
+| `alpha-warning-fg-light-hovered` | #df751f4d ≈ `oklch(0.672 0.159 53 / 0.30)` | #ff934673 ≈ `oklch(0.765 0.158 53 / 0.45)` |
+| `alpha-warning-fg-dark-hovered` | #b15c0fff ≈ `oklch(0.566 0.135 55)` | #ff9346ff ≈ `oklch(0.765 0.158 53)` |
+| `alpha-accent-bg-dark-hovered` | #3268c4ff ≈ `oklch(0.531 0.155 260)` | #4088dfff ≈ `oklch(0.623 0.150 255)` |
+| `alpha-accent-bg-normal-hovered` | #4088dfff ≈ `oklch(0.623 0.150 255)` | #5cadf1ff ≈ `oklch(0.725 0.127 246)` |
+| `alpha-accent-bg-light-hovered` | #4088df4d ≈ `oklch(0.623 0.150 255 / 0.30)` | #5cadf173 ≈ `oklch(0.725 0.127 246 / 0.45)` |
+| `alpha-accent-bg-lighter-hovered` | #4088df4d ≈ `oklch(0.623 0.150 255 / 0.30)` | #5cadf14d ≈ `oklch(0.725 0.127 246 / 0.30)` |
+| `alpha-accent-bg-lightest-hovered` | #4088df27 ≈ `oklch(0.623 0.150 255 / 0.15)` | #5cadf139 ≈ `oklch(0.725 0.127 246 / 0.22)` |
+| `alpha-accent-fg-normal-hovered` | #4088dfff ≈ `oklch(0.623 0.150 255)` | #5cadf1ff ≈ `oklch(0.725 0.127 246)` |
+| `alpha-accent-fg-light-hovered` | #4088df4d ≈ `oklch(0.623 0.150 255 / 0.30)` | #5cadf173 ≈ `oklch(0.725 0.127 246 / 0.45)` |
+| `alpha-accent-fg-dark-hovered` | #3268c4ff ≈ `oklch(0.531 0.155 260)` | #5cadf1ff ≈ `oklch(0.725 0.127 246)` |
+| `alpha-success-bg-dark-hovered` | #347b5aff ≈ `oklch(0.528 0.089 161)` | #3f9e61ff ≈ `oklch(0.627 0.129 153)` |
+| `alpha-success-bg-normal-hovered` | #3f9e61ff ≈ `oklch(0.627 0.129 153)` | #5bc373ff ≈ `oklch(0.735 0.150 149)` |
+| `alpha-success-bg-light-hovered` | #3f9e614d ≈ `oklch(0.627 0.129 153 / 0.30)` | #5bc37373 ≈ `oklch(0.735 0.150 149 / 0.45)` |
+| `alpha-success-bg-lighter-hovered` | #3f9e614d ≈ `oklch(0.627 0.129 153 / 0.30)` | #5bc3734d ≈ `oklch(0.735 0.150 149 / 0.30)` |
+| `alpha-success-bg-lightest-hovered` | #3f9e6127 ≈ `oklch(0.627 0.129 153 / 0.15)` | #5bc37339 ≈ `oklch(0.735 0.150 149 / 0.22)` |
+| `alpha-success-fg-normal-hovered` | #3f9e61ff ≈ `oklch(0.627 0.129 153)` | #5bc373ff ≈ `oklch(0.735 0.150 149)` |
+| `alpha-success-fg-light-hovered` | #3f9e614d ≈ `oklch(0.627 0.129 153 / 0.30)` | #5bc37373 ≈ `oklch(0.735 0.150 149 / 0.45)` |
+| `alpha-success-fg-dark-hovered` | #347b5aff ≈ `oklch(0.528 0.089 161)` | #5bc373ff ≈ `oklch(0.735 0.150 149)` |
 
 ## Typography
 
@@ -1839,8 +3025,8 @@ Bezier는 앱 셸/뷰포트 브레이크포인트를 토큰으로 발행하지 �
 - **hex→OKLCH 변환 오차.** 모든 색은 Bezier가 hex로 게시한 토큰을 OKLCH로 변환한 것이라 미세한 변환 드리프트가 있을 수 있다 — 정확한 원본 hex는 `@channel.io/bezier-tokens` 빌드 CSS를 직접 참조해야 한다 [src:3].
 - **beta 팔레트는 이제 검증됐다(2026-07-29 정정).** 이 항목은 원래 "beta 팔레트 값 상당수가 공개 URL로 직접 교차검증되지 않는다"고 적고 있었으나, 실제로 대조해 보니 당시 이 문서의 색 토큰 전부가 `@channel.io/bezier-tokens` 0.6.0의 beta 엔트리와 ΔE ≤ 0.02로 일치했다(Colors 절 참조). 남은 공백은 **컴포넌트 정본 스펙**(Banner/Toast 처리 등)이며, 이쪽은 Storybook 개별 docs를 `?path=/docs/<id>`로 열어 대조해야 한다 [src:3][src:2].
 - **시맨틱 다크 원시값은 이제 실렸다(2026-10-28 정정).** 이 항목은 원래 "다크 측이 참조하는 일부 white-알파 원시값의 정확한 단계는 코퍼스에서 전부 발췌되지 않았다"고 적고 있었으나, 상류 beta 엔트리에서 그 단계를 확인해 다크 글자·중립 채움이 가리키는 `white-8/20/40/60/80`, 라이트 중립 채움의 `black-5/15`, accent 채움 사다리를 frontmatter에 실었다(Colors 절 참조) [src:3].
-- **alpha tier 역할 층은 아직 싣지 않았다(2026-11-01).** 상류 0.6.0 은 `dist/alpha/css/styles.css` 로 `--alpha-color-fg-*`·`--alpha-color-bg-*`·`--alpha-color-surface-*` 등 세 번째 역할 층을 발행하고, 역할은 `var(--alpha-color-…)` 로 alpha 원시값을 가리킨다(일부는 다른 alpha 역할을 가리킨다 — `primary-bg-normal` → `bg-blue-normal`). 원시값은 테마마다 다시 정의되지 않는다 [src:3]. 이 문서는 아직 그 층을 싣지 않았다. 싣는다면 `stable-*` 처럼 tier 를 가르는 `alpha-` 앞붙임 팔레트에 alpha 원시값을 싣고, 역할을 그 키의 참조 행과 본문 표로 싣는다.
-- **hex 를 직접 적은 beta 역할은 참조 행이 없다(2026-11-01).** beta 테마 블록의 `-hovered` 역할과 hovered 가 아닌 `chart-theme-default-*` 는 상류가 두 테마 모두 원시값을 거치지 않고 hex 를 직접 적어, 가리킬 팔레트 토큰이 상류에 없다. 그래서 본문 표에만 `#hex ≈ oklch(…)` 로 싣고, frontmatter 참조 행과 사이드카(Tokens 탭·use-design-md 가 읽는 토큰 JSON)에는 없다. hex 가 원시값과 같은 칸(`fill-*-transparent-hovered` 계열의 `{hue}-400-10`·`{hue}-300-10`·`black-5`·`white-5`)도 상류가 그 원시값을 가리키는 것이 아니라 참조가 아니다 [src:3].
+- **hex 를 직접 적은 beta, alpha 역할은 참조 행이 없다(2026-11-09).** beta 테마 블록의 `-hovered` 역할과 hovered 가 아닌 `chart-theme-default-*`, alpha 테마 블록의 `-hovered` 역할은 상류가 두 테마 모두 원시값을 거치지 않고 hex 를 직접 적어, 가리킬 팔레트 토큰이 상류에 없다. 그래서 본문 표에만 `#hex ≈ oklch(…)` 로 싣고, frontmatter 참조 행과 사이드카(Tokens 탭·use-design-md 가 읽는 토큰 JSON)에는 없다. hex 가 원시값과 같은 칸(`fill-*-transparent-hovered` 계열의 `{hue}-400-10`·`{hue}-300-10`·`black-5`·`white-5`, alpha 의 `alpha-bg-*-transparent-hovered` 계열)도 상류가 그 원시값을 가리키는 것이 아니라 참조가 아니다 [src:3].
+- **alpha 역할이 가리키지 않는 alpha 원시값은 싣지 않았다(2026-11-09).** alpha 역할이 가리키는 원시값은 모두 `alpha-` 앞붙임 키로 실었다. 어느 alpha 역할도 가리키지 않는 나머지 — 각 hue 의 `100`, `200`, `600` 단계와 `black-50`, `black-70`, `grey-300`, `grey-alpha-900-90` — 는 싣지 않았다 [src:3].
 - **beta 역할이 가리키지 않는 투명 단계는 싣지 않았다(2026-11-01).** beta 역할이 가리키는 원시값은 모두 실었다(`{hue}-400-0`·`{hue}-300-0`·`blue-400-30`·`blue-300-45`·`orange-400-30` 포함). 어느 역할도 가리키지 않는 나머지 — 색상 알파(`{hue}-300-10`·`{hue}-400-5`, blue 밖의 `{hue}-300-45`, blue·orange 밖의 `{hue}-400-30`)와 중립색 알파(`grey-50/100/200/700/800/850-80`·`grey-700-90`·`grey-900-0/90`·`white-22/30/50`·`black-50/70`) — 는 싣지 않았다 [src:3].
 - **프리뷰 다크 기본 버튼 hover 값이 상류와 다르다(2026-11-02).** 프리뷰 다크 `--fill-accent-blue-heavier-hovered` 는 #6f64f0 ≈ `oklch(0.590 0.203 282)` 인데, Colors 절 「beta hover」 표와 상류 beta 다크 `color-fill-accent-blue-heavier-hovered` 는 #9698ff ≈ `oklch(0.722 0.148 281)` 이다(상류 값은 2026-11-01 캐시 기준) [src:3]. 프리뷰는 다크 기본 버튼 바탕을 `{colors.blue-400}` 으로 두지만 상류 다크 `fill-accent-blue-heavier` 는 `{colors.blue-300}` 이라, 바탕도 함께 다시 맞출 대상이다. 표 칸과 프리뷰 값이라 `audit:oklch` 는 이 어긋남을 보지 않는다.
 - **모바일 리플로우 미관찰.** 제공 스크린샷이 데스크톱 Storybook 캔버스 한정이라, 실제 모바일 웹/네이티브에서의 컴포넌트 리플로우·접힘 거동은 직접 확인되지 않았다 [src:2].

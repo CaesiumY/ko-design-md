@@ -83,10 +83,11 @@ interface Coverage {
 // `--ref-color-*` (#663): each step in its light and its `dark-*` block. Its
 // 27 handoff-bundle usage colours carry no hex, so drift 199 = annotated
 // 172 + 27; `primary` and the `base-*` / `mint-*` role rows (#665) are
-// reference rows and count in neither. bezier annotates only the steps taken from the beta tier and
-// the stable tier (`stable-*`) of `@channel.io/bezier-tokens` (#569, #628);
-// the 43 bundle steps stay unannotated, so drift 275 = annotated 232 + 43;
-// role rows count in neither. toss annotates only the steps whose name maps to
+// reference rows and count in neither. bezier annotates only the steps taken
+// from the beta, stable (`stable-*`) and alpha (`alpha-*`) tiers of
+// `@channel.io/bezier-tokens` (#569, #628, #664); the 43 bundle steps stay
+// unannotated, so drift 482 = annotated 439 + 43; role rows count in neither.
+// toss annotates only the steps whose name maps to
 // Toss's published `@toss/tds-colors` (15 light + 15 `dark-*`); its bundle-only
 // steps stay unannotated. teamsparta likewise annotates only the three reds
 // corrected to the live sites' `--stack-semantic-*` values and the 45
@@ -96,7 +97,8 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   "11st": { annotated: 31, judged: 31, drift: 33 },
   baemin: { annotated: 172, judged: 172, drift: 199 },
   banksalad: { annotated: 187, judged: 187, drift: 187 },
-  bezier: { annotated: 232, judged: 232, drift: 275 },
+  bezier: { annotated: 439, judged: 439, drift: 482 },
+  chzzk: { annotated: 50, judged: 50, drift: 50 },
   class101: { annotated: 98, judged: 98, drift: 98 },
   codeit: { annotated: 180, judged: 173, drift: 180, webfont: true },
   gmarket: { annotated: 75, judged: 75, drift: 75 },
@@ -105,6 +107,7 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   "gs-shop": { annotated: 52, judged: 52, drift: 52 },
   krds: { annotated: 44, judged: 44, drift: 55 },
   kyobobook: { annotated: 26, judged: 26, drift: 56 },
+  laftel: { annotated: 32, judged: 32, drift: 32 },
   "lg-electronics": { annotated: 67, judged: 67, drift: 67 },
   likelion: { annotated: 39, judged: 39, drift: 39 },
   "line-design-system": { annotated: 24, judged: 24, drift: 24 },

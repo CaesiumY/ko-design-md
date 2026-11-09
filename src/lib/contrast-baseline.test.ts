@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 import {
   BASELINE_WIDTHS,
+  MIN_TEXT_ELEMENTS,
   baselineArgConflicts,
   baselineHolds,
   compareToBaseline,
@@ -29,6 +30,7 @@ describe("compareToBaseline", () => {
       warnings: [],
       unrecorded: [],
       missing: [],
+      thin: [],
     })
   })
 
@@ -69,6 +71,82 @@ describe("compareToBaseline", () => {
         measured: 404,
       },
     ])
+  })
+})
+
+describe("compareToBaseline, thin previews", () => {
+  // The floor is read from what the sweep MEASURED. A check on the recorded
+  // table alone trusts whoever pasted the numbers, and `elements` is the one
+  // count the exact comparison leaves out, so a hand-raised value would pass.
+  const thin = row({ elements: MIN_TEXT_ELEMENTS - 1 })
+
+  it("blocks a measured text row under the floor even when the table records the same number", () => {
+    const got = compareToBaseline([thin], [thin])
+    expect(got.thin).toEqual([thin])
+    expect(baselineHolds(got)).toBe(false)
+  })
+
+  it("blocks it when the table claims a thicker preview than the sweep found", () => {
+    const got = compareToBaseline([thin], [row()])
+    expect(got.thin).toEqual([thin])
+    expect(baselineHolds(got)).toBe(false)
+  })
+
+  it("blocks a new slug's thin row as well as reporting it unrecorded", () => {
+    const fresh = row({ slug: "laftel", elements: 51 })
+    const got = compareToBaseline([row(), fresh], [row()])
+    expect(got.thin).toEqual([fresh])
+    expect(got.unrecorded).toEqual([fresh])
+  })
+
+  it("leaves a row exactly at the floor alone", () => {
+    const edge = row({ elements: MIN_TEXT_ELEMENTS })
+    expect(compareToBaseline([edge], [edge]).thin).toEqual([])
+  })
+
+  it("does not apply the floor to non-text", () => {
+    // Non-text counts painted surfaces, a handful per preview; four is normal.
+    const few = row({ kind: "non-text", measured: 4, elements: 4 })
+    expect(compareToBaseline([few], [few]).thin).toEqual([])
+  })
+
+  it("prints the thin rows and what to do about them", () => {
+    const lines = renderBaselineFailure(
+      compareToBaseline([thin], [thin]),
+      [thin],
+      [thin]
+    ).join("\n")
+    expect(lines).toContain(`FAIL contrast baseline — 1 text row(s)`)
+    expect(lines).toContain(`toss | light | text — elements ${thin.elements}`)
+    expect(lines).toContain("rubric-preview.md")
+    // The count is the text the contrast collector reads, which skips disabled
+    // text. Pointing at "states" without saying so sends a reader to add
+    // disabled states, which cannot raise it.
+    expect(lines).toContain("non-disabled")
+    expect(lines).toContain("Disabled, hidden")
+  })
+
+  it("does not send a thin-only failure to the table", () => {
+    // The closing paragraph is about pasting CI's numbers into the table, and
+    // no rewrite of the table clears a floor read from the measured count.
+    const lines = renderBaselineFailure(
+      compareToBaseline([thin], [thin]),
+      [thin],
+      [thin]
+    ).join("\n")
+    expect(lines).not.toContain("rebaseline")
+    expect(lines).not.toContain("Take the replacement lines from CI")
+    expect(lines).toContain("Rewriting the table does not clear it")
+  })
+
+  it("still prints the closing paragraph when a count also moved", () => {
+    const moved = { ...thin, fail: thin.fail + 1 }
+    const lines = renderBaselineFailure(
+      compareToBaseline([moved], [thin]),
+      [moved],
+      [thin]
+    ).join("\n")
+    expect(lines).toContain("Take the replacement lines from CI")
   })
 })
 

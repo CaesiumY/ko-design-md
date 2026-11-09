@@ -197,6 +197,7 @@ const PREVIEW_TOKEN_ALIASES: Partial<
 > = {
   baemin: [["", "bm-"]],
   banksalad: [["", "bs-"]],
+  chzzk: [["", "chz-"]],
   class101: [["", "c101-"]],
   codeit: [
     ["codeit-", "ci-"],
@@ -211,6 +212,7 @@ const PREVIEW_TOKEN_ALIASES: Partial<
   "gs-shop": [["", "gs-"]],
   krds: [["", "krds-"]],
   kyobobook: [["", "kds-"]],
+  laftel: [["", "lft-"]],
   "lg-electronics": [["", "lg-"]],
   likelion: [["", "ll-"]],
   "line-design-system": [
