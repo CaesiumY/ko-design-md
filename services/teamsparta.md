@@ -441,7 +441,7 @@ Shape language는 **rounded dashboard geometry**다. 사각형 컨테이너는 1
 
 ### 패키지 컴포넌트 토큰
 
-토큰 이름은 패키지의 `baseComponent` 경로이고, frontmatter 키는 그 경로를 케밥 표기로 이은 것이다(`button.solidPrimary.backgroundHover` → `button-solid-primary-hover`의 `backgroundColor`). 라이트 열은 `baseComponent`가 `sccLight`를 받아 낸 값, 다크 열은 `sccDark`가 다시 가리킨 값이다. `sccDark`가 다시 적지 않은 칸은 같은 원시 단계를 쓰거나 역할의 다크 짝으로 바뀐다. 불투명도 램프와 리터럴 칸은 역할 표와 같은 꼴로 적는다.
+토큰 이름은 패키지의 `baseComponent` 경로이고, frontmatter 키는 그 경로를 케밥 표기로 이은 것이다(`button.solidPrimary.backgroundHover` → `button-solid-primary-hover`의 `backgroundColor`). 다만 달력은 묶음 단계 `header`와 기본 상태 `default`를 키에서 뺐다(`calendar.header.navButton` → `calendar-nav-button`, `calendar.dateCell.default` → `calendar-date-cell`). 라이트 열은 `baseComponent`가 `sccLight`를 받아 낸 값, 다크 열은 `sccDark`가 다시 가리킨 값이다. `sccDark`가 다시 적지 않은 칸은 같은 원시 단계를 쓰거나 역할의 다크 짝으로 바뀐다. 불투명도 램프와 리터럴 칸은 역할 표와 같은 꼴로 적는다.
 
 | 컴포넌트 토큰 | 라이트 (`baseComponent`) | 다크 (`sccDark`) |
 | --- | --- | --- |
