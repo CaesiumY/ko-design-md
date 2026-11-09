@@ -260,24 +260,24 @@ describe("alignToPreviewNames", () => {
   })
 
   it("drops an alias that two md names would fold onto with different values", () => {
-    // teamsparta's rules are `brand-` -> `sp-` then a `sp-` catch-all, so
-    // `brand-red` and a bare `red` both produce `sp-red`. Whichever came first
+    // yeogi's rules are `yeogi-` -> `yg-` then a `yg-` catch-all, so
+    // `yeogi-red` and a bare `red` both produce `yg-red`. Whichever came first
     // in the md would win on declaration order alone and the gate would compare
     // against a value chosen by nothing. The catalogue has no such collision
     // today (measured: 0 across all 17 slugs), which is why this is a fixture.
     const out = alignToPreviewNames(
-      defs({ "brand-red": "oklch(0.61 0.21 19)", red: "oklch(0.5 0.2 19)" }),
-      "teamsparta"
+      defs({ "yeogi-red": "oklch(0.61 0.21 19)", red: "oklch(0.5 0.2 19)" }),
+      "yeogi"
     )
-    expect(out.has("sp-red")).toBe(false)
+    expect(out.has("yg-red")).toBe(false)
   })
 
   it("keeps the alias when both md names carry the same value", () => {
     const out = alignToPreviewNames(
-      defs({ "brand-red": "oklch(0.61 0.21 19)", red: "oklch(0.61 0.21 19)" }),
-      "teamsparta"
+      defs({ "yeogi-red": "oklch(0.61 0.21 19)", red: "oklch(0.61 0.21 19)" }),
+      "yeogi"
     )
-    expect(out.get("sp-red")).toBe("oklch(0.61 0.21 19)")
+    expect(out.get("yg-red")).toBe("oklch(0.61 0.21 19)")
   })
 
   it("does not double a namespace the md name already carries", () => {

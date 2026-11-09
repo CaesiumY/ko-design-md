@@ -3,7 +3,7 @@ name: 팀스파르타
 slug: teamsparta
 category: education
 logo: https://getdesign.kr/logos/teamsparta-favicon.png
-last_updated: "2026-11-02"
+last_updated: "2026-11-09"
 created_at: "2026-05-13"
 lang: ko
 colors:
@@ -86,54 +86,28 @@ colors:
   dark-line-selected: "{colors.neutral-20}"
   dark-fill-inverse-default: "{colors.neutral-0}"
   dark-fill-inverse-subtle: "{colors.neutral-30}"
-  ## Brand & interaction
-  primary: "{colors.brand-red}"   # 명세의 대표색 역할 — 텍스트 축의 text-primary(neutral-100)와 다른 축
-  brand-red: oklch(0.621 0.251 24)   # #FA0030 — 라이브 발행값 stack semantic-brand-default, 워드마크·primary CTA·progress highlight
-  brand-red-dark: oklch(0.556 0.225 24)   # #D80028 — 라이브 발행값 stack semantic-brand-strong. primary CTA hover/pressed 역할은 번들 배정이며 라이브 CTA hover 로는 관측되지 않았다
-  brand-red-soft: oklch(0.944 0.029 7)   # red badge and subtle alert surface
-  interaction-blue: oklch(0.429 0.297 264)   # links, info, focus ring source. sRGB 색역 밖 — 브라우저가 클리핑하며 라이브는 더 낮은 채도를 쓴다(Colors 절 감사 메모 참조)
-  interaction-blue-soft: oklch(0.958 0.020 280)
-  teal-strong: oklch(0.378 0.066 224)   # active sidebar, live session, data cards
-  ## Neutral scale
-  white: oklch(1.000 0.000 0)
-  gray-50: oklch(0.979 0.003 265)
-  gray-100: oklch(0.954 0.005 258)
-  gray-200: oklch(0.910 0.007 269)
-  gray-300: oklch(0.829 0.009 265)
-  gray-400: oklch(0.729 0.013 271)
-  gray-500: oklch(0.569 0.011 267)
-  gray-600: oklch(0.420 0.012 267)
-  gray-700: oklch(0.298 0.011 271)
-  gray-800: oklch(0.210 0.008 275)
-  gray-900: oklch(0.164 0.011 268)
-  gray-950: oklch(0.164 0.007 271)
-  black: oklch(0.000 0.000 0)
-  ## Semantic status
-  success: oklch(0.627 0.170 149)
-  warning: oklch(0.769 0.165 70)
-  danger: oklch(0.646 0.226 33)   # #F94015 — 라이브 발행값 stack semantic-status-error-default. brand-red 와 별개 값이다
-  info: oklch(0.429 0.297 264)   # interaction-blue 값 — sRGB 색역 밖이라 브라우저가 클리핑한다(Colors 절 감사 메모 참조)
-  ## Semantic alias
-  focus-ring: oklch(0.429 0.297 264 / 0.32)   # interaction-blue 값 — sRGB 색역 밖(Colors 절 감사 메모 참조)
-  modal-backdrop: oklch(0.000 0.000 0 / 0.48)
-  ## Supporting badge surfaces
-  badge-blue-bg: oklch(0.932 0.034 286)
-  badge-teal-bg: oklch(0.941 0.021 208)
-  badge-green-bg: oklch(0.962 0.043 157)
-  ## Stack palette — @teamsparta/stack-tokens primitiveColor (role layer 가 가리키는 단계만)
+  ## Bundle-only — 핸드오프 번들 색 가운데 발행 패키지에 대응 단계가 없는 것만 (Colors 절 감사 메모 참조)
+  interaction-blue: oklch(0.429 0.297 264)   # 번들 전용 — links, ghost action, focus ring source. 발행 원시 팔레트에 같은 값이 없다(가장 가까운 deepBlue[80] 도 ΔE 0.106). sRGB 색역 밖 — 브라우저가 클리핑하며 라이브는 더 낮은 채도를 쓴다(Colors 절 감사 메모 참조)
+  interaction-blue-soft: oklch(0.958 0.020 280)   # 번들 전용 — ghost hover 표면. interaction-blue 와 한 벌이라 함께 남겼다
+  focus-ring: oklch(0.429 0.297 264 / 0.32)   # 번들 전용 — interaction-blue 값. 발행 패키지에 포커스 링 토큰이 없다. sRGB 색역 밖(Colors 절 감사 메모 참조)
+  badge-blue-bg: oklch(0.932 0.034 286)   # 번들 전용 — blue 배지 바탕. interaction-blue 글자와 한 벌이라 함께 남겼다
+  ## Stack palette — @teamsparta/stack-tokens primitiveColor (역할 계층·컴포넌트 토큰·컴포넌트 스펙이 가리키는 단계만)
   neutral-0: oklch(1.000 0.000 0.0)   # #FFFFFF — stack-tokens neutral[0]
   neutral-5: oklch(0.982 0.001 286.4)   # #F9F9FA — stack-tokens neutral[5]
   neutral-10: oklch(0.959 0.003 286.3)   # #F1F1F3 — stack-tokens neutral[10]
   neutral-20: oklch(0.931 0.004 271.4)   # #E7E8EB — stack-tokens neutral[20]
   neutral-30: oklch(0.879 0.006 264.5)   # #D5D7DB — stack-tokens neutral[30]
+  neutral-40: oklch(0.808 0.010 267.3)   # #BDC0C7 — stack-tokens neutral[40]
   neutral-50: oklch(0.729 0.013 271.2)   # #A4A7B0 — stack-tokens neutral[50]
   neutral-60: oklch(0.628 0.017 273.7)   # #858893 — stack-tokens neutral[60]
+  neutral-70: oklch(0.520 0.019 278.2)   # #666874 — stack-tokens neutral[70]
   neutral-80: oklch(0.378 0.017 281.0)   # #40414B — stack-tokens neutral[80]
   neutral-90: oklch(0.307 0.013 279.2)   # #2E2F36 — stack-tokens neutral[90]
   neutral-100: oklch(0.164 0.007 271.0)   # #0D0E11 — stack-tokens neutral[100]
   red-5: oklch(0.984 0.011 339.3)   # #FFF7FC — stack-tokens red[5]
   red-20: oklch(0.936 0.038 350.6)   # #FFE0ED — stack-tokens red[20]
   red-50: oklch(0.736 0.167 10.2)   # #FF7791 — stack-tokens red[50]
+  primary: "{colors.red-70}"   # 명세의 대표색 역할 — 텍스트 축의 text-primary(neutral-100)와 다른 축
   red-70: oklch(0.621 0.251 24.0)   # #FA0030 — stack-tokens red[70]
   red-80: oklch(0.556 0.225 24.0)   # #D80028 — stack-tokens red[80]
   red-90: oklch(0.494 0.199 21.9)   # #B80028 — stack-tokens red[90]
@@ -143,6 +117,7 @@ colors:
   orange-red-50: oklch(0.732 0.165 28.3)   # #FF7A6B — stack-tokens orangeRed[50]
   orange-red-60: oklch(0.684 0.207 33.9)   # #FF5A36 — stack-tokens orangeRed[60]
   orange-red-70: oklch(0.646 0.226 33.4)   # #F94015 — stack-tokens orangeRed[70]
+  orange-red-80: oklch(0.581 0.231 30.4)   # #E31700 — stack-tokens orangeRed[80]
   orange-red-90: oklch(0.528 0.207 30.4)   # #C71704 — stack-tokens orangeRed[90]
   orange-red-100: oklch(0.426 0.165 30.6)   # #941103 — stack-tokens orangeRed[100]
   yellow-10: oklch(0.976 0.024 83.4)   # #FFF6E5 — stack-tokens yellow[10]
@@ -157,6 +132,7 @@ colors:
   green-50: oklch(0.820 0.170 143.8)   # #79E079 — stack-tokens green[50]
   green-60: oklch(0.772 0.202 143.3)   # #55D455 — stack-tokens green[60]
   green-70: oklch(0.710 0.225 142.7)   # #27C227 — stack-tokens green[70]
+  green-80: oklch(0.607 0.203 142.6)   # #099E09 — stack-tokens green[80]
   green-90: oklch(0.520 0.177 142.5)   # #008000 — stack-tokens green[90]
   green-100: oklch(0.387 0.107 143.2)   # #185218 — stack-tokens green[100]
   blue-10: oklch(0.969 0.015 248.0)   # #EDF6FF — stack-tokens blue[10]
@@ -166,6 +142,8 @@ colors:
   blue-70: oklch(0.626 0.205 254.9)   # #0085FF — stack-tokens blue[70]
   blue-90: oklch(0.431 0.138 254.1)   # #004F99 — stack-tokens blue[90]
   blue-100: oklch(0.328 0.100 252.6)   # #003566 — stack-tokens blue[100]
+  sky-blue-10: oklch(0.959 0.029 215.7)   # #DDF7FE — stack-tokens skyBlue[10]
+  sky-blue-90: oklch(0.378 0.066 224.3)   # #0B495C — stack-tokens skyBlue[90]
 typography:
   xs:
     fontFamily: "\"Pretendard Variable\", Pretendard, \"Pretendard Bold Placeholder\", -apple-system, BlinkMacSystemFont, system-ui, \"Malgun Gothic\", \"Apple SD Gothic Neo\", sans-serif"
@@ -236,14 +214,97 @@ rounded:
   radius-sm: 16px   # cards, modals, media tiles, video player
   radius-md: 50px   # pills, avatars, tags, primary CTAs, progress bars
 elevation:
-  shadow-sm: 0 1px 2px oklch(0.164 0.011 268 / 0.06), 0 1px 1px oklch(0.164 0.011 268 / 0.04)
-  shadow-md: 0 4px 10px oklch(0.164 0.011 268 / 0.08), 0 1px 3px oklch(0.164 0.011 268 / 0.06)
-  shadow-lg: 0 12px 28px oklch(0.164 0.011 268 / 0.14), 0 4px 10px oklch(0.164 0.011 268 / 0.08)
+  elevation1: 0px 8px 24px 0px oklch(0.000 0.000 0 / 0.08), 0px 0px 4px 0px oklch(0.000 0.000 0 / 0.12)   # stack-tokens effect.shadow.elevation1 — 라이트 card.shadow
+  elevation2: 0px 18px 33px 0px oklch(0.000 0.000 0 / 0.02), 0px 8px 40px 0px oklch(0.000 0.000 0 / 0.10), 0px 0px 6px 0px oklch(0.000 0.000 0 / 0.10)   # stack-tokens effect.shadow.elevation2 — 다크(sccDark) card.shadow
 components:
-  button-primary-hover:
-    backgroundColor: "{colors.brand-red-dark}"
-  button-secondary-hover:
-    backgroundColor: "{colors.gray-50}"
+  ## stack-tokens component tokens (baseComponent = sccLight). 다크(sccDark)는 Components 절 표
+  button-solid-primary:
+    backgroundColor: "{colors.brand-default}"
+    textColor: "{colors.neutral-0}"
+    rounded: "{rounded.radius-md}"
+  button-solid-primary-hover:
+    backgroundColor: "{colors.brand-strong}"
+  button-solid-secondary:
+    backgroundColor: "{colors.neutral-100}"
+    textColor: "{colors.text-inverse}"
+    rounded: "{rounded.radius-md}"
+  button-solid-secondary-hover:
+    backgroundColor: "{colors.neutral-80}"
+  button-solid-tertiary:
+    backgroundColor: "{colors.neutral-20}"
+    textColor: "{colors.text-secondary}"
+    rounded: "{rounded.radius-md}"
+  button-solid-tertiary-hover:
+    backgroundColor: "{colors.neutral-30}"
+  button-solid-error:
+    backgroundColor: "{colors.orange-red-70}"
+    textColor: "{colors.neutral-0}"
+    rounded: "{rounded.radius-md}"
+  button-solid-error-hover:
+    backgroundColor: "{colors.orange-red-80}"
+  button-outline-primary:
+    backgroundColor: "{colors.neutral-0}"
+    textColor: "{colors.brand-default}"
+    rounded: "{rounded.radius-md}"
+  button-outline-primary-hover:
+    backgroundColor: "{colors.brand-subtlest}"
+  button-outline-secondary:
+    backgroundColor: "{colors.neutral-0}"
+    textColor: "{colors.text-secondary}"
+    rounded: "{rounded.radius-md}"
+  button-outline-secondary-hover:
+    backgroundColor: "{colors.neutral-10}"
+  switch-checked-brand:
+    backgroundColor: "{colors.brand-default}"
+  switch-checked-brand-hover:
+    backgroundColor: "{colors.brand-strong}"
+  switch-checked-green:
+    backgroundColor: "{colors.green-70}"
+  switch-checked-green-hover:
+    backgroundColor: "{colors.green-80}"
+  switch-unchecked:
+    backgroundColor: "{colors.neutral-30}"
+  switch-unchecked-hover:
+    backgroundColor: "{colors.neutral-40}"
+  checkbox-checked:
+    backgroundColor: "{colors.brand-default}"
+    rounded: "{rounded.radius-xs}"
+  checkbox-checked-hover:
+    backgroundColor: "{colors.brand-strong}"
+  checkbox-unchecked:
+    backgroundColor: "{colors.fill-default}"
+    rounded: "{rounded.radius-xs}"
+  checkbox-unchecked-hover:
+    backgroundColor: "{colors.fill-subtle}"
+  radio-group-checked:
+    backgroundColor: "{colors.fill-default}"
+  radio-group-checked-hover:
+    backgroundColor: "{colors.fill-subtle}"
+  radio-group-unchecked:
+    backgroundColor: "{colors.fill-default}"
+  radio-group-unchecked-hover:
+    backgroundColor: "{colors.fill-subtle}"
+  bottom-sheet-grabber:
+    backgroundColor: "{colors.neutral-20}"
+  calendar-nav-button:
+    backgroundColor: "{colors.neutral-0}"
+  calendar-nav-button-hover:
+    backgroundColor: "{colors.neutral-10}"
+  calendar-date-cell:
+    textColor: "{colors.text-secondary}"
+  calendar-date-cell-hover:
+    backgroundColor: "{colors.background-subtle}"
+  calendar-date-cell-selected:
+    backgroundColor: "{colors.neutral-80}"
+    textColor: "{colors.text-inverse}"
+  calendar-date-cell-selected-hover:
+    backgroundColor: "{colors.neutral-70}"
+  calendar-date-cell-range-middle:
+    backgroundColor: "{colors.neutral-20}"
+    textColor: "{colors.text-secondary}"
+  calendar-date-cell-range-middle-hover:
+    backgroundColor: "{colors.neutral-30}"
+  ## Bundle components — 패키지에 컴포넌트 토큰이 없어 번들 스펙을 발행 값에 다시 건 것
   button-ghost:
     textColor: "{colors.interaction-blue}"
   button-ghost-hover:
@@ -251,27 +312,27 @@ components:
   topbar:
     height: 56px
   search:
-    backgroundColor: "{colors.gray-50}"
+    backgroundColor: "{colors.background-subtle}"
     rounded: "{rounded.radius-md}"
   pill-red:
-    backgroundColor: "{colors.brand-red-soft}"
-    textColor: "{colors.brand-red-dark}"
+    backgroundColor: "{colors.brand-subtlest}"
+    textColor: "{colors.brand-strong}"
   pill-blue:
     backgroundColor: "{colors.badge-blue-bg}"
     textColor: "{colors.interaction-blue}"
   pill-teal:
-    backgroundColor: "{colors.badge-teal-bg}"
-    textColor: "{colors.teal-strong}"
+    backgroundColor: "{colors.sky-blue-10}"
+    textColor: "{colors.sky-blue-90}"
   pill-green:
-    backgroundColor: "{colors.badge-green-bg}"
-    textColor: "{colors.success}"
+    backgroundColor: "{colors.green-10}"
+    textColor: "{colors.green-80}"
 fonts:
   font-family-mono: "\"JetBrains Mono\", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
 ---
 
 # 팀스파르타 (스파르타클럽) — design.md
 
-> 팀스파르타가 운영하는 스파르타클럽 학습 생태계의 인증 대시보드 디자인 시스템이다. 본 문서는 Claude Design handoff bundle의 `스파르타클럽 Design System` README, `colors_and_type.css`, preview cards, dashboard UI kit, chat transcript를 1차 출처로 합성했다. 공개 공식 사이트와 내일배움캠프, 기업교육, 커리어 surface는 서비스 범위와 브랜드 맥락 확인용 보조 출처로 사용했다 [src:1][src:2][src:3][src:4]. 색 역할 계층과 그것이 가리키는 팔레트 단계는 팀스파르타가 npm에 발행한 토큰 패키지에서 옮겼다 [src:5]. 그 밖의 색·타이포·스페이싱·컴포넌트 정량값은 이 핸드오프 번들에서 재구성한 것이다. 다만 색 값에 한해서는 인용된 라이브 사이트가 실제로 서빙하는 색과 대조했고, 브랜드 red 3개는 번들값이 라이브에서 다른 역할의 색이었으므로 라이브 발행값으로 바로잡았다(Colors 절 감사 메모 참조).
+> 팀스파르타가 운영하는 스파르타클럽 학습 생태계의 인증 대시보드 디자인 시스템이다. 본 문서는 Claude Design handoff bundle의 `스파르타클럽 Design System` README, `colors_and_type.css`, preview cards, dashboard UI kit, chat transcript를 1차 출처로 합성했다. 공개 공식 사이트와 내일배움캠프, 기업교육, 커리어 surface는 서비스 범위와 브랜드 맥락 확인용 보조 출처로 사용했다 [src:1][src:2][src:3][src:4]. 색 역할 계층, 원시 팔레트, 컴포넌트 토큰은 팀스파르타가 npm에 발행한 토큰 패키지에서 옮겼다 [src:5]. 타이포, 스페이싱, 라운드와 컴포넌트의 크기와 여백은 이 핸드오프 번들에서 재구성했다. 색은 발행 패키지에 대응 값이 없는 번들 파랑 계열만 번들 값으로 남겼다(Colors 절 감사 메모 참조).
 
 ## Brand & Style
 
@@ -283,11 +344,11 @@ fonts:
 
 ## Colors
 
-> **역할 계층 대조(2026-11-01).** 팀스파르타는 디자인 토큰을 npm 패키지 `@teamsparta/stack-tokens`로 발행한다 [src:5]. 이 패키지(2.6.0)는 원시 팔레트 `primitiveColor` 위에 역할 계층을 정의한다 — 라이트는 `baseSemanticColor`(스파르타클럽 테마 `sccLight`는 여기에 같은 brand 값만 다시 적는다), 다크는 `sccDark`다. 내일배움캠프는 그 역할을 `--stack-semantic-*` 커스텀 프로퍼티로 서빙한다 [src:2]. 아래 역할 표의 45개 역할은 패키지에서 옮겼고, 라이트 45개를 내일배움캠프 라이브 값과 hex로 대조하니 불일치는 0개였다. 내일배움캠프 라이브 페이지는 `--stack-semantic-*`를 라이트 값 한 벌로만 서빙하고 다크 테마 정의(`prefers-color-scheme` 분기 등)가 없어, 다크 값은 패키지로만 대조했다. 전에 frontmatter 첫머리에 있던 역할 행 11개(`bg-canvas`·`fg-primary`·`border-default` 등)는 핸드오프 번들이 붙인 이름이라 패키지에도 배포 CSS에도 없었고, 대응도 발행본과 달랐다(번들 `fg-secondary` → `gray-500`, 발행 `text-secondary` → `neutral-80`). 발행 이름이 아니므로 그 행을 지우고 발행 역할 계층으로 바꿨다. 번들 회색 `gray-*` 11단계는 발행 `neutral-*`와 거의 다른 값이라(같은 값은 `gray-400`·`gray-950` 둘) 그대로 두고, 역할이 가리키는 발행 단계는 `neutral-*`·`red-*` 등 별도 이름으로 실었다. 컴포넌트와 프리뷰는 아직 번들 값을 쓴다. 브랜드 red 3개(`brand-red`·`brand-red-dark`·`danger`)는 2026-09-24에 라이브 시맨틱 값(`brand-default`·`brand-strong`·`status-error-default`)으로 바로잡은 값이고 발행 원시 `red-70`·`red-80`·`orange-red-70`과 같다. `brand-red`는 라이브 사이트 4곳이 칠하는 브랜드 red(워드마크 fill·CTA 배경·내일배움캠프 히어로 배경·커리어 사이트 테넌트 테마)와 같은 값이다 [src:1][src:2][src:3][src:4]. `brand-red-soft`·`success` 등 번들에서 온 나머지 리터럴은 이번에 다시 맞추지 않았다.
+> **번들 팔레트 정리(2026-11-09).** 팀스파르타는 디자인 토큰을 npm 패키지 `@teamsparta/stack-tokens`로 발행한다 [src:5]. 2026-11-09에 조회한 최신판은 2.6.0이다. 이 패키지는 원시 팔레트 `primitiveColor` 위에 역할 계층을 정의한다 — 라이트는 `baseSemanticColor`(스파르타클럽 테마 `sccLight`는 여기에 같은 brand 값만 다시 적는다), 다크는 `sccDark`다. 컴포넌트 토큰은 `baseComponent`가 역할과 원시 단계를 가리켜 정의하고, `sccDark`가 그중 일부를 다시 가리킨다. 내일배움캠프는 역할을 `--stack-semantic-*` 커스텀 프로퍼티로 서빙한다 [src:2]. 아래 역할 표의 45개 역할은 패키지에서 옮겼고, 2026-11-01에 라이트 45개를 내일배움캠프 라이브 값과 hex로 대조하니 불일치는 0개였다. 내일배움캠프 라이브 페이지는 다크 테마 정의가 없어 다크 값은 패키지로만 대조했다. 이번에는 핸드오프 번들에서 온 팔레트를 발행값으로 옮겼다. 번들 회색 `gray-*` 11단계와 `white`, `black`은 지웠고(발행 `neutral-*`와 같은 값은 `gray-400`, `gray-950` 둘뿐이었다), 그 값을 쓰던 자리는 발행 역할(`text-primary`, `background-subtle`, `line-nonClickable` 등)이나 패키지 컴포넌트 토큰으로 옮겼다. 번들 이름으로 발행값을 싣던 `brand-red`, `brand-red-dark`, `danger`는 발행 `red-70`, `red-80`, `orange-red-70`과 같은 값이라 지우고, 대표색 별칭 `primary`가 `red-70`을 가리키게 했다. `success`, `warning`, `modal-backdrop`은 같은 자리를 맡는 발행 역할 `status-success-default`, `status-warning-default`, `dimm-default`로 바꿨고, `info`는 `interaction-blue`와 같은 값의 별칭이라 지웠다. 번들 `teal-strong`은 발행 `skyBlue[90]`과 같은 값이라 `sky-blue-90`으로 바꿨다. red 배지 바탕 `brand-red-soft`는 brand 역할의 가장 옅은 칸 `brand-subtlest`로 옮겼다. 값이 가장 가까운 칸은 `brand-subtler`(`red[20]`)지만, 다크에서 그 칸은 `red[90]`이 되어 글자 `brand-strong`(`red[50]`)과 대비가 무너진다. 나머지 번들 배지색 `badge-teal-bg`, `badge-green-bg`와 green 배지 글자(번들 `success`)는 가장 가까운 발행 단계 `skyBlue[10]`, `green[10]`, `green[80]`으로 옮겼다. 남긴 번들 색은 `interaction-blue`, `interaction-blue-soft`, `focus-ring`, `badge-blue-bg` 넷이다. 발행 원시 팔레트에 같은 값이 없고(가장 가까운 `deepBlue[80]`도 ΔE 0.106), 패키지에 포커스 링이나 배지 토큰도 없어 링크, ghost 액션, 포커스 링, blue 배지의 번들 파랑을 그대로 두었다.
 >
-> **`interaction-blue`는 sRGB 색역 밖이다.** `oklch(0.429 0.297 264)`를 선형 sRGB로 풀면 red 채널이 −0.0002로 음수라, 브라우저는 이 값을 그대로 그리지 못하고 클리핑한다. 라이브 사이트가 쓰는 가장 가까운 파랑은 `#003CDC` = `oklch(0.457 0.245 264)`로 **hue는 같고 채도가 낮은**(색역 안) 값이며 ΔE 0.059 떨어져 있다. 방침대로 값은 그대로 두고 차이만 적는다 — 이 토큰을 참조하는 `info`·`focus-ring`·`input-focus-ring`도 같은 값을 쓰므로 네 줄 모두에 같은 단서를 달았다. 다만 사이드카로 실려 나가는 건 앞의 셋뿐이다 — `input-focus-ring`은 컴포넌트 절에 있어 `tokens:build`의 색 토큰 추출 대상이 아니다.
+> **`interaction-blue`는 sRGB 색역 밖이다.** `oklch(0.429 0.297 264)`를 선형 sRGB로 풀면 red 채널이 −0.0002로 음수라, 브라우저는 이 값을 그대로 그리지 못하고 클리핑한다. 라이브 사이트가 쓰는 가장 가까운 파랑은 `#003CDC` = `oklch(0.457 0.245 264)`로 **hue는 같고 채도가 낮은**(색역 안) 값이며 ΔE 0.059 떨어져 있다. 방침대로 값은 그대로 두고 차이만 적는다 — 이 토큰을 참조하는 `focus-ring`과 `input-focus-ring`도 같은 값을 쓰므로 세 줄 모두에 같은 단서를 달았다. 다만 사이드카로 실려 나가는 건 앞의 둘뿐이다 — `input-focus-ring`은 컴포넌트 절에 있어 `tokens:build`의 색 토큰 추출 대상이 아니다.
 
-색은 두 층이다. 역할 계층과 그것이 가리키는 `neutral-*`·`red-*`·`orange-red-*`·`yellow-*`·`green-*`·`blue-*` 단계는 발행 패키지에서 옮겼다 [src:5]. 그 밖의 팔레트(`gray-*`·`interaction-blue`·`teal-strong`·배지 표면 등)는 핸드오프 번들의 `colors_and_type.css`에서 왔다(위 대조로 라이브 발행값으로 바꾼 red 3개는 제외). 둘 다 catalog 규약에 따라 OKLCH로 변환해 표기한다. Blue는 interaction/info, red는 brand/CTA, teal은 informational active surface, cool gray는 dashboard structure를 담당한다.
+색은 두 층이다. 역할 계층과 그것이 가리키는 원시 팔레트 단계는 발행 패키지에서 옮겼고, 컴포넌트 토큰이 가리키는 단계(`neutral-40`, `neutral-70`, `orange-red-80`, `green-80`)와 번들 색을 옮겨 간 단계(`sky-blue-10`, `sky-blue-90`)도 같은 원시 팔레트에서 왔다 [src:5]. 번들에서 온 색은 위 메모가 남긴 파랑 계열뿐이다. 모두 catalog 규약에 따라 OKLCH로 변환해 표기한다. Blue는 interaction/info, red는 brand/CTA, sky blue는 informational active surface, neutral은 dashboard structure를 담당한다.
 
 ### 역할 계층
 
@@ -363,7 +424,7 @@ Radius는 세 단계로 제한한다.
 
 ## Elevation & Depth
 
-시스템은 flat-first다. 기본 card, sidebar, topbar, list row는 shadow 없이 `1px` border로 구조를 만들고, elevation은 dropdown, toast, modal 같은 floating surface에만 쓴다.
+시스템은 flat-first다. 번들 대시보드는 sidebar, topbar, list row를 shadow 없이 `1px` border로 구조를 만들고, elevation은 dropdown, toast, modal 같은 floating surface에 쓴다. 카드는 예외로, 발행 패키지가 컴포넌트 토큰 `card.shadow`를 두어 라이트는 `elevation1`, 다크(`sccDark`)는 `elevation2`를 가리킨다 [src:5]. 둘 다 검정 알파의 넓고 옅은 그림자다.
 
 Hover elevation은 clickable media card에만 제한적으로 허용한다. Primary CTA는 hover 때 shadow를 키우기보다 red를 어둡게 하고, active/press는 `scale(0.98)`과 shadow 제거로 반응한다.
 
@@ -375,37 +436,121 @@ Shape language는 **rounded dashboard geometry**다. 사각형 컨테이너는 1
 
 ## Components
 
-### Button primary
+컴포넌트 색은 두 갈래다. 버튼, 스위치, 체크박스, 라디오 그룹, 바텀시트, 스피너, 스켈레톤, 아코디언, 캘린더는 발행 패키지의 컴포넌트 토큰 이름과 값을 그대로 쓴다 [src:5]. 사이드바, 탑바, 코스 카드, 배지, 입력, 진행률, 레슨 플레이어는 패키지에 컴포넌트 토큰이 없어 번들 스펙의 구조(크기, 여백, 라운드)를 두고 색만 발행 역할과 단계에 다시 걸었다. frontmatter `components:` 맵은 라이트 값만 싣는다. 명세 맵에 테마 축이 없기 때문이다.
 
-Primary button은 Sparta red 배경, white foreground, 50px radius, 700 weight를 사용한다. 주요 CTA는 `수강신청`, `무료 체험 시작`, `이어서 학습`, `참여하기`처럼 동사 중심으로 작성한다.
+### 패키지 컴포넌트 토큰
+
+토큰 이름은 패키지의 `baseComponent` 경로이고, frontmatter 키는 그 경로를 케밥 표기로 이은 것이다(`button.solidPrimary.backgroundHover` → `button-solid-primary-hover`의 `backgroundColor`). 라이트 열은 `baseComponent`가 `sccLight`를 받아 낸 값, 다크 열은 `sccDark`가 다시 가리킨 값이다. `sccDark`가 다시 적지 않은 칸은 같은 원시 단계를 쓰거나 역할의 다크 짝으로 바뀐다. 불투명도 램프와 리터럴 칸은 역할 표와 같은 꼴로 적는다.
+
+| 컴포넌트 토큰 | 라이트 (`baseComponent`) | 다크 (`sccDark`) |
+| --- | --- | --- |
+| `button.solidPrimary.background` | `{colors.brand-default}` | `{colors.dark-brand-default}` |
+| `button.solidPrimary.backgroundHover` | `{colors.brand-strong}` | `{colors.dark-brand-subtle}` |
+| `button.solidPrimary.text` | `{colors.neutral-0}` | `{colors.neutral-0}` |
+| `button.solidPrimary.icon` | `{colors.neutral-0}` | `{colors.neutral-0}` |
+| `button.solidSecondary.background` | `{colors.neutral-100}` | `{colors.neutral-10}` |
+| `button.solidSecondary.backgroundHover` | `{colors.neutral-80}` | `{colors.neutral-30}` |
+| `button.solidSecondary.text` | `{colors.text-inverse}` | `{colors.dark-text-inverse}` |
+| `button.solidSecondary.icon` | `{colors.icon-inverse}` | `{colors.dark-icon-inverse}` |
+| `button.solidTertiary.background` | `{colors.neutral-20}` | `{colors.neutral-80}` |
+| `button.solidTertiary.backgroundHover` | `{colors.neutral-30}` | `{colors.neutral-70}` |
+| `button.solidTertiary.text` | `{colors.text-secondary}` | `{colors.dark-text-secondary}` |
+| `button.solidTertiary.icon` | `{colors.icon-secondary}` | `{colors.dark-icon-secondary}` |
+| `button.solidError.background` | `{colors.orange-red-70}` | `{colors.orange-red-70}` |
+| `button.solidError.backgroundHover` | `{colors.orange-red-80}` | `{colors.orange-red-80}` |
+| `button.solidError.text` | `{colors.neutral-0}` | `{colors.neutral-0}` |
+| `button.solidError.icon` | `{colors.neutral-0}` | `{colors.neutral-0}` |
+| `button.outlinePrimary.border` | `{colors.brand-default}` | `{colors.neutral-10}` |
+| `button.outlinePrimary.background` | `{colors.neutral-0}` | `neutralBlackAlpha[0]` = `oklch(0.164 0.007 271.0 / 0)` — 불투명도 램프 |
+| `button.outlinePrimary.backgroundHover` | `{colors.brand-subtlest}` | `neutralWhiteAlpha[12]` = `oklch(1.000 0.000 0.0 / 0.12)` — 불투명도 램프 |
+| `button.outlinePrimary.text` | `{colors.brand-default}` | `{colors.dark-text-primary}` |
+| `button.outlinePrimary.icon` | `{colors.brand-default}` | `{colors.dark-icon-primary}` |
+| `button.outlineSecondary.border` | `{colors.neutral-30}` | `{colors.neutral-60}` |
+| `button.outlineSecondary.background` | `{colors.neutral-0}` | `neutralBlackAlpha[0]` = `oklch(0.164 0.007 271.0 / 0)` — 불투명도 램프 |
+| `button.outlineSecondary.backgroundHover` | `{colors.neutral-10}` | `neutralWhiteAlpha[12]` = `oklch(1.000 0.000 0.0 / 0.12)` — 불투명도 램프 |
+| `button.outlineSecondary.text` | `{colors.text-secondary}` | `{colors.dark-text-secondary}` |
+| `button.outlineSecondary.icon` | `{colors.icon-secondary}` | `{colors.dark-icon-secondary}` |
+| `switch.checkedBrand.background` | `{colors.brand-default}` | `{colors.dark-brand-default}` |
+| `switch.checkedBrand.backgroundHover` | `{colors.brand-strong}` | `{colors.dark-brand-strong}` |
+| `switch.checkedGreen.background` | `{colors.green-70}` | `{colors.green-70}` |
+| `switch.checkedGreen.backgroundHover` | `{colors.green-80}` | `{colors.green-60}` |
+| `switch.unchecked.background` | `{colors.neutral-30}` | `{colors.neutral-70}` |
+| `switch.unchecked.backgroundHover` | `{colors.neutral-40}` | `{colors.neutral-60}` |
+| `card.shadow` | `elevation1` | `elevation2` |
+| `bottomSheet.grabber.background` | `{colors.neutral-20}` | `{colors.neutral-80}` |
+| `spinner.indicator.color` | `{colors.neutral-100}` | `{colors.neutral-0}` |
+| `checkbox.checked.border` | `{colors.brand-default}` | `{colors.dark-brand-default}` |
+| `checkbox.checked.background` | `{colors.brand-default}` | `{colors.dark-brand-default}` |
+| `checkbox.checked.backgroundHover` | `{colors.brand-strong}` | `{colors.dark-brand-strong}` |
+| `checkbox.unchecked.border` | `{colors.neutral-40}` | `{colors.neutral-60}` |
+| `checkbox.unchecked.background` | `{colors.fill-default}` | `neutralBlackAlpha[0]` = `oklch(0.164 0.007 271.0 / 0)` — 불투명도 램프 |
+| `checkbox.unchecked.backgroundHover` | `{colors.fill-subtle}` | `neutralWhiteAlpha[12]` = `oklch(1.000 0.000 0.0 / 0.12)` — 불투명도 램프 |
+| `radioGroup.checked.accent` | `{colors.brand-default}` | `{colors.dark-brand-default}` |
+| `radioGroup.checked.accentHover` | `{colors.brand-strong}` | `{colors.dark-brand-strong}` |
+| `radioGroup.checked.background` | `{colors.fill-default}` | `neutralBlackAlpha[0]` = `oklch(0.164 0.007 271.0 / 0)` — 불투명도 램프 |
+| `radioGroup.checked.backgroundHover` | `{colors.fill-subtle}` | `neutralWhiteAlpha[12]` = `oklch(1.000 0.000 0.0 / 0.12)` — 불투명도 램프 |
+| `radioGroup.unchecked.accent` | `{colors.neutral-40}` | `{colors.neutral-60}` |
+| `radioGroup.unchecked.accentHover` | `{colors.neutral-40}` | `{colors.neutral-60}` |
+| `radioGroup.unchecked.background` | `{colors.fill-default}` | `neutralBlackAlpha[0]` = `oklch(0.164 0.007 271.0 / 0)` — 불투명도 램프 |
+| `radioGroup.unchecked.backgroundHover` | `{colors.fill-subtle}` | `neutralWhiteAlpha[12]` = `oklch(1.000 0.000 0.0 / 0.12)` — 불투명도 램프 |
+| `skeleton.background` | 리터럴 `oklch(0.328 0.100 252.6 / 0.06)` | 리터럴 `oklch(0.969 0.015 248.0 / 0.08)` |
+| `accordion.arrow.color` | `{colors.icon-tertiary}` | `{colors.dark-icon-quaternary}` |
+| `calendar.header.navButton.background` | `{colors.neutral-0}` | `neutralBlackAlpha[0]` = `oklch(0.164 0.007 271.0 / 0)` — 불투명도 램프 |
+| `calendar.header.navButton.backgroundHover` | `{colors.neutral-10}` | `neutralWhiteAlpha[12]` = `oklch(1.000 0.000 0.0 / 0.12)` — 불투명도 램프 |
+| `calendar.header.navButton.border` | `{colors.neutral-30}` | `{colors.neutral-60}` |
+| `calendar.dateCell.default.text` | `{colors.text-secondary}` | `{colors.dark-text-secondary}` |
+| `calendar.dateCell.default.background` | `neutralBlackAlpha[0]` = `oklch(0.164 0.007 271.0 / 0)` — 불투명도 램프 | `neutralBlackAlpha[0]` = `oklch(0.164 0.007 271.0 / 0)` — 불투명도 램프 |
+| `calendar.dateCell.default.backgroundHover` | `{colors.background-subtle}` | `{colors.dark-background-subtle}` |
+| `calendar.dateCell.selected.text` | `{colors.text-inverse}` | `{colors.dark-text-inverse}` |
+| `calendar.dateCell.selected.background` | `{colors.neutral-80}` | `{colors.neutral-20}` |
+| `calendar.dateCell.selected.backgroundHover` | `{colors.neutral-70}` | `{colors.neutral-30}` |
+| `calendar.dateCell.rangeMiddle.text` | `{colors.text-secondary}` | `{colors.dark-text-secondary}` |
+| `calendar.dateCell.rangeMiddle.background` | `{colors.neutral-20}` | `{colors.neutral-80}` |
+| `calendar.dateCell.rangeMiddle.backgroundHover` | `{colors.neutral-30}` | `{colors.neutral-70}` |
+| `calendar.dateCell.today.border` | `{colors.neutral-30}` | `{colors.neutral-60}` |
+
+스켈레톤의 두 리터럴은 패키지가 `rgba(…)`로 적은 값을 OKLCH로 옮긴 것이다 — 라이트는 `blue[100]`, 다크는 `blue[10]`과 같은 색에 불투명도만 걸었다. 패키지는 스켈레톤 shimmer도 같은 색이 투명, 불투명, 투명으로 바뀌는 그라디언트로 적는다.
+
+### Button
+
+Primary는 `button.solidPrimary`다 — brand red 바탕, 흰 글자이고 hover에서 `brand-strong`으로 어두워진다(다크는 `brand-subtle`). 보조 버튼은 패키지의 `solidSecondary`(검은 채움), `solidTertiary`(회색 채움), `outlineSecondary`(흰 바탕과 `neutral-30` 테두리) 셋이고, 오류 행동은 `solidError`, brand 테두리 버튼은 `outlinePrimary`다. 모양은 번들 스펙대로 50px radius, 700 weight이며, 주요 CTA는 `수강신청`, `무료 체험 시작`, `이어서 학습`, `참여하기`처럼 동사 중심으로 작성한다.
+
+Ghost는 패키지에 없는 번들 변형이다. background 없이 interaction blue text를 쓰며 로그인, 보조 이동, link-like action에 쓴다.
 
 ```tsx
 <Button variant="primary" size="md">이어서 학습</Button>
 ```
 
 ```text
-button-primary-bg: brand-red
-button-primary-hover-bg: brand-red-dark
-button-primary-fg: white
-button-primary-radius: radius-md
-button-primary-focus: focus-ring
+button-solid-primary: { bg: brand-default, fg: neutral-0, hover-bg: brand-strong }
+button-outline-secondary: { bg: neutral-0, border: neutral-30, fg: text-secondary, hover-bg: neutral-10 }
+button-solid-tertiary: { bg: neutral-20, fg: text-secondary, hover-bg: neutral-30 }
+button-radius: radius-md
+button-focus: focus-ring
+button-ghost: { fg: interaction-blue, hover-bg: interaction-blue-soft }
 ```
 
-### Button secondary and ghost
+### Switch
 
-Secondary는 white surface와 gray-200 border로 구조를 만들고, hover에서는 gray-50으로만 살짝 떠오른다. Ghost는 background 없이 interaction blue text를 사용하며 로그인, 보조 이동, link-like action에 쓴다.
+`switch.checkedBrand`는 brand red, `switch.checkedGreen`은 `green[70]`, 꺼진 상태 `switch.unchecked`는 `neutral-30`(다크 `neutral-70`) 트랙을 쓴다.
+
+### Checkbox
+
+Checkbox는 label과 input을 semantic하게 연결하고, label 전체가 클릭 영역이 되도록 한다. 켜진 상태는 `checkbox.checked`로 brand red 테두리와 채움, 흰 체크 글리프를 쓴다. 꺼진 상태는 `checkbox.unchecked`로 `neutral-40` 테두리(다크 `neutral-60`)와 `fill-default` 바탕을 쓴다. focus-visible은 blue ring을 유지한다.
 
 ```text
-button-secondary-bg: white
-button-secondary-border: gray-200
-button-secondary-hover-bg: gray-50
-button-ghost-fg: interaction-blue
-button-ghost-hover-bg: interaction-blue-soft
+checkbox-radius: radius-xs
+checkbox-checked: { bg: brand-default, border: brand-default, hover-bg: brand-strong }
+checkbox-unchecked: { bg: fill-default, border: neutral-40, hover-bg: fill-subtle }
 ```
+
+### Radio group, bottom sheet, calendar
+
+라디오 그룹은 선택 점을 `accent`로 칠하고(켜짐 brand red, 꺼짐 `neutral-40`), 바탕은 체크박스와 같은 `fill-default`다. 바텀시트 grabber는 `neutral-20`, 스피너 indicator는 라이트에서 `neutral-100`이다. 캘린더는 선택한 날짜를 `neutral-80` 채움과 반전 글자로, 범위 가운데 날짜를 `neutral-20` 채움으로 표시한다.
 
 ### Sidebar
 
-Sidebar는 240px fixed width, full-height sticky, white surface, gray-100 border-right를 사용한다. Active nav item은 teal-strong fill과 white text로 처리해 red CTA와 경쟁하지 않는다.
+Sidebar는 240px fixed width, full-height sticky, `background-default` surface, `line-nonClickable` border-right를 사용한다. Active nav item은 `sky-blue-90` fill과 흰 text로 처리해 red CTA와 경쟁하지 않는다. 비활성 항목은 `text-secondary`다.
 
 ```tsx
 <Sidebar active="catalog" onNav={setScreen} />
@@ -413,21 +558,22 @@ Sidebar는 240px fixed width, full-height sticky, white surface, gray-100 border
 
 ### Topbar and search
 
-Topbar는 56px sticky header이며 shadow 없이 하단 border만 사용한다. Search box는 gray-50 pill field이고, width는 desktop에서 280px를 기준으로 한다.
+Topbar는 56px sticky header이며 shadow 없이 하단 border만 사용한다. Search box는 `background-subtle` pill field이고, width는 desktop에서 280px를 기준으로 한다.
 
 ```text
 topbar-height: 56px
 search-radius: radius-md
-search-bg: gray-50
+search-bg: background-subtle
 ```
 
 ### Card
 
-Card는 white surface, gray-100/200 border, 16px radius, 20px padding이 기본이다. Course card는 media thumbnail, badge row, title/description, metadata footer로 구성되며, 사용자의 iteration 결과 metadata footer는 하단에 고정하고 card 높이는 row 안에서 일관되게 유지한다.
+Card는 `background-default` surface, `line-nonClickable` border, 16px radius, 20px padding이 기본이고, 패키지 `card.shadow`(라이트 `elevation1`)를 더한다. Course card는 media thumbnail, badge row, title/description, metadata footer로 구성되며, 사용자의 iteration 결과 metadata footer는 하단에 고정하고 card 높이는 row 안에서 일관되게 유지한다.
 
 ```text
-card-bg: white
-card-border: gray-100
+card-bg: background-default
+card-border: line-nonClickable
+card-shadow: elevation1
 card-radius: radius-sm
 card-padding: 20px
 card-gap: 10px
@@ -436,41 +582,37 @@ card-footer-pin: true
 
 ### Pill and badge
 
-Pill은 50px radius, 11px/700 label, 3px 10px padding을 쓴다. Red badge는 hot/new/primary emphasis, teal은 국비지원/취업 보장 같은 정보성 상태, green은 completion/success, blue는 new/info에 배정한다.
+Pill은 50px radius, 11px/700 label, 3px 10px padding을 쓴다. Red badge는 hot/new/primary emphasis, teal은 국비지원/취업 보장 같은 정보성 상태, green은 completion/success, blue는 new/info에 배정한다. 패키지에 배지 토큰이 없어 red는 brand 역할(바탕 `brand-subtlest`, 글자 `brand-strong`)이라 테마를 따라 바뀌고, teal과 green은 번들 값에 가장 가까운 발행 단계, blue는 번들 값이라 두 테마에서 같은 색이다.
 
 ```text
-pill-red:   { bg: brand-red-soft, fg: brand-red-dark }
+pill-red:   { bg: brand-subtlest, fg: brand-strong }
 pill-blue:  { bg: badge-blue-bg, fg: interaction-blue }
-pill-teal:  { bg: badge-teal-bg, fg: teal-strong }
-pill-green: { bg: badge-green-bg, fg: success }
+pill-teal:  { bg: sky-blue-10, fg: sky-blue-90 }
+pill-green: { bg: green-10, fg: green-80 }
 ```
 
 ### Form input
 
-Input은 6px radius, 14px text, 10px 12px padding, gray-200 border를 사용한다. Focus-visible은 border 색만 바꾸지 않고 interaction blue ring을 외곽에 둔다. Error는 red border와 red helper text를 쓰며 input background를 red로 칠하지 않는다.
+Input은 6px radius, 14px text, 10px 12px padding, `line-clickable` border를 사용한다. Focus-visible은 border 색만 바꾸지 않고 interaction blue ring을 외곽에 둔다. Error는 `status-error-default` border와 helper text를 쓰며 input background를 red로 칠하지 않는다.
 
 ```text
 input-radius: radius-xs
-input-border: gray-200
+input-border: line-clickable
 input-focus-ring: oklch(0.429 0.297 264 / 0.18)   # interaction-blue 값 — sRGB 색역 밖(Colors 절 감사 메모 참조)
-input-error-border: danger
+input-error-border: status-error-default
 ```
 
 ### Select
 
 Select는 native chevron을 숨기고 오른쪽 36px padding 안에 custom chevron을 둔다. 텍스트 시작점은 input과 같은 12px left padding에 맞추며, chevron이 텍스트 baseline을 밀지 않도록 한다.
 
-### Checkbox
-
-Checkbox는 label과 input을 semantic하게 연결하고, label 전체가 클릭 영역이 되도록 한다. Checked state는 red fill과 white check glyph를 사용하고, focus-visible은 blue ring을 유지한다.
-
 ### Course row and progress
 
-Course row는 52px thumbnail, badge/track, single-line title, next lesson, right-aligned progress percentage로 구성한다. Progress track은 gray-100, fill은 brand-red 또는 success green을 사용하며 radius-md로 capsule 처리한다.
+Course row는 52px thumbnail, badge/track, single-line title, next lesson, right-aligned progress percentage로 구성한다. Progress track은 `fill-subtle`, fill은 `brand-default` 또는 `status-success-default`를 사용하며 radius-md로 capsule 처리한다.
 
 ### Lesson player
 
-Lesson player는 16:9 dark video frame, 16px radius, red radial emphasis, large 50px play button, bottom progress bar를 사용한다. Curriculum accordion은 active week를 gray-50 surface로 열고, 완료 상태는 success green, 현재 상태는 brand-red로 구분한다.
+Lesson player는 16:9 dark video frame(`neutral-100`), 16px radius, red radial emphasis, large 50px play button, bottom progress bar를 사용한다. Curriculum accordion은 active week를 `background-subtle` surface로 열고, 완료 상태는 `status-success-default`, 현재 상태는 `brand-default`로 구분한다.
 
 ## Do's and Don'ts
 
@@ -510,7 +652,7 @@ Cards and course rows must preserve scan order: thumbnail → badge/track → ti
 - The blue-vs-red token semantics are documented as a caveat and should be confirmed by the team before production adoption.
 - The dashboard default theme is not confirmed; the bundle authored light mode as default while keeping dark-mode tokens available.
 - No custom icon library was included; Lucide/Heroicons-style outline icons are the documented fallback.
-- The published palette is upstream and is carried: the `neutral-*`/`red-*`/`orange-red-*`/`yellow-*`/`green-*`/`blue-*` steps the role layer points at were added from `@teamsparta/stack-tokens` [src:5]. What is not yet aligned is this entry's bundle palette (`gray-*`, `brand-red-soft`, `success`, `warning`, the `interaction-blue` family, `teal-strong`, badge surfaces) and the component specs and preview that use it — moving them to the published values means changing existing values, and a maintainer decision (2026-11-01) split that into follow-up work. The package's component tokens (`button`, `checkbox`, …) are upstream too and are left to the same follow-up.
+- The link, ghost-action, focus and blue-badge blue (`interaction-blue`, `interaction-blue-soft`, `focus-ring`, `badge-blue-bg`) is still the handoff bundle's value: `@teamsparta/stack-tokens` publishes no matching palette step, focus-ring token or badge token for it, so it should be confirmed by the team before production adoption.
 
 ## References
 
