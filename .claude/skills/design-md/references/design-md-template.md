@@ -185,8 +185,9 @@ components:
 - **변형을 중첩하기.** `button-primary:` 아래 `hover:` 를 두면 표준 도구가 자식을 통째로
   버린다. `button-primary-hover` 처럼 평평한 이름으로, 본문 `###` 과 같은 이름을 쓴다. 브랜드 토큰 패키지가
   경로로 발행한 컴포넌트 토큰을 옮긴 행만은 그 경로를 케밥 표기로 이은 키를 쓰고, 끝의 색 단계(`background`, `text`)는
-  맵 속성(`backgroundColor`, `textColor`)으로, 그 `Hover` 꼴은 `-hover` 접미로 옮기며 한 경로의 토큰은 한 행에 합친다
-  (`checkbox.unchecked.backgroundHover` → `checkbox-unchecked-hover` 의 `backgroundColor`, 그 밖에 뺀 경로 단계는 본문에 적는다).
+  맵 속성(`backgroundColor`, `textColor`)으로, 그 `Hover` 꼴은 `-hover` 접미로 옮기며, 끝 단계만 다른 색 토큰은 한 행에 합친다
+  (`button.solidPrimary.background` 와 `.text` 는 `button-solid-primary` 한 행, `.backgroundHover` 는
+  `button-solid-primary-hover`. 그 밖에 뺀 경로 단계는 본문에 적는다).
   본문 패키지 토큰 표 첫 열의 경로로 짝을 짓는다. 다른 컴포넌트 행은 색이 발행 토큰을 가리켜도 `###` 이름을
   따른다(`stitch-format.md`).
 - **값에 산문 섞기.** `28 또는 32`·`top-left (10, 10)` 은 토큰이 아니라 노트다. 본문에 쓴다.
