@@ -303,7 +303,7 @@ components:
     textColor: "{colors.text-secondary}"
   calendar-date-cell-range-middle-hover:
     backgroundColor: "{colors.neutral-30}"
-  ## Bundle components — 패키지에 컴포넌트 토큰이 없어 번들 스펙을 발행 값에 다시 건 것
+  ## Bundle components — 패키지에 컴포넌트 토큰이 없어 번들 스펙을 발행 값에 다시 건 것. 링크와 ghost 글자의 파랑(interaction-blue)만 번들 값으로 남는다
   button-ghost:
     textColor: "{colors.interaction-blue}"
   button-ghost-hover:
@@ -437,7 +437,7 @@ Shape language는 **rounded dashboard geometry**다. 사각형 컨테이너는 1
 
 ## Components
 
-컴포넌트 색은 두 갈래다. 버튼, 스위치, 체크박스, 라디오 그룹, 바텀시트, 스피너, 스켈레톤, 아코디언, 캘린더는 발행 패키지의 컴포넌트 토큰 이름과 값을 그대로 쓴다 [src:5]. 사이드바, 탑바, 코스 카드, 배지, 입력, 진행률, 레슨 플레이어는 패키지에 컴포넌트 토큰이 없어 번들 스펙의 구조(크기, 여백, 라운드)를 두고 색만 발행 역할과 단계에 다시 걸었다. frontmatter `components:` 맵은 라이트 값만 싣는다. 명세 맵에 테마 축이 없기 때문이다.
+컴포넌트 색은 두 갈래다. 버튼(ghost 변형 제외), 스위치, 체크박스, 라디오 그룹, 바텀시트, 스피너, 스켈레톤, 아코디언, 캘린더는 발행 패키지의 컴포넌트 토큰 이름과 값을 그대로 쓴다 [src:5]. ghost 버튼, 사이드바, 탑바, 코스 카드, 배지, 입력, 진행률, 레슨 플레이어는 패키지에 색 토큰이 없어 번들 스펙의 구조(크기, 여백, 라운드)를 두고 색을 발행 역할과 단계에 다시 걸었다. 코스 카드의 그림자만은 패키지 `card.shadow`다. 예외는 번들 파랑 `interaction-blue`로, ghost 버튼과 blue 배지의 글자, 입력 포커스 링은 발행 패키지에 대응 값이 없어 번들 값 그대로다(Colors 절 감사 메모). frontmatter `components:` 맵은 라이트 값만 싣는다. 명세 맵에 테마 축이 없기 때문이다.
 
 ### 패키지 컴포넌트 토큰
 
