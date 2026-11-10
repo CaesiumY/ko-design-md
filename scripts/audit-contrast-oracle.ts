@@ -421,7 +421,9 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  * reading taken from the panel is (1 + 0.05) / (0 + 0.05) = 21. Each line's
  * rect is its font's content area, about y 51..69 of its panel (inside the
  * 24px line, y 48..72), and lies inside x 60..240 (`.grid`'s, inside its
- * column, x 150..300; `.vertical`'s stands upright, see below):
+ * column, x 150..300). `.vertical`'s stands upright, a column about 18px
+ * wide centred on x 150, still inside x 60..240, but taller than the line
+ * and well under the panel's 120px, so the y range is not its:
  *
  * - `.side` draws a block level with the line at x 0..60 of the panel, so the
  *   block is not in the way and the run is judged — a pass at 21. Before

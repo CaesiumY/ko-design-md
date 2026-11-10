@@ -17,9 +17,10 @@
       so roughly y 51..69, and inside y 48..72 whatever the font. "Sample
       text" is well under 150px wide in any sans-serif, so the box lies inside
       x 60..240, centred on x 150; in `.grid`, whose run is centred in a 150px
-      column, inside that column, x 150..300. In `.vertical` the run stands
-      upright instead, a column about 18px wide centred on x 150 and well
-      under 120px tall.
+      column, inside that column, x 150..300. `.vertical`'s run stands
+      upright instead, a column about 18px wide centred on x 150 — inside
+      x 60..240 still — and taller than the 24px line, well under the
+      panel's 120px: the y range above is not its.
 
       - `.side::after` is a 60x24 black block level with the line, from x 0 to
         x 60. Its box misses the line's box, so it is not in the way.
