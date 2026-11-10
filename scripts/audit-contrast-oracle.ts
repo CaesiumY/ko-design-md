@@ -429,6 +429,12 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   colours is not read (which side of the text it paints on is #692's
  *   question), so the run is held. No ratio is claimed: the claim is that the
  *   verdict is withheld.
+ * - `.far` sits 1000px down, under a wash whose containing block is the
+ *   document root (`html` is positioned), placed from the root's origin at
+ *   x 24, y 1312 — exactly over the panel. The collector scrolls to reach it,
+ *   and the root's rect has moved with that scroll already, so the box covers
+ *   the point and the run is held. Taking the root's `scrollTop` off a second
+ *   time would lift the box clear and read it as a pass.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -444,6 +450,15 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
     id: "text under a pseudo-element wash that covers it",
     pathEnds: "div.cover > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text under a wash placed from the scrolled document root",
+    pathEnds: "div.far > span.t",
     theme: "light",
     state: "default",
     kind: "text",

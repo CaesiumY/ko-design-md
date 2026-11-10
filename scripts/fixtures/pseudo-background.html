@@ -26,15 +26,28 @@
         point. Left in flow, the wash would paint over it, and a hit on a
         pseudo-element is reported as its owner — `div.cover` in front of the
         run, an `overlay` hold on top of this one.
+      - `.far` is a third panel of the same shape that is NOT positioned, put
+        1000px further down behind a spacer, so the collector has to scroll to
+        reach it. `html` is `position: relative`, which makes the document root
+        its wash's containing block. The panel starts at y 24 + 144 + 144 +
+        1000 = 1312 and x 24 of the root, and `.far::before` is placed exactly
+        there at 300x120, so it covers the panel's sample point and holds. The
+        root's rect already moves with the scroll; subtracting the root's
+        `scrollTop` again lifts the box clear of the point and reads it as a
+        pass. Its run is `position: relative` for the reason `.cover`'s is.
     -->
     <style>
+      html {
+        position: relative;
+      }
       body {
         margin: 0;
         padding: 24px;
         background: oklch(1 0 0);
       }
       .side,
-      .cover {
+      .cover,
+      .far {
         position: relative;
         width: 300px;
         height: 120px;
@@ -60,8 +73,24 @@
         inset: 0;
         background: oklch(0 0 0 / 0.1);
       }
-      .cover .t {
+      .cover .t,
+      .far .t {
         position: relative;
+      }
+      .far {
+        position: static;
+      }
+      .far::before {
+        content: "";
+        position: absolute;
+        left: 24px;
+        top: 1312px;
+        width: 300px;
+        height: 120px;
+        background: oklch(0 0 0 / 0.1);
+      }
+      .spacer {
+        height: 1000px;
       }
       .t {
         color: oklch(0 0 0);
@@ -72,5 +101,7 @@
   <body>
     <div class="side"><span class="t">Sample text</span></div>
     <div class="cover"><span class="t">Sample text</span></div>
+    <div class="spacer"></div>
+    <div class="far"><span class="t">Sample text</span></div>
   </body>
 </html>

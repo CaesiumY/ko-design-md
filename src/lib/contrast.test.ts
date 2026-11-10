@@ -693,7 +693,13 @@ const pseudo = (over: Partial<RawPseudo> = {}): RawPseudo => ({
   borderRightWidth: "0px",
   borderBottomWidth: "0px",
   borderLeftWidth: "0px",
-  containingBlock: { left: 100, top: 200, display: "block", transforms: [] },
+  containingBlock: {
+    left: 100,
+    top: 200,
+    display: "block",
+    transforms: [],
+    unsure: [],
+  },
   point: { x: 250, y: 260 },
   ...over,
 })
@@ -797,6 +803,7 @@ describe("a pseudo-element holds only a reading its box can cover (#691)", () =>
           top: 200,
           display: "block",
           transforms: [],
+          unsure: [],
           ...over,
         },
       })
@@ -811,6 +818,11 @@ describe("a pseudo-element holds only a reading its box can cover (#691)", () =>
     expect(
       textOver([cb({ transforms: ["matrix(1, 0, 0, 1, 12, -4.5)"] })])
     ).toMatchObject(judged)
+    // A property that may capture the box somewhere the walk did not stop —
+    // here a promised transform — leaves the box's origin a guess.
+    expect(
+      textOver([cb({ unsure: ["will-change: transform"] })])
+    ).toMatchObject(held)
   })
 
   it("holds when any one of several pseudo-elements may cover the point", () => {

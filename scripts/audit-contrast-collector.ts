@@ -318,36 +318,39 @@ export function collectContrast(): Collected {
     return pseudos.length === 0 ? {} : { pseudos }
   }
 
-  // Whether an element is the containing block of a FIXED descendant: a
-  // transform of any kind, a 3D context, a motion path, a filter, perspective,
-  // containment, a size container, or a promise of one in `will-change`. With
-  // none of them above it, a fixed box belongs to the viewport. The #402
-  // survey released 103 rows with a narrower first draft of this test and got
-  // none wrong; the additions only make more ancestors count, each one a
-  // property the CSS specs name.
+  // Whether an element is the containing block of a FIXED descendant, by the
+  // rules this walk models: a transform of any kind or a filter. An ABSOLUTE
+  // descendant is captured by those and by any `position` but `static`. With
+  // none of them above it, a fixed box belongs to the viewport. These are the
+  // rules the #402 survey released 103 rows with and got none wrong.
+  //
+  // A containing block found one ancestor too near is as wrong as one too far
+  // — either moves the origin, and a box that covers the point can come out
+  // beside it. So the rarer ways to capture a box are not added here as more
+  // stops; each is listed by `unsureOf` and holds the reading instead.
   const capturesFixed = (c: CSSStyleDeclaration): boolean =>
     c.transform !== "none" ||
     c.translate !== "none" ||
     c.rotate !== "none" ||
     c.scale !== "none" ||
-    c.transformStyle === "preserve-3d" ||
-    c.offsetPath !== "none" ||
-    c.perspective !== "none" ||
-    c.filter !== "none" ||
-    c.backdropFilter !== "none" ||
-    /paint|layout|strict|content/.test(c.contain) ||
-    c.containerType !== "normal" ||
-    c.contentVisibility === "auto" ||
-    /transform|translate|rotate|scale|perspective|filter|contain|offset-path/.test(
-      c.willChange
-    )
+    c.filter !== "none"
 
-  // An ABSOLUTE descendant is captured by all of those, and also by any
-  // `position` but `static` — or the promise of one.
-  const capturesAbsolute = (c: CSSStyleDeclaration): boolean =>
-    capturesFixed(c) ||
-    c.position !== "static" ||
-    /(^|, )position(,|$)/.test(c.willChange)
+  // The properties that can capture a positioned box under a rule the walk
+  // above does not model, as `name: value`. None of the catalogue's previews
+  // sets one.
+  const unsureOf = (c: CSSStyleDeclaration): Array<string> =>
+    [
+      ["will-change", c.willChange, "auto"],
+      ["contain", c.contain, "none"],
+      ["container-type", c.containerType, "normal"],
+      ["content-visibility", c.contentVisibility, "visible"],
+      ["backdrop-filter", c.backdropFilter, "none"],
+      ["perspective", c.perspective, "none"],
+      ["transform-style", c.transformStyle, "flat"],
+      ["offset-path", c.offsetPath, "none"],
+    ]
+      .filter(([, value, initial]) => value !== initial)
+      .map(([name, value]) => `${name}: ${value}`)
 
   // The box a positioned pseudo-element of `el` is placed in: the padding box
   // of the nearest ancestor that captures it — `el` itself first, since the
@@ -358,17 +361,23 @@ export function collectContrast(): Collected {
     el: Element,
     fixed: boolean
   ): RawPseudo["containingBlock"] {
+    // Read over the whole chain, not only up to the containing block: one
+    // of these above it could still be what really captures the box.
+    const unsure: Array<string> = []
+    for (let up: Element | null = el; up !== null; up = up.parentElement) {
+      unsure.push(...unsureOf(getComputedStyle(up)))
+    }
     let cb: Element | null = el
     while (cb !== null) {
       const c = getComputedStyle(cb)
-      if (fixed ? capturesFixed(c) : capturesAbsolute(c)) break
+      if (capturesFixed(c) || (!fixed && c.position !== "static")) break
       cb = cb.parentElement
     }
     if (cb === null) {
       const origin = fixed
         ? { left: 0, top: 0 }
         : { left: -window.scrollX, top: -window.scrollY }
-      return { ...origin, display: "block", transforms: [] }
+      return { ...origin, display: "block", transforms: [], unsure }
     }
     const c = getComputedStyle(cb)
     const r = cb.getBoundingClientRect()
@@ -387,18 +396,19 @@ export function collectContrast(): Collected {
     // viewport's, which its rect has already moved by — taking them off again
     // would lift the box by a whole scroll and could put it clear of a point
     // it covers.
-    const scrolled = cb === document.scrollingElement ? null : cb
+    const ownScroller = cb === document.scrollingElement ? null : cb
     return {
       left:
         r.left +
         Number.parseFloat(c.borderLeftWidth) -
-        (scrolled?.scrollLeft ?? 0),
+        (ownScroller?.scrollLeft ?? 0),
       top:
         r.top +
         Number.parseFloat(c.borderTopWidth) -
-        (scrolled?.scrollTop ?? 0),
+        (ownScroller?.scrollTop ?? 0),
       display: c.display,
       transforms,
+      unsure,
     }
   }
 

@@ -57,6 +57,15 @@ export interface RawPseudo {
      * before, so anything but a translation puts the two in different units.
      */
     transforms: Array<string>
+    /**
+     * Every property, on the owner or any ancestor, that can capture a
+     * positioned box under a rule the collector does not walk —
+     * `will-change`, containment, a size container, `backdrop-filter`,
+     * perspective, a 3D context, a motion path — as `name: value`. Any one of
+     * them leaves the containing block a guess, so none is modelled: its
+     * presence holds the reading. The catalogue's previews have none.
+     */
+    unsure: Array<string>
   }
   /** The sample point, in viewport pixels — the same frame as the box. */
   point: { x: number; y: number }
@@ -129,6 +138,7 @@ function mayCover(p: RawPseudo): boolean {
   const cb = p.containingBlock
   if (NOT_ONE_BOX.has(cb.display)) return true
   if (cb.transforms.some((t) => !TRANSLATION.test(t))) return true
+  if (cb.unsure.length > 0) return true
 
   const v = lengthsOf(p)
   if (v === null) return true
