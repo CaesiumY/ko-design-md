@@ -72,7 +72,7 @@ and re-derive those; never paste the measurer's new output into them.
 Another synthetic document under the same rule (#691). It covers text next to
 a painted `::before` or `::after`, which the sweep releases only when the
 pseudo-element's box, worked out from its computed geometry, certainly misses
-the line's sample point — and nothing it paints reaches past that box. No
+the box of the line read — and nothing it paints reaches past that box. No
 text in the samsung file sits beside a positioned pseudo-element, and the
 file cannot gain one.
 

@@ -1,15 +1,17 @@
 /**
- * Whether a painted `::before` or `::after` can be in the way of a sample
- * point, read from computed style rather than from pixels (#691, part of
- * #402).
+ * Whether a painted `::before` or `::after` can be in the way of a reading,
+ * read from computed style rather than from pixels (#691, part of #402).
  *
  * A pseudo-element is not a hit-test target, so `elementsFromPoint` never
- * returns it and the collector cannot see whether it covers the point. What it
- * can see is the pseudo-element's computed geometry and its containing block's
- * box. From those, a box is worked out here, on the side that can be tested,
- * and a pseudo-element whose box misses the point is not a reason to hold the
- * reading: a 1px rule under a heading, a speech-bubble tail beside a badge,
- * a connector between two steps.
+ * returns it and the collector cannot see whether it covers what is read. What
+ * it can see is the pseudo-element's computed geometry and its containing
+ * block's box. From those, a box is worked out here, on the side that can be
+ * tested, and a pseudo-element whose box misses the whole area read — a
+ * text line's box, a surface's box — is not a reason to hold the reading: a
+ * rule under a heading, a speech-bubble tail beside a badge, a connector
+ * between two steps. The area, not the one point a backdrop is sampled at: a
+ * highlighter under the lower part of a line misses the line's centre while
+ * the glyphs still sit on it.
  *
  * Only a box that can be worked out with certainty releases a reading. Every
  * other shape keeps the hold it always had: a pseudo-element in normal flow
@@ -71,11 +73,14 @@ export interface RawPseudo {
    * None is modelled: any one of them holds the reading.
    */
   unsure: Array<string>
-  /** The sample point, in viewport pixels — the same frame as the box. */
-  point: { x: number; y: number }
+  /**
+   * The box of what is read — a text line, a form control, a non-text
+   * surface — in viewport pixels, the same frame as the pseudo-element's box.
+   */
+  area: { left: number; top: number; right: number; bottom: number }
 }
 
-/** Whether any painted pseudo-element in a stack may reach its sample point. */
+/** Whether any painted pseudo-element in a stack may reach the area read. */
 export function pseudoInTheWay(
   stack: ReadonlyArray<{ pseudos?: Array<RawPseudo> }>
 ): boolean {
@@ -84,8 +89,8 @@ export function pseudoInTheWay(
 
 // A length exactly as computed style writes a resolved one. Anything else is
 // not read at all. `parseFloat` would turn `auto` or an empty string into NaN,
-// every comparison against NaN is false, and the point would come out
-// "outside" a box nobody worked out — the one way this could release a reading
+// every comparison against NaN is false, and the line would come out
+// "clear of" a box nobody worked out — the one way this could release a reading
 // it should hold. A percentage it would read as that many pixels, which is no
 // better.
 const PX = /^(-?\d+(?:\.\d+)?(?:e-?\d+)?)px$/
@@ -163,7 +168,8 @@ function mayReach(p: RawPseudo): boolean {
     (contentBox
       ? v.paddingTop + v.paddingBottom + v.borderTopWidth + v.borderBottomWidth
       : 0)
-  const { x, y } = p.point
-  // The edges count as inside: a point on the border is a point it paints.
-  return x >= x0 && x <= x0 + w && y >= y0 && y <= y0 + h
+  // Overlap, not touch: a box that starts where the area ends shares no row
+  // or column of pixels with it.
+  const a = p.area
+  return x0 < a.right && x0 + w > a.left && y0 < a.bottom && y0 + h > a.top
 }

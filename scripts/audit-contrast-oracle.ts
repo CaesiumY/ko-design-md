@@ -414,19 +414,20 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
 
 /**
  * The pseudo-element fixture's claims (#691): a painted pseudo-element holds a
- * reading only when it can reach the sample point — its box covers it, or the
- * box or what it paints cannot be pinned down.
+ * reading only when it can reach the line read — its box overlaps the line's
+ * box, or the box or what it paints cannot be pinned down.
  *
- * All three runs are black (luminance 0) on a white panel (luminance 1), so
- * a reading taken from the panel is (1 + 0.05) / (0 + 0.05) = 21:
+ * All four runs are black (luminance 0) on a white panel (luminance 1), so a
+ * reading taken from the panel is (1 + 0.05) / (0 + 0.05) = 21. Each line box
+ * is y 48..72 of its panel and lies inside x 60..240:
  *
- * - `.side` draws a block level with the line at x 0..100 of the panel, and
- *   the line's sample point is at x 150, so the block is not in the way and
- *   the run is judged — a pass at 21. Before #691 any painted pseudo-element
- *   held it. The block is over-constrained (`left: 0; right: 100px; width:
- *   100px`), and placed from `right` it would sit at x 100..200 over the
- *   point: the pass also says the box came from `left`.
- * - `.cover` washes the whole panel, point included. What it does to the
+ * - `.side` draws a block level with the line at x 0..60 of the panel, so the
+ *   block is not in the way and the run is judged — a pass at 21. Before
+ *   #691 any painted pseudo-element held it. The block is over-constrained
+ *   (`left: 0; right: 100px; width: 60px`), and placed from `right` it would
+ *   sit at x 140..200 over the line: the pass also says the box came from
+ *   `left`.
+ * - `.cover` washes the whole panel, line included. What it does to the
  *   colours is not read (which side of the text it paints on is #692's
  *   question), so the run is held. No ratio is claimed: the claim is that the
  *   verdict is withheld.
@@ -434,8 +435,11 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   document root (`html` is positioned), placed from the root's origin at
  *   x 24, y 1312 — exactly over the panel. The collector scrolls to reach it,
  *   and the root's rect has moved with that scroll already, so the box covers
- *   the point and the run is held. Taking the root's `scrollTop` off a second
+ *   the line and the run is held. Taking the root's `scrollTop` off a second
  *   time would lift the box clear and read it as a pass.
+ * - `.mark` lays a band at y 66..76 under the lower part of the line: clear of
+ *   its centre (y 60), over its box (y 48..72). The run is held. Testing the
+ *   centre alone would release it and read the panel, a pass at 21.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -460,6 +464,15 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
     id: "text under a wash placed from the scrolled document root",
     pathEnds: "div.far > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text over a highlighter that misses the line's centre",
+    pathEnds: "div.mark > span.t",
     theme: "light",
     state: "default",
     kind: "text",

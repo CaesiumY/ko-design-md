@@ -253,9 +253,10 @@ export function collectContrast(): Collected {
   // hit-test target, so it is invisible to `elementsFromPoint` too. Each
   // painted one is handed over with its computed geometry and its containing
   // block's box, and `pseudoInTheWay` (src/lib/contrast-pseudo.ts) decides
-  // whether it can reach the point (#691). Where it sits in the paint order is
-  // still not guessed: one that can reach the point holds the reading.
-  function paintedPseudos(el: Element, x: number, y: number): Array<RawPseudo> {
+  // whether it can reach `area`, the box of what is read (#691). Where it sits
+  // in the paint order is still not guessed: one that can reach it holds the
+  // reading.
+  function paintedPseudos(el: Element, area: DOMRect): Array<RawPseudo> {
     const out: Array<RawPseudo> = []
     for (const pseudo of ["::before", "::after"]) {
       const cs = getComputedStyle(el, pseudo)
@@ -302,7 +303,12 @@ export function collectContrast(): Collected {
         borderLeftWidth: cs.borderLeftWidth,
         containingBlock: containingBlockOf(el, cs.position === "fixed"),
         unsure: unsureFor(el, cs),
-        point: { x, y },
+        area: {
+          left: area.left,
+          top: area.top,
+          right: area.right,
+          bottom: area.bottom,
+        },
       })
     }
     return out
@@ -312,10 +318,9 @@ export function collectContrast(): Collected {
   // the shape `imageOf` gives an element with no image.
   const pseudosOf = (
     el: Element,
-    x: number,
-    y: number
+    area: DOMRect
   ): { pseudos?: Array<RawPseudo> } => {
-    const pseudos = paintedPseudos(el, x, y)
+    const pseudos = paintedPseudos(el, area)
     return pseudos.length === 0 ? {} : { pseudos }
   }
 
@@ -326,8 +331,8 @@ export function collectContrast(): Collected {
   // rules the #402 survey released 103 rows with and got none wrong.
   //
   // A containing block found one ancestor too near is as wrong as one too far
-  // — either moves the origin, and a box that covers the point can come out
-  // beside it. So the rarer ways to capture a box are not added here as more
+  // — either moves the origin, and a box that covers the line read can come
+  // out beside it. So the rarer ways to capture a box are not added here as more
   // stops; `unsureOf` lists them, and they hold the reading instead.
   const capturesFixed = (c: CSSStyleDeclaration): boolean =>
     c.transform !== "none" ||
@@ -414,7 +419,7 @@ export function collectContrast(): Collected {
     // the origin moves up and left by however far the container has scrolled.
     // Not for the document's own scroller: its scroll offsets are the
     // viewport's, which its rect has already moved by — taking them off again
-    // would lift the box by a whole scroll and could put it clear of a point
+    // would lift the box by a whole scroll and could put it clear of a line
     // it covers.
     const ownScroller = cb === document.scrollingElement ? null : cb
     return {
@@ -498,7 +503,9 @@ export function collectContrast(): Collected {
   function backdropAt(
     x: number,
     y: number,
-    from: Element
+    from: Element,
+    /** The box of what is read at (x, y), for the pseudo-elements' test. */
+    area: DOMRect
   ): {
     stack: Array<RawLayer>
     blockers: Set<Blocker>
@@ -532,7 +539,7 @@ export function collectContrast(): Collected {
         ...colour,
         opacity: opacityOf(el),
         ...imageOf(cs),
-        ...pseudosOf(el, x, y),
+        ...pseudosOf(el, area),
       }
       stack.push(layer)
       // Nothing below an opaque layer contributes. The opacity test matters as
@@ -637,7 +644,7 @@ export function collectContrast(): Collected {
       const px = r.left + r.width / 2
       const py = r.top + r.height / 2
       if (!inViewport(px, py)) continue
-      const read = backdropAt(px, py, parent)
+      const read = backdropAt(px, py, parent, r)
       if (read.occluded) continue
       lines.push({ stack: read.stack, blockers: [...read.blockers] })
     }
@@ -681,7 +688,7 @@ export function collectContrast(): Collected {
     if (!inViewport(cx, cy)) continue
     // Starting at the control itself: its own background is the first layer
     // behind its text, exactly as a text node's parent is in the text pass.
-    const read = backdropAt(cx, cy, el)
+    const read = backdropAt(cx, cy, el, rect)
     if (read.occluded) continue
 
     const shownOption = (s: HTMLSelectElement | null): string => {
@@ -867,7 +874,7 @@ export function collectContrast(): Collected {
         ...colour,
         opacity: opacityOf(behind),
         ...imageOf(bcs),
-        ...pseudosOf(behind, cx, cy),
+        ...pseudosOf(behind, live),
       }
       outer.push(layer)
       if (isOpaque(colour) && layer.opacity >= 1) break
