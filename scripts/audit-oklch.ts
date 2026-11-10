@@ -7,6 +7,7 @@ import {
 } from "../src/lib/oklch-sync"
 import { auditOklch } from "../src/lib/oklch-audit"
 import {
+  UnreadableStylesheetError,
   definitionsForSlug,
   findPreviewDrift,
   findRoleChainDrift,
@@ -300,13 +301,25 @@ for (const slug of slugs) {
   const preview = path.join(dir, previewFile)
   const markdown = fs.readFileSync(path.join(SERVICES, `${slug}.md`), "utf8")
   const html = fs.readFileSync(preview, "utf8")
-  const found = findPreviewDrift(html, definitionsForSlug(markdown, slug))
-  // 역할 → 팔레트 사슬: md 참조 행(`text-primary: "{colors.gray-800}"`)은
-  // oklch 가 없어 위 비교에 잡히지 않는다. 프리뷰가 역할을 `var()` 로 잇는
-  // 곳에서 그 `var()` 가 참조 행이 가리키는 단계인지 라이트와 다크 둘 다 본다.
-  // 다크 스코프를 읽으므로 분리 레이아웃의 light.html 에서는 다크 짝이 비교되지
-  // 않는다 — 카탈로그는 전부 병합 레이아웃이다.
-  const chained = findRoleChainDrift(html, roleChainsForSlug(markdown, slug))
+  // A preview this check cannot read (a start tag parse5 drops inside <select>)
+  // stops only its own slug, named, and the run fails; the other slugs are
+  // still read. Any other error is a bug and propagates.
+  let found: ReturnType<typeof findPreviewDrift>
+  let chained: ReturnType<typeof findRoleChainDrift>
+  try {
+    found = findPreviewDrift(html, definitionsForSlug(markdown, slug))
+    // 역할 → 팔레트 사슬: md 참조 행(`text-primary: "{colors.gray-800}"`)은
+    // oklch 가 없어 위 비교에 잡히지 않는다. 프리뷰가 역할을 `var()` 로 잇는
+    // 곳에서 그 `var()` 가 참조 행이 가리키는 단계인지 라이트와 다크 둘 다 본다.
+    // 다크 스코프를 읽으므로 분리 레이아웃의 light.html 에서는 다크 짝이 비교되지
+    // 않는다 — 카탈로그는 전부 병합 레이아웃이다.
+    chained = findRoleChainDrift(html, roleChainsForSlug(markdown, slug))
+  } catch (e) {
+    if (!(e instanceof UnreadableStylesheetError)) throw e
+    console.error(`${slug}/${previewFile}: ${e.message}`)
+    process.exitCode = 1
+    continue
+  }
   if (found.length + chained.length === 0) continue
   console.log(
     `\n${slug}/${previewFile} — ${found.length + chained.length} drifted from ${slug}.md`

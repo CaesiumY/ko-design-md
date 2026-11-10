@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest"
 import {
+  UnreadableStylesheetError,
   alignToPreviewNames,
   conflictingDefinitions,
   findPreviewDrift,
@@ -435,6 +436,177 @@ describe("findPreviewDrift", () => {
     expect(found).toEqual([])
   })
 
+  // The two inputs a late review of PR #670 found the regex scanner read
+  // differently from the HTML tokenizer (#624).
+  // `<title-card>` is a custom element, not `<title>`: its content is markup,
+  // and the stylesheet after it applies. `<style-guide>` is not a stylesheet
+  // either.
+  it.each([
+    "<title-card>Toss</title-card>",
+    "<script-runner></script-runner>",
+    "<textarea-field></textarea-field>",
+    "<style-guide>:root { --gray-07: oklch(0.99 0 0); }</style-guide>",
+  ])(
+    "reads a <style> after a custom element named like a raw-text one: %s",
+    (element) => {
+      const sheet = "<style>:root { --gray-06: oklch(0.68 0 0); }</style>"
+      expect(
+        findPreviewDrift(element + sheet, readDefinitions(md)).map(
+          (f) => f.name
+        )
+      ).toEqual(["gray-06"])
+    }
+  )
+
+  it("reads past a <template> inside <svg> or <math>", () => {
+    // Inside foreign content a `<template>` tag is an SVG or MathML element
+    // with no content fragment; its children are ordinary children, and the
+    // stylesheet beside it still applies.
+    const sheet = "<style>:root { --gray-06: oklch(0.68 0 0); }</style>"
+    for (const foreign of [
+      "<svg><template></template></svg>",
+      "<svg><template><g></g></template></svg>",
+      "<math><template></template></math>",
+    ]) {
+      expect(
+        findPreviewDrift(foreign + sheet, readDefinitions(md)).map(
+          (f) => f.name
+        ),
+        foreign
+      ).toEqual(["gray-06"])
+    }
+  })
+
+  it.each([
+    [
+      "directly",
+      "<math><style>:root { --gray-07: oklch(0.99 0 0); }</style></math>",
+    ],
+    [
+      "inside a <template>",
+      "<math><template><style>:root { --gray-07: oklch(0.99 0 0); }</style></template></math>",
+    ],
+  ])("reads no stylesheet out of a MathML <style> %s", (_label, math) => {
+    // A browser applies an HTML or SVG `<style>`, not one parsed as MathML.
+    const sheet = "<style>:root { --gray-06: oklch(0.68 0 0); }</style>"
+    expect(
+      findPreviewDrift(sheet + math, readDefinitions(md)).map((f) => f.name)
+    ).toEqual(["gray-06"])
+  })
+
+  it.each([
+    [
+      "a MathML <style>",
+      "<math><style><mi><style>:root { --gray-07: oklch(0.99 0 0); }</style></mi></style></math>",
+    ],
+    [
+      "an SVG <style>",
+      "<svg><style><svg><style>:root { --gray-07: oklch(0.99 0 0); }</style></svg></style></svg>",
+    ],
+  ])(
+    "reads a stylesheet nested inside %s, as the browser does",
+    (_label, nested) => {
+      // A foreign `<style>` holds markup; an element inside it that returns to
+      // HTML or SVG may hold a `<style>` the browser applies.
+      const sheet = "<style>:root { --gray-06: oklch(0.68 0 0); }</style>"
+      expect(
+        findPreviewDrift(sheet + nested, readDefinitions(md)).map((f) => f.name)
+      ).toEqual(["gray-06", "gray-07"])
+    }
+  )
+
+  it("refuses a <style> inside <select>, which Chromium applies and parse5 drops", () => {
+    // Chromium's customizable <select> applies the inner sheet; the parser
+    // here follows the older rules and drops the tag, so reading on would
+    // pass a wrong value the screen paints. The check stops instead.
+    const sheet = "<style>:root { --gray-06: oklch(0.68 0 0); }</style>"
+    const select =
+      "<select><option>A</option><style>:root { --gray-07: oklch(0.99 0 0); }</style></select>"
+    expect(() => findPreviewDrift(sheet + select, readDefinitions(md))).toThrow(
+      /<select>.*<style>/
+    )
+    expect(() => findPreviewDrift(sheet + select, readDefinitions(md))).toThrow(
+      UnreadableStylesheetError
+    )
+    // A <select> with no <style> in it reads as before.
+    expect(
+      findPreviewDrift(
+        sheet + "<select><option>A</option></select>",
+        readDefinitions(md)
+      ).map((f) => f.name)
+    ).toEqual(["gray-06"])
+  })
+
+  // The older "in select" rules drop every start tag but a few, so a raw-text
+  // element there loses its tag and its content becomes markup, while Chromium
+  // reads it as text. A <style> after a dropped <noscript> would then read as
+  // applied here and hide a wrong value the screen paints.
+  it.each([
+    "noscript",
+    "xmp",
+    "title",
+    "noembed",
+    "noframes",
+    "iframe",
+    "plaintext",
+    "div",
+  ])(
+    "refuses a <%s> inside <select>, a tag parse5 drops and Chromium keeps",
+    (tag) => {
+      const html = `<style>:root { --gray-06: oklch(0.68 0 0); }</style><select><${tag}></select><style>:root { --gray-07: oklch(0.99 0 0); }</style></${tag}></select>`
+      expect(() => findPreviewDrift(html, readDefinitions(md))).toThrow(
+        new RegExp(`<select>.*<${tag}>`)
+      )
+    }
+  )
+
+  it("reads a <select> holding only tags the older rules keep, as before", () => {
+    const html =
+      "<style>:root { --gray-06: oklch(0.68 0 0); }</style>" +
+      '<select><html lang="ko"><optgroup label="A"><option>1</option></optgroup><hr><option>2</option></select>'
+    expect(
+      findPreviewDrift(html, readDefinitions(md)).map((f) => f.name)
+    ).toEqual(["gray-06"])
+  })
+
+  // A `<style>` written inside an attribute value is not a stylesheet, and a
+  // `<script>` there does not swallow the stylesheet after it.
+  it.each([
+    `<div data-x="<style>:root { --gray-07: oklch(0.99 0 0); }</style>"></div>`,
+    `<div data-x='<script>'></div>`,
+    `<div title="<!--"></div>`,
+  ])("reads a quoted attribute value as text, not as markup: %s", (element) => {
+    const sheet = "<style>:root { --gray-06: oklch(0.68 0 0); }</style>"
+    expect(
+      findPreviewDrift(element + sheet, readDefinitions(md)).map((f) => f.name)
+    ).toEqual(["gray-06"])
+  })
+
+  // A browser applies an SVG <style> to the document. Inside <svg> the HTML
+  // parser reads markup, not raw text: a `<!--` opens a real comment, whose
+  // CSS does not apply, and a CDATA section is text.
+  it.each([
+    [
+      "applies an <svg> stylesheet",
+      "<svg><style>:root { --gray-06: oklch(0.68 0 0); }</style></svg>",
+      ["gray-06"],
+    ],
+    [
+      "drops an HTML comment inside an <svg> stylesheet",
+      "<svg><style><!-- :root { --gray-06: oklch(0.68 0 0); } --></style></svg>",
+      [],
+    ],
+    [
+      "reads a CDATA section inside an <svg> stylesheet",
+      "<svg><style><![CDATA[:root { --gray-06: oklch(0.68 0 0); }]]></style></svg>",
+      ["gray-06"],
+    ],
+  ])("%s", (_, html, names) => {
+    expect(
+      findPreviewDrift(html, readDefinitions(md)).map((f) => f.name)
+    ).toEqual(names)
+  })
+
   it("does not treat an unterminated comment as code", () => {
     // A truncated file must fail closed — reading the rest as CSS would let a
     // half-written comment invent declarations.
@@ -576,12 +748,11 @@ colors:
 
   it("does not let a conditional <style> element hide a wrong base value", () => {
     // The @media bypass again, written as HTML: a `media` attribute, or a
-    // stylesheet that only applies inside <noscript> or <template>.
+    // stylesheet that only applies once a <template> is stamped out.
     const chains = roleChainsForSlug(roles, "socar")
     const base = `<style>:root { --sf-text-primary: var(--sf-gray-100); }</style>`
     for (const conditional of [
       `<style media="(min-width: 1000px)">:root { --sf-text-primary: var(--sf-gray-800); }</style>`,
-      `<noscript><style>:root { --sf-text-primary: var(--sf-gray-800); }</style></noscript>`,
       `<template><style>:root { --sf-text-primary: var(--sf-gray-800); }</style></template>`,
     ]) {
       const html = base + conditional
@@ -597,37 +768,84 @@ colors:
     }
   })
 
-  it("reads no stylesheet out of comments, raw text or a non-CSS <style>", () => {
+  describe("reads no stylesheet out of comments, raw text or a non-CSS <style>", () => {
     // None of these is applied by a browser, so none may hide the wrong base.
+    // <noscript> is raw text too: a browser parses with scripting on, as the
+    // Chromium that measures contrast does.
     const chains = roleChainsForSlug(roles, "socar")
     const base = `<style>:root { --sf-text-primary: var(--sf-gray-100); }</style>`
     const fix = `<style>:root { --sf-text-primary: var(--sf-gray-800); }</style>`
-    for (const dead of [
-      `<!-- ${fix} -->`,
-      `<script>const css = "${fix.replace(/"/g, "'")}"</script>`,
-      `<textarea>${fix}</textarea>`,
-      `<title>${fix}</title>`,
-      fix.replace("<style>", '<style type="text/plain">'),
-    ]) {
-      const html = base + dead
-      expect(
-        findRoleChainDrift(html, chains).map((f) => f.preview),
-        dead
-      ).toEqual(["var(--sf-gray-100)"])
-      expect(roleChainCoverage(html, chains), dead).toEqual({
+    it.each([
+      ["a comment", `${base}<!-- ${fix} -->`],
+      [
+        "a <script>",
+        `${base}<script>const css = "${fix.replace(/"/g, "'")}"</script>`,
+      ],
+      ["a <textarea>", `${base}<textarea>${fix}</textarea>`],
+      ["a <title>", `${base}<title>${fix}</title>`],
+      [
+        "a non-CSS type",
+        base + fix.replace("<style>", '<style type="text/plain">'),
+      ],
+      ["a <noscript>", `${base}<noscript>${fix}</noscript>`],
+      [
+        "a <noscript> holding markup",
+        `${base}<noscript><p>JS 필요</p>${fix}</noscript>`,
+      ],
+      [
+        "a <noscript> in <head> holding body markup",
+        `<head>${base}<noscript><link rel="x"><div></div>${fix}</noscript></head>`,
+      ],
+    ])("inside %s", (_, html) => {
+      expect(findRoleChainDrift(html, chains).map((f) => f.preview)).toEqual([
+        "var(--sf-gray-100)",
+      ])
+      expect(roleChainCoverage(html, chains)).toEqual({
         chained: 1,
         literal: 0,
         scoped: 0,
       })
-    }
-    // `text/css` is the stylesheet type and is read.
-    expect(
-      findRoleChainDrift(
-        base + fix.replace("<style>", '<style type="text/css">'),
-        chains
-      )
-    ).toEqual([])
+    })
+
+    it("but reads one with type `text/css`, the stylesheet type", () => {
+      expect(
+        findRoleChainDrift(
+          base + fix.replace("<style>", '<style type="text/css">'),
+          chains
+        )
+      ).toEqual([])
+    })
   })
+
+  it("ends a <noscript> at its first end tag, as the browser does", () => {
+    // The `<!--` is raw text inside <noscript>, not a comment, so the
+    // stylesheet after `</noscript>` applies and its wrong value is read.
+    const chains = roleChainsForSlug(roles, "socar")
+    const html = `<style>:root { --sf-text-primary: var(--sf-gray-800); }</style>
+      <noscript><!--</noscript><style>:root { --sf-text-primary: var(--sf-gray-600); }</style>--></noscript>`
+    expect(findRoleChainDrift(html, chains).map((f) => f.preview)).toEqual([
+      "var(--sf-gray-600)",
+    ])
+  })
+
+  it.each([
+    ["applies", `<style data-x="a>b">`, ["var(--sf-gray-600)"]],
+    [
+      "keeps its media",
+      `<style data-x="a>b" media="(min-width: 1px)">`,
+      ["var(--sf-gray-100)"],
+    ],
+  ])(
+    "reads a <style> with `>` in a quoted attribute value: it %s",
+    (_, start, previews) => {
+      const chains = roleChainsForSlug(roles, "socar")
+      const html = `<style>:root { --sf-text-primary: var(--sf-gray-100); }</style>
+        ${start}:root { --sf-text-primary: var(--sf-gray-600); }</style>`
+      expect(findRoleChainDrift(html, chains).map((f) => f.preview)).toEqual(
+        previews
+      )
+    }
+  )
 
   it("reads a <style> body's `<!--` as CSS, not as an HTML comment", () => {
     // <style> is a raw-text element: `<!--` and `-->` inside it are CSS's

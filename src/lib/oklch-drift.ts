@@ -1,6 +1,8 @@
+import { html, parse } from "parse5"
 import { findKey, readFrontmatter } from "./frontmatter"
 import { splitFrontmatter } from "./frontmatter-fence"
 import { LEADING_OKLCH, oklchEntries } from "./oklch-sync"
+import type { DefaultTreeAdapterTypes } from "parse5"
 // Detect preview CSS that no longer agrees with the design.md it was built from.
 //
 // This exists because the gates added alongside it could not see their own
@@ -455,6 +457,9 @@ export function definitionsForSlug(
  * produce hundreds of bogus hits. Restricting to EXACT names outside any
  * `[data-theme="dark"]` block gives zero false positives across the catalogue
  * while still catching the 11st defect this was written for.
+ *
+ * Throws UnreadableStylesheetError when the preview's stylesheets cannot be
+ * read as the browser reads them (a start tag parse5 drops inside `<select>`).
  */
 export function findPreviewDrift(
   previewHtml: string,
@@ -502,10 +507,12 @@ export interface RoleChainFinding extends DriftFinding {
  * `html[data-theme="dark"]` for dark, each in a top-level block outside any
  * at-rule, in a `<style>` element whose `media` is absent, empty or `all` (any
  * other media is treated as conditional, `screen` included) and that is not
- * inside `<noscript>` or `<template>`. A `<style>` inside an HTML
- * comment or a raw-text element (`<script>`, `<textarea>`, `<title>`, …), or
- * one whose `type` is set to anything but empty or `text/css`, is not read at
- * all; a `<!--` inside a `<style>` body is CSS. A role declared under any other selector
+ * inside `<template>`. The `<style>` elements are found by an HTML parser
+ * with scripting on, as in the browser (styleBlocks): one inside an HTML
+ * comment, a raw-text element (`<script>`, `<textarea>`, `<title>`,
+ * `<noscript>`, …) or a quoted attribute value, or one whose `type` is set to
+ * anything but empty or `text/css`, is not read at all; a `<!--` inside an
+ * HTML `<style>` body is CSS, while inside an `<svg>` one it opens a comment. A role declared under any other selector
  * (`.inverse`, `:where(.chip)`, `[data-theme="sepia"]`, `:root` inside
  * `@media`) is neither compared nor allowed to hide the root value;
  * `roleChainCoverage` counts it as `scoped`.
@@ -522,6 +529,9 @@ export interface RoleChainFinding extends DriftFinding {
  * light `var()` in the dark theme; that declaration is held to the dark row as
  * well. A dark target named without its `dark-` prefix counts only where the
  * dark root redeclares that step (RoleChains.rebound).
+ *
+ * Throws UnreadableStylesheetError when the preview's stylesheets cannot be
+ * read as the browser reads them (a start tag parse5 drops inside `<select>`).
  */
 export function findRoleChainDrift(
   previewHtml: string,
@@ -554,6 +564,9 @@ export function findRoleChainDrift(
  * one `var()`), how many theme-root ones it leaves out as literals (`literal`),
  * counting each scope's last theme-root declaration once, and how many role
  * declarations sit outside a theme-root block (`scoped`), each counted.
+ *
+ * Throws UnreadableStylesheetError when the preview's stylesheets cannot be
+ * read as the browser reads them (a start tag parse5 drops inside `<select>`).
  */
 export function roleChainCoverage(
   previewHtml: string,
@@ -715,21 +728,150 @@ function normaliseSelector(text: string): string {
 }
 
 /**
- * A start tag's attributes by lower-case name, as an HTML tokenizer splits
- * them: a name begins after whitespace, so `data-type=` is not `type=`. A
- * name repeated keeps its first value, and a bare name has the value "".
+ * A preview whose stylesheets this module cannot read as the browser does.
+ * Callers that read many previews report it per preview and keep going; any
+ * other error is a bug and propagates.
  */
-function styleAttributes(text: string): Map<string, string> {
-  const out = new Map<string, string>()
-  const ATTR =
-    /(?:^|\s)([^\s"'>/=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g
-  for (const m of text.matchAll(ATTR)) {
-    const name = m[1].toLowerCase()
-    // Unmatched groups are undefined at runtime, whatever the match type says.
-    const values: Array<string | undefined> = [m[2], m[3], m[4]]
-    if (!out.has(name)) out.set(name, values.find((v) => v !== undefined) ?? "")
+export class UnreadableStylesheetError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = "UnreadableStylesheetError"
   }
-  return out
+}
+
+/**
+ * The start tags the older "in select" parser rules keep or act on inside a
+ * `<select>`; parse5 drops every other. `<html>` merges its attributes into
+ * the document's, as in the browser, and holds no stylesheet.
+ */
+const SELECT_KEEPS: ReadonlySet<string> = new Set([
+  "html",
+  "option",
+  "optgroup",
+  "hr",
+  "select",
+  "input",
+  "keygen",
+  "textarea",
+  "script",
+  "template",
+])
+
+/**
+ * The bodies of a preview's applied `<style>` elements, in document order, as
+ * a browser's HTML parser finds them. An HTML comment, a raw-text element
+ * (`<script>`, `<textarea>`, `<title>`, `<noscript>`, …) and a quoted
+ * attribute value are text, so a `<style>` written inside one is not a
+ * stylesheet, while a custom element such as `<title-card>` is ordinary
+ * markup. A `<style>` whose `type` names anything but CSS is skipped.
+ *
+ * An HTML `<style>` is raw text itself, so a `<!--` in its body is CSS, not a
+ * comment. Inside `<svg>` (foreign content) a `<style>` holds markup: a `<!--`
+ * there opens a real comment, whose CSS does not apply, entities are decoded
+ * and a CDATA section is text. Only the element's own text children are its
+ * stylesheet, as the browser reads it.
+ *
+ * parse5 follows the HTML parser before Chromium's customizable `<select>`:
+ * inside `<select>` it drops every start tag but a few, so a `<style>` there,
+ * which Chromium 153 applies, is lost, and a raw-text element such as
+ * `<noscript>` loses its tag and lets its content read as markup. Rather than
+ * pass a value the screen paints, this throws when a `<select>`'s source holds
+ * any other start tag, even as text in a comment, a script or an attribute
+ * value. Catalogue previews put only `<option>` there.
+ *
+ * A `<style>` that applies only conditionally (a `media` attribute, or inside
+ * `<template>`) is wrapped in an at-rule here, so its declarations are never
+ * a theme root, as an `@media` block's are not.
+ */
+function styleBlocks(previewHtml: string): Array<string> {
+  // parse5 is the parser inside jsdom, used directly for two reasons. Its
+  // scripting flag is on by default, as in the browser and the Chromium that
+  // measures contrast, so `<noscript>` content is raw text; jsdom parses with
+  // scripting off unless scripts may run. And it builds no CSSOM, which made
+  // jsdom twice as slow here. Only scripts and validators import this module,
+  // so a devDependency is enough.
+  const document = parse(previewHtml, { sourceCodeLocationInfo: true })
+  const blocks: Array<string> = []
+  const walk = (
+    parent: DefaultTreeAdapterTypes.ParentNode,
+    conditional: boolean
+  ): void => {
+    for (const node of parent.childNodes) {
+      if (!("tagName" in node)) continue
+      // The parser drops most start tags inside <select>, so the tree cannot
+      // show them; the element's own source can.
+      if (node.tagName === "select" && node.namespaceURI === html.NS.HTML) {
+        // With no source location the check cannot look, so it stops too.
+        const at = node.sourceCodeLocation
+        const inner = at
+          ? previewHtml.slice(
+              at.startTag?.endOffset ?? at.startOffset,
+              at.endTag?.startOffset ?? at.endOffset
+            )
+          : "<style>"
+        const dropped = [...inner.matchAll(/<([a-z][^\s/>]*)/gi)]
+          .map((m) => m[1].toLowerCase())
+          .find((tag) => !SELECT_KEEPS.has(tag))
+        if (dropped !== undefined)
+          throw new UnreadableStylesheetError(
+            `<select> holds <${dropped}>, which parse5 drops while Chromium 153 keeps it, so this check cannot read the page as the browser does. ` +
+              `Move the <${dropped}> out of the <select> (a <style> goes into <head>). ` +
+              "Text spelling a tag inside the <select> (a comment, a script string, an attribute value) stops the check too; reword it."
+          )
+      }
+      // A <template>'s markup is its content fragment, not its children. Inside
+      // <svg> or <math> the tag is a foreign element with no fragment, so it is
+      // walked like any other element (preview-halves.ts makes the same cut).
+      if (node.tagName === "template" && node.namespaceURI === html.NS.HTML) {
+        walk((node as DefaultTreeAdapterTypes.Template).content, true)
+        continue
+      }
+      if (node.tagName !== "style") {
+        walk(node, conditional)
+        continue
+      }
+      // A browser applies an HTML or SVG <style>; one parsed inside <math> is a
+      // MathML element, not a stylesheet. Its children are still walked: an
+      // <mi> or <mtext> inside it returns to HTML, and a <style> there applies.
+      if (
+        node.namespaceURI !== html.NS.HTML &&
+        node.namespaceURI !== html.NS.SVG
+      ) {
+        walk(node, conditional)
+        continue
+      }
+      // A <style> applies when its type is absent, empty or `text/css`, as the
+      // HTML spec has it. Any media other than absent, empty or `all` is
+      // treated as conditional: the query is not evaluated, so even `screen`
+      // is.
+      const attr = (name: string): string | undefined =>
+        node.attrs
+          .find((a) => a.name === name && a.namespace === undefined)
+          ?.value.trim()
+          .toLowerCase()
+      const type = attr("type")
+      const isCss = type === undefined || type === "" || type === "text/css"
+      const media = attr("media")
+      const applies =
+        !conditional && (media === undefined || media === "" || media === "all")
+      const text = node.childNodes
+        .map((child) =>
+          child.nodeName === "#text"
+            ? (child as DefaultTreeAdapterTypes.TextNode).value
+            : ""
+        )
+        .join("")
+      // CSS drops CDO and CDC (`<!--`, `-->`) as tokens; blanked to spaces.
+      const body = text.replace(/<!--|-->/g, (t) => " ".repeat(t.length))
+      if (isCss)
+        blocks.push(applies ? body : `@conditional-style {\n${body}\n}`)
+      // An SVG <style> holds markup, so an element inside it may hold another
+      // stylesheet (an HTML <style> is raw text and has no element children).
+      walk(node, conditional)
+    }
+  }
+  walk(document, false)
+  return blocks
 }
 
 /** Every custom-property declaration in a preview's stylesheets, in order. */
@@ -739,52 +881,13 @@ function declarations(previewHtml: string): Array<Declaration> {
   // style="{…}" attribute skew the depth and quietly break the dark-scope test —
   // a silent miss in the very gate written to catch other gates' silent misses.
   //
-  // A <style> element that applies only conditionally (a `media` attribute, or
-  // inside <noscript> or <template>) is wrapped in an at-rule here, so its
-  // declarations are never a theme root, as an `@media` block's are not.
-  //
-  // The document is read in one left-to-right pass, as an HTML tokenizer
-  // does: whichever opens first, an HTML comment or a raw-text element
-  // (`<style>` among them), runs to its own end. So a `<style>` written inside
-  // a comment or a `<script>` is text, not a stylesheet, and a `<!--` inside a
-  // `<style>` body is CSS, not a comment. Only `<style>` bodies are kept, and
-  // not one whose `type` names anything but CSS. Comments are stripped only in
-  // the markup between, which is also what the <noscript> / <template> count
-  // reads.
-  const RAW =
-    // A comment ends at `-->` or `--!>`; `<!-->` and `<!--->` end in place.
-    // A raw-text element ends at `</name` followed by space, `/` or `>`.
-    /<!--(?:>|->|[\s\S]*?(?:--!?>|$))|<(style|script|textarea|title|xmp|noembed|noframes)\b([^>]*)>([\s\S]*?)(?:<\/\1(?=[\s/>])[^>]*>|$)/gi
-  let markup = ""
-  let from = 0
-  const blocks: Array<string> = []
-  const inside = (tag: string): boolean =>
-    (markup.match(new RegExp(`<${tag}\\b`, "gi"))?.length ?? 0) >
-    (markup.match(new RegExp(`</${tag}\\s*>`, "gi"))?.length ?? 0)
-  for (const m of previewHtml.matchAll(RAW)) {
-    markup += previewHtml.slice(from, m.index)
-    from = m.index + m[0].length
-    if (m[0].startsWith("<!--") || m[1].toLowerCase() !== "style") continue
-    // A <style> applies when its type is absent, empty or `text/css`, as the
-    // HTML spec has it. Any media other than absent, empty or `all` is treated
-    // as conditional: the query is not evaluated, so even `screen` is.
-    const attrs = styleAttributes(m[2])
-    const type = attrs.get("type")?.trim().toLowerCase()
-    if (type !== undefined && type !== "" && type !== "text/css") continue
-    const media = attrs.get("media")?.trim().toLowerCase()
-    const conditional =
-      (media !== undefined && media !== "" && media !== "all") ||
-      inside("noscript") ||
-      inside("template")
-    // CSS drops CDO and CDC (`<!--`, `-->`) as tokens; blanked to spaces.
-    const body = m[3].replace(/<!--|-->/g, (t) => " ".repeat(t.length))
-    blocks.push(conditional ? `@conditional-style {\n${body}\n}` : body)
-  }
   // With no <style> tag at all the input is already a stylesheet — every
   // catalogue preview has one, so this only matters when checking raw CSS
   // directly. A document whose only <style> tags are dead reads as empty.
   const css = stripComments(
-    /<style\b/i.test(previewHtml) ? blocks.join("\n") : previewHtml
+    /<style\b/i.test(previewHtml)
+      ? styleBlocks(previewHtml).join("\n")
+      : previewHtml
   )
 
   // Walk braces and declarations in document order. Deciding scope per LINE is

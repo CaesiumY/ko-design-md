@@ -126,6 +126,9 @@ importers:
       oxc-transform-react:
         specifier: ~0.152.0
         version: 0.152.0
+      parse5:
+        specifier: 8.0.1
+        version: 8.0.1
       playwright:
         specifier: ^1.63.0
         version: 1.63.0
