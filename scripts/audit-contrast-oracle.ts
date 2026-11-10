@@ -418,8 +418,9 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  * box, or the box or what it paints cannot be pinned down.
  *
  * All four runs are black (luminance 0) on a white panel (luminance 1), so a
- * reading taken from the panel is (1 + 0.05) / (0 + 0.05) = 21. Each line box
- * is y 48..72 of its panel and lies inside x 60..240:
+ * reading taken from the panel is (1 + 0.05) / (0 + 0.05) = 21. Each line's
+ * rect is its font's content area, about y 51..69 of its panel (inside the
+ * 24px line, y 48..72), and lies inside x 60..240:
  *
  * - `.side` draws a block level with the line at x 0..60 of the panel, so the
  *   block is not in the way and the run is judged — a pass at 21. Before
@@ -437,8 +438,8 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   and the root's rect has moved with that scroll already, so the box covers
  *   the line and the run is held. Taking the root's `scrollTop` off a second
  *   time would lift the box clear and read it as a pass.
- * - `.mark` lays a band at y 66..76 under the lower part of the line: clear of
- *   its centre (y 60), over its box (y 48..72). The run is held. Testing the
+ * - `.mark` lays a band at y 62..76 under the lower part of the line: clear of
+ *   its centre (y 60), over its rect (down to about y 69). The run is held. Testing the
  *   centre alone would release it and read the panel, a pass at 21.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [

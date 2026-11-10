@@ -297,7 +297,7 @@ export interface RawLayer extends RawColor {
   /**
    * The element's painted `::before` and `::after`, as computed geometry. A
    * pseudo-element is not in the hit list, so the collector cannot tell
-   * whether one covers the point; `pseudoInTheWay` works that out here.
+   * whether one reaches the line read; `pseudoInTheWay` works that out here.
    */
   pseudos?: Array<RawPseudo>
 }

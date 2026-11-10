@@ -11,9 +11,12 @@
       All four panels are 300x120 — over 1% of the 976x800 viewport, so none
       is measured as a non-text surface — and white, with one run of black
       16px text centred in each. All but `.far` are `position: relative`. A
-      16px line at line-height 1.5 is 24px tall, so its box spans y 48..72 of
-      the panel. "Sample text" is well under 180px wide in any sans-serif, so
-      the box lies inside x 60..240, centred on x 150.
+      16px line at line-height 1.5 is 24px tall, y 48..72 of the panel, and
+      the box the collector reads for it is the text's own rect — the font's
+      content area, about 18px tall for 16px sans-serif, centred on y 60 —
+      so roughly y 51..69, and inside y 48..72 whatever the font. "Sample
+      text" is well under 180px wide in any sans-serif, so the box lies inside
+      x 60..240, centred on x 150.
 
       - `.side::after` is a 60x24 black block level with the line, from x 0 to
         x 60. Its box misses the line's box, so it is not in the way.
@@ -37,9 +40,9 @@
         again lifts the box clear of the line and reads it as a pass. Its run
         is `position: relative` for the reason `.cover`'s is.
       - `.mark::before` is a highlighter under the lower part of the line, a
-        10% black band from y 66 to y 76 across the panel. It misses the line's
-        centre (y 60) but overlaps its box (y 48..72), so the glyphs' lower
-        part sits on it and it holds. A test of the centre alone would read it
+        10% black band from y 62 to y 76 across the panel. It misses the line's
+        centre (y 60) but overlaps its rect by several pixels (down to about
+        y 69), so the glyphs' lower part sits on it and it holds. A test of the centre alone would read it
         as a pass. It comes last, so `.far` keeps its place.
     -->
     <style>
@@ -102,8 +105,8 @@
         position: absolute;
         left: 0;
         right: 0;
-        top: 66px;
-        height: 10px;
+        top: 62px;
+        height: 14px;
         background: oklch(0 0 0 / 0.1);
       }
       .spacer {
