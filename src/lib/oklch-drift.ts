@@ -1,7 +1,8 @@
-import { JSDOM } from "jsdom"
+import { html, parse } from "parse5"
 import { findKey, readFrontmatter } from "./frontmatter"
 import { splitFrontmatter } from "./frontmatter-fence"
 import { LEADING_OKLCH, oklchEntries } from "./oklch-sync"
+import type { DefaultTreeAdapterTypes } from "parse5"
 // Detect preview CSS that no longer agrees with the design.md it was built from.
 //
 // This exists because the gates added alongside it could not see their own
@@ -503,11 +504,12 @@ export interface RoleChainFinding extends DriftFinding {
  * `html[data-theme="dark"]` for dark, each in a top-level block outside any
  * at-rule, in a `<style>` element whose `media` is absent, empty or `all` (any
  * other media is treated as conditional, `screen` included) and that is not
- * inside `<noscript>` or `<template>`. The `<style>` elements are found by an
- * HTML parser (styleBlocks): one inside an HTML comment, a raw-text element
- * (`<script>`, `<textarea>`, `<title>`, …) or a quoted attribute value, or
- * one whose `type` is set to anything but empty or `text/css`, is not read at
- * all; a `<!--` inside a `<style>` body is CSS. A role declared under any other selector
+ * inside `<template>`. The `<style>` elements are found by an HTML parser
+ * with scripting on, as in the browser (styleBlocks): one inside an HTML
+ * comment, a raw-text element (`<script>`, `<textarea>`, `<title>`,
+ * `<noscript>`, …) or a quoted attribute value, or one whose `type` is set to
+ * anything but empty or `text/css`, is not read at all; a `<!--` inside an
+ * HTML `<style>` body is CSS, while inside an `<svg>` one it opens a comment. A role declared under any other selector
  * (`.inverse`, `:where(.chip)`, `[data-theme="sepia"]`, `:root` inside
  * `@media`) is neither compared nor allowed to hide the root value;
  * `roleChainCoverage` counts it as `scoped`.
@@ -716,80 +718,77 @@ function normaliseSelector(text: string): string {
     .trim()
 }
 
-/** Made on first use: one jsdom window serves every parse. */
-let htmlParser: DOMParser | undefined
-
-const XHTML_NAMESPACE = "http://www.w3.org/1999/xhtml"
-
 /**
  * The bodies of a preview's applied `<style>` elements, in document order, as
- * an HTML parser finds them (jsdom). An HTML comment, a raw-text element
- * (`<script>`, `<textarea>`, `<title>`, …) and a quoted attribute value are
- * text, so a `<style>` written inside one is not a stylesheet, while a custom
- * element such as `<title-card>` is ordinary markup. A `<!--` inside a
- * `<style>` body is CSS, not a comment. A `<style>` whose `type` names
- * anything but CSS is skipped.
+ * a browser's HTML parser finds them. An HTML comment, a raw-text element
+ * (`<script>`, `<textarea>`, `<title>`, `<noscript>`, …) and a quoted
+ * attribute value are text, so a `<style>` written inside one is not a
+ * stylesheet, while a custom element such as `<title-card>` is ordinary
+ * markup. A `<style>` whose `type` names anything but CSS is skipped.
+ *
+ * An HTML `<style>` is raw text itself, so a `<!--` in its body is CSS, not a
+ * comment. Inside `<svg>` (foreign content) a `<style>` holds markup: a `<!--`
+ * there opens a real comment, whose CSS does not apply, entities are decoded
+ * and a CDATA section is text. Only the element's own text children are its
+ * stylesheet, as the browser reads it.
  *
  * A `<style>` that applies only conditionally (a `media` attribute, or inside
- * `<noscript>` or `<template>`) is wrapped in an at-rule here, so its
- * declarations are never a theme root, as an `@media` block's are not.
+ * `<template>`) is wrapped in an at-rule here, so its declarations are never
+ * a theme root, as an `@media` block's are not.
  */
 function styleBlocks(previewHtml: string): Array<string> {
-  // A DOMParser document has no window, so jsdom builds no stylesheet objects
-  // for it: parsing CSS took half the time and is not what is read here.
-  htmlParser ??= new new JSDOM("").window.DOMParser()
-  const document = htmlParser.parseFromString(previewHtml, "text/html")
+  // parse5 is the parser inside jsdom, used directly for three reasons. Its
+  // scripting flag is on by default, as in the browser and the Chromium that
+  // measures contrast, so `<noscript>` content is raw text; jsdom parses with
+  // scripting off unless scripts may run. It builds no CSSOM, which made jsdom
+  // twice as slow here. And gate code stays off jsdom (see html-walk.ts).
+  const document = parse(previewHtml)
   const blocks: Array<string> = []
-  const walk = (parent: ParentNode, conditional: boolean): void => {
-    for (const element of parent.children) {
-      const tag = element.localName
+  const walk = (
+    parent: DefaultTreeAdapterTypes.ParentNode,
+    conditional: boolean
+  ): void => {
+    for (const node of parent.childNodes) {
+      if (!("tagName" in node)) continue
       // A <template>'s markup is its content fragment, not its children. Inside
       // <svg> or <math> the tag is a foreign element with no fragment, so it is
       // walked like any other element (preview-halves.ts makes the same cut).
-      if (tag === "template" && element.namespaceURI === XHTML_NAMESPACE) {
-        walk((element as HTMLTemplateElement).content, true)
+      if (node.tagName === "template" && node.namespaceURI === html.NS.HTML) {
+        walk((node as DefaultTreeAdapterTypes.Template).content, true)
         continue
       }
-      if (tag !== "style") {
-        walk(element, conditional || tag === "noscript")
+      if (node.tagName !== "style") {
+        walk(node, conditional)
         continue
       }
       // A <style> applies when its type is absent, empty or `text/css`, as the
       // HTML spec has it. Any media other than absent, empty or `all` is
       // treated as conditional: the query is not evaluated, so even `screen`
       // is.
-      const type = element.getAttribute("type")?.trim().toLowerCase()
+      const attr = (name: string): string | undefined =>
+        node.attrs
+          .find((a) => a.name === name && a.namespace === undefined)
+          ?.value.trim()
+          .toLowerCase()
+      const type = attr("type")
       if (type !== undefined && type !== "" && type !== "text/css") continue
-      const media = element.getAttribute("media")?.trim().toLowerCase()
+      const media = attr("media")
       const applies =
         !conditional && (media === undefined || media === "" || media === "all")
+      const text = node.childNodes
+        .map((child) =>
+          child.nodeName === "#text"
+            ? (child as DefaultTreeAdapterTypes.TextNode).value
+            : ""
+        )
+        .join("")
       // CSS drops CDO and CDC (`<!--`, `-->`) as tokens; blanked to spaces.
-      const body = element.textContent.replace(/<!--|-->/g, (t) =>
-        " ".repeat(t.length)
-      )
+      const body = text.replace(/<!--|-->/g, (t) => " ".repeat(t.length))
       blocks.push(applies ? body : `@conditional-style {\n${body}\n}`)
     }
   }
   walk(document, false)
   return blocks
-}
-
-/**
- * styleBlocks joined, remembered for the last few documents. Parsing is the
- * slow part (a whole HTML tree for each preview), and the value comparison,
- * the role-chain check and their coverage counts each read the same preview.
- */
-const stylesheets = new Map<string, string>()
-function stylesheetOf(previewHtml: string): string {
-  const known = stylesheets.get(previewHtml)
-  if (known !== undefined) return known
-  const css = styleBlocks(previewHtml).join("\n")
-  // Oldest first: a Map iterates in insertion order.
-  if (stylesheets.size >= 64) {
-    stylesheets.delete(stylesheets.keys().next().value ?? "")
-  }
-  stylesheets.set(previewHtml, css)
-  return css
 }
 
 /** Every custom-property declaration in a preview's stylesheets, in order. */
@@ -803,7 +802,9 @@ function declarations(previewHtml: string): Array<Declaration> {
   // catalogue preview has one, so this only matters when checking raw CSS
   // directly. A document whose only <style> tags are dead reads as empty.
   const css = stripComments(
-    /<style\b/i.test(previewHtml) ? stylesheetOf(previewHtml) : previewHtml
+    /<style\b/i.test(previewHtml)
+      ? styleBlocks(previewHtml).join("\n")
+      : previewHtml
   )
 
   // Walk braces and declarations in document order. Deciding scope per LINE is
