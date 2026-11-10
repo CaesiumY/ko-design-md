@@ -734,7 +734,8 @@ function normaliseSelector(text: string): string {
  *
  * parse5 follows the HTML parser before Chromium's customizable `<select>`, so
  * it drops a `<style>` inside `<select>` that Chromium 153 applies. Rather than
- * pass a value the screen paints, this throws on such a `<style>`.
+ * pass a value the screen paints, this throws when a `<select>`'s source holds
+ * `<style` at all, even as text in a comment, a script or an attribute value.
  *
  * A `<style>` that applies only conditionally (a `media` attribute, or inside
  * `<template>`) is wrapped in an at-rule here, so its declarations are never
@@ -758,16 +759,18 @@ function styleBlocks(previewHtml: string): Array<string> {
       // The parser drops a <style> start tag inside <select>, so the tree
       // cannot show one; the element's own source can.
       if (node.tagName === "select" && node.namespaceURI === html.NS.HTML) {
+        // With no source location the check cannot look, so it stops too.
         const at = node.sourceCodeLocation
         const inner = at
           ? previewHtml.slice(
               at.startTag?.endOffset ?? at.startOffset,
               at.endTag?.startOffset ?? at.endOffset
             )
-          : ""
+          : "<style>"
         if (/<style[\s/>]/i.test(inner))
           throw new Error(
-            "<select> holds a <style> this check cannot read: Chromium applies it, but parse5 drops it. Move the <style> into <head>."
+            "<select> holds a <style> this check cannot read: Chromium applies it, but parse5 drops it. Move the <style> into <head>. " +
+              "Text spelling `<style` inside the <select> (a comment, a script string, an attribute value) stops the check too; reword it."
           )
       }
       // A <template>'s markup is its content fragment, not its children. Inside
