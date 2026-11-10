@@ -719,6 +719,24 @@ function normaliseSelector(text: string): string {
 }
 
 /**
+ * The start tags the older "in select" parser rules keep or act on inside a
+ * `<select>`; parse5 drops every other. `<html>` is left out on purpose: the
+ * rules merge its attributes rather than drop it, but no preview writes one
+ * there, so it stops the check like the rest.
+ */
+const SELECT_KEEPS: ReadonlySet<string> = new Set([
+  "option",
+  "optgroup",
+  "hr",
+  "select",
+  "input",
+  "keygen",
+  "textarea",
+  "script",
+  "template",
+])
+
+/**
  * The bodies of a preview's applied `<style>` elements, in document order, as
  * a browser's HTML parser finds them. An HTML comment, a raw-text element
  * (`<script>`, `<textarea>`, `<title>`, `<noscript>`, …) and a quoted
@@ -770,21 +788,9 @@ function styleBlocks(previewHtml: string): Array<string> {
               at.endTag?.startOffset ?? at.endOffset
             )
           : "<style>"
-        // The tags the older "in select" rules keep or act on.
-        const kept = new Set([
-          "option",
-          "optgroup",
-          "hr",
-          "select",
-          "input",
-          "keygen",
-          "textarea",
-          "script",
-          "template",
-        ])
         const dropped = [...inner.matchAll(/<([a-z][^\s/>]*)/gi)]
           .map((m) => m[1].toLowerCase())
-          .find((tag) => !kept.has(tag))
+          .find((tag) => !SELECT_KEEPS.has(tag))
         if (dropped !== undefined)
           throw new Error(
             `<select> holds <${dropped}>, which parse5 drops while Chromium 153 keeps it, so this check cannot read the page as the browser does. ` +

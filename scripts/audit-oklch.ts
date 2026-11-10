@@ -300,8 +300,9 @@ for (const slug of slugs) {
   const preview = path.join(dir, previewFile)
   const markdown = fs.readFileSync(path.join(SERVICES, `${slug}.md`), "utf8")
   const html = fs.readFileSync(preview, "utf8")
-  // A preview this check cannot read (a <style> inside <select>) stops only
-  // its own slug, named, and the run fails; the other slugs are still read.
+  // A preview this check cannot read (a start tag parse5 drops inside <select>)
+  // stops only its own slug, named, and the run fails; the other slugs are
+  // still read.
   let found: ReturnType<typeof findPreviewDrift>
   let chained: ReturnType<typeof findRoleChainDrift>
   try {
