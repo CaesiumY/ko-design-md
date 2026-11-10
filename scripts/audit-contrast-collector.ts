@@ -366,8 +366,10 @@ export function collectContrast(): Collected {
   // Read over the whole chain, not only up to the containing block: one of
   // these above it could still be what really captures the box. The
   // pseudo-element's own count too — a motion path moves it while its
-  // `transform` still reads `none` — and so does any paint of its own that
-  // reaches past its box.
+  // `transform` still reads `none` — and so do any paint of its own that
+  // reaches past its box, a grid placement, which makes a grid area its
+  // containing block, and self-alignment or anchor positioning, which move it
+  // past what `left` and `top` say.
   function unsureFor(el: Element, pseudo: CSSStyleDeclaration): Array<string> {
     const unsure = unsureOf(pseudo)
     for (const [name, value, initial] of [
@@ -383,8 +385,17 @@ export function collectContrast(): Collected {
       ["grid-column-end", pseudo.gridColumnEnd, "auto"],
       ["grid-row-start", pseudo.gridRowStart, "auto"],
       ["grid-row-end", pseudo.gridRowEnd, "auto"],
+      // Self-alignment and anchor positioning move an absolute box while its
+      // computed `left` and `top` still read the offsets as written.
+      ["justify-self", pseudo.justifySelf, "auto"],
+      ["align-self", pseudo.alignSelf, "auto"],
+      ["position-area", pseudo.positionArea, "none"],
     ]) {
-      if (value !== initial) unsure.push(`${name}: ${value}`)
+      // An empty value is a property this browser does not know, so it
+      // cannot be moving anything.
+      if (value !== initial && value !== "") {
+        unsure.push(`${name}: ${value}`)
+      }
     }
     for (let up: Element | null = el; up !== null; up = up.parentElement) {
       unsure.push(...unsureOf(getComputedStyle(up)))

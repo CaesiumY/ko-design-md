@@ -417,7 +417,7 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  * reading only when it can reach the line read — its box overlaps the line's
  * box, or the box or what it paints cannot be pinned down.
  *
- * All five runs are black (luminance 0) on a white panel (luminance 1), so a
+ * Every run is black (luminance 0) on a white panel (luminance 1), so a
  * reading taken from the panel is (1 + 0.05) / (0 + 0.05) = 21. Each line's
  * rect is its font's content area, about y 51..69 of its panel (inside the
  * 24px line, y 48..72), and lies inside x 60..240 (`.grid`'s, inside its

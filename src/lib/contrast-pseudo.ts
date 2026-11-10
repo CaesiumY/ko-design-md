@@ -70,8 +70,11 @@ export interface RawPseudo {
    * perspective, a 3D context, a motion path — or `zoom`, which can put the
    * box and its containing block in different units. On the pseudo-element
    * alone: a `filter`, `box-shadow`, `outline` or `border-image`, which paint
-   * past the box, and a grid placement, which makes one grid area its
-   * containing block. None is modelled: any one of them holds the reading.
+   * past the box, a grid placement, which makes one grid area its
+   * containing block, and self-alignment (`justify-self`, `align-self`) or
+   * anchor positioning (`position-area`), which move it while `left` and
+   * `top` still read as written. None is modelled: any one of them holds the
+   * reading.
    */
   unsure: Array<string>
   /**
