@@ -514,6 +514,25 @@ describe("findPreviewDrift", () => {
     }
   )
 
+  it("refuses a <style> inside <select>, which Chromium applies and parse5 drops", () => {
+    // Chromium's customizable <select> applies the inner sheet; the parser
+    // here follows the older rules and drops the tag, so reading on would
+    // pass a wrong value the screen paints. The check stops instead.
+    const sheet = "<style>:root { --gray-06: oklch(0.68 0 0); }</style>"
+    const select =
+      "<select><option>A</option><style>:root { --gray-07: oklch(0.99 0 0); }</style></select>"
+    expect(() => findPreviewDrift(sheet + select, readDefinitions(md))).toThrow(
+      /<select>.*<style>/
+    )
+    // A <select> with no <style> in it reads as before.
+    expect(
+      findPreviewDrift(
+        sheet + "<select><option>A</option></select>",
+        readDefinitions(md)
+      ).map((f) => f.name)
+    ).toEqual(["gray-06"])
+  })
+
   // A `<style>` written inside an attribute value is not a stylesheet, and a
   // `<script>` there does not swallow the stylesheet after it.
   it.each([

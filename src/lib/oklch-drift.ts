@@ -733,8 +733,8 @@ function normaliseSelector(text: string): string {
  * stylesheet, as the browser reads it.
  *
  * parse5 follows the HTML parser before Chromium's customizable `<select>`, so
- * a `<style>` inside `<select>` is dropped here while Chromium 153 applies it;
- * no preview puts one there.
+ * it drops a `<style>` inside `<select>` that Chromium 153 applies. Rather than
+ * pass a value the screen paints, this throws on such a `<style>`.
  *
  * A `<style>` that applies only conditionally (a `media` attribute, or inside
  * `<template>`) is wrapped in an at-rule here, so its declarations are never
@@ -747,7 +747,7 @@ function styleBlocks(previewHtml: string): Array<string> {
   // scripting off unless scripts may run. And it builds no CSSOM, which made
   // jsdom twice as slow here. Only scripts and validators import this module,
   // so a devDependency is enough.
-  const document = parse(previewHtml)
+  const document = parse(previewHtml, { sourceCodeLocationInfo: true })
   const blocks: Array<string> = []
   const walk = (
     parent: DefaultTreeAdapterTypes.ParentNode,
@@ -755,6 +755,21 @@ function styleBlocks(previewHtml: string): Array<string> {
   ): void => {
     for (const node of parent.childNodes) {
       if (!("tagName" in node)) continue
+      // The parser drops a <style> start tag inside <select>, so the tree
+      // cannot show one; the element's own source can.
+      if (node.tagName === "select" && node.namespaceURI === html.NS.HTML) {
+        const at = node.sourceCodeLocation
+        const inner = at
+          ? previewHtml.slice(
+              at.startTag?.endOffset ?? at.startOffset,
+              at.endTag?.startOffset ?? at.endOffset
+            )
+          : ""
+        if (/<style[\s/>]/i.test(inner))
+          throw new Error(
+            "<select> holds a <style> this check cannot read: Chromium applies it, but parse5 drops it. Move the <style> into <head>."
+          )
+      }
       // A <template>'s markup is its content fragment, not its children. Inside
       // <svg> or <math> the tag is a foreign element with no fragment, so it is
       // walked like any other element (preview-halves.ts makes the same cut).
