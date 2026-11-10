@@ -54,6 +54,15 @@
         box instead, the same values put it at x 0..150, clear of the run, and
         the run would read as a pass. Its run is `position: relative` for the
         reason `.cover`'s is.
+      - `.rtl` is written right to left (`direction: rtl`). `.rtl::before` is
+        a 10% black wash over-constrained as `left: -150px; right: 0;
+        width: 150px`. In a right-to-left containing block it is `left` that
+        gives way (CSS 2, 10.3.7), so the wash sits at x 150..300 and covers
+        the right half of the run, centred on x 150; a writing direction other
+        than left-to-right horizontal holds the reading. Built from `left`,
+        the box would be x -150..0, clear of the run, and the run would read
+        as a pass. Its run is `position: relative` for the reason `.cover`'s
+        is.
     -->
     <style>
       html {
@@ -68,7 +77,8 @@
       .cover,
       .far,
       .mark,
-      .grid {
+      .grid,
+      .rtl {
         position: relative;
         width: 300px;
         height: 120px;
@@ -97,7 +107,8 @@
       .cover .t,
       .far .t,
       .mark .t,
-      .grid .t {
+      .grid .t,
+      .rtl .t {
         position: relative;
       }
       .far {
@@ -140,6 +151,19 @@
         height: 14px;
         background: oklch(0 0 0 / 0.1);
       }
+      .rtl {
+        direction: rtl;
+      }
+      .rtl::before {
+        content: "";
+        position: absolute;
+        left: -150px;
+        right: 0;
+        width: 150px;
+        top: 0;
+        height: 120px;
+        background: oklch(0 0 0 / 0.1);
+      }
       .spacer {
         height: 1000px;
       }
@@ -156,5 +180,6 @@
     <div class="far"><span class="t">Sample text</span></div>
     <div class="mark"><span class="t">Sample text</span></div>
     <div class="grid"><span class="t">Sample text</span></div>
+    <div class="rtl"><span class="t">Sample text</span></div>
   </body>
 </html>

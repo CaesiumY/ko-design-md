@@ -447,6 +447,11 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   covers the run, and a grid placement on a pseudo-element holds the
  *   reading. Placed from the panel's padding box, the same values would put
  *   the wash at x 0..150, clear of the run, and read it as a pass.
+ * - `.rtl` is written right to left, under a wash over-constrained as
+ *   `left: -150px; right: 0; width: 150px`. There `left` gives way, so the
+ *   wash sits at x 150..300 over the right half of the run, and a writing
+ *   direction other than left-to-right horizontal holds the reading. Built
+ *   from `left`, the box would be x -150..0, clear of the run, a pass.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -489,6 +494,15 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
     id: "text under a wash placed in its grid area",
     pathEnds: "div.grid > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text under a wash in a right-to-left panel",
+    pathEnds: "div.rtl > span.t",
     theme: "light",
     state: "default",
     kind: "text",
