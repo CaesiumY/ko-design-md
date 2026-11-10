@@ -414,7 +414,8 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
 
 /**
  * The pseudo-element fixture's claims (#691): a painted pseudo-element holds a
- * reading only when its box can cover the sample point.
+ * reading only when it can reach the sample point — its box covers it, or the
+ * box or what it paints cannot be pinned down.
  *
  * All three runs are black (luminance 0) on a white panel (luminance 1), so
  * a reading taken from the panel is (1 + 0.05) / (0 + 0.05) = 21:
@@ -889,7 +890,7 @@ export async function selfCheck(root: string): Promise<CheckResult> {
       )
       for (const anchor of GRADIENT_ANCHORS) checkPath(gradient, anchor)
 
-      heading("a painted pseudo-element, held only where its box can cover")
+      heading("a painted pseudo-element, held only where it can reach")
       const pseudo = await collect(
         `${base}${ORACLE_URL_PATH}?fixture=pseudo`,
         "oracle-pseudo",

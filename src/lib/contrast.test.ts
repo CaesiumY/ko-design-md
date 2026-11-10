@@ -708,7 +708,7 @@ const pseudo = (over: Partial<RawPseudo> = {}): RawPseudo => ({
 const rule = (over: Partial<RawPseudo> = {}): RawPseudo =>
   pseudo({ top: "100px", height: "2px", ...over })
 
-describe("a pseudo-element holds only a reading its box can cover (#691)", () => {
+describe("a pseudo-element holds only a reading it can reach (#691)", () => {
   // Black text on white, 21:1 — a pass whenever nothing holds it.
   const textOver = (pseudos: Array<RawPseudo>, blockers: Array<Blocker> = []) =>
     evaluateText({

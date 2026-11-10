@@ -253,8 +253,8 @@ export function collectContrast(): Collected {
   // hit-test target, so it is invisible to `elementsFromPoint` too. Each
   // painted one is handed over with its computed geometry and its containing
   // block's box, and `pseudoInTheWay` (src/lib/contrast-pseudo.ts) decides
-  // whether it can cover the point (#691). Where it sits in the paint order is
-  // still not guessed: one that can cover the point holds the reading.
+  // whether it can reach the point (#691). Where it sits in the paint order is
+  // still not guessed: one that can reach the point holds the reading.
   function paintedPseudos(el: Element, x: number, y: number): Array<RawPseudo> {
     const out: Array<RawPseudo> = []
     for (const pseudo of ["::before", "::after"]) {
@@ -357,11 +357,6 @@ export function collectContrast(): Collected {
       .filter(([, value, initial]) => value !== initial)
       .map(([name, value]) => `${name}: ${value}`)
 
-  // The box a positioned pseudo-element of `el` is placed in: the padding box
-  // of the nearest ancestor that captures it — `el` itself first, since the
-  // pseudo-element is its child — or, with none, the viewport for a fixed one
-  // and the document's origin for an absolute one. Read at sample time, as the
-  // overlay candidates' rects are: the page scrolls between samples.
   // What leaves a pseudo-element of `el`'s box, or where it paints, a guess.
   // Read over the whole chain, not only up to the containing block: one of
   // these above it could still be what really captures the box. The
@@ -383,6 +378,11 @@ export function collectContrast(): Collected {
     return unsure
   }
 
+  // The box a positioned pseudo-element of `el` is placed in: the padding box
+  // of the nearest ancestor that captures it — `el` itself first, since the
+  // pseudo-element is its child — or, with none, the viewport for a fixed one
+  // and the document's origin for an absolute one. Read at sample time, as the
+  // overlay candidates' rects are: the page scrolls between samples.
   function containingBlockOf(
     el: Element,
     fixed: boolean
