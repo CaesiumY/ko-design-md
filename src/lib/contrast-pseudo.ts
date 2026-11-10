@@ -1,6 +1,7 @@
 /**
  * Whether a painted `::before` or `::after` can be in the way of a sample
- * point, read from computed style rather than from pixels (#402).
+ * point, read from computed style rather than from pixels (#691, part of
+ * #402).
  *
  * A pseudo-element is not a hit-test target, so `elementsFromPoint` never
  * returns it and the collector cannot see whether it covers the point. What it
@@ -68,11 +69,12 @@ export function pseudoInTheWay(
   return stack.some((layer) => (layer.pseudos ?? []).some(mayCover))
 }
 
-// A length exactly as computed style writes a resolved one. Anything else —
-// `auto`, a percentage, an empty string — is not read at all: `parseFloat`
-// would turn it into NaN, every comparison against NaN is false, and the point
-// would come out "outside" a box nobody worked out. That is the one way this
-// could release a reading it should hold.
+// A length exactly as computed style writes a resolved one. Anything else is
+// not read at all. `parseFloat` would turn `auto` or an empty string into NaN,
+// every comparison against NaN is false, and the point would come out
+// "outside" a box nobody worked out — the one way this could release a reading
+// it should hold. A percentage it would read as that many pixels, which is no
+// better.
 const PX = /^(-?\d+(?:\.\d+)?(?:e-?\d+)?)px$/
 const px = (value: string): number | null => {
   const m = PX.exec(value)
@@ -88,6 +90,37 @@ const TRANSLATION = /^matrix\(1, 0, 0, 1, -?[\d.e-]+, -?[\d.e-]+\)$/
 // has lines, and `display: contents` makes no box at all.
 const NOT_ONE_BOX = new Set(["inline", "contents"])
 
+// Every length the box is worked out from, so that each is read by name.
+const LENGTHS = [
+  "top",
+  "left",
+  "width",
+  "height",
+  "marginTop",
+  "marginLeft",
+  "paddingTop",
+  "paddingRight",
+  "paddingBottom",
+  "paddingLeft",
+  "borderTopWidth",
+  "borderRightWidth",
+  "borderBottomWidth",
+  "borderLeftWidth",
+] as const
+
+/** Those lengths in pixels, or null when any one is not a pixel length. */
+function lengthsOf(
+  p: RawPseudo
+): Record<(typeof LENGTHS)[number], number> | null {
+  const out = {} as Record<(typeof LENGTHS)[number], number>
+  for (const name of LENGTHS) {
+    const value = px(p[name])
+    if (value === null) return null
+    out[name] = value
+  }
+  return out
+}
+
 function mayCover(p: RawPseudo): boolean {
   if (p.position !== "absolute" && p.position !== "fixed") return true
   if ([p.transform, p.translate, p.rotate, p.scale].some((v) => v !== "none")) {
@@ -97,34 +130,25 @@ function mayCover(p: RawPseudo): boolean {
   if (NOT_ONE_BOX.has(cb.display)) return true
   if (cb.transforms.some((t) => !TRANSLATION.test(t))) return true
 
-  const values = [
-    p.top,
-    p.left,
-    p.width,
-    p.height,
-    p.marginTop,
-    p.marginLeft,
-    p.paddingTop,
-    p.paddingRight,
-    p.paddingBottom,
-    p.paddingLeft,
-    p.borderTopWidth,
-    p.borderRightWidth,
-    p.borderBottomWidth,
-    p.borderLeftWidth,
-  ].map(px)
-  if (values.some((v) => v === null)) return true
-  const [top, left, width, height, mt, ml, pt, pr, pb, pl, bt, br, bb, bl] =
-    values as Array<number>
+  const v = lengthsOf(p)
+  if (v === null) return true
 
   // `left` and never `right`: when `left`, `right` and `width` are all set,
   // `right` is the one that gives way, yet computed style still reports it as
   // written — a box built from it lands somewhere the pseudo-element is not.
-  const x0 = cb.left + left + ml
-  const y0 = cb.top + top + mt
+  const x0 = cb.left + v.left + v.marginLeft
+  const y0 = cb.top + v.top + v.marginTop
   const contentBox = p.boxSizing !== "border-box"
-  const w = width + (contentBox ? pl + pr + bl + br : 0)
-  const h = height + (contentBox ? pt + pb + bt + bb : 0)
+  const w =
+    v.width +
+    (contentBox
+      ? v.paddingLeft + v.paddingRight + v.borderLeftWidth + v.borderRightWidth
+      : 0)
+  const h =
+    v.height +
+    (contentBox
+      ? v.paddingTop + v.paddingBottom + v.borderTopWidth + v.borderBottomWidth
+      : 0)
   const { x, y } = p.point
   // The edges count as inside: a point on the border is a point it paints.
   return x >= x0 && x <= x0 + w && y >= y0 && y <= y0 + h

@@ -748,14 +748,18 @@ describe("a pseudo-element holds only a reading its box can cover (#691)", () =>
     // `left: 0; right: 0; width: 40px` is over-constrained, and `right` is
     // what gives way. Computed style still reports `right: 0px` as written, so
     // a box built from it would sit at x 360..400 and cover a point at 380.
-    // Built from `left`, it is x 100..140 and misses it.
+    // Built from `left`, it is x 100..140 and misses it. `right` is not
+    // handed over at all, so this pins only the arithmetic; that the browser
+    // reports `left` as the value that holds is the self-check's `.side`
+    // anchor (scripts/fixtures/pseudo-background.html).
     expect(
       textOver([pseudo({ width: "40px", point: { x: 380, y: 260 } })])
     ).toMatchObject(judged)
   })
 
   it("adds the margin to `left` and `top`", () => {
-    // 40x20 at margin (40, 200): x 300..340, y 240..260 — over (320, 250).
+    // 40x20 with a 200px left margin and a 40px top margin: x 300..340,
+    // y 240..260 — over (320, 250).
     // Without the margins it would be x 100..140, y 200..220, and miss it.
     const box = { width: "40px", height: "20px", point: { x: 320, y: 250 } }
     expect(
@@ -821,7 +825,7 @@ describe("a pseudo-element holds only a reading its box can cover (#691)", () =>
   })
 
   describe("behind a non-text surface", () => {
-    // A 12x12 mid-grey dot (L* ~ 0x76) on white: well over 3:1 when judged.
+    // A mid-grey dot, channels 118, on white: 4.54:1, over 3:1 when judged.
     const dotOver = (pseudos: Array<RawPseudo>) =>
       evaluateNonText({
         fill: opaque(118, 118, 118),

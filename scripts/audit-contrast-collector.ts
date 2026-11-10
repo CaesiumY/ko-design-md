@@ -248,7 +248,8 @@ export function collectContrast(): Collected {
       return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom
     })
 
-  // A pseudo-element paints behind its originating element's text but is not a
+  // A pseudo-element paints as part of its originating element — under its
+  // text or over it, depending on how it is positioned — but is not a
   // hit-test target, so it is invisible to `elementsFromPoint` too. Each
   // painted one is handed over with its computed geometry and its containing
   // block's box, and `pseudoInTheWay` (src/lib/contrast-pseudo.ts) decides
@@ -318,24 +319,35 @@ export function collectContrast(): Collected {
   }
 
   // Whether an element is the containing block of a FIXED descendant: a
-  // transform of any kind, a filter, perspective, containment, a size
-  // container, or a promise of one in `will-change`. An absolute descendant is
-  // captured by those and by any `position` but `static`. With none of them
-  // above it, a fixed box belongs to the viewport. The #402 survey released
-  // 103 rows with this test's narrower first draft and got none wrong; the
-  // additions only make more ancestors count, each one the spec names.
+  // transform of any kind, a 3D context, a motion path, a filter, perspective,
+  // containment, a size container, or a promise of one in `will-change`. With
+  // none of them above it, a fixed box belongs to the viewport. The #402
+  // survey released 103 rows with a narrower first draft of this test and got
+  // none wrong; the additions only make more ancestors count, each one a
+  // property the CSS specs name.
   const capturesFixed = (c: CSSStyleDeclaration): boolean =>
     c.transform !== "none" ||
     c.translate !== "none" ||
     c.rotate !== "none" ||
     c.scale !== "none" ||
+    c.transformStyle === "preserve-3d" ||
+    c.offsetPath !== "none" ||
     c.perspective !== "none" ||
     c.filter !== "none" ||
     c.backdropFilter !== "none" ||
     /paint|layout|strict|content/.test(c.contain) ||
     c.containerType !== "normal" ||
     c.contentVisibility === "auto" ||
-    /transform|perspective|filter/.test(c.willChange)
+    /transform|translate|rotate|scale|perspective|filter|contain|offset-path/.test(
+      c.willChange
+    )
+
+  // An ABSOLUTE descendant is captured by all of those, and also by any
+  // `position` but `static` — or the promise of one.
+  const capturesAbsolute = (c: CSSStyleDeclaration): boolean =>
+    capturesFixed(c) ||
+    c.position !== "static" ||
+    /(^|, )position(,|$)/.test(c.willChange)
 
   // The box a positioned pseudo-element of `el` is placed in: the padding box
   // of the nearest ancestor that captures it — `el` itself first, since the
@@ -349,7 +361,7 @@ export function collectContrast(): Collected {
     let cb: Element | null = el
     while (cb !== null) {
       const c = getComputedStyle(cb)
-      if (capturesFixed(c) || (!fixed && c.position !== "static")) break
+      if (fixed ? capturesFixed(c) : capturesAbsolute(c)) break
       cb = cb.parentElement
     }
     if (cb === null) {
@@ -371,9 +383,20 @@ export function collectContrast(): Collected {
     }
     // An absolute box inside a scroll container scrolls with its content, so
     // the origin moves up and left by however far the container has scrolled.
+    // Not for the document's own scroller: its scroll offsets are the
+    // viewport's, which its rect has already moved by — taking them off again
+    // would lift the box by a whole scroll and could put it clear of a point
+    // it covers.
+    const scrolled = cb === document.scrollingElement ? null : cb
     return {
-      left: r.left + Number.parseFloat(c.borderLeftWidth) - cb.scrollLeft,
-      top: r.top + Number.parseFloat(c.borderTopWidth) - cb.scrollTop,
+      left:
+        r.left +
+        Number.parseFloat(c.borderLeftWidth) -
+        (scrolled?.scrollLeft ?? 0),
+      top:
+        r.top +
+        Number.parseFloat(c.borderTopWidth) -
+        (scrolled?.scrollTop ?? 0),
       display: c.display,
       transforms,
     }

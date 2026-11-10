@@ -451,7 +451,7 @@
   .walert { display: flex; gap: 10px; padding: 14px 16px; border-radius: 12px; align-items: flex-start; font-size: 13px; font-weight: 500; line-height: 1.5; font-family: inherit; }
   .walert b { font-size: 14px; font-weight: 600; line-height: 1.4; font-family: inherit; display: block; margin-bottom: 2px; color: var(--w-fg-strong); }
   .walert-ic { flex: none; width: 18px; height: 18px; margin-top: 1px; border-radius: 9999px; }
-  /* md alert 절 · 몽타주 SectionMessage — 중립 배경 opacity[88] 위에 상태색(info 는 브랜드 surface) opacity[5] 를 얹는다(montage-web packages/core/src/components/section-message/style.ts). md 의 상태색을 md opacity 사다리 alpha-5 로 bg-surface 위에 한 색으로 칠한다 — 바탕 위가 bg-surface 라 88% 층은 같은 색이 된다. 글자는 상태와 무관하게 제목 fg-strong · 설명 fg-default, 상태색은 왼쪽 아이콘 자리(.walert-ic — 가상 요소로 그리면 측정기가 알림 글자의 배경을 판정 보류한다)에만. 상태색·surface 가 바뀌면 다시 잰다. */
+  /* md alert 절 · 몽타주 SectionMessage — 중립 배경 opacity[88] 위에 상태색(info 는 브랜드 surface) opacity[5] 를 얹는다(montage-web packages/core/src/components/section-message/style.ts). md 의 상태색을 md opacity 사다리 alpha-5 로 bg-surface 위에 한 색으로 칠한다 — 바탕 위가 bg-surface 라 88% 층은 같은 색이 된다. 글자는 상태와 무관하게 제목 fg-strong · 설명 fg-default, 상태색은 왼쪽 아이콘 자리(.walert-ic — 흐름 안의 가상 요소로 그리면 측정기가 알림 글자의 배경을 판정 보류한다)에만. 상태색·surface 가 바뀌면 다시 잰다. */
   .walert.info { background: color-mix(in srgb, var(--w-bg-brand) 5%, var(--w-bg-surface)); color: var(--w-fg-default); }
   .walert.info .walert-ic { background: var(--w-bg-brand); }
   .walert.danger { background: color-mix(in srgb, var(--w-fg-danger) 5%, var(--w-bg-surface)); color: var(--w-fg-default); }
