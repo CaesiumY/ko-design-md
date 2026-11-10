@@ -185,7 +185,7 @@ components:
 - **변형을 중첩하기.** `button-primary:` 아래 `hover:` 를 두면 표준 도구가 자식을 통째로
   버린다. `button-primary-hover` 처럼 평평한 이름으로, 본문 `###` 과 같은 이름을 쓴다. 브랜드 토큰 패키지가
   경로로 발행한 컴포넌트 토큰을 옮긴 행만은 그 경로를 케밥 표기로 이은 키를 쓰고, 끝의 색 단계(`background`, `text`)는
-  맵 속성(`backgroundColor`, `textColor`)으로, 그 `Hover` 꼴은 `-hover` 접미로 옮기며, 한 경로의 색 단계는 꼴마다 한 행에 합친다
+  맵 속성(`backgroundColor`, `textColor`)으로, 그 `Hover` 꼴은 `-hover` 접미로 옮기며, 한 경로의 색 단계는 평소 꼴끼리 한 행, `Hover` 꼴끼리 한 `-hover` 행에 합친다
   (`button.solidPrimary.background` 와 `.text` 는 `button-solid-primary` 한 행, `.backgroundHover` 와 `.textHover` 는
   `button-solid-primary-hover` 한 행, #624 결정 6. 그 밖에 뺀 경로 단계는 본문에 적는다).
   그 행의 색 값은 본문 패키지 토큰 표 첫 열의 경로(키가 합친 여러 행)로, 패키지가 발행하지 않은 다른 값(번들 스펙의
