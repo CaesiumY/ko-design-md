@@ -16,11 +16,12 @@
  * Only a box that can be worked out with certainty releases a reading. Every
  * other shape keeps the hold it always had: a pseudo-element in normal flow
  * (static or relative), one with a transform, one whose geometry is not in
- * pixels, one whose containing block is itself transformed or is not a block
- * box, and one with anything listed in `unsure` — a rarer way to capture or
- * move the box, or paint of its own that reaches past it. Each of those
- * answers "in the way", which errs toward a person looking at it, never
- * toward a pass.
+ * pixels, one whose containing block, or anything above it, is transformed
+ * other than by a translation, one whose containing block is not one box
+ * (`inline`, `contents`), and one with anything listed in `unsure` — a
+ * rarer way to capture or move the box, or paint of its own that reaches
+ * past it. Each of those answers "in the way", which errs toward a person
+ * looking at it, never toward a pass.
  */
 
 /**
