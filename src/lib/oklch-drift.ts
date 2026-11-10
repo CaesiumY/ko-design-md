@@ -732,16 +732,21 @@ function normaliseSelector(text: string): string {
  * and a CDATA section is text. Only the element's own text children are its
  * stylesheet, as the browser reads it.
  *
+ * parse5 follows the HTML parser before Chromium's customizable `<select>`, so
+ * a `<style>` inside `<select>` is dropped here while Chromium 153 applies it;
+ * no preview puts one there.
+ *
  * A `<style>` that applies only conditionally (a `media` attribute, or inside
  * `<template>`) is wrapped in an at-rule here, so its declarations are never
  * a theme root, as an `@media` block's are not.
  */
 function styleBlocks(previewHtml: string): Array<string> {
-  // parse5 is the parser inside jsdom, used directly for three reasons. Its
+  // parse5 is the parser inside jsdom, used directly for two reasons. Its
   // scripting flag is on by default, as in the browser and the Chromium that
   // measures contrast, so `<noscript>` content is raw text; jsdom parses with
-  // scripting off unless scripts may run. It builds no CSSOM, which made jsdom
-  // twice as slow here. And gate code stays off jsdom (see html-walk.ts).
+  // scripting off unless scripts may run. And it builds no CSSOM, which made
+  // jsdom twice as slow here. Only scripts and validators import this module,
+  // so a devDependency is enough.
   const document = parse(previewHtml)
   const blocks: Array<string> = []
   const walk = (
@@ -757,10 +762,17 @@ function styleBlocks(previewHtml: string): Array<string> {
         walk((node as DefaultTreeAdapterTypes.Template).content, true)
         continue
       }
+      // A browser applies an HTML or SVG <style>; one parsed inside <math> is
+      // a MathML element, not a stylesheet, and its subtree holds none either.
       if (node.tagName !== "style") {
         walk(node, conditional)
         continue
       }
+      if (
+        node.namespaceURI !== html.NS.HTML &&
+        node.namespaceURI !== html.NS.SVG
+      )
+        continue
       // A <style> applies when its type is absent, empty or `text/css`, as the
       // HTML spec has it. Any media other than absent, empty or `all` is
       // treated as conditional: the query is not evaluated, so even `screen`

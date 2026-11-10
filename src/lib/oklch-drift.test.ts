@@ -476,6 +476,23 @@ describe("findPreviewDrift", () => {
     }
   })
 
+  it.each([
+    [
+      "directly",
+      "<math><style>:root { --gray-07: oklch(0.99 0 0); }</style></math>",
+    ],
+    [
+      "inside a <template>",
+      "<math><template><style>:root { --gray-07: oklch(0.99 0 0); }</style></template></math>",
+    ],
+  ])("reads no stylesheet out of a MathML <style> %s", (_label, math) => {
+    // A browser applies an HTML or SVG `<style>`, not one parsed as MathML.
+    const sheet = "<style>:root { --gray-06: oklch(0.68 0 0); }</style>"
+    expect(
+      findPreviewDrift(sheet + math, readDefinitions(md)).map((f) => f.name)
+    ).toEqual(["gray-06"])
+  })
+
   // A `<style>` written inside an attribute value is not a stylesheet, and a
   // `<script>` there does not swallow the stylesheet after it.
   it.each([
