@@ -720,11 +720,11 @@ function normaliseSelector(text: string): string {
 
 /**
  * The start tags the older "in select" parser rules keep or act on inside a
- * `<select>`; parse5 drops every other. `<html>` is left out on purpose: the
- * rules merge its attributes rather than drop it, but no preview writes one
- * there, so it stops the check like the rest.
+ * `<select>`; parse5 drops every other. `<html>` merges its attributes into
+ * the document's, as in the browser, and holds no stylesheet.
  */
 const SELECT_KEEPS: ReadonlySet<string> = new Set([
+  "html",
   "option",
   "optgroup",
   "hr",

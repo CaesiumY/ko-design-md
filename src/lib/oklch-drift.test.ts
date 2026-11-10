@@ -559,7 +559,7 @@ describe("findPreviewDrift", () => {
   it("reads a <select> holding only tags the older rules keep, as before", () => {
     const html =
       "<style>:root { --gray-06: oklch(0.68 0 0); }</style>" +
-      '<select><optgroup label="A"><option>1</option></optgroup><hr><option>2</option></select>'
+      '<select><html lang="ko"><optgroup label="A"><option>1</option></optgroup><hr><option>2</option></select>'
     expect(
       findPreviewDrift(html, readDefinitions(md)).map((f) => f.name)
     ).toEqual(["gray-06"])
