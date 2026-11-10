@@ -72,8 +72,8 @@ export interface RawPseudo {
    * box and its containing block in different units, or a writing direction
    * other than left-to-right horizontal, in which `left` can be the side
    * that gives way. On the pseudo-element
-   * alone: a `filter`, `box-shadow`, `outline` or `border-image`, which paint
-   * past the box, a grid placement, which makes one grid area its
+   * alone: a `filter`, `box-shadow`, `outline`, `border-image` or reflection
+   * (`-webkit-box-reflect`), which paint past the box, a grid placement, which makes one grid area its
    * containing block, and self-alignment (`justify-self`, `align-self`) or
    * anchor positioning (`position-area`), which move it while `left` and
    * `top` still read as written. None is modelled: any one of them holds the

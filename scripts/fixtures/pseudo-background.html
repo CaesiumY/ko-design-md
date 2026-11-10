@@ -93,6 +93,12 @@
           so it holds. A test of the centre alone would read a pass at 21.
         Both the box and the input are `position: relative` for the reason
         `.cover`'s run is.
+      - `.reflect::before` is a 10% black wash over the top of the panel,
+        y 0..40, clear of the line (y 51..69). It carries
+        `-webkit-box-reflect: below 0`, which paints a copy of it at y 40..80,
+        over the line, so it holds. Read from its box alone it would miss the
+        line and read as a pass. Its run is `position: relative` for the
+        reason `.cover`'s is.
     -->
     <style>
       html {
@@ -111,7 +117,8 @@
       .rtl,
       .vertical,
       .surface,
-      .field {
+      .field,
+      .reflect {
         position: relative;
         width: 300px;
         height: 120px;
@@ -142,7 +149,8 @@
       .mark .t,
       .grid .t,
       .rtl .t,
-      .vertical .t {
+      .vertical .t,
+      .reflect .t {
         position: relative;
       }
       .far {
@@ -212,6 +220,16 @@
         height: 24px;
         background: oklch(0 0 0 / 0.1);
       }
+      .reflect::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 300px;
+        height: 40px;
+        background: oklch(0 0 0 / 0.1);
+        -webkit-box-reflect: below 0;
+      }
       .box {
         position: relative;
         width: 40px;
@@ -250,5 +268,6 @@
     <div class="field">
       <input class="entry" value="Sample text" aria-label="Sample" />
     </div>
+    <div class="reflect"><span class="t">Sample text</span></div>
   </body>
 </html>

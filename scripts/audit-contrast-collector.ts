@@ -384,6 +384,13 @@ export function collectContrast(): Collected {
       ["box-shadow", pseudo.boxShadow, "none"],
       ["outline-style", pseudo.outlineStyle, "none"],
       ["border-image-source", pseudo.borderImageSource, "none"],
+      // A copy of the whole box painted beside it. Read by name: the
+      // prefixed property has no camel-case field to rely on.
+      [
+        "-webkit-box-reflect",
+        pseudo.getPropertyValue("-webkit-box-reflect"),
+        "none",
+      ],
       // A grid placement makes the box's containing block one grid area of a
       // grid container, not its padding box, while `left` and `top` still
       // read as offsets from that area.

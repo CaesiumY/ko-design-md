@@ -467,6 +467,10 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   held. A test of the centre alone, on either path, would read the white
  *   panel behind them, a pass at 21 — the `.mark` test, for the two kinds of
  *   reading whose area is an element's box rather than a text line.
+ * - `.reflect` puts a wash at y 0..40, clear of the line, and reflects it
+ *   below itself (`-webkit-box-reflect: below 0`), so a copy lands at
+ *   y 40..80, over the line. Paint past the box holds the reading; read from
+ *   the box alone, the run would be a pass.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -549,6 +553,15 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
     state: "default",
     kind: "text",
     source: "value",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text under the reflection of a wash above it",
+    pathEnds: "div.reflect > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
     verdict: "indeterminate",
     blockers: ["pseudo-background"],
   },
