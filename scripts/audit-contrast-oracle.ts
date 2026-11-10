@@ -421,7 +421,7 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  * reading taken from the panel is (1 + 0.05) / (0 + 0.05) = 21. Each line's
  * rect is its font's content area, about y 51..69 of its panel (inside the
  * 24px line, y 48..72), and lies inside x 60..240 (`.grid`'s, inside its
- * column, x 150..300):
+ * column, x 150..300; `.vertical`'s stands upright, see below):
  *
  * - `.side` draws a block level with the line at x 0..60 of the panel, so the
  *   block is not in the way and the run is judged — a pass at 21. Before
@@ -452,6 +452,12 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   wash sits at x 150..300 over the right half of the run, and a writing
  *   direction other than left-to-right horizontal holds the reading. Built
  *   from `left`, the box would be x -150..0, clear of the run, a pass.
+ * - `.vertical` is written in vertical lines stacked right to left, under the
+ *   same wash. Its horizontal axis is the block axis, whose end is the left,
+ *   so `left` gives way again and the wash covers the right half of the
+ *   upright run (a column about 18px wide centred on x 150); a writing mode
+ *   other than horizontal holds the reading. Built from `left`, the box would
+ *   be x -150..0, clear of the column, a pass.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -503,6 +509,15 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
     id: "text under a wash in a right-to-left panel",
     pathEnds: "div.rtl > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text under a wash in a vertical panel",
+    pathEnds: "div.vertical > span.t",
     theme: "light",
     state: "default",
     kind: "text",

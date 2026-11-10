@@ -17,7 +17,9 @@
       so roughly y 51..69, and inside y 48..72 whatever the font. "Sample
       text" is well under 150px wide in any sans-serif, so the box lies inside
       x 60..240, centred on x 150; in `.grid`, whose run is centred in a 150px
-      column, inside that column, x 150..300.
+      column, inside that column, x 150..300. In `.vertical` the run stands
+      upright instead, a column about 18px wide centred on x 150 and well
+      under 120px tall.
 
       - `.side::after` is a 60x24 black block level with the line, from x 0 to
         x 60. Its box misses the line's box, so it is not in the way.
@@ -63,6 +65,15 @@
         the box would be x -150..0, clear of the run, and the run would read
         as a pass. Its run is `position: relative` for the reason `.cover`'s
         is.
+      - `.vertical` is written top to bottom, lines stacked right to left
+        (`writing-mode: vertical-rl`), with the same wash as `.rtl`. The
+        horizontal axis is now the block axis and its end is the left, so
+        `left` gives way here too and the wash sits at x 150..300. The run
+        stands as a column about 18px wide centred on x 150, so the wash
+        covers its right half; a writing mode other than horizontal holds
+        the reading. Built from `left`, the box would be x -150..0, clear of
+        the column, and the run would read as a pass. Its run is
+        `position: relative` for the reason `.cover`'s is.
     -->
     <style>
       html {
@@ -78,7 +89,8 @@
       .far,
       .mark,
       .grid,
-      .rtl {
+      .rtl,
+      .vertical {
         position: relative;
         width: 300px;
         height: 120px;
@@ -108,7 +120,8 @@
       .far .t,
       .mark .t,
       .grid .t,
-      .rtl .t {
+      .rtl .t,
+      .vertical .t {
         position: relative;
       }
       .far {
@@ -154,7 +167,11 @@
       .rtl {
         direction: rtl;
       }
-      .rtl::before {
+      .vertical {
+        writing-mode: vertical-rl;
+      }
+      .rtl::before,
+      .vertical::before {
         content: "";
         position: absolute;
         left: -150px;
@@ -181,5 +198,6 @@
     <div class="mark"><span class="t">Sample text</span></div>
     <div class="grid"><span class="t">Sample text</span></div>
     <div class="rtl"><span class="t">Sample text</span></div>
+    <div class="vertical"><span class="t">Sample text</span></div>
   </body>
 </html>
