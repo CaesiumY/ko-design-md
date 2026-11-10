@@ -343,8 +343,8 @@ export function collectContrast(): Collected {
 
   // The properties on an element that leave a positioned box below it a
   // guess, as `name: value`: the ones that can capture or move it under a rule
-  // the walk above does not model, and `zoom`. None of the catalogue's
-  // previews sets one.
+  // the walk above does not model, and `zoom`. A preview that sets one has
+  // the readings under it held, not guessed at.
   const unsureOf = (c: CSSStyleDeclaration): Array<string> =>
     [
       ["will-change", c.willChange, "auto"],
