@@ -300,7 +300,8 @@ export function collectContrast(): Collected {
         borderRightWidth: cs.borderRightWidth,
         borderBottomWidth: cs.borderBottomWidth,
         borderLeftWidth: cs.borderLeftWidth,
-        containingBlock: containingBlockOf(el, cs),
+        containingBlock: containingBlockOf(el, cs.position === "fixed"),
+        unsure: unsureFor(el, cs),
         point: { x, y },
       })
     }
@@ -327,7 +328,7 @@ export function collectContrast(): Collected {
   // A containing block found one ancestor too near is as wrong as one too far
   // — either moves the origin, and a box that covers the point can come out
   // beside it. So the rarer ways to capture a box are not added here as more
-  // stops; each is listed by `unsureOf` and holds the reading instead.
+  // stops; `unsureOf` lists them, and they hold the reading instead.
   const capturesFixed = (c: CSSStyleDeclaration): boolean =>
     c.transform !== "none" ||
     c.translate !== "none" ||
@@ -335,9 +336,10 @@ export function collectContrast(): Collected {
     c.scale !== "none" ||
     c.filter !== "none"
 
-  // The properties that can capture a positioned box under a rule the walk
-  // above does not model, as `name: value`. None of the catalogue's previews
-  // sets one.
+  // The properties on an element that leave a positioned box below it a
+  // guess, as `name: value`: the ones that can capture or move it under a rule
+  // the walk above does not model, and `zoom`. None of the catalogue's
+  // previews sets one.
   const unsureOf = (c: CSSStyleDeclaration): Array<string> =>
     [
       ["will-change", c.willChange, "auto"],
@@ -360,19 +362,31 @@ export function collectContrast(): Collected {
   // pseudo-element is its child — or, with none, the viewport for a fixed one
   // and the document's origin for an absolute one. Read at sample time, as the
   // overlay candidates' rects are: the page scrolls between samples.
-  function containingBlockOf(
-    el: Element,
-    pseudo: CSSStyleDeclaration
-  ): RawPseudo["containingBlock"] {
-    const fixed = pseudo.position === "fixed"
-    // Read over the whole chain, not only up to the containing block: one
-    // of these above it could still be what really captures the box. The
-    // pseudo-element's own count too — a motion path moves it while its
-    // `transform` still reads `none`.
+  // What leaves a pseudo-element of `el`'s box, or where it paints, a guess.
+  // Read over the whole chain, not only up to the containing block: one of
+  // these above it could still be what really captures the box. The
+  // pseudo-element's own count too — a motion path moves it while its
+  // `transform` still reads `none` — and so does any paint of its own that
+  // reaches past its box.
+  function unsureFor(el: Element, pseudo: CSSStyleDeclaration): Array<string> {
     const unsure = unsureOf(pseudo)
+    for (const [name, value, initial] of [
+      ["filter", pseudo.filter, "none"],
+      ["box-shadow", pseudo.boxShadow, "none"],
+      ["outline-style", pseudo.outlineStyle, "none"],
+    ]) {
+      if (value !== initial) unsure.push(`${name}: ${value}`)
+    }
     for (let up: Element | null = el; up !== null; up = up.parentElement) {
       unsure.push(...unsureOf(getComputedStyle(up)))
     }
+    return unsure
+  }
+
+  function containingBlockOf(
+    el: Element,
+    fixed: boolean
+  ): RawPseudo["containingBlock"] {
     let cb: Element | null = el
     while (cb !== null) {
       const c = getComputedStyle(cb)
@@ -383,7 +397,7 @@ export function collectContrast(): Collected {
       const origin = fixed
         ? { left: 0, top: 0 }
         : { left: -window.scrollX, top: -window.scrollY }
-      return { ...origin, display: "block", transforms: [], unsure }
+      return { ...origin, display: "block", transforms: [] }
     }
     const c = getComputedStyle(cb)
     const r = cb.getBoundingClientRect()
@@ -414,7 +428,6 @@ export function collectContrast(): Collected {
         (ownScroller?.scrollTop ?? 0),
       display: c.display,
       transforms,
-      unsure,
     }
   }
 

@@ -698,8 +698,8 @@ const pseudo = (over: Partial<RawPseudo> = {}): RawPseudo => ({
     top: 200,
     display: "block",
     transforms: [],
-    unsure: [],
   },
+  unsure: [],
   point: { x: 250, y: 260 },
   ...over,
 })
@@ -803,7 +803,6 @@ describe("a pseudo-element holds only a reading its box can cover (#691)", () =>
           top: 200,
           display: "block",
           transforms: [],
-          unsure: [],
           ...over,
         },
       })
@@ -818,11 +817,18 @@ describe("a pseudo-element holds only a reading its box can cover (#691)", () =>
     expect(
       textOver([cb({ transforms: ["matrix(1, 0, 0, 1, 12, -4.5)"] })])
     ).toMatchObject(judged)
+  })
+
+  it("holds when something leaves the box, or where it paints, a guess", () => {
     // A property that may capture the box somewhere the walk did not stop —
-    // here a promised transform — leaves the box's origin a guess.
+    // here a promised transform — leaves its origin a guess.
     expect(
-      textOver([cb({ unsure: ["will-change: transform"] })])
+      textOver([rule({ unsure: ["will-change: transform"] })])
     ).toMatchObject(held)
+    // A blur paints past the box it is worked out from, onto a point beside it.
+    expect(textOver([rule({ unsure: ["filter: blur(12px)"] })])).toMatchObject(
+      held
+    )
   })
 
   it("holds when any one of several pseudo-elements may cover the point", () => {

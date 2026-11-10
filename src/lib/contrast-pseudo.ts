@@ -14,9 +14,11 @@
  * Only a box that can be worked out with certainty releases a reading. Every
  * other shape keeps the hold it always had: a pseudo-element in normal flow
  * (static or relative), one with a transform, one whose geometry is not in
- * pixels, and one whose containing block is itself transformed or is not a
- * block box. Each of those answers "in the way", which errs toward a person
- * looking at it, never toward a pass.
+ * pixels, one whose containing block is itself transformed or is not a block
+ * box, and one with anything listed in `unsure` — a rarer way to capture or
+ * move the box, or paint of its own that reaches past it. Each of those
+ * answers "in the way", which errs toward a person looking at it, never
+ * toward a pass.
  */
 
 /**
@@ -57,17 +59,18 @@ export interface RawPseudo {
      * before, so anything but a translation puts the two in different units.
      */
     transforms: Array<string>
-    /**
-     * Every property, on the pseudo-element, its owner or any ancestor, that
-     * can capture or move a positioned box under a rule the collector does
-     * not walk — `will-change`, containment, a size container,
-     * `backdrop-filter`, perspective, a 3D context, a motion path, `zoom` — as
-     * `name: value`. Any one of them leaves the box a guess, so none is
-     * modelled: its presence holds the reading. The catalogue's previews have
-     * none.
-     */
-    unsure: Array<string>
   }
+  /**
+   * Every property that leaves the box, or where it paints, a guess, as
+   * `name: value`. On the pseudo-element, its owner or any ancestor: one that
+   * can capture or move a positioned box under a rule the collector does not
+   * walk — `will-change`, containment, a size container, `backdrop-filter`,
+   * perspective, a 3D context, a motion path — or `zoom`, which can put the
+   * box and its containing block in different units. On the pseudo-element
+   * alone: a `filter`, `box-shadow` or `outline`, which paint past the box.
+   * None is modelled: any one of them holds the reading.
+   */
+  unsure: Array<string>
   /** The sample point, in viewport pixels — the same frame as the box. */
   point: { x: number; y: number }
 }
@@ -139,7 +142,7 @@ function mayCover(p: RawPseudo): boolean {
   const cb = p.containingBlock
   if (NOT_ONE_BOX.has(cb.display)) return true
   if (cb.transforms.some((t) => !TRANSLATION.test(t))) return true
-  if (cb.unsure.length > 0) return true
+  if (p.unsure.length > 0) return true
 
   const v = lengthsOf(p)
   if (v === null) return true
