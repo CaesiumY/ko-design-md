@@ -8,15 +8,16 @@
       scripts/fixtures/README.md: the expectations are derived from this CSS by
       hand, so a change here changes the derivation in the oracle too.
 
-      All four panels are 300x120 — over 1% of the 976x800 viewport, so none
+      All five panels are 300x120 — over 1% of the 976x800 viewport, so none
       is measured as a non-text surface — and white, with one run of black
       16px text centred in each. All but `.far` are `position: relative`. A
       16px line at line-height 1.5 is 24px tall, y 48..72 of the panel, and
       the box the collector reads for it is the text's own rect — the font's
       content area, about 18px tall for 16px sans-serif, centred on y 60 —
       so roughly y 51..69, and inside y 48..72 whatever the font. "Sample
-      text" is well under 180px wide in any sans-serif, so the box lies inside
-      x 60..240, centred on x 150.
+      text" is well under 150px wide in any sans-serif, so the box lies inside
+      x 60..240, centred on x 150; in `.grid`, whose run is centred in a 150px
+      column, inside that column, x 150..300.
 
       - `.side::after` is a 60x24 black block level with the line, from x 0 to
         x 60. Its box misses the line's box, so it is not in the way.
@@ -42,8 +43,17 @@
       - `.mark::before` is a highlighter under the lower part of the line, a
         10% black band from y 62 to y 76 across the panel. It misses the line's
         centre (y 60) but overlaps its rect by several pixels (down to about
-        y 69), so the glyphs' lower part sits on it and it holds. A test of the centre alone would read it
-        as a pass. It comes last, so `.far` keeps its place.
+        y 69), so the glyphs' lower part sits on it and it holds. A test of
+        the centre alone would read it as a pass. It comes after `.far`, so
+        `.far` keeps its place.
+      - `.grid` is a grid of two 150px columns with its run placed in the
+        second, x 150..300, so the run's box lies inside that column.
+        `.grid::before` is placed in that column too (`grid-column: 2`) with
+        `left: 0; width: 150px` — offsets from the grid area, not from the
+        panel — so it covers the run and holds. Read from the panel's padding
+        box instead, the same values put it at x 0..150, clear of the run, and
+        the run would read as a pass. Its run is `position: relative` for the
+        reason `.cover`'s is.
     -->
     <style>
       html {
@@ -57,7 +67,8 @@
       .side,
       .cover,
       .far,
-      .mark {
+      .mark,
+      .grid {
         position: relative;
         width: 300px;
         height: 120px;
@@ -85,7 +96,8 @@
       }
       .cover .t,
       .far .t,
-      .mark .t {
+      .mark .t,
+      .grid .t {
         position: relative;
       }
       .far {
@@ -97,6 +109,25 @@
         left: 24px;
         top: 1312px;
         width: 300px;
+        height: 120px;
+        background: oklch(0 0 0 / 0.1);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 150px 150px;
+        align-items: center;
+        justify-items: center;
+      }
+      .grid .t {
+        grid-column: 2;
+      }
+      .grid::before {
+        content: "";
+        position: absolute;
+        grid-column: 2;
+        left: 0;
+        top: 0;
+        width: 150px;
         height: 120px;
         background: oklch(0 0 0 / 0.1);
       }
@@ -124,5 +155,6 @@
     <div class="spacer"></div>
     <div class="far"><span class="t">Sample text</span></div>
     <div class="mark"><span class="t">Sample text</span></div>
+    <div class="grid"><span class="t">Sample text</span></div>
   </body>
 </html>

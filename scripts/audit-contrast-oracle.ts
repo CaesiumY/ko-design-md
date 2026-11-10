@@ -417,10 +417,11 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  * reading only when it can reach the line read — its box overlaps the line's
  * box, or the box or what it paints cannot be pinned down.
  *
- * All four runs are black (luminance 0) on a white panel (luminance 1), so a
+ * All five runs are black (luminance 0) on a white panel (luminance 1), so a
  * reading taken from the panel is (1 + 0.05) / (0 + 0.05) = 21. Each line's
  * rect is its font's content area, about y 51..69 of its panel (inside the
- * 24px line, y 48..72), and lies inside x 60..240:
+ * 24px line, y 48..72), and lies inside x 60..240 (`.grid`'s, inside its
+ * column, x 150..300):
  *
  * - `.side` draws a block level with the line at x 0..60 of the panel, so the
  *   block is not in the way and the run is judged — a pass at 21. Before
@@ -441,6 +442,11 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  * - `.mark` lays a band at y 62..76 under the lower part of the line: clear of
  *   its centre (y 60), over its rect (down to about y 69). The run is held. Testing the
  *   centre alone would release it and read the panel, a pass at 21.
+ * - `.grid` places both its run and its wash in the second of two 150px grid
+ *   columns. The wash's `left: 0` is an offset from that grid area, so it
+ *   covers the run, and a grid placement on a pseudo-element holds the
+ *   reading. Placed from the panel's padding box, the same values would put
+ *   the wash at x 0..150, clear of the run, and read it as a pass.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -474,6 +480,15 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
     id: "text over a highlighter that misses the line's centre",
     pathEnds: "div.mark > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text under a wash placed in its grid area",
+    pathEnds: "div.grid > span.t",
     theme: "light",
     state: "default",
     kind: "text",

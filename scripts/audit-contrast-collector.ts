@@ -371,9 +371,18 @@ export function collectContrast(): Collected {
   function unsureFor(el: Element, pseudo: CSSStyleDeclaration): Array<string> {
     const unsure = unsureOf(pseudo)
     for (const [name, value, initial] of [
+      // Paint that reaches past the box.
       ["filter", pseudo.filter, "none"],
       ["box-shadow", pseudo.boxShadow, "none"],
       ["outline-style", pseudo.outlineStyle, "none"],
+      ["border-image-source", pseudo.borderImageSource, "none"],
+      // A grid placement makes the box's containing block one grid area of a
+      // grid container, not its padding box, while `left` and `top` still
+      // read as offsets from that area.
+      ["grid-column-start", pseudo.gridColumnStart, "auto"],
+      ["grid-column-end", pseudo.gridColumnEnd, "auto"],
+      ["grid-row-start", pseudo.gridRowStart, "auto"],
+      ["grid-row-end", pseudo.gridRowEnd, "auto"],
     ]) {
       if (value !== initial) unsure.push(`${name}: ${value}`)
     }
