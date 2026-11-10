@@ -282,7 +282,7 @@ Then `AskUserQuestion`:
 | Option | Effect |
 |---|---|
 | "승인하고 계속" | Approve as-is. Proceed to Stage 8. |
-| "수정 사항 알려주고 한 번 더" | User provides feedback in the "Other" custom input. Append the user's notes to the prior review-N.json's issues array (with `severity: block`) and re-dispatch the author for one more revision. After this extra revision, run the reviewer once more, then return to checkpoint with the new draft. |
+| "수정 사항 알려주고 한 번 더" | User provides feedback in the "Other" custom input. Append the user's notes to the prior review-N.json's issues array (with `severity: block`) and re-dispatch the author for one more revision. A note asking to key a package token listed as undecided in `## Known Gaps` is not passed on — the author and reviewer cannot act on it until a keying rule is added to `references/stitch-format.md`; tell the user so and suggest recording it as an issue. After this extra revision, run the reviewer once more, then return to checkpoint with the new draft. |
 | "취소" | Abort. Cache dir is left intact. Print: "취소되었습니다. 재개하려면 cache 디렉터리에서 작업을 이어가세요: `.claude/cache/design-md/{slug}/`" |
 
 

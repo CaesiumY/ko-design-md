@@ -14,7 +14,7 @@ components; with no token layer at all, add a small variable block at the top sc
 ## 2. Map the DESIGN.md sections
 
 **Read `## Known Gaps` before applying any other section.** Most of its bullets are one of
-four kinds, and each is handled differently (a bullet recording a retracted claim only
+five kinds, and each is handled differently (a bullet recording a retracted claim only
 corrects an earlier version of the entry — nothing to apply):
 
 - **Constraints you must follow.** Example: toss's brand typeface (Toss Product Sans) may
@@ -34,6 +34,11 @@ corrects an earlier version of the entry — nothing to apply):
 - **Scope disclosures.** Values the catalog recommends rather than the brand publishing them
   (e.g. breakpoints), or areas the sources didn't cover. Use them, but don't present them
   as the brand's spec.
+- **Package tokens with no map key.** A bullet that starts with a package path and
+  `— 키 미정(패키지 컴포넌트 토큰)` names a component token the brand *did* publish, but
+  the catalog has no rule yet for its `components:` map key. Take its value from the
+  entry's package token table in `## Components`; missing from the map means only that
+  standard tools get no key for it, not that the value is unpublished.
 
 | DESIGN.md section   | Where it lands in the target |
 |---------------------|------------------------------|
