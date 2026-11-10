@@ -274,7 +274,7 @@ This is the gate **every** entry passes through — Stage 4c precedes it only wh
 
 1. The current `draft.md` content (read it and display the full file inline, formatted as markdown — paste in code fences).
 2. The latest `review-{final}.json` verdict — extract `score`, `passed`, `verdict`, and bullet the issues array.
-3. If `## Known Gaps` lists package component tokens whose key is undecided (`references/stitch-format.md`, "Variants are flat names" — the author leaves them out of the map because it cannot ask), list them here and tell the user they wait for the maintainer to say how to key and pair them; the answer goes back through "수정 사항 알려주고 한 번 더".
+3. If `## Known Gaps` lists package component tokens whose key is undecided (`references/stitch-format.md`, "Variants are flat names" — the author leaves them out of the map because it cannot ask), list them here and tell the user they stay out of the map in this entry, with their values in the body's package token table. Keying one needs a rule added to `references/stitch-format.md` first (a maintainer decision, made outside this run), so the reviewer blocks a map row for them until then; approving keeps them as they are.
 4. If iteration > 1, show a brief diff highlight: `"Iter 1 score: X → Iter {final} score: Y"` plus the top 1–2 issues that improved between iterations (compare `review-1.json.issues` and `review-{final}.json.issues`).
 
 Then `AskUserQuestion`:
