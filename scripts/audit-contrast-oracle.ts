@@ -59,6 +59,7 @@ const SYNTHETIC_FILE = join(
 )
 const FORM_FILE = join("scripts", "fixtures", "form-control-text.html")
 const GRADIENT_FILE = join("scripts", "fixtures", "gradient-backdrop.html")
+const PSEUDO_FILE = join("scripts", "fixtures", "pseudo-background.html")
 const ORACLE_URL_PATH = "/__oracle/preview.html"
 const ORACLE_WIDTH = 976
 /** Wide enough to absorb 8-bit quantisation, tight enough to catch a drift. */
@@ -412,6 +413,46 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
 ]
 
 /**
+ * The pseudo-element fixture's claims (#691): a painted pseudo-element holds a
+ * reading only when its box can cover the sample point.
+ *
+ * Both runs are black (luminance 0) on a white panel (luminance 1), so a
+ * reading taken from the panel is (1 + 0.05) / (0 + 0.05) = 21:
+ *
+ * - `.side` draws a block level with the line at x 0..100 of the panel, and
+ *   the line's sample point is at x 150, so the block is not in the way and
+ *   the run is judged — a pass at 21. Before #691 any painted pseudo-element
+ *   held it. The block is over-constrained (`left: 0; right: 100px; width:
+ *   100px`), and placed from `right` it would sit at x 100..200 over the
+ *   point: the pass also says the box came from `left`.
+ * - `.cover` washes the whole panel, point included. What it does to the
+ *   colours is not read (which side of the text it paints on is #692's
+ *   question), so the run is held. No ratio is claimed: the claim is that the
+ *   verdict is withheld.
+ */
+const PSEUDO_ANCHORS: Array<PathAnchor> = [
+  {
+    id: "text beside a pseudo-element block that misses it",
+    pathEnds: "div.side > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "pass",
+    blockers: [],
+    ratio: 21,
+  },
+  {
+    id: "text under a pseudo-element wash that covers it",
+    pathEnds: "div.cover > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+]
+
+/**
  * The form-control fixture's claims (#400): text that is on screen but that
  * the text pass does not measure, so the collector has to read it from the
  * control.
@@ -619,6 +660,7 @@ export async function selfCheck(root: string): Promise<CheckResult> {
   const syntheticFixture = readFileSync(join(root, SYNTHETIC_FILE), "utf8")
   const formFixture = readFileSync(join(root, FORM_FILE), "utf8")
   const gradientFixture = readFileSync(join(root, GRADIENT_FILE), "utf8")
+  const pseudoFixture = readFileSync(join(root, PSEUDO_FILE), "utf8")
   const server = await serveStatic(`${root}/public`)
   const browser = await chromium.launch()
   const lines: Array<string> = []
@@ -778,6 +820,9 @@ export async function selfCheck(root: string): Promise<CheckResult> {
     lines.push(
       `fixture: ${GRADIENT_FILE} (${gradientFixture.length} bytes, synthetic)`
     )
+    lines.push(
+      `fixture: ${PSEUDO_FILE} (${pseudoFixture.length} bytes, synthetic)`
+    )
     const base = `http://127.0.0.1:${server.port}`
     for (const current of VARIANTS) {
       variant = current
@@ -828,6 +873,14 @@ export async function selfCheck(root: string): Promise<CheckResult> {
         gradientFixture
       )
       for (const anchor of GRADIENT_ANCHORS) checkPath(gradient, anchor)
+
+      heading("a painted pseudo-element, held only where its box can cover")
+      const pseudo = await collect(
+        `${base}${ORACLE_URL_PATH}?fixture=pseudo`,
+        "oracle-pseudo",
+        pseudoFixture
+      )
+      for (const anchor of PSEUDO_ANCHORS) checkPath(pseudo, anchor)
 
       // `CSS.forcePseudoState` is accepted and ignored when it is handed a
       // node id the document no longer has, so a hover pass can look like it

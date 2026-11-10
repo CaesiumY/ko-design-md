@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>text beside and under a painted pseudo-element</title>
+    <!--
+      Synthetic, written for scripts/audit-contrast-oracle.ts (#691). See
+      scripts/fixtures/README.md: the expectations are derived from this CSS by
+      hand, so a change here changes the derivation in the oracle too.
+
+      Both panels are 300x120 — over 1% of the 976x800 viewport, so neither is
+      measured as a non-text surface — white, `position: relative`, with one
+      run of black 16px text centred in them. A 16px line at line-height 1.5 is
+      24px tall, so its box spans y 48..72 of the panel and its sample point is
+      at y 60, x 150.
+
+      - `.side::after` is a 100x24 black block level with the line, from x 0 to
+        x 100. Its box misses the point at x 150, so it is not in the way.
+        `left: 0; right: 100px; width: 100px` over-constrains it on purpose:
+        `right` is what gives way, and a box built from it would sit at
+        x 100..200, over the point. Only a box built from `left` misses it.
+      - `.cover::before` fills the panel with a 10% black wash, which covers
+        the point; where it sits in the paint order is not read, so it holds.
+        The run in it is `position: relative`, later in tree order than the
+        wash, so it paints over the wash and is the first thing hit at its
+        point. Left in flow, the wash would paint over it, and a hit on a
+        pseudo-element is reported as its owner — `div.cover` in front of the
+        run, an `overlay` hold on top of this one.
+    -->
+    <style>
+      body {
+        margin: 0;
+        padding: 24px;
+        background: oklch(1 0 0);
+      }
+      .side,
+      .cover {
+        position: relative;
+        width: 300px;
+        height: 120px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: oklch(1 0 0);
+      }
+      .side::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 100px;
+        width: 100px;
+        top: 48px;
+        height: 24px;
+        background: oklch(0 0 0);
+      }
+      .cover::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0 / 0.1);
+      }
+      .cover .t {
+        position: relative;
+      }
+      .t {
+        color: oklch(0 0 0);
+        font: 400 16px / 1.5 sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="side"><span class="t">Sample text</span></div>
+    <div class="cover"><span class="t">Sample text</span></div>
+  </body>
+</html>

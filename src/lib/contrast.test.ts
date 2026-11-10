@@ -18,6 +18,7 @@ import type {
   RawControl,
   RawLayer,
 } from "./contrast"
+import type { RawPseudo } from "./contrast-pseudo"
 
 const WHITE = { r: 255, g: 255, b: 255 }
 const BLACK = { r: 0, g: 0, b: 0 }
@@ -663,6 +664,179 @@ describe("evaluateText — a blocker belongs to the line it came from", () => {
       lines: [{ stack: [opaque(80, 80, 80)], blockers: ["pseudo-background"] }],
     })
     expect(got.blockers).toEqual(["pseudo-background"])
+  })
+})
+
+// A painted `::before`/`::after` as the collector hands it over. By default it
+// fills its containing block: the padding box starts at (100, 200) and the
+// pseudo-element is 300x120 from there, so it spans x 100..400 and y 200..320
+// and covers the sample point (250, 260). Each case moves one value and says
+// where the box lands, worked out from the CSS rather than by the code.
+const pseudo = (over: Partial<RawPseudo> = {}): RawPseudo => ({
+  position: "absolute",
+  transform: "none",
+  translate: "none",
+  rotate: "none",
+  scale: "none",
+  boxSizing: "content-box",
+  top: "0px",
+  left: "0px",
+  width: "300px",
+  height: "120px",
+  marginTop: "0px",
+  marginLeft: "0px",
+  paddingTop: "0px",
+  paddingRight: "0px",
+  paddingBottom: "0px",
+  paddingLeft: "0px",
+  borderTopWidth: "0px",
+  borderRightWidth: "0px",
+  borderBottomWidth: "0px",
+  borderLeftWidth: "0px",
+  containingBlock: { left: 100, top: 200, display: "block", transforms: [] },
+  point: { x: 250, y: 260 },
+  ...over,
+})
+
+// A 2px rule 100px down the containing block: y 300..302, under the point.
+const rule = (over: Partial<RawPseudo> = {}): RawPseudo =>
+  pseudo({ top: "100px", height: "2px", ...over })
+
+describe("a pseudo-element holds only a reading its box can cover (#691)", () => {
+  // Black text on white, 21:1 — a pass whenever nothing holds it.
+  const textOver = (pseudos: Array<RawPseudo>, blockers: Array<Blocker> = []) =>
+    evaluateText({
+      fontSizePx: 16,
+      fontWeight: 400,
+      fg: opaque(0, 0, 0),
+      lines: [{ stack: [{ ...opaque(255, 255, 255), pseudos }], blockers }],
+      blockers: [],
+    })
+  const held = { verdict: "indeterminate", blockers: ["pseudo-background"] }
+  const judged = { verdict: "pass", blockers: [] }
+
+  it("holds a line whose sample point the box covers", () => {
+    expect(textOver([pseudo()])).toMatchObject(held)
+  })
+
+  it("judges a line beside a decoration whose box misses the point", () => {
+    const got = textOver([rule()])
+    expect(got).toMatchObject(judged)
+    expect(got.ratio).toBeCloseTo(21, 5)
+  })
+
+  it("works the box out for a fixed pseudo-element the same way", () => {
+    expect(textOver([rule({ position: "fixed" })])).toMatchObject(judged)
+    expect(textOver([pseudo({ position: "fixed" })])).toMatchObject(held)
+  })
+
+  it("holds a pseudo-element in normal flow, whose box is not in its values", () => {
+    expect(textOver([rule({ position: "static" })])).toMatchObject(held)
+    expect(textOver([rule({ position: "relative" })])).toMatchObject(held)
+  })
+
+  it("holds a transformed pseudo-element, by any of the four properties", () => {
+    expect(
+      textOver([rule({ transform: "matrix(1, 0, 0, 1, 0, -100)" })])
+    ).toMatchObject(held)
+    expect(textOver([rule({ translate: "0px -100px" })])).toMatchObject(held)
+    expect(textOver([rule({ rotate: "90deg" })])).toMatchObject(held)
+    expect(textOver([rule({ scale: "1 60" })])).toMatchObject(held)
+  })
+
+  it("places the box from `left`, never from `right`", () => {
+    // `left: 0; right: 0; width: 40px` is over-constrained, and `right` is
+    // what gives way. Computed style still reports `right: 0px` as written, so
+    // a box built from it would sit at x 360..400 and cover a point at 380.
+    // Built from `left`, it is x 100..140 and misses it.
+    expect(
+      textOver([pseudo({ width: "40px", point: { x: 380, y: 260 } })])
+    ).toMatchObject(judged)
+  })
+
+  it("adds the margin to `left` and `top`", () => {
+    // 40x20 at margin (40, 200): x 300..340, y 240..260 — over (320, 250).
+    // Without the margins it would be x 100..140, y 200..220, and miss it.
+    const box = { width: "40px", height: "20px", point: { x: 320, y: 250 } }
+    expect(
+      textOver([pseudo({ ...box, marginLeft: "200px", marginTop: "40px" })])
+    ).toMatchObject(held)
+  })
+
+  it("adds padding and border to a content-box width, not to a border-box one", () => {
+    // A 40px width with 20px padding and 5px border each side: x 100..190 as
+    // content-box, over a point at 170; x 100..140 as border-box, beside it.
+    const box = {
+      width: "40px",
+      paddingLeft: "20px",
+      paddingRight: "20px",
+      borderLeftWidth: "5px",
+      borderRightWidth: "5px",
+      point: { x: 170, y: 260 },
+    }
+    expect(textOver([pseudo(box)])).toMatchObject(held)
+    expect(
+      textOver([pseudo({ ...box, boxSizing: "border-box" })])
+    ).toMatchObject(judged)
+  })
+
+  it("holds when a value is not in pixels, rather than reading it as a miss", () => {
+    expect(textOver([rule({ width: "auto" })])).toMatchObject(held)
+    expect(textOver([rule({ top: "" })])).toMatchObject(held)
+  })
+
+  it("holds when the containing block is not a plain block box", () => {
+    const cb = (over: Partial<RawPseudo["containingBlock"]>) =>
+      rule({
+        containingBlock: {
+          left: 100,
+          top: 200,
+          display: "block",
+          transforms: [],
+          ...over,
+        },
+      })
+    // An inline containing block is its fragments' box, not one rect.
+    expect(textOver([cb({ display: "inline" })])).toMatchObject(held)
+    // A scale on it, or on anything above it, changes the units of its rect.
+    expect(
+      textOver([cb({ transforms: ["matrix(1.05, 0, 0, 1.05, 0, 0)"] })])
+    ).toMatchObject(held)
+    expect(textOver([cb({ transforms: ["2"] })])).toMatchObject(held)
+    // A translation only moves it, and its rect is read after the move.
+    expect(
+      textOver([cb({ transforms: ["matrix(1, 0, 0, 1, 12, -4.5)"] })])
+    ).toMatchObject(judged)
+  })
+
+  it("holds when any one of several pseudo-elements may cover the point", () => {
+    expect(textOver([rule(), pseudo()])).toMatchObject(held)
+  })
+
+  it("keeps a line's other reasons after its pseudo-element is released", () => {
+    expect(textOver([rule()], ["overlay"])).toMatchObject({
+      verdict: "indeterminate",
+      blockers: ["overlay"],
+    })
+  })
+
+  describe("behind a non-text surface", () => {
+    // A 12x12 mid-grey dot (L* ~ 0x76) on white: well over 3:1 when judged.
+    const dotOver = (pseudos: Array<RawPseudo>) =>
+      evaluateNonText({
+        fill: opaque(118, 118, 118),
+        border: null,
+        outer: [{ ...opaque(255, 255, 255), pseudos }],
+        blockers: [],
+      })
+
+    it("holds when the box covers the surface's centre", () => {
+      expect(dotOver([pseudo()])).toMatchObject(held)
+    })
+
+    it("judges the surface when the box misses its centre", () => {
+      expect(dotOver([rule()])).toMatchObject(judged)
+    })
   })
 })
 
