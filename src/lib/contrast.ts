@@ -16,7 +16,9 @@
 
 import { paintableColours, rgbaKey } from "./contrast-gradient"
 import { srgbToLinear } from "./oklch-convert"
+import { pseudoInTheWay } from "./contrast-pseudo"
 import type { BackgroundImage } from "./contrast-gradient"
+import type { RawPseudo } from "./contrast-pseudo"
 
 /** An opaque sRGB colour, channels on [0, 255]. */
 export interface Rgb {
@@ -292,6 +294,12 @@ export const isBlocker = (name: string): name is Blocker =>
  */
 export interface RawLayer extends RawColor {
   image?: BackgroundImage
+  /**
+   * The element's painted `::before` and `::after`, as computed geometry. A
+   * pseudo-element is not in the hit list, so the collector cannot tell
+   * whether one reaches the line read; `pseudoInTheWay` works that out here.
+   */
+  pseudos?: Array<RawPseudo>
 }
 
 /** One line box of a run: what is behind it, and what stops it being read. */
@@ -299,8 +307,9 @@ export interface RawTextLine {
   /** Topmost first, as `document.elementsFromPoint` returns it. */
   stack: Array<RawLayer>
   /**
-   * Why THIS line cannot be read — a painted pseudo-element behind it,
-   * something over it.
+   * Why THIS line cannot be read, as the collector saw it — something over
+   * it, a filter behind it. A pseudo-element is not among them: it travels
+   * on its layer, and `readLine` adds its reason when it may reach the line.
    * Held per line because a wrapped run can cross a band that one line sits on
    * and another does not.
    */
@@ -702,7 +711,11 @@ function readLine(
     rootTransparent: backdrops.some((b) => b.rootTransparent),
     // A stack that cannot be listed is read as one backdrop, its images left
     // out, and ranked by it — the same as any other held line.
-    blockers: blocker === null ? line.blockers : [...line.blockers, blocker],
+    blockers: [
+      ...line.blockers,
+      ...(blocker === null ? [] : [blocker]),
+      ...(pseudoInTheWay(line.stack) ? (["pseudo-background"] as const) : []),
+    ],
   }
 }
 
@@ -822,6 +835,7 @@ export function evaluateNonText(
     ...new Set([
       ...sample.blockers,
       ...(unread === null ? [] : [unread]),
+      ...(pseudoInTheWay(sample.outer) ? (["pseudo-background"] as const) : []),
       ...(outer.backdrops.some((b) => b.rootTransparent)
         ? (["root-transparent"] as const)
         : []),

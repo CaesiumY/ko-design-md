@@ -59,6 +59,7 @@ const SYNTHETIC_FILE = join(
 )
 const FORM_FILE = join("scripts", "fixtures", "form-control-text.html")
 const GRADIENT_FILE = join("scripts", "fixtures", "gradient-backdrop.html")
+const PSEUDO_FILE = join("scripts", "fixtures", "pseudo-background.html")
 const ORACLE_URL_PATH = "/__oracle/preview.html"
 const ORACLE_WIDTH = 976
 /** Wide enough to absorb 8-bit quantisation, tight enough to catch a drift. */
@@ -412,6 +413,161 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
 ]
 
 /**
+ * The pseudo-element fixture's claims (#691): a painted pseudo-element holds a
+ * reading only when it can reach the line read — its box overlaps the line's
+ * box, or the box or what it paints cannot be pinned down.
+ *
+ * Every run is black (luminance 0) on a white panel (luminance 1), so a
+ * reading taken from the panel is (1 + 0.05) / (0 + 0.05) = 21. Each line's
+ * rect is its font's content area, about y 51..69 of its panel (inside the
+ * 24px line, y 48..72), and lies inside x 60..240 (`.grid`'s, inside its
+ * column, x 150..300). `.vertical`'s stands upright, a column about 18px
+ * wide centred on x 150, still inside x 60..240, but taller than the line
+ * and well under the panel's 120px, so the y range is not its:
+ *
+ * - `.side` draws a block level with the line at x 0..60 of the panel, so the
+ *   block is not in the way and the run is judged — a pass at 21. Before
+ *   #691 any painted pseudo-element held it. The block is over-constrained
+ *   (`left: 0; right: 100px; width: 60px`), and placed from `right` it would
+ *   sit at x 140..200 over the line: the pass also says the box came from
+ *   `left`.
+ * - `.cover` washes the whole panel, line included. What it does to the
+ *   colours is not read (which side of the text it paints on is #692's
+ *   question), so the run is held. No ratio is claimed: the claim is that the
+ *   verdict is withheld.
+ * - `.far` sits 1000px down, under a wash whose containing block is the
+ *   document root (`html` is positioned), placed from the root's origin at
+ *   x 24, y 1312 — exactly over the panel. The collector scrolls to reach it,
+ *   and the root's rect has moved with that scroll already, so the box covers
+ *   the line and the run is held. Taking the root's `scrollTop` off a second
+ *   time would lift the box clear and read it as a pass.
+ * - `.mark` lays a band at y 62..76 under the lower part of the line: clear of
+ *   its centre (y 60), over its rect (down to about y 69). The run is held. Testing the
+ *   centre alone would release it and read the panel, a pass at 21.
+ * - `.grid` places both its run and its wash in the second of two 150px grid
+ *   columns. The wash's `left: 0` is an offset from that grid area, so it
+ *   covers the run, and a grid placement on a pseudo-element holds the
+ *   reading. Placed from the panel's padding box, the same values would put
+ *   the wash at x 0..150, clear of the run, and read it as a pass.
+ * - `.rtl` is written right to left, under a wash over-constrained as
+ *   `left: -150px; right: 0; width: 150px`. There `left` gives way, so the
+ *   wash sits at x 150..300 over the right half of the run, and a writing
+ *   direction other than left-to-right horizontal holds the reading. Built
+ *   from `left`, the box would be x -150..0, clear of the run, a pass.
+ * - `.vertical` is written in vertical lines stacked right to left, under the
+ *   same wash. Its horizontal axis is the block axis, whose end is the left,
+ *   so `left` gives way again and the wash covers the right half of the
+ *   upright run (a column about 18px wide centred on x 150); a writing mode
+ *   other than horizontal holds the reading. Built from `left`, the box would
+ *   be x -150..0, clear of the column, a pass.
+ * - `.surface` and `.field` lay a band at y 66..90 across the panel, clear of
+ *   the centre (y 60) of what each reads, over its box: a 40x40 black box at
+ *   y 40..80 read as a non-text surface, and an input at y 44..76 whose value
+ *   is read as text over the panel, its own background transparent. Both are
+ *   held. A test of the centre alone, on either path, would read the white
+ *   panel behind them, a pass at 21 — the `.mark` test, for the two kinds of
+ *   reading whose area is an element's box rather than a text line.
+ * - `.reflect` puts a wash at y 0..40, clear of the line, and reflects it
+ *   below itself (`-webkit-box-reflect: below 0`), so a copy lands at
+ *   y 40..80, over the line. Paint past the box holds the reading; read from
+ *   the box alone, the run would be a pass.
+ */
+const PSEUDO_ANCHORS: Array<PathAnchor> = [
+  {
+    id: "text beside a pseudo-element block that misses it",
+    pathEnds: "div.side > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "pass",
+    blockers: [],
+    ratio: 21,
+  },
+  {
+    id: "text under a pseudo-element wash that covers it",
+    pathEnds: "div.cover > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text under a wash placed from the scrolled document root",
+    pathEnds: "div.far > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text over a highlighter that misses the line's centre",
+    pathEnds: "div.mark > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text under a wash placed in its grid area",
+    pathEnds: "div.grid > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text under a wash in a right-to-left panel",
+    pathEnds: "div.rtl > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text under a wash in a vertical panel",
+    pathEnds: "div.vertical > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "surface over a band that misses its centre",
+    pathEnds: "div.surface > span.box",
+    theme: "light",
+    state: "default",
+    kind: "non-text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "input value over a band that misses its centre",
+    pathEnds: "div.field > input.entry",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    source: "value",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text under the reflection of a wash above it",
+    pathEnds: "div.reflect > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+]
+
+/**
  * The form-control fixture's claims (#400): text that is on screen but that
  * the text pass does not measure, so the collector has to read it from the
  * control.
@@ -619,6 +775,7 @@ export async function selfCheck(root: string): Promise<CheckResult> {
   const syntheticFixture = readFileSync(join(root, SYNTHETIC_FILE), "utf8")
   const formFixture = readFileSync(join(root, FORM_FILE), "utf8")
   const gradientFixture = readFileSync(join(root, GRADIENT_FILE), "utf8")
+  const pseudoFixture = readFileSync(join(root, PSEUDO_FILE), "utf8")
   const server = await serveStatic(`${root}/public`)
   const browser = await chromium.launch()
   const lines: Array<string> = []
@@ -778,6 +935,9 @@ export async function selfCheck(root: string): Promise<CheckResult> {
     lines.push(
       `fixture: ${GRADIENT_FILE} (${gradientFixture.length} bytes, synthetic)`
     )
+    lines.push(
+      `fixture: ${PSEUDO_FILE} (${pseudoFixture.length} bytes, synthetic)`
+    )
     const base = `http://127.0.0.1:${server.port}`
     for (const current of VARIANTS) {
       variant = current
@@ -828,6 +988,14 @@ export async function selfCheck(root: string): Promise<CheckResult> {
         gradientFixture
       )
       for (const anchor of GRADIENT_ANCHORS) checkPath(gradient, anchor)
+
+      heading("a painted pseudo-element, held only where it can reach")
+      const pseudo = await collect(
+        `${base}${ORACLE_URL_PATH}?fixture=pseudo`,
+        "oracle-pseudo",
+        pseudoFixture
+      )
+      for (const anchor of PSEUDO_ANCHORS) checkPath(pseudo, anchor)
 
       // `CSS.forcePseudoState` is accepted and ignored when it is handed a
       // node id the document no longer has, so a hover pass can look like it

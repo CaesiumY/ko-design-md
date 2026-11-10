@@ -66,3 +66,18 @@ achromatic OKLCH colours, so it is grey in either interpolation space, its
 luminance runs monotonically from one end to the other, and the weakest colour
 is an end stop with luminance L³. The same condition holds: edit this file,
 and re-derive those; never paste the measurer's new output into them.
+
+## `pseudo-background.html`
+
+Another synthetic document under the same rule (#691). It covers text next to
+a painted `::before` or `::after`, which the sweep releases only when the
+pseudo-element's box, worked out from its computed geometry, certainly misses
+the box of the line read — and nothing it paints reaches past that box. No
+text in the samsung file sits beside a positioned pseudo-element, and the
+file cannot gain one.
+
+Every expectation on it is derived by hand in `PSEUDO_ANCHORS`
+(`scripts/audit-contrast-oracle.ts`): black text on a white panel, 21:1, and
+a box placed from the fixture's own pixel values. The same condition holds:
+edit this file, and re-derive those; never paste the measurer's new output
+into them.

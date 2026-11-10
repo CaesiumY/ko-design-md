@@ -13,6 +13,7 @@ import type {
   RawControl,
   RawLayer,
 } from "../src/lib/contrast"
+import type { RawPseudo } from "../src/lib/contrast-pseudo"
 
 export interface CollectedText {
   path: string
@@ -247,11 +248,16 @@ export function collectContrast(): Collected {
       return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom
     })
 
-  // A pseudo-element paints behind its originating element's text but is not a
-  // hit-test target, so it is invisible to `elementsFromPoint` too. Only its
-  // presence is detected; where it sits in the stack is what the audit declines
-  // to guess.
-  function hasPaintedPseudo(el: Element): boolean {
+  // A pseudo-element paints as part of its originating element — under its
+  // text or over it, depending on how it is positioned — but is not a
+  // hit-test target, so it is invisible to `elementsFromPoint` too. Each
+  // painted one is handed over with its computed geometry and its containing
+  // block's box, and `pseudoInTheWay` (src/lib/contrast-pseudo.ts) decides
+  // whether it can reach `area`, the box of what is read (#691). Where it sits
+  // in the paint order is still not guessed: one that can reach it holds the
+  // reading.
+  function paintedPseudos(el: Element, area: DOMRect): Array<RawPseudo> {
+    const out: Array<RawPseudo> = []
     for (const pseudo of ["::before", "::after"]) {
       const cs = getComputedStyle(el, pseudo)
       // `none` is what an undeclared pseudo-element reports too, so this one
@@ -271,10 +277,196 @@ export function collectContrast(): Collected {
       if (cs.display === "none" || cs.visibility === "hidden") continue
       const alpha = Number.parseFloat(cs.opacity)
       if (Number.isFinite(alpha) && alpha === 0) continue
-      if (cs.backgroundImage !== "none") return true
-      if (!isTransparent(cs.backgroundColor)) return true
+      if (cs.backgroundImage === "none" && isTransparent(cs.backgroundColor)) {
+        continue
+      }
+      out.push({
+        position: cs.position,
+        transform: cs.transform,
+        translate: cs.translate,
+        rotate: cs.rotate,
+        scale: cs.scale,
+        boxSizing: cs.boxSizing,
+        top: cs.top,
+        left: cs.left,
+        width: cs.width,
+        height: cs.height,
+        marginTop: cs.marginTop,
+        marginLeft: cs.marginLeft,
+        paddingTop: cs.paddingTop,
+        paddingRight: cs.paddingRight,
+        paddingBottom: cs.paddingBottom,
+        paddingLeft: cs.paddingLeft,
+        borderTopWidth: cs.borderTopWidth,
+        borderRightWidth: cs.borderRightWidth,
+        borderBottomWidth: cs.borderBottomWidth,
+        borderLeftWidth: cs.borderLeftWidth,
+        containingBlock: containingBlockOf(el, cs.position === "fixed"),
+        unsure: unsureFor(el, cs),
+        area: {
+          left: area.left,
+          top: area.top,
+          right: area.right,
+          bottom: area.bottom,
+        },
+      })
     }
-    return false
+    return out
+  }
+
+  // As a layer's optional field: absent, not empty, when nothing is painted —
+  // the shape `imageOf` gives an element with no image.
+  const pseudosOf = (
+    el: Element,
+    area: DOMRect
+  ): { pseudos?: Array<RawPseudo> } => {
+    const pseudos = paintedPseudos(el, area)
+    return pseudos.length === 0 ? {} : { pseudos }
+  }
+
+  // Whether an element is the containing block of a FIXED descendant, by the
+  // rules this walk models: a transform of any kind or a filter. An ABSOLUTE
+  // descendant is captured by those and by any `position` but `static`. With
+  // none of them above it, a fixed box belongs to the viewport. These are the
+  // rules the #402 survey released 103 rows with and got none wrong.
+  //
+  // A containing block found one ancestor too near is as wrong as one too far
+  // — either moves the origin, and a box that covers the line read can come
+  // out beside it. So the rarer ways to capture a box are not added here as more
+  // stops; `unsureOf` lists them, and they hold the reading instead.
+  const capturesFixed = (c: CSSStyleDeclaration): boolean =>
+    c.transform !== "none" ||
+    c.translate !== "none" ||
+    c.rotate !== "none" ||
+    c.scale !== "none" ||
+    c.filter !== "none"
+
+  // The properties on an element that leave a positioned box below it a
+  // guess, as `name: value`: the ones that can capture or move it under a rule
+  // the walk above does not model, and `zoom`. A preview that sets one has
+  // the readings under it held, not guessed at.
+  const unsureOf = (c: CSSStyleDeclaration): Array<string> =>
+    [
+      ["will-change", c.willChange, "auto"],
+      ["contain", c.contain, "none"],
+      ["container-type", c.containerType, "normal"],
+      ["content-visibility", c.contentVisibility, "visible"],
+      ["backdrop-filter", c.backdropFilter, "none"],
+      ["perspective", c.perspective, "none"],
+      ["transform-style", c.transformStyle, "flat"],
+      ["offset-path", c.offsetPath, "none"],
+      // Not a capture but a change of units: a zoomed box's rect is read in
+      // zoomed pixels and a pseudo-element's own lengths may not be.
+      ["zoom", c.zoom, "1"],
+      // Over-constrained, a box gives way on its inline-end side: `right` in
+      // left-to-right horizontal text, but `left` in right-to-left text, and
+      // another axis altogether in vertical text. The box is placed from
+      // `left` and `top`, so only the first is certain.
+      ["direction", c.direction, "ltr"],
+      ["writing-mode", c.writingMode, "horizontal-tb"],
+    ]
+      .filter(([, value, initial]) => value !== initial)
+      .map(([name, value]) => `${name}: ${value}`)
+
+  // What leaves a pseudo-element of `el`'s box, or where it paints, a guess.
+  // Read over the whole chain, not only up to the containing block: one of
+  // these above it could still be what really captures the box. The
+  // pseudo-element's own count too — a motion path moves it while its
+  // `transform` still reads `none` — and so do any paint of its own that
+  // reaches past its box, a grid placement, which makes a grid area its
+  // containing block, and self-alignment or anchor positioning, which move it
+  // past what `left` and `top` say.
+  function unsureFor(el: Element, pseudo: CSSStyleDeclaration): Array<string> {
+    const unsure = unsureOf(pseudo)
+    for (const [name, value, initial] of [
+      // Paint that reaches past the box.
+      ["filter", pseudo.filter, "none"],
+      ["box-shadow", pseudo.boxShadow, "none"],
+      ["outline-style", pseudo.outlineStyle, "none"],
+      ["border-image-source", pseudo.borderImageSource, "none"],
+      // A copy of the whole box painted beside it. Read by name: the
+      // prefixed property has no camel-case field to rely on.
+      [
+        "-webkit-box-reflect",
+        pseudo.getPropertyValue("-webkit-box-reflect"),
+        "none",
+      ],
+      // A grid placement makes the box's containing block one grid area of a
+      // grid container, not its padding box, while `left` and `top` still
+      // read as offsets from that area.
+      ["grid-column-start", pseudo.gridColumnStart, "auto"],
+      ["grid-column-end", pseudo.gridColumnEnd, "auto"],
+      ["grid-row-start", pseudo.gridRowStart, "auto"],
+      ["grid-row-end", pseudo.gridRowEnd, "auto"],
+      // Self-alignment and anchor positioning move an absolute box while its
+      // computed `left` and `top` still read the offsets as written.
+      ["justify-self", pseudo.justifySelf, "auto"],
+      ["align-self", pseudo.alignSelf, "auto"],
+      ["position-area", pseudo.positionArea, "none"],
+    ]) {
+      // An empty value is a property this browser does not know, so it
+      // cannot be moving anything.
+      if (value !== initial && value !== "") {
+        unsure.push(`${name}: ${value}`)
+      }
+    }
+    for (let up: Element | null = el; up !== null; up = up.parentElement) {
+      unsure.push(...unsureOf(getComputedStyle(up)))
+    }
+    return unsure
+  }
+
+  // The box a positioned pseudo-element of `el` is placed in: the padding box
+  // of the nearest ancestor that captures it — `el` itself first, since the
+  // pseudo-element is its child — or, with none, the viewport for a fixed one
+  // and the document's origin for an absolute one. Read at sample time, as the
+  // overlay candidates' rects are: the page scrolls between samples.
+  function containingBlockOf(
+    el: Element,
+    fixed: boolean
+  ): RawPseudo["containingBlock"] {
+    let cb: Element | null = el
+    while (cb !== null) {
+      const c = getComputedStyle(cb)
+      if (capturesFixed(c) || (!fixed && c.position !== "static")) break
+      cb = cb.parentElement
+    }
+    if (cb === null) {
+      const origin = fixed
+        ? { left: 0, top: 0 }
+        : { left: -window.scrollX, top: -window.scrollY }
+      return { ...origin, display: "block", transforms: [] }
+    }
+    const c = getComputedStyle(cb)
+    const r = cb.getBoundingClientRect()
+    // A transform anywhere from the containing block up changes the units its
+    // rect is in. Listed for `pseudoInTheWay`, which lets a translation through.
+    const transforms: Array<string> = []
+    for (let up: Element | null = cb; up !== null; up = up.parentElement) {
+      const u = getComputedStyle(up)
+      for (const v of [u.transform, u.rotate, u.scale]) {
+        if (v !== "none") transforms.push(v)
+      }
+    }
+    // An absolute box inside a scroll container scrolls with its content, so
+    // the origin moves up and left by however far the container has scrolled.
+    // Not for the document's own scroller: its scroll offsets are the
+    // viewport's, which its rect has already moved by — taking them off again
+    // would lift the box by a whole scroll and could put it clear of a line
+    // it covers.
+    const ownScroller = cb === document.scrollingElement ? null : cb
+    return {
+      left:
+        r.left +
+        Number.parseFloat(c.borderLeftWidth) -
+        (ownScroller?.scrollLeft ?? 0),
+      top:
+        r.top +
+        Number.parseFloat(c.borderTopWidth) -
+        (ownScroller?.scrollTop ?? 0),
+      display: c.display,
+      transforms,
+    }
   }
 
   /**
@@ -344,7 +536,9 @@ export function collectContrast(): Collected {
   function backdropAt(
     x: number,
     y: number,
-    from: Element
+    from: Element,
+    /** The box of what is read at (x, y), for the pseudo-elements' test. */
+    area: DOMRect
   ): {
     stack: Array<RawLayer>
     blockers: Set<Blocker>
@@ -370,7 +564,6 @@ export function collectContrast(): Collected {
     }
     for (const el of hit.slice(index)) {
       const cs = getComputedStyle(el)
-      if (hasPaintedPseudo(el)) blockers.add("pseudo-background")
       for (const b of paintBlockers(cs, el.getBoundingClientRect())) {
         blockers.add(b)
       }
@@ -379,6 +572,7 @@ export function collectContrast(): Collected {
         ...colour,
         opacity: opacityOf(el),
         ...imageOf(cs),
+        ...pseudosOf(el, area),
       }
       stack.push(layer)
       // Nothing below an opaque layer contributes. The opacity test matters as
@@ -483,7 +677,7 @@ export function collectContrast(): Collected {
       const px = r.left + r.width / 2
       const py = r.top + r.height / 2
       if (!inViewport(px, py)) continue
-      const read = backdropAt(px, py, parent)
+      const read = backdropAt(px, py, parent, r)
       if (read.occluded) continue
       lines.push({ stack: read.stack, blockers: [...read.blockers] })
     }
@@ -527,7 +721,7 @@ export function collectContrast(): Collected {
     if (!inViewport(cx, cy)) continue
     // Starting at the control itself: its own background is the first layer
     // behind its text, exactly as a text node's parent is in the text pass.
-    const read = backdropAt(cx, cy, el)
+    const read = backdropAt(cx, cy, el, rect)
     if (read.occluded) continue
 
     const shownOption = (s: HTMLSelectElement | null): string => {
@@ -700,7 +894,6 @@ export function collectContrast(): Collected {
     if (coveredByOverlay(cx, cy, el)) blockers.add("overlay")
     for (const behind of hit.slice(index + 1)) {
       const bcs = getComputedStyle(behind)
-      if (hasPaintedPseudo(behind)) blockers.add("pseudo-background")
       // The same four tests the text path's `backdropAt` runs on every layer.
       // These two were missing here, so a surface sitting over a filtered or
       // shadow-covered ancestor was judged on that ancestor's pre-filter
@@ -714,6 +907,7 @@ export function collectContrast(): Collected {
         ...colour,
         opacity: opacityOf(behind),
         ...imageOf(bcs),
+        ...pseudosOf(behind, live),
       }
       outer.push(layer)
       if (isOpaque(colour) && layer.opacity >= 1) break
