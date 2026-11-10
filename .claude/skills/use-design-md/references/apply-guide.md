@@ -37,7 +37,7 @@ corrects an earlier version of the entry — nothing to apply):
 - **Package tokens with no map key.** A bullet that starts with a package path and
   `— 키 미정(패키지 컴포넌트 토큰)` names a component token the brand *did* publish, but
   the catalog has no rule yet for its `components:` map key. Take its value from the
-  entry's package token table in `## Components`; missing from the map means only that
+  entry's package token table in the body; missing from the map means only that
   standard tools get no key for it, not that the value is unpublished.
 
 | DESIGN.md section   | Where it lands in the target |
