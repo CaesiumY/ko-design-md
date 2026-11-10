@@ -460,6 +460,13 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   upright run (a column about 18px wide centred on x 150); a writing mode
  *   other than horizontal holds the reading. Built from `left`, the box would
  *   be x -150..0, clear of the column, a pass.
+ * - `.surface` and `.field` lay a band at y 66..90 across the panel, clear of
+ *   the centre (y 60) of what each reads, over its box: a 40x40 black box at
+ *   y 40..80 read as a non-text surface, and an input at y 44..76 whose value
+ *   is read as text over the panel, its own background transparent. Both are
+ *   held. A test of the centre alone, on either path, would read the white
+ *   panel behind them, a pass at 21 — the `.mark` test, for the two kinds of
+ *   reading whose area is an element's box rather than a text line.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -523,6 +530,25 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
     theme: "light",
     state: "default",
     kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "surface over a band that misses its centre",
+    pathEnds: "div.surface > span.box",
+    theme: "light",
+    state: "default",
+    kind: "non-text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "input value over a band that misses its centre",
+    pathEnds: "div.field > input.entry",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    source: "value",
     verdict: "indeterminate",
     blockers: ["pseudo-background"],
   },

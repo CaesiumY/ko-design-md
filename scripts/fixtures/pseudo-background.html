@@ -10,7 +10,8 @@
 
       Every panel is 300x120 — over 1% of the 976x800 viewport, so none
       is measured as a non-text surface — and white, with one run of black
-      16px text centred in each. All but `.far` are `position: relative`. A
+      16px text centred in each but `.surface` and `.field`, described last.
+      All but `.far` are `position: relative`. A
       16px line at line-height 1.5 is 24px tall, y 48..72 of the panel, and
       the box the collector reads for it is the text's own rect — the font's
       content area, about 18px tall for 16px sans-serif, centred on y 60 —
@@ -75,6 +76,23 @@
         the reading. Built from `left`, the box would be x -150..0, clear of
         the column, and the run would read as a pass. Its run is
         `position: relative` for the reason `.cover`'s is.
+      - `.surface` and `.field` carry the `.mark` test to the other two kinds
+        of reading, whose area is the box of the element read rather than a
+        text line. Their `::before` is a 10% black band from y 66 to y 90
+        across the panel.
+        - `.surface` holds no text but a 40x40 black box centred in it,
+          y 40..80 — 1600px², under the non-text cut of 1% of the viewport
+          (7808px²), so it is measured as a non-text surface. The band misses
+          its centre (y 60) but overlaps its box from y 66 to y 80, so it
+          holds. A test of the centre alone would read the white panel
+          behind it, a pass at 21.
+        - `.field` holds an `<input>` whose value is the run, 200x32 and
+          centred, y 44..76, with no background or border, so the layers
+          behind its text go on to the panel and its band. The band misses
+          the input's centre (y 60) but overlaps its box from y 66 to y 76,
+          so it holds. A test of the centre alone would read a pass at 21.
+        Both the box and the input are `position: relative` for the reason
+        `.cover`'s run is.
     -->
     <style>
       html {
@@ -91,7 +109,9 @@
       .mark,
       .grid,
       .rtl,
-      .vertical {
+      .vertical,
+      .surface,
+      .field {
         position: relative;
         width: 300px;
         height: 120px;
@@ -182,6 +202,32 @@
         height: 120px;
         background: oklch(0 0 0 / 0.1);
       }
+      .surface::before,
+      .field::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 66px;
+        height: 24px;
+        background: oklch(0 0 0 / 0.1);
+      }
+      .box {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        background: oklch(0 0 0);
+      }
+      .entry {
+        position: relative;
+        width: 200px;
+        height: 32px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: oklch(0 0 0);
+        font: 400 16px / 1.5 sans-serif;
+      }
       .spacer {
         height: 1000px;
       }
@@ -200,5 +246,9 @@
     <div class="grid"><span class="t">Sample text</span></div>
     <div class="rtl"><span class="t">Sample text</span></div>
     <div class="vertical"><span class="t">Sample text</span></div>
+    <div class="surface"><span class="box"></span></div>
+    <div class="field">
+      <input class="entry" value="Sample text" aria-label="Sample" />
+    </div>
   </body>
 </html>
