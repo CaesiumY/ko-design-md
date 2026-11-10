@@ -358,6 +358,12 @@ export function collectContrast(): Collected {
       // Not a capture but a change of units: a zoomed box's rect is read in
       // zoomed pixels and a pseudo-element's own lengths may not be.
       ["zoom", c.zoom, "1"],
+      // Over-constrained, a box gives way on its inline-end side: `right` in
+      // left-to-right horizontal text, but `left` in right-to-left text, and
+      // another axis altogether in vertical text. The box is placed from
+      // `left` and `top`, so only the first is certain.
+      ["direction", c.direction, "ltr"],
+      ["writing-mode", c.writingMode, "horizontal-tb"],
     ]
       .filter(([, value, initial]) => value !== initial)
       .map(([name, value]) => `${name}: ${value}`)

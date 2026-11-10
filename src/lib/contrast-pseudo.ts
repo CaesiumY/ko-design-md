@@ -68,7 +68,9 @@ export interface RawPseudo {
    * can capture or move a positioned box under a rule the collector does not
    * walk — `will-change`, containment, a size container, `backdrop-filter`,
    * perspective, a 3D context, a motion path — or `zoom`, which can put the
-   * box and its containing block in different units. On the pseudo-element
+   * box and its containing block in different units, or a writing direction
+   * other than left-to-right horizontal, in which `left` can be the side
+   * that gives way. On the pseudo-element
    * alone: a `filter`, `box-shadow`, `outline` or `border-image`, which paint
    * past the box, a grid placement, which makes one grid area its
    * containing block, and self-alignment (`justify-self`, `align-self`) or
@@ -156,9 +158,11 @@ function mayReach(p: RawPseudo): boolean {
   const v = lengthsOf(p)
   if (v === null) return true
 
-  // `left` and never `right`: when `left`, `right` and `width` are all set,
-  // `right` is the one that gives way, yet computed style still reports it as
-  // written — a box built from it lands somewhere the pseudo-element is not.
+  // `left` and never `right`: when `left`, `right` and `width` are all set in
+  // left-to-right horizontal text — the only writing direction that gets this
+  // far, see `unsure` — `right` is the one that gives way, yet computed style
+  // still reports it as written, so a box built from it lands somewhere the
+  // pseudo-element is not.
   const x0 = cb.left + v.left + v.marginLeft
   const y0 = cb.top + v.top + v.marginTop
   const contentBox = p.boxSizing !== "border-box"
