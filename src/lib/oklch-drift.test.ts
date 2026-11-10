@@ -493,6 +493,27 @@ describe("findPreviewDrift", () => {
     ).toEqual(["gray-06"])
   })
 
+  it.each([
+    [
+      "a MathML <style>",
+      "<math><style><mi><style>:root { --gray-07: oklch(0.99 0 0); }</style></mi></style></math>",
+    ],
+    [
+      "an SVG <style>",
+      "<svg><style><svg><style>:root { --gray-07: oklch(0.99 0 0); }</style></svg></style></svg>",
+    ],
+  ])(
+    "reads a stylesheet nested inside %s, as the browser does",
+    (_label, nested) => {
+      // A foreign `<style>` holds markup; an element inside it that returns to
+      // HTML or SVG may hold a `<style>` the browser applies.
+      const sheet = "<style>:root { --gray-06: oklch(0.68 0 0); }</style>"
+      expect(
+        findPreviewDrift(sheet + nested, readDefinitions(md)).map((f) => f.name)
+      ).toEqual(["gray-06", "gray-07"])
+    }
+  )
+
   // A `<style>` written inside an attribute value is not a stylesheet, and a
   // `<script>` there does not swallow the stylesheet after it.
   it.each([

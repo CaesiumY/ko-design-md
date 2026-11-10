@@ -762,17 +762,20 @@ function styleBlocks(previewHtml: string): Array<string> {
         walk((node as DefaultTreeAdapterTypes.Template).content, true)
         continue
       }
-      // A browser applies an HTML or SVG <style>; one parsed inside <math> is
-      // a MathML element, not a stylesheet, and its subtree holds none either.
       if (node.tagName !== "style") {
         walk(node, conditional)
         continue
       }
+      // A browser applies an HTML or SVG <style>; one parsed inside <math> is a
+      // MathML element, not a stylesheet. Its children are still walked: an
+      // <mi> or <mtext> inside it returns to HTML, and a <style> there applies.
       if (
         node.namespaceURI !== html.NS.HTML &&
         node.namespaceURI !== html.NS.SVG
-      )
+      ) {
+        walk(node, conditional)
         continue
+      }
       // A <style> applies when its type is absent, empty or `text/css`, as the
       // HTML spec has it. Any media other than absent, empty or `all` is
       // treated as conditional: the query is not evaluated, so even `screen`
@@ -783,7 +786,7 @@ function styleBlocks(previewHtml: string): Array<string> {
           ?.value.trim()
           .toLowerCase()
       const type = attr("type")
-      if (type !== undefined && type !== "" && type !== "text/css") continue
+      const isCss = type === undefined || type === "" || type === "text/css"
       const media = attr("media")
       const applies =
         !conditional && (media === undefined || media === "" || media === "all")
@@ -796,7 +799,11 @@ function styleBlocks(previewHtml: string): Array<string> {
         .join("")
       // CSS drops CDO and CDC (`<!--`, `-->`) as tokens; blanked to spaces.
       const body = text.replace(/<!--|-->/g, (t) => " ".repeat(t.length))
-      blocks.push(applies ? body : `@conditional-style {\n${body}\n}`)
+      if (isCss)
+        blocks.push(applies ? body : `@conditional-style {\n${body}\n}`)
+      // An SVG <style> holds markup, so an element inside it may hold another
+      // stylesheet (an HTML <style> is raw text and has no element children).
+      walk(node, conditional)
     }
   }
   walk(document, false)
