@@ -533,6 +533,20 @@ describe("findPreviewDrift", () => {
     ).toEqual(["gray-06"])
   })
 
+  // The older "in select" rules drop every start tag but a few, so a raw-text
+  // element there loses its tag and its content becomes markup, while Chromium
+  // reads it as text. A <style> after a dropped <noscript> would then read as
+  // applied here and hide a wrong value the screen paints.
+  it.each(["noscript", "xmp", "title", "div"])(
+    "refuses a <%s> inside <select>, a tag parse5 drops and Chromium keeps",
+    (tag) => {
+      const html = `<style>:root { --gray-06: oklch(0.68 0 0); }</style><select><${tag}></select><style>:root { --gray-07: oklch(0.99 0 0); }</style></${tag}></select>`
+      expect(() => findPreviewDrift(html, readDefinitions(md))).toThrow(
+        new RegExp(`<select>.*<${tag}>`)
+      )
+    }
+  )
+
   // A `<style>` written inside an attribute value is not a stylesheet, and a
   // `<script>` there does not swallow the stylesheet after it.
   it.each([

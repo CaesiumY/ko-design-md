@@ -732,10 +732,13 @@ function normaliseSelector(text: string): string {
  * and a CDATA section is text. Only the element's own text children are its
  * stylesheet, as the browser reads it.
  *
- * parse5 follows the HTML parser before Chromium's customizable `<select>`, so
- * it drops a `<style>` inside `<select>` that Chromium 153 applies. Rather than
+ * parse5 follows the HTML parser before Chromium's customizable `<select>`:
+ * inside `<select>` it drops every start tag but a few, so a `<style>` there,
+ * which Chromium 153 applies, is lost, and a raw-text element such as
+ * `<noscript>` loses its tag and lets its content read as markup. Rather than
  * pass a value the screen paints, this throws when a `<select>`'s source holds
- * `<style` at all, even as text in a comment, a script or an attribute value.
+ * any other start tag, even as text in a comment, a script or an attribute
+ * value. Catalogue previews put only `<option>` there.
  *
  * A `<style>` that applies only conditionally (a `media` attribute, or inside
  * `<template>`) is wrapped in an at-rule here, so its declarations are never
@@ -756,8 +759,8 @@ function styleBlocks(previewHtml: string): Array<string> {
   ): void => {
     for (const node of parent.childNodes) {
       if (!("tagName" in node)) continue
-      // The parser drops a <style> start tag inside <select>, so the tree
-      // cannot show one; the element's own source can.
+      // The parser drops most start tags inside <select>, so the tree cannot
+      // show them; the element's own source can.
       if (node.tagName === "select" && node.namespaceURI === html.NS.HTML) {
         // With no source location the check cannot look, so it stops too.
         const at = node.sourceCodeLocation
@@ -767,10 +770,26 @@ function styleBlocks(previewHtml: string): Array<string> {
               at.endTag?.startOffset ?? at.endOffset
             )
           : "<style>"
-        if (/<style[\s/>]/i.test(inner))
+        // The tags the older "in select" rules keep or act on.
+        const kept = new Set([
+          "option",
+          "optgroup",
+          "hr",
+          "select",
+          "input",
+          "keygen",
+          "textarea",
+          "script",
+          "template",
+        ])
+        const dropped = [...inner.matchAll(/<([a-z][^\s/>]*)/gi)]
+          .map((m) => m[1].toLowerCase())
+          .find((tag) => !kept.has(tag))
+        if (dropped !== undefined)
           throw new Error(
-            "<select> holds a <style> this check cannot read: Chromium applies it, but parse5 drops it. Move the <style> into <head>. " +
-              "Text spelling `<style` inside the <select> (a comment, a script string, an attribute value) stops the check too; reword it."
+            `<select> holds <${dropped}>, which parse5 drops while Chromium 153 keeps it, so this check cannot read the page as the browser does. ` +
+              `Move the <${dropped}> out of the <select> (a <style> goes into <head>). ` +
+              "Text spelling a tag inside the <select> (a comment, a script string, an attribute value) stops the check too; reword it."
           )
       }
       // A <template>'s markup is its content fragment, not its children. Inside
