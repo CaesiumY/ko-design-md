@@ -457,6 +457,9 @@ export function definitionsForSlug(
  * produce hundreds of bogus hits. Restricting to EXACT names outside any
  * `[data-theme="dark"]` block gives zero false positives across the catalogue
  * while still catching the 11st defect this was written for.
+ *
+ * Throws UnreadableStylesheetError when the preview's stylesheets cannot be
+ * read as the browser reads them (a start tag parse5 drops inside `<select>`).
  */
 export function findPreviewDrift(
   previewHtml: string,
@@ -526,6 +529,9 @@ export interface RoleChainFinding extends DriftFinding {
  * light `var()` in the dark theme; that declaration is held to the dark row as
  * well. A dark target named without its `dark-` prefix counts only where the
  * dark root redeclares that step (RoleChains.rebound).
+ *
+ * Throws UnreadableStylesheetError when the preview's stylesheets cannot be
+ * read as the browser reads them (a start tag parse5 drops inside `<select>`).
  */
 export function findRoleChainDrift(
   previewHtml: string,
@@ -558,6 +564,9 @@ export function findRoleChainDrift(
  * one `var()`), how many theme-root ones it leaves out as literals (`literal`),
  * counting each scope's last theme-root declaration once, and how many role
  * declarations sit outside a theme-root block (`scoped`), each counted.
+ *
+ * Throws UnreadableStylesheetError when the preview's stylesheets cannot be
+ * read as the browser reads them (a start tag parse5 drops inside `<select>`).
  */
 export function roleChainCoverage(
   previewHtml: string,
@@ -719,6 +728,18 @@ function normaliseSelector(text: string): string {
 }
 
 /**
+ * A preview whose stylesheets this module cannot read as the browser does.
+ * Callers that read many previews report it per preview and keep going; any
+ * other error is a bug and propagates.
+ */
+export class UnreadableStylesheetError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = "UnreadableStylesheetError"
+  }
+}
+
+/**
  * The start tags the older "in select" parser rules keep or act on inside a
  * `<select>`; parse5 drops every other. `<html>` merges its attributes into
  * the document's, as in the browser, and holds no stylesheet.
@@ -792,7 +813,7 @@ function styleBlocks(previewHtml: string): Array<string> {
           .map((m) => m[1].toLowerCase())
           .find((tag) => !SELECT_KEEPS.has(tag))
         if (dropped !== undefined)
-          throw new Error(
+          throw new UnreadableStylesheetError(
             `<select> holds <${dropped}>, which parse5 drops while Chromium 153 keeps it, so this check cannot read the page as the browser does. ` +
               `Move the <${dropped}> out of the <select> (a <style> goes into <head>). ` +
               "Text spelling a tag inside the <select> (a comment, a script string, an attribute value) stops the check too; reword it."

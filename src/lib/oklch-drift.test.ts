@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest"
 import {
+  UnreadableStylesheetError,
   alignToPreviewNames,
   conflictingDefinitions,
   findPreviewDrift,
@@ -523,6 +524,9 @@ describe("findPreviewDrift", () => {
       "<select><option>A</option><style>:root { --gray-07: oklch(0.99 0 0); }</style></select>"
     expect(() => findPreviewDrift(sheet + select, readDefinitions(md))).toThrow(
       /<select>.*<style>/
+    )
+    expect(() => findPreviewDrift(sheet + select, readDefinitions(md))).toThrow(
+      UnreadableStylesheetError
     )
     // A <select> with no <style> in it reads as before.
     expect(

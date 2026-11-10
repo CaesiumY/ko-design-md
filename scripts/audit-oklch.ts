@@ -7,6 +7,7 @@ import {
 } from "../src/lib/oklch-sync"
 import { auditOklch } from "../src/lib/oklch-audit"
 import {
+  UnreadableStylesheetError,
   definitionsForSlug,
   findPreviewDrift,
   findRoleChainDrift,
@@ -302,7 +303,7 @@ for (const slug of slugs) {
   const html = fs.readFileSync(preview, "utf8")
   // A preview this check cannot read (a start tag parse5 drops inside <select>)
   // stops only its own slug, named, and the run fails; the other slugs are
-  // still read.
+  // still read. Any other error is a bug and propagates.
   let found: ReturnType<typeof findPreviewDrift>
   let chained: ReturnType<typeof findRoleChainDrift>
   try {
@@ -314,7 +315,8 @@ for (const slug of slugs) {
     // 않는다 — 카탈로그는 전부 병합 레이아웃이다.
     chained = findRoleChainDrift(html, roleChainsForSlug(markdown, slug))
   } catch (e) {
-    console.error(`${slug}/${previewFile}: ${(e as Error).message}`)
+    if (!(e instanceof UnreadableStylesheetError)) throw e
+    console.error(`${slug}/${previewFile}: ${e.message}`)
     process.exitCode = 1
     continue
   }
