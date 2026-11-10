@@ -596,7 +596,7 @@ detour 였다. 비텍스트가 정확값이 아닌 **플로어**인 이유는 �
 표가 서술하는 것과 다른 렌더에 대해 답하게 된다. 입력은 run `42878751952`(#691 의 PR #693 head `2629c78` — 가상 요소의 칠이 읽는 줄에 닿지 않는 것이 확실하면
 `pseudo-background` 보류에서 빼는 측정기 변경이고, 팔레트는 바뀌지 않았다. 앞 run `42717277914` 와 달라진 것은 보류에서
 풀려 판정된 행이다. 경계선 표에서는 bezier 와 krds 의 텍스트 `both-published` 가 한 행씩, 미달 표에서는 11st, bezier,
-class101, lg-electronics, line-design-system, ridi 의 행이 늘었다. 그 앞 run `42717277914` 는 #684 의 head `eba739d` — 팀스파르타의 번들 팔레트를 발행 `@teamsparta/stack-tokens` 단계로 옮기고 프리뷰를 그 값과 패키지 컴포넌트 토큰으로 다시 쓴 브랜치에 #683 이 머지된 main 을 합치고, 다크 brand 글자와 green 배지 글자를 기준을 넘는 색으로 고친 재집계다. 앞 run `42617443024`(#683 의 head `3dfda22`, vapor-ui 의 색을 `@vapor-ui/core` 1.7.0 으로 옮긴 재집계)과 달라진 것은 두 표의 teamsparta 행이다. #683 의 run 과 그 앞 run `42606437083`(#670 의 병합 head `fc77f54`) 사이에는 두 표의 행이 같고 vapor-ui 팔레트의 지문만 달랐다. #614 의 chzzk 와 laftel 은 run `42597494828` 에서 분류에 들어왔다)다.
+class101, lg-electronics, line-design-system, ridi 의 행이 늘었다. 그 run `42717277914` 는 #684 의 head `eba739d` — 팀스파르타의 번들 팔레트를 발행 `@teamsparta/stack-tokens` 단계로 옮기고 프리뷰를 그 값과 패키지 컴포넌트 토큰으로 다시 쓴 브랜치에 #683 이 머지된 main 을 합치고, 다크 brand 글자와 green 배지 글자를 기준을 넘는 색으로 고친 재집계다. 앞 run `42617443024`(#683 의 head `3dfda22`, vapor-ui 의 색을 `@vapor-ui/core` 1.7.0 으로 옮긴 재집계)과 달라진 것은 두 표의 teamsparta 행이다. #683 의 run 과 그 앞 run `42606437083`(#670 의 병합 head `fc77f54`) 사이에는 두 표의 행이 같고 vapor-ui 팔레트의 지문만 달랐다. #614 의 chzzk 와 laftel 은 run `42597494828` 에서 분류에 들어왔다)다.
 그 뒤에 더해진 항목은 다음 재집계 때 두 표에 들어가고, 그전까지는 표에 없다(아래 「게이트는 이것을 어떻게 다루나」). 미달과
 경계선이 모두 0 인 항목도 표에 없다.
 
@@ -859,7 +859,7 @@ push 하고, 합본을 잰 자기 CI run 으로 명령을 다시 돌린다(루�
 | zigbang | non-text | 33 | 0 | 0 | 0 | 33 |
 
 **어느 슬러그부터 (2026-11-11 재집계 기준).** 고칠 수 있는 칸(`one-token`·`no-token`)이 큰 쪽은 텍스트에서
-line-design-system 이고 bezier, gmarket, ridi, toss, 11st, wanted 가 뒤따른다(수는 위 표에 있다). line-design-system 이
+line-design-system 이고 bezier, gmarket, ridi, toss 와 11st(같은 수), wanted 가 뒤따른다(수는 위 표에 있다). line-design-system 이
 bezier 를 앞지른 것은 run `42878751952` 재집계에서 가상 요소 보류가 풀린 텍스트 미달이 고칠 수 있는 칸에 들어왔기
 때문이다. 단 #550 의 슬러그 티켓으로 이미 처리한 슬러그는, 텍스트
 칸이 행마다 처리를 마친 뒤의 남은 행일 수 있다 — 무엇으로 처리했는지는 그 티켓의 PR 본문에 있고, 이 문단에는 쌓지
