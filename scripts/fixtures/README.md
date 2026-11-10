@@ -72,8 +72,9 @@ and re-derive those; never paste the measurer's new output into them.
 Another synthetic document under the same rule (#691). It covers text next to
 a painted `::before` or `::after`, which the sweep releases only when the
 pseudo-element's box, worked out from its computed geometry, certainly misses
-the line's sample point — and nothing it paints reaches past that box. No text in the samsung file sits beside a positioned
-pseudo-element, and the file cannot gain one.
+the line's sample point — and nothing it paints reaches past that box. No
+text in the samsung file sits beside a positioned pseudo-element, and the
+file cannot gain one.
 
 Every expectation on it is derived by hand in `PSEUDO_ANCHORS`
 (`scripts/audit-contrast-oracle.ts`): black text on a white panel, 21:1, and

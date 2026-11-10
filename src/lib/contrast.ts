@@ -309,8 +309,7 @@ export interface RawTextLine {
   /**
    * Why THIS line cannot be read, as the collector saw it — something over
    * it, a filter behind it. A pseudo-element is not among them: it travels
-   * on its layer, and `readLine` adds its reason when its box may cover the
-   * line.
+   * on its layer, and `readLine` adds its reason when it may reach the line.
    * Held per line because a wrapped run can cross a band that one line sits on
    * and another does not.
    */

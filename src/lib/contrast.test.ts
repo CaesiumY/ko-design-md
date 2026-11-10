@@ -831,7 +831,7 @@ describe("a pseudo-element holds only a reading it can reach (#691)", () => {
     )
   })
 
-  it("holds when any one of several pseudo-elements may cover the point", () => {
+  it("holds when any one of several pseudo-elements may reach the point", () => {
     expect(textOver([rule(), pseudo()])).toMatchObject(held)
   })
 

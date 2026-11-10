@@ -75,11 +75,11 @@ export interface RawPseudo {
   point: { x: number; y: number }
 }
 
-/** Whether any painted pseudo-element in a stack may cover its sample point. */
+/** Whether any painted pseudo-element in a stack may reach its sample point. */
 export function pseudoInTheWay(
   stack: ReadonlyArray<{ pseudos?: Array<RawPseudo> }>
 ): boolean {
-  return stack.some((layer) => (layer.pseudos ?? []).some(mayCover))
+  return stack.some((layer) => (layer.pseudos ?? []).some(mayReach))
 }
 
 // A length exactly as computed style writes a resolved one. Anything else is
@@ -134,7 +134,7 @@ function lengthsOf(
   return out
 }
 
-function mayCover(p: RawPseudo): boolean {
+function mayReach(p: RawPseudo): boolean {
   if (p.position !== "absolute" && p.position !== "fixed") return true
   if ([p.transform, p.translate, p.rotate, p.scale].some((v) => v !== "none")) {
     return true
