@@ -300,7 +300,7 @@ export function collectContrast(): Collected {
         borderRightWidth: cs.borderRightWidth,
         borderBottomWidth: cs.borderBottomWidth,
         borderLeftWidth: cs.borderLeftWidth,
-        containingBlock: containingBlockOf(el, cs.position === "fixed"),
+        containingBlock: containingBlockOf(el, cs),
         point: { x, y },
       })
     }
@@ -348,6 +348,9 @@ export function collectContrast(): Collected {
       ["perspective", c.perspective, "none"],
       ["transform-style", c.transformStyle, "flat"],
       ["offset-path", c.offsetPath, "none"],
+      // Not a capture but a change of units: a zoomed box's rect is read in
+      // zoomed pixels and a pseudo-element's own lengths may not be.
+      ["zoom", c.zoom, "1"],
     ]
       .filter(([, value, initial]) => value !== initial)
       .map(([name, value]) => `${name}: ${value}`)
@@ -359,11 +362,14 @@ export function collectContrast(): Collected {
   // overlay candidates' rects are: the page scrolls between samples.
   function containingBlockOf(
     el: Element,
-    fixed: boolean
+    pseudo: CSSStyleDeclaration
   ): RawPseudo["containingBlock"] {
+    const fixed = pseudo.position === "fixed"
     // Read over the whole chain, not only up to the containing block: one
-    // of these above it could still be what really captures the box.
-    const unsure: Array<string> = []
+    // of these above it could still be what really captures the box. The
+    // pseudo-element's own count too — a motion path moves it while its
+    // `transform` still reads `none`.
+    const unsure = unsureOf(pseudo)
     for (let up: Element | null = el; up !== null; up = up.parentElement) {
       unsure.push(...unsureOf(getComputedStyle(up)))
     }

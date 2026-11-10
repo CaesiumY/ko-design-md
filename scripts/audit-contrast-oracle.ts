@@ -416,8 +416,8 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  * The pseudo-element fixture's claims (#691): a painted pseudo-element holds a
  * reading only when its box can cover the sample point.
  *
- * Both runs are black (luminance 0) on a white panel (luminance 1), so a
- * reading taken from the panel is (1 + 0.05) / (0 + 0.05) = 21:
+ * All three runs are black (luminance 0) on a white panel (luminance 1), so
+ * a reading taken from the panel is (1 + 0.05) / (0 + 0.05) = 21:
  *
  * - `.side` draws a block level with the line at x 0..100 of the panel, and
  *   the line's sample point is at x 150, so the block is not in the way and

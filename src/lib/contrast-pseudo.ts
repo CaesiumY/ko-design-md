@@ -58,12 +58,13 @@ export interface RawPseudo {
      */
     transforms: Array<string>
     /**
-     * Every property, on the owner or any ancestor, that can capture a
-     * positioned box under a rule the collector does not walk —
-     * `will-change`, containment, a size container, `backdrop-filter`,
-     * perspective, a 3D context, a motion path — as `name: value`. Any one of
-     * them leaves the containing block a guess, so none is modelled: its
-     * presence holds the reading. The catalogue's previews have none.
+     * Every property, on the pseudo-element, its owner or any ancestor, that
+     * can capture or move a positioned box under a rule the collector does
+     * not walk — `will-change`, containment, a size container,
+     * `backdrop-filter`, perspective, a 3D context, a motion path, `zoom` — as
+     * `name: value`. Any one of them leaves the box a guess, so none is
+     * modelled: its presence holds the reading. The catalogue's previews have
+     * none.
      */
     unsure: Array<string>
   }
