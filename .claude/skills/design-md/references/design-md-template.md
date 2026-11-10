@@ -154,6 +154,7 @@ components:
 ## Known Gaps
 
 - {{리서치에서 끝내 확인하지 못한 것. 정직한 2~5개.}}
+- {{키가 아직 정해지지 않은 패키지 컴포넌트 토큰이 있으면 빠짐없이 하나씩, 이 꼴 그대로: `` `button.primary.radius` — 키 미정(패키지 컴포넌트 토큰) ``. 값은 본문 패키지 토큰 표에 있다고 덧붙여도 된다. 2~5개에 세지 않고, 하나만 있어도 이 절을 둔다.}}
 
 ## References
 
@@ -183,7 +184,22 @@ components:
 `components:` 에서 자주 틀리는 것 넷(#389):
 
 - **변형을 중첩하기.** `button-primary:` 아래 `hover:` 를 두면 표준 도구가 자식을 통째로
-  버린다. `button-primary-hover` 처럼 평평한 이름으로, 본문 `###` 과 같은 이름을 쓴다.
+  버린다. `button-primary-hover` 처럼 평평한 이름으로, 본문 `###` 과 같은 이름을 쓴다. 브랜드 토큰 패키지가
+  경로로 발행한 컴포넌트 토큰을 옮긴 행만은 그 경로를 케밥 표기로 이은 키를 쓰고, 끝의 색 단계(`background`, `text`)는
+  맵 속성(`backgroundColor`, `textColor`)으로, 그 `Hover` 꼴은 `-hover` 접미로 옮기며, 한 경로의 색 단계는 평소 꼴끼리 한 행, `Hover` 꼴끼리 한 `-hover` 행에 합친다
+  (`button.solidPrimary.background` 와 `.text` 는 `button-solid-primary` 한 행, `.backgroundHover` 와 `.textHover` 는
+  `button-solid-primary-hover` 한 행, #624 결정 6. 그 밖에 뺀 경로 단계는 본문에 적는다. 어느 단계를 빼도 되는지는 아직 정하지 않았으니 하나하나 적는다).
+  그 행의 색 값은 본문 패키지 토큰 표 첫 열의 경로(키가 합친 여러 행)로, 패키지가 발행하지 않은 다른 값(번들 스펙의
+  `rounded`, `height`, `padding`)은 그 컴포넌트의 `###` 펜스로 짝을 짓는다. 그 `###` 은 그 값 때문에 따로 맵 행을
+  둘 필요가 없다(#624 결정 5). 패키지가 맵이 받는 색 아닌 컴포넌트 토큰(경로 끝이 radius, height, padding, size, width, 타이포)이나
+  끝 단계가 `background`, `text` 로 시작하고 `Hover` 아닌 접미가 붙은 토큰(`backgroundPressed`, `backgroundSelected`, `textSubtle`. `checkbox.checked.background` 처럼 경로 중간의 상태는 해당 없음)이나 끝 색 단계가 `background`, `text`, `border`, `icon`, `accent`, `color` 어느 것으로도 시작하지 않는 토큰(`bg`, `fg`, `fill`, `surface`)을 발행하거나, 규칙대로 지은 최종 키(본문이 밝힌 단계 빼기까지 적용한 키)가 다른 키(다른 패키지 경로나 번들 컴포넌트의 `###` 이름이나 맵 행 키)와 겹치면 키가 아직 정해지지 않았으니
+  키를 짓지 않는다. 맵에 싣지 않고 본문 패키지 토큰 표에만 두며 `## Known Gaps` 에 `` `{package path}` — 키 미정(패키지 컴포넌트 토큰) `` 꼴의 불릿으로 적는다. 초안 확인
+  단계(Stage 7)가 그 목록을 메인테이너에게 보여 주고, 그 토큰의 키 짓기 규칙이 `stitch-format.md` 에 더해지기 전까지는
+  맵에 싣지 않는다(#624 결정 7. 작성 에이전트는 사용자에게 직접 물을 수 없다).
+  여덟 속성 밖의 패키지 컴포넌트 토큰(teamsparta `card.shadow` 같은 그림자)은 그런 표시 없이
+  본문 패키지 토큰 표에만 둔다. 끝 색 단계가 `border`, `icon`, `accent`, `color` 로 시작하는 색 토큰(`border`, `borderDisabled`, `icon`,
+  `accent`, `color`. 예: `spinner.indicator.color`)도 표시도 맵 행도 없이 본문 패키지 토큰 표에만 둔다(#624 결정 8). 다른 컴포넌트 행은 색이 발행 토큰을 가리켜도 `###` 이름을
+  따른다(`stitch-format.md`).
 - **값에 산문 섞기.** `28 또는 32`·`top-left (10, 10)` 은 토큰이 아니라 노트다. 본문에 쓴다.
 - **치수에 단위 빼먹기.** 컴포넌트의 `height`·`padding` 등도 Dimension 이다. 토큰이 있으면
   참조, 없으면 `48px` 처럼 `px`·`em`·`rem` 을 붙인다(`%`·`vw` 는 명세의 Dimension 이 아니라 본문에만). 값은 하나다 — `padding: 12px 16px` 같은 여러 값
