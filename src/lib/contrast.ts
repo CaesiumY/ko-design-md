@@ -705,8 +705,9 @@ const EMPTY_CONTENT = '""'
  * - under the text or under its owner's background, either way: one whose
  *   owner's own box does not hold the whole area, so its background is not
  *   under all of it, and one with an element from the one read up to the
- *   owner that paints a background, itself or by its own pseudo-elements, and
- *   takes no pointer events, which no stack shows, one whose owner's
+ *   owner that draws anything — a background, a border, a shadow, an outline
+ *   or a backdrop filter, itself or by its own pseudo-elements — and takes no
+ *   pointer events, which no stack shows, one whose owner's
  *   background is the canvas's — the root, or a `body` whose background
  *   passes on to the canvas — so is not painted on its box, and one whose
  *   owner's background colour is clipped short of its border box.
