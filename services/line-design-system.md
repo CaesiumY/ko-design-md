@@ -105,7 +105,7 @@ elevation:
   ldsg-shadow-on-gray-300: 0px 1px 15px oklch(0 0 0 / 0.04)
 ---
 
-라인은 일본과 대만 중심의 메신저 패밀리 서비스이고, LINE Green과 검정, 11단 회색으로 조용한 화면을 짜고 상태는 투명도로만 바꾼다 [src:1][src:2][src:4].
+라인은 일본과 대만 중심의 메신저 패밀리 서비스이고 [src:4], LINE Green과 검정, 회색 램프로 조용한 화면을 짜고 상태 변화는 주로 투명도로 나타낸다 [src:1][src:2].
 
 ## Brand & Style
 
