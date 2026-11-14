@@ -1,4 +1,3 @@
-import type { CopySurface } from "@/hooks/use-copy-feedback"
 import { CheckIcon, CopyIcon } from "@/components/ui/icons"
 import { useCopyFeedback } from "@/hooks/use-copy-feedback"
 import { cn } from "@/lib/utils"
@@ -6,13 +5,6 @@ import { cn } from "@/lib/utils"
 interface Props {
   raw: string
   filename: string
-  /**
-   * Which copy this is. Required and caller-supplied because this component is
-   * used more than once on the same page for different payloads - the md and the
-   * token sidecar - and a shared default would merge them into one number.
-   */
-  surface: CopySurface
-  slug: string
   /**
    * Idle-state button text. Defaults to "복사".
    *
@@ -28,12 +20,10 @@ interface Props {
 export function InlineCopyButton({
   raw,
   filename,
-  surface,
-  slug,
   label = "복사",
   className,
 }: Props) {
-  const { copied, copy } = useCopyFeedback(raw, { surface, slug })
+  const { copied, copy } = useCopyFeedback(raw)
 
   // Visible label first so it is contained in the accessible name — voice
   // control users say what they see (WCAG 2.5.3); the filename trails as extra

@@ -8,7 +8,6 @@ import {
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import { TanStackDevtools } from "@tanstack/react-devtools"
 import { Provider as JotaiProvider } from "jotai"
-import { Analytics } from "@vercel/analytics/react"
 import appCss from "../styles.css?url"
 import { buildNotFoundSeo } from "@/lib/seo"
 import { absoluteUrl } from "@/lib/site-config"
@@ -148,7 +147,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             },
           ]}
         />
-        <Analytics />
         <Scripts />
       </body>
     </html>

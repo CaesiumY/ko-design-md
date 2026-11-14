@@ -324,7 +324,7 @@ describe("agentResponse", () => {
   // `normalizePathname` strips the trailing slash, so the mount's own root
   // arrives as `/_serverFn` - which no prefix in the list matches. Left that
   // way the module answers a live mount's root with a markdown 404.
-  it.each(["/_serverFn", "/_vercel", "/_serverFn/", "/_vercel/x"])(
+  it.each(["/_serverFn", "/_serverFn/", "/_serverFn/x"])(
     "leaves %s to the mount that owns it",
     (path) => {
       expect(agentResponse(get(path, "text/markdown"))).toBeUndefined()
@@ -334,20 +334,21 @@ describe("agentResponse", () => {
   // Only mounts with evidence behind them are excluded. `/_build/` was in that
   // list on the first pass and nothing in this app serves it - a prefix nobody
   // owns keeps the 500 alive under it, which is the defect this fixes (#376).
-  it("answers a /_build path, since no mount here owns that prefix", () => {
-    expect(
-      agentResponse(get("/_build/anything", "text/markdown"))?.status
-    ).toBe(404)
-  })
+  // `/_vercel/` left the list with the move to Cloudflare, which serves
+  // nothing there.
+  it.each(["/_build/anything", "/_vercel/insights/script.js"])(
+    "answers %s, since no mount here owns that prefix",
+    (path) => {
+      expect(agentResponse(get(path, "text/markdown"))?.status).toBe(404)
+    }
+  )
 
   // A browser fetching an asset under the same prefix sends the bare wildcard.
   // It takes html, so it keeps the old route: the static layer or SSR answers,
   // and this module stays out of the way.
   it("leaves a wildcard request for a /_ path to the layers that serve assets", () => {
-    expect(agentResponse(get("/_vercel/insights/script.js"))).toBeUndefined()
-    expect(
-      agentResponse(get("/_vercel/insights/script.js", "*/*"))
-    ).toBeUndefined()
+    expect(agentResponse(get("/_assets/script.js"))).toBeUndefined()
+    expect(agentResponse(get("/_assets/script.js", "*/*"))).toBeUndefined()
   })
 
   it("ignores non-GET methods", () => {

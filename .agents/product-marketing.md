@@ -167,26 +167,19 @@ KRDS 등) — 브랜드 발행물이라 권위는 최고지만 형식이 통일�
 
 ## Proof Points
 
-**Metrics:** 계측은 붙어 있으나(`@vercel/analytics`, 2026-08-25 배선) **인용할 수
-있는 값이 없다.** 쌓이는 중이라서가 아니라 **조회할 수 없어서다** — Vercel Web
-Analytics 는 커스텀 이벤트 조회를 Pro·Enterprise 플랜에만 열어 두어, 현재 플랜에서
-이벤트 집계를 요청하면 402 가 돌아온다(2026-09-13 확인). 페이지뷰는 정상 조회된다.
-이벤트가 수집은 되고 조회만 막힌 것인지는 확인하지 못했다. 조회 수단은 당분간
-마련하지 않기로 했다(#336).
+**Metrics:** 인용할 수 있는 값은 페이지뷰와 방문자뿐이다(Cloudflare Web Analytics, 도메인
+이전 뒤 대시보드에서 자동 설정을 켠 날부터). 복사와 다운로드 이벤트는 2026-08-25 부터
+Vercel Analytics 로 보냈지만 현재 플랜에서
+조회할 수 없었고(2026-09-13 확인, #336), 호스팅을 Cloudflare 로 옮기며 코드에서 걷어 냈다.
+Cloudflare Web Analytics 는 커스텀 이벤트를 지원하지 않는다.
 
-- **primary metric = `design_md_copy` + `design_md_download`** — DESIGN.md 를
-  가져간 횟수. 복사와 다운로드는 같은 전환이라 합산하되, 두 경로의 비중을 볼 수
-  있게 이벤트 이름은 갈라 둔다(#336).
-- `design_md_copy` — DESIGN.md 전체를 넘기는 두 표면(`design-md-hero`·
-  `design-md-tab`)만 이 이름으로 발행된다.
-- `asset_copy` — 토큰 사이드카·색상 스와치·스킬 설치 명령. 보조 신호라 KPI와
-  이름을 갈랐다. 한 이름으로 묶으면 스와치를 여덟 번 복사한 세션이 전환 8건으로
-  읽힌다.
-- `design_md_download` — 상세 페이지 사이드바의 DESIGN.md 파일 다운로드(항목 파일
-  `{slug}.md` 그대로).
-- 페이지뷰 — 이전부터 수집 중이고 조회된다.
+- **primary metric = DESIGN.md 복사 + 다운로드** — DESIGN.md 를 가져간 횟수(#336).
+  지금은 계측하지 않는다. 다시 붙이려면 커스텀 이벤트를 받는 도구가 필요하고, 그때도
+  복사와 다운로드는 합산하되 이름을 가르고, 토큰이나 스와치 복사는 KPI 와 따로 센다
+  (한 이름으로 묶으면 스와치를 여덟 번 복사한 세션이 전환 8건으로 읽힌다).
+- 페이지뷰: Cloudflare Web Analytics 로 도메인 이전 뒤 대시보드에서 자동 설정을 켠 날부터 수집된다. Vercel 시절 값은 이어지지 않고, 그 사이 기간은 비어 있다.
 
-**이벤트 값은 비어 있다.** 조회 수단이 생기기 전에 이 문서에 숫자를 옮겨 적지 말 것.
+**이벤트 값은 없다.** 이벤트를 보내지 않으므로, 다시 계측하기 전에 이 문서에 숫자를 옮겨 적지 말 것.
 
 **Customers:** 공개 사용 사례 미수집. README의 Showcase 섹션도 아직 없다.
 
@@ -213,12 +206,14 @@ Analytics 는 커스텀 이벤트 조회를 Pro·Enterprise 플랜에만 열어 
 4. 새 항목 기여 PR
 
 **Current metrics:** PRD의 V0 목표는 주간 순방문 500+, Copy 1,000+/월, star 100+,
-자발 언급 2~3건. 넷 중 셋(트래픽·Copy·스킬 설치)은 **계측 배선이 끝났고 값이 쌓이는
-중**이며, star 와 자발 언급은 수동 확인이다. **실측치를 인용하기 전에 대시보드를
+자발 언급 2~3건. 이 중 계측되는 것은 트래픽(Cloudflare Web Analytics 의 페이지뷰와
+방문자, 도메인 이전 뒤 자동 설정을 켠 날부터)뿐이고, Copy 와 스킬 설치 명령 복사는 2026-11 Cloudflare 로 옮기며 계측을 걷어
+냈다. star 와 자발 언급은 수동 확인이다. **실측치를 인용하기 전에 대시보드를
 먼저 볼 것 — 이 문서에는 아직 값이 없다.**
 
 ## Changelog
 *Newest first. One line per revision: what changed and why.*
+- v7 (2026-11-14) — Metrics 갱신: Cloudflare 로 이전하며 복사와 다운로드 이벤트를 걷어 냄. 페이지뷰만 Cloudflare Web Analytics 로 남음.
 - v6 (2026-09-26) — `/DESIGN.md` 를 변환본이 아니라 같은 문서의 명세 파일명 주소로 고침(#421, 어댑터 폐지).
 - v5 (2026-09-16) — 용어를 `CONTEXT.md` 용어집에 맞춤(#354): 항목 문서는 DESIGN.md, 형식은 카탈로그 형식, Google 표준은 DESIGN.md 명세, `/DESIGN.md` 는 표준 도구용 발행본. 출처 증거 줄은 frontmatter `sources` 제거(#364)에 맞게, primary metric 줄은 v3 의 합산 정의에 맞게 고침.
 - v4 (2026-09-14) — PRD 가 to-spec 모양의 제품 스펙으로 재작성됨. 이 문서가 인용한 포지셔닝·primary metric·지표 수치·로드맵(MCP V1.x)은 보존돼 본문은 그대로다. 규격 세부의 정본 사슬을 머리말에 한 줄 추가.
