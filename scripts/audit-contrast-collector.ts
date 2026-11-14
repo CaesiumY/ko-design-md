@@ -351,6 +351,11 @@ export function collectContrast(): Collected {
     )
   }
 
+  // Whether an element is on screen at all: not hidden, not `display: none`,
+  // not faded out. What it draws is not asked.
+  const elementShown = (cs: CSSStyleDeclaration): boolean =>
+    cs.visibility !== "hidden" && cs.display !== "none" && ownOpacity(cs) !== 0
+
   // Whether an element draws anything on screen: a background, or a border,
   // shadow, outline or backdrop filter, and it is not hidden or faded out.
   const elementDraws = (cs: CSSStyleDeclaration): boolean =>
@@ -372,8 +377,8 @@ export function collectContrast(): Collected {
   }
 
   // Whether anything inside `owner` that is not `from` or one of its
-  // ancestors paints with `pointer-events: none`, itself or by its own
-  // pseudo-element: no hit list shows it (#692). Each owner's painters are
+  // ancestors is shown with `pointer-events: none`, or has a pseudo-element
+  // that draws with it: no hit list shows it (#692). Each owner's painters are
   // listed once per page.
   const unhitPainters = new Map<Element, Array<Element>>()
   const unhitPaintIn = (owner: Element, from: Element): boolean => {
@@ -381,7 +386,10 @@ export function collectContrast(): Collected {
     if (painters === undefined) {
       painters = [...owner.querySelectorAll("*")].filter((d) => {
         const cs = getComputedStyle(d)
-        if (cs.pointerEvents === "none" && elementDraws(cs)) return true
+        // Any element shown at all, not only one that paints: its glyphs,
+        // an image or a canvas draw as surely as a background does, and
+        // listing what draws leaves a kind out.
+        if (cs.pointerEvents === "none" && elementShown(cs)) return true
         return (["::before", "::after"] as const).some((ps) => {
           const pcs = getComputedStyle(d, ps)
           return pcs.pointerEvents === "none" && pseudoDraws(pcs)

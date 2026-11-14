@@ -166,8 +166,9 @@ export interface RawPseudo {
    */
   chain: Array<OrderBox> | null
   /**
-   * Something inside the owner, off the chain, paints with `pointer-events:
-   * none` — itself or by its own `::before` or `::after`. No hit list shows
+   * Something inside the owner, off the chain, is shown with
+   * `pointer-events: none` — whatever it draws: a background, glyphs, an
+   * image — or has a `::before` or `::after` that draws with it. No hit list shows
    * it, so it may lie under what is read, over the owner's background or
    * under a wash of the owner's, unread. Where it is is not worked out: the box of a pseudo-element is its
    * containing block's, not its element's.

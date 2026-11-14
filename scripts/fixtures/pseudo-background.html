@@ -227,6 +227,12 @@
         no hit list, and read as the wash alone over white the run would pass
         at 16.67. A painter that draws by its shadow, border, outline or
         backdrop filter holds it as one by its background does.
+      - `.glyph` puts a 50% black `::after` over a raised run, and under the
+        run a sibling with `pointer-events: none` and no background that
+        draws black full-block glyphs over the whole panel. On screen the run
+        is black on black under the wash, a fail; read as the wash over white
+        it would pass. Any element shown with `pointer-events: none` holds it,
+        whatever it draws.
     -->
     <style>
       html {
@@ -268,7 +274,8 @@
       .clipped,
       .aside,
       .atop,
-      .shade {
+      .shade,
+      .glyph {
         position: relative;
         width: 300px;
         height: 120px;
@@ -562,6 +569,25 @@
       .shade .t {
         position: relative;
       }
+      .glyph::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0 / 0.5);
+      }
+      .glyph .g {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        color: oklch(0 0 0);
+        font: 400 120px / 1 sans-serif;
+        letter-spacing: -0.2em;
+        white-space: nowrap;
+      }
+      .glyph .t {
+        position: relative;
+      }
       .clipped::before {
         content: "";
         position: absolute;
@@ -795,6 +821,10 @@
     </div>
     <div class="shade">
       <i class="sh"></i>
+      <span class="t">Sample text</span>
+    </div>
+    <div class="glyph">
+      <i class="g">█████</i>
       <span class="t">Sample text</span>
     </div>
   </body>
