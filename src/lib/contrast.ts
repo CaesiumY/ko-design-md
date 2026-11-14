@@ -16,7 +16,12 @@
 
 import { paintableColours, rgbaKey } from "./contrast-gradient"
 import { srgbToLinear } from "./oklch-convert"
-import { ownerBackgroundUnder, paintOrder, reach } from "./contrast-pseudo"
+import {
+  ownerBackgroundUnder,
+  paintOrder,
+  reach,
+  unhitPaintBetween,
+} from "./contrast-pseudo"
 import type { BackgroundImage } from "./contrast-gradient"
 import type { RawPseudo } from "./contrast-pseudo"
 
@@ -701,8 +706,9 @@ const EMPTY_CONTENT = '""'
  *   more than its box, one whose owner, a layer between it and what is
  *   read, or the element read itself, draws by a pseudo-element that is not
  *   read (`unreadPseudo`), and
- *   one whose owner holds anything else that paints and takes no pointer
- *   events (`unhitPaint`);
+ *   one with anything that paints and takes no pointer events inside its
+ *   owner, or near the area outside an owner that is no stacking context
+ *   (`unhitPaintBetween`);
  * - under its owner's background: one whose owner's colour is not opaque;
  * - under the text or under its owner's background, either way: one whose
  *   owner's own box does not hold the whole area, so its background is not
@@ -768,7 +774,7 @@ function pseudoEffect(
       }
       // Something else inside the owner paints out of the hit test's sight:
       // it may be under the text and over or under this paint, on any side.
-      if (p.unhitPaint) {
+      if (unhitPaintBetween(p)) {
         unsure = true
         continue
       }

@@ -174,6 +174,15 @@ export interface RawPseudo {
    * containing block's, not its element's.
    */
   unhitPaint: boolean
+  /**
+   * Something anywhere on the page, off the chain, does the same where it
+   * may reach the area: its own box overlaps it, or, for a pseudo-element
+   * placed `absolute`, its containing block does, or it is `fixed`. It
+   * matters only when the owner is no stacking context: its pseudo-elements
+   * then paint in the context around it, where such a thing can come
+   * between them and what is read.
+   */
+  unhitPaintNear: boolean
 }
 
 /**
@@ -639,6 +648,15 @@ const isPositioned = (b: OrderBox): boolean => b.position !== "static"
  * Whether an element makes a stacking context, or null when that is not
  * known from what was read.
  */
+/**
+ * Whether unhit paint can come between a pseudo-element and what is read:
+ * anything inside its owner (`unhitPaint`), or anything near the area outside
+ * an owner that is not certainly a stacking context (`unhitPaintNear`).
+ */
+export function unhitPaintBetween(p: RawPseudo): boolean {
+  return p.unhitPaint || (p.unhitPaintNear && makesContext(p.owner) !== true)
+}
+
 function makesContext(b: OrderBox): boolean | null {
   const maybe = b.contextProps.some((s) =>
     MAYBE_CONTEXT.some((name) => s.startsWith(`${name}:`))

@@ -248,6 +248,16 @@
         run is black on black, a fail; read as the wash over white it would
         pass at 16.67. The element read drawing by a pseudo-element not read
         holds it.
+      - `.beyond` is a white panel that is no stacking context (`z-index`
+        auto) with a `::before` of oklch(0.8 0 0) and a run raised to
+        `z-index: 1`. Its next sibling, absolutely placed over it with
+        `pointer-events: none` and no background, has a black `::before`.
+        The panel's wash and the sibling paint in the same positioned layer
+        of the context around them, in document order, and the run over
+        both: on screen black on black, a fail. The hit test skips the
+        sibling, and read as the grey wash over white the run would pass.
+        Unhit paint outside an owner that is no stacking context, near the
+        line, holds it.
     -->
     <style>
       html {
@@ -605,6 +615,41 @@
       .glyph .t {
         position: relative;
       }
+      .beyond-wrap {
+        position: relative;
+        width: 300px;
+        margin-bottom: 24px;
+      }
+      .beyond {
+        position: relative;
+        width: 300px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: oklch(1 0 0);
+      }
+      .beyond::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0.8 0 0);
+      }
+      .beyond .t {
+        position: relative;
+        z-index: 1;
+      }
+      .beyond-wrap .x {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      .beyond-wrap .x::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0);
+      }
       .selfdraw::before {
         content: "";
         position: absolute;
@@ -882,6 +927,10 @@
     <div class="shade">
       <i class="sh"></i>
       <span class="t">Sample text</span>
+    </div>
+    <div class="beyond-wrap">
+      <div class="beyond"><span class="t">Sample text</span></div>
+      <i class="x"></i>
     </div>
     <div class="selfdraw"><span class="t">Sample text</span></div>
     <div class="between">

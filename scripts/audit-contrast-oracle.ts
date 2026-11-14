@@ -552,6 +552,9 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  * - `.selfdraw` lays the `.cover` wash under a run whose own `::before`
  *   draws a black border in its negative layer, not read: held, where read
  *   as the wash over white it would pass at 16.67.
+ * - `.beyond` raises its run over the grey wash of a panel that is no
+ *   stacking context, under a black `::before` of a later sibling taking no
+ *   pointer events: held, where read as the grey over white it would pass.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -861,6 +864,15 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
     id: "text over a wash with its own pseudo-element drawing unread",
     pathEnds: "div.selfdraw > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a wash with unhit paint outside its owner",
+    pathEnds: "div.beyond > span.t",
     theme: "light",
     state: "default",
     kind: "text",

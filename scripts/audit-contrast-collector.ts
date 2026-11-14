@@ -400,6 +400,64 @@ export function collectContrast(): Collected {
     return painters.some((d) => !d.contains(from))
   }
 
+  // Whether anything on the page that is not `from` or one of its ancestors
+  // paints out of the hit test's sight where it may reach `area`: an element
+  // shown with `pointer-events: none` whose box overlaps it, or a
+  // pseudo-element drawing with it whose box may — its own element's box
+  // when it is in flow, its containing block's when it is `absolute` (the
+  // nearest positioned ancestor, approximated), and anywhere when `fixed`
+  // (#692). Listed once per page; the boxes are read at sample time.
+  let pagePainters: Array<{
+    el: Element
+    boxes: () => Array<DOMRect | null>
+  }> | null = null
+  const overlapsArea = (r: DOMRect | null, area: DOMRect): boolean =>
+    r === null ||
+    (r.left < area.right &&
+      r.right > area.left &&
+      r.top < area.bottom &&
+      r.bottom > area.top)
+  const positionedFrom = (e: Element): Element => {
+    let up: Element | null = e
+    while (up !== null) {
+      if (getComputedStyle(up).position !== "static") return up
+      up = up.parentElement
+    }
+    return document.documentElement
+  }
+  const unhitPaintNearArea = (from: Element, area: DOMRect): boolean => {
+    if (pagePainters === null) {
+      pagePainters = []
+      for (const d of document.querySelectorAll("*")) {
+        const cs = getComputedStyle(d)
+        const own = cs.pointerEvents === "none" && elementShown(cs)
+        const pseudoKinds = (["::before", "::after"] as const)
+          .map((ps) => getComputedStyle(d, ps))
+          .filter((pcs) => pcs.pointerEvents === "none" && pseudoDraws(pcs))
+          .map((pcs) => pcs.position)
+        if (!own && pseudoKinds.length === 0) continue
+        const el = d
+        pagePainters.push({
+          el,
+          boxes: () => [
+            ...(own ? [el.getBoundingClientRect()] : []),
+            ...pseudoKinds.map((pos) =>
+              pos === "fixed"
+                ? null
+                : pos === "absolute"
+                  ? positionedFrom(el).getBoundingClientRect()
+                  : el.getBoundingClientRect()
+            ),
+          ],
+        })
+      }
+    }
+    return pagePainters.some(
+      ({ el, boxes }) =>
+        !el.contains(from) && boxes().some((r) => overlapsArea(r, area))
+    )
+  }
+
   const orderBoxOf = (e: Element): OrderBox => {
     const c = getComputedStyle(e)
     const parent = e.parentElement
@@ -520,6 +578,7 @@ export function collectContrast(): Collected {
         owner: orderBoxOf(el),
         chain: chainTo(from, el),
         unhitPaint: unhitPaintIn(el, from),
+        unhitPaintNear: unhitPaintNearArea(from, area),
       })
     }
     return out

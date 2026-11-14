@@ -722,6 +722,7 @@ const pseudo = (over: Partial<RawPseudo> = {}): RawPseudo => ({
   ownerRadii: ["0px", "0px", "0px", "0px"],
   ownerBackgroundClip: "border-box",
   unhitPaint: false,
+  unhitPaintNear: false,
   ownerCornerShapes: ["round", "round", "round", "round"],
   cornerShapes: ["round", "round", "round", "round"],
   which: "before",
@@ -1230,6 +1231,34 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
         ],
         blockers: [],
       })
+
+    it("holds when unhit paint outside an owner that is no stacking context reaches the line", () => {
+      // The owner is `position: relative` with `z-index: auto`: its wash paints in
+      // the context around it, where a later sibling taking no pointer events
+      // can paint over the wash and under the raised text.
+      expect(
+        textOn(opaque(0, 0, 0), [
+          pseudo({ ...raised, paint: halfBlack(), unhitPaintNear: true }),
+        ])
+      ).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+    })
+
+    it("composes when the owner is a stacking context, whatever paints outside it", () => {
+      // Its wash and the text paint inside it, so nothing outside comes between.
+      expect(
+        textOn(opaque(0, 0, 0), [
+          pseudo({
+            ...raised,
+            paint: halfBlack(),
+            unhitPaintNear: true,
+            owner: orderBox({ zIndex: "0" }),
+          }),
+        ])
+      ).toMatchObject({ verdict: "pass", blockers: [] })
+    })
 
     it("holds when the element read draws by a pseudo-element not read", () => {
       // The raised span's own `::before` at `z-index: -1` draws a border in
