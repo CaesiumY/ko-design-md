@@ -202,8 +202,8 @@ const ROUND_CORNER = new Set(["", "round", "superellipse(1)"])
  * background, can be laid against that background with certainty: the
  * owner's own box holds the whole area, so its background is under all of
  * it, it is visible so that background is painted, and nothing from the
- * element read up to the owner paints out of the hit test's sight. Taken from the area as given; a surface's grown area is
- * the caller's to pass.
+ * element read up to the owner paints out of the hit test's sight. Taken
+ * from the area as given; a surface's grown area is the caller's to pass.
  */
 export function ownerBackgroundUnder(p: RawPseudo, area: Rect): boolean {
   // Its background fills its border box cut by its rounded corners.

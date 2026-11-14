@@ -302,7 +302,7 @@ export function collectContrast(): Collected {
       .filter(([, value, initial]) => value !== initial && value !== "")
       .map(([name, value]) => `${name}: ${value}`)
 
-  const radiiOf = (c: CSSStyleDeclaration): RawPseudo["radii"] => [
+  const radiiOf = (c: CSSStyleDeclaration): Corners => [
     c.borderTopLeftRadius,
     c.borderTopRightRadius,
     c.borderBottomRightRadius,
@@ -368,6 +368,7 @@ export function collectContrast(): Collected {
     from: Element
   ): Array<RawPseudo> {
     const out: Array<RawPseudo> = []
+    const ownerStyle = getComputedStyle(el)
     for (const pseudo of ["::before", "::after"] as const) {
       const cs = getComputedStyle(el, pseudo)
       // `pseudoPaints` tests `content` against `none`, never against an EMPTY
@@ -431,8 +432,8 @@ export function collectContrast(): Collected {
           offset: cs.outlineOffset,
         },
         ownerBox: ownerBoxOf(el),
-        ownerRadii: radiiOf(getComputedStyle(el)),
-        ownerCornerShapes: cornerShapesOf(getComputedStyle(el)),
+        ownerRadii: radiiOf(ownerStyle),
+        ownerCornerShapes: cornerShapesOf(ownerStyle),
         cornerShapes: cornerShapesOf(cs),
         owner: orderBoxOf(el),
         chain: chainTo(from, el),
