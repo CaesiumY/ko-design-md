@@ -184,6 +184,16 @@
         unpainted white it would pass at 5.32. The hit test meets the owner
         only in front of the run, never under it, so it is an ancestor ahead
         that no stack holds: an `overlay`.
+      - `.tag` lays a 40% black `::before` wash over its run in normal flow,
+        and an `::after` that paints no background but draws "NEW" in white
+        28px glyphs over the same line. That one is not read, and the hit
+        test may meet the panel in front of the run by it: the wash does not
+        explain the panel in front, so it stays an `overlay`, as before #692.
+        Read as the wash alone, the run would pass at 7.37.
+      - `.badge` is `.tag` with the wash and the glyphs in one `::after`: its
+        `content` draws more than its box, so it is not composed as a flat
+        wash. Held, `overlay` and `pseudo-background` both, where it would
+        read 7.37.
     -->
     <style>
       html {
@@ -217,7 +227,9 @@
       .bevel,
       .diamond,
       .unseen,
-      .shroud {
+      .shroud,
+      .tag,
+      .badge {
         position: relative;
         width: 300px;
         height: 120px;
@@ -415,6 +427,26 @@
       }
       .shroud .t {
         visibility: visible;
+      }
+      .tag::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0 / 0.4);
+      }
+      .tag::after,
+      .badge::after {
+        content: "NEW";
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        color: oklch(1 0 0);
+      }
+      .badge::after {
+        background: oklch(0 0 0 / 0.4);
       }
       .split::before,
       .unhit::before {
@@ -617,5 +649,7 @@
     <div class="shroud">
       <div class="o"><span class="t">Sample text</span></div>
     </div>
+    <div class="tag"><span class="t">Sample text</span></div>
+    <div class="badge"><span class="t">Sample text</span></div>
   </body>
 </html>

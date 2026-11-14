@@ -413,6 +413,7 @@ export function collectContrast(): Collected {
           bottom: area.bottom,
         },
         which: pseudo === "::before" ? "before" : "after",
+        content: cs.content,
         zIndex: cs.zIndex,
         paint: {
           ...readColour(cs.backgroundColor),
@@ -442,15 +443,39 @@ export function collectContrast(): Collected {
     return out
   }
 
-  // As a layer's optional field: absent, not empty, when nothing is painted —
+  // Whether a `::before` or `::after` that paints no background still draws:
+  // glyphs or an image by its `content`, a border, a shadow or an outline.
+  // Such a one is not read, but the hit test can meet it (#692).
+  const pseudoDrawsUnread = (cs: CSSStyleDeclaration): boolean => {
+    if (cs.content === "none" || cs.content === "normal") return false
+    if (cs.visibility === "hidden" || cs.display === "none") return false
+    if (ownOpacity(cs) === 0 || pseudoPaints(cs)) return false
+    const edged = (["top", "right", "bottom", "left"] as const).some(
+      (at) =>
+        Number.parseFloat(cs.getPropertyValue(`border-${at}-width`)) > 0 &&
+        !["none", "hidden"].includes(cs.getPropertyValue(`border-${at}-style`))
+    )
+    const outlined =
+      !["none", "hidden"].includes(cs.outlineStyle) &&
+      Number.parseFloat(cs.outlineWidth) > 0
+    return cs.content !== '""' || edged || outlined || cs.boxShadow !== "none"
+  }
+
+  // As a layer's optional fields: absent, not empty, when nothing is painted —
   // the shape `imageOf` gives an element with no image.
   const pseudosOf = (
     el: Element,
     area: DOMRect,
     from: Element
-  ): { pseudos?: Array<RawPseudo> } => {
+  ): { pseudos?: Array<RawPseudo>; unread?: true } => {
     const pseudos = paintedPseudos(el, area, from)
-    return pseudos.length === 0 ? {} : { pseudos }
+    const unread = (["::before", "::after"] as const).some((ps) =>
+      pseudoDrawsUnread(getComputedStyle(el, ps))
+    )
+    return {
+      ...(pseudos.length === 0 ? {} : { pseudos }),
+      ...(unread ? { unread: true as const } : {}),
+    }
   }
 
   // The ancestors of `from` that a hit list puts in front of it, each as the

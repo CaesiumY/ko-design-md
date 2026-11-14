@@ -47,6 +47,7 @@ const pseudo = (over: Partial<RawPseudo> = {}): RawPseudo => ({
   ownerCornerShapes: ["round", "round", "round", "round"],
   cornerShapes: ["round", "round", "round", "round"],
   which: "before",
+  content: '""',
   zIndex: "auto",
   paint: {
     onWhite: { r: 0, g: 0, b: 0 },

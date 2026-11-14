@@ -722,6 +722,7 @@ const pseudo = (over: Partial<RawPseudo> = {}): RawPseudo => ({
   ownerCornerShapes: ["round", "round", "round", "round"],
   cornerShapes: ["round", "round", "round", "round"],
   which: "before",
+  content: '""',
   zIndex: "auto",
   paint: opaque(0, 0, 0),
   radii: ["0px", "0px", "0px", "0px"],
@@ -984,6 +985,24 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
       expect([got.fg, got.bg]).toEqual(["#000000", "#808080"])
     })
 
+    it("holds a wash that also draws content of its own", () => {
+      // `content: "NEW"`: its glyphs are drawn over the text too, in a colour
+      // and place not read.
+      expect(
+        textOver([
+          pseudo({
+            ...ownText,
+            which: "after",
+            paint: halfBlack(),
+            content: '"NEW"',
+          }),
+        ])
+      ).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+    })
+
     it("holds a wash whose owner is hidden and so paints no background", () => {
       // The owner's computed white is in the stack only because the hit
       // test meets it by its visible pseudo-element: none of that white is
@@ -1088,6 +1107,35 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
         ahead: [0],
       })
       expect(got).toMatchObject({ verdict: "pass", blockers: [] })
+    })
+
+    it("is a cover when it also draws by a pseudo-element not read", () => {
+      // Its `::after` draws glyphs on no background, so it is not among the
+      // pseudo-elements read, and it may be what the hit test met in front:
+      // the wash does not explain it.
+      const got = evaluateText({
+        fontSizePx: 16,
+        fontWeight: 400,
+        fg: opaque(0, 0, 0),
+        lines: [
+          {
+            stack: [
+              {
+                ...opaque(255, 255, 255),
+                pseudos: [pseudo({ ...ownText, paint: halfBlack() })],
+                unread: true,
+              },
+            ],
+            blockers: [],
+            ahead: [0],
+          },
+        ],
+        blockers: [],
+      })
+      expect(got).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["overlay"],
+      })
     })
 
     it("is a cover when nothing of its own paints over the text", () => {

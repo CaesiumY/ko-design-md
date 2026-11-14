@@ -516,6 +516,12 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   comes over as an ancestor ahead that no stack holds: held as `overlay`.
  *   Read as the wash over the owner's unpainted white, it would pass at 5.32;
  *   on screen it is over the grey, a fail.
+ * - `.tag` washes a run in normal flow with 40% black, beside an `::after` of
+ *   the same panel that draws white "NEW" glyphs on no background and is not
+ *   read: the panel in front stays an `overlay`, where the wash alone would
+ *   read 7.37 (white turns rgb(153), luminance 0.3185).
+ * - `.badge` draws the glyphs on the wash itself: held, `overlay` and
+ *   `pseudo-background`, where it would read 7.37.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -740,6 +746,24 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
     kind: "text",
     verdict: "indeterminate",
     blockers: ["overlay"],
+  },
+  {
+    id: "text under a wash beside glyphs of the same owner",
+    pathEnds: "div.tag > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["overlay"],
+  },
+  {
+    id: "text under a wash that draws glyphs of its own",
+    pathEnds: "div.badge > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["overlay", "pseudo-background"],
   },
 ]
 

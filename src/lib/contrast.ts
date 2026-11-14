@@ -308,6 +308,13 @@ export interface RawLayer extends RawColor {
    * pseudo-element's, and the background it carries is not what is here.
    */
   again?: true
+  /**
+   * The element draws by a `::before` or `::after` that is not among
+   * `pseudos`, since it paints no background: glyphs of its `content`, a
+   * border, a shadow or an outline. The hit test may meet that one, so it may
+   * be why the element is in front of the text.
+   */
+  unread?: true
 }
 
 /** One line box of a run: what is behind it, and what stops it being read. */
@@ -683,7 +690,8 @@ const paintsNothing = (layer: RawLayer): boolean =>
  *   not read either; and one whose owner is hit again further down, where
  *   something paints between the pseudo-element and the owner's background;
  * - on any side: one whose owner is hidden, whose computed background is in
- *   the stack though nothing of it is painted;
+ *   the stack though nothing of it is painted, and one whose `content` draws
+ *   more than its box;
  * - under its owner's background: one whose owner's colour is not opaque;
  * - under the text or under its owner's background, either way: one whose
  *   owner's own box does not hold the whole area, so its background is not
@@ -725,6 +733,12 @@ function pseudoEffect(
         unsure = true
         continue
       }
+      // Its `content` draws inside the box too, in a colour and place not
+      // read: glyphs over or under the text are not a flat paint.
+      if (p.content !== '""') {
+        unsure = true
+        continue
+      }
       const side = paintOrder(p)
       if (side === "above") {
         over.push({ index, p })
@@ -743,9 +757,11 @@ function pseudoEffect(
     }
   }
   // An ancestor in front is explained by a pseudo-element of its own that
-  // paints over the area. Anything else in front is a cover, as it always was.
+  // paints over the area, and only when nothing else of it that draws goes
+  // unread. Anything else in front is a cover, as it always was.
   const overlay = ahead.some(
-    (i) => i === -1 || !over.some((o) => o.index === i)
+    (i) =>
+      i === -1 || stack[i].unread === true || !over.some((o) => o.index === i)
   )
   const blockers: Array<Blocker> = overlay ? ["overlay"] : []
   const held = (): PseudoEffect => ({

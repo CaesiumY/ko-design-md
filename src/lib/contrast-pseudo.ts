@@ -107,6 +107,11 @@ export interface RawPseudo {
   area: Rect
   /** Which of its owner's two pseudo-elements this is. */
   which: "before" | "after"
+  /**
+   * Its computed `content`. Only `""` draws nothing but the box; anything
+   * else — a string, an image, a counter — draws inside it as well.
+   */
+  content: string
   /** Its computed `z-index`: `auto` or an integer. */
   zIndex: string
   /**
