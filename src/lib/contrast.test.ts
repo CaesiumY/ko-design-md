@@ -17,8 +17,9 @@ import type {
   RawColor,
   RawControl,
   RawLayer,
+  RawTextLine,
 } from "./contrast"
-import type { RawPseudo } from "./contrast-pseudo"
+import type { OrderBox, RawPseudo } from "./contrast-pseudo"
 
 const WHITE = { r: 255, g: 255, b: 255 }
 const BLACK = { r: 0, g: 0, b: 0 }
@@ -673,6 +674,17 @@ describe("evaluateText — a blocker belongs to the line it came from", () => {
 // and covers the line box x 200..300, y 248..272. Each case moves one value
 // and says where the box lands, worked out from the CSS rather than by the
 // code.
+// An element in the paint order: a `position: relative` block with no
+// `z-index` and nothing else that makes a stacking context, unless a case
+// says otherwise.
+const orderBox = (over: Partial<OrderBox> = {}): OrderBox => ({
+  position: "relative",
+  zIndex: "auto",
+  parentDisplay: "block",
+  contextProps: [],
+  ...over,
+})
+
 const pseudo = (over: Partial<RawPseudo> = {}): RawPseudo => ({
   position: "absolute",
   transform: "none",
@@ -702,6 +714,19 @@ const pseudo = (over: Partial<RawPseudo> = {}): RawPseudo => ({
   },
   unsure: [],
   area: { left: 200, top: 248, right: 300, bottom: 272 },
+  which: "before",
+  zIndex: "auto",
+  paint: opaque(0, 0, 0),
+  radii: ["0px", "0px", "0px", "0px"],
+  backgroundClip: "border-box",
+  clipPath: "none",
+  maskImage: "none",
+  mixBlendMode: "normal",
+  outline: { style: "none", width: "0px", offset: "0px" },
+  owner: orderBox(),
+  // Where it paints against the text is unknown unless a case says so, so a
+  // box that covers the line holds it, as before #692.
+  chain: null,
   ...over,
 })
 
@@ -742,10 +767,24 @@ describe("a pseudo-element holds only a reading it can reach (#691)", () => {
     expect(textOver([rule({ position: "relative" })])).toMatchObject(held)
   })
 
+  it("moves the box by a translation of its own (#692)", () => {
+    // `translate(-50%, -50%)` and the like come back from computed style as a
+    // matrix in pixels. Moved 50px up, the rule is y 250..252, across the
+    // line; moved 200px down, the wash is y 400..520, clear of it.
+    expect(
+      textOver([rule({ transform: "matrix(1, 0, 0, 1, 0, -50)" })])
+    ).toMatchObject(held)
+    expect(
+      textOver([pseudo({ transform: "matrix(1, 0, 0, 1, 0, 200)" })])
+    ).toMatchObject(judged)
+  })
+
   it("holds a transformed pseudo-element, by any of the four properties", () => {
     expect(
-      textOver([rule({ transform: "matrix(1, 0, 0, 1, 0, -100)" })])
+      textOver([rule({ transform: "matrix(1, 0, 0, 1.5, 0, -100)" })])
     ).toMatchObject(held)
+    // The `translate` property keeps a percentage as written, so it is not
+    // read as an offset.
     expect(textOver([rule({ translate: "0px -100px" })])).toMatchObject(held)
     expect(textOver([rule({ rotate: "90deg" })])).toMatchObject(held)
     expect(textOver([rule({ scale: "1 60" })])).toMatchObject(held)
@@ -885,6 +924,386 @@ describe("a pseudo-element holds only a reading it can reach (#691)", () => {
 
     it("judges the surface when the box misses it", () => {
       expect(dotOver([rule()])).toMatchObject(judged)
+    })
+  })
+})
+
+// A colour the canvas reads back at alpha a: `onWhite` is what it shows over
+// white and `onBlack` over black, so `recoverAlpha` gets a and the colour back
+// exactly. Black at 128 over white is alpha 127/255, the wash below.
+const halfBlack = (opacity = 1): RawColor => ({
+  onWhite: { r: 128, g: 128, b: 128 },
+  onBlack: { r: 0, g: 0, b: 0 },
+  opacity,
+})
+
+describe("a pseudo-element is judged on the side of the text it paints (#692)", () => {
+  // Black 16px text on a white owner, 21:1 alone. The default pseudo-element
+  // box covers the line box whole, and its owner is `position: relative` with
+  // no `z-index`.
+  const textOver = (
+    pseudos: Array<RawPseudo>,
+    line: Partial<RawTextLine> = {}
+  ) =>
+    evaluateText({
+      fontSizePx: 16,
+      fontWeight: 400,
+      fg: opaque(0, 0, 0),
+      lines: [
+        {
+          stack: [{ ...opaque(255, 255, 255), pseudos }],
+          blockers: [],
+          ...line,
+        },
+      ],
+      blockers: [],
+    })
+  // The text is the owner's own, in normal flow: an absolute pseudo-element
+  // with no `z-index` paints over it, whichever of the two it is.
+  const ownText = { chain: [] }
+
+  describe("over the text", () => {
+    it("composes a translucent wash onto the text and its backdrop both", () => {
+      // The wash turns the white behind into #808080, and the black text
+      // stays black under it: #808080 on black is 5.32:1 (relative luminance
+      // 0.2159, so (0.2159 + 0.05) / 0.05). Composed onto the backdrop alone
+      // it would leave the text black on #808080 all the same, so the pair
+      // is what tells the two apart below.
+      const got = textOver([
+        pseudo({ ...ownText, which: "after", paint: halfBlack() }),
+      ])
+      expect(got).toMatchObject({ verdict: "pass", blockers: [] })
+      expect(got.ratio).toBeCloseTo(5.32, 2)
+      expect([got.fg, got.bg]).toEqual(["#000000", "#808080"])
+    })
+
+    it("composes onto the glyphs too, not only behind them", () => {
+      // White text under the same wash turns #808080 as well: 1:1, a
+      // certain fail. Composed onto the backdrop alone, white on #808080
+      // would read 3.95.
+      const got = evaluateText({
+        fontSizePx: 16,
+        fontWeight: 400,
+        fg: opaque(255, 255, 255),
+        lines: [
+          {
+            stack: [
+              {
+                ...opaque(255, 255, 255),
+                pseudos: [pseudo({ ...ownText, paint: halfBlack() })],
+              },
+            ],
+            blockers: [],
+          },
+        ],
+        blockers: [],
+      })
+      expect(got.verdict).toBe("fail")
+      expect(got.ratio).toBeCloseTo(1, 5)
+    })
+
+    it("folds the wash's own opacity into its alpha", () => {
+      // Opaque black at `opacity: 0.5` turns white into rgb(127.5): relative
+      // luminance 0.2140, so (0.2140 + 0.05) / 0.05 = 5.28.
+      const got = textOver([
+        pseudo({ ...ownText, paint: opaque(0, 0, 0, 0.5) }),
+      ])
+      expect(got).toMatchObject({ verdict: "pass", opacityApprox: true })
+      expect(got.ratio).toBeCloseTo(5.28, 2)
+    })
+
+    it("holds an opaque wash, which hides the text", () => {
+      expect(
+        textOver([pseudo({ ...ownText, paint: opaque(0, 0, 0) })])
+      ).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+    })
+
+    it("holds a gradient or an image wash, a blended one, and two at once", () => {
+      const held = { verdict: "indeterminate", blockers: ["pseudo-background"] }
+      const fade = painted("linear-gradient(transparent, rgba(0, 0, 0, 0.5))")
+      expect(textOver([pseudo({ ...ownText, paint: fade })])).toMatchObject(
+        held
+      )
+      expect(
+        textOver([pseudo({ ...ownText, paint: painted("url(x.png)") })])
+      ).toMatchObject(held)
+      expect(
+        textOver([
+          pseudo({ ...ownText, paint: halfBlack(), mixBlendMode: "multiply" }),
+        ])
+      ).toMatchObject(held)
+      expect(
+        textOver([
+          pseudo({ ...ownText, paint: halfBlack() }),
+          pseudo({ ...ownText, which: "after", paint: halfBlack() }),
+        ])
+      ).toMatchObject(held)
+    })
+
+    it("holds a wash that covers the line only in part", () => {
+      // Over the lower half of the line box, y 260..320: the glyphs above it
+      // are not under it.
+      expect(
+        textOver([pseudo({ ...ownText, paint: halfBlack(), top: "60px" })])
+      ).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+    })
+  })
+
+  describe("an ancestor in front of the text", () => {
+    it("is its own wash, not a cover, when it has one over the text", () => {
+      // The hit test returned the owner — stack index 0 — in front of the
+      // text, as it does for a pseudo-element painted over it.
+      const got = textOver([pseudo({ ...ownText, paint: halfBlack() })], {
+        ahead: [0],
+      })
+      expect(got).toMatchObject({ verdict: "pass", blockers: [] })
+    })
+
+    it("is a cover when nothing of its own paints over the text", () => {
+      // Its pseudo-element paints under the text, so something else of it is
+      // in front.
+      const under = pseudo({
+        chain: [orderBox({ zIndex: "1" })],
+        paint: halfBlack(),
+      })
+      expect(textOver([under], { ahead: [0] })).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["overlay"],
+      })
+      // Or it is in front but not behind, where its pseudo-elements are read.
+      expect(
+        textOver([pseudo({ ...ownText, paint: halfBlack() })], { ahead: [-1] })
+      ).toMatchObject({ verdict: "indeterminate", blockers: ["overlay"] })
+    })
+  })
+
+  describe("under the text", () => {
+    // The text sits in a `position: relative; z-index: 1` span over a white
+    // owner, as socar's calendar date does over its circle. The span paints
+    // nothing itself, so the stack is that span and then the owner.
+    const SPAN = { onWhite: WHITE, onBlack: BLACK, opacity: 1 }
+    const raised = { chain: [orderBox({ zIndex: "1" })] }
+    const textOn = (
+      fg: RawColor,
+      pseudos: Array<RawPseudo>,
+      between: Array<RawLayer> = []
+    ) =>
+      evaluateText({
+        fontSizePx: 16,
+        fontWeight: 400,
+        fg,
+        lines: [
+          {
+            stack: [SPAN, ...between, { ...opaque(255, 255, 255), pseudos }],
+            blockers: [],
+          },
+        ],
+        blockers: [],
+      })
+
+    it("reads the text on the pseudo-element's paint", () => {
+      // Black on rgb(118): 4.62:1 (luminance 0.1811), the grid's "plain 118".
+      const got = textOn(opaque(0, 0, 0), [
+        pseudo({ ...raised, zIndex: "0", paint: opaque(118, 118, 118) }),
+      ])
+      expect(got).toMatchObject({
+        verdict: "pass",
+        blockers: [],
+        bg: "#767676",
+      })
+      expect(got.ratio).toBeCloseTo(4.62, 2)
+    })
+
+    it("lays a translucent one over the owner's background", () => {
+      // The wash over white is #808080, and white text on it reads 3.95.
+      const got = textOn(opaque(255, 255, 255), [
+        pseudo({ ...raised, paint: halfBlack() }),
+      ])
+      expect(got).toMatchObject({ verdict: "fail", blockers: [] })
+      expect(got.ratio).toBeCloseTo(3.95, 2)
+    })
+
+    it("judges a gradient one by every colour it can paint (#642)", () => {
+      const ramp = (from: number, to: number) =>
+        painted(
+          `linear-gradient(rgb(${from}, ${from}, ${from}), rgb(${to}, ${to}, ${to}))`
+        )
+      // rgb(255) to rgb(130): 21 to 5.46, a pass everywhere.
+      expect(
+        textOn(opaque(0, 0, 0), [pseudo({ ...raised, paint: ramp(255, 130) })])
+      ).toMatchObject({ verdict: "pass", blockers: [] })
+      // rgb(255) to rgb(100): a pass at one end, a fail at the other.
+      expect(
+        textOn(opaque(0, 0, 0), [pseudo({ ...raised, paint: ramp(255, 100) })])
+      ).toMatchObject({ verdict: "indeterminate", blockers: ["gradient"] })
+      expect(
+        textOn(opaque(0, 0, 0), [
+          pseudo({ ...raised, paint: painted("url(x.png)") }),
+        ])
+      ).toMatchObject({ verdict: "indeterminate", blockers: ["image"] })
+    })
+
+    it("holds when a layer between it and the text paints", () => {
+      // Which of the grey layer and the pseudo-element is on top is not read.
+      expect(
+        textOn(
+          opaque(0, 0, 0),
+          [pseudo({ ...raised, paint: opaque(118, 118, 118) })],
+          [opaque(200, 200, 200)]
+        )
+      ).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+    })
+
+    it("holds two of them, whose order is not read", () => {
+      expect(
+        textOn(opaque(0, 0, 0), [
+          pseudo({ ...raised, paint: opaque(118, 118, 118) }),
+          pseudo({ ...raised, which: "after", paint: opaque(200, 200, 200) }),
+        ])
+      ).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+    })
+
+    it("holds one under and one over, two on the same line", () => {
+      // Two pseudo-elements covering one line hold it, whichever sides they
+      // paint on.
+      expect(
+        textOn(opaque(0, 0, 0), [
+          pseudo({ ...raised, paint: opaque(118, 118, 118) }),
+          pseudo({
+            chain: [orderBox({ position: "static" })],
+            paint: halfBlack(),
+          }),
+        ])
+      ).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+    })
+  })
+
+  describe("under its owner's background", () => {
+    // `z-index: -1` on a pseudo-element of an owner that is no stacking
+    // context: the owner's background paints over it.
+    const sunk = (owner: RawLayer) =>
+      evaluateText({
+        fontSizePx: 16,
+        fontWeight: 400,
+        fg: opaque(0, 0, 0),
+        lines: [
+          {
+            stack: [
+              {
+                ...owner,
+                pseudos: [
+                  pseudo({ ...ownText, zIndex: "-1", paint: opaque(0, 0, 0) }),
+                ],
+              },
+            ],
+            blockers: [],
+          },
+        ],
+        blockers: [],
+      })
+
+    it("is left out when the owner's background is opaque", () => {
+      const got = sunk(opaque(255, 255, 255))
+      expect(got).toMatchObject({ verdict: "pass", blockers: [] })
+      expect(got.ratio).toBeCloseTo(21, 5)
+    })
+
+    it("holds when the owner's background lets it through", () => {
+      expect(sunk(halfBlack())).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background", "root-transparent"],
+      })
+    })
+  })
+
+  it("ranks a washed line against the run's other lines by its composed contrast", () => {
+    // Opaque black at `opacity: 0.6` over white is rgb(102): luminance 0.1329,
+    // black on it 3.66:1, a fail. The other line is black on white, 21:1. The
+    // run reads as its weakest line.
+    const washed = pseudo({ ...ownText, paint: opaque(0, 0, 0, 0.6) })
+    const got = evaluateText({
+      fontSizePx: 16,
+      fontWeight: 400,
+      fg: opaque(0, 0, 0),
+      lines: [
+        { stack: [opaque(255, 255, 255)], blockers: [] },
+        {
+          stack: [{ ...opaque(255, 255, 255), pseudos: [washed] }],
+          blockers: [],
+        },
+      ],
+      blockers: [],
+    })
+    expect(got).toMatchObject({ verdict: "fail", blockers: [], bg: "#666666" })
+    expect(got.ratio).toBeCloseTo(3.66, 2)
+  })
+
+  describe("over a non-text surface", () => {
+    // A grey dot, rgb(118), on a white owner: 4.54:1 alone. The dot is a
+    // static span, so a positioned wash of its owner paints over it.
+    const dotUnder = (pseudos: Array<RawPseudo>, ahead?: Array<number>) =>
+      evaluateNonText({
+        fill: opaque(118, 118, 118),
+        border: null,
+        outer: [{ ...opaque(255, 255, 255), pseudos }],
+        blockers: [],
+        ahead,
+      })
+    const dot = { chain: [orderBox({ position: "static" })] }
+
+    it("holds a wash that covers the surface but not what is just around it", () => {
+      // The surface is read against the colour beside its edge, outside its
+      // box. A wash exactly the surface's box, x 200..300, y 248..272, leaves
+      // that colour unwashed.
+      expect(
+        dotUnder([
+          pseudo({
+            ...dot,
+            paint: halfBlack(),
+            top: "48px",
+            left: "100px",
+            width: "100px",
+            height: "24px",
+          }),
+        ])
+      ).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+    })
+
+    it("composes the wash onto the surface and what is behind it", () => {
+      // The wash (alpha 127/255, black) turns the dot rgb(59.2), luminance
+      // 0.0441, and the white behind it #808080, 0.2159: (0.2159 + 0.05) /
+      // (0.0441 + 0.05) = 2.83, under 3:1.
+      const got = dotUnder([pseudo({ ...dot, paint: halfBlack() })], [0])
+      expect(got).toMatchObject({ verdict: "fail", blockers: [] })
+      expect(got?.ratio).toBeCloseTo(2.83, 2)
+    })
+
+    it("lays one under the surface over the owner's background", () => {
+      // The dot raised over a wash: it reads against #808080, 1.15:1 — rgb(118)
+      // is luminance 0.1811, so (0.2159 + 0.05) / (0.1811 + 0.05).
+      const got = dotUnder([
+        pseudo({ chain: [orderBox({ zIndex: "1" })], paint: halfBlack() }),
+      ])
+      expect(got).toMatchObject({ verdict: "fail", blockers: [] })
+      expect(got?.ratio).toBeCloseTo(1.15, 2)
     })
   })
 })
@@ -1508,6 +1927,28 @@ const fade = (from: number, to: number): Array<RawLayer> => [
   grey(255),
 ]
 
+// Opaque black at this `opacity`, painted by the owner's pseudo-element over
+// its own text on white.
+const washOver = (opacity: number): Array<RawLayer> => [
+  {
+    ...grey(255),
+    pseudos: [pseudo({ chain: [], paint: opaque(0, 0, 0, opacity) })],
+  },
+]
+// This paint under text raised in a `z-index: 1` span that paints nothing,
+// over a white owner.
+const discUnder = (paint: RawLayer): Array<RawLayer> => [
+  {
+    onWhite: { r: 255, g: 255, b: 255 },
+    onBlack: { r: 0, g: 0, b: 0 },
+    opacity: 1,
+  },
+  {
+    ...grey(255),
+    pseudos: [pseudo({ chain: [orderBox({ zIndex: "1" })], paint })],
+  },
+]
+
 /**
  * Lines with no reason of their own, named by what black body text reads on
  * them alone. Plain and gradient lines, around each side of the 4.5:1 bar and
@@ -1525,6 +1966,14 @@ const GRID: Record<string, Array<RawLayer>> = {
   "gradient 115→117": fade(115, 117),
   "gradient 255→118": fade(255, 118),
   "gradient 255→100": fade(255, 100),
+  // A pseudo-element's paint, composed where it paints (#692): a wash over
+  // the text, and a disc under it in a raised span.
+  "wash 0.5 over": washOver(0.5),
+  "wash 0.6 over": washOver(0.6),
+  "disc 116 under": discUnder(grey(116)),
+  "disc 255→100 under": discUnder(
+    painted("linear-gradient(rgb(255, 255, 255), rgb(100, 100, 100))")
+  ),
 }
 
 const runOf = (
@@ -1622,6 +2071,10 @@ describe("adding a line can only lower a run's contrast (#653)", () => {
       "gradient 115→117": "borderline",
       "gradient 255→118": "pass",
       "gradient 255→100": "indeterminate", // pass at one end, fail at the other
+      "wash 0.5 over": "pass", // 5.28:1, rgb(127.5) behind black
+      "wash 0.6 over": "fail", // 3.66:1, rgb(102)
+      "disc 116 under": "borderline", // 4.49:1, as "plain 116"
+      "disc 255→100 under": "indeterminate", // as "gradient 255→100"
     })
   })
 

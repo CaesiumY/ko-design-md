@@ -431,16 +431,19 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   (`left: 0; right: 100px; width: 60px`), and placed from `right` it would
  *   sit at x 140..200 over the line: the pass also says the box came from
  *   `left`.
- * - `.cover` washes the whole panel, line included. What it does to the
- *   colours is not read (which side of the text it paints on is #692's
- *   question), so the run is held. No ratio is claimed: the claim is that the
- *   verdict is withheld.
- * - `.far` sits 1000px down, under a wash whose containing block is the
- *   document root (`html` is positioned), placed from the root's origin at
- *   x 24, y 1312 — exactly over the panel. The collector scrolls to reach it,
- *   and the root's rect has moved with that scroll already, so the box covers
- *   the line and the run is held. Taking the root's `scrollTop` off a second
- *   time would lift the box clear and read it as a pass.
+ * - `.cover` washes the whole panel, line included, with 10% black. Since
+ *   #692 it is composed where it paints: its `::before` and the run are both
+ *   positioned with `z-index` auto, so document order puts the wash under
+ *   the run, over the white panel. The canvas reads 10% black back at alpha
+ *   26/255 (25.5 rounded), turning white into rgb(229), luminance 0.7835:
+ *   black on it is (0.7835 + 0.05) / 0.05 = 16.67.
+ * - `.far` sits 1000px down, under the same wash, whose containing block is
+ *   the document root (`html` is positioned), placed from the root's origin
+ *   at x 24, y 1312 — exactly over the panel. The collector scrolls to reach
+ *   it, and the root's rect has moved with that scroll already, so the box
+ *   covers the line and the run reads 16.67, as `.cover`'s does. Taking the
+ *   root's `scrollTop` off a second time would lift the box clear and read
+ *   21.
  * - `.mark` lays a band at y 62..76 under the lower part of the line: clear of
  *   its centre (y 60), over its rect (down to about y 69). The run is held. Testing the
  *   centre alone would release it and read the panel, a pass at 21.
@@ -471,6 +474,22 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   below itself (`-webkit-box-reflect: below 0`), so a copy lands at
  *   y 40..80, over the line. Paint past the box holds the reading; read from
  *   the box alone, the run would be a pass.
+ *
+ * Those that follow are #692's: which side of the text a pseudo-element
+ * covering the line paints on, and what that does to the colours.
+ *
+ * - `.disc` raises its run (`position: relative; z-index: 1`) over a 120px
+ *   circle of rgb(128) at `z-index: 0`, centred by a translation of its own.
+ *   Black on rgb(128) (luminance 0.2159) is 5.32, a pass: the circle is
+ *   under the text. Missed, the run would read 21.
+ * - `.veil` washes a run in normal flow with 60% black over it. Black stays
+ *   black and the white turns rgb(102) (luminance 0.1329): 3.66, a fail,
+ *   with no `overlay` though the wash puts the panel in front of the run.
+ * - `.opaque` is the same with an opaque wash, which hides the text: held.
+ * - `.unknown`'s run carries `will-change: transform`, and whether that
+ *   makes a stacking context is not read: held, `pseudo-background` alone.
+ * - `.under`'s opaque `::before` at `z-index: -1` paints under the panel's
+ *   own white, since the panel is no stacking context: a pass at 21.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -484,22 +503,24 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
     ratio: 21,
   },
   {
-    id: "text under a pseudo-element wash that covers it",
+    id: "text over a pseudo-element wash that covers it",
     pathEnds: "div.cover > span.t",
     theme: "light",
     state: "default",
     kind: "text",
-    verdict: "indeterminate",
-    blockers: ["pseudo-background"],
+    verdict: "pass",
+    blockers: [],
+    ratio: 16.67,
   },
   {
-    id: "text under a wash placed from the scrolled document root",
+    id: "text over a wash placed from the scrolled document root",
     pathEnds: "div.far > span.t",
     theme: "light",
     state: "default",
     kind: "text",
-    verdict: "indeterminate",
-    blockers: ["pseudo-background"],
+    verdict: "pass",
+    blockers: [],
+    ratio: 16.67,
   },
   {
     id: "text over a highlighter that misses the line's centre",
@@ -564,6 +585,54 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
     kind: "text",
     verdict: "indeterminate",
     blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a circle centred by a translation",
+    pathEnds: "div.disc > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "pass",
+    blockers: [],
+    ratio: 5.32,
+  },
+  {
+    id: "text in normal flow under a translucent wash",
+    pathEnds: "div.veil > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "fail",
+    blockers: [],
+    ratio: 3.66,
+  },
+  {
+    id: "text in normal flow under an opaque wash",
+    pathEnds: "div.opaque > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text whose order against a wash is not read",
+    pathEnds: "div.unknown > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text over a negative-z pseudo-element under its owner's background",
+    pathEnds: "div.under > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "pass",
+    blockers: [],
+    ratio: 21,
   },
 ]
 

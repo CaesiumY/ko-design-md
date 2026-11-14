@@ -69,15 +69,17 @@ and re-derive those; never paste the measurer's new output into them.
 
 ## `pseudo-background.html`
 
-Another synthetic document under the same rule (#691). It covers text next to
-a painted `::before` or `::after`, which the sweep releases only when the
-pseudo-element's box, worked out from its computed geometry, certainly misses
-the box of the line read — and nothing it paints reaches past that box. No
-text in the samsung file sits beside a positioned pseudo-element, and the
-file cannot gain one.
+Another synthetic document under the same rule (#691, #692). It covers text
+next to, under and over a painted `::before` or `::after`. The sweep releases
+such a reading only when the pseudo-element's box, worked out from its
+computed geometry, certainly misses the box of the line read — and nothing it
+paints reaches past that box — or when its paint covers that box whole and
+its side of the text is known from the paint order, in which case it is
+composed on that side. No text in the samsung file sits beside a positioned
+pseudo-element, and the file cannot gain one.
 
 Every expectation on it is derived by hand in `PSEUDO_ANCHORS`
-(`scripts/audit-contrast-oracle.ts`): black text on a white panel, 21:1, and
-a box placed from the fixture's own pixel values. The same condition holds:
-edit this file, and re-derive those; never paste the measurer's new output
-into them.
+(`scripts/audit-contrast-oracle.ts`): black text on a white panel, the
+colours a wash or a disc turns that panel into, and boxes placed from the
+fixture's own pixel values. The same condition holds: edit this file, and
+re-derive those; never paste the measurer's new output into them.
