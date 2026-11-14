@@ -3,7 +3,7 @@ name: 교보문고
 design_system_name: Kyobo Design System (KDS)
 slug: kyobobook
 category: commerce
-last_updated: "2026-08-22"
+last_updated: "2026-11-14"
 created_at: 2026-05-30
 lang: ko
 logo: https://getdesign.kr/logos/kyobobook.png
@@ -149,7 +149,7 @@ elevation:
 
 # Kyobo Design System (KDS) — design.md
 
-교보문고는 한국 최대 서점 체인이고, 흰색과 옅은 회색 바탕에 책 표지가 색을 채우고 페리윙클 인디고가 핵심 액션을 맡는다 [src:2][src:3][src:18].
+교보문고는 온오프라인 서점과 도서쇼핑몰을 함께 운영하는 종합문화기업이고 [src:27], 흰색과 옅은 회색 바탕 위에서 페리윙클 인디고가 핵심 액션을 맡는다 [src:3][src:18].
 
 ## Brand & Style
 
@@ -445,3 +445,4 @@ KDS는 모든 화면 크기에서 일정한 6/12열 그리드를 유지하되, *
 24. https://design.kyobobook.co.kr/component/thumbnail/
 25. https://design.kyobobook.co.kr/component/toast/
 26. https://design.kyobobook.co.kr/component/tooltip/
+27. https://www.kyobobook.co.kr/ — 교보문고 온라인 서점 홈. 메타 설명이 "교보문고는 온오프라인을 통틀어 대한민국 최고의 도서쇼핑몰이며 전자책, 음반, 기프트, 문화서비스까지 제공하는 종합문화기업입니다"다.

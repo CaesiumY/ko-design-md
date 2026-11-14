@@ -3,7 +3,7 @@ name: 채널톡
 design_system_name: Bezier Design System
 slug: bezier
 category: developer
-last_updated: "2026-11-11"
+last_updated: "2026-11-14"
 created_at: "2026-06-03"
 lang: ko
 logo: https://getdesign.kr/logos/bezier.png
@@ -1596,7 +1596,7 @@ rounded:
 
 # Bezier Design System — design.md
 
-채널톡은 B2B 메시징 서비스이고, 거의 순수한 회색과 흰 표면 위에 채도 높은 액센트 하나를 얹고 모서리를 크게 둥글린다 [src:1][src:2][src:3].
+채널톡은 고객 상담을 중심에 둔 AI 비즈니스 OS이고 [src:6], 거의 순수한 회색과 흰 표면 위에 채도 높은 액센트 하나를 얹고 모서리를 크게 둥글린다 [src:2][src:3].
 
 > 채널톡을 만드는 (주)채널코퍼레이션의 오픈소스 React 디자인 시스템. 컴포넌트 라이브러리 + 디자인 토큰 + 아이콘 세트를 한 모노레포로 배포하며, 핵심 패키지는 `@channel.io/bezier-react`·`@channel.io/bezier-tokens`(0.6.0)·`@channel.io/bezier-icons`(0.60.0)이다 [src:1][src:3][src:4]. 본 문서는 사용자가 제공한 Claude Design 핸드오프 번들을 1차 출처로 추출·정리해 합성한 결과다 — 번들은 비공개이므로, 아래 정량 주장은 2026-07-29에 공개 배포물(`@channel.io/bezier-tokens` 0.6.0 · `@channel.io/bezier-icons` 0.60.0 · Storybook 인덱스 [src:5])과 전수 대조했다. 당시 이 문서의 색 토큰은 전부 ΔE ≤ 0.02로 일치했고, 컴포넌트 59개 이름도 Storybook 문서와 1:1로 대응했다.
 
@@ -3039,3 +3039,4 @@ Bezier는 앱 셸/뷰포트 브레이크포인트를 토큰으로 발행하지 �
 3. https://www.npmjs.com/package/@channel.io/bezier-tokens — 토큰 패키지 0.6.0. 값의 authoritative 출처이며 `dist/css`(stable, 변수 450개)·`dist/beta`·`dist/alpha` 3 tier를 함께 배포한다.
 4. https://www.npmjs.com/package/@channel.io/bezier-icons — 아이콘 패키지 0.60.0, SVG 602개.
 5. https://main--62bead1508281287d3c94d25.chromatic.com/index.json — 위 Storybook의 기계 판독 인덱스(엔트리 186 = docs 64 + 스토리 122). 컴포넌트 59개 이름과 docs 개수 주장을 직접 검증할 수 있는 항목이며, 루트 URL과 달리 텍스트로 내용을 반환한다.
+6. https://channel.io/kr — 채널톡 서비스 소개 페이지. 메타 설명이 "고객 상담부터 데이터 분석, 마케팅, 팀 협업까지 비즈니스의 중심에 고객을 연결하는 AI 비즈니스 OS"다.
