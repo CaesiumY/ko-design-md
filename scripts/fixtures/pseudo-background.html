@@ -187,13 +187,23 @@
       - `.tag` lays a 40% black `::before` wash over its run in normal flow,
         and an `::after` that paints no background but draws "NEW" in white
         28px glyphs over the same line. That one is not read, and the hit
-        test may meet the panel in front of the run by it: the wash does not
-        explain the panel in front, so it stays an `overlay`, as before #692.
-        Read as the wash alone, the run would pass at 7.37.
+        test may meet the panel in front of the run by it. A wash whose owner
+        draws unread is not composed, and the panel in front is not explained
+        by it: held, `overlay` and `pseudo-background`, as before #692. Read
+        as the wash alone, the run would pass at 7.37.
       - `.badge` is `.tag` with the wash and the glyphs in one `::after`: its
         `content` draws more than its box, so it is not composed as a flat
         wash. Held, `overlay` and `pseudo-background` both, where it would
         read 7.37.
+      - `.mute` is `.tag` with `pointer-events: none` on both pseudo-elements,
+        so the hit test never puts the panel in front: the glyphs are seen
+        only as something of the owner drawn unread. Held,
+        `pseudo-background`, where it would read 7.37.
+      - `.frost` puts the same wash beside an `::after` with no background
+        and `backdrop-filter: brightness(0.3)`, both taking no pointer
+        events. On screen the panel behind turns dark and the run a fail;
+        read as the wash alone, it would pass at 7.37. Held,
+        `pseudo-background`.
     -->
     <style>
       html {
@@ -229,7 +239,9 @@
       .unseen,
       .shroud,
       .tag,
-      .badge {
+      .badge,
+      .mute,
+      .frost {
         position: relative;
         width: 300px;
         height: 120px;
@@ -448,6 +460,32 @@
       .badge::after {
         background: oklch(0 0 0 / 0.4);
       }
+      .mute::before,
+      .frost::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0 / 0.4);
+        pointer-events: none;
+      }
+      .mute::after {
+        content: "NEW";
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        color: oklch(1 0 0);
+        pointer-events: none;
+      }
+      .frost::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        backdrop-filter: brightness(0.3);
+        pointer-events: none;
+      }
       .split::before,
       .unhit::before {
         content: "";
@@ -651,5 +689,7 @@
     </div>
     <div class="tag"><span class="t">Sample text</span></div>
     <div class="badge"><span class="t">Sample text</span></div>
+    <div class="mute"><span class="t">Sample text</span></div>
+    <div class="frost"><span class="t">Sample text</span></div>
   </body>
 </html>

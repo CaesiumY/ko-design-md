@@ -518,10 +518,17 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   on screen it is over the grey, a fail.
  * - `.tag` washes a run in normal flow with 40% black, beside an `::after` of
  *   the same panel that draws white "NEW" glyphs on no background and is not
- *   read: the panel in front stays an `overlay`, where the wash alone would
- *   read 7.37 (white turns rgb(153), luminance 0.3185).
+ *   read: the wash is not composed and the panel in front stays an
+ *   `overlay`, where the wash alone would read 7.37 (white turns rgb(153),
+ *   luminance 0.3185).
  * - `.badge` draws the glyphs on the wash itself: held, `overlay` and
  *   `pseudo-background`, where it would read 7.37.
+ * - `.mute` is `.tag` with neither pseudo-element taking pointer events, so
+ *   no panel is in front to explain: held, `pseudo-background`, where it
+ *   would read 7.37.
+ * - `.frost` lays the wash beside a backdrop filter of the same panel that
+ *   darkens what is behind: held, `pseudo-background`, where it would read
+ *   7.37.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -754,7 +761,25 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
     state: "default",
     kind: "text",
     verdict: "indeterminate",
-    blockers: ["overlay"],
+    blockers: ["overlay", "pseudo-background"],
+  },
+  {
+    id: "text under a wash beside glyphs the hit test does not see",
+    pathEnds: "div.mute > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text under a wash beside a backdrop filter of the same owner",
+    pathEnds: "div.frost > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
   },
   {
     id: "text under a wash that draws glyphs of its own",

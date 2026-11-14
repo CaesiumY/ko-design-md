@@ -444,7 +444,8 @@ export function collectContrast(): Collected {
   }
 
   // Whether a `::before` or `::after` that paints no background still draws:
-  // glyphs or an image by its `content`, a border, a shadow or an outline.
+  // glyphs or an image by its `content`, a border, a shadow, an outline, or a
+  // backdrop filter over what is behind it.
   // Such a one is not read, but the hit test can meet it (#692).
   const pseudoDrawsUnread = (cs: CSSStyleDeclaration): boolean => {
     if (cs.content === "none" || cs.content === "normal") return false
@@ -458,7 +459,15 @@ export function collectContrast(): Collected {
     const outlined =
       !["none", "hidden"].includes(cs.outlineStyle) &&
       Number.parseFloat(cs.outlineWidth) > 0
-    return cs.content !== '""' || edged || outlined || cs.boxShadow !== "none"
+    // `""` is Chromium's `content: ""`, quotes included (`EMPTY_CONTENT` in
+    // src/lib/contrast.ts).
+    return (
+      cs.content !== '""' ||
+      edged ||
+      outlined ||
+      cs.boxShadow !== "none" ||
+      cs.backdropFilter !== "none"
+    )
   }
 
   // As a layer's optional fields: absent, not empty, when nothing is painted —
@@ -467,24 +476,25 @@ export function collectContrast(): Collected {
     el: Element,
     area: DOMRect,
     from: Element
-  ): { pseudos?: Array<RawPseudo>; unread?: true } => {
+  ): { pseudos?: Array<RawPseudo>; unreadPseudo?: true } => {
     const pseudos = paintedPseudos(el, area, from)
     const unread = (["::before", "::after"] as const).some((ps) =>
       pseudoDrawsUnread(getComputedStyle(el, ps))
     )
     return {
       ...(pseudos.length === 0 ? {} : { pseudos }),
-      ...(unread ? { unread: true as const } : {}),
+      ...(unread ? { unreadPseudo: true as const } : {}),
     }
   }
 
   // The ancestors of `from` that a hit list puts in front of it, each as the
   // index of the same element in the stack read from `start` of that list,
   // or -1 where the stack stops before it. An ancestor is in front of its
-  // descendant by a pseudo-element of its own painted over it, or by its own
+  // descendant by a pseudo-element of its own drawn over it, or by its own
   // background over a descendant with a negative `z-index`. These are not
-  // called an `overlay` here: `pseudoEffect` lets the first through and calls
-  // anything else an `overlay`, as before (#692).
+  // called an `overlay` here: `pseudoEffect` lets the first through when that
+  // pseudo-element is a wash it reads and nothing else of the ancestor draws
+  // unread (`unreadPseudo`), and calls anything else an `overlay` (#692).
   const aheadOf = (
     hit: Array<Element>,
     end: number,

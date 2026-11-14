@@ -314,7 +314,7 @@ export interface RawLayer extends RawColor {
    * border, a shadow or an outline. The hit test may meet that one, so it may
    * be why the element is in front of the text.
    */
-  unread?: true
+  unreadPseudo?: true
 }
 
 /** One line box of a run: what is behind it, and what stops it being read. */
@@ -332,10 +332,11 @@ export interface RawTextLine {
   /**
    * Ancestors of the element read that the hit test put in FRONT of it, each
    * as the index of the same element further down `stack`, or -1 where it is
-   * not there. An ancestor is in front by a pseudo-element of its own painted
+   * not there. An ancestor is in front by a pseudo-element of its own drawn
    * over the line, or by its own background over a descendant with a negative
    * `z-index`. The collector does not call one an `overlay`; `pseudoEffect`
-   * does, unless a pseudo-element of that ancestor paints over the line (#692).
+   * does, unless a pseudo-element of that ancestor paints over the line and
+   * nothing else of it draws unread (`unreadPseudo`, #692).
    */
   ahead?: Array<number>
 }
@@ -665,6 +666,10 @@ const paintsNothing = (layer: RawLayer): boolean =>
   layer.image === undefined &&
   recoverAlpha(layer.onWhite, layer.onBlack).a === 0
 
+// `content: ""` as Chromium serialises it, quotes included: a box and no
+// more. The collector tests the same literal for the same reason.
+const EMPTY_CONTENT = '""'
+
 /**
  * Where each painted pseudo-element in a stack goes (#692), or why that is
  * not known.
@@ -690,8 +695,9 @@ const paintsNothing = (layer: RawLayer): boolean =>
  *   not read either; and one whose owner is hit again further down, where
  *   something paints between the pseudo-element and the owner's background;
  * - on any side: one whose owner is hidden, whose computed background is in
- *   the stack though nothing of it is painted, and one whose `content` draws
- *   more than its box;
+ *   the stack though nothing of it is painted, one whose `content` draws
+ *   more than its box, and one whose owner draws by another pseudo-element
+ *   that is not read (`unreadPseudo`);
  * - under its owner's background: one whose owner's colour is not opaque;
  * - under the text or under its owner's background, either way: one whose
  *   owner's own box does not hold the whole area, so its background is not
@@ -735,7 +741,15 @@ function pseudoEffect(
       }
       // Its `content` draws inside the box too, in a colour and place not
       // read: glyphs over or under the text are not a flat paint.
-      if (p.content !== '""') {
+      if (p.content !== EMPTY_CONTENT) {
+        unsure = true
+        continue
+      }
+      // Something else of its owner draws and is not read — glyphs, a
+      // border, a backdrop filter — and may be over the same line, out of
+      // the hit test's sight with `pointer-events: none`, or be why the owner
+      // is in front of the text. The wash alone is not what is there.
+      if (layer.unreadPseudo === true) {
         unsure = true
         continue
       }
@@ -757,11 +771,10 @@ function pseudoEffect(
     }
   }
   // An ancestor in front is explained by a pseudo-element of its own that
-  // paints over the area, and only when nothing else of it that draws goes
-  // unread. Anything else in front is a cover, as it always was.
+  // paints over the area — one composed, so nothing else of it draws unread.
+  // Anything else in front is a cover, as it always was.
   const overlay = ahead.some(
-    (i) =>
-      i === -1 || stack[i].unread === true || !over.some((o) => o.index === i)
+    (i) => i === -1 || !over.some((o) => o.index === i)
   )
   const blockers: Array<Blocker> = overlay ? ["overlay"] : []
   const held = (): PseudoEffect => ({

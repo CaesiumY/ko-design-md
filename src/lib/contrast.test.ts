@@ -985,6 +985,35 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
       expect([got.fg, got.bg]).toEqual(["#000000", "#808080"])
     })
 
+    it("holds a wash beside something else of its owner that draws unread", () => {
+      // A sibling pseudo-element draws glyphs, or filters what is behind it,
+      // with no background, so it is not read — and with `pointer-events:
+      // none` the hit test never puts the owner in front to say so. Composing
+      // the wash alone would leave that out.
+      const got = evaluateText({
+        fontSizePx: 16,
+        fontWeight: 400,
+        fg: opaque(0, 0, 0),
+        lines: [
+          {
+            stack: [
+              {
+                ...opaque(255, 255, 255),
+                pseudos: [pseudo({ ...ownText, paint: halfBlack() })],
+                unreadPseudo: true,
+              },
+            ],
+            blockers: [],
+          },
+        ],
+        blockers: [],
+      })
+      expect(got).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+    })
+
     it("holds a wash that also draws content of its own", () => {
       // `content: "NEW"`: its glyphs are drawn over the text too, in a colour
       // and place not read.
@@ -1112,7 +1141,7 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
     it("is a cover when it also draws by a pseudo-element not read", () => {
       // Its `::after` draws glyphs on no background, so it is not among the
       // pseudo-elements read, and it may be what the hit test met in front:
-      // the wash does not explain it.
+      // the wash does not explain it, nor is it composed.
       const got = evaluateText({
         fontSizePx: 16,
         fontWeight: 400,
@@ -1123,7 +1152,7 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
               {
                 ...opaque(255, 255, 255),
                 pseudos: [pseudo({ ...ownText, paint: halfBlack() })],
-                unread: true,
+                unreadPseudo: true,
               },
             ],
             blockers: [],
@@ -1134,7 +1163,7 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
       })
       expect(got).toMatchObject({
         verdict: "indeterminate",
-        blockers: ["overlay"],
+        blockers: ["overlay", "pseudo-background"],
       })
     })
 
