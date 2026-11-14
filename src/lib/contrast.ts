@@ -311,8 +311,10 @@ export interface RawLayer extends RawColor {
   /**
    * The element draws by a `::before` or `::after` that is not among
    * `pseudos`, since it paints no background: glyphs of its `content`, a
-   * border, a shadow or an outline. The hit test may meet that one, so it may
-   * be why the element is in front of the text.
+   * border, a shadow, an outline or a backdrop filter. That one may be over
+   * the same line — out of the hit test's sight with `pointer-events: none`
+   * — or be why the element is in front of the text, so `pseudoEffect`
+   * composes none of the element's pseudo-elements, on any side.
    */
   unreadPseudo?: true
 }
