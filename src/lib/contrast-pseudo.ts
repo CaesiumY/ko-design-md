@@ -32,6 +32,9 @@
 
 import type { RawLayer } from "./contrast"
 
+/** Four per-corner values, top-left first and clockwise. */
+export type Corners = [string, string, string, string]
+
 /** A box in viewport pixels. */
 export interface Rect {
   left: number
@@ -115,7 +118,13 @@ export interface RawPseudo {
    * The four corner radii as computed style writes them, top-left first and
    * clockwise: one or two lengths each, in pixels or percentages of the box.
    */
-  radii: [string, string, string, string]
+  radii: Corners
+  /**
+   * Its four `corner-*-shape` values, empty where the browser does not know
+   * the property. Anything but `round` (`superellipse(1)` in Chromium) cuts
+   * a corner to a shape the radii alone do not describe.
+   */
+  cornerShapes: Corners
   backgroundClip: string
   clipPath: string
   maskImage: string
@@ -132,13 +141,9 @@ export interface RawPseudo {
    */
   ownerBox: Rect
   /** The owner's four corner radii, written as `radii` is. */
-  ownerRadii: RawPseudo["radii"]
-  /**
-   * The owner's four `corner-*-shape` values, top-left first and clockwise,
-   * empty where the browser does not know the property. Anything but
-   * `round` (`superellipse(1)` in Chromium) cuts the corner to a shape the radii alone do not describe.
-   */
-  ownerCornerShapes: [string, string, string, string]
+  ownerRadii: Corners
+  /** The owner's four `corner-*-shape` values, written as `cornerShapes` is. */
+  ownerCornerShapes: Corners
   /** The element whose pseudo-element this is. */
   owner: OrderBox
   /**
@@ -173,6 +178,11 @@ export interface OrderBox {
   /** Its computed `pointer-events`. */
   pointerEvents: string
   /**
+   * Its computed `visibility`. A hidden owner paints no background, though
+   * its pseudo-elements may be `visible` and still put it in the hit list.
+   */
+  visibility: string
+  /**
    * Whether it, or its own `::before` or `::after`, paints a background on
    * screen — a colour that is not transparent, or an image, and not hidden.
    * Borders and shadows are not counted. With `pointer-events: none` such an
@@ -191,19 +201,22 @@ const ROUND_CORNER = new Set(["", "round", "superellipse(1)"])
  * Whether a pseudo-element placed under the text, or under its owner's
  * background, can be laid against that background with certainty: the
  * owner's own box holds the whole area, so its background is under all of
- * it, and nothing from the element read up to the owner paints out of the
- * hit test's sight. Taken from the area as given; a surface's grown area is
+ * it, it is visible so that background is painted, and nothing from the
+ * element read up to the owner paints out of the hit test's sight. Taken from the area as given; a surface's grown area is
  * the caller's to pass.
  */
 export function ownerBackgroundUnder(p: RawPseudo, area: Rect): boolean {
-  // Its background fills its border box cut by its rounded corners — round
-  // ones only: another `corner-shape` is a curve this does not work out.
-  const round = p.ownerCornerShapes.every((c) => ROUND_CORNER.has(c))
-  const holds = round && roundedHolds(p.ownerBox, p.ownerRadii, area)
+  // Its background fills its border box cut by its rounded corners.
+  const holds = roundedHolds(
+    p.ownerBox,
+    p.ownerRadii,
+    p.ownerCornerShapes,
+    area
+  )
   const hidden = (p.chain ?? []).some(
     (b) => b.pointerEvents === "none" && b.paintsBackgroundOrPseudo
   )
-  return holds && !hidden
+  return holds && !hidden && p.owner.visibility === "visible"
 }
 
 /**
@@ -431,6 +444,7 @@ function paintCoversArea(p: RawPseudo, box: Box): boolean {
   return roundedHolds(
     { left: box.x, top: box.y, right: box.x + box.w, bottom: box.y + box.h },
     p.radii,
+    p.cornerShapes,
     {
       left: p.area.left - box.outlineInset,
       top: p.area.top - box.outlineInset,
@@ -442,14 +456,17 @@ function paintCoversArea(p: RawPseudo, box: Box): boolean {
 
 /**
  * Whether a box cut by its rounded corners holds the whole of `area`.
- * `radii` are as computed style writes them, top-left first and clockwise;
- * one that cannot be read answers no.
+ * `radii` and `shapes` are as computed style writes them; a radius that
+ * cannot be read, or a corner shape other than round — a curve this does not
+ * work out — answers no.
  */
 function roundedHolds(
   shape: Rect,
-  radii: [string, string, string, string],
+  radii: Corners,
+  shapes: Corners,
   area: Rect
 ): boolean {
+  if (!shapes.every((c) => ROUND_CORNER.has(c))) return false
   const w = shape.right - shape.left
   const h = shape.bottom - shape.top
   const read = radii.map((r) => radiusOf(r, w, h))

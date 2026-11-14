@@ -677,6 +677,7 @@ const orderBox = (over: Partial<OrderBox> = {}): OrderBox => ({
   parentDisplay: "block",
   contextProps: [],
   pointerEvents: "auto",
+  visibility: "visible",
   paintsBackgroundOrPseudo: false,
   ...over,
 })
@@ -719,6 +720,7 @@ const pseudo = (over: Partial<RawPseudo> = {}): RawPseudo => ({
   ownerBox: { left: 100, top: 200, right: 400, bottom: 320 },
   ownerRadii: ["0px", "0px", "0px", "0px"],
   ownerCornerShapes: ["round", "round", "round", "round"],
+  cornerShapes: ["round", "round", "round", "round"],
   which: "before",
   zIndex: "auto",
   paint: opaque(0, 0, 0),
@@ -1234,8 +1236,8 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
         blockers: ["pseudo-background"],
       })
       // Round — `superellipse(1)` as Chromium writes it — or unknown to the
-      // browser (an empty value), is the ellipse,
-      // which holds this line: black on the wash over white, #808080, 5.32.
+      // browser (an empty value), is the ellipse, which holds this line:
+      // black on the wash over white, #808080, 5.32.
       for (const shape of ["round", "superellipse(1)", ""]) {
         expect(
           textOn(opaque(0, 0, 0), [
@@ -1344,6 +1346,40 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
       const got = sunk(opaque(255, 255, 255))
       expect(got).toMatchObject({ verdict: "pass", blockers: [] })
       expect(got.ratio).toBeCloseTo(21, 5)
+    })
+
+    it("holds when the owner is hidden and so paints no background", () => {
+      // `visibility: hidden` on the owner, `visible` on its pseudo-element:
+      // the hit test still meets the owner, by its pseudo-element, and its
+      // computed background is white, but none of it is painted.
+      const got = evaluateText({
+        fontSizePx: 16,
+        fontWeight: 400,
+        fg: opaque(0, 0, 0),
+        lines: [
+          {
+            stack: [
+              {
+                ...opaque(255, 255, 255),
+                pseudos: [
+                  pseudo({
+                    ...ownText,
+                    zIndex: "-1",
+                    paint: opaque(0, 0, 0),
+                    owner: orderBox({ visibility: "hidden" }),
+                  }),
+                ],
+              },
+            ],
+            blockers: [],
+          },
+        ],
+        blockers: [],
+      })
+      expect(got).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
     })
 
     it("holds when the owner's background lets it through", () => {

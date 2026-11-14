@@ -15,7 +15,7 @@ import type {
   RawNonTextSample,
   RawTextLine,
 } from "../src/lib/contrast"
-import type { OrderBox, RawPseudo } from "../src/lib/contrast-pseudo"
+import type { Corners, OrderBox, RawPseudo } from "../src/lib/contrast-pseudo"
 
 export interface CollectedText {
   path: string
@@ -309,17 +309,11 @@ export function collectContrast(): Collected {
     c.borderBottomLeftRadius,
   ]
 
-  // `corner-*-shape`, read by name. Chromium writes `round` as
-  // `superellipse(1)`, and an empty value is a browser that does not know
-  // the property, whose corners are round.
-  const ROUND_CORNER = new Set(["", "round", "superellipse(1)"])
+  // `corner-*-shape`, read by name; which values are round is
+  // `roundedHolds`'s to say.
   const CORNERS = ["top-left", "top-right", "bottom-right", "bottom-left"]
-  const cornerShapesOf = (
-    c: CSSStyleDeclaration
-  ): RawPseudo["ownerCornerShapes"] =>
-    CORNERS.map((at) =>
-      c.getPropertyValue(`corner-${at}-shape`)
-    ) as RawPseudo["ownerCornerShapes"]
+  const cornerShapesOf = (c: CSSStyleDeclaration): Corners =>
+    CORNERS.map((at) => c.getPropertyValue(`corner-${at}-shape`)) as Corners
 
   // The owner's border box, read at sample time like the rest.
   const ownerBoxOf = (e: Element): RawPseudo["ownerBox"] => {
@@ -337,6 +331,7 @@ export function collectContrast(): Collected {
         parent === null ? "block" : getComputedStyle(parent).display,
       contextProps: contextPropsOf(c),
       pointerEvents: c.pointerEvents,
+      visibility: c.visibility,
       // Its own pseudo-elements too: they take its `pointer-events`, so no
       // hit list shows them either.
       paintsBackgroundOrPseudo:
@@ -438,6 +433,7 @@ export function collectContrast(): Collected {
         ownerBox: ownerBoxOf(el),
         ownerRadii: radiiOf(getComputedStyle(el)),
         ownerCornerShapes: cornerShapesOf(getComputedStyle(el)),
+        cornerShapes: cornerShapesOf(cs),
         owner: orderBoxOf(el),
         chain: chainTo(from, el),
       })
@@ -568,13 +564,6 @@ export function collectContrast(): Collected {
       // cannot be moving anything.
       if (value !== initial && value !== "") {
         unsure.push(`${name}: ${value}`)
-      }
-    }
-    // A corner cut other than round is a shape `reach` does not work out
-    // from the radii (#692 review).
-    for (const [at, shape] of cornerShapesOf(pseudo).entries()) {
-      if (!ROUND_CORNER.has(shape)) {
-        unsure.push(`corner-${CORNERS[at]}-shape: ${shape}`)
       }
     }
     for (let up: Element | null = el; up !== null; up = up.parentElement) {

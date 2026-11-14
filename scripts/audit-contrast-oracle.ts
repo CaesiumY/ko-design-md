@@ -506,6 +506,10 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  * - `.bevel` and `.diamond` cut a 50% radius to a diamond with
  *   `corner-shape: bevel`, the owner's and the pseudo-element's: held, where
  *   an ellipse would read a pass.
+ * - `.unseen`'s white owner has `visibility: hidden`, while its `::before`
+ *   at `z-index: -1` and its run stay visible: the owner's white is not
+ *   painted, so its dark wash is not out of sight: held, where it would
+ *   read 21.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -707,6 +711,15 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
     id: "text past the bevelled corner of a disc under it",
     pathEnds: "div.diamond > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text over a pseudo-element of a hidden owner",
+    pathEnds: "div.unseen > div.o > span.t",
     theme: "light",
     state: "default",
     kind: "text",

@@ -10,6 +10,7 @@ const box = (over: Partial<OrderBox> = {}): OrderBox => ({
   parentDisplay: "block",
   contextProps: [],
   pointerEvents: "auto",
+  visibility: "visible",
   paintsBackgroundOrPseudo: false,
   ...over,
 })
@@ -44,6 +45,7 @@ const pseudo = (over: Partial<RawPseudo> = {}): RawPseudo => ({
   ownerBox: { left: 100, top: 200, right: 400, bottom: 320 },
   ownerRadii: ["0px", "0px", "0px", "0px"],
   ownerCornerShapes: ["round", "round", "round", "round"],
+  cornerShapes: ["round", "round", "round", "round"],
   which: "before",
   zIndex: "auto",
   paint: {
@@ -230,6 +232,34 @@ describe("reach — how much of the area a pseudo-element paints (#692)", () => 
         radii: ["50%", "50%", "50%", "50%"],
       })
     ).toBe("all")
+  })
+
+  it("is unsure of a corner cut to a shape other than round", () => {
+    // `corner-shape: bevel` makes the 50% radius a diamond, which leaves
+    // the corners of a line box the ellipse would hold.
+    const shaped = (shape: string) =>
+      reach(
+        pseudo({
+          radii: ["50%", "50%", "50%", "50%"],
+          cornerShapes: [shape, shape, shape, shape],
+        })
+      )
+    expect(shaped("superellipse(0)")).toBe("unsure")
+    // Chromium writes `round` as `superellipse(1)`; an unknown property
+    // reads as empty. Both are the ellipse, which holds the line here.
+    for (const round of ["round", "superellipse(1)", ""]) {
+      expect(shaped(round)).toBe("all")
+    }
+    // A box that misses the area still misses it, whatever its corners.
+    expect(
+      reach(
+        pseudo({
+          top: "100px",
+          height: "2px",
+          cornerShapes: ["bevel", "bevel", "bevel", "bevel"],
+        })
+      )
+    ).toBe("none")
   })
 
   it("covers only part of an area that runs past its box", () => {
