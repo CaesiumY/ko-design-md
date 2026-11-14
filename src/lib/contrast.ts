@@ -682,7 +682,12 @@ const paintsNothing = (layer: RawLayer): boolean =>
  *   what is read that paints anything, since which of the two is on top is
  *   not read either; and one whose owner is hit again further down, where
  *   something paints between the pseudo-element and the owner's background;
- * - under its owner's background: one whose owner's colour is not opaque.
+ * - under its owner's background: one whose owner's colour is not opaque;
+ * - under the text or under its owner's background, either way: one whose
+ *   owner's own box does not hold the whole area, so its background is not
+ *   under all of it, and one with an element from the one read up to the
+ *   owner that paints a background and takes no pointer events, which no
+ *   stack shows.
  *
  * One under the text is composed by source-over whatever its
  * `mix-blend-mode`, as every layer of a stack is.

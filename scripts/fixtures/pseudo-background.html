@@ -147,6 +147,18 @@
         place carries its white: read as white, the run would pass at 5.32;
         on screen the wash is over rgb(128), rgb(64), a fail. An owner whose
         own box does not hold the line holds it.
+      - `.round` puts a 200x100 white owner with `border-radius: 50%` on a
+        grey panel, its raised run at its top-left corner and a square 50%
+        wash (`inset: 0`) over the whole owner box. The run's line box lies
+        inside the owner's rectangle but past its curve, where no white is:
+        read as white it would pass at 5.32. An owner whose rounded shape
+        does not hold the line holds it.
+      - `.ghost` is `.unhit` whose wrapper paints nothing itself but has a
+        `::before` of oklch(0.4 0 0) over the panel, above the panel's wash
+        and under the raised run. The wrapper takes no pointer events, nor
+        does its pseudo-element: read as the wash over white, the run would
+        pass at 5.32, on a grey it does not sit on. A painted pseudo-element
+        of an element the hit test skips holds it.
     -->
     <style>
       html {
@@ -174,7 +186,9 @@
       .under,
       .split,
       .unhit,
-      .spill {
+      .spill,
+      .round,
+      .ghost {
         position: relative;
         width: 300px;
         height: 120px;
@@ -376,6 +390,47 @@
       .spill .t {
         position: relative;
       }
+      .round {
+        background: oklch(0.6 0 0);
+      }
+      .round .o {
+        position: relative;
+        width: 200px;
+        height: 100px;
+        border-radius: 50%;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        background: oklch(1 0 0);
+      }
+      .round .o::before,
+      .ghost::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0 / 0.5);
+      }
+      .round .t {
+        position: relative;
+      }
+      .ghost .m {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+      .ghost .m::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0.4 0 0);
+      }
+      .ghost .t {
+        position: relative;
+        pointer-events: auto;
+      }
       .box {
         position: relative;
         width: 40px;
@@ -428,6 +483,12 @@
     </div>
     <div class="spill">
       <div class="o"><span class="t">Sample text</span></div>
+    </div>
+    <div class="round">
+      <div class="o"><span class="t">Sample text</span></div>
+    </div>
+    <div class="ghost">
+      <div class="m"><span class="t">Sample text</span></div>
     </div>
   </body>
 </html>

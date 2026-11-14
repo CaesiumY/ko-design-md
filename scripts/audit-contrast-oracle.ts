@@ -500,6 +500,9 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   owner's centred 50% wash, over a grey panel. The owner is hit only where
  *   its wash is, carrying its white there: held. Read as white, it would pass
  *   at 5.32; on screen it is rgb(64), a fail.
+ * - `.round`'s raised run sits past the rounded corner of a white owner on a
+ *   grey panel, under a square wash of the owner's: held.
+ * - `.ghost` is `.unhit` whose wrapper paints by its own `::before`: held.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -665,6 +668,24 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
     id: "text spilling out of the owner its wash belongs to",
     pathEnds: "div.spill > div.o > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text past the rounded corner of the owner its wash belongs to",
+    pathEnds: "div.round > div.o > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a skipped wrapper that paints by its pseudo-element",
+    pathEnds: "div.ghost > div.m > span.t",
     theme: "light",
     state: "default",
     kind: "text",

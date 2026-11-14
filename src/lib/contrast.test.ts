@@ -677,7 +677,7 @@ const orderBox = (over: Partial<OrderBox> = {}): OrderBox => ({
   parentDisplay: "block",
   contextProps: [],
   pointerEvents: "auto",
-  paints: false,
+  paintsBackground: false,
   ...over,
 })
 
@@ -717,6 +717,7 @@ const pseudo = (over: Partial<RawPseudo> = {}): RawPseudo => ({
   unsure: [],
   area: { left: 200, top: 248, right: 300, bottom: 272 },
   ownerBox: { left: 100, top: 200, right: 400, bottom: 320 },
+  ownerRadii: ["0px", "0px", "0px", "0px"],
   which: "before",
   zIndex: "auto",
   paint: opaque(0, 0, 0),
@@ -1197,6 +1198,25 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
       })
     })
 
+    it("holds one whose owner's rounded corner leaves the line", () => {
+      // The owner is an ellipse over x 100..400, y 200..320. A line box at
+      // x 105..150, y 205..225 is inside its rectangle but its top-left
+      // corner, 145 and 55 from the centre, is outside the curve
+      // ((145 / 150)² + (55 / 60)² > 1): no owner background there.
+      const got = textOn(opaque(0, 0, 0), [
+        pseudo({
+          ...raised,
+          paint: halfBlack(),
+          ownerRadii: ["50%", "50%", "50%", "50%"],
+          area: { left: 105, top: 205, right: 150, bottom: 225 },
+        }),
+      ])
+      expect(got).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+    })
+
     it("holds one with a painted element between it and the text that the hit test skips", () => {
       // A wrapper that paints and takes no pointer events is under the
       // pseudo-element and over the owner, and in no stack.
@@ -1207,7 +1227,7 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
             orderBox({
               position: "static",
               pointerEvents: "none",
-              paints: true,
+              paintsBackground: true,
             }),
           ],
           paint: halfBlack(),

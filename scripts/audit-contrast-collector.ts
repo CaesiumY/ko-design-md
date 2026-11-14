@@ -232,11 +232,27 @@ export function collectContrast(): Collected {
   // from being invisible to the audit. Their rects are read at sample time
   // rather than cached, because the page scrolls between samples and a
   // `position: fixed` candidate does not move with it.
+  // Whether an element paints a background of its own on screen: a colour
+  // that is not transparent, or an image, and it is not hidden.
+  const paintsBackground = (cs: CSSStyleDeclaration): boolean =>
+    cs.visibility !== "hidden" &&
+    cs.display !== "none" &&
+    (cs.backgroundImage !== "none" || !isTransparent(cs.backgroundColor))
+
+  // Whether a `::before` or `::after`, by its computed style, paints a
+  // background on screen. `none` is what an undeclared pseudo-element reports
+  // for `content` too, so that one test covers both; see `paintedPseudos` for
+  // why each of the others is there.
+  const pseudoPaints = (cs: CSSStyleDeclaration): boolean => {
+    if (cs.content === "none") return false
+    const alpha = Number.parseFloat(cs.opacity)
+    if (Number.isFinite(alpha) && alpha === 0) return false
+    return paintsBackground(cs)
+  }
+
   const overlayCandidates = [...document.querySelectorAll("*")].filter((el) => {
     const cs = getComputedStyle(el)
-    if (cs.pointerEvents !== "none") return false
-    if (cs.visibility === "hidden" || cs.display === "none") return false
-    return cs.backgroundImage !== "none" || !isTransparent(cs.backgroundColor)
+    return cs.pointerEvents === "none" && paintsBackground(cs)
   })
 
   // `from` is the element being measured. Its own ancestors are excluded: an
@@ -280,6 +296,13 @@ export function collectContrast(): Collected {
       .filter(([, value, initial]) => value !== initial && value !== "")
       .map(([name, value]) => `${name}: ${value}`)
 
+  const radiiOf = (c: CSSStyleDeclaration): RawPseudo["radii"] => [
+    c.borderTopLeftRadius,
+    c.borderTopRightRadius,
+    c.borderBottomRightRadius,
+    c.borderBottomLeftRadius,
+  ]
+
   // The owner's border box, read at sample time like the rest.
   const ownerBoxOf = (e: Element): RawPseudo["ownerBox"] => {
     const r = e.getBoundingClientRect()
@@ -296,7 +319,13 @@ export function collectContrast(): Collected {
         parent === null ? "block" : getComputedStyle(parent).display,
       contextProps: contextPropsOf(c),
       pointerEvents: c.pointerEvents,
-      paints: c.backgroundImage !== "none" || !isTransparent(c.backgroundColor),
+      // Its own pseudo-elements too: they take its `pointer-events`, so no
+      // hit list shows them either.
+      paintsBackground:
+        paintsBackground(c) ||
+        ["::before", "::after"].some((ps) =>
+          pseudoPaints(getComputedStyle(e, ps))
+        ),
     }
   }
 
@@ -328,26 +357,19 @@ export function collectContrast(): Collected {
     const out: Array<RawPseudo> = []
     for (const pseudo of ["::before", "::after"] as const) {
       const cs = getComputedStyle(el, pseudo)
-      // `none` is what an undeclared pseudo-element reports too, so this one
-      // test covers both. An EMPTY `content` is not spelled `""` here:
-      // Chromium serialises `content: ""` as the two characters `""`, quotes
-      // included — measured — so comparing against the empty string is a test
-      // that can never pass. It would also be the wrong test if it did:
+      // `pseudoPaints` tests `content` against `none`, never against an EMPTY
+      // value: Chromium serialises `content: ""` as the two characters `""`,
+      // quotes included — measured — so comparing against the empty string is
+      // a test that can never pass. It would also be the wrong test if it did:
       // vapor-ui's `.vp-btn::before` is `content: ""` WITH a background, and
       // skipping on empty content would step over a layer that really paints.
-      // What makes that one harmless is the opacity test below.
-      if (cs.content === "none") continue
-      // A declared pseudo-element that paints nothing is not in the way.
-      // vapor-ui's buttons carry `::before { background: …; opacity: 0 }` for
-      // a hover wash, and Chromium serialises their empty content as `""`
-      // rather than `none` — so without these three tests every vapor-ui
-      // button reading was held for a layer that is not on screen.
-      if (cs.display === "none" || cs.visibility === "hidden") continue
+      // What makes that one harmless is the opacity test: a declared
+      // pseudo-element that paints nothing is not in the way. vapor-ui's
+      // buttons carry `::before { background: …; opacity: 0 }` for a hover
+      // wash, so without the hidden, opacity and background tests every
+      // vapor-ui button reading was held for a layer that is not on screen.
+      if (!pseudoPaints(cs)) continue
       const alpha = Number.parseFloat(cs.opacity)
-      if (Number.isFinite(alpha) && alpha === 0) continue
-      if (cs.backgroundImage === "none" && isTransparent(cs.backgroundColor)) {
-        continue
-      }
       out.push({
         position: cs.position,
         transform: cs.transform,
@@ -386,12 +408,7 @@ export function collectContrast(): Collected {
           opacity: (Number.isFinite(alpha) ? alpha : 1) * opacityOf(el),
           ...imageOf(cs),
         },
-        radii: [
-          cs.borderTopLeftRadius,
-          cs.borderTopRightRadius,
-          cs.borderBottomRightRadius,
-          cs.borderBottomLeftRadius,
-        ],
+        radii: radiiOf(cs),
         backgroundClip: cs.backgroundClip,
         clipPath: cs.clipPath,
         maskImage: cs.maskImage,
@@ -402,6 +419,7 @@ export function collectContrast(): Collected {
           offset: cs.outlineOffset,
         },
         ownerBox: ownerBoxOf(el),
+        ownerRadii: radiiOf(getComputedStyle(el)),
         owner: orderBoxOf(el),
         chain: chainTo(from, el),
       })

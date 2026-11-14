@@ -32,6 +32,14 @@
 
 import type { RawLayer } from "./contrast"
 
+/** A box in viewport pixels. */
+export interface Rect {
+  left: number
+  top: number
+  right: number
+  bottom: number
+}
+
 /**
  * One painted pseudo-element as the collector reads it — computed values only,
  * no judgement.
@@ -93,7 +101,7 @@ export interface RawPseudo {
    * The box of what is read — a text line, a form control, a non-text
    * surface — in viewport pixels, the same frame as the pseudo-element's box.
    */
-  area: { left: number; top: number; right: number; bottom: number }
+  area: Rect
   /** Which of its owner's two pseudo-elements this is. */
   which: "before" | "after"
   /** Its computed `z-index`: `auto` or an integer. */
@@ -122,7 +130,9 @@ export interface RawPseudo {
    * The owner's own border box, in viewport pixels. Where it does not hold
    * the area read, the owner's background is not under all of it.
    */
-  ownerBox: { left: number; top: number; right: number; bottom: number }
+  ownerBox: Rect
+  /** The owner's four corner radii, written as `radii` is. */
+  ownerRadii: [string, string, string, string]
   /** The element whose pseudo-element this is. */
   owner: OrderBox
   /**
@@ -157,33 +167,27 @@ export interface OrderBox {
   /** Its computed `pointer-events`. */
   pointerEvents: string
   /**
-   * Whether it paints a background — a colour that is not transparent, or
-   * an image. With `pointer-events: none` such an element is in no hit list,
+   * Whether it paints a background on screen — a colour that is not
+   * transparent, or an image, and it is not hidden. Borders and shadows are
+   * not counted. With `pointer-events: none` such an element is in no hit list,
    * so no stack shows where its paint is.
    */
-  paints: boolean
+  paintsBackground: boolean
 }
 
 /**
  * Whether a pseudo-element placed under the text, or under its owner's
  * background, can be laid against that background with certainty: the
  * owner's own box holds the whole area, so its background is under all of
- * it, and nothing between the element read and the owner paints out of the
+ * it, and nothing from the element read up to the owner paints out of the
  * hit test's sight. Taken from the area as given; a surface's grown area is
  * the caller's to pass.
  */
-export function ownerBackgroundUnder(
-  p: RawPseudo,
-  area: RawPseudo["area"]
-): boolean {
-  const o = p.ownerBox
-  const holds =
-    o.left <= area.left &&
-    o.top <= area.top &&
-    o.right >= area.right &&
-    o.bottom >= area.bottom
+export function ownerBackgroundUnder(p: RawPseudo, area: Rect): boolean {
+  // Its background fills its border box cut by its rounded corners.
+  const holds = roundedHolds(p.ownerBox, p.ownerRadii, area)
   const hidden = (p.chain ?? []).some(
-    (b) => b.pointerEvents === "none" && b.paints
+    (b) => b.pointerEvents === "none" && b.paintsBackground
   )
   return holds && !hidden
 }
@@ -407,22 +411,47 @@ function paintCoversArea(p: RawPseudo, box: Box): boolean {
     !(clip === "content-box" && !padded)
   if (clipsShort) return false
 
-  const radii = p.radii.map((r) => radiusOf(r, box.w, box.h))
-  if (radii.some((r) => r === null)) return false
-  const [tl, tr, br, bl] = radii as Array<{ rx: number; ry: number }>
+  // The shape is convex, so it holds the area once it holds its corners. An
+  // outline inside the box paints a colour of its own over that edge, so the
+  // area has to keep clear of it: grown by the ring's reach, it must still
+  // fit, which puts every point of it at least that far in.
+  return roundedHolds(
+    { left: box.x, top: box.y, right: box.x + box.w, bottom: box.y + box.h },
+    p.radii,
+    {
+      left: p.area.left - box.outlineInset,
+      top: p.area.top - box.outlineInset,
+      right: p.area.right + box.outlineInset,
+      bottom: p.area.bottom + box.outlineInset,
+    }
+  )
+}
+
+/**
+ * Whether a box cut by its rounded corners holds the whole of `area`.
+ * `radii` are as computed style writes them, top-left first and clockwise;
+ * one that cannot be read answers no.
+ */
+function roundedHolds(
+  shape: Rect,
+  radii: [string, string, string, string],
+  area: Rect
+): boolean {
+  const w = shape.right - shape.left
+  const h = shape.bottom - shape.top
+  const read = radii.map((r) => radiusOf(r, w, h))
+  if (read.some((r) => r === null)) return false
+  const [tl, tr, br, bl] = read as Array<{ rx: number; ry: number }>
   // Radii that add up past a side are scaled down together, by the smallest
   // factor any side needs (CSS Backgrounds 3, "Overlapping Curves").
   const fit = (side: number, sum: number) => (sum > side ? side / sum : 1)
   const f = Math.min(
-    fit(box.w, tl.rx + tr.rx),
-    fit(box.w, bl.rx + br.rx),
-    fit(box.h, tl.ry + bl.ry),
-    fit(box.h, tr.ry + br.ry)
+    fit(w, tl.rx + tr.rx),
+    fit(w, bl.rx + br.rx),
+    fit(h, tl.ry + bl.ry),
+    fit(h, tr.ry + br.ry)
   )
-  const left = box.x
-  const top = box.y
-  const right = box.x + box.w
-  const bottom = box.y + box.h
+  const { left, top, right, bottom } = shape
   // Each corner as the centre of its ellipse, its two radii, and which way
   // from that centre a point has to lie to be in the corner at all.
   const corners = [
@@ -444,21 +473,12 @@ function paintCoversArea(p: RawPseudo, box: Box): boolean {
     }
     return true
   }
-  // The shape is convex, so it holds the area once it holds its corners. An
-  // outline inside the box paints a colour of its own over that edge, so the
-  // area has to keep clear of it: grown by the ring's reach, it must still
-  // fit, which puts every point of it at least that far in.
-  const a = {
-    left: p.area.left - box.outlineInset,
-    top: p.area.top - box.outlineInset,
-    right: p.area.right + box.outlineInset,
-    bottom: p.area.bottom + box.outlineInset,
-  }
+  // The shape is convex, so it holds the area once it holds its corners.
   return (
-    inside(a.left, a.top) &&
-    inside(a.right, a.top) &&
-    inside(a.right, a.bottom) &&
-    inside(a.left, a.bottom)
+    inside(area.left, area.top) &&
+    inside(area.right, area.top) &&
+    inside(area.right, area.bottom) &&
+    inside(area.left, area.bottom)
   )
 }
 
