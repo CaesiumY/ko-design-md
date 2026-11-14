@@ -490,6 +490,10 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   makes a stacking context is not read: held, `pseudo-background` alone.
  * - `.under`'s opaque `::before` at `z-index: -1` paints under the panel's
  *   own white, since the panel is no stacking context: a pass at 21.
+ * - `.split` raises its run over a 50% wash with an unpositioned wrapper of
+ *   rgb(128) between them. The hit test returns the panel twice, its wash
+ *   first, so its first place is not its white background: held. Read as
+ *   white, it would pass at 5.32; on screen it is rgb(64), a fail.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -633,6 +637,15 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
     verdict: "pass",
     blockers: [],
     ratio: 21,
+  },
+  {
+    id: "raised text over a wash with a painted wrapper between",
+    pathEnds: "div.m > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
   },
 ]
 

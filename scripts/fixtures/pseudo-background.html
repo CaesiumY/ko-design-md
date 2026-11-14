@@ -129,6 +129,14 @@
       - `.under` is a panel that is no stacking context, whose `::before`
         is opaque black at `z-index: -1`. That paints under the panel's own
         white background, out of sight, and the run is a pass at 21.
+      - `.split` raises its run (`position: relative`) over a 50% black
+        `::before`, as `.disc` does, but with an unpositioned wrapper of
+        oklch(0.6 0 0) (rgb(128)) in between. The wash paints over the
+        wrapper and under the run, so the hit test returns the panel twice:
+        first where its wash is, then its own white background. Read as the
+        panel's white, the wash would make it rgb(128) and the run a pass at
+        5.32; on screen it is the wash over the wrapper, rgb(64), and a fail.
+        The panel hit again holds it.
     -->
     <style>
       html {
@@ -153,7 +161,8 @@
       .veil,
       .opaque,
       .unknown,
-      .under {
+      .under,
+      .split {
         position: relative;
         width: 300px;
         height: 120px;
@@ -305,6 +314,23 @@
         background: oklch(0 0 0);
         z-index: -1;
       }
+      .split::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0 / 0.5);
+      }
+      .split .m {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        background: oklch(0.6 0 0);
+      }
+      .split .t {
+        position: relative;
+      }
       .box {
         position: relative;
         width: 40px;
@@ -349,5 +375,8 @@
     <div class="opaque"><span class="t">Sample text</span></div>
     <div class="unknown"><span class="t">Sample text</span></div>
     <div class="under"><span class="t">Sample text</span></div>
+    <div class="split">
+      <div class="m"><span class="t">Sample text</span></div>
+    </div>
   </body>
 </html>

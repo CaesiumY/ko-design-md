@@ -269,6 +269,8 @@ export function collectContrast(): Collected {
       ["mix-blend-mode", c.mixBlendMode, "normal"],
       ["isolation", c.isolation, "auto"],
       ["view-transition-name", c.viewTransitionName, "none"],
+      ["transform-style", c.transformStyle, "flat"],
+      ["offset-path", c.offsetPath, "none"],
       ["will-change", c.willChange, "auto"],
       ["contain", c.contain, "none"],
       ["container-type", c.containerType, "normal"],
@@ -411,9 +413,11 @@ export function collectContrast(): Collected {
 
   // The ancestors of `from` that a hit list puts in front of it, each as the
   // index of the same element in the stack read from `start` of that list,
-  // or -1 where the stack stops before it. Only a pseudo-element of its own
-  // can put an ancestor in front of its descendant, so these are not called
-  // an `overlay` here; `pseudoEffect` decides (#692).
+  // or -1 where the stack stops before it. An ancestor is in front of its
+  // descendant by a pseudo-element of its own painted over it, or by its own
+  // background over a descendant with a negative `z-index`. These are not
+  // called an `overlay` here: `pseudoEffect` lets the first through and calls
+  // anything else an `overlay`, as before (#692).
   const aheadOf = (
     hit: Array<Element>,
     end: number,
@@ -428,6 +432,11 @@ export function collectContrast(): Collected {
         const at = hit.indexOf(front, start)
         return at === -1 || at - start >= depth ? -1 : at - start
       })
+
+  // `again` for the layer hit at `at`, when the same element is hit again
+  // further down — see `RawLayer.again`. Absent otherwise.
+  const againOf = (hit: Array<Element>, at: number): { again?: true } =>
+    hit.indexOf(hit[at], at + 1) === -1 ? {} : { again: true }
 
   // Whether an element is the containing block of a FIXED descendant, by the
   // rules this walk models: a transform of any kind or a filter. An ABSOLUTE
@@ -633,7 +642,7 @@ export function collectContrast(): Collected {
    *
    * `from` is the element the colour belongs to, and the walk starts there
    * rather than at the top of the hit list. Anything in front of it is covering
-   * it, not backing it: socar's demo snackbar sits over a price label, and
+   * it, not backing it — but for its ancestors, see `aheadOf`: socar's demo snackbar sits over a price label, and
    * taking the hit list from the top made the snackbar's fill — the same dark
    * navy as the label's text — its background, reporting 1.00:1 for a label
    * that is simply hidden. A covered reading is held, not scored, because the
@@ -666,14 +675,15 @@ export function collectContrast(): Collected {
     if (index === -1) return { stack, blockers, ahead: [], occluded: true }
     // Something IS in front, but `from` is still reachable, so the cover is
     // translucent or only partial. That is a held reading, not a dropped one.
-    // A descendant of `from` in front of it is part of it, not a cover, and
-    // an ancestor is in front only by a pseudo-element of its own: see
-    // `aheadOf`.
+    // A descendant of `from` in front of it is part of it, not a cover. An
+    // ancestor in front is handed over as `ahead` instead, for `pseudoEffect`
+    // to call an `overlay` or not: see `aheadOf`.
     const covers = hit
       .slice(0, index)
       .some((front) => !from.contains(front) && !front.contains(from))
     if (covers) blockers.add("overlay")
-    for (const el of hit.slice(index)) {
+    for (const [at, el] of hit.entries()) {
+      if (at < index) continue
       const cs = getComputedStyle(el)
       for (const b of paintBlockers(cs, el.getBoundingClientRect())) {
         blockers.add(b)
@@ -684,6 +694,7 @@ export function collectContrast(): Collected {
         opacity: opacityOf(el),
         ...imageOf(cs),
         ...pseudosOf(el, area, from),
+        ...againOf(hit, at),
       }
       stack.push(layer)
       // Nothing below an opaque layer contributes. The opacity test matters as
@@ -1005,16 +1016,16 @@ export function collectContrast(): Collected {
     // sibling is over it, so its own fill and the layers behind it are not the
     // pixels a viewer sees. Its OWN descendants do not count — a radio's inner
     // dot sits over its centre and is part of the control, not something
-    // covering it; counting those held 628 readings on the catalogue. Nor do
-    // its ancestors, which only a pseudo-element of their own puts in front:
-    // see `aheadOf`.
+    // covering it; counting those held 628 readings on the catalogue. Its
+    // ancestors are handed over as `ahead` instead: see `aheadOf`.
     const covered = hit
       .slice(0, index)
       .some((front) => !el.contains(front) && !front.contains(el))
     if (covered) blockers.add("overlay")
     const outer: Array<RawLayer> = []
     if (coveredByOverlay(cx, cy, el)) blockers.add("overlay")
-    for (const behind of hit.slice(index + 1)) {
+    for (const [at, behind] of hit.entries()) {
+      if (at <= index) continue
       const bcs = getComputedStyle(behind)
       // The same four tests the text path's `backdropAt` runs on every layer.
       // These two were missing here, so a surface sitting over a filtered or
@@ -1030,6 +1041,7 @@ export function collectContrast(): Collected {
         opacity: opacityOf(behind),
         ...imageOf(bcs),
         ...pseudosOf(behind, live, el),
+        ...againOf(hit, at),
       }
       outer.push(layer)
       if (isOpaque(colour) && layer.opacity >= 1) break

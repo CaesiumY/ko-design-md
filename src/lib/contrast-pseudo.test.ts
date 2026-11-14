@@ -119,6 +119,14 @@ describe("paintOrder — which side of what is read a pseudo-element paints on (
     expect(paintOrder(pseudo({ chain: fadedBlock, which: "after" }))).toBe(
       "above"
     )
+    // A 3D context and a motion path make one too.
+    for (const made of [
+      "transform-style: preserve-3d",
+      'offset-path: path("M0 0")',
+    ]) {
+      const chain = [box({ position: "static", contextProps: [made] })]
+      expect(paintOrder(pseudo({ chain }))).toBe("below")
+    }
     // A block's does not: it stays in the normal flow, under the wash.
     const block = [box({ position: "static", zIndex: "1" })]
     expect(paintOrder(pseudo({ chain: block }))).toBe("above")

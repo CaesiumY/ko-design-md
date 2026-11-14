@@ -301,6 +301,13 @@ export interface RawLayer extends RawColor {
    * paints; `pseudoEffect` works that out here.
    */
   pseudos?: Array<RawPseudo>
+  /**
+   * The same element is hit again further down. A hit on a pseudo-element is
+   * reported as its owner, so the owner comes up twice when something paints
+   * between its pseudo-element and its own background: this place is then the
+   * pseudo-element's, and the background it carries is not what is here.
+   */
+  again?: true
 }
 
 /** One line box of a run: what is behind it, and what stops it being read. */
@@ -318,9 +325,10 @@ export interface RawTextLine {
   /**
    * Ancestors of the element read that the hit test put in FRONT of it, each
    * as the index of the same element further down `stack`, or -1 where it is
-   * not there. Only a pseudo-element of its own puts an ancestor in front, so
-   * the collector does not call one an `overlay`; `pseudoEffect` does, unless
-   * a pseudo-element of that ancestor paints over the line (#692).
+   * not there. An ancestor is in front by a pseudo-element of its own painted
+   * over the line, or by its own background over a descendant with a negative
+   * `z-index`. The collector does not call one an `overlay`; `pseudoEffect`
+   * does, unless a pseudo-element of that ancestor paints over the line (#692).
    */
   ahead?: Array<number>
 }
@@ -672,7 +680,10 @@ const paintsNothing = (layer: RawLayer): boolean =>
  *   source-over;
  * - under it: one whose owner is further down than a layer between it and
  *   what is read that paints anything, since which of the two is on top is
- *   not read either;
+ *   not read either; and one whose owner is hit again further down, where
+ *   something paints between the pseudo-element and the owner's background.
+ *   One under it is composed by source-over whatever its `mix-blend-mode`,
+ *   as every layer of a stack is;
  * - under its owner's background: one whose owner's colour is not opaque.
  */
 function pseudoEffect(
@@ -740,6 +751,10 @@ function pseudoEffect(
   let out = stack
   if (under.length === 1) {
     const { index, p } = under[0]
+    // Its owner hit again further down: something paints between the two,
+    // and this layer is the pseudo-element's place, not the owner's
+    // background, which may lie past where the stack stopped.
+    if (stack[index].again === true) return held()
     if (stack.slice(between, index).some((l) => !paintsNothing(l))) {
       return held()
     }

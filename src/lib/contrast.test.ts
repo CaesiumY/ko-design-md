@@ -668,12 +668,6 @@ describe("evaluateText — a blocker belongs to the line it came from", () => {
   })
 })
 
-// A painted `::before`/`::after` as the collector hands it over. By default it
-// fills its containing block: the padding box starts at (100, 200) and the
-// pseudo-element is 300x120 from there, so it spans x 100..400 and y 200..320
-// and covers the line box x 200..300, y 248..272. Each case moves one value
-// and says where the box lands, worked out from the CSS rather than by the
-// code.
 // An element in the paint order: a `position: relative` block with no
 // `z-index` and nothing else that makes a stacking context, unless a case
 // says otherwise.
@@ -685,6 +679,12 @@ const orderBox = (over: Partial<OrderBox> = {}): OrderBox => ({
   ...over,
 })
 
+// A painted `::before`/`::after` as the collector hands it over. By default it
+// fills its containing block: the padding box starts at (100, 200) and the
+// pseudo-element is 300x120 from there, so it spans x 100..400 and y 200..320
+// and covers the line box x 200..300, y 248..272. Each case moves one value
+// and says where the box lands, worked out from the CSS rather than by the
+// code.
 const pseudo = (over: Partial<RawPseudo> = {}): RawPseudo => ({
   position: "absolute",
   transform: "none",
@@ -1147,6 +1147,35 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
           pseudo({ ...raised, paint: painted("url(x.png)") }),
         ])
       ).toMatchObject({ verdict: "indeterminate", blockers: ["image"] })
+    })
+
+    it("holds one whose owner the hit test meets again further down", () => {
+      // The owner's layer here is where its pseudo-element was hit, not its
+      // background: something that paints sat between the two, and the
+      // stack may have stopped before reaching it (#692 review).
+      const got = evaluateText({
+        fontSizePx: 16,
+        fontWeight: 400,
+        fg: opaque(0, 0, 0),
+        lines: [
+          {
+            stack: [
+              SPAN,
+              {
+                ...opaque(255, 255, 255),
+                again: true,
+                pseudos: [pseudo({ ...raised, paint: halfBlack() })],
+              },
+            ],
+            blockers: [],
+          },
+        ],
+        blockers: [],
+      })
+      expect(got).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
     })
 
     it("holds when a layer between it and the text paints", () => {
