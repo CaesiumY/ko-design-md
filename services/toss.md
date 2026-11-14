@@ -2,7 +2,7 @@
 name: 토스
 slug: toss
 category: finance
-last_updated: "2026-11-02"
+last_updated: "2026-11-14"
 created_at: "2026-05-11"
 lang: ko
 logo: https://getdesign.kr/logos/toss.png
@@ -202,6 +202,8 @@ fonts:
 ---
 
 # 토스 (Toss) — design.md
+
+토스는 금융부터 일상까지 한 앱에 묶은 핀테크 앱이고 [src:11], 거의 무채색인 흰 캔버스 위에서 토스 블루로 채운 버튼은 주요 액션에 쓴다 [src:12][src:14].
 
 > 비바리퍼블리카가 운영하는 한국 최대 핀테크 슈퍼앱. 송금·결제·은행·증권·보험·세금·부동산·자동차 관리 등 금융 전반을 단일 모바일 셸로 묶고, "Apps in Toss" 미니앱 플랫폼까지 같은 디자인 시스템 위에 얹는다 [src:2]. 본 문서는 Toss Design System 핸드오프 번들(`TDS_Mobile_for_Apps_in_Toss_(2602-3-2).fig` export → `toss-design-system/{README, chats/chat1, project/{README, SKILL, colors_and_type.css, preview/ 41 cards, ui_kits/mobile/{Components.jsx, Screens.jsx, Send-Money Flow.html, ios-frame.jsx}, assets/toss-logo.png}}`)을 1차 출처로 합성한 결과이며, 공개된 toss.tech 보고서 [src:1]와 toss.im 미니앱 가이드, TDS Mobile docs를 보조 출처로 사용했다.
 
@@ -682,3 +684,4 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 11. https://toss.im — 토스 공식 홈페이지. 슬로건·카피·비주얼 톤 보조 출처.
 12. https://www.npmjs.com/package/@toss/tds-colors — TDS 색 토큰 npm 패키지. `colors.light.css`·`colors.dark.css`가 `--adaptive*` 커스텀 프로퍼티로 팔레트 hex를 싣는다(blue·grey·green·red·orange·yellow·purple·teal 각 50~900). 같은 파일이 adaptive 배경·선 역할(`background`·`greyBackground`·`layeredBackground`·`floatBackground`·`dimmedBackground`·`hairlineBorder` 등)과 불투명도 계열(`greyOpacity*`·`opacity*`)도 테마별 리터럴로 싣는다 — 불투명 색은 hex, 불투명도가 있는 색은 rgba 다. JS 모듈은 같은 값에 더해 `tds` 컴포넌트 토큰(`tToastBackground` 등, 테마별 hex·rgba·그라디언트 값)을 싣는다. 시맨틱 토큰이 테마별로 어느 팔레트 단계를 가리키는지는 싣지 않는다.
 13. https://tossmini-docs.toss.im/tds-mobile/foundation/colors/ — TDS Mobile Colors 문서. `@toss/tds-colors` 사용법과 기본·배경 색상 팔레트를 이름과 hex로 보여 준다. 배경 색상 견본은 `greyBackground`의 라이트 값을 hex가 아니라 `lightThemeGrey100`으로 적는다.
+14. https://tossmini-docs.toss.im/tds-mobile/components/button/ — TDS Mobile Button 문서. fill variant 는 채도가 높아 "주요 액션을 강조하는 데 적합"하고 weak variant 는 덜 중요한 보조 액션에 쓴다고 적는다.

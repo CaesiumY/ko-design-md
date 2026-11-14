@@ -2,7 +2,7 @@
 name: 원티드
 slug: wanted
 category: career
-last_updated: "2026-10-27"
+last_updated: "2026-11-14"
 created_at: "2026-05-12"
 lang: ko
 logo: https://getdesign.kr/logos/wanted.png
@@ -317,6 +317,8 @@ font-display-src: https://cdn.jsdelivr.net/npm/wanted-sans@1.0.3/fonts/webfonts/
 ---
 
 # 원티드 (Wanted) — design.md
+
+원티드는 채용과 커리어 플랫폼이고, 흰 바탕에 색을 아끼고 파랑에서 분홍, 주황으로 흐르는 그라디언트는 로고 심볼에 담는다 [src:17].
 
 > 원티드랩이 운영하는 한국 1위 채용·커리어 플랫폼. `wanted.co.kr` 잡 마켓플레이스, 채용담당자용 Wanted Talent 대시보드, 프리미엄 커리어 코칭 구독 Wanted Plus, 후보자/리크루터용 iOS/Android 앱을 단일 디자인 시스템 위에 얹는다 [src:17]. 원티드의 디자인 시스템은 **몽타주(Montage)**라는 이름으로 `montage.wanted.co.kr`에 공개 문서화되어 있으며 [src:1], 웹 구현체는 `wanteddev/montage-web` 레포에 **MIT 라이선스**로 공개된다 [src:14] — 상업적 이용·수정·재배포가 허용되고 저작권 표시와 라이선스 전문 포함이 의무다 [src:2]. 본 문서의 서술 골격은 2025년 Wanted Design System 핸드오프 번들(`wanted-design-system/` 익스포트 — `README.md`, `colors_and_type.css`, `components.css`(23개 컴포넌트 그룹), `components.html` 라이브 갤러리, `ui_kits/wanted-web/` 마켓플레이스 재구성)에서 합성됐고, 이번 갱신에서 그 정량값을 몽타주 공개 문서 및 공개 토큰 소스와 대조했다. 결과는 세 갈래다 — **교차검증됨**: 타입 스케일 19개 스타일(57개 값 중 56개) [src:5], 알파 사다리 13단 [src:14], 램프·그라디언트 스톱 토큰에 병기한 hex 12개 중 11개 [src:3]. **단, 이 hex 대조는 병기된 hex에 대한 것이지 실제 토큰 값인 OKLCH의 정확성을 보증하지 않는다** — 아래 Known Gaps 참조. **공개 출처와 어긋남**: 스페이싱 사다리, 브레이크포인트, 엘리베이션 값, 시맨틱 alias 명명 [src:4][src:6][src:7][src:14]. **공개 토큰 자체가 없음**: 라운드 — 공식 테마는 radius 스케일을 노출하지 않아 본 문서의 사다리는 번들 관찰값으로 남는다 [src:14]. 어긋나는 램프 값은 덮어쓰지 않고 각 절에서 차이를 명시했고, 상태 글자색·배지 바탕·버튼 인터랙션 층은 원티드 실서비스와 몽타주가 같이 쓰는 공개 값으로 옮겼다(`## Colors` 첫머리 · `## Known Gaps`).
 
@@ -1045,7 +1047,7 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 14. https://github.com/wanteddev/montage-web — 몽타주 웹 공식 오픈소스 구현(MIT). `packages/theme`(옛 `packages/wds-theme`)가 atomic·semantic·opacity·breakpoint·spacing·zIndex 토큰의 소스오브트루스이고, `packages/core` 가 컴포넌트 구현이다.
 15. https://github.com/wanteddev/wanted-sans — Wanted Sans 오픈소스 typeface (OFL). 디자인·제작 원티드랩(길형진·강한빈), 한글 바탕은 본고딕. 7가지 기본 굵기 + 가변 글꼴.
 16. https://github.com/orioncactus/pretendard — Pretendard JP variable typeface. 몽타주가 지정한 기본 글꼴.
-17. https://www.wanted.co.kr — 원티드 공식 마케팅 + 잡 마켓플레이스. 제품 표면의 카피 보이스·잡카드 조립물 관찰 대상. 페이지가 싣는 `asset.wanted.co.kr` 스타일시트가 몽타주 `--semantic-*`·`--atomic-*` 커스텀 프로퍼티를 그대로 담는다(해시 파일명이라 페이지에서 찾아 연다).
+17. https://www.wanted.co.kr — 원티드 공식 마케팅 + 잡 마켓플레이스. 제품 표면의 카피 보이스·잡카드 조립물 관찰 대상. 홈 헤더의 로고 심볼은 파랑에서 분홍, 주황으로 흐르는 SVG 그라디언트로 그려지고, 바탕은 흰색이다. 페이지가 싣는 `asset.wanted.co.kr` 스타일시트가 몽타주 `--semantic-*`·`--atomic-*` 커스텀 프로퍼티를 그대로 담는다(해시 파일명이라 페이지에서 찾아 연다).
 18. https://github.com/wanteddev/montage-web/blob/c333375c9ebbf0baf30d5e85fe29451048118ab9/packages/theme/src/theme/semantic/index.ts — 시맨틱 토큰 소스(라이트·다크). foreground 의 positive·cautionary·negative·neutral 과 surface(상태색 opacity[8]) 값.
 19. https://github.com/wanteddev/montage-web/blob/c333375c9ebbf0baf30d5e85fe29451048118ab9/packages/core/src/components/content-badge/style.ts — ContentBadge 스타일. accent 변형의 글자 = accent 색, 바탕 = 그 색 opacity[8], 테두리 = opacity[43].
 20. https://github.com/wanteddev/montage-web/blob/c333375c9ebbf0baf30d5e85fe29451048118ab9/packages/core/src/components/with-interaction/style.ts — 공통 인터랙션 층. 덮개 한 장과 hover·active 투명도 단계(normal·light·strong).

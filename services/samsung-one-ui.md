@@ -50,6 +50,8 @@ font-sans-src: https://cdn.jsdelivr.net/npm/@fontsource-variable/roboto@5.3.0/in
 
 # 삼성 One UI — design.md
 
+삼성 One UI는 갤럭시 기기 전반의 OS 디자인 언어이고 [src:1], 풍부한 단색과 절제된 색 범위 [src:7], 둥근 코너 [src:2] 위에서 조작을 화면 아래쪽에 모은다 [src:1].
+
 > 삼성전자 갤럭시 디바이스 전반(폰·태블릿·폴더블·워치·PC)에 적용되는 OS 디자인 언어 One UI를 공개된 공식 삼성 자료만으로 정리한 카탈로그 항목이다 [src:1]. **본 문서는 삼성의 공식 산출물이 아니며**, 삼성이 공개한 원칙·수치를 다운스트림 UI 생성에 쓸 수 있는 형태로 재구성한 비공식 요약이다. One UI는 열린 토큰 패키지를 발행하지 않으므로, 이 문서는 **버전 무관한 원칙(evergreen)** 을 기본값으로 삼고 **세대 종속 수치는 출처 세대를 명시해 격리한다** — 수치 토큰 대부분은 2019년 공개 One UI Design Guidelines(One UI 2 세대) 기준이다 [src:9].
 
 ## Brand & Style

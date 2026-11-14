@@ -361,6 +361,8 @@ fonts:
 font-display-src: https://cdn.jsdelivr.net/npm/spoqa-han-sans@3.3.0/css/SpoqaHanSansNeo.css
 ---
 
+코드잇은 프로그래밍 교육 서비스이고, 유채색을 바이올렛 하나로 모으고 여백을 넉넉히 둔 차분한 화면을 쓴다 [src:1][src:5][src:12].
+
 ## Brand & Style
 
 코드잇은 프로그래밍 교육 서비스이며, `design.codeit.com`은 그 공개 디자인 시스템 사이트다(Framer 호스팅, 전 문서 한국어) [src:1]. 슬로건은 "배움의 기쁨을 세상 모두에게"이며 [src:1], 시스템 자체를 "'배움의 기쁨'을 일관되게 전하기 위한 약속"으로 정의한다. "명확한 원칙과 유연한 컴포넌트로 협업을 효율화하고, 더 나은 사용자 경험을 제공"하는 것이 목적이다 [src:1].

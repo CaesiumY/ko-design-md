@@ -513,6 +513,8 @@ elevation:
 
 # Vapor UI — design.md
 
+구름은 클라우드 IDE와 개발자 교육 회사이고, 밝고 부드러운 흰 화면을 1px 헤어라인으로 나누고 색은 상태 표시에만 아껴 쓴다 [src:1][src:5].
+
 > 한국의 클라우드 IDE/개발자 교육 회사 goorm(구름)이 운영하는 디자인 시스템. goormIDE·goormEDU·goormLEVEL·goorm Cloud·goorm.co 마케팅 사이트가 단일 시각 언어를 공유하도록 설계되었다 [src:1]. 본 문서의 토큰·컴포넌트 값은 공개 배포물이 1차 출처다 — 색(팔레트와 시맨틱 alias)은 `@vapor-ui/core` 1.7.0 배포본 [src:6], 컴포넌트는 1.3.0 배포본 [src:4] 이 기준이다. 여백, 치수, radius, 글자 크기, 줄높이, 무게, 자간, 그림자 토큰은 두 판이 같은 값을 발행하고 [src:4][src:6], goorm 공식 문서 사이트가 서빙하는 CSS 도 색까지 1.7.0 과 같은 값을 내놓는다 [src:1]. 컴포넌트 절을 1.7.0 과 아직 대조하지 않은 것은 `## Known Gaps` 에 적었다. 초판은 Claude Design 핸드오프 번들에서 합성했으나 그 값이 발행값과 어긋나 `## Colors`(2026-07-29)에 이어 나머지 토큰 절과 `## Components`(2026-08-17)를 전량 교체했다.
 
 ## Brand & Style

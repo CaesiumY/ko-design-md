@@ -138,6 +138,8 @@ elevation:
 
 # KRDS — design.md
 
+KRDS는 정부와 공공기관이 함께 쓰는 공공 디지털 서비스 표준이고, 장식 없는 평면 화면과 선명한 화면 모드로 신뢰와 접근성을 앞세운다 [src:2][src:3].
+
 > Korea government Reusable Design System (전자정부 디자인 시스템) v1.0.0. 행정안전부가 발행하는 대한민국 공공 부문 디지털 서비스의 공식 UI/UX 표준이다 [src:2].
 
 ## Brand & Style

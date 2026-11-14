@@ -3,7 +3,7 @@ name: 팀스파르타
 slug: teamsparta
 category: education
 logo: https://getdesign.kr/logos/teamsparta-favicon.png
-last_updated: "2026-11-10"
+last_updated: "2026-11-14"
 created_at: "2026-05-13"
 lang: ko
 colors:
@@ -330,6 +330,8 @@ fonts:
 ---
 
 # 팀스파르타 (스파르타클럽) — design.md
+
+팀스파르타는 내일배움캠프 등 스파르타클럽 학습 서비스를 운영하고, 흰 화면 위에 브랜드 빨강을 큰 프로그램 카드와 강조 면에 쓴다 [src:1][src:2][src:5].
 
 > 팀스파르타가 운영하는 스파르타클럽 학습 생태계의 인증 대시보드 디자인 시스템이다. 본 문서는 Claude Design handoff bundle의 `스파르타클럽 Design System` README, `colors_and_type.css`, preview cards, dashboard UI kit, chat transcript를 1차 출처로 합성했다. 공개 공식 사이트와 내일배움캠프, 기업교육, 커리어 surface는 서비스 범위와 브랜드 맥락 확인용 보조 출처로 사용했다 [src:1][src:2][src:3][src:4]. 색 역할 계층, 원시 팔레트, 컴포넌트 토큰은 팀스파르타가 npm에 발행한 토큰 패키지에서 옮겼다 [src:5]. 타이포, 스페이싱, 라운드와 컴포넌트의 크기와 여백은 이 핸드오프 번들에서 재구성했다. 색은 발행 패키지에 대응 값이 없는 번들 파랑 `interaction-blue`와, 같은 파랑에 투명도를 건 `focus-ring`과 본문의 `input-focus-ring`만 번들 값으로 남겼다(Colors 절 감사 메모 참조).
 
@@ -659,8 +661,8 @@ Cards and course rows must preserve scan order: thumbnail → badge/track → ti
 
 ## References
 
-1. https://spartaclub.kr/ — 스파르타클럽 공식 사이트 (서비스 범위·브랜드 맥락)
-2. https://nbcamp.spartaclub.kr/ — 내일배움캠프. 색 토큰을 `--stack-semantic-*`·`--stack-primitive-*` CSS 커스텀 프로퍼티로 서빙한다
+1. https://spartaclub.kr/ — 스파르타클럽 공식 사이트 (서비스 범위·브랜드 맥락). 홈은 흰 바탕 위에 빨강, 남청록, 보라 프로그램 카드를 나란히 두고, 빨강 카드가 취업 캠프를 맡는다
+2. https://nbcamp.spartaclub.kr/ — 내일배움캠프. 색 토큰을 `--stack-semantic-*`·`--stack-primitive-*` CSS 커스텀 프로퍼티로 서빙한다. 첫 화면의 큰 강조 카드 면이 빨강이다
 3. https://b2b.spartaclub.kr/ — 팀스파르타 기업교육. `axis.spartapartners.ai`로 리다이렉트된다
 4. https://career.spartaclub.kr/ — 팀스파르타 커리어. 외부 채용 플랫폼(Greeting) 위의 페이지라 플랫폼 고유 색 토큰이 섞여 있고, 브랜드 red는 테넌트 테마가 `--primitive-color-brand-500`을 덮어써 넣는다
 5. https://cdn.jsdelivr.net/npm/@teamsparta/stack-tokens@2.6.0/dist/ — 팀스파르타가 npm에 발행한 토큰 패키지 `@teamsparta/stack-tokens` 2.6.0의 배포 파일. 원시 팔레트(`primitiveColor`), 라이트 역할 계층(`baseSemanticColor`), 컴포넌트 토큰(`baseComponent`), 그림자(`effect`), 서비스별 테마(`sccLight`, `sccDark` 등)가 들어 있다
