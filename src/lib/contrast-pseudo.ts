@@ -223,8 +223,10 @@ const ROUND_CORNER = new Set(["", "round", "superellipse(1)"])
  * it, and nothing from the element read up to the owner paints out of the
  * hit test's sight. Taken from the area as given; a surface's grown area is
  * the caller's to pass. Not an owner whose background is the canvas's: what
- * its box carries is not painted there. That the owner is visible at all is
- * `pseudoEffect`'s to check first, for every side.
+ * its box carries is not painted there; nor one whose background colour is
+ * clipped short of its border box (`background-clip` of `text`, or the padding
+ * or content box). That the owner is visible at all is `pseudoEffect`'s to
+ * check first, for every side.
  */
 export function ownerBackgroundUnder(p: RawPseudo, area: Rect): boolean {
   // Its background fills its border box cut by its rounded corners.
@@ -240,9 +242,18 @@ export function ownerBackgroundUnder(p: RawPseudo, area: Rect): boolean {
   // Its colour fills the border box only when clipped to it: `text` paints
   // it inside glyphs, and the padding and content boxes stop short of the
   // border box the area was held against.
-  const clip = p.ownerBackgroundClip.split(",").at(-1)?.trim()
-  return holds && !hidden && !p.owner.canvas && clip === "border-box"
+  return (
+    holds &&
+    !hidden &&
+    !p.owner.canvas &&
+    colourClip(p.ownerBackgroundClip) === "border-box"
+  )
 }
+
+// A computed `background-clip` holds one value per background layer; the
+// background colour is clipped as the last one is.
+const colourClip = (backgroundClip: string): string | undefined =>
+  backgroundClip.split(",").at(-1)?.trim()
 
 /**
  * How far a painted pseudo-element reaches over the area read.
@@ -449,9 +460,8 @@ function paintCoversArea(p: RawPseudo, box: Box): boolean {
     v.borderLeftWidth !== 0
   if (bordered) return false
   if (p.clipPath !== "none" || p.maskImage !== "none") return false
-  // One value per background layer; the colour is clipped as the last one
-  // is. With no border, the padding box is the border box.
-  const clip = p.backgroundClip.split(",").at(-1)?.trim()
+  // With no border, the padding box is the border box.
+  const clip = colourClip(p.backgroundClip)
   const padded =
     v.paddingTop !== 0 ||
     v.paddingRight !== 0 ||

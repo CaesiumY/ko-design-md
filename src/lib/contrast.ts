@@ -705,9 +705,10 @@ const EMPTY_CONTENT = '""'
  *   owner's own box does not hold the whole area, so its background is not
  *   under all of it, and one with an element from the one read up to the
  *   owner that paints a background, itself or by its own pseudo-elements, and
- *   takes no pointer events, which no stack shows, and one whose owner's
+ *   takes no pointer events, which no stack shows, one whose owner's
  *   background is the canvas's — the root, or a `body` whose background
- *   passes on to the canvas — so is not painted on its box.
+ *   passes on to the canvas — so is not painted on its box, and one whose
+ *   owner's background colour is clipped short of its border box.
  *
  * One under the text is composed by source-over whatever its
  * `mix-blend-mode`, as every layer of a stack is.
