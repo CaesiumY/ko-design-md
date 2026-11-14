@@ -182,7 +182,7 @@ elevation:
 
 # GS SHOP — design.md
 
-GS SHOP은 TV 편성과 모바일 라이브가 한 앱에 공존하는 홈쇼핑이고, 계정 동선은 다이내믹 블루가, 구매 동선은 브라이트 핑크가 맡는다 [src:1][src:6].
+GS SHOP은 TV와 모바일 중심의 홈쇼핑이고 [src:6], 다이내믹 블루를 대표 색으로, 브라이트 핑크를 보조 색으로 쓴다 [src:1][src:6].
 
 ## Brand & Style
 
