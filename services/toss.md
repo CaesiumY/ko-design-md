@@ -684,4 +684,4 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 11. https://toss.im — 토스 공식 홈페이지. 슬로건·카피·비주얼 톤 보조 출처.
 12. https://www.npmjs.com/package/@toss/tds-colors — TDS 색 토큰 npm 패키지. `colors.light.css`·`colors.dark.css`가 `--adaptive*` 커스텀 프로퍼티로 팔레트 hex를 싣는다(blue·grey·green·red·orange·yellow·purple·teal 각 50~900). 같은 파일이 adaptive 배경·선 역할(`background`·`greyBackground`·`layeredBackground`·`floatBackground`·`dimmedBackground`·`hairlineBorder` 등)과 불투명도 계열(`greyOpacity*`·`opacity*`)도 테마별 리터럴로 싣는다 — 불투명 색은 hex, 불투명도가 있는 색은 rgba 다. JS 모듈은 같은 값에 더해 `tds` 컴포넌트 토큰(`tToastBackground` 등, 테마별 hex·rgba·그라디언트 값)을 싣는다. 시맨틱 토큰이 테마별로 어느 팔레트 단계를 가리키는지는 싣지 않는다.
 13. https://tossmini-docs.toss.im/tds-mobile/foundation/colors/ — TDS Mobile Colors 문서. `@toss/tds-colors` 사용법과 기본·배경 색상 팔레트를 이름과 hex로 보여 준다. 배경 색상 견본은 `greyBackground`의 라이트 값을 hex가 아니라 `lightThemeGrey100`으로 적는다.
-14. https://tossmini-docs.toss.im/tds-mobile/components/button/ — TDS Mobile Button 문서. fill variant 는 채도가 높아 "주요 액션을 강조하는 데 적합"하고 weak variant 는 덜 중요한 보조 액션에 쓴다고 적는다.
+14. https://tossmini-docs.toss.im/tds-mobile/components/button/ — TDS Mobile Button 문서. variant 별 쓰임(fill 과 weak)을 설명한다.

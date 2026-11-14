@@ -445,4 +445,4 @@ KDS는 모든 화면 크기에서 일정한 6/12열 그리드를 유지하되, *
 24. https://design.kyobobook.co.kr/component/thumbnail/
 25. https://design.kyobobook.co.kr/component/toast/
 26. https://design.kyobobook.co.kr/component/tooltip/
-27. https://www.kyobobook.co.kr/ — 교보문고 온라인 서점 홈. 메타 설명이 "교보문고는 온오프라인을 통틀어 대한민국 최고의 도서쇼핑몰이며 전자책, 음반, 기프트, 문화서비스까지 제공하는 종합문화기업입니다"다.
+27. https://www.kyobobook.co.kr/ — 교보문고 온라인 서점 홈. 메타 설명에 회사의 서비스 정의가 있다.

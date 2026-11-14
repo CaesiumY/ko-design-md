@@ -2,7 +2,7 @@
 name: 라프텔
 slug: laftel
 category: content
-last_updated: 2026-11-14
+last_updated: 2026-11-15
 created_at: 2026-10-27
 lang: ko
 logo: https://getdesign.kr/logos/laftel.png
@@ -280,7 +280,7 @@ radius도 토큰이 없고 스타일시트에 3, 4, 7, 8, 10, 14, 16, 18, 20px, 
 
 ## References
 
-1. https://laftel.net — 서비스 홈과 하위 화면(/daily, /membership/landing, 404). 인라인 스타일의 시맨틱 색 변수(라이트, 다크), 렌더된 화면의 계산 스타일, 헤더, 칩, 카드 실측과 메타, 서비스가 내려보내는 JS 청크의 색 팔레트와 컴포넌트 스타일. 홈 메타 설명은 "세상의 모든 애니메이션을 고화질로 무제한 스트리밍하세요"다.
+1. https://laftel.net — 서비스 홈과 하위 화면(/daily, /membership/landing, 404). 인라인 스타일의 시맨틱 색 변수(라이트, 다크), 렌더된 화면의 계산 스타일, 헤더, 칩, 카드 실측과 메타, 서비스가 내려보내는 JS 청크의 색 팔레트와 컴포넌트 스타일. 홈 메타 설명에 서비스 정의가 있다.
 2. https://blog.laftel.net/post/17 — 라프텔 팀 블로그 "라프텔의 디자인 원칙". 디자인 원칙 4가지와 디자인 시스템 서술.
 3. https://brunch.co.kr/@laftelux/8 — 라프텔 프로덕트 디자인팀 Brunch 원문(2024-04-15). 같은 디자인 원칙.
 4. https://blog.laftel.net/post/11 — 라프텔 팀 블로그 다크모드 제작기. Basic Color와 Theme Color 구분.

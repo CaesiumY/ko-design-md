@@ -646,4 +646,4 @@ Button 개요에 변종으로 이름만 공개된다 [src:29]. "필 없이 텍�
 41. https://techblog.gccompany.co.kr/여기어때-비주얼-에셋-새롭게-정의하다-a247c28bc5d8 — GC COMPANY 기술블로그(Design Library 아카이브 정의 인용문 1건). 근거 강도: 이 인용문은 2026-07-16 리서치 단계의 fetch로 확보해 독립 검증(3표 일치)을 거쳤고, 이후 재확인 시도는 Medium 인증벽(본문 미로드)에 막혀 원문 대조가 불가능하다 — 인용문 자체는 검증된 fetch 산출물이나 상시 재확인은 되지 않는 소스로 취급할 것
 42. https://noonnu.cc/font_page/115 — 여기어때 잘난체 공식 배포처(소유권·라이선스 조건·웹폰트 @font-face 스니펫)
 43. https://data.jsdelivr.com/v1/packages/gh/projectnoonnu/noonfonts_four@1.2 — jsDelivr 파일 인덱스(JalnanOTF00.woff 실재 및 CSS 엔트리포인트 부재 검증)
-44. https://www.yeogi.com/ — 여기어때 예약 서비스 홈. 페이지 제목이 "여기어때 | 해외여행, 호텔, 리조트, 캠핑, 펜션, 모텔, 풀빌라, 패키지여행, 항공권 예약"이다.
+44. https://www.yeogi.com/ — 여기어때 예약 서비스 홈. 페이지 제목에 예약 상품의 범위가 있다.
