@@ -351,7 +351,7 @@ Voice는 **친근한 2인칭 + 부드러운 존댓말**로 요약된다. 사무�
 
 ### Brand gradient (심볼 전용)
 
-원티드 홈 헤더의 로고 심볼은 파랑에서 분홍, 주황으로 흐르는 SVG 그라디언트로 그려지고, 그 바탕은 흰색이다 [src:17]. 심볼 마크 자체 + 일부 아바타 circle + 일부 잡카드 썸네일 placeholder에만 적용된다. 마케팅 hero용 변형은 `0E1F3F → blue-800 → magenta`로 깊은 navy를 추가해 `linear-gradient(120deg, ...)`로 그려지지만, 카탈로그 토큰으로 노출된 것은 아니다.
+이 그라디언트는 심볼 마크 자체 + 일부 아바타 circle + 일부 잡카드 썸네일 placeholder에만 적용된다. 원티드 홈 헤더의 로고 심볼이 파랑에서 분홍, 주황으로 흐르는 SVG 그라디언트로 그려지고, 그 바탕은 흰색이다 [src:17]. 마케팅 hero용 변형은 `0E1F3F → blue-800 → magenta`로 깊은 navy를 추가해 `linear-gradient(120deg, ...)`로 그려지지만, 카탈로그 토큰으로 노출된 것은 아니다.
 
 ### Gray (14-step, single tint — 채도 0)
 
