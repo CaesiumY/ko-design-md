@@ -149,7 +149,7 @@ elevation:
 
 # Kyobo Design System (KDS) — design.md
 
-교보문고는 온오프라인 도서쇼핑몰이자 종합문화기업이고 [src:27], 페리윙클 인디고를 UI 기본색과 강조에 쓴다 [src:3].
+교보문고는 도서와 전자책, 음반, 기프트를 제공하는 온오프라인 도서쇼핑몰이고 [src:27], 페리윙클 인디고를 UI 기본색과 강조에 쓴다 [src:3].
 
 ## Brand & Style
 
