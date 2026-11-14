@@ -2,7 +2,7 @@
 name: 원티드
 slug: wanted
 category: career
-last_updated: "2026-10-27"
+last_updated: "2026-11-14"
 created_at: "2026-05-12"
 lang: ko
 logo: https://getdesign.kr/logos/wanted.png
@@ -1047,7 +1047,7 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 14. https://github.com/wanteddev/montage-web — 몽타주 웹 공식 오픈소스 구현(MIT). `packages/theme`(옛 `packages/wds-theme`)가 atomic·semantic·opacity·breakpoint·spacing·zIndex 토큰의 소스오브트루스이고, `packages/core` 가 컴포넌트 구현이다.
 15. https://github.com/wanteddev/wanted-sans — Wanted Sans 오픈소스 typeface (OFL). 디자인·제작 원티드랩(길형진·강한빈), 한글 바탕은 본고딕. 7가지 기본 굵기 + 가변 글꼴.
 16. https://github.com/orioncactus/pretendard — Pretendard JP variable typeface. 몽타주가 지정한 기본 글꼴.
-17. https://www.wanted.co.kr — 원티드 공식 마케팅 + 잡 마켓플레이스. 제품 표면의 카피 보이스·잡카드 조립물 관찰 대상. 페이지가 싣는 `asset.wanted.co.kr` 스타일시트가 몽타주 `--semantic-*`·`--atomic-*` 커스텀 프로퍼티를 그대로 담는다(해시 파일명이라 페이지에서 찾아 연다).
+17. https://www.wanted.co.kr — 원티드 공식 마케팅 + 잡 마켓플레이스. 제품 표면의 카피 보이스·잡카드 조립물 관찰 대상. 홈 헤더 로고 SVG 는 파랑에서 분홍, 주황으로 흐르는 그라디언트로 그려지고, 바탕은 흰색이다. 페이지가 싣는 `asset.wanted.co.kr` 스타일시트가 몽타주 `--semantic-*`·`--atomic-*` 커스텀 프로퍼티를 그대로 담는다(해시 파일명이라 페이지에서 찾아 연다).
 18. https://github.com/wanteddev/montage-web/blob/c333375c9ebbf0baf30d5e85fe29451048118ab9/packages/theme/src/theme/semantic/index.ts — 시맨틱 토큰 소스(라이트·다크). foreground 의 positive·cautionary·negative·neutral 과 surface(상태색 opacity[8]) 값.
 19. https://github.com/wanteddev/montage-web/blob/c333375c9ebbf0baf30d5e85fe29451048118ab9/packages/core/src/components/content-badge/style.ts — ContentBadge 스타일. accent 변형의 글자 = accent 색, 바탕 = 그 색 opacity[8], 테두리 = opacity[43].
 20. https://github.com/wanteddev/montage-web/blob/c333375c9ebbf0baf30d5e85fe29451048118ab9/packages/core/src/components/with-interaction/style.ts — 공통 인터랙션 층. 덮개 한 장과 hover·active 투명도 단계(normal·light·strong).
