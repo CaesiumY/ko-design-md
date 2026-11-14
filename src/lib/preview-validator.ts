@@ -75,9 +75,11 @@ export interface PreviewValidationResult {
 const IFRAME_JS_SRC = "/preview/_runtime/iframe.js"
 const TOKENS_CSS_HREF = "/preview/_runtime/tokens.css"
 
-// 크기 게이트는 실제로 배포되는 형태(brotli)를 잰다. 호스트가 프리뷰 HTML 을
-// `content-encoding: br` 로 서빙하므로 raw 바이트는 전송 비용이 아니다 —
-// bezier 는 raw 155 KiB 인데 실제 다운로드는 19.5 KiB 다.
+// 크기 게이트는 실제로 배포되는 형태(brotli)를 잰다. Vercel 이 프리뷰 HTML 을
+// `content-encoding: br` 로 서빙했으므로 raw 바이트는 전송 비용이 아니었다 —
+// bezier 는 raw 155 KiB 인데 실제 다운로드는 19.5 KiB 였다. 호스트를 Cloudflare
+// Workers 로 옮긴 뒤(2026-11)의 응답 인코딩은 아직 재지 않았다. 실배포에서
+// `content-encoding` 을 확인하기 전까지 이 전제는 Vercel 측정에 기댄다.
 //
 // **"배포되는 형태" 는 병합(#235) 이후 반쪽이 아니라 `preview.html` 한 파일이다.**
 // 어느 테마를 보든 두 시트를 다 담은 그 문서를 받으므로, 재는 대상은
