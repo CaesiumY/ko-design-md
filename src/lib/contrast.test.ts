@@ -984,6 +984,24 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
       expect([got.fg, got.bg]).toEqual(["#000000", "#808080"])
     })
 
+    it("holds a wash whose owner is hidden and so paints no background", () => {
+      // The owner's computed white is in the stack only because the hit
+      // test meets it by its visible pseudo-element: none of that white is
+      // painted, so the wash is over whatever lies below, unread.
+      const got = textOver([
+        pseudo({
+          ...ownText,
+          which: "after",
+          paint: halfBlack(),
+          owner: orderBox({ visibility: "hidden" }),
+        }),
+      ])
+      expect(got).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+    })
+
     it("composes onto the glyphs too, not only behind them", () => {
       // White text under the same wash turns #808080 as well: 1:1, a
       // certain fail. Composed onto the backdrop alone, white on #808080

@@ -682,6 +682,8 @@ const paintsNothing = (layer: RawLayer): boolean =>
  *   what is read that paints anything, since which of the two is on top is
  *   not read either; and one whose owner is hit again further down, where
  *   something paints between the pseudo-element and the owner's background;
+ * - on any side: one whose owner is hidden, whose computed background is in
+ *   the stack though nothing of it is painted;
  * - under its owner's background: one whose owner's colour is not opaque;
  * - under the text or under its owner's background, either way: one whose
  *   owner's own box does not hold the whole area, so its background is not
@@ -713,6 +715,13 @@ function pseudoEffect(
       const reached = reach({ ...p, area })
       if (reached === "none") continue
       if (reached === "unsure") {
+        unsure = true
+        continue
+      }
+      // A hidden owner is in the stack only because the hit test meets its
+      // visible pseudo-element: its computed background there is not
+      // painted, so nothing can be laid against it, on either side.
+      if (p.owner.visibility !== "visible") {
         unsure = true
         continue
       }

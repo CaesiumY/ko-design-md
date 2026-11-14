@@ -177,6 +177,13 @@
         it would pass at 21. A hidden owner holds it. (The panel is isolated
         so the wash stays above it: under `body`, whose background goes to
         the canvas, the stack would stop at `body`'s computed white.)
+      - `.shroud` puts a hidden 200x60 white owner on a panel of
+        oklch(0.6 0 0) (rgb(128)), with a visible 50% black `::after` at
+        `inset: 0` over its visible run in normal flow. On screen the wash
+        is over the grey, rgb(64), and the run a fail; read over the owner's
+        unpainted white it would pass at 5.32. The hit test meets the owner
+        only in front of the run, never under it, so it is an ancestor ahead
+        that no stack holds: an `overlay`.
     -->
     <style>
       html {
@@ -209,7 +216,8 @@
       .ghost,
       .bevel,
       .diamond,
-      .unseen {
+      .unseen,
+      .shroud {
         position: relative;
         width: 300px;
         height: 120px;
@@ -383,6 +391,29 @@
         visibility: visible;
       }
       .unseen .t {
+        visibility: visible;
+      }
+      .shroud {
+        background: oklch(0.6 0 0);
+      }
+      .shroud .o {
+        position: relative;
+        width: 200px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: oklch(1 0 0);
+        visibility: hidden;
+      }
+      .shroud .o::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0 / 0.5);
+        visibility: visible;
+      }
+      .shroud .t {
         visibility: visible;
       }
       .split::before,
@@ -581,6 +612,9 @@
       <span class="t">Sample text Sample text Sample te</span>
     </div>
     <div class="unseen">
+      <div class="o"><span class="t">Sample text</span></div>
+    </div>
+    <div class="shroud">
       <div class="o"><span class="t">Sample text</span></div>
     </div>
   </body>

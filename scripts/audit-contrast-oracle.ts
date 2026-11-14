@@ -510,6 +510,12 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   at `z-index: -1` and its run stay visible: the owner's white is not
  *   painted, so its dark wash is not out of sight: held, where it would
  *   read 21.
+ * - `.shroud` puts a 50% wash over a hidden white owner on a grey panel, the
+ *   run visible in normal flow. The hit test meets the owner only in front
+ *   of the run, by its wash, and never in the stack under it, so the owner
+ *   comes over as an ancestor ahead that no stack holds: held as `overlay`.
+ *   Read as the wash over the owner's unpainted white, it would pass at 5.32;
+ *   on screen it is over the grey, a fail.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -725,6 +731,15 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
     kind: "text",
     verdict: "indeterminate",
     blockers: ["pseudo-background"],
+  },
+  {
+    id: "text under a wash of a hidden owner",
+    pathEnds: "div.shroud > div.o > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["overlay"],
   },
 ]
 

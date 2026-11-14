@@ -201,9 +201,10 @@ const ROUND_CORNER = new Set(["", "round", "superellipse(1)"])
  * Whether a pseudo-element placed under the text, or under its owner's
  * background, can be laid against that background with certainty: the
  * owner's own box holds the whole area, so its background is under all of
- * it, it is visible so that background is painted, and nothing from the
- * element read up to the owner paints out of the hit test's sight. Taken
- * from the area as given; a surface's grown area is the caller's to pass.
+ * it, and nothing from the element read up to the owner paints out of the
+ * hit test's sight. Taken from the area as given; a surface's grown area is
+ * the caller's to pass. That the owner is visible at all is `pseudoEffect`'s
+ * to check first, for every side.
  */
 export function ownerBackgroundUnder(p: RawPseudo, area: Rect): boolean {
   // Its background fills its border box cut by its rounded corners.
@@ -216,7 +217,7 @@ export function ownerBackgroundUnder(p: RawPseudo, area: Rect): boolean {
   const hidden = (p.chain ?? []).some(
     (b) => b.pointerEvents === "none" && b.paintsBackgroundOrPseudo
   )
-  return holds && !hidden && p.owner.visibility === "visible"
+  return holds && !hidden
 }
 
 /**
