@@ -188,6 +188,8 @@ rounded:
 
 # 클래스101 — design.md
 
+클래스101은 취미부터 커리어까지 다루는 온라인 클래스 플랫폼이고, 무채색 위에 채도 높은 오렌지 하나로 버튼과 배지와 강조를 모은다 [src:2][src:8][src:9].
+
 > 클래스101(CLASS101)은 크리에이터가 온라인 클래스를 열고 수익을 얻는 클래스 플랫폼이며 [src:7], 그 공개 디자인 시스템이 **Vibrant Design System(VDS)** 이다 [src:1]. React DOM과 React Native를 단일 `<VibrantProvider>`로 감싸는 크로스플랫폼 오픈소스 모노레포로 개발된다 [src:12][src:10][src:4].
 
 ## Brand & Style

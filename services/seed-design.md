@@ -513,6 +513,8 @@ gradients:
 
 # SEED Design — design.md
 
+당근은 중고 직거래에서 출발한 지역 생활 커뮤니티이고, 주황 하나를 브랜드 축으로 붙들고 사용자 신뢰를 10단계 매너온도 램프로 색칠한다 [src:78][src:26][src:53].
+
 ## Brand & Style
 
 당근은 주황 하나를 브랜드 축으로 붙들고, 사용자 신뢰를 10단계 온도 램프로 색칠해 UI 안에 박아 넣은 디자인 언어를 쓴다. SEED는 그 언어를 "당근 제품을 위한 통합 디자인 언어"로 정의하며, 디자인과 코드가 하나의 소스를 바라보게 만들어 누가 만들어도 같은 품질의 경험이 나오도록 하는 것을 목표로 삼는다 [src:2].
@@ -1022,3 +1024,4 @@ s98: 0.98
 75. https://seed-design.io/llms/components/text-input.txt — Text Input & Textarea 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
 76. https://seed-design.io/llms/components/top-navigation.txt — Top Navigation 컴포넌트 스펙 — Anatomy·Properties·Guidelines.
 77. https://registry.npmjs.org/@seed-design/css/-/css-2.8.3.tgz — npm 배포 tarball(v2.8.3). `base.css` 의 light-only · dark-only 블록이 역할 토큰을 팔레트 참조(`--seed-color-bg-brand-solid: var(--seed-color-palette-carrot-600)` 꼴)로 싣는다
+78. https://about.daangn.com/ — 당근 회사소개. "근처 이웃과의 중고 직거래를 시작으로, 전에 없던 지역 생활 커뮤니티를 만들어 나가고 있어요"라고 서비스를 소개한다.

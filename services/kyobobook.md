@@ -149,6 +149,8 @@ elevation:
 
 # Kyobo Design System (KDS) — design.md
 
+교보문고는 한국 최대 서점 체인이고, 흰색과 옅은 회색 바탕에 책 표지가 색을 채우고 페리윙클 인디고가 핵심 액션을 맡는다 [src:2][src:3][src:18].
+
 ## Brand & Style
 
 Kyobo Design System(KDS)은 교보문고의 디자인 시스템이며, 브랜드명(교보문고 / KYOBO Book Centre)과 디자인 시스템명은 별개의 이름이다 [src:2]. 교보문고는 1980년 설립된 한국 최대 서점 체인으로, 오프라인 서점·온라인 서점·전자책(sam / 교보 eBook)과 라이프스타일 리테일 서브브랜드 핫트랙스(Hottracks)를 아우르는 옴니채널 커머스 사업자다 [src:2].

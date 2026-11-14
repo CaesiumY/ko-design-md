@@ -313,6 +313,8 @@ elevation:
 
 # 그리팅 — design.md
 
+그리팅은 기업 채용 담당자를 위한 채용 관리 SaaS이고, 흰 바탕을 1px 헤어라인으로 나누고 브랜드 파랑과 상태색만 쓰는 조밀한 업무 화면이다 [src:1][src:3].
+
 > 그리팅(Greeting)은 두들린 주식회사가 만드는 채용 관리 SaaS이고 [src:3], 그 디자인 시스템이 **Doodlin UI**(`@doodlincorp/doodlin-ui`)다 [src:4]. 값의 출처는 공개 Storybook 배포본과 npm 레지스트리이며, 아래 수치는 그 두 곳에서 확인된 것만 옮겼다 [src:1][src:4].
 
 ## Brand & Style

@@ -235,6 +235,8 @@ elevation:
 
 # SOCAR Frame 2.0 — design.md
 
+쏘카는 한국 최대 카셰어링 서비스이고, 흰 바탕 위 단일 브랜드 블루와 옅게 푸른 회색으로 장식 없이 차분한 화면을 짠다 [src:1][src:4][src:5].
+
 ## Brand & Style
 
 SOCAR Frame 2.0(쏘카프레임 2.0)는 쏘카의 디자인 시스템이며, 브랜드명(쏘카 / SOCAR)과 디자인 시스템명은 별개의 이름이다 [src:9][src:5]. 쏘카는 한국 최대 카셰어링 서비스이며, 전국의 쏘카존(공용 차량 거점)을 기반으로 단기·왕복 차량 대여를 제공하는 한국형 모빌리티 플랫폼이다 [src:1][src:2]. 소비자용 카셰어링 제품과 SOCAR Business 라인을 함께 운영하며, 두 서비스는 토큰 세트에 `{colors.service-socar}`와 `{colors.service-business}` 색으로 각각 기록되어 있다 [src:4].

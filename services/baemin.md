@@ -406,6 +406,8 @@ fonts:
   font-display-cursive: BM GLIM   # "그림글자" — 배달이 마스코트가 한글 신체를 이룸 [src:12]
 ---
 
+배달의민족은 음식과 생필품 배달 슈퍼앱이고, 밝은 민트와 길거리 간판의 손맛을 옮긴 서체로 화면을 짠다 [src:1][src:2][src:12].
+
 > 본 문서의 색 팔레트(frontmatter 의 `Deployed palette` 묶음)는 배민 웹이 배포하는 스타일시트의 `--ref-color-*` 값을 옮긴 것이다 [src:14]. 그 밖의 토큰과 서술은 Claude Design이 사용자가 제공한 배달의민족 스크린샷과 공개 브랜드 자료를 토대로 재구성한 **핸드오프 디자인 시스템 번들**(`handoff/design-system/`, README·SKILL·`colors_and_type.css`·preview HTML·chat 트레일)을 1차 출처로 합성한 결과이며, 우아한형제들이 공식 배포한 Figma·코드베이스가 아니다. 2024년 *Baemin 2.0* 리브랜드와 한명수 CCO·김봉진 의장 발언, 폰트 라이선스 사이트 등 공개 웹 자료를 보조 출처로 사용했다. 번들 토큰을 그대로 코드에 옮기기 전 실제 앱 캡처와 1~3px·1~2단계 hex 채도 편차를 한 번 더 비교할 것을 권장한다.
 
 ## Brand & Style
