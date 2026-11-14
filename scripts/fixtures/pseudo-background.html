@@ -29,21 +29,22 @@
         `right` is what gives way, and a box built from it would sit at
         x 140..200, over the line. Only a box built from `left` misses it.
       - `.cover::before` fills the panel with a 10% black wash, which covers
-        the line; where it sits in the paint order is not read, so it holds.
-        The run in it is `position: relative`, later in tree order than the
-        wash, so it paints over the wash and is the first thing hit at its
-        point. Left in flow, the wash would paint over it, and a hit on a
-        pseudo-element is reported as its owner — `div.cover` in front of the
-        run, an `overlay` hold on top of this one.
+        the line box whole. The run in it is `position: relative`, later in
+        tree order than the wash, both with `z-index` auto, so it paints over
+        the wash (#692): the wash is composed under the run, over the white
+        panel. 10% black reads back from the canvas at alpha 26/255
+        (0.1 x 255 = 25.5, rounded), turning white into rgb(229), luminance
+        0.7835: black on it is (0.7835 + 0.05) / 0.05 = 16.67, a pass.
       - `.far` is a third panel of the same shape that is NOT positioned, put
         1000px further down behind a spacer, so the collector has to scroll to
         reach it. `html` is `position: relative`, which makes the document root
         its wash's containing block. The panel starts at y 24 + 144 + 144 +
         1000 = 1312 and x 24 of the root, and `.far::before` is placed exactly
-        there at 300x120, so it covers the panel's line and holds. The root's
-        rect already moves with the scroll; subtracting the root's `scrollTop`
-        again lifts the box clear of the line and reads it as a pass. Its run
-        is `position: relative` for the reason `.cover`'s is.
+        there at 300x120, so it covers the panel's line and the run reads
+        16.67, as `.cover`'s does. The root's rect already moves with the
+        scroll; subtracting the root's `scrollTop` again lifts the box clear
+        of the line and reads it as 21. Its run is `position: relative` for
+        the reason `.cover`'s is.
       - `.mark::before` is a highlighter under the lower part of the line, a
         10% black band from y 62 to y 76 across the panel. It misses the line's
         centre (y 60) but overlaps its rect by several pixels (down to about
@@ -99,6 +100,110 @@
         over the line, so it holds. Read from its box alone it would miss the
         line and read as a pass. Its run is `position: relative` for the
         reason `.cover`'s is.
+
+      The panels below are #692's own: which side of the text a
+      pseudo-element covering the whole line box paints on, and what that
+      does to the colours.
+
+      - `.disc` is socar's calendar date: a 120px circle of oklch(0.6 0 0)
+        (rgb(128), luminance 0.2159) centred by `top: 50%; left: 50%;
+        transform: translate(-50%, -50%)` at `z-index: 0`, under a run that
+        is `position: relative; z-index: 1`. The circle is x 90..210,
+        y 0..120, and the line box's corners lie well inside it ("Sample
+        text" is under 100px wide: corners at most about 50 x 9 from the
+        centre, inside the 60px radius). The run reads black on rgb(128):
+        (0.2159 + 0.05) / 0.05 = 5.32, a pass. Missed, it would read 21; laid
+        over the text, it would hide it.
+      - `.veil` puts a 60% black wash (`::after`, `inset: 0`) over a run in
+        normal flow, so the wash paints over it. Black stays black under it,
+        and the white panel turns rgb(102) (0.6 x 255 = 153 exactly):
+        luminance 0.1329, so (0.1329 + 0.05) / 0.05 = 3.66, a fail. The wash
+        takes pointer events, so the hit test puts the panel in front of the
+        run — the shape that read as an `overlay` before #692 — and the run
+        carries no reason at all.
+      - `.opaque` is `.veil` with an opaque wash, which hides the text: held.
+      - `.unknown` is `.veil` whose run carries `will-change: transform`,
+        which may or may not make it a stacking context — the order is not
+        read, so the run is held. Its wash takes no pointer events, so the
+        hold is `pseudo-background` alone.
+      - `.under` is a panel that is no stacking context, whose `::before`
+        is opaque black at `z-index: -1`. That paints under the panel's own
+        white background, out of sight, and the run is a pass at 21.
+      - `.split` raises its run (`position: relative`) over a 50% black
+        `::before`, as `.disc` does, but with an unpositioned wrapper of
+        oklch(0.6 0 0) (rgb(128)) in between. The wash paints over the
+        wrapper and under the run, so the hit test returns the panel twice:
+        first where its wash is, then its own white background. Read as the
+        panel's white, the wash would make it rgb(128) and the run a pass at
+        5.32; on screen it is the wash over the wrapper, rgb(64), and a fail.
+        The panel hit again holds it.
+      - `.unhit` is `.split` with `pointer-events: none` on the wrapper (and
+        `auto` back on the run), so the hit test skips the wrapper and may
+        show the panel once. A painted element between the read element and
+        the owner that takes no pointer events holds it.
+      - `.spill` lays the same 50% wash, centred, from a 0px-tall white
+        owner whose raised run spills out below it, over a panel of
+        oklch(0.6 0 0). The owner is hit only where its wash is, and that
+        place carries its white: read as white, the run would pass at 5.32;
+        on screen the wash is over rgb(128), rgb(64), a fail. An owner whose
+        own box does not hold the line holds it.
+      - `.round` puts a 200x100 white owner with `border-radius: 50%` on a
+        grey panel, its raised run at its top-left corner and a square 50%
+        wash (`inset: 0`) over the whole owner box. The run's line box lies
+        inside the owner's rectangle but past its curve, where no white is:
+        read as white it would pass at 5.32. An owner whose rounded shape
+        does not hold the line holds it.
+      - `.ghost` is `.unhit` whose wrapper paints nothing itself but has a
+        `::before` of oklch(0.4 0 0) over the panel, above the panel's wash
+        and under the raised run. The wrapper takes no pointer events, nor
+        does its pseudo-element: read as the wash over white, the run would
+        pass at 5.32, on a grey it does not sit on. A painted pseudo-element
+        of an element the hit test skips holds it.
+      - `.bevel` and `.diamond` cut a 50% radius with `corner-shape: bevel`,
+        a diamond rather than the ellipse the radii describe. Their 18px run
+        is long enough that its ends leave the diamond while its line box
+        stays inside the ellipse. `.bevel` does it to a white owner on a
+        grey panel, under the owner's square 50% wash: read as an ellipse,
+        the run would pass, while its ends sit on the wash over grey.
+        `.diamond` does it to the panel's own dark `::before`, under white
+        text: read as an ellipse it would pass at 18, while the ends are
+        white on white. A corner shape other than round holds both.
+      - `.unseen` isolates a white panel holding a 200x60 owner with
+        `visibility: hidden`, a white background and a `::before` of
+        oklch(0.3 0 0) at `z-index: -1`, which stays `visible`, as does the
+        run. The hit test still meets the owner, by its pseudo-element, and
+        its computed background is white, but none of it is painted: the run
+        is black on the dark wash, a fail. Read as under the owner's white,
+        it would pass at 21. A hidden owner holds it. (The panel is isolated
+        so the wash stays above it: under `body`, whose background goes to
+        the canvas, the stack would stop at `body`'s computed white.)
+      - `.shroud` puts a hidden 200x60 white owner on a panel of
+        oklch(0.6 0 0) (rgb(128)), with a visible 50% black `::after` at
+        `inset: 0` over its visible run in normal flow. On screen the wash
+        is over the grey, rgb(64), and the run a fail; read over the owner's
+        unpainted white it would pass at 5.32. The hit test meets the owner
+        only in front of the run, never under it, so it is an ancestor ahead
+        that no stack holds: an `overlay`.
+      - `.tag` lays a 40% black `::before` wash over its run in normal flow,
+        and an `::after` that paints no background but draws "NEW" in white
+        28px glyphs over the same line. That one is not read, and the hit
+        test may meet the panel in front of the run by it. A wash whose owner
+        draws unread is not composed, and the panel in front is not explained
+        by it: held, `overlay` and `pseudo-background`, as before #692. Read
+        as the wash alone, the run would pass at 7.37.
+      - `.badge` is `.tag` with the wash and the glyphs in one `::after`: its
+        `content` draws more than its box, so it is not composed as a flat
+        wash. Held, `overlay` and `pseudo-background` both, where it would
+        read 7.37.
+      - `.mute` is `.tag` with `pointer-events: none` on both pseudo-elements,
+        so the hit test never puts the panel in front: the glyphs are seen
+        only as something of the owner drawn unread. Held,
+        `pseudo-background`, where it would read 7.37.
+      - `.frost` puts the same wash beside an `::after` with no background
+        and `backdrop-filter: brightness(0.3)`, both taking no pointer
+        events. On screen the panel behind turns dark and the run a fail;
+        read as the wash alone, it would pass at 7.37. Held,
+        `pseudo-background`.
     -->
     <style>
       html {
@@ -118,7 +223,25 @@
       .vertical,
       .surface,
       .field,
-      .reflect {
+      .reflect,
+      .disc,
+      .veil,
+      .opaque,
+      .unknown,
+      .under,
+      .split,
+      .unhit,
+      .spill,
+      .round,
+      .ghost,
+      .bevel,
+      .diamond,
+      .unseen,
+      .shroud,
+      .tag,
+      .badge,
+      .mute,
+      .frost {
         position: relative;
         width: 300px;
         height: 120px;
@@ -230,6 +353,267 @@
         background: oklch(0 0 0 / 0.1);
         -webkit-box-reflect: below 0;
       }
+      .disc::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 120px;
+        height: 120px;
+        transform: translate(-50%, -50%);
+        border-radius: 9999px;
+        background: oklch(0.6 0 0);
+        z-index: 0;
+      }
+      .disc .t {
+        position: relative;
+        z-index: 1;
+      }
+      .veil::after,
+      .opaque::after,
+      .unknown::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0 / 0.6);
+      }
+      .opaque::after {
+        background: oklch(0 0 0);
+      }
+      .unknown::after {
+        pointer-events: none;
+      }
+      .unknown .t {
+        will-change: transform;
+      }
+      .under::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0);
+        z-index: -1;
+      }
+      .unseen {
+        isolation: isolate;
+      }
+      .unseen .o {
+        position: relative;
+        width: 200px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: oklch(1 0 0);
+        visibility: hidden;
+      }
+      .unseen .o::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0.3 0 0);
+        z-index: -1;
+        visibility: visible;
+      }
+      .unseen .t {
+        visibility: visible;
+      }
+      .shroud {
+        background: oklch(0.6 0 0);
+      }
+      .shroud .o {
+        position: relative;
+        width: 200px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: oklch(1 0 0);
+        visibility: hidden;
+      }
+      .shroud .o::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0 / 0.5);
+        visibility: visible;
+      }
+      .shroud .t {
+        visibility: visible;
+      }
+      .tag::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0 / 0.4);
+      }
+      .tag::after,
+      .badge::after {
+        content: "NEW";
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        color: oklch(1 0 0);
+      }
+      .badge::after {
+        background: oklch(0 0 0 / 0.4);
+      }
+      .mute::before,
+      .frost::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0 / 0.4);
+        pointer-events: none;
+      }
+      .mute::after {
+        content: "NEW";
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        color: oklch(1 0 0);
+        pointer-events: none;
+      }
+      .frost::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        backdrop-filter: brightness(0.3);
+        pointer-events: none;
+      }
+      .split::before,
+      .unhit::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0 / 0.5);
+      }
+      .split .m,
+      .unhit .m {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        background: oklch(0.6 0 0);
+      }
+      .split .t,
+      .unhit .t {
+        position: relative;
+      }
+      .unhit .m {
+        pointer-events: none;
+      }
+      .unhit .t {
+        pointer-events: auto;
+      }
+      .spill {
+        background: oklch(0.6 0 0);
+      }
+      .spill .o {
+        position: relative;
+        width: 300px;
+        height: 0;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        background: oklch(1 0 0);
+      }
+      .spill .o::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: -60px;
+        height: 120px;
+        background: oklch(0 0 0 / 0.5);
+      }
+      .spill .t {
+        position: relative;
+      }
+      .round {
+        background: oklch(0.6 0 0);
+      }
+      .round .o {
+        position: relative;
+        width: 200px;
+        height: 100px;
+        border-radius: 50%;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        background: oklch(1 0 0);
+      }
+      .round .o::before,
+      .ghost::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0 / 0.5);
+      }
+      .round .t {
+        position: relative;
+      }
+      .ghost .m {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+      .ghost .m::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0.4 0 0);
+      }
+      .ghost .t {
+        position: relative;
+        pointer-events: auto;
+      }
+      .bevel {
+        background: oklch(0.6 0 0);
+      }
+      .bevel .o {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        corner-shape: bevel;
+        background: oklch(1 0 0);
+      }
+      .bevel .o::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0 / 0.5);
+      }
+      .bevel .t,
+      .diamond .t {
+        position: relative;
+        white-space: nowrap;
+        font-size: 18px;
+      }
+      .diamond::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        corner-shape: bevel;
+        background: oklch(0.2 0 0);
+      }
+      .diamond .t {
+        color: oklch(1 0 0);
+      }
       .box {
         position: relative;
         width: 40px;
@@ -269,5 +653,43 @@
       <input class="entry" value="Sample text" aria-label="Sample" />
     </div>
     <div class="reflect"><span class="t">Sample text</span></div>
+    <div class="disc"><span class="t">Sample text</span></div>
+    <div class="veil"><span class="t">Sample text</span></div>
+    <div class="opaque"><span class="t">Sample text</span></div>
+    <div class="unknown"><span class="t">Sample text</span></div>
+    <div class="under"><span class="t">Sample text</span></div>
+    <div class="split">
+      <div class="m"><span class="t">Sample text</span></div>
+    </div>
+    <div class="unhit">
+      <div class="m"><span class="t">Sample text</span></div>
+    </div>
+    <div class="spill">
+      <div class="o"><span class="t">Sample text</span></div>
+    </div>
+    <div class="round">
+      <div class="o"><span class="t">Sample text</span></div>
+    </div>
+    <div class="ghost">
+      <div class="m"><span class="t">Sample text</span></div>
+    </div>
+    <div class="bevel">
+      <div class="o">
+        <span class="t">Sample text Sample text Sample te</span>
+      </div>
+    </div>
+    <div class="diamond">
+      <span class="t">Sample text Sample text Sample te</span>
+    </div>
+    <div class="unseen">
+      <div class="o"><span class="t">Sample text</span></div>
+    </div>
+    <div class="shroud">
+      <div class="o"><span class="t">Sample text</span></div>
+    </div>
+    <div class="tag"><span class="t">Sample text</span></div>
+    <div class="badge"><span class="t">Sample text</span></div>
+    <div class="mute"><span class="t">Sample text</span></div>
+    <div class="frost"><span class="t">Sample text</span></div>
   </body>
 </html>

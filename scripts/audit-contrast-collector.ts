@@ -12,8 +12,10 @@ import type {
   RawColor,
   RawControl,
   RawLayer,
+  RawNonTextSample,
+  RawTextLine,
 } from "../src/lib/contrast"
-import type { RawPseudo } from "../src/lib/contrast-pseudo"
+import type { Corners, OrderBox, RawPseudo } from "../src/lib/contrast-pseudo"
 
 export interface CollectedText {
   path: string
@@ -36,17 +38,18 @@ export interface CollectedText {
    * line's range of possible backdrops and keeps only the reasons of the lines
    * its verdict could rest on.
    */
-  lines: Array<{ stack: Array<RawLayer>; blockers: Array<Blocker> }>
+  lines: Array<RawTextLine>
   /** Reasons that hold for the whole run, whichever line is judged. */
   blockers: Array<Blocker>
 }
 
-export interface CollectedNonText {
+/**
+ * A surface, read raw: the judge's own input with a path. Extending it, not
+ * restating it, keeps a field the judge reads — `ahead` (#692) — from being
+ * dropped on its way there.
+ */
+export interface CollectedNonText extends RawNonTextSample {
   path: string
-  fill: RawLayer | null
-  border: RawColor | null
-  outer: Array<RawLayer>
-  blockers: Array<Blocker>
 }
 
 /** A form control, read raw; see `RawControl` for why nothing is decided here. */
@@ -223,6 +226,30 @@ export function collectContrast(): Collected {
     return parts.join(" > ")
   }
 
+  // Whether an element paints a background of its own on screen: a colour
+  // that is not transparent, or an image, and it is not hidden.
+  const paintsBackground = (cs: CSSStyleDeclaration): boolean =>
+    cs.visibility !== "hidden" &&
+    cs.display !== "none" &&
+    (cs.backgroundImage !== "none" || !isTransparent(cs.backgroundColor))
+
+  // A computed `opacity` as a number; 1 where it does not read as one. Tested
+  // for a number, not for truthiness: `0` must stay 0.
+  const ownOpacity = (cs: CSSStyleDeclaration): number => {
+    const raw = Number.parseFloat(cs.opacity)
+    return Number.isFinite(raw) ? raw : 1
+  }
+
+  // Whether a `::before` or `::after`, by its computed style, paints a
+  // background on screen. `none` is what an undeclared pseudo-element reports
+  // for `content` too, so that one test covers both; see `paintedPseudos` for
+  // why each of the others is there.
+  const pseudoPaints = (cs: CSSStyleDeclaration): boolean => {
+    if (cs.content === "none") return false
+    if (ownOpacity(cs) === 0) return false
+    return paintsBackground(cs)
+  }
+
   // `document.elementsFromPoint` never returns a `pointer-events: none`
   // element, and a decorative scrim is exactly that. Collecting the candidates
   // once and testing each sample against their live rects is what keeps a scrim
@@ -231,9 +258,7 @@ export function collectContrast(): Collected {
   // `position: fixed` candidate does not move with it.
   const overlayCandidates = [...document.querySelectorAll("*")].filter((el) => {
     const cs = getComputedStyle(el)
-    if (cs.pointerEvents !== "none") return false
-    if (cs.visibility === "hidden" || cs.display === "none") return false
-    return cs.backgroundImage !== "none" || !isTransparent(cs.backgroundColor)
+    return cs.pointerEvents === "none" && paintsBackground(cs)
   })
 
   // `from` is the element being measured. Its own ancestors are excluded: an
@@ -248,38 +273,128 @@ export function collectContrast(): Collected {
       return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom
     })
 
+  // The properties on an element that make, or may make, a stacking context,
+  // as `name: value`, where they are not at their initial value. Which ones
+  // do, and when, is `paintOrder`'s to say (src/lib/contrast-pseudo.ts).
+  const contextPropsOf = (c: CSSStyleDeclaration): Array<string> =>
+    [
+      ["opacity", c.opacity, "1"],
+      ["transform", c.transform, "none"],
+      ["translate", c.translate, "none"],
+      ["rotate", c.rotate, "none"],
+      ["scale", c.scale, "none"],
+      ["filter", c.filter, "none"],
+      ["backdrop-filter", c.backdropFilter, "none"],
+      ["perspective", c.perspective, "none"],
+      ["clip-path", c.clipPath, "none"],
+      ["mask-image", c.maskImage, "none"],
+      ["mix-blend-mode", c.mixBlendMode, "normal"],
+      ["isolation", c.isolation, "auto"],
+      ["view-transition-name", c.viewTransitionName, "none"],
+      ["transform-style", c.transformStyle, "flat"],
+      ["offset-path", c.offsetPath, "none"],
+      ["will-change", c.willChange, "auto"],
+      ["contain", c.contain, "none"],
+      ["container-type", c.containerType, "normal"],
+      ["content-visibility", c.contentVisibility, "visible"],
+    ]
+      // An empty value is a property this browser does not know.
+      .filter(([, value, initial]) => value !== initial && value !== "")
+      .map(([name, value]) => `${name}: ${value}`)
+
+  const radiiOf = (c: CSSStyleDeclaration): Corners => [
+    c.borderTopLeftRadius,
+    c.borderTopRightRadius,
+    c.borderBottomRightRadius,
+    c.borderBottomLeftRadius,
+  ]
+
+  // `corner-*-shape`, read by name; which values are round is
+  // `roundedHolds`'s to say.
+  const CORNERS = ["top-left", "top-right", "bottom-right", "bottom-left"]
+  const cornerShapesOf = (c: CSSStyleDeclaration): Corners =>
+    CORNERS.map((at) => c.getPropertyValue(`corner-${at}-shape`)) as Corners
+
+  // The owner's border box, read at sample time like the rest.
+  const ownerBoxOf = (e: Element): RawPseudo["ownerBox"] => {
+    const r = e.getBoundingClientRect()
+    return { left: r.left, top: r.top, right: r.right, bottom: r.bottom }
+  }
+
+  // The `body` whose background the root passes on to the canvas: the root
+  // paints no background of its own, so `body`'s is drawn there instead of
+  // on its box (CSS Backgrounds 3, "The Canvas Background").
+  const bodyOnCanvas = (e: Element): boolean => {
+    if (e !== document.body) return false
+    const root = getComputedStyle(document.documentElement)
+    return (
+      root.backgroundImage === "none" && isTransparent(root.backgroundColor)
+    )
+  }
+
+  const orderBoxOf = (e: Element): OrderBox => {
+    const c = getComputedStyle(e)
+    const parent = e.parentElement
+    return {
+      position: c.position,
+      zIndex: c.zIndex,
+      parentDisplay:
+        parent === null ? "block" : getComputedStyle(parent).display,
+      contextProps: contextPropsOf(c),
+      pointerEvents: c.pointerEvents,
+      visibility: c.visibility,
+      canvas: e === document.documentElement || bodyOnCanvas(e),
+      // Its own pseudo-elements too: they take its `pointer-events`, so no
+      // hit list shows them either.
+      paintsBackgroundOrPseudo:
+        paintsBackground(c) ||
+        ["::before", "::after"].some((ps) =>
+          pseudoPaints(getComputedStyle(e, ps))
+        ),
+    }
+  }
+
+  // The element read and its ancestors up to, not including, `owner`, or
+  // null when `owner` is not one of them.
+  function chainTo(from: Element, owner: Element): Array<OrderBox> | null {
+    if (!owner.contains(from)) return null
+    const chain: Array<OrderBox> = []
+    for (let e: Element | null = from; e !== owner && e !== null;) {
+      chain.push(orderBoxOf(e))
+      e = e.parentElement
+    }
+    return chain
+  }
+
   // A pseudo-element paints as part of its originating element — under its
-  // text or over it, depending on how it is positioned — but is not a
-  // hit-test target, so it is invisible to `elementsFromPoint` too. Each
-  // painted one is handed over with its computed geometry and its containing
-  // block's box, and `pseudoInTheWay` (src/lib/contrast-pseudo.ts) decides
-  // whether it can reach `area`, the box of what is read (#691). Where it sits
-  // in the paint order is still not guessed: one that can reach it holds the
-  // reading.
-  function paintedPseudos(el: Element, area: DOMRect): Array<RawPseudo> {
+  // text or over it, depending on how it is positioned — and a hit test
+  // reports it as that element. Each painted one is handed over with its
+  // computed geometry and its containing block's box, its paint, and the
+  // values that place it in the paint order against `from`, the element
+  // read. `reach` and `paintOrder` (src/lib/contrast-pseudo.ts) decide
+  // whether it reaches `area`, the box of what is read (#691), and on which
+  // side of it it paints (#692).
+  function paintedPseudos(
+    el: Element,
+    area: DOMRect,
+    from: Element
+  ): Array<RawPseudo> {
     const out: Array<RawPseudo> = []
-    for (const pseudo of ["::before", "::after"]) {
+    const ownerStyle = getComputedStyle(el)
+    for (const pseudo of ["::before", "::after"] as const) {
       const cs = getComputedStyle(el, pseudo)
-      // `none` is what an undeclared pseudo-element reports too, so this one
-      // test covers both. An EMPTY `content` is not spelled `""` here:
-      // Chromium serialises `content: ""` as the two characters `""`, quotes
-      // included — measured — so comparing against the empty string is a test
-      // that can never pass. It would also be the wrong test if it did:
+      // `pseudoPaints` tests `content` against `none`, never against an EMPTY
+      // value: Chromium serialises `content: ""` as the two characters `""`,
+      // quotes included — measured — so comparing against the empty string is
+      // a test that can never pass. It would also be the wrong test if it did:
       // vapor-ui's `.vp-btn::before` is `content: ""` WITH a background, and
       // skipping on empty content would step over a layer that really paints.
-      // What makes that one harmless is the opacity test below.
-      if (cs.content === "none") continue
-      // A declared pseudo-element that paints nothing is not in the way.
-      // vapor-ui's buttons carry `::before { background: …; opacity: 0 }` for
-      // a hover wash, and Chromium serialises their empty content as `""`
-      // rather than `none` — so without these three tests every vapor-ui
-      // button reading was held for a layer that is not on screen.
-      if (cs.display === "none" || cs.visibility === "hidden") continue
-      const alpha = Number.parseFloat(cs.opacity)
-      if (Number.isFinite(alpha) && alpha === 0) continue
-      if (cs.backgroundImage === "none" && isTransparent(cs.backgroundColor)) {
-        continue
-      }
+      // What makes that one harmless is the opacity test: a declared
+      // pseudo-element that paints nothing is not in the way. vapor-ui's
+      // buttons carry `::before { background: …; opacity: 0 }` for a hover
+      // wash, so without the hidden, opacity and background tests every
+      // vapor-ui button reading was held for a layer that is not on screen.
+      if (!pseudoPaints(cs)) continue
       out.push({
         position: cs.position,
         transform: cs.transform,
@@ -309,20 +424,108 @@ export function collectContrast(): Collected {
           right: area.right,
           bottom: area.bottom,
         },
+        which: pseudo === "::before" ? "before" : "after",
+        content: cs.content,
+        zIndex: cs.zIndex,
+        paint: {
+          ...readColour(cs.backgroundColor),
+          // Its own `opacity` and its owner's chain: a pseudo-element is its
+          // owner's child, faded with it.
+          opacity: ownOpacity(cs) * opacityOf(el),
+          ...imageOf(cs),
+        },
+        radii: radiiOf(cs),
+        backgroundClip: cs.backgroundClip,
+        clipPath: cs.clipPath,
+        maskImage: cs.maskImage,
+        mixBlendMode: cs.mixBlendMode,
+        outline: {
+          style: cs.outlineStyle,
+          width: cs.outlineWidth,
+          offset: cs.outlineOffset,
+        },
+        ownerBox: ownerBoxOf(el),
+        ownerRadii: radiiOf(ownerStyle),
+        ownerCornerShapes: cornerShapesOf(ownerStyle),
+        cornerShapes: cornerShapesOf(cs),
+        owner: orderBoxOf(el),
+        chain: chainTo(from, el),
       })
     }
     return out
   }
 
-  // As a layer's optional field: absent, not empty, when nothing is painted —
+  // Whether a `::before` or `::after` that paints no background still draws:
+  // glyphs or an image by its `content`, a border, a shadow, an outline, or a
+  // backdrop filter over what is behind it.
+  // Such a one is not read, but the hit test can meet it (#692).
+  const pseudoDrawsUnread = (cs: CSSStyleDeclaration): boolean => {
+    if (cs.content === "none" || cs.content === "normal") return false
+    if (cs.visibility === "hidden" || cs.display === "none") return false
+    if (ownOpacity(cs) === 0 || pseudoPaints(cs)) return false
+    const edged = (["top", "right", "bottom", "left"] as const).some(
+      (at) =>
+        Number.parseFloat(cs.getPropertyValue(`border-${at}-width`)) > 0 &&
+        !["none", "hidden"].includes(cs.getPropertyValue(`border-${at}-style`))
+    )
+    const outlined =
+      !["none", "hidden"].includes(cs.outlineStyle) &&
+      Number.parseFloat(cs.outlineWidth) > 0
+    // `""` is Chromium's `content: ""`, quotes included (`EMPTY_CONTENT` in
+    // src/lib/contrast.ts).
+    return (
+      cs.content !== '""' ||
+      edged ||
+      outlined ||
+      cs.boxShadow !== "none" ||
+      cs.backdropFilter !== "none"
+    )
+  }
+
+  // As a layer's optional fields: absent, not empty, when nothing is painted —
   // the shape `imageOf` gives an element with no image.
   const pseudosOf = (
     el: Element,
-    area: DOMRect
-  ): { pseudos?: Array<RawPseudo> } => {
-    const pseudos = paintedPseudos(el, area)
-    return pseudos.length === 0 ? {} : { pseudos }
+    area: DOMRect,
+    from: Element
+  ): { pseudos?: Array<RawPseudo>; unreadPseudo?: true } => {
+    const pseudos = paintedPseudos(el, area, from)
+    const unread = (["::before", "::after"] as const).some((ps) =>
+      pseudoDrawsUnread(getComputedStyle(el, ps))
+    )
+    return {
+      ...(pseudos.length === 0 ? {} : { pseudos }),
+      ...(unread ? { unreadPseudo: true as const } : {}),
+    }
   }
+
+  // The ancestors of `from` that a hit list puts in front of it, each as the
+  // index of the same element in the stack read from `start` of that list,
+  // or -1 where the stack stops before it. An ancestor is in front of its
+  // descendant by a pseudo-element of its own drawn over it, or by its own
+  // background over a descendant with a negative `z-index`. These are not
+  // called an `overlay` here: `pseudoEffect` lets the first through when that
+  // pseudo-element is a wash it reads and nothing else of the ancestor draws
+  // unread (`unreadPseudo`), and calls anything else an `overlay` (#692).
+  const aheadOf = (
+    hit: Array<Element>,
+    end: number,
+    from: Element,
+    start: number,
+    depth: number
+  ): Array<number> =>
+    hit
+      .slice(0, end)
+      .filter((front) => front !== from && front.contains(from))
+      .map((front) => {
+        const at = hit.indexOf(front, start)
+        return at === -1 || at - start >= depth ? -1 : at - start
+      })
+
+  // `again` for the layer hit at `at`, when the same element is hit again
+  // further down — see `RawLayer.again`. Absent otherwise.
+  const againOf = (hit: Array<Element>, at: number): { again?: true } =>
+    hit.indexOf(hit[at], at + 1) === -1 ? {} : { again: true }
 
   // Whether an element is the containing block of a FIXED descendant, by the
   // rules this walk models: a transform of any kind or a filter. An ABSOLUTE
@@ -379,10 +582,11 @@ export function collectContrast(): Collected {
   function unsureFor(el: Element, pseudo: CSSStyleDeclaration): Array<string> {
     const unsure = unsureOf(pseudo)
     for (const [name, value, initial] of [
-      // Paint that reaches past the box.
+      // Paint that reaches past the box. An outline may or may not — one
+      // drawn inside the box does not — so it is handed over as `outline`
+      // and `reach` decides (#692).
       ["filter", pseudo.filter, "none"],
       ["box-shadow", pseudo.boxShadow, "none"],
-      ["outline-style", pseudo.outlineStyle, "none"],
       ["border-image-source", pseudo.borderImageSource, "none"],
       // A copy of the whole box painted beside it. Read by name: the
       // prefixed property has no camel-case field to rely on.
@@ -440,7 +644,7 @@ export function collectContrast(): Collected {
     const c = getComputedStyle(cb)
     const r = cb.getBoundingClientRect()
     // A transform anywhere from the containing block up changes the units its
-    // rect is in. Listed for `pseudoInTheWay`, which lets a translation through.
+    // rect is in. Listed for `reach`, which lets a translation through.
     const transforms: Array<string> = []
     for (let up: Element | null = cb; up !== null; up = up.parentElement) {
       const u = getComputedStyle(up)
@@ -531,7 +735,8 @@ export function collectContrast(): Collected {
    * taking the hit list from the top made the snackbar's fill — the same dark
    * navy as the label's text — its background, reporting 1.00:1 for a label
    * that is simply hidden. A covered reading is held, not scored, because the
-   * text is not on screen to be read at all.
+   * text is not on screen to be read at all. An ancestor in front is the one
+   * exception, handed over as `ahead` instead: see `aheadOf`.
    */
   function backdropAt(
     x: number,
@@ -542,6 +747,8 @@ export function collectContrast(): Collected {
   ): {
     stack: Array<RawLayer>
     blockers: Set<Blocker>
+    /** See `RawTextLine.ahead`. */
+    ahead: Array<number>
     /** Nothing to read here: the point does not reach `from` at all. */
     occluded: boolean
   } {
@@ -555,14 +762,18 @@ export function collectContrast(): Collected {
     // — a hold says "measured, verdict withheld", and this was never on screen
     // to measure. Counting it would also double-count, since an empty stack
     // reads as `root-transparent` too.
-    if (index === -1) return { stack, blockers, occluded: true }
+    if (index === -1) return { stack, blockers, ahead: [], occluded: true }
     // Something IS in front, but `from` is still reachable, so the cover is
     // translucent or only partial. That is a held reading, not a dropped one.
-    // A descendant of `from` in front of it is part of it, not a cover.
-    if (hit.slice(0, index).some((front) => !from.contains(front))) {
-      blockers.add("overlay")
-    }
-    for (const el of hit.slice(index)) {
+    // A descendant of `from` in front of it is part of it, not a cover. An
+    // ancestor in front is handed over as `ahead` instead, for `pseudoEffect`
+    // to call an `overlay` or not: see `aheadOf`.
+    const covers = hit
+      .slice(0, index)
+      .some((front) => !from.contains(front) && !front.contains(from))
+    if (covers) blockers.add("overlay")
+    for (const [at, el] of hit.entries()) {
+      if (at < index) continue
       const cs = getComputedStyle(el)
       for (const b of paintBlockers(cs, el.getBoundingClientRect())) {
         blockers.add(b)
@@ -572,7 +783,8 @@ export function collectContrast(): Collected {
         ...colour,
         opacity: opacityOf(el),
         ...imageOf(cs),
-        ...pseudosOf(el, area),
+        ...pseudosOf(el, area, from),
+        ...againOf(hit, at),
       }
       stack.push(layer)
       // Nothing below an opaque layer contributes. The opacity test matters as
@@ -580,8 +792,17 @@ export function collectContrast(): Collected {
       // what is behind it through.
       if (isOpaque(colour) && layer.opacity >= 1) break
     }
-    return { stack, blockers, occluded: false }
+    const ahead = aheadOf(hit, index, from, index, stack.length)
+    return { stack, blockers, ahead, occluded: false }
   }
+
+  // One read point as a line for the judge. `ahead` is absent, not empty,
+  // when nothing is ahead: the shape a line had before #692.
+  const lineOf = (read: ReturnType<typeof backdropAt>): RawTextLine => ({
+    stack: read.stack,
+    blockers: [...read.blockers],
+    ...(read.ahead.length > 0 ? { ahead: read.ahead } : {}),
+  })
 
   // `elementsFromPoint` needs the point to be in the viewport, and a preview is
   // several screens tall. Scrolling only when the element is actually outside
@@ -671,15 +892,14 @@ export function collectContrast(): Collected {
     // cannot rest on would hold a verdict the other lines support, which hides
     // a failure instead of reporting it — the exact outcome `evaluateText`'s
     // comment says it avoids.
-    const lines: Array<{ stack: Array<RawLayer>; blockers: Array<Blocker> }> =
-      []
+    const lines: Array<RawTextLine> = []
     for (const r of rects) {
       const px = r.left + r.width / 2
       const py = r.top + r.height / 2
       if (!inViewport(px, py)) continue
       const read = backdropAt(px, py, parent, r)
       if (read.occluded) continue
-      lines.push({ stack: read.stack, blockers: [...read.blockers] })
+      lines.push(lineOf(read))
     }
     if (lines.length === 0) continue
 
@@ -761,7 +981,7 @@ export function collectContrast(): Collected {
       // number, not for truthiness, for the reason `opacityOf` gives — `0` is
       // the floating-label idiom, and `|| 1` would make it opaque.
       placeholderStyle: styleOf(ph, opacityOf(el) * placeholderOpacity(ph)),
-      lines: [{ stack: read.stack, blockers: [...read.blockers] }],
+      lines: [lineOf(read)],
       blockers: paintBlockers(cs, rect),
     })
   }
@@ -886,13 +1106,16 @@ export function collectContrast(): Collected {
     // sibling is over it, so its own fill and the layers behind it are not the
     // pixels a viewer sees. Its OWN descendants do not count — a radio's inner
     // dot sits over its centre and is part of the control, not something
-    // covering it; counting those held 628 readings on the catalogue.
-    if (hit.slice(0, index).some((front) => !el.contains(front))) {
-      blockers.add("overlay")
-    }
+    // covering it; counting those held 628 readings on the catalogue. Its
+    // ancestors are handed over as `ahead` instead: see `aheadOf`.
+    const covered = hit
+      .slice(0, index)
+      .some((front) => !el.contains(front) && !front.contains(el))
+    if (covered) blockers.add("overlay")
     const outer: Array<RawLayer> = []
     if (coveredByOverlay(cx, cy, el)) blockers.add("overlay")
-    for (const behind of hit.slice(index + 1)) {
+    for (const [at, behind] of hit.entries()) {
+      if (at <= index) continue
       const bcs = getComputedStyle(behind)
       // The same four tests the text path's `backdropAt` runs on every layer.
       // These two were missing here, so a surface sitting over a filtered or
@@ -907,11 +1130,13 @@ export function collectContrast(): Collected {
         ...colour,
         opacity: opacityOf(behind),
         ...imageOf(bcs),
-        ...pseudosOf(behind, live),
+        ...pseudosOf(behind, live, el),
+        ...againOf(hit, at),
       }
       outer.push(layer)
       if (isOpaque(colour) && layer.opacity >= 1) break
     }
+    const ahead = aheadOf(hit, index, el, index + 1, outer.length)
 
     nonText.push({
       path: pathOf(el),
@@ -919,6 +1144,7 @@ export function collectContrast(): Collected {
       border,
       outer,
       blockers: [...blockers],
+      ...(ahead.length > 0 ? { ahead } : {}),
     })
   }
 

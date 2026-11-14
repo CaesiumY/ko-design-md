@@ -305,12 +305,9 @@ export function toFindings(
     })
   }
   for (const n of collected.nonText) {
-    const m = evaluateNonText({
-      fill: n.fill,
-      border: n.border,
-      outer: n.outer,
-      blockers: n.blockers,
-    })
+    // The surface as collected, whole: a field picked out here one by one
+    // would be dropped the day the judge reads a new one.
+    const m = evaluateNonText(n)
     if (m === null) continue
     out.push({
       ...context,
