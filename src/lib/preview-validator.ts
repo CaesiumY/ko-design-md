@@ -75,7 +75,7 @@ export interface PreviewValidationResult {
 const IFRAME_JS_SRC = "/preview/_runtime/iframe.js"
 const TOKENS_CSS_HREF = "/preview/_runtime/tokens.css"
 
-// 크기 게이트는 실제로 배포되는 형태(brotli)를 잰다. Vercel 이 프리뷰 HTML 을
+// 크기 게이트는 실제로 배포되는 형태(brotli)를 잰다. 호스트가 프리뷰 HTML 을
 // `content-encoding: br` 로 서빙하므로 raw 바이트는 전송 비용이 아니다 —
 // bezier 는 raw 155 KiB 인데 실제 다운로드는 19.5 KiB 다.
 //

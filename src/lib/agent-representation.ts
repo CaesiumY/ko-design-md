@@ -315,8 +315,8 @@ const MACHINE_ENDPOINTS: ReadonlyArray<RegExp> = [
 ]
 
 // Build output and catalog assets. `/_` is deliberately broad: it covers the
-// runtime paths neither this repo nor the build names explicitly (`/_vercel/`
-// for analytics, whatever the adapter mounts), and no page can collide with it
+// runtime paths neither this repo nor the build names explicitly (whatever
+// the adapter mounts), and no page can collide with it
 // - TanStack reads a leading `_` in a route file as a PATHLESS layout, so the
 // convention cannot produce a top-level `/_…` URL in the first place.
 //
@@ -335,13 +335,12 @@ const ASSET_PREFIXES = ["/assets/", "/logos/", "/og/", "/preview/", "/_"]
 //
 // Each entry needs evidence, because a prefix listed here leaves the framework's
 // native negotiation guard in place. `/_serverFn/` is TanStack Start's default
-// mount (this repo sets no basepath) and has that pinned test; `/_vercel/` was
-// measured on production, where the edge answers
-// `/_vercel/insights/script.js` with 200 and its own content type whatever the
-// Accept. A speculative `/_build/` sat here on the first pass and nothing in
-// this app serves it — the built server bundle's only `/_build/` string was
-// this constant — so it went.
-const UNDERSCORE_MOUNTS = ["/_serverFn/", "/_vercel/"]
+// mount (this repo sets no basepath) and has that pinned test. `/_vercel/` sat
+// here while the site was on Vercel, whose edge answered
+// `/_vercel/insights/script.js` itself; the Cloudflare host mounts nothing under
+// `/_` (its own paths live under `/cdn-cgi/`), so it went. A speculative
+// `/_build/` went on the first pass for the same reason - nothing serves it.
+const UNDERSCORE_MOUNTS = ["/_serverFn/"]
 
 // True for a path under `/_` that no mount above claims. Such a path resolves
 // nowhere: the static layer has no file and the router has no route (TanStack
@@ -544,7 +543,7 @@ export function agentResponse(request: Request): Response | undefined {
 
   const pathname = normalizePathname(new URL(request.url).pathname)
   // A client that takes html keeps the old route for everything under the
-  // prefixes: a browser fetching `/_vercel/insights/script.js` sends the bare
+  // prefixes: a browser fetching an asset under `/_` sends the bare
   // wildcard, and the static layer must answer it. Only a client that cannot
   // use html at all reaches past the prefix, and only for a `/_` path no mount
   // claims — where the alternative is the framework's 500, not a working
