@@ -233,6 +233,14 @@
         is black on black under the wash, a fail; read as the wash over white
         it would pass. Any element shown with `pointer-events: none` holds it,
         whatever it draws.
+      - `.between` isolates a white panel whose `::before` of oklch(0.6 0 0)
+        (rgb(128)) sits at `z-index: -1`, under a wrapper that is a stacking
+        context (`z-index: 0`) and paints no background, but whose own
+        `::before` at `z-index: -1` draws a 60px black border filling it. On
+        screen the run is black on that border, a fail; the wrapper is read
+        as painting nothing, and the run as on the panel's grey wash, a pass
+        at 5.32. A layer between that draws by a pseudo-element not read
+        holds it.
     -->
     <style>
       html {
@@ -275,7 +283,8 @@
       .aside,
       .atop,
       .shade,
-      .glyph {
+      .glyph,
+      .between {
         position: relative;
         width: 300px;
         height: 120px;
@@ -588,6 +597,31 @@
       .glyph .t {
         position: relative;
       }
+      .between {
+        isolation: isolate;
+      }
+      .between::before,
+      .between .x::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: oklch(0.6 0 0);
+      }
+      .between .x {
+        position: relative;
+        z-index: 0;
+        width: 300px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .between .x::before {
+        background: none;
+        border: 60px solid oklch(0 0 0);
+        box-sizing: border-box;
+      }
       .clipped::before {
         content: "";
         position: absolute;
@@ -822,6 +856,9 @@
     <div class="shade">
       <i class="sh"></i>
       <span class="t">Sample text</span>
+    </div>
+    <div class="between">
+      <div class="x"><span class="t">Sample text</span></div>
     </div>
     <div class="glyph">
       <i class="g">█████</i>

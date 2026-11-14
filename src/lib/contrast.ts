@@ -698,9 +698,10 @@ const EMPTY_CONTENT = '""'
  *   something paints between the pseudo-element and the owner's background;
  * - on any side: one whose owner is hidden, whose computed background is in
  *   the stack though nothing of it is painted, one whose `content` draws
- *   more than its box, one whose owner draws by another pseudo-element
- *   that is not read (`unreadPseudo`), and one whose owner holds anything else
- *   that paints and takes no pointer events (`unhitPaint`);
+ *   more than its box, one whose owner, or a layer between it and what is
+ *   read, draws by a pseudo-element that is not read (`unreadPseudo`), and
+ *   one whose owner holds anything else that paints and takes no pointer
+ *   events (`unhitPaint`);
  * - under its owner's background: one whose owner's colour is not opaque;
  * - under the text or under its owner's background, either way: one whose
  *   owner's own box does not hold the whole area, so its background is not
@@ -752,11 +753,15 @@ function pseudoEffect(
         unsure = true
         continue
       }
-      // Something else of its owner draws and is not read — glyphs, a
-      // border, a backdrop filter — and may be over the same line, out of
-      // the hit test's sight with `pointer-events: none`, or be why the owner
-      // is in front of the text. The wash alone is not what is there.
-      if (layer.unreadPseudo === true) {
+      // Something else of its owner, or of a layer between the owner and
+      // what is read, draws and is not read — glyphs, a border, a backdrop
+      // filter — and may be over the same line, out of the hit test's sight
+      // with `pointer-events: none`, or be why the owner is in front of the
+      // text. The paint alone is not what is there.
+      if (
+        layer.unreadPseudo === true ||
+        stack.slice(between, index).some((l) => l.unreadPseudo === true)
+      ) {
         unsure = true
         continue
       }

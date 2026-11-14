@@ -1231,6 +1231,22 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
         blockers: [],
       })
 
+    it("holds when a layer between draws by a pseudo-element not read", () => {
+      // The layer between paints no background of its own, but its
+      // `::before` draws a border over the line: not read, so where it is
+      // against the paint below is not known.
+      expect(
+        textOn(
+          opaque(0, 0, 0),
+          [pseudo({ ...raised, paint: halfBlack() })],
+          [{ ...SPAN, onWhite: WHITE, onBlack: BLACK, unreadPseudo: true }]
+        )
+      ).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+    })
+
     it("holds when something else inside the owner paints out of sight", () => {
       // A sibling of the text, or its pseudo-element, paints with
       // `pointer-events: none`: no stack shows it, and it may lie between

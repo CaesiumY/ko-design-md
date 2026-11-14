@@ -546,6 +546,9 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  * - `.glyph` washes a raised run from `::after` over a sibling that takes no
  *   pointer events and draws only black glyphs under it: held, `overlay` too
  *   since the wash puts the panel in front, where it would read a pass.
+ * - `.between` lays the panel's grey wash under a wrapper that paints no
+ *   background but draws a black border by a `::before` not read: held,
+ *   where read as the grey alone it would pass at 5.32.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -842,6 +845,15 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
     kind: "text",
     verdict: "indeterminate",
     blockers: ["overlay", "pseudo-background"],
+  },
+  {
+    id: "text over a wash with a layer between drawing unread",
+    pathEnds: "div.between > div.x > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
   },
   {
     id: "text under a wash that draws glyphs of its own",
