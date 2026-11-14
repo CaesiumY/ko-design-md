@@ -20,5 +20,7 @@
     // validators and the HTTP regression suite all name the `.html` file.
     "html_handling": "none",
   },
+  // Workers Logs. src/routes/privacy.tsx tells visitors what this keeps and
+  // for how long (its hosting paragraph); change that paragraph with this.
   "observability": { "enabled": true },
 }
