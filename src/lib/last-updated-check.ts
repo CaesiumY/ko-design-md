@@ -19,7 +19,8 @@
 import { findKey, readFrontmatter } from "./frontmatter"
 
 /**
- * Is a repo-wide mechanical sweep exempted by a commit in range?
+ * Is an edit exempted by a commit in range? Which edits may carry the trailer
+ * is a rule, not code: see the date section of `.claude/rules/audit-notes.md`.
  *
  * Trailer-shaped, not a bracket tag in prose. The first draft matched
  * `[skip last_updated]` anywhere in the message and promptly exempted its own

@@ -150,7 +150,8 @@ function main(): void {
     return
   }
 
-  // Escape hatch for repo-wide mechanical sweeps. Replaying 24 commits found
+  // Escape hatch for the edits listed in the date section of
+  // `.claude/rules/audit-notes.md` (it began with repo-wide mechanical sweeps). Replaying 24 commits found
   // two — a vendor-neutrality line added to 9 entries, a `created_at` backfill
   // across 4 — where bumping every date would push the whole catalog to the top
   // of the RSS feed for an edit no reader is tracking. It lives in the commit
