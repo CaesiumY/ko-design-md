@@ -159,6 +159,15 @@
         does its pseudo-element: read as the wash over white, the run would
         pass at 5.32, on a grey it does not sit on. A painted pseudo-element
         of an element the hit test skips holds it.
+      - `.bevel` and `.diamond` cut a 50% radius with `corner-shape: bevel`,
+        a diamond rather than the ellipse the radii describe. Their 18px run
+        is long enough that its ends leave the diamond while its line box
+        stays inside the ellipse. `.bevel` does it to a white owner on a
+        grey panel, under the owner's square 50% wash: read as an ellipse,
+        the run would pass, while its ends sit on the wash over grey.
+        `.diamond` does it to the panel's own dark `::before`, under white
+        text: read as an ellipse it would pass at 18, while the ends are
+        white on white. A corner shape other than round holds both.
     -->
     <style>
       html {
@@ -188,7 +197,9 @@
       .unhit,
       .spill,
       .round,
-      .ghost {
+      .ghost,
+      .bevel,
+      .diamond {
         position: relative;
         width: 300px;
         height: 120px;
@@ -431,6 +442,43 @@
         position: relative;
         pointer-events: auto;
       }
+      .bevel {
+        background: oklch(0.6 0 0);
+      }
+      .bevel .o {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        corner-shape: bevel;
+        background: oklch(1 0 0);
+      }
+      .bevel .o::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0 / 0.5);
+      }
+      .bevel .t,
+      .diamond .t {
+        position: relative;
+        white-space: nowrap;
+        font-size: 18px;
+      }
+      .diamond::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        corner-shape: bevel;
+        background: oklch(0.2 0 0);
+      }
+      .diamond .t {
+        color: oklch(1 0 0);
+      }
       .box {
         position: relative;
         width: 40px;
@@ -489,6 +537,12 @@
     </div>
     <div class="ghost">
       <div class="m"><span class="t">Sample text</span></div>
+    </div>
+    <div class="bevel">
+      <div class="o"><span class="t">Sample text Sample text Sample te</span></div>
+    </div>
+    <div class="diamond">
+      <span class="t">Sample text Sample text Sample te</span>
     </div>
   </body>
 </html>

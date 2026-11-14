@@ -503,6 +503,9 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  * - `.round`'s raised run sits past the rounded corner of a white owner on a
  *   grey panel, under a square wash of the owner's: held.
  * - `.ghost` is `.unhit` whose wrapper paints by its own `::before`: held.
+ * - `.bevel` and `.diamond` cut a 50% radius to a diamond with
+ *   `corner-shape: bevel`, the owner's and the pseudo-element's: held, where
+ *   an ellipse would read a pass.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -686,6 +689,24 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
     id: "raised text over a skipped wrapper that paints by its pseudo-element",
     pathEnds: "div.ghost > div.m > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text past the bevelled corner of the owner its wash belongs to",
+    pathEnds: "div.bevel > div.o > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text past the bevelled corner of a disc under it",
+    pathEnds: "div.diamond > span.t",
     theme: "light",
     state: "default",
     kind: "text",

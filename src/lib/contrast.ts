@@ -686,8 +686,8 @@ const paintsNothing = (layer: RawLayer): boolean =>
  * - under the text or under its owner's background, either way: one whose
  *   owner's own box does not hold the whole area, so its background is not
  *   under all of it, and one with an element from the one read up to the
- *   owner that paints a background and takes no pointer events, which no
- *   stack shows.
+ *   owner that paints a background, itself or by its own pseudo-elements, and
+ *   takes no pointer events, which no stack shows.
  *
  * One under the text is composed by source-over whatever its
  * `mix-blend-mode`, as every layer of a stack is.

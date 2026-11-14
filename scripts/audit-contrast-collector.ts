@@ -226,12 +226,6 @@ export function collectContrast(): Collected {
     return parts.join(" > ")
   }
 
-  // `document.elementsFromPoint` never returns a `pointer-events: none`
-  // element, and a decorative scrim is exactly that. Collecting the candidates
-  // once and testing each sample against their live rects is what keeps a scrim
-  // from being invisible to the audit. Their rects are read at sample time
-  // rather than cached, because the page scrolls between samples and a
-  // `position: fixed` candidate does not move with it.
   // Whether an element paints a background of its own on screen: a colour
   // that is not transparent, or an image, and it is not hidden.
   const paintsBackground = (cs: CSSStyleDeclaration): boolean =>
@@ -239,17 +233,29 @@ export function collectContrast(): Collected {
     cs.display !== "none" &&
     (cs.backgroundImage !== "none" || !isTransparent(cs.backgroundColor))
 
+  // A computed `opacity` as a number; 1 where it does not read as one. Tested
+  // for a number, not for truthiness: `0` must stay 0.
+  const ownOpacity = (cs: CSSStyleDeclaration): number => {
+    const raw = Number.parseFloat(cs.opacity)
+    return Number.isFinite(raw) ? raw : 1
+  }
+
   // Whether a `::before` or `::after`, by its computed style, paints a
   // background on screen. `none` is what an undeclared pseudo-element reports
   // for `content` too, so that one test covers both; see `paintedPseudos` for
   // why each of the others is there.
   const pseudoPaints = (cs: CSSStyleDeclaration): boolean => {
     if (cs.content === "none") return false
-    const alpha = Number.parseFloat(cs.opacity)
-    if (Number.isFinite(alpha) && alpha === 0) return false
+    if (ownOpacity(cs) === 0) return false
     return paintsBackground(cs)
   }
 
+  // `document.elementsFromPoint` never returns a `pointer-events: none`
+  // element, and a decorative scrim is exactly that. Collecting the candidates
+  // once and testing each sample against their live rects is what keeps a scrim
+  // from being invisible to the audit. Their rects are read at sample time
+  // rather than cached, because the page scrolls between samples and a
+  // `position: fixed` candidate does not move with it.
   const overlayCandidates = [...document.querySelectorAll("*")].filter((el) => {
     const cs = getComputedStyle(el)
     return cs.pointerEvents === "none" && paintsBackground(cs)
@@ -303,6 +309,18 @@ export function collectContrast(): Collected {
     c.borderBottomLeftRadius,
   ]
 
+  // `corner-*-shape`, read by name. Chromium writes `round` as
+  // `superellipse(1)`, and an empty value is a browser that does not know
+  // the property, whose corners are round.
+  const ROUND_CORNER = new Set(["", "round", "superellipse(1)"])
+  const CORNERS = ["top-left", "top-right", "bottom-right", "bottom-left"]
+  const cornerShapesOf = (
+    c: CSSStyleDeclaration
+  ): RawPseudo["ownerCornerShapes"] =>
+    CORNERS.map((at) =>
+      c.getPropertyValue(`corner-${at}-shape`)
+    ) as RawPseudo["ownerCornerShapes"]
+
   // The owner's border box, read at sample time like the rest.
   const ownerBoxOf = (e: Element): RawPseudo["ownerBox"] => {
     const r = e.getBoundingClientRect()
@@ -321,7 +339,7 @@ export function collectContrast(): Collected {
       pointerEvents: c.pointerEvents,
       // Its own pseudo-elements too: they take its `pointer-events`, so no
       // hit list shows them either.
-      paintsBackground:
+      paintsBackgroundOrPseudo:
         paintsBackground(c) ||
         ["::before", "::after"].some((ps) =>
           pseudoPaints(getComputedStyle(e, ps))
@@ -369,7 +387,6 @@ export function collectContrast(): Collected {
       // wash, so without the hidden, opacity and background tests every
       // vapor-ui button reading was held for a layer that is not on screen.
       if (!pseudoPaints(cs)) continue
-      const alpha = Number.parseFloat(cs.opacity)
       out.push({
         position: cs.position,
         transform: cs.transform,
@@ -405,7 +422,7 @@ export function collectContrast(): Collected {
           ...readColour(cs.backgroundColor),
           // Its own `opacity` and its owner's chain: a pseudo-element is its
           // owner's child, faded with it.
-          opacity: (Number.isFinite(alpha) ? alpha : 1) * opacityOf(el),
+          opacity: ownOpacity(cs) * opacityOf(el),
           ...imageOf(cs),
         },
         radii: radiiOf(cs),
@@ -420,6 +437,7 @@ export function collectContrast(): Collected {
         },
         ownerBox: ownerBoxOf(el),
         ownerRadii: radiiOf(getComputedStyle(el)),
+        ownerCornerShapes: cornerShapesOf(getComputedStyle(el)),
         owner: orderBoxOf(el),
         chain: chainTo(from, el),
       })
@@ -550,6 +568,13 @@ export function collectContrast(): Collected {
       // cannot be moving anything.
       if (value !== initial && value !== "") {
         unsure.push(`${name}: ${value}`)
+      }
+    }
+    // A corner cut other than round is a shape `reach` does not work out
+    // from the radii (#692 review).
+    for (const [at, shape] of cornerShapesOf(pseudo).entries()) {
+      if (!ROUND_CORNER.has(shape)) {
+        unsure.push(`corner-${CORNERS[at]}-shape: ${shape}`)
       }
     }
     for (let up: Element | null = el; up !== null; up = up.parentElement) {

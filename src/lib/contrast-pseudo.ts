@@ -132,7 +132,13 @@ export interface RawPseudo {
    */
   ownerBox: Rect
   /** The owner's four corner radii, written as `radii` is. */
-  ownerRadii: [string, string, string, string]
+  ownerRadii: RawPseudo["radii"]
+  /**
+   * The owner's four `corner-*-shape` values, top-left first and clockwise,
+   * empty where the browser does not know the property. Anything but
+   * `round` (`superellipse(1)` in Chromium) cuts the corner to a shape the radii alone do not describe.
+   */
+  ownerCornerShapes: [string, string, string, string]
   /** The element whose pseudo-element this is. */
   owner: OrderBox
   /**
@@ -167,13 +173,19 @@ export interface OrderBox {
   /** Its computed `pointer-events`. */
   pointerEvents: string
   /**
-   * Whether it paints a background on screen — a colour that is not
-   * transparent, or an image, and it is not hidden. Borders and shadows are
-   * not counted. With `pointer-events: none` such an element is in no hit list,
-   * so no stack shows where its paint is.
+   * Whether it, or its own `::before` or `::after`, paints a background on
+   * screen — a colour that is not transparent, or an image, and not hidden.
+   * Borders and shadows are not counted. With `pointer-events: none` such an
+   * element and its pseudo-elements are in no hit list, so no stack shows
+   * where that paint is.
    */
-  paintsBackground: boolean
+  paintsBackgroundOrPseudo: boolean
 }
+
+// `corner-*-shape` values that are the plain round corner: Chromium writes
+// `round` as `superellipse(1)`, and a browser without the property reads it
+// as empty.
+const ROUND_CORNER = new Set(["", "round", "superellipse(1)"])
 
 /**
  * Whether a pseudo-element placed under the text, or under its owner's
@@ -184,10 +196,12 @@ export interface OrderBox {
  * the caller's to pass.
  */
 export function ownerBackgroundUnder(p: RawPseudo, area: Rect): boolean {
-  // Its background fills its border box cut by its rounded corners.
-  const holds = roundedHolds(p.ownerBox, p.ownerRadii, area)
+  // Its background fills its border box cut by its rounded corners — round
+  // ones only: another `corner-shape` is a curve this does not work out.
+  const round = p.ownerCornerShapes.every((c) => ROUND_CORNER.has(c))
+  const holds = round && roundedHolds(p.ownerBox, p.ownerRadii, area)
   const hidden = (p.chain ?? []).some(
-    (b) => b.pointerEvents === "none" && b.paintsBackground
+    (b) => b.pointerEvents === "none" && b.paintsBackgroundOrPseudo
   )
   return holds && !hidden
 }
@@ -411,8 +425,7 @@ function paintCoversArea(p: RawPseudo, box: Box): boolean {
     !(clip === "content-box" && !padded)
   if (clipsShort) return false
 
-  // The shape is convex, so it holds the area once it holds its corners. An
-  // outline inside the box paints a colour of its own over that edge, so the
+  // An outline inside the box paints a colour of its own over that edge, so the
   // area has to keep clear of it: grown by the ring's reach, it must still
   // fit, which puts every point of it at least that far in.
   return roundedHolds(

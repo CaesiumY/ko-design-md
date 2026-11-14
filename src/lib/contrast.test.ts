@@ -677,7 +677,7 @@ const orderBox = (over: Partial<OrderBox> = {}): OrderBox => ({
   parentDisplay: "block",
   contextProps: [],
   pointerEvents: "auto",
-  paintsBackground: false,
+  paintsBackgroundOrPseudo: false,
   ...over,
 })
 
@@ -718,6 +718,7 @@ const pseudo = (over: Partial<RawPseudo> = {}): RawPseudo => ({
   area: { left: 200, top: 248, right: 300, bottom: 272 },
   ownerBox: { left: 100, top: 200, right: 400, bottom: 320 },
   ownerRadii: ["0px", "0px", "0px", "0px"],
+  ownerCornerShapes: ["round", "round", "round", "round"],
   which: "before",
   zIndex: "auto",
   paint: opaque(0, 0, 0),
@@ -1217,6 +1218,38 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
       })
     })
 
+    it("holds one whose owner's corners are cut to a shape other than round", () => {
+      // `corner-shape: bevel` turns a 50% radius into a diamond: the ellipse
+      // the radii describe is not the shape the background fills.
+      const got = textOn(opaque(0, 0, 0), [
+        pseudo({
+          ...raised,
+          paint: halfBlack(),
+          ownerRadii: ["50%", "50%", "50%", "50%"],
+          ownerCornerShapes: ["bevel", "bevel", "bevel", "bevel"],
+        }),
+      ])
+      expect(got).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+      // Round — `superellipse(1)` as Chromium writes it — or unknown to the
+      // browser (an empty value), is the ellipse,
+      // which holds this line: black on the wash over white, #808080, 5.32.
+      for (const shape of ["round", "superellipse(1)", ""]) {
+        expect(
+          textOn(opaque(0, 0, 0), [
+            pseudo({
+              ...raised,
+              paint: halfBlack(),
+              ownerRadii: ["50%", "50%", "50%", "50%"],
+              ownerCornerShapes: [shape, shape, shape, shape],
+            }),
+          ]).verdict
+        ).toBe("pass")
+      }
+    })
+
     it("holds one with a painted element between it and the text that the hit test skips", () => {
       // A wrapper that paints and takes no pointer events is under the
       // pseudo-element and over the owner, and in no stack.
@@ -1227,7 +1260,7 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
             orderBox({
               position: "static",
               pointerEvents: "none",
-              paintsBackground: true,
+              paintsBackgroundOrPseudo: true,
             }),
           ],
           paint: halfBlack(),
