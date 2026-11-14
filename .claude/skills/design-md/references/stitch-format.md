@@ -4,6 +4,13 @@ A catalog entry is a YAML-frontmatter + Markdown document that encodes a brand's
 
 ## Standard section order (use as ## headings, in this order)
 
+Before the first section, directly under the H1, a new entry carries its **tagline line** (한 줄 소개): one plain-prose sentence, not a blockquote. The site reads the first prose line after the H1 and any blockquote and shows it as is on the home list, the detail header, the share card, the meta description, `llms.txt` and the RSS item description. Its rules:
+
+- Subject is the frontmatter `name` (the brand name the detail page shows), even when the H1 names the design system.
+- One sentence, 90 characters or fewer as the reader sees it (citation markers not counted).
+- Says what the service does, then how its screens look. The service definition uses the cited source's own words. No brand slogan or campaign line, reproduced or paraphrased, and no mission, vision or positioning line, even when a source phrases it that way.
+- Every claim carries a `[src:N]`. No color values, bold, or dashes.
+
 1. **Brand & Style** — design philosophy, target audience, emotional tone. Prose, body lang.
 2. **Colors** — palette with semantic roles. Values are declared as OKLCH in the frontmatter `colors:` map (see the token rules below); the section carries the prose, plus a table only where it adds what the map cannot (usage matrix, light/dark pairing).
 3. **Typography** — font families (Pretendard Variable for Korean coverage), scale, weights, line heights.
@@ -303,8 +310,8 @@ These sections extend the 10 standard sections. They are recommended for new ent
 ## What's NOT in design.md
 
 - Implementation code beyond short illustrative snippets — design.md describes intent and tokens, not full components.
-- Marketing copy, brand slogans, campaign lines, or hero messaging — those belong in product surfaces. A new entry opens with one plain-prose sentence directly under the H1 that says what the service is and how its screens look, with citations; `design-md-template.md` shows its form. That sentence is held to this rule too and must not reproduce or paraphrase a brand slogan or campaign line.
-- Brand mission statements — keep `## Brand & Style` focused on visual/UX intent, not corporate positioning. That sentence under the H1 states what the service does in its cited source's words and how its screens look; a mission, vision or positioning line stays out of it, even when a source phrases it that way.
+- Marketing copy, brand slogans, campaign lines, or hero messaging — those belong in product surfaces. The tagline line under the H1 (see Standard section order) is the entry's own introduction, not a slogan, and is held to this rule too.
+- Brand mission statements — keep `## Brand & Style` focused on visual/UX intent, not corporate positioning.
 
 ## Sources
 
