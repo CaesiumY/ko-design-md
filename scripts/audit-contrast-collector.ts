@@ -280,6 +280,12 @@ export function collectContrast(): Collected {
       .filter(([, value, initial]) => value !== initial && value !== "")
       .map(([name, value]) => `${name}: ${value}`)
 
+  // The owner's border box, read at sample time like the rest.
+  const ownerBoxOf = (e: Element): RawPseudo["ownerBox"] => {
+    const r = e.getBoundingClientRect()
+    return { left: r.left, top: r.top, right: r.right, bottom: r.bottom }
+  }
+
   const orderBoxOf = (e: Element): OrderBox => {
     const c = getComputedStyle(e)
     const parent = e.parentElement
@@ -289,6 +295,8 @@ export function collectContrast(): Collected {
       parentDisplay:
         parent === null ? "block" : getComputedStyle(parent).display,
       contextProps: contextPropsOf(c),
+      pointerEvents: c.pointerEvents,
+      paints: c.backgroundImage !== "none" || !isTransparent(c.backgroundColor),
     }
   }
 
@@ -393,6 +401,7 @@ export function collectContrast(): Collected {
           width: cs.outlineWidth,
           offset: cs.outlineOffset,
         },
+        ownerBox: ownerBoxOf(el),
         owner: orderBoxOf(el),
         chain: chainTo(from, el),
       })
@@ -642,11 +651,12 @@ export function collectContrast(): Collected {
    *
    * `from` is the element the colour belongs to, and the walk starts there
    * rather than at the top of the hit list. Anything in front of it is covering
-   * it, not backing it — but for its ancestors, see `aheadOf`: socar's demo snackbar sits over a price label, and
+   * it, not backing it: socar's demo snackbar sits over a price label, and
    * taking the hit list from the top made the snackbar's fill — the same dark
    * navy as the label's text — its background, reporting 1.00:1 for a label
    * that is simply hidden. A covered reading is held, not scored, because the
-   * text is not on screen to be read at all.
+   * text is not on screen to be read at all. An ancestor in front is the one
+   * exception, handed over as `ahead` instead: see `aheadOf`.
    */
   function backdropAt(
     x: number,

@@ -9,6 +9,8 @@ const box = (over: Partial<OrderBox> = {}): OrderBox => ({
   zIndex: "auto",
   parentDisplay: "block",
   contextProps: [],
+  pointerEvents: "auto",
+  paints: false,
   ...over,
 })
 
@@ -39,6 +41,7 @@ const pseudo = (over: Partial<RawPseudo> = {}): RawPseudo => ({
   containingBlock: { left: 100, top: 200, display: "block", transforms: [] },
   unsure: [],
   area: { left: 200, top: 248, right: 300, bottom: 272 },
+  ownerBox: { left: 100, top: 200, right: 400, bottom: 320 },
   which: "before",
   zIndex: "auto",
   paint: {

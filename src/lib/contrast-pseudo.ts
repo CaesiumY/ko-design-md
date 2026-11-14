@@ -118,6 +118,11 @@ export interface RawPseudo {
    * plus `offset` at most 0) paints only within the box's outer edge.
    */
   outline: { style: string; width: string; offset: string }
+  /**
+   * The owner's own border box, in viewport pixels. Where it does not hold
+   * the area read, the owner's background is not under all of it.
+   */
+  ownerBox: { left: number; top: number; right: number; bottom: number }
   /** The element whose pseudo-element this is. */
   owner: OrderBox
   /**
@@ -149,6 +154,38 @@ export interface OrderBox {
    * initial value; what each one means is decided here.
    */
   contextProps: Array<string>
+  /** Its computed `pointer-events`. */
+  pointerEvents: string
+  /**
+   * Whether it paints a background — a colour that is not transparent, or
+   * an image. With `pointer-events: none` such an element is in no hit list,
+   * so no stack shows where its paint is.
+   */
+  paints: boolean
+}
+
+/**
+ * Whether a pseudo-element placed under the text, or under its owner's
+ * background, can be laid against that background with certainty: the
+ * owner's own box holds the whole area, so its background is under all of
+ * it, and nothing between the element read and the owner paints out of the
+ * hit test's sight. Taken from the area as given; a surface's grown area is
+ * the caller's to pass.
+ */
+export function ownerBackgroundUnder(
+  p: RawPseudo,
+  area: RawPseudo["area"]
+): boolean {
+  const o = p.ownerBox
+  const holds =
+    o.left <= area.left &&
+    o.top <= area.top &&
+    o.right >= area.right &&
+    o.bottom >= area.bottom
+  const hidden = (p.chain ?? []).some(
+    (b) => b.pointerEvents === "none" && b.paints
+  )
+  return holds && !hidden
 }
 
 /**

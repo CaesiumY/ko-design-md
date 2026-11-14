@@ -16,7 +16,7 @@
 
 import { paintableColours, rgbaKey } from "./contrast-gradient"
 import { srgbToLinear } from "./oklch-convert"
-import { paintOrder, reach } from "./contrast-pseudo"
+import { ownerBackgroundUnder, paintOrder, reach } from "./contrast-pseudo"
 import type { BackgroundImage } from "./contrast-gradient"
 import type { RawPseudo } from "./contrast-pseudo"
 
@@ -681,10 +681,11 @@ const paintsNothing = (layer: RawLayer): boolean =>
  * - under it: one whose owner is further down than a layer between it and
  *   what is read that paints anything, since which of the two is on top is
  *   not read either; and one whose owner is hit again further down, where
- *   something paints between the pseudo-element and the owner's background.
- *   One under it is composed by source-over whatever its `mix-blend-mode`,
- *   as every layer of a stack is;
+ *   something paints between the pseudo-element and the owner's background;
  * - under its owner's background: one whose owner's colour is not opaque.
+ *
+ * One under the text is composed by source-over whatever its
+ * `mix-blend-mode`, as every layer of a stack is.
  */
 function pseudoEffect(
   stack: Array<RawLayer>,
@@ -698,28 +699,33 @@ function pseudoEffect(
   let unsure = false
   for (const [index, layer] of stack.entries()) {
     for (const p of layer.pseudos ?? []) {
-      const a = p.area
-      const reached = reach({
-        ...p,
-        area: {
-          left: a.left - edge,
-          top: a.top - edge,
-          right: a.right + edge,
-          bottom: a.bottom + edge,
-        },
-      })
+      const area = {
+        left: p.area.left - edge,
+        top: p.area.top - edge,
+        right: p.area.right + edge,
+        bottom: p.area.bottom + edge,
+      }
+      const reached = reach({ ...p, area })
       if (reached === "none") continue
       if (reached === "unsure") {
         unsure = true
         continue
       }
       const side = paintOrder(p)
-      if (side === "above") over.push({ index, p })
-      else if (side === "below") under.push({ index, p })
-      // Under an opaque background of its owner's, it is not on screen.
-      else if (side === "under-owner") {
-        if (recoverAlpha(layer.onWhite, layer.onBlack).a < 1) unsure = true
-      } else unsure = true
+      if (side === "above") {
+        over.push({ index, p })
+        continue
+      }
+      // Both other sides are laid against the owner's background, which has
+      // to be under the whole area, in sight of the hit test.
+      if (side === "unsure" || !ownerBackgroundUnder(p, area)) {
+        unsure = true
+      } else if (side === "below") {
+        under.push({ index, p })
+      } else if (recoverAlpha(layer.onWhite, layer.onBlack).a < 1) {
+        // Under an opaque background of its owner's, it is not on screen.
+        unsure = true
+      }
     }
   }
   // An ancestor in front is explained by a pseudo-element of its own that

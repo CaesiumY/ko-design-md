@@ -676,6 +676,8 @@ const orderBox = (over: Partial<OrderBox> = {}): OrderBox => ({
   zIndex: "auto",
   parentDisplay: "block",
   contextProps: [],
+  pointerEvents: "auto",
+  paints: false,
   ...over,
 })
 
@@ -714,6 +716,7 @@ const pseudo = (over: Partial<RawPseudo> = {}): RawPseudo => ({
   },
   unsure: [],
   area: { left: 200, top: 248, right: 300, bottom: 272 },
+  ownerBox: { left: 100, top: 200, right: 400, bottom: 320 },
   which: "before",
   zIndex: "auto",
   paint: opaque(0, 0, 0),
@@ -1172,6 +1175,44 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
         ],
         blockers: [],
       })
+      expect(got).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+    })
+
+    it("holds one whose owner's own box does not hold the line", () => {
+      // The text runs out of a 0px-tall owner. Its layer is then only where
+      // its pseudo-element was hit, and the white it carries is not there.
+      const got = textOn(opaque(0, 0, 0), [
+        pseudo({
+          ...raised,
+          paint: halfBlack(),
+          ownerBox: { left: 100, top: 200, right: 400, bottom: 200 },
+        }),
+      ])
+      expect(got).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+    })
+
+    it("holds one with a painted element between it and the text that the hit test skips", () => {
+      // A wrapper that paints and takes no pointer events is under the
+      // pseudo-element and over the owner, and in no stack.
+      const got = textOn(opaque(0, 0, 0), [
+        pseudo({
+          chain: [
+            orderBox({ zIndex: "1" }),
+            orderBox({
+              position: "static",
+              pointerEvents: "none",
+              paints: true,
+            }),
+          ],
+          paint: halfBlack(),
+        }),
+      ])
       expect(got).toMatchObject({
         verdict: "indeterminate",
         blockers: ["pseudo-background"],

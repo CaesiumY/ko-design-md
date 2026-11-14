@@ -137,6 +137,16 @@
         panel's white, the wash would make it rgb(128) and the run a pass at
         5.32; on screen it is the wash over the wrapper, rgb(64), and a fail.
         The panel hit again holds it.
+      - `.unhit` is `.split` with `pointer-events: none` on the wrapper (and
+        `auto` back on the run), so the hit test skips the wrapper and may
+        show the panel once. A painted element between the read element and
+        the owner that takes no pointer events holds it.
+      - `.spill` lays the same 50% wash, centred, from a 0px-tall white
+        owner whose raised run spills out below it, over a panel of
+        oklch(0.6 0 0). The owner is hit only where its wash is, and that
+        place carries its white: read as white, the run would pass at 5.32;
+        on screen the wash is over rgb(128), rgb(64), a fail. An owner whose
+        own box does not hold the line holds it.
     -->
     <style>
       html {
@@ -162,7 +172,9 @@
       .opaque,
       .unknown,
       .under,
-      .split {
+      .split,
+      .unhit,
+      .spill {
         position: relative;
         width: 300px;
         height: 120px;
@@ -314,13 +326,15 @@
         background: oklch(0 0 0);
         z-index: -1;
       }
-      .split::before {
+      .split::before,
+      .unhit::before {
         content: "";
         position: absolute;
         inset: 0;
         background: oklch(0 0 0 / 0.5);
       }
-      .split .m {
+      .split .m,
+      .unhit .m {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -328,7 +342,38 @@
         height: 100%;
         background: oklch(0.6 0 0);
       }
-      .split .t {
+      .split .t,
+      .unhit .t {
+        position: relative;
+      }
+      .unhit .m {
+        pointer-events: none;
+      }
+      .unhit .t {
+        pointer-events: auto;
+      }
+      .spill {
+        background: oklch(0.6 0 0);
+      }
+      .spill .o {
+        position: relative;
+        width: 300px;
+        height: 0;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        background: oklch(1 0 0);
+      }
+      .spill .o::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: -60px;
+        height: 120px;
+        background: oklch(0 0 0 / 0.5);
+      }
+      .spill .t {
         position: relative;
       }
       .box {
@@ -377,6 +422,12 @@
     <div class="under"><span class="t">Sample text</span></div>
     <div class="split">
       <div class="m"><span class="t">Sample text</span></div>
+    </div>
+    <div class="unhit">
+      <div class="m"><span class="t">Sample text</span></div>
+    </div>
+    <div class="spill">
+      <div class="o"><span class="t">Sample text</span></div>
     </div>
   </body>
 </html>

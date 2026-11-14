@@ -494,6 +494,12 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   rgb(128) between them. The hit test returns the panel twice, its wash
  *   first, so its first place is not its white background: held. Read as
  *   white, it would pass at 5.32; on screen it is rgb(64), a fail.
+ * - `.unhit` is `.split` with a wrapper that takes no pointer events, so no
+ *   hit list shows it: held.
+ * - `.spill`'s raised run spills out of a 0px-tall white owner under the
+ *   owner's centred 50% wash, over a grey panel. The owner is hit only where
+ *   its wash is, carrying its white there: held. Read as white, it would pass
+ *   at 5.32; on screen it is rgb(64), a fail.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -640,7 +646,25 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
   },
   {
     id: "raised text over a wash with a painted wrapper between",
-    pathEnds: "div.m > span.t",
+    pathEnds: "div.split > div.m > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a wash with a painted wrapper the hit test skips",
+    pathEnds: "div.unhit > div.m > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text spilling out of the owner its wash belongs to",
+    pathEnds: "div.spill > div.o > span.t",
     theme: "light",
     state: "default",
     kind: "text",
