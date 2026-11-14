@@ -2,7 +2,7 @@
 name: 토스
 slug: toss
 category: finance
-last_updated: "2026-11-02"
+last_updated: "2026-11-14"
 created_at: "2026-05-11"
 lang: ko
 logo: https://getdesign.kr/logos/toss.png
