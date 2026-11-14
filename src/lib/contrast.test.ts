@@ -721,6 +721,7 @@ const pseudo = (over: Partial<RawPseudo> = {}): RawPseudo => ({
   ownerBox: { left: 100, top: 200, right: 400, bottom: 320 },
   ownerRadii: ["0px", "0px", "0px", "0px"],
   ownerBackgroundClip: "border-box",
+  unhitPaint: false,
   ownerCornerShapes: ["round", "round", "round", "round"],
   cornerShapes: ["round", "round", "round", "round"],
   which: "before",
@@ -1210,6 +1211,20 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
         ],
         blockers: [],
       })
+
+    it("holds when something else inside the owner paints out of sight", () => {
+      // A sibling of the text, or its pseudo-element, paints with
+      // `pointer-events: none`: no stack shows it, and it may lie between
+      // the wash and the text.
+      expect(
+        textOn(opaque(0, 0, 0), [
+          pseudo({ ...raised, paint: halfBlack(), unhitPaint: true }),
+        ])
+      ).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+    })
 
     it("reads the text on the pseudo-element's paint", () => {
       // Black on rgb(118): 4.62:1 (luminance 0.1811), the grid's "plain 118".

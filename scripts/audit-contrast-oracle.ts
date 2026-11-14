@@ -534,6 +534,9 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  * - `.clipped` is `.under` with the panel's white clipped to the glyphs
  *   (`background-clip: text`) and a dark grey run: the black wash shows
  *   around the glyphs, held, where read as under the white it would pass.
+ * - `.aside` raises its run over its panel's 50% wash, with a sibling taking
+ *   no pointer events whose dark `::before` fills the panel between the two:
+ *   held, where read as the wash over white it would pass at 5.32.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -789,6 +792,15 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
     id: "text over a negative-z wash under an owner background clipped to text",
     pathEnds: "div.clipped > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a wash with an unhit painter between",
+    pathEnds: "div.aside > span.t",
     theme: "light",
     state: "default",
     kind: "text",

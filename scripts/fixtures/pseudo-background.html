@@ -210,6 +210,13 @@
         them, a fail. Read as under the panel's white, the wash would be
         dropped and the run read as a pass. An owner background clipped
         short of the border box holds it.
+      - `.aside` makes a stacking context of its panel (`z-index: 0`) with a
+        50% black `::before`, a raised run, and before it an empty sibling
+        with `pointer-events: none` whose `::before` of oklch(0.3 0 0) fills
+        the panel (its containing block). That paints over the wash and under
+        the run, a fail, but no hit list shows it: read as the wash over
+        white, the run would pass at 5.32. A painter inside the owner that
+        the hit test cannot see holds it.
     -->
     <style>
       html {
@@ -248,7 +255,8 @@
       .badge,
       .mute,
       .frost,
-      .clipped {
+      .clipped,
+      .aside {
         position: relative;
         width: 300px;
         height: 120px;
@@ -489,6 +497,25 @@
       .clipped {
         background-clip: text;
       }
+      .aside {
+        z-index: 0;
+      }
+      .aside::before,
+      .aside .w::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0 / 0.5);
+      }
+      .aside .w {
+        pointer-events: none;
+      }
+      .aside .w::before {
+        background: oklch(0.3 0 0);
+      }
+      .aside .t {
+        position: relative;
+      }
       .clipped::before {
         content: "";
         position: absolute;
@@ -712,5 +739,9 @@
     <div class="mute"><span class="t">Sample text</span></div>
     <div class="frost"><span class="t">Sample text</span></div>
     <div class="clipped"><span class="t">Sample text</span></div>
+    <div class="aside">
+      <div class="w"></div>
+      <span class="t">Sample text</span>
+    </div>
   </body>
 </html>

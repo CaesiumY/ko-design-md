@@ -332,6 +332,27 @@ export function collectContrast(): Collected {
     )
   }
 
+  // Whether anything inside `owner` that is not `from` or one of its
+  // ancestors paints with `pointer-events: none`, itself or by its own
+  // pseudo-element: no hit list shows it (#692). Each owner's painters are
+  // listed once per page.
+  const unhitPainters = new Map<Element, Array<Element>>()
+  const unhitPaintIn = (owner: Element, from: Element): boolean => {
+    let painters = unhitPainters.get(owner)
+    if (painters === undefined) {
+      painters = [...owner.querySelectorAll("*")].filter((d) => {
+        const cs = getComputedStyle(d)
+        if (cs.pointerEvents === "none" && paintsBackground(cs)) return true
+        return (["::before", "::after"] as const).some((ps) => {
+          const pcs = getComputedStyle(d, ps)
+          return pcs.pointerEvents === "none" && pseudoPaints(pcs)
+        })
+      })
+      unhitPainters.set(owner, painters)
+    }
+    return painters.some((d) => !d.contains(from))
+  }
+
   const orderBoxOf = (e: Element): OrderBox => {
     const c = getComputedStyle(e)
     const parent = e.parentElement
@@ -451,6 +472,7 @@ export function collectContrast(): Collected {
         cornerShapes: cornerShapesOf(cs),
         owner: orderBoxOf(el),
         chain: chainTo(from, el),
+        unhitPaint: unhitPaintIn(el, from),
       })
     }
     return out

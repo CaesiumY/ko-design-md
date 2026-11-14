@@ -705,7 +705,8 @@ const EMPTY_CONTENT = '""'
  *   owner's own box does not hold the whole area, so its background is not
  *   under all of it, and one with an element from the one read up to the
  *   owner that paints a background, itself or by its own pseudo-elements, and
- *   takes no pointer events, which no stack shows, one whose owner's
+ *   takes no pointer events, which no stack shows, one whose owner holds
+ *   anything else that paints and takes no pointer events, one whose owner's
  *   background is the canvas's — the root, or a `body` whose background
  *   passes on to the canvas — so is not painted on its box, and one whose
  *   owner's background colour is clipped short of its border box.
@@ -775,8 +776,9 @@ function pseudoEffect(
       }
     }
   }
-  // An ancestor in front is explained by a pseudo-element of its own that
-  // paints over the area — one composed, so nothing else of it draws unread.
+  // An ancestor in front is explained by a pseudo-element of its own judged
+  // to paint over the area whole, whether it is then composed or held — so
+  // nothing else of it draws unread.
   // Anything else in front is a cover, as it always was.
   const overlay = ahead.some(
     (i) => i === -1 || !over.some((o) => o.index === i)

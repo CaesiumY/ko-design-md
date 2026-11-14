@@ -165,6 +165,14 @@ export interface RawPseudo {
    * unknown.
    */
   chain: Array<OrderBox> | null
+  /**
+   * Something inside the owner, off the chain, paints with `pointer-events:
+   * none` — itself or by its own `::before` or `::after`. No hit list shows
+   * it, so it may lie between the owner's background and what is read,
+   * unread. Where it is is not worked out: the box of a pseudo-element is its
+   * containing block's, not its element's.
+   */
+  unhitPaint: boolean
 }
 
 /**
@@ -222,7 +230,8 @@ const ROUND_CORNER = new Set(["", "round", "superellipse(1)"])
  * owner's own box holds the whole area, so its background is under all of
  * it, and nothing from the element read up to the owner paints out of the
  * hit test's sight. Taken from the area as given; a surface's grown area is
- * the caller's to pass. Not an owner whose background is the canvas's: what
+ * the caller's to pass. Nor when anything else inside the owner paints out
+ * of the hit test's sight (`unhitPaint`). Not an owner whose background is the canvas's: what
  * its box carries is not painted there; nor one whose background colour is
  * clipped short of its border box (`background-clip` of `text`, or the padding
  * or content box). That the owner is visible at all is `pseudoEffect`'s to
@@ -245,6 +254,7 @@ export function ownerBackgroundUnder(p: RawPseudo, area: Rect): boolean {
   return (
     holds &&
     !hidden &&
+    !p.unhitPaint &&
     !p.owner.canvas &&
     colourClip(p.ownerBackgroundClip) === "border-box"
   )
