@@ -304,7 +304,7 @@ These sections extend the 10 standard sections. They are recommended for new ent
 
 - Implementation code beyond short illustrative snippets — design.md describes intent and tokens, not full components.
 - Marketing copy, brand slogans, campaign lines, or hero messaging — those belong in product surfaces. A new entry opens with one plain-prose sentence directly under the H1 that says what the service is and how its screens look, with citations; `design-md-template.md` shows its form. That sentence is held to this rule too and must not reproduce or paraphrase a brand slogan or campaign line.
-- Brand mission statements — keep `## Brand & Style` focused on visual/UX intent, not corporate positioning. The sentence under the H1 states what the service does in its cited source's words and how its screens look; a mission, vision or positioning line stays out of it, even when a source phrases it that way.
+- Brand mission statements — keep `## Brand & Style` focused on visual/UX intent, not corporate positioning. That sentence under the H1 states what the service does in its cited source's words and how its screens look; a mission, vision or positioning line stays out of it, even when a source phrases it that way.
 
 ## Sources
 
