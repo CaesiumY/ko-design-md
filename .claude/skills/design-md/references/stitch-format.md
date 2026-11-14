@@ -4,7 +4,7 @@ A catalog entry is a YAML-frontmatter + Markdown document that encodes a brand's
 
 ## Standard section order (use as ## headings, in this order)
 
-Before the first section, directly under the H1, a new entry carries its **tagline line** (한 줄 소개): one plain-prose sentence, not a blockquote. The site reads the first prose line after the H1 and any blockquote and shows it as is on the home list, the detail header, the share card, the meta description, `llms.txt` and the RSS item description. Its rules:
+Before the first section, directly under the H1, a new entry carries its **tagline line** (한 줄 소개): one plain-prose sentence, not a blockquote. The site takes the first non-blank line that is not a heading or a blockquote (an HTML comment counts as a line), strips bold, citation markers and backticks, and shows it on the home list, the detail header, the meta description (cut at 155 characters), `llms.txt` and the RSS item description; the share card shows its first sentence. Its rules:
 
 - Subject is the frontmatter `name` (the brand name the detail page shows), even when the H1 names the design system.
 - One sentence, 90 characters or fewer as the reader sees it (citation markers not counted).
