@@ -532,39 +532,6 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   darkens what is behind: held, `pseudo-background`, where it would read
  *   7.37.
  */
-/**
- * A negative-z wash of an owner whose background is the canvas's, each in a
- * document of its own (`scripts/fixtures/pseudo-canvas-*.html`), since the
- * canvas belongs to the whole document. In both the wash is 60% black over a
- * white canvas, under black text: rgb(102), 3.66 on screen. Held. For `body`,
- * read as under its computed white the wash would be dropped and the run
- * would pass at 21. The root is a stacking context in Chromium (its UA
- * `view-transition-name: root`), so there the wash would be composed under
- * the text and read 3.66 anyway: that anchor records the hold only.
- */
-const CANVAS_BODY_ANCHORS: Array<PathAnchor> = [
-  {
-    id: "text over a negative-z wash of a body whose background is the canvas's",
-    pathEnds: "p.t",
-    theme: "light",
-    state: "default",
-    kind: "text",
-    verdict: "indeterminate",
-    blockers: ["pseudo-background"],
-  },
-]
-const CANVAS_ROOT_ANCHORS: Array<PathAnchor> = [
-  {
-    id: "text over a negative-z wash of the root element",
-    pathEnds: "p.t",
-    theme: "light",
-    state: "default",
-    kind: "text",
-    verdict: "indeterminate",
-    blockers: ["pseudo-background"],
-  },
-]
-
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
     id: "text beside a pseudo-element block that misses it",
@@ -824,6 +791,40 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
     kind: "text",
     verdict: "indeterminate",
     blockers: ["overlay", "pseudo-background"],
+  },
+]
+
+/**
+ * A negative-z wash of an owner whose background is the canvas's, each in a
+ * document of its own (`scripts/fixtures/pseudo-canvas-*.html`), since the
+ * canvas belongs to the whole document. In both the wash is 60% black over a
+ * white canvas, under black text: rgb(102), 3.66 on screen. Held. Read as
+ * under the owner's computed white, the wash would be dropped and the run
+ * would pass at 21. The root is always a stacking context, but the collector
+ * learns that only from Chromium's UA `view-transition-name: root`; the root
+ * document sets it to `none`, so its anchor guards the hold as the body's
+ * does.
+ */
+const CANVAS_BODY_ANCHORS: Array<PathAnchor> = [
+  {
+    id: "text over a negative-z wash of a body whose background is the canvas's",
+    pathEnds: "p.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+]
+const CANVAS_ROOT_ANCHORS: Array<PathAnchor> = [
+  {
+    id: "text over a negative-z wash of the root element",
+    pathEnds: "p.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
   },
 ]
 

@@ -12,12 +12,12 @@
       root's `::before` is a 60% black wash at `z-index: -1`, fixed over the
       viewport, in the root stacking context's negative layer — over the
       canvas, under the text. On screen the black run sits on rgb(102), 3.66,
-      a fail. The stack reaches the root with its computed white. Chromium
-      gives the root `view-transition-name: root`, which makes it a stacking
-      context, so without the hold the wash is composed under the text over
-      that white and reads the same 3.66: this anchor records the hold, it
-      does not guard a false pass. A root owner holds it all the same, since
-      its white is the canvas's, not its box's.
+      a fail. The stack reaches the root with its computed white. The root
+      is always a stacking context, but the collector learns that only from
+      Chromium's UA `view-transition-name: root`, set to `none` here: without
+      the hold the wash would be read as under the root's white, dropped,
+      and the run read as a pass at 21. A root owner holds it, since its
+      white is the canvas's, not its box's.
 
       A document of its own, as `pseudo-canvas-body.html` is: the root and
       its canvas belong to the whole document.
@@ -25,6 +25,7 @@
     <style>
       html {
         background: oklch(1 0 0);
+        view-transition-name: none;
       }
       html::before {
         content: "";
