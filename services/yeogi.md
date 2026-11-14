@@ -3,7 +3,7 @@ name: 여기어때
 design_system_name: Yeogi Design System
 slug: yeogi
 category: travel
-last_updated: "2026-11-14"
+last_updated: "2026-11-15"
 created_at: "2026-07-18"
 lang: ko
 logo: https://getdesign.kr/logos/yeogi.png

@@ -3,7 +3,7 @@ name: 교보문고
 design_system_name: Kyobo Design System (KDS)
 slug: kyobobook
 category: commerce
-last_updated: "2026-11-14"
+last_updated: "2026-11-15"
 created_at: 2026-05-30
 lang: ko
 logo: https://getdesign.kr/logos/kyobobook.png
