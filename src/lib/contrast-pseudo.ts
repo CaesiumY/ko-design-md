@@ -149,6 +149,12 @@ export interface RawPseudo {
   ownerRadii: Corners
   /** The owner's four `corner-*-shape` values, written as `cornerShapes` is. */
   ownerCornerShapes: Corners
+  /**
+   * The owner's computed `background-clip`, one value per background layer.
+   * Its colour is clipped by the last; only `border-box` paints the whole box
+   * the owner's background is trusted to fill.
+   */
+  ownerBackgroundClip: string
   /** The element whose pseudo-element this is. */
   owner: OrderBox
   /**
@@ -231,7 +237,11 @@ export function ownerBackgroundUnder(p: RawPseudo, area: Rect): boolean {
   const hidden = (p.chain ?? []).some(
     (b) => b.pointerEvents === "none" && b.paintsBackgroundOrPseudo
   )
-  return holds && !hidden && !p.owner.canvas
+  // Its colour fills the border box only when clipped to it: `text` paints
+  // it inside glyphs, and the padding and content boxes stop short of the
+  // border box the area was held against.
+  const clip = p.ownerBackgroundClip.split(",").at(-1)?.trim()
+  return holds && !hidden && !p.owner.canvas && clip === "border-box"
 }
 
 /**

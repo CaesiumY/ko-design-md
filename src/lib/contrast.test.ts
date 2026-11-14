@@ -720,6 +720,7 @@ const pseudo = (over: Partial<RawPseudo> = {}): RawPseudo => ({
   area: { left: 200, top: 248, right: 300, bottom: 272 },
   ownerBox: { left: 100, top: 200, right: 400, bottom: 320 },
   ownerRadii: ["0px", "0px", "0px", "0px"],
+  ownerBackgroundClip: "border-box",
   ownerCornerShapes: ["round", "round", "round", "round"],
   cornerShapes: ["round", "round", "round", "round"],
   which: "before",
@@ -1463,6 +1464,39 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
                     zIndex: "-1",
                     paint: opaque(0, 0, 0),
                     owner: orderBox({ visibility: "hidden" }),
+                  }),
+                ],
+              },
+            ],
+            blockers: [],
+          },
+        ],
+        blockers: [],
+      })
+      expect(got).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+    })
+
+    it("holds when the owner's background is clipped short of its box", () => {
+      // `background-clip: text`: the white is painted inside the glyphs only,
+      // and the wash below shows everywhere else.
+      const got = evaluateText({
+        fontSizePx: 16,
+        fontWeight: 400,
+        fg: opaque(0, 0, 0),
+        lines: [
+          {
+            stack: [
+              {
+                ...opaque(255, 255, 255),
+                pseudos: [
+                  pseudo({
+                    ...ownText,
+                    zIndex: "-1",
+                    paint: opaque(0, 0, 0),
+                    ownerBackgroundClip: "text",
                   }),
                 ],
               },

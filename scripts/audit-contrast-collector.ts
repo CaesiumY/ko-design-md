@@ -447,6 +447,7 @@ export function collectContrast(): Collected {
         ownerBox: ownerBoxOf(el),
         ownerRadii: radiiOf(ownerStyle),
         ownerCornerShapes: cornerShapesOf(ownerStyle),
+        ownerBackgroundClip: ownerStyle.backgroundClip,
         cornerShapes: cornerShapesOf(cs),
         owner: orderBoxOf(el),
         chain: chainTo(from, el),

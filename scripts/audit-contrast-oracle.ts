@@ -531,6 +531,9 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  * - `.frost` lays the wash beside a backdrop filter of the same panel that
  *   darkens what is behind: held, `pseudo-background`, where it would read
  *   7.37.
+ * - `.clipped` is `.under` with the panel's white clipped to the glyphs
+ *   (`background-clip: text`) and a dark grey run: the black wash shows
+ *   around the glyphs, held, where read as under the white it would pass.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -777,6 +780,15 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
     id: "text under a wash beside a backdrop filter of the same owner",
     pathEnds: "div.frost > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text over a negative-z wash under an owner background clipped to text",
+    pathEnds: "div.clipped > span.t",
     theme: "light",
     state: "default",
     kind: "text",

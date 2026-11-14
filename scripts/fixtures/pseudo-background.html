@@ -204,6 +204,12 @@
         events. On screen the panel behind turns dark and the run a fail;
         read as the wash alone, it would pass at 7.37. Held,
         `pseudo-background`.
+      - `.clipped` is `.under` with `background-clip: text` on the panel and
+        a run of oklch(0.3 0 0): the panel's white is painted inside the
+        glyphs only, and its black `::before` at `z-index: -1` shows around
+        them, a fail. Read as under the panel's white, the wash would be
+        dropped and the run read as a pass. An owner background clipped
+        short of the border box holds it.
     -->
     <style>
       html {
@@ -241,7 +247,8 @@
       .tag,
       .badge,
       .mute,
-      .frost {
+      .frost,
+      .clipped {
         position: relative;
         width: 300px;
         height: 120px;
@@ -479,6 +486,19 @@
         color: oklch(1 0 0);
         pointer-events: none;
       }
+      .clipped {
+        background-clip: text;
+      }
+      .clipped::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: oklch(0 0 0);
+      }
+      .clipped .t {
+        color: oklch(0.3 0 0);
+      }
       .frost::after {
         content: "";
         position: absolute;
@@ -691,5 +711,6 @@
     <div class="badge"><span class="t">Sample text</span></div>
     <div class="mute"><span class="t">Sample text</span></div>
     <div class="frost"><span class="t">Sample text</span></div>
+    <div class="clipped"><span class="t">Sample text</span></div>
   </body>
 </html>
