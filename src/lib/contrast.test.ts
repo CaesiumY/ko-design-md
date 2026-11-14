@@ -1231,6 +1231,34 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
         blockers: [],
       })
 
+    it("holds when the element read draws by a pseudo-element not read", () => {
+      // The raised span's own `::before` at `z-index: -1` draws a border in
+      // its own negative layer: over the wash below, under the text.
+      expect(
+        evaluateText({
+          fontSizePx: 16,
+          fontWeight: 400,
+          fg: opaque(0, 0, 0),
+          lines: [
+            {
+              stack: [
+                { ...SPAN, unreadPseudo: true },
+                {
+                  ...opaque(255, 255, 255),
+                  pseudos: [pseudo({ ...raised, paint: halfBlack() })],
+                },
+              ],
+              blockers: [],
+            },
+          ],
+          blockers: [],
+        })
+      ).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+    })
+
     it("holds when a layer between draws by a pseudo-element not read", () => {
       // The layer between paints no background of its own, but its
       // `::before` draws a border over the line: not read, so where it is

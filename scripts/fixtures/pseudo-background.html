@@ -241,6 +241,13 @@
         as painting nothing, and the run as on the panel's grey wash, a pass
         at 5.32. A layer between that draws by a pseudo-element not read
         holds it.
+      - `.selfdraw` lays the `.cover` wash (10% black `::before`) under a run
+        that is a stacking context (`z-index: 0`) and whose own `::before`
+        at `z-index: -1`, taking no pointer events, draws a 40px black
+        border over its box — over the wash, under the glyphs. On screen the
+        run is black on black, a fail; read as the wash over white it would
+        pass at 16.67. The element read drawing by a pseudo-element not read
+        holds it.
     -->
     <style>
       html {
@@ -284,7 +291,8 @@
       .atop,
       .shade,
       .glyph,
-      .between {
+      .between,
+      .selfdraw {
         position: relative;
         width: 300px;
         height: 120px;
@@ -597,6 +605,24 @@
       .glyph .t {
         position: relative;
       }
+      .selfdraw::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0 / 0.1);
+      }
+      .selfdraw .t {
+        position: relative;
+        z-index: 0;
+      }
+      .selfdraw .t::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border: 40px solid oklch(0 0 0);
+        pointer-events: none;
+      }
       .between {
         isolation: isolate;
       }
@@ -857,6 +883,7 @@
       <i class="sh"></i>
       <span class="t">Sample text</span>
     </div>
+    <div class="selfdraw"><span class="t">Sample text</span></div>
     <div class="between">
       <div class="x"><span class="t">Sample text</span></div>
     </div>

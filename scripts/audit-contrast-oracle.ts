@@ -549,6 +549,9 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  * - `.between` lays the panel's grey wash under a wrapper that paints no
  *   background but draws a black border by a `::before` not read: held,
  *   where read as the grey alone it would pass at 5.32.
+ * - `.selfdraw` lays the `.cover` wash under a run whose own `::before`
+ *   draws a black border in its negative layer, not read: held, where read
+ *   as the wash over white it would pass at 16.67.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -849,6 +852,15 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
     id: "text over a wash with a layer between drawing unread",
     pathEnds: "div.between > div.x > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text over a wash with its own pseudo-element drawing unread",
+    pathEnds: "div.selfdraw > span.t",
     theme: "light",
     state: "default",
     kind: "text",
