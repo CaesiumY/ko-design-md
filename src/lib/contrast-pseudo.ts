@@ -210,13 +210,13 @@ export interface OrderBox {
    */
   canvas: boolean
   /**
-   * Whether it, or its own `::before` or `::after`, paints a background on
-   * screen — a colour that is not transparent, or an image, and not hidden.
-   * Borders and shadows are not counted. With `pointer-events: none` such an
-   * element and its pseudo-elements are in no hit list, so no stack shows
-   * where that paint is.
+   * Whether it, or its own `::before` or `::after`, draws anything on screen:
+   * a background, a border, a shadow, an outline, a backdrop filter, or — a
+   * pseudo-element — glyphs or an image by its `content`. With
+   * `pointer-events: none` such an element and its pseudo-elements are in no
+   * hit list, so no stack shows where that paint is.
    */
-  paintsBackgroundOrPseudo: boolean
+  draws: boolean
 }
 
 // `corner-*-shape` values that are the plain round corner: Chromium writes
@@ -246,7 +246,7 @@ export function ownerBackgroundUnder(p: RawPseudo, area: Rect): boolean {
     area
   )
   const hidden = (p.chain ?? []).some(
-    (b) => b.pointerEvents === "none" && b.paintsBackgroundOrPseudo
+    (b) => b.pointerEvents === "none" && b.draws
   )
   // Its colour fills the border box only when clipped to it: `text` paints
   // it inside glyphs, and the padding and content boxes stop short of the

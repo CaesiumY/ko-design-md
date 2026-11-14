@@ -12,7 +12,7 @@ const box = (over: Partial<OrderBox> = {}): OrderBox => ({
   pointerEvents: "auto",
   visibility: "visible",
   canvas: false,
-  paintsBackgroundOrPseudo: false,
+  draws: false,
   ...over,
 })
 

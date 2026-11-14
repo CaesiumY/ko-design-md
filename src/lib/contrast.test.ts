@@ -679,7 +679,7 @@ const orderBox = (over: Partial<OrderBox> = {}): OrderBox => ({
   pointerEvents: "auto",
   visibility: "visible",
   canvas: false,
-  paintsBackgroundOrPseudo: false,
+  draws: false,
   ...over,
 })
 
@@ -1393,7 +1393,7 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
             orderBox({
               position: "static",
               pointerEvents: "none",
-              paintsBackgroundOrPseudo: true,
+              draws: true,
             }),
           ],
           paint: halfBlack(),

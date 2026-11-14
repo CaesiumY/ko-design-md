@@ -332,6 +332,45 @@ export function collectContrast(): Collected {
     )
   }
 
+  // Whether a box draws anything besides its background: a border, a
+  // shadow, an outline, or a backdrop filter over what is behind it.
+  const drawsEdgeOrFilter = (cs: CSSStyleDeclaration): boolean => {
+    const edged = (["top", "right", "bottom", "left"] as const).some(
+      (at) =>
+        Number.parseFloat(cs.getPropertyValue(`border-${at}-width`)) > 0 &&
+        !["none", "hidden"].includes(cs.getPropertyValue(`border-${at}-style`))
+    )
+    const outlined =
+      !["none", "hidden"].includes(cs.outlineStyle) &&
+      Number.parseFloat(cs.outlineWidth) > 0
+    return (
+      edged ||
+      outlined ||
+      cs.boxShadow !== "none" ||
+      cs.backdropFilter !== "none"
+    )
+  }
+
+  // Whether an element draws anything on screen: a background, or a border,
+  // shadow, outline or backdrop filter, and it is not hidden or faded out.
+  const elementDraws = (cs: CSSStyleDeclaration): boolean =>
+    paintsBackground(cs) ||
+    (cs.visibility !== "hidden" &&
+      cs.display !== "none" &&
+      ownOpacity(cs) !== 0 &&
+      drawsEdgeOrFilter(cs))
+
+  // Whether a `::before` or `::after` draws anything on screen: a
+  // background, glyphs or an image by its `content`, or a border, shadow,
+  // outline or backdrop filter. `""` is Chromium's `content: ""`, quotes
+  // included (`EMPTY_CONTENT` in src/lib/contrast.ts).
+  const pseudoDraws = (cs: CSSStyleDeclaration): boolean => {
+    if (cs.content === "none" || cs.content === "normal") return false
+    if (cs.visibility === "hidden" || cs.display === "none") return false
+    if (ownOpacity(cs) === 0) return false
+    return pseudoPaints(cs) || cs.content !== '""' || drawsEdgeOrFilter(cs)
+  }
+
   // Whether anything inside `owner` that is not `from` or one of its
   // ancestors paints with `pointer-events: none`, itself or by its own
   // pseudo-element: no hit list shows it (#692). Each owner's painters are
@@ -342,10 +381,10 @@ export function collectContrast(): Collected {
     if (painters === undefined) {
       painters = [...owner.querySelectorAll("*")].filter((d) => {
         const cs = getComputedStyle(d)
-        if (cs.pointerEvents === "none" && paintsBackground(cs)) return true
+        if (cs.pointerEvents === "none" && elementDraws(cs)) return true
         return (["::before", "::after"] as const).some((ps) => {
           const pcs = getComputedStyle(d, ps)
-          return pcs.pointerEvents === "none" && pseudoPaints(pcs)
+          return pcs.pointerEvents === "none" && pseudoDraws(pcs)
         })
       })
       unhitPainters.set(owner, painters)
@@ -367,10 +406,10 @@ export function collectContrast(): Collected {
       canvas: e === document.documentElement || bodyOnCanvas(e),
       // Its own pseudo-elements too: they take its `pointer-events`, so no
       // hit list shows them either.
-      paintsBackgroundOrPseudo:
-        paintsBackground(c) ||
+      draws:
+        elementDraws(c) ||
         ["::before", "::after"].some((ps) =>
-          pseudoPaints(getComputedStyle(e, ps))
+          pseudoDraws(getComputedStyle(e, ps))
         ),
     }
   }
@@ -482,28 +521,8 @@ export function collectContrast(): Collected {
   // glyphs or an image by its `content`, a border, a shadow, an outline, or a
   // backdrop filter over what is behind it.
   // Such a one is not read, but the hit test can meet it (#692).
-  const pseudoDrawsUnread = (cs: CSSStyleDeclaration): boolean => {
-    if (cs.content === "none" || cs.content === "normal") return false
-    if (cs.visibility === "hidden" || cs.display === "none") return false
-    if (ownOpacity(cs) === 0 || pseudoPaints(cs)) return false
-    const edged = (["top", "right", "bottom", "left"] as const).some(
-      (at) =>
-        Number.parseFloat(cs.getPropertyValue(`border-${at}-width`)) > 0 &&
-        !["none", "hidden"].includes(cs.getPropertyValue(`border-${at}-style`))
-    )
-    const outlined =
-      !["none", "hidden"].includes(cs.outlineStyle) &&
-      Number.parseFloat(cs.outlineWidth) > 0
-    // `""` is Chromium's `content: ""`, quotes included (`EMPTY_CONTENT` in
-    // src/lib/contrast.ts).
-    return (
-      cs.content !== '""' ||
-      edged ||
-      outlined ||
-      cs.boxShadow !== "none" ||
-      cs.backdropFilter !== "none"
-    )
-  }
+  const pseudoDrawsUnread = (cs: CSSStyleDeclaration): boolean =>
+    pseudoDraws(cs) && !pseudoPaints(cs)
 
   // As a layer's optional fields: absent, not empty, when nothing is painted —
   // the shape `imageOf` gives an element with no image.

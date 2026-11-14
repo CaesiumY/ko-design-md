@@ -220,6 +220,13 @@
       - `.atop` is `.aside` with the wash moved to `::after`, over the run:
         the sibling's dark `::before` stays under the run, a fail, and read
         as the wash over white the run would pass. Held, `overlay` too.
+      - `.shade` lays the `.cover` wash (10% black `::before`) under a raised
+        run, and between them a sibling with `pointer-events: none` that
+        paints no background but an inset shadow of 60% black over the whole
+        panel. On screen the run is black on dark, a fail; the sibling is in
+        no hit list, and read as the wash alone over white the run would pass
+        at 16.67. A painter that draws by its shadow, border, outline or
+        backdrop filter holds it as one by its background does.
     -->
     <style>
       html {
@@ -260,7 +267,8 @@
       .frost,
       .clipped,
       .aside,
-      .atop {
+      .atop,
+      .shade {
         position: relative;
         width: 300px;
         height: 120px;
@@ -539,6 +547,21 @@
       .atop .t {
         position: relative;
       }
+      .shade::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0 / 0.1);
+      }
+      .shade .sh {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        box-shadow: inset 0 0 0 999px oklch(0 0 0 / 0.6);
+      }
+      .shade .t {
+        position: relative;
+      }
       .clipped::before {
         content: "";
         position: absolute;
@@ -768,6 +791,10 @@
     </div>
     <div class="atop">
       <div class="w"></div>
+      <span class="t">Sample text</span>
+    </div>
+    <div class="shade">
+      <i class="sh"></i>
       <span class="t">Sample text</span>
     </div>
   </body>
