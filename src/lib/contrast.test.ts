@@ -19,7 +19,7 @@ import type {
   RawLayer,
   RawTextLine,
 } from "./contrast"
-import type { OrderBox, RawPseudo } from "./contrast-pseudo"
+import type { OrderBox, RawPseudo, StopBox } from "./contrast-pseudo"
 
 const WHITE = { r: 255, g: 255, b: 255 }
 const BLACK = { r: 0, g: 0, b: 0 }
@@ -1864,6 +1864,166 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
       ])
       expect(got).toMatchObject({ verdict: "fail", blockers: [] })
       expect(got?.ratio).toBeCloseTo(1.15, 2)
+    })
+  })
+})
+
+describe("a pseudo-element past where the stack stops", () => {
+  // The stack stops at an opaque white layer between the text and an
+  // ancestor whose pseudo-element takes no pointer events, so no stack holds
+  // its owner. Black on white, 21:1, whenever nothing holds it.
+  const textPast = (past: Array<RawPseudo>) =>
+    evaluateText({
+      fontSizePx: 16,
+      fontWeight: 400,
+      fg: opaque(0, 0, 0),
+      lines: [{ stack: [opaque(255, 255, 255)], blockers: [], past }],
+      blockers: [],
+    })
+  const held = { verdict: "indeterminate", blockers: ["pseudo-background"] }
+
+  it("holds a line it covers, whichever side it paints on", () => {
+    // Over the opaque layer, under the raised text: the line is on its paint,
+    // not on the white the stack stopped at.
+    expect(
+      textPast([pseudo({ chain: [orderBox({ position: "relative" })] })])
+    ).toMatchObject(held)
+    // Over the text as well: a wash the stack never reached.
+    expect(textPast([pseudo({ paint: halfBlack() })])).toMatchObject(held)
+  })
+
+  it("holds a line it reaches only in part", () => {
+    expect(textPast([pseudo({ top: "66px", height: "10px" })])).toMatchObject(
+      held
+    )
+  })
+
+  it("judges a line it misses", () => {
+    const got = textPast([rule()])
+    expect(got).toMatchObject({ verdict: "pass", blockers: [] })
+    expect(got.ratio).toBeCloseTo(21, 5)
+  })
+
+  it("keeps the shape a line had without one", () => {
+    expect(textPast([])).toMatchObject({ verdict: "pass", blockers: [] })
+  })
+
+  describe("under the opaque layer the stack stopped at", () => {
+    // A raised white card, `position: relative`, over an absolute wash of
+    // its ancestor's that precedes it in document order: the wash paints
+    // under the card, out of sight. The card's box holds the line.
+    const card: StopBox = {
+      box: { left: 100, top: 200, right: 400, bottom: 320 },
+      borders: ["0px", "0px", "0px", "0px"],
+      radii: ["0px", "0px", "0px", "0px"],
+      cornerShapes: ["round", "round", "round", "round"],
+      backgroundClip: "border-box",
+      clipPath: "none",
+      maskImage: "none",
+    }
+    const sunkWash = pseudo({ chain: [orderBox()] })
+    const lineOver = (
+      line: Partial<RawTextLine>,
+      past: Array<RawPseudo> = [sunkWash]
+    ) =>
+      evaluateText({
+        fontSizePx: 16,
+        fontWeight: 400,
+        fg: opaque(0, 0, 0),
+        lines: [
+          { stack: [opaque(255, 255, 255)], blockers: [], past, ...line },
+        ],
+        blockers: [],
+      })
+
+    it("judges a line whose layer hides it", () => {
+      const got = lineOver({ stop: card })
+      expect(got).toMatchObject({ verdict: "pass", blockers: [] })
+      expect(got.ratio).toBeCloseTo(21, 5)
+    })
+
+    it("holds a line whose layer it paints over", () => {
+      // The card in normal flow: a positioned wash paints after its
+      // background.
+      expect(
+        lineOver({ stop: card }, [
+          pseudo({ chain: [orderBox({ position: "static" })] }),
+        ])
+      ).toMatchObject(held)
+    })
+
+    it("holds when the stack did not stop at an opaque layer", () => {
+      expect(lineOver({})).toMatchObject(held)
+    })
+
+    it("holds when the layer is hit again, its first place not its background", () => {
+      expect(
+        lineOver({
+          stop: card,
+          stack: [{ ...opaque(255, 255, 255), again: true }],
+        })
+      ).toMatchObject(held)
+    })
+
+    it("holds a surface whose edge the layer does not reach", () => {
+      // The surface is read against the 2px around its box: a card exactly
+      // its box, x 200..300, y 248..272, leaves that edge to the wash.
+      const got = evaluateNonText({
+        fill: opaque(118, 118, 118),
+        border: null,
+        outer: [opaque(255, 255, 255)],
+        blockers: [],
+        past: [sunkWash],
+        stop: {
+          ...card,
+          box: { left: 200, top: 248, right: 300, bottom: 272 },
+        },
+      })
+      expect(got).toMatchObject(held)
+    })
+
+    it("judges a surface whose layer hides it", () => {
+      expect(
+        evaluateNonText({
+          fill: opaque(118, 118, 118),
+          border: null,
+          outer: [opaque(255, 255, 255)],
+          blockers: [],
+          past: [sunkWash],
+          stop: card,
+        })
+      ).toMatchObject({ verdict: "pass", blockers: [] })
+    })
+  })
+
+  describe("behind a non-text surface", () => {
+    // A mid-grey dot, rgb(118), on white: 4.54:1, a pass when judged.
+    const dotPast = (past: Array<RawPseudo>) =>
+      evaluateNonText({
+        fill: opaque(118, 118, 118),
+        border: null,
+        outer: [opaque(255, 255, 255)],
+        blockers: [],
+        past,
+      })
+
+    it("holds a surface it reaches", () => {
+      expect(dotPast([pseudo()])).toMatchObject(held)
+    })
+
+    it("holds a surface whose edge it reaches, though it misses the box", () => {
+      // y 272..274 starts where the surface's box ends, inside the 2px a
+      // boundary is seen against.
+      expect(dotPast([pseudo({ top: "72px", height: "2px" })])).toMatchObject(
+        held
+      )
+    })
+
+    it("judges a surface it misses", () => {
+      expect(dotPast([rule()])).toMatchObject({
+        verdict: "pass",
+        blockers: [],
+      })
     })
   })
 })

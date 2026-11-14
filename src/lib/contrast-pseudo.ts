@@ -163,7 +163,9 @@ export interface RawPseudo {
    * owner — the text's parent, the form control or the surface first. Empty
    * when the owner is the element read. `null` when the owner is not one of
    * its ancestors, which leaves where the two paint against each other
-   * unknown.
+   * unknown. For one handed over in `RawTextLine.past` with a `stop`, the
+   * chain runs from that opaque layer instead, so its order is read against
+   * the layer (`underStop`).
    */
   chain: Array<OrderBox> | null
   /**
@@ -288,6 +290,67 @@ export function ownerBackgroundUnder(p: RawPseudo, area: Rect): boolean {
 // background colour is clipped as the last one is.
 const colourClip = (backgroundClip: string): string | undefined =>
   backgroundClip.split(",").at(-1)?.trim()
+
+/**
+ * The opaque layer a stack stopped at, as the collector reads it: what its
+ * background covers. Handed over only when the stack stopped there.
+ */
+export interface StopBox {
+  /** Its border box, in viewport pixels. */
+  box: Rect
+  /** Its four border widths, top first and clockwise, as computed. */
+  borders: Corners
+  /** Its four corner radii, written as `RawPseudo.radii` is. */
+  radii: Corners
+  /** Its four `corner-*-shape` values, written as `RawPseudo.cornerShapes` is. */
+  cornerShapes: Corners
+  backgroundClip: string
+  clipPath: string
+  maskImage: string
+}
+
+/**
+ * Whether a pseudo-element no layer of the stack stands for (`past`) paints
+ * under the opaque layer the stack stopped at, out of sight over the whole
+ * area. `p.chain` runs from that layer, not from the element read, up to the
+ * owner, so `paintOrder` places the pseudo-element against the layer: under
+ * it (`below`, or `under-owner`, under the owner's background and so under
+ * everything the owner holds) or not. The layer's background has to be under
+ * the whole area too: its padding box, which every background clip but
+ * `content-box` paints, cut by its rounded corners — the outer radii, which
+ * cut more than the inner ones do — with no clip or mask over it.
+ *
+ * A 3D context (`transform-style: preserve-3d` anywhere from the owner up)
+ * sorts by depth instead, so it answers no, as does anything `paintOrder`
+ * does not know.
+ */
+export function underStop(p: RawPseudo, stop: StopBox, area: Rect): boolean {
+  if (p.unsure.some((s) => s.startsWith("transform-style:"))) return false
+  if (stop.clipPath !== "none" || stop.maskImage !== "none") return false
+  const clip = stop.backgroundClip.split(",").at(-1)?.trim()
+  if (clip !== "border-box" && clip !== "padding-box") return false
+  const widths = stop.borders.map(px)
+  if (widths.some((w) => w === null)) return false
+  const [top, right, bottom, left] = widths as Array<number>
+  const padding = {
+    left: stop.box.left + left,
+    top: stop.box.top + top,
+    right: stop.box.right - right,
+    bottom: stop.box.bottom - bottom,
+  }
+  // A percentage radius is of the border box: resolved there, then laid on
+  // the smaller padding box, where the same curve cuts at least as much.
+  const w = stop.box.right - stop.box.left
+  const h = stop.box.bottom - stop.box.top
+  const resolved = stop.radii.map((r) => radiusOf(r, w, h))
+  if (resolved.some((r) => r === null)) return false
+  const radii = (resolved as Array<{ rx: number; ry: number }>).map(
+    (r) => `${r.rx}px ${r.ry}px`
+  ) as Corners
+  if (!roundedHolds(padding, radii, stop.cornerShapes, area)) return false
+  const side = paintOrder(p)
+  return side === "below" || side === "under-owner"
+}
 
 /**
  * How far a painted pseudo-element reaches over the area read.

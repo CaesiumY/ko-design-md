@@ -578,6 +578,27 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   0 0)`, held, and by `visibility: collapse`, left out, so the run reads
  *   (1.05) / (0.2659) = 3.95 on white, a fail. Composed as the black under
  *   the run either would read 5.32, a pass.
+ *
+ * The last five are a pseudo-element the stack never reaches: one of an
+ * ancestor of what is read, past the opaque layer the stack stops at, that
+ * takes no pointer events. oklch(0.3 0 0) is rgb(46), luminance 0.0273, and
+ * black on it is 1.55.
+ *
+ * - `.past` lays an opaque oklch(0.3 0 0) `::before` of the panel over an
+ *   in-flow white block and under a raised run: on screen 1.55, a fail. The
+ *   stack stops at the block's white and would read 21: held.
+ * - `.pastbox` is `.past` with a black 40x40 surface in place of the run,
+ *   read on the non-text path: held, where it would read 21.
+ * - `.overblock` puts `.veil`'s 60% black wash over an in-flow white block and a
+ *   run in normal flow: on screen 3.66, a fail, read as the block's white,
+ *   21: held.
+ * - `.lifted` raises the white block of `.past` (`position: relative`) with
+ *   its run in normal flow inside. The panel's `::before` precedes it on the
+ *   same layer and paints under it, out of sight: a pass at 21, released.
+ * - `.corner` cuts that raised block to a 200x100 ellipse with the run at
+ *   its top-left corner, past the curve, where the run's ends sit on the
+ *   dark wash: the block does not hold the line, so held. Released, it would
+ *   read 21.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -985,6 +1006,52 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
     kind: "text",
     verdict: "indeterminate",
     blockers: ["overlay", "pseudo-background"],
+  },
+  {
+    id: "raised text over a wash of an ancestor past an opaque block",
+    pathEnds: "div.past > div.o > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "surface over a wash of an ancestor past an opaque block",
+    pathEnds: "div.pastbox > div.o > span.box",
+    theme: "light",
+    state: "default",
+    kind: "non-text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text under a wash of an ancestor past an opaque block",
+    pathEnds: "div.overblock > div.o > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text in a raised block over a wash of an ancestor under it",
+    pathEnds: "div.lifted > div.o > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "pass",
+    blockers: [],
+    ratio: 21,
+  },
+  {
+    id: "text past the curve of a raised block over a wash of an ancestor",
+    pathEnds: "div.corner > div.o > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
   },
 ]
 

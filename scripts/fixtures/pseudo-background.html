@@ -303,6 +303,39 @@
         fail. Composed as the black under the run it would read 5.32, a
         pass. The clip holds it; the collapsed one paints nothing and is
         left out, so the run reads 3.95 on white.
+
+      The panels below are a pseudo-element the stack never reaches: one of
+      an ancestor of the run, past the opaque layer the stack stops at, that
+      takes no pointer events, so no hit list shows it either.
+
+      - `.past` holds an in-flow white block, `.o`, filling the panel, and a
+        raised run in it. The panel's `::before` is opaque oklch(0.3 0 0)
+        (rgb(46), luminance 0.0273) at `inset: 0` with `pointer-events: none`.
+        Positioned with `z-index` auto, it paints over `.o`'s in-flow
+        background and under the run, later in tree order: the run is black
+        on rgb(46), (0.0273 + 0.05) / 0.05 = 1.55, a fail. The stack stops at
+        `.o`'s white and reads 21. A pseudo-element of an ancestor past the
+        stack that reaches the line, and does not paint under the layer the
+        stack stopped at, holds it.
+      - `.pastbox` is `.past` with the 40x40 black box of `.surface` in place
+        of the run, measured as a non-text surface: black on rgb(46) on
+        screen, read as black on white, 21.
+      - `.overblock` puts the 60% black wash of `.veil` over an in-flow white
+        `.o`, the wash taking no pointer events, over a run in normal flow.
+        On screen it is `.veil`'s 3.66, a fail; the stack stops at `.o`'s
+        white, which the wash is not on, and reads 21.
+      - `.lifted` is `.past` with its white block raised, `position:
+        relative`, and its run left in normal flow inside it. The panel's
+        `::before` precedes the block in document order on the same layer,
+        so it paints under the block, out of sight: the run is black on
+        white, a pass at 21. A pseudo-element past the stack that paints under
+        the opaque layer the stack stopped at, whose box holds the line, is
+        released.
+      - `.corner` is `.lifted` with the raised block cut to `.round`'s
+        200x100 ellipse (`border-radius: 50%`), its run at the top-left
+        corner. The line box lies past the curve, so the ends of the run sit
+        on the dark wash beside the block, not on its white: the block does
+        not hold the line and the reading is held. Released, it would read 21.
     -->
     <style>
       html {
@@ -352,7 +385,12 @@
       .selfdraw,
       .wrapped,
       .rectclip,
-      .collapsed {
+      .collapsed,
+      .past,
+      .pastbox,
+      .overblock,
+      .lifted,
+      .corner {
         position: relative;
         width: 300px;
         height: 120px;
@@ -1045,6 +1083,50 @@
         color: oklch(0 0 0);
         font: 400 16px / 1.5 sans-serif;
       }
+      .past::before,
+      .pastbox::before,
+      .lifted::before,
+      .corner::before,
+      .overblock::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0.3 0 0);
+        pointer-events: none;
+      }
+      .overblock::after {
+        background: oklch(0 0 0 / 0.6);
+      }
+      .past .o,
+      .pastbox .o,
+      .overblock .o {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: oklch(1 0 0);
+      }
+      .past .t {
+        position: relative;
+      }
+      .lifted .o,
+      .corner .o {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        background: oklch(1 0 0);
+      }
+      .corner .o {
+        width: 200px;
+        height: 100px;
+        border-radius: 50%;
+        align-items: flex-start;
+        justify-content: flex-start;
+      }
       .spacer {
         height: 1000px;
       }
@@ -1147,6 +1229,21 @@
     <div class="glyph">
       <i class="g">█████</i>
       <span class="t">Sample text</span>
+    </div>
+    <div class="past">
+      <div class="o"><span class="t">Sample text</span></div>
+    </div>
+    <div class="pastbox">
+      <div class="o"><span class="box"></span></div>
+    </div>
+    <div class="overblock">
+      <div class="o"><span class="t">Sample text</span></div>
+    </div>
+    <div class="lifted">
+      <div class="o"><span class="t">Sample text</span></div>
+    </div>
+    <div class="corner">
+      <div class="o"><span class="t">Sample text</span></div>
     </div>
   </body>
 </html>

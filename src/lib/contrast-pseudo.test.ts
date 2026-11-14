@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
-import { paintOrder, reach } from "./contrast-pseudo"
-import type { OrderBox, RawPseudo } from "./contrast-pseudo"
+import { paintOrder, reach, underStop } from "./contrast-pseudo"
+import type { OrderBox, RawPseudo, StopBox } from "./contrast-pseudo"
 
 // An element in the paint order: `position: relative`, no `z-index`, nothing
 // else that makes a stacking context.
@@ -330,5 +330,121 @@ describe("reach — how much of the area a pseudo-element paints (#692)", () => 
       ).toBe("all")
       expect(reach(pseudo(ring("0px", "4px")))).toBe("all")
     })
+  })
+})
+
+describe("underStop — a pseudo-element past the stack, under the layer it stopped at", () => {
+  // The opaque layer the stack stopped at: a 300x120 block at (100, 200),
+  // over the line box x 200..300, y 248..272, with nothing that cuts its
+  // background short. The pseudo-element's chain runs from that layer up to
+  // its owner: here one raised block, `position: relative` with no
+  // `z-index`, so with an absolute `::before` of `z-index` auto the two meet
+  // on the same layer and document order puts the `::before` first.
+  const stop = (over: Partial<StopBox> = {}): StopBox => ({
+    box: { left: 100, top: 200, right: 400, bottom: 320 },
+    borders: ["0px", "0px", "0px", "0px"],
+    radii: ["0px", "0px", "0px", "0px"],
+    cornerShapes: ["round", "round", "round", "round"],
+    backgroundClip: "border-box",
+    clipPath: "none",
+    maskImage: "none",
+    ...over,
+  })
+  const raised = { chain: [box()] }
+  const area = { left: 200, top: 248, right: 300, bottom: 272 }
+
+  it("is under a raised layer it precedes in document order", () => {
+    expect(underStop(pseudo(raised), stop(), area)).toBe(true)
+  })
+
+  it("is not under it when it follows it", () => {
+    expect(underStop(pseudo({ ...raised, which: "after" }), stop(), area)).toBe(
+      false
+    )
+  })
+
+  it("is not under a layer in normal flow, whose background paints first", () => {
+    expect(
+      underStop(pseudo({ chain: [box({ position: "static" })] }), stop(), area)
+    ).toBe(false)
+  })
+
+  it("is under a layer in normal flow from a negative `z-index`", () => {
+    expect(
+      underStop(
+        pseudo({ chain: [box({ position: "static" })], zIndex: "-1" }),
+        stop(),
+        area
+      )
+    ).toBe(true)
+  })
+
+  it("is not known when its owner is not an ancestor of the layer", () => {
+    expect(underStop(pseudo({ chain: null }), stop(), area)).toBe(false)
+  })
+
+  it("is not known under a 3D context, which sorts by depth", () => {
+    expect(
+      underStop(
+        pseudo({ ...raised, unsure: ["transform-style: preserve-3d"] }),
+        stop(),
+        area
+      )
+    ).toBe(false)
+  })
+
+  it("needs the layer's own background under the whole line", () => {
+    // y 200..260 ends inside the line.
+    expect(
+      underStop(
+        pseudo(raised),
+        stop({ box: { left: 100, top: 200, right: 400, bottom: 260 } }),
+        area
+      )
+    ).toBe(false)
+    // A 50% radius on the layer puts the line's corners past its curve.
+    expect(
+      underStop(
+        pseudo(raised),
+        stop({
+          box: { left: 190, top: 240, right: 310, bottom: 280 },
+          radii: ["50%", "50%", "50%", "50%"],
+        }),
+        area
+      )
+    ).toBe(false)
+    // A bevelled corner is not the ellipse the radii describe.
+    expect(
+      underStop(
+        pseudo(raised),
+        stop({ cornerShapes: ["bevel", "round", "round", "round"] }),
+        area
+      )
+    ).toBe(false)
+  })
+
+  it("reads the background inside the borders", () => {
+    // A 50px border all round: the padding box is x 150..350, y 250..270,
+    // short of the line's top and bottom.
+    expect(
+      underStop(
+        pseudo(raised),
+        stop({ borders: ["50px", "50px", "50px", "50px"] }),
+        area
+      )
+    ).toBe(false)
+  })
+
+  it("needs a background that is not cut short", () => {
+    for (const cut of [
+      { clipPath: "inset(10px)" },
+      { maskImage: "linear-gradient(black, transparent)" },
+      { backgroundClip: "content-box" },
+    ]) {
+      expect(underStop(pseudo(raised), stop(cut), area)).toBe(false)
+    }
+    expect(
+      underStop(pseudo(raised), stop({ backgroundClip: "padding-box" }), area)
+    ).toBe(true)
   })
 })

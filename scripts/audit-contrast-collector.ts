@@ -20,6 +20,7 @@ import type {
   OrderBox,
   RawPseudo,
   Rect,
+  StopBox,
 } from "../src/lib/contrast-pseudo"
 
 export interface CollectedText {
@@ -651,6 +652,68 @@ export function collectContrast(): Collected {
   const pseudoDrawsUnread = (cs: CSSStyleDeclaration): boolean =>
     pseudoDraws(cs) && !pseudoPaints(cs)
 
+  // Whether an element has a painted `::before` or `::after` at all, asked
+  // once per element: the walk below asks it of every ancestor of every
+  // point read.
+  const paintsPseudo = new Map<Element, boolean>()
+  const hasPaintedPseudo = (e: Element): boolean => {
+    let known = paintsPseudo.get(e)
+    if (known === undefined) {
+      known = ["::before", "::after"].some((ps) =>
+        pseudoPaints(getComputedStyle(e, ps))
+      )
+      paintsPseudo.set(e, known)
+    }
+    return known
+  }
+
+  // The painted pseudo-elements of every ancestor of `from`, from `start`
+  // up to the root, whose own layer is not among `walked` — the elements a
+  // stack was read from — nor in front of `from` in `hit`, which `aheadOf`
+  // hands over. One past the opaque layer a stack stopped at is never read,
+  // and one that takes no pointer events is in no hit list at all, yet either
+  // can paint over the line. Whether it reaches the line, or paints under
+  // `stopped` — the opaque layer the stack stopped at, if it did — is
+  // `pseudoEffect`'s to say, so each one's chain runs from `stopped`, and
+  // that layer's box goes with them.
+  function pastOf(
+    from: Element,
+    start: Element | null,
+    walked: Array<Element>,
+    hit: Array<Element>,
+    index: number,
+    area: DOMRect,
+    stopped: Element | null
+  ): { past?: Array<RawPseudo>; stop?: StopBox } {
+    const skip = new Set([...walked, ...hit.slice(0, index)])
+    const past: Array<RawPseudo> = []
+    for (let up = start; up !== null; up = up.parentElement) {
+      if (skip.has(up) || !hasPaintedPseudo(up)) continue
+      past.push(...paintedPseudos(up, area, stopped ?? from))
+    }
+    if (past.length === 0) return {}
+    return stopped === null ? { past } : { past, stop: stopBoxOf(stopped) }
+  }
+
+  // What the background of the layer a stack stopped at covers.
+  const stopBoxOf = (e: Element): StopBox => {
+    const c = getComputedStyle(e)
+    return {
+      box: ownerBoxOf(e),
+      borders: [
+        c.borderTopWidth,
+        c.borderRightWidth,
+        c.borderBottomWidth,
+        c.borderLeftWidth,
+      ],
+      radii: radiiOf(c),
+      cornerShapes: cornerShapesOf(c),
+      backgroundClip: c.backgroundClip,
+      clipPath: c.clipPath,
+      maskImage: c.maskImage,
+    }
+  }
+
   // As a layer's optional fields: absent, not empty, when nothing is painted —
   // the shape `imageOf` gives an element with no image.
   const pseudosOf = (
@@ -960,11 +1023,16 @@ export function collectContrast(): Collected {
     blockers: Set<Blocker>
     /** See `RawTextLine.ahead`. */
     ahead: Array<number>
+    /** See `RawTextLine.past`. */
+    past?: Array<RawPseudo>
+    /** See `RawTextLine.stop`. */
+    stop?: StopBox
     /** Nothing to read here: the point does not reach `from` at all. */
     occluded: boolean
   } {
     const blockers = new Set<Blocker>()
     const stack: Array<RawLayer> = []
+    let stopped: Element | null = null
     if (coveredByOverlay(x, y, from)) blockers.add("overlay")
     const hit = document.elementsFromPoint(x, y)
     const index = hit.indexOf(from)
@@ -1001,10 +1069,21 @@ export function collectContrast(): Collected {
       // Nothing below an opaque layer contributes. The opacity test matters as
       // much as the colour's: an opaque paint inside a faded subtree still lets
       // what is behind it through.
-      if (isOpaque(colour) && layer.opacity >= 1) break
+      if (isOpaque(colour) && layer.opacity >= 1) {
+        stopped = el
+        break
+      }
     }
     const ahead = aheadOf(hit, index, from, index, stack.length)
-    return { stack, blockers, ahead, occluded: false }
+    // `from` is the stack's first layer, so the walk starts at its parent.
+    const walked = hit.slice(index, index + stack.length)
+    return {
+      stack,
+      blockers,
+      ahead,
+      ...pastOf(from, from.parentElement, walked, hit, index, area, stopped),
+      occluded: false,
+    }
   }
 
   // One read point as a line for the judge. `ahead` is absent, not empty,
@@ -1013,6 +1092,8 @@ export function collectContrast(): Collected {
     stack: read.stack,
     blockers: [...read.blockers],
     ...(read.ahead.length > 0 ? { ahead: read.ahead } : {}),
+    ...(read.past === undefined ? {} : { past: read.past }),
+    ...(read.stop === undefined ? {} : { stop: read.stop }),
   })
 
   // `elementsFromPoint` needs the point to be in the viewport, and a preview is
@@ -1324,6 +1405,7 @@ export function collectContrast(): Collected {
       .some((front) => !el.contains(front) && !front.contains(el))
     if (covered) blockers.add("overlay")
     const outer: Array<RawLayer> = []
+    let stopped: Element | null = null
     if (coveredByOverlay(cx, cy, el)) blockers.add("overlay")
     for (const [at, behind] of hit.entries()) {
       if (at <= index) continue
@@ -1345,9 +1427,16 @@ export function collectContrast(): Collected {
         ...againOf(hit, at),
       }
       outer.push(layer)
-      if (isOpaque(colour) && layer.opacity >= 1) break
+      if (isOpaque(colour) && layer.opacity >= 1) {
+        stopped = behind
+        break
+      }
     }
     const ahead = aheadOf(hit, index, el, index + 1, outer.length)
+    // From its parent: the surface's own pseudo-elements are part of it, as
+    // a radio's dot is, not behind it.
+    const walked = hit.slice(index + 1, index + 1 + outer.length)
+    const past = pastOf(el, el.parentElement, walked, hit, index, live, stopped)
 
     nonText.push({
       path: pathOf(el),
@@ -1356,6 +1445,7 @@ export function collectContrast(): Collected {
       outer,
       blockers: [...blockers],
       ...(ahead.length > 0 ? { ahead } : {}),
+      ...past,
     })
   }
 
