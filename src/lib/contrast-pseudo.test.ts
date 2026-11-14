@@ -11,6 +11,7 @@ const box = (over: Partial<OrderBox> = {}): OrderBox => ({
   contextProps: [],
   pointerEvents: "auto",
   visibility: "visible",
+  canvas: false,
   paintsBackgroundOrPseudo: false,
   ...over,
 })

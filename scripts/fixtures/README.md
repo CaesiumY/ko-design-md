@@ -83,3 +83,13 @@ Every expectation on it is derived by hand in `PSEUDO_ANCHORS`
 colours a wash or a disc turns that panel into, and boxes placed from the
 fixture's own pixel values. The same condition holds: edit this file, and
 re-derive those; never paste the measurer's new output into them.
+
+## `pseudo-canvas-body.html` and `pseudo-canvas-root.html`
+
+Two one-line documents under the same rule (#692), each with a 60% black
+`::before` at `z-index: -1` over a white canvas, under black text: in one the
+`body`'s background passes on to the canvas, in the other the root's is the
+canvas's. Each needs a document of its own, since the canvas belongs to the
+whole document. The expectations, in `CANVAS_BODY_ANCHORS` and
+`CANVAS_ROOT_ANCHORS`, are a hold: an owner whose background is the canvas's
+carries a computed colour its box does not paint. The same condition holds.

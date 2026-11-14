@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>text over a negative-z wash of the root element</title>
+    <!--
+      Synthetic, written for scripts/audit-contrast-oracle.ts (#692). See
+      scripts/fixtures/README.md: the expectation is derived from this CSS by
+      hand, so a change here changes the derivation in the oracle too.
+
+      The root's white is the canvas's, and `body` has no background. The
+      root's `::before` is a 60% black wash at `z-index: -1`, fixed over the
+      viewport, in the root stacking context's negative layer — over the
+      canvas, under the text. On screen the black run sits on rgb(102), 3.66,
+      a fail. The stack reaches the root with its computed white. Chromium
+      gives the root `view-transition-name: root`, which makes it a stacking
+      context, so without the hold the wash is composed under the text over
+      that white and reads the same 3.66: this anchor records the hold, it
+      does not guard a false pass. A root owner holds it all the same, since
+      its white is the canvas's, not its box's.
+
+      A document of its own, as `pseudo-canvas-body.html` is: the root and
+      its canvas belong to the whole document.
+    -->
+    <style>
+      html {
+        background: oklch(1 0 0);
+      }
+      html::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background: oklch(0 0 0 / 0.6);
+      }
+      body {
+        margin: 0;
+        padding: 24px;
+      }
+      .t {
+        margin: 0;
+        color: oklch(0 0 0);
+        font: 400 16px / 1.5 sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="t">Sample text</p>
+  </body>
+</html>

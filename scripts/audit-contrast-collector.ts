@@ -321,6 +321,17 @@ export function collectContrast(): Collected {
     return { left: r.left, top: r.top, right: r.right, bottom: r.bottom }
   }
 
+  // The `body` whose background the root passes on to the canvas: the root
+  // paints no background of its own, so `body`'s is drawn there instead of
+  // on its box (CSS Backgrounds 3, "The Canvas Background").
+  const bodyOnCanvas = (e: Element): boolean => {
+    if (e !== document.body) return false
+    const root = getComputedStyle(document.documentElement)
+    return (
+      root.backgroundImage === "none" && isTransparent(root.backgroundColor)
+    )
+  }
+
   const orderBoxOf = (e: Element): OrderBox => {
     const c = getComputedStyle(e)
     const parent = e.parentElement
@@ -332,6 +343,7 @@ export function collectContrast(): Collected {
       contextProps: contextPropsOf(c),
       pointerEvents: c.pointerEvents,
       visibility: c.visibility,
+      canvas: e === document.documentElement || bodyOnCanvas(e),
       // Its own pseudo-elements too: they take its `pointer-events`, so no
       // hit list shows them either.
       paintsBackgroundOrPseudo:

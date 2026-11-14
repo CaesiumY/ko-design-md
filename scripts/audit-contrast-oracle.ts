@@ -60,6 +60,8 @@ const SYNTHETIC_FILE = join(
 const FORM_FILE = join("scripts", "fixtures", "form-control-text.html")
 const GRADIENT_FILE = join("scripts", "fixtures", "gradient-backdrop.html")
 const PSEUDO_FILE = join("scripts", "fixtures", "pseudo-background.html")
+const CANVAS_BODY_FILE = join("scripts", "fixtures", "pseudo-canvas-body.html")
+const CANVAS_ROOT_FILE = join("scripts", "fixtures", "pseudo-canvas-root.html")
 const ORACLE_URL_PATH = "/__oracle/preview.html"
 const ORACLE_WIDTH = 976
 /** Wide enough to absorb 8-bit quantisation, tight enough to catch a drift. */
@@ -530,6 +532,39 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   darkens what is behind: held, `pseudo-background`, where it would read
  *   7.37.
  */
+/**
+ * A negative-z wash of an owner whose background is the canvas's, each in a
+ * document of its own (`scripts/fixtures/pseudo-canvas-*.html`), since the
+ * canvas belongs to the whole document. In both the wash is 60% black over a
+ * white canvas, under black text: rgb(102), 3.66 on screen. Held. For `body`,
+ * read as under its computed white the wash would be dropped and the run
+ * would pass at 21. The root is a stacking context in Chromium (its UA
+ * `view-transition-name: root`), so there the wash would be composed under
+ * the text and read 3.66 anyway: that anchor records the hold only.
+ */
+const CANVAS_BODY_ANCHORS: Array<PathAnchor> = [
+  {
+    id: "text over a negative-z wash of a body whose background is the canvas's",
+    pathEnds: "p.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+]
+const CANVAS_ROOT_ANCHORS: Array<PathAnchor> = [
+  {
+    id: "text over a negative-z wash of the root element",
+    pathEnds: "p.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+]
+
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
     id: "text beside a pseudo-element block that misses it",
@@ -1001,6 +1036,8 @@ export async function selfCheck(root: string): Promise<CheckResult> {
   const formFixture = readFileSync(join(root, FORM_FILE), "utf8")
   const gradientFixture = readFileSync(join(root, GRADIENT_FILE), "utf8")
   const pseudoFixture = readFileSync(join(root, PSEUDO_FILE), "utf8")
+  const canvasBodyFixture = readFileSync(join(root, CANVAS_BODY_FILE), "utf8")
+  const canvasRootFixture = readFileSync(join(root, CANVAS_ROOT_FILE), "utf8")
   const server = await serveStatic(`${root}/public`)
   const browser = await chromium.launch()
   const lines: Array<string> = []
@@ -1163,6 +1200,12 @@ export async function selfCheck(root: string): Promise<CheckResult> {
     lines.push(
       `fixture: ${PSEUDO_FILE} (${pseudoFixture.length} bytes, synthetic)`
     )
+    lines.push(
+      `fixture: ${CANVAS_BODY_FILE} (${canvasBodyFixture.length} bytes, synthetic)`
+    )
+    lines.push(
+      `fixture: ${CANVAS_ROOT_FILE} (${canvasRootFixture.length} bytes, synthetic)`
+    )
     const base = `http://127.0.0.1:${server.port}`
     for (const current of VARIANTS) {
       variant = current
@@ -1221,6 +1264,20 @@ export async function selfCheck(root: string): Promise<CheckResult> {
         pseudoFixture
       )
       for (const anchor of PSEUDO_ANCHORS) checkPath(pseudo, anchor)
+
+      heading("a negative-z pseudo-element of an owner painted on the canvas")
+      const canvasBody = await collect(
+        `${base}${ORACLE_URL_PATH}?fixture=canvas-body`,
+        "oracle-canvas-body",
+        canvasBodyFixture
+      )
+      for (const anchor of CANVAS_BODY_ANCHORS) checkPath(canvasBody, anchor)
+      const canvasRoot = await collect(
+        `${base}${ORACLE_URL_PATH}?fixture=canvas-root`,
+        "oracle-canvas-root",
+        canvasRootFixture
+      )
+      for (const anchor of CANVAS_ROOT_ANCHORS) checkPath(canvasRoot, anchor)
 
       // `CSS.forcePseudoState` is accepted and ignored when it is handed a
       // node id the document no longer has, so a hover pass can look like it

@@ -188,6 +188,14 @@ export interface OrderBox {
    */
   visibility: string
   /**
+   * Its background is drawn on the canvas, not on its own box: it is the
+   * root element, or the `body` whose background the root passes on to the
+   * canvas because the root has none of its own. A negative-z pseudo-element
+   * of such an owner paints over that canvas, in sight, not under a
+   * background of the owner's.
+   */
+  canvas: boolean
+  /**
    * Whether it, or its own `::before` or `::after`, paints a background on
    * screen — a colour that is not transparent, or an image, and not hidden.
    * Borders and shadows are not counted. With `pointer-events: none` such an
@@ -208,8 +216,9 @@ const ROUND_CORNER = new Set(["", "round", "superellipse(1)"])
  * owner's own box holds the whole area, so its background is under all of
  * it, and nothing from the element read up to the owner paints out of the
  * hit test's sight. Taken from the area as given; a surface's grown area is
- * the caller's to pass. That the owner is visible at all is `pseudoEffect`'s
- * to check first, for every side.
+ * the caller's to pass. Not an owner whose background is the canvas's: what
+ * its box carries is not painted there. That the owner is visible at all is
+ * `pseudoEffect`'s to check first, for every side.
  */
 export function ownerBackgroundUnder(p: RawPseudo, area: Rect): boolean {
   // Its background fills its border box cut by its rounded corners.
@@ -222,7 +231,7 @@ export function ownerBackgroundUnder(p: RawPseudo, area: Rect): boolean {
   const hidden = (p.chain ?? []).some(
     (b) => b.pointerEvents === "none" && b.paintsBackgroundOrPseudo
   )
-  return holds && !hidden
+  return holds && !hidden && !p.owner.canvas
 }
 
 /**

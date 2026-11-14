@@ -678,6 +678,7 @@ const orderBox = (over: Partial<OrderBox> = {}): OrderBox => ({
   contextProps: [],
   pointerEvents: "auto",
   visibility: "visible",
+  canvas: false,
   paintsBackgroundOrPseudo: false,
   ...over,
 })
@@ -1462,6 +1463,40 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
                     zIndex: "-1",
                     paint: opaque(0, 0, 0),
                     owner: orderBox({ visibility: "hidden" }),
+                  }),
+                ],
+              },
+            ],
+            blockers: [],
+          },
+        ],
+        blockers: [],
+      })
+      expect(got).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+    })
+
+    it("holds when the owner's background is the canvas's, not its own", () => {
+      // The root element, or a `body` whose background passes to the canvas:
+      // its computed white is not painted on its box, and a negative-z
+      // pseudo-element of it paints over the canvas, in sight.
+      const got = evaluateText({
+        fontSizePx: 16,
+        fontWeight: 400,
+        fg: opaque(0, 0, 0),
+        lines: [
+          {
+            stack: [
+              {
+                ...opaque(255, 255, 255),
+                pseudos: [
+                  pseudo({
+                    ...ownText,
+                    zIndex: "-1",
+                    paint: opaque(0, 0, 0),
+                    owner: orderBox({ canvas: true }),
                   }),
                 ],
               },
