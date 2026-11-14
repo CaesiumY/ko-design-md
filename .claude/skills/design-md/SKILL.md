@@ -333,7 +333,7 @@ cd "${repo_root}" && pnpm validate:previews \
   --iteration {M} --json-out "${repo_root}/.claude/cache/design-md/{slug}/preview-review-machine-{M}.json"
 ```
 
-It hard-checks the structural rubric items (data-theme/lang, absolute runtime paths, foreign scripts, transfer size, hero logo src, catalog disclosure strip) **plus two content rules that used to be reviewer judgment** — a swatch catalog (fill-only elements per theme, Item 2) and a type-scale showcase (design.md typography token names printed as visible text labels, Item 3). Size is weighed in **brotli** bytes, the form Vercel actually serves, with a raw cap kept only as a safety net against runaway generated markup. It also emits warn-level responsive heuristics plus an `oklch coverage` metric (`matched/total` per theme) in `metrics`.
+It hard-checks the structural rubric items (data-theme/lang, absolute runtime paths, foreign scripts, transfer size, hero logo src, catalog disclosure strip) **plus two content rules that used to be reviewer judgment** — a swatch catalog (fill-only elements per theme, Item 2) and a type-scale showcase (design.md typography token names printed as visible text labels, Item 3). Size is weighed in **brotli** bytes, the form the host actually serves, with a raw cap kept only as a safety net against runaway generated markup. It also emits warn-level responsive heuristics plus an `oklch coverage` metric (`matched/total` per theme) in `metrics`.
 
 - **Exit 0** → proceed to 9a3, then 9b with the machine report path.
 - **Exit 1** → do NOT dispatch the reviewer. Re-dispatch 9a with `prior_review_path` = the `preview-review-machine-{M}.json`. Machine retries use a sub-counter **K (max 2) and do not increment M**.
@@ -698,7 +698,7 @@ Print a summary message containing:
 - **`pnpm build:og` fails** — Stage 11's error path. Do not auto-rollback the placed .md.
 - **Subagent missing expected output file** — retry once. Second failure aborts with diagnostic.
 - **Pretendard CDN dependency** — tokens.css imports Pretendard from jsDelivr. Online-only assumption; flag in the final report.
-- **Preview HTML / logo cache policy** — `/preview/*` and `/logos/*` are served with `Cache-Control: no-cache` by `previewCacheHeadersPlugin` in `vite.config.ts` (both `vite dev` and `vite preview`). This prevents browsers heuristic-caching iframe HTML and logo files after entry edits — the cache trap that previously required users to hard-refresh after every preview/logo change. Per-entry HTML does NOT need its own `<meta http-equiv="Cache-Control">` (unreliable across browsers anyway); the server-level header is the source of truth. Production cache headers are handled by the host (Vercel defaults).
+- **Preview HTML / logo cache policy** — `/preview/*` and `/logos/*` are served with `Cache-Control: no-cache` by `previewCacheHeadersPlugin` in `vite.config.ts` (both `vite dev` and `vite preview`). This prevents browsers heuristic-caching iframe HTML and logo files after entry edits — the cache trap that previously required users to hard-refresh after every preview/logo change. Per-entry HTML does NOT need its own `<meta http-equiv="Cache-Control">` (unreliable across browsers anyway); the server-level header is the source of truth. Production cache headers are handled by the host (Cloudflare static assets answer these paths with `public, max-age=0, must-revalidate`).
 
 ## What this skill must NOT do
 

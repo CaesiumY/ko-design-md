@@ -415,8 +415,9 @@ function serviceSlug(pathname: string): string | undefined {
     // than it does: such a request never reaches application code anyway. h3
     // decodes the pathname while constructing its H3Event, so it throws first —
     // vite dev turns that into a 500, the nitro preview server answers nothing
-    // at all, and Vercel's edge rejects the URL with 400 before either runs.
-    // 400 is the right answer and we do not control it. This guard is here so
+    // at all, and Vercel's edge (the host until 2026-11) rejected the URL with
+    // 400 before either ran. The Cloudflare host has not been measured here.
+    // A 400 is the right answer and we do not control it. This guard is here so
     // that the one path we DO own cannot throw, not because production depends
     // on it.
     return undefined

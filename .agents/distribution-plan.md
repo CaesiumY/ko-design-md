@@ -17,7 +17,7 @@
 |---|------|------|------|
 | 1 | 공개 접근 가능 | ✅ | getdesign.kr, 로그인 없음 |
 | 2 | 가격 페이지 | ➖ 해당 없음 | 무료 OSS. 등재 폼이 요구하면 "Free / MIT+CC BY" 로 답한다 |
-| 3 | 개인정보처리방침·약관 | ⚠️ **없음** | 사이트에 라우트 없음. `@vercel/analytics`가 도는 중이라 등재 폼에서 요구받을 수 있다 |
+| 3 | 개인정보처리방침·약관 | ⚠️ **없음** | 사이트에 라우트 없음. 방문 통계(당시 `@vercel/analytics`, 지금은 Cloudflare Web Analytics)가 돌아 등재 폼에서 요구받을 수 있다 |
 | 4 | 로고 자산 | 🔶 부분 | `favicon.svg`·`favicon.ico`·`apple-touch-icon.png`(180×180) 있음. **1024×1024 정사각 PNG 없음** — 다수 디렉터리 필수 |
 | 5 | 스크린샷 5~8장 + 데모 영상 | 🔶 부분 | `docs/catalog-home.png` 1장뿐. 60~90초 데모 영상 없음 |
 | 6 | GEO 준비(단일 H1·구조화 데이터) | 🔶 부분 | 단일 H1 ✅ · 계층 ✅ · Organization/ItemList/Breadcrumb ✅(이번 작업) · **FAQPage 없음** |

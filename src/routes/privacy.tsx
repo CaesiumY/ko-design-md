@@ -58,10 +58,10 @@ function PrivacyPage() {
                 이 문단도 함께 고칠 것. */}
             <strong>호스팅(Cloudflare).</strong> 사이트가 Cloudflare Workers
             에서 서빙되므로, 다른 웹사이트와 마찬가지로 요청 정보(IP,
-            User-Agent, 요청 주소 등)가 Cloudflare 를 거칩니다. 요청 기록은 이
-            프로젝트의 Cloudflare 계정에 최대 7일 남고 관리자가 대시보드에서
-            오류를 살필 때 볼 수 있습니다. 따로 내려받거나 그보다 오래 보관하지
-            않습니다.
+            User-Agent, 요청 주소 등)가 Cloudflare 를 거칩니다. 이때 남는 서버
+            로그는 이 프로젝트의 Cloudflare 계정에 최대 7일 남고 관리자가
+            대시보드에서 오류를 살필 때 볼 수 있습니다. 따로 내려받거나 그보다
+            오래 보관하지 않습니다.
           </li>
           <li>
             {/* 근거는 Cloudflare Web Analytics 문서(about, FAQ)다(2026-11-14
