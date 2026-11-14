@@ -1,0 +1,24 @@
+// Cloudflare Workers deploy settings. This file is not what wrangler deploys:
+// a build with the `cloudflare_module` Nitro preset merges it into
+// `.output/server/wrangler.json` (adding `main` and the assets directory) and
+// leaves `.wrangler/deploy/config.json` pointing wrangler at that file. Workers
+// Builds selects that preset on its own; set NITRO_PRESET=cloudflare_module
+// anyway so a local build matches it.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Must match the Worker's name in the Cloudflare dashboard. Without it Nitro
+  // derives one from the git remote and the checkout path, so a build from a
+  // worktree would deploy under a different Worker.
+  "name": "ko-design-md",
+  // Pinned so a rebuild does not silently pick up newer runtime behaviour.
+  // Nitro's default is the build day.
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    // The default (`auto-trailing-slash`) answers `/preview/{slug}/preview.html`
+    // with a 307 to the extensionless path. The preview iframes, the
+    // validators and the HTTP regression suite all name the `.html` file.
+    "html_handling": "none",
+  },
+  "observability": { "enabled": true },
+}
