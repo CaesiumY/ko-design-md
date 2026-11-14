@@ -528,8 +528,8 @@ export function collectContrast(): Collected {
   // descendant by a pseudo-element of its own drawn over it, or by its own
   // background over a descendant with a negative `z-index`. These are not
   // called an `overlay` here: `pseudoEffect` lets the first through when that
-  // pseudo-element is a wash it reads and nothing else of the ancestor draws
-  // unread (`unreadPseudo`), and calls anything else an `overlay` (#692).
+  // pseudo-element is judged to paint over the area whole, whether it is then
+  // composed or held, and calls anything else an `overlay` (#692).
   const aheadOf = (
     hit: Array<Element>,
     end: number,

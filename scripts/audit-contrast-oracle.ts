@@ -537,6 +537,9 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  * - `.aside` raises its run over its panel's 50% wash, with a sibling taking
  *   no pointer events whose dark `::before` fills the panel between the two:
  *   held, where read as the wash over white it would pass at 5.32.
+ * - `.atop` moves that wash over the run, leaving the dark painter under it:
+ *   held, `overlay` too since the wash puts the panel in front, where read
+ *   as the wash over white it would pass.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -806,6 +809,15 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
     kind: "text",
     verdict: "indeterminate",
     blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text under a wash with an unhit painter below",
+    pathEnds: "div.atop > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["overlay", "pseudo-background"],
   },
   {
     id: "text under a wash that draws glyphs of its own",

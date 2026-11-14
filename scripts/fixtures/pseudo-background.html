@@ -217,6 +217,9 @@
         the run, a fail, but no hit list shows it: read as the wash over
         white, the run would pass at 5.32. A painter inside the owner that
         the hit test cannot see holds it.
+      - `.atop` is `.aside` with the wash moved to `::after`, over the run:
+        the sibling's dark `::before` stays under the run, a fail, and read
+        as the wash over white the run would pass. Held, `overlay` too.
     -->
     <style>
       html {
@@ -256,7 +259,8 @@
       .mute,
       .frost,
       .clipped,
-      .aside {
+      .aside,
+      .atop {
         position: relative;
         width: 300px;
         height: 120px;
@@ -516,6 +520,25 @@
       .aside .t {
         position: relative;
       }
+      .atop {
+        z-index: 0;
+      }
+      .atop::after,
+      .atop .w::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0 / 0.5);
+      }
+      .atop .w {
+        pointer-events: none;
+      }
+      .atop .w::before {
+        background: oklch(0.3 0 0);
+      }
+      .atop .t {
+        position: relative;
+      }
       .clipped::before {
         content: "";
         position: absolute;
@@ -740,6 +763,10 @@
     <div class="frost"><span class="t">Sample text</span></div>
     <div class="clipped"><span class="t">Sample text</span></div>
     <div class="aside">
+      <div class="w"></div>
+      <span class="t">Sample text</span>
+    </div>
+    <div class="atop">
       <div class="w"></div>
       <span class="t">Sample text</span>
     </div>

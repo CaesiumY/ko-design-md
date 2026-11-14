@@ -698,15 +698,15 @@ const EMPTY_CONTENT = '""'
  *   something paints between the pseudo-element and the owner's background;
  * - on any side: one whose owner is hidden, whose computed background is in
  *   the stack though nothing of it is painted, one whose `content` draws
- *   more than its box, and one whose owner draws by another pseudo-element
- *   that is not read (`unreadPseudo`);
+ *   more than its box, one whose owner draws by another pseudo-element
+ *   that is not read (`unreadPseudo`), and one whose owner holds anything else
+ *   that paints and takes no pointer events (`unhitPaint`);
  * - under its owner's background: one whose owner's colour is not opaque;
  * - under the text or under its owner's background, either way: one whose
  *   owner's own box does not hold the whole area, so its background is not
  *   under all of it, and one with an element from the one read up to the
  *   owner that paints a background, itself or by its own pseudo-elements, and
- *   takes no pointer events, which no stack shows, one whose owner holds
- *   anything else that paints and takes no pointer events, one whose owner's
+ *   takes no pointer events, which no stack shows, one whose owner's
  *   background is the canvas's — the root, or a `body` whose background
  *   passes on to the canvas — so is not painted on its box, and one whose
  *   owner's background colour is clipped short of its border box.
@@ -756,6 +756,12 @@ function pseudoEffect(
       // the hit test's sight with `pointer-events: none`, or be why the owner
       // is in front of the text. The wash alone is not what is there.
       if (layer.unreadPseudo === true) {
+        unsure = true
+        continue
+      }
+      // Something else inside the owner paints out of the hit test's sight:
+      // it may be under the text and over or under this paint, on any side.
+      if (p.unhitPaint) {
         unsure = true
         continue
       }
