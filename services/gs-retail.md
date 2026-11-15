@@ -126,7 +126,7 @@ fonts:
 
 ## Components
 
-아래 항목은 리서치가 실제로 관찰한 것만 담는다. 아래에서 색과 상태별 스타일까지 적은 컨트롤은 `{component.button-primary}` 이고, 나머지는 **구성과 배치**의 관찰이다. 웹뷰 CSS 의 다른 상태 규칙(켜진 스위치, 입력 포커스)은 `## Do's and Don'ts` 에 적었다 [src:1][src:7][src:18].
+아래 항목은 리서치가 실제로 관찰한 것만 담는다. 아래에서 색과 상태별 스타일까지 적은 컨트롤은 `{component.button-primary}` 이고, 나머지는 **구성과 배치**의 관찰이다. 웹뷰 CSS 의 다른 상태 규칙(켜진 스위치 바탕과 입력 포커스 테두리의 `{colors.signature-cyan}`)은 `## Do's and Don'ts` 에 적었다 [src:1][src:7][src:18].
 
 ### button-primary
 
@@ -135,6 +135,7 @@ fonts:
 ```tsx
 <ButtonPrimary onPress={submit}>결제하기</ButtonPrimary>
 // background: {colors.primary-dark} · color: {colors.white}
+// :active background: {colors.navy-deep} · :disabled background: {colors.neutral-300}
 // 출처 범위: 앱 내부 GS ALL 웹뷰 .GS25 스코프 [src:18]
 ```
 
@@ -228,7 +229,7 @@ fonts:
 
 ## Do's and Don'ts
 
-**Do** 1차 액션은 `{colors.primary-dark}` 채움 + `{colors.white}` 전경으로 두고, `{colors.signature-cyan}` 은 브랜드 표면(아이콘 배경·마스코트·원형 아이콘)에 남긴다 — 이 역할 분리가 실제로 관찰된 배치다 [src:1][src:18]. 웹뷰 CSS 에서는 켜진 스위치의 바탕과 입력 포커스 테두리에도 이 색이 쓰인다 [src:18].
+**Do** 1차 액션은 `{colors.primary-dark}` 채움 + `{colors.white}` 전경으로 두고, `{colors.signature-cyan}` 은 브랜드 표면(아이콘 배경·마스코트·원형 아이콘)에 남긴다 — 이 역할 분리가 실제로 관찰된 배치다 [src:1][src:18]. 다만 웹뷰 CSS 는 `{colors.signature-cyan}` 을 켜진 스위치의 바탕과 입력 포커스 테두리에도 쓴다 [src:18].
 
 **Do** 화면 좌우 여백을 `{spacing.screen-horizontal}` 하나로 묶고, 그 컨테이너를 접근성 트리의 경계로도 함께 쓴다 [src:7].
 
