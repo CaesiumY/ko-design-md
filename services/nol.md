@@ -636,7 +636,7 @@ bottom-nav                                                  [src:5][src:8]
 
 - CTA·선택·포커스는 `{colors.primary-main}` 하나로 칠하고, 호버·눌림만 `{colors.primary-presshover-strong3}` 로 짙게 한다 [src:8][src:10].
 - 브랜드 대표색이 필요한 자리(로고 주변·브랜드 자산)에는 발행값 `{colors.nol-blue}` 를 변형 없이 쓴다 — 에셋 센터가 변형을 금지한다 [src:1].
-- 빨강 `{colors.accent-main}` 은 할인율·쿠폰처럼 가격 긴박감에만 쓴다 [src:5][src:8].
+- 빨강 `{colors.accent-main}` 은 할인율·쿠폰처럼 가격 긴박감을 말하는 자리에 쓴다 [src:5][src:8].
 - 층은 1px 테두리(`{colors.neutral-weak3}`·`{colors.neutral-weak2}`)와 면 차이로 나누고, 그림자 `{elevation.shadow-2}` 는 떠 있는 컨트롤에만 준다 [src:8].
 - 높이 40·44 컨트롤에는 `{rounded.12}`, 48·52 에는 `{rounded.16}` 을 짝짓는다 [src:8].
 - 호버는 `(hover:hover) and (pointer:fine)` 안에서만 걸고, 키보드 포커스는 `{component.focus-ring}` 으로 보인다 [src:8].
