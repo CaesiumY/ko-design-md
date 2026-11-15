@@ -14,7 +14,11 @@ import {
   readRepoFile,
 } from "./skill-asset-paths"
 import { OG_LEDE_MAX_CHARS } from "./og-lede"
-import { TAGLINE_EXCLUSIVE_FORMS, TAGLINE_REPORT_LABEL } from "./tagline-lint"
+import {
+  TAGLINE_EXCLUSIVE_FORMS,
+  TAGLINE_REPORT_LABEL,
+  TAGLINE_RULE,
+} from "./tagline-lint"
 
 // Wiring between the tagline line rule's prose copies and the code that holds
 // it (#701). The rule's text lives once, in stitch-format.md 「Standard section
@@ -23,13 +27,8 @@ import { TAGLINE_EXCLUSIVE_FORMS, TAGLINE_REPORT_LABEL } from "./tagline-lint"
 
 const CANON_SECTION = "Standard section order"
 
-// Rule ids the draft gate can emit for the tagline line, read from the module
-// that emits them.
-const GATE_RULES = new Set(
-  [
-    ...readRepoFile("src/lib/tagline-lint.ts").matchAll(/"(tagline-[a-z-]+)"/g),
-  ].map((m) => m[1])
-)
+// Rule ids the draft gate can emit for the tagline line.
+const GATE_RULES: ReadonlySet<string> = new Set(Object.values(TAGLINE_RULE))
 
 const namedRules = (text: string) =>
   new Set([...text.matchAll(/`(tagline-[a-z-]+)`/g)].map((m) => m[1]))
@@ -112,8 +111,19 @@ describe("design-md tagline line rule", () => {
     expect(text).toContain(`\`${TAGLINE_REPORT_LABEL}\``)
   })
 
+  // The tagline line comes before the draft in the checkpoint's list, so the
+  // user meets it on its own instead of inside the whole file.
+  it("Stage 7 shows the tagline line before the draft", () => {
+    const text = stage7()
+    const label = text.indexOf(`\`${TAGLINE_REPORT_LABEL}\``)
+    const draft = text.indexOf("The current `draft.md` content")
+    expect(draft, "Stage 7 no longer shows the draft").toBeGreaterThan(-1)
+    expect(label).toBeLessThan(draft)
+  })
+
   // The preview hero's line is the brand's slogan, not the entry's tagline
-  // (ADR 0014). These files once called it a tagline.
+  // (ADR 0014). These files once called it a tagline. A mention of the entry's
+  // own line uses the format guide's term, "tagline line", and stays allowed.
   it.each([
     PREVIEW_HTML_AUTHOR_AGENT,
     PREVIEW_HTML_REVIEWER_AGENT,
@@ -121,7 +131,7 @@ describe("design-md tagline line rule", () => {
     PREVIEW_PROSE_AUDIT_SKILL,
     PREVIEW_RULES,
   ])("%s calls the hero's line a slogan", (path) => {
-    expect(readRepoFile(path)).not.toMatch(/tagline|태그라인/i)
+    expect(readRepoFile(path)).not.toMatch(/tagline(?! line)|태그라인/i)
   })
 
   it("CODING_STANDARDS names the exclusive forms the gate searches", () => {

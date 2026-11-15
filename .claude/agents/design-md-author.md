@@ -81,7 +81,7 @@ Rules for the token maps — each one is a gate, not a preference:
   frontmatter `components:` map (rules: `references/stitch-format.md`,
   "Component tokens in the frontmatter `components:` map").
 
-Directly under the H1, before `## Brand & Style`, write the **tagline line** (한 줄 소개): one sentence the site shows on the home list, the share card, the search description and the catalog index. Its rules are the opening paragraph and list of `references/stitch-format.md`, "Standard section order" — read them there; the template only marks the spot. Delete the template's HTML comment above it: the site does not skip a comment, so a comment left there becomes the tagline. The draft gate blocks its form (the `tagline-*` rules), and the reviewer checks its subject, its screen description and that each citation backs its claim.
+Directly under the H1, before `## Brand & Style`, write the **tagline line** (한 줄 소개): one sentence the site shows on the home list, the detail page header, the share card, the search description, the catalog index and the RSS feed. Its rules are the opening paragraph and list of `references/stitch-format.md`, "Standard section order" — read them there; the template only marks the spot. Delete the template's HTML comment above it: the site does not skip a comment, so a comment left there becomes the tagline. The draft gate blocks its form (the `tagline-*` rules), and the reviewer checks its subject, its screen description and that each citation backs its claim.
 
 Body sections in this exact order, all as `##` headings:
 
