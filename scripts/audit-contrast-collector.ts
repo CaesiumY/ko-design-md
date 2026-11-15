@@ -877,7 +877,11 @@ export function collectContrast(): Collected {
     // An inline box broken over lines paints its background fragment by
     // fragment, and its rect is the box round all of them.
     const broken = e.getClientRects().length > 1
-    if (cutsByShape(c) || bent || broken) {
+    // A pseudo-element of the layer itself paints over its background
+    // whatever its order inside it: "under" there is still above the colour
+    // the stack read.
+    const own = owners.some(({ owner }) => owner === e)
+    if (cutsByShape(c) || bent || broken || own) {
       clips.push({
         box: ownerBoxOf(e),
         borders: ["0px", "0px", "0px", "0px"],

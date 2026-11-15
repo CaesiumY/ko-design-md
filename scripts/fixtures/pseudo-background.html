@@ -408,9 +408,17 @@
       - `.stackedge` is `.pastedge` with no inner block: the panel itself is
         the white layer the stack stops at, and its own `::after`, taking no
         pointer events, draws only a 60px oklch(0.3 0 0) border that covers
-        the panel. A layer the stack reads has its drawing pseudo-elements
-        read with it as past ones, so the run, black on rgb(46) at 1.55, a
-        fail, is held where it would read 21.
+        the panel. Positioned and later in tree order than the relative run,
+        it paints over the run and hides it; read as the panel's white the
+        run would pass at 21. A layer the stack reads has its drawing
+        pseudo-elements read with it as past ones, so it is held.
+      - `.stackunder` makes that panel a stacking context (`z-index: 0`) and
+        moves the border to `z-index: -1`, under a run in normal flow: the
+        border paints over the panel's white and under the run, black on
+        rgb(46), 1.55, a fail. Its order is under the panel's content but
+        above the panel's background, the colour the stack read, so a
+        pseudo-element of the layer the stack stopped at is never out of
+        sight: held, where released it would read 21.
       - `.pastinline` makes the panel a stacking context (`z-index: 0`) with
         its wash at `z-index: -1`, under a white inline span that breaks over
         two lines: fragments at x 150..273 and x 0..79, 20px of padding
@@ -481,6 +489,7 @@
       .pastturn,
       .pastpath,
       .stackedge,
+      .stackunder,
       .pastinline,
       .pastbox,
       .overblock,
@@ -1285,6 +1294,17 @@
       .stackedge .t {
         position: relative;
       }
+      .stackunder {
+        z-index: 0;
+      }
+      .stackunder::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border: 60px solid oklch(0.3 0 0);
+        pointer-events: none;
+      }
       .pastinline {
         z-index: 0;
         display: block;
@@ -1558,6 +1578,7 @@
       <span class="t">Sample text</span>
     </div>
     <div class="stackedge"><span class="t">Sample text</span></div>
+    <div class="stackunder"><span class="t">Sample text</span></div>
     <div class="pastinline">
       <p class="p"><span class="i">xxxx xxxx xxxx xxxx xxxx</span></p>
       <span class="t">Sample text</span>
