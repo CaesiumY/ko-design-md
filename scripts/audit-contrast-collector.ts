@@ -698,10 +698,30 @@ export function collectContrast(): Collected {
   // past what `left` and `top` say.
   //
   // `placeOnly` asks only where the box lies, not what it paints there (the
-  // placed pseudo-elements of `nearPseudosOf`): its own `backdrop-filter`
-  // then counts for nothing — it filters what is behind inside the box and
+  // placed pseudo-elements of `nearPseudosOf`): its own inset shadows, and
+  // its own `backdrop-filter`, then count for nothing — it filters what is behind inside the box and
   // makes a containing block only for descendants a pseudo-element has none
   // of. An ancestor's still does.
+  // Whether every layer of a computed `box-shadow` is `inset`: split on the
+  // commas outside parentheses, since colours carry commas of their own.
+  const insetOnly = (shadow: string): boolean => {
+    if (shadow === "none") return true
+    const layers: Array<string> = []
+    let depth = 0
+    let start = 0
+    for (let i = 0; i < shadow.length; i++) {
+      const ch = shadow[i]
+      if (ch === "(") depth++
+      else if (ch === ")") depth--
+      else if (ch === "," && depth === 0) {
+        layers.push(shadow.slice(start, i))
+        start = i + 1
+      }
+    }
+    layers.push(shadow.slice(start))
+    return layers.every((l) => /\binset\b/.test(l))
+  }
+
   function unsureFor(
     el: Element,
     pseudo: CSSStyleDeclaration,
@@ -715,7 +735,12 @@ export function collectContrast(): Collected {
       // drawn inside the box does not — so it is handed over as `outline`
       // and `reach` decides (#692).
       ["filter", pseudo.filter, "none"],
-      ["box-shadow", pseudo.boxShadow, "none"],
+      // Inset shadows only, under `placeOnly`: they paint inside the box.
+      [
+        "box-shadow",
+        placeOnly && insetOnly(pseudo.boxShadow) ? "none" : pseudo.boxShadow,
+        "none",
+      ],
       ["border-image-source", pseudo.borderImageSource, "none"],
       // A copy of the whole box painted beside it. Read by name: the
       // prefixed property has no camel-case field to rely on.
