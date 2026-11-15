@@ -222,7 +222,7 @@ After return, verify `{cache_dir}/draft.md` exists and is non-empty. If missing,
 
 ### 6a2. Deterministic draft gate (machine validation)
 
-Before spending a reviewer dispatch, run the draft validator — it covers every mechanically checkable rubric item (frontmatter read and field values, section presence/order, OKLCH-only token values, `[src:N]`/References integrity, expected logo) so the reviewer model never has to "grep mentally":
+Before spending a reviewer dispatch, run the draft validator — it covers every mechanically checkable rubric item (frontmatter read and field values, section presence/order, OKLCH-only token values, `[src:N]`/References integrity, expected logo, the tagline line's form) so the reviewer model never has to "grep mentally":
 
 ```bash
 cd "${repo_root}" && pnpm validate:draft .claude/cache/design-md/{slug}/draft.md \
@@ -255,9 +255,10 @@ Follow your agent definition. Write exactly one file at output_path.
 
 The machine report has already verified the deterministically checkable items
 (frontmatter read and field values, section presence/order, OKLCH-only token scan,
-[src:N]/References integrity, expected logo). Do not re-verify those — spend
-your review on judgment items: Brand fidelity semantics against research.md,
-Voice/tone, and cross-section token contradictions.
+[src:N]/References integrity, expected logo, the tagline line's form). Do not
+re-verify those — spend your review on judgment items: Brand fidelity semantics
+against research.md, Voice/tone with the tagline line's three checks, and
+cross-section token contradictions.
 ```
 
 After return, `Read` `{cache_dir}/review-{N}.json`.
@@ -272,10 +273,11 @@ After return, `Read` `{cache_dir}/review-{N}.json`.
 
 This is the gate **every** entry passes through — Stage 4c precedes it only when a design board is upstream. Show the user:
 
-1. The current `draft.md` content (read it and display the full file inline, formatted as markdown — paste in code fences).
-2. The latest `review-{final}.json` verdict — extract `score`, `passed`, `verdict`, and bullet the issues array.
-3. If `## Known Gaps` lists package component tokens whose key is undecided (`references/stitch-format.md`, "Variants are flat names" — no keying rule covers them yet, so the author leaves them out of the map; find them by the fixed bullet form `` `{package path}` — 키 미정(패키지 컴포넌트 토큰) ``), list them here and tell the user they stay out of the map in this entry, with their values in the body's package token table. Keying one needs a rule added to `references/stitch-format.md` first (a maintainer decision, made outside this run), so the reviewer blocks a map row for them until then; approving keeps them as they are.
-4. If iteration > 1, show a brief diff highlight: `"Iter 1 score: X → Iter {final} score: Y"` plus the top 1–2 issues that improved between iterations (compare `review-1.json.issues` and `review-{final}.json.issues`).
+1. The tagline line (한 줄 소개; rules: `references/stitch-format.md`, "Standard section order"), on its own and before the draft, because it is the one sentence readers meet outside the entry. Run `pnpm validate:draft .claude/cache/design-md/{slug}/draft.md` and show the `tagline:` line it prints: the sentence as the reader sees it, then its character count over the limit. Take the count from that line; do not count by eye. Say where the sentence is shown: the home list, the share card (its first sentence), the search description and the catalog index (`llms.txt`). If the run reports a `tagline-*` block or warning, list it under the sentence.
+2. The current `draft.md` content (read it and display the full file inline, formatted as markdown — paste in code fences).
+3. The latest `review-{final}.json` verdict — extract `score`, `passed`, `verdict`, and bullet the issues array.
+4. If `## Known Gaps` lists package component tokens whose key is undecided (`references/stitch-format.md`, "Variants are flat names" — no keying rule covers them yet, so the author leaves them out of the map; find them by the fixed bullet form `` `{package path}` — 키 미정(패키지 컴포넌트 토큰) ``), list them here and tell the user they stay out of the map in this entry, with their values in the body's package token table. Keying one needs a rule added to `references/stitch-format.md` first (a maintainer decision, made outside this run), so the reviewer blocks a map row for them until then; approving keeps them as they are.
+5. If iteration > 1, show a brief diff highlight: `"Iter 1 score: X → Iter {final} score: Y"` plus the top 1–2 issues that improved between iterations (compare `review-1.json.issues` and `review-{final}.json.issues`).
 
 Then `AskUserQuestion`:
 
