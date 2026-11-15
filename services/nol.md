@@ -2,7 +2,7 @@
 name: NOL
 slug: nol
 category: travel
-last_updated: "2026-10-12"
+last_updated: "2026-11-15"
 created_at: "2026-10-12"
 lang: ko
 logo: https://getdesign.kr/logos/nol.png
@@ -302,7 +302,7 @@ gradients:
   detail-bg: oklch(0.697 0.149 250.2) 0%, oklch(0.614 0.205 262.6) 25%, oklch(0.547 0.213 268.2) 50%, oklch(0.526 0.228 270.8) 75%, oklch(0.511 0.228 285.9) 100%   # #4BA2F6 #3C7BFD #3E5FEA #4052EB #643EDF · 78.57deg · 상세 번들 --bg · 쓰는 요소 미확인
 ---
 
-NOL은 여행과 여가 플랫폼이고, 흰 바탕에 채도 높은 파랑을 예약과 선택, 포커스에만 아껴 쓰며 숙소와 공연 사진을 둥글게 크게 잘라 세운다 [src:5][src:8].
+NOL은 여행과 여가 플랫폼이고, 그림자 대신 1px 연한 테두리로 깊이를 내고 할인율과 쿠폰 같은 가격 강조에 빨강을 쓴다 [src:5][src:6][src:8].
 
 ## Brand & Style
 
@@ -312,7 +312,7 @@ NOL은 흰 바탕 위에 채도 높은 파랑을 예약·선택·포커스에만
 
 **두 층.** 놀유니버스가 직접 발행한 디자인 값은 에셋 센터의 색 다섯과 로고 사용 규칙뿐이다 [src:1]. 타입 스케일·간격·반경·그림자·컴포넌트는 발행되지 않았고, 이 문서의 그 값들은 nol.yanolja.com 이 출하한 CSS 번들과 SSR HTML 에서 읽은 관측값(미발행)이다 [src:5][src:8][src:9][src:10]. 그래서 frontmatter 는 발행 그룹과 관측 그룹을 나누고, 관측 토큰의 줄 주석에는 모두 '관측(미발행)' 을 적었다.
 
-**화면의 결.** 차가운 쪽의 밝은 화면이다. 파랑 `{colors.primary-main}` 은 CTA·선택 탭·포커스에만 나오고, 나머지는 거의 검정인 글자 `{colors.neutral-main}` 과 아주 연한 회색 면 `{colors.neutral-weak}`·`{colors.neutral-weak1}` 로 짠다 [src:5][src:8]. 두 번째 강조색 `{colors.accent-main}` 은 할인율·쿠폰처럼 가격의 긴박감을 말할 때만 나온다 [src:5][src:8]. 깊이는 그림자보다 1px 연한 테두리와 면 색 차이로 만들고, 그림자는 캐러셀 화살표·하단 내비 같은 떠 있는 컨트롤에만 옅게 쓴다 [src:6][src:8]. 모양은 둥글고 부드럽다 — 검색창·칩·공지·신규오픈 배지는 알약형, 카드 안 텍스트 배지는 `{rounded.6}`, 버튼·카드는 12·16 둥근 사각, PC 히어로는 28 이다 [src:5][src:8]. 유일한 장식은 파랑에서 보라로 흐르는 그라디언트이고, 넓은 면이 아니라 1px 테두리로 쓰인다 [src:7][src:8].
+**화면의 결.** 차가운 쪽의 밝은 화면이다. 파랑 `{colors.primary-main}` 은 CTA·선택 탭·포커스에만 나오고, 나머지는 거의 검정인 글자 `{colors.neutral-main}` 과 아주 연한 회색 면 `{colors.neutral-weak}`·`{colors.neutral-weak1}` 로 짠다 [src:5][src:8]. 두 번째 강조색 `{colors.accent-main}` 은 할인율·쿠폰처럼 가격의 긴박감을 말하는 자리에 나온다 [src:5][src:8]. 같은 값이 danger 별칭으로도 선언돼 있지만 오류 상태의 쓰임은 관측하지 못했다(`## Known Gaps`). 깊이는 그림자보다 1px 연한 테두리와 면 색 차이로 만들고, 그림자는 캐러셀 화살표·하단 내비 같은 떠 있는 컨트롤에만 옅게 쓴다 [src:6][src:8]. 모양은 둥글고 부드럽다 — 검색창·칩·공지·신규오픈 배지는 알약형, 카드 안 텍스트 배지는 `{rounded.6}`, 버튼·카드는 12·16 둥근 사각, PC 히어로는 28 이다 [src:5][src:8]. 유일한 장식은 파랑에서 보라로 흐르는 그라디언트이고, 넓은 면이 아니라 1px 테두리로 쓰인다 [src:7][src:8].
 
 **CI 서술.** 놀유니버스 회사소개는 CI를 "다채로운 즐거움이 유연하게 확장되는 모습을 곡선으로 담아냈습니다. 여정 속 언제나 함께하는 하늘에서 모티프를 얻어, 두 가지 블루 계열로 고유한 컬러 팔레트를 구성했습니다." 로 서술한다 [src:2]. 법인 CI 서술이지만 두 블루와 곡선이라는 축은 서비스 화면의 파랑·알약형과 결이 같다.
 
@@ -636,7 +636,7 @@ bottom-nav                                                  [src:5][src:8]
 
 - CTA·선택·포커스는 `{colors.primary-main}` 하나로 칠하고, 호버·눌림만 `{colors.primary-presshover-strong3}` 로 짙게 한다 [src:8][src:10].
 - 브랜드 대표색이 필요한 자리(로고 주변·브랜드 자산)에는 발행값 `{colors.nol-blue}` 를 변형 없이 쓴다 — 에셋 센터가 변형을 금지한다 [src:1].
-- 빨강 `{colors.accent-main}` 은 할인율·쿠폰처럼 가격 긴박감에만 쓴다 [src:5][src:8].
+- 빨강 `{colors.accent-main}` 은 할인율·쿠폰처럼 가격 긴박감을 말하는 자리에 쓴다 [src:5][src:8].
 - 층은 1px 테두리(`{colors.neutral-weak3}`·`{colors.neutral-weak2}`)와 면 차이로 나누고, 그림자 `{elevation.shadow-2}` 는 떠 있는 컨트롤에만 준다 [src:8].
 - 높이 40·44 컨트롤에는 `{rounded.12}`, 48·52 에는 `{rounded.16}` 을 짝짓는다 [src:8].
 - 호버는 `(hover:hover) and (pointer:fine)` 안에서만 걸고, 키보드 포커스는 `{component.focus-ring}` 으로 보인다 [src:8].

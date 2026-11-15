@@ -3,7 +3,7 @@ name: LG전자
 design_system_name: LG EI Design
 slug: lg-electronics
 category: etc
-last_updated: "2026-10-05"
+last_updated: "2026-11-15"
 created_at: "2026-10-05"
 lang: ko
 logo: https://getdesign.kr/logos/lg-electronics.png
@@ -338,11 +338,11 @@ elevation:
   kr-box-shadow-base: 2px 4px 12px 0 oklch(0 0 0 / 0.16)   # 국내 운영 CSS --box-shadow--base = 2px 4px 12px 0 rgba(0,0,0,.16) · 쓰는 컴포넌트 미확인
 ---
 
-LG전자는 가전 브랜드이고, Active Red와 Heritage Red 두 빨강을 Warm Grey와 흰색, 검정 위에 올리고 둥근 EI 폼으로 화면을 짠다 [src:1][src:3][src:4][src:5].
+LG전자는 TV와 주방, 세탁, 에어컨 등의 전자 제품을 내고 [src:1], 글로벌 사이트는 Warm Grey 바탕에 사진 캐러셀과 둥근 카드를 놓아 여백을 넓게 쓴다 [src:12].
 
 ## Brand & Style
 
-LG전자는 에너지의 Active Red와 로고를 받치는 Heritage Red, 두 빨강을 Warm Grey·흰색·검정의 중립 위에 올리고, 제품의 둥근 형태에서 온 EI 폼과 자체 서체 LG EI로 "기술에 미소를 담는" Emotionally Intelligent Design을 그리는 가전 브랜드다 [src:1][src:3][src:4][src:5].
+LG전자는 에너지의 Active Red와 로고를 받치는 Heritage Red, 두 빨강을 Warm Grey·흰색·검정의 중립 위에 올리고, 제품의 둥근 형태에서 온 EI 폼과 자체 서체 LG EI로 "기술에 미소를 담는" Emotionally Intelligent Design을 그리는, TV와 주방, 세탁, 에어컨 등의 전자 제품을 내는 회사다 [src:1][src:3][src:4][src:5].
 
 **범위.** 이 항목은 LG전자 하나만 다룬다. 지주사 ㈜LG의 CI나 LG U+ 같은 계열사는 범위 밖이다. 로고 페이지는 얼굴 마크가 1995년에 도입됐다고만 적고 그 마크의 디자인 주체·연혁이 어디에 속하는지 서술하지 않으므로, 이 항목도 그 역사를 LG전자 고유의 것이라고 단정하지 않는다 [src:2]. 같은 회사 안에서도 표면이 둘로 갈린다. **lg.com** 은 LG EI 아이덴티티를 적용한 글로벌 사이트이고(브랜드 면 lg.com/global, 커머스 면 lg.com/us), **lge.co.kr** 은 Pretendard만 로드하고 `--color-set--*`·`--br-radius--*`·`--fw--*` 라는 자체 이름 체계를 쓰는 별도 플랫폼이다 [src:12][src:13][src:15]. 그래서 토큰은 세 그룹으로 갈라 두었다 — (a) EI 브랜드는 발행물과 lg.com/global 관측, (b) EI 커머스는 lg.com/us 관측(`us-` 접두), (c) 국내는 lge.co.kr 운영 CSS 이름과 관측(`kr-` 접두)이다. 관측값은 2026-10-03에 lg.com 1425·360폭, lge.co.kr 1440폭과 모바일 웹 375폭에서 잰 것이고, 발행되지 않은 값이다.
 
@@ -778,7 +778,7 @@ kr-pdp-buybox                                               [src:17]
 
 ## References
 
-1. https://www.lg.com/global/our-identity/ — LG EI 아이덴티티 인덱스. 디자인 철학 문장과 정체성 요소 일곱 가지
+1. https://www.lg.com/global/our-identity/ — LG EI 아이덴티티 인덱스. 디자인 철학 문장과 정체성 요소 일곱 가지, 사이트맵 안내 단락의 제품 영역 서술
 2. https://www.lg.com/global/our-identity/logo/ — 로고 페이지. 워드마크·얼굴 마크, 색 변형 슬라이더, 클리어스페이스, Digital Logo Play. 로고 에셋 zip 링크가 이 페이지에 있다
 3. https://www.lg.com/global/our-identity/color/ — 색 페이지. 발행 5색, Adaptable Color System, 그라디언트 4종과 사용 모드 태그(태그는 슬라이더 스크립트가 슬라이드마다 바꾼다)
 4. https://www.lg.com/global/our-identity/typography/ — 타이포그래피 페이지. LG EI Headline/Text 서술과 굵기 이미지. 페이지 CSS 의 px·굵기 550 은 이 페이지 자체 스타일이다

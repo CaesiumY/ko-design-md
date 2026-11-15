@@ -269,7 +269,7 @@ font-display-src: https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/J
 
 # 여기어때 — design.md
 
-여기어때는 숙소와 항공권, 패키지여행을 예약하는 서비스이고 [src:44], 지도 위 가격 마커와 활기찬 Lively red를 시그니처로 삼는다 [src:12][src:34].
+여기어때는 숙소와 항공권, 패키지여행을 예약하는 서비스이고 [src:44], 로고에는 Yeogi Red를, 주요 버튼에는 그와 다른 Lively red를 쓴다 [src:5][src:12].
 
 > 여기어때는 GC COMPANY(여기어때컴퍼니)가 운영하는 여행·숙박 플랫폼이고, 그 공개 문서 사이트가 **여기어때 Design Library**다 [src:1]. 문서 본문이 스스로를 지칭하는 시스템 이름은 **YDS(Yeogi Design System)**이며 [src:12][src:19], Layout 문서 기준 현재 버전은 **YDS 6.0**이다 [src:18].
 
