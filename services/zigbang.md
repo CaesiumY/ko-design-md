@@ -602,12 +602,12 @@ radius 4. `full` 타입은 하단 스크림(gray10 잉크 0 → 0.3 → 0.6)과 
 - **이름 붙은 spacing·radius 스케일과 letterSpacing 토큰이 없다.** `## Spacing`·`## Rounded`의 값은 컴포넌트 리터럴의 빈도 관찰이라 frontmatter 맵을 두지 않았고, 자간은 선언 자체가 없다 [src:5][src:2][src:76].
 - **브레이크포인트가 없다.** 넓은 화면 대응은 오버레이·배너·툴팁의 폭 상한(Dialog 외곽 400 · 내용 340, SnackBar 400, Banner 320, Tooltip 260)뿐이다 — `## Responsive Behavior` 표 참고 [src:21][src:22][src:14][src:24].
 - **토큰화가 제품 전체에 닿지 않는다.** 소비자 웹은 `#FF681B`(`oklch(0.699 0.200 42)`)·`#FA880B`(`oklch(0.738 0.176 57)`) 같은 enum 밖 오렌지를 `{colors.orange1}`(`oklch(0.700 0.202 44)`) 대신 하드코딩하고, 본문 서체도 ZUIX의 Pretendard가 아니라 Spoqa Han Sans다 [src:72][src:77]. ZUIX 값만으로 직방 웹 화면 전체를 재현할 수는 없다.
-- **ZUIX Storybook 이 열리지 않는다 (2026-11-16).** `zuix2.zigbang.io` 는 확인한 경로(루트, `index.json`, 해시 번들) 모두에 CloudFront 403 을 돌려준다. 웨이백에는 2022년 판 루트와 글꼴 파일만 있어, 이 문서가 기댄 2026년 번들 [src:1]–[src:70][src:76] 을 대신 열어 볼 사본이 없다. 값은 그 전에 받은 번들에서 옮긴 것이다.
+- **ZUIX Storybook 이 열리지 않는다 (2026-11-16).** `zuix2.zigbang.io` 의 Storybook 셸과 해시 번들 [src:1]–[src:3][src:5]–[src:70][src:76] 은 CloudFront 403 을 돌려주고, 이 호스트의 출처 가운데 글꼴 CSS [src:4] 는 열린다. 웨이백에 있는 이 호스트 사본(2022년 Storybook 셸, 글꼴, 이미지)에는 해시 번들이 없어, 이 문서가 기댄 번들을 대신 열어 볼 사본이 없다. 값은 그 전에 받은 번들에서 옮긴 것이다.
 - **App Store 스크린샷은 수치로 재지 못했다.** 마케팅 프레임 안의 화면이라 구조·색 관계만 볼 수 있다 [src:75]. 발표 자료는 2021년 재게시본이라 현행 번들과 재대조되지 않은 서술이 있다 [src:71].
 
 ## References
 
-해시 번들 표시가 붙은 항목은 파일명의 해시가 재배포 때마다 바뀐다. 안정 진입점은 스토리 인덱스 `index.json`[src:2]과 프리뷰 셸 `iframe.html`[src:3]이고, 해시 청크는 그 경로로 다시 찾는다. 2026-11-16 기준 이 호스트는 403 을 돌려준다(`## Known Gaps`).
+해시 번들 표시가 붙은 항목은 파일명의 해시가 재배포 때마다 바뀐다. 해시 청크는 스토리 인덱스 `index.json`[src:2]과 프리뷰 셸 `iframe.html`[src:3]의 경로로 다시 찾았는데, 지금은 이 둘도 열리지 않는다(`## Known Gaps`).
 
 1. https://zuix2.zigbang.io/ — ZUIX Storybook 루트. JS 셸이라 렌더해야 읽힌다
 2. https://zuix2.zigbang.io/index.json — 안정 진입점. Storybook v5 스토리 인덱스

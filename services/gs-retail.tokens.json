@@ -33,7 +33,7 @@
     {
       "name": "neutral-300",
       "value": "oklch(0.820 0.013 267)",
-      "note": "#C0C4CD — 3회 등장",
+      "note": "#C0C4CD — 3회 등장, 웹뷰 primary 버튼의 비활성 배경",
       "group": "Neutral ramp — 앱 내부 웹뷰 .GS25 스코프 (용도 미공개, 이름은 명도순으로 부여)"
     },
     {
@@ -57,7 +57,7 @@
     {
       "name": "navy-deep",
       "value": "oklch(0.234 0.082 257)",
-      "note": "#001C43",
+      "note": "#001C43 — 웹뷰 primary 버튼의 눌림(:active) 배경",
       "group": "Neutral ramp — 앱 내부 웹뷰 .GS25 스코프 (용도 미공개, 이름은 명도순으로 부여)"
     },
     {

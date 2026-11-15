@@ -521,7 +521,7 @@ elevation:
 
 Vapor는 시스템 자체의 정체성을 **opinionated, light-first, very token-driven, proudly Korean-bilingual** 로 정의한다 [src:5]. opinionated는 디자인 결정이 토큰 레벨에서 강하게 박혀 있다는 뜻이고, light-first는 다크 모드가 동등하게 지원되되 1차 환경은 화이트 캔버스라는 의미다. very token-driven은 product-facing 색상이 모두 시맨틱 alias로만 노출되어 raw 팔레트는 새 role을 만들 때만 직접 참조된다는 정책을 가리킨다 [src:5].
 
-대상 사용자는 세 층위다. 디자이너에게는 Figma 라이브러리(`figma.com/community/file/1508829832204351721`)를 [src:3], 개발자에게는 `@vapor-ui/core`를 중심으로 한 6패키지 모노레포(`goorm-dev/vapor-ui`)를, 그리고 product surface를 운영하는 host 팀에게는 `@vapor-ui/css-generator`를 통해 기본 키 팔레트를 자체 브랜드 색으로 교체할 수 있는 토큰 빌드 파이프라인을 제공한다 [src:4][src:5]. 2025년 4월 Vapor 디자인 시스템 전담 조직이 신설됐고, 발표는 CDO 이태성과 Vapor Squad 리더 최준영이 함께 했다 [src:2].
+대상 사용자는 세 층위다. 디자이너에게는 Figma 라이브러리(`figma.com/community/file/1508829832204351721`)를 [src:3], 개발자에게는 `@vapor-ui/core`를 중심으로 한 6패키지 모노레포(`goorm-dev/vapor-ui`)를, 그리고 product surface를 운영하는 host 팀에게는 `@vapor-ui/css-generator`를 통해 기본 키 팔레트를 자체 브랜드 색으로 교체할 수 있는 토큰 빌드 파이프라인을 제공한다 [src:4][src:5]. 2025년 4월 Vapor 디자인 시스템 전담 조직이 신설됐고, Figma Maker Collective: Seoul 에서 Vapor 를 공개한 발표는 CDO 이태성과 Vapor Squad 리더 최준영이 함께 했다 [src:2].
 
 전체 무드는 **bright, soft white** 로 요약된다 [src:5]. 정보 밀도가 높은 표면(테이블·코드 패널·폼)은 흰 카드 위에 옅은 페이지 배경, 그리고 1px 헤어라인으로 분리되는 패턴이며, 색은 절제되어 있고 시맨틱 팔레트는 상태(primary CTA, success/warning/danger badge, link blue)에만 사용된다 [src:5]. 시스템 표면 자체에는 **그라디언트, 글래스/블러 효과, 텍스처, 장식 일러스트가 없다** [src:5]. 그라디언트가 등장하는 단 두 곳은 Vapor 워드마크 로고와 Getting Started 페이지의 컨셉 히어로다 [src:5]. 트랜스페어런시·블러는 토스트와 다이얼로그 스크림에만 쓰이고 frosted glass나 `backdrop-filter`는 시스템에서 제외된다 [src:5].
 

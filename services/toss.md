@@ -205,7 +205,7 @@ fonts:
 
 토스는 송금과 자산 확인, 금융 상품을 한 앱에 담은 금융 앱이고 [src:15], 거의 무채색인 흰 캔버스 위에서 토스 블루로 채운 버튼은 주요 액션에 쓴다 [src:12][src:14].
 
-> 비바리퍼블리카가 운영하는 한국 최대 핀테크 슈퍼앱. 송금·결제·은행·증권·보험·세금·부동산·자동차 관리 등 금융 전반을 단일 모바일 셸로 묶고, "Apps in Toss" 미니앱 플랫폼까지 같은 디자인 시스템 위에 얹는다 [src:2]. 본 문서는 Toss Design System 핸드오프 번들(`TDS_Mobile_for_Apps_in_Toss_(2602-3-2).fig` export → `toss-design-system/{README, chats/chat1, project/{README, SKILL, colors_and_type.css, preview/ 41 cards, ui_kits/mobile/{Components.jsx, Screens.jsx, Send-Money Flow.html, ios-frame.jsx}, assets/toss-logo.png}}`)을 1차 출처로 합성한 결과이며, 공개된 toss.tech 보고서 [src:1]와 toss.im 미니앱 가이드, TDS Mobile docs를 보조 출처로 사용했다.
+> 비바리퍼블리카가 운영하는 금융 앱 [src:15]. 송금·결제·은행·증권·보험·세금·부동산·자동차 관리 등 금융 전반을 단일 모바일 셸로 묶고, "Apps in Toss" 미니앱 플랫폼까지 같은 디자인 시스템 위에 얹는다 [src:2]. 본 문서는 Toss Design System 핸드오프 번들(`TDS_Mobile_for_Apps_in_Toss_(2602-3-2).fig` export → `toss-design-system/{README, chats/chat1, project/{README, SKILL, colors_and_type.css, preview/ 41 cards, ui_kits/mobile/{Components.jsx, Screens.jsx, Send-Money Flow.html, ios-frame.jsx}, assets/toss-logo.png}}`)을 1차 출처로 합성한 결과이며, 공개된 toss.tech 보고서 [src:1]와 toss.im 미니앱 가이드, TDS Mobile docs를 보조 출처로 사용했다.
 
 ## Brand & Style
 
@@ -308,7 +308,7 @@ TPS는 variable·fixed-width 두 폭을 모두 제공하며, 실시간 금융 �
 
 ## Rounded
 
-라운드 토큰은 4~32px 8단계 + `full`(999px) 한 단계로 정의되며, 토스 시스템은 "**프로덕션에서 가장 둥근 모바일 시스템 중 하나**"로 분류된다:
+라운드 토큰은 4~32px 8단계 + `full`(999px) 한 단계로 정의된다:
 
 버튼 라운드는 사이즈에 따라 스케일된다 — XL 16 / L 14 / M 12 / S 10, `buttons.html` preview로 확인된다. iOS류 squircle/blob 라운드는 `Templates/Squircle` 전용 페이지를 제외하면 사용되지 않는다.
 
