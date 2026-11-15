@@ -294,6 +294,19 @@ export function collectContrast(): Collected {
       ["perspective", c.perspective, "none"],
       ["clip-path", c.clipPath, "none"],
       ["mask-image", c.maskImage, "none"],
+      // A mask border and a reflection make one too, in Chromium as by the
+      // spec. Read by name: the prefixed ones have no camel-case field.
+      ["mask-border-source", c.getPropertyValue("mask-border-source"), "none"],
+      [
+        "-webkit-mask-box-image-source",
+        c.getPropertyValue("-webkit-mask-box-image-source"),
+        "none",
+      ],
+      [
+        "-webkit-box-reflect",
+        c.getPropertyValue("-webkit-box-reflect"),
+        "none",
+      ],
       ["mix-blend-mode", c.mixBlendMode, "normal"],
       ["isolation", c.isolation, "auto"],
       ["view-transition-name", c.viewTransitionName, "none"],
@@ -474,6 +487,20 @@ export function collectContrast(): Collected {
         })
       )
 
+  // Whether an element is in the top layer — a modal dialog, an open
+  // popover, a fullscreen element — which always makes a stacking context,
+  // whatever its styles say. A selector this browser does not know answers
+  // nothing.
+  const TOP_LAYER = [":modal", ":popover-open", ":fullscreen"]
+  const inTopLayer = (e: Element): boolean =>
+    TOP_LAYER.some((sel) => {
+      try {
+        return e.matches(sel)
+      } catch {
+        return false
+      }
+    })
+
   // `hit` is the hit list at the point read, where there is one: see
   // `OrderBox.hit`.
   const orderBoxOf = (e: Element, hit?: Array<Element>): OrderBox => {
@@ -484,7 +511,10 @@ export function collectContrast(): Collected {
       zIndex: c.zIndex,
       parentDisplay:
         parent === null ? "block" : getComputedStyle(parent).display,
-      contextProps: contextPropsOf(c),
+      contextProps: [
+        ...contextPropsOf(c),
+        ...(inTopLayer(e) ? ["top-layer: yes"] : []),
+      ],
       pointerEvents: c.pointerEvents,
       visibility: c.visibility,
       canvas: e === document.documentElement || bodyOnCanvas(e),

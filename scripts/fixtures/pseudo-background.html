@@ -129,6 +129,11 @@
       - `.under` is a panel that is no stacking context, whose `::before`
         is opaque black at `z-index: -1`. That paints under the panel's own
         white background, out of sight, and the run is a pass at 21.
+      - `.maskbox` and `.mirror` are `.under` made stacking contexts by a
+        mask border (`-webkit-mask-box-image`) and by a reflection
+        (`-webkit-box-reflect`, its copy masked to nothing): the black then
+        paints over the panel's white and under the run, black on black,
+        1.00, a fail. Read as no stacking context they would pass at 21.
       - `.split` raises its run (`position: relative`) over a 50% black
         `::before`, as `.disc` does, but with an unpositioned wrapper of
         oklch(0.6 0 0) (rgb(128)) in between. The wash paints over the
@@ -323,6 +328,8 @@
       .opaque,
       .unknown,
       .under,
+      .maskbox,
+      .mirror,
       .split,
       .unhit,
       .spill,
@@ -490,12 +497,20 @@
       .unknown .t {
         will-change: transform;
       }
-      .under::before {
+      .under::before,
+      .maskbox::before,
+      .mirror::before {
         content: "";
         position: absolute;
         inset: 0;
         background: oklch(0 0 0);
         z-index: -1;
+      }
+      .maskbox {
+        -webkit-mask-box-image: linear-gradient(#000, #000);
+      }
+      .mirror {
+        -webkit-box-reflect: below 0px linear-gradient(transparent, transparent);
       }
       .unseen {
         isolation: isolate;
@@ -1058,6 +1073,8 @@
     <div class="opaque"><span class="t">Sample text</span></div>
     <div class="unknown"><span class="t">Sample text</span></div>
     <div class="under"><span class="t">Sample text</span></div>
+    <div class="maskbox"><span class="t">Sample text</span></div>
+    <div class="mirror"><span class="t">Sample text</span></div>
     <div class="split">
       <div class="m"><span class="t">Sample text</span></div>
     </div>

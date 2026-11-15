@@ -492,6 +492,10 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   makes a stacking context is not read: held, `pseudo-background` alone.
  * - `.under`'s opaque `::before` at `z-index: -1` paints under the panel's
  *   own white, since the panel is no stacking context: a pass at 21.
+ * - `.maskbox` and `.mirror` are `.under` made stacking contexts by a mask
+ *   border and a reflection: the black paints over the white and under the
+ *   run, black on black, a fail at 1.00, where read as `.under` it would
+ *   pass at 21.
  * - `.split` raises its run over a 50% wash with an unpositioned wrapper of
  *   rgb(128) between them. The hit test returns the panel twice, its wash
  *   first, so its first place is not its white background: held. Read as
@@ -717,6 +721,26 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
     verdict: "pass",
     blockers: [],
     ratio: 21,
+  },
+  {
+    id: "text over a negative-z pseudo-element of an owner a mask border makes a context",
+    pathEnds: "div.maskbox > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "fail",
+    blockers: [],
+    ratio: 1,
+  },
+  {
+    id: "text over a negative-z pseudo-element of an owner a reflection makes a context",
+    pathEnds: "div.mirror > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "fail",
+    blockers: [],
+    ratio: 1,
   },
   {
     id: "raised text over a wash with a painted wrapper between",
