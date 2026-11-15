@@ -120,6 +120,8 @@ elevation:
   level4: 0px 8px 20px oklch(0.218 0 0 / 0.1) # rgba(26, 26, 26, 0.1) — iOS offset 8 · radius 10 / Android elevation 16 · 소비자 웹 홈 카테고리 패널과 같은 값
 ---
 
+직방은 부동산 플랫폼이고, 짙은 회색 잉크로 짠 무채색 위에 따뜻한 오렌지 하나만 강조로 올리고 작은 모서리로 조밀한 모바일 화면을 짠다 [src:5][src:6][src:8][src:75].
+
 ## Brand & Style
 
 직방 ZUIX는 순흑 대신 짙은 회색 잉크로 짠 무채색 램프 위에 따뜻한 오렌지 한 색만 강조로 올리고, 4px 안팎의 작은 모서리와 Pretendard로 조밀한 모바일 화면을 짜는 부동산 플랫폼의 공통 컴포넌트 언어다 [src:5][src:6][src:8].

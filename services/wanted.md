@@ -2,7 +2,7 @@
 name: 원티드
 slug: wanted
 category: career
-last_updated: "2026-10-27"
+last_updated: "2026-11-15"
 created_at: "2026-05-12"
 lang: ko
 logo: https://getdesign.kr/logos/wanted.png
@@ -318,6 +318,8 @@ font-display-src: https://cdn.jsdelivr.net/npm/wanted-sans@1.0.3/fonts/webfonts/
 
 # 원티드 (Wanted) — design.md
 
+원티드는 채용과 커리어 플랫폼이고, 흰 바탕에 색을 아끼고 파랑에서 분홍, 주황으로 흐르는 그라디언트는 로고 심볼에 담는다 [src:17].
+
 > 원티드랩이 운영하는 한국 1위 채용·커리어 플랫폼. `wanted.co.kr` 잡 마켓플레이스, 채용담당자용 Wanted Talent 대시보드, 프리미엄 커리어 코칭 구독 Wanted Plus, 후보자/리크루터용 iOS/Android 앱을 단일 디자인 시스템 위에 얹는다 [src:17]. 원티드의 디자인 시스템은 **몽타주(Montage)**라는 이름으로 `montage.wanted.co.kr`에 공개 문서화되어 있으며 [src:1], 웹 구현체는 `wanteddev/montage-web` 레포에 **MIT 라이선스**로 공개된다 [src:14] — 상업적 이용·수정·재배포가 허용되고 저작권 표시와 라이선스 전문 포함이 의무다 [src:2]. 본 문서의 서술 골격은 2025년 Wanted Design System 핸드오프 번들(`wanted-design-system/` 익스포트 — `README.md`, `colors_and_type.css`, `components.css`(23개 컴포넌트 그룹), `components.html` 라이브 갤러리, `ui_kits/wanted-web/` 마켓플레이스 재구성)에서 합성됐고, 이번 갱신에서 그 정량값을 몽타주 공개 문서 및 공개 토큰 소스와 대조했다. 결과는 세 갈래다 — **교차검증됨**: 타입 스케일 19개 스타일(57개 값 중 56개) [src:5], 알파 사다리 13단 [src:14], 램프·그라디언트 스톱 토큰에 병기한 hex 12개 중 11개 [src:3]. **단, 이 hex 대조는 병기된 hex에 대한 것이지 실제 토큰 값인 OKLCH의 정확성을 보증하지 않는다** — 아래 Known Gaps 참조. **공개 출처와 어긋남**: 스페이싱 사다리, 브레이크포인트, 엘리베이션 값, 시맨틱 alias 명명 [src:4][src:6][src:7][src:14]. **공개 토큰 자체가 없음**: 라운드 — 공식 테마는 radius 스케일을 노출하지 않아 본 문서의 사다리는 번들 관찰값으로 남는다 [src:14]. 어긋나는 램프 값은 덮어쓰지 않고 각 절에서 차이를 명시했고, 상태 글자색·배지 바탕·버튼 인터랙션 층은 원티드 실서비스와 몽타주가 같이 쓰는 공개 값으로 옮겼다(`## Colors` 첫머리 · `## Known Gaps`).
 
 ## Brand & Style
@@ -349,7 +351,7 @@ Voice는 **친근한 2인칭 + 부드러운 존댓말**로 요약된다. 사무�
 
 ### Brand gradient (심볼 전용)
 
-심볼 마크 자체 + 일부 아바타 circle + 일부 잡카드 썸네일 placeholder에만 적용된다. 마케팅 hero용 변형은 `0E1F3F → blue-800 → magenta`로 깊은 navy를 추가해 `linear-gradient(120deg, ...)`로 그려지지만, 카탈로그 토큰으로 노출된 것은 아니다.
+이 그라디언트는 심볼 마크 자체 + 일부 아바타 circle + 일부 잡카드 썸네일 placeholder에만 적용된다. 원티드 홈 헤더의 로고 심볼이 파랑에서 분홍, 주황으로 흐르는 SVG 그라디언트로 그려지고, 그 바탕은 흰색이다 [src:17]. 마케팅 hero용 변형은 `0E1F3F → blue-800 → magenta`로 깊은 navy를 추가해 `linear-gradient(120deg, ...)`로 그려지지만, 카탈로그 토큰으로 노출된 것은 아니다.
 
 ### Gray (14-step, single tint — 채도 0)
 

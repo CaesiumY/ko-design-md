@@ -2,7 +2,7 @@
 name: 코드잇
 slug: codeit
 category: education
-last_updated: "2026-10-29"
+last_updated: "2026-11-15"
 created_at: "2026-07-16"
 lang: ko
 logo: https://getdesign.kr/logos/codeit.png
@@ -360,6 +360,8 @@ fonts:
   font-code: Menlo, ui-monospace, SFMono-Regular, Consolas, monospace   # Menlo는 macOS 시스템 폰트 — 로드 가능한 웹폰트 URL 없음
 font-display-src: https://cdn.jsdelivr.net/npm/spoqa-han-sans@3.3.0/css/SpoqaHanSansNeo.css
 ---
+
+코드잇은 웹 개발과 데이터 분석, AI를 다루는 IT 교육 서비스이고 [src:1][src:2], 유채색을 바이올렛 하나로 모으고 여백을 넉넉히 둔 차분한 화면을 쓴다 [src:5][src:12].
 
 ## Brand & Style
 
@@ -794,7 +796,7 @@ Anatomy 3요소 — Filter Button(적용 필터 유무로 on/off), Filter Header
 ## References
 
 1. https://design.codeit.com — 디자인 시스템 최상위 페이지(슬로건, 시스템 정의, 3대 원칙)
-2. https://www.codeit.kr — 프로덕션 번들 CSS(스케일 토큰 hex 실측 출처)
+2. https://www.codeit.kr — 프로덕션 번들 CSS(스케일 토큰 hex 실측 출처). 홈 메타 설명에 다루는 IT 분야가 있다.
 3. https://design.codeit.com/brand — Brand 계층 정의(Keyword·Logo·Color)
 4. https://design.codeit.com/brand/value — 브랜드 키워드 6종
 5. https://design.codeit.com/brand/color — 브랜드 컬러(Codeit Violet, PANTONE, CMYK)

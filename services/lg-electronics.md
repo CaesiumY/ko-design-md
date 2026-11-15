@@ -338,6 +338,8 @@ elevation:
   kr-box-shadow-base: 2px 4px 12px 0 oklch(0 0 0 / 0.16)   # 국내 운영 CSS --box-shadow--base = 2px 4px 12px 0 rgba(0,0,0,.16) · 쓰는 컴포넌트 미확인
 ---
 
+LG전자는 가전 브랜드이고, Active Red와 Heritage Red 두 빨강을 Warm Grey와 흰색, 검정 위에 올리고 둥근 EI 폼으로 화면을 짠다 [src:1][src:3][src:4][src:5].
+
 ## Brand & Style
 
 LG전자는 에너지의 Active Red와 로고를 받치는 Heritage Red, 두 빨강을 Warm Grey·흰색·검정의 중립 위에 올리고, 제품의 둥근 형태에서 온 EI 폼과 자체 서체 LG EI로 "기술에 미소를 담는" Emotionally Intelligent Design을 그리는 가전 브랜드다 [src:1][src:3][src:4][src:5].

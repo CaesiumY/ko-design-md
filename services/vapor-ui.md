@@ -3,7 +3,7 @@ name: 구름
 design_system_name: Vapor UI
 slug: vapor-ui
 category: developer
-last_updated: "2026-11-10"
+last_updated: "2026-11-15"
 created_at: "2026-05-10"
 lang: ko
 logo: https://getdesign.kr/logos/goorm.png
@@ -513,6 +513,8 @@ elevation:
 
 # Vapor UI — design.md
 
+구름은 AI와 SW 에듀테크 기업이고 [src:2], 디자인 시스템 Vapor의 흰 바탕 위에서 파랑으로 주요 버튼을 채운다 [src:1].
+
 > 한국의 클라우드 IDE/개발자 교육 회사 goorm(구름)이 운영하는 디자인 시스템. goormIDE·goormEDU·goormLEVEL·goorm Cloud·goorm.co 마케팅 사이트가 단일 시각 언어를 공유하도록 설계되었다 [src:1]. 본 문서의 토큰·컴포넌트 값은 공개 배포물이 1차 출처다 — 색(팔레트와 시맨틱 alias)은 `@vapor-ui/core` 1.7.0 배포본 [src:6], 컴포넌트는 1.3.0 배포본 [src:4] 이 기준이다. 여백, 치수, radius, 글자 크기, 줄높이, 무게, 자간, 그림자 토큰은 두 판이 같은 값을 발행하고 [src:4][src:6], goorm 공식 문서 사이트가 서빙하는 CSS 도 색까지 1.7.0 과 같은 값을 내놓는다 [src:1]. 컴포넌트 절을 1.7.0 과 아직 대조하지 않은 것은 `## Known Gaps` 에 적었다. 초판은 Claude Design 핸드오프 번들에서 합성했으나 그 값이 발행값과 어긋나 `## Colors`(2026-07-29)에 이어 나머지 토큰 절과 `## Components`(2026-08-17)를 전량 교체했다.
 
 ## Brand & Style
@@ -768,7 +770,7 @@ import { Button } from "@vapor-ui/core";
 
 ### button-primary
 
-`<Button colorPalette="primary">` (variant 기본값 `fill`). `{colors.color-background-primary-200}` bg + 흰 텍스트다. hover·press 는 색을 바꾸지 않고 절 공통의 검정 오버레이만 얹는다 [src:4]. 흰 텍스트 자리에 1.3.0 은 `color-foreground-inverse` 를 썼는데 그때 inverse 는 두 테마 모두 white 였다 [src:4]. 1.7.0 은 inverse 를 다크에서 black 으로 바꾸면서 이 자리를 `{colors.color-foreground-staticWhite}` 로 옮겼다 [src:6].
+`<Button colorPalette="primary">` (variant 기본값 `fill`). `{colors.color-background-primary-200}` bg + 흰 텍스트다. 공식 사이트의 흰 바탕 데모는 "Public으로 변경" 같은 주요 버튼을 이 파랑(`blue-500`)으로 채운다 [src:1]. hover·press 는 색을 바꾸지 않고 절 공통의 검정 오버레이만 얹는다 [src:4]. 흰 텍스트 자리에 1.3.0 은 `color-foreground-inverse` 를 썼는데 그때 inverse 는 두 테마 모두 white 였다 [src:4]. 1.7.0 은 inverse 를 다크에서 black 으로 바꾸면서 이 자리를 `{colors.color-foreground-staticWhite}` 로 옮겼다 [src:6].
 
 ### button-primary-outline
 
@@ -986,7 +988,7 @@ Vapor 시스템은 imagery treatment를 강제하지 않는다. goorm 마케팅 
 ## References
 
 1. https://vapor-ui.goorm.io/ — 공식 docs/데모 사이트, goorm 네이밍·운영 컨텍스트.
-2. https://blog.goorm.io/vapor-figma-seoul/ — goorm 공식 블로그 "Vapor at Figma Config Seoul 2025", Vapor Squad 조직(2025년 4월 신설, Squad Lead 최준영, CDO 이태성)·SSOT 자동화·MCP Server 컨텍스트.
+2. https://blog.goorm.io/vapor-figma-seoul/ — goorm 공식 블로그 "Vapor at Figma Config Seoul 2025", Vapor Squad 조직(2025년 4월 신설, Squad Lead 최준영, CDO 이태성)·SSOT 자동화·MCP Server 컨텍스트. 본문 머리에서 구름의 회사 성격을 소개한다.
 3. https://www.figma.com/community/file/1508829832204351721/vapor-design-system — Vapor Design System Figma Community 파일. 평범한 GET에는 텍스트가 34자뿐인 JS 셸이라 브라우저로 열어야 파일 정보가 보인다.
 4. https://cdn.jsdelivr.net/npm/@vapor-ui/core@1.3.0/ — `@vapor-ui/core` 1.3.0 배포본의 파일 목록(jsDelivr, 버전 고정). 컴포넌트 절의 기준 판이다 — 컴포넌트 치수·무게·radius는 `dist/components/*/*.css.ts.vanilla.css`(35개)와 `dist/styles/mixins/typography.css.ts.vanilla.css`, 크기, 타이포그래피, 그림자 토큰은 `dist/styles/themes.css.ts.vanilla.css` 다. 색의 기준은 [src:6] 이다.
 5. https://github.com/goorm-dev/vapor-ui — GitHub 모노레포(6 패키지 구조: core / hooks / icons / codemod / color-generator / css-generator, README 카피). **루트 URL 하나가 본문 인용의 대부분을 떠받치고 있어**, 개별 주장을 이 링크만으로 확인하기 어렵다. 토큰 값은 [src:4]의 배포 CSS가, 정책·카피 서술은 이 저장소의 README와 docs 소스가 각각 1차 근거다.
