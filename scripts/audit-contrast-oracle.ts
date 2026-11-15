@@ -641,6 +641,13 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   it would read 21. Held.
  * - `.pastpath` turns the same band by a 30 degree `offset-path` with no
  *   `transform`: the same rect and the same 1.55 at the line's ends. Held.
+ * - `.stackedge` has the panel itself, the white layer the stack stops at,
+ *   draw a 60px oklch(0.3 0 0) border from its own `::after`: on screen 1.55,
+ *   a fail, where the stack reads 21. Held.
+ * - `.pastinline` stops the stack at a white inline span broken over two
+ *   lines, x 150..273 and x 0..79, over the panel's negative-layer wash: the
+ *   run's left end, x 110..150, sits on the wash, 1.55, a fail, where the
+ *   span's rect holds the line and released it would read 21. Held.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -1188,6 +1195,24 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
     id: "raised text over a band a motion path turns",
     pathEnds: "div.pastpath > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text on a layer whose own pseudo-element draws a border over it",
+    pathEnds: "div.stackedge > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over an inline layer broken over two lines",
+    pathEnds: "div.pastinline > span.t",
     theme: "light",
     state: "default",
     kind: "text",

@@ -405,6 +405,19 @@
         from the panel's centre, `offset-path`, with no `transform`: the
         path's own `offset-rotate: auto` turns it as `.pastturn`'s does, to
         the same rect and the same 1.55 at the line's ends. Held.
+      - `.stackedge` is `.pastedge` with no inner block: the panel itself is
+        the white layer the stack stops at, and its own `::after`, taking no
+        pointer events, draws only a 60px oklch(0.3 0 0) border that covers
+        the panel. A layer the stack reads has its drawing pseudo-elements
+        read with it as past ones, so the run, black on rgb(46) at 1.55, a
+        fail, is held where it would read 21.
+      - `.pastinline` makes the panel a stacking context (`z-index: 0`) with
+        its wash at `z-index: -1`, under a white inline span that breaks over
+        two lines: fragments at x 150..273 and x 0..79, 20px of padding
+        above and below. An absolute run at x 110..194 on the first line has
+        its middle on the first fragment, where the stack stops, and its left
+        end on the wash, 1.55, a fail. The span's rect, x 0..273, holds the
+        line, so released it would read 21. A broken inline box holds it.
     -->
     <style>
       html {
@@ -467,6 +480,8 @@
       .pastmaskbox,
       .pastturn,
       .pastpath,
+      .stackedge,
+      .pastinline,
       .pastbox,
       .overblock,
       .lifted,
@@ -1260,6 +1275,44 @@
         background: oklch(1 0 0);
         offset-path: path("M 150 60 L 250 117.735");
       }
+      .stackedge::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border: 60px solid oklch(0.3 0 0);
+        pointer-events: none;
+      }
+      .stackedge .t {
+        position: relative;
+      }
+      .pastinline {
+        z-index: 0;
+        display: block;
+      }
+      .pastinline::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: oklch(0.3 0 0);
+        pointer-events: none;
+      }
+      .pastinline .p {
+        margin: 0;
+        width: 300px;
+        text-indent: 150px;
+        font: 400 16px / 60px monospace;
+        color: transparent;
+      }
+      .pastinline .i {
+        padding: 20px 0;
+        background: oklch(1 0 0);
+      }
+      .pastinline .t {
+        position: absolute;
+        left: 110px;
+        top: 18px;
+      }
       .pastrect .l {
         position: absolute;
         inset: 0;
@@ -1502,6 +1555,11 @@
     </div>
     <div class="pastpath">
       <div class="l"></div>
+      <span class="t">Sample text</span>
+    </div>
+    <div class="stackedge"><span class="t">Sample text</span></div>
+    <div class="pastinline">
+      <p class="p"><span class="i">xxxx xxxx xxxx xxxx xxxx</span></p>
       <span class="t">Sample text</span>
     </div>
     <div class="pastboth">

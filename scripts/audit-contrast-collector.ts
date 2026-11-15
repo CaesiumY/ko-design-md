@@ -696,15 +696,22 @@ export function collectContrast(): Collected {
     area: DOMRect,
     stopped: Element | null
   ): { past?: Array<RawPseudo>; stop?: StopBox } {
-    const skip = new Set([...walked, ...hit.slice(0, index)])
+    const ahead = new Set(hit.slice(0, index))
+    const read = new Set(walked)
     const past: Array<RawPseudo> = []
     const owners: Array<{ owner: Element; position: string }> = []
     for (let up = start; up !== null; up = up.parentElement) {
-      if (skip.has(up) || !hasShownPseudo(up)) continue
+      if (ahead.has(up) || !hasShownPseudo(up)) continue
+      // A layer the stack read had its painting pseudo-elements read with it;
+      // one that only draws — a border, a shadow, glyphs — was not, and can
+      // cover the line all the same, so it goes here too.
+      const accept = read.has(up)
+        ? (cs: CSSStyleDeclaration) => pseudoShows(cs) && !pseudoPaints(cs)
+        : pseudoShows
       // Where it lands and its paint order are all that is asked of it, so
       // the unhit paint around it is not read (`nested`).
       const found = paintedPseudos(up, area, stopped ?? from, {
-        accept: pseudoShows,
+        accept,
         nested: true,
       })
       for (const p of found) owners.push({ owner: up, position: p.position })
@@ -867,7 +874,10 @@ export function collectContrast(): Collected {
         break
       }
     }
-    if (cutsByShape(c) || bent) {
+    // An inline box broken over lines paints its background fragment by
+    // fragment, and its rect is the box round all of them.
+    const broken = e.getClientRects().length > 1
+    if (cutsByShape(c) || bent || broken) {
       clips.push({
         box: ownerBoxOf(e),
         borders: ["0px", "0px", "0px", "0px"],
