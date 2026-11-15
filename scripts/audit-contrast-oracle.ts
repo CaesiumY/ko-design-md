@@ -615,7 +615,8 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   read 21. Held.
  * - `.pastimage` is `.past` with a `::before` that paints only a filled
  *   60px `border-image` of flat oklch(0.3 0 0) over the panel: on screen
- *   1.55, a fail, where the stack reads 21: held.
+ *   rgb(45) to rgb(46) as the gradient rounds, about 1.55, a fail, where the
+ *   stack reads 21: held.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {

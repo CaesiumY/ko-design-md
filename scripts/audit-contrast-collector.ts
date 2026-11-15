@@ -716,31 +716,23 @@ export function collectContrast(): Collected {
       : { past, stop: stopBoxOf(stopped, owners) }
   }
 
-  // The element whose box a pseudo-element of `owner` is placed in: `owner`
-  // itself for one in flow or `relative`, the nearest ancestor that places
-  // an `absolute` or `fixed` box for those, or null for the initial
-  // containing block or the viewport. As `containingBlockOf` walks.
-  const placerOf = (owner: Element, position: string): Element | null => {
+  // The element a box whose parent is `parent` is placed in: `parent` for
+  // one in flow, `relative` or `sticky`; for an `absolute` or `fixed` one the
+  // nearest element from `parent` up that places it, or null for the
+  // initial containing block or the viewport. `containingBlockOf` walks the
+  // same way.
+  const placerOf = (parent: Element, position: string): Element | null => {
     const fixed = position === "fixed"
-    if (!fixed && position !== "absolute") return owner
-    let cb: Element | null = owner
-    while (cb !== null) {
-      const c = getComputedStyle(cb)
-      if (capturesFixed(c) || (!fixed && c.position !== "static")) break
-      cb = cb.parentElement
-    }
-    return cb
+    if (!fixed && position !== "absolute") return parent
+    return placingAncestor(parent, fixed)
   }
 
-  // Whether a clip on `e` also cuts a pseudo-element of `owner` placed in
-  // `placer`: `e` is the owner or above it, and the box it is placed in is
-  // `e` or inside it. The root's clip, and the `body`'s it passes to the
+  // Whether a clip on `e` cuts a box placed in `box`. An overflow clip cuts
+  // what is placed, box by box, in the element or inside it: the walk goes
+  // up each box's own containing block, and the clip cuts only if it meets
+  // `e` before leaving it. The root's clip, and the `body`'s it passes to the
   // viewport, cut everything.
-  const clipsToo = (
-    e: Element,
-    owner: Element,
-    placer: Element | null
-  ): boolean => {
+  const cutsIn = (e: Element, box: Element | null): boolean => {
     if (e === document.documentElement) return true
     if (
       e === document.body &&
@@ -748,8 +740,13 @@ export function collectContrast(): Collected {
     ) {
       return true
     }
-    if (e !== owner && owner.contains(e)) return false
-    return placer !== null && (placer === e || e.contains(placer))
+    let at = box
+    while (at !== null) {
+      if (at === e) return true
+      if (!e.contains(at) || at.parentElement === null) return false
+      at = placerOf(at.parentElement, getComputedStyle(at).position)
+    }
+    return false
   }
 
   // How an element cuts what its descendants paint short, if it does: to
@@ -785,23 +782,25 @@ export function collectContrast(): Collected {
   }
 
   // What the background of the layer a stack stopped at covers. A clip on
-  // one of its ancestors cuts the layer short; it hides a pseudo-element
+  // one of its ancestors that cuts the layer short hides a pseudo-element
   // under the layer only where it cuts that pseudo-element too, so every
-  // clip that leaves one of `owners`' pseudo-elements whole is handed over.
+  // clip that cuts the layer and leaves one of `owners`' pseudo-elements
+  // whole is handed over.
   const stopBoxOf = (
     e: Element,
     owners: Array<{ owner: Element; position: string }>
   ): StopBox => {
     const c = getComputedStyle(e)
-    const placed = owners.map(({ owner, position }) => ({
-      owner,
-      placer: placerOf(owner, position),
-    }))
+    const layerIn =
+      e.parentElement === null ? null : placerOf(e.parentElement, c.position)
+    const pseudosIn = owners.map(({ owner, position }) =>
+      placerOf(owner, position)
+    )
     const clips: Array<ClipBox> = []
     for (let up = e.parentElement; up !== null; up = up.parentElement) {
       const cut = clipOf(up)
-      if (cut === null) continue
-      if (placed.some(({ owner, placer }) => !clipsToo(up, owner, placer))) {
+      if (cut === null || !cutsIn(up, layerIn)) continue
+      if (pseudosIn.some((box) => !cutsIn(up, box))) {
         clips.push(cut)
       }
     }
@@ -1008,16 +1007,23 @@ export function collectContrast(): Collected {
   // pseudo-element is its child — or, with none, the viewport for a fixed one
   // and the document's origin for an absolute one. Read at sample time, as the
   // overlay candidates' rects are: the page scrolls between samples.
-  function containingBlockOf(
-    el: Element,
-    fixed: boolean
-  ): RawPseudo["containingBlock"] {
-    let cb: Element | null = el
+  // The nearest element from `start` up that places an `absolute` box, or a
+  // `fixed` one when `fixed`, or null when none does.
+  function placingAncestor(start: Element, fixed: boolean): Element | null {
+    let cb: Element | null = start
     while (cb !== null) {
       const c = getComputedStyle(cb)
       if (capturesFixed(c) || (!fixed && c.position !== "static")) break
       cb = cb.parentElement
     }
+    return cb
+  }
+
+  function containingBlockOf(
+    el: Element,
+    fixed: boolean
+  ): RawPseudo["containingBlock"] {
+    const cb = placingAncestor(el, fixed)
     if (cb === null) {
       const origin = fixed
         ? { left: 0, top: 0 }
