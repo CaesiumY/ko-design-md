@@ -103,7 +103,7 @@
 
       /* 네이티브 radius 수치는 공개돼 있지 않다. 관찰된 것은 성격뿐이라
          (정보는 둥근 직사각 카드, 액션·아이콘·상태는 원 또는 필) 그 성격만
-         재현한다. 버튼만은 웹뷰 CSS 의 [class*=button-] 36px 를 따른다.
+         재현한다. button-primary 데모만 웹뷰 CSS 의 [class*=button-] 36px 를 따른다.
          이 수치들은 화면 어디에도 값으로 표시하지 않는다. */
       --r-button: 36px;
       --r-card: 18px;
@@ -255,7 +255,7 @@
 
     /* ── 버튼 ────────────────────────────────────────────────────────────── */
     .btn {
-      border: 0; border-radius: var(--r-button);
+      border: 0; border-radius: var(--r-inner);
       padding: 12px 20px; font-size: 14px; font-weight: 700;
       line-height: 1.2; cursor: pointer; min-width: 0;
       background: var(--cta-bg); color: var(--cta-ink);
@@ -264,6 +264,7 @@
       background: transparent; color: var(--ink);
       border: 1px solid var(--rule-strong);
     }
+    .btn-webview { border-radius: var(--r-button); }
     .btn.is-pressed { background: var(--cta-bg-pressed); }
     .btn[disabled] { background: var(--cta-bg-disabled); color: var(--cta-ink-disabled); cursor: not-allowed; }
     .btn-block { display: block; width: 100%; }
@@ -686,15 +687,15 @@
         <div class="demo">
           <div class="btn-row">
             <div class="btn-demo">
-              <button class="btn" type="button">결제하기</button>
+              <button class="btn btn-webview" type="button">결제하기</button>
               <span class="lab">기본 — 확인된 값(다크는 가정)</span>
             </div>
             <div class="btn-demo">
-              <button class="btn is-pressed" type="button">결제하기</button>
+              <button class="btn btn-webview is-pressed" type="button">결제하기</button>
               <span class="lab">누름 — 확인된 값(다크는 가정)</span>
             </div>
             <div class="btn-demo">
-              <button class="btn" type="button" disabled>결제하기</button>
+              <button class="btn btn-webview" type="button" disabled>결제하기</button>
               <span class="lab">비활성 — 확인된 값(다크는 가정)</span>
             </div>
           </div>
