@@ -3,6 +3,8 @@ import { lint } from "@google/design.md/linter"
 import { REQUIRED_SECTIONS, validateDraft } from "./draft-validator"
 import { findKey, readFrontmatter } from "./frontmatter"
 import { FRONTMATTER_MAPS } from "./frontmatter-map-table"
+import { taglineAsShown } from "./content-parser"
+import { OG_LEDE_MAX_CHARS } from "./og-lede"
 import type { FrontmatterMapTraits } from "./frontmatter-map-table"
 import type { DraftValidationOptions } from "./draft-validator"
 
@@ -25,7 +27,14 @@ interface FixtureOverrides {
   dropSection?: string
   duplicateSection?: string
   swapSections?: [string, string]
+  /** The tagline line under the H1 (한 줄 소개). */
+  tagline?: string
 }
+
+// The line the site shows as the entry's 한 줄 소개: one sentence under the H1,
+// both claims cited.
+const TAGLINE =
+  "데모는 송금 앱이고 [src:1], 흰 바탕 위에 파랑 버튼 하나로 주요 액션을 짚는다 [src:2]."
 
 function nestUnderComponent(fence: string): string {
   const [open, ...rest] = fence.split("\n")
@@ -106,7 +115,8 @@ function makeDraft(overrides: FixtureOverrides = {}): string {
     .join("\n\n")
 
   const body = overrides.body ? overrides.body(sections) : sections
-  return `${frontmatter}\n\n# 데모 — design.md\n\n> 데모 태그라인이다.\n\n${body}\n`
+  const tagline = overrides.tagline ?? TAGLINE
+  return `${frontmatter}\n\n# 데모 — design.md\n\n${tagline}\n\n${body}\n`
 }
 
 const OPTS: DraftValidationOptions = {
@@ -4056,5 +4066,202 @@ describe("every {map.name} reference names a declared key", () => {
     const rules = rulesFor(raw)
     expect(rules).toContain("frontmatter-yaml-invalid")
     expect(rules).not.toContain("unresolved-token-ref")
+  })
+})
+
+// ── tagline line (한 줄 소개) ──────────────────────────────────────────────────
+// The rules are stitch-format.md 「Standard section order」's opening list. The
+// line is the one the site shows (`deriveTagline`), so the fixtures put it
+// where the site looks: the first prose line under the H1.
+
+describe("validateDraft — tagline line", () => {
+  const taglineRules = (tagline: string, severity?: "block" | "warn") =>
+    rulesOf(makeDraft({ tagline }), OPTS, severity).filter((r) =>
+      r.startsWith("tagline-")
+    )
+
+  it("passes one cited sentence within the limit", () => {
+    expect(taglineRules(TAGLINE)).toEqual([])
+  })
+
+  it("blocks a second sentence", () => {
+    expect(
+      taglineRules(
+        "데모는 송금 앱이다 [src:1]. 2015년에 출시해 사용자를 모았다 [src:2].",
+        "block"
+      )
+    ).toEqual(["tagline-multiple-sentences"])
+  })
+
+  // A line of exactly `chars` characters as the reader sees it: one sentence,
+  // cited, padded with 가.
+  const lineOf = (chars: number, cite = " [src:1]") => {
+    const head = "데모는 송금 앱이고"
+    const tail = "다."
+    return `${head}${cite}, ${"가".repeat(chars - head.length - 2 - tail.length)}${tail}`
+  }
+
+  it("passes a sentence of exactly the limit and blocks one over it", () => {
+    expect([...taglineAsShown(lineOf(90))].length).toBe(90)
+    expect(taglineRules(lineOf(90))).toEqual([])
+    expect(taglineRules(lineOf(91), "block")).toEqual(["tagline-too-long"])
+  })
+
+  it("counts the characters the reader sees, not citations, bold or backticks", () => {
+    const marked = lineOf(90, " [src:1][src:2]").replace("송금", "`송금`")
+    expect(marked.length).toBeGreaterThan(90)
+    expect(taglineRules(marked)).not.toContain("tagline-too-long")
+    // Bold is blocked on its own; the length rule still reads it stripped.
+    const bold = lineOf(90).replace("송금 앱", "**송금 앱**")
+    expect(taglineRules(bold)).not.toContain("tagline-too-long")
+  })
+
+  it("says the reader-visible count, the limit and how to fix it", () => {
+    const issue = validateDraft(
+      makeDraft({ tagline: lineOf(95) }),
+      OPTS
+    ).issues.find((i) => i.rule === "tagline-too-long")
+    expect(issue?.fix).toContain("95")
+    expect(issue?.fix).toContain(String(OG_LEDE_MAX_CHARS))
+    expect(issue?.fix).toContain("## Brand & Style")
+  })
+
+  it("blocks a line with no [src:N]", () => {
+    expect(
+      taglineRules(
+        "데모는 송금 앱이고, 흰 바탕 위에 파랑 버튼 하나를 쓴다.",
+        "block"
+      )
+    ).toEqual(["tagline-no-citation"])
+    // A screenshot or board marker is not a numbered citation.
+    expect(
+      taglineRules(
+        "데모는 송금 앱이고 [src:screenshot:home.png], 흰 바탕을 쓴다.",
+        "block"
+      )
+    ).toEqual(["tagline-no-citation"])
+  })
+
+  it.each([
+    ["a hex", "파랑(#3182F6) 버튼"],
+    ["an oklch value", "파랑(`oklch(0.62 0.19 258)`) 버튼"],
+  ])("blocks %s", (_, colour) => {
+    expect(
+      taglineRules(
+        `데모는 송금 앱이고 [src:1], 흰 바탕 위에 ${colour}을 쓴다 [src:2].`,
+        "block"
+      )
+    ).toEqual(["tagline-colour-value"])
+  })
+
+  it("blocks bold, which the site strips and the line would lose", () => {
+    expect(
+      taglineRules(TAGLINE.replace("파랑 버튼", "**파랑 버튼**"), "block")
+    ).toEqual(["tagline-bold"])
+  })
+
+  it("blocks an em dash", () => {
+    expect(
+      taglineRules(
+        "데모는 송금 앱이고 [src:1], 흰 바탕 — 파랑 버튼 하나로 액션을 짚는다 [src:2].",
+        "block"
+      )
+    ).toEqual(["tagline-em-dash"])
+  })
+
+  it("blocks an HTML comment the site would show as the tagline, and only that", () => {
+    const issues = validateDraft(
+      makeDraft({
+        tagline: `<!-- 이 줄을 지운다.
+     둘째 줄. -->
+
+${TAGLINE}`,
+      }),
+      OPTS
+    ).issues.filter((i) => i.rule.startsWith("tagline-"))
+    expect(issues.map((i) => [i.severity, i.rule])).toEqual([
+      ["block", "tagline-html-comment"],
+    ])
+  })
+
+  it("leaves the template's working comment to its own marker rule as well", () => {
+    const rules = rulesOf(
+      makeDraft({
+        tagline: `<!-- 다듬을 것: 이 주석을 지운다. -->
+
+${TAGLINE}`,
+      }),
+      OPTS,
+      "block"
+    )
+    expect(rules).toContain("tagline-html-comment")
+    expect(rules).toContain("working-marker-in-prose")
+  })
+  it.each(["에만", "때만", "만을", "뿐", "모두"])(
+    "warns on the exclusive form %s and does not block",
+    (word) => {
+      const line = `데모는 송금 앱이고 [src:1], 흰 바탕${word} 파랑 버튼을 둔다 [src:2].`
+      expect(taglineRules(line, "block")).toEqual([])
+      expect(taglineRules(line, "warn")).toEqual(["tagline-exclusive-word"])
+    }
+  )
+
+  it("does not read 만 inside a word as exclusive", () => {
+    expect(
+      taglineRules(
+        "데모는 송금 앱이고 [src:1], 새카만 화면 위에 파랑 버튼을 둔다 [src:2].",
+        "warn"
+      )
+    ).toEqual([])
+  })
+
+  it.each([
+    [
+      "이고",
+      "데모는 송금 앱이고, 흰 바탕 위에 파랑 버튼을 둔다 [src:1][src:2].",
+    ],
+    ["하고", "데모는 송금 서비스를 운영하고, 흰 바탕을 쓴다 [src:1]."],
+    ["내고", "데모는 가전을 내고, 흰 바탕을 쓴다 [src:1]."],
+    [
+      "the first comma",
+      "데모는 송금 앱으로, 흰 바탕 위에 파랑 버튼을 둔다 [src:1].",
+    ],
+  ])(
+    "warns when the service definition ending at %s carries no [src:N]",
+    (_, line) => {
+      expect(taglineRules(line, "block")).toEqual([])
+      expect(taglineRules(line, "warn")).toEqual(["tagline-definition-uncited"])
+    }
+  )
+
+  it.each([
+    ["cited right after the connective", TAGLINE],
+    [
+      "cited inside the clause",
+      "데모는 [src:1] 송금 앱이고, 흰 바탕을 쓴다 [src:2].",
+    ],
+    [
+      "one clause, cited",
+      "데모는 흰 바탕에 파랑 버튼을 쓰는 송금 앱이다 [src:1].",
+    ],
+  ])("does not warn on a service definition %s", (_, line) => {
+    expect(taglineRules(line, "warn")).toEqual([])
+  })
+})
+
+describe("validateDraft — tagline reading", () => {
+  it("returns the tagline as the reader sees it, with its count and limit", () => {
+    const { tagline } = validateDraft(makeDraft(), OPTS)
+    expect(tagline).toEqual({
+      text: "데모는 송금 앱이고, 흰 바탕 위에 파랑 버튼 하나로 주요 액션을 짚는다.",
+      chars: 41,
+      max: OG_LEDE_MAX_CHARS,
+    })
+  })
+
+  it("reads nothing when the frontmatter fence is missing", () => {
+    const raw = makeDraft().replace(/^---\n/, "")
+    expect(validateDraft(raw, OPTS).tagline).toBeNull()
+    expect(rulesOf(raw).filter((r) => r.startsWith("tagline-"))).toEqual([])
   })
 })
