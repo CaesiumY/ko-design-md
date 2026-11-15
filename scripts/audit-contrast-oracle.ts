@@ -617,6 +617,13 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   60px `border-image` of flat oklch(0.3 0 0) over the panel: on screen
  *   rgb(45) to rgb(46) as the gradient rounds, about 1.55, a fail, where the
  *   stack reads 21: held.
+ * - `.pastshape` and `.pastcontain` cut an absolute white layer across the
+ *   panel down to its middle 40px by a static wrapper, with `clip-path` in
+ *   the one and `contain: paint` in the other, under an absolute run wider
+ *   than that: the run's ends sit on the wash, 1.55, a fail, where the
+ *   layer's box holds the line and released it would read 21. Held;
+ *   `.pastcontain` also by its wrapper's `contain`, which leaves the paint
+ *   order unknown.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -1101,6 +1108,24 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
     id: "raised text over a border image of an ancestor past an opaque block",
     pathEnds: "div.pastimage > div.o > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a layer cut to a strip by a shape",
+    pathEnds: "div.pastshape > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a layer cut to a strip by paint containment",
+    pathEnds: "div.pastcontain > span.t",
     theme: "light",
     state: "default",
     kind: "text",

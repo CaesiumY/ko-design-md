@@ -364,6 +364,19 @@
         gradient, 60px wide and filled, over the panel's 300x120 box: on
         screen the run is black on rgb(45) to rgb(46), as the gradient
         rounds, about 1.55, a fail, where the stack reads 21. Held, as `.pastedge`.
+      - `.pastshape` and `.pastcontain` cut an absolute white layer, placed
+        across the panel's 300x120 by its own containing block, down to the
+        middle 40px, x 130..170, by a static wrapper `.w` that is no
+        containing block for it: `clip-path: inset(0 130px)` in the one,
+        `contain: paint` with the layer placed in the 40px wrapper and
+        widened to 300px in the other. The run is absolute over the
+        panel's middle, later in tree order, so its ends sit on the panel's
+        oklch(0.3 0 0) wash, 1.55, a fail, while the stack at the line's
+        middle stops at the layer's white, whose box holds the line.
+        Released it would read 21. A shape or paint containment cuts the
+        layer wherever it is placed, so both are held. `.pastcontain` is held
+        twice over: `contain` on the wrapper, between the layer and the
+        panel, leaves the paint order unknown as well.
     -->
     <style>
       html {
@@ -419,6 +432,8 @@
       .pastimage,
       .pastclip,
       .pastescape,
+      .pastshape,
+      .pastcontain,
       .pastbox,
       .overblock,
       .lifted,
@@ -1121,6 +1136,8 @@
       .corner::before,
       .pastclip::before,
       .pastescape .f::before,
+      .pastshape::before,
+      .pastcontain::before,
       .overblock::after {
         content: "";
         position: absolute;
@@ -1136,6 +1153,42 @@
         width: 40px;
         height: 100%;
         overflow: hidden;
+      }
+      .pastshape .w,
+      .pastcontain .w {
+        width: 40px;
+        height: 100%;
+      }
+      .pastshape .w {
+        width: 100%;
+        clip-path: inset(0 130px);
+      }
+      .pastcontain .w {
+        position: static;
+        contain: paint;
+      }
+      .pastshape .l,
+      .pastcontain .l {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        background: oklch(1 0 0);
+      }
+      .pastshape .l {
+        left: 0;
+        right: 0;
+      }
+      .pastcontain .l {
+        left: -130px;
+        width: 300px;
+      }
+      .pastshape .t,
+      .pastcontain .t {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 48px;
+        text-align: center;
       }
       .pastimage::before {
         content: "";
@@ -1337,6 +1390,14 @@
     </div>
     <div class="pastimage">
       <div class="o"><span class="t">Sample text</span></div>
+    </div>
+    <div class="pastshape">
+      <div class="w"><div class="l"></div></div>
+      <span class="t">Sample text</span>
+    </div>
+    <div class="pastcontain">
+      <div class="w"><div class="l"></div></div>
+      <span class="t">Sample text</span>
     </div>
   </body>
 </html>

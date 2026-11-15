@@ -724,8 +724,20 @@ export function collectContrast(): Collected {
   const placerOf = (parent: Element, position: string): Element | null => {
     const fixed = position === "fixed"
     if (!fixed && position !== "absolute") return parent
-    return placingAncestor(parent, fixed)
+    return placingAncestor(parent, fixed, true)
   }
+
+  // Whether an element clips its descendants' paint to its padding box:
+  // `contain: paint`, `strict` or `content`, or a `content-visibility` other
+  // than `visible`.
+  const containsPaint = (c: CSSStyleDeclaration): boolean =>
+    c.contentVisibility !== "visible" ||
+    /\b(paint|strict|content)\b/.test(c.contain)
+
+  // Whether an element places its descendants' `absolute` and `fixed` boxes
+  // by containment: paint containment, or `contain: layout`.
+  const placesByContainment = (c: CSSStyleDeclaration): boolean =>
+    containsPaint(c) || /\blayout\b/.test(c.contain)
 
   // Whether a clip on `e` cuts a box placed in `box`. An overflow clip cuts
   // what is placed, box by box, in the element or inside it: the walk goes
@@ -752,7 +764,7 @@ export function collectContrast(): Collected {
   // How an element cuts what its descendants paint short, if it does: to
   // its padding box (`overflow`, `contain: paint`), or by a shape its box
   // does not say (`clip-path`, a mask).
-  const clipOf = (e: Element): ClipBox | null => {
+  const clipOf = (e: Element): { cut: ClipBox; scoped: boolean } | null => {
     const c = getComputedStyle(e)
     const shaped =
       c.clipPath !== "none" ||
@@ -760,24 +772,25 @@ export function collectContrast(): Collected {
       // The legacy `clip` cuts an absolute or fixed box to a rectangle.
       ((c.position === "absolute" || c.position === "fixed") &&
         c.clip !== "auto")
-    const boxed =
-      c.overflowX !== "visible" ||
-      c.overflowY !== "visible" ||
-      // Its contents skipped or not, `content-visibility` contains paint.
-      c.contentVisibility !== "visible" ||
-      /\b(paint|strict|content)\b/.test(c.contain)
-    if (!shaped && !boxed) return null
+    const contained = containsPaint(c)
+    const overflows = c.overflowX !== "visible" || c.overflowY !== "visible"
+    if (!shaped && !contained && !overflows) return null
     return {
-      box: ownerBoxOf(e),
-      borders: [
-        c.borderTopWidth,
-        c.borderRightWidth,
-        c.borderBottomWidth,
-        c.borderLeftWidth,
-      ],
-      radii: radiiOf(c),
-      cornerShapes: cornerShapesOf(c),
-      shaped,
+      // A shape or paint containment cuts whatever is inside the element,
+      // wherever it is placed; an overflow clip only what is placed in it.
+      scoped: shaped || contained,
+      cut: {
+        box: ownerBoxOf(e),
+        borders: [
+          c.borderTopWidth,
+          c.borderRightWidth,
+          c.borderBottomWidth,
+          c.borderLeftWidth,
+        ],
+        radii: radiiOf(c),
+        cornerShapes: cornerShapesOf(c),
+        shaped,
+      },
     }
   }
 
@@ -798,11 +811,15 @@ export function collectContrast(): Collected {
     )
     const clips: Array<ClipBox> = []
     for (let up = e.parentElement; up !== null; up = up.parentElement) {
-      const cut = clipOf(up)
-      if (cut === null || !cutsIn(up, layerIn)) continue
-      if (pseudosIn.some((box) => !cutsIn(up, box))) {
-        clips.push(cut)
-      }
+      const clip = clipOf(up)
+      if (clip === null) continue
+      // A scoped clip cuts the layer, inside it, and a pseudo-element only
+      // when its owner is `up` or inside it.
+      const cutsLayer = clip.scoped || cutsIn(up, layerIn)
+      const leaves = clip.scoped
+        ? owners.some(({ owner }) => owner !== up && !up.contains(owner))
+        : pseudosIn.some((box) => !cutsIn(up, box))
+      if (cutsLayer && leaves) clips.push(clip.cut)
     }
     return {
       box: ownerBoxOf(e),
@@ -1002,23 +1019,34 @@ export function collectContrast(): Collected {
     return unsure
   }
 
-  // The box a positioned pseudo-element of `el` is placed in: the padding box
-  // of the nearest ancestor that captures it — `el` itself first, since the
-  // pseudo-element is its child — or, with none, the viewport for a fixed one
-  // and the document's origin for an absolute one. Read at sample time, as the
-  // overlay candidates' rects are: the page scrolls between samples.
   // The nearest element from `start` up that places an `absolute` box, or a
-  // `fixed` one when `fixed`, or null when none does.
-  function placingAncestor(start: Element, fixed: boolean): Element | null {
+  // `fixed` one when `fixed`, or null when none does. With `containment`,
+  // paint and layout containment place them too; `containingBlockOf` leaves
+  // those to `unsureOf`, which holds what is placed under them.
+  function placingAncestor(
+    start: Element,
+    fixed: boolean,
+    containment = false
+  ): Element | null {
     let cb: Element | null = start
     while (cb !== null) {
       const c = getComputedStyle(cb)
-      if (capturesFixed(c) || (!fixed && c.position !== "static")) break
+      if (
+        capturesFixed(c) ||
+        (containment && placesByContainment(c)) ||
+        (!fixed && c.position !== "static")
+      )
+        break
       cb = cb.parentElement
     }
     return cb
   }
 
+  // The box a positioned pseudo-element of `el` is placed in: the padding box
+  // of the nearest ancestor that captures it — `el` itself first, since the
+  // pseudo-element is its child — or, with none, the viewport for a fixed one
+  // and the document's origin for an absolute one. Read at sample time, as the
+  // overlay candidates' rects are: the page scrolls between samples.
   function containingBlockOf(
     el: Element,
     fixed: boolean
