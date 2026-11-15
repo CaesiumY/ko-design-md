@@ -338,7 +338,7 @@ elevation:
   kr-box-shadow-base: 2px 4px 12px 0 oklch(0 0 0 / 0.16)   # 국내 운영 CSS --box-shadow--base = 2px 4px 12px 0 rgba(0,0,0,.16) · 쓰는 컴포넌트 미확인
 ---
 
-LG전자는 가전 브랜드이고, 글로벌 사이트는 Warm Grey 바탕 위에 풀블리드 사진 캐러셀과 크게 둥근 카드를 놓아 여백을 넓게 쓴다 [src:12].
+LG전자는 가전 브랜드이고 [src:1][src:3][src:4][src:5], 글로벌 사이트는 Warm Grey 바탕 위에 풀블리드 사진 캐러셀과 크게 둥근 카드를 놓아 여백을 넓게 쓴다 [src:12].
 
 ## Brand & Style
 

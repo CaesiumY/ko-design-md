@@ -120,7 +120,7 @@ elevation:
   level4: 0px 8px 20px oklch(0.218 0 0 / 0.1) # rgba(26, 26, 26, 0.1) — iOS offset 8 · radius 10 / Android elevation 16 · 소비자 웹 홈 카테고리 패널과 같은 값
 ---
 
-직방은 부동산 플랫폼이고, 주 버튼과 탭 밑줄, 체크박스, 하단 내비 활성 아이콘을 모두 같은 오렌지로 칠한다 [src:8][src:32][src:25][src:16].
+직방은 부동산 플랫폼이고 [src:75], 주 버튼과 탭 밑줄, 체크박스, 하단 내비 활성 아이콘을 모두 같은 오렌지로 칠한다 [src:8][src:32][src:25][src:16].
 
 ## Brand & Style
 
