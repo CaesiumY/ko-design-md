@@ -645,10 +645,6 @@ const MAYBE_CONTEXT = [
 const isPositioned = (b: OrderBox): boolean => b.position !== "static"
 
 /**
- * Whether an element makes a stacking context, or null when that is not
- * known from what was read.
- */
-/**
  * Whether unhit paint can come between a pseudo-element and what is read:
  * anything inside its owner (`unhitPaint`), or anything near the area outside
  * an owner that is not certainly a stacking context (`unhitPaintNear`).
@@ -657,6 +653,10 @@ export function unhitPaintBetween(p: RawPseudo): boolean {
   return p.unhitPaint || (p.unhitPaintNear && makesContext(p.owner) !== true)
 }
 
+/**
+ * Whether an element makes a stacking context, or null when that is not
+ * known from what was read.
+ */
 function makesContext(b: OrderBox): boolean | null {
   const maybe = b.contextProps.some((s) =>
     MAYBE_CONTEXT.some((name) => s.startsWith(`${name}:`))
