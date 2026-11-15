@@ -698,7 +698,7 @@ export function collectContrast(): Collected {
   ): { past?: Array<RawPseudo>; stop?: StopBox } {
     const skip = new Set([...walked, ...hit.slice(0, index)])
     const past: Array<RawPseudo> = []
-    let farthest: Element | null = null
+    const owners: Array<{ owner: Element; position: string }> = []
     for (let up = start; up !== null; up = up.parentElement) {
       if (skip.has(up) || !hasShownPseudo(up)) continue
       // Where it lands and its paint order are all that is asked of it, so
@@ -707,13 +707,49 @@ export function collectContrast(): Collected {
         accept: pseudoShows,
         nested: true,
       })
-      if (found.length > 0) farthest = up
+      for (const p of found) owners.push({ owner: up, position: p.position })
       past.push(...found)
     }
     if (past.length === 0) return {}
     return stopped === null
       ? { past }
-      : { past, stop: stopBoxOf(stopped, farthest) }
+      : { past, stop: stopBoxOf(stopped, owners) }
+  }
+
+  // The element whose box a pseudo-element of `owner` is placed in: `owner`
+  // itself for one in flow or `relative`, the nearest ancestor that places
+  // an `absolute` or `fixed` box for those, or null for the initial
+  // containing block or the viewport. As `containingBlockOf` walks.
+  const placerOf = (owner: Element, position: string): Element | null => {
+    const fixed = position === "fixed"
+    if (!fixed && position !== "absolute") return owner
+    let cb: Element | null = owner
+    while (cb !== null) {
+      const c = getComputedStyle(cb)
+      if (capturesFixed(c) || (!fixed && c.position !== "static")) break
+      cb = cb.parentElement
+    }
+    return cb
+  }
+
+  // Whether a clip on `e` also cuts a pseudo-element of `owner` placed in
+  // `placer`: `e` is the owner or above it, and the box it is placed in is
+  // `e` or inside it. The root's clip, and the `body`'s it passes to the
+  // viewport, cut everything.
+  const clipsToo = (
+    e: Element,
+    owner: Element,
+    placer: Element | null
+  ): boolean => {
+    if (e === document.documentElement) return true
+    if (
+      e === document.body &&
+      getComputedStyle(document.documentElement).overflow === "visible"
+    ) {
+      return true
+    }
+    if (e !== owner && owner.contains(e)) return false
+    return placer !== null && (placer === e || e.contains(placer))
   }
 
   // How an element cuts what its descendants paint short, if it does: to
@@ -721,10 +757,17 @@ export function collectContrast(): Collected {
   // does not say (`clip-path`, a mask).
   const clipOf = (e: Element): ClipBox | null => {
     const c = getComputedStyle(e)
-    const shaped = c.clipPath !== "none" || c.maskImage !== "none"
+    const shaped =
+      c.clipPath !== "none" ||
+      c.maskImage !== "none" ||
+      // The legacy `clip` cuts an absolute or fixed box to a rectangle.
+      ((c.position === "absolute" || c.position === "fixed") &&
+        c.clip !== "auto")
     const boxed =
       c.overflowX !== "visible" ||
       c.overflowY !== "visible" ||
+      // Its contents skipped or not, `content-visibility` contains paint.
+      c.contentVisibility !== "visible" ||
       /\b(paint|strict|content)\b/.test(c.contain)
     if (!shaped && !boxed) return null
     return {
@@ -741,17 +784,26 @@ export function collectContrast(): Collected {
     }
   }
 
-  // What the background of the layer a stack stopped at covers. `owner` is
-  // the farthest owner of a pseudo-element past it: a clip on an element
-  // between the two may cut the layer short and leave the pseudo-element
-  // whole. Reading up to the farthest one holds for every nearer owner too.
-  const stopBoxOf = (e: Element, owner: Element | null): StopBox => {
+  // What the background of the layer a stack stopped at covers. A clip on
+  // one of its ancestors cuts the layer short; it hides a pseudo-element
+  // under the layer only where it cuts that pseudo-element too, so every
+  // clip that leaves one of `owners`' pseudo-elements whole is handed over.
+  const stopBoxOf = (
+    e: Element,
+    owners: Array<{ owner: Element; position: string }>
+  ): StopBox => {
     const c = getComputedStyle(e)
+    const placed = owners.map(({ owner, position }) => ({
+      owner,
+      placer: placerOf(owner, position),
+    }))
     const clips: Array<ClipBox> = []
-    for (let up = e.parentElement; up !== null && up !== owner;) {
+    for (let up = e.parentElement; up !== null; up = up.parentElement) {
       const cut = clipOf(up)
-      if (cut !== null) clips.push(cut)
-      up = up.parentElement
+      if (cut === null) continue
+      if (placed.some(({ owner, placer }) => !clipsToo(up, owner, placer))) {
+        clips.push(cut)
+      }
     }
     return {
       box: ownerBoxOf(e),

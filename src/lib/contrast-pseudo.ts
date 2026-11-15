@@ -314,10 +314,12 @@ export interface StopBox {
    */
   canvas: boolean
   /**
-   * The elements between it and the farthest owner past it, that owner left
-   * out, that cut what it paints short: an `overflow` other than `visible`,
-   * `contain: paint`, a `clip-path` or a mask. Its own box says what of its
-   * background shows only where each of them holds the area.
+   * Its ancestors that cut what it paints short — an `overflow` other than
+   * `visible`, paint containment, a `clip-path`, a mask, a legacy `clip` —
+   * and leave a pseudo-element past it whole: one inside that pseudo-element's
+   * owner, or one at the owner or above that the pseudo-element is placed
+   * outside of. Its own box says what of its background shows only where
+   * each of them holds the area.
    */
   clips: Array<ClipBox>
 }
@@ -349,9 +351,9 @@ export interface ClipBox {
  * the whole area too: its padding box, which every background clip but
  * `content-box` paints, cut by its rounded corners — the outer radii, which
  * cut more than the inner ones do — with no clip or mask over it, and not
- * the canvas's. Each element between it and the owner that clips holds the
- * area as well: an overflow clip by its padding box and rounded corners, a
- * `clip-path` or a mask never, its shape not read.
+ * the canvas's. Each clip that cuts the layer and not the pseudo-element
+ * holds the area as well: an overflow clip by its padding box and rounded
+ * corners, a `clip-path`, a mask or a legacy `clip` never, its shape not read.
  *
  * A 3D context (`transform-style: preserve-3d` anywhere from the owner up)
  * sorts by depth instead, so it answers no, as does anything `paintOrder`

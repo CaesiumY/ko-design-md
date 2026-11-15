@@ -608,6 +608,14 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   with `overflow: hidden`, under an absolute run wider than the wrapper:
  *   the run's ends sit on the wash, 1.55, a fail. The block's box holds the
  *   line, so released it would read 21; the wrapper's clip holds it.
+ * - `.pastescape` puts that clip on the owner of the wash, a static 40px
+ *   wrapper whose absolute `::before` is placed in the panel, outside the
+ *   clip, as is the absolute run inside the wrapper: the run's ends sit on
+ *   the wash, 1.55, a fail; released it would
+ *   read 21. Held.
+ * - `.pastimage` is `.past` with a `::before` that paints only a filled
+ *   60px `border-image` of flat oklch(0.3 0 0) over the panel: on screen
+ *   1.55, a fail, where the stack reads 21: held.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -1074,6 +1082,24 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
     id: "raised text over a clipped block over a wash of an ancestor",
     pathEnds: "div.pastclip > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a block clipped at the owner of an escaping wash",
+    pathEnds: "div.pastescape > div.f > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a border image of an ancestor past an opaque block",
+    pathEnds: "div.pastimage > div.o > span.t",
     theme: "light",
     state: "default",
     kind: "text",

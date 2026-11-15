@@ -351,6 +351,19 @@
         line's middle, stops at the block's white, whose box holds the line,
         and released it would read 21. An element between the layer and the
         owner that clips the layer holds the reading.
+      - `.pastescape` moves that clip onto the owner: `.f`, the 40px
+        wrapper, static with `overflow: hidden`, owns the wash, an absolute
+        `::before` placed in the panel, outside `.f`, so `.f` clips the
+        white block and not the wash. The run is inside `.f` too, absolute
+        and placed in the panel like the wash, so it escapes the clip as
+        well and its ends sit on the wash, 1.55, a fail; released it would
+        read 21. A clip at the owner that the
+        pseudo-element is placed outside of holds the reading.
+      - `.pastimage` is `.past` with its `::before` painting no background
+        and no border, only a `border-image` of a flat oklch(0.3 0 0)
+        gradient, 60px wide and filled, over the panel's 300x120 box: on
+        screen the run is black on rgb(46) again, 1.55, a fail, where the
+        stack reads 21. Held, as `.pastedge`.
     -->
     <style>
       html {
@@ -403,7 +416,9 @@
       .collapsed,
       .past,
       .pastedge,
+      .pastimage,
       .pastclip,
+      .pastescape,
       .pastbox,
       .overblock,
       .lifted,
@@ -1104,6 +1119,8 @@
       .pastbox::before,
       .lifted::before,
       .corner::before,
+      .pastclip::before,
+      .pastescape .f::before,
       .overblock::after {
         content: "";
         position: absolute;
@@ -1114,26 +1131,31 @@
       .overblock::after {
         background: oklch(0 0 0 / 0.6);
       }
-      .pastclip::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: oklch(0.3 0 0);
-        pointer-events: none;
-      }
-      .pastclip .c {
+      .pastclip .c,
+      .pastescape .f {
         width: 40px;
         height: 100%;
         overflow: hidden;
       }
-      .pastclip .o {
+      .pastimage::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: transparent;
+        border-image: linear-gradient(oklch(0.3 0 0), oklch(0.3 0 0)) 1 fill /
+          60px;
+        pointer-events: none;
+      }
+      .pastclip .o,
+      .pastescape .o {
         position: relative;
         width: 300px;
         height: 100%;
         margin-left: -130px;
         background: oklch(1 0 0);
       }
-      .pastclip .t {
+      .pastclip .t,
+      .pastescape .t {
         position: absolute;
         left: 0;
         right: 0;
@@ -1150,6 +1172,7 @@
       }
       .past .o,
       .pastedge .o,
+      .pastimage .o,
       .pastbox .o,
       .overblock .o {
         width: 100%;
@@ -1160,7 +1183,8 @@
         background: oklch(1 0 0);
       }
       .past .t,
-      .pastedge .t {
+      .pastedge .t,
+      .pastimage .t {
         position: relative;
       }
       .lifted .o,
@@ -1304,6 +1328,15 @@
     <div class="pastclip">
       <div class="c"><div class="o"></div></div>
       <span class="t">Sample text</span>
+    </div>
+    <div class="pastescape">
+      <div class="f">
+        <div class="o"></div>
+        <span class="t">Sample text</span>
+      </div>
+    </div>
+    <div class="pastimage">
+      <div class="o"><span class="t">Sample text</span></div>
     </div>
   </body>
 </html>
