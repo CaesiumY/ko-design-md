@@ -377,6 +377,19 @@
         layer wherever it is placed, so both are held. `.pastcontain` is held
         twice over: `contain` on the wrapper, between the layer and the
         panel, leaves the paint order unknown as well.
+      - `.pastrect` cuts the absolute white layer itself down to the middle
+        40px with the legacy `clip: rect(0 170px 120px 130px)`, under the
+        same absolute run: its ends sit on the wash, 1.55, a fail, where the
+        layer's box holds the line and released it would read 21. The
+        layer's own clip holds the reading.
+      - `.pastboth` puts both kinds of clip on one static 40px wrapper,
+        `.w`: `overflow: hidden`, and a `clip-path: inset(-200px)` that cuts
+        nothing in the panel. Inside it `.f`, static, owns the wash, an
+        absolute `::before` placed in the panel, and holds a raised white
+        layer, 300px wide at `margin-left: -130px`, and the absolute run.
+        The overflow clip cuts the layer to x 130..170 and lets the wash and
+        the run, placed in the panel, through: the run's ends sit on the
+        wash, 1.55, a fail, where released it would read 21. Held.
     -->
     <style>
       html {
@@ -434,6 +447,8 @@
       .pastescape,
       .pastshape,
       .pastcontain,
+      .pastrect,
+      .pastboth,
       .pastbox,
       .overblock,
       .lifted,
@@ -1138,6 +1153,8 @@
       .pastescape .f::before,
       .pastshape::before,
       .pastcontain::before,
+      .pastrect::before,
+      .pastboth .f::before,
       .overblock::after {
         content: "";
         position: absolute;
@@ -1182,8 +1199,32 @@
         left: -130px;
         width: 300px;
       }
+      .pastboth .w {
+        width: 40px;
+        height: 100%;
+        overflow: hidden;
+        clip-path: inset(-200px);
+      }
+      .pastboth .f {
+        height: 100%;
+      }
+      .pastboth .l {
+        position: relative;
+        width: 300px;
+        height: 100%;
+        margin-left: -130px;
+        background: oklch(1 0 0);
+      }
+      .pastrect .l {
+        position: absolute;
+        inset: 0;
+        background: oklch(1 0 0);
+        clip: rect(0 170px 120px 130px);
+      }
       .pastshape .t,
-      .pastcontain .t {
+      .pastcontain .t,
+      .pastrect .t,
+      .pastboth .t {
         position: absolute;
         left: 0;
         right: 0;
@@ -1398,6 +1439,18 @@
     <div class="pastcontain">
       <div class="w"><div class="l"></div></div>
       <span class="t">Sample text</span>
+    </div>
+    <div class="pastrect">
+      <div class="l"></div>
+      <span class="t">Sample text</span>
+    </div>
+    <div class="pastboth">
+      <div class="w">
+        <div class="f">
+          <div class="l"></div>
+          <span class="t">Sample text</span>
+        </div>
+      </div>
     </div>
   </body>
 </html>

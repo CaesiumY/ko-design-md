@@ -624,6 +624,14 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   layer's box holds the line and released it would read 21. Held;
  *   `.pastcontain` also by its wrapper's `contain`, which leaves the paint
  *   order unknown.
+ * - `.pastrect` cuts the absolute white layer itself to that strip with the
+ *   legacy `clip: rect()`: the run's ends sit on the wash, 1.55, a fail,
+ *   where released it would read 21. Held.
+ * - `.pastboth` puts an `overflow: hidden` and a `clip-path` that cuts
+ *   nothing on one static 40px wrapper, over a raised white layer and an
+ *   absolute wash and run placed in the panel: the overflow cuts the layer
+ *   and lets the wash through, so the run's ends sit on it, 1.55, a fail,
+ *   where released it would read 21. Held.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -1126,6 +1134,24 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
     id: "raised text over a layer cut to a strip by paint containment",
     pathEnds: "div.pastcontain > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a layer cut to a strip by its own clip",
+    pathEnds: "div.pastrect > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a layer an overflow clip cuts beside a shape",
+    pathEnds: "div.pastboth > div.w > div.f > span.t",
     theme: "light",
     state: "default",
     kind: "text",

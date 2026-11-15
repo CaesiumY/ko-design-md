@@ -764,7 +764,7 @@ export function collectContrast(): Collected {
   // How an element cuts what its descendants paint short, if it does: to
   // its padding box (`overflow`, `contain: paint`), or by a shape its box
   // does not say (`clip-path`, a mask).
-  const clipOf = (e: Element): { cut: ClipBox; scoped: boolean } | null => {
+  const clipsOf = (e: Element): Array<{ cut: ClipBox; scoped: boolean }> => {
     const c = getComputedStyle(e)
     const shaped =
       c.clipPath !== "none" ||
@@ -774,24 +774,25 @@ export function collectContrast(): Collected {
         c.clip !== "auto")
     const contained = containsPaint(c)
     const overflows = c.overflowX !== "visible" || c.overflowY !== "visible"
-    if (!shaped && !contained && !overflows) return null
-    return {
-      // A shape or paint containment cuts whatever is inside the element,
-      // wherever it is placed; an overflow clip only what is placed in it.
-      scoped: shaped || contained,
-      cut: {
-        box: ownerBoxOf(e),
-        borders: [
-          c.borderTopWidth,
-          c.borderRightWidth,
-          c.borderBottomWidth,
-          c.borderLeftWidth,
-        ],
-        radii: radiiOf(c),
-        cornerShapes: cornerShapesOf(c),
-        shaped,
-      },
-    }
+    const cut = (isShaped: boolean): ClipBox => ({
+      box: ownerBoxOf(e),
+      borders: [
+        c.borderTopWidth,
+        c.borderRightWidth,
+        c.borderBottomWidth,
+        c.borderLeftWidth,
+      ],
+      radii: radiiOf(c),
+      cornerShapes: cornerShapesOf(c),
+      shaped: isShaped,
+    })
+    // A shape or paint containment cuts whatever is inside the element,
+    // wherever it is placed; an overflow clip only what is placed in it. An
+    // element may do both, and each is weighed on its own.
+    const out: Array<{ cut: ClipBox; scoped: boolean }> = []
+    if (shaped || contained) out.push({ cut: cut(shaped), scoped: true })
+    if (overflows) out.push({ cut: cut(false), scoped: false })
+    return out
   }
 
   // What the background of the layer a stack stopped at covers. A clip on
@@ -811,15 +812,29 @@ export function collectContrast(): Collected {
     )
     const clips: Array<ClipBox> = []
     for (let up = e.parentElement; up !== null; up = up.parentElement) {
-      const clip = clipOf(up)
-      if (clip === null) continue
-      // A scoped clip cuts the layer, inside it, and a pseudo-element only
-      // when its owner is `up` or inside it.
-      const cutsLayer = clip.scoped || cutsIn(up, layerIn)
-      const leaves = clip.scoped
-        ? owners.some(({ owner }) => owner !== up && !up.contains(owner))
-        : pseudosIn.some((box) => !cutsIn(up, box))
-      if (cutsLayer && leaves) clips.push(clip.cut)
+      for (const clip of clipsOf(up)) {
+        // A scoped clip cuts the layer, inside it, and a pseudo-element only
+        // when its owner is `up` or inside it.
+        const cutsLayer = clip.scoped || cutsIn(up, layerIn)
+        const leaves = clip.scoped
+          ? owners.some(({ owner }) => owner !== up && !up.contains(owner))
+          : pseudosIn.some((box) => !cutsIn(up, box))
+        if (cutsLayer && leaves) clips.push(clip.cut)
+      }
+    }
+    // The layer's own legacy `clip` cuts its background and never a
+    // pseudo-element of an ancestor: a shaped clip, as `clip-path` is.
+    if (
+      (c.position === "absolute" || c.position === "fixed") &&
+      c.clip !== "auto"
+    ) {
+      clips.push({
+        box: ownerBoxOf(e),
+        borders: ["0px", "0px", "0px", "0px"],
+        radii: ["0px", "0px", "0px", "0px"],
+        cornerShapes: ["round", "round", "round", "round"],
+        shaped: true,
+      })
     }
     return {
       box: ownerBoxOf(e),
