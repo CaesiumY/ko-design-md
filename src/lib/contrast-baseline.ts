@@ -511,9 +511,9 @@ export const BASELINE_TABLE = `\
 | bezier | dark | non-text | 42 | 45 | 10 | 2 | 1 |
 | bezier | light | text | 175 | 349 | 54 | 10 | 9 |
 | bezier | light | non-text | 41 | 44 | 18 | 9 | 1 |
-| chzzk | dark | text | 139 | 300 | 10 | 1 | 1 |
+| chzzk | dark | text | 139 | 300 | 10 | 1 | 2 |
 | chzzk | dark | non-text | 4 | 4 | 1 | 0 | 0 |
-| chzzk | light | text | 141 | 300 | 17 | 0 | 1 |
+| chzzk | light | text | 141 | 300 | 17 | 0 | 2 |
 | chzzk | light | non-text | 4 | 4 | 2 | 0 | 0 |
 | class101 | dark | text | 100 | 160 | 24 | 0 | 6 |
 | class101 | dark | non-text | 16 | 18 | 11 | 1 | 0 |
