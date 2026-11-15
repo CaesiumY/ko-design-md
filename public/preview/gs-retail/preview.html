@@ -574,7 +574,8 @@
 
       /* primary-dark 는 근접 검정이라 어두운 지면에서 사라진다. 색상각과
          채도는 유지한 채 명도만 올렸다. 발행된 다크 토큰이 아니다.
-         눌림과 비활성도 (가정): 라이트의 눌림이 더 어두워지는 방향만 따랐다. */
+         눌림과 비활성도 (가정): 눌림은 라이트처럼 기본보다 어둡게, 비활성
+         배경은 어두운 지면에 가깝게, 비활성 글자는 흐린 회색으로 두었다. */
       --cta-bg: oklch(0.430 0.036 259);
       --cta-bg-pressed: oklch(0.355 0.032 259);
       --cta-bg-disabled: oklch(0.278 0.018 265);
@@ -683,15 +684,15 @@
           <div class="btn-row">
             <div class="btn-demo">
               <button class="btn" type="button">결제하기</button>
-              <span class="lab">기본 — 확인된 값</span>
+              <span class="lab">기본 — 확인된 값(다크는 가정)</span>
             </div>
             <div class="btn-demo">
               <button class="btn is-pressed" type="button">결제하기</button>
-              <span class="lab">누름 — 확인된 값(라이트)</span>
+              <span class="lab">누름 — 확인된 값(다크는 가정)</span>
             </div>
             <div class="btn-demo">
               <button class="btn" type="button" disabled>결제하기</button>
-              <span class="lab">비활성 — 확인된 값(라이트)</span>
+              <span class="lab">비활성 — 확인된 값(다크는 가정)</span>
             </div>
           </div>
         </div>
