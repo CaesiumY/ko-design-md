@@ -101,9 +101,11 @@
       --shade: 0 1px 2px oklch(0 0 0 / 0.05), 0 8px 20px oklch(0 0 0 / 0.07);
       --shade-lift: 0 6px 16px oklch(0 0 0 / 0.18);
 
-      /* radius 수치도 하나도 공개돼 있지 않다. 관찰된 것은 성격뿐이라
+      /* 네이티브 radius 수치는 공개돼 있지 않다. 관찰된 것은 성격뿐이라
          (정보는 둥근 직사각 카드, 액션·아이콘·상태는 원 또는 필) 그 성격만
-         재현한다. 이 수치들은 화면 어디에도 값으로 표시하지 않는다. */
+         재현한다. 버튼만은 웹뷰 CSS 의 [class*=button-] 36px 를 따른다.
+         이 수치들은 화면 어디에도 값으로 표시하지 않는다. */
+      --r-button: 36px;
       --r-card: 18px;
       --r-inner: 12px;
       --r-chip: 999px;
@@ -253,7 +255,7 @@
 
     /* ── 버튼 ────────────────────────────────────────────────────────────── */
     .btn {
-      border: 0; border-radius: var(--r-inner);
+      border: 0; border-radius: var(--r-button);
       padding: 12px 20px; font-size: 14px; font-weight: 700;
       line-height: 1.2; cursor: pointer; min-width: 0;
       background: var(--cta-bg); color: var(--cta-ink);
