@@ -16,6 +16,7 @@ import { readFileSync, readdirSync, writeFileSync } from "node:fs"
 import { basename, join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { validateDraft } from "../src/lib/draft-validator"
+import { taglineReport } from "../src/lib/tagline-lint"
 import type {
   DraftValidationOptions,
   ValidationIssue,
@@ -121,6 +122,8 @@ function runSingle(args: CliArgs): void {
   const result = validateDraft(raw, opts)
   const { blocks, warns } = statusLine(basename(file), result.issues)
   printIssues(result.issues)
+  // The Stage 7 checkpoint shows this line instead of counting by eye.
+  if (result.tagline) console.log(`\n${taglineReport(result.tagline)}`)
 
   if (args.jsonOut) {
     const report = {
@@ -129,6 +132,7 @@ function runSingle(args: CliArgs): void {
       schema: 1,
       iteration: args.iteration,
       passed: result.passed,
+      tagline: result.tagline,
       issues: result.issues,
       verdict: `${blocks} block / ${warns} warn — deterministic draft checks ${result.passed ? "passed" : "failed"}`,
     }

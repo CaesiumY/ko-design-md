@@ -75,6 +75,14 @@ Body prose is Korean editorial register: ending with ~다, no honorifics, no mar
 **Pass**: voice is consistent throughout, matches that register.
 **Fail**: any section reads like marketing copy or chatbot output.
 
+**Tagline line** (한 줄 소개, the line directly under the H1). Its rules are stitch-format.md, "Standard section order" (the opening paragraph and the list under it); judge by them, not by this summary. The draft gate already holds its form: it blocks `tagline-multiple-sentences`, `tagline-too-long`, `tagline-no-citation`, `tagline-colour-value`, `tagline-bold`, `tagline-em-dash` and `tagline-html-comment`, and warns on `tagline-exclusive-word` and `tagline-definition-uncited`. Mirror its blocks and do not re-count. Check the three things it cannot see:
+
+1. **Subject.** The sentence's subject is the frontmatter `name`, even when the H1 names the design system.
+2. **Screens.** After what the service does, it says a visual trait of its screens. The service definition uses the cited source's own words: no slogan, campaign line, mission or positioning line, even when the source phrases it that way.
+3. **Citations that back.** Every claim carries a `[src:N]` that actually supports it: open the source behind the service definition and the one behind the screen description. On a `tagline-exclusive-word` warning, decide whether the body and the source back "nothing else"; the gate does not search a bare `만` (빨강만), so look for that yourself. On `tagline-definition-uncited`, decide whether one of the citations gathered at the sentence's end backs the definition.
+
+A tagline line that fails any of the three is a `block` issue whatever the score.
+
 ## Output JSON shape
 
 ```json

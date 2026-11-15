@@ -22,8 +22,13 @@
 // `design-md-skill-tagline.test.ts` holds the two together.
 export const OG_LEDE_MAX_CHARS = 90
 
+// What ends a sentence, as a regex source: a terminator the share card cuts
+// after when whitespace or the end of the text follows it. The draft gate
+// counts a tagline's sentences with the same judgement.
+export const SENTENCE_END = "(?:[다요죠함음네지야]\\.|[.!?？！])"
+
 const FIRST_SENTENCE = new RegExp(
-  `^(.{8,${OG_LEDE_MAX_CHARS}}?(?:[다요죠함음네지야]\\.|[.!?？！]))(?:\\s|$)`,
+  `^(.{8,${OG_LEDE_MAX_CHARS}}?${SENTENCE_END})(?:\\s|$)`,
   "u"
 )
 
