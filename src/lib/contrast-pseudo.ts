@@ -314,12 +314,24 @@ export interface StopBox {
    */
   canvas: boolean
   /**
-   * Its ancestors that cut what it paints short — an `overflow` other than
-   * `visible`, paint containment, a `clip-path`, a mask, a legacy `clip` —
-   * and leave a pseudo-element past it whole: one inside that pseudo-element's
-   * owner, or one at the owner or above that the pseudo-element is placed
-   * outside of. Its own box says what of its background shows only where
-   * each of them holds the area.
+   * What cuts what it paints short and leaves a pseudo-element past it
+   * whole, so that its own box says what of its background shows only where
+   * each of these holds the area:
+   *
+   * - an ancestor's `overflow` other than `visible`, which cuts only boxes
+   *   whose containing-block chain passes through that ancestor — cutting
+   *   the layer, and missing a pseudo-element placed outside it;
+   * - an ancestor's `clip-path`, mask, mask border, legacy `clip` or paint
+   *   containment, which cuts everything inside it, so the layer always and
+   *   a pseudo-element only when its owner is that ancestor or inside it;
+   * - the layer's own legacy `clip` or mask border, which cuts it and never
+   *   an ancestor's pseudo-element;
+   * - a turn, skew or scale — a non-translating `transform`, `rotate`,
+   *   `scale`, a motion path, `zoom`, or a `perspective` above — anywhere
+   *   from the layer up, which leaves every rect here a box round some other
+   *   shape.
+   *
+   * The last two, and the shape cuts, come `shaped`.
    */
   clips: Array<ClipBox>
 }
@@ -335,8 +347,9 @@ export interface ClipBox {
   /** Its four `corner-*-shape` values, written as `RawPseudo.cornerShapes` is. */
   cornerShapes: Corners
   /**
-   * It clips by a shape its box does not say — a `clip-path` or a mask —
-   * rather than to its padding box (`overflow`, `contain: paint`).
+   * What it cuts to is not its padding box — a `clip-path`, a mask, a mask
+   * border, a legacy `clip`, or a box a turn or a motion path has bent —
+   * rather than an `overflow` or paint containment's padding box.
    */
   shaped: boolean
 }
@@ -351,9 +364,10 @@ export interface ClipBox {
  * the whole area too: its padding box, which every background clip but
  * `content-box` paints, cut by its rounded corners — the outer radii, which
  * cut more than the inner ones do — with no clip or mask over it, and not
- * the canvas's. Each clip that cuts the layer and not the pseudo-element
- * holds the area as well: an overflow clip by its padding box and rounded
- * corners, a `clip-path`, a mask or a legacy `clip` never, its shape not read.
+ * the canvas's. Each of `stop.clips` holds the area as well: an overflow clip
+ * or paint containment by its padding box and rounded corners, a `shaped`
+ * one never — a shape cut, whose shape is not read, or a turned, skewed or
+ * scaled box, whose rect is not its shape.
  *
  * A 3D context (`transform-style: preserve-3d` anywhere from the owner up)
  * sorts by depth instead, so it answers no, as does anything `paintOrder`
