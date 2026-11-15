@@ -764,14 +764,36 @@ export function collectContrast(): Collected {
   // How an element cuts what its descendants paint short, if it does: to
   // its padding box (`overflow`, `contain: paint`), or by a shape its box
   // does not say (`clip-path`, a mask).
+  // Whether an element cuts its own paint and its descendants' by a shape
+  // its box does not say: a `clip-path`, a mask or a mask border, or the
+  // legacy `clip`, which cuts an absolute or fixed box to a rectangle.
+  const cutsByShape = (c: CSSStyleDeclaration): boolean =>
+    c.clipPath !== "none" ||
+    c.maskImage !== "none" ||
+    // Read by name: a property this browser does not know reads as "".
+    !["", "none"].includes(c.getPropertyValue("mask-border-source")) ||
+    !["", "none"].includes(
+      c.getPropertyValue("-webkit-mask-box-image-source")
+    ) ||
+    ((c.position === "absolute" || c.position === "fixed") && c.clip !== "auto")
+
+  // Whether an element turns, skews or scales what it paints, which leaves
+  // its rect, and every rect inside it, a box round a shape that is not
+  // that box. A translation only moves it, which the rect keeps up with.
+  const bendsBox = (c: CSSStyleDeclaration): boolean => {
+    const t = c.transform
+    const moved =
+      t === "none" ||
+      /^matrix\(1, 0, 0, 1, [^,]+, [^,]+\)$/.test(t) ||
+      /^matrix3d\(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, [^,]+, [^,]+, [^,]+, 1\)$/.test(
+        t
+      )
+    return !moved || c.rotate !== "none" || c.scale !== "none"
+  }
+
   const clipsOf = (e: Element): Array<{ cut: ClipBox; scoped: boolean }> => {
     const c = getComputedStyle(e)
-    const shaped =
-      c.clipPath !== "none" ||
-      c.maskImage !== "none" ||
-      // The legacy `clip` cuts an absolute or fixed box to a rectangle.
-      ((c.position === "absolute" || c.position === "fixed") &&
-        c.clip !== "auto")
+    const shaped = cutsByShape(c)
     const contained = containsPaint(c)
     const overflows = c.overflowX !== "visible" || c.overflowY !== "visible"
     const cut = (isShaped: boolean): ClipBox => ({
@@ -822,12 +844,20 @@ export function collectContrast(): Collected {
         if (cutsLayer && leaves) clips.push(clip.cut)
       }
     }
-    // The layer's own legacy `clip` cuts its background and never a
-    // pseudo-element of an ancestor: a shaped clip, as `clip-path` is.
-    if (
-      (c.position === "absolute" || c.position === "fixed") &&
-      c.clip !== "auto"
-    ) {
+    // The layer's own shape cut — a legacy `clip` or a mask border, besides
+    // the `clip-path` and mask `underStop` reads — cuts its background and
+    // never a pseudo-element of an ancestor. And a turn, a skew or a scale
+    // on the layer or above it leaves every rect here a box round some other
+    // shape. Either way its box does not say what of its background shows:
+    // handed over as a shaped clip, as `clip-path` is.
+    let bent = false
+    for (let up: Element | null = e; up !== null; up = up.parentElement) {
+      if (bendsBox(getComputedStyle(up))) {
+        bent = true
+        break
+      }
+    }
+    if (cutsByShape(c) || bent) {
       clips.push({
         box: ownerBoxOf(e),
         borders: ["0px", "0px", "0px", "0px"],

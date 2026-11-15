@@ -632,6 +632,13 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   absolute wash and run placed in the panel: the overflow cuts the layer
  *   and lets the wash through, so the run's ends sit on it, 1.55, a fail,
  *   where released it would read 21. Held.
+ * - `.pastmaskbox` masks the absolute white layer away with a transparent
+ *   `-webkit-mask-box-image`, which leaves the hit test alone: the run sits
+ *   on the wash, 1.55, a fail, where released it would read 21. Held.
+ * - `.pastturn` turns a 200x10 white band 30 degrees: the hit test at the
+ *   line's centre meets it, the line's ends lie off it on the wash, 1.55, a
+ *   fail, and its rect round the turned band holds the line, so released
+ *   it would read 21. Held.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -1152,6 +1159,24 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
     id: "raised text over a layer an overflow clip cuts beside a shape",
     pathEnds: "div.pastboth > div.w > div.f > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a layer masked away by a mask border",
+    pathEnds: "div.pastmaskbox > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a turned band whose rect holds the line",
+    pathEnds: "div.pastturn > span.t",
     theme: "light",
     state: "default",
     kind: "text",

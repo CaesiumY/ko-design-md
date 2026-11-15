@@ -390,6 +390,17 @@
         The overflow clip cuts the layer to x 130..170 and lets the wash and
         the run, placed in the panel, through: the run's ends sit on the
         wash, 1.55, a fail, where released it would read 21. Held.
+      - `.pastmaskbox` is `.pastrect` with the absolute white layer whole
+        but masked away by a transparent `-webkit-mask-box-image`: a mask
+        leaves the hit test alone, so the stack still stops at the layer's
+        white, where the run sits on the wash, 1.55, a fail. Released it
+        would read 21. Held.
+      - `.pastturn` turns a 200x10 absolute white band 30 degrees about its
+        centre, the panel's. The hit test at the line's centre meets the
+        band, but the line's ends and edges lie off it, on the wash, 1.55,
+        a fail. The band's rect, 178x109 round the turned shape, holds the
+        line, so released it would read 21. A turn leaves the rect a box
+        round some other shape: held.
     -->
     <style>
       html {
@@ -449,6 +460,8 @@
       .pastcontain,
       .pastrect,
       .pastboth,
+      .pastmaskbox,
+      .pastturn,
       .pastbox,
       .overblock,
       .lifted,
@@ -1155,6 +1168,8 @@
       .pastcontain::before,
       .pastrect::before,
       .pastboth .f::before,
+      .pastmaskbox::before,
+      .pastturn::before,
       .overblock::after {
         content: "";
         position: absolute;
@@ -1215,6 +1230,21 @@
         margin-left: -130px;
         background: oklch(1 0 0);
       }
+      .pastmaskbox .l {
+        position: absolute;
+        inset: 0;
+        background: oklch(1 0 0);
+        -webkit-mask-box-image: linear-gradient(transparent, transparent);
+      }
+      .pastturn .l {
+        position: absolute;
+        left: 50px;
+        top: 55px;
+        width: 200px;
+        height: 10px;
+        background: oklch(1 0 0);
+        transform: rotate(30deg);
+      }
       .pastrect .l {
         position: absolute;
         inset: 0;
@@ -1224,7 +1254,9 @@
       .pastshape .t,
       .pastcontain .t,
       .pastrect .t,
-      .pastboth .t {
+      .pastboth .t,
+      .pastmaskbox .t,
+      .pastturn .t {
         position: absolute;
         left: 0;
         right: 0;
@@ -1441,6 +1473,14 @@
       <span class="t">Sample text</span>
     </div>
     <div class="pastrect">
+      <div class="l"></div>
+      <span class="t">Sample text</span>
+    </div>
+    <div class="pastmaskbox">
+      <div class="l"></div>
+      <span class="t">Sample text</span>
+    </div>
+    <div class="pastturn">
       <div class="l"></div>
       <span class="t">Sample text</span>
     </div>
