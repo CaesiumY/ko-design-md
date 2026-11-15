@@ -77,7 +77,7 @@ paints reaches past that box — or when its paint covers that box whole and
 its side of the text is known from the paint order, in which case it is
 composed on that side. A pseudo-element of an ancestor the stack never
 reaches — past the opaque layer it stops at, or taking no pointer events —
-holds the reading wherever it reaches the line, unless it paints under the
+holds the reading wherever it paints or draws over the line, unless it paints under the
 opaque layer the stack stopped at and that layer's background holds the
 line. No text in the samsung file sits beside a positioned pseudo-element,
 and the file cannot gain one.

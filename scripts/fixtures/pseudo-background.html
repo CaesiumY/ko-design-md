@@ -336,6 +336,12 @@
         corner. The line box lies past the curve, so the ends of the run sit
         on the dark wash beside the block, not on its white: the block does
         not hold the line and the reading is held. Released, it would read 21.
+      - `.pastedge` is `.past` with its `::before` painting no background,
+        only a 60px solid oklch(0.3 0 0) border on every side. The box is
+        the panel's 300x120, so the borders meet and cover all of it: the run
+        is black on rgb(46) again, 1.55, a fail, where the stack reads 21. A
+        pseudo-element past the stack that draws without a background holds
+        the reading as one that paints does.
     -->
     <style>
       html {
@@ -387,6 +393,7 @@
       .rectclip,
       .collapsed,
       .past,
+      .pastedge,
       .pastbox,
       .overblock,
       .lifted,
@@ -1097,7 +1104,16 @@
       .overblock::after {
         background: oklch(0 0 0 / 0.6);
       }
+      .pastedge::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: transparent;
+        border: 60px solid oklch(0.3 0 0);
+        pointer-events: none;
+      }
       .past .o,
+      .pastedge .o,
       .pastbox .o,
       .overblock .o {
         width: 100%;
@@ -1107,7 +1123,8 @@
         justify-content: center;
         background: oklch(1 0 0);
       }
-      .past .t {
+      .past .t,
+      .pastedge .t {
         position: relative;
       }
       .lifted .o,
@@ -1243,6 +1260,9 @@
       <div class="o"><span class="t">Sample text</span></div>
     </div>
     <div class="corner">
+      <div class="o"><span class="t">Sample text</span></div>
+    </div>
+    <div class="pastedge">
       <div class="o"><span class="t">Sample text</span></div>
     </div>
   </body>

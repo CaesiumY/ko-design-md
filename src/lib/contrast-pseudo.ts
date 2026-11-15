@@ -322,12 +322,14 @@ export interface StopBox {
  *
  * A 3D context (`transform-style: preserve-3d` anywhere from the owner up)
  * sorts by depth instead, so it answers no, as does anything `paintOrder`
- * does not know.
+ * does not know. A `mix-blend-mode` on the layer or above it is not read:
+ * a stack is composed by source-over whatever its blend modes, and "out of
+ * sight" assumes the same.
  */
 export function underStop(p: RawPseudo, stop: StopBox, area: Rect): boolean {
   if (p.unsure.some((s) => s.startsWith("transform-style:"))) return false
   if (stop.clipPath !== "none" || stop.maskImage !== "none") return false
-  const clip = stop.backgroundClip.split(",").at(-1)?.trim()
+  const clip = colourClip(stop.backgroundClip)
   if (clip !== "border-box" && clip !== "padding-box") return false
   const widths = stop.borders.map(px)
   if (widths.some((w) => w === null)) return false

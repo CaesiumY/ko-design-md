@@ -652,27 +652,33 @@ export function collectContrast(): Collected {
   const pseudoDrawsUnread = (cs: CSSStyleDeclaration): boolean =>
     pseudoDraws(cs) && !pseudoPaints(cs)
 
-  // Whether an element has a painted `::before` or `::after` at all, asked
+  // Whether a `::before` or `::after` paints a background or draws without
+  // one — glyphs, a border, a shadow, an outline, a backdrop filter. Past the
+  // stack either can cover the line, and where it lands is all that is asked.
+  const pseudoShows = (cs: CSSStyleDeclaration): boolean =>
+    pseudoPaints(cs) || pseudoDraws(cs)
+
+  // Whether an element has such a `::before` or `::after` at all, asked
   // once per element: the walk below asks it of every ancestor of every
   // point read.
-  const paintsPseudo = new Map<Element, boolean>()
-  const hasPaintedPseudo = (e: Element): boolean => {
-    let known = paintsPseudo.get(e)
+  const showsPseudo = new Map<Element, boolean>()
+  const hasShownPseudo = (e: Element): boolean => {
+    let known = showsPseudo.get(e)
     if (known === undefined) {
       known = ["::before", "::after"].some((ps) =>
-        pseudoPaints(getComputedStyle(e, ps))
+        pseudoShows(getComputedStyle(e, ps))
       )
-      paintsPseudo.set(e, known)
+      showsPseudo.set(e, known)
     }
     return known
   }
 
-  // The painted pseudo-elements of every ancestor of `from`, from `start`
-  // up to the root, whose own layer is not among `walked` — the elements a
-  // stack was read from — nor in front of `from` in `hit`, which `aheadOf`
-  // hands over. One past the opaque layer a stack stopped at is never read,
-  // and one that takes no pointer events is in no hit list at all, yet either
-  // can paint over the line. Whether it reaches the line, or paints under
+  // The pseudo-elements that paint or draw, of every ancestor of `from`,
+  // from `start` up to the root, whose own layer is not among `walked` — the
+  // elements a stack was read from — nor in front of `from` in `hit`, which
+  // `aheadOf` hands over. One past the opaque layer a stack stopped at is
+  // never read, and one that takes no pointer events is in no hit list at
+  // all, yet either can paint or draw over the line. Whether it reaches the line, or paints under
   // `stopped` — the opaque layer the stack stopped at, if it did — is
   // `pseudoEffect`'s to say, so each one's chain runs from `stopped`, and
   // that layer's box goes with them.
@@ -688,8 +694,10 @@ export function collectContrast(): Collected {
     const skip = new Set([...walked, ...hit.slice(0, index)])
     const past: Array<RawPseudo> = []
     for (let up = start; up !== null; up = up.parentElement) {
-      if (skip.has(up) || !hasPaintedPseudo(up)) continue
-      past.push(...paintedPseudos(up, area, stopped ?? from))
+      if (skip.has(up) || !hasShownPseudo(up)) continue
+      past.push(
+        ...paintedPseudos(up, area, stopped ?? from, { accept: pseudoShows })
+      )
     }
     if (past.length === 0) return {}
     return stopped === null ? { past } : { past, stop: stopBoxOf(stopped) }

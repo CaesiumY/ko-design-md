@@ -579,7 +579,7 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   (1.05) / (0.2659) = 3.95 on white, a fail. Composed as the black under
  *   the run either would read 5.32, a pass.
  *
- * The last five are a pseudo-element the stack never reaches: one of an
+ * Those that follow are a pseudo-element the stack never reaches: one of an
  * ancestor of what is read, past the opaque layer the stack stops at, that
  * takes no pointer events. oklch(0.3 0 0) is rgb(46), luminance 0.0273, and
  * black on it is 1.55.
@@ -599,6 +599,10 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   its top-left corner, past the curve, where the run's ends sit on the
  *   dark wash: the block does not hold the line, so held. Released, it would
  *   read 21.
+ * - `.pastedge` is `.past` with a `::before` that paints no background and
+ *   draws only a 60px oklch(0.3 0 0) border on each side of the panel's
+ *   300x120 box, so the borders cover it whole: on screen 1.55, a fail,
+ *   where the stack reads 21: held.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -1047,6 +1051,15 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
     id: "text past the curve of a raised block over a wash of an ancestor",
     pathEnds: "div.corner > div.o > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a border of an ancestor past an opaque block",
+    pathEnds: "div.pastedge > div.o > span.t",
     theme: "light",
     state: "default",
     kind: "text",
