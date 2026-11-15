@@ -13,6 +13,7 @@ const box = (over: Partial<OrderBox> = {}): OrderBox => ({
   visibility: "visible",
   canvas: false,
   draws: false,
+  hit: true,
   ...over,
 })
 

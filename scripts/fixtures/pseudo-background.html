@@ -272,6 +272,15 @@
         order and under the run. On screen the run is black on black, a
         fail. Its containing block misses the line; its own box, worked out
         as any pseudo-element's is, does not, and holds it.
+      - `.contents` is a white panel made a stacking context (`z-index: 0`)
+        with a 50% black `::before` at `inset: 0` under a raised black run.
+        Between them a wrapper with `display: contents` takes pointer
+        events, but its `::before`, oklch(0.3 0 0) at `inset: 0`, does not.
+        In the positioned layer the panel's wash, the wrapper's grey and the
+        run paint in that order: on screen black on dark grey, a fail. The
+        wrapper has no box, so no hit list shows it; read as the wash over
+        white the run would pass 5.32. A box on the chain that draws and is
+        not in the hit list at the point holds it.
       - `.elder` holds a white panel that is no stacking context and is not
         positioned, so its 10% black `::before` at `inset: 0` takes the
         wrapper for its containing block. The wrapper, an ancestor of the
@@ -719,6 +728,36 @@
       .wrapped .t {
         pointer-events: auto;
       }
+      .contents {
+        position: relative;
+        z-index: 0;
+        width: 300px;
+        height: 120px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: oklch(1 0 0);
+      }
+      .contents::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0 / 0.5);
+      }
+      .contents .w {
+        display: contents;
+      }
+      .contents .w::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: oklch(0.3 0 0);
+      }
+      .contents .t {
+        position: relative;
+      }
       .elder {
         position: relative;
         width: 300px;
@@ -1073,6 +1112,9 @@
     <div class="collapsed"><span class="t">Sample text</span></div>
     <div class="wrapped">
       <div class="wr"><span class="t">Sample text</span></div>
+    </div>
+    <div class="contents">
+      <div class="w"><span class="t">Sample text</span></div>
     </div>
     <div class="elder">
       <div class="o"><span class="t">Sample text</span></div>

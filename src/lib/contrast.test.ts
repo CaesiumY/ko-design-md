@@ -680,6 +680,7 @@ const orderBox = (over: Partial<OrderBox> = {}): OrderBox => ({
   visibility: "visible",
   canvas: false,
   draws: false,
+  hit: true,
   ...over,
 })
 
@@ -1053,6 +1054,37 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
         verdict: "indeterminate",
         blockers: ["pseudo-background"],
       })
+    })
+
+    it("holds a wash over an ancestor between that draws where this point's hit list leaves it out", () => {
+      // A wrapper between takes pointer events, but its own pseudo-element
+      // does not, or its box does not hold the point: what it draws is in no
+      // stack here.
+      expect(
+        textOver([
+          pseudo({
+            which: "after",
+            paint: halfBlack(),
+            chain: [orderBox({ draws: true, hit: false })],
+          }),
+        ])
+      ).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+    })
+
+    it("composes a wash over an ancestor between that draws in sight of the hit list", () => {
+      // What it draws is in the stack, read as any layer is.
+      expect(
+        textOver([
+          pseudo({
+            which: "after",
+            paint: halfBlack(),
+            chain: [orderBox({ draws: true })],
+          }),
+        ])
+      ).toMatchObject({ blockers: [] })
     })
 
     it("holds a wash that also draws content of its own", () => {

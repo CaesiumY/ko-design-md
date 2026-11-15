@@ -474,7 +474,9 @@ export function collectContrast(): Collected {
         })
       )
 
-  const orderBoxOf = (e: Element): OrderBox => {
+  // `hit` is the hit list at the point read, where there is one: see
+  // `OrderBox.hit`.
+  const orderBoxOf = (e: Element, hit?: Array<Element>): OrderBox => {
     const c = getComputedStyle(e)
     const parent = e.parentElement
     return {
@@ -493,16 +495,21 @@ export function collectContrast(): Collected {
         ["::before", "::after"].some((ps) =>
           pseudoDraws(getComputedStyle(e, ps))
         ),
+      hit: hit === undefined || hit.includes(e),
     }
   }
 
   // The element read and its ancestors up to, not including, `owner`, or
   // null when `owner` is not one of them.
-  function chainTo(from: Element, owner: Element): Array<OrderBox> | null {
+  function chainTo(
+    from: Element,
+    owner: Element,
+    hit?: Array<Element>
+  ): Array<OrderBox> | null {
     if (!owner.contains(from)) return null
     const chain: Array<OrderBox> = []
     for (let e: Element | null = from; e !== owner && e !== null;) {
-      chain.push(orderBoxOf(e))
+      chain.push(orderBoxOf(e, hit))
       e = e.parentElement
     }
     return chain
@@ -523,6 +530,8 @@ export function collectContrast(): Collected {
     opts: {
       accept?: (cs: CSSStyleDeclaration) => boolean
       nested?: boolean
+      /** The hit list at the point read, for the chain's `hit`. */
+      hit?: Array<Element>
     } = {}
   ): Array<RawPseudo> {
     const out: Array<RawPseudo> = []
@@ -596,7 +605,7 @@ export function collectContrast(): Collected {
         ownerBackgroundClip: ownerStyle.backgroundClip,
         cornerShapes: cornerShapesOf(cs),
         owner: orderBoxOf(el),
-        chain: chainTo(from, el),
+        chain: chainTo(from, el, opts.hit),
         unhitPaint: opts.nested === true ? false : unhitPaintIn(el, from),
         nearBoxes: opts.nested === true ? [] : nearBoxesOf(el, from),
         nearPseudos: opts.nested === true ? [] : nearPseudosOf(el, from, area),
@@ -617,9 +626,10 @@ export function collectContrast(): Collected {
   const pseudosOf = (
     el: Element,
     area: DOMRect,
-    from: Element
+    from: Element,
+    hit: Array<Element>
   ): { pseudos?: Array<RawPseudo>; unreadPseudo?: true } => {
-    const pseudos = paintedPseudos(el, area, from)
+    const pseudos = paintedPseudos(el, area, from, { hit })
     const unread = (["::before", "::after"] as const).some((ps) =>
       pseudoDrawsUnread(getComputedStyle(el, ps))
     )
@@ -706,7 +716,8 @@ export function collectContrast(): Collected {
   // these above it could still be what really captures the box. The
   // pseudo-element's own count too — a motion path moves it while its
   // `transform` still reads `none` — and so do any paint of its own that
-  // reaches past its box, a grid placement, which makes a grid area its
+  // reaches past its box, a legacy `clip` that paints only part of it, a grid
+  // placement, which makes a grid area its
   // containing block, and self-alignment or anchor positioning, which move it
   // past what `left` and `top` say.
   //
@@ -953,7 +964,7 @@ export function collectContrast(): Collected {
         ...colour,
         opacity: opacityOf(el),
         ...imageOf(cs),
-        ...pseudosOf(el, area, from),
+        ...pseudosOf(el, area, from, hit),
         ...againOf(hit, at),
       }
       stack.push(layer)
@@ -1300,7 +1311,7 @@ export function collectContrast(): Collected {
         ...colour,
         opacity: opacityOf(behind),
         ...imageOf(bcs),
-        ...pseudosOf(behind, live, el),
+        ...pseudosOf(behind, live, el, hit),
         ...againOf(hit, at),
       }
       outer.push(layer)

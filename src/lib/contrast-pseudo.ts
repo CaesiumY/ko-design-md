@@ -93,7 +93,8 @@ export interface RawPseudo {
    * that gives way. On the pseudo-element
    * alone: a `filter`, `box-shadow`, `border-image` or reflection
    * (`-webkit-box-reflect`), which paint past the box — an outline is read
-   * from `outline` instead — a grid placement, which makes one grid area its
+   * from `outline` instead — a legacy `clip`, which paints only a rectangle
+   * of the box, a grid placement, which makes one grid area its
    * containing block, and self-alignment (`justify-self`, `align-self`) or
    * anchor positioning (`position-area`), which move it while `left` and
    * `top` still read as written. None is modelled: any one of them holds the
@@ -238,6 +239,14 @@ export interface OrderBox {
    * hit list, so no stack shows where that paint is.
    */
   draws: boolean
+  /**
+   * Whether the hit list at the point read shows it, so that what it and its
+   * pseudo-elements draw there is read with the stack. A box on the chain can
+   * be left out while it still draws over the line: a pseudo-element of its
+   * own with `pointer-events: none`, or a box that does not hold the point —
+   * 0px tall, or `display: contents`. True where no hit list was taken.
+   */
+  hit: boolean
 }
 
 // `corner-*-shape` values that are the plain round corner: Chromium writes
@@ -653,7 +662,7 @@ const isPositioned = (b: OrderBox): boolean => b.position !== "static"
 /**
  * Whether unhit paint can come between a pseudo-element and what is read:
  * an element from the one read up to the owner that draws and takes no
- * pointer events, anything else inside the owner (`unhitPaint`), or anything
+ * pointer events or is not in the hit list at the point read, anything else inside the owner (`unhitPaint`), or anything
  * over `area` off the chain when the owner is not certainly a stacking
  * context (a box of `nearBoxes` that overlaps it, or a placed pseudo-element
  * of `nearPseudos` that `reach` does not rule out). `area` is what has to be
@@ -661,7 +670,7 @@ const isPositioned = (b: OrderBox): boolean => b.position !== "static"
  */
 export function unhitPaintBetween(p: RawPseudo, area: Rect = p.area): boolean {
   const chain = (p.chain ?? []).some(
-    (b) => b.pointerEvents === "none" && b.draws
+    (b) => b.draws && (b.pointerEvents === "none" || !b.hit)
   )
   const near =
     p.nearBoxes.some(
