@@ -607,7 +607,7 @@ radius 4. `full` 타입은 하단 스크림(gray10 잉크 0 → 0.3 → 0.6)과 
 
 ## References
 
-해시 번들 표시가 붙은 항목은 파일명의 해시가 재배포 때마다 바뀐다. 해시 청크는 스토리 인덱스 `index.json`[src:2]과 프리뷰 셸 `iframe.html`[src:3]의 경로로 다시 찾았는데, 2026-11-16 에는 이 둘도 열리지 않았다(`## Known Gaps`).
+해시 번들 표시가 붙은 항목은 파일명의 해시가 재배포 때마다 바뀐다. 해시 청크는 스토리 인덱스 `index.json`[src:2]과 프리뷰 셸 `iframe.html`[src:3]의 경로로 다시 찾는다. 이 호스트의 접근 상태는 `## Known Gaps` 에 있다.
 
 1. https://zuix2.zigbang.io/ — ZUIX Storybook 루트. JS 셸이다
 2. https://zuix2.zigbang.io/index.json — Storybook v5 스토리 인덱스. 해시 청크 이름의 진입점
