@@ -20,6 +20,7 @@ import { conflictingDefinitions } from "./oklch-drift"
 import { KNOWN_SPEC_LIMITATIONS } from "./spec-limitations"
 import { LOGO_TAKEDOWNS } from "./logo-takedowns"
 import { readTagline, taglineIssues } from "./tagline-lint"
+import { CSS_COLOUR_FUNCTION } from "./colour-function"
 import {
   ColorRefError,
   TYPE_STYLE_PROPERTIES,
@@ -1345,8 +1346,10 @@ function isComponentDimension(value: string): boolean {
 }
 
 /** A literal CSS colour — hex or a colour function, OKLCH included. */
-const LITERAL_COLOUR =
-  /^(?:#[0-9a-fA-F]{3,8}\b|(?:rgba?|hsla?|hwb|oklch|oklab|lch|lab|color-mix)\s*\()/i
+const LITERAL_COLOUR = new RegExp(
+  `^(?:#[0-9a-fA-F]{3,8}\\b|${CSS_COLOUR_FUNCTION})`,
+  "i"
+)
 /**
  * Strip a MATCHING surrounding quote pair, either style; leave anything else
  * alone so a value that merely contains a quote is not mangled. Only for the

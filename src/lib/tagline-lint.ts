@@ -1,4 +1,5 @@
 import { taglineAsShown, taglineSourceLine } from "./content-parser"
+import { CSS_COLOUR_FUNCTION } from "./colour-function"
 import { OG_LEDE_MAX_CHARS, SENTENCE_END } from "./og-lede"
 import type { ValidationIssue } from "./draft-validator"
 
@@ -28,10 +29,12 @@ export const TAGLINE_RULE = {
 const SECOND_SENTENCE = new RegExp(`${SENTENCE_END}\\s+\\S`, "u")
 
 // A colour value: a hex (the prose-hex shape in draft-validator, which does not
-// catch a URL fragment or `&#…;`) or a CSS colour function, the same functions
-// draft-validator's `LITERAL_COLOUR` reads.
-const COLOUR_VALUE =
-  /(?<![\w&#/])#[0-9a-fA-F]{3,8}\b|\b(?:rgba?|hsla?|hwb|oklch|oklab|lch|lab|color-mix)\s*\(/i
+// catch a URL fragment or `&#…;`) or a CSS colour function, the list
+// draft-validator's `LITERAL_COLOUR` shares.
+const COLOUR_VALUE = new RegExp(
+  `(?<![\\w&#/])#[0-9a-fA-F]{3,8}\\b|\\b${CSS_COLOUR_FUNCTION}`,
+  "i"
+)
 
 // A numbered citation, as `source-citations.ts` counts one. A screenshot or
 // board marker carries no number and does not count.
@@ -84,7 +87,7 @@ export function taglineIssues(body: string): Array<ValidationIssue> {
   const issues: Array<ValidationIssue> = []
   const report = (
     severity: ValidationIssue["severity"],
-    rule: string,
+    rule: (typeof TAGLINE_RULE)[keyof typeof TAGLINE_RULE],
     fix: string
   ) => issues.push({ severity, rule, section: "tagline", fix })
 
