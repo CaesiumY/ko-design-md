@@ -4,7 +4,7 @@ import { REQUIRED_SECTIONS, validateDraft } from "./draft-validator"
 import { findKey, readFrontmatter } from "./frontmatter"
 import { FRONTMATTER_MAPS } from "./frontmatter-map-table"
 import { taglineAsShown } from "./content-parser"
-import { OG_LEDE_MAX_CHARS } from "./og-lede"
+import { OG_LEDE_MAX_CHARS, ogLede } from "./og-lede"
 import type { FrontmatterMapTraits } from "./frontmatter-map-table"
 import type { DraftValidationOptions } from "./draft-validator"
 
@@ -4116,6 +4116,19 @@ describe("validateDraft — tagline line", () => {
     expect(taglineRules(bold)).not.toContain("tagline-too-long")
   })
 
+  // With no sentence end the share card measures in UTF-16 units, where a
+  // character outside the BMP counts twice; the gate measures the same way, so
+  // a line it passes is one the card shows whole.
+  it("blocks a line the share card would cut, counting as the card does", () => {
+    const head = "데모는 송금 앱이고 [src:1], "
+    const shownHead = "데모는 송금 앱이고, "
+    const line = `${head}${"가".repeat(89 - shownHead.length)}😀`
+    const shown = taglineAsShown(line)
+    expect([...shown].length).toBe(90)
+    expect(ogLede(shown)).not.toBe(shown)
+    expect(taglineRules(line, "block")).toEqual(["tagline-too-long"])
+  })
+
   it("says the reader-visible count, the limit and how to fix it", () => {
     const issue = validateDraft(
       makeDraft({ tagline: lineOf(95) }),
@@ -4145,6 +4158,8 @@ describe("validateDraft — tagline line", () => {
   it.each([
     ["a hex", "파랑(#3182F6) 버튼"],
     ["an oklch value", "파랑(`oklch(0.62 0.19 258)`) 버튼"],
+    ["an rgb value", "빨강(rgb(255 0 56)) 버튼"],
+    ["a color-mix", "`color-mix(in oklab, red, white)` 버튼"],
   ])("blocks %s", (_, colour) => {
     expect(
       taglineRules(
@@ -4152,6 +4167,19 @@ describe("validateDraft — tagline line", () => {
         "block"
       )
     ).toEqual(["tagline-colour-value"])
+  })
+
+  it.each([
+    ["a name before a parenthesis", "AI Lab (연구 조직)이 만든 화면"],
+    ["an abbreviation before a parenthesis", "RGB (빨강, 초록, 파랑) 조합"],
+    ["a number tag run into a word", "#100일 챌린지 배너"],
+  ])("does not read %s as a colour value", (_, words) => {
+    expect(
+      taglineRules(
+        `데모는 송금 앱이고 [src:1], 흰 바탕 위에 ${words}를 둔다 [src:2].`,
+        "block"
+      )
+    ).toEqual([])
   })
 
   it("blocks bold, which the site strips and the line would lose", () => {

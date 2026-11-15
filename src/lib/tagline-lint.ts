@@ -28,12 +28,16 @@ export const TAGLINE_RULE = {
 // does not, so a short fragment before a full stop still counts as two.
 const SECOND_SENTENCE = new RegExp(`${SENTENCE_END}\\s+\\S`, "u")
 
-// A colour value: a hex (the prose-hex shape in draft-validator, which does not
-// catch a URL fragment or `&#…;`) or a CSS colour function, the list
-// draft-validator's `LITERAL_COLOUR` shares.
+// A colour value written into prose, so the shape is stricter than a component
+// value's (`LITERAL_COLOUR`), where the whole value is the colour:
+// - a hex not run into a letter or digit of any script (`#100일` is a tag), and
+//   not after URL or entity characters, as draft-validator's prose hex;
+// - a CSS colour function from the shared list whose parenthesis opens on a
+//   colour argument (a number, `from`, `var(`, or color-mix's `in`), so
+//   `AI Lab (연구 조직)` and `RGB (빨강, …)` stay prose.
 const COLOUR_VALUE = new RegExp(
-  `(?<![\\w&#/])#[0-9a-fA-F]{3,8}\\b|\\b${CSS_COLOUR_FUNCTION}`,
-  "i"
+  `(?<![\\w&#/])#[0-9a-fA-F]{3,8}(?![\\p{L}\\p{N}_])|\\b${CSS_COLOUR_FUNCTION}\\s*(?:[\\d.+-]|from\\b|var\\(|in\\b)`,
+  "iu"
 )
 
 // A numbered citation, as `source-citations.ts` counts one. A screenshot or
@@ -69,8 +73,10 @@ export interface TaglineReading {
 
 export function readTagline(body: string): TaglineReading {
   const text = taglineAsShown(taglineSourceLine(body))
-  // Code points, as the share card's `.{8,90}` (with the `u` flag) counts them.
-  return { text, chars: [...text].length, max: OG_LEDE_MAX_CHARS }
+  // UTF-16 units, as the share card measures a line with no sentence end
+  // (`ogLede`'s fallback). Its sentence path counts code points, which are
+  // never more, so a line within the limit here shows whole on either path.
+  return { text, chars: text.length, max: OG_LEDE_MAX_CHARS }
 }
 
 // The line `validate:draft` prints for one draft, which the Stage 7 checkpoint
@@ -141,7 +147,7 @@ export function taglineIssues(body: string): Array<ValidationIssue> {
     report(
       "block",
       TAGLINE_RULE.tooLong,
-      `The tagline line runs ${chars} characters as the reader sees it (citation markers, bold and backticks not counted); the limit is ${OG_LEDE_MAX_CHARS}, the length the share card shows whole. ${FIX_SECOND_PARAGRAPH}`
+      `The tagline line runs ${chars} characters as the reader sees it (citation markers, bold and backticks not counted; an emoji or other character outside the basic plane counts as two, as the share card measures it); the limit is ${OG_LEDE_MAX_CHARS}, the length the share card shows whole. ${FIX_SECOND_PARAGRAPH}`
     )
   }
   const exclusive = TAGLINE_EXCLUSIVE_FORMS.filter((form) =>
