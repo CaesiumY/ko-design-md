@@ -324,14 +324,19 @@ export interface StopBox {
    * - an ancestor's `clip-path`, mask, mask border, legacy `clip` or paint
    *   containment, which cuts everything inside it, so the layer always and
    *   a pseudo-element only when its owner is that ancestor or inside it;
-   * - the layer's own legacy `clip` or mask border, which cuts it and never
-   *   an ancestor's pseudo-element;
+   * - the layer's own `clip-path`, mask, mask border or legacy `clip`, which
+   *   cut it and never an ancestor's pseudo-element;
    * - a turn, skew or scale — a non-translating `transform`, `rotate`,
-   *   `scale`, a motion path, `zoom`, or a `perspective` above — anywhere
-   *   from the layer up, which leaves every rect here a box round some other
-   *   shape.
+   *   `scale`, a motion path, `zoom`, or a `perspective` — anywhere from the
+   *   layer up, which leaves every rect here a box round some other shape;
+   * - the layer broken over lines as an inline box, whose rect is the box
+   *   round fragments painted one by one;
+   * - a pseudo-element past it whose owner is the layer itself: in a layer
+   *   that is a stacking context its negative layer still paints over the
+   *   layer's background, so its order against the layer is not weighed.
    *
-   * The last two, and the shape cuts, come `shaped`.
+   * The last four, and the ancestors' shape cuts, come `shaped`: none of them
+   * is a padding box that can hold the area, so each refuses the release.
    */
   clips: Array<ClipBox>
 }
@@ -347,9 +352,11 @@ export interface ClipBox {
   /** Its four `corner-*-shape` values, written as `RawPseudo.cornerShapes` is. */
   cornerShapes: Corners
   /**
-   * What it cuts to is not its padding box — a `clip-path`, a mask, a mask
-   * border, a legacy `clip`, or a box a turn or a motion path has bent —
-   * rather than an `overflow` or paint containment's padding box.
+   * What it stands for is not a padding box that can hold the area — a
+   * `clip-path`, a mask, a mask border, a legacy `clip`, a box a turn, skew,
+   * scale or motion path has bent, an inline box broken over lines, or the
+   * layer's own pseudo-element — rather than an `overflow` or paint
+   * containment's padding box.
    */
   shaped: boolean
 }
@@ -366,8 +373,9 @@ export interface ClipBox {
  * cut more than the inner ones do — with no clip or mask over it, and not
  * the canvas's. Each of `stop.clips` holds the area as well: an overflow clip
  * or paint containment by its padding box and rounded corners, a `shaped`
- * one never — a shape cut, whose shape is not read, or a turned, skewed or
- * scaled box, whose rect is not its shape.
+ * one never — a shape cut, whose shape is not read, a turned, skewed or
+ * scaled box or a broken inline one, whose rect is not its shape, or a
+ * pseudo-element of the layer itself (`StopBox.clips`).
  *
  * A 3D context (`transform-style: preserve-3d` anywhere from the owner up)
  * sorts by depth instead, so it answers no, as does anything `paintOrder`
