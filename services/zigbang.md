@@ -607,11 +607,11 @@ radius 4. `full` 타입은 하단 스크림(gray10 잉크 0 → 0.3 → 0.6)과 
 
 ## References
 
-해시 번들 표시가 붙은 항목은 파일명의 해시가 재배포 때마다 바뀐다. 해시 청크는 스토리 인덱스 `index.json`[src:2]과 프리뷰 셸 `iframe.html`[src:3]의 경로로 다시 찾았는데, 지금은 이 둘도 열리지 않는다(`## Known Gaps`).
+해시 번들 표시가 붙은 항목은 파일명의 해시가 재배포 때마다 바뀐다. 해시 청크는 스토리 인덱스 `index.json`[src:2]과 프리뷰 셸 `iframe.html`[src:3]의 경로로 다시 찾았는데, 2026-11-16 에는 이 둘도 열리지 않았다(`## Known Gaps`).
 
-1. https://zuix2.zigbang.io/ — ZUIX Storybook 루트. JS 셸이라 렌더해야 읽힌다
-2. https://zuix2.zigbang.io/index.json — 안정 진입점. Storybook v5 스토리 인덱스
-3. https://zuix2.zigbang.io/iframe.html — 안정 진입점. 프리뷰 셸, Pretendard CSS 링크
+1. https://zuix2.zigbang.io/ — ZUIX Storybook 루트. JS 셸이다
+2. https://zuix2.zigbang.io/index.json — Storybook v5 스토리 인덱스. 해시 청크 이름의 진입점
+3. https://zuix2.zigbang.io/iframe.html — 프리뷰 셸, Pretendard CSS 링크. 해시 청크 이름의 진입점
 4. https://zuix2.zigbang.io/font/pretendard-subset.css — Pretendard 400·500·700 서브셋 @font-face
 5. https://zuix2.zigbang.io/assets/style-D3ygbBMf.js — (해시 번들) Color enum · Shadow 유틸 · margin 헬퍼
 6. https://zuix2.zigbang.io/assets/Text-zt7S0cae.js — (해시 번들) Text · 크기 스케일 · FontWeight

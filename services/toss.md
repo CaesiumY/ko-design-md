@@ -631,7 +631,7 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 
 ## Responsive Behavior
 
-토스는 **mobile-first** 슈퍼앱이며, TDS Mobile / 앱인토스 TDS가 정식 문서화의 1차 표면이다 [src:9]. 데스크톱 surface는 부수적이며 모바일 인터랙션 패턴을 그대로 옮기지 않는다. README에 명시된 정책 — "토스는 모바일에서 다중 컬럼 레이아웃을 거의 사용하지 않는다".
+TDS 의 공개 문서로는 TDS Mobile [src:5] 과 앱인토스 TDS 컴포넌트 목록 [src:9] 이 있다. 데스크톱 surface는 부수적이며 모바일 인터랙션 패턴을 그대로 옮기지 않는다. README에 명시된 정책 — "토스는 모바일에서 다중 컬럼 레이아웃을 거의 사용하지 않는다".
 
 ### Breakpoints
 
@@ -667,7 +667,7 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 - **철회된 부재 주장 2건 (2026-09-24)** — 「토큰 패키지도 값 표도 공개되지 않았다」(`## Colors` 이전 감사 메모)와 「나머지 hue별 step은 surface되지 않았다」(위 step ladder 항목의 이전 문구)는 번들 기준으로만 참이었다. 토스는 `@toss/tds-colors`로 라이트·다크 팔레트 값과 각 hue의 50~900 step을 발행한다 [src:12]. 위 시맨틱 토큰 항목의 공백은 철회 대상이 아니다 — 그 패키지는 팔레트(hex), adaptive 배경·선·불투명도 값(hex·rgba), `tds` 컴포넌트 토큰(hex·rgba·그라디언트)을 모두 테마별 값으로 싣고, 시맨틱 토큰이 테마별로 어느 base step을 참조하는지는 싣지 않는다.
 - **Toss Product Sans 라이선스** — TPS는 자체 라이선스로 외부 재배포가 금지된다 [src:8]. 본 카탈로그를 적용하는 host 앱은 Pretendard로 substitute해야 하며, 메트릭은 거의 일치하지만 글리프 디테일(특수문자 디자인, fixed-width 숫자)에서는 차이가 발생할 수 있다.
 - **Token Studio 빌드 산출물 포맷** — 토큰은 Token Studio → GitHub PR → 플랫폼별 코드 자동 생성을 거치며 출력은 RGB/RGBA 포맷이다 [src:3]. 본 카탈로그는 OKLCH로 변환해 표기하나, 자동 생성 산출물의 정확한 포맷·툴체인 디테일은 공개되지 않았다.
-- **공식 breakpoint 토큰** — TDS Mobile은 mobile-first 정책상 breakpoint 토큰 자체가 공식 surface되지 않았다 [src:9]. 본 문서의 Responsive Behavior 분기점은 권장값이며 토스 공식 토큰이 아니다.
+- **공식 breakpoint 토큰** — 앱인토스 TDS 컴포넌트 목록 [src:9] 에는 breakpoint 토큰이 없다. 본 문서의 Responsive Behavior 분기점은 권장값이며 토스 공식 토큰이 아니다.
 
 ## References
 
