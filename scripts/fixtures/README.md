@@ -97,3 +97,12 @@ canvas's. Each needs a document of its own, since the canvas belongs to the
 whole document. The expectations, in `CANVAS_BODY_ANCHORS` and
 `CANVAS_ROOT_ANCHORS`, are a hold: an owner whose background is the canvas's
 carries a computed colour its box does not paint. The same condition holds.
+
+## `pseudo-canvas-stop.html`
+
+One more one-line document under the same rule (#692). The root has no
+background, so `body`'s white passes on to the canvas, and the root's opaque
+`::before` at `z-index: -1` lies over the canvas, under black text. The hit
+test stops at `body`'s computed white, past which the root is never read.
+The expectation, in `CANVAS_STOP_ANCHORS`, is a hold: a layer whose
+background is the canvas's hides nothing under it. The same condition holds.

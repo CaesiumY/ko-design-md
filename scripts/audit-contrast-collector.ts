@@ -16,6 +16,7 @@ import type {
   RawTextLine,
 } from "../src/lib/contrast"
 import type {
+  ClipBox,
   Corners,
   OrderBox,
   RawPseudo,
@@ -656,7 +657,11 @@ export function collectContrast(): Collected {
   // one — glyphs, a border, a shadow, an outline, a backdrop filter. Past the
   // stack either can cover the line, and where it lands is all that is asked.
   const pseudoShows = (cs: CSSStyleDeclaration): boolean =>
-    pseudoPaints(cs) || pseudoDraws(cs)
+    pseudoPaints(cs) ||
+    pseudoDraws(cs) ||
+    (cs.content !== "none" &&
+      cs.content !== "normal" &&
+      cs.borderImageSource !== "none")
 
   // Whether an element has such a `::before` or `::after` at all, asked
   // once per element: the walk below asks it of every ancestor of every
@@ -693,19 +698,61 @@ export function collectContrast(): Collected {
   ): { past?: Array<RawPseudo>; stop?: StopBox } {
     const skip = new Set([...walked, ...hit.slice(0, index)])
     const past: Array<RawPseudo> = []
+    let farthest: Element | null = null
     for (let up = start; up !== null; up = up.parentElement) {
       if (skip.has(up) || !hasShownPseudo(up)) continue
-      past.push(
-        ...paintedPseudos(up, area, stopped ?? from, { accept: pseudoShows })
-      )
+      // Where it lands and its paint order are all that is asked of it, so
+      // the unhit paint around it is not read (`nested`).
+      const found = paintedPseudos(up, area, stopped ?? from, {
+        accept: pseudoShows,
+        nested: true,
+      })
+      if (found.length > 0) farthest = up
+      past.push(...found)
     }
     if (past.length === 0) return {}
-    return stopped === null ? { past } : { past, stop: stopBoxOf(stopped) }
+    return stopped === null
+      ? { past }
+      : { past, stop: stopBoxOf(stopped, farthest) }
   }
 
-  // What the background of the layer a stack stopped at covers.
-  const stopBoxOf = (e: Element): StopBox => {
+  // How an element cuts what its descendants paint short, if it does: to
+  // its padding box (`overflow`, `contain: paint`), or by a shape its box
+  // does not say (`clip-path`, a mask).
+  const clipOf = (e: Element): ClipBox | null => {
     const c = getComputedStyle(e)
+    const shaped = c.clipPath !== "none" || c.maskImage !== "none"
+    const boxed =
+      c.overflowX !== "visible" ||
+      c.overflowY !== "visible" ||
+      /\b(paint|strict|content)\b/.test(c.contain)
+    if (!shaped && !boxed) return null
+    return {
+      box: ownerBoxOf(e),
+      borders: [
+        c.borderTopWidth,
+        c.borderRightWidth,
+        c.borderBottomWidth,
+        c.borderLeftWidth,
+      ],
+      radii: radiiOf(c),
+      cornerShapes: cornerShapesOf(c),
+      shaped,
+    }
+  }
+
+  // What the background of the layer a stack stopped at covers. `owner` is
+  // the farthest owner of a pseudo-element past it: a clip on an element
+  // between the two may cut the layer short and leave the pseudo-element
+  // whole. Reading up to the farthest one holds for every nearer owner too.
+  const stopBoxOf = (e: Element, owner: Element | null): StopBox => {
+    const c = getComputedStyle(e)
+    const clips: Array<ClipBox> = []
+    for (let up = e.parentElement; up !== null && up !== owner;) {
+      const cut = clipOf(up)
+      if (cut !== null) clips.push(cut)
+      up = up.parentElement
+    }
     return {
       box: ownerBoxOf(e),
       borders: [
@@ -719,6 +766,8 @@ export function collectContrast(): Collected {
       backgroundClip: c.backgroundClip,
       clipPath: c.clipPath,
       maskImage: c.maskImage,
+      canvas: e === document.documentElement || bodyOnCanvas(e),
+      clips,
     }
   }
 

@@ -62,6 +62,7 @@ const GRADIENT_FILE = join("scripts", "fixtures", "gradient-backdrop.html")
 const PSEUDO_FILE = join("scripts", "fixtures", "pseudo-background.html")
 const CANVAS_BODY_FILE = join("scripts", "fixtures", "pseudo-canvas-body.html")
 const CANVAS_ROOT_FILE = join("scripts", "fixtures", "pseudo-canvas-root.html")
+const CANVAS_STOP_FILE = join("scripts", "fixtures", "pseudo-canvas-stop.html")
 const ORACLE_URL_PATH = "/__oracle/preview.html"
 const ORACLE_WIDTH = 976
 /** Wide enough to absorb 8-bit quantisation, tight enough to catch a drift. */
@@ -603,6 +604,10 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   draws only a 60px oklch(0.3 0 0) border on each side of the panel's
  *   300x120 box, so the borders cover it whole: on screen 1.55, a fail,
  *   where the stack reads 21: held.
+ * - `.pastclip` raises the white block of `.lifted` inside a 40px wrapper
+ *   with `overflow: hidden`, under an absolute run wider than the wrapper:
+ *   the run's ends sit on the wash, 1.55, a fail. The block's box holds the
+ *   line, so released it would read 21; the wrapper's clip holds it.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -1066,6 +1071,15 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
     verdict: "indeterminate",
     blockers: ["pseudo-background"],
   },
+  {
+    id: "raised text over a clipped block over a wash of an ancestor",
+    pathEnds: "div.pastclip > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
 ]
 
 /**
@@ -1093,6 +1107,17 @@ const CANVAS_BODY_ANCHORS: Array<PathAnchor> = [
 const CANVAS_ROOT_ANCHORS: Array<PathAnchor> = [
   {
     id: "text over a negative-z wash of the root element",
+    pathEnds: "p.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+]
+const CANVAS_STOP_ANCHORS: Array<PathAnchor> = [
+  {
+    id: "text over a negative-z wash of the root past a body on the canvas",
     pathEnds: "p.t",
     theme: "light",
     state: "default",
@@ -1313,6 +1338,7 @@ export async function selfCheck(root: string): Promise<CheckResult> {
   const pseudoFixture = readFileSync(join(root, PSEUDO_FILE), "utf8")
   const canvasBodyFixture = readFileSync(join(root, CANVAS_BODY_FILE), "utf8")
   const canvasRootFixture = readFileSync(join(root, CANVAS_ROOT_FILE), "utf8")
+  const canvasStopFixture = readFileSync(join(root, CANVAS_STOP_FILE), "utf8")
   const server = await serveStatic(`${root}/public`)
   const browser = await chromium.launch()
   const lines: Array<string> = []
@@ -1481,6 +1507,9 @@ export async function selfCheck(root: string): Promise<CheckResult> {
     lines.push(
       `fixture: ${CANVAS_ROOT_FILE} (${canvasRootFixture.length} bytes, synthetic)`
     )
+    lines.push(
+      `fixture: ${CANVAS_STOP_FILE} (${canvasStopFixture.length} bytes, synthetic)`
+    )
     const base = `http://127.0.0.1:${server.port}`
     for (const current of VARIANTS) {
       variant = current
@@ -1553,6 +1582,12 @@ export async function selfCheck(root: string): Promise<CheckResult> {
         canvasRootFixture
       )
       for (const anchor of CANVAS_ROOT_ANCHORS) checkPath(canvasRoot, anchor)
+      const canvasStop = await collect(
+        `${base}${ORACLE_URL_PATH}?fixture=canvas-stop`,
+        "oracle-canvas-stop",
+        canvasStopFixture
+      )
+      for (const anchor of CANVAS_STOP_ANCHORS) checkPath(canvasStop, anchor)
 
       // `CSS.forcePseudoState` is accepted and ignored when it is handed a
       // node id the document no longer has, so a hover pass can look like it

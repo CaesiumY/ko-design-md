@@ -19,7 +19,7 @@ import type {
   RawLayer,
   RawTextLine,
 } from "./contrast"
-import type { OrderBox, RawPseudo, StopBox } from "./contrast-pseudo"
+import type { ClipBox, OrderBox, RawPseudo, StopBox } from "./contrast-pseudo"
 
 const WHITE = { r: 255, g: 255, b: 255 }
 const BLACK = { r: 0, g: 0, b: 0 }
@@ -1920,6 +1920,8 @@ describe("a pseudo-element past where the stack stops", () => {
       backgroundClip: "border-box",
       clipPath: "none",
       maskImage: "none",
+      canvas: false,
+      clips: [],
     }
     const sunkWash = pseudo({ chain: [orderBox()] })
     const lineOver = (
@@ -1950,6 +1952,33 @@ describe("a pseudo-element past where the stack stops", () => {
           pseudo({ chain: [orderBox({ position: "static" })] }),
         ])
       ).toMatchObject(held)
+    })
+
+    it("holds when the layer's background is the canvas's", () => {
+      // The root, or a `body` whose background passes on to the canvas: its
+      // colour is painted under the whole document, so a pseudo-element of
+      // the root in its negative layer paints over it, not under it.
+      expect(lineOver({ stop: { ...card, canvas: true } })).toMatchObject(held)
+    })
+
+    it("holds when an element between the layer and the owner clips it", () => {
+      // An `overflow: hidden` wrapper narrower than the card shows its white
+      // inside the wrapper only; the line's ends sit on the wash.
+      // A 40px window, x 230..270, inside the line's x 200..300.
+      const window: ClipBox = {
+        box: { left: 230, top: 200, right: 270, bottom: 320 },
+        borders: ["0px", "0px", "0px", "0px"],
+        radii: ["0px", "0px", "0px", "0px"],
+        cornerShapes: ["round", "round", "round", "round"],
+        shaped: false,
+      }
+      expect(lineOver({ stop: { ...card, clips: [window] } })).toMatchObject(
+        held
+      )
+      // The card's own box as the clip holds the line: still judged.
+      expect(
+        lineOver({ stop: { ...card, clips: [{ ...window, box: card.box }] } })
+      ).toMatchObject({ verdict: "pass", blockers: [] })
     })
 
     it("holds when the stack did not stop at an opaque layer", () => {

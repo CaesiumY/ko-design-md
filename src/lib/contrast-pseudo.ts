@@ -307,6 +307,36 @@ export interface StopBox {
   backgroundClip: string
   clipPath: string
   maskImage: string
+  /**
+   * Its background is the canvas's — it is the root, or a `body` whose
+   * background passes on to the canvas — so its colour lies under the whole
+   * document, under the root's negative layer too, not on its box.
+   */
+  canvas: boolean
+  /**
+   * The elements between it and the farthest owner past it, that owner left
+   * out, that cut what it paints short: an `overflow` other than `visible`,
+   * `contain: paint`, a `clip-path` or a mask. Its own box says what of its
+   * background shows only where each of them holds the area.
+   */
+  clips: Array<ClipBox>
+}
+
+/** An element that cuts what its descendants paint, as `StopBox.clips` holds it. */
+export interface ClipBox {
+  /** Its border box, in viewport pixels. */
+  box: Rect
+  /** Its four border widths, top first and clockwise, as computed. */
+  borders: Corners
+  /** Its four corner radii, written as `RawPseudo.radii` is. */
+  radii: Corners
+  /** Its four `corner-*-shape` values, written as `RawPseudo.cornerShapes` is. */
+  cornerShapes: Corners
+  /**
+   * It clips by a shape its box does not say — a `clip-path` or a mask —
+   * rather than to its padding box (`overflow`, `contain: paint`).
+   */
+  shaped: boolean
 }
 
 /**
@@ -318,7 +348,10 @@ export interface StopBox {
  * everything the owner holds) or not. The layer's background has to be under
  * the whole area too: its padding box, which every background clip but
  * `content-box` paints, cut by its rounded corners — the outer radii, which
- * cut more than the inner ones do — with no clip or mask over it.
+ * cut more than the inner ones do — with no clip or mask over it, and not
+ * the canvas's. Each element between it and the owner that clips holds the
+ * area as well: an overflow clip by its padding box and rounded corners, a
+ * `clip-path` or a mask never, its shape not read.
  *
  * A 3D context (`transform-style: preserve-3d` anywhere from the owner up)
  * sorts by depth instead, so it answers no, as does anything `paintOrder`
@@ -328,30 +361,44 @@ export interface StopBox {
  */
 export function underStop(p: RawPseudo, stop: StopBox, area: Rect): boolean {
   if (p.unsure.some((s) => s.startsWith("transform-style:"))) return false
+  if (stop.canvas) return false
   if (stop.clipPath !== "none" || stop.maskImage !== "none") return false
   const clip = colourClip(stop.backgroundClip)
   if (clip !== "border-box" && clip !== "padding-box") return false
-  const widths = stop.borders.map(px)
+  if (!paddingHolds(stop, area)) return false
+  if (stop.clips.some((c) => c.shaped || !paddingHolds(c, area))) return false
+  const side = paintOrder(p)
+  return side === "below" || side === "under-owner"
+}
+
+/**
+ * Whether a box's padding box, cut by its rounded corners, holds the whole
+ * area: where a background clipped there, or an overflow clip, still covers
+ * every point of it.
+ */
+function paddingHolds(
+  b: { box: Rect; borders: Corners; radii: Corners; cornerShapes: Corners },
+  area: Rect
+): boolean {
+  const widths = b.borders.map(px)
   if (widths.some((w) => w === null)) return false
   const [top, right, bottom, left] = widths as Array<number>
   const padding = {
-    left: stop.box.left + left,
-    top: stop.box.top + top,
-    right: stop.box.right - right,
-    bottom: stop.box.bottom - bottom,
+    left: b.box.left + left,
+    top: b.box.top + top,
+    right: b.box.right - right,
+    bottom: b.box.bottom - bottom,
   }
   // A percentage radius is of the border box: resolved there, then laid on
   // the smaller padding box, where the same curve cuts at least as much.
-  const w = stop.box.right - stop.box.left
-  const h = stop.box.bottom - stop.box.top
-  const resolved = stop.radii.map((r) => radiusOf(r, w, h))
+  const w = b.box.right - b.box.left
+  const h = b.box.bottom - b.box.top
+  const resolved = b.radii.map((r) => radiusOf(r, w, h))
   if (resolved.some((r) => r === null)) return false
   const radii = (resolved as Array<{ rx: number; ry: number }>).map(
     (r) => `${r.rx}px ${r.ry}px`
   ) as Corners
-  if (!roundedHolds(padding, radii, stop.cornerShapes, area)) return false
-  const side = paintOrder(p)
-  return side === "below" || side === "under-owner"
+  return roundedHolds(padding, radii, b.cornerShapes, area)
 }
 
 /**

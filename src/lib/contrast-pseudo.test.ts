@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { paintOrder, reach, underStop } from "./contrast-pseudo"
-import type { OrderBox, RawPseudo, StopBox } from "./contrast-pseudo"
+import type { ClipBox, OrderBox, RawPseudo, StopBox } from "./contrast-pseudo"
 
 // An element in the paint order: `position: relative`, no `z-index`, nothing
 // else that makes a stacking context.
@@ -348,6 +348,8 @@ describe("underStop — a pseudo-element past the stack, under the layer it stop
     backgroundClip: "border-box",
     clipPath: "none",
     maskImage: "none",
+    canvas: false,
+    clips: [],
     ...over,
   })
   const raised = { chain: [box()] }
@@ -391,6 +393,69 @@ describe("underStop — a pseudo-element past the stack, under the layer it stop
         area
       )
     ).toBe(false)
+  })
+
+  it("is not under a layer whose background is the canvas's", () => {
+    expect(underStop(pseudo(raised), stop({ canvas: true }), area)).toBe(false)
+  })
+
+  describe("with an element between the layer and the owner that clips", () => {
+    const clipBox = (over: Partial<ClipBox> = {}): ClipBox => ({
+      box: { left: 100, top: 200, right: 400, bottom: 320 },
+      borders: ["0px", "0px", "0px", "0px"],
+      radii: ["0px", "0px", "0px", "0px"],
+      cornerShapes: ["round", "round", "round", "round"],
+      shaped: false,
+      ...over,
+    })
+
+    it("is still under the layer where the clip holds the line", () => {
+      expect(
+        underStop(pseudo(raised), stop({ clips: [clipBox()] }), area)
+      ).toBe(true)
+    })
+
+    it("is not under it where the clip cuts the layer inside the line", () => {
+      // A 40px window, x 230..270, inside the line's x 200..300.
+      expect(
+        underStop(
+          pseudo(raised),
+          stop({
+            clips: [
+              clipBox({
+                box: { left: 230, top: 200, right: 270, bottom: 320 },
+              }),
+            ],
+          }),
+          area
+        )
+      ).toBe(false)
+      // Rounded: a 50% radius on a box just round the line cuts its corners.
+      expect(
+        underStop(
+          pseudo(raised),
+          stop({
+            clips: [
+              clipBox({
+                box: { left: 190, top: 240, right: 310, bottom: 280 },
+                radii: ["50%", "50%", "50%", "50%"],
+              }),
+            ],
+          }),
+          area
+        )
+      ).toBe(false)
+    })
+
+    it("is not under it when the clip's shape is not its box", () => {
+      expect(
+        underStop(
+          pseudo(raised),
+          stop({ clips: [clipBox({ shaped: true })] }),
+          area
+        )
+      ).toBe(false)
+    })
   })
 
   it("needs the layer's own background under the whole line", () => {

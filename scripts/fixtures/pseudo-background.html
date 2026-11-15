@@ -342,6 +342,15 @@
         is black on rgb(46) again, 1.55, a fail, where the stack reads 21. A
         pseudo-element past the stack that draws without a background holds
         the reading as one that paints does.
+      - `.pastclip` is `.lifted` with the raised white block, 300px wide,
+        inside a 40px wrapper, `.c`, centred in the panel at x 130..170,
+        whose `overflow: hidden` shows the white there only. The run is
+        absolute over the panel's middle, later in tree order, so it paints
+        over the block; its line is wider than 40px, so its ends sit on the
+        panel's oklch(0.3 0 0) wash, 1.55, a fail. The stack, read at the
+        line's middle, stops at the block's white, whose box holds the line,
+        and released it would read 21. An element between the layer and the
+        owner that clips the layer holds the reading.
     -->
     <style>
       html {
@@ -394,6 +403,7 @@
       .collapsed,
       .past,
       .pastedge,
+      .pastclip,
       .pastbox,
       .overblock,
       .lifted,
@@ -1104,6 +1114,32 @@
       .overblock::after {
         background: oklch(0 0 0 / 0.6);
       }
+      .pastclip::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0.3 0 0);
+        pointer-events: none;
+      }
+      .pastclip .c {
+        width: 40px;
+        height: 100%;
+        overflow: hidden;
+      }
+      .pastclip .o {
+        position: relative;
+        width: 300px;
+        height: 100%;
+        margin-left: -130px;
+        background: oklch(1 0 0);
+      }
+      .pastclip .t {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 48px;
+        text-align: center;
+      }
       .pastedge::before {
         content: "";
         position: absolute;
@@ -1264,6 +1300,10 @@
     </div>
     <div class="pastedge">
       <div class="o"><span class="t">Sample text</span></div>
+    </div>
+    <div class="pastclip">
+      <div class="c"><div class="o"></div></div>
+      <span class="t">Sample text</span>
     </div>
   </body>
 </html>
