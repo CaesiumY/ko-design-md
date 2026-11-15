@@ -14,11 +14,11 @@ colors:
   ## Neutral ramp — 앱 내부 웹뷰 .GS25 스코프 (발행된 용도 설명 없음, 이름은 명도순으로 부여)
   neutral-50: oklch(0.971 0.008 279)   # #F4F5FB — .GS25 스코프에서 4회로 최다 등장
   neutral-200: oklch(0.885 0.011 270)   # #D6D9E1
-  neutral-300: oklch(0.820 0.013 267)   # #C0C4CD — 3회 등장, 웹뷰 primary 버튼의 비활성 배경
+  neutral-300: oklch(0.820 0.013 267)   # #C0C4CD — 3회 등장, 웹뷰 버튼 전반의 비활성 배경
   neutral-400: oklch(0.788 0.023 254)   # #B0BBC9
   neutral-450: oklch(0.764 0.017 286)   # #B1B1BD
   neutral-600: oklch(0.441 0.024 285)   # #515160
-  navy-deep: oklch(0.234 0.082 257)   # #001C43 — 웹뷰 primary 버튼의 눌림(:active) 배경
+  navy-deep: oklch(0.234 0.082 257)   # #001C43 — 웹뷰 primary 버튼의 눌림(:active) 배경과 선택된 통신사 버튼 배경
   webview-blue: oklch(0.538 0.142 247)   # #0072BB — 기업 CI 의 GS Blue 와 sRGB 채널 1단위 차. 동일값으로 단정하지 말 것
   ## Service brands — 앱 내부 서비스의 공식 발행값 (네이티브 UI 토큰 아님)
   gs-all: oklch(0.377 0.104 259)   # #1C4078 — GS ALL 멤버십 · PANTONE 2154C. 웹뷰 CSS 에서도 실제 관찰됨
@@ -84,7 +84,7 @@ fonts:
 
 **(D) 상표 규정.** 기업 CI 4색은 "GS리테일의 색상군은 3색형 심볼마크의 색상을 응용합니다"라는 규정과 함께 발행된다 [src:20]. 이 값들은 제품 표면 토큰이 아니다. 다만 완전히 무관하지도 않아서, 웹뷰의 `{colors.webview-blue}` 가 `{colors.gs-blue}` 와 sRGB 채널 1단위만 다르다 — 기업 색이 제품 표면으로 내려온 정황으로 보이나 **동일값으로 단정하지 말 것** [src:18][src:20]. 구 CI/BI 페이지의 표는 RGB 열과 HEX 열이 서로 어긋나는 오류를 갖고 있어 [src:2], 기업 색은 hex 와 rgb 가 자체 일치하는 브랜드 아카이브 쪽을 정본으로 삼았다 [src:20]. 같은 구 페이지가 서브 브랜드 로고 색 규정(GS25 = PANTONE 285C·311C, GS THE FRESH = PANTONE 7484C)을 갖고 있고, 접근성용 숨김 텍스트에 2019년 개명 이전 표기가 잔존한다 [src:2].
 
-`.GS25` 스코프의 무채색 램프 6종과 `{colors.navy-deep}` 은 CSS 값으로만 있고 **발행된 용도 설명이 없다** [src:18]. CSS 가 보여 주는 쓰임은 `{colors.navy-deep}` 이 `[class*=button-primary]` 의 눌림(`:active`) 배경, `{colors.neutral-300}` 이 같은 버튼의 비활성(`:disabled`) 배경이라는 것이다 [src:18]. `neutral-` 이라는 이름과 번호는 명도순으로 이 문서가 부여한 것이지 발행된 토큰명이 아니다.
+`.GS25` 스코프의 무채색 램프 6종과 `{colors.navy-deep}` 은 CSS 값으로만 있고 **발행된 용도 설명이 없다** [src:18]. CSS 에서 확인되는 버튼 쓰임은 이렇다. `{colors.navy-deep}` 은 `[class*=button-primary]` 의 눌림(`:active`) 배경과 선택된 통신사 버튼(`.select-carrier-box button.on`)의 배경이고, `{colors.neutral-300}` 은 버튼 전반(`[class*=button-]`, primary, secondary)의 비활성(`:disabled`) 배경이다 [src:18]. `neutral-` 이라는 이름과 번호는 명도순으로 이 문서가 부여한 것이지 발행된 토큰명이 아니다.
 
 **범위 주의.** 이 CSS 는 우리동네GS 앱 **안에서 열리는 GS ALL 멤버십 웹뷰**의 것이고, `.GS25` 는 그 웹뷰가 GS25 브랜드 문맥에서 쓰는 스코프 테마다 [src:18]. Flutter 네이티브 화면이 같은 값을 쓴다는 직접 증거는 아니다. `{colors.primary-dark}` 가 네이티브 코드와 웹뷰 양쪽에 나온다는 점이 두 표면의 팔레트 공유를 시사할 뿐이다 [src:7][src:18].
 
