@@ -722,7 +722,7 @@ const pseudo = (over: Partial<RawPseudo> = {}): RawPseudo => ({
   ownerRadii: ["0px", "0px", "0px", "0px"],
   ownerBackgroundClip: "border-box",
   unhitPaint: false,
-  unhitPaintNear: false,
+  nearBoxes: [],
   nearPseudos: [],
   ownerCornerShapes: ["round", "round", "round", "round"],
   cornerShapes: ["round", "round", "round", "round"],
@@ -1256,12 +1256,28 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
       // can paint over the wash and under the raised text.
       expect(
         textOn(opaque(0, 0, 0), [
-          pseudo({ ...raised, paint: halfBlack(), unhitPaintNear: true }),
+          pseudo({
+            ...raised,
+            paint: halfBlack(),
+            nearBoxes: [{ left: 250, top: 250, right: 260, bottom: 260 }],
+          }),
         ])
       ).toMatchObject({
         verdict: "indeterminate",
         blockers: ["pseudo-background"],
       })
+    })
+
+    it("composes when unhit paint outside the owner misses the line", () => {
+      expect(
+        textOn(opaque(0, 0, 0), [
+          pseudo({
+            ...raised,
+            paint: halfBlack(),
+            nearBoxes: [{ left: 250, top: 300, right: 260, bottom: 310 }],
+          }),
+        ])
+      ).toMatchObject({ verdict: "pass", blockers: [] })
     })
 
     it("holds when an unhit pseudo-element outside the owner reaches the line", () => {
@@ -1296,7 +1312,7 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
           pseudo({
             ...raised,
             paint: halfBlack(),
-            unhitPaintNear: true,
+            nearBoxes: [{ left: 250, top: 250, right: 260, bottom: 260 }],
             owner: orderBox({ zIndex: "0" }),
           }),
         ])
@@ -1767,6 +1783,45 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
       const got = dotUnder([pseudo({ ...dot, paint: halfBlack() })], [0])
       expect(got).toMatchObject({ verdict: "fail", blockers: [] })
       expect(got?.ratio).toBeCloseTo(2.83, 2)
+    })
+
+    it("holds when unhit paint outside the owner lies only in the band around the surface", () => {
+      // The band x 300..302 is part of what the surface is read against.
+      expect(
+        dotUnder([
+          pseudo({
+            ...dot,
+            paint: halfBlack(),
+            nearBoxes: [{ left: 300, top: 248, right: 302, bottom: 272 }],
+          }),
+        ])
+      ).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+    })
+
+    it("holds when an unhit pseudo-element outside the owner lies only in that band", () => {
+      // Its box is x 300..302 from the containing block at (100, 200).
+      expect(
+        dotUnder([
+          pseudo({
+            ...dot,
+            paint: halfBlack(),
+            nearPseudos: [
+              pseudo({
+                left: "200px",
+                top: "48px",
+                width: "2px",
+                height: "24px",
+              }),
+            ],
+          }),
+        ])
+      ).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
     })
 
     it("lays one under the surface over the owner's background", () => {

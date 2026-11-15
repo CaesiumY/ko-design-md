@@ -772,7 +772,7 @@ function pseudoEffect(
       }
       // Something else inside the owner paints out of the hit test's sight:
       // it may be under the text and over or under this paint, on any side.
-      if (unhitPaintBetween(p)) {
+      if (unhitPaintBetween(p, area)) {
         unsure = true
         continue
       }

@@ -47,7 +47,7 @@ const pseudo = (over: Partial<RawPseudo> = {}): RawPseudo => ({
   ownerRadii: ["0px", "0px", "0px", "0px"],
   ownerBackgroundClip: "border-box",
   unhitPaint: false,
-  unhitPaintNear: false,
+  nearBoxes: [],
   nearPseudos: [],
   ownerCornerShapes: ["round", "round", "round", "round"],
   cornerShapes: ["round", "round", "round", "round"],

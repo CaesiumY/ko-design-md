@@ -15,7 +15,12 @@ import type {
   RawNonTextSample,
   RawTextLine,
 } from "../src/lib/contrast"
-import type { Corners, OrderBox, RawPseudo } from "../src/lib/contrast-pseudo"
+import type {
+  Corners,
+  OrderBox,
+  RawPseudo,
+  Rect,
+} from "../src/lib/contrast-pseudo"
 
 export interface CollectedText {
   path: string
@@ -430,27 +435,35 @@ export function collectContrast(): Collected {
     pagePainters = list
     return list
   }
-  const overlapsArea = (r: DOMRect, area: DOMRect): boolean =>
-    r.left < area.right &&
-    r.right > area.left &&
-    r.top < area.bottom &&
-    r.bottom > area.top
+  // Whether `d` is on the chain from `from` up to `owner`, the owner
+  // included: what is read and the layers it is read through, which the hit
+  // test sees or `chain` reads. Every other element is off it — the owner's
+  // ancestors too, whose placed pseudo-elements can paint between the
+  // owner's and the text in the context around the owner (#692).
+  const onChain = (d: Element, owner: Element, from: Element): boolean =>
+    d.contains(from) && owner.contains(d)
 
-  // Whether an element off `from`'s chain draws unhit where its own box, or
-  // that of a pseudo-element of it in flow, overlaps `area`.
-  const unhitPaintNearArea = (from: Element, area: DOMRect): boolean =>
-    painters().some(
-      (p) =>
-        (p.own || p.inflow) &&
-        !p.el.contains(from) &&
-        overlapsArea(p.el.getBoundingClientRect(), area)
-    )
-
-  // The placed pseudo-elements off `from`'s chain that draw unhit, read as
-  // any painted pseudo-element is, for `reach` to place.
-  const nearPseudosOf = (from: Element, area: DOMRect): Array<RawPseudo> =>
+  // The boxes of the elements off the chain that draw unhit by their own box,
+  // or by a pseudo-element in flow, whose box is theirs. Every one on the
+  // page is handed over: the area is grown around a surface where it is
+  // judged, so which of them meet it is decided there.
+  const nearBoxesOf = (owner: Element, from: Element): Array<Rect> =>
     painters()
-      .filter((p) => p.placed && !p.el.contains(from))
+      .filter((p) => (p.own || p.inflow) && !onChain(p.el, owner, from))
+      .map((p) => {
+        const r = p.el.getBoundingClientRect()
+        return { left: r.left, top: r.top, right: r.right, bottom: r.bottom }
+      })
+
+  // The placed pseudo-elements off the chain that draw unhit, read as any
+  // painted pseudo-element is, for `reach` to place.
+  const nearPseudosOf = (
+    owner: Element,
+    from: Element,
+    area: DOMRect
+  ): Array<RawPseudo> =>
+    painters()
+      .filter((p) => p.placed && !onChain(p.el, owner, from))
       .flatMap((p) =>
         paintedPseudos(p.el, area, from, {
           accept: (pcs) =>
@@ -585,9 +598,8 @@ export function collectContrast(): Collected {
         owner: orderBoxOf(el),
         chain: chainTo(from, el),
         unhitPaint: opts.nested === true ? false : unhitPaintIn(el, from),
-        unhitPaintNear:
-          opts.nested === true ? false : unhitPaintNearArea(from, area),
-        nearPseudos: opts.nested === true ? [] : nearPseudosOf(from, area),
+        nearBoxes: opts.nested === true ? [] : nearBoxesOf(el, from),
+        nearPseudos: opts.nested === true ? [] : nearPseudosOf(el, from, area),
       })
     }
     return out

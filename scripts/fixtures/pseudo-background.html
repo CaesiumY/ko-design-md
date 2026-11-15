@@ -272,6 +272,15 @@
         order and under the run. On screen the run is black on black, a
         fail. Its containing block misses the line; its own box, worked out
         as any pseudo-element's is, does not, and holds it.
+      - `.elder` holds a white panel that is no stacking context and is not
+        positioned, so its 10% black `::before` at `inset: 0` takes the
+        wrapper for its containing block. The wrapper, an ancestor of the
+        panel, has a 60% black `::before` at `inset: 0`; both take no
+        pointer events. In the positioned layer they paint in document
+        order, the wrapper's first, then the panel's, then the raised run:
+        on screen black on dark grey, a fail. The hit test stops at the
+        panel's white; read as the 10% wash over it the run would pass.
+        Unhit paint of the owner's ancestors is off the chain and holds it.
       - `.rectclip` and `.collapsed` are white panels made stacking contexts
         (`z-index: 0`) with an opaque black `::before` at `inset: 0` under a
         raised run of oklch(0.6 0 0) (rgb(128)). `.rectclip` cuts the black
@@ -710,6 +719,35 @@
       .wrapped .t {
         pointer-events: auto;
       }
+      .elder {
+        position: relative;
+        width: 300px;
+        margin-bottom: 24px;
+      }
+      .elder::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: oklch(0 0 0 / 0.6);
+      }
+      .elder .o {
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: oklch(1 0 0);
+      }
+      .elder .o::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: oklch(0 0 0 / 0.1);
+      }
+      .elder .t {
+        position: relative;
+      }
       .offset-wrap {
         width: 300px;
         margin-bottom: 24px;
@@ -1035,6 +1073,9 @@
     <div class="collapsed"><span class="t">Sample text</span></div>
     <div class="wrapped">
       <div class="wr"><span class="t">Sample text</span></div>
+    </div>
+    <div class="elder">
+      <div class="o"><span class="t">Sample text</span></div>
     </div>
     <div class="offset-wrap">
       <div class="offset"><span class="t">Sample text</span></div>

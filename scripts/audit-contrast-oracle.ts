@@ -562,6 +562,10 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   `::after` of the next element placed at `top: -120px`, outside its
  *   containing block and over the panel: held, where read as the wash over
  *   white it would pass.
+ * - `.elder` raises its run over the 10% wash of a white panel whose
+ *   ancestor, the wrapper, paints a 60% black `::before` before it in the
+ *   same layer, taking no pointer events: held, where read as the wash over
+ *   white it would pass.
  * - `.rectclip` and `.collapsed` hide a black `::before` under a grey run of
  *   oklch(0.6 0 0) (rgb(128), luminance 0.2159) on white: by `clip: rect(0 0
  *   0 0)`, held, and by `visibility: collapse`, left out, so the run reads
@@ -903,6 +907,15 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
     id: "raised text over a wash with an unhit box placed outside its block",
     pathEnds: "div.offset > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a wash with an ancestor's unhit wash",
+    pathEnds: "div.elder > div.o > span.t",
     theme: "light",
     state: "default",
     kind: "text",
