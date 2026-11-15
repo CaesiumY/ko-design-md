@@ -761,9 +761,6 @@ export function collectContrast(): Collected {
     return false
   }
 
-  // How an element cuts what its descendants paint short, if it does: to
-  // its padding box (`overflow`, `contain: paint`), or by a shape its box
-  // does not say (`clip-path`, a mask).
   // Whether an element cuts its own paint and its descendants' by a shape
   // its box does not say: a `clip-path`, a mask or a mask border, or the
   // legacy `clip`, which cuts an absolute or fixed box to a rectangle.
@@ -779,7 +776,10 @@ export function collectContrast(): Collected {
 
   // Whether an element turns, skews or scales what it paints, which leaves
   // its rect, and every rect inside it, a box round a shape that is not
-  // that box. A translation only moves it, which the rect keeps up with.
+  // that box, or a radius and a border read in other units than the rect's.
+  // A translation only moves it, which the rect keeps up with — unless a
+  // perspective above turns a move in depth into a scale. A motion path
+  // turns it without a `transform`, and `zoom` scales it.
   const bendsBox = (c: CSSStyleDeclaration): boolean => {
     const t = c.transform
     const moved =
@@ -788,9 +788,19 @@ export function collectContrast(): Collected {
       /^matrix3d\(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, [^,]+, [^,]+, [^,]+, 1\)$/.test(
         t
       )
-    return !moved || c.rotate !== "none" || c.scale !== "none"
+    return (
+      !moved ||
+      c.rotate !== "none" ||
+      c.scale !== "none" ||
+      c.perspective !== "none" ||
+      !["", "none"].includes(c.getPropertyValue("offset-path")) ||
+      !["", "1", "normal"].includes(c.getPropertyValue("zoom"))
+    )
   }
 
+  // How an element cuts what its descendants paint short, if it does: to
+  // its padding box (`overflow`, `contain: paint`), or by a shape its box
+  // does not say (`clip-path`, a mask), one entry for each.
   const clipsOf = (e: Element): Array<{ cut: ClipBox; scoped: boolean }> => {
     const c = getComputedStyle(e)
     const shaped = cutsByShape(c)

@@ -401,6 +401,10 @@
         a fail. The band's rect, 178x109 round the turned shape, holds the
         line, so released it would read 21. A turn leaves the rect a box
         round some other shape: held.
+      - `.pastpath` sets the same band on a straight 30 degree motion path
+        from the panel's centre, `offset-path`, with no `transform`: the
+        path's own `offset-rotate: auto` turns it as `.pastturn`'s does, to
+        the same rect and the same 1.55 at the line's ends. Held.
     -->
     <style>
       html {
@@ -462,6 +466,7 @@
       .pastboth,
       .pastmaskbox,
       .pastturn,
+      .pastpath,
       .pastbox,
       .overblock,
       .lifted,
@@ -1170,6 +1175,7 @@
       .pastboth .f::before,
       .pastmaskbox::before,
       .pastturn::before,
+      .pastpath::before,
       .overblock::after {
         content: "";
         position: absolute;
@@ -1245,6 +1251,15 @@
         background: oklch(1 0 0);
         transform: rotate(30deg);
       }
+      .pastpath .l {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 200px;
+        height: 10px;
+        background: oklch(1 0 0);
+        offset-path: path("M 150 60 L 250 117.735");
+      }
       .pastrect .l {
         position: absolute;
         inset: 0;
@@ -1256,7 +1271,8 @@
       .pastrect .t,
       .pastboth .t,
       .pastmaskbox .t,
-      .pastturn .t {
+      .pastturn .t,
+      .pastpath .t {
         position: absolute;
         left: 0;
         right: 0;
@@ -1481,6 +1497,10 @@
       <span class="t">Sample text</span>
     </div>
     <div class="pastturn">
+      <div class="l"></div>
+      <span class="t">Sample text</span>
+    </div>
+    <div class="pastpath">
       <div class="l"></div>
       <span class="t">Sample text</span>
     </div>

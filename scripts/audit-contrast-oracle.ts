@@ -639,6 +639,8 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   line's centre meets it, the line's ends lie off it on the wash, 1.55, a
  *   fail, and its rect round the turned band holds the line, so released
  *   it would read 21. Held.
+ * - `.pastpath` turns the same band by a 30 degree `offset-path` with no
+ *   `transform`: the same rect and the same 1.55 at the line's ends. Held.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -1177,6 +1179,15 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
     id: "raised text over a turned band whose rect holds the line",
     pathEnds: "div.pastturn > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a band a motion path turns",
+    pathEnds: "div.pastpath > span.t",
     theme: "light",
     state: "default",
     kind: "text",

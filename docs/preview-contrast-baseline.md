@@ -309,7 +309,7 @@ CSS 규칙 하나 뒤에서 같은 컴포넌트를 반복하므로 모든 사본
 않는 돌연변이로는 `.rectclip` 과 `.collapsed` 앵커가 통과로 읽혀 실패한다.
 
 스택이 닿지 않는 조상의 의사요소 판은 `.past`, `.pastbox`, `.overblock`, `.pastedge`, `.pastimage`, `.lifted`, `.corner`,
-`.pastclip`, `.pastescape`, `.pastshape`, `.pastcontain`, `.pastrect`, `.pastboth`, `.pastmaskbox`, `.pastturn` 과 문서
+`.pastclip`, `.pastescape`, `.pastshape`, `.pastcontain`, `.pastrect`, `.pastboth`, `.pastmaskbox`, `.pastturn`, `.pastpath` 와 문서
 `pseudo-canvas-stop.html` 이다. 앞의 다섯은 불투명 흰 블록 위에 조상의 칠(앞의 셋은
 배경, `.pastedge` 는 배경 없는 테두리, `.pastimage` 는 배경 없는 `border-image`)이 덮여 화면은 미달인데 스택이 흰 블록에서
 멈춰 21 로 읽던 자리라 보류다. `.lifted` 는 그 칠이 위치를 준 흰 블록 **밑**이라 21 통과로 판정한다. `.corner` 는 둥근
@@ -318,7 +318,7 @@ CSS 규칙 하나 뒤에서 같은 컴포넌트를 반복하므로 모든 사본
 자르는 `clip-path` 와 `contain: paint` 가 절대 위치 흰 층을 가운데 40px 만 남기는 자리(`.pastcontain` 은 감싸개의 `contain`
 이 칠 순서도 모르게 해 이중으로 보류된다), `.pastrect` 는 흰 층 자신의 옛 `clip: rect()` 가 같은 띠만 남기는 자리, `.pastboth` 는 한 감싸개의 `overflow` 와
 `clip-path` 가운데 `overflow` 만 층을 자르고 막은 빠져나가는 자리, `.pastmaskbox` 는 흰 층을 투명한 마스크 테두리가
-지우는 자리, `.pastturn` 은 30도 돌린 흰 띠의 외접 사각형이 줄을 품지만 줄 끝은 띠 밖인 자리,
+지우는 자리, `.pastturn` 은 30도 돌린 흰 띠의 외접 사각형이 줄을 품지만 줄 끝은 띠 밖인 자리, `.pastpath` 는 같은 띠를 `transform` 없이 모션 경로가 돌리는 자리,
 `pseudo-canvas-stop` 은 배경이 캔버스로 넘어간 `body` 에서
 멈춘 스택 너머 루트의 음수 층이라 모두 보류다. 수집기가 past 를 넘기지 않는 돌연변이로 텍스트와 비텍스트 앵커가, 해제를 끄는 돌연변이로 `.lifted` 앵커가, 칠 순서를
 무시하는 돌연변이로 `.past`, `.pastbox`, `.overblock` 앵커가, 층의 상자 검사를 빼는 돌연변이로 `.corner` 앵커가, 그리기만
@@ -326,7 +326,7 @@ CSS 규칙 하나 뒤에서 같은 컴포넌트를 반복하므로 모든 사본
 검사를 빼는 돌연변이로 `pseudo-canvas-stop` 과 `.pastclip` 앵커가, 주인과 그 위의 잘림을 보지 않는 돌연변이로 `.pastescape`
 앵커가, 모양 잘림을 컨테이닝 블록 사슬로만 따지는 돌연변이로 `.pastshape` 앵커가, 층 자신의 옛 `clip` 을 보지 않는
 돌연변이로 `.pastrect` 앵커가, 한 요소의 두 잘림 가운데 하나만 보는 돌연변이로 `.pastboth` 앵커가, 마스크 테두리를 보지
-않는 돌연변이로 `.pastmaskbox` 앵커가, 변환을 보지 않는 돌연변이로 `.pastturn` 앵커가 실패한다.
+않는 돌연변이로 `.pastmaskbox` 앵커가, 변환을 보지 않는 돌연변이로 `.pastturn` 앵커가, 모션 경로를 보지 않는 돌연변이로 `.pastpath` 앵커가 실패한다.
 
 **같은 대조를 두 번 돈다** — 문서 그대로 한 번, `* { scroll-behavior: smooth !important; }` 를
 주입하고 한 번(#490). 수집기는 화면 밖 요소를 스크롤로 끌어온 바로 다음 줄에서 위치를 읽는다.
@@ -1292,7 +1292,7 @@ run `42878751952` 재집계에서는 class101 의 비텍스트에 가상 요소 
     지금은 합성하지 않고 보류하므로, 그런 칠 위의 미달도 수로는 잡히지 않고 보류로 남는다. 다만 스택이 멈춘 불투명
     층에 대고 칠 순서를 따져 그 층 **밑**에 칠해지고, 그 층의 배경(테두리 안쪽 상자를 둥근 모서리까지 따진 것,
     `clip-path`, 마스크, 마스크 테두리, 위치를 준 층의 옛 `clip`, `content-box` 클립이 없고, 그 층과 조상에 평행 이동 말고는
-    변환이 없을 때)이 줄을 다 품으면 화면에 보이지 않으므로 보류하지 않는다.
+    변환, 모션 경로, `zoom`, `perspective` 가 없을 때)이 줄을 다 품으면 화면에 보이지 않으므로 보류하지 않는다.
     모달 뒤 어두운 막이나 위치를 준 배지 밑의 잇는 선이 그렇다. 그 층이 점 조회에 두 번 나오거나(첫 자리가 배경이
     아님), 3D 맥락(`transform-style: preserve-3d`)이 있거나, 주인이 그 층의 조상이 아니면 보류한다. 그 층의 배경이
     캔버스의 것(루트, 배경이 넘어간 `body`)이면 보류한다. 그 층의 조상 가운데 칠을 자르는 요소가 층은 자르되 의사요소는
