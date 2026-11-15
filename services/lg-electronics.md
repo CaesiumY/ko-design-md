@@ -3,7 +3,7 @@ name: LG전자
 design_system_name: LG EI Design
 slug: lg-electronics
 category: etc
-last_updated: "2026-10-05"
+last_updated: "2026-11-15"
 created_at: "2026-10-05"
 lang: ko
 logo: https://getdesign.kr/logos/lg-electronics.png
@@ -338,7 +338,7 @@ elevation:
   kr-box-shadow-base: 2px 4px 12px 0 oklch(0 0 0 / 0.16)   # 국내 운영 CSS --box-shadow--base = 2px 4px 12px 0 rgba(0,0,0,.16) · 쓰는 컴포넌트 미확인
 ---
 
-LG전자는 가전 브랜드이고, Active Red와 Heritage Red 두 빨강을 Warm Grey와 흰색, 검정 위에 올리고 둥근 EI 폼으로 화면을 짠다 [src:1][src:3][src:4][src:5].
+LG전자는 가전 브랜드이고, 글로벌 사이트는 Warm Grey 바탕 위에 풀블리드 사진 캐러셀과 크게 둥근 카드를 놓아 여백을 넓게 쓴다 [src:12].
 
 ## Brand & Style
 

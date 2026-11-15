@@ -2,7 +2,7 @@
 name: NOL
 slug: nol
 category: travel
-last_updated: "2026-10-12"
+last_updated: "2026-11-15"
 created_at: "2026-10-12"
 lang: ko
 logo: https://getdesign.kr/logos/nol.png
@@ -302,7 +302,7 @@ gradients:
   detail-bg: oklch(0.697 0.149 250.2) 0%, oklch(0.614 0.205 262.6) 25%, oklch(0.547 0.213 268.2) 50%, oklch(0.526 0.228 270.8) 75%, oklch(0.511 0.228 285.9) 100%   # #4BA2F6 #3C7BFD #3E5FEA #4052EB #643EDF · 78.57deg · 상세 번들 --bg · 쓰는 요소 미확인
 ---
 
-NOL은 여행과 여가 플랫폼이고, 흰 바탕에 채도 높은 파랑을 예약과 선택, 포커스에만 아껴 쓰며 숙소와 공연 사진을 둥글게 크게 잘라 세운다 [src:5][src:8].
+NOL은 여행과 여가 플랫폼이고, 그림자 대신 1px 연한 테두리로 깊이를 내고 할인율과 쿠폰을 말할 때만 두 번째 강조색을 쓴다 [src:5][src:6][src:8].
 
 ## Brand & Style
 
