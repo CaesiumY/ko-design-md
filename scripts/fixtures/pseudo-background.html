@@ -258,6 +258,12 @@
         sibling, and read as the grey wash over white the run would pass.
         Unhit paint outside an owner that is no stacking context, near the
         line, holds it.
+      - `.wrapped` washes its run with a 10% black `::after`, and between
+        the panel and the run a wrapper of oklch(0.3 0 0) takes no pointer
+        events while the run takes them back. On screen the run is black on
+        dark grey, a fail; the hit test skips the wrapper, and read as the
+        wash over white the run would pass. An ancestor between that draws
+        unhit holds it on the side above as well as below.
     -->
     <style>
       html {
@@ -302,7 +308,8 @@
       .shade,
       .glyph,
       .between,
-      .selfdraw {
+      .selfdraw,
+      .wrapped {
         position: relative;
         width: 300px;
         height: 120px;
@@ -650,6 +657,19 @@
         inset: 0;
         background: oklch(0 0 0);
       }
+      .wrapped::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0 / 0.1);
+      }
+      .wrapped .wr {
+        pointer-events: none;
+        background: oklch(0.3 0 0);
+      }
+      .wrapped .t {
+        pointer-events: auto;
+      }
       .selfdraw::before {
         content: "";
         position: absolute;
@@ -931,6 +951,9 @@
     <div class="beyond-wrap">
       <div class="beyond"><span class="t">Sample text</span></div>
       <i class="x"></i>
+    </div>
+    <div class="wrapped">
+      <div class="wr"><span class="t">Sample text</span></div>
     </div>
     <div class="selfdraw"><span class="t">Sample text</span></div>
     <div class="between">

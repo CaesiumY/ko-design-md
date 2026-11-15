@@ -1037,6 +1037,23 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
       })
     })
 
+    it("holds a wash over an ancestor between that paints unhit", () => {
+      // A wrapper between the owner and the text paints a background and
+      // takes no pointer events: no stack shows it under the wash.
+      expect(
+        textOver([
+          pseudo({
+            which: "after",
+            paint: halfBlack(),
+            chain: [orderBox({ pointerEvents: "none", draws: true })],
+          }),
+        ])
+      ).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+    })
+
     it("holds a wash that also draws content of its own", () => {
       // `content: "NEW"`: its glyphs are drawn over the text too, in a colour
       // and place not read.

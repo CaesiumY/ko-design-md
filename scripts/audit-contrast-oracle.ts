@@ -555,6 +555,9 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  * - `.beyond` raises its run over the grey wash of a panel that is no
  *   stacking context, under a black `::before` of a later sibling taking no
  *   pointer events: held, where read as the grey over white it would pass.
+ * - `.wrapped` washes a run from `::after` over a dark wrapper that takes no
+ *   pointer events: held, `overlay` too since the wash puts the panel in
+ *   front, where read as the wash over white it would pass.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -878,6 +881,15 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
     kind: "text",
     verdict: "indeterminate",
     blockers: ["pseudo-background"],
+  },
+  {
+    id: "text under a wash with an unhit wrapper between",
+    pathEnds: "div.wrapped > div.wr > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["overlay", "pseudo-background"],
   },
   {
     id: "text under a wash that draws glyphs of its own",

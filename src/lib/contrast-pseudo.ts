@@ -238,14 +238,13 @@ const ROUND_CORNER = new Set(["", "round", "superellipse(1)"])
  * Whether a pseudo-element placed under the text, or under its owner's
  * background, can be laid against that background with certainty: the
  * owner's own box holds the whole area, so its background is under all of
- * it, and nothing from the element read up to the owner paints out of the
- * hit test's sight. Taken from the area as given; a surface's grown area is
- * the caller's to pass. Not an owner whose background is the canvas's: what
- * its box carries is not painted there; nor one whose background colour is
- * clipped short of its border box (`background-clip` of `text`, or the
- * padding or content box). That the owner is visible at all, and that
- * nothing else inside it paints unhit (`unhitPaint`), is `pseudoEffect`'s to
- * check first, for every side.
+ * it. Taken from the area as given; a surface's grown area is the caller's
+ * to pass. Not an owner whose background is the canvas's: what its box
+ * carries is not painted there; nor one whose background colour is clipped
+ * short of its border box (`background-clip` of `text`, or the padding or
+ * content box). That the owner is visible at all, and that nothing paints
+ * out of the hit test's sight between (`unhitPaintBetween`), is
+ * `pseudoEffect`'s to check first, for every side.
  */
 export function ownerBackgroundUnder(p: RawPseudo, area: Rect): boolean {
   // Its background fills its border box cut by its rounded corners.
@@ -255,15 +254,11 @@ export function ownerBackgroundUnder(p: RawPseudo, area: Rect): boolean {
     p.ownerCornerShapes,
     area
   )
-  const hidden = (p.chain ?? []).some(
-    (b) => b.pointerEvents === "none" && b.draws
-  )
   // Its colour fills the border box only when clipped to it: `text` paints
   // it inside glyphs, and the padding and content boxes stop short of the
   // border box the area was held against.
   return (
     holds &&
-    !hidden &&
     !p.owner.canvas &&
     colourClip(p.ownerBackgroundClip) === "border-box"
   )
@@ -646,11 +641,20 @@ const isPositioned = (b: OrderBox): boolean => b.position !== "static"
 
 /**
  * Whether unhit paint can come between a pseudo-element and what is read:
- * anything inside its owner (`unhitPaint`), or anything near the area outside
- * an owner that is not certainly a stacking context (`unhitPaintNear`).
+ * an element from the one read up to the owner that draws and takes no
+ * pointer events, anything else inside the owner (`unhitPaint`), or anything
+ * near the area outside an owner that is not certainly a stacking context
+ * (`unhitPaintNear`).
  */
 export function unhitPaintBetween(p: RawPseudo): boolean {
-  return p.unhitPaint || (p.unhitPaintNear && makesContext(p.owner) !== true)
+  const chain = (p.chain ?? []).some(
+    (b) => b.pointerEvents === "none" && b.draws
+  )
+  return (
+    chain ||
+    p.unhitPaint ||
+    (p.unhitPaintNear && makesContext(p.owner) !== true)
+  )
 }
 
 /**

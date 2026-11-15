@@ -706,16 +706,14 @@ const EMPTY_CONTENT = '""'
  *   more than its box, one whose owner, a layer between it and what is
  *   read, or the element read itself, draws by a pseudo-element that is not
  *   read (`unreadPseudo`), and
- *   one with anything that paints and takes no pointer events inside its
- *   owner, or near the area outside an owner that is no stacking context
+ *   one with anything that draws and takes no pointer events — an element
+ *   from the one read up to the owner, anything else inside the owner, or
+ *   anything near the area outside an owner that is no stacking context
  *   (`unhitPaintBetween`);
  * - under its owner's background: one whose owner's colour is not opaque;
  * - under the text or under its owner's background, either way: one whose
  *   owner's own box does not hold the whole area, so its background is not
- *   under all of it, and one with an element from the one read up to the
- *   owner that draws anything — a background, a border, a shadow, an outline
- *   or a backdrop filter, itself or by its own pseudo-elements — and takes no
- *   pointer events, which no stack shows, one whose owner's
+ *   under all of it, one whose owner's
  *   background is the canvas's — the root, or a `body` whose background
  *   passes on to the canvas — so is not painted on its box, and one whose
  *   owner's background colour is clipped short of its border box.
