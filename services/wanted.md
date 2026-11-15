@@ -497,7 +497,7 @@ spring·bounce·parallax는 시스템 전반에서 사용되지 않는다. Hover
 
 기하학은 **discrete radii + 평면 표면 + 헤어라인 보더**로 요약된다. 평면 흰 캔버스(또는 다크 캔버스) 위에 8~16px 라운드 카드/버튼을 얹고, chip·avatar·icon button·search·toggle에는 `{rounded.radius-full}`를 적용한다. **장식은 절제되고 색·타이포 위계가 카드 구조를 짊어진다**.
 
-기본 보더는 **1px `{colors.border-subtle}` 헤어라인**이며 (rgba ~8%), 폼 입력·secondary 버튼은 1px `{colors.border-default}` (rgba ~22%)로 한 단계 강해진다. 포커스 상태는 1px `{colors.blue-800}` 보더 + 3px rgba blue glow(`oklch(0.563 0.241 261 / 0.16)` 부근)로 표현된다. 2px 장식용 보더, 컬러 left-rail accent 카드, color-shifted variant rim은 시스템 전반에서 사용되지 않는다.
+기본 보더는 **1px `{colors.border-subtle}` 헤어라인**이며 (rgba ~8%), 폼 입력·secondary 버튼은 1px `{colors.border-default}` (rgba ~22%)로 한 단계 강해진다. 포커스 상태는 1px `{colors.blue-800}` 보더 + 3px rgba blue glow(`oklch(0.563 0.241 261 / 0.16)` 부근)로 표현된다. 번들 기준 서술(공개 출처로 확인되지 않음): 번들 컴포넌트에는 2px 장식용 보더, 컬러 left-rail accent 카드, color-shifted variant rim 이 없다. 원티드 홈의 멘토 질문 상자는 색이 도는 conic 그라디언트 테두리를 쓴다(`### Brand gradient`) [src:17].
 
 배경은 평면 색이 기본이다. 번들 기준 서술(공개 출처로 확인되지 않음): 그라디언트를 쓰는 자리는 (1) **심볼 마크 자체** (3-stop blue → magenta → coral), (2) **아바타 circle** 의 같은 3-stop, (3) **잡카드 썸네일 placeholder** (같은 3-stop 또는 다크 변형 `oklch(0.166 0.005 271) → oklch(0.357 0.013 274)`), (4) **마케팅 hero banner** (`120deg`, navy `oklch(0.183 0.044 256)` → `{colors.blue-800}` → magenta `oklch(0.709 0.232 346)`) 네 곳이고, CTA·헤더·풀-블리드 본문 표면에는 그라디언트를 적용하지 않는다. 원티드 홈에서 관측한 그라디언트는 `### Brand gradient` 절에 있다.
 
@@ -956,7 +956,7 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 **Don't**
 
 - **이모지를 product UI에 inline으로 사용하지 않는다** — 빈 상태·성공·상태 pill에서도 monochrome SVG 또는 평면 일러스트 자산으로 대체한다. CTA의 "→" 같은 화살표도 unicode가 아니라 SVG로 그린다.
-- **그라디언트를 chrome에 사용하지 않는다** — 번들이 그라디언트 자리로 드는 곳은 (1) 심볼 마크, (2) 아바타 circle, (3) 잡카드 썸네일 placeholder, (4) 마케팅 hero banner 네 곳이고(공개 출처로 확인되지 않음), CTA·헤더·풀-블리드 본문 표면에는 적용하지 않는다.
+- **그라디언트를 chrome에 사용하지 않는다** — 번들이 그라디언트 자리로 드는 곳은 (1) 심볼 마크, (2) 아바타 circle, (3) 잡카드 썸네일 placeholder, (4) 마케팅 hero banner 네 곳이고(공개 출처로 확인되지 않음), CTA·헤더·풀-블리드 본문 표면에는 적용하지 않는다. 원티드 홈의 멘토 질문 상자 테두리(`### Brand gradient`)는 이 번들 규칙 밖의 관측이다.
 - 격식체(`-습니다`/`-십시오`)나 단정형 `-다`를 product 카피에 사용하지 않는다 — `-요`/`-어요`가 표준이다.
 - ALL-CAPS, Title Case In Buttons를 사용하지 않는다 — 영어는 항상 sentence case다.
 - UI 라벨이나 리스트 아이템 끝에 마침표를 찍지 않는다.
