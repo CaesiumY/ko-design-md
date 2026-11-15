@@ -704,8 +704,9 @@ const EMPTY_CONTENT = '""'
  * - on any side: one whose owner is hidden, whose computed background is in
  *   the stack though nothing of it is painted, one whose `content` draws
  *   more than its box, one whose owner, a layer between it and what is
- *   read, or the element read itself, draws by a pseudo-element that is not
- *   read (`unreadPseudo`), and
+ *   read, or — reading text — the element read itself, draws by a
+ *   pseudo-element that is not read (`unreadPseudo`; a surface's own
+ *   pseudo-elements are not read, here or without one), and
  *   one with anything that draws and takes no pointer events — an element
  *   from the one read up to the owner, anything else inside the owner, or
  *   anything near the area outside an owner that is no stacking context
@@ -759,7 +760,9 @@ function pseudoEffect(
         continue
       }
       // Something else of its owner, of a layer between the owner and what
-      // is read, or of the element read itself, draws and is not read — glyphs, a border, a backdrop
+      // is read, or of the element read itself when that is text (`stack[0]`;
+      // a surface's own layer is not in `stack`, and its pseudo-elements are
+      // not read at all), draws and is not read — glyphs, a border, a backdrop
       // filter — and may be over the same line, out of the hit test's sight
       // with `pointer-events: none`, or be why the owner is in front of the
       // text. The paint alone is not what is there.
