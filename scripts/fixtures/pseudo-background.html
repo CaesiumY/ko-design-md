@@ -272,6 +272,14 @@
         order and under the run. On screen the run is black on black, a
         fail. Its containing block misses the line; its own box, worked out
         as any pseudo-element's is, does not, and holds it.
+      - `.rectclip` and `.collapsed` are white panels made stacking contexts
+        (`z-index: 0`) with an opaque black `::before` at `inset: 0` under a
+        raised run of oklch(0.6 0 0) (rgb(128)). `.rectclip` cuts the black
+        away with `clip: rect(0 0 0 0)`, `.collapsed` hides it with
+        `visibility: collapse`: on screen the run is grey on white, 3.95, a
+        fail. Composed as the black under the run it would read 5.32, a
+        pass. The clip holds it; the collapsed one paints nothing and is
+        left out, so the run reads 3.95 on white.
     -->
     <style>
       html {
@@ -317,7 +325,9 @@
       .glyph,
       .between,
       .selfdraw,
-      .wrapped {
+      .wrapped,
+      .rectclip,
+      .collapsed {
         position: relative;
         width: 300px;
         height: 120px;
@@ -665,6 +675,28 @@
         inset: 0;
         background: oklch(0 0 0);
       }
+      .rectclip,
+      .collapsed {
+        z-index: 0;
+      }
+      .rectclip::before,
+      .collapsed::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0 0 0);
+      }
+      .rectclip::before {
+        clip: rect(0 0 0 0);
+      }
+      .collapsed::before {
+        visibility: collapse;
+      }
+      .rectclip .t,
+      .collapsed .t {
+        position: relative;
+        color: oklch(0.6 0 0);
+      }
       .wrapped::after {
         content: "";
         position: absolute;
@@ -999,6 +1031,8 @@
       <div class="beyond"><span class="t">Sample text</span></div>
       <i class="x"></i>
     </div>
+    <div class="rectclip"><span class="t">Sample text</span></div>
+    <div class="collapsed"><span class="t">Sample text</span></div>
     <div class="wrapped">
       <div class="wr"><span class="t">Sample text</span></div>
     </div>

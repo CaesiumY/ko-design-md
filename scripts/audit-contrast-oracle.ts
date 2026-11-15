@@ -562,6 +562,11 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   `::after` of the next element placed at `top: -120px`, outside its
  *   containing block and over the panel: held, where read as the wash over
  *   white it would pass.
+ * - `.rectclip` and `.collapsed` hide a black `::before` under a grey run of
+ *   oklch(0.6 0 0) (rgb(128), luminance 0.2159) on white: by `clip: rect(0 0
+ *   0 0)`, held, and by `visibility: collapse`, left out, so the run reads
+ *   (1.05) / (0.2659) = 3.95 on white, a fail. Composed as the black under
+ *   the run either would read 5.32, a pass.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -903,6 +908,25 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
     kind: "text",
     verdict: "indeterminate",
     blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a black box clipped to nothing",
+    pathEnds: "div.rectclip > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a collapsed black box",
+    pathEnds: "div.collapsed > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "fail",
+    blockers: [],
+    ratio: 3.95,
   },
   {
     id: "text under a wash that draws glyphs of its own",

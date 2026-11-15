@@ -227,9 +227,10 @@ export function collectContrast(): Collected {
   }
 
   // Whether an element paints a background of its own on screen: a colour
-  // that is not transparent, or an image, and it is not hidden.
+  // that is not transparent, or an image, and it is visible (`collapse`
+  // hides as `hidden` does, outside a table's rows and columns).
   const paintsBackground = (cs: CSSStyleDeclaration): boolean =>
-    cs.visibility !== "hidden" &&
+    cs.visibility === "visible" &&
     cs.display !== "none" &&
     (cs.backgroundImage !== "none" || !isTransparent(cs.backgroundColor))
 
@@ -354,13 +355,13 @@ export function collectContrast(): Collected {
   // Whether an element is on screen at all: not hidden, not `display: none`,
   // not faded out. What it draws is not asked.
   const elementShown = (cs: CSSStyleDeclaration): boolean =>
-    cs.visibility !== "hidden" && cs.display !== "none" && ownOpacity(cs) !== 0
+    cs.visibility === "visible" && cs.display !== "none" && ownOpacity(cs) !== 0
 
   // Whether an element draws anything on screen: a background, or a border,
   // shadow, outline or backdrop filter, and it is not hidden or faded out.
   const elementDraws = (cs: CSSStyleDeclaration): boolean =>
     paintsBackground(cs) ||
-    (cs.visibility !== "hidden" &&
+    (cs.visibility === "visible" &&
       cs.display !== "none" &&
       ownOpacity(cs) !== 0 &&
       drawsEdgeOrFilter(cs))
@@ -371,7 +372,7 @@ export function collectContrast(): Collected {
   // included (`EMPTY_CONTENT` in src/lib/contrast.ts).
   const pseudoDraws = (cs: CSSStyleDeclaration): boolean => {
     if (cs.content === "none" || cs.content === "normal") return false
-    if (cs.visibility === "hidden" || cs.display === "none") return false
+    if (cs.visibility !== "visible" || cs.display === "none") return false
     if (ownOpacity(cs) === 0) return false
     return pseudoPaints(cs) || cs.content !== '""' || drawsEdgeOrFilter(cs)
   }
@@ -761,6 +762,9 @@ export function collectContrast(): Collected {
       ["justify-self", pseudo.justifySelf, "auto"],
       ["align-self", pseudo.alignSelf, "auto"],
       ["position-area", pseudo.positionArea, "none"],
+      // The legacy `clip` cuts an absolute or fixed box to a rectangle, so
+      // what the box covers is not what it paints.
+      ["clip", pseudo.clip, "auto"],
     ]) {
       // An empty value is a property this browser does not know, so it
       // cannot be moving anything.
