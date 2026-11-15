@@ -3,7 +3,7 @@ name: 구름
 design_system_name: Vapor UI
 slug: vapor-ui
 category: developer
-last_updated: "2026-11-15"
+last_updated: "2026-11-16"
 created_at: "2026-05-10"
 lang: ko
 logo: https://getdesign.kr/logos/goorm.png
@@ -521,7 +521,7 @@ elevation:
 
 Vapor는 시스템 자체의 정체성을 **opinionated, light-first, very token-driven, proudly Korean-bilingual** 로 정의한다 [src:5]. opinionated는 디자인 결정이 토큰 레벨에서 강하게 박혀 있다는 뜻이고, light-first는 다크 모드가 동등하게 지원되되 1차 환경은 화이트 캔버스라는 의미다. very token-driven은 product-facing 색상이 모두 시맨틱 alias로만 노출되어 raw 팔레트는 새 role을 만들 때만 직접 참조된다는 정책을 가리킨다 [src:5].
 
-대상 사용자는 세 층위다. 디자이너에게는 Figma 라이브러리(`figma.com/community/file/1508829832204351721`)를 [src:3], 개발자에게는 `@vapor-ui/core`를 중심으로 한 6패키지 모노레포(`goorm-dev/vapor-ui`)를, 그리고 product surface를 운영하는 host 팀에게는 `@vapor-ui/css-generator`를 통해 기본 키 팔레트를 자체 브랜드 색으로 교체할 수 있는 토큰 빌드 파이프라인을 제공한다 [src:4][src:5]. 2025년 4월 전담 조직 Vapor Squad가 신설되어 Squad Lead 최준영, CDO 이태성 체제로 운영된다 [src:2].
+대상 사용자는 세 층위다. 디자이너에게는 Figma 라이브러리(`figma.com/community/file/1508829832204351721`)를 [src:3], 개발자에게는 `@vapor-ui/core`를 중심으로 한 6패키지 모노레포(`goorm-dev/vapor-ui`)를, 그리고 product surface를 운영하는 host 팀에게는 `@vapor-ui/css-generator`를 통해 기본 키 팔레트를 자체 브랜드 색으로 교체할 수 있는 토큰 빌드 파이프라인을 제공한다 [src:4][src:5]. 2025년 4월 Vapor 디자인 시스템 전담 조직이 신설됐고, 발표는 CDO 이태성과 Vapor Squad 리더 최준영이 함께 했다 [src:2].
 
 전체 무드는 **bright, soft white** 로 요약된다 [src:5]. 정보 밀도가 높은 표면(테이블·코드 패널·폼)은 흰 카드 위에 옅은 페이지 배경, 그리고 1px 헤어라인으로 분리되는 패턴이며, 색은 절제되어 있고 시맨틱 팔레트는 상태(primary CTA, success/warning/danger badge, link blue)에만 사용된다 [src:5]. 시스템 표면 자체에는 **그라디언트, 글래스/블러 효과, 텍스처, 장식 일러스트가 없다** [src:5]. 그라디언트가 등장하는 단 두 곳은 Vapor 워드마크 로고와 Getting Started 페이지의 컨셉 히어로다 [src:5]. 트랜스페어런시·블러는 토스트와 다이얼로그 스크림에만 쓰이고 frosted glass나 `backdrop-filter`는 시스템에서 제외된다 [src:5].
 
@@ -988,7 +988,7 @@ Vapor 시스템은 imagery treatment를 강제하지 않는다. goorm 마케팅 
 ## References
 
 1. https://vapor-ui.goorm.io/ — 공식 docs/데모 사이트, goorm 네이밍·운영 컨텍스트.
-2. https://blog.goorm.io/vapor-figma-seoul/ — goorm 공식 블로그 "Vapor at Figma Config Seoul 2025", Vapor Squad 조직(2025년 4월 신설, Squad Lead 최준영, CDO 이태성)·SSOT 자동화·MCP Server 컨텍스트. 본문 머리에서 구름의 회사 성격을 소개한다.
+2. https://blog.goorm.io/vapor-figma-seoul/ — goorm 공식 블로그 "구름, 서울 Figma 컨퍼런스서 혁신적 디자인 시스템 ‘Vapor’ 공개"(2025-06-24). Figma Maker Collective: Seoul 발표, Vapor 디자인 시스템 전담 조직(2025년 4월 신설), 발표자 CDO 이태성과 Vapor Squad 리더 최준영, SSOT 자동화와 MCP Server 맥락. 본문 머리에서 구름의 회사 성격을 소개한다.
 3. https://www.figma.com/community/file/1508829832204351721/vapor-design-system — Vapor Design System Figma Community 파일. 평범한 GET에는 텍스트가 34자뿐인 JS 셸이라 브라우저로 열어야 파일 정보가 보인다.
 4. https://cdn.jsdelivr.net/npm/@vapor-ui/core@1.3.0/ — `@vapor-ui/core` 1.3.0 배포본의 파일 목록(jsDelivr, 버전 고정). 컴포넌트 절의 기준 판이다 — 컴포넌트 치수·무게·radius는 `dist/components/*/*.css.ts.vanilla.css`(35개)와 `dist/styles/mixins/typography.css.ts.vanilla.css`, 크기, 타이포그래피, 그림자 토큰은 `dist/styles/themes.css.ts.vanilla.css` 다. 색의 기준은 [src:6] 이다.
 5. https://github.com/goorm-dev/vapor-ui — GitHub 모노레포(6 패키지 구조: core / hooks / icons / codemod / color-generator / css-generator, README 카피). **루트 URL 하나가 본문 인용의 대부분을 떠받치고 있어**, 개별 주장을 이 링크만으로 확인하기 어렵다. 토큰 값은 [src:4]의 배포 CSS가, 정책·카피 서술은 이 저장소의 README와 docs 소스가 각각 1차 근거다.

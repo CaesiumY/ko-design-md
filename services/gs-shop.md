@@ -2,7 +2,7 @@
 name: GS SHOP
 slug: gs-shop
 category: commerce
-last_updated: "2026-09-03"
+last_updated: "2026-11-16"
 created_at: "2026-08-30"
 lang: ko
 logo: https://getdesign.kr/logos/gs-shop.png
@@ -214,7 +214,7 @@ BI 리뉴얼과는 별개로, 2024년 9월에는 행동 데이터를 분석해 �
 | 할인율 라벨 | `{colors.content-accent}` | `.price-discount` 실측 [src:1] |
 | 라이브 방송 배지 | `{colors.live-flag-from}` → `{colors.live-flag-to}` | 홈 CSS 인라인 SVG 실추출 [src:1] |
 
-`{colors.primary-default}`가 브랜드색이라는 근거는 두 겹이다. 헤더의 `.gs-logo`는 `<img>`가 아니라 CSS `background-image`로 삽입된 인라인 SVG이고, 그 6개 path 전부가 이 값 하나를 `fill`로 쓴다 [src:1]. 별도로 GS ALL 멤버십 앱 웹뷰 스타일시트의 `.GSSHOP` 스코프에서도 같은 값이 `[class*=button-primary]` 배경으로 17회 나타나, 앱 웹뷰와 모바일 웹이 같은 토큰 체계를 공유한다는 방증이 된다 [src:13].
+`{colors.primary-default}`가 브랜드색이라는 근거는 두 겹이다. 헤더의 `.gs-logo`는 `<img>`가 아니라 CSS `background-image`로 삽입된 인라인 SVG이고, 그 6개 path 전부가 이 값 하나를 `fill`로 쓴다 [src:1]. 별도로 GS ALL 멤버십 앱 웹뷰 스타일시트의 `.GSSHOP` 스코프에서도 같은 값이 `[class*=button-primary]` 배경과 켜진 스위치, 선택된 라디오의 바탕에 쓰여, 앱 웹뷰와 모바일 웹이 같은 토큰 체계를 공유한다는 방증이 된다 [src:13].
 
 명도 스케일 규칙은 공식 문서에 있다 — "Color의 숫자가 낮을수록 밝고 클수록 어두운색"이며 50·100·200…900의 10단계를 기본으로 하되 Gray만 25·950을 더해 12단계로 만든다. Brand Color만 light/middle/default/dark의 4단계로 세분화하고 나머지 Semantic은 light/middle/dark의 3단계이며, light는 Background, middle·dark는 Content 용도로 권장한다 [src:2]. System Color의 모든 색상이 WCAG AA의 색상 최소 대비 요구사항을 충족한다고 문서가 밝히고, 스케일을 만들 때 미리 정의한 명암비를 기준으로 각 색을 미세 조정했다는 서술이 함께 있다 [src:2].
 
@@ -527,7 +527,7 @@ xsmall 18 / small 24 / medium 32 / **large 40(기본)** / xlarge 48 / xxlarge 56
 10. https://gsretail.tistory.com/20 — GS SHOP 기술블로그(이인영). 디자인 토큰 파이프라인과 ref/sys/comp 3계층
 11. https://gsretail.tistory.com/16 — GS리테일 DX블로그(박이슬). 같은 사내 발표를 다른 저자가 요약해 파이프라인을 독립적으로 재확인한다
 12. https://hpsimg.gsretail.com/gsretail/ko/intro/ci-ri — GS리테일 CI/RI 안내. 로고 PANTONE 규정이며 색공간이 달라 화면 토큰과 직접 대응하지 않는다
-13. https://ex-hubpage.grm.gsretail.com/_nuxt/entry.HxTB7rhz.css — GS ALL 멤버십 앱 웹뷰 스타일시트. `.GSSHOP` 스코프에서 브랜드 토큰이 교차 확인된다
+13. https://ex-hubpage.grm.gsretail.com/ — GS ALL 멤버십 앱 웹뷰. 페이지가 싣는 `_nuxt/entry.*.css` 스타일시트(해시 파일명이라 페이지에서 찾아 연다)의 `.GSSHOP` 스코프에서 브랜드 토큰이 교차 확인된다
 14. https://news.nate.com/view/20240902n05010 — GS SHOP의 GS리테일 소속과 2024년 앱 개편을 다룬 2차 보도
 15. https://zdnet.co.kr/view/?no=20240901100644 — 2024년 AI 라이프스타일 커머스 개편 보도. 개인화 비중과 카테고리 재배치 메커니즘
 16. http://hpimg.gsretail.com/_ui/desktop/common/docs/GS+CIBI.zip — GS리테일 공식 CI/BI 킷(벡터 + JPG). GS SHOP 워드마크의 괄호 처리를 확인할 수 있는 원본 자산

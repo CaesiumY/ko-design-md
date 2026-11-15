@@ -2,7 +2,7 @@
 name: KRDS
 slug: krds
 category: gov
-last_updated: "2026-08-17"
+last_updated: "2026-11-16"
 created_at: 2026-05-09
 lang: ko
 logo: https://getdesign.kr/logos/krds.svg
@@ -469,7 +469,7 @@ KRDS는 Figma UI 킷을 공식 배포 채널로 두며, 공식 사이트가 KRDS
 - 본문 기본 사이즈는 17px / line-height 1.55 / letter-spacing 0을 유지한다.
 - 표면은 흰색·`{colors.gray-10}`·`{colors.secondary-10}` 세 단계만 운영하고, 위계는 1px `{colors.gray-30}` 보더와 `{elevation.shadow-1}`–`{elevation.shadow-2}`로 표현한다.
 - 모든 인터랙티브 요소에 2px `{colors.primary-50}` 포커스 아웃라인 + 2px 오프셋을 적용한다.
-- **선명한 화면 모드**를 기본 모드와 동등한 대안으로 설계한다 — 그림자가 약해지는 만큼 표면 색 단계로 위계를 보강한다 [src:3].
+- **선명한 화면 모드**를 일반 모드와 함께 제공하고, 두 모드 모두 배경과 표면 색을 elevation 에 따라 단계적으로 조절한다 [src:3].
 - `{component.government-identifier-strip}` (공식 배너)은 모든 정부 페이지의 최상단에 검정 40px 바로 고정 배치한다 [src:1].
 - **전자정부 웹사이트 품질관리 지침**과 **W3C 웹 콘텐츠 접근성 지침(WCAG) 레벨 AA**를 함께 만족시킨다 — 공식 문서가 명시하는 두 기준이다 [src:2]. (종전 판본은 이를 KWCAG로 적었으나 공식 문서는 KWCAG를 언급하지 않는다.)
 - 영문 용어는 첫 노출에서 한글 풀이를 괄호로 병기한다(예: `Primary 색상 (primary color)`). 두 번째 등장부터는 한글만 사용한다.
@@ -521,7 +521,7 @@ KRDS는 Figma UI 킷을 공식 배포 채널로 두며, 공식 사이트가 KRDS
 
 - KRDS 번들은 약 120종 라인 아이콘을 정의하지만, 핸드오프 추출본에는 6종(search, close, home, menu, download, exclamation)만 포함되어 있다. CDN 폴백으로 **Material Symbols Outlined**(weight 400, grade 0, optical size 24)을 권장한다.
 - 폼 검증·에러 상태는 이제 `{component.input-text}`의 error 상태(`{colors.danger}` 보더 + helper text)로 일부 토큰화되었다. 다만 폼 전체의 인라인 검증 타이밍·에러 메시지 카탈로그는 여전히 패턴 페이지에만 부분 노출된다.
-- KRDS 표준은 라이트 모드와 **선명한 화면 모드**(high-contrast)를 1등 시민으로 명시한다 [src:3]. 본 entry의 프리뷰 다크 테마는 일반 다크 모드가 아니라 이 **선명한 화면 모드**(near-black 표면 사다리 + 리프트된 primary 명도 + 약화 그림자)를 시연하며, 별도의 일반 다크 모드 변형은 KRDS 범위 밖이다.
+- KRDS 표준형 스타일은 사용자 접근성을 고려해 일반 모드와 **선명한 화면 모드**(색상 대비를 높인 모드)를 제공한다 [src:3]. 본 entry의 프리뷰 다크 테마는 일반 다크 모드가 아니라 이 **선명한 화면 모드**(near-black 표면 사다리 + 리프트된 primary 명도 + 약화 그림자)를 시연하며, 별도의 일반 다크 모드 변형은 KRDS 범위 밖이다.
 - `{component.service-tile}` 4-up grid의 정확한 gutter·column 토큰은 sample portal CSS 추출에 한계가 있어 24px·1248px 기준의 추정값을 사용했다.
 - 모션 토큰은 duration·easing만 surface되었으며, 컴포넌트별 transition 정의는 sample portal에 일부만 노출된다.
 

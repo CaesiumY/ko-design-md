@@ -2,7 +2,7 @@
 name: 원티드
 slug: wanted
 category: career
-last_updated: "2026-11-15"
+last_updated: "2026-11-16"
 created_at: "2026-05-12"
 lang: ko
 logo: https://getdesign.kr/logos/wanted.png
@@ -349,9 +349,9 @@ Voice는 **친근한 2인칭 + 부드러운 존댓말**로 요약된다. 사무�
 
 브랜드 primary는 `{colors.blue-800}` 단일 — 버튼, 링크, 포커스 링, 핵심 데이터에 사용된다. CTA 표면 외에는 배경으로 사용하지 않는다 — 채도 강조가 아니라 단일 strong stop 정책이다.
 
-### Brand gradient (심볼 전용)
+### Brand gradient
 
-이 그라디언트는 심볼 마크 자체 + 일부 아바타 circle + 일부 잡카드 썸네일 placeholder에만 적용된다. 원티드 홈 헤더의 로고 심볼이 파랑에서 분홍, 주황으로 흐르는 SVG 그라디언트로 그려지고, 그 바탕은 흰색이다 [src:17]. 마케팅 hero용 변형은 `0E1F3F → blue-800 → magenta`로 깊은 navy를 추가해 `linear-gradient(120deg, ...)`로 그려지지만, 카탈로그 토큰으로 노출된 것은 아니다.
+원티드 홈 헤더의 로고 심볼이 파랑에서 분홍, 주황으로 흐르는 SVG 그라디언트로 그려지고, 그 바탕은 흰색이다 [src:17]. 같은 홈에는 이 3-stop 밖의 그라디언트도 있다 — 멘토 질문 상자의 테두리가 파랑과 보라로 도는 conic 그라디언트다 [src:17]. 번들 기준 서술(공개 출처로 확인되지 않음): 핸드오프 번들의 UI kit 는 이 3-stop 을 심볼 마크, 아바타 circle, 잡카드 썸네일 placeholder 에 칠하고, 마케팅 hero banner 에는 `0E1F3F → blue-800 → magenta` 로 깊은 navy 를 앞에 더한 `linear-gradient(120deg, ...)` 변형을 쓴다. 이 변형은 카탈로그 토큰으로 노출된 것이 아니다.
 
 ### Gray (14-step, single tint — 채도 0)
 
@@ -499,7 +499,7 @@ spring·bounce·parallax는 시스템 전반에서 사용되지 않는다. Hover
 
 기본 보더는 **1px `{colors.border-subtle}` 헤어라인**이며 (rgba ~8%), 폼 입력·secondary 버튼은 1px `{colors.border-default}` (rgba ~22%)로 한 단계 강해진다. 포커스 상태는 1px `{colors.blue-800}` 보더 + 3px rgba blue glow(`oklch(0.563 0.241 261 / 0.16)` 부근)로 표현된다. 2px 장식용 보더, 컬러 left-rail accent 카드, color-shifted variant rim은 시스템 전반에서 사용되지 않는다.
 
-배경은 평면 색이 기본이며, 그라디언트는 (1) **심볼 마크 자체** (3-stop blue → magenta → coral), (2) **아바타 circle** 의 같은 3-stop, (3) **잡카드 썸네일 placeholder** (같은 3-stop 또는 다크 변형 `oklch(0.166 0.005 271) → oklch(0.357 0.013 274)`), (4) **마케팅 hero banner** (`120deg`, navy `oklch(0.183 0.044 256)` → `{colors.blue-800}` → magenta `oklch(0.709 0.232 346)`) — 이렇게 네 가지 문서화된 자리에만 등장한다. CTA·헤더·풀-블리드 본문 표면에는 그라디언트를 적용하지 않는다.
+배경은 평면 색이 기본이다. 번들 기준 서술(공개 출처로 확인되지 않음): 그라디언트를 쓰는 자리는 (1) **심볼 마크 자체** (3-stop blue → magenta → coral), (2) **아바타 circle** 의 같은 3-stop, (3) **잡카드 썸네일 placeholder** (같은 3-stop 또는 다크 변형 `oklch(0.166 0.005 271) → oklch(0.357 0.013 274)`), (4) **마케팅 hero banner** (`120deg`, navy `oklch(0.183 0.044 256)` → `{colors.blue-800}` → magenta `oklch(0.709 0.232 346)`) 네 곳이고, CTA·헤더·풀-블리드 본문 표면에는 그라디언트를 적용하지 않는다. 원티드 홈에서 관측한 그라디언트는 `### Brand gradient` 절에 있다.
 
 **Iconography** — 원티드는 자체 아이콘 셋을 운영하며, 공식 갤러리가 `montage.wanted.co.kr`에 공개되어 있다 [src:9]. 공개 갤러리에서 직접 확인되는 사실은 다음과 같다.
 
@@ -690,7 +690,7 @@ avatar:
   font: 12/700
 ```
 
-브랜드 그라디언트가 적용되는 컴포넌트 — 심볼·잡카드 placeholder 외에 그라디언트가 정식 등장하는 컴포넌트는 avatar 하나다.
+번들 UI kit 에서 브랜드 그라디언트를 바탕으로 받는 컴포넌트다(공개 출처로 확인되지 않음). 같은 3-stop 을 받는 다른 자리는 `### Brand gradient` 절에 있다.
 
 ### job-card
 
@@ -956,7 +956,7 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 **Don't**
 
 - **이모지를 product UI에 inline으로 사용하지 않는다** — 빈 상태·성공·상태 pill에서도 monochrome SVG 또는 평면 일러스트 자산으로 대체한다. CTA의 "→" 같은 화살표도 unicode가 아니라 SVG로 그린다.
-- **그라디언트를 chrome에 사용하지 않는다** — 그라디언트는 (1) 심볼 마크, (2) 아바타 circle, (3) 잡카드 썸네일 placeholder, (4) 마케팅 hero banner — 네 가지 문서화된 자리에만 사용한다. CTA·헤더·풀-블리드 본문 표면에는 적용하지 않는다.
+- **그라디언트를 chrome에 사용하지 않는다** — 번들이 그라디언트 자리로 드는 곳은 (1) 심볼 마크, (2) 아바타 circle, (3) 잡카드 썸네일 placeholder, (4) 마케팅 hero banner 네 곳이고(공개 출처로 확인되지 않음), CTA·헤더·풀-블리드 본문 표면에는 적용하지 않는다.
 - 격식체(`-습니다`/`-십시오`)나 단정형 `-다`를 product 카피에 사용하지 않는다 — `-요`/`-어요`가 표준이다.
 - ALL-CAPS, Title Case In Buttons를 사용하지 않는다 — 영어는 항상 sentence case다.
 - UI 라벨이나 리스트 아이템 끝에 마침표를 찍지 않는다.

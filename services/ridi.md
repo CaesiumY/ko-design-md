@@ -2,7 +2,7 @@
 name: 리디
 slug: ridi
 category: content
-last_updated: "2026-10-20"
+last_updated: "2026-11-16"
 created_at: "2026-10-19"
 lang: ko
 logo: https://getdesign.kr/logos/ridi.png
@@ -621,7 +621,7 @@ components:
 
 렌더에서 원시와 같은 값이 나온 자리는 다음과 같다(렌더 관찰 ≈, 보드 판독 · 공개 출처 없음 — 값 일치일 뿐 토큰 경유가 아니다): `{colors.neutral-400}` 보조 글자(홈 1440 최다) · `{colors.neutral-900}` 기본 글자 · `{colors.red-500}` 별점·할인 배지 · `{colors.neutral-300}` 보조 글자 · `{colors.neutral-50}` 검색창·바로가기 원 · `{colors.darknavy-500}` 배지 · `{colors.mint-500}` `UP` 배지 · `{colors.neutral-100}` 테두리 · `{colors.neutral-25}` 상세 정보 박스 · `{colors.coolgray-200}` `보기` 버튼 테두리 · `{colors.coolgray-50}` 회차 행 구분선.
 
-층 A·emotion 어디에도 없는 렌더 색도 있다(≈, 보드 판독 · 공개 출처 없음): 비선택 회차 탭 `oklch(0.967 0.000 0.0)`, 체크박스 테두리 `oklch(0.795 0.009 264.5)`, 정보 칩의 바탕·글자 여섯 색(`연재` 글자 · `이벤트` 바탕·글자 · `리다무` 바탕 · `추천` 바탕·글자 — `## Components` 의 `info-chip`. `독점` 칩 바탕·글자는 `{colors.neutral-100}` / `{colors.emotion-grey550}` 값이라 여기 들지 않는다), 히어로 칩의 반투명 흰 바탕과 반투명 검정 글자, 맨 위로 버튼의 반투명 흰 바탕. 빈도 1의 배너 배경 40여 개는 작품별 배너 색이라 토큰이 아니다. 상세 화면 코드에는 배경 상수 `oklch(0.628 0.191 27.4)` 가 있고 다크면 테마의 빨강으로 바뀐다 [src:22]. 메타 `msapplication-TileColor` 는 목록 HTML 에서 `{colors.emotion-blue}` 값, 상세 HTML 에서 흰색이고, `theme-color` 는 흰색이다 [src:1][src:10].
+층 A·emotion 어디에도 없는 렌더 색도 있다(≈, 보드 판독 · 공개 출처 없음): 비선택 회차 탭 `oklch(0.967 0.000 0.0)`, 체크박스 테두리 `oklch(0.795 0.009 264.5)`, 정보 칩의 바탕·글자 여섯 색(`연재` 글자 · `이벤트` 바탕·글자 · `리다무` 바탕 · `추천` 바탕·글자 — `## Components` 의 `info-chip`. `독점` 칩 바탕·글자는 `{colors.neutral-100}` / `{colors.emotion-grey550}` 값이라 여기 들지 않는다), 히어로 칩의 반투명 흰 바탕과 반투명 검정 글자, 맨 위로 버튼의 반투명 흰 바탕. 빈도 1의 배너 배경 40여 개는 작품별 배너 색이라 토큰이 아니다. 상세 화면 코드에는 배경 상수 `oklch(0.628 0.191 27.4)` 가 있고 다크면 테마의 빨강으로 바뀐다 [src:22]. 메타 `msapplication-TileColor` 는 목록 HTML 과 상세 HTML 모두 `{colors.emotion-blue}` 값이고, `theme-color` 는 흰색이다 [src:1][src:10].
 
 **옛 층의 색.** 상세 화면만 불러오는 레거시 CSS 에 옛 이름 변수가 남아 있다. 옛 대표색 `--dodgerblue_50` `oklch(0.628 0.164 249.6)` 이 회차 리스트의 파란 버튼과 `리다무` 칩 글자에 쓰이고, `--lightsteelblue_20` `oklch(0.942 0.017 248.0)` 이 `연재` 칩 바탕이다 [src:27][src:29]. 옛 팔레트 111키는 지금도 emotion 번들 안 객체로 실려 있다 [src:3][src:30]. 레거시 hover 블루 `oklch(0.609 0.200 254.9)` 는 상세 레거시 CSS 에만 있다 [src:26].
 
