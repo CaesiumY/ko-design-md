@@ -150,8 +150,9 @@ function main(): void {
     return
   }
 
-  // Escape hatch for the edits listed under the `Skip-Last-Updated` bullet of
-  // "날짜는 조회해서 쓴다" in `.claude/rules/audit-notes.md`. It began with repo-wide mechanical sweeps:
+  // Escape hatch for the edits listed under the `Skip-Last-Updated`
+  // bullet of "날짜는 조회해서 쓴다" in `.claude/rules/audit-notes.md`.
+  // It began with repo-wide mechanical sweeps:
   // replaying 24 commits found two — a vendor-neutrality line added to 9
   // entries, a `created_at` backfill across 4 — where bumping every date would
   // push the whole catalog to the top of the RSS feed. It lives in the commit

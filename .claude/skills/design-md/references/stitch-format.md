@@ -4,12 +4,12 @@ A catalog entry is a YAML-frontmatter + Markdown document that encodes a brand's
 
 ## Standard section order (use as ## headings, in this order)
 
-Before the first section, directly under the H1, a new entry carries its **tagline line** (한 줄 소개): one plain-prose sentence, not a blockquote. The site takes the first non-blank line that is not a heading or a blockquote (an HTML comment counts as a line), strips bold, citation markers and backticks, and shows it on the home list, the detail header, the meta description (cut at 155 characters), `llms.txt` and the RSS item description; the share card shows its first sentence. Its rules:
+Before the first section, directly under the H1, a new entry carries its **tagline line** (한 줄 소개): one plain-prose sentence, not a blockquote. The site takes the first non-blank line that is not a heading or a blockquote (an HTML comment counts as a line), strips bold, citation markers and backticks, and shows it on the home list, the detail header, the meta description (trimmed to fit), `llms.txt` and the RSS item description; the share card shows its first sentence. Its rules:
 
 - Subject is the frontmatter `name` (the brand name the detail page shows), even when the H1 names the design system.
 - One sentence, 90 characters or fewer as the reader sees it (citation markers not counted).
 - Says what the service does, then how its screens look. The service definition uses the cited source's own words. No brand slogan or campaign line, reproduced or paraphrased, and no mission, vision or positioning line, even when a source phrases it that way.
-- Every claim carries a `[src:N]`. No color values, bold, or dashes.
+- Every claim carries a `[src:N]`. No color values, no bold, no em dash (`—`).
 
 1. **Brand & Style** — design philosophy, target audience, emotional tone. Prose, body lang.
 2. **Colors** — palette with semantic roles. Values are declared as OKLCH in the frontmatter `colors:` map (see the token rules below); the section carries the prose, plus a table only where it adds what the map cannot (usage matrix, light/dark pairing).
