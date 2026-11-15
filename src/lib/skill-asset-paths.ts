@@ -28,6 +28,10 @@ export const PREVIEW_PROSE_AUDIT_SKILL =
   ".claude/skills/preview-prose-audit/SKILL.md"
 export const USE_DESIGN_MD_SKILL = ".claude/skills/use-design-md/SKILL.md"
 
+// A rule file that restates a preview prompt's rule (the closed list of text a
+// preview may carry), read by the tagline contract test.
+export const PREVIEW_RULES = ".claude/rules/preview.md"
+
 // The consumer skill's `claude plugin eval` suite. It lives OUTSIDE the skill
 // directory because skills.sh copies that directory wholesale into consumer
 // projects — the trigger queries used to ship that way. Cases reach the skill
@@ -75,6 +79,7 @@ export const ALL_SKILL_ASSET_PATHS = [
   DOCS_CRAWLER_SKILL,
   PREVIEW_PROSE_AUDIT_SKILL,
   USE_DESIGN_MD_SKILL,
+  PREVIEW_RULES,
   USE_DESIGN_MD_SKILL_DIR,
   USE_DESIGN_MD_EVALS,
   ...DESIGN_MD_AGENT_PATHS,

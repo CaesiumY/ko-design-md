@@ -31,19 +31,33 @@ export function deriveSlug(
 //   NOT render (the OG image via satori, the meta description), so a leftover
 //   backtick shows up as a literal character on the social card.
 export function deriveTagline(body: string): string {
-  const lines = body.split(/\r?\n/)
-  for (const line of lines) {
+  return taglineAsShown(taglineSourceLine(body))
+}
+
+/**
+ * The body line the site takes as the tagline, as written: the first
+ * non-blank line that is not a heading or a blockquote. An HTML comment is not
+ * skipped. The draft gate reads this to judge what stripping hides (bold) or
+ * what is not prose at all (a comment); `deriveTagline` is it as shown.
+ */
+export function taglineSourceLine(body: string): string {
+  for (const line of body.split(/\r?\n/)) {
     const trimmed = line.trim()
     if (trimmed.length === 0) continue
     if (trimmed.startsWith("#")) continue
     if (trimmed.startsWith(">")) continue
     return trimmed
-      .replace(/\*\*/g, "")
-      .replace(/\s*\[src:[^\]]*\]/g, "")
-      .replace(/`/g, "")
-      .trim()
   }
   return ""
+}
+
+/** A tagline source line as the reader sees it: no bold, citations or backticks. */
+export function taglineAsShown(line: string): string {
+  return line
+    .replace(/\*\*/g, "")
+    .replace(/\s*\[src:[^\]]*\]/g, "")
+    .replace(/`/g, "")
+    .trim()
 }
 
 // Sentence terminator beats whitespace: a period closes a thought, a space may

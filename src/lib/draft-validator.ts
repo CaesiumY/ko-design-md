@@ -19,6 +19,8 @@ import { LEADING_OKLCH, definitionRow, matchDefinition } from "./oklch-sync"
 import { conflictingDefinitions } from "./oklch-drift"
 import { KNOWN_SPEC_LIMITATIONS } from "./spec-limitations"
 import { LOGO_TAKEDOWNS } from "./logo-takedowns"
+import { readTagline, taglineIssues } from "./tagline-lint"
+import { CSS_COLOUR_FUNCTION } from "./colour-function"
 import {
   ColorRefError,
   TYPE_STYLE_PROPERTIES,
@@ -26,6 +28,7 @@ import {
   isShadowValue,
   stylePropertyValue,
 } from "./token-extractor"
+import type { TaglineReading } from "./tagline-lint"
 import type {
   FrontmatterEntryRow,
   FrontmatterKey,
@@ -66,6 +69,9 @@ export interface DraftValidationResult {
   issues: Array<ValidationIssue>
   passed: boolean
   doc: ServiceDoc | null
+  // The tagline line as the site would show it, for the Stage 7 checkpoint;
+  // null when the frontmatter fence is missing and no body line is read.
+  tagline: TaglineReading | null
 }
 
 // The 10 standard Stitch v0.1 sections, in required order. Entries may add
@@ -1340,8 +1346,10 @@ function isComponentDimension(value: string): boolean {
 }
 
 /** A literal CSS colour — hex or a colour function, OKLCH included. */
-const LITERAL_COLOUR =
-  /^(?:#[0-9a-fA-F]{3,8}\b|(?:rgba?|hsla?|hwb|oklch|oklab|lch|lab|color-mix)\s*\()/i
+const LITERAL_COLOUR = new RegExp(
+  `^(?:#[0-9a-fA-F]{3,8}\\b|${CSS_COLOUR_FUNCTION})`,
+  "i"
+)
 /**
  * Strip a MATCHING surrounding quote pair, either style; leave anything else
  * alone so a value that merely contains a quote is not mangled. Only for the
@@ -2523,7 +2531,8 @@ export function validateDraft(
     )
   }
 
-  const body = splitFrontmatter(raw)?.body ?? raw
+  const split = splitFrontmatter(raw)
+  const body = split?.body ?? raw
   const read = readFrontmatter(raw)
   // The entry's slug for lookups keyed by it (recorded limitations, logo
   // takedowns, citations): the written slug, else the caller's, else the
@@ -2601,6 +2610,10 @@ export function validateDraft(
   )
   issues.push(...checkDuplicateTokens(raw, body))
   issues.push(...checkWorkingMarkers(body))
+  // Read only once the frontmatter fence is found: without it the "first prose
+  // line" is the fence itself, and the frontmatter finding already names the
+  // cause.
+  if (split) issues.push(...taglineIssues(body))
   issues.push(...scan.yamlTokenIssues)
   issues.push(...scan.fenceIssues)
   issues.push(...scan.proseHexIssues)
@@ -2610,5 +2623,6 @@ export function validateDraft(
     issues,
     passed: !issues.some((i) => i.severity === "block"),
     doc,
+    tagline: split ? readTagline(body) : null,
   }
 }

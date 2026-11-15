@@ -145,7 +145,7 @@ restating `services/remember.md`. The reviewer did not err; the axis did not exi
 points** — append one `warn` per gap.
 
 A preview carries **no design-explanation caption**. The demo's own text is not in question — the
-hero's brand name, tagline and CTA, section headings, the copy inside each component and mock. Any
+hero's brand name, slogan and CTA, section headings, the copy inside each component and mock. Any
 other text on the screen is one of a closed list, and these are out of scope:
 
 - the `catalog-disclaimer` strip (Item 1);
