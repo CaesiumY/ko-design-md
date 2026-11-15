@@ -264,6 +264,14 @@
         dark grey, a fail; the hit test skips the wrapper, and read as the
         wash over white the run would pass. An ancestor between that draws
         unhit holds it on the side above as well as below.
+      - `.offset` is a panel that is no stacking context with a 10% black
+        `::before` at `z-index: 1` under a run at `z-index: 2`. The next
+        element is 0px tall, and its `::after`, taking no pointer events,
+        is a black 300x120 box at `top: -120px` and `z-index: 1`: outside
+        its containing block, over the panel, after the wash in document
+        order and under the run. On screen the run is black on black, a
+        fail. Its containing block misses the line; its own box, worked out
+        as any pseudo-element's is, does not, and holds it.
     -->
     <style>
       html {
@@ -670,6 +678,45 @@
       .wrapped .t {
         pointer-events: auto;
       }
+      .offset-wrap {
+        width: 300px;
+        margin-bottom: 24px;
+      }
+      .offset {
+        position: relative;
+        width: 300px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: oklch(1 0 0);
+      }
+      .offset::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: oklch(0 0 0 / 0.1);
+      }
+      .offset .t {
+        position: relative;
+        z-index: 2;
+      }
+      .offset-wrap .n {
+        position: relative;
+        height: 0;
+      }
+      .offset-wrap .n::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: -120px;
+        width: 300px;
+        height: 120px;
+        z-index: 1;
+        pointer-events: none;
+        background: oklch(0 0 0);
+      }
       .selfdraw::before {
         content: "";
         position: absolute;
@@ -954,6 +1001,10 @@
     </div>
     <div class="wrapped">
       <div class="wr"><span class="t">Sample text</span></div>
+    </div>
+    <div class="offset-wrap">
+      <div class="offset"><span class="t">Sample text</span></div>
+      <div class="n"></div>
     </div>
     <div class="selfdraw"><span class="t">Sample text</span></div>
     <div class="between">

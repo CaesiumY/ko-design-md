@@ -175,14 +175,22 @@ export interface RawPseudo {
    */
   unhitPaint: boolean
   /**
-   * Something anywhere on the page, off the chain, does the same where it
-   * may reach the area: its own box overlaps it, or, for a pseudo-element
-   * placed `absolute`, its containing block does, or it is `fixed`. It
+   * Something anywhere on the page, off the chain, does the same where its
+   * own box overlaps the area: an element, or a pseudo-element in flow, whose
+   * box is its element's. Placed pseudo-elements are `nearPseudos`. It
    * matters only when the owner is no stacking context: its pseudo-elements
    * then paint in the context around it, where such a thing can come
    * between them and what is read.
    */
   unhitPaintNear: boolean
+  /**
+   * Each `::before` or `::after` placed `absolute` or `fixed` anywhere on the
+   * page, off the chain, that draws with `pointer-events: none`, read as this
+   * one is, so `reach` can tell whether it may lie over the area: such a box
+   * can sit outside its containing block. Their own `unhitPaint`,
+   * `unhitPaintNear` and `nearPseudos` are not read.
+   */
+  nearPseudos: Array<RawPseudo>
 }
 
 /**
@@ -644,17 +652,16 @@ const isPositioned = (b: OrderBox): boolean => b.position !== "static"
  * an element from the one read up to the owner that draws and takes no
  * pointer events, anything else inside the owner (`unhitPaint`), or anything
  * near the area outside an owner that is not certainly a stacking context
- * (`unhitPaintNear`).
+ * (`unhitPaintNear`, or a placed pseudo-element of `nearPseudos` that `reach`
+ * does not rule out).
  */
 export function unhitPaintBetween(p: RawPseudo): boolean {
   const chain = (p.chain ?? []).some(
     (b) => b.pointerEvents === "none" && b.draws
   )
-  return (
-    chain ||
-    p.unhitPaint ||
-    (p.unhitPaintNear && makesContext(p.owner) !== true)
-  )
+  const near =
+    p.unhitPaintNear || p.nearPseudos.some((np) => reach(np) !== "none")
+  return chain || p.unhitPaint || (near && makesContext(p.owner) !== true)
 }
 
 /**

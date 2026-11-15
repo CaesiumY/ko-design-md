@@ -400,63 +400,65 @@ export function collectContrast(): Collected {
     return painters.some((d) => !d.contains(from))
   }
 
-  // Whether anything on the page that is not `from` or one of its ancestors
-  // paints out of the hit test's sight where it may reach `area`: an element
-  // shown with `pointer-events: none` whose box overlaps it, or a
-  // pseudo-element drawing with it whose box may — its own element's box
-  // when it is in flow, its containing block's when it is `absolute` (the
-  // nearest positioned ancestor, approximated), and anywhere when `fixed`
-  // (#692). Listed once per page; the boxes are read at sample time.
-  let pagePainters: Array<{
+  // The elements on the page that draw out of the hit test's sight: shown
+  // with `pointer-events: none` themselves (`own`), or with a pseudo-element
+  // that draws with it, in flow (`inflow`, inside the element's box) or
+  // placed (`placed`, anywhere its own geometry puts it). Listed once per
+  // page; boxes are read at sample time (#692).
+  interface Painter {
     el: Element
-    boxes: () => Array<DOMRect | null>
-  }> | null = null
-  const overlapsArea = (r: DOMRect | null, area: DOMRect): boolean =>
-    r === null ||
-    (r.left < area.right &&
-      r.right > area.left &&
-      r.top < area.bottom &&
-      r.bottom > area.top)
-  const positionedFrom = (e: Element): Element => {
-    let up: Element | null = e
-    while (up !== null) {
-      if (getComputedStyle(up).position !== "static") return up
-      up = up.parentElement
-    }
-    return document.documentElement
+    own: boolean
+    inflow: boolean
+    placed: boolean
   }
-  const unhitPaintNearArea = (from: Element, area: DOMRect): boolean => {
-    if (pagePainters === null) {
-      pagePainters = []
-      for (const d of document.querySelectorAll("*")) {
-        const cs = getComputedStyle(d)
-        const own = cs.pointerEvents === "none" && elementShown(cs)
-        const pseudoKinds = (["::before", "::after"] as const)
-          .map((ps) => getComputedStyle(d, ps))
-          .filter((pcs) => pcs.pointerEvents === "none" && pseudoDraws(pcs))
-          .map((pcs) => pcs.position)
-        if (!own && pseudoKinds.length === 0) continue
-        const el = d
-        pagePainters.push({
-          el,
-          boxes: () => [
-            ...(own ? [el.getBoundingClientRect()] : []),
-            ...pseudoKinds.map((pos) =>
-              pos === "fixed"
-                ? null
-                : pos === "absolute"
-                  ? positionedFrom(el).getBoundingClientRect()
-                  : el.getBoundingClientRect()
-            ),
-          ],
-        })
-      }
+  let pagePainters: Array<Painter> | null = null
+  const painters = (): Array<Painter> => {
+    if (pagePainters !== null) return pagePainters
+    const list: Array<Painter> = []
+    for (const d of document.querySelectorAll("*")) {
+      const cs = getComputedStyle(d)
+      const own = cs.pointerEvents === "none" && elementShown(cs)
+      const kinds = (["::before", "::after"] as const)
+        .map((ps) => getComputedStyle(d, ps))
+        .filter((pcs) => pcs.pointerEvents === "none" && pseudoDraws(pcs))
+        .map((pcs) => pcs.position)
+      const placed = kinds.some((k) => k === "absolute" || k === "fixed")
+      const inflow = kinds.some((k) => k !== "absolute" && k !== "fixed")
+      if (own || inflow || placed) list.push({ el: d, own, inflow, placed })
     }
-    return pagePainters.some(
-      ({ el, boxes }) =>
-        !el.contains(from) && boxes().some((r) => overlapsArea(r, area))
+    pagePainters = list
+    return list
+  }
+  const overlapsArea = (r: DOMRect, area: DOMRect): boolean =>
+    r.left < area.right &&
+    r.right > area.left &&
+    r.top < area.bottom &&
+    r.bottom > area.top
+
+  // Whether an element off `from`'s chain draws unhit where its own box, or
+  // that of a pseudo-element of it in flow, overlaps `area`.
+  const unhitPaintNearArea = (from: Element, area: DOMRect): boolean =>
+    painters().some(
+      (p) =>
+        (p.own || p.inflow) &&
+        !p.el.contains(from) &&
+        overlapsArea(p.el.getBoundingClientRect(), area)
     )
-  }
+
+  // The placed pseudo-elements off `from`'s chain that draw unhit, read as
+  // any painted pseudo-element is, for `reach` to place.
+  const nearPseudosOf = (from: Element, area: DOMRect): Array<RawPseudo> =>
+    painters()
+      .filter((p) => p.placed && !p.el.contains(from))
+      .flatMap((p) =>
+        paintedPseudos(p.el, area, from, {
+          accept: (pcs) =>
+            pcs.pointerEvents === "none" &&
+            pseudoDraws(pcs) &&
+            (pcs.position === "absolute" || pcs.position === "fixed"),
+          nested: true,
+        })
+      )
 
   const orderBoxOf = (e: Element): OrderBox => {
     const c = getComputedStyle(e)
@@ -503,7 +505,11 @@ export function collectContrast(): Collected {
   function paintedPseudos(
     el: Element,
     area: DOMRect,
-    from: Element
+    from: Element,
+    opts: {
+      accept?: (cs: CSSStyleDeclaration) => boolean
+      nested?: boolean
+    } = {}
   ): Array<RawPseudo> {
     const out: Array<RawPseudo> = []
     const ownerStyle = getComputedStyle(el)
@@ -520,7 +526,7 @@ export function collectContrast(): Collected {
       // buttons carry `::before { background: …; opacity: 0 }` for a hover
       // wash, so without the hidden, opacity and background tests every
       // vapor-ui button reading was held for a layer that is not on screen.
-      if (!pseudoPaints(cs)) continue
+      if (!(opts.accept ?? pseudoPaints)(cs)) continue
       out.push({
         position: cs.position,
         transform: cs.transform,
@@ -543,7 +549,7 @@ export function collectContrast(): Collected {
         borderBottomWidth: cs.borderBottomWidth,
         borderLeftWidth: cs.borderLeftWidth,
         containingBlock: containingBlockOf(el, cs.position === "fixed"),
-        unsure: unsureFor(el, cs),
+        unsure: unsureFor(el, cs, opts.nested === true),
         area: {
           left: area.left,
           top: area.top,
@@ -577,8 +583,10 @@ export function collectContrast(): Collected {
         cornerShapes: cornerShapesOf(cs),
         owner: orderBoxOf(el),
         chain: chainTo(from, el),
-        unhitPaint: unhitPaintIn(el, from),
-        unhitPaintNear: unhitPaintNearArea(from, area),
+        unhitPaint: opts.nested === true ? false : unhitPaintIn(el, from),
+        unhitPaintNear:
+          opts.nested === true ? false : unhitPaintNearArea(from, area),
+        nearPseudos: opts.nested === true ? [] : nearPseudosOf(from, area),
       })
     }
     return out
@@ -688,8 +696,20 @@ export function collectContrast(): Collected {
   // reaches past its box, a grid placement, which makes a grid area its
   // containing block, and self-alignment or anchor positioning, which move it
   // past what `left` and `top` say.
-  function unsureFor(el: Element, pseudo: CSSStyleDeclaration): Array<string> {
-    const unsure = unsureOf(pseudo)
+  //
+  // `placeOnly` asks only where the box lies, not what it paints there (the
+  // placed pseudo-elements of `nearPseudosOf`): its own `backdrop-filter`
+  // then counts for nothing — it filters what is behind inside the box and
+  // makes a containing block only for descendants a pseudo-element has none
+  // of. An ancestor's still does.
+  function unsureFor(
+    el: Element,
+    pseudo: CSSStyleDeclaration,
+    placeOnly = false
+  ): Array<string> {
+    const unsure = unsureOf(pseudo).filter(
+      (u) => !placeOnly || !u.startsWith("backdrop-filter:")
+    )
     for (const [name, value, initial] of [
       // Paint that reaches past the box. An outline may or may not — one
       // drawn inside the box does not — so it is handed over as `outline`

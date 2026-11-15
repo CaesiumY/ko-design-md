@@ -723,6 +723,7 @@ const pseudo = (over: Partial<RawPseudo> = {}): RawPseudo => ({
   ownerBackgroundClip: "border-box",
   unhitPaint: false,
   unhitPaintNear: false,
+  nearPseudos: [],
   ownerCornerShapes: ["round", "round", "round", "round"],
   cornerShapes: ["round", "round", "round", "round"],
   which: "before",
@@ -1261,6 +1262,31 @@ describe("a pseudo-element is judged on the side of the text it paints (#692)", 
         verdict: "indeterminate",
         blockers: ["pseudo-background"],
       })
+    })
+
+    it("holds when an unhit pseudo-element outside the owner reaches the line", () => {
+      // Placed `absolute`, it can paint outside its containing block: its own
+      // box is worked out as any pseudo-element's is.
+      expect(
+        textOn(opaque(0, 0, 0), [
+          pseudo({ ...raised, paint: halfBlack(), nearPseudos: [pseudo()] }),
+        ])
+      ).toMatchObject({
+        verdict: "indeterminate",
+        blockers: ["pseudo-background"],
+      })
+    })
+
+    it("composes when an unhit pseudo-element outside the owner misses the line", () => {
+      expect(
+        textOn(opaque(0, 0, 0), [
+          pseudo({
+            ...raised,
+            paint: halfBlack(),
+            nearPseudos: [pseudo({ top: "500px" })],
+          }),
+        ])
+      ).toMatchObject({ verdict: "pass", blockers: [] })
     })
 
     it("composes when the owner is a stacking context, whatever paints outside it", () => {

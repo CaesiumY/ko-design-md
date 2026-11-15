@@ -558,6 +558,10 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  * - `.wrapped` washes a run from `::after` over a dark wrapper that takes no
  *   pointer events: held, `overlay` too since the wash puts the panel in
  *   front, where read as the wash over white it would pass.
+ * - `.offset` raises its run over a wash with, between them, a black
+ *   `::after` of the next element placed at `top: -120px`, outside its
+ *   containing block and over the panel: held, where read as the wash over
+ *   white it would pass.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -890,6 +894,15 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
     kind: "text",
     verdict: "indeterminate",
     blockers: ["overlay", "pseudo-background"],
+  },
+  {
+    id: "raised text over a wash with an unhit box placed outside its block",
+    pathEnds: "div.offset > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
   },
   {
     id: "text under a wash that draws glyphs of its own",
