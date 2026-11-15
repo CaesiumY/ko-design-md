@@ -635,7 +635,7 @@ TDS 의 공개 문서로는 TDS Mobile [src:5] 과 앱인토스 TDS 컴포넌트
 
 ### Breakpoints
 
-공식 breakpoint 토큰 표는 핸드오프 번들에서 별도로 surface되지 않았다 — 아래는 mobile-first 정책 기반의 권장 분기점이며 토스 공식 토큰은 아니다.
+공식 breakpoint 토큰 표는 핸드오프 번들에서 별도로 surface되지 않았다 — 아래는 모바일 화면을 기준으로 둔 권장 분기점이며 토스 공식 토큰은 아니다.
 
 | Name | Width | Key Changes |
 |---|---|---|

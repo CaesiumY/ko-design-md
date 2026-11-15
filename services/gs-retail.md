@@ -65,7 +65,7 @@ fonts:
 
 ## Colors
 
-> **교차 대조(2026-11-16).** 정확값 색 2종은 서로 독립된 두 표면에서 확인됐다 — `{colors.primary-dark}` 는 공식 기술블로그의 Dart 코드와 앱 내부 웹뷰 CSS 의 `[class*=button-primary]` 규칙 양쪽에 나오고 [src:7][src:18], `{colors.signature-cyan}` 은 그 웹뷰 CSS 값과 공식 앱 랜딩 도메인 `apple-touch-icon` 배경 실측이 일치한다 [src:18][src:26]. 나머지는 등급이 다르다 — `.GS25` 스코프의 무채색 램프는 용도가 공개되지 않았고, 서비스 브랜드·기업 CI 값은 발행값이되 네이티브 UI 토큰이 아니다 [src:19][src:20]. 웹뷰 CSS 는 `{colors.primary-dark}` 를 **primary 버튼 배경**으로 쓰고, 그 버튼의 눌림 배경은 `{colors.navy-deep}`, 비활성 배경은 `{colors.neutral-300}` 이다 [src:18].
+> **교차 대조(2026-11-16).** 정확값 색 2종은 서로 독립된 두 표면에서 확인됐다 — `{colors.primary-dark}` 는 공식 기술블로그의 Dart 코드와 앱 내부 웹뷰 CSS 의 `[class*=button-primary]` 규칙 양쪽에 나오고 [src:7][src:18], `{colors.signature-cyan}` 은 그 웹뷰 CSS 값과 공식 앱 랜딩 도메인 `apple-touch-icon` 배경 실측이 일치한다 [src:18][src:26]. 나머지는 등급이 다르다 — `.GS25` 스코프의 무채색 램프는 발행된 용도 설명이 없고, 서비스 브랜드·기업 CI 값은 발행값이되 네이티브 UI 토큰이 아니다 [src:19][src:20]. 웹뷰 CSS 는 `{colors.primary-dark}` 를 **primary 버튼 배경**으로 쓰고, 그 버튼의 눌림 배경은 `{colors.navy-deep}`, 비활성 배경은 `{colors.neutral-300}` 이다 [src:18].
 
 공개된 디자인 토큰 표는 존재하지 않는다. 그래서 이 절의 값은 하나의 팔레트가 아니라 **근거 강도가 다른 네 묶음**이며, frontmatter 의 그룹 라벨이 그 경계를 그대로 따른다.
 
