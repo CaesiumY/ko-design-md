@@ -956,7 +956,7 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 **Don't**
 
 - **이모지를 product UI에 inline으로 사용하지 않는다** — 빈 상태·성공·상태 pill에서도 monochrome SVG 또는 평면 일러스트 자산으로 대체한다. CTA의 "→" 같은 화살표도 unicode가 아니라 SVG로 그린다.
-- **그라디언트를 chrome에 사용하지 않는다** — 번들이 그라디언트 자리로 드는 곳은 (1) 심볼 마크, (2) 아바타 circle, (3) 잡카드 썸네일 placeholder, (4) 마케팅 hero banner 네 곳이고(공개 출처로 확인되지 않음), CTA·헤더·풀-블리드 본문 표면에는 적용하지 않는다. 원티드 홈의 멘토 질문 상자 테두리(`### Brand gradient`)는 이 번들 규칙 밖의 관측이다.
+- **그라디언트를 chrome에 사용하지 않는다** — 번들이 그라디언트 자리로 드는 곳은 (1) 심볼 마크, (2) 아바타 circle, (3) 잡카드 썸네일 placeholder, (4) 마케팅 hero banner 네 곳이고(공개 출처로 확인되지 않음), CTA·헤더·풀-블리드 본문 표면에는 적용하지 않는다. 원티드 홈의 멘토 질문 상자 테두리(`### Brand gradient`)는 이 번들 규칙 밖의 관측이다 [src:17].
 - 격식체(`-습니다`/`-십시오`)나 단정형 `-다`를 product 카피에 사용하지 않는다 — `-요`/`-어요`가 표준이다.
 - ALL-CAPS, Title Case In Buttons를 사용하지 않는다 — 영어는 항상 sentence case다.
 - UI 라벨이나 리스트 아이템 끝에 마침표를 찍지 않는다.
