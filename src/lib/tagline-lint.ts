@@ -36,19 +36,22 @@ const SECOND_SENTENCE = new RegExp(`${SENTENCE_END}\\s+\\S`, "u")
 //   value (`#3182F6인`, `#ff6600으로만`); only a Latin letter or digit run into
 //   it makes it something else. A three- or four-digit one (`#333`) is a colour
 //   too, unless one of the listed units or nouns follows and makes it a number
-//   tag (`#100일`, `#2024년`, `#100이벤트`). The list releases; it does not
-//   catch, so a word missing from it blocks rather than slips through — Korean
-//   endings cannot be listed (`#333였다`, `#333같은`), units can;
+//   tag (`#100일`, `#2024년`, `#100이벤트`). The list releases rather than
+//   catches, because Korean endings cannot be listed (`#333였다`, `#333같은`)
+//   and units can: a unit missing from it blocks instead of slipping through.
+//   It keeps to units that seldom open another word, since nothing checks
+//   where the unit's word ends — 회, 주, 초 and 명 would release 회색, 주황,
+//   초록 and 명도. 일 stays for `#100일`, so `#333일 때` slips through;
 // - a CSS colour function from the shared list, written in lower case with its
-//   parenthesis attached as CSS writes it, opening on anything but Korean or a
-//   closing parenthesis (`oklch(none 0 0)`, `rgb(calc(255) 0 0)`). A capital
-//   or a space makes it a name in prose: `LG AI Lab(2020년 설립)`,
-//   `RGB(255, 0, 0) 조합`, `AI Lab (연구 조직)`, and so does a Korean
-//   argument: `lab(연구 조직)`.
-const NUMBER_TAG =
-  "(?:주년|이벤트|챌린지|시간|일|년|월|명|원|개|회|주|번|위|호|층|분|초|점|건|장|권|곳|살|세)"
+//   parenthesis attached as CSS writes it, opening, spaces aside, on anything
+//   but Korean or a closing parenthesis (`oklch(none 0 0)`,
+//   `rgb(calc(255) 0 0)`). A capital or a space before the parenthesis makes it
+//   a name in prose: `LG AI Lab(2020년 설립)`, `RGB(255, 0, 0) 조합`,
+//   `AI Lab (연구 조직)`, and so does a Korean argument: `lab(연구 조직)`. An
+//   upper-case colour function (`OKLCH(…)`) slips through with them.
+const NUMBER_TAG = "(?:주년|이벤트|챌린지|시간|일|년|월|개|번|층)"
 const COLOUR_VALUE = new RegExp(
-  `(?<![\\w&#/])#(?:(?=[0-9]*[a-fA-F])[0-9a-fA-F]{3,8}|[0-9]{6}(?:[0-9]{2})?|[0-9]{3,4}(?!${NUMBER_TAG}))(?![0-9A-Za-z_])|\\b${CSS_COLOUR_FUNCTION_NAME}\\(\\s*(?![\\p{Script=Hangul})])`,
+  `(?<![\\w&#/])#(?:(?=[0-9]*[a-fA-F])[0-9a-fA-F]{3,8}|[0-9]{6}(?:[0-9]{2})?|[0-9]{3,4}(?!${NUMBER_TAG}))(?![0-9A-Za-z_])|\\b${CSS_COLOUR_FUNCTION_NAME}\\((?!\\s*[\\p{Script=Hangul})])`,
   "u"
 )
 

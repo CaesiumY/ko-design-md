@@ -4175,7 +4175,7 @@ describe("validateDraft — tagline line", () => {
   })
 
   // Korean attaches the particle or ending to the value it follows. A hex with
-  // a letter or six or eight digits is a colour whatever follows; a short
+  // a letter or six or eight digits is a colour whatever Korean follows; a short
   // all-digit one is a colour unless a listed unit or noun makes it a number
   // tag (see the next test).
   it.each([
@@ -4199,6 +4199,13 @@ describe("validateDraft — tagline line", () => {
     ["쯤 after a short all-digit hex", "#333쯤 되는 회색을 쓴다"],
     ["에게 after a short all-digit hex", "#000에게 자리를 준다"],
     ["nothing after a short all-digit hex", "글자색 #999 를 쓴다"],
+    // A unit that opens another word must not release it.
+    ["회색 after a short all-digit hex", "글자는 #999회색으로 둔다"],
+    ["주황 after a short all-digit hex", "면은 #333주황으로 둔다"],
+    ["초록 after a short all-digit hex", "면은 #333초록으로 둔다"],
+    ["명도 after a short all-digit hex", "#333명도의 글자를 쓴다"],
+    ["위에 after a short all-digit hex", "#333위에 흰 글자를 둔다"],
+    ["장면 after a short all-digit hex", "#000장면을 쓴다"],
   ])("blocks a hex with %s attached", (_, phrase) => {
     expect(
       taglineRules(
@@ -4228,6 +4235,11 @@ describe("validateDraft — tagline line", () => {
     ],
     ["an abbreviation with its parenthesis attached", "RGB(255, 0, 0) 조합"],
     ["a lower-case word before a Korean parenthesis", "lab(연구 조직)의 화면"],
+    [
+      "a lower-case word before a spaced Korean parenthesis",
+      "lab( 연구 조직)의 화면",
+    ],
+    ["an empty parenthesis", "rgb( ) 표기"],
   ])("does not read %s as a colour value", (_, words) => {
     expect(
       taglineRules(
