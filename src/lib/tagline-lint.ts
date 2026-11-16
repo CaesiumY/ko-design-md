@@ -1,5 +1,5 @@
 import { taglineAsShown, taglineSourceLine } from "./content-parser"
-import { CSS_COLOUR_FUNCTION } from "./colour-function"
+import { CSS_COLOUR_FUNCTION_NAME } from "./colour-function"
 import { OG_LEDE_MAX_CHARS, SENTENCE_END } from "./og-lede"
 import type { ValidationIssue } from "./draft-validator"
 
@@ -32,11 +32,12 @@ const SECOND_SENTENCE = new RegExp(`${SENTENCE_END}\\s+\\S`, "u")
 // value's (`LITERAL_COLOUR`), where the whole value is the colour:
 // - a hex not run into a letter or digit of any script (`#100일` is a tag), and
 //   not after URL or entity characters, as draft-validator's prose hex;
-// - a CSS colour function from the shared list whose parenthesis opens on a
-//   colour argument (a number, `from`, `var(`, or color-mix's `in`), so
-//   `AI Lab (연구 조직)` and `RGB (빨강, …)` stay prose.
+// - a CSS colour function from the shared list with its parenthesis attached,
+//   as CSS writes it, opening on a colour argument (a number, `from`, `var(`,
+//   or color-mix's `in`). A word set apart from its parenthesis stays prose:
+//   `AI Lab (연구 조직)`, `LG AI Lab (2020년 설립)`, `RGB (빨강, …)`.
 const COLOUR_VALUE = new RegExp(
-  `(?<![\\w&#/])#[0-9a-fA-F]{3,8}(?![\\p{L}\\p{N}_])|\\b${CSS_COLOUR_FUNCTION}\\s*(?:[\\d.+-]|from\\b|var\\(|in\\b)`,
+  `(?<![\\w&#/])#[0-9a-fA-F]{3,8}(?![\\p{L}\\p{N}_])|\\b${CSS_COLOUR_FUNCTION_NAME}\\(\\s*(?:[\\d.+-]|from\\b|var\\(|in\\b)`,
   "iu"
 )
 

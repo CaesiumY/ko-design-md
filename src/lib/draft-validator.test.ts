@@ -4160,6 +4160,9 @@ describe("validateDraft — tagline line", () => {
     ["an oklch value", "파랑(`oklch(0.62 0.19 258)`) 버튼"],
     ["an rgb value", "빨강(rgb(255 0 56)) 버튼"],
     ["a color-mix", "`color-mix(in oklab, red, white)` 버튼"],
+    ["a lab value", "주황(`lab(50% 40 59)`) 버튼"],
+    ["an oklch value with no backticks", "주황(oklch(0.6 0.2 30)) 버튼"],
+    ["a lower-case hex", "주황(#ff6600) 버튼"],
   ])("blocks %s", (_, colour) => {
     expect(
       taglineRules(
@@ -4173,6 +4176,10 @@ describe("validateDraft — tagline line", () => {
     ["a name before a parenthesis", "AI Lab (연구 조직)이 만든 화면"],
     ["an abbreviation before a parenthesis", "RGB (빨강, 초록, 파랑) 조합"],
     ["a number tag run into a word", "#100일 챌린지 배너"],
+    [
+      "a name before a parenthesis that opens on a number",
+      "LG AI Lab (2020년 설립)이 만든 화면",
+    ],
   ])("does not read %s as a colour value", (_, words) => {
     expect(
       taglineRules(
