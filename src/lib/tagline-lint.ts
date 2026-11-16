@@ -39,9 +39,11 @@ const SECOND_SENTENCE = new RegExp(`${SENTENCE_END}\\s+\\S`, "u")
 //   tag (`#100일`, `#2024년`, `#100이벤트`). The list releases rather than
 //   catches, because Korean endings cannot be listed (`#333였다`, `#333같은`)
 //   and units can: a unit missing from it blocks instead of slipping through.
-//   It keeps to units that seldom open another word, since nothing checks
-//   where the unit's word ends — 회, 주, 초 and 명 would release 회색, 주황,
-//   초록 and 명도. 일 stays for `#100일`, so `#333일 때` slips through;
+//   The unit must end its word or take one of a few short particles
+//   (`#2024년의`, `#100일간`, `#100번째`), so a longer word that opens with a
+//   unit still blocks (`#333번지는`, `#333일반`). The list keeps to units
+//   common in number tags; one left out blocks. 일 stays for `#100일`, so
+//   `#333일 때` slips through;
 // - a CSS colour function from the shared list, written in lower case with its
 //   parenthesis attached as CSS writes it, opening, spaces aside, on anything
 //   but Korean or a closing parenthesis (`oklch(none 0 0)`,
@@ -50,8 +52,9 @@ const SECOND_SENTENCE = new RegExp(`${SENTENCE_END}\\s+\\S`, "u")
 //   `AI Lab (연구 조직)`, and so does a Korean argument: `lab(연구 조직)`. An
 //   upper-case colour function (`OKLCH(…)`) slips through with them.
 const NUMBER_TAG = "(?:주년|이벤트|챌린지|시간|일|년|월|개|번|층)"
+const TAG_PARTICLE = "(?:의|에|은|는|이|가|을|를|도|과|와|간|째)"
 const COLOUR_VALUE = new RegExp(
-  `(?<![\\w&#/])#(?:(?=[0-9]*[a-fA-F])[0-9a-fA-F]{3,8}|[0-9]{6}(?:[0-9]{2})?|[0-9]{3,4}(?!${NUMBER_TAG}))(?![0-9A-Za-z_])|\\b${CSS_COLOUR_FUNCTION_NAME}\\((?!\\s*[\\p{Script=Hangul})])`,
+  `(?<![\\w&#/])#(?:(?=[0-9]*[a-fA-F])[0-9a-fA-F]{3,8}|[0-9]{6}(?:[0-9]{2})?|[0-9]{3,4}(?!${NUMBER_TAG}${TAG_PARTICLE}?(?![\\p{L}\\p{N}_])))(?![0-9A-Za-z_])|\\b${CSS_COLOUR_FUNCTION_NAME}\\((?!\\s*[\\p{Script=Hangul})])`,
   "u"
 )
 

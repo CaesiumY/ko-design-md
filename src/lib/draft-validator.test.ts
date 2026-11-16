@@ -4206,6 +4206,11 @@ describe("validateDraft — tagline line", () => {
     ["명도 after a short all-digit hex", "#333명도의 글자를 쓴다"],
     ["위에 after a short all-digit hex", "#333위에 흰 글자를 둔다"],
     ["장면 after a short all-digit hex", "#000장면을 쓴다"],
+    // Nor must a longer word that opens with a unit.
+    ["번지는 after a short all-digit hex", "#333번지는 면을 쓴다"],
+    ["일반 after a short all-digit hex", "#333일반 글자를 쓴다"],
+    ["년대 after a short all-digit hex", "#333년대 감성을 쓴다"],
+    ["시간대 after a short all-digit hex", "#333시간대 화면을 쓴다"],
   ])("blocks a hex with %s attached", (_, phrase) => {
     expect(
       taglineRules(
@@ -4220,6 +4225,9 @@ describe("validateDraft — tagline line", () => {
     ["an abbreviation before a parenthesis", "RGB (빨강, 초록, 파랑) 조합"],
     ["a number tag run into a word", "#100일 챌린지 배너"],
     ["a year tag run into a word", "#2024년 회고 배너"],
+    ["a year tag with a particle", "#2024년의 회고 배너"],
+    ["a day tag with 간", "#100일간 이어진 배너"],
+    ["an ordinal tag with 째", "#100번째 배너"],
     [
       "a number tag run into a word that opens like a particle",
       "#100이벤트 배너",
