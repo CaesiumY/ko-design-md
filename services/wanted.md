@@ -326,7 +326,7 @@ font-display-src: https://cdn.jsdelivr.net/npm/wanted-sans@1.0.3/fonts/webfonts/
 
 공식 문서는 원티드의 디자인 시스템을 몽타주(Montage)로 명명하고 **Extensibility·Consistency·Efficiency** 3원칙 위에서 운영한다고 밝힌다 [src:1]. 공개 atomic 팔레트는 채도 0의 `neutral` 14단계 + cool blue-tinted `coolNeutral` 21단계 dual-neutral 구조에 hue ramp 11종(blue·red·green·orange·redOrange·lime·cyan·lightBlue·violet·purple·pink)을 얹으며 — blue만 14단계이고 나머지는 11~12단계다 [src:3], 원티드랩이 자체 제작한 오픈소스 OFL 서체 `Wanted Sans`를 함께 운용한다 [src:15]. 시스템의 가장 인지 가능한 마크는 **blue → magenta → orange** 3-stop 그라디언트로 그려진 심볼이며, 이 그라디언트가 쓰이는 자리는 `### Brand gradient` 절에 모았다. 2025년 핸드오프 번들은 이 토큰 시스템 위에 `components.css` production 스타일시트로 23개 컴포넌트 그룹(버튼·폼·선택·칩/배지·아바타·툴팁·로딩·세그먼트/탭·페이지네이션·리스트셀·카드·디바이더·알림/토스트·모달/시트/메뉴·아코디언·테이블·브레드크럼·빈 상태)을 함께 ship하며, `components.html` 갤러리에서 light/dark 토글로 라이브 확인된다.
 
-전체 무드는 **clean, generous, neutral-anchored** 다. 색은 절제되어 사용되고 타이포가 위계의 대부분을 짊어진다. 표면은 흰 캔버스(light) 또는 `oklch(0.148 0.004 277)` 다크 캔버스(dark)로 평면화되며, 텍스처·노이즈·전면 사진은 chrome에 사용되지 않는다. 카드는 기본적으로 그림자 없이 1px `border-subtle` 헤어라인이 구조를 짊어지고, 그림자는 popover·dropdown·modal 같은 elevated surface에서만 등장한다.
+전체 무드는 **clean, generous, neutral-anchored** 다. 색은 절제되어 사용되고 타이포가 위계의 대부분을 짊어진다. 표면은 흰 캔버스(light) 또는 `oklch(0.148 0.004 277)` 다크 캔버스(dark)로 평면화되며, 텍스처·노이즈·전면 사진은 chrome에 사용되지 않는다. 카드는 기본적으로 그림자 없이 1px `border-subtle` 헤어라인이 구조를 짊어지고, 그림자는 popover, dropdown, modal 같은 elevated surface 에 쓰이고, switch 노브, segmented active 아이템, 잡카드 로고 타일에는 `{elevation.shadow-1}` 미세 그림자가 붙는다.
 
 대상 사용자는 후보자(구직자)와 리크루터 양쪽이며, 시스템은 마케팅 사이트·잡 마켓플레이스·리크루터 대시보드·네이티브 앱을 동일한 디자인 시스템으로 횡단한다. 본 문서는 잡 마켓플레이스(`wanted.co.kr` candidate-side) surface를 1차 관찰 대상으로 한다 — SSOT 번들의 `ui_kits/wanted-web/`이 이 surface를 1:1 재구성하기 때문이다.
 
@@ -347,7 +347,7 @@ Voice는 **친근한 2인칭 + 부드러운 존댓말**로 요약된다. 사무�
 
 ### Brand
 
-브랜드 primary는 `{colors.blue-800}` 이고 버튼, 링크, 포커스 링, 핵심 데이터에 사용된다. CTA 표면 외에는 배경으로 사용하지 않는다.
+브랜드 primary는 `{colors.blue-800}` 이고 버튼, 링크, 포커스 링, 핵심 데이터에 사용된다. 컴포넌트에서는 버튼 배경 밖에 체크박스 체크 상태, switch On 트랙, progress 바의 채움에도 `{colors.bg-brand}` 를 쓴다.
 
 ### Brand gradient
 
@@ -470,7 +470,7 @@ Wanted Sans는 오픈소스 (OFL 1.1) 서체로, **7가지 기본 굵기**를 �
 
 ## Elevation & Depth
 
-원티드는 평면이 기본이며 그림자는 elevated surface(popover, dropdown, modal, toast)에서만 등장한다. 카드 자체는 1px `{colors.border-subtle}` 헤어라인이 구조를 짊어진다 — 그림자가 카드 위계를 만들지 않는다.
+원티드는 평면이 기본이며 그림자는 elevated surface(popover, dropdown, modal, toast)에 쓰이고, switch 노브, segmented active 아이템, 잡카드 로고 타일에는 `{elevation.shadow-1}` 미세 그림자가 붙는다. 카드 자체는 1px `{colors.border-subtle}` 헤어라인이 구조를 짊어진다 — 그림자가 카드 위계를 만들지 않는다.
 
 그림자 색은 `oklch(0.155 0 0)` 또는 순수 검정(`oklch(0 0 0)`) 베이스의 ~5–12% 알파로 통일된다. 두 톤이 함께 쌓이는 패턴(soft-tint + true-black)이 표준이며, navy-tinted 그림자는 사용되지 않는다 — 단순 검정 + 흰 캔버스의 대비가 시그너처다.
 
@@ -943,7 +943,7 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 - product-facing 색은 시맨틱 alias(`{colors.bg-brand}`, `{colors.fg-strong}`, `{colors.fg-default}`, `{colors.fg-secondary}`, `{colors.border-subtle}`)로 호출하고, atomic ramp(`{colors.blue-800}`, `{colors.neutral-700}`)는 새 alias를 만들 때만 직접 참조한다.
 - 화면 내 가장 중요한 메인 행동에는 Primary 를, 삭제나 탈퇴처럼 되돌리기 어려운 행동에는 Negative(`button-danger`)를 쓰고 [src:10][src:21], 보조 액션은 button-secondary/tertiary/ghost로 분리한다.
 - 텍스트 위계는 **alpha multiplier 시스템**으로 표현한다 — primary `alpha-88`, secondary `alpha-61`, tertiary `alpha-43`, disabled `alpha-28`. 별도 gray hex로 만들지 않는다.
-- 카드는 1px `{colors.border-subtle}` 헤어라인으로 구조를 만든다 — 그림자를 카드에 적용하지 않는다. 그림자는 popover/dropdown/modal/toast에만 사용한다.
+- 카드는 1px `{colors.border-subtle}` 헤어라인으로 구조를 만든다 — 그림자를 카드에 적용하지 않는다. 그림자는 popover/dropdown/modal/toast 같은 떠 있는 표면에 쓰고, switch 노브와 segmented active 아이템, 로고 타일에는 `{elevation.shadow-1}` 미세 그림자를 쓴다.
 - 라운드는 **`{rounded.radius-8}` 또는 `{rounded.radius-12}`를 디폴트**로, pills는 `{rounded.radius-full}`로 사용한다. 단 공식 테마에 radius 토큰이 없으므로 [src:14], 이 사다리는 시스템 토큰이 아니라 컴포넌트 로컬 규약으로 취급한다.
 - 버튼 라운드는 사이즈와 페어로 운영한다 — xs·sm `{rounded.radius-8}`, md 10, lg `{rounded.radius-12}`, xl 14.
 - 본문은 `{typography.body1}` (16/500/1.5 line-height)을 기본으로, 산문 단락은 `{typography.body1-read}` (1.625 line-height)을 사용한다.
