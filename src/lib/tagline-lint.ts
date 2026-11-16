@@ -42,20 +42,21 @@ const SECOND_SENTENCE = new RegExp(`${SENTENCE_END}\\s+\\S`, "u")
 //   The unit must end its word or take one of a few short particles
 //   (`#2024년의`, `#100일간`, `#100번째`), so a longer word that opens with a
 //   unit still blocks (`#333번지는`, `#333일반`). The list keeps to units
-//   common in number tags; one left out blocks. 일 stays for `#100일`, so
-//   `#333일 때` slips through;
-// - a CSS colour function from the shared list, written in lower case with its
-//   parenthesis attached as CSS writes it, opening, spaces aside, on anything
-//   but Korean or a closing parenthesis (`oklch(none 0 0)`,
-//   `rgb(calc(255) 0 0)`). A capital or a space before the parenthesis makes it
-//   a name in prose: `LG AI Lab(2020년 설립)`, `RGB(255, 0, 0) 조합`,
-//   `AI Lab (연구 조직)`, and so does a Korean argument: `lab(연구 조직)`. An
-//   upper-case colour function (`OKLCH(…)`) slips through with them.
+//   common in number tags; one left out blocks. The cost: a short all-digit
+//   colour followed by any listed unit that ends its word, or takes one of
+//   those particles, slips through (`#333일 때`, `#333번 버튼`, `#333층의`);
+// - a CSS colour function from the shared list, its name in any case (as CSS
+//   reads it) with the parenthesis attached as CSS writes it, unless the text
+//   inside the parenthesis holds Korean or nothing. So `RGB(255, 0, 0)`,
+//   `oklch(none 0 0)` and `rgb(calc(255) 0 0)` block, while names in prose
+//   stay: `LG AI Lab(2020년 설립)` and `lab( 연구 조직)` hold Korean, and
+//   `AI Lab (연구 조직)` sets the parenthesis apart. The cost runs the other
+//   way: a name before a parenthesis with no Korean in it blocks (`Lab(2020)`).
 const NUMBER_TAG = "(?:주년|이벤트|챌린지|시간|일|년|월|개|번|층)"
 const TAG_PARTICLE = "(?:의|에|은|는|이|가|을|를|도|과|와|간|째)"
 const COLOUR_VALUE = new RegExp(
-  `(?<![\\w&#/])#(?:(?=[0-9]*[a-fA-F])[0-9a-fA-F]{3,8}|[0-9]{6}(?:[0-9]{2})?|[0-9]{3,4}(?!${NUMBER_TAG}${TAG_PARTICLE}?(?![\\p{L}\\p{N}_])))(?![0-9A-Za-z_])|\\b${CSS_COLOUR_FUNCTION_NAME}\\((?!\\s*[\\p{Script=Hangul})])`,
-  "u"
+  `(?<![\\w&#/])#(?:(?=[0-9]*[a-fA-F])[0-9a-fA-F]{3,8}|[0-9]{6}(?:[0-9]{2})?|[0-9]{3,4}(?!${NUMBER_TAG}${TAG_PARTICLE}?(?![\\p{L}\\p{N}_])))(?![0-9A-Za-z_])|\\b${CSS_COLOUR_FUNCTION_NAME}\\((?![^)]*\\p{Script=Hangul})(?!\\s*\\))`,
+  "iu"
 )
 
 // A numbered citation, as `source-citations.ts` counts one. A screenshot or

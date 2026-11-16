@@ -4165,6 +4165,10 @@ describe("validateDraft — tagline line", () => {
     ["a lower-case hex", "주황(#ff6600) 버튼"],
     ["a function opening on none", "`oklch(none 0 0)` 버튼"],
     ["a function opening on calc()", "`rgb(calc(255) 0 0)` 버튼"],
+    // CSS function names ignore case, so the capitalised ones are colours too.
+    ["an upper-case rgb value", "RGB(255, 0, 0) 조합"],
+    ["an upper-case hsl value", "HSL(210 50% 50%) 버튼"],
+    ["a capitalised oklch value", "Oklch(0.6 0.2 30) 버튼"],
   ])("blocks %s", (_, colour) => {
     expect(
       taglineRules(
@@ -4241,7 +4245,7 @@ describe("validateDraft — tagline line", () => {
       "a name with its parenthesis attached",
       "LG AI Lab(2020년 설립)이 만든 화면",
     ],
-    ["an abbreviation with its parenthesis attached", "RGB(255, 0, 0) 조합"],
+    ["a capitalised name before a Korean parenthesis", "Lab(연구 조직)의 화면"],
     ["a lower-case word before a Korean parenthesis", "lab(연구 조직)의 화면"],
     [
       "a lower-case word before a spaced Korean parenthesis",
