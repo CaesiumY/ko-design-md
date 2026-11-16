@@ -935,7 +935,7 @@
     {
       "name": "shadow-1",
       "value": "0 1px 2px oklch(0.155 0 0 / 0.06), 0 1px 3px oklch(0 0 0 / 0.05)",
-      "note": "잡카드 로고 타일, 토글 노브"
+      "note": "잡카드 로고 타일, 토글 노브, segmented active 아이템"
     },
     {
       "name": "shadow-2",

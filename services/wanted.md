@@ -291,7 +291,7 @@ rounded:
   radius-32: 32px
   radius-full: 9999px   # pills (chip, filter-pill, toggle, avatar, icon button, search)
 elevation:
-  shadow-1: 0 1px 2px oklch(0.155 0 0 / 0.06), 0 1px 3px oklch(0 0 0 / 0.05)   # 잡카드 로고 타일, 토글 노브
+  shadow-1: 0 1px 2px oklch(0.155 0 0 / 0.06), 0 1px 3px oklch(0 0 0 / 0.05)   # 잡카드 로고 타일, 토글 노브, segmented active 아이템
   shadow-2: 0 2px 6px oklch(0.155 0 0 / 0.07), 0 1px 2px oklch(0 0 0 / 0.06)   # 디테일 로고 타일
   shadow-3: 0 6px 16px oklch(0 0 0 / 0.08), 0 2px 4px oklch(0.155 0 0 / 0.06)   # 일반 elevated surface
   shadow-4: 0 12px 32px oklch(0 0 0 / 0.12), 0 4px 8px oklch(0.155 0 0 / 0.07)   # 큰 elevated, 모달
@@ -480,7 +480,7 @@ Wanted Sans는 오픈소스 (OFL 1.1) 서체로, **7가지 기본 굵기**를 �
 - **그림자 베이스 색** — 공식은 전 레벨이 `#171717`(atomic `neutral-10`) 단일 베이스에 알파만 달리한다. frontmatter `elevation:` 이 쓰는 `oklch(0.155 0 0)`·순수 검정 2종 조합과 다르다.
 - **기하** — 공식 Normal 레벨은 음수 spread를 적극적으로 쓴다 (예: Small `0 2px 4px -2px` + `0 4px 6px -1px`, XLarge `0 10px 15px -5px` + `0 24px 38px -10px`), Spread 계열은 offset 없이 큰 blur만 쓴다 (Small `0 0 60px`, Medium `0 15px 75px`). `elevation:` 값들에는 음수 spread가 없다.
 
-즉 **"카드는 평면 + 헤어라인, 그림자는 elevated 표면 전용"이라는 정책과 2겹 합성 원칙은 공개 출처로 뒷받침되고, 구체적 그림자 값은 번들 관찰값**이다.
+즉 **2겹 합성 원칙은 공개 출처로 뒷받침되고 [src:7], 구체적 그림자 값과 그림자를 쓰는 자리(기본 카드는 헤어라인, 떠 있는 표면과 작은 컨트롤은 그림자)는 번들 관찰값**이다.
 
 ### Motion
 
@@ -902,7 +902,7 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 
 ### card
 
-범용 카드 — `{colors.bg-surface}` + 1px `{colors.border-subtle}`, `{rounded.radius-16}`. 기본은 그림자 없이 헤어라인이 구조를 잡고(시스템 정책), `--shadow` 변형만 보더를 빼고 `{elevation.shadow-2}`를 얹는다. 내부 padding 20, title 18/700 `{colors.fg-strong}` + sub 14/500 `{colors.fg-secondary}`. 잡 마켓플레이스 전용 조립물 `{component.job-card}`와 달리 범용 컨테이너다.
+범용 카드 — `{colors.bg-surface}` + 1px `{colors.border-subtle}`, `{rounded.radius-16}`. 기본은 그림자 없이 헤어라인이 구조를 잡고, `--shadow` 변형만 보더를 빼고 `{elevation.shadow-2}`를 얹는다. 내부 padding 20, title 18/700 `{colors.fg-strong}` + sub 14/500 `{colors.fg-secondary}`. 잡 마켓플레이스 전용 조립물 `{component.job-card}`와 달리 범용 컨테이너다.
 
 ### divider
 
@@ -943,7 +943,7 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 - product-facing 색은 시맨틱 alias(`{colors.bg-brand}`, `{colors.fg-strong}`, `{colors.fg-default}`, `{colors.fg-secondary}`, `{colors.border-subtle}`)로 호출하고, atomic ramp(`{colors.blue-800}`, `{colors.neutral-700}`)는 새 alias를 만들 때만 직접 참조한다.
 - 화면 내 가장 중요한 메인 행동에는 Primary 를, 삭제나 탈퇴처럼 되돌리기 어려운 행동에는 Negative(`button-danger`)를 쓰고 [src:10][src:21], 보조 액션은 button-secondary/tertiary/ghost로 분리한다.
 - 텍스트 위계는 **alpha multiplier 시스템**으로 표현한다 — primary `alpha-88`, secondary `alpha-61`, tertiary `alpha-43`, disabled `alpha-28`. 별도 gray hex로 만들지 않는다.
-- 카드는 1px `{colors.border-subtle}` 헤어라인으로 구조를 만든다 — 그림자를 카드에 적용하지 않는다. 그림자는 popover/dropdown/modal/toast 같은 떠 있는 표면에 쓰고, switch 노브와 segmented active 아이템, 로고 타일에는 `{elevation.shadow-1}` 미세 그림자를 쓴다.
+- 기본 카드는 1px `{colors.border-subtle}` 헤어라인으로 구조를 만든다 — 그림자는 보더를 뺀 `--shadow` 변형(`{elevation.shadow-2}`)이 쓴다. 그 밖의 그림자는 popover/dropdown/modal/toast 같은 떠 있는 표면에 쓰고, switch 노브와 segmented active 아이템, 로고 타일에는 `{elevation.shadow-1}` 미세 그림자를 쓴다.
 - 라운드는 **`{rounded.radius-8}` 또는 `{rounded.radius-12}`를 디폴트**로, pills는 `{rounded.radius-full}`로 사용한다. 단 공식 테마에 radius 토큰이 없으므로 [src:14], 이 사다리는 시스템 토큰이 아니라 컴포넌트 로컬 규약으로 취급한다.
 - 버튼 라운드는 사이즈와 페어로 운영한다 — xs·sm `{rounded.radius-8}`, md 10, lg `{rounded.radius-12}`, xl 14.
 - 본문은 `{typography.body1}` (16/500/1.5 line-height)을 기본으로, 산문 단락은 `{typography.body1-read}` (1.625 line-height)을 사용한다.
@@ -963,7 +963,7 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 - ALL-CAPS, Title Case In Buttons를 사용하지 않는다 — 영어는 항상 sentence case다.
 - UI 라벨이나 리스트 아이템 끝에 마침표를 찍지 않는다.
 - 마케팅 과장 ("혁신적", "차세대", "최고의") 이나 챗봇 톤 ("~해보세요!", "여기를 눌러주세요")을 product 카피에 사용하지 않는다.
-- 카드에 그림자를 적용하지 않는다 — 1px `{colors.border-subtle}` 헤어라인이 표준이다.
+- 기본 카드에 그림자를 얹어 구조를 만들지 않는다 — 1px `{colors.border-subtle}` 헤어라인이 표준이고, 그림자는 보더를 뺀 `--shadow` 변형이 쓴다.
 - 임의 간격을 즉흥적으로 만들지 않는다 — 기본은 4배수이며, 시각 보정이 필요할 때만 2px 단위(불가피하면 1px)로 조정한다 [src:6]. 종전 판본의 "6·10·14px를 도입하지 않는다"는 규칙은 공식 `spacing` 토큰이 6·10·14를 정규 단계로 포함하므로 철회한다 [src:14].
 - 텍스처·노이즈·grain을 표면에 사용하지 않는다 — 모든 표면은 평면 색이다.
 - glassy 효과(blur backdrop, translucent toolbar)를 사용하지 않는다 — Wanted 시스템은 평면 색 + 헤어라인 보더로 깊이를 만든다.
