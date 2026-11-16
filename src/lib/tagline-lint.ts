@@ -47,7 +47,8 @@ const SECOND_SENTENCE = new RegExp(`${SENTENCE_END}\\s+\\S`, "u")
 //   those particles, slips through (`#333일 때`, `#333번 버튼`, `#333층의`);
 // - a CSS colour function from the shared list, its name in any case (as CSS
 //   reads it) with the parenthesis attached as CSS writes it, unless the text
-//   inside the parenthesis holds Korean or nothing. So `RGB(255, 0, 0)`,
+//   inside the parenthesis, up to its closing one, holds Korean or nothing (a
+//   parenthesis that never closes blocks: `rgb(255 0 0 빨강`). So `RGB(255, 0, 0)`,
 //   `oklch(none 0 0)` and `rgb(calc(255) 0 0)` block, while names in prose
 //   stay: `LG AI Lab(2020년 설립)` and `lab( 연구 조직)` hold Korean, and
 //   `AI Lab (연구 조직)` sets the parenthesis apart. The cost runs the other
@@ -55,7 +56,7 @@ const SECOND_SENTENCE = new RegExp(`${SENTENCE_END}\\s+\\S`, "u")
 const NUMBER_TAG = "(?:주년|이벤트|챌린지|시간|일|년|월|개|번|층)"
 const TAG_PARTICLE = "(?:의|에|은|는|이|가|을|를|도|과|와|간|째)"
 const COLOUR_VALUE = new RegExp(
-  `(?<![\\w&#/])#(?:(?=[0-9]*[a-fA-F])[0-9a-fA-F]{3,8}|[0-9]{6}(?:[0-9]{2})?|[0-9]{3,4}(?!${NUMBER_TAG}${TAG_PARTICLE}?(?![\\p{L}\\p{N}_])))(?![0-9A-Za-z_])|\\b${CSS_COLOUR_FUNCTION_NAME}\\((?![^)]*\\p{Script=Hangul})(?!\\s*\\))`,
+  `(?<![\\w&#/])#(?:(?=[0-9]*[a-fA-F])[0-9a-fA-F]{3,8}|[0-9]{6}(?:[0-9]{2})?|[0-9]{3,4}(?!${NUMBER_TAG}${TAG_PARTICLE}?(?![\\p{L}\\p{N}_])))(?![0-9A-Za-z_])|\\b${CSS_COLOUR_FUNCTION_NAME}\\((?![^)]*\\p{Script=Hangul}[^)]*\\))(?!\\s*\\))`,
   "iu"
 )
 

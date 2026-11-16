@@ -4169,6 +4169,8 @@ describe("validateDraft — tagline line", () => {
     ["an upper-case rgb value", "RGB(255, 0, 0) 조합"],
     ["an upper-case hsl value", "HSL(210 50% 50%) 버튼"],
     ["a capitalised oklch value", "Oklch(0.6 0.2 30) 버튼"],
+    // Korean after a parenthesis that never closes is not inside it.
+    ["an unclosed function", "rgb(255 0 0 빨강"],
   ])("blocks %s", (_, colour) => {
     expect(
       taglineRules(
