@@ -9,7 +9,7 @@ logo: https://getdesign.kr/logos/wanted.png
 colors:
   ## Brand
   primary: "{colors.blue-800}"
-  blue-800: oklch(0.563 0.241 261)   # core Wanted Blue (#0066FF), 단일 primary
+  blue-800: oklch(0.563 0.241 261)   # core Wanted Blue (#0066FF)
   blue-700: oklch(0.607 0.225 257)
   blue-850: oklch(0.529 0.220 258)
   blue-900: oklch(0.484 0.205 258)
@@ -347,7 +347,7 @@ Voice는 **친근한 2인칭 + 부드러운 존댓말**로 요약된다. 사무�
 
 ### Brand
 
-브랜드 primary는 `{colors.blue-800}` 단일 — 버튼, 링크, 포커스 링, 핵심 데이터에 사용된다. CTA 표면 외에는 배경으로 사용하지 않는다 — 채도 강조가 아니라 단일 strong stop 정책이다.
+브랜드 primary는 `{colors.blue-800}` 이고 버튼, 링크, 포커스 링, 핵심 데이터에 사용된다. CTA 표면 외에는 배경으로 사용하지 않는다.
 
 ### Brand gradient
 
@@ -514,9 +514,11 @@ spring·bounce·parallax는 시스템 전반에서 사용되지 않는다. Hover
 
 ## Components
 
+> **Button 색 변형 정정(2026-11-16).** 몽타주 Button 문서의 색 변형은 Primary, Assistive, Negative 셋이고, 삭제나 탈퇴처럼 되돌리기 어려운 행동에 Negative 를 쓰라는 Do 를 둔다 [src:10]. 이에 맞춰 아래 공식 Button 서술을 고쳤다. 이 절의 다른 값은 이번에 다시 대조하지 않았다.
+
 원티드 컴포넌트는 두 레이어로 나뉜다 — **(1) 마켓플레이스 컴포지트**(`ui_kits/wanted-web/`의 `Header.jsx`·`Filters.jsx`·`JobCard.jsx`·`JobDetail.jsx`·`JobGrid.jsx`·`Footer.jsx`에서 관찰한 `wanted.co.kr` 고유 조립물 — header·nav·search·job-card·job-detail-hero·hero-banner·filter-bar)와 **(2) `components.css` 컴포넌트 라이브러리**(Figma `/2-Element`·`/3-Component` 페이지를 production CSS로 옮긴 23개 그룹 — button·icon-button·field/select·checkbox/radio/switch·chip·badge/tag·avatar·tooltip·spinner/skeleton/progress·segmented/tabs·pagination·list-cell·card·divider·alert/toast·modal/sheet/menu·accordion·table·stepper·breadcrumb·empty)다. 아래 명세는 두 레이어를 합친 것이며, 토큰값(`{spacing.*}`, `{rounded.*}`, `{colors.*}`, `{typography.*}`)이 모두 surface되어 있으므로 prose에서 `{group.name}` 형태로 호출한다.
 
-**공식 컴포넌트 문서와의 관계** — 몽타주는 컴포넌트를 Actions · Selection and input · Contents · Feedback · Loading · Navigations · Presentation 7개 카테고리로 나눈다 — 이 분류는 컴포넌트 문서의 사이드바 내비게이션에 노출되며 [src:10] 페이지에서 7개 이름이 모두 확인된다. 각 컴포넌트는 각 컴포넌트마다 Design / Web / iOS / Android 페이지를 따로 둔다 [src:10]. 공식 문서는 해부도(anatomy)·변형(variants)·상태·사용 지침을 서술하고 치수는 선별적으로만 공개한다 — 예컨대 Snackbar는 "기본 높이 54px, 내부 콘텐츠에 따라 높이 결정, 최대 너비 420px"를 명시하는 반면 [src:12], Button은 "너비는 자유롭게 커스터마이징하되 높이는 고정한다"고만 적고 사이즈별 픽셀값은 공개하지 않는다 [src:10]. **따라서 아래 컴포넌트 명세의 픽셀값은 대부분 번들 관찰값이다.** 이름 대응도 1:1이 아니다 — 아래 `{component.input}`은 공식 `Text field` [src:11], `{component.toast}`는 공식 `Snackbar`/`Toast` [src:12], `{component.modal}`은 공식 `Popup`, `{component.filter-pill}`은 공식 `Filter button`, `{component.badge}`는 공식 `Content badge`/`Push badge`/`Play badge`에 대응한다 [src:10]. 공식 Button은 변형이 **Solid·Outlined 2종 × 색상 Primary·Assistive 2종**이고 위계를 Level 1~4로 규정하며 [src:10], 아래의 6변형(text·ghost·danger 포함)은 번들 명명이다. 공식 문서 페이지는 Primary·Assistive 색만 서술하지만, 구현은 `negative`(위험) 색도 받는다 — solid 에만 쓰이고 outlined 와 함께 주면 primary 로 되돌린다 [src:21]. 아래 `### button-danger` 가 그 solid negative 에 대응한다.
+**공식 컴포넌트 문서와의 관계** — 몽타주는 컴포넌트를 Actions · Selection and input · Contents · Feedback · Loading · Navigations · Presentation 7개 카테고리로 나눈다 — 이 분류는 컴포넌트 문서의 사이드바 내비게이션에 노출되며 [src:10] 페이지에서 7개 이름이 모두 확인된다. 각 컴포넌트는 각 컴포넌트마다 Design / Web / iOS / Android 페이지를 따로 둔다 [src:10]. 공식 문서는 해부도(anatomy)·변형(variants)·상태·사용 지침을 서술하고 치수는 선별적으로만 공개한다 — 예컨대 Snackbar는 "기본 높이 54px, 내부 콘텐츠에 따라 높이 결정, 최대 너비 420px"를 명시하는 반면 [src:12], Button은 "너비는 자유롭게 커스터마이징하되 높이는 고정한다"고만 적고 사이즈별 픽셀값은 공개하지 않는다 [src:10]. **따라서 아래 컴포넌트 명세의 픽셀값은 대부분 번들 관찰값이다.** 이름 대응도 1:1이 아니다 — 아래 `{component.input}`은 공식 `Text field` [src:11], `{component.toast}`는 공식 `Snackbar`/`Toast` [src:12], `{component.modal}`은 공식 `Popup`, `{component.filter-pill}`은 공식 `Filter button`, `{component.badge}`는 공식 `Content badge`/`Push badge`/`Play badge`에 대응한다 [src:10]. 공식 Button은 변형이 **Solid, Outlined 2종 × 색상 Primary, Assistive, Negative 3종**이고 위계를 Level 1~4로 규정하며 [src:10], 아래의 6변형(text·ghost·danger 포함)은 번들 명명이다. 공식 문서는 삭제나 탈퇴처럼 되돌리기 어려운 행동에 Negative 를 쓰라고 적고 [src:10], 구현은 `negative` 색을 solid 에만 쓰고 outlined 와 함께 주면 primary 로 되돌린다 [src:21]. 아래 `### button-danger` 가 그 solid negative 에 대응한다.
 
 ### button
 
@@ -939,7 +941,7 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 **Do**
 
 - product-facing 색은 시맨틱 alias(`{colors.bg-brand}`, `{colors.fg-strong}`, `{colors.fg-default}`, `{colors.fg-secondary}`, `{colors.border-subtle}`)로 호출하고, atomic ramp(`{colors.blue-800}`, `{colors.neutral-700}`)는 새 alias를 만들 때만 직접 참조한다.
-- 강조색은 `{colors.bg-brand}` 로 통일하고, 화면 내 가장 중요한 메인 행동에 Primary 를 쓰며 [src:10], 보조 액션은 button-secondary/tertiary/ghost로 분리한다.
+- 화면 내 가장 중요한 메인 행동에는 Primary 를, 삭제나 탈퇴처럼 되돌리기 어려운 행동에는 Negative(`button-danger`)를 쓰고 [src:10], 보조 액션은 button-secondary/tertiary/ghost로 분리한다.
 - 텍스트 위계는 **alpha multiplier 시스템**으로 표현한다 — primary `alpha-88`, secondary `alpha-61`, tertiary `alpha-43`, disabled `alpha-28`. 별도 gray hex로 만들지 않는다.
 - 카드는 1px `{colors.border-subtle}` 헤어라인으로 구조를 만든다 — 그림자를 카드에 적용하지 않는다. 그림자는 popover/dropdown/modal/toast에만 사용한다.
 - 라운드는 **`{rounded.radius-8}` 또는 `{rounded.radius-12}`를 디폴트**로, pills는 `{rounded.radius-full}`로 사용한다. 단 공식 테마에 radius 토큰이 없으므로 [src:14], 이 사다리는 시스템 토큰이 아니라 컴포넌트 로컬 규약으로 취급한다.
@@ -1040,7 +1042,7 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 7. https://montage.wanted.co.kr/docs/foundations/base-material/elevation/normal — Shadow Normal 5레벨과 Ambient+Key 2겹 합성 원칙.
 8. https://montage.wanted.co.kr/docs/foundations/base-material/elevation/spread — Shadow Spread 2레벨(Dialog 등 사방 확산용).
 9. https://montage.wanted.co.kr/docs/foundations/base-material/icons — 공식 아이콘 갤러리. 24×24 viewBox, `currentColor` 상속, Solid/Color/Nav 분류.
-10. https://montage.wanted.co.kr/docs/components/actions/button/design — Button 해부도·변형(Solid/Outlined × Primary/Assistive)·위계 4단계·레이아웃 정책.
+10. https://montage.wanted.co.kr/docs/components/actions/button/design — Button 해부도·변형(Solid/Outlined × Primary/Assistive/Negative)·위계 4단계·레이아웃 정책·사용 지침.
 11. https://montage.wanted.co.kr/docs/components/selection-and-input/text-field/design — Text field 해부도(Heading·Placeholder·Description·Leading icon·Required badge·Trailing contents).
 12. https://montage.wanted.co.kr/docs/components/feedback/snackbar/design — Snackbar 해부도와 공개 치수(기본 높이 54px, 최대 너비 420px).
 13. https://montage.wanted.co.kr/docs/release-note — 시맨틱 버저닝 정책. Major는 3개 플랫폼 공통으로 6월·12월 정기 릴리즈.
