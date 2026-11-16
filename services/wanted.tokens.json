@@ -940,7 +940,7 @@
     {
       "name": "shadow-2",
       "value": "0 2px 6px oklch(0.155 0 0 / 0.07), 0 1px 2px oklch(0 0 0 / 0.06)",
-      "note": "디테일 로고 타일"
+      "note": "디테일 로고 타일, 카드 --shadow 변형"
     },
     {
       "name": "shadow-3",

@@ -292,7 +292,7 @@ rounded:
   radius-full: 9999px   # pills (chip, filter-pill, toggle, avatar, icon button, search)
 elevation:
   shadow-1: 0 1px 2px oklch(0.155 0 0 / 0.06), 0 1px 3px oklch(0 0 0 / 0.05)   # 잡카드 로고 타일, 토글 노브, segmented active 아이템
-  shadow-2: 0 2px 6px oklch(0.155 0 0 / 0.07), 0 1px 2px oklch(0 0 0 / 0.06)   # 디테일 로고 타일
+  shadow-2: 0 2px 6px oklch(0.155 0 0 / 0.07), 0 1px 2px oklch(0 0 0 / 0.06)   # 디테일 로고 타일, 카드 --shadow 변형
   shadow-3: 0 6px 16px oklch(0 0 0 / 0.08), 0 2px 4px oklch(0.155 0 0 / 0.06)   # 일반 elevated surface
   shadow-4: 0 12px 32px oklch(0 0 0 / 0.12), 0 4px 8px oklch(0.155 0 0 / 0.07)   # 큰 elevated, 모달
   shadow-pop: 0 8px 24px oklch(0 0 0 / 0.12)   # popover, dropdown, modal
@@ -470,7 +470,7 @@ Wanted Sans는 오픈소스 (OFL 1.1) 서체로, **7가지 기본 굵기**를 �
 
 ## Elevation & Depth
 
-원티드는 평면이 기본이며 그림자는 elevated surface(popover, dropdown, modal, toast)에 쓰이고, switch 노브, segmented active 아이템, 잡카드 로고 타일에는 `{elevation.shadow-1}` 미세 그림자가 붙는다. 카드 자체는 1px `{colors.border-subtle}` 헤어라인이 구조를 짊어진다 — 그림자가 카드 위계를 만들지 않는다.
+원티드는 평면이 기본이며 그림자는 elevated surface(popover, dropdown, modal, toast)에 쓰이고, switch 노브, segmented active 아이템, 잡카드 로고 타일에는 `{elevation.shadow-1}` 미세 그림자가 붙는다. 기본 카드는 1px `{colors.border-subtle}` 헤어라인이 구조를 짊어지고, 보더를 뺀 `--shadow` 변형은 `{elevation.shadow-2}` 를 얹는다.
 
 그림자 색은 `oklch(0.155 0 0)` 또는 순수 검정(`oklch(0 0 0)`) 베이스의 ~5–12% 알파로 통일된다. 두 톤이 함께 쌓이는 패턴(soft-tint + true-black)이 표준이며, navy-tinted 그림자는 사용되지 않는다 — 단순 검정 + 흰 캔버스의 대비가 시그너처다.
 
@@ -943,7 +943,7 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 - product-facing 색은 시맨틱 alias(`{colors.bg-brand}`, `{colors.fg-strong}`, `{colors.fg-default}`, `{colors.fg-secondary}`, `{colors.border-subtle}`)로 호출하고, atomic ramp(`{colors.blue-800}`, `{colors.neutral-700}`)는 새 alias를 만들 때만 직접 참조한다.
 - 화면 내 가장 중요한 메인 행동에는 Primary 를, 삭제나 탈퇴처럼 되돌리기 어려운 행동에는 Negative(`button-danger`)를 쓰고 [src:10][src:21], 보조 액션은 button-secondary/tertiary/ghost로 분리한다.
 - 텍스트 위계는 **alpha multiplier 시스템**으로 표현한다 — primary `alpha-88`, secondary `alpha-61`, tertiary `alpha-43`, disabled `alpha-28`. 별도 gray hex로 만들지 않는다.
-- 기본 카드는 1px `{colors.border-subtle}` 헤어라인으로 구조를 만든다 — 그림자는 보더를 뺀 `--shadow` 변형(`{elevation.shadow-2}`)이 쓴다. 그 밖의 그림자는 popover/dropdown/modal/toast 같은 떠 있는 표면에 쓰고, switch 노브와 segmented active 아이템, 로고 타일에는 `{elevation.shadow-1}` 미세 그림자를 쓴다.
+- 기본 카드는 1px `{colors.border-subtle}` 헤어라인으로 구조를 만든다 — 그림자는 보더를 뺀 `--shadow` 변형(`{elevation.shadow-2}`)이 쓴다. 그 밖의 그림자는 popover/dropdown/modal/toast 같은 떠 있는 표면에 쓰고, switch 노브와 segmented active 아이템, 잡카드 로고 타일에는 `{elevation.shadow-1}`, 잡 디테일 hero 의 로고 타일에는 `{elevation.shadow-2}` 를 쓴다.
 - 라운드는 **`{rounded.radius-8}` 또는 `{rounded.radius-12}`를 디폴트**로, pills는 `{rounded.radius-full}`로 사용한다. 단 공식 테마에 radius 토큰이 없으므로 [src:14], 이 사다리는 시스템 토큰이 아니라 컴포넌트 로컬 규약으로 취급한다.
 - 버튼 라운드는 사이즈와 페어로 운영한다 — xs·sm `{rounded.radius-8}`, md 10, lg `{rounded.radius-12}`, xl 14.
 - 본문은 `{typography.body1}` (16/500/1.5 line-height)을 기본으로, 산문 단락은 `{typography.body1-read}` (1.625 line-height)을 사용한다.
