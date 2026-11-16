@@ -599,7 +599,7 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 
 - product-facing 색은 시맨틱·컴포넌트 토큰으로 호출하고, base 팔레트는 새 role을 만들 때만 직접 참조한다 [src:3].
 - (카탈로그 권고) 토스의 시맨틱 토큰 목록과 팔레트 대응은 공개되지 않았으므로, 이 문서를 적용할 때는 컴포넌트 설명이 가리키는 팔레트 단계(`{colors.blue-500}`, `{colors.grey-900}` 등)를 자기 프로젝트의 역할 토큰에 한 번 묶어 두고 그 이름으로 호출한다.
-- 화면당 단일 강조색 정책을 유지한다 — 강조 hue 는 Primary 컬러인 파랑 `{colors.blue-500}` 하나이고 [src:3], 그 색으로 채운 fill 버튼은 주요 액션을 강조하는 데 쓰며 [src:14], 보조 액션은 `{colors.grey-100}` 채움 또는 ghost 변형으로 분리한다.
+- 강조색은 Primary 컬러인 파랑 `{colors.blue-500}` 으로 두고 [src:3], 그 색으로 채운 fill 버튼은 주요 액션을 강조하는 데 쓰며 [src:14], 보조 액션은 `{colors.grey-100}` 채움 또는 ghost 변형으로 분리한다.
 - 화면 최하단 강제 액션은 `{component.bottom-cta}`로, 화면 내부 액션은 `{component.button-primary}`로 분리한다 — 두 컴포넌트의 역할이 다르다.
 - 버튼 라운드는 사이즈와 페어로 운영한다 — XL→`{rounded.radius-xl}` (16), L→`{rounded.radius-l}` (14), M→`{rounded.radius-m}` (12), S→10.
 - 실시간 금융 데이터(잔액·환율·차트)는 `tabular-nums`로, 강조 숫자는 `proportional-nums`로 분리한다 [src:8].
@@ -617,7 +617,7 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 - 챗봇 톤("~해보세요!", "~할까요?")이나 마케팅 과장("혁신적", "최고의", "차세대")을 product 카피에 사용하지 않는다 [src:10].
 - 격식체(~십시오/~합니다)를 product 카피에 사용하지 않는다 — 토스가 잘못한 에러 화면에서도 해요체를 유지한다 [src:10].
 - 단정형 `-다`나 방송 헤드라인 톤을 사용하지 않는다 — 해요체가 표준이다.
-- 한 화면에 강조 hue 를 둘 이상 사용하지 않는다 — 강조는 `{colors.blue-500}` 하나다. 포커스 보더·선택 상태·진행 표시 같은 작은 강조도 다른 hue 가 아니라 같은 `{colors.blue-500}` 을 쓴다.
+- 강조 hue 를 파랑 밖으로 늘리지 않는다. 포커스 보더·선택 상태·진행 표시 같은 작은 강조도 다른 hue 가 아니라 같은 `{colors.blue-500}` 을 쓴다.
 - 그라디언트를 chrome에 사용하지 않는다 — 세 가지 문서화된 예외(bottom CTA 보호 그라디언트, 로딩 버튼 radial glow, yellow→orange 일러스트)만 허용된다.
 - iOS류 squircle/blob 라운드를 사용하지 않는다 — `Templates/Squircle` 전용 페이지를 제외하고는 표준 9단 `{rounded.*}` ladder만 사용한다.
 - 2px 장식용 보더, 컬러 left-rail accent 카드를 사용하지 않는다 — 기본 보더는 1px `{colors.grey-200}` 헤어라인이다.
@@ -625,7 +625,6 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 - 320ms 초과 fade·바운스 오버슈트·parallax를 사용하지 않는다 — 모션은 `dur-fast`/`dur-base`/`dur-slow` (120/200/320ms) 안에서만 운용한다.
 - inner shadow를 사용하지 않는다 — pressed state는 `{colors.press-overlay}` overlay이지 shadow가 아니다.
 - 이모지를 product 카피에 inline으로 사용하지 않는다 — "emoji" 컨텐츠는 큐레이트된 `{component.asset}` 일러스트 세트로 다뤄지고, 텍스트 punctuation으로 쓰이지 않는다.
-- `{component.button-primary}`와 `{component.bottom-cta}`를 같은 화면에 동시에 두지 않는다 — 액션 위계가 무너지고 강조점이 분산된다.
 - 영문 UI 라벨에 ALL CAPS, 헤딩에 `!`, 한국어 문장 중간에 em-dash를 사용하지 않는다; "여기를 눌러주세요" 같은 디렉티브 라벨은 금지된다 — 버튼은 일어날 일을 직접 말한다(`송금하기`, `다음`, `시작하기`).
 - 토스의 금융 제품 도메인(송금·결제·계좌·증권 흐름, 미니앱을 토스 앱 안에서 띄우는 구조, `Send-Money Flow` 같은 화면 시퀀스)을 성격이 다른 제품에 그대로 이식하지 않는다 — TDS에서 차용할 것은 시각 언어(단일 강조색 규율·공격적 라운드 ladder·해요체 카피 운용·tabular 숫자 분리)이지 토스의 금융 서비스 개념이 아니다; 미니앱조차 토스 하단 네비게이션 복제와 브랜드 혼동이 금지된다 [src:6].
 
