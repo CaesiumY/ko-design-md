@@ -7,7 +7,7 @@ A catalog entry is a YAML-frontmatter + Markdown document that encodes a brand's
 Before the first section, directly under the H1, a new entry carries its **tagline line** (한 줄 소개): one plain-prose sentence, not a blockquote. The site takes the first non-blank line that is not a heading or a blockquote (an HTML comment counts as a line), strips bold, citation markers and backticks, and shows it on the home list, the detail header, the meta description (trimmed to fit), `llms.txt` and the RSS item description; the share card shows its first sentence. Its rules:
 
 - Subject is the frontmatter `name` (the brand name the detail page shows), even when the H1 names the design system.
-- One sentence, 90 characters or fewer as the reader sees it (citation markers not counted; an emoji or other character outside the Basic Multilingual Plane counts as two, the most the share card can count it, so the line shows whole whether or not it ends a sentence).
+- One sentence, 90 characters or fewer as the reader sees it (citation markers not counted; an emoji or other character outside the Basic Multilingual Plane counts as two, the larger of the share card's two counts, so the line shows whole whether or not it ends a sentence).
 - Says what the service does, then how its screens look. The service definition uses the cited source's own words. No brand slogan or campaign line, reproduced or paraphrased, and no mission, vision or positioning line, even when a source phrases it that way.
 - Every claim carries a `[src:N]`. No color values, no bold, no em dash (`—`).
 
