@@ -392,7 +392,7 @@ NOL은 흰 바탕 위에 채도 높은 파랑을 예약·선택·포커스에 �
 
 **깊이는 테두리와 면이 먼저다.** 카드와 패널은 그림자 대신 `{colors.neutral-weak3}`·`{colors.neutral-weak2}` 1px 테두리나 `{colors.neutral-weak1}` 구분선, `{colors.neutral-weak}` 면 차이로 층을 나눈다 [src:6][src:8]. 사진 위에는 `{colors.opacity-black-5}` 1px 인셋 외곽을 둘러 흰 배경과의 경계를 잡는다 [src:8].
 
-**그림자는 떠 있는 컨트롤 전용이다.** 다섯 단계 모두 오프셋 없는 사방 번짐이다 [src:8][src:10].
+**그림자는 떠 있는 컨트롤과 상세 섹션 상단 구분에 쓴다.** 다섯 단계 모두 오프셋 없는 사방 번짐이다 [src:8][src:10].
 
 - `{elevation.shadow-1}` 상세 섹션 상단 구분.
 - `{elevation.shadow-2}` 캐러셀 화살표·하단 내비·모바일 하단 고정바·지도 버튼, 네 곳에 쓰인다.
