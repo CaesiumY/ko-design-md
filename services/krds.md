@@ -199,7 +199,7 @@ KRDS 색상 가이드는 단계 번호 40·50·70·90을 WCAG 명도 대비 3:1�
 
 4단 그림자 시스템을 사용한다. 그림자는 표면 색 단계와 1px 디바이더(`gray-30`)가 만드는 평면 위계를 보조하는 역할이다.
 
-기본 모드에서 그림자 1–2단은 약 6–14% 검정으로 매우 절제된다. **선명한 화면 모드에서는 그림자가 더 약해지고, 표면 색 단계가 위계를 대신한다**. 인너 섀도우 시스템은 정의되지 않는다.
+기본 모드에서 그림자 1–2단은 약 6–14% 검정으로 매우 절제된다. 기본 모드는 레이어가 쌓일 때 흰색 surface 와 색상 surface 를 번갈아 쓰고 border 나 shadow 를 함께 써서 고도를 표현하며, **선명한 화면 모드는 배경에서 레이어가 쌓일수록 점차 밝아지게 표현한다** [src:3]. 인너 섀도우 시스템은 정의되지 않는다.
 
 ## Shapes
 
@@ -521,7 +521,7 @@ KRDS는 Figma UI 킷을 공식 배포 채널로 두며, 공식 사이트가 KRDS
 
 - KRDS 번들은 약 120종 라인 아이콘을 정의하지만, 핸드오프 추출본에는 6종(search, close, home, menu, download, exclamation)만 포함되어 있다. CDN 폴백으로 **Material Symbols Outlined**(weight 400, grade 0, optical size 24)을 권장한다.
 - 폼 검증·에러 상태는 이제 `{component.input-text}`의 error 상태(`{colors.danger}` 보더 + helper text)로 일부 토큰화되었다. 다만 폼 전체의 인라인 검증 타이밍·에러 메시지 카탈로그는 여전히 패턴 페이지에만 부분 노출된다.
-- KRDS 표준형 스타일은 사용자 접근성을 고려해 일반 모드와 **선명한 화면 모드**(색상 대비를 높인 모드)를 제공한다 [src:3]. 본 entry의 프리뷰 다크 테마는 일반 다크 모드가 아니라 이 **선명한 화면 모드**(near-black 표면 사다리 + 리프트된 primary 명도 + 약화 그림자)를 시연하며, 별도의 일반 다크 모드 변형은 KRDS 범위 밖이다.
+- KRDS 표준형 스타일은 사용자 접근성을 고려해 일반 모드와 **선명한 화면 모드**(색상 대비를 높인 모드)를 제공한다 [src:3]. 본 entry의 프리뷰 다크 테마는 일반 다크 모드가 아니라 이 **선명한 화면 모드**(near-black 표면 사다리 + 리프트된 primary 명도)를 시연하며, 별도의 일반 다크 모드 변형은 KRDS 범위 밖이다.
 - `{component.service-tile}` 4-up grid의 정확한 gutter·column 토큰은 sample portal CSS 추출에 한계가 있어 24px·1248px 기준의 추정값을 사용했다.
 - 모션 토큰은 duration·easing만 surface되었으며, 컴포넌트별 transition 정의는 sample portal에 일부만 노출된다.
 
