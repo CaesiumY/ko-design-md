@@ -1,5 +1,5 @@
 import { taglineAsShown, taglineSourceLine } from "./content-parser"
-import { CSS_COLOUR_FUNCTION } from "./colour-function"
+import { CSS_COLOUR_FUNCTION_NAME } from "./colour-function"
 import { OG_LEDE_MAX_CHARS, SENTENCE_END } from "./og-lede"
 import type { ValidationIssue } from "./draft-validator"
 
@@ -28,12 +28,36 @@ export const TAGLINE_RULE = {
 // does not, so a short fragment before a full stop still counts as two.
 const SECOND_SENTENCE = new RegExp(`${SENTENCE_END}\\s+\\S`, "u")
 
-// A colour value: a hex (the prose-hex shape in draft-validator, which does not
-// catch a URL fragment or `&#…;`) or a CSS colour function, the list
-// draft-validator's `LITERAL_COLOUR` shares.
+// A colour value written into prose, so the shape is stricter than a component
+// value's (`LITERAL_COLOUR`), where the whole value is the colour:
+// - a hex, not after URL or entity characters (as draft-validator's prose hex).
+//   One with a letter (`#3182F6`) or six or eight digits (`#000000`) is a
+//   colour whatever Korean follows, since Korean attaches the particle to the
+//   value (`#3182F6인`, `#ff6600으로만`); only a Latin letter or digit run into
+//   it makes it something else. A three- or four-digit one (`#333`) is a colour
+//   too, unless one of the listed units or nouns follows and makes it a number
+//   tag (`#100일`, `#2024년`, `#100이벤트`). The list releases rather than
+//   catches, because Korean endings cannot be listed (`#333였다`, `#333같은`)
+//   and units can: a unit missing from it blocks instead of slipping through.
+//   The unit must end its word or take one of a few short particles
+//   (`#2024년의`, `#100일간`, `#100번째`), so a longer word that opens with a
+//   unit still blocks (`#333번지는`, `#333일반`). The list keeps to units
+//   common in number tags; one left out blocks. The cost: a short all-digit
+//   colour followed by any listed unit that ends its word, or takes one of
+//   those particles, slips through (`#333일 때`, `#333번 버튼`, `#333층의`);
+// - a CSS colour function from the shared list, its name in any case (as CSS
+//   reads it) with the parenthesis attached as CSS writes it, unless the text
+//   inside the parenthesis, up to its closing one, holds Korean or nothing (a
+//   parenthesis that never closes blocks: `rgb(255 0 0 빨강`). So `RGB(255, 0, 0)`,
+//   `oklch(none 0 0)` and `rgb(calc(255) 0 0)` block, while names in prose
+//   stay: `LG AI Lab(2020년 설립)` and `lab( 연구 조직)` hold Korean, and
+//   `AI Lab (연구 조직)` sets the parenthesis apart. The cost runs the other
+//   way: a name before a parenthesis with no Korean in it blocks (`Lab(2020)`).
+const NUMBER_TAG = "(?:주년|이벤트|챌린지|시간|일|년|월|개|번|층)"
+const TAG_PARTICLE = "(?:의|에|은|는|이|가|을|를|도|과|와|간|째)"
 const COLOUR_VALUE = new RegExp(
-  `(?<![\\w&#/])#[0-9a-fA-F]{3,8}\\b|\\b${CSS_COLOUR_FUNCTION}`,
-  "i"
+  `(?<![\\w&#/])#(?:(?=[0-9]*[a-fA-F])[0-9a-fA-F]{3,8}|[0-9]{6}(?:[0-9]{2})?|[0-9]{3,4}(?!${NUMBER_TAG}${TAG_PARTICLE}?(?![\\p{L}\\p{N}_])))(?![0-9A-Za-z_])|\\b${CSS_COLOUR_FUNCTION_NAME}\\((?![^)]*\\p{Script=Hangul}[^)]*\\))(?!\\s*\\))`,
+  "iu"
 )
 
 // A numbered citation, as `source-citations.ts` counts one. A screenshot or
@@ -69,8 +93,10 @@ export interface TaglineReading {
 
 export function readTagline(body: string): TaglineReading {
   const text = taglineAsShown(taglineSourceLine(body))
-  // Code points, as the share card's `.{8,90}` (with the `u` flag) counts them.
-  return { text, chars: [...text].length, max: OG_LEDE_MAX_CHARS }
+  // UTF-16 units, as the share card measures a line with no sentence end
+  // (`ogLede`'s fallback). Its sentence path counts code points, which are
+  // never more, so a line within the limit here shows whole on either path.
+  return { text, chars: text.length, max: OG_LEDE_MAX_CHARS }
 }
 
 // The line `validate:draft` prints for one draft, which the Stage 7 checkpoint
@@ -141,7 +167,7 @@ export function taglineIssues(body: string): Array<ValidationIssue> {
     report(
       "block",
       TAGLINE_RULE.tooLong,
-      `The tagline line runs ${chars} characters as the reader sees it (citation markers, bold and backticks not counted); the limit is ${OG_LEDE_MAX_CHARS}, the length the share card shows whole. ${FIX_SECOND_PARAGRAPH}`
+      `The tagline line runs ${chars} characters as the reader sees it (citation markers, bold and backticks not counted; an emoji or other character outside the basic plane counts as two, as the share card measures it); the limit is ${OG_LEDE_MAX_CHARS}, the length the share card shows whole. ${FIX_SECOND_PARAGRAPH}`
     )
   }
   const exclusive = TAGLINE_EXCLUSIVE_FORMS.filter((form) =>
