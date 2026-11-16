@@ -30,18 +30,21 @@ const SECOND_SENTENCE = new RegExp(`${SENTENCE_END}\\s+\\S`, "u")
 
 // A colour value written into prose, so the shape is stricter than a component
 // value's (`LITERAL_COLOUR`), where the whole value is the colour:
-// - a hex, not after URL or entity characters (as draft-validator's prose hex),
-//   that ends the word or carries a particle: Korean attaches the particle to
-//   the value (`#3182F6을`, `#ff6600으로`), while any other word run into it
-//   makes it a tag (`#100일`, `#100이벤트`);
+// - a hex, not after URL or entity characters (as draft-validator's prose hex).
+//   One with a letter (`#3182F6`) or six or eight digits (`#000000`) is a
+//   colour whatever Korean follows, since Korean attaches the particle to the
+//   value (`#3182F6인`, `#ff6600으로만`); only a Latin letter or digit run into
+//   it makes it something else. A three- or four-digit one reads as a number
+//   tag (`#100일`, `#2024년`) unless the word ends there or a run of the listed
+//   particles ends it (`#333은`, `#333으로만`);
 // - a CSS colour function from the shared list with its parenthesis attached,
 //   as CSS writes it, opening on a colour argument (a number, `from`, `var(`,
 //   or color-mix's `in`). A word set apart from its parenthesis stays prose:
 //   `AI Lab (연구 조직)`, `LG AI Lab (2020년 설립)`, `RGB (빨강, …)`.
 const HEX_PARTICLE =
-  "(?:에서|으로|이고|이며|이다|처럼|은|는|이|가|을|를|과|와|의|에|도|만|로)"
+  "(?:에서|으로|이고|이며|이다|이나|처럼|까지|부터|보다|은|는|이|가|을|를|과|와|의|에|도|만|로|인)"
 const COLOUR_VALUE = new RegExp(
-  `(?<![\\w&#/])#[0-9a-fA-F]{3,8}(?![\\p{L}\\p{N}_])|(?<![\\w&#/])#[0-9a-fA-F]{3,8}${HEX_PARTICLE}(?![\\p{L}\\p{N}_])|\\b${CSS_COLOUR_FUNCTION_NAME}\\(\\s*(?:[\\d.+-]|from\\b|var\\(|in\\b)`,
+  `(?<![\\w&#/])#(?:(?:(?=[0-9]*[a-fA-F])[0-9a-fA-F]{3,8}|[0-9]{6}(?:[0-9]{2})?)(?![0-9A-Za-z_])|[0-9]{3,4}(?:${HEX_PARTICLE})*(?![\\p{L}\\p{N}_]))|\\b${CSS_COLOUR_FUNCTION_NAME}\\(\\s*(?:[\\d.+-]|from\\b|var\\(|in\\b)`,
   "iu"
 )
 

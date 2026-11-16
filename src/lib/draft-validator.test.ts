@@ -4172,13 +4172,19 @@ describe("validateDraft — tagline line", () => {
     ).toEqual(["tagline-colour-value"])
   })
 
-  // Korean attaches the particle to the value it follows.
+  // Korean attaches the particle to the value it follows. A hex with a letter
+  // or six or eight digits is a colour whatever follows; a short all-digit one
+  // is a colour only with a listed particle (see the next test's tags).
   it.each([
     ["을", "파랑 #3182F6을 버튼에 쓴다"],
     ["으로", "버튼을 #ff6600으로 칠한다"],
-    ["은", "본문 회색 #333은 낮춘다"],
     ["이고", "기본색은 #0064FF이고 강조에 쓴다"],
-  ])("blocks a hex with the particle %s attached", (_, phrase) => {
+    ["인", "#3182F6인 버튼을 둔다"],
+    ["까지", "#0064FF까지 번지는 면을 쓴다"],
+    ["으로만", "버튼을 #ff6600으로만 칠한다"],
+    ["을 after six digits", "글자를 #000000을 써 칠한다"],
+    ["은 after a short all-digit hex", "본문 회색 #333은 낮춘다"],
+  ])("blocks a hex with %s attached", (_, phrase) => {
     expect(
       taglineRules(
         `데모는 송금 앱이고 [src:1], 흰 바탕 위에서 ${phrase} [src:2].`,
@@ -4191,6 +4197,7 @@ describe("validateDraft — tagline line", () => {
     ["a name before a parenthesis", "AI Lab (연구 조직)이 만든 화면"],
     ["an abbreviation before a parenthesis", "RGB (빨강, 초록, 파랑) 조합"],
     ["a number tag run into a word", "#100일 챌린지 배너"],
+    ["a year tag run into a word", "#2024년 회고 배너"],
     [
       "a number tag run into a word that opens like a particle",
       "#100이벤트 배너",
