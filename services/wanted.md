@@ -2,7 +2,7 @@
 name: 원티드
 slug: wanted
 category: career
-last_updated: "2026-11-15"
+last_updated: "2026-11-16"
 created_at: "2026-05-12"
 lang: ko
 logo: https://getdesign.kr/logos/wanted.png
@@ -320,11 +320,11 @@ font-display-src: https://cdn.jsdelivr.net/npm/wanted-sans@1.0.3/fonts/webfonts/
 
 원티드는 채용과 커리어 플랫폼이고, 흰 바탕에 색을 아끼고 파랑에서 분홍, 주황으로 흐르는 그라디언트는 로고 심볼에 담는다 [src:17].
 
-> 원티드랩이 운영하는 한국 1위 채용·커리어 플랫폼. `wanted.co.kr` 잡 마켓플레이스, 채용담당자용 Wanted Talent 대시보드, 프리미엄 커리어 코칭 구독 Wanted Plus, 후보자/리크루터용 iOS/Android 앱을 단일 디자인 시스템 위에 얹는다 [src:17]. 원티드의 디자인 시스템은 **몽타주(Montage)**라는 이름으로 `montage.wanted.co.kr`에 공개 문서화되어 있으며 [src:1], 웹 구현체는 `wanteddev/montage-web` 레포에 **MIT 라이선스**로 공개된다 [src:14] — 상업적 이용·수정·재배포가 허용되고 저작권 표시와 라이선스 전문 포함이 의무다 [src:2]. 본 문서의 서술 골격은 2025년 Wanted Design System 핸드오프 번들(`wanted-design-system/` 익스포트 — `README.md`, `colors_and_type.css`, `components.css`(23개 컴포넌트 그룹), `components.html` 라이브 갤러리, `ui_kits/wanted-web/` 마켓플레이스 재구성)에서 합성됐고, 이번 갱신에서 그 정량값을 몽타주 공개 문서 및 공개 토큰 소스와 대조했다. 결과는 세 갈래다 — **교차검증됨**: 타입 스케일 19개 스타일(57개 값 중 56개) [src:5], 알파 사다리 13단 [src:14], 램프·그라디언트 스톱 토큰에 병기한 hex 12개 중 11개 [src:3]. **단, 이 hex 대조는 병기된 hex에 대한 것이지 실제 토큰 값인 OKLCH의 정확성을 보증하지 않는다** — 아래 Known Gaps 참조. **공개 출처와 어긋남**: 스페이싱 사다리, 브레이크포인트, 엘리베이션 값, 시맨틱 alias 명명 [src:4][src:6][src:7][src:14]. **공개 토큰 자체가 없음**: 라운드 — 공식 테마는 radius 스케일을 노출하지 않아 본 문서의 사다리는 번들 관찰값으로 남는다 [src:14]. 어긋나는 램프 값은 덮어쓰지 않고 각 절에서 차이를 명시했고, 상태 글자색·배지 바탕·버튼 인터랙션 층은 원티드 실서비스와 몽타주가 같이 쓰는 공개 값으로 옮겼다(`## Colors` 첫머리 · `## Known Gaps`).
+> 원티드는 (주)원티드랩이 운영하고, 웹 `wanted.co.kr` 과 iOS, Android 앱이 있다 [src:17]. 원티드의 디자인 시스템은 **몽타주(Montage)**라는 이름으로 `montage.wanted.co.kr`에 공개 문서화되어 있으며 [src:1], 웹 구현체는 `wanteddev/montage-web` 레포에 **MIT 라이선스**로 공개된다 [src:14] — 상업적 이용·수정·재배포가 허용되고 저작권 표시와 라이선스 전문 포함이 의무다 [src:2]. 본 문서의 서술 골격은 2025년 Wanted Design System 핸드오프 번들(`wanted-design-system/` 익스포트 — `README.md`, `colors_and_type.css`, `components.css`(23개 컴포넌트 그룹), `components.html` 라이브 갤러리, `ui_kits/wanted-web/` 마켓플레이스 재구성)에서 합성됐고, 이번 갱신에서 그 정량값을 몽타주 공개 문서 및 공개 토큰 소스와 대조했다. 결과는 세 갈래다 — **교차검증됨**: 타입 스케일 19개 스타일(57개 값 중 56개) [src:5], 알파 사다리 13단 [src:14], 램프·그라디언트 스톱 토큰에 병기한 hex 12개 중 11개 [src:3]. **단, 이 hex 대조는 병기된 hex에 대한 것이지 실제 토큰 값인 OKLCH의 정확성을 보증하지 않는다** — 아래 Known Gaps 참조. **공개 출처와 어긋남**: 스페이싱 사다리, 브레이크포인트, 엘리베이션 값, 시맨틱 alias 명명 [src:4][src:6][src:7][src:14]. **공개 토큰 자체가 없음**: 라운드 — 공식 테마는 radius 스케일을 노출하지 않아 본 문서의 사다리는 번들 관찰값으로 남는다 [src:14]. 어긋나는 램프 값은 덮어쓰지 않고 각 절에서 차이를 명시했고, 상태 글자색·배지 바탕·버튼 인터랙션 층은 원티드 실서비스와 몽타주가 같이 쓰는 공개 값으로 옮겼다(`## Colors` 첫머리 · `## Known Gaps`).
 
 ## Brand & Style
 
-원티드는 한국 디자인-엔지니어링 씬에서 **정밀 스케일 토큰 시스템 + 자체 브랜드 서체 + 시그너처 그라디언트 로고**의 조합으로 알려진다. 공식 문서는 이 시스템을 몽타주(Montage)로 명명하고 **Extensibility·Consistency·Efficiency** 3원칙 위에서 운영한다고 밝힌다 [src:1]. 공개 atomic 팔레트는 채도 0의 `neutral` 14단계 + cool blue-tinted `coolNeutral` 21단계 dual-neutral 구조에 hue ramp 11종(blue·red·green·orange·redOrange·lime·cyan·lightBlue·violet·purple·pink)을 얹으며 — blue만 14단계이고 나머지는 11~12단계다 [src:3], 원티드랩이 자체 제작한 오픈소스 OFL 서체 `Wanted Sans`를 함께 운용한다 [src:15]. 시스템의 가장 인지 가능한 마크는 **blue → magenta → orange** 3-stop 그라디언트로 그려진 심볼이며, 이 그라디언트는 심볼·아바타·잡카드 썸네일 placeholder에만 적용되고 CTA·헤더·풀-블리드 표면에는 적용되지 않는다. 2025년 핸드오프 번들은 이 토큰 시스템 위에 `components.css` production 스타일시트로 23개 컴포넌트 그룹(버튼·폼·선택·칩/배지·아바타·툴팁·로딩·세그먼트/탭·페이지네이션·리스트셀·카드·디바이더·알림/토스트·모달/시트/메뉴·아코디언·테이블·브레드크럼·빈 상태)을 함께 ship하며, `components.html` 갤러리에서 light/dark 토글로 라이브 확인된다.
+공식 문서는 원티드의 디자인 시스템을 몽타주(Montage)로 명명하고 **Extensibility·Consistency·Efficiency** 3원칙 위에서 운영한다고 밝힌다 [src:1]. 공개 atomic 팔레트는 채도 0의 `neutral` 14단계 + cool blue-tinted `coolNeutral` 21단계 dual-neutral 구조에 hue ramp 11종(blue·red·green·orange·redOrange·lime·cyan·lightBlue·violet·purple·pink)을 얹으며 — blue만 14단계이고 나머지는 11~12단계다 [src:3], 원티드랩이 자체 제작한 오픈소스 OFL 서체 `Wanted Sans`를 함께 운용한다 [src:15]. 시스템의 가장 인지 가능한 마크는 **blue → magenta → orange** 3-stop 그라디언트로 그려진 심볼이며, 이 그라디언트가 쓰이는 자리는 `### Brand gradient` 절에 모았다. 2025년 핸드오프 번들은 이 토큰 시스템 위에 `components.css` production 스타일시트로 23개 컴포넌트 그룹(버튼·폼·선택·칩/배지·아바타·툴팁·로딩·세그먼트/탭·페이지네이션·리스트셀·카드·디바이더·알림/토스트·모달/시트/메뉴·아코디언·테이블·브레드크럼·빈 상태)을 함께 ship하며, `components.html` 갤러리에서 light/dark 토글로 라이브 확인된다.
 
 전체 무드는 **clean, generous, neutral-anchored** — Toss·Naver와 결이 가깝고 splashy한 서양 채용 브랜드와는 거리가 있다. 색은 절제되어 사용되고 타이포가 위계의 대부분을 짊어진다. 표면은 흰 캔버스(light) 또는 `oklch(0.148 0.004 277)` 다크 캔버스(dark)로 평면화되며, 텍스처·노이즈·전면 사진은 chrome에 사용되지 않는다. 카드는 기본적으로 그림자 없이 1px `border-subtle` 헤어라인이 구조를 짊어지고, 그림자는 popover·dropdown·modal 같은 elevated surface에서만 등장한다.
 
@@ -349,9 +349,9 @@ Voice는 **친근한 2인칭 + 부드러운 존댓말**로 요약된다. 사무�
 
 브랜드 primary는 `{colors.blue-800}` 단일 — 버튼, 링크, 포커스 링, 핵심 데이터에 사용된다. CTA 표면 외에는 배경으로 사용하지 않는다 — 채도 강조가 아니라 단일 strong stop 정책이다.
 
-### Brand gradient (심볼 전용)
+### Brand gradient
 
-이 그라디언트는 심볼 마크 자체 + 일부 아바타 circle + 일부 잡카드 썸네일 placeholder에만 적용된다. 원티드 홈 헤더의 로고 심볼이 파랑에서 분홍, 주황으로 흐르는 SVG 그라디언트로 그려지고, 그 바탕은 흰색이다 [src:17]. 마케팅 hero용 변형은 `0E1F3F → blue-800 → magenta`로 깊은 navy를 추가해 `linear-gradient(120deg, ...)`로 그려지지만, 카탈로그 토큰으로 노출된 것은 아니다.
+원티드 홈 헤더의 로고 심볼이 파랑에서 분홍, 주황으로 흐르는 SVG 그라디언트로 그려지고, 그 바탕은 흰색이다 [src:17]. 같은 홈에는 이 3-stop 밖의 그라디언트도 있다 — 멘토 질문 상자의 테두리가 파랑과 보라로 도는 conic 그라디언트다 [src:17]. 번들 기준 서술(공개 출처로 확인되지 않음): 핸드오프 번들의 UI kit 는 이 3-stop 을 심볼 마크, 아바타 circle, 잡카드 썸네일 placeholder 에 칠하고, 마케팅 hero banner 에는 `0E1F3F → blue-800 → magenta` 로 깊은 navy 를 앞에 더한 `linear-gradient(120deg, ...)` 변형을 쓴다. 이 변형은 카탈로그 토큰으로 노출된 것이 아니다.
 
 ### Gray (14-step, single tint — 채도 0)
 
@@ -497,9 +497,9 @@ spring·bounce·parallax는 시스템 전반에서 사용되지 않는다. Hover
 
 기하학은 **discrete radii + 평면 표면 + 헤어라인 보더**로 요약된다. 평면 흰 캔버스(또는 다크 캔버스) 위에 8~16px 라운드 카드/버튼을 얹고, chip·avatar·icon button·search·toggle에는 `{rounded.radius-full}`를 적용한다. **장식은 절제되고 색·타이포 위계가 카드 구조를 짊어진다**.
 
-기본 보더는 **1px `{colors.border-subtle}` 헤어라인**이며 (rgba ~8%), 폼 입력·secondary 버튼은 1px `{colors.border-default}` (rgba ~22%)로 한 단계 강해진다. 포커스 상태는 1px `{colors.blue-800}` 보더 + 3px rgba blue glow(`oklch(0.563 0.241 261 / 0.16)` 부근)로 표현된다. 2px 장식용 보더, 컬러 left-rail accent 카드, color-shifted variant rim은 시스템 전반에서 사용되지 않는다.
+기본 보더는 **1px `{colors.border-subtle}` 헤어라인**이며 (rgba ~8%), 폼 입력·secondary 버튼은 1px `{colors.border-default}` (rgba ~22%)로 한 단계 강해진다. 포커스 상태는 1px `{colors.blue-800}` 보더 + 3px rgba blue glow(`oklch(0.563 0.241 261 / 0.16)` 부근)로 표현된다. 번들 기준 서술(공개 출처로 확인되지 않음): 번들 컴포넌트에는 2px 장식용 보더, 컬러 left-rail accent 카드, color-shifted variant rim 이 없다. 원티드 홈의 멘토 질문 상자는 색이 도는 conic 그라디언트 테두리를 쓴다(`### Brand gradient`) [src:17].
 
-배경은 평면 색이 기본이며, 그라디언트는 (1) **심볼 마크 자체** (3-stop blue → magenta → coral), (2) **아바타 circle** 의 같은 3-stop, (3) **잡카드 썸네일 placeholder** (같은 3-stop 또는 다크 변형 `oklch(0.166 0.005 271) → oklch(0.357 0.013 274)`), (4) **마케팅 hero banner** (`120deg`, navy `oklch(0.183 0.044 256)` → `{colors.blue-800}` → magenta `oklch(0.709 0.232 346)`) — 이렇게 네 가지 문서화된 자리에만 등장한다. CTA·헤더·풀-블리드 본문 표면에는 그라디언트를 적용하지 않는다.
+배경은 평면 색이 기본이다. 번들 기준 서술(공개 출처로 확인되지 않음): 그라디언트를 쓰는 자리는 (1) **심볼 마크 자체** (3-stop blue → magenta → coral), (2) **아바타 circle** 의 같은 3-stop, (3) **잡카드 썸네일 placeholder** (같은 3-stop 또는 다크 변형 `oklch(0.166 0.005 271) → oklch(0.357 0.013 274)`), (4) **마케팅 hero banner** (`120deg`, navy `oklch(0.183 0.044 256)` → `{colors.blue-800}` → magenta `oklch(0.709 0.232 346)`) 네 곳이고, CTA·헤더·풀-블리드 본문 표면에는 그라디언트를 적용하지 않는다. 원티드 홈에서 관측한 그라디언트는 `### Brand gradient` 절에 있다.
 
 **Iconography** — 원티드는 자체 아이콘 셋을 운영하며, 공식 갤러리가 `montage.wanted.co.kr`에 공개되어 있다 [src:9]. 공개 갤러리에서 직접 확인되는 사실은 다음과 같다.
 
@@ -690,7 +690,7 @@ avatar:
   font: 12/700
 ```
 
-브랜드 그라디언트가 적용되는 컴포넌트 — 심볼·잡카드 placeholder 외에 그라디언트가 정식 등장하는 컴포넌트는 avatar 하나다.
+번들 UI kit 에서 브랜드 그라디언트를 바탕으로 받는 컴포넌트다(공개 출처로 확인되지 않음). 같은 3-stop 을 받는 다른 자리는 `### Brand gradient` 절에 있다.
 
 ### job-card
 
@@ -956,7 +956,7 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 **Don't**
 
 - **이모지를 product UI에 inline으로 사용하지 않는다** — 빈 상태·성공·상태 pill에서도 monochrome SVG 또는 평면 일러스트 자산으로 대체한다. CTA의 "→" 같은 화살표도 unicode가 아니라 SVG로 그린다.
-- **그라디언트를 chrome에 사용하지 않는다** — 그라디언트는 (1) 심볼 마크, (2) 아바타 circle, (3) 잡카드 썸네일 placeholder, (4) 마케팅 hero banner — 네 가지 문서화된 자리에만 사용한다. CTA·헤더·풀-블리드 본문 표면에는 적용하지 않는다.
+- **그라디언트를 chrome에 사용하지 않는다** — 번들이 그라디언트 자리로 드는 곳은 (1) 심볼 마크, (2) 아바타 circle, (3) 잡카드 썸네일 placeholder, (4) 마케팅 hero banner 네 곳이고(공개 출처로 확인되지 않음), CTA·헤더·풀-블리드 본문 표면에는 적용하지 않는다. 원티드 홈의 멘토 질문 상자 테두리(`### Brand gradient`)는 이 번들 규칙 밖의 관측이다 [src:17].
 - 격식체(`-습니다`/`-십시오`)나 단정형 `-다`를 product 카피에 사용하지 않는다 — `-요`/`-어요`가 표준이다.
 - ALL-CAPS, Title Case In Buttons를 사용하지 않는다 — 영어는 항상 sentence case다.
 - UI 라벨이나 리스트 아이템 끝에 마침표를 찍지 않는다.

@@ -2,7 +2,7 @@
 name: 우리동네GS
 slug: gs-retail
 category: commerce
-last_updated: "2026-09-02"
+last_updated: "2026-11-16"
 created_at: "2026-08-30"
 lang: ko
 logo: https://getdesign.kr/logos/gs-retail.png
@@ -11,14 +11,14 @@ colors:
   primary-dark: oklch(0.263 0.023 259)   # #1E2530 — primary 버튼 배경이자 섹션 헤더 텍스트색. Dart 코드와 웹뷰 CSS 두 출처에서 확인
   signature-cyan: oklch(0.796 0.137 208)   # #00D4EA — GS25 시그니처 청록. 앱 아이콘 배경 실측과 같은 값
   white: oklch(1 0 0)   # #FFFFFF — 앱 기본 배경(흰 바탕 카드 레이아웃)이자 primary 버튼 전경색
-  ## Neutral ramp — 앱 내부 웹뷰 .GS25 스코프 (용도 미공개, 이름은 명도순으로 부여)
+  ## Neutral ramp — 앱 내부 웹뷰 .GS25 스코프 (발행된 용도 설명 없음, 이름은 명도순으로 부여)
   neutral-50: oklch(0.971 0.008 279)   # #F4F5FB — .GS25 스코프에서 4회로 최다 등장
   neutral-200: oklch(0.885 0.011 270)   # #D6D9E1
-  neutral-300: oklch(0.820 0.013 267)   # #C0C4CD — 3회 등장
+  neutral-300: oklch(0.820 0.013 267)   # #C0C4CD — 3회 등장, 웹뷰 기본, primary, secondary 버튼의 비활성 배경
   neutral-400: oklch(0.788 0.023 254)   # #B0BBC9
   neutral-450: oklch(0.764 0.017 286)   # #B1B1BD
   neutral-600: oklch(0.441 0.024 285)   # #515160
-  navy-deep: oklch(0.234 0.082 257)   # #001C43
+  navy-deep: oklch(0.234 0.082 257)   # #001C43 — 웹뷰 primary 버튼의 눌림(:active) 배경과 선택된 통신사 버튼 배경
   webview-blue: oklch(0.538 0.142 247)   # #0072BB — 기업 CI 의 GS Blue 와 sRGB 채널 1단위 차. 동일값으로 단정하지 말 것
   ## Service brands — 앱 내부 서비스의 공식 발행값 (네이티브 UI 토큰 아님)
   gs-all: oklch(0.377 0.104 259)   # #1C4078 — GS ALL 멤버십 · PANTONE 2154C. 웹뷰 CSS 에서도 실제 관찰됨
@@ -59,13 +59,13 @@ fonts:
 
 타깃은 특정 세그먼트가 아니라 편의점을 일상적으로 쓰는 대중 전체다. 누적 다운로드는 약 1,500만 건으로 보도됐고 [src:5], 론칭 2년 만에 MAU 가 244만 명 늘어 역대 최고치를 기록했다는 보도도 있다 [src:4]. Android 패키지는 `com.gsr.gs25` 이고 Play 리스팅 기준 다운로드 1,000만 이상이다 [src:12]. GS ALL 멤버십으로 GS25·GS SHOP·GS THE FRESH 세 브랜드의 등급 혜택을 묶는 계열 통합 구조도 이 앱이 짊어진다 [src:6].
 
-정서적 톤은 '친근한 생활밀착'이다. 앱 워드마크가 둥글둥글한 손글씨풍 라운드 서체이고, 서브 브랜드마다 고유 마스코트 일러스트(GS25 는 호랑이 캐릭터, GS더프레시는 배달원 캐릭터)를 카드에 얹어 정보 밀도가 높은 커머스 화면의 긴장을 낮춘다 [src:1]. 반대편에는 커머스 앱다운 건조함이 있다 — 스토어 캡처에서 커머스 CTA 는 다크 네이비/블랙 계열로 관찰되고, 청록은 CTA 가 아니라 브랜드 표면(아이콘 배경·마스코트·원형 아이콘)에 머문다 [src:1][src:18].
+정서적 톤은 '친근한 생활밀착'이다. 앱 워드마크가 둥글둥글한 손글씨풍 라운드 서체이고, 서브 브랜드마다 고유 마스코트 일러스트(GS25 는 호랑이 캐릭터, GS더프레시는 배달원 캐릭터)를 카드에 얹어 정보 밀도가 높은 커머스 화면의 긴장을 낮춘다 [src:1]. 반대편에는 커머스 앱다운 건조함이 있다 — 스토어 캡처에서 커머스 CTA 는 다크 네이비/블랙 계열로 관찰되고, 청록은 CTA 가 아니라 브랜드 표면(아이콘 배경·마스코트·원형 아이콘)에 쓰인다 [src:1]. 웹뷰 CSS 도 primary 버튼을 근접 검정으로 채우고, 청록은 켜진 스위치와 입력 포커스 테두리에 쓴다 [src:18].
 
 브랜드 자산의 층위도 특이하다. 우리동네GS 는 **자체 등록 CI 를 갖지 않는다.** GS25 공식 사이트의 소개 페이지에는 전용 워드마크 이미지가 없고 페이지 로고는 사이트 공통 헤더 로고뿐이며 [src:9], GS리테일 공식 CI/BI 다운로드 킷에도 우리동네GS 전용 마크가 없다(GS그룹·GS Retail·GS25·GS SHOP·GS THE FRESH 만 들어 있다) [src:16]. 즉 이 브랜드의 시각 정체성은 **앱 아이콘과 앱 안 워드마크 레벨에만 존재한다.** 정본 아이콘은 평면 청록 배경 위 흰 손글씨풍 워드마크이고, 공식 앱 랜딩 도메인의 `apple-touch-icon` 배경 실측이 `{colors.signature-cyan}` 과 정확히 같다 [src:26]. 평면 형태가 더 오래·더 넓게 쓰인다. Wayback 이 보존한 App Store 캡처는 2023-08-09 과 2024-12-20 두 시점뿐인데 둘 다 평면이고 [src:24], Play 리스팅과 앱 랜딩 도메인은 지금도 평면이다 [src:12][src:26]. App Store 가 그라디언트로 갈린 것은 **Wayback 이 아니라 2026-08 라이브 관측에서 확인한 것**이다 — 그 사이 구간의 아카이브 캡처가 없어 전환 시점은 특정하지 못한다 [src:1]. 2026-08-22 에 관측된 수박 일러스트 아이콘은 **시즌 변형**이며 8일 뒤 App Store 아이콘에서 사라졌다 [src:1][src:24]. 가로형 워드마크 자산은 앱 안에서 열리는 웹뷰가 참조하는 277×84 흰색·투명 PNG 다 [src:25].
 
 ## Colors
 
-> **교차 대조(2026-08-30).** 정확값 색 2종은 서로 독립된 두 표면에서 확인됐다 — `{colors.primary-dark}` 는 공식 기술블로그의 Dart 코드와 앱 내부 웹뷰 CSS 의 `[class*=button-primary]` 규칙 양쪽에 나오고 [src:7][src:18], `{colors.signature-cyan}` 은 그 웹뷰 CSS 값과 공식 앱 랜딩 도메인 `apple-touch-icon` 배경 실측이 일치한다 [src:18][src:26]. 나머지는 등급이 다르다 — `.GS25` 스코프의 무채색 램프는 용도가 공개되지 않았고, 서비스 브랜드·기업 CI 값은 발행값이되 네이티브 UI 토큰이 아니다 [src:19][src:20]. 이번 대조로 용도 서술도 정정됐다. `{colors.primary-dark}` 를 "섹션 헤더 텍스트색"으로만 적던 종전 서술과 달리, 웹뷰 CSS 는 이 색을 **primary 버튼 배경**으로 쓴다 [src:18].
+> **교차 대조(2026-11-16).** 정확값 색 2종은 서로 독립된 두 표면에서 확인됐다 — `{colors.primary-dark}` 는 공식 기술블로그의 Dart 코드와 앱 내부 웹뷰 CSS 의 `[class*=button-primary]` 규칙 양쪽에 나오고 [src:7][src:18], `{colors.signature-cyan}` 은 그 웹뷰 CSS 값과 공식 앱 랜딩 도메인 `apple-touch-icon` 배경 실측이 일치한다 [src:18][src:26]. 나머지는 등급이 다르다 — `.GS25` 스코프의 무채색 램프는 발행된 용도 설명이 없고, 서비스 브랜드·기업 CI 값은 발행값이되 네이티브 UI 토큰이 아니다 [src:19][src:20]. 웹뷰 CSS 는 `{colors.primary-dark}` 를 **primary 버튼 배경**으로 쓰고, 그 버튼의 눌림 배경은 `{colors.navy-deep}`, 비활성 배경은 `{colors.neutral-300}` 이다 [src:18].
 
 공개된 디자인 토큰 표는 존재하지 않는다. 그래서 이 절의 값은 하나의 팔레트가 아니라 **근거 강도가 다른 네 묶음**이며, frontmatter 의 그룹 라벨이 그 경계를 그대로 따른다.
 
@@ -84,7 +84,7 @@ fonts:
 
 **(D) 상표 규정.** 기업 CI 4색은 "GS리테일의 색상군은 3색형 심볼마크의 색상을 응용합니다"라는 규정과 함께 발행된다 [src:20]. 이 값들은 제품 표면 토큰이 아니다. 다만 완전히 무관하지도 않아서, 웹뷰의 `{colors.webview-blue}` 가 `{colors.gs-blue}` 와 sRGB 채널 1단위만 다르다 — 기업 색이 제품 표면으로 내려온 정황으로 보이나 **동일값으로 단정하지 말 것** [src:18][src:20]. 구 CI/BI 페이지의 표는 RGB 열과 HEX 열이 서로 어긋나는 오류를 갖고 있어 [src:2], 기업 색은 hex 와 rgb 가 자체 일치하는 브랜드 아카이브 쪽을 정본으로 삼았다 [src:20]. 같은 구 페이지가 서브 브랜드 로고 색 규정(GS25 = PANTONE 285C·311C, GS THE FRESH = PANTONE 7484C)을 갖고 있고, 접근성용 숨김 텍스트에 2019년 개명 이전 표기가 잔존한다 [src:2].
 
-`.GS25` 스코프의 무채색 램프 6종과 `{colors.navy-deep}` 은 값만 확인됐고 **용도가 공개되지 않았다** [src:18]. `neutral-` 이라는 이름과 번호는 명도순으로 이 문서가 부여한 것이지 발행된 토큰명이 아니다.
+`.GS25` 스코프의 무채색 램프 6종과 `{colors.navy-deep}` 은 CSS 값으로만 있고 **발행된 용도 설명이 없다** [src:18]. CSS 에서 확인되는 버튼 쓰임은 이렇다. `{colors.navy-deep}` 은 `[class*=button-primary]` 의 눌림(`:active`) 배경과 선택된 통신사 버튼(`.select-carrier-box button.on`)의 배경이고, `{colors.neutral-300}` 은 기본(`[class*=button-]`), primary, secondary 버튼의 비활성(`:disabled`) 배경이다. line2, 수정, 주소 검색 버튼은 비활성 배경을 따로 정한다 [src:18]. `neutral-` 이라는 이름과 번호는 명도순으로 이 문서가 부여한 것이지 발행된 토큰명이 아니다.
 
 **범위 주의.** 이 CSS 는 우리동네GS 앱 **안에서 열리는 GS ALL 멤버십 웹뷰**의 것이고, `.GS25` 는 그 웹뷰가 GS25 브랜드 문맥에서 쓰는 스코프 테마다 [src:18]. Flutter 네이티브 화면이 같은 값을 쓴다는 직접 증거는 아니다. `{colors.primary-dark}` 가 네이티브 코드와 웹뷰 양쪽에 나온다는 점이 두 표면의 팔레트 공유를 시사할 뿐이다 [src:7][src:18].
 
@@ -106,9 +106,9 @@ fonts:
 
 ## Rounded
 
-**radius 의 수치는 하나도 공개돼 있지 않다** [src:7]. 스토어 캡처에서 읽히는 것은 곡률의 성격뿐이다 — 카드 코너는 대략 16px 하한, 20px 상한 사이의 중간~큰 라운드로 보이고, 하단 탭바 중앙의 결제 버튼은 완전한 원형이다 [src:1].
+**네이티브 앱의 radius 수치는 공개돼 있지 않다** [src:7]. 앱 안 웹뷰의 `.GS25` 스코프 CSS 에는 값이 있다 — 36px 규칙이 버튼(`[class*=button-]`), 입력 칸, textarea, 라디오 라벨, 통신사 선택 버튼, 간편 등록 버튼에 걸리고, 수정과 주소 검색 버튼은 200px 다. 멤버십 해지 화면의 입력 칸은 이를 8px 로 덮어쓴다 [src:18]. 스토어 캡처에서 읽히는 것은 곡률의 성격뿐이다 — 카드 코너는 대략 16px 하한, 20px 상한 사이의 중간~큰 라운드로 보이고, 하단 탭바 중앙의 결제 버튼은 완전한 원형이다 [src:1].
 
-그 폭을 하나의 값으로 좁힐 근거가 없어 **radius 토큰을 선언하지 않았다.** 범위를 단일 값으로 확정하면 없는 정밀도를 만들어 내고, 범위를 그대로 토큰에 넣으면 기계 소비자가 읽지 못한다. 차용할 때는 카드에 16~20px 대의 한 값을 제품 쪽에서 고르고, 원형 컨트롤만 완전 라운드로 두면 이 문서가 실제로 관찰한 것과 어긋나지 않는다.
+웹뷰 값은 네이티브 화면의 확인값이 아니고, 캡처의 폭을 하나의 값으로 좁힐 근거도 없어 **radius 토큰을 선언하지 않았다.** 범위를 단일 값으로 확정하면 없는 정밀도를 만들어 내고, 범위를 그대로 토큰에 넣으면 기계 소비자가 읽지 못한다. 차용할 때는 카드에 16~20px 대의 한 값을 제품 쪽에서 고르고, 원형 컨트롤만 완전 라운드로 두면 이 문서가 실제로 관찰한 것과 어긋나지 않는다.
 
 ## Elevation & Depth
 
@@ -126,15 +126,16 @@ fonts:
 
 ## Components
 
-아래 항목은 리서치가 실제로 관찰한 것만 담는다. 색·radius·상태별 스타일이 규칙 수준으로 확인된 컨트롤은 `{component.button-primary}` 하나뿐이고, 나머지는 **구성과 배치**의 관찰이다 [src:1][src:7][src:18].
+아래 항목은 리서치가 실제로 관찰한 것만 담는다. 아래에서 색과 상태별 스타일까지 적은 컨트롤은 `{component.button-primary}` 이고, 나머지는 **구성과 배치**의 관찰이다. 웹뷰 CSS 의 다른 상태 규칙(켜진 스위치 바탕과 입력 포커스 테두리의 `{colors.signature-cyan}`)은 `## Do's and Don'ts` 에 적었다 [src:1][src:7][src:18].
 
 ### button-primary
 
-앱 안 웹뷰의 `.GS25` 스코프에서 유일하게 규칙까지 확인된 컨트롤이다. 배경 `{colors.primary-dark}`, 전경 `{colors.white}` 로 고정된다 [src:18]. **이 값은 웹뷰 스코프의 값이고 네이티브 버튼의 확인값이 아니다.**
+앱 안 웹뷰의 `.GS25` 스코프에서 규칙까지 확인된 컨트롤이다. 배경 `{colors.primary-dark}`, 전경 `{colors.white}` 이고, 눌리면 배경이 `{colors.navy-deep}`, 비활성이면 `{colors.neutral-300}` 이 되고, 모서리는 36px 다 [src:18]. **이 값은 웹뷰 스코프의 값이고 네이티브 버튼의 확인값이 아니다.**
 
 ```tsx
 <ButtonPrimary onPress={submit}>결제하기</ButtonPrimary>
 // background: {colors.primary-dark} · color: {colors.white}
+// :active background: {colors.navy-deep} · :disabled background: {colors.neutral-300}
 // 출처 범위: 앱 내부 GS ALL 웹뷰 .GS25 스코프 [src:18]
 ```
 
@@ -228,7 +229,7 @@ fonts:
 
 ## Do's and Don'ts
 
-**Do** 1차 액션은 `{colors.primary-dark}` 채움 + `{colors.white}` 전경으로 두고, `{colors.signature-cyan}` 은 브랜드 표면(아이콘 배경·마스코트·원형 아이콘)에 남긴다 — 이 역할 분리가 실제로 관찰된 배치다 [src:1][src:18].
+**Do** 1차 액션은 `{colors.primary-dark}` 채움 + `{colors.white}` 전경으로 두고, `{colors.signature-cyan}` 은 브랜드 표면(아이콘 배경·마스코트·원형 아이콘)에 남긴다 — 1차 액션 채움(웹뷰 CSS [src:18])과 브랜드 표면(캡처 [src:1])의 이 분리가 실제로 관찰된 배치다. 다만 웹뷰 CSS 는 `{colors.signature-cyan}` 을 켜진 스위치의 바탕과 입력 포커스 테두리에도 쓴다 [src:18].
 
 **Do** 화면 좌우 여백을 `{spacing.screen-horizontal}` 하나로 묶고, 그 컨테이너를 접근성 트리의 경계로도 함께 쓴다 [src:7].
 
@@ -272,7 +273,7 @@ fonts:
 ## Known Gaps
 
 - **네이티브 UI 서체 패밀리명 — 미확인.** 두 차례 심층 리서치로도 확인에 실패했고, 확증 경로 둘(비밀번호가 걸린 플랫폼 브랜드 아카이브 [src:21], APK 디컴파일)이 모두 막혀 있다. 지금 있는 것은 웹뷰 `@font-face` 와 BI 규정이라는 정황뿐이다 [src:18][src:19].
-- **radius·shadow·상태별 스타일이 전무하다.** 확보된 정확값은 색 2종·타이포 1종·치수 2종이 전부이고, hover/disabled/selected/error 같은 상태 스타일은 어느 소스에도 없다 [src:7][src:18].
+- **네이티브 radius·shadow 수치가 없고 상태별 스타일은 일부뿐이다.** 네이티브 쪽에서 확인한 정확값(Dart 코드, 앱 아이콘)은 색 2종·타이포 1종·치수 2종이고, 웹뷰 CSS 의 radius 는 `## Rounded` 에 적었다 [src:18]. 네이티브 화면의 hover/disabled/selected/error 같은 상태 스타일은 어느 소스에도 없다 [src:7]. 웹뷰 CSS 에는 primary 버튼의 눌림, 비활성 배경과 켜진 스위치, 입력 포커스 테두리 같은 상태 규칙이 있지만 컴포넌트 토큰으로 정리하지 않았다 [src:18].
 - **(B) 근사 관찰색을 토큰으로 승격하지 않았다.** GS더프레시 섹션의 초록 배경, 만료 카운트다운 배지의 주황, 와인25플러스의 진분홍 포인트는 캡처 인상으로만 남는다 [src:1]. 그 자리를 채우려면 소비자가 자체 값을 정해야 한다.
 - **로그인 게이트 뒤 화면을 확보하지 못했다.** 로그인/온보딩, 마이페이지 탭 구성, 주문내역 상세가 여기 해당한다.
 - **매장 지도 기반 재고찾기 화면을 싣지 못했다.** 화면이 실재하는 것은 확인했으나 그 근거가 공개 URL 이 아니라(사용자 실기기 캡처) 인용할 수 없어 컴포넌트에서 뺐다. 사유가 앞 항목과 다르다 — 접근이 막힌 게 아니라 인용 가능한 출처가 없는 경우다.
@@ -297,7 +298,7 @@ fonts:
 15. http://www.gsretail.com/gsretail/ko/media/gsr-magazine-view?magazineId=8798517943753 — 사보 인터뷰 전문. 조직 연혁 확인용이며 서체·프레임워크명 언급이 없다
 16. http://hpimg.gsretail.com/_ui/desktop/common/docs/GS+CIBI.zip — 공식 CI/BI 킷(AI+JPG). 우리동네GS 전용 마크가 들어 있지 않음을 확인한 자산이다
 17. https://unhngs.zeroheight.com/ — 우리동네GS 로 추정되는 Zeroheight 워크스페이스. 로그인이 필요해 실재 여부만 확인된다
-18. https://ex-hubpage.grm.gsretail.com/_nuxt/entry.HxTB7rhz.css — 앱 안에서 열리는 GS ALL 멤버십 웹뷰의 스타일시트. `.GS25` 브랜드 스코프 테마와 Pretendard 자체 호스팅 `@font-face` 가 여기 있다. 파일명 해시는 2026-08-22 시점 빌드다
+18. https://ex-hubpage.grm.gsretail.com/ — 앱 안에서 열리는 GS ALL 멤버십 웹뷰. 페이지가 싣는 `_nuxt/entry.*.css` 스타일시트(해시 파일명이라 페이지에서 찾아 연다)에 `.GS25` 브랜드 스코프 테마와 Pretendard 자체 호스팅 `@font-face` 가 있다
 19. https://service.brand.gsretail.com/144fcad43 — GS리테일 서비스 브랜드 아카이브. GS ALL·GS Pay·POP·WINE25+ 의 색·서체·표기 규정이 발행돼 있고 로그인이 필요 없다
 20. https://brand.gsretail.com/065da11e3 — GS리테일 기업 브랜드 아카이브. 기업 CI 4색이 hex·rgb·CMYK·PANTONE 으로 자체 일치하게 발행돼 있다
 21. https://platform.brand.gsretail.com/870687ee0/p/9238e4-gs — 우리동네GS 공식 브랜드 페이지. 실재하지만 "This page is private" 로 잠겨 있다

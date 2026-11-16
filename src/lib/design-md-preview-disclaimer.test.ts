@@ -175,8 +175,8 @@ describe("/design-md catalog disclosure wiring", () => {
     // only the benefit copy is invented, so the caption must keep that split.
     yeogi: ["혜택 설명", "ElitePlus"],
     // The only entry whose named subjects are natural persons, not companies:
-    // a member table rendering goorm's real Vapor Squad Lead and CDO (md:27,
-    // sourced to goorm's blog) with invented account status and container
+    // a member table rendering goorm's real Vapor Squad leader and CDO (named in
+    // the md's Brand & Style, sourced to goorm's blog) with invented account status and container
     // counts, alongside two people who do not exist. Plus a console mock on a
     // real hostname carrying invented usage figures.
     //
@@ -192,7 +192,7 @@ describe("/design-md catalog disclosure wiring", () => {
     // Adding proper nouns raised the bar and did not close the hole.
     //
     // Spanning the attribution with the phrase is what closes it here: the
-    // reversal cannot produce `Squad Lead 최준영·CDO 이태성` or
+    // reversal cannot produce `Vapor Squad 리더 최준영·CDO 이태성` or
     // `김지원·박서연은 가상의 인물`. This works because these captions state the
     // split locally, in one clause. It is not a general fix — the mechanism
     // still cannot check attribution, so any entry below that uses bare tokens
@@ -210,7 +210,7 @@ describe("/design-md catalog disclosure wiring", () => {
     // wording is correct. For captions naming real natural persons that is the
     // right direction to be brittle in.
     "vapor-ui": [
-      "Squad Lead 최준영·CDO 이태성",
+      "Vapor Squad 리더 최준영·CDO 이태성",
       "실제 직함",
       "계정 상태와 컨테이너 수는 발명값",
       "김지원·박서연은 가상의 인물",

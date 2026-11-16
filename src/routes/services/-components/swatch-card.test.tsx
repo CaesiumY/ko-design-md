@@ -12,7 +12,7 @@ const TOKEN = {
 
 const NOTED = {
   ...TOKEN,
-  note: "카노니컬 Toss Blue, 화면당 하나의 primary CTA",
+  note: "카노니컬 Toss Blue, 이 색으로 채운 fill 버튼은 주요 액션 강조용",
 }
 
 // jsdom ships no clipboard implementation, so every test installs its own and
