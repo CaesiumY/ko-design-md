@@ -4172,10 +4172,29 @@ describe("validateDraft — tagline line", () => {
     ).toEqual(["tagline-colour-value"])
   })
 
+  // Korean attaches the particle to the value it follows.
+  it.each([
+    ["을", "파랑 #3182F6을 버튼에 쓴다"],
+    ["으로", "버튼을 #ff6600으로 칠한다"],
+    ["은", "본문 회색 #333은 낮춘다"],
+    ["이고", "기본색은 #0064FF이고 강조에 쓴다"],
+  ])("blocks a hex with the particle %s attached", (_, phrase) => {
+    expect(
+      taglineRules(
+        `데모는 송금 앱이고 [src:1], 흰 바탕 위에서 ${phrase} [src:2].`,
+        "block"
+      )
+    ).toEqual(["tagline-colour-value"])
+  })
+
   it.each([
     ["a name before a parenthesis", "AI Lab (연구 조직)이 만든 화면"],
     ["an abbreviation before a parenthesis", "RGB (빨강, 초록, 파랑) 조합"],
     ["a number tag run into a word", "#100일 챌린지 배너"],
+    [
+      "a number tag run into a word that opens like a particle",
+      "#100이벤트 배너",
+    ],
     [
       "a name before a parenthesis that opens on a number",
       "LG AI Lab (2020년 설립)이 만든 화면",
