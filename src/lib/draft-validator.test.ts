@@ -4163,6 +4163,8 @@ describe("validateDraft — tagline line", () => {
     ["a lab value", "주황(`lab(50% 40 59)`) 버튼"],
     ["an oklch value with no backticks", "주황(oklch(0.6 0.2 30)) 버튼"],
     ["a lower-case hex", "주황(#ff6600) 버튼"],
+    ["a function opening on none", "`oklch(none 0 0)` 버튼"],
+    ["a function opening on calc()", "`rgb(calc(255) 0 0)` 버튼"],
   ])("blocks %s", (_, colour) => {
     expect(
       taglineRules(
@@ -4172,9 +4174,10 @@ describe("validateDraft — tagline line", () => {
     ).toEqual(["tagline-colour-value"])
   })
 
-  // Korean attaches the particle to the value it follows. A hex with a letter
-  // or six or eight digits is a colour whatever follows; a short all-digit one
-  // is a colour only with a listed particle (see the next test's tags).
+  // Korean attaches the particle or ending to the value it follows. A hex with
+  // a letter or six or eight digits is a colour whatever follows; a short
+  // all-digit one is a colour unless a listed unit or noun makes it a number
+  // tag (see the next test).
   it.each([
     ["을", "파랑 #3182F6을 버튼에 쓴다"],
     ["으로", "버튼을 #ff6600으로 칠한다"],
@@ -4184,6 +4187,18 @@ describe("validateDraft — tagline line", () => {
     ["으로만", "버튼을 #ff6600으로만 칠한다"],
     ["을 after six digits", "글자를 #000000을 써 칠한다"],
     ["은 after a short all-digit hex", "본문 회색 #333은 낮춘다"],
+    ["같은 after a short all-digit hex", "#333같은 회색 글자를 둔다"],
+    ["였다 after a short all-digit hex", "글자는 #333였다"],
+    ["이었다 after a short all-digit hex", "글자는 #333이었다"],
+    ["입니다 after a short all-digit hex", "글자는 #333입니다"],
+    ["인데 after a short all-digit hex", "글자는 #333인데 진하다"],
+    ["라는 after a short all-digit hex", "#333라는 회색을 쓴다"],
+    ["로서 after a short all-digit hex", "#333로서 본문을 칠한다"],
+    ["하고 after a short all-digit hex", "#333하고 흰색을 쓴다"],
+    ["랑 after a short all-digit hex", "#333랑 흰색을 쓴다"],
+    ["쯤 after a short all-digit hex", "#333쯤 되는 회색을 쓴다"],
+    ["에게 after a short all-digit hex", "#000에게 자리를 준다"],
+    ["nothing after a short all-digit hex", "글자색 #999 를 쓴다"],
   ])("blocks a hex with %s attached", (_, phrase) => {
     expect(
       taglineRules(
@@ -4206,6 +4221,13 @@ describe("validateDraft — tagline line", () => {
       "a name before a parenthesis that opens on a number",
       "LG AI Lab (2020년 설립)이 만든 화면",
     ],
+    ["an anniversary tag", "#100주년 배너"],
+    [
+      "a name with its parenthesis attached",
+      "LG AI Lab(2020년 설립)이 만든 화면",
+    ],
+    ["an abbreviation with its parenthesis attached", "RGB(255, 0, 0) 조합"],
+    ["a lower-case word before a Korean parenthesis", "lab(연구 조직)의 화면"],
   ])("does not read %s as a colour value", (_, words) => {
     expect(
       taglineRules(
