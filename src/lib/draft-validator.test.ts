@@ -4,7 +4,7 @@ import { REQUIRED_SECTIONS, validateDraft } from "./draft-validator"
 import { findKey, readFrontmatter } from "./frontmatter"
 import { FRONTMATTER_MAPS } from "./frontmatter-map-table"
 import { taglineAsShown } from "./content-parser"
-import { OG_LEDE_MAX_CHARS } from "./og-lede"
+import { OG_LEDE_MAX_CHARS, ogLede } from "./og-lede"
 import type { FrontmatterMapTraits } from "./frontmatter-map-table"
 import type { DraftValidationOptions } from "./draft-validator"
 
@@ -4116,6 +4116,19 @@ describe("validateDraft — tagline line", () => {
     expect(taglineRules(bold)).not.toContain("tagline-too-long")
   })
 
+  // With no sentence end the share card measures in UTF-16 units, where a
+  // character outside the BMP counts twice; the gate measures the same way, so
+  // a line it passes is one the card shows whole.
+  it("blocks a line the share card would cut, counting as the card does", () => {
+    const head = "데모는 송금 앱이고 [src:1], "
+    const shownHead = "데모는 송금 앱이고, "
+    const line = `${head}${"가".repeat(89 - shownHead.length)}😀`
+    const shown = taglineAsShown(line)
+    expect([...shown].length).toBe(90)
+    expect(ogLede(shown)).not.toBe(shown)
+    expect(taglineRules(line, "block")).toEqual(["tagline-too-long"])
+  })
+
   it("says the reader-visible count, the limit and how to fix it", () => {
     const issue = validateDraft(
       makeDraft({ tagline: lineOf(95) }),
@@ -4145,6 +4158,19 @@ describe("validateDraft — tagline line", () => {
   it.each([
     ["a hex", "파랑(#3182F6) 버튼"],
     ["an oklch value", "파랑(`oklch(0.62 0.19 258)`) 버튼"],
+    ["an rgb value", "빨강(rgb(255 0 56)) 버튼"],
+    ["a color-mix", "`color-mix(in oklab, red, white)` 버튼"],
+    ["a lab value", "주황(`lab(50% 40 59)`) 버튼"],
+    ["an oklch value with no backticks", "주황(oklch(0.6 0.2 30)) 버튼"],
+    ["a lower-case hex", "주황(#ff6600) 버튼"],
+    ["a function opening on none", "`oklch(none 0 0)` 버튼"],
+    ["a function opening on calc()", "`rgb(calc(255) 0 0)` 버튼"],
+    // CSS function names ignore case, so the capitalised ones are colours too.
+    ["an upper-case rgb value", "RGB(255, 0, 0) 조합"],
+    ["an upper-case hsl value", "HSL(210 50% 50%) 버튼"],
+    ["a capitalised oklch value", "Oklch(0.6 0.2 30) 버튼"],
+    // Korean after a parenthesis that never closes is not inside it.
+    ["an unclosed function", "rgb(255 0 0 빨강"],
   ])("blocks %s", (_, colour) => {
     expect(
       taglineRules(
@@ -4152,6 +4178,89 @@ describe("validateDraft — tagline line", () => {
         "block"
       )
     ).toEqual(["tagline-colour-value"])
+  })
+
+  // Korean attaches the particle or ending to the value it follows. A hex with
+  // a letter or six or eight digits is a colour whatever Korean follows; a short
+  // all-digit one is a colour unless a listed unit or noun makes it a number
+  // tag (see the next test).
+  it.each([
+    ["을", "파랑 #3182F6을 버튼에 쓴다"],
+    ["으로", "버튼을 #ff6600으로 칠한다"],
+    ["이고", "기본색은 #0064FF이고 강조에 쓴다"],
+    ["인", "#3182F6인 버튼을 둔다"],
+    ["까지", "#0064FF까지 번지는 면을 쓴다"],
+    ["으로만", "버튼을 #ff6600으로만 칠한다"],
+    ["을 after six digits", "글자를 #000000을 써 칠한다"],
+    ["은 after a short all-digit hex", "본문 회색 #333은 낮춘다"],
+    ["같은 after a short all-digit hex", "#333같은 회색 글자를 둔다"],
+    ["였다 after a short all-digit hex", "글자는 #333였다"],
+    ["이었다 after a short all-digit hex", "글자는 #333이었다"],
+    ["입니다 after a short all-digit hex", "글자는 #333입니다"],
+    ["인데 after a short all-digit hex", "글자는 #333인데 진하다"],
+    ["라는 after a short all-digit hex", "#333라는 회색을 쓴다"],
+    ["로서 after a short all-digit hex", "#333로서 본문을 칠한다"],
+    ["하고 after a short all-digit hex", "#333하고 흰색을 쓴다"],
+    ["랑 after a short all-digit hex", "#333랑 흰색을 쓴다"],
+    ["쯤 after a short all-digit hex", "#333쯤 되는 회색을 쓴다"],
+    ["에게 after a short all-digit hex", "#000에게 자리를 준다"],
+    ["nothing after a short all-digit hex", "글자색 #999 를 쓴다"],
+    // A unit that opens another word must not release it.
+    ["회색 after a short all-digit hex", "글자는 #999회색으로 둔다"],
+    ["주황 after a short all-digit hex", "면은 #333주황으로 둔다"],
+    ["초록 after a short all-digit hex", "면은 #333초록으로 둔다"],
+    ["명도 after a short all-digit hex", "#333명도의 글자를 쓴다"],
+    ["위에 after a short all-digit hex", "#333위에 흰 글자를 둔다"],
+    ["장면 after a short all-digit hex", "#000장면을 쓴다"],
+    // Nor must a longer word that opens with a unit.
+    ["번지는 after a short all-digit hex", "#333번지는 면을 쓴다"],
+    ["일반 after a short all-digit hex", "#333일반 글자를 쓴다"],
+    ["년대 after a short all-digit hex", "#333년대 감성을 쓴다"],
+    ["시간대 after a short all-digit hex", "#333시간대 화면을 쓴다"],
+  ])("blocks a hex with %s attached", (_, phrase) => {
+    expect(
+      taglineRules(
+        `데모는 송금 앱이고 [src:1], 흰 바탕 위에서 ${phrase} [src:2].`,
+        "block"
+      )
+    ).toEqual(["tagline-colour-value"])
+  })
+
+  it.each([
+    ["a name before a parenthesis", "AI Lab (연구 조직)이 만든 화면"],
+    ["an abbreviation before a parenthesis", "RGB (빨강, 초록, 파랑) 조합"],
+    ["a number tag run into a word", "#100일 챌린지 배너"],
+    ["a year tag run into a word", "#2024년 회고 배너"],
+    ["a year tag with a particle", "#2024년의 회고 배너"],
+    ["a day tag with 간", "#100일간 이어진 배너"],
+    ["an ordinal tag with 째", "#100번째 배너"],
+    [
+      "a number tag run into a word that opens like a particle",
+      "#100이벤트 배너",
+    ],
+    [
+      "a name before a parenthesis that opens on a number",
+      "LG AI Lab (2020년 설립)이 만든 화면",
+    ],
+    ["an anniversary tag", "#100주년 배너"],
+    [
+      "a name with its parenthesis attached",
+      "LG AI Lab(2020년 설립)이 만든 화면",
+    ],
+    ["a capitalised name before a Korean parenthesis", "Lab(연구 조직)의 화면"],
+    ["a lower-case word before a Korean parenthesis", "lab(연구 조직)의 화면"],
+    [
+      "a lower-case word before a spaced Korean parenthesis",
+      "lab( 연구 조직)의 화면",
+    ],
+    ["an empty parenthesis", "rgb( ) 표기"],
+  ])("does not read %s as a colour value", (_, words) => {
+    expect(
+      taglineRules(
+        `데모는 송금 앱이고 [src:1], 흰 바탕 위에 ${words}를 둔다 [src:2].`,
+        "block"
+      )
+    ).toEqual([])
   })
 
   it("blocks bold, which the site strips and the line would lose", () => {
