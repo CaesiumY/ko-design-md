@@ -617,7 +617,7 @@ result는 성공/실패 종료 화면 — 중앙 정렬된 시맨틱 원형 아�
 - 챗봇 톤("~해보세요!", "~할까요?")이나 마케팅 과장("혁신적", "최고의", "차세대")을 product 카피에 사용하지 않는다 [src:10].
 - 격식체(~십시오/~합니다)를 product 카피에 사용하지 않는다 — 토스가 잘못한 에러 화면에서도 해요체를 유지한다 [src:10].
 - 단정형 `-다`나 방송 헤드라인 톤을 사용하지 않는다 — 해요체가 표준이다.
-- 강조 hue 를 파랑 밖으로 늘리지 않는다(TDS Button 은 `color="danger"` 변형도 둔다 [src:14]). 포커스 보더·선택 상태·진행 표시 같은 작은 강조도 다른 hue 가 아니라 같은 `{colors.blue-500}` 을 쓴다.
+- 버튼 색을 TDS Button 의 color 네 가지(primary, dark, danger, light) 밖에서 새로 만들지 않는다 [src:14].
 - 그라디언트를 chrome에 사용하지 않는다 — 세 가지 문서화된 예외(bottom CTA 보호 그라디언트, 로딩 버튼 radial glow, yellow→orange 일러스트)만 허용된다.
 - iOS류 squircle/blob 라운드를 사용하지 않는다 — `Templates/Squircle` 전용 페이지를 제외하고는 표준 9단 `{rounded.*}` ladder만 사용한다.
 - 2px 장식용 보더, 컬러 left-rail accent 카드를 사용하지 않는다 — 기본 보더는 1px `{colors.grey-200}` 헤어라인이다.
