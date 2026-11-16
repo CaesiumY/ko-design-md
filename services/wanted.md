@@ -941,7 +941,7 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 **Do**
 
 - product-facing 색은 시맨틱 alias(`{colors.bg-brand}`, `{colors.fg-strong}`, `{colors.fg-default}`, `{colors.fg-secondary}`, `{colors.border-subtle}`)로 호출하고, atomic ramp(`{colors.blue-800}`, `{colors.neutral-700}`)는 새 alias를 만들 때만 직접 참조한다.
-- 화면 내 가장 중요한 메인 행동에는 Primary 를, 삭제나 탈퇴처럼 되돌리기 어려운 행동에는 Negative(`button-danger`)를 쓰고 [src:10], 보조 액션은 button-secondary/tertiary/ghost로 분리한다.
+- 화면 내 가장 중요한 메인 행동에는 Primary 를, 삭제나 탈퇴처럼 되돌리기 어려운 행동에는 Negative(`button-danger`)를 쓰고 [src:10][src:21], 보조 액션은 button-secondary/tertiary/ghost로 분리한다.
 - 텍스트 위계는 **alpha multiplier 시스템**으로 표현한다 — primary `alpha-88`, secondary `alpha-61`, tertiary `alpha-43`, disabled `alpha-28`. 별도 gray hex로 만들지 않는다.
 - 카드는 1px `{colors.border-subtle}` 헤어라인으로 구조를 만든다 — 그림자를 카드에 적용하지 않는다. 그림자는 popover/dropdown/modal/toast에만 사용한다.
 - 라운드는 **`{rounded.radius-8}` 또는 `{rounded.radius-12}`를 디폴트**로, pills는 `{rounded.radius-full}`로 사용한다. 단 공식 테마에 radius 토큰이 없으므로 [src:14], 이 사다리는 시스템 토큰이 아니라 컴포넌트 로컬 규약으로 취급한다.
