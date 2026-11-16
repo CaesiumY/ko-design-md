@@ -326,7 +326,7 @@ font-display-src: https://cdn.jsdelivr.net/npm/wanted-sans@1.0.3/fonts/webfonts/
 
 공식 문서는 원티드의 디자인 시스템을 몽타주(Montage)로 명명하고 **Extensibility·Consistency·Efficiency** 3원칙 위에서 운영한다고 밝힌다 [src:1]. 공개 atomic 팔레트는 채도 0의 `neutral` 14단계 + cool blue-tinted `coolNeutral` 21단계 dual-neutral 구조에 hue ramp 11종(blue·red·green·orange·redOrange·lime·cyan·lightBlue·violet·purple·pink)을 얹으며 — blue만 14단계이고 나머지는 11~12단계다 [src:3], 원티드랩이 자체 제작한 오픈소스 OFL 서체 `Wanted Sans`를 함께 운용한다 [src:15]. 시스템의 가장 인지 가능한 마크는 **blue → magenta → orange** 3-stop 그라디언트로 그려진 심볼이며, 이 그라디언트가 쓰이는 자리는 `### Brand gradient` 절에 모았다. 2025년 핸드오프 번들은 이 토큰 시스템 위에 `components.css` production 스타일시트로 23개 컴포넌트 그룹(버튼·폼·선택·칩/배지·아바타·툴팁·로딩·세그먼트/탭·페이지네이션·리스트셀·카드·디바이더·알림/토스트·모달/시트/메뉴·아코디언·테이블·브레드크럼·빈 상태)을 함께 ship하며, `components.html` 갤러리에서 light/dark 토글로 라이브 확인된다.
 
-전체 무드는 **clean, generous, neutral-anchored** — Toss·Naver와 결이 가깝고 splashy한 서양 채용 브랜드와는 거리가 있다. 색은 절제되어 사용되고 타이포가 위계의 대부분을 짊어진다. 표면은 흰 캔버스(light) 또는 `oklch(0.148 0.004 277)` 다크 캔버스(dark)로 평면화되며, 텍스처·노이즈·전면 사진은 chrome에 사용되지 않는다. 카드는 기본적으로 그림자 없이 1px `border-subtle` 헤어라인이 구조를 짊어지고, 그림자는 popover·dropdown·modal 같은 elevated surface에서만 등장한다.
+전체 무드는 **clean, generous, neutral-anchored** 다. 색은 절제되어 사용되고 타이포가 위계의 대부분을 짊어진다. 표면은 흰 캔버스(light) 또는 `oklch(0.148 0.004 277)` 다크 캔버스(dark)로 평면화되며, 텍스처·노이즈·전면 사진은 chrome에 사용되지 않는다. 카드는 기본적으로 그림자 없이 1px `border-subtle` 헤어라인이 구조를 짊어지고, 그림자는 popover·dropdown·modal 같은 elevated surface에서만 등장한다.
 
 대상 사용자는 후보자(구직자)와 리크루터 양쪽이며, 시스템은 마케팅 사이트·잡 마켓플레이스·리크루터 대시보드·네이티브 앱을 동일한 디자인 시스템으로 횡단한다. 본 문서는 잡 마켓플레이스(`wanted.co.kr` candidate-side) surface를 1차 관찰 대상으로 한다 — SSOT 번들의 `ui_kits/wanted-web/`이 이 surface를 1:1 재구성하기 때문이다.
 
@@ -539,7 +539,7 @@ spring·bounce·parallax는 시스템 전반에서 사용되지 않는다. Hover
 
 ### button-primary
 
-solid 변형 — `{colors.bg-brand}` (`oklch(0.563 0.241 261)`) 배경 + `{colors.fg-on-brand}` (흰 텍스트). 화면당 가장 중요한 단일 액션에 사용. Hover·active 때 배경을 다른 색 단계로 갈지 않는다 — 몽타주의 공통 인터랙션 층이 `foreground.neutral.primary`(라이트 `#171719` ≈ `oklch(0.205 0.004 286)` · 다크 `#F7F7F8` ≈ `oklch(0.976 0.001 286)` [src:17][src:18]) 한 색을 버튼 위에 덮고, solid primary 는 강한 단계라 hover 7.5% · active 18%다 — `{colors.interaction-strong-hover}` · `{colors.interaction-strong-active}`(다크는 `dark-` 짝) [src:20][src:21].
+solid 변형 — `{colors.bg-brand}` (`oklch(0.563 0.241 261)`) 배경 + `{colors.fg-on-brand}` (흰 텍스트). 화면 내에서 가장 중요한 메인 행동을 유도한다 — 몽타주 Button 위계의 Level.4 Primary 설명이다 [src:10]. Hover·active 때 배경을 다른 색 단계로 갈지 않는다 — 몽타주의 공통 인터랙션 층이 `foreground.neutral.primary`(라이트 `#171719` ≈ `oklch(0.205 0.004 286)` · 다크 `#F7F7F8` ≈ `oklch(0.976 0.001 286)` [src:17][src:18]) 한 색을 버튼 위에 덮고, solid primary 는 강한 단계라 hover 7.5% · active 18%다 — `{colors.interaction-strong-hover}` · `{colors.interaction-strong-active}`(다크는 `dark-` 짝) [src:20][src:21].
 
 ### button-secondary
 
@@ -781,7 +781,7 @@ hero-banner:
 - sub: 16/500/1.5, opacity 0.85, max-width 520
 - cta: 흰 pill, fg-strong 텍스트, padding `12 22`, font 14/600
 
-마케팅 hero는 **풀-블리드 그라디언트 + bottom-left 카피 + 흰색 pill CTA**의 패턴이 표준이다. 그라디언트 stop은 심볼 마크와 다르다 — navy를 prepend해 깊이를 만든다.
+번들 기준 서술(공개 출처로 확인되지 않음): 번들 UI kit 의 마케팅 hero는 **풀-블리드 그라디언트 + bottom-left 카피 + 흰색 pill CTA** 패턴이다. 그라디언트 stop은 심볼 마크와 다르다 — navy를 prepend해 깊이를 만든다.
 
 ### filter-bar
 
@@ -939,7 +939,7 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 **Do**
 
 - product-facing 색은 시맨틱 alias(`{colors.bg-brand}`, `{colors.fg-strong}`, `{colors.fg-default}`, `{colors.fg-secondary}`, `{colors.border-subtle}`)로 호출하고, atomic ramp(`{colors.blue-800}`, `{colors.neutral-700}`)는 새 alias를 만들 때만 직접 참조한다.
-- 화면당 단일 강조색 정책을 유지한다 — primary CTA는 `{colors.bg-brand}` 하나로 통일하고, 보조 액션은 button-secondary/tertiary/ghost로 분리한다.
+- 강조색은 `{colors.bg-brand}` 로 통일하고, 화면 내 가장 중요한 메인 행동에 Primary 를 쓰며 [src:10], 보조 액션은 button-secondary/tertiary/ghost로 분리한다.
 - 텍스트 위계는 **alpha multiplier 시스템**으로 표현한다 — primary `alpha-88`, secondary `alpha-61`, tertiary `alpha-43`, disabled `alpha-28`. 별도 gray hex로 만들지 않는다.
 - 카드는 1px `{colors.border-subtle}` 헤어라인으로 구조를 만든다 — 그림자를 카드에 적용하지 않는다. 그림자는 popover/dropdown/modal/toast에만 사용한다.
 - 라운드는 **`{rounded.radius-8}` 또는 `{rounded.radius-12}`를 디폴트**로, pills는 `{rounded.radius-full}`로 사용한다. 단 공식 테마에 radius 토큰이 없으므로 [src:14], 이 사다리는 시스템 토큰이 아니라 컴포넌트 로컬 규약으로 취급한다.
@@ -1007,7 +1007,7 @@ inset 트랙형 토글 그룹 — `{colors.neutral-75}` 트랙(10 라운드, pad
 
 - **Job grid**: desktop 4 cols → tablet 2–3 cols → mobile 1–2 cols. card aspect는 그대로 유지된다.
 - **Header**: desktop의 nav links + search + icon buttons + avatar 풀 행 → tablet에서 일부 nav를 hamburger로 collapse → mobile은 hamburger + 로고 + 1–2 icon button.
-- **Hero**: full-bleed gradient banner는 모든 breakpoint에서 유지되나, height가 모바일에서 축소된다 (관찰: desktop 280 → mobile ~200).
+- **Hero**: full-bleed gradient banner는 모든 breakpoint에서 유지되나, height가 모바일에서 축소된다 (번들 UI kit 기준, 공개 출처로 확인되지 않음: desktop 280 → mobile ~200).
 - **Filter bar**: filter pills는 wrap, sort는 mobile에서 우측 정렬 유지하되 라벨이 축약될 수 있다.
 
 ### Image Behavior
