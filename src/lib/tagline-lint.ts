@@ -167,7 +167,7 @@ export function taglineIssues(body: string): Array<ValidationIssue> {
     report(
       "block",
       TAGLINE_RULE.tooLong,
-      `The tagline line runs ${chars} characters as the reader sees it (citation markers, bold and backticks not counted; an emoji or other character outside the basic plane counts as two, as the share card measures it); the limit is ${OG_LEDE_MAX_CHARS}, the length the share card shows whole. ${FIX_SECOND_PARAGRAPH}`
+      `The tagline line runs ${chars} characters as the reader sees it (citation markers, bold and backticks not counted; an emoji or other character outside the basic plane counts as two, the larger of the share card's two counts, so the line shows whole whether or not it ends a sentence); the limit is ${OG_LEDE_MAX_CHARS}, the length the share card shows whole. ${FIX_SECOND_PARAGRAPH}`
     )
   }
   const exclusive = TAGLINE_EXCLUSIVE_FORMS.filter((form) =>
