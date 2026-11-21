@@ -22,7 +22,6 @@ describe("TokenCardSection", () => {
   it("tells the reader the colour swatches are click-to-copy", () => {
     render(
       <TokenCardSection
-        slug="demo"
         tokens={tokens({
           colors: [{ name: "blue-500", value: "oklch(0.624 0.176 254)" }],
         })}
@@ -35,7 +34,6 @@ describe("TokenCardSection", () => {
   it("omits the copy hint when the entry has no colours to click", () => {
     render(
       <TokenCardSection
-        slug="demo"
         tokens={tokens({ radius: [{ name: "r-md", value: "8px", px: 8 }] })}
       />
     )
@@ -62,12 +60,7 @@ describe("TokenCardSection — role cards", () => {
   }
 
   it("shows a role in its own block, outside the palette's folded tail", () => {
-    render(
-      <TokenCardSection
-        slug="demo"
-        tokens={tokens({ colors: [...gray, role] })}
-      />
-    )
+    render(<TokenCardSection tokens={tokens({ colors: [...gray, role] })} />)
 
     const card = screen.getByRole("button", {
       name: /^color-background-canvas-200 복사/,
@@ -95,10 +88,7 @@ describe("TokenCardSection — role cards", () => {
       ref: "gray-100",
     }))
     render(
-      <TokenCardSection
-        slug="demo"
-        tokens={tokens({ colors: [...gray, ...roles] })}
-      />
+      <TokenCardSection tokens={tokens({ colors: [...gray, ...roles] })} />
     )
 
     const cards = screen.getAllByRole("button", { name: /^role-\d+ 복사/ })
@@ -112,7 +102,6 @@ describe("TokenCardSection — role cards", () => {
   it("keeps the primary brand-colour alias with the palette, not the roles", () => {
     render(
       <TokenCardSection
-        slug="demo"
         tokens={tokens({
           colors: [
             ...gray,
@@ -139,7 +128,6 @@ describe("TokenCardSection — dark roles", () => {
   it("leaves a dark- role out of the light-only card view and its count", () => {
     render(
       <TokenCardSection
-        slug="demo"
         tokens={tokens({
           colors: [
             { name: "gray-050", value: "oklch(0.98 0 0)" },
@@ -171,7 +159,6 @@ describe("TokenCardSection — elevation", () => {
     const value = "0 4px 12px oklch(0 0 0 / 0.08)"
     const { container } = render(
       <TokenCardSection
-        slug="demo"
         tokens={tokens({
           elevation: [{ name: "shadow-2", value, note: "카드" }],
         })}
@@ -190,7 +177,6 @@ describe("TokenCardSection — elevation", () => {
   it("counts shadows in the section header", () => {
     render(
       <TokenCardSection
-        slug="demo"
         tokens={tokens({
           elevation: [
             { name: "s1", value: "0 1px 2px oklch(0 0 0 / 0.06)" },
@@ -210,7 +196,6 @@ describe("TokenCardSection — elevation", () => {
     // opaque. Colors have always been filtered — shadows have to be too.
     render(
       <TokenCardSection
-        slug="demo"
         tokens={tokens({
           elevation: [
             { name: "s1", value: "0px 1px 4px 0px oklch(0 0 0 / 0.078)" },
@@ -231,7 +216,6 @@ describe("TokenCardSection — elevation", () => {
   it("renders nothing when every shadow is a dark variant", () => {
     const { container } = render(
       <TokenCardSection
-        slug="demo"
         tokens={tokens({
           elevation: [
             { name: "dark-s1", value: "0px 1px 4px 0px oklch(0 0 0 / 0.502)" },
@@ -243,9 +227,7 @@ describe("TokenCardSection — elevation", () => {
   })
 
   it("renders nothing when elevation is the only key and it is absent", () => {
-    const { container } = render(
-      <TokenCardSection slug="demo" tokens={tokens()} />
-    )
+    const { container } = render(<TokenCardSection tokens={tokens()} />)
     expect(container.firstChild).toBeNull()
   })
 })

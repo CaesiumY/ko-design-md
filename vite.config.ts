@@ -145,8 +145,10 @@ function previewSlugsPlugin(): Plugin {
 // HMR and other Vite-handled responses untouched. The same handler is wired
 // to both `configureServer` (vite dev) and `configurePreviewServer`
 // (vite preview) so behavior is consistent across local modes. Production
-// headers are handled by the host (Vercel's defaults are sensible for
-// non-hashed HTML).
+// headers are handled by the host. Vercel answered `/preview/` with
+// `public, max-age=0, must-revalidate`; Cloudflare's static assets gave the
+// same plus an ETag under local workerd (`wrangler dev`, `/preview/` only).
+// Neither path has been measured on a Cloudflare deploy yet.
 function previewCacheHeadersPlugin(): Plugin {
   const isCatalogMutablePath = (url: string | undefined): boolean => {
     if (!url) return false

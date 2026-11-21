@@ -1,4 +1,3 @@
-import { track } from "@vercel/analytics"
 import { Button } from "@/components/ui/button"
 
 interface Props {
@@ -59,16 +58,6 @@ export function downloadFilename(slug: string): string {
 export function DownloadButton({ raw, slug }: Props) {
   function download() {
     saveAs(raw, downloadFilename(slug))
-
-    // Its own event rather than `design_md_copy`. The primary metric counts
-    // copies and downloads together (#336); a separate name keeps the split
-    // between the two visible. Guarded for the same reason
-    // as the copy hook — a dropped analytics event must not cost the reader.
-    try {
-      track("design_md_download", { slug })
-    } catch {
-      // Measurement is best-effort.
-    }
   }
 
   return (

@@ -4,7 +4,7 @@ import { buildStaticPageSeo } from "@/lib/seo"
 import { GITHUB_REPO_URL } from "@/lib/site-config"
 
 const DESCRIPTION =
-  "getdesign.kr 은 계정도 로그인도 폼도 없습니다. 이 문서는 사이트가 무엇을 수집하지 않는지, 그리고 페이지를 열거나 복사 버튼을 누를 때 어떤 외부 요청이 나가는지를 설명합니다."
+  "getdesign.kr 은 계정도 로그인도 폼도 없습니다. 이 문서는 사이트가 무엇을 수집하지 않는지, 그리고 페이지를 열 때 어떤 외부 요청이 나가는지를 설명합니다."
 
 export const Route = createFileRoute("/privacy")({
   head: () =>
@@ -52,23 +52,32 @@ function PrivacyPage() {
         </p>
         <ul className="list-disc space-y-2 pl-5">
           <li>
-            <strong>호스팅(Vercel).</strong> 사이트가 Vercel 에서 서빙되므로,
-            다른 웹사이트와 마찬가지로 요청이 서버 로그에
-            남습니다(IP·User-Agent·요청 경로 등). 이 로그는 Vercel 이 보유하며
-            이 프로젝트가 따로 내려받거나 보관하지 않습니다.
+            {/* 근거는 Cloudflare 문서다(2026-11-14 조회). Workers Logs 는
+                무료 요금제 3일, 유료 7일 보관하고, 새 Worker 는 기본으로 켜져
+                있다. wrangler.jsonc 의 observability 를 끄거나 요금제를 바꾸면
+                이 문단도 함께 고칠 것. */}
+            <strong>호스팅(Cloudflare).</strong> 사이트가 Cloudflare Workers
+            에서 서빙되므로, 다른 웹사이트와 마찬가지로 요청 정보(IP,
+            User-Agent, 요청 주소 등)가 Cloudflare 를 거칩니다. 이때 남는 서버
+            로그는 이 프로젝트의 Cloudflare 계정에 최대 7일 남고 관리자가
+            대시보드에서 오류를 살필 때 볼 수 있습니다. 따로 내려받거나 그보다
+            오래 보관하지 않습니다.
           </li>
           <li>
-            {/* 한때 이 항은 "페이지뷰를 집계합니다" 에서 멈췄다. 실제로는
-                `useCopyFeedback` 이 복사할 때마다 `track()` 으로 커스텀 이벤트를
-                보낸다 — 여기 적힌 범위가 코드가 보내는 범위보다 좁으면 안 된다.
-                복사 버튼 종류(`CopySurface`)나 이벤트 속성을 늘리면 이 문단도
-                함께 고칠 것. */}
-            <strong>Vercel Analytics.</strong> 어떤 항목이 읽히는지 파악하기
-            위해 페이지뷰를 집계합니다. 또 복사 버튼을 누르면 어떤 버튼이었는지
-            (DESIGN.md 전체·토큰 사이드카·색상 토큰·스킬 설치 명령)와, 항목
-            페이지에서 누른 경우 그 항목의 슬러그를 이벤트로 보냅니다. 복사한
-            내용 자체는 보내지 않습니다. 쿠키를 쓰지 않고 개인을 식별하지 않는
-            방식입니다.
+            {/* 근거는 Cloudflare Web Analytics 문서(about, FAQ)다(2026-11-14
+                조회). 자동 설정은 같은 도메인의 /cdn-cgi/rum 으로 보내고,
+                쿼리 문자열은 기록하지 않으며, 커스텀 이벤트는 지원하지 않는다.
+                복사나 다운로드를 다시 계측하게 되면 이 문단을 먼저 고칠 것. */}
+            <strong>Cloudflare Web Analytics.</strong> 어떤 항목이 읽히는지
+            파악하기 위해 페이지뷰를 집계합니다. Cloudflare 가 페이지에 넣는
+            측정 스크립트는 브라우저가{" "}
+            <code className="font-mono">static.cloudflareinsights.com</code>{" "}
+            에서 내려받고, 로딩 성능과 방문한 페이지를 이 사이트 주소로
+            보냅니다. Cloudflare 는 이 기능이 방문자의 개인정보를 수집하거나
+            쓰지 않고, 주소의 쿼리 문자열(검색어가 담기는{" "}
+            <code className="font-mono">?q=</code> 등)도 기록하지 않는다고
+            밝히고 있습니다. 복사 버튼이나 다운로드 버튼을 누른 것은 따로 보내지
+            않습니다.
           </li>
           <li>
             <strong>조회수 배지(hits.sh).</strong> 항목 상세 페이지에는 조회수
