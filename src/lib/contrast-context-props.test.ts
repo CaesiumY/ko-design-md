@@ -17,20 +17,27 @@ import { describe, expect, it } from "vitest"
 // root is a context there through the `view-transition-name: root` Chromium
 // gives it.
 //
-// Only the name heading each `[name, value, initial]` entry is read, so a name
-// left in a comment counts for nothing. A name read from the wrong computed
-// field still passes here, and is the measurement's to catch.
+// Each block is read with its comments taken out, and only the name heading
+// each `[name, value, initial]` entry counts, so an entry commented out, or a
+// name left in a comment, counts for nothing. A name read from the wrong
+// computed field still passes here, and is the measurement's to catch.
 const ROOT = process.cwd()
 const read = (file: string): string => readFileSync(join(ROOT, file), "utf8")
 const collector = read("scripts/audit-contrast-collector.ts")
 const judge = read("src/lib/contrast-pseudo.ts")
+
+// The blocks read hold no string with `//` or `/*` in it, so comments can be
+// taken out by pattern. Cut from the raw source first, so a `/*` inside a
+// string elsewhere in the file cannot swallow a block.
+const uncommented = (code: string): string =>
+  code.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/[^\n]*/g, "")
 
 const block = (source: string, start: string, end: string): string => {
   const from = source.indexOf(start)
   expect(from, `${start} not found`).toBeGreaterThan(-1)
   const to = source.indexOf(end, from)
   expect(to, `${end} not found after ${start}`).toBeGreaterThan(from)
-  return source.slice(from, to)
+  return uncommented(source.slice(from, to))
 }
 
 // One name per property MDN lists. `mask` is a shorthand: its image and its
