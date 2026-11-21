@@ -1166,8 +1166,68 @@ run `42878751952` 재집계에서는 class101 의 비텍스트에 가상 요소 
 분류표, 「유보 사유」 표를 함께 다시 쓴다(위 「게이트는 이것을 어떻게 다루나」). 줄어든 미달이 판정만 바뀐 것이 아니라 실제 수정의 결과임은 그 PR 에서 행의
 수정 전/후 비율로 보인다.
 
+## 보류를 푸는 변경의 점검 목록
+
+보류하던 경우를 판정하게 바꾸는 변경(`CODING_STANDARDS.md` 「보류 풀기」) 가운데 가상 요소(`::before`, `::after`)의 칠을
+판정하는 쪽이 대조할 갈래다. 점 조회(`elementsFromPoint`)와 계산값만으로는 화면의 칠을 다 알 수 없으므로, 판정은 아래 갈래
+하나하나에서 화면과 같아야 한다. 괄호는 그 갈래를 지키는 자기검사 판(픽스처가 아니라 단위 테스트가 지키는 갈래는 그 테스트 이름)이고, 판 이름과 설명의 정본은
+`scripts/fixtures/pseudo-background.html` 과 `pseudo-canvas-*.html` 의 머리말이다. 판을 더하면 이 목록에도 그 갈래를 더한다
+(자기검사 앵커 `PSEUDO_ANCHORS` 의 판, `pseudo-background.html` 머리말의 판, 이 절의 판 이름이 같은지는
+`src/lib/contrast-hold-checklist.test.ts` 가 본다).
+판이 없는 갈래는 그렇다고 적고 Known gaps 에도 둔다. 다른 경로의 보류(비텍스트 표면 뒤의 `filter` 와 그림자, 그라디언트,
+폼 컨트롤)는 `scripts/fixtures/README.md` 가 가리키는 각 픽스처 머리말이 갈래의 정본이다. 합성 자체가 맞는지 보는 판
+(`.cover`, `.veil`, `.opaque`, `.under` 처럼 위아래와 덮음을 가르는 기본 판)은 갈래가 아니라 기본 동작이라
+여기 적지 않는다.
+
+- **점 조회에 나오지 않는 칠**: 클릭을 받지 않는(`pointer-events: none`) 요소(`.unhit`, `.ghost`). 요소는 클릭을 받지만 자기
+  의사요소는 받지 않는 경우(`.mute`), 상자가 없어 그 점에 나오지 않는 감싸개(`.contents`). 위 막 쪽에서도 같다(`.wrapped`, `.overblock`).
+- **어디에 있는 칠인가**: 주인 안 사슬 밖(`.aside`, `.atop`), 주인 밖(`.beyond`), 주인의 조상(`.elder`), 컨테이닝 블록 밖으로
+  나온 배치 상자(`.offset`), 불투명 층에서 멈춘 스택 너머의 조상(`.past`, `.pastbox`, `.pastclip`, `.pastboth`, `.lifted`),
+  스택이 멈춘 층 자신의 의사요소(`.stackedge`, `.stackunder`).
+- **무엇으로 그리나**: 배경만이 아니라 테두리(`.pastedge`), `border-image`(`.pastimage`), 그림자(`.shade`), 글자(`.glyph`,
+  의사요소의 `content` 는 `.badge`), `backdrop-filter`(`.frost`). 주인, 사이 층, 읽는 요소의 읽지 않는 의사요소(`.tag`,
+  `.mute`, `.between`, `.selfdraw`).
+- **잘라내기와 숨김**: `clip`(`.rectclip`, `.pastrect`), `clip-path` 와 `contain: paint`(`.pastshape`, `.pastcontain`),
+  마스크(`.pastmaskbox`), 주인 밖에 놓여 자르는 상자를 벗어난 칠(`.pastescape`), `visibility: hidden` 과 `collapse`
+  (`.unseen`, `.shroud`, `.collapsed`), 주인 배경의 `background-clip`(`.clipped`).
+- **상자의 모양**: 줄을 다 품지 않는 주인 상자(`.spill`), 둥근 모서리(`.round`, `.corner`), `corner-shape`(`.bevel`,
+  `.diamond`), 회전과 모션 경로(`.pastturn`, `.pastpath`), 줄이 나뉜 인라인 상자(`.pastinline`), 주인이 두 번 나오는 층
+  (`.split`).
+- **위치 계산**: 과잉 제약에서 상자를 정하는 값(`.side`), 평행 이동(`.disc`), 쓰는 방향(`.rtl`, `.vertical`), grid 배치(`.grid`), 반사(`.reflect`), 스크롤된
+  루트(`.far`).
+- **칠 순서의 전제**: 쌓임 맥락을 만드는 속성. 이름 있는 필드가 없는 접두 속성(`.maskbox`, `.mirror`), 값에 따라 갈리는 속성
+  (`.unknown`). 최상위 층(모달 dialog, 열린 popover, 전체 화면)은 판이 없다. 배경이 캔버스로 넘어간 루트와 `body`
+  (`pseudo-canvas-body.html`, `pseudo-canvas-root.html`, `pseudo-canvas-stop.html`).
+- **속성 목록으로 보류하는 갈래**: 값이 하나라도 있으면 보류하는 목록이다. 상자나 칠의 자리를 모르게 하는 값은 수집기의
+  `unsureOf`(의사요소 자신과 그 조상 사슬 모두에 적용)와 `unsureFor`(그 위에 의사요소 자신에만 더 보는 값)가, 값에 따라
+  쌓임 맥락이 되기도 하는 속성은 판정기의 `MAYBE_CONTEXT` 가 정본이다. 칠 순서를 정하지 않는 조건은 `paintOrder` 와
+  `underStop` 의 주석이, 합성 단계에서 보류하는 조건(위 막이 불투명하거나 그라디언트, 이미지, 섞임 모드를 가진 것, 위 막이
+  둘 이상인 것 등)은 판정기 `src/lib/contrast.ts` 의 `pseudoEffect` 주석이 정본이다. 이 목록들 가운데 위 갈래에 판이 적히지 않은 값(예: `zoom`, `position-area`, 자기 정렬,
+  3D 맥락, 의사요소 자신의 `filter`, 글자 위 막의 `mix-blend-mode`)은 판이 없다. 글자 아래 칠의 `mix-blend-mode` 는 보류하지
+  않고 덧칠로 합성한다(Known gaps). 그런 값의 보류를 푸는 변경은 그 값의 판부터 더한다.
+- **속성 목록으로 판정하는 갈래**: 값이 하나라도 있으면 쌓임 맥락이라고 **확정해 판정**하는 목록이다. 정본은 수집기의
+  `contextPropsOf` 와 최상위 층 검사이고, 판정기의 `makesContext` 가 이것으로 위와 아래를 가른다. 다만 그 가운데
+  `MAYBE_CONTEXT` 에도 있는 속성은 판정하지 않고 보류하고, `unsureOf` 에도 있는 속성(`perspective`, `backdrop-filter`,
+  `transform-style`, `offset-path`)과 평행 이동이 아닌 변형은 주인이나 그 조상에 있으면 상자를 계산하지 않아 보류한다. 그 속성을
+  빼면 실패하는 판으로 확인한 것은 마스크 테두리와 반사(`.maskbox`, `.mirror`)뿐이고, 나머지는 판 없이 판정한다. 예를 들어
+  주인이나 그 조상에 있는 `opacity`, `mix-blend-mode`, `isolation`, `view-transition-name` 과, 읽는 요소에서 주인 바로
+  아래까지의 사슬에 있는 이 목록의 속성이 그렇다. 이 목록을 고치는 변경과 이 갈래에 기대는 판정을 바꾸는 변경은
+  그 속성의 판부터 더한다.
+- **읽는 영역**: 가운데 점이 아니라 줄 상자 전체(`.mark`), 글자 줄이 아니라 요소 상자를 읽는 비텍스트 표면과 입력창
+  (`.surface`, `.field`). 비텍스트 표면은 상자보다 2px
+  넓힌 영역과 견주므로, 그 띠에만 걸친 칠도 센다(`contrast.test.ts` 의 "holds when unhit paint outside the owner lies only
+  in the band around the surface").
+
 ## Known gaps
 
+- 가상 요소 칠을 보류하는 속성 목록(수집기의 `unsureOf`, `unsureFor`, 판정기의 `MAYBE_CONTEXT`) 가운데 여럿은 자기검사 판이
+  없다(「보류를 푸는 변경의 점검 목록」의 보류 갈래). 보류 쪽이라 거짓 통과는 내지 않지만, 그 보류를 푸는 변경은 판부터 더해야
+  한다.
+- 쌓임 맥락으로 판정하는 속성 목록(수집기의 `contextPropsOf`) 가운데 보류로 닫히지 않는 속성은 마스크 테두리와 반사를 빼고
+  판 없이 판정한다(「보류를 푸는 변경의 점검 목록」의 판정 갈래에 범위를 적었다). 그 판정이 가르는 위와 아래가 맞는지 지키는 판이 없고, 조상이나 주인의
+  `mix-blend-mode` 는 맥락을 만든다고만 읽고 섞임은 스택의 다른 층처럼 덧칠로 합성한다. 거짓 통과가 날 수 있는 열린 갈래다.
+- 최상위 층(모달 dialog, 열린 popover, 전체 화면)에 올라간 요소를 쌓임 맥락으로 치는 검사에는 자기검사 판이 없다. 자기검사
+  문서 하나에 모달을 띄우면 다른 판의 점 조회가 바뀌기 때문이다.
 - 열린 `<select>` 의 드롭다운 목록(브라우저 네이티브 UI)은 재지 않는다. 닫힌 상태에 보이는
   선택 옵션 글자는 잰다(#400). `date`·`time`·`color`·`file`·`week`·`month`·`datetime-local` 입력처럼
   브라우저 위젯이 그리는 값과, 비활성(`:disabled`) 컨트롤의 글자(SC 1.4.3 면제)도 재지 않는다.
