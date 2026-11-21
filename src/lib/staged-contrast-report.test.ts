@@ -1,11 +1,14 @@
 import { describe, expect, it } from "vitest"
+import { MIN_TEXT_ELEMENTS, THIN_PREVIEW_ADVICE } from "./contrast-baseline"
 import {
   MAX_RENDER_ISSUES,
   STAGED_CONTRAST_RULE,
+  STAGED_THIN_RULE,
   mergeIntoMachineReport,
   observedRender,
   skippedRender,
 } from "./staged-contrast-report"
+import { totalsBySlug } from "./contrast-report"
 import type { DedupedFinding, Judgement } from "./contrast-report"
 import type { MachineReport } from "./staged-contrast-report"
 
@@ -65,18 +68,45 @@ function stage9a2Report(): MachineReport {
   }
 }
 
+// Text rows standing for `elements` elements in one theme, split so a count of
+// rows and a count of elements disagree.
+function textIn(
+  theme: "light" | "dark",
+  elements: number
+): Array<DedupedFinding> {
+  const half = Math.floor(elements / 2)
+  return [
+    row("pass", 8, { theme, path: `p.a-${theme}`, occurrences: half }),
+    row("pass", 9, {
+      theme,
+      path: `p.b-${theme}`,
+      occurrences: elements - half,
+    }),
+  ]
+}
+
+// Enough passing text in both themes to clear the floor, for the tests about
+// contrast items: without it every one of their small inputs is also a thin
+// preview, and the thin item would sit in the lists they compare.
+const THICK = [
+  ...textIn("light", MIN_TEXT_ELEMENTS),
+  ...textIn("dark", MIN_TEXT_ELEMENTS),
+]
+
+const observeThick = (
+  rows: Array<DedupedFinding>
+): ReturnType<typeof observedRender> =>
+  observedRender([...rows, ...THICK], SWEPT)
+
 describe("observedRender", () => {
   it("reports only failures, worst ratio first, as warn items", () => {
-    const { issues } = observedRender(
-      [
-        row("fail", 3.9),
-        row("borderline", 4.45),
-        row("fail", 2.1),
-        row("indeterminate", 1.5, { blockers: ["gradient"] }),
-        row("pass", 7),
-      ],
-      SWEPT
-    )
+    const { issues } = observeThick([
+      row("fail", 3.9),
+      row("borderline", 4.45),
+      row("fail", 2.1),
+      row("indeterminate", 1.5, { blockers: ["gradient"] }),
+      row("pass", 7),
+    ])
     expect(issues.map((i) => i.severity)).toEqual(["warn", "warn"])
     expect(issues.map((i) => i.rule)).toEqual([
       STAGED_CONTRAST_RULE,
@@ -87,10 +117,9 @@ describe("observedRender", () => {
   })
 
   it("names the element, the sample, the measured and required ratio and the colour pair", () => {
-    const [issue] = observedRender(
-      [row("fail", 2.1, { theme: "dark", state: "hover", widths: [976] })],
-      SWEPT
-    ).issues
+    const [issue] = observeThick([
+      row("fail", 2.1, { theme: "dark", state: "hover", widths: [976] }),
+    ]).issues
     expect(issue.section).toContain("dark")
     expect(issue.section).toContain("hover")
     expect(issue.section).toContain("976")
@@ -119,7 +148,7 @@ describe("observedRender", () => {
         basis: "border",
       })
     )
-    const { issues } = observedRender([...edges, row("fail", 4.1)], SWEPT)
+    const { issues } = observeThick([...edges, row("fail", 4.1)])
     expect(issues).toHaveLength(MAX_RENDER_ISSUES)
     expect(issues[0].fix).toContain("4.10:1")
     expect(issues[0].fix).toContain('text "가입하기"')
@@ -133,7 +162,7 @@ describe("observedRender", () => {
       row("fail", 1.5 + i / 100)
     )
     const dark = row("fail", 4.2, { theme: "dark" })
-    const { issues } = observedRender([...light, dark], SWEPT)
+    const { issues } = observeThick([...light, dark])
     expect(issues).toHaveLength(MAX_RENDER_ISSUES)
     expect(issues[0].section).toContain("dark")
     expect(issues[0].fix).toContain("4.20:1")
@@ -143,7 +172,7 @@ describe("observedRender", () => {
     const many = Array.from({ length: MAX_RENDER_ISSUES + 7 }, (_, i) =>
       row("fail", 1 + i / 100)
     )
-    const { render, issues } = observedRender(many, SWEPT)
+    const { render, issues } = observeThick(many)
     expect(issues).toHaveLength(MAX_RENDER_ISSUES)
     expect(issues[0].fix).toContain("1.00:1")
     expect(render.observed.fail).toBe(MAX_RENDER_ISSUES + 7)
@@ -170,6 +199,8 @@ describe("observedRender", () => {
       reported: 1,
       omitted: 0,
       omittedDarkText: 0,
+      // Four light text rows of one element each; nothing in dark.
+      textElements: { light: 4, dark: 0 },
     })
   })
 
@@ -180,7 +211,7 @@ describe("observedRender", () => {
       row("fail", 1 + i / 100, { theme: "dark" })
     )
     const light = [row("fail", 2), row("fail", 2.5)]
-    const { render } = observedRender([...dark, ...light], SWEPT)
+    const { render } = observeThick([...dark, ...light])
     expect(render.observed.omitted).toBe(5)
     expect(render.observed.omittedDarkText).toBe(3)
   })
@@ -188,7 +219,7 @@ describe("observedRender", () => {
 
 describe("skipped and observed reports", () => {
   it("differ in shape, not just in a value — a skip can never read as a clean run", () => {
-    const clean = observedRender([], SWEPT)
+    const clean = observeThick([])
     const skipped = skippedRender(
       "browserType.launch: Executable doesn't exist"
     )
@@ -216,7 +247,7 @@ describe("mergeIntoMachineReport", () => {
     const before = stage9a2Report()
     const merged = mergeIntoMachineReport(
       before,
-      observedRender([row("fail", 2.1)], SWEPT),
+      observeThick([row("fail", 2.1)]),
       { iteration: 2 }
     )
     const own = ["machine", "tool", "schema", "passed", "metrics"] as const
@@ -233,7 +264,7 @@ describe("mergeIntoMachineReport", () => {
   it("recounts the verdict from the merged items", () => {
     const merged = mergeIntoMachineReport(
       stage9a2Report(),
-      observedRender([row("fail", 2.1), row("fail", 3)], SWEPT),
+      observeThick([row("fail", 2.1), row("fail", 3)]),
       { iteration: 2 }
     )
     expect(merged.verdict).toMatch(/^0 block \/ 3 warn — /)
@@ -255,12 +286,12 @@ describe("mergeIntoMachineReport", () => {
   it("replaces an earlier 9a3 result instead of stacking a second one", () => {
     const once = mergeIntoMachineReport(
       stage9a2Report(),
-      observedRender([row("fail", 2.1), row("fail", 3)], SWEPT),
+      observeThick([row("fail", 2.1), row("fail", 3)]),
       { iteration: 2 }
     )
     const twice = mergeIntoMachineReport(
       once,
-      observedRender([row("fail", 2.5)], SWEPT),
+      observeThick([row("fail", 2.5)]),
       { iteration: 2 }
     )
     const rules = twice.issues.map((i) => i.rule)
@@ -278,7 +309,7 @@ describe("mergeIntoMachineReport", () => {
   it("starts its own report when there is no 9a2 report to join", () => {
     const report = mergeIntoMachineReport(
       null,
-      observedRender([row("fail", 2.1)], SWEPT),
+      observeThick([row("fail", 2.1)]),
       { iteration: 1 }
     )
     expect(report.machine).toBe(true)
@@ -294,16 +325,190 @@ describe("observedRender — a form control's text says where it came from", () 
     // The colour an author must change for a placeholder is `::placeholder`'s,
     // not the field's `color`; an issue that called it plain text sends them
     // looking for a text node "이메일" that does not exist.
-    const { issues } = observedRender(
-      [row("fail", 1.91, { sample: "이메일", source: "placeholder" })],
-      SWEPT
-    )
+    const { issues } = observeThick([
+      row("fail", 1.91, { sample: "이메일", source: "placeholder" }),
+    ])
     expect(issues[0].fix).toContain('placeholder "이메일"')
     expect(issues[0].fix).toContain("::placeholder")
   })
 
   it("leaves an ordinary text node's wording as it was", () => {
-    const { issues } = observedRender([row("fail", 4.1)], SWEPT)
+    const { issues } = observeThick([row("fail", 4.1)])
     expect(issues[0].fix).toContain('text "가입하기"')
+  })
+})
+
+describe("observedRender — a preview under the text-element floor", () => {
+  it("warns once, ahead of the contrast items, naming the thin theme and how far short it is", () => {
+    const { issues } = observedRender(
+      [
+        ...textIn("light", MIN_TEXT_ELEMENTS - 10),
+        ...textIn("dark", MIN_TEXT_ELEMENTS + 5),
+        row("fail", 2.1, { theme: "dark", path: "p.low" }),
+      ],
+      SWEPT
+    )
+    expect(issues.map((i) => i.rule)).toEqual([
+      STAGED_THIN_RULE,
+      STAGED_CONTRAST_RULE,
+    ])
+    const [thin] = issues
+    expect(thin.severity).toBe("warn")
+    expect(thin.fix).toContain(`light shows ${MIN_TEXT_ELEMENTS - 10}`)
+    expect(thin.fix).toContain("10 short")
+    expect(thin.fix).not.toContain("dark shows")
+    // The advice is the CI gate's own lines, not a second wording of them.
+    for (const line of THIN_PREVIEW_ADVICE) expect(thin.fix).toContain(line)
+  })
+
+  it("puts every theme under the floor into the one item", () => {
+    const { issues } = observedRender(
+      [...textIn("light", 79), ...textIn("dark", 51)],
+      SWEPT
+    )
+    const thin = issues.filter((i) => i.rule === STAGED_THIN_RULE)
+    expect(thin).toHaveLength(1)
+    expect(thin[0].fix).toContain("light shows 79 (1 short)")
+    expect(thin[0].fix).toContain("dark shows 51 (29 short)")
+  })
+
+  it("says nothing at exactly the floor", () => {
+    const { issues } = observedRender(
+      [
+        ...textIn("light", MIN_TEXT_ELEMENTS),
+        ...textIn("dark", MIN_TEXT_ELEMENTS),
+      ],
+      SWEPT
+    )
+    expect(issues).toEqual([])
+  })
+
+  it("counts text only — non-text surfaces neither raise nor lower it", () => {
+    const edges = (theme: "light" | "dark", occurrences: number) =>
+      row("fail", 1.2, {
+        theme,
+        kind: "non-text",
+        sample: null,
+        threshold: 3,
+        basis: "border",
+        path: `div.edge-${theme}`,
+        occurrences,
+      })
+    const atFloor = observedRender(
+      [
+        ...textIn("light", MIN_TEXT_ELEMENTS),
+        ...textIn("dark", MIN_TEXT_ELEMENTS),
+      ],
+      SWEPT
+    )
+    expect(atFloor.issues.some((i) => i.rule === STAGED_THIN_RULE)).toBe(false)
+    const thinButBusy = observedRender(
+      [...textIn("light", 40), ...textIn("dark", 40), edges("light", 500)],
+      SWEPT
+    )
+    expect(thinButBusy.render.observed.textElements).toEqual({
+      light: 40,
+      dark: 40,
+    })
+    expect(thinButBusy.issues[0].rule).toBe(STAGED_THIN_RULE)
+  })
+
+  it("warns when no text was measured at all", () => {
+    // A collector that reached nothing is the thinnest preview there is, and
+    // a report with no item would read as a clean one.
+    const { render, issues } = observedRender([], SWEPT)
+    expect(render.observed.textElements).toEqual({ light: 0, dark: 0 })
+    expect(issues.map((i) => i.rule)).toEqual([STAGED_THIN_RULE])
+    expect(issues[0].fix).toContain("light shows 0")
+    expect(issues[0].fix).toContain("dark shows 0")
+  })
+
+  it("counts the elements CI counts: every copy, hover rows included, per theme", () => {
+    // By hand: light text rows stand for 30 + 25 (default) + 12 (hover) = 67
+    // elements in 3 rows; dark has 81 in 2; the non-text row is not text.
+    const deduped = [
+      row("pass", 8, { path: "p.a", occurrences: 30 }),
+      row("fail", 3, { path: "p.b", occurrences: 25 }),
+      row("pass", 7, { path: "a.link", state: "hover", occurrences: 12 }),
+      row("pass", 8, { theme: "dark", path: "p.a", occurrences: 60 }),
+      row("pass", 6, { theme: "dark", path: "p.c", occurrences: 21 }),
+      row("fail", 1.5, {
+        kind: "non-text",
+        sample: null,
+        threshold: 3,
+        basis: "border",
+        occurrences: 40,
+      }),
+    ]
+    const { render, issues } = observedRender(deduped, SWEPT)
+    expect(render.observed.textElements).toEqual({ light: 67, dark: 81 })
+    // The same rows through the CI gate's totals give the same numbers.
+    const ci = totalsBySlug(deduped)
+    for (const theme of ["light", "dark"] as const) {
+      const elements = ci.find(
+        (t) => t.theme === theme && t.kind === "text"
+      )?.elements
+      expect(elements, theme).toBe(render.observed.textElements[theme])
+    }
+    expect(issues[0].rule).toBe(STAGED_THIN_RULE)
+    expect(issues[0].fix).toContain("light shows 67 (13 short)")
+    expect(issues[0].fix).not.toContain("dark shows")
+  })
+
+  it("stays first and outside the cap when the shortfalls overflow it", () => {
+    const many = Array.from({ length: MAX_RENDER_ISSUES + 5 }, (_, i) =>
+      row("fail", 1 + i / 100, { path: `p.m-${i}` })
+    )
+    const { render, issues } = observedRender(many, SWEPT)
+    expect(issues[0].rule).toBe(STAGED_THIN_RULE)
+    expect(issues.filter((i) => i.rule === STAGED_CONTRAST_RULE)).toHaveLength(
+      MAX_RENDER_ISSUES
+    )
+    expect(render.observed.reported).toBe(MAX_RENDER_ISSUES)
+    expect(render.observed.omitted).toBe(5)
+  })
+
+  it("is not read as a contrast shortfall", () => {
+    // Before the rubric learns this item, it reads `contrast —` sections under
+    // `render.observed` as its legibility input.
+    const [thin] = observedRender([], SWEPT).issues
+    expect(thin.section.startsWith("contrast")).toBe(false)
+  })
+})
+
+describe("mergeIntoMachineReport — the thin-preview item", () => {
+  const thinRun = () =>
+    observedRender(
+      [...textIn("light", 50), ...textIn("dark", 50), row("fail", 2.1)],
+      SWEPT
+    )
+
+  it("keeps 9a2's items first, then the thin item, then the contrast items, and counts it in the verdict", () => {
+    const merged = mergeIntoMachineReport(stage9a2Report(), thinRun(), {
+      iteration: 2,
+    })
+    expect(merged.issues.map((i) => i.rule)).toEqual([
+      "iframe-js-defer",
+      STAGED_THIN_RULE,
+      STAGED_CONTRAST_RULE,
+    ])
+    expect(merged.verdict).toMatch(/^0 block \/ 3 warn — /)
+  })
+
+  it("drops an earlier thin item when the rerun clears the floor or is skipped", () => {
+    const once = mergeIntoMachineReport(stage9a2Report(), thinRun(), {
+      iteration: 2,
+    })
+    const padded = mergeIntoMachineReport(once, observedRender(THICK, SWEPT), {
+      iteration: 2,
+    })
+    expect(padded.issues.map((i) => i.rule)).toEqual(["iframe-js-defer"])
+    expect(padded.verdict).toMatch(/^0 block \/ 1 warn — /)
+
+    const skipped = mergeIntoMachineReport(once, skippedRender("x"), {
+      iteration: 2,
+    })
+    expect(skipped.issues).toEqual(stage9a2Report().issues)
+    expect(skipped.render).toEqual({ skipped: { reason: "x" } })
   })
 })

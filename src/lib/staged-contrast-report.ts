@@ -11,11 +11,28 @@
 // "drift" (ADR 0007) cannot apply, and what is left — an individual shortfall —
 // may be two published values that simply do not reach the threshold. Blocking
 // on that would push the author to throw a brand value away to get through.
+//
+// It also counts the text elements per theme against the CI gate's floor
+// (ADR 0013) — a number CI does block on, even for an entry with no baseline
+// row — so the author hears about a thin preview inside the loop, not from the
+// first CI run. Still a `warn` here, for the reason above.
 
+import { MIN_TEXT_ELEMENTS, THIN_PREVIEW_ADVICE } from "./contrast-baseline"
+import { totalsBySlug } from "./contrast-report"
 import type { DedupedFinding, State, Theme } from "./contrast-report"
 import type { ValidationIssue } from "./draft-validator"
 
 export const STAGED_CONTRAST_RULE = "render-contrast-shortfall"
+
+/**
+ * The item for a preview under the CI gate's text-element floor (ADR 0013).
+ *
+ * A rule of its own, not another contrast shortfall: it says the preview shows
+ * too little, not that something in it is hard to read, and a reader of the
+ * report — the reviewer's rubric, a test — has to be able to tell the two
+ * apart. Still a `warn`, like everything this stage adds (ADR 0009).
+ */
+export const STAGED_THIN_RULE = "render-thin-preview"
 
 /** The envelope's `tool` when there is no 9a2 report to join. */
 export const STAGED_CONTRAST_TOOL = "observe-staged-contrast"
@@ -58,6 +75,13 @@ export interface ObservedRender {
      * cannot see them, so the rubric sends it to the CSS before full marks.
      */
     omittedDarkText: number
+    /**
+     * Text elements per swept theme, counted the way the CI gate counts them
+     * against `MIN_TEXT_ELEMENTS`: the `elements` of that theme's text rows
+     * in the baseline totals, over the same folded rows. CI sweeps hover at
+     * the same width this stage does, so the hover rows are in both counts.
+     */
+    textElements: Partial<Record<Theme, number>>
   }
 }
 
@@ -134,6 +158,26 @@ function toIssue(f: DedupedFinding): MachineIssue {
   }
 }
 
+// One item for every theme under the floor, so an author reading it once
+// learns which side to add to and how much.
+function thinIssue(
+  textElements: Partial<Record<Theme, number>>
+): MachineIssue | null {
+  const thin = Object.entries(textElements).filter(
+    ([, n]) => n < MIN_TEXT_ELEMENTS
+  )
+  if (thin.length === 0) return null
+  const shown = thin
+    .map(([theme, n]) => `${theme} shows ${n} (${MIN_TEXT_ELEMENTS - n} short)`)
+    .join(", ")
+  return {
+    severity: "warn",
+    rule: STAGED_THIN_RULE,
+    section: `text elements — ${thin.map(([theme]) => theme).join(", ")} under ${MIN_TEXT_ELEMENTS}`,
+    fix: `Each theme needs at least ${MIN_TEXT_ELEMENTS} text elements the contrast collector reads, and the CI contrast job blocks a preview with fewer; ${shown}. ${THIN_PREVIEW_ADVICE.join(" ")}`,
+  }
+}
+
 export function observedRender(
   deduped: Array<DedupedFinding>,
   swept: SweepShape,
@@ -150,7 +194,23 @@ export function observedRender(
       (a, b) =>
         rank(a) - rank(b) || a.ratio - b.ratio || a.path.localeCompare(b.path)
     )
-  const issues = failures.slice(0, max).map(toIssue)
+  const contrast = failures.slice(0, max).map(toIssue)
+  // From the gate's own totals, so the number here is the number CI will
+  // hold the preview to. Seeded from the swept themes rather than read off the
+  // totals' rows: a theme with no text reading has no row there, and it is the
+  // thinnest case of all.
+  const totals = totalsBySlug(deduped)
+  const textElements: Partial<Record<Theme, number>> = {}
+  for (const theme of swept.themes) {
+    textElements[theme] = totals
+      .filter((t) => t.kind === "text" && t.theme === theme)
+      .reduce((sum, t) => sum + t.elements, 0)
+  }
+  // Ahead of the contrast items and outside their cap: the cap exists so a
+  // long list of shortfalls does not bury the few worth acting on, and this
+  // one is about the whole preview.
+  const thin = thinIssue(textElements)
+  const issues = thin === null ? contrast : [thin, ...contrast]
   return {
     render: {
       observed: {
@@ -161,10 +221,11 @@ export function observedRender(
         fail: failures.length,
         borderline: count("borderline"),
         held: count("indeterminate"),
-        reported: issues.length,
-        omitted: failures.length - issues.length,
+        reported: contrast.length,
+        omitted: failures.length - contrast.length,
         omittedDarkText: failures.slice(max).filter((f) => rank(f) === 0)
           .length,
+        textElements,
       },
     },
     issues,
@@ -203,7 +264,11 @@ export function mergeIntoMachineReport(
     issues: [],
     verdict: "0 block / 0 warn — render observation only",
   }
-  const kept = base.issues.filter((i) => i.rule !== STAGED_CONTRAST_RULE)
+  // Both of this stage's rules, so a rerun replaces its earlier result — a
+  // preview padded past the floor must lose the old thin item with it.
+  const kept = base.issues.filter(
+    (i) => i.rule !== STAGED_CONTRAST_RULE && i.rule !== STAGED_THIN_RULE
+  )
   const issues = [...kept, ...result.issues]
   const blocks = issues.filter((i) => i.severity === "block").length
   const warns = issues.filter((i) => i.severity === "warn").length
