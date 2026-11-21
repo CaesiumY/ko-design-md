@@ -1,0 +1,74 @@
+/* pv-frame:start — PROTOTYPE. 모든 프리뷰가 글자 그대로 똑같이 갖는 틀.
+   짜임(배치, 간격, 크기)만 여기서 정하고 서체와 색은 항목이 :root 의 --pv-* 로 넣는다.
+   페이지 쪽 스타일은 .pv-* 선택자를 다시 정의하지 않는다. */
+.pv-page {
+  display: block;
+  min-width: 0;
+  background: var(--pv-canvas);
+  color: var(--pv-ink);
+  font-family: var(--pv-font);
+}
+.pv-zone {
+  min-width: 0;
+  padding: 48px 24px;
+  border-top: 1px solid var(--pv-line);
+}
+.pv-zone-title {
+  margin: 0 0 24px;
+  font-family: var(--pv-font-display, var(--pv-font));
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0;
+  color: var(--pv-ink);
+}
+.pv-cells {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  min-width: 0;
+}
+.pv-cell {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--pv-line);
+  border-radius: var(--pv-radius, 0px);
+  background: var(--pv-surface);
+}
+.pv-cell--wide {
+  grid-column: 1 / -1;
+}
+.pv-label {
+  margin: 0 0 14px;
+  font-family: var(--pv-font);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0;
+  color: var(--pv-ink-muted);
+}
+.pv-stage {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  max-width: 100%;
+}
+.pv-stage--stack {
+  flex-direction: column;
+  align-items: stretch;
+}
+.pv-screen {
+  min-width: 0;
+  max-width: 100%;
+}
+@media (max-width: 767px) {
+  .pv-zone {
+    padding: 32px 16px;
+  }
+  .pv-cells {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* pv-frame:end */

@@ -185,6 +185,25 @@
     document.documentElement.setAttribute("data-theme", d.value)
   })
 
+  // PROTOTYPE (preview standard): selection-only toggles. Inside a
+  // `[data-pv-toggle="aria-selected|aria-pressed|aria-checked"]` group, the
+  // clicked `[data-pv-option]` gets the attribute "true" and its siblings
+  // "false". Nothing is shown or hidden — a tab moves its indicator, no panel
+  // is swapped — so the document never carries text that is not on screen.
+  document.addEventListener("click", function (e) {
+    var target = e.target
+    if (target === null || typeof target.closest !== "function") return
+    var option = target.closest("[data-pv-option]")
+    if (option === null) return
+    var group = option.closest("[data-pv-toggle]")
+    if (group === null) return
+    var attr = group.getAttribute("data-pv-toggle") || "aria-selected"
+    var options = group.querySelectorAll("[data-pv-option]")
+    for (var i = 0; i < options.length; i++) {
+      options[i].setAttribute(attr, options[i] === option ? "true" : "false")
+    }
+  })
+
   if (window.parent === window) return
 
   function send() {
