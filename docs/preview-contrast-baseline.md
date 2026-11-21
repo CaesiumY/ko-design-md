@@ -1180,7 +1180,7 @@ run `42878751952` 재집계에서는 class101 의 비텍스트에 가상 요소 
 여기 적지 않는다.
 
 - **점 조회에 나오지 않는 칠**: 클릭을 받지 않는(`pointer-events: none`) 요소(`.unhit`, `.ghost`). 요소는 클릭을 받지만 자기
-  의사요소는 받지 않거나, 상자가 없어 그 점에 나오지 않는 감싸개(`.contents`). 위 막 쪽에서도 같다(`.wrapped`, `.overblock`).
+  의사요소는 받지 않는 경우(`.mute`), 상자가 없어 그 점에 나오지 않는 감싸개(`.contents`). 위 막 쪽에서도 같다(`.wrapped`, `.overblock`).
 - **어디에 있는 칠인가**: 주인 안 사슬 밖(`.aside`, `.atop`), 주인 밖(`.beyond`), 주인의 조상(`.elder`), 컨테이닝 블록 밖으로
   나온 배치 상자(`.offset`), 불투명 층에서 멈춘 스택 너머의 조상(`.past`, `.pastbox`, `.pastclip`, `.pastboth`, `.lifted`),
   스택이 멈춘 층 자신의 의사요소(`.stackedge`, `.stackunder`).
