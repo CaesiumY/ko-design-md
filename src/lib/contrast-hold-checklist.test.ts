@@ -42,7 +42,15 @@ const described = new Set(
 const doc = read("docs/preview-contrast-baseline.md")
 const from = doc.indexOf("## 보류를 푸는 변경의 점검 목록")
 const to = doc.indexOf("## Known gaps", from)
-const listed = new Set([...doc.slice(from, to).matchAll(NAME)].map((n) => n[1]))
+const section = doc.slice(from, to)
+const firstBranch = section.indexOf("\n- **")
+const names = (text: string): Set<string> =>
+  new Set([...text.matchAll(NAME)].map((n) => n[1]))
+// The panels the section names before its first branch are the basic ones it
+// says it leaves out; a panel counts as listed only under a branch, a bullet
+// opening `- **…**`.
+const basic = names(section.slice(0, firstBranch))
+const listed = names(section.slice(firstBranch))
 
 const missing = (want: Set<string>, have: Set<string>): Array<string> =>
   [...want].filter((name) => !have.has(name)).sort()
@@ -60,11 +68,22 @@ describe("the hold-release checklist", () => {
     expect(missing(described, anchored)).toEqual([])
   })
 
-  it("names every anchored panel", () => {
-    expect(missing(anchored, listed)).toEqual([])
+  it("names every anchored panel under a branch, or among the basic ones it leaves out", () => {
+    expect(firstBranch).toBeGreaterThan(-1)
+    expect(missing(anchored, new Set([...listed, ...basic]))).toEqual([])
+  })
+
+  it("leaves out only the basic panels that judge the composing itself", () => {
+    // A closed list: moving a panel out of the branches is a choice a diff to
+    // this test has to make in sight.
+    expect([...basic].sort()).toEqual(["cover", "opaque", "under", "veil"])
+  })
+
+  it("names no panel both under a branch and among the basic ones", () => {
+    expect([...basic].filter((name) => listed.has(name)).sort()).toEqual([])
   })
 
   it("names no panel that has no anchor", () => {
-    expect(missing(listed, anchored)).toEqual([])
+    expect(missing(new Set([...listed, ...basic]), anchored)).toEqual([])
   })
 })
