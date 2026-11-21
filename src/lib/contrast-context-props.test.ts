@@ -6,8 +6,9 @@ import { describe, expect, it } from "vitest"
 // its own; the paint order a pseudo-element is judged by rests on that list
 // (src/lib/contrast-pseudo.ts). A property left off it reads an owner as no
 // stacking context, and a `z-index: -1` paint that shows over the owner's
-// background is dropped as hidden under it: a false pass. PR #705 shipped
-// without `-webkit-mask-box-image` and `-webkit-box-reflect` that way.
+// background is dropped as hidden under it: a false pass. PR #705 left
+// `-webkit-mask-box-image` and `-webkit-box-reflect` off it that way until its
+// review caught them, before merge.
 //
 // The collector runs in the browser, inside one function, so its list is read
 // from the source here. The names below are MDN's "Features creating stacking
