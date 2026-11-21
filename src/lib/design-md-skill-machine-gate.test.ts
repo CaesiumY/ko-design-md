@@ -8,10 +8,11 @@ import {
   COMPONENT_PROPERTIES,
   REQUIRED_SECTIONS,
 } from "./draft-validator"
-import { BASELINE_WIDTHS } from "./contrast-baseline"
+import * as contrastBaseline from "./contrast-baseline"
 import { reducedMotionBlock } from "./reduced-motion-block"
 import {
   STAGED_CONTRAST_RULE,
+  STAGED_THIN_RULE,
   observedRender,
   skippedRender,
 } from "./staged-contrast-report"
@@ -37,6 +38,22 @@ import {
 // to be present are not pinned here (#424): rewording a prompt should not
 // break a test, and keeping a rule is the job of the validators and the
 // reviewer agents.
+
+// One `## Item N` section of the preview rubric, up to the next heading.
+function rubricItem(n: number): string {
+  const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
+  const start = rubric.indexOf(`## Item ${n}`)
+  return rubric.slice(start, rubric.indexOf("\n## ", start + 1))
+}
+
+// The SKILL.md text from one heading up to the next one given.
+function skillBetween(heading: string, next: string): string {
+  const skill = readRepoFile(DESIGN_MD_SKILL)
+  const start = skill.indexOf(heading)
+  const end = skill.indexOf(next, start + 1)
+  // The last section has no heading after it: it runs to the end.
+  return skill.slice(start, end < 0 ? undefined : end)
+}
 
 function readFrontmatter(path: string): string {
   const raw = readRepoFile(path)
@@ -383,14 +400,14 @@ describe("/design-md machine gates", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
     const contrast = /same widths \(([\d/]+)\)/.exec(skill)?.[1]
     expect(contrast, "SKILL.md must state the 9a3 widths").toBeDefined()
-    expect(contrast).toBe(BASELINE_WIDTHS.join("/"))
+    expect(contrast).toBe(contrastBaseline.BASELINE_WIDTHS.join("/"))
 
     // `**375 (mobile) / 768 (tablet) / 976 (…) / 1440 (desktop)**` — each
     // width is the number before its parenthesised label.
     const overflow = /\*\*(\d+ \(mobile\)[^*]*)\*\*/.exec(skill)?.[1]
     expect(overflow, "SKILL.md must state the Stage 12 widths").toBeDefined()
     const widths = [...(overflow ?? "").matchAll(/(\d+) \(/g)].map((m) => m[1])
-    expect(widths.join("/")).toBe(BASELINE_WIDTHS.join("/"))
+    expect(widths.join("/")).toBe(contrastBaseline.BASELINE_WIDTHS.join("/"))
   })
 
   // PR #221 moved the preview size gate from raw bytes to brotli. The byte
@@ -553,11 +570,10 @@ describe("/design-md machine gates", () => {
         // id is held to the same rule. Imported, not grepped: the constant is
         // the one the report is built with.
         STAGED_CONTRAST_RULE,
-        // Its thin-preview item (`STAGED_THIN_RULE`) joins the same report but
-        // is left out on purpose. The spec that added it (#680) has the rubric
-        // and SKILL.md name that rule, to be checked against the constant by
-        // a contract test of its own (#682). Keeping it out of the two agent
-        // prompts this guard also reads is #682's to decide.
+        // Its thin-preview item too. The docs find that item by its section,
+        // as they find every other one (#682) — see "names the thin-preview
+        // item by the section the 9a3 report gives it".
+        STAGED_THIN_RULE,
       ]),
     ]
     expect(ruleIds).toContain("unreadable-merged-preview")
@@ -848,14 +864,122 @@ describe("/design-md machine gates", () => {
       "the reviewer's Item 5 must point at a rubric paragraph"
     ).toBeDefined()
 
-    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
-    const start = rubric.indexOf("## Item 5")
-    const item5 = rubric.slice(start, rubric.indexOf("\n## ", start + 1))
+    const item5 = rubricItem(5)
     expect(item5, "rubric Item 5 must exist").not.toBe("")
     expect(
       item5,
       `rubric Item 5 has no **${label}** paragraph for the reviewer's pointer to land on`
     ).toContain(`**${label}.**`)
+  })
+
+  // The thin-preview item (#680) is scored under Item 4 and reported on its
+  // own line at Stage 13. Like every other machine item, the docs find it by
+  // the words its `section` starts with, never by its rule id (which the
+  // guard above keeps out of them) — so those words are the join, and a
+  // section reworded in code would leave the rubric and the orchestrator
+  // looking for an item that no longer exists, and reading its absence as a
+  // preview that clears the floor.
+  it("names the thin-preview item by the section the 9a3 report gives it", () => {
+    const [thin] = observedRender([], {
+      widths: [976],
+      themes: ["light", "dark"],
+      states: ["default"],
+    }).issues
+    expect(thin.rule).toBe(STAGED_THIN_RULE)
+
+    // Only the reviewer's Item 4 instruction: another item pointed at by the
+    // same words elsewhere in the prompt is not this one.
+    const reviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
+    const reviewerAt = reviewer.indexOf("**Item 4 (")
+    const reviewerItem4 = reviewer.slice(
+      reviewerAt,
+      reviewer.indexOf("**Item 5 (", reviewerAt)
+    )
+
+    for (const [where, text] of [
+      ["rubric Item 4", rubricItem(4)],
+      ["SKILL.md Stage 9a3", skillBetween("### 9a3.", "### 9b.")],
+      // 9b's dispatch prompt hands the same pointer to the reviewer.
+      ["SKILL.md Stage 9b", skillBetween("### 9b.", "### 9c.")],
+      [`${PREVIEW_HTML_REVIEWER_AGENT} Item 4`, reviewerItem4],
+    ] as const) {
+      const quoted = [...text.matchAll(/`section` starts with `([^`]+)`/g)].map(
+        (m) => m[1]
+      )
+      expect(
+        quoted,
+        `${where} must say which section the item has`
+      ).not.toEqual([])
+      for (const words of quoted) {
+        expect(
+          thin.section.startsWith(words),
+          `${where} looks for a section starting "${words}", but the 9a3 report writes "${thin.section}"`
+        ).toBe(true)
+      }
+    }
+  })
+
+  // The floor's number is written in one place (ADR 0013) and the docs name
+  // the constant instead. A renamed constant would leave them naming nothing.
+  it("names the text-element floor by a constant the gate exports", () => {
+    const docs = [
+      ["rubric Item 4", rubricItem(4)],
+      [DESIGN_MD_SKILL, readRepoFile(DESIGN_MD_SKILL)],
+    ] as const
+    const exported = new Map(Object.entries(contrastBaseline))
+    for (const [where, text] of docs) {
+      const named = [...text.matchAll(/`(MIN_[A-Z_]+)`/g)].map((m) => m[1])
+      expect(named, `${where} must name the floor's constant`).not.toEqual([])
+      for (const name of named) {
+        expect(
+          typeof exported.get(name),
+          `${where} names \`${name}\`, which contrast-baseline.ts does not export as a number`
+        ).toBe("number")
+      }
+    }
+  })
+
+  // Same reason as the Item 5 pointer above: the cap lives once, in the
+  // rubric, and the reviewer's prompt only points at it.
+  it("points the reviewer at the rubric's thin-preview rule instead of restating it", () => {
+    const reviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
+    const label = /the rubric's \*\*([^*]+)\*\* paragraph under Item 4/.exec(
+      reviewer
+    )?.[1]
+    expect(
+      label,
+      "the reviewer's Item 4 must point at a rubric paragraph"
+    ).toBeDefined()
+
+    expect(
+      rubricItem(4),
+      `rubric Item 4 has no **${label}** paragraph for the reviewer's pointer to land on`
+    ).toContain(`**${label}.**`)
+  })
+
+  // 9c reads the size result 9a3 records to decide whether the author gets
+  // another pass, and Stage 13 picks its line by it. A value read there that
+  // 9a3 never records is a branch nothing takes — for 9c, a thin preview that
+  // exits the loop on its score anyway.
+  it("reads only the size results Stage 9a3 records", () => {
+    const values = (text: string): Array<string> => [
+      ...new Set([...text.matchAll(/`size_result = (\w+)`/g)].map((m) => m[1])),
+    ]
+    const recorded = values(skillBetween("### 9a3.", "### 9b."))
+    expect(recorded, "Stage 9a3 must record size_result").not.toEqual([])
+    for (const [where, text] of [
+      ["SKILL.md Stage 9c", skillBetween("### 9c.", "## Stage 10")],
+      ["SKILL.md Stage 13", skillBetween("## Stage 13", "\n## Stage ")],
+    ] as const) {
+      const read = values(text)
+      expect(read, `${where} must read size_result`).not.toEqual([])
+      for (const value of read) {
+        expect(
+          recorded,
+          `${where} reads size_result = ${value}, which Stage 9a3 never records`
+        ).toContain(value)
+      }
+    }
   })
 
   // The skill, the rubric and both preview agents tell a model to read named
