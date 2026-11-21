@@ -9,10 +9,24 @@ import { describe, expect, it } from "vitest"
 // diff can break silently: a panel added to the fixture and left off the list
 // leaves a reviewer checking against a list that misses its branch.
 //
-// The panels are the ones the fixture's header describes, one bullet each,
-// named as `` `.name` `` (or `` `.name::before` ``, several joined by "and").
+// The panels are read from two places. The machine-read one is the oracle's
+// `PSEUDO_ANCHORS`: the first `div.<panel>` of each `pathEnds`. The fixture's
+// header describes each panel in a bullet that opens with its name, as
+// `` `.name` `` (or `` `.name::before` ``, several joined by "and"); the two are
+// held equal, so a panel described in some other shape is caught by its anchor.
 const ROOT = process.cwd()
 const read = (file: string): string => readFileSync(join(ROOT, file), "utf8")
+
+const oracle = read("scripts/audit-contrast-oracle.ts")
+const anchorsFrom = oracle.indexOf("const PSEUDO_ANCHORS")
+const anchorsTo = oracle.indexOf("\n]\n", anchorsFrom)
+const anchored = new Set(
+  [
+    ...oracle
+      .slice(anchorsFrom, anchorsTo)
+      .matchAll(/pathEnds: "div\.([a-z-]+)/g),
+  ].map((m) => m[1])
+)
 
 const fixture = read("scripts/fixtures/pseudo-background.html")
 const header = fixture.slice(0, fixture.indexOf("-->"))
@@ -30,18 +44,27 @@ const from = doc.indexOf("## 보류를 푸는 변경의 점검 목록")
 const to = doc.indexOf("## Known gaps", from)
 const listed = new Set([...doc.slice(from, to).matchAll(NAME)].map((n) => n[1]))
 
+const missing = (want: Set<string>, have: Set<string>): Array<string> =>
+  [...want].filter((name) => !have.has(name)).sort()
+
 describe("the hold-release checklist", () => {
-  it("is found in the baseline document", () => {
+  it("is found, with the panels it is held to", () => {
     expect(from).toBeGreaterThan(-1)
     expect(to).toBeGreaterThan(from)
-    expect(described.size).toBeGreaterThan(0)
+    expect(anchorsFrom).toBeGreaterThan(-1)
+    expect(anchored.size).toBeGreaterThan(0)
   })
 
-  it("names every panel the pseudo-background fixture describes", () => {
-    expect([...described].filter((name) => !listed.has(name))).toEqual([])
+  it("has every anchored panel described in the fixture's header, and no other", () => {
+    expect(missing(anchored, described)).toEqual([])
+    expect(missing(described, anchored)).toEqual([])
   })
 
-  it("names no panel the fixture does not describe", () => {
-    expect([...listed].filter((name) => !described.has(name))).toEqual([])
+  it("names every anchored panel", () => {
+    expect(missing(anchored, listed)).toEqual([])
+  })
+
+  it("names no panel that has no anchor", () => {
+    expect(missing(listed, anchored)).toEqual([])
   })
 })

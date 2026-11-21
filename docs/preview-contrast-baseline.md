@@ -1172,7 +1172,8 @@ run `42878751952` 재집계에서는 class101 의 비텍스트에 가상 요소 
 판정하는 쪽이 대조할 갈래다. 점 조회(`elementsFromPoint`)와 계산값만으로는 화면의 칠을 다 알 수 없으므로, 판정은 아래 갈래
 하나하나에서 화면과 같아야 한다. 괄호는 그 갈래를 지키는 자기검사 판(픽스처가 아니라 단위 테스트가 지키는 갈래는 그 테스트 이름)이고, 판 이름과 설명의 정본은
 `scripts/fixtures/pseudo-background.html` 과 `pseudo-canvas-*.html` 의 머리말이다. 판을 더하면 이 목록에도 그 갈래를 더한다
-(`pseudo-background.html` 머리말의 판 이름과 이 절의 판 이름이 같은지는 `src/lib/contrast-hold-checklist.test.ts` 가 본다).
+(자기검사 앵커 `PSEUDO_ANCHORS` 의 판, `pseudo-background.html` 머리말의 판, 이 절의 판 이름이 같은지는
+`src/lib/contrast-hold-checklist.test.ts` 가 본다).
 판이 없는 갈래는 그렇다고 적고 Known gaps 에도 둔다. 다른 경로의 보류(비텍스트 표면 뒤의 `filter` 와 그림자, 그라디언트,
 폼 컨트롤)는 `scripts/fixtures/README.md` 가 가리키는 각 픽스처 머리말이 갈래의 정본이다. 합성 자체가 맞는지 보는 판
 (`.cover`, `.veil`, `.opaque`, `.under` 처럼 위아래와 덮음을 가르는 기본 판)은 갈래가 아니라 기본 동작이라
