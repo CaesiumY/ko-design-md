@@ -85,8 +85,9 @@ export const MIN_TEXT_ELEMENTS = 80
  * case and sends an author to add disabled states.
  *
  * Kept as the lines the CI output prints, so that output stays as it was; the
- * observation joins them into one sentence run. What is about the recorded
- * table stays in the CI output only: a staged preview has no row to rewrite.
+ * other two join them into one run of sentences. What is about the recorded
+ * table is not in here, and each place that has a table says it in its own
+ * words: a staged preview has no row to rewrite.
  */
 export const THIN_PREVIEW_ADVICE: ReadonlyArray<string> = Object.freeze([
   "Add the non-disabled component states and screen mockups the md describes",
