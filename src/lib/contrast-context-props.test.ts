@@ -20,8 +20,11 @@ import { describe, expect, it } from "vitest"
 //
 // Each block is read with its comments taken out, and only the name heading
 // each `[name, value, initial]` entry counts, so an entry commented out, or a
-// name left in a comment, counts for nothing. A name read from the wrong
-// computed field still passes here, and is the measurement's to catch.
+// name left in a comment, counts for nothing. That the lists are wired in is
+// read the same way: the collector's order box takes `contextPropsOf` and the
+// top-layer test, the top-layer test takes `TOP_LAYER`, and the judge's
+// `makesContext` takes `MAYBE_CONTEXT`. A name read from the wrong computed
+// field still passes here, and is the measurement's to catch.
 const ROOT = process.cwd()
 const read = (file: string): string => readFileSync(join(ROOT, file), "utf8")
 const collector = read("scripts/audit-contrast-collector.ts")
@@ -102,6 +105,21 @@ describe("the properties the collector reads as making a stacking context", () =
 
   it.each(UNSURE)("hand %s to the judge as unsure", (name) => {
     expect(block(judge, "const MAYBE_CONTEXT", "]")).toContain(`"${name}"`)
+  })
+
+  it("are what the collector's order box reads, with the top-layer test", () => {
+    const box = block(collector, "const orderBoxOf", "function chainTo")
+    expect(box).toContain("...contextPropsOf(c)")
+    expect(box).toContain("inTopLayer(e)")
+    expect(block(collector, "const inTopLayer", "const orderBoxOf")).toContain(
+      "TOP_LAYER.some("
+    )
+  })
+
+  it("leave the judge's unsure names to decide nothing", () => {
+    expect(
+      block(judge, "function makesContext", "function zApplies")
+    ).toContain("MAYBE_CONTEXT.some(")
   })
 
   it("include being in the top layer: a modal dialog, an open popover, a fullscreen element", () => {
