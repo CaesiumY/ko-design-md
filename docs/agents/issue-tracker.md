@@ -21,7 +21,7 @@
 `yes` 일 때는 PR 도 이슈와 같은 라벨·상태로 돌리며 `gh pr` 대응 명령을 쓴다.
 
 - **PR 읽기**: `gh pr view <number> --comments`, diff 는 `gh pr diff <number>`.
-- **PR 댓글을 API 로 훑기**(봇 판정의 최신 줄 찾기 등): `gh api --paginate repos/<owner>/<repo>/issues/<number>/comments --jq ...`. `--paginate` 를 빼면 오래된 순 첫 30건에서 **아무 표시 없이** 잘려, 옛 댓글이 최신처럼 보인다.
+- **PR 댓글을 API 로 훑기**(봇 판정의 최신 줄 찾기 등): `gh api --paginate repos/<owner>/<repo>/issues/<number>/comments --jq ...`. `--paginate` 를 빼면 오래된 순 첫 30건에서 **아무 표시 없이** 잘려, 옛 댓글이 최신처럼 보인다. 붙이면 `--jq` 가 응답 전체가 아니라 **페이지마다 따로** 돌므로(`length` 가 페이지 수만큼 줄을 낸다), 최신 하나를 고를 때는 `--jq '.[] | …'` 로 펼친 뒤 마지막 줄(`| tail -1`)을 읽는다. `--slurp` 는 `--jq` 와 함께 쓸 수 없다.
 - **트리아지할 외부 PR 목록**: `gh api --paginate 'repos/{owner}/{repo}/pulls?state=open&per_page=100' --jq '.[] | select(.user.type != "Bot") | select(.author_association | IN("CONTRIBUTOR", "FIRST_TIME_CONTRIBUTOR", "FIRST_TIMER", "NONE")) | {number, title, labels: [.labels[].name], author: .user.login, author_association}'` — `OWNER`/`MEMBER`/`COLLABORATOR` 는 뺀다. dependabot 같은 봇도 `CONTRIBUTOR` 로 잡히므로 `user.type` 으로 먼저 뺀다. `FIRST_TIMER`(GitHub 첫 기여)와 `FIRST_TIME_CONTRIBUTOR`(이 저장소 첫 기여)는 다른 값이라 둘 다 넣는다. `gh pr list --json` 에는 author association 필드가 **없어서** REST 의 `author_association` 을 쓴다. 본문·코멘트는 걸러낸 번호로 `gh pr view` 에서 읽는다.
 - **코멘트 / 라벨 / 닫기**: `gh pr comment`, `gh pr edit --add-label`/`--remove-label`, `gh pr close`.
 
