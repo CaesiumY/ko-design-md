@@ -41,8 +41,9 @@ const block = (source: string, start: string, end: string): string => {
   return uncommented(source.slice(from, to))
 }
 
-// One name per property MDN lists. `mask` is a shorthand: its image and its
-// border are the longhands read.
+// One name per property MDN lists. MDN names `mask`, `mask-image` and
+// `mask-border`; the two shorthands are read by a longhand each, `mask` by
+// `mask-image` and `mask-border` by `mask-border-source`.
 const MDN = [
   "opacity",
   "mix-blend-mode",
