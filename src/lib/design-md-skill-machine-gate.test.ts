@@ -9,7 +9,6 @@ import {
   REQUIRED_SECTIONS,
 } from "./draft-validator"
 import * as contrastBaseline from "./contrast-baseline"
-import { BASELINE_WIDTHS } from "./contrast-baseline"
 import { reducedMotionBlock } from "./reduced-motion-block"
 import {
   STAGED_CONTRAST_RULE,
@@ -39,6 +38,20 @@ import {
 // to be present are not pinned here (#424): rewording a prompt should not
 // break a test, and keeping a rule is the job of the validators and the
 // reviewer agents.
+
+// One `## Item N` section of the preview rubric, up to the next heading.
+function rubricItem(n: number): string {
+  const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
+  const start = rubric.indexOf(`## Item ${n}`)
+  return rubric.slice(start, rubric.indexOf("\n## ", start + 1))
+}
+
+// The SKILL.md text from one heading up to the next one given.
+function skillBetween(heading: string, next: string): string {
+  const skill = readRepoFile(DESIGN_MD_SKILL)
+  const start = skill.indexOf(heading)
+  return skill.slice(start, skill.indexOf(next, start + 1))
+}
 
 function readFrontmatter(path: string): string {
   const raw = readRepoFile(path)
@@ -385,14 +398,14 @@ describe("/design-md machine gates", () => {
     const skill = readRepoFile(DESIGN_MD_SKILL)
     const contrast = /same widths \(([\d/]+)\)/.exec(skill)?.[1]
     expect(contrast, "SKILL.md must state the 9a3 widths").toBeDefined()
-    expect(contrast).toBe(BASELINE_WIDTHS.join("/"))
+    expect(contrast).toBe(contrastBaseline.BASELINE_WIDTHS.join("/"))
 
     // `**375 (mobile) / 768 (tablet) / 976 (…) / 1440 (desktop)**` — each
     // width is the number before its parenthesised label.
     const overflow = /\*\*(\d+ \(mobile\)[^*]*)\*\*/.exec(skill)?.[1]
     expect(overflow, "SKILL.md must state the Stage 12 widths").toBeDefined()
     const widths = [...(overflow ?? "").matchAll(/(\d+) \(/g)].map((m) => m[1])
-    expect(widths.join("/")).toBe(BASELINE_WIDTHS.join("/"))
+    expect(widths.join("/")).toBe(contrastBaseline.BASELINE_WIDTHS.join("/"))
   })
 
   // PR #221 moved the preview size gate from raw bytes to brotli. The byte
@@ -849,9 +862,7 @@ describe("/design-md machine gates", () => {
       "the reviewer's Item 5 must point at a rubric paragraph"
     ).toBeDefined()
 
-    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
-    const start = rubric.indexOf("## Item 5")
-    const item5 = rubric.slice(start, rubric.indexOf("\n## ", start + 1))
+    const item5 = rubricItem(5)
     expect(item5, "rubric Item 5 must exist").not.toBe("")
     expect(
       item5,
@@ -874,22 +885,21 @@ describe("/design-md machine gates", () => {
     }).issues
     expect(thin.rule).toBe(STAGED_THIN_RULE)
 
-    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
-    const start = rubric.indexOf("## Item 4")
-    const item4 = rubric.slice(start, rubric.indexOf("\n## ", start + 1))
-    const skill = readRepoFile(DESIGN_MD_SKILL)
-    const at9a3 = skill.indexOf("### 9a3.")
-    const stage9a3 = skill.slice(at9a3, skill.indexOf("### 9b.", at9a3))
-    // 9b's dispatch prompt hands the same pointer to the reviewer.
-    const at9b = skill.indexOf("### 9b.")
-    const stage9b = skill.slice(at9b, skill.indexOf("### 9c.", at9b))
+    // Only the reviewer's Item 4 instruction: another item pointed at by the
+    // same words elsewhere in the prompt is not this one.
     const reviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
+    const reviewerAt = reviewer.indexOf("**Item 4 (")
+    const reviewerItem4 = reviewer.slice(
+      reviewerAt,
+      reviewer.indexOf("**Item 5 (", reviewerAt)
+    )
 
     for (const [where, text] of [
-      ["rubric Item 4", item4],
-      ["SKILL.md Stage 9a3", stage9a3],
-      ["SKILL.md Stage 9b", stage9b],
-      [PREVIEW_HTML_REVIEWER_AGENT, reviewer],
+      ["rubric Item 4", rubricItem(4)],
+      ["SKILL.md Stage 9a3", skillBetween("### 9a3.", "### 9b.")],
+      // 9b's dispatch prompt hands the same pointer to the reviewer.
+      ["SKILL.md Stage 9b", skillBetween("### 9b.", "### 9c.")],
+      [`${PREVIEW_HTML_REVIEWER_AGENT} Item 4`, reviewerItem4],
     ] as const) {
       const quoted = [...text.matchAll(/`section` starts with `([^`]+)`/g)].map(
         (m) => m[1]
@@ -910,11 +920,8 @@ describe("/design-md machine gates", () => {
   // The floor's number is written in one place (ADR 0013) and the docs name
   // the constant instead. A renamed constant would leave them naming nothing.
   it("names the text-element floor by a constant the gate exports", () => {
-    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
-    const start = rubric.indexOf("## Item 4")
-    const item4 = rubric.slice(start, rubric.indexOf("\n## ", start + 1))
     const docs = [
-      ["rubric Item 4", item4],
+      ["rubric Item 4", rubricItem(4)],
       [DESIGN_MD_SKILL, readRepoFile(DESIGN_MD_SKILL)],
     ] as const
     const exported = new Map(Object.entries(contrastBaseline))
@@ -942,13 +949,35 @@ describe("/design-md machine gates", () => {
       "the reviewer's Item 4 must point at a rubric paragraph"
     ).toBeDefined()
 
-    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
-    const start = rubric.indexOf("## Item 4")
-    const item4 = rubric.slice(start, rubric.indexOf("\n## ", start + 1))
     expect(
-      item4,
+      rubricItem(4),
       `rubric Item 4 has no **${label}** paragraph for the reviewer's pointer to land on`
     ).toContain(`**${label}.**`)
+  })
+
+  // 9c reads the size result 9a3 records to decide whether the author gets
+  // another pass, and Stage 13 picks its line by it. A value read there that
+  // 9a3 never records is a branch nothing takes — for 9c, a thin preview that
+  // exits the loop on its score anyway.
+  it("reads only the size results Stage 9a3 records", () => {
+    const values = (text: string): Array<string> => [
+      ...new Set([...text.matchAll(/`size_result = (\w+)`/g)].map((m) => m[1])),
+    ]
+    const recorded = values(skillBetween("### 9a3.", "### 9b."))
+    expect(recorded, "Stage 9a3 must record size_result").not.toEqual([])
+    for (const [where, text] of [
+      ["SKILL.md Stage 9c", skillBetween("### 9c.", "## Stage 10")],
+      ["SKILL.md Stage 13", skillBetween("## Stage 13", "\n## Stage ")],
+    ] as const) {
+      const read = values(text)
+      expect(read, `${where} must read size_result`).not.toEqual([])
+      for (const value of read) {
+        expect(
+          recorded,
+          `${where} reads size_result = ${value}, which Stage 9a3 never records`
+        ).toContain(value)
+      }
+    }
   })
 
   // The skill, the rubric and both preview agents tell a model to read named
