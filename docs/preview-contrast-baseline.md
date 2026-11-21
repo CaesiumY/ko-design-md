@@ -1168,10 +1168,12 @@ run `42878751952` 재집계에서는 class101 의 비텍스트에 가상 요소 
 
 ## 보류를 푸는 변경의 점검 목록
 
-보류하던 경우를 판정하게 바꾸는 변경(`CODING_STANDARDS.md` 「보류 풀기」)이 대조할 갈래다. 점 조회
-(`elementsFromPoint`)와 계산값만으로는 화면의 칠을 다 알 수 없으므로, 판정은 아래 갈래 하나하나에서 화면과 같아야 한다.
-괄호는 그 갈래를 지키는 자기검사 판이다. 판 이름의 정본은 각 픽스처 문서의 머리말과 `scripts/fixtures/README.md` 이고, 판을
-더하면 이 목록에도 그 갈래를 더한다. 판이 없는 갈래는 그렇다고 적고 Known gaps 에도 둔다. 합성 자체가 맞는지 보는 판
+보류하던 경우를 판정하게 바꾸는 변경(`CODING_STANDARDS.md` 「보류 풀기」) 가운데 가상 요소(`::before`, `::after`)의 칠을
+판정하는 쪽이 대조할 갈래다. 점 조회(`elementsFromPoint`)와 계산값만으로는 화면의 칠을 다 알 수 없으므로, 판정은 아래 갈래
+하나하나에서 화면과 같아야 한다. 괄호는 그 갈래를 지키는 자기검사 판이고, 판 이름과 설명의 정본은
+`scripts/fixtures/pseudo-background.html` 과 `pseudo-canvas-*.html` 의 머리말이다. 판을 더하면 이 목록에도 그 갈래를 더한다.
+판이 없는 갈래는 그렇다고 적고 Known gaps 에도 둔다. 다른 경로의 보류(비텍스트 표면 뒤의 `filter` 와 그림자, 그라디언트,
+폼 컨트롤)는 `scripts/fixtures/README.md` 가 가리키는 각 픽스처 머리말이 갈래의 정본이다. 합성 자체가 맞는지 보는 판
 (`.cover`, `.veil`, `.opaque`, `.under` 처럼 위아래와 덮음을 가르는 기본 판)은 갈래가 아니라 기본 동작이라
 여기 적지 않는다.
 
@@ -1194,12 +1196,21 @@ run `42878751952` 재집계에서는 class101 의 비텍스트에 가상 요소 
 - **칠 순서의 전제**: 쌓임 맥락을 만드는 속성. 이름 있는 필드가 없는 접두 속성(`.maskbox`, `.mirror`), 값에 따라 갈리는 속성
   (`.unknown`). 최상위 층(모달 dialog, 열린 popover, 전체 화면)은 판이 없다. 배경이 캔버스로 넘어간 루트와 `body`
   (`pseudo-canvas-body.html`, `pseudo-canvas-root.html`, `pseudo-canvas-stop.html`).
+- **속성 목록으로 보류하는 갈래**: 상자나 칠의 자리를 모르게 하는 값은 수집기의 `unsureOf`(조상 사슬)와 `unsureFor`(의사요소 자신)가, 쌓임 맥락을 만드는 속성은
+  `contextPropsOf` 가, 값에 따라 갈리는 속성은 판정기의 `MAYBE_CONTEXT` 가 정본이다. 칠 순서를 정하지 않는 조건은
+  `paintOrder` 와 `underStop` 의 주석이 정본이다. 이 목록들 가운데 위 갈래에 판이 적히지 않은 속성(예: `zoom`,
+  `position-area`, 자기 정렬, 3D 맥락, `mix-blend-mode`, 의사요소의 `filter`)은 판이 없다. 그런 속성의 보류를 푸는 변경은
+  그 속성의 판부터 더한다.
 - **읽는 영역**: 가운데 점이 아니라 줄 상자 전체(`.mark`), 글자 줄이 아니라 요소 상자를 읽는 비텍스트 표면과 입력창
   (`.surface`, `.field`). 비텍스트 표면은 상자보다 2px
   넓힌 영역과 견주므로, 그 띠에만 걸친 칠도 센다(`contrast.test.ts` 의 "holds when unhit paint outside the owner lies only
   in the band around the surface").
 
 ## Known gaps
+
+- 가상 요소 칠을 보류하는 속성 목록(수집기의 `unsureOf`, `unsureFor`, `contextPropsOf`, 판정기의 `MAYBE_CONTEXT`) 가운데 여럿은 자기검사
+  판이 없다(「보류를 푸는 변경의 점검 목록」의 속성 목록 갈래). 지금은 보류 쪽이라 거짓 통과를 내지 않지만, 그 보류를 푸는
+  변경은 판부터 더해야 한다.
 
 - 최상위 층(모달 dialog, 열린 popover, 전체 화면)에 올라간 요소를 쌓임 맥락으로 치는 검사에는 자기검사 판이 없다. 자기검사
   문서 하나에 모달을 띄우면 다른 판의 점 조회가 바뀌기 때문이다.
