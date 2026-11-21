@@ -8,10 +8,12 @@ import {
   COMPONENT_PROPERTIES,
   REQUIRED_SECTIONS,
 } from "./draft-validator"
+import * as contrastBaseline from "./contrast-baseline"
 import { BASELINE_WIDTHS } from "./contrast-baseline"
 import { reducedMotionBlock } from "./reduced-motion-block"
 import {
   STAGED_CONTRAST_RULE,
+  STAGED_THIN_RULE,
   observedRender,
   skippedRender,
 } from "./staged-contrast-report"
@@ -553,11 +555,10 @@ describe("/design-md machine gates", () => {
         // id is held to the same rule. Imported, not grepped: the constant is
         // the one the report is built with.
         STAGED_CONTRAST_RULE,
-        // Its thin-preview item (`STAGED_THIN_RULE`) joins the same report but
-        // is left out on purpose. The spec that added it (#680) has the rubric
-        // and SKILL.md name that rule, to be checked against the constant by
-        // a contract test of its own (#682). Keeping it out of the two agent
-        // prompts this guard also reads is #682's to decide.
+        // Its thin-preview item too. The docs find that item by its section,
+        // as they find every other one (#682) — see "names the thin-preview
+        // item by the section the 9a3 report gives it".
+        STAGED_THIN_RULE,
       ]),
     ]
     expect(ruleIds).toContain("unreadable-merged-preview")
@@ -855,6 +856,98 @@ describe("/design-md machine gates", () => {
     expect(
       item5,
       `rubric Item 5 has no **${label}** paragraph for the reviewer's pointer to land on`
+    ).toContain(`**${label}.**`)
+  })
+
+  // The thin-preview item (#680) is scored under Item 4 and reported on its
+  // own line at Stage 13. Like every other machine item, the docs find it by
+  // the words its `section` starts with, never by its rule id (which the
+  // guard above keeps out of them) — so those words are the join, and a
+  // section reworded in code would leave the rubric and the orchestrator
+  // looking for an item that no longer exists, and reading its absence as a
+  // preview that clears the floor.
+  it("names the thin-preview item by the section the 9a3 report gives it", () => {
+    const [thin] = observedRender([], {
+      widths: [976],
+      themes: ["light", "dark"],
+      states: ["default"],
+    }).issues
+    expect(thin.rule).toBe(STAGED_THIN_RULE)
+
+    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
+    const start = rubric.indexOf("## Item 4")
+    const item4 = rubric.slice(start, rubric.indexOf("\n## ", start + 1))
+    const skill = readRepoFile(DESIGN_MD_SKILL)
+    const at9a3 = skill.indexOf("### 9a3.")
+    const stage9a3 = skill.slice(at9a3, skill.indexOf("### 9b.", at9a3))
+    // 9b's dispatch prompt hands the same pointer to the reviewer.
+    const at9b = skill.indexOf("### 9b.")
+    const stage9b = skill.slice(at9b, skill.indexOf("### 9c.", at9b))
+    const reviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
+
+    for (const [where, text] of [
+      ["rubric Item 4", item4],
+      ["SKILL.md Stage 9a3", stage9a3],
+      ["SKILL.md Stage 9b", stage9b],
+      [PREVIEW_HTML_REVIEWER_AGENT, reviewer],
+    ] as const) {
+      const quoted = [...text.matchAll(/`section` starts with `([^`]+)`/g)].map(
+        (m) => m[1]
+      )
+      expect(
+        quoted,
+        `${where} must say which section the item has`
+      ).not.toEqual([])
+      for (const words of quoted) {
+        expect(
+          thin.section.startsWith(words),
+          `${where} looks for a section starting "${words}", but the 9a3 report writes "${thin.section}"`
+        ).toBe(true)
+      }
+    }
+  })
+
+  // The floor's number is written in one place (ADR 0013) and the docs name
+  // the constant instead. A renamed constant would leave them naming nothing.
+  it("names the text-element floor by a constant the gate exports", () => {
+    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
+    const start = rubric.indexOf("## Item 4")
+    const item4 = rubric.slice(start, rubric.indexOf("\n## ", start + 1))
+    const docs = [
+      ["rubric Item 4", item4],
+      [DESIGN_MD_SKILL, readRepoFile(DESIGN_MD_SKILL)],
+    ] as const
+    const exported = new Map(Object.entries(contrastBaseline))
+    for (const [where, text] of docs) {
+      const named = [...text.matchAll(/`(MIN_[A-Z_]+)`/g)].map((m) => m[1])
+      expect(named, `${where} must name the floor's constant`).not.toEqual([])
+      for (const name of named) {
+        expect(
+          typeof exported.get(name),
+          `${where} names \`${name}\`, which contrast-baseline.ts does not export as a number`
+        ).toBe("number")
+      }
+    }
+  })
+
+  // Same reason as the Item 5 pointer above: the cap lives once, in the
+  // rubric, and the reviewer's prompt only points at it.
+  it("points the reviewer at the rubric's thin-preview rule instead of restating it", () => {
+    const reviewer = readRepoFile(PREVIEW_HTML_REVIEWER_AGENT)
+    const label = /the rubric's \*\*([^*]+)\*\* paragraph under Item 4/.exec(
+      reviewer
+    )?.[1]
+    expect(
+      label,
+      "the reviewer's Item 4 must point at a rubric paragraph"
+    ).toBeDefined()
+
+    const rubric = readRepoFile(DESIGN_MD_RUBRIC_PREVIEW)
+    const start = rubric.indexOf("## Item 4")
+    const item4 = rubric.slice(start, rubric.indexOf("\n## ", start + 1))
+    expect(
+      item4,
+      `rubric Item 4 has no **${label}** paragraph for the reviewer's pointer to land on`
     ).toContain(`**${label}.**`)
   })
 

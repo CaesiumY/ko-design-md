@@ -351,11 +351,12 @@ cd "${repo_root}" && pnpm audit:contrast:staged \
   --iteration {M} --json-out "${repo_root}/.claude/cache/design-md/{slug}/preview-review-machine-{M}.json"
 ```
 
-It writes into the **same** machine report 9a2 just wrote, so the reviewer and the retrying author keep their one path each. It adds a `render` object and, for each contrast shortfall, a `warn` item in `issues` (dark-theme text first — the only kind the rubric scores — then light-theme text, then non-text, each lowest ratio first, capped; the rest are counted in `render.observed.omitted`). It also counts each theme's text elements the way the CI contrast job does, in `render.observed.textElements`, and when a theme falls under that job's floor (`MIN_TEXT_ELEMENTS`) it puts one thin-preview `warn` ahead of the contrast items, outside the cap and not counted in `omitted`. It never adds a `block` and never changes `passed`.
+It writes into the **same** machine report 9a2 just wrote, so the reviewer and the retrying author keep their one path each. It adds a `render` object and, for each contrast shortfall, a `warn` item in `issues` (dark-theme text first — the only kind the rubric scores — then light-theme text, then non-text, each lowest ratio first, capped; the rest are counted in `render.observed.omitted`). It also counts each theme's text elements the way the CI contrast job does, in `render.observed.textElements`, and when a theme falls under that job's floor (`MIN_TEXT_ELEMENTS`) it puts one thin-preview `warn` ahead of the contrast items, outside the cap and not counted in `omitted` — the item whose `section` starts with `text elements —`, which the rubric's Item 4 scores. It never adds a `block` and never changes `passed`.
 
 - **Always proceed to 9b** after it, whatever it found. 9a3 is an observation, not a gate: a staged preview has no baseline row, so a shortfall cannot be told apart from two published brand values that simply fall short, and blocking would push the author to discard a published value to get through. Convergence stays with the reviewer's score; drift stays with the CI contrast job.
 - **`render.skipped`** (no Chromium on this machine, or the measurement broke) → note it for Stage 13 as `render_result = skipped` with the `reason`, and proceed. Do **not** install a browser inside the session. A skipped report carries no `observed` key at all, so it can never be read as a clean run.
 - Otherwise, when `render.observed.measured` is 0, record `render_result = empty` — the page rendered but nothing was collected, which is no more a pass than a skip. When `render.observed.fail` is 0, record `render_result = ok` with `render.observed.held` (rows the judge could not decide — a gradient, an overlay); else `render_result = warn` with the fail count.
+- Separately, for the preview's size: when `issues` carries the item whose `section` starts with `text elements —`, record `size_result = thin` with `render.observed.textElements`; otherwise, under `render.observed`, `size_result = ok` with the same counts; under `render.skipped`, `size_result = skipped`. Size is not contrast — a preview with no shortfall can still be too thin for the CI contrast job — so the two results are kept apart.
 - **Exit 2** means the command or a file it names was wrong — an unknown flag, a staged path that is not a readable file, a report path that cannot be written, an existing report from a different iteration than `--iteration`, or an existing report file that is not a machine report (not JSON, or not the 9a2 envelope — a reviewer's `preview-review-{M}.json` named by mistake is refused rather than overwritten). Fix that and rerun; it is not a measurement result. The command has no other failure exit: anything that goes wrong while measuring is the `render.skipped` outcome above.
 
 ### 9b. Dispatch preview-html-reviewer
@@ -387,7 +388,10 @@ Typography hierarchy, and dark-mode appropriateness.
 The report's `render` object is the one rendered observation in the loop.
 Under `render.observed`, its contrast `warn` items are measured shortfalls:
 score them as the rubric's Item 5 says and mirror each into your `issues`
-as `warn`, so the next author pass sees them. Under `render.skipped`, nothing
+as `warn`, so the next author pass sees them. If it also carries the item
+whose `section` starts with `text elements —`, the preview is under the CI
+contrast job's text-element floor: score Item 4 as the rubric's Render size
+(9a3) paragraph says and mirror that item too. Under `render.skipped`, nothing
 was rendered — say "렌더 관측 없음" in your verdict and judge Item 5 from the
 CSS alone.
 ```
@@ -669,6 +673,12 @@ Print a summary message containing:
   - `render_result = skipped` → `렌더 대비: ⏭ 관측 건너뜀 — {reason}`
 
   Neither the skipped line nor the empty line may read like the ok line: no Chromium, or a run that collected nothing, means nothing was measured, which is not the same fact as nothing falling short. The ok line carries the held count for the same reason — rows on a gradient or under an overlay were measured but not judged. If the Stage 12 responsive auto-fix rewrote the preview after the loop, add `(Stage 12 자동수정 전 파일 기준)` to the line — 9a3 measured the file the loop ended with, not the one that shipped.
+- Render size (Stage 9a3, the same machine report) — pick the line by state:
+  - `size_result = ok` → `렌더 분량: ✅ 텍스트 요소 라이트 {light}, 다크 {dark} — CI 하한 이상`
+  - `size_result = thin` → `렌더 분량: ⚠️ 텍스트 요소 라이트 {light}, 다크 {dark} — CI 하한 아래라 PR 의 contrast 잡이 막는다 (리뷰어에 warn 으로 전달)`
+  - `size_result = skipped` → `렌더 분량: ⏭ 분량을 재지 않음 — {reason}`
+
+  The floor is `MIN_TEXT_ELEMENTS`; the line names it as "CI 하한" rather than copying its number. The skipped line must not read like the ok line, for the reason given for the contrast lines above, and the Stage 12 note above applies to this line too.
 - Responsive verification (Stage 12 sweep) — pick the line by state:
   - `responsive_result = ok` → `반응형: ✅ 375/768/976/1440 가로 오버플로 없음 (자동수정 {attempts}회)`
   - `responsive_result = warn` → `반응형: ⚠️ 잔여 오버플로 — {file} @{width}px {overflowPx}px, 요소 {culprits} (스크린샷 {path}, 자동수정 2회 후 잔존)`
