@@ -85,22 +85,22 @@ function textIn(
   ]
 }
 
-// Enough passing text in both themes to clear the floor, for the tests about
-// contrast items: without it every one of their small inputs is also a thin
-// preview, and the thin item would sit in the lists they compare.
-const ABOVE_FLOOR = [
+// Passing text at exactly the floor in both themes, which clears it, for the
+// tests about contrast items: without it every one of their small inputs is
+// also a thin preview, and the thin item would sit in the lists they compare.
+const AT_FLOOR = [
   ...textIn("light", MIN_TEXT_ELEMENTS),
   ...textIn("dark", MIN_TEXT_ELEMENTS),
 ]
 
-const observeAboveFloor = (
+const observeAtFloor = (
   rows: Array<DedupedFinding>
 ): ReturnType<typeof observedRender> =>
-  observedRender([...rows, ...ABOVE_FLOOR], SWEPT)
+  observedRender([...rows, ...AT_FLOOR], SWEPT)
 
 describe("observedRender", () => {
   it("reports only failures, worst ratio first, as warn items", () => {
-    const { issues } = observeAboveFloor([
+    const { issues } = observeAtFloor([
       row("fail", 3.9),
       row("borderline", 4.45),
       row("fail", 2.1),
@@ -117,7 +117,7 @@ describe("observedRender", () => {
   })
 
   it("names the element, the sample, the measured and required ratio and the colour pair", () => {
-    const [issue] = observeAboveFloor([
+    const [issue] = observeAtFloor([
       row("fail", 2.1, { theme: "dark", state: "hover", widths: [976] }),
     ]).issues
     expect(issue.section).toContain("dark")
@@ -148,7 +148,7 @@ describe("observedRender", () => {
         basis: "border",
       })
     )
-    const { issues } = observeAboveFloor([...edges, row("fail", 4.1)])
+    const { issues } = observeAtFloor([...edges, row("fail", 4.1)])
     expect(issues).toHaveLength(MAX_RENDER_ISSUES)
     expect(issues[0].fix).toContain("4.10:1")
     expect(issues[0].fix).toContain('text "가입하기"')
@@ -162,7 +162,7 @@ describe("observedRender", () => {
       row("fail", 1.5 + i / 100)
     )
     const dark = row("fail", 4.2, { theme: "dark" })
-    const { issues } = observeAboveFloor([...light, dark])
+    const { issues } = observeAtFloor([...light, dark])
     expect(issues).toHaveLength(MAX_RENDER_ISSUES)
     expect(issues[0].section).toContain("dark")
     expect(issues[0].fix).toContain("4.20:1")
@@ -172,7 +172,7 @@ describe("observedRender", () => {
     const many = Array.from({ length: MAX_RENDER_ISSUES + 7 }, (_, i) =>
       row("fail", 1 + i / 100)
     )
-    const { render, issues } = observeAboveFloor(many)
+    const { render, issues } = observeAtFloor(many)
     expect(issues).toHaveLength(MAX_RENDER_ISSUES)
     expect(issues[0].fix).toContain("1.00:1")
     expect(render.observed.fail).toBe(MAX_RENDER_ISSUES + 7)
@@ -211,7 +211,7 @@ describe("observedRender", () => {
       row("fail", 1 + i / 100, { theme: "dark" })
     )
     const light = [row("fail", 2), row("fail", 2.5)]
-    const { render } = observeAboveFloor([...dark, ...light])
+    const { render } = observeAtFloor([...dark, ...light])
     expect(render.observed.omitted).toBe(5)
     expect(render.observed.omittedDarkText).toBe(3)
   })
@@ -219,7 +219,7 @@ describe("observedRender", () => {
 
 describe("skipped and observed reports", () => {
   it("differ in shape, not just in a value — a skip can never read as a clean run", () => {
-    const clean = observeAboveFloor([])
+    const clean = observeAtFloor([])
     const skipped = skippedRender(
       "browserType.launch: Executable doesn't exist"
     )
@@ -247,7 +247,7 @@ describe("mergeIntoMachineReport", () => {
     const before = stage9a2Report()
     const merged = mergeIntoMachineReport(
       before,
-      observeAboveFloor([row("fail", 2.1)]),
+      observeAtFloor([row("fail", 2.1)]),
       { iteration: 2 }
     )
     const own = ["machine", "tool", "schema", "passed", "metrics"] as const
@@ -264,7 +264,7 @@ describe("mergeIntoMachineReport", () => {
   it("recounts the verdict from the merged items", () => {
     const merged = mergeIntoMachineReport(
       stage9a2Report(),
-      observeAboveFloor([row("fail", 2.1), row("fail", 3)]),
+      observeAtFloor([row("fail", 2.1), row("fail", 3)]),
       { iteration: 2 }
     )
     expect(merged.verdict).toMatch(/^0 block \/ 3 warn — /)
@@ -286,12 +286,12 @@ describe("mergeIntoMachineReport", () => {
   it("replaces an earlier 9a3 result instead of stacking a second one", () => {
     const once = mergeIntoMachineReport(
       stage9a2Report(),
-      observeAboveFloor([row("fail", 2.1), row("fail", 3)]),
+      observeAtFloor([row("fail", 2.1), row("fail", 3)]),
       { iteration: 2 }
     )
     const twice = mergeIntoMachineReport(
       once,
-      observeAboveFloor([row("fail", 2.5)]),
+      observeAtFloor([row("fail", 2.5)]),
       { iteration: 2 }
     )
     const rules = twice.issues.map((i) => i.rule)
@@ -309,7 +309,7 @@ describe("mergeIntoMachineReport", () => {
   it("starts its own report when there is no 9a2 report to join", () => {
     const report = mergeIntoMachineReport(
       null,
-      observeAboveFloor([row("fail", 2.1)]),
+      observeAtFloor([row("fail", 2.1)]),
       { iteration: 1 }
     )
     expect(report.machine).toBe(true)
@@ -325,7 +325,7 @@ describe("observedRender — a form control's text says where it came from", () 
     // The colour an author must change for a placeholder is `::placeholder`'s,
     // not the field's `color`; an issue that called it plain text sends them
     // looking for a text node "이메일" that does not exist.
-    const { issues } = observeAboveFloor([
+    const { issues } = observeAtFloor([
       row("fail", 1.91, { sample: "이메일", source: "placeholder" }),
     ])
     expect(issues[0].fix).toContain('placeholder "이메일"')
@@ -333,7 +333,7 @@ describe("observedRender — a form control's text says where it came from", () 
   })
 
   it("leaves an ordinary text node's wording as it was", () => {
-    const { issues } = observeAboveFloor([row("fail", 4.1)])
+    const { issues } = observeAtFloor([row("fail", 4.1)])
     expect(issues[0].fix).toContain('text "가입하기"')
   })
 })
@@ -394,8 +394,8 @@ describe("observedRender — a preview under the text-element floor", () => {
         path: `div.edge-${theme}`,
         occurrences,
       })
-    // At the floor with a single non-text surface in each theme: few
-    // surfaces do not pull the text count under it.
+    // At the floor with a non-text surface in each theme: non-text rows are
+    // not text elements, so they leave the count where it is.
     const atFloor = observedRender(
       [
         ...textIn("light", MIN_TEXT_ELEMENTS),
@@ -509,7 +509,7 @@ describe("mergeIntoMachineReport — the thin-preview item", () => {
     })
     const padded = mergeIntoMachineReport(
       once,
-      observedRender(ABOVE_FLOOR, SWEPT),
+      observedRender(AT_FLOOR, SWEPT),
       {
         iteration: 2,
       }
