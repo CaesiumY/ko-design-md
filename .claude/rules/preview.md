@@ -56,6 +56,6 @@ CI 의 **별도 `contrast` 잡**에서 돈다. 프리뷰 대비를 라이트·�
 새 항목은 다음 재집계까지 면제되므로 온보딩의 등록처는 늘지 않는다. 비텍스트 `fail`·`borderline` 은 `gate:contrast` 가 warn 만 내므로 비텍스트 쪽은 두 표가
 함께 낡을 수 있다.
 
-스킬 루프 안의 `pnpm audit:contrast:staged`(Stage 9a3, ADR 0009)는 미달을 **warn** 으로만 합친다.
+스킬 루프 안의 `pnpm audit:contrast:staged`(Stage 9a3, ADR 0009)는 미달을 **warn** 으로만 합친다. 테마별 텍스트 요소 수도 CI 와 같은 방식으로 세어, `MIN_TEXT_ELEMENTS` 아래면 얇은 프리뷰 **warn** 을 하나 더한다.
 Chromium 이 없거나 측정이 깨지면 exit 0 과 `render.skipped` 를 남기는데, 이것은 "미달 없음"이 아니라
 "재지 않음"이다. exit 2 는 호출이나 그 파일이 잘못된 경우뿐이다. 로컬 수치라 기준선과 대조하지 않는다.

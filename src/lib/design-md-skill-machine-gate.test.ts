@@ -553,6 +553,12 @@ describe("/design-md machine gates", () => {
         // id is held to the same rule. Imported, not grepped: the constant is
         // the one the report is built with.
         STAGED_CONTRAST_RULE,
+        // Its thin-preview item (`STAGED_THIN_RULE`) joins the same report but
+        // is left out here on purpose, for now: #682 wires it into the rubric
+        // and SKILL.md, and its acceptance criteria ask those docs to name the
+        // rule — the opposite of this guard. Whether they name it or quote a
+        // phrase like every other item is #682's call; it should add the id
+        // here if it picks the phrase.
       ]),
     ]
     expect(ruleIds).toContain("unreadable-merged-preview")
