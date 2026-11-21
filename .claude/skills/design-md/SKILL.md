@@ -30,7 +30,7 @@ This skill builds a complete catalog entry through a 5-subagent pipeline with on
                                                          END
 ```
 
-**Loop termination**: design loop is blocking — score must reach 8/10 within 3 iterations or the user decides at the checkpoint. Preview loop is non-blocking — proceed with warning if score < 8 at iteration 3.
+**Loop termination**: design loop is blocking — score must reach 8/10 within 3 iterations or the user decides at the checkpoint. Preview loop is non-blocking — proceed with warning if, at iteration 3, the score is still under 8 or the preview is still under the CI contrast job's text-element floor (9c).
 
 **Key reference files** (read these before dispatching subagents that need them):
 - `.claude/skills/design-md/references/stitch-format.md`
@@ -356,7 +356,7 @@ It writes into the **same** machine report 9a2 just wrote, so the reviewer and t
 - **Always proceed to 9b** after it, whatever it found. 9a3 is an observation, not a gate: a staged preview has no baseline row, so a shortfall cannot be told apart from two published brand values that simply fall short, and blocking would push the author to discard a published value to get through. Convergence stays with the reviewer's score, plus one thing 9c checks besides it — a thin preview gets another author pass (see `size_result` below); drift stays with the CI contrast job.
 - **`render.skipped`** (no Chromium on this machine, or the measurement broke) → note it for Stage 13 as `render_result = skipped` with the `reason`, and proceed. Do **not** install a browser inside the session. A skipped report carries no `observed` key at all, so it can never be read as a clean run.
 - Otherwise, when `render.observed.measured` is 0, record `render_result = empty` — the page rendered but nothing was collected, which is no more a pass than a skip. When `render.observed.fail` is 0, record `render_result = ok` with `render.observed.held` (rows the judge could not decide — a gradient, an overlay); else `render_result = warn` with the fail count.
-- Separately, for the preview's size: when `issues` carries the item whose `section` starts with `text elements —`, record `size_result = thin` with `render.observed.textElements`; otherwise, under `render.observed`, `size_result = ok` with the same counts; under `render.skipped`, `size_result = skipped` with the same `reason`. Size is not contrast — a preview with no shortfall can still be too thin for the CI contrast job — so the two results are kept apart.
+- Separately, for the preview's size: when `render.observed.measured` is 0, record `size_result = skipped` with the reason `수집된 행 없음` — the thin item is then there because nothing was read, which says nothing about the preview and is no reason for another author pass. Otherwise, when `issues` carries the item whose `section` starts with `text elements —`, record `size_result = thin` with `render.observed.textElements`; otherwise, under `render.observed`, `size_result = ok` with the same counts; under `render.skipped`, `size_result = skipped` with the same `reason`. Size is not contrast — a preview with no shortfall can still be too thin for the CI contrast job — so the two results are kept apart.
 - **Exit 2** means the command or a file it names was wrong — an unknown flag, a staged path that is not a readable file, a report path that cannot be written, an existing report from a different iteration than `--iteration`, or an existing report file that is not a machine report (not JSON, or not the 9a2 envelope — a reviewer's `preview-review-{M}.json` named by mistake is refused rather than overwritten). Fix that and rerun; it is not a measurement result. The command has no other failure exit: anything that goes wrong while measuring is the `render.skipped` outcome above.
 
 ### 9b. Dispatch preview-html-reviewer
@@ -398,7 +398,7 @@ CSS alone.
 
 ### 9c. Loop decision (non-blocking)
 
-- If `passed && score >= 8` and 9a3 did not record `size_result = thin` → exit loop, go to Stage 10.
+- If `passed && score >= 8` and this pass's 9a3 did not record `size_result = thin` → exit loop, go to Stage 10.
 - Else if `M < 3` → `M += 1`, go back to 9a. A thin preview gets this pass whatever its score: the rubric caps Item 4 at 1 point for it, which leaves a preview good everywhere else at 9, and without another pass the author would never see the warning the reviewer mirrored.
 - Else (`M == 3`, and not passed or still thin) → log the warning, exit loop, go to Stage 10 anyway. Preview review is non-blocking because visual previews iterate naturally during real use; the user already approved the design.md the preview is built from.
 
@@ -678,7 +678,7 @@ Print a summary message containing:
   - `size_result = thin` → `렌더 분량: ⚠️ 텍스트 요소 라이트 {light}, 다크 {dark} — CI 하한 아래({short})라 PR 의 contrast 잡이 막는다`
   - `size_result = skipped` → `렌더 분량: ⏭ 분량을 재지 않음 — {reason}`
 
-  The floor is `MIN_TEXT_ELEMENTS`; the line names it as "CI 하한" rather than copying its number. `{short}` is each theme the thin item's `fix` names with how many it is short, in Korean (`라이트 10개 모자람`). Put that item's `fix` on the next line, indented, instead of in the warn list below. With `render_result = empty` the counts are 0 because nothing was collected, so add `(수집된 글자 0개 — 수집기가 프리뷰에 닿지 못했을 수 있음)`: CI may read the same preview differently. The skipped line must not read like the ok line, for the reason given for the contrast lines above, and the Stage 12 note above applies to this line too.
+  The floor is `MIN_TEXT_ELEMENTS`; the line names it as "CI 하한" rather than copying its number. `{short}` is each theme the thin item's `fix` names with how many it is short, in Korean (`라이트 10개 모자람`). Put that item's `fix` on the next line, indented, instead of in the warn list below. The skipped line must not read like the ok line, for the reason given for the contrast lines above, and the Stage 12 note above applies to this line too.
 - Responsive verification (Stage 12 sweep) — pick the line by state:
   - `responsive_result = ok` → `반응형: ✅ 375/768/976/1440 가로 오버플로 없음 (자동수정 {attempts}회)`
   - `responsive_result = warn` → `반응형: ⚠️ 잔여 오버플로 — {file} @{width}px {overflowPx}px, 요소 {culprits} (스크린샷 {path}, 자동수정 2회 후 잔존)`

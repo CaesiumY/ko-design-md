@@ -57,7 +57,7 @@ No standalone type-scale showcase — the documented scale lives in the token ca
 
 Each component named in `## Components` of the design.md is visibly rendered in the preview, with documented variants and states (hover, active, disabled where applicable).
 
-**Render size (9a3).** When the machine report carries `render.observed` and an item in its `issues` whose `section` starts with `text elements —`, the preview shows fewer text elements in some theme than the CI contrast job's floor (`MIN_TEXT_ELEMENTS`), and that job blocks the PR on it (ADR 0013). Mirror the item into `issues` as `warn` with its `section` and `fix` — that is how the next author pass learns which theme is short and by how much — and give this item at most 1 pt, however complete the components look. Without that item, judge this item by the criteria below. The count is the text the contrast collector reads, so disabled demos do not raise it; the item's `fix` says what does. Under `render.skipped` nothing was counted: judge from the HTML alone and say so in this item's notes.
+**Render size (9a3).** When the machine report carries `render.observed` with `measured` above 0 and an item in its `issues` whose `section` starts with `text elements —`, the preview shows fewer text elements in some theme than the CI contrast job's floor (`MIN_TEXT_ELEMENTS`), and that job blocks the PR on it (ADR 0013). Mirror the item into `issues` as `warn` with its `section` and `fix` — that is how the next author pass learns which theme is short and by how much — and give this item at most 1 pt, however complete the components look. Without that item, judge this item by the criteria below. The count is the text the contrast collector reads, so disabled demos do not raise it; the item's `fix` says what does. Under `render.skipped`, or with `render.observed.measured` at 0, nothing was counted — the item is then there only because nothing was read: judge from the HTML alone and say so in this item's notes.
 
 **Pass criteria**:
 - 2 pts: every named component rendered; primary variant + at least one state variation per interactive component; no thin-preview item (see **Render size (9a3)**).
@@ -277,4 +277,4 @@ the copy in the dark sheet."}``.
 }
 ```
 
-`passed = score >= 8`. The skill treats the preview review loop as **non-blocking** — if score < 8 at iteration 3, the skill proceeds to BUILD_OG with a warning rather than asking the user, since visual previews iterate naturally during real use.
+`passed = score >= 8`. The skill treats the preview review loop as **non-blocking** — if, at iteration 3, the score is still under 8 or the machine report still carries the thin-preview item (**Render size (9a3)** under Item 4), the skill proceeds to BUILD_OG with a warning rather than asking the user, since visual previews iterate naturally during real use.

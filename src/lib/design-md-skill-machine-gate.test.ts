@@ -50,7 +50,9 @@ function rubricItem(n: number): string {
 function skillBetween(heading: string, next: string): string {
   const skill = readRepoFile(DESIGN_MD_SKILL)
   const start = skill.indexOf(heading)
-  return skill.slice(start, skill.indexOf(next, start + 1))
+  const end = skill.indexOf(next, start + 1)
+  // The last section has no heading after it: it runs to the end.
+  return skill.slice(start, end < 0 ? undefined : end)
 }
 
 function readFrontmatter(path: string): string {
