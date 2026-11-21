@@ -20,10 +20,11 @@ import {
   ownerBackgroundUnder,
   paintOrder,
   reach,
+  underStop,
   unhitPaintBetween,
 } from "./contrast-pseudo"
 import type { BackgroundImage } from "./contrast-gradient"
-import type { RawPseudo } from "./contrast-pseudo"
+import type { RawPseudo, Rect, StopBox } from "./contrast-pseudo"
 
 /** An opaque sRGB colour, channels on [0, 255]. */
 export interface Rgb {
@@ -331,7 +332,8 @@ export interface RawTextLine {
   /**
    * Why THIS line cannot be read, as the collector saw it — something over
    * it, a filter behind it. A pseudo-element is not among them: it travels
-   * on its layer, and `readLine` adds its reason when it may reach the line.
+   * on its layer, or in `past` when no layer stands for its owner, and
+   * `readLine` adds its reason when it may reach the line.
    * Held per line because a wrapped run can cross a band that one line sits on
    * and another does not.
    */
@@ -346,6 +348,24 @@ export interface RawTextLine {
    * nothing else of it draws unread (`unreadPseudo`, #692).
    */
   ahead?: Array<number>
+  /**
+   * The painted pseudo-elements of every ancestor of the element read that
+   * no layer of `stack` stands for: one past the opaque layer the stack
+   * stopped at, or one the hit test skips because it takes no pointer
+   * events. A pseudo-element with `pointer-events: none` is in no hit list,
+   * so the stack cannot show where it paints, and one past where the stack
+   * stopped is never read at all — yet it can paint over that opaque layer,
+   * under a raised line or over it. Ancestors already handed over as `ahead`
+   * are not repeated here. Absent when there are none. Each one's `chain`
+   * runs from `stop`, when there is one, rather than from the element read.
+   */
+  past?: Array<RawPseudo>
+  /**
+   * The opaque layer `stack` stopped at — its last — as far as its
+   * background goes. Absent when the stack ran out first. A pseudo-element in
+   * `past` that paints under it is out of sight (`underStop`).
+   */
+  stop?: StopBox
 }
 
 export interface RawTextSample {
@@ -711,6 +731,10 @@ const EMPTY_CONTENT = '""'
  *   from the one read up to the owner, anything else inside the owner, or
  *   anything near the area outside an owner that is no stacking context
  *   (`unhitPaintBetween`);
+ * - past the stack: one in `past`, a pseudo-element of an ancestor no layer
+ *   stands for, that reaches the area at all, since nothing it can be laid
+ *   against was read — unless it paints under the opaque layer the stack
+ *   stopped at (`stop`), whose background covers the whole area;
  * - under its owner's background: one whose owner's colour is not opaque;
  * - under the text or under its owner's background, either way: one whose
  *   owner's own box does not hold the whole area, so its background is not
@@ -725,21 +749,34 @@ const EMPTY_CONTENT = '""'
 function pseudoEffect(
   stack: Array<RawLayer>,
   ahead: Array<number>,
+  past: Array<RawPseudo>,
+  stop: StopBox | undefined,
   read: "text" | "surface"
 ): PseudoEffect {
   const between = read === "text" ? 1 : 0
   const edge = read === "text" ? 0 : SURFACE_EDGE
+  const grown = (p: RawPseudo): Rect => ({
+    left: p.area.left - edge,
+    top: p.area.top - edge,
+    right: p.area.right + edge,
+    bottom: p.area.bottom + edge,
+  })
   const over: Array<Placed> = []
   const under: Array<Placed> = []
-  let unsure = false
+  // One no layer stands for is laid against nothing in the stack: wherever
+  // it paints, the colour the stack gives is not what is there — unless it
+  // paints under the opaque layer the stack stopped at, which covers the
+  // whole area. A layer hit again is not its background where it was hit.
+  const hidden = (p: RawPseudo): boolean =>
+    stop !== undefined &&
+    stack.at(-1)?.again !== true &&
+    underStop(p, stop, grown(p))
+  let unsure = past.some(
+    (p) => reach({ ...p, area: grown(p) }) !== "none" && !hidden(p)
+  )
   for (const [index, layer] of stack.entries()) {
     for (const p of layer.pseudos ?? []) {
-      const area = {
-        left: p.area.left - edge,
-        top: p.area.top - edge,
-        right: p.area.right + edge,
-        bottom: p.area.bottom + edge,
-      }
+      const area = grown(p)
       const reached = reach({ ...p, area })
       if (reached === "none") continue
       if (reached === "unsure") {
@@ -926,7 +963,13 @@ function readLine(
   blockers: Array<Blocker>
   faded: boolean
 } {
-  const effect = pseudoEffect(line.stack, line.ahead ?? [], "text")
+  const effect = pseudoEffect(
+    line.stack,
+    line.ahead ?? [],
+    line.past ?? [],
+    line.stop,
+    "text"
+  )
   const { backdrops, blocker } = backdropsOf(effect.stack)
   const veiled = (c: Rgb): Rgb =>
     effect.veil === null ? c : compositeOver(effect.veil, c)
@@ -975,6 +1018,13 @@ export interface RawNonTextSample {
   blockers: Array<Blocker>
   /** As `RawTextLine.ahead`, its indices into `outer`. */
   ahead?: Array<number>
+  /**
+   * As `RawTextLine.past`, for the surface's ancestors: its own
+   * pseudo-elements are part of it, not behind it, and are not listed.
+   */
+  past?: Array<RawPseudo>
+  /** As `RawTextLine.stop`, the last layer of `outer`. */
+  stop?: StopBox
 }
 
 export interface NonTextMeasurement extends Measurement {
@@ -1045,7 +1095,13 @@ export function evaluateNonText(
   sample: RawNonTextSample
 ): NonTextMeasurement | null {
   if (sample.fill === null && sample.border === null) return null
-  const effect = pseudoEffect(sample.outer, sample.ahead ?? [], "surface")
+  const effect = pseudoEffect(
+    sample.outer,
+    sample.ahead ?? [],
+    sample.past ?? [],
+    sample.stop,
+    "surface"
+  )
   const outer = backdropsOf(effect.stack)
   // The surface's own image is enumerated like a layer behind it. Blocked, it
   // is read as its `background-color` alone and held for the same reason.

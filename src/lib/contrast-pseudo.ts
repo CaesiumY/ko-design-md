@@ -163,7 +163,9 @@ export interface RawPseudo {
    * owner — the text's parent, the form control or the surface first. Empty
    * when the owner is the element read. `null` when the owner is not one of
    * its ancestors, which leaves where the two paint against each other
-   * unknown.
+   * unknown. For one handed over in `RawTextLine.past` with a `stop`, the
+   * chain runs from that opaque layer instead, so its order is read against
+   * the layer (`underStop`).
    */
   chain: Array<OrderBox> | null
   /**
@@ -288,6 +290,140 @@ export function ownerBackgroundUnder(p: RawPseudo, area: Rect): boolean {
 // background colour is clipped as the last one is.
 const colourClip = (backgroundClip: string): string | undefined =>
   backgroundClip.split(",").at(-1)?.trim()
+
+/**
+ * The opaque layer a stack stopped at, as the collector reads it: what its
+ * background covers. Handed over only when the stack stopped there.
+ */
+export interface StopBox {
+  /** Its border box, in viewport pixels. */
+  box: Rect
+  /** Its four border widths, top first and clockwise, as computed. */
+  borders: Corners
+  /** Its four corner radii, written as `RawPseudo.radii` is. */
+  radii: Corners
+  /** Its four `corner-*-shape` values, written as `RawPseudo.cornerShapes` is. */
+  cornerShapes: Corners
+  backgroundClip: string
+  clipPath: string
+  maskImage: string
+  /**
+   * Its background is the canvas's — it is the root, or a `body` whose
+   * background passes on to the canvas — so its colour lies under the whole
+   * document, under the root's negative layer too, not on its box.
+   */
+  canvas: boolean
+  /**
+   * What cuts what it paints short and leaves a pseudo-element past it
+   * whole, so that its own box says what of its background shows only where
+   * each of these holds the area:
+   *
+   * - an ancestor's `overflow` other than `visible`, which cuts only boxes
+   *   whose containing-block chain passes through that ancestor — cutting
+   *   the layer, and missing a pseudo-element placed outside it;
+   * - an ancestor's `clip-path`, mask, mask border, legacy `clip` or paint
+   *   containment, which cuts everything inside it, so the layer always and
+   *   a pseudo-element only when its owner is that ancestor or inside it;
+   * - the layer's own `clip-path`, mask, mask border or legacy `clip`, which
+   *   cut it and never an ancestor's pseudo-element;
+   * - a turn, skew or scale — a non-translating `transform`, `rotate`,
+   *   `scale`, a motion path, `zoom`, or a `perspective` — anywhere from the
+   *   layer up, which leaves every rect here a box round some other shape;
+   * - the layer broken over lines as an inline box, whose rect is the box
+   *   round fragments painted one by one;
+   * - a pseudo-element past it whose owner is the layer itself: in a layer
+   *   that is a stacking context its negative layer still paints over the
+   *   layer's background, so its order against the layer is not weighed.
+   *
+   * The last four, and the ancestors' shape cuts, come `shaped`: none of them
+   * is a padding box that can hold the area, so each refuses the release.
+   */
+  clips: Array<ClipBox>
+}
+
+/** An element that cuts what its descendants paint, as `StopBox.clips` holds it. */
+export interface ClipBox {
+  /** Its border box, in viewport pixels. */
+  box: Rect
+  /** Its four border widths, top first and clockwise, as computed. */
+  borders: Corners
+  /** Its four corner radii, written as `RawPseudo.radii` is. */
+  radii: Corners
+  /** Its four `corner-*-shape` values, written as `RawPseudo.cornerShapes` is. */
+  cornerShapes: Corners
+  /**
+   * What it stands for is not a padding box that can hold the area — a
+   * `clip-path`, a mask, a mask border, a legacy `clip`, a box a turn, skew,
+   * scale or motion path has bent, an inline box broken over lines, or the
+   * layer's own pseudo-element — rather than an `overflow` or paint
+   * containment's padding box.
+   */
+  shaped: boolean
+}
+
+/**
+ * Whether a pseudo-element no layer of the stack stands for (`past`) paints
+ * under the opaque layer the stack stopped at, out of sight over the whole
+ * area. `p.chain` runs from that layer, not from the element read, up to the
+ * owner, so `paintOrder` places the pseudo-element against the layer: under
+ * it (`below`, or `under-owner`, under the owner's background and so under
+ * everything the owner holds) or not. The layer's background has to be under
+ * the whole area too: its padding box, which every background clip but
+ * `content-box` paints, cut by its rounded corners — the outer radii, which
+ * cut more than the inner ones do — with no clip or mask over it, and not
+ * the canvas's. Each of `stop.clips` holds the area as well: an overflow clip
+ * or paint containment by its padding box and rounded corners, a `shaped`
+ * one never — a shape cut, whose shape is not read, a turned, skewed or
+ * scaled box or a broken inline one, whose rect is not its shape, or a
+ * pseudo-element of the layer itself (`StopBox.clips`).
+ *
+ * A 3D context (`transform-style: preserve-3d` anywhere from the owner up)
+ * sorts by depth instead, so it answers no, as does anything `paintOrder`
+ * does not know. A `mix-blend-mode` on the layer or above it is not read:
+ * a stack is composed by source-over whatever its blend modes, and "out of
+ * sight" assumes the same.
+ */
+export function underStop(p: RawPseudo, stop: StopBox, area: Rect): boolean {
+  if (p.unsure.some((s) => s.startsWith("transform-style:"))) return false
+  if (stop.canvas) return false
+  if (stop.clipPath !== "none" || stop.maskImage !== "none") return false
+  const clip = colourClip(stop.backgroundClip)
+  if (clip !== "border-box" && clip !== "padding-box") return false
+  if (!paddingHolds(stop, area)) return false
+  if (stop.clips.some((c) => c.shaped || !paddingHolds(c, area))) return false
+  const side = paintOrder(p)
+  return side === "below" || side === "under-owner"
+}
+
+/**
+ * Whether a box's padding box, cut by its rounded corners, holds the whole
+ * area: where a background clipped there, or an overflow clip, still covers
+ * every point of it.
+ */
+function paddingHolds(
+  b: { box: Rect; borders: Corners; radii: Corners; cornerShapes: Corners },
+  area: Rect
+): boolean {
+  const widths = b.borders.map(px)
+  if (widths.some((w) => w === null)) return false
+  const [top, right, bottom, left] = widths as Array<number>
+  const padding = {
+    left: b.box.left + left,
+    top: b.box.top + top,
+    right: b.box.right - right,
+    bottom: b.box.bottom - bottom,
+  }
+  // A percentage radius is of the border box: resolved there, then laid on
+  // the smaller padding box, where the same curve cuts at least as much.
+  const w = b.box.right - b.box.left
+  const h = b.box.bottom - b.box.top
+  const resolved = b.radii.map((r) => radiusOf(r, w, h))
+  if (resolved.some((r) => r === null)) return false
+  const radii = (resolved as Array<{ rx: number; ry: number }>).map(
+    (r) => `${r.rx}px ${r.ry}px`
+  ) as Corners
+  return roundedHolds(padding, radii, b.cornerShapes, area)
+}
 
 /**
  * How far a painted pseudo-element reaches over the area read.

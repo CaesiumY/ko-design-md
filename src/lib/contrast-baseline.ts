@@ -511,13 +511,13 @@ export const BASELINE_TABLE = `\
 | bezier | dark | non-text | 42 | 45 | 10 | 2 | 1 |
 | bezier | light | text | 175 | 349 | 54 | 10 | 9 |
 | bezier | light | non-text | 41 | 44 | 18 | 9 | 1 |
-| chzzk | dark | text | 139 | 300 | 10 | 1 | 0 |
+| chzzk | dark | text | 139 | 300 | 10 | 1 | 2 |
 | chzzk | dark | non-text | 4 | 4 | 1 | 0 | 0 |
-| chzzk | light | text | 141 | 300 | 17 | 0 | 0 |
+| chzzk | light | text | 141 | 300 | 17 | 0 | 2 |
 | chzzk | light | non-text | 4 | 4 | 2 | 0 | 0 |
-| class101 | dark | text | 99 | 160 | 24 | 0 | 5 |
+| class101 | dark | text | 100 | 160 | 24 | 0 | 6 |
 | class101 | dark | non-text | 16 | 18 | 11 | 1 | 0 |
-| class101 | light | text | 99 | 160 | 35 | 2 | 5 |
+| class101 | light | text | 100 | 160 | 35 | 2 | 6 |
 | class101 | light | non-text | 15 | 18 | 7 | 3 | 0 |
 | codeit | dark | text | 147 | 224 | 1 | 1 | 0 |
 | codeit | dark | non-text | 27 | 38 | 14 | 4 | 0 |
@@ -587,9 +587,9 @@ export const BASELINE_TABLE = `\
 | socar | dark | non-text | 20 | 28 | 9 | 0 | 0 |
 | socar | light | text | 145 | 246 | 59 | 0 | 5 |
 | socar | light | non-text | 18 | 26 | 9 | 0 | 0 |
-| teamsparta | dark | text | 87 | 119 | 6 | 1 | 0 |
+| teamsparta | dark | text | 87 | 119 | 6 | 1 | 1 |
 | teamsparta | dark | non-text | 15 | 17 | 5 | 0 | 3 |
-| teamsparta | light | text | 87 | 119 | 12 | 0 | 0 |
+| teamsparta | light | text | 87 | 119 | 12 | 0 | 1 |
 | teamsparta | light | non-text | 15 | 17 | 3 | 0 | 3 |
 | toss | dark | text | 197 | 388 | 25 | 2 | 16 |
 | toss | dark | non-text | 23 | 33 | 10 | 4 | 0 |
@@ -607,9 +607,9 @@ export const BASELINE_TABLE = `\
 | yeogi | dark | non-text | 14 | 14 | 9 | 0 | 0 |
 | yeogi | light | text | 70 | 94 | 34 | 2 | 2 |
 | yeogi | light | non-text | 13 | 13 | 8 | 0 | 0 |
-| zigbang | dark | text | 219 | 366 | 40 | 0 | 5 |
+| zigbang | dark | text | 221 | 367 | 40 | 0 | 7 |
 | zigbang | dark | non-text | 34 | 40 | 11 | 1 | 2 |
-| zigbang | light | text | 219 | 366 | 87 | 0 | 5 |
+| zigbang | light | text | 221 | 367 | 87 | 0 | 7 |
 | zigbang | light | non-text | 34 | 40 | 22 | 2 | 2 |`
 
 /** The recorded table as rows, parsed once. */

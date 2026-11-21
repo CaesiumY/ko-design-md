@@ -303,6 +303,129 @@
         fail. Composed as the black under the run it would read 5.32, a
         pass. The clip holds it; the collapsed one paints nothing and is
         left out, so the run reads 3.95 on white.
+
+      The panels below are a pseudo-element the stack never reaches: one of
+      an ancestor of the run, past the opaque layer the stack stops at, that
+      takes no pointer events, so no hit list shows it either.
+
+      - `.past` holds an in-flow white block, `.o`, filling the panel, and a
+        raised run in it. The panel's `::before` is opaque oklch(0.3 0 0)
+        (rgb(46), luminance 0.0273) at `inset: 0` with `pointer-events: none`.
+        Positioned with `z-index` auto, it paints over `.o`'s in-flow
+        background and under the run, later in tree order: the run is black
+        on rgb(46), (0.0273 + 0.05) / 0.05 = 1.55, a fail. The stack stops at
+        `.o`'s white and reads 21. A pseudo-element of an ancestor past the
+        stack that reaches the line, and does not paint under the layer the
+        stack stopped at, holds it.
+      - `.pastbox` is `.past` with the 40x40 black box of `.surface` in place
+        of the run, measured as a non-text surface: black on rgb(46) on
+        screen, read as black on white, 21.
+      - `.overblock` puts the 60% black wash of `.veil` over an in-flow white
+        `.o`, the wash taking no pointer events, over a run in normal flow.
+        On screen it is `.veil`'s 3.66, a fail; the stack stops at `.o`'s
+        white, which the wash is not on, and reads 21.
+      - `.lifted` is `.past` with its white block raised, `position:
+        relative`, and its run left in normal flow inside it. The panel's
+        `::before` precedes the block in document order on the same layer,
+        so it paints under the block, out of sight: the run is black on
+        white, a pass at 21. A pseudo-element past the stack that paints under
+        the opaque layer the stack stopped at, whose box holds the line, is
+        released.
+      - `.corner` is `.lifted` with the raised block cut to `.round`'s
+        200x100 ellipse (`border-radius: 50%`), its run at the top-left
+        corner. The line box lies past the curve, so the ends of the run sit
+        on the dark wash beside the block, not on its white: the block does
+        not hold the line and the reading is held. Released, it would read 21.
+      - `.pastedge` is `.past` with its `::before` painting no background,
+        only a 60px solid oklch(0.3 0 0) border on every side. The box is
+        the panel's 300x120, so the borders meet and cover all of it: the run
+        is black on rgb(46) again, 1.55, a fail, where the stack reads 21. A
+        pseudo-element past the stack that draws without a background holds
+        the reading as one that paints does.
+      - `.pastclip` is `.lifted` with the raised white block, 300px wide,
+        inside a 40px wrapper, `.c`, centred in the panel at x 130..170,
+        whose `overflow: hidden` shows the white there only. The run is
+        absolute over the panel's middle, later in tree order, so it paints
+        over the block; its line is wider than 40px, so its ends sit on the
+        panel's oklch(0.3 0 0) wash, 1.55, a fail. The stack, read at the
+        line's middle, stops at the block's white, whose box holds the line,
+        and released it would read 21. An element between the layer and the
+        owner that clips the layer holds the reading.
+      - `.pastescape` moves that clip onto the owner: `.f`, the 40px
+        wrapper, static with `overflow: hidden`, owns the wash, an absolute
+        `::before` placed in the panel, outside `.f`, so `.f` clips the
+        white block and not the wash. The run is inside `.f` too, absolute
+        and placed in the panel like the wash, so it escapes the clip as
+        well and its ends sit on the wash, 1.55, a fail; released it would
+        read 21. A clip at the owner that the
+        pseudo-element is placed outside of holds the reading.
+      - `.pastimage` is `.past` with its `::before` painting no background
+        and no border, only a `border-image` of a flat oklch(0.3 0 0)
+        gradient, 60px wide and filled, over the panel's 300x120 box: on
+        screen the run is black on rgb(45) to rgb(46), as the gradient
+        rounds, about 1.55, a fail, where the stack reads 21. Held, as `.pastedge`.
+      - `.pastshape` and `.pastcontain` cut an absolute white layer, placed
+        across the panel's 300x120 by its own containing block, down to the
+        middle 40px, x 130..170, by a static wrapper `.w` that is no
+        containing block for it: `clip-path: inset(0 130px)` in the one,
+        `contain: paint` with the layer placed in the 40px wrapper and
+        widened to 300px in the other. The run is absolute over the
+        panel's middle, later in tree order, so its ends sit on the panel's
+        oklch(0.3 0 0) wash, 1.55, a fail, while the stack at the line's
+        middle stops at the layer's white, whose box holds the line.
+        Released it would read 21. A shape or paint containment cuts the
+        layer wherever it is placed, so both are held. `.pastcontain` is held
+        twice over: `contain` on the wrapper, between the layer and the
+        panel, leaves the paint order unknown as well.
+      - `.pastrect` cuts the absolute white layer itself down to the middle
+        40px with the legacy `clip: rect(0 170px 120px 130px)`, under the
+        same absolute run: its ends sit on the wash, 1.55, a fail, where the
+        layer's box holds the line and released it would read 21. The
+        layer's own clip holds the reading.
+      - `.pastboth` puts both kinds of clip on one static 40px wrapper,
+        `.w`: `overflow: hidden`, and a `clip-path: inset(-200px)` that cuts
+        nothing in the panel. Inside it `.f`, static, owns the wash, an
+        absolute `::before` placed in the panel, and holds a raised white
+        layer, 300px wide at `margin-left: -130px`, and the absolute run.
+        The overflow clip cuts the layer to x 130..170 and lets the wash and
+        the run, placed in the panel, through: the run's ends sit on the
+        wash, 1.55, a fail, where released it would read 21. Held.
+      - `.pastmaskbox` is `.pastrect` with the absolute white layer whole
+        but masked away by a transparent `-webkit-mask-box-image`: a mask
+        leaves the hit test alone, so the stack still stops at the layer's
+        white, where the run sits on the wash, 1.55, a fail. Released it
+        would read 21. Held.
+      - `.pastturn` turns a 200x10 absolute white band 30 degrees about its
+        centre, the panel's. The hit test at the line's centre meets the
+        band, but the line's ends and edges lie off it, on the wash, 1.55,
+        a fail. The band's rect, 178x109 round the turned shape, holds the
+        line, so released it would read 21. A turn leaves the rect a box
+        round some other shape: held.
+      - `.pastpath` sets the same band on a straight 30 degree motion path
+        from the panel's centre, `offset-path`, with no `transform`: the
+        path's own `offset-rotate: auto` turns it as `.pastturn`'s does, to
+        the same rect and the same 1.55 at the line's ends. Held.
+      - `.stackedge` is `.pastedge` with no inner block: the panel itself is
+        the white layer the stack stops at, and its own `::after`, taking no
+        pointer events, draws only a 60px oklch(0.3 0 0) border that covers
+        the panel. Positioned and later in tree order than the relative run,
+        it paints over the run and hides it; read as the panel's white the
+        run would pass at 21. A layer the stack reads has its drawing
+        pseudo-elements read with it as past ones, so it is held.
+      - `.stackunder` makes that panel a stacking context (`z-index: 0`) and
+        moves the border to `z-index: -1`, under a run in normal flow: the
+        border paints over the panel's white and under the run, black on
+        rgb(46), 1.55, a fail. Its order is under the panel's content but
+        above the panel's background, the colour the stack read, so a
+        pseudo-element of the layer the stack stopped at is never out of
+        sight: held, where released it would read 21.
+      - `.pastinline` makes the panel a stacking context (`z-index: 0`) with
+        its wash at `z-index: -1`, under a white inline span that breaks over
+        two lines: fragments at x 150..273 and x 0..79, 20px of padding
+        above and below. An absolute run at x 110..194 on the first line has
+        its middle on the first fragment, where the stack stops, and its left
+        end on the wash, 1.55, a fail. The span's rect, x 0..273, holds the
+        line, so released it would read 21. A broken inline box holds it.
     -->
     <style>
       html {
@@ -352,7 +475,26 @@
       .selfdraw,
       .wrapped,
       .rectclip,
-      .collapsed {
+      .collapsed,
+      .past,
+      .pastedge,
+      .pastimage,
+      .pastclip,
+      .pastescape,
+      .pastshape,
+      .pastcontain,
+      .pastrect,
+      .pastboth,
+      .pastmaskbox,
+      .pastturn,
+      .pastpath,
+      .stackedge,
+      .stackunder,
+      .pastinline,
+      .pastbox,
+      .overblock,
+      .lifted,
+      .corner {
         position: relative;
         width: 300px;
         height: 120px;
@@ -1045,6 +1187,238 @@
         color: oklch(0 0 0);
         font: 400 16px / 1.5 sans-serif;
       }
+      .past::before,
+      .pastbox::before,
+      .lifted::before,
+      .corner::before,
+      .pastclip::before,
+      .pastescape .f::before,
+      .pastshape::before,
+      .pastcontain::before,
+      .pastrect::before,
+      .pastboth .f::before,
+      .pastmaskbox::before,
+      .pastturn::before,
+      .pastpath::before,
+      .overblock::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: oklch(0.3 0 0);
+        pointer-events: none;
+      }
+      .overblock::after {
+        background: oklch(0 0 0 / 0.6);
+      }
+      .pastclip .c,
+      .pastescape .f {
+        width: 40px;
+        height: 100%;
+        overflow: hidden;
+      }
+      .pastshape .w,
+      .pastcontain .w {
+        width: 40px;
+        height: 100%;
+      }
+      .pastshape .w {
+        width: 100%;
+        clip-path: inset(0 130px);
+      }
+      .pastcontain .w {
+        position: static;
+        contain: paint;
+      }
+      .pastshape .l,
+      .pastcontain .l {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        background: oklch(1 0 0);
+      }
+      .pastshape .l {
+        left: 0;
+        right: 0;
+      }
+      .pastcontain .l {
+        left: -130px;
+        width: 300px;
+      }
+      .pastboth .w {
+        width: 40px;
+        height: 100%;
+        overflow: hidden;
+        clip-path: inset(-200px);
+      }
+      .pastboth .f {
+        height: 100%;
+      }
+      .pastboth .l {
+        position: relative;
+        width: 300px;
+        height: 100%;
+        margin-left: -130px;
+        background: oklch(1 0 0);
+      }
+      .pastmaskbox .l {
+        position: absolute;
+        inset: 0;
+        background: oklch(1 0 0);
+        -webkit-mask-box-image: linear-gradient(transparent, transparent);
+      }
+      .pastturn .l {
+        position: absolute;
+        left: 50px;
+        top: 55px;
+        width: 200px;
+        height: 10px;
+        background: oklch(1 0 0);
+        transform: rotate(30deg);
+      }
+      .pastpath .l {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 200px;
+        height: 10px;
+        background: oklch(1 0 0);
+        offset-path: path("M 150 60 L 250 117.735");
+      }
+      .stackedge::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border: 60px solid oklch(0.3 0 0);
+        pointer-events: none;
+      }
+      .stackedge .t {
+        position: relative;
+      }
+      .stackunder {
+        z-index: 0;
+      }
+      .stackunder::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border: 60px solid oklch(0.3 0 0);
+        pointer-events: none;
+      }
+      .pastinline {
+        z-index: 0;
+        display: block;
+      }
+      .pastinline::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: oklch(0.3 0 0);
+        pointer-events: none;
+      }
+      .pastinline .p {
+        margin: 0;
+        width: 300px;
+        text-indent: 150px;
+        font: 400 16px / 60px monospace;
+        color: transparent;
+      }
+      .pastinline .i {
+        padding: 20px 0;
+        background: oklch(1 0 0);
+      }
+      .pastinline .t {
+        position: absolute;
+        left: 110px;
+        top: 18px;
+      }
+      .pastrect .l {
+        position: absolute;
+        inset: 0;
+        background: oklch(1 0 0);
+        clip: rect(0 170px 120px 130px);
+      }
+      .pastshape .t,
+      .pastcontain .t,
+      .pastrect .t,
+      .pastboth .t,
+      .pastmaskbox .t,
+      .pastturn .t,
+      .pastpath .t {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 48px;
+        text-align: center;
+      }
+      .pastimage::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: transparent;
+        border-image: linear-gradient(oklch(0.3 0 0), oklch(0.3 0 0)) 1 fill /
+          60px;
+        pointer-events: none;
+      }
+      .pastclip .o,
+      .pastescape .o {
+        position: relative;
+        width: 300px;
+        height: 100%;
+        margin-left: -130px;
+        background: oklch(1 0 0);
+      }
+      .pastclip .t,
+      .pastescape .t {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 48px;
+        text-align: center;
+      }
+      .pastedge::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: transparent;
+        border: 60px solid oklch(0.3 0 0);
+        pointer-events: none;
+      }
+      .past .o,
+      .pastedge .o,
+      .pastimage .o,
+      .pastbox .o,
+      .overblock .o {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: oklch(1 0 0);
+      }
+      .past .t,
+      .pastedge .t,
+      .pastimage .t {
+        position: relative;
+      }
+      .lifted .o,
+      .corner .o {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        background: oklch(1 0 0);
+      }
+      .corner .o {
+        width: 200px;
+        height: 100px;
+        border-radius: 50%;
+        align-items: flex-start;
+        justify-content: flex-start;
+      }
       .spacer {
         height: 1000px;
       }
@@ -1147,6 +1521,75 @@
     <div class="glyph">
       <i class="g">█████</i>
       <span class="t">Sample text</span>
+    </div>
+    <div class="past">
+      <div class="o"><span class="t">Sample text</span></div>
+    </div>
+    <div class="pastbox">
+      <div class="o"><span class="box"></span></div>
+    </div>
+    <div class="overblock">
+      <div class="o"><span class="t">Sample text</span></div>
+    </div>
+    <div class="lifted">
+      <div class="o"><span class="t">Sample text</span></div>
+    </div>
+    <div class="corner">
+      <div class="o"><span class="t">Sample text</span></div>
+    </div>
+    <div class="pastedge">
+      <div class="o"><span class="t">Sample text</span></div>
+    </div>
+    <div class="pastclip">
+      <div class="c"><div class="o"></div></div>
+      <span class="t">Sample text</span>
+    </div>
+    <div class="pastescape">
+      <div class="f">
+        <div class="o"></div>
+        <span class="t">Sample text</span>
+      </div>
+    </div>
+    <div class="pastimage">
+      <div class="o"><span class="t">Sample text</span></div>
+    </div>
+    <div class="pastshape">
+      <div class="w"><div class="l"></div></div>
+      <span class="t">Sample text</span>
+    </div>
+    <div class="pastcontain">
+      <div class="w"><div class="l"></div></div>
+      <span class="t">Sample text</span>
+    </div>
+    <div class="pastrect">
+      <div class="l"></div>
+      <span class="t">Sample text</span>
+    </div>
+    <div class="pastmaskbox">
+      <div class="l"></div>
+      <span class="t">Sample text</span>
+    </div>
+    <div class="pastturn">
+      <div class="l"></div>
+      <span class="t">Sample text</span>
+    </div>
+    <div class="pastpath">
+      <div class="l"></div>
+      <span class="t">Sample text</span>
+    </div>
+    <div class="stackedge"><span class="t">Sample text</span></div>
+    <div class="stackunder"><span class="t">Sample text</span></div>
+    <div class="pastinline">
+      <p class="p"><span class="i">xxxx xxxx xxxx xxxx xxxx</span></p>
+      <span class="t">Sample text</span>
+    </div>
+    <div class="pastboth">
+      <div class="w">
+        <div class="f">
+          <div class="l"></div>
+          <span class="t">Sample text</span>
+        </div>
+      </div>
     </div>
   </body>
 </html>

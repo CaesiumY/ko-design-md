@@ -16,10 +16,12 @@ import type {
   RawTextLine,
 } from "../src/lib/contrast"
 import type {
+  ClipBox,
   Corners,
   OrderBox,
   RawPseudo,
   Rect,
+  StopBox,
 } from "../src/lib/contrast-pseudo"
 
 export interface CollectedText {
@@ -651,6 +653,261 @@ export function collectContrast(): Collected {
   const pseudoDrawsUnread = (cs: CSSStyleDeclaration): boolean =>
     pseudoDraws(cs) && !pseudoPaints(cs)
 
+  // Whether a `::before` or `::after` paints a background or draws without
+  // one — glyphs, a border, a shadow, an outline, a backdrop filter. Past the
+  // stack either can cover the line, and where it lands is all that is asked.
+  const pseudoShows = (cs: CSSStyleDeclaration): boolean =>
+    pseudoPaints(cs) ||
+    pseudoDraws(cs) ||
+    (cs.content !== "none" &&
+      cs.content !== "normal" &&
+      cs.borderImageSource !== "none")
+
+  // Whether an element has such a `::before` or `::after` at all, asked
+  // once per element: the walk below asks it of every ancestor of every
+  // point read.
+  const showsPseudo = new Map<Element, boolean>()
+  const hasShownPseudo = (e: Element): boolean => {
+    let known = showsPseudo.get(e)
+    if (known === undefined) {
+      known = ["::before", "::after"].some((ps) =>
+        pseudoShows(getComputedStyle(e, ps))
+      )
+      showsPseudo.set(e, known)
+    }
+    return known
+  }
+
+  // The pseudo-elements that paint or draw, of every ancestor of `from`,
+  // from `start` up to the root, whose own layer is not among `walked` — the
+  // elements a stack was read from — nor in front of `from` in `hit`, which
+  // `aheadOf` hands over. One past the opaque layer a stack stopped at is
+  // never read, and one that takes no pointer events is in no hit list at
+  // all, yet either can paint or draw over the line. Whether it reaches the line, or paints under
+  // `stopped` — the opaque layer the stack stopped at, if it did — is
+  // `pseudoEffect`'s to say, so each one's chain runs from `stopped`, and
+  // that layer's box goes with them.
+  function pastOf(
+    from: Element,
+    start: Element | null,
+    walked: Array<Element>,
+    hit: Array<Element>,
+    index: number,
+    area: DOMRect,
+    stopped: Element | null
+  ): { past?: Array<RawPseudo>; stop?: StopBox } {
+    const ahead = new Set(hit.slice(0, index))
+    const read = new Set(walked)
+    const past: Array<RawPseudo> = []
+    const owners: Array<{ owner: Element; position: string }> = []
+    for (let up = start; up !== null; up = up.parentElement) {
+      if (ahead.has(up) || !hasShownPseudo(up)) continue
+      // A layer the stack read had its painting pseudo-elements read with it;
+      // one that only draws — a border, a shadow, glyphs — was not, and can
+      // cover the line all the same, so it goes here too.
+      const accept = read.has(up)
+        ? (cs: CSSStyleDeclaration) => pseudoShows(cs) && !pseudoPaints(cs)
+        : pseudoShows
+      // Where it lands and its paint order are all that is asked of it, so
+      // the unhit paint around it is not read (`nested`).
+      const found = paintedPseudos(up, area, stopped ?? from, {
+        accept,
+        nested: true,
+      })
+      for (const p of found) owners.push({ owner: up, position: p.position })
+      past.push(...found)
+    }
+    if (past.length === 0) return {}
+    return stopped === null
+      ? { past }
+      : { past, stop: stopBoxOf(stopped, owners) }
+  }
+
+  // The element a box whose parent is `parent` is placed in: `parent` for
+  // one in flow, `relative` or `sticky`; for an `absolute` or `fixed` one the
+  // nearest element from `parent` up that places it, or null for the
+  // initial containing block or the viewport. `containingBlockOf` walks the
+  // same way.
+  const placerOf = (parent: Element, position: string): Element | null => {
+    const fixed = position === "fixed"
+    if (!fixed && position !== "absolute") return parent
+    return placingAncestor(parent, fixed, true)
+  }
+
+  // Whether an element clips its descendants' paint to its padding box:
+  // `contain: paint`, `strict` or `content`, or a `content-visibility` other
+  // than `visible`.
+  const containsPaint = (c: CSSStyleDeclaration): boolean =>
+    c.contentVisibility !== "visible" ||
+    /\b(paint|strict|content)\b/.test(c.contain)
+
+  // Whether an element places its descendants' `absolute` and `fixed` boxes
+  // by containment: paint containment, or `contain: layout`.
+  const placesByContainment = (c: CSSStyleDeclaration): boolean =>
+    containsPaint(c) || /\blayout\b/.test(c.contain)
+
+  // Whether a clip on `e` cuts a box placed in `box`. An overflow clip cuts
+  // what is placed, box by box, in the element or inside it: the walk goes
+  // up each box's own containing block, and the clip cuts only if it meets
+  // `e` before leaving it. The root's clip, and the `body`'s it passes to the
+  // viewport, cut everything.
+  const cutsIn = (e: Element, box: Element | null): boolean => {
+    if (e === document.documentElement) return true
+    if (
+      e === document.body &&
+      getComputedStyle(document.documentElement).overflow === "visible"
+    ) {
+      return true
+    }
+    let at = box
+    while (at !== null) {
+      if (at === e) return true
+      if (!e.contains(at) || at.parentElement === null) return false
+      at = placerOf(at.parentElement, getComputedStyle(at).position)
+    }
+    return false
+  }
+
+  // Whether an element cuts its own paint and its descendants' by a shape
+  // its box does not say: a `clip-path`, a mask or a mask border, or the
+  // legacy `clip`, which cuts an absolute or fixed box to a rectangle.
+  const cutsByShape = (c: CSSStyleDeclaration): boolean =>
+    c.clipPath !== "none" ||
+    c.maskImage !== "none" ||
+    // Read by name: a property this browser does not know reads as "".
+    !["", "none"].includes(c.getPropertyValue("mask-border-source")) ||
+    !["", "none"].includes(
+      c.getPropertyValue("-webkit-mask-box-image-source")
+    ) ||
+    ((c.position === "absolute" || c.position === "fixed") && c.clip !== "auto")
+
+  // Whether an element turns, skews or scales what it paints, which leaves
+  // its rect, and every rect inside it, a box round a shape that is not
+  // that box, or a radius and a border read in other units than the rect's.
+  // A translation only moves it, which the rect keeps up with — unless a
+  // perspective above turns a move in depth into a scale. A motion path
+  // turns it without a `transform`, and `zoom` scales it.
+  const bendsBox = (c: CSSStyleDeclaration): boolean => {
+    const t = c.transform
+    const moved =
+      t === "none" ||
+      /^matrix\(1, 0, 0, 1, [^,]+, [^,]+\)$/.test(t) ||
+      /^matrix3d\(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, [^,]+, [^,]+, [^,]+, 1\)$/.test(
+        t
+      )
+    return (
+      !moved ||
+      c.rotate !== "none" ||
+      c.scale !== "none" ||
+      c.perspective !== "none" ||
+      !["", "none"].includes(c.getPropertyValue("offset-path")) ||
+      !["", "1", "normal"].includes(c.getPropertyValue("zoom"))
+    )
+  }
+
+  // How an element cuts what its descendants paint short, if it does: to
+  // its padding box (`overflow`, `contain: paint`), or by a shape its box
+  // does not say (`clip-path`, a mask), one entry for each.
+  const clipsOf = (e: Element): Array<{ cut: ClipBox; scoped: boolean }> => {
+    const c = getComputedStyle(e)
+    const shaped = cutsByShape(c)
+    const contained = containsPaint(c)
+    const overflows = c.overflowX !== "visible" || c.overflowY !== "visible"
+    const cut = (isShaped: boolean): ClipBox => ({
+      box: ownerBoxOf(e),
+      borders: [
+        c.borderTopWidth,
+        c.borderRightWidth,
+        c.borderBottomWidth,
+        c.borderLeftWidth,
+      ],
+      radii: radiiOf(c),
+      cornerShapes: cornerShapesOf(c),
+      shaped: isShaped,
+    })
+    // A shape or paint containment cuts whatever is inside the element,
+    // wherever it is placed; an overflow clip only what is placed in it. An
+    // element may do both, and each is weighed on its own.
+    const out: Array<{ cut: ClipBox; scoped: boolean }> = []
+    if (shaped || contained) out.push({ cut: cut(shaped), scoped: true })
+    if (overflows) out.push({ cut: cut(false), scoped: false })
+    return out
+  }
+
+  // What the background of the layer a stack stopped at covers. A clip on
+  // one of its ancestors that cuts the layer short hides a pseudo-element
+  // under the layer only where it cuts that pseudo-element too, so every
+  // clip that cuts the layer and leaves one of `owners`' pseudo-elements
+  // whole is handed over.
+  const stopBoxOf = (
+    e: Element,
+    owners: Array<{ owner: Element; position: string }>
+  ): StopBox => {
+    const c = getComputedStyle(e)
+    const layerIn =
+      e.parentElement === null ? null : placerOf(e.parentElement, c.position)
+    const pseudosIn = owners.map(({ owner, position }) =>
+      placerOf(owner, position)
+    )
+    const clips: Array<ClipBox> = []
+    for (let up = e.parentElement; up !== null; up = up.parentElement) {
+      for (const clip of clipsOf(up)) {
+        // A scoped clip cuts the layer, inside it, and a pseudo-element only
+        // when its owner is `up` or inside it.
+        const cutsLayer = clip.scoped || cutsIn(up, layerIn)
+        const leaves = clip.scoped
+          ? owners.some(({ owner }) => owner !== up && !up.contains(owner))
+          : pseudosIn.some((box) => !cutsIn(up, box))
+        if (cutsLayer && leaves) clips.push(clip.cut)
+      }
+    }
+    // The layer's own shape cut — a legacy `clip` or a mask border, besides
+    // the `clip-path` and mask `underStop` reads — cuts its background and
+    // never a pseudo-element of an ancestor. And a turn, a skew or a scale
+    // on the layer or above it leaves every rect here a box round some other
+    // shape. Either way its box does not say what of its background shows:
+    // handed over as a shaped clip, as `clip-path` is.
+    let bent = false
+    for (let up: Element | null = e; up !== null; up = up.parentElement) {
+      if (bendsBox(getComputedStyle(up))) {
+        bent = true
+        break
+      }
+    }
+    // An inline box broken over lines paints its background fragment by
+    // fragment, and its rect is the box round all of them.
+    const broken = e.getClientRects().length > 1
+    // A pseudo-element of the layer itself, when the layer is a stacking
+    // context, paints over its background even in its negative layer: "under"
+    // there is still above the colour the stack read. Not weighed, held.
+    const own = owners.some(({ owner }) => owner === e)
+    if (cutsByShape(c) || bent || broken || own) {
+      clips.push({
+        box: ownerBoxOf(e),
+        borders: ["0px", "0px", "0px", "0px"],
+        radii: ["0px", "0px", "0px", "0px"],
+        cornerShapes: ["round", "round", "round", "round"],
+        shaped: true,
+      })
+    }
+    return {
+      box: ownerBoxOf(e),
+      borders: [
+        c.borderTopWidth,
+        c.borderRightWidth,
+        c.borderBottomWidth,
+        c.borderLeftWidth,
+      ],
+      radii: radiiOf(c),
+      cornerShapes: cornerShapesOf(c),
+      backgroundClip: c.backgroundClip,
+      clipPath: c.clipPath,
+      maskImage: c.maskImage,
+      canvas: e === document.documentElement || bodyOnCanvas(e),
+      clips,
+    }
+  }
+
   // As a layer's optional fields: absent, not empty, when nothing is painted —
   // the shape `imageOf` gives an element with no image.
   const pseudosOf = (
@@ -831,6 +1088,29 @@ export function collectContrast(): Collected {
     return unsure
   }
 
+  // The nearest element from `start` up that places an `absolute` box, or a
+  // `fixed` one when `fixed`, or null when none does. With `containment`,
+  // paint and layout containment place them too; `containingBlockOf` leaves
+  // those to `unsureOf`, which holds what is placed under them.
+  function placingAncestor(
+    start: Element,
+    fixed: boolean,
+    containment = false
+  ): Element | null {
+    let cb: Element | null = start
+    while (cb !== null) {
+      const c = getComputedStyle(cb)
+      if (
+        capturesFixed(c) ||
+        (containment && placesByContainment(c)) ||
+        (!fixed && c.position !== "static")
+      )
+        break
+      cb = cb.parentElement
+    }
+    return cb
+  }
+
   // The box a positioned pseudo-element of `el` is placed in: the padding box
   // of the nearest ancestor that captures it — `el` itself first, since the
   // pseudo-element is its child — or, with none, the viewport for a fixed one
@@ -840,12 +1120,7 @@ export function collectContrast(): Collected {
     el: Element,
     fixed: boolean
   ): RawPseudo["containingBlock"] {
-    let cb: Element | null = el
-    while (cb !== null) {
-      const c = getComputedStyle(cb)
-      if (capturesFixed(c) || (!fixed && c.position !== "static")) break
-      cb = cb.parentElement
-    }
+    const cb = placingAncestor(el, fixed)
     if (cb === null) {
       const origin = fixed
         ? { left: 0, top: 0 }
@@ -960,11 +1235,16 @@ export function collectContrast(): Collected {
     blockers: Set<Blocker>
     /** See `RawTextLine.ahead`. */
     ahead: Array<number>
+    /** See `RawTextLine.past`. */
+    past?: Array<RawPseudo>
+    /** See `RawTextLine.stop`. */
+    stop?: StopBox
     /** Nothing to read here: the point does not reach `from` at all. */
     occluded: boolean
   } {
     const blockers = new Set<Blocker>()
     const stack: Array<RawLayer> = []
+    let stopped: Element | null = null
     if (coveredByOverlay(x, y, from)) blockers.add("overlay")
     const hit = document.elementsFromPoint(x, y)
     const index = hit.indexOf(from)
@@ -1001,10 +1281,21 @@ export function collectContrast(): Collected {
       // Nothing below an opaque layer contributes. The opacity test matters as
       // much as the colour's: an opaque paint inside a faded subtree still lets
       // what is behind it through.
-      if (isOpaque(colour) && layer.opacity >= 1) break
+      if (isOpaque(colour) && layer.opacity >= 1) {
+        stopped = el
+        break
+      }
     }
     const ahead = aheadOf(hit, index, from, index, stack.length)
-    return { stack, blockers, ahead, occluded: false }
+    // `from` is the stack's first layer, so the walk starts at its parent.
+    const walked = hit.slice(index, index + stack.length)
+    return {
+      stack,
+      blockers,
+      ahead,
+      ...pastOf(from, from.parentElement, walked, hit, index, area, stopped),
+      occluded: false,
+    }
   }
 
   // One read point as a line for the judge. `ahead` is absent, not empty,
@@ -1013,6 +1304,8 @@ export function collectContrast(): Collected {
     stack: read.stack,
     blockers: [...read.blockers],
     ...(read.ahead.length > 0 ? { ahead: read.ahead } : {}),
+    ...(read.past === undefined ? {} : { past: read.past }),
+    ...(read.stop === undefined ? {} : { stop: read.stop }),
   })
 
   // `elementsFromPoint` needs the point to be in the viewport, and a preview is
@@ -1324,6 +1617,7 @@ export function collectContrast(): Collected {
       .some((front) => !el.contains(front) && !front.contains(el))
     if (covered) blockers.add("overlay")
     const outer: Array<RawLayer> = []
+    let stopped: Element | null = null
     if (coveredByOverlay(cx, cy, el)) blockers.add("overlay")
     for (const [at, behind] of hit.entries()) {
       if (at <= index) continue
@@ -1345,9 +1639,16 @@ export function collectContrast(): Collected {
         ...againOf(hit, at),
       }
       outer.push(layer)
-      if (isOpaque(colour) && layer.opacity >= 1) break
+      if (isOpaque(colour) && layer.opacity >= 1) {
+        stopped = behind
+        break
+      }
     }
     const ahead = aheadOf(hit, index, el, index + 1, outer.length)
+    // From its parent: the surface's own pseudo-elements are part of it, as
+    // a radio's dot is, not behind it.
+    const walked = hit.slice(index + 1, index + 1 + outer.length)
+    const past = pastOf(el, el.parentElement, walked, hit, index, live, stopped)
 
     nonText.push({
       path: pathOf(el),
@@ -1356,6 +1657,7 @@ export function collectContrast(): Collected {
       outer,
       blockers: [...blockers],
       ...(ahead.length > 0 ? { ahead } : {}),
+      ...past,
     })
   }
 

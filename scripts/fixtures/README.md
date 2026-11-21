@@ -75,8 +75,12 @@ such a reading only when the pseudo-element's box, worked out from its
 computed geometry, certainly misses the box of the line read — and nothing it
 paints reaches past that box — or when its paint covers that box whole and
 its side of the text is known from the paint order, in which case it is
-composed on that side. No text in the samsung file sits beside a positioned
-pseudo-element, and the file cannot gain one.
+composed on that side. A pseudo-element of an ancestor the stack never
+reaches — past the opaque layer it stops at, or taking no pointer events —
+holds the reading wherever it paints or draws over the line, unless it paints under the
+opaque layer the stack stopped at and that layer's background holds the
+line. No text in the samsung file sits beside a positioned pseudo-element,
+and the file cannot gain one.
 
 Every expectation on it is derived by hand in `PSEUDO_ANCHORS`
 (`scripts/audit-contrast-oracle.ts`): black text on a white panel, the
@@ -93,3 +97,12 @@ canvas's. Each needs a document of its own, since the canvas belongs to the
 whole document. The expectations, in `CANVAS_BODY_ANCHORS` and
 `CANVAS_ROOT_ANCHORS`, are a hold: an owner whose background is the canvas's
 carries a computed colour its box does not paint. The same condition holds.
+
+## `pseudo-canvas-stop.html`
+
+One more one-line document under the same rule (#692). The root has no
+background, so `body`'s white passes on to the canvas, and the root's opaque
+`::before` at `z-index: -1` lies over the canvas, under black text. The hit
+test stops at `body`'s computed white, past which the root is never read.
+The expectation, in `CANVAS_STOP_ANCHORS`, is a hold: a layer whose
+background is the canvas's hides nothing under it. The same condition holds.
