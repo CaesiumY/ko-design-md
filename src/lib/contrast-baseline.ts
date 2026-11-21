@@ -77,10 +77,11 @@ export const MIN_TEXT_ELEMENTS = 80
  * What to tell an author whose preview sits under `MIN_TEXT_ELEMENTS`: what
  * raises the count, and which text it does not count.
  *
- * Said in two places that must not drift apart — the CI gate's failure output
- * here, and the onboarding loop's render observation
+ * Said in places that must not drift apart — the CI gate's failure output
+ * here, the onboarding loop's render observation
  * (`staged-contrast-report.ts`), which warns about the same floor before the
- * PR exists. A second wording of "not counted" would be the one that forgets a
+ * PR exists, and the corpus test that fails on a thin row pasted into the
+ * table. A second wording of "not counted" would be the one that forgets a
  * case and sends an author to add disabled states.
  *
  * Kept as the lines the CI output prints, so that output stays as it was; the
