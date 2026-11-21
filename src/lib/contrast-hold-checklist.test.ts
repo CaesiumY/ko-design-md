@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs"
+import { readFileSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { describe, expect, it } from "vitest"
 
@@ -14,6 +14,9 @@ import { describe, expect, it } from "vitest"
 // header describes each panel in a bullet that opens with its name, as
 // `` `.name` `` (or `` `.name::before` ``, several joined by "and"); the two are
 // held equal, so a panel described in some other shape is caught by its anchor.
+// A name is read to its end, whatever it holds — `.past2` is not `.past` — so
+// a name cut short cannot stand in for one already there. The canvas
+// fixtures are a document each, one panel apiece: they are held by file name.
 const ROOT = process.cwd()
 const read = (file: string): string => readFileSync(join(ROOT, file), "utf8")
 
@@ -24,17 +27,17 @@ const anchored = new Set(
   [
     ...oracle
       .slice(anchorsFrom, anchorsTo)
-      .matchAll(/pathEnds: "div\.([a-z-]+)/g),
+      .matchAll(/pathEnds: "div\.([^\s.>:#[\]"]+)/g),
   ].map((m) => m[1])
 )
 
 const fixture = read("scripts/fixtures/pseudo-background.html")
 const header = fixture.slice(0, fixture.indexOf("-->"))
-const NAME = /`\.([a-z-]+)(?:::[a-z]+)?`/g
+const NAME = /`\.([\w-]+)(?:::[\w-]+)?`/g
 const described = new Set(
   [
     ...header.matchAll(
-      /^\s*- (`\.[a-z-]+(?:::[a-z]+)?`(?:(?:,| and|, and) `\.[a-z-]+(?:::[a-z]+)?`)*)/gm
+      /^\s*- (`\.[\w-]+(?:::[\w-]+)?`(?:(?:,| and|, and) `\.[\w-]+(?:::[\w-]+)?`)*)/gm
     ),
   ].flatMap((m) => [...m[1].matchAll(NAME)].map((n) => n[1]))
 )
@@ -51,6 +54,10 @@ const names = (text: string): Set<string> =>
 // opening `- **…**`.
 const basic = names(section.slice(0, firstBranch))
 const listed = names(section.slice(firstBranch))
+
+const canvases = readdirSync(join(ROOT, "scripts/fixtures")).filter((f) =>
+  /^pseudo-canvas-.*\.html$/.test(f)
+)
 
 const missing = (want: Set<string>, have: Set<string>): Array<string> =>
   [...want].filter((name) => !have.has(name)).sort()
@@ -81,6 +88,12 @@ describe("the hold-release checklist", () => {
 
   it("names no panel both under a branch and among the basic ones", () => {
     expect([...basic].filter((name) => listed.has(name)).sort()).toEqual([])
+  })
+
+  it("names every canvas fixture under a branch", () => {
+    expect(canvases.length).toBeGreaterThan(0)
+    const branches = section.slice(firstBranch)
+    expect(canvases.filter((f) => !branches.includes(f))).toEqual([])
   })
 
   it("names no panel that has no anchor", () => {
