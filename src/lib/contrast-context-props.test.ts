@@ -17,8 +17,9 @@ import { describe, expect, it } from "vitest"
 // root is a context there through the `view-transition-name: root` Chromium
 // gives it.
 //
-// Only names are checked: a name read from the wrong computed field passes
-// here, and is the measurement's to catch.
+// Only the name heading each `[name, value, initial]` entry is read, so a name
+// left in a comment counts for nothing. A name read from the wrong computed
+// field still passes here, and is the measurement's to catch.
 const ROOT = process.cwd()
 const read = (file: string): string => readFileSync(join(ROOT, file), "utf8")
 const collector = read("scripts/audit-contrast-collector.ts")
@@ -78,10 +79,16 @@ const UNSURE = [
 ]
 
 describe("the properties the collector reads as making a stacking context", () => {
-  const list = block(collector, "const contextPropsOf", ".filter(")
+  const entries = new Set(
+    [
+      ...block(collector, "const contextPropsOf", ".filter(").matchAll(
+        /\[\s*"([^"]+)",/g
+      ),
+    ].map((m) => m[1])
+  )
 
   it.each([...MDN, ...ALSO])("include %s", (name) => {
-    expect(list).toContain(`"${name}"`)
+    expect(entries).toContain(name)
   })
 
   it.each(UNSURE)("hand %s to the judge as unsure", (name) => {
