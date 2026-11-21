@@ -69,9 +69,36 @@ export interface BaselineComparison {
  * holds it, and from the recorded table in the corpus test, so pasting a thin
  * row fails `pnpm test` too. The recorded check alone would trust whoever
  * pasted the numbers: `elements` is the one count the exact comparison leaves
- * out, so a hand-raised value would pass it.
+ * out, so a hand-raised value would pass it. The onboarding loop's render
+ * observation (`staged-contrast-report.ts`) reads it as well, to warn about a
+ * staged preview before CI does — so moving the floor moves that warning and
+ * its tests too.
  */
 export const MIN_TEXT_ELEMENTS = 80
+
+/**
+ * What to tell an author whose preview sits under `MIN_TEXT_ELEMENTS`: what
+ * raises the count, and which text it does not count.
+ *
+ * Said in places that must not drift apart — the CI gate's failure output
+ * here, the onboarding loop's render observation
+ * (`staged-contrast-report.ts`), which warns about the same floor before the
+ * PR exists, and the corpus test that fails on a thin row pasted into the
+ * table. A second wording of "not counted" would be the one that forgets a
+ * case and sends an author to add disabled states.
+ *
+ * Kept as the lines the CI output prints, so that output stays as it was; the
+ * other two join them into one run of sentences. What is about the recorded
+ * table is not in here, and each place that has a table says it in its own
+ * words: a staged preview has no row to rewrite.
+ */
+export const THIN_PREVIEW_ADVICE: ReadonlyArray<string> = Object.freeze([
+  "Add the non-disabled component states and screen mockups the md describes",
+  "(.claude/skills/design-md/references/rubric-preview.md). A copied card",
+  "raises this count without showing more, so it is not the fix.",
+  "Disabled, hidden, opacity-0, clipped-to-a-pixel and covered text is not counted —",
+  "the contrast collector skips it — so a disabled state does not raise it.",
+])
 
 const keyOf = (t: Pick<SlugTotals, "slug" | "theme" | "kind">): string =>
   `${t.slug}|${t.theme}|${t.kind}`
@@ -312,11 +339,7 @@ export function renderBaselineFailure(
   if (c.thin.length > 0) {
     out.push(
       `FAIL contrast baseline — ${c.thin.length} text row(s) under ${MIN_TEXT_ELEMENTS} elements, thinner than any preview the catalogue kept.`,
-      "  Add the non-disabled component states and screen mockups the md describes",
-      "  (.claude/skills/design-md/references/rubric-preview.md). A copied card",
-      "  raises this count without showing more, so it is not the fix.",
-      "  Disabled, hidden, opacity-0, clipped-to-a-pixel and covered text is not counted —",
-      "  the contrast collector skips it — so a disabled state does not raise it.",
+      ...THIN_PREVIEW_ADVICE.map((line) => `  ${line}`),
       "  Rewriting the table does not clear it: the floor reads the measured count.",
       "  A new entry adds its rows to the table only after the preview clears the floor:",
       "  the next CI run then fails on the rows the table lacks and prints them to paste.",
