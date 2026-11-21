@@ -69,7 +69,10 @@ export interface BaselineComparison {
  * holds it, and from the recorded table in the corpus test, so pasting a thin
  * row fails `pnpm test` too. The recorded check alone would trust whoever
  * pasted the numbers: `elements` is the one count the exact comparison leaves
- * out, so a hand-raised value would pass it.
+ * out, so a hand-raised value would pass it. The onboarding loop's render
+ * observation (`staged-contrast-report.ts`) reads it as well, to warn about a
+ * staged preview before CI does — so moving the floor moves that warning and
+ * its tests too.
  */
 export const MIN_TEXT_ELEMENTS = 80
 

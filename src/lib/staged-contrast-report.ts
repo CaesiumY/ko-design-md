@@ -14,8 +14,10 @@
 //
 // It also counts the text elements per theme against the CI gate's floor
 // (ADR 0013) — a number CI does block on, even for an entry with no baseline
-// row — so the author hears about a thin preview inside the loop, not from the
-// first CI run. Still a `warn` here, for the reason above.
+// row — so a thin preview is in the report inside the loop, before the first
+// CI run. The report is all this module decides: the reviewer carrying the item
+// into its review, and the final report saying it, are the skill's wiring
+// (#682). Still a `warn` here, for the reason above.
 
 import { MIN_TEXT_ELEMENTS, THIN_PREVIEW_ADVICE } from "./contrast-baseline"
 import { totalsBySlug } from "./contrast-report"
