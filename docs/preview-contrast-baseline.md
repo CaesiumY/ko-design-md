@@ -1170,25 +1170,28 @@ run `42878751952` 재집계에서는 class101 의 비텍스트에 가상 요소 
 
 보류하던 경우를 판정하게 바꾸는 변경(`CODING_STANDARDS.md` 「보류 풀기」)이 대조할 갈래다. 점 조회
 (`elementsFromPoint`)와 계산값만으로는 화면의 칠을 다 알 수 없으므로, 판정은 아래 갈래 하나하나에서 화면과 같아야 한다.
-괄호는 그 갈래를 지키는 자기검사 판이다.
+괄호는 그 갈래를 지키는 자기검사 판이고, 판 이름의 정본은 `scripts/fixtures/pseudo-background.html` 머리말이다. 판이 없는
+갈래는 그렇다고 적고 Known gaps 에도 둔다.
 
-- **점 조회에 나오지 않는 칠**: 클릭을 받지 않는(`pointer-events: none`) 요소와 의사요소(`.unhit`, `.ghost`, `.aside`,
-  `.atop`). 요소는 클릭을 받고 자기 의사요소만 받지 않는 경우, 상자가 없거나 높이 0 이라 그 점에 나오지 않는 감싸개
-  (`.contents`, `.spill`).
+- **점 조회에 나오지 않는 칠**: 클릭을 받지 않는(`pointer-events: none`) 요소(`.unhit`, `.ghost`, `.aside`, `.atop`).
+  요소는 클릭을 받지만 자기 의사요소는 받지 않거나, 상자가 없어 그 점에 나오지 않는 감싸개(`.contents`).
 - **어디에 있는 칠인가**: 주인 안 사슬 밖, 주인 밖(`.beyond`), 주인의 조상(`.elder`), 불투명 층에서 멈춘 스택 너머의 조상
-  (`.past`, `.pastbox`, `.pastedge`, `.pastclip`, `.lifted`), 컨테이닝 블록 밖으로 나온 배치 상자(`.offset`).
-- **무엇으로 그리나**: 배경, 테두리, 그림자, 글자(`content`, `.badge`), `backdrop-filter`(`.frost`), 사이 층과 읽는
-  요소의 읽지 않는 의사요소(`.between`, `.selfdraw`, `.tag`).
-- **보이는 모양**: `clip`(`.rectclip`), `visibility: hidden` 과 `collapse`(`.unseen`, `.collapsed`), 주인 배경의
-  `background-clip`(`.clipped`), 주인이 두 번 나오는 층(`.split`).
-- **칠 순서의 전제**: 쌓임 맥락을 만드는 속성. 이름 있는 필드가 없는 접두 속성(`.maskbox`, `.mirror`)과 최상위 층을
-  포함한다. 배경이 캔버스로 넘어간 루트와 `body`(`pseudo-canvas-body.html`, `pseudo-canvas-root.html`,
-  `pseudo-canvas-stop.html`).
-- **읽는 영역**: 비텍스트 표면은 상자보다 2px 넓힌 영역과 견주므로, 그 띠에만 걸친 칠도 센다(`contrast.test.ts` 의
-  표면 띠 테스트).
+  (`.past`, `.pastbox`, `.pastclip`, `.lifted`), 컨테이닝 블록 밖으로 나온 배치 상자(`.offset`).
+- **무엇으로 그리나**: 배경만이 아니라 테두리(`.pastedge`), 그림자(`.shade`), 글자(`.glyph`, 의사요소의 `content` 는
+  `.badge`), `backdrop-filter`(`.frost`). 주인, 사이 층, 읽는 요소의 읽지 않는 의사요소(`.tag`, `.mute`, `.between`,
+  `.selfdraw`).
+- **보이는 모양**: `clip`(`.rectclip`), `visibility: hidden` 과 `collapse`(`.unseen`, `.shroud`, `.collapsed`), 주인
+  배경의 `background-clip`(`.clipped`), 줄을 다 품지 않는 주인 상자(`.spill`), 주인이 두 번 나오는 층(`.split`).
+- **칠 순서의 전제**: 쌓임 맥락을 만드는 속성. 이름 있는 필드가 없는 접두 속성(`.maskbox`, `.mirror`)을 포함한다. 최상위 층
+  (모달 dialog, 열린 popover, 전체 화면)은 판이 없다. 배경이 캔버스로 넘어간 루트와 `body`(`pseudo-canvas-body.html`,
+  `pseudo-canvas-root.html`, `pseudo-canvas-stop.html`).
+- **읽는 영역**: 비텍스트 표면은 상자보다 2px 넓힌 영역과 견주므로, 그 띠에만 걸친 칠도 센다(`contrast.test.ts` 의 "holds
+  when unhit paint outside the owner lies only in the band around the surface").
 
 ## Known gaps
 
+- 최상위 층(모달 dialog, 열린 popover, 전체 화면)에 올라간 요소를 쌓임 맥락으로 치는 검사에는 자기검사 판이 없다. 자기검사
+  문서 하나에 모달을 띄우면 다른 판의 점 조회가 바뀌기 때문이다.
 - 열린 `<select>` 의 드롭다운 목록(브라우저 네이티브 UI)은 재지 않는다. 닫힌 상태에 보이는
   선택 옵션 글자는 잰다(#400). `date`·`time`·`color`·`file`·`week`·`month`·`datetime-local` 입력처럼
   브라우저 위젯이 그리는 값과, 비활성(`:disabled`) 컨트롤의 글자(SC 1.4.3 면제)도 재지 않는다.
