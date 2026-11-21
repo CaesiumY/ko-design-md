@@ -1170,23 +1170,34 @@ run `42878751952` 재집계에서는 class101 의 비텍스트에 가상 요소 
 
 보류하던 경우를 판정하게 바꾸는 변경(`CODING_STANDARDS.md` 「보류 풀기」)이 대조할 갈래다. 점 조회
 (`elementsFromPoint`)와 계산값만으로는 화면의 칠을 다 알 수 없으므로, 판정은 아래 갈래 하나하나에서 화면과 같아야 한다.
-괄호는 그 갈래를 지키는 자기검사 판이고, 판 이름의 정본은 `scripts/fixtures/pseudo-background.html` 머리말이다. 판이 없는
-갈래는 그렇다고 적고 Known gaps 에도 둔다.
+괄호는 그 갈래를 지키는 자기검사 판이다. 판 이름의 정본은 각 픽스처 문서의 머리말과 `scripts/fixtures/README.md` 이고, 판을
+더하면 이 목록에도 그 갈래를 더한다. 판이 없는 갈래는 그렇다고 적고 Known gaps 에도 둔다. 합성 자체가 맞는지 보는 판
+(`.cover`, `.veil`, `.opaque`, `.under` 처럼 위아래와 덮음을 가르는 기본 판)은 갈래가 아니라 기본 동작이라
+여기 적지 않는다.
 
-- **점 조회에 나오지 않는 칠**: 클릭을 받지 않는(`pointer-events: none`) 요소(`.unhit`, `.ghost`, `.aside`, `.atop`).
-  요소는 클릭을 받지만 자기 의사요소는 받지 않거나, 상자가 없어 그 점에 나오지 않는 감싸개(`.contents`).
-- **어디에 있는 칠인가**: 주인 안 사슬 밖, 주인 밖(`.beyond`), 주인의 조상(`.elder`), 불투명 층에서 멈춘 스택 너머의 조상
-  (`.past`, `.pastbox`, `.pastclip`, `.lifted`), 컨테이닝 블록 밖으로 나온 배치 상자(`.offset`).
-- **무엇으로 그리나**: 배경만이 아니라 테두리(`.pastedge`), 그림자(`.shade`), 글자(`.glyph`, 의사요소의 `content` 는
-  `.badge`), `backdrop-filter`(`.frost`). 주인, 사이 층, 읽는 요소의 읽지 않는 의사요소(`.tag`, `.mute`, `.between`,
-  `.selfdraw`).
-- **보이는 모양**: `clip`(`.rectclip`), `visibility: hidden` 과 `collapse`(`.unseen`, `.shroud`, `.collapsed`), 주인
-  배경의 `background-clip`(`.clipped`), 줄을 다 품지 않는 주인 상자(`.spill`), 주인이 두 번 나오는 층(`.split`).
-- **칠 순서의 전제**: 쌓임 맥락을 만드는 속성. 이름 있는 필드가 없는 접두 속성(`.maskbox`, `.mirror`)을 포함한다. 최상위 층
-  (모달 dialog, 열린 popover, 전체 화면)은 판이 없다. 배경이 캔버스로 넘어간 루트와 `body`(`pseudo-canvas-body.html`,
-  `pseudo-canvas-root.html`, `pseudo-canvas-stop.html`).
-- **읽는 영역**: 비텍스트 표면은 상자보다 2px 넓힌 영역과 견주므로, 그 띠에만 걸친 칠도 센다(`contrast.test.ts` 의 "holds
-  when unhit paint outside the owner lies only in the band around the surface").
+- **점 조회에 나오지 않는 칠**: 클릭을 받지 않는(`pointer-events: none`) 요소(`.unhit`, `.ghost`). 요소는 클릭을 받지만 자기
+  의사요소는 받지 않거나, 상자가 없어 그 점에 나오지 않는 감싸개(`.contents`). 위 막 쪽에서도 같다(`.wrapped`, `.overblock`).
+- **어디에 있는 칠인가**: 주인 안 사슬 밖(`.aside`, `.atop`), 주인 밖(`.beyond`), 주인의 조상(`.elder`), 컨테이닝 블록 밖으로
+  나온 배치 상자(`.offset`), 불투명 층에서 멈춘 스택 너머의 조상(`.past`, `.pastbox`, `.pastclip`, `.pastboth`, `.lifted`),
+  스택이 멈춘 층 자신의 의사요소(`.stackedge`, `.stackunder`).
+- **무엇으로 그리나**: 배경만이 아니라 테두리(`.pastedge`), `border-image`(`.pastimage`), 그림자(`.shade`), 글자(`.glyph`,
+  의사요소의 `content` 는 `.badge`), `backdrop-filter`(`.frost`). 주인, 사이 층, 읽는 요소의 읽지 않는 의사요소(`.tag`,
+  `.mute`, `.between`, `.selfdraw`).
+- **잘라내기와 숨김**: `clip`(`.rectclip`, `.pastrect`), `clip-path` 와 `contain: paint`(`.pastshape`, `.pastcontain`),
+  마스크(`.pastmaskbox`), 주인 밖에 놓여 자르는 상자를 벗어난 칠(`.pastescape`), `visibility: hidden` 과 `collapse`
+  (`.unseen`, `.shroud`, `.collapsed`), 주인 배경의 `background-clip`(`.clipped`).
+- **상자의 모양**: 줄을 다 품지 않는 주인 상자(`.spill`), 둥근 모서리(`.round`, `.corner`), `corner-shape`(`.bevel`,
+  `.diamond`), 회전과 모션 경로(`.pastturn`, `.pastpath`), 줄이 나뉜 인라인 상자(`.pastinline`), 주인이 두 번 나오는 층
+  (`.split`).
+- **위치 계산**: 과잉 제약에서 상자를 정하는 값(`.side`), 평행 이동(`.disc`), 쓰는 방향(`.rtl`, `.vertical`), grid 배치(`.grid`), 반사(`.reflect`), 스크롤된
+  루트(`.far`).
+- **칠 순서의 전제**: 쌓임 맥락을 만드는 속성. 이름 있는 필드가 없는 접두 속성(`.maskbox`, `.mirror`), 값에 따라 갈리는 속성
+  (`.unknown`). 최상위 층(모달 dialog, 열린 popover, 전체 화면)은 판이 없다. 배경이 캔버스로 넘어간 루트와 `body`
+  (`pseudo-canvas-body.html`, `pseudo-canvas-root.html`, `pseudo-canvas-stop.html`).
+- **읽는 영역**: 가운데 점이 아니라 줄 상자 전체(`.mark`), 글자 줄이 아니라 요소 상자를 읽는 비텍스트 표면과 입력창
+  (`.surface`, `.field`). 비텍스트 표면은 상자보다 2px
+  넓힌 영역과 견주므로, 그 띠에만 걸친 칠도 센다(`contrast.test.ts` 의 "holds when unhit paint outside the owner lies only
+  in the band around the surface").
 
 ## Known gaps
 
