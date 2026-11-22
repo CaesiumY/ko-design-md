@@ -4,7 +4,7 @@ The design-md-reviewer subagent uses this rubric to score `draft.md` against `re
 
 ## Item 1 — Schema validity (3 pts, hard requirement)
 
-Frontmatter must read as YAML and give the site's build values it accepts (`src/lib/site-frontmatter.ts` — the build fails on a key the site reads written with no value). Concretely:
+Frontmatter must read as YAML and give the site's build values it accepts (`src/lib/site-frontmatter.ts` — the build fails on a key the site reads written with no value, bar the keys in that file's `FALLBACK_KEYS`, which it treats as absent). Concretely:
 
 - All required keys present: `name, slug, category, last_updated, created_at, lang`. There is no `sources` key — `## References` is the only source list.
 - `name` is the Korean company/brand display name. If the design system has a distinct public name, `design_system_name` may be present as an optional string and is not a hard-fail requirement.
