@@ -11,24 +11,28 @@
    짜임(배치, 간격, 크기)만 여기서 정하고 서체와 색은 항목이 :root 의 --pv-* 로 넣는다.
    페이지 쪽 스타일은 .pv-* 선택자를 다시 정의하지 않는다. */
 .pv-page {
+  --pv-gutter: max(24px, calc((100% - 1200px) / 2));
   display: block;
   min-width: 0;
   background: var(--pv-canvas);
   color: var(--pv-ink);
   font-family: var(--pv-font);
 }
+.pv-hero {
+  min-width: 0;
+}
 .pv-zone {
   min-width: 0;
-  padding: 48px 24px;
+  padding: 48px var(--pv-gutter);
   border-top: 1px solid var(--pv-line);
 }
 .pv-zone-title {
   margin: 0 0 24px;
-  font-family: var(--pv-font-display, var(--pv-font));
+  font-family: var(--pv-font);
   font-size: 22px;
-  font-weight: 700;
+  font-weight: var(--pv-title-weight, 700);
   line-height: 1.3;
-  letter-spacing: 0;
+  letter-spacing: var(--pv-tracking, 0);
   color: var(--pv-ink);
 }
 .pv-cells {
@@ -53,7 +57,7 @@
   font-size: 12px;
   font-weight: 500;
   line-height: 1.4;
-  letter-spacing: 0;
+  letter-spacing: var(--pv-tracking, 0);
   color: var(--pv-ink-muted);
 }
 .pv-stage {
@@ -66,18 +70,25 @@
 }
 .pv-stage--stack {
   flex-direction: column;
+  flex-wrap: nowrap;
   align-items: stretch;
 }
 .pv-screen {
+  width: 100%;
   min-width: 0;
   max-width: 100%;
 }
-@media (max-width: 767px) {
-  .pv-zone {
-    padding: 32px 16px;
-  }
+@media (max-width: 899px) {
   .pv-cells {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 767px) {
+  .pv-page {
+    --pv-gutter: 16px;
+  }
+  .pv-zone {
+    padding-block: 32px;
   }
 }
 /* pv-frame:end */
@@ -167,13 +178,13 @@
     --font-system: -apple-system, BlinkMacSystemFont, "Malgun Gothic", "맑은 고딕", Helvetica, Arial, sans-serif;
 
     --pv-font: var(--font);
-    --pv-font-display: var(--font-display);
     --pv-ink: var(--ink);
     --pv-ink-muted: var(--ink-3);
     --pv-canvas: var(--canvas);
     --pv-surface: var(--canvas);
     --pv-line: var(--line);
     --pv-radius: var(--chz-radius-lg);
+    --pv-tracking: -0.3px;
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--canvas); color: var(--ink); font-family: var(--font); letter-spacing: -0.3px; }
@@ -221,7 +232,7 @@
   .side-l { width: 6px; height: 6px; border-radius: 3px; background: var(--chz-live-red); flex: 0 0 auto; }
 
   .main { padding: 20px 24px 32px; min-width: 0; }
-  .hero-wrap { padding: 20px 24px 12px; min-width: 0; }
+  .hero-wrap { padding: 20px var(--pv-gutter) 12px; min-width: 0; }
   .hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 24px; align-items: center; padding: 8px 0 28px; }
   .hero h1 { margin: 0 0 16px; font-size: 40px; line-height: 48px; font-weight: 800; }
   .hero-cta { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -289,11 +300,6 @@
   .modal h4 { margin: 0 0 8px; font-size: 22px; line-height: 30px; font-weight: 700; }
   .modal p { margin: 0 0 20px; font-size: 14px; line-height: 20px; color: var(--ink-3); }
   .modal .btn { width: 100%; height: 44px; border-radius: 8px; padding: 0 20px; font-family: var(--font-display); font-size: 14px; line-height: 18px; font-weight: 400; letter-spacing: 0; }
-
-  /* A stacked stage wraps (the frame sets flex-wrap on every stage), so the browser sizes each child's height
-     at its shrink-to-fit width before stretching it. A definite width keeps 16:9 boxes from spilling out. */
-  .vrows, .specs, .in-stack, .pop-wrap, .states, .lc-pair, .hcard, .cats, .ch, .chat, .modal { width: 100%; }
-  .screen-home, .screen-desk { width: 100vw; max-width: 100%; }
 
   /* state and spec labels inside a stage */
   .states { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 20px; min-width: 0; }
@@ -402,7 +408,7 @@
     .hdr-tabs { display: none; }
   }
   @media (max-width: 767px) {
-    .hero-wrap { padding: 16px 16px 4px; }
+    .hero-wrap { padding-block: 16px 4px; }
   }
   @media (max-width: 720px) {
     .hero, .lc-pair, .dk-body { grid-template-columns: minmax(0, 1fr); }
@@ -482,8 +488,7 @@
     <div class="pv-cells">
       <div class="pv-cell pv-cell--wide" data-pv-cell="screen-home-desktop">
         <p class="pv-label">홈, 데스크톱</p>
-        <p class="catalog-dummy">채널명과 방송 상태는 더미 데이터입니다.</p>
-        <p class="catalog-dummy">방송 제목, 채널명, 시청자 수, LIVE 배지, 다시보기 배지, 드롭스 배지, 태그는 레이아웃 시연용 더미 데이터입니다.</p>
+        <p class="catalog-dummy">방송 제목, 채널명, 방송 상태, 시청자 수, LIVE 배지, 다시보기 배지, 드롭스 배지, 태그는 레이아웃 시연용 더미 데이터입니다.</p>
         <div class="pv-stage pv-stage--stack">
           <div class="pv-screen">
             <div class="screen-home">

@@ -76,7 +76,9 @@ const CELLS = {
   "tile:GRID-LIST": ["content", "grid-list", true],
   "tile:LIST-FOOTER": ["buttons", "list-footer", true],
   "tile:LOADER": ["feedback", "loader", true],
-  "tile:MENU": ["navigation", "menu", true],
+  // md 461 calls the menu a selector and the demo picks a sort order: a list
+  // opened to put a value in, which is 입력 by use.
+  "tile:MENU": ["inputs", "menu", true],
   "tile:NAVIGATION · APPS IN TOSS": ["navigation", "navigation-apps-in-toss", true],
   "tile:NUMERIC-SPINNER": ["inputs", "numeric-spinner", true],
   "tile:POST": ["content", "post", true],
@@ -85,19 +87,19 @@ const CELLS = {
   "tile:STEPPER": ["inputs", "stepper", true],
   "tile:TAB": ["navigation", "tab", true],
   "tile:TABLE-ROW": ["content", "table-row", true],
-  // Copied, not moved: the keypad of the amount screen, shown once more on its own.
-  keypad: ["brand", "keypad", true],
+  // The keypad stays where it was, inside the amount screen. Nothing lands in
+  // 브랜드 고유, so that zone is not written.
 }
 
 const ORDER = {
   screens: ["screen-send-home", "screen-send-select", "screen-send-amount", "screen-send-confirm", "screen-send-done"],
   buttons: ["button-size", "button-variant", "button-state", "text-button", "bottom-info", "list-footer"],
-  inputs: ["text-field", "search-field", "slider", "numeric-spinner", "stepper"],
+  inputs: ["text-field", "search-field", "slider", "numeric-spinner", "stepper", "menu"],
   selection: ["switch-checkbox", "segmented-control", "chip", "filter-chips"],
-  navigation: ["navigation-apps-in-toss", "tab", "menu"],
+  navigation: ["navigation-apps-in-toss", "tab"],
   content: ["list-row", "badge", "rating", "board-row", "bar-chart", "grid-list", "post", "bubble", "table-row", "border"],
   feedback: ["toast", "dialog", "bottom-sheet", "tooltip", "progress-bar", "progress-bar-row", "progress-stepper", "loader"],
-  brand: ["keypad"],
+  brand: [],
 }
 
 // ---------------------------------------------------------------------------
@@ -177,7 +179,9 @@ function toggleGroup(group, itemSelector, groupRole, itemRole, attr) {
   }
 }
 toggleGroup(one(doc, ".comp-card > .seg"), ".it", "radiogroup", "radio", "aria-checked")
-toggleGroup(one(doc, ".seg-line"), ".it", "tablist", "tab", "aria-selected")
+// The underline variant looks like a tab, but it is drawn as a segmented
+// control (md 488: one of several options, picked in place) and has no panel.
+toggleGroup(one(doc, ".seg-line"), ".it", "radiogroup", "radio", "aria-checked")
 toggleGroup(one(doc, ".tab-inline"), ".ti", "tablist", "tab", "aria-selected")
 
 // --- pick the cells out of the old sections ---------------------------------
@@ -213,18 +217,22 @@ for (const [key, selector] of [["toast", ".toast"], ["dialog", ".dialog"]]) {
   cell(key, one(demo.parentElement, ".row-label").innerHTML, [demo.outerHTML])
 }
 
+// The old section caption ended in "치수 (가정)" for all eight cards. The caption
+// goes away with the section, so the mark moves onto each card's label.
+const ASSUMED = "치수 (가정)"
+if (!one(sNew, ".section-head .caption").textContent.trim().endsWith(ASSUMED)) {
+  throw new Error("the 04 section caption no longer ends in the assumption mark")
+}
 for (const card of Array.from(sNew.querySelectorAll(".comp-card"))) {
   const title = one(card, "h4")
   const caption = card.querySelector(".comp-caption")
   const rest = elements(card).filter((el) => el !== title && el !== caption)
-  // One wrapper keeps the demo's own spacing (sibling margins) intact. It is a
-  // block of the stage's width (.demo-block), so a scrolling row inside it
-  // scrolls instead of widening the stage.
+  // One wrapper keeps the demo's own spacing (sibling margins) intact.
   const stage =
     rest.length === 1
       ? outer(rest)
       : ['<div class="demo-block">\n' + outer(rest).map((h) => indent(h, "  ")).join("\n") + "\n</div>"]
-  cell(`comp:${title.textContent.trim()}`, `${title.textContent.trim()}, ${caption.innerHTML}`, stage)
+  cell(`comp:${title.textContent.trim()}`, `${title.textContent.trim()}, ${caption.innerHTML}, ${ASSUMED}`, stage)
 }
 
 for (const tile of Array.from(sGrid.querySelectorAll(".ftile"))) {
@@ -239,8 +247,6 @@ Array.from(sFlow.querySelectorAll(".mock-frame > .stage")).forEach((stage, i) =>
   const phone = one(stage, ".phone")
   cell(`phone:${i}`, `${num} ${text}`, ['<div class="pv-screen">\n' + indent(phone.outerHTML, "  ") + "\n</div>"])
 })
-
-cell("keypad", "keypad", [one(sFlow, ".keypad-grid").outerHTML])
 
 // --- write the body ----------------------------------------------------------
 
@@ -405,16 +411,15 @@ head = replaceOnce(
 // A phone used to be laid out by .mock-frame; in a cell it must not be wider than the cell.
 head = replaceOnce(head, "  .phone {\n    width: 360px;\n", "  .phone {\n    width: 360px;\n    max-width: 100%;\n", "phone max-width")
 
-// A wrapper around a demo made of several blocks. frame.css leaves
-// `flex-wrap: wrap` on the stacked stage, which makes it a multi-line column:
-// a line is as wide as its widest item's content, not as wide as the stage.
-// An explicit width keeps the wrapper to the stage.
+// The hero's inner wrappers take the frame's gutter, so the hero and the zones
+// share a left edge at every width (frame.css gives --pv-gutter).
 head = replaceOnce(
   head,
-  "  .comp-caption {",
-  "  .demo-block { width: 100%; min-width: 0; }\n  .comp-caption {",
-  "demo block"
+  "  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }",
+  "  .container { padding: 0 var(--pv-gutter); }",
+  "container gutter"
 )
+head = removeRule(head, ".container", "640px")
 
 // 3. Finger feedback and toggles, each from services/toss.md.
 // Press: the press overlay over the fill, dur-fast with the base ease (md 319, 326, 358).
@@ -477,7 +482,7 @@ const reset = "    appearance: none;\n    border: 0;\n    background: transparen
 head = replaceOnce(head, "  .seg .it {\n", "  .seg .it {\n" + reset, "segment reset")
 head = replaceOnce(head, "  .seg .it.active {", '  .seg .it[aria-checked="true"] {', "segment on")
 head = replaceOnce(head, "  .seg-line .it {\n", "  .seg-line .it {\n" + reset, "underline tab reset")
-head = replaceOnce(head, "  .seg-line .it.active {", '  .seg-line .it[aria-selected="true"] {', "underline tab on")
+head = replaceOnce(head, "  .seg-line .it.active {", '  .seg-line .it[aria-checked="true"] {', "underline segment on")
 head = replaceOnce(
   head,
   "  .tab-inline .ti {\n    padding: 10px 4px; margin-right: 18px;\n",
@@ -500,7 +505,8 @@ head = replaceOnce(
     "    --pv-canvas: var(--tds-grey-50);\n" +
     "    --pv-surface: var(--tds-bg-canvas);\n" +
     "    --pv-line: var(--tds-grey-200);\n" +
-    "    --pv-radius: var(--tds-radius-xl);\n",
+    "    --pv-radius: var(--tds-radius-xl);\n" +
+    "    --pv-tracking: -0.005em;\n",
   "frame variables"
 )
 

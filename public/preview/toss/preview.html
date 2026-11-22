@@ -11,24 +11,28 @@
    짜임(배치, 간격, 크기)만 여기서 정하고 서체와 색은 항목이 :root 의 --pv-* 로 넣는다.
    페이지 쪽 스타일은 .pv-* 선택자를 다시 정의하지 않는다. */
 .pv-page {
+  --pv-gutter: max(24px, calc((100% - 1200px) / 2));
   display: block;
   min-width: 0;
   background: var(--pv-canvas);
   color: var(--pv-ink);
   font-family: var(--pv-font);
 }
+.pv-hero {
+  min-width: 0;
+}
 .pv-zone {
   min-width: 0;
-  padding: 48px 24px;
+  padding: 48px var(--pv-gutter);
   border-top: 1px solid var(--pv-line);
 }
 .pv-zone-title {
   margin: 0 0 24px;
-  font-family: var(--pv-font-display, var(--pv-font));
+  font-family: var(--pv-font);
   font-size: 22px;
-  font-weight: 700;
+  font-weight: var(--pv-title-weight, 700);
   line-height: 1.3;
-  letter-spacing: 0;
+  letter-spacing: var(--pv-tracking, 0);
   color: var(--pv-ink);
 }
 .pv-cells {
@@ -53,7 +57,7 @@
   font-size: 12px;
   font-weight: 500;
   line-height: 1.4;
-  letter-spacing: 0;
+  letter-spacing: var(--pv-tracking, 0);
   color: var(--pv-ink-muted);
 }
 .pv-stage {
@@ -66,18 +70,25 @@
 }
 .pv-stage--stack {
   flex-direction: column;
+  flex-wrap: nowrap;
   align-items: stretch;
 }
 .pv-screen {
+  width: 100%;
   min-width: 0;
   max-width: 100%;
 }
-@media (max-width: 767px) {
-  .pv-zone {
-    padding: 32px 16px;
-  }
+@media (max-width: 899px) {
   .pv-cells {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 767px) {
+  .pv-page {
+    --pv-gutter: 16px;
+  }
+  .pv-zone {
+    padding-block: 32px;
   }
 }
 /* pv-frame:end */
@@ -181,6 +192,7 @@
     --pv-surface: var(--tds-bg-canvas);
     --pv-line: var(--tds-grey-200);
     --pv-radius: var(--tds-radius-xl);
+    --pv-tracking: -0.005em;
 
     /* 다크에서 값이 달라지는 자리. 다크 시트가 같은 이름을 다시 정의한다 */
     --tds-bg-canvas: var(--tds-white);
@@ -219,7 +231,7 @@
     letter-spacing: -0.005em;
   }
 
-  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .container { padding: 0 var(--pv-gutter); }
 
   /* === TOP STRIP — wordmark === */
   .strip {
@@ -556,7 +568,6 @@
   .dlg-btn.primary { background: var(--tds-blue-500); color: var(--tds-fg-on-fill); }
   .dlg-btn.secondary { background: var(--tds-bg-fill-weak); color: var(--tds-grey-900); }
 
-  .demo-block { width: 100%; min-width: 0; }
   .comp-caption {
     font-size: 12px;
     color: var(--tds-fg-tertiary);
@@ -612,7 +623,7 @@
     border-bottom: 2.5px solid transparent;
     margin-bottom: -1px;
   }
-  .seg-line .it[aria-selected="true"] {
+  .seg-line .it[aria-checked="true"] {
     color: var(--tds-fg-primary);
     border-bottom-color: var(--tds-grey-900);
   }
@@ -1399,7 +1410,6 @@
     .hero .subtitle { font-size: 20px; }
   }
   @media (max-width: 640px) {
-    .container { padding: 0 16px; }
     .strip .meta, .strip .right .text-meta-caps { display: none; }
     .hero { padding: 40px 0 28px; }
     .hero .brand-lockup { flex-direction: column; align-items: flex-start; gap: 12px; }
@@ -1845,7 +1855,7 @@
         </div>
       </div>
       <div class="pv-cell" data-pv-cell="search-field">
-        <p class="pv-label">Search Field, <span data-theme-text="">grey-100 resting → focus white + 1.5px blue</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">grey-100 resting → focus near-black + 1.5px blue</span></template></p>
+        <p class="pv-label">Search Field, <span data-theme-text="">grey-100 resting → focus white + 1.5px blue</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">grey-100 resting → focus near-black + 1.5px blue</span></template>, 치수 (가정)</p>
         <div class="pv-stage pv-stage--stack">
           <div style="display:flex; flex-direction:column; gap:12px;">
             <div class="search-field">
@@ -1861,7 +1871,7 @@
         </div>
       </div>
       <div class="pv-cell" data-pv-cell="slider">
-        <p class="pv-label">Slider, 8px track · 28px thumb · tabular value</p>
+        <p class="pv-label">Slider, 8px track · 28px thumb · tabular value, 치수 (가정)</p>
         <div class="pv-stage pv-stage--stack">
           <div class="demo-block">
             <div class="slider-row">
@@ -1908,6 +1918,16 @@
           </div>
         </div>
       </div>
+      <div class="pv-cell" data-pv-cell="menu">
+        <p class="pv-label">MENU</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="menu-pop">
+            <div class="mi active">최신순 <span class="ck">✓</span></div>
+            <div class="mi">가나다순</div>
+            <div class="mi">금액순</div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1946,7 +1966,7 @@
         </div>
       </div>
       <div class="pv-cell" data-pv-cell="segmented-control">
-        <p class="pv-label">Segmented Control, pill 3-segments · underline tab</p>
+        <p class="pv-label">Segmented Control, pill 3-segments · underline tab, 치수 (가정)</p>
         <div class="pv-stage pv-stage--stack">
           <div class="demo-block">
             <div class="seg" role="radiogroup" data-pv-toggle="aria-checked">
@@ -1954,11 +1974,11 @@
               <button class="it" type="button" role="radio" aria-checked="false" data-pv-option="">입금</button>
               <button class="it" type="button" role="radio" aria-checked="false" data-pv-option="">출금</button>
             </div>
-            <div class="seg-line" role="tablist" data-pv-toggle="aria-selected">
-              <button class="it" type="button" role="tab" aria-selected="true" data-pv-option="">예금</button>
-              <button class="it" type="button" role="tab" aria-selected="false" data-pv-option="">적금</button>
-              <button class="it" type="button" role="tab" aria-selected="false" data-pv-option="">투자</button>
-              <button class="it" type="button" role="tab" aria-selected="false" data-pv-option="">대출</button>
+            <div class="seg-line" role="radiogroup" data-pv-toggle="aria-checked">
+              <button class="it" type="button" role="radio" aria-checked="true" data-pv-option="">예금</button>
+              <button class="it" type="button" role="radio" aria-checked="false" data-pv-option="">적금</button>
+              <button class="it" type="button" role="radio" aria-checked="false" data-pv-option="">투자</button>
+              <button class="it" type="button" role="radio" aria-checked="false" data-pv-option="">대출</button>
             </div>
           </div>
         </div>
@@ -1977,7 +1997,7 @@
         </div>
       </div>
       <div class="pv-cell" data-pv-cell="filter-chips">
-        <p class="pv-label">Filter Chips — scrollable row, multi-select · grey-900 active · S 28 / M 34 / L 42</p>
+        <p class="pv-label">Filter Chips — scrollable row, multi-select · grey-900 active · S 28 / M 34 / L 42, 치수 (가정)</p>
         <div class="pv-stage pv-stage--stack">
           <div class="demo-block">
             <div class="chip-row" style="overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px;">
@@ -2024,16 +2044,6 @@
             <button class="ti" type="button" role="tab" aria-selected="true" data-pv-option="">홈</button>
             <button class="ti" type="button" role="tab" aria-selected="false" data-pv-option="">송금</button>
             <button class="ti" type="button" role="tab" aria-selected="false" data-pv-option="">내역</button>
-          </div>
-        </div>
-      </div>
-      <div class="pv-cell" data-pv-cell="menu">
-        <p class="pv-label">MENU</p>
-        <div class="pv-stage pv-stage--stack">
-          <div class="menu-pop">
-            <div class="mi active">최신순 <span class="ck">✓</span></div>
-            <div class="mi">가나다순</div>
-            <div class="mi">금액순</div>
           </div>
         </div>
       </div>
@@ -2087,7 +2097,7 @@
         </div>
       </div>
       <div class="pv-cell" data-pv-cell="rating">
-        <p class="pv-label">Rating, 5-star · half-fill · yellow-500 body</p>
+        <p class="pv-label">Rating, 5-star · half-fill · yellow-500 body, 치수 (가정)</p>
         <div class="pv-stage pv-stage--stack">
           <div class="demo-block">
             <div class="rating-row">
@@ -2234,7 +2244,7 @@
         </div>
       </div>
       <div class="pv-cell" data-pv-cell="bottom-sheet">
-        <p class="pv-label">Bottom Sheet — grab handle, <span data-theme-text="">scrim 56% · radius 24 top · grey-300 handle bar</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">scrim 64% · radius 24 top · grey-300 handle bar</span></template></p>
+        <p class="pv-label">Bottom Sheet — grab handle, <span data-theme-text="">scrim 56% · radius 24 top · grey-300 handle bar</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">scrim 64% · radius 24 top · grey-300 handle bar</span></template>, 치수 (가정)</p>
         <div class="pv-stage pv-stage--stack">
           <div class="sheet-stage">
             <div class="sheet">
@@ -2263,7 +2273,7 @@
         </div>
       </div>
       <div class="pv-cell" data-pv-cell="tooltip">
-        <p class="pv-label">Tooltip, <span data-theme-text="">grey-900 surface · caret · 10px gap</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">grey-200 surface · caret · 10px gap</span></template></p>
+        <p class="pv-label">Tooltip, <span data-theme-text="">grey-900 surface · caret · 10px gap</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">grey-200 surface · caret · 10px gap</span></template>, 치수 (가정)</p>
         <div class="pv-stage pv-stage--stack">
           <div class="demo-block">
             <div class="tt-stage">
@@ -2282,7 +2292,7 @@
         </div>
       </div>
       <div class="pv-cell" data-pv-cell="progress-bar">
-        <p class="pv-label">Progress Bar, 8px track · brand / success / danger fill · 320ms ease</p>
+        <p class="pv-label">Progress Bar, 8px track · brand / success / danger fill · 320ms ease, 치수 (가정)</p>
         <div class="pv-stage pv-stage--stack">
           <div class="demo-block">
             <div class="pb-row">
@@ -2331,31 +2341,6 @@
         <p class="pv-label">LOADER</p>
         <div class="pv-stage pv-stage--stack">
           <div class="loader-3"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="pv-zone" data-pv-zone="brand" aria-labelledby="pv-brand">
-    <h2 class="pv-zone-title" id="pv-brand">브랜드 고유</h2>
-    <div class="pv-cells">
-      <div class="pv-cell" data-pv-cell="keypad">
-        <p class="pv-label">keypad</p>
-        <div class="pv-stage pv-stage--stack">
-          <div class="keypad-grid">
-            <button class="key">1</button>
-            <button class="key">2</button>
-            <button class="key">3</button>
-            <button class="key">4</button>
-            <button class="key">5</button>
-            <button class="key">6</button>
-            <button class="key">7</button>
-            <button class="key">8</button>
-            <button class="key">9</button>
-            <button class="key">00</button>
-            <button class="key">0</button>
-            <button class="key" aria-label="지우기">⌫</button>
-          </div>
         </div>
       </div>
     </div>
