@@ -7,6 +7,80 @@
 <link rel="stylesheet" href="/preview/_runtime/tokens.css">
 <script src="/preview/_runtime/iframe.js" defer=""></script>
 <style>
+/* pv-frame:start — PROTOTYPE. 모든 프리뷰가 글자 그대로 똑같이 갖는 틀.
+   짜임(배치, 간격, 크기)만 여기서 정하고 서체와 색은 항목이 :root 의 --pv-* 로 넣는다.
+   페이지 쪽 스타일은 .pv-* 선택자를 다시 정의하지 않는다. */
+.pv-page {
+  display: block;
+  min-width: 0;
+  background: var(--pv-canvas);
+  color: var(--pv-ink);
+  font-family: var(--pv-font);
+}
+.pv-zone {
+  min-width: 0;
+  padding: 48px 24px;
+  border-top: 1px solid var(--pv-line);
+}
+.pv-zone-title {
+  margin: 0 0 24px;
+  font-family: var(--pv-font-display, var(--pv-font));
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0;
+  color: var(--pv-ink);
+}
+.pv-cells {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  min-width: 0;
+}
+.pv-cell {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--pv-line);
+  border-radius: var(--pv-radius, 0px);
+  background: var(--pv-surface);
+}
+.pv-cell--wide {
+  grid-column: 1 / -1;
+}
+.pv-label {
+  margin: 0 0 14px;
+  font-family: var(--pv-font);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0;
+  color: var(--pv-ink-muted);
+}
+.pv-stage {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  max-width: 100%;
+}
+.pv-stage--stack {
+  flex-direction: column;
+  align-items: stretch;
+}
+.pv-screen {
+  min-width: 0;
+  max-width: 100%;
+}
+@media (max-width: 767px) {
+  .pv-zone {
+    padding: 32px 16px;
+  }
+  .pv-cells {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* pv-frame:end */
   :root {
     /* === TDS base palette — light canonical (OKLCH from services/toss.md) === */
     --tds-blue-500: oklch(0.620 0.191 258);
@@ -96,6 +170,18 @@
     --accent-glow: var(--tds-blue-500);
     --ghost: var(--tds-grey-100);
 
+    /* services/toss.md typography.*.fontFamily */
+    --tds-font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Apple SD Gothic Neo", "Noto Sans KR", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+    /* 틀(pv-frame)이 읽는 변수. 브랜드 변수를 참조로만 준다 */
+    --pv-font: var(--tds-font-sans);
+    --pv-ink: var(--tds-grey-900);
+    --pv-ink-muted: var(--tds-grey-700);
+    --pv-canvas: var(--tds-grey-50);
+    --pv-surface: var(--tds-bg-canvas);
+    --pv-line: var(--tds-grey-200);
+    --pv-radius: var(--tds-radius-xl);
+
     /* 다크에서 값이 달라지는 자리. 다크 시트가 같은 이름을 다시 정의한다 */
     --tds-bg-canvas: var(--tds-white);
     --tds-hover-brightness: 0.96;
@@ -169,7 +255,6 @@
   /* === HERO === */
   .hero {
     background: var(--tds-bg-canvas);
-    border-bottom: 1px solid var(--tds-grey-200);
     padding: 96px 0 80px;
   }
   .hero .brand-lockup {
@@ -227,50 +312,6 @@
     align-items: center;
   }
 
-
-  /* === Section frame === */
-  .section { padding: 80px 0; border-top: 1px solid var(--tds-grey-200); background: var(--tds-grey-50); }
-  .section.canvas { background: var(--tds-bg-canvas); }
-  .section-head {
-    display: flex;
-    align-items: baseline;
-    gap: 14px;
-    padding-bottom: 20px;
-    border-bottom: 2px solid var(--tds-grey-900);
-    margin-bottom: 36px;
-  }
-  .section-head .num {
-    color: var(--tds-blue-500);
-    font-weight: 800;
-    font-size: 13px;
-    letter-spacing: 0.04em;
-    font-family: ui-monospace, monospace;
-  }
-  .section-head h2 {
-    font-size: 28px;
-    line-height: 1.30;
-    letter-spacing: -0.020em;
-    font-weight: 700;
-    margin: 0;
-    color: var(--tds-grey-900);
-  }
-  .section-head .caption {
-    margin-left: auto;
-    color: var(--tds-fg-tertiary);
-    font-size: 12px;
-  }
-
-  .row-label {
-    font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    color: var(--tds-fg-tertiary);
-    margin: 0 0 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-  .palette-row + .palette-row { margin-top: 36px; }
-
   /* === TYPOGRAPHY ramp === */
   .tds-body-3 { font-size: 13px; line-height: 1.50; font-weight: 400; margin: 0; color: var(--tds-fg-secondary); }
   .num-tab { font-feature-settings: "tnum"; font-variant-numeric: tabular-nums; }
@@ -284,9 +325,10 @@
     cursor: pointer;
     font-family: inherit;
     letter-spacing: -0.005em;
-    transition: filter 120ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    transition: filter 120ms cubic-bezier(0.22, 0.61, 0.36, 1), box-shadow 120ms cubic-bezier(0.22, 0.61, 0.36, 1);
   }
   .btn:hover { filter: brightness(var(--tds-hover-brightness)); }
+  .btn:active { box-shadow: inset 0 0 0 999px var(--tds-overlay-press); }
   .btn-xl { height: 56px; padding: 0 28px; border-radius: 16px; font-size: 17px; font-weight: 700; }
   .btn-l  { height: 48px; padding: 0 18px; border-radius: 14px; font-size: 15px; font-weight: 700; }
   .btn-m  { height: 40px; padding: 0 14px; border-radius: 12px; font-size: 14px; font-weight: 600; }
@@ -374,6 +416,11 @@
     letter-spacing: -0.005em;
   }
   .input::placeholder { color: var(--tds-fg-placeholder); }
+  .input:focus-visible {
+    outline: 0;
+    background: var(--tds-bg-canvas);
+    border: 1.5px solid var(--tds-blue-500);
+  }
   .input.focused {
     background: var(--tds-bg-canvas);
     border: 1.5px solid var(--tds-blue-500);
@@ -388,7 +435,8 @@
 
   /* === CONTROL — switch / checkbox === */
   .ctrl-stack { display: flex; flex-direction: column; gap: 12px; }
-  .ctrl-line { display: flex; align-items: center; gap: 12px; font-size: 15px; color: var(--tds-grey-900); }
+  .ctrl-line { position: relative; display: flex; align-items: center; gap: 12px; font-size: 15px; color: var(--tds-grey-900); }
+  .ctrl-input { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0; }
   .tds-switch {
     width: 44px;
     height: 26px;
@@ -398,7 +446,7 @@
     flex-shrink: 0;
     transition: background-color 200ms cubic-bezier(0.22, 0.61, 0.36, 1);
   }
-  .tds-switch.on { background: var(--tds-blue-500); }
+  .ctrl-input:checked + .tds-switch { background: var(--tds-blue-500); }
   .tds-switch::after {
     content: "";
     position: absolute;
@@ -411,7 +459,7 @@
     box-shadow: var(--tds-shadow-knob);
     transition: transform 200ms cubic-bezier(0.22, 0.61, 0.36, 1);
   }
-  .tds-switch.on::after { transform: translateX(18px); }
+  .ctrl-input:checked + .tds-switch::after { transform: translateX(18px); }
   .tds-check {
     width: 22px;
     height: 22px;
@@ -423,18 +471,9 @@
     justify-content: center;
     flex-shrink: 0;
   }
-  .tds-check.on { background: var(--tds-blue-500); border-color: var(--tds-blue-500); }
-  .tds-check.on svg { display: block; }
+  .ctrl-input:checked + .tds-check { background: var(--tds-blue-500); border-color: var(--tds-blue-500); }
+  .ctrl-input:checked + .tds-check svg { display: block; }
   .tds-check svg { display: none; width: 14px; height: 14px; }
-
-  /* === CARDS === */
-  .two-up { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .card {
-    background: var(--card);
-    border: 1px solid var(--tds-grey-200);
-    border-radius: 20px;
-    padding: 24px;
-  }
 
   /* === LIST ROW === */
   .listcard {
@@ -512,31 +551,13 @@
   .dlg-title { font-size: 18px; font-weight: 700; color: var(--tds-grey-900); letter-spacing: -0.010em; }
   .dlg-body { font-size: 15px; color: var(--tds-fg-secondary); line-height: 1.5; margin-top: 8px; }
   .dlg-actions { display: flex; gap: 8px; margin-top: 20px; }
-  .dlg-btn { flex: 1; height: 48px; border-radius: 14px; border: 0; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; }
+  .dlg-btn { flex: 1; height: 48px; border-radius: 14px; border: 0; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; transition: box-shadow 120ms cubic-bezier(0.22, 0.61, 0.36, 1); }
+  .dlg-btn:active { box-shadow: inset 0 0 0 999px var(--tds-overlay-press); }
   .dlg-btn.primary { background: var(--tds-blue-500); color: var(--tds-fg-on-fill); }
   .dlg-btn.secondary { background: var(--tds-bg-fill-weak); color: var(--tds-grey-900); }
 
-  /* === NEW COMPONENTS (06) === */
-  .comp-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-  }
-  .comp-card {
-    background: var(--card);
-    border: 1px solid var(--tds-grey-200);
-    border-radius: 20px;
-    padding: clamp(16px, 5vw, 24px);
-    min-width: 0;
-  }
-  .comp-card h4 {
-    margin: 0 0 4px;
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--tds-grey-900);
-    letter-spacing: -0.005em;
-  }
-  .comp-card .comp-caption {
+  .demo-block { width: 100%; min-width: 0; }
+  .comp-caption {
     font-size: 12px;
     color: var(--tds-fg-tertiary);
     margin: 0 0 18px;
@@ -551,6 +572,10 @@
     background: var(--tds-grey-100);
   }
   .seg .it {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    font-family: inherit;
     flex: 1;
     text-align: center;
     padding: 10px 12px;
@@ -561,7 +586,7 @@
     border-radius: 8px;
     cursor: pointer;
   }
-  .seg .it.active {
+  .seg .it[aria-checked="true"] {
     background: var(--tds-bg-selected);
     color: var(--tds-fg-primary);
     box-shadow: var(--tds-shadow-selected);
@@ -572,6 +597,10 @@
     margin-top: 12px;
   }
   .seg-line .it {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    font-family: inherit;
     flex: 1;
     text-align: center;
     padding: 14px 12px;
@@ -583,7 +612,7 @@
     border-bottom: 2.5px solid transparent;
     margin-bottom: -1px;
   }
-  .seg-line .it.active {
+  .seg-line .it[aria-selected="true"] {
     color: var(--tds-fg-primary);
     border-bottom-color: var(--tds-grey-900);
   }
@@ -611,6 +640,7 @@
     letter-spacing: -0.005em;
   }
   .search-field input::placeholder { color: var(--tds-fg-placeholder); }
+  .search-field:focus-within,
   .search-field.focus {
     background: var(--tds-bg-canvas);
     border: 1.5px solid var(--tds-blue-500);
@@ -807,29 +837,6 @@
   }
   .sheet .opt .ar { color: var(--tds-grey-400); }
 
-  /* === 08 · FULL COMPONENT GRID === */
-  .full-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 16px;
-  }
-  .ftile {
-    background: var(--tds-grey-100);
-    border: 1px solid var(--tds-border-secondary);
-    border-radius: 14px;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    min-width: 0;
-  }
-  .ftile .ftile-demo {
-    min-height: 60px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
   /* Bar-Chart — 막대가 배경 위에 그대로, axis line 없음 */
   .bar-chart { display: flex; align-items: flex-end; gap: 10px; height: 72px; padding-top: 4px; }
   .bar-chart .bc-col { flex: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 6px; }
@@ -876,7 +883,9 @@
     background: var(--tds-blue-500); color: var(--tds-fg-on-fill);
     font-family: inherit; font-size: 15px; font-weight: 700;
     letter-spacing: -0.005em; cursor: pointer;
+    transition: box-shadow 120ms cubic-bezier(0.22, 0.61, 0.36, 1);
   }
+  .bottom-info .bi-cta:active { box-shadow: inset 0 0 0 999px var(--tds-overlay-press); }
 
   /* Bubble (chat) */
   .bubble-demo { display: flex; flex-direction: column; gap: 8px; }
@@ -1062,6 +1071,10 @@
   /* Tab (inline underline) */
   .tab-inline { display: flex; border-bottom: 1px solid var(--tds-border-secondary); }
   .tab-inline .ti {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    font-family: inherit;
     padding: 10px 4px; margin-right: 18px;
     font-size: 14px; font-weight: 600;
     color: var(--tds-fg-tertiary);
@@ -1069,7 +1082,7 @@
     margin-bottom: -1px;
     cursor: pointer; letter-spacing: -0.005em;
   }
-  .tab-inline .ti.active { color: var(--tds-grey-900); border-bottom-color: var(--tds-grey-900); }
+  .tab-inline .ti[aria-selected="true"] { color: var(--tds-grey-900); border-bottom-color: var(--tds-grey-900); }
 
   /* Table-Row */
   .table-mini { width: 100%; border-collapse: collapse; }
@@ -1084,36 +1097,10 @@
   .table-mini td.amt-cell { font-weight: 700; }
   .table-mini tr:last-child td { border-bottom: 0; }
 
-  /* === KEY SCREEN — 5-phone Send-Money flow === */
-  .mock-frame {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    align-items: flex-start;
-  }
-  .mock-frame > .stage {
-    width: 360px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-  }
-  .mock-frame .stage-label {
-    font-family: ui-monospace, monospace;
-    font-size: 11px;
-    color: var(--tds-fg-tertiary);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    font-weight: 600;
-  }
-  .mock-frame .stage-label .num {
-    color: var(--tds-blue-500);
-    font-weight: 800;
-    margin-right: 6px;
-  }
+  /* === KEY SCREEN — Send-Money flow, one phone per cell === */
   .phone {
     width: 360px;
+    max-width: 100%;
     height: 660px;
     background: var(--tds-bg-canvas);
     border: 1px solid var(--tds-grey-200);
@@ -1267,7 +1254,9 @@
     font-weight: 700;
     letter-spacing: -0.005em;
     cursor: pointer;
+    transition: box-shadow 120ms cubic-bezier(0.22, 0.61, 0.36, 1);
   }
+  .phone .bottom-cta:active { box-shadow: inset 0 0 0 999px var(--tds-overlay-press); }
   .phone .bottom-cta:disabled {
     background: var(--tds-grey-200);
     color: var(--tds-fg-quaternary);
@@ -1408,9 +1397,6 @@
     .hero .brand-lockup .wm-text { font-size: 36px; }
     .hero h1 { font-size: clamp(32px, 5.6vw, 56px); }
     .hero .subtitle { font-size: 20px; }
-    .section { padding: 56px 0; }
-    .two-up, .comp-grid { grid-template-columns: 1fr; }
-    .mock-frame { gap: 24px; }
   }
   @media (max-width: 640px) {
     .container { padding: 0 16px; }
@@ -1422,14 +1408,6 @@
     .hero h1 { font-size: clamp(26px, 8vw, 36px); line-height: 1.25; }
     .hero .subtitle { font-size: 17px; }
     .hero .cta-row { margin-top: 28px; }
-    .section { padding: 40px 0; }
-    .section-head { flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
-    .section-head h2 { font-size: 22px; }
-    .section-head .caption { display: none; }
-    .full-grid { grid-template-columns: 1fr; }
-    .mock-frame { gap: 16px; }
-    .mock-frame > .stage { width: 100%; max-width: 360px; }
-    .phone { width: 100%; max-width: 360px; }
   }
   /* Reduced motion — one global reset, no exceptions. */
   @media (prefers-reduced-motion: reduce) {
@@ -1522,121 +1500,331 @@
 </style></head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
-  <!-- TOP STRIP -->
-  <header class="strip">
-    <div class="container">
-      <div class="row">
-        <span class="wordmark"><img class="logo-dot" src="/logos/toss.png" alt="">토스</span>
-        <span class="meta">TDS Mobile · 2026 (Apps in Toss)</span>
-        <div class="right">
-          <span class="text-meta-caps" style="font-size: 11px;"><span data-theme-text="">PREVIEW · LIGHT</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">PREVIEW · DARK</span></template></span>
-          <span class="badge b-blue">Token-driven</span>
+<main class="pv-page">
+
+  <header class="pv-hero" data-pv-zone="hero">
+    <div class="strip">
+      <div class="container">
+        <div class="row">
+          <span class="wordmark"><img class="logo-dot" src="/logos/toss.png" alt="">토스</span>
+          <span class="meta">TDS Mobile · 2026 (Apps in Toss)</span>
+          <div class="right">
+            <span class="text-meta-caps" style="font-size: 11px;"><span data-theme-text="">PREVIEW · LIGHT</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">PREVIEW · DARK</span></template></span>
+            <span class="badge b-blue">Token-driven</span>
+          </div>
         </div>
+      </div>
+    </div>
+    <div class="hero">
+      <div class="container">
+        <div class="brand-lockup">
+          <img src="/logos/toss-logotype.png" alt="Toss">
+          <span class="wm-text">토스</span>
+        </div>
+        <span class="eyebrow">은행에 다니는 유능한 친구</span>
+        <h1>금융을 더 쉽게,<br>토스로 한번에.</h1>
+        <p class="subtitle">송금·결제·은행·증권을 한 화면에서.</p>
+        <div class="cta-row">
+          <button class="btn btn-xl btn-brand" type="button">시작하기</button>
+          <button class="btn btn-xl btn-neutral" type="button">컴포넌트 둘러보기</button>
+          <button class="btn btn-xl btn-ghost" type="button">개발자 문서 →</button>
+        </div>
+
       </div>
     </div>
   </header>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="container">
-      <div class="brand-lockup">
-        <img src="/logos/toss-logotype.png" alt="Toss">
-        <span class="wm-text">토스</span>
-      </div>
-      <span class="eyebrow">은행에 다니는 유능한 친구</span>
-      <h1>금융을 더 쉽게,<br>토스로 한번에.</h1>
-      <p class="subtitle">송금·결제·은행·증권을 한 화면에서.</p>
-      <div class="cta-row">
-        <button class="btn btn-xl btn-brand" type="button">시작하기</button>
-        <button class="btn btn-xl btn-neutral" type="button">컴포넌트 둘러보기</button>
-        <button class="btn btn-xl btn-ghost" type="button">개발자 문서 →</button>
-      </div>
+  <section class="pv-zone" data-pv-zone="screens" aria-labelledby="pv-screens">
+    <h2 class="pv-zone-title" id="pv-screens">화면</h2>
+    <div class="pv-cells">
+      <div class="pv-cell" data-pv-cell="screen-send-home">
+        <p class="pv-label">01. 홈 · 송금하기</p>
+        <div class="pv-stage">
+          <div class="pv-screen">
+            <div class="phone">
+              <div class="top-app-bar">
+                <div class="title" style="font-size: 22px; font-weight: 800; color: var(--tds-grey-900); padding-left: 4px; letter-spacing: -0.020em;">toss</div>
+                <div class="ic-btn">⌕</div>
+                <div class="ic-btn" style="position: relative;">
+                  🔔
+                  <span style="position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 999px; background: var(--tds-red-500); border: 1.5px solid #fff;"></span>
+                </div><template data-theme-variant="dark" data-theme-op="swap"><div class="ic-btn" style="position: relative;">
+                  🔔
+                  <span style="position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 999px; background: var(--tds-red-500); border: 1.5px solid var(--tds-near-black);"></span>
+                </div></template>
+              </div>
+              <div class="content">
+                <div class="balance-card">
+                  <div class="balance-card-head">
+                    <span class="lbl">토스뱅크 통장</span>
+                    <span style="color: var(--tds-grey-400); font-size: 14px;">›</span>
+                  </div>
+                  <p class="balance num-tab">1,284,520<span class="unit">원</span></p>
+                  <div class="home-quick-btns">
+                    <button class="qb">채우기</button>
+                    <button class="qb primary">보내기</button>
+                  </div>
+                </div>
 
+                <p class="section-h">최근 송금</p>
+                <div class="list-card">
+                  <div class="lrow">
+                    <div class="av">😊</div>
+                    <div class="body"><div class="ttl">엄마</div><div class="sub">토스뱅크 · 1234</div></div>
+                    <div class="right"><div class="arrow">›</div></div>
+                  </div>
+                  <div class="lrow">
+                    <div class="av av-blue">🧑‍💼</div>
+                    <div class="body"><div class="ttl">김민준</div><div class="sub">국민 · 5678</div></div>
+                    <div class="right"><div class="arrow">›</div></div>
+                  </div>
+                  <div class="lrow">
+                    <div class="av av-warm">🎂</div>
+                    <div class="body"><div class="ttl">이서연</div><div class="sub">신한 · 9012</div></div>
+                    <div class="right"><div class="arrow">›</div></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Floating Tab-Bar (홈 · 혜택 · 주식 · 전체) -->
+              <nav class="tab-bar" aria-label="하단 탭">
+                <span class="tab active">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 12 4l8 7"></path><path d="M6 10v9h12v-9"></path></svg>
+                  홈
+                </span>
+                <span class="tab">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v8H4v-8"></path><path d="M2 8h20v4H2z"></path><path d="M12 8v12"></path><path d="M12 8S10 4 7.5 4 5 6 5 6s.5 2 3 2 4 0 4 0Z"></path></svg>
+                  혜택
+                </span>
+                <span class="tab">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18 9 11l4 4 7-9"></path></svg>
+                  주식
+                </span>
+                <span class="tab">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path></svg>
+                  전체
+                </span>
+              </nav>
+
+              <div class="bottom-cta-wrap">
+                <div class="protection"></div>
+                <button class="bottom-cta" type="button">송금하기</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="screen-send-select">
+        <p class="pv-label">02. 받는 사람 선택</p>
+        <div class="pv-stage">
+          <div class="pv-screen">
+            <div class="phone">
+              <div class="top-app-bar">
+                <div class="ic-btn">←</div>
+                <div class="title">누구에게 보낼까요?</div>
+                <div class="ic-btn right">×</div>
+              </div>
+              <div class="content" style="padding: 8px 16px 16px;">
+                <div class="search-field">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"></circle><path d="m20 20-3.5-3.5"></path></svg>
+                  <input placeholder="이름, 전화번호 또는 계좌번호">
+                </div>
+                <p style="font-size: 13px; font-weight: 600; color: var(--tds-grey-600); margin: 18px 8px 6px;">자주 쓰는 친구</p>
+                <div class="lrow" style="padding: 10px 8px;">
+                  <div class="av">😊</div>
+                  <div class="body"><div class="ttl">엄마</div><div class="sub">토스뱅크 · 1234</div></div>
+                  <div class="right"><div class="arrow">›</div></div>
+                </div>
+                <div class="lrow" style="padding: 10px 8px;">
+                  <div class="av av-blue">🧑‍💼</div>
+                  <div class="body"><div class="ttl">김민준</div><div class="sub">국민 · 5678</div></div>
+                  <div class="right"><div class="arrow">›</div></div>
+                </div>
+                <div class="lrow" style="padding: 10px 8px;">
+                  <div class="av av-warm">🎂</div>
+                  <div class="body"><div class="ttl">이서연</div><div class="sub">신한 · 9012</div></div>
+                  <div class="right"><div class="arrow">›</div></div>
+                </div>
+                <div class="lrow" style="padding: 10px 8px;">
+                  <div class="av av-grey">🐶</div>
+                  <div class="body"><div class="ttl">박지호</div><div class="sub">카카오뱅크 · 3456</div></div>
+                  <div class="right"><div class="arrow">›</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="screen-send-amount">
+        <p class="pv-label">03. 금액 입력</p>
+        <div class="pv-stage">
+          <div class="pv-screen">
+            <div class="phone">
+              <div class="top-app-bar">
+                <div class="ic-btn">←</div>
+                <div class="title" style="opacity: 0;">.</div>
+                <div class="ic-btn right">×</div>
+              </div>
+              <div class="content" style="padding: 4px 20px 8px;">
+                <p class="amt-screen-eyebrow">엄마 · 토스뱅크 1234</p>
+                <p class="amt-screen-value num-tab">120,000<span class="unit">원</span></p>
+                <p class="amt-screen-balance num-tab">출금 가능 1,284,520원</p>
+                <div class="amt-quick-chips">
+                  <button class="qc">+1만</button>
+                  <button class="qc">+5만</button>
+                  <button class="qc">+10만</button>
+                  <button class="qc">전액</button>
+                </div>
+                <div class="keypad-grid">
+                  <button class="key">1</button>
+                  <button class="key">2</button>
+                  <button class="key">3</button>
+                  <button class="key">4</button>
+                  <button class="key">5</button>
+                  <button class="key">6</button>
+                  <button class="key">7</button>
+                  <button class="key">8</button>
+                  <button class="key">9</button>
+                  <button class="key">00</button>
+                  <button class="key">0</button>
+                  <button class="key" aria-label="지우기">⌫</button>
+                </div>
+              </div>
+              <div class="bottom-cta-wrap">
+                <div class="protection"></div>
+                <button class="bottom-cta" type="button">120,000원 보내기</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="screen-send-confirm">
+        <p class="pv-label">04. 확인</p>
+        <div class="pv-stage">
+          <div class="pv-screen">
+            <div class="phone">
+              <div class="top-app-bar">
+                <div class="ic-btn">←</div>
+                <div class="title" style="opacity: 0;">.</div>
+                <div class="ic-btn right">×</div>
+              </div>
+              <div class="content" style="padding: 8px 24px 16px;">
+                <p class="confirm-head">엄마님께<br>120,000원을 보낼까요?</p>
+                <div class="confirm-card">
+                  <div class="kv"><span class="k">받는 분</span><span class="v">엄마</span></div>
+                  <div class="kv"><span class="k">받는 계좌</span><span class="v">토스뱅크 1000-1234-5678</span></div>
+                  <div class="kv"><span class="k">보내는 통장</span><span class="v">토스뱅크 통장</span></div>
+                  <div class="kv"><span class="k">수수료</span><span class="v brand">없음</span></div>
+                </div>
+                <p class="tds-body-3" style="margin-top: 20px;">송금 후에는 취소할 수 없어요. 한 번 더 확인해주세요.</p>
+              </div>
+              <div class="bottom-cta-wrap">
+                <div class="protection"></div>
+                <button class="bottom-cta" type="button">120,000원 보내기</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="screen-send-done">
+        <p class="pv-label">05. 완료</p>
+        <div class="pv-stage">
+          <div class="pv-screen">
+            <div class="phone">
+              <div class="top-app-bar">
+                <div class="title" style="opacity: 0;">.</div>
+              </div>
+              <div class="content" style="padding: 0;">
+                <div class="done-stage">
+                  <div class="done-check">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"></path></svg><template data-theme-variant="dark" data-theme-op="swap"><svg viewBox="0 0 24 24" fill="none" stroke="var(--tds-near-black)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"></path></svg></template>
+                  </div>
+                  <p class="done-title">송금 완료</p>
+                  <p class="done-sub num-tab">엄마님께 120,000원을<br>보냈어요</p>
+                  <div class="done-illo">😊</div>
+                </div>
+              </div>
+              <div class="bottom-cta-wrap">
+                <div class="protection"></div>
+                <button class="bottom-cta" type="button">확인</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- 01 BUTTONS -->
-  <section class="section canvas">
-    <div class="container">
-      <div class="section-head">
-        <span class="num">01.</span>
-        <h2>Button — XL / L / M / S</h2>
-      </div>
-
-      <div class="palette-row">
-        <p class="row-label">SIZE · XL 56 / L 48 / M 40 / S 32</p>
-        <div class="btn-group">
-          <button class="btn btn-xl btn-brand" type="button">송금하기</button>
-          <button class="btn btn-l btn-brand" type="button">다음</button>
-          <button class="btn btn-m btn-brand" type="button">확인</button>
-          <button class="btn btn-s btn-brand" type="button">선택</button>
+  <section class="pv-zone" data-pv-zone="buttons" aria-labelledby="pv-buttons">
+    <h2 class="pv-zone-title" id="pv-buttons">버튼</h2>
+    <div class="pv-cells">
+      <div class="pv-cell" data-pv-cell="button-size">
+        <p class="pv-label">SIZE · XL 56 / L 48 / M 40 / S 32</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="btn-group">
+            <button class="btn btn-xl btn-brand" type="button">송금하기</button>
+            <button class="btn btn-l btn-brand" type="button">다음</button>
+            <button class="btn btn-m btn-brand" type="button">확인</button>
+            <button class="btn btn-s btn-brand" type="button">선택</button>
+          </div>
         </div>
       </div>
-
-      <div class="palette-row">
-        <p class="row-label">VARIANT · primary / neutral / danger / ghost</p>
-        <div class="btn-group">
-          <button class="btn btn-l btn-brand" type="button">송금하기</button>
-          <button class="btn btn-l btn-neutral" type="button">취소</button>
-          <button class="btn btn-l btn-danger" type="button">삭제</button>
-          <button class="btn btn-l btn-ghost" type="button">자세히</button>
+      <div class="pv-cell" data-pv-cell="button-variant">
+        <p class="pv-label">VARIANT · primary / neutral / danger / ghost</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="btn-group">
+            <button class="btn btn-l btn-brand" type="button">송금하기</button>
+            <button class="btn btn-l btn-neutral" type="button">취소</button>
+            <button class="btn btn-l btn-danger" type="button">삭제</button>
+            <button class="btn btn-l btn-ghost" type="button">자세히</button>
+          </div>
         </div>
       </div>
-
-      <div class="palette-row">
-        <p class="row-label"><span data-theme-text="">STATE · default / pressed (검정 26% overlay) / disabled (opacity 30%)</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">STATE · default / pressed (가정) / disabled (opacity 30%)</span></template></p>
-        <div class="btn-group">
-          <button class="btn btn-l btn-brand" type="button">송금하기</button>
-          <button class="btn btn-l btn-brand pressed" type="button">송금하기</button>
-          <button class="btn btn-l btn-brand btn-disabled" type="button" aria-disabled="true">송금하기</button>
+      <div class="pv-cell" data-pv-cell="button-state">
+        <p class="pv-label"><span data-theme-text="">STATE · default / pressed (검정 26% overlay) / disabled (opacity 30%)</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">STATE · default / pressed (가정) / disabled (opacity 30%)</span></template></p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="btn-group">
+            <button class="btn btn-l btn-brand" type="button">송금하기</button>
+            <button class="btn btn-l btn-brand pressed" type="button">송금하기</button>
+            <button class="btn btn-l btn-brand btn-disabled" type="button" aria-disabled="true">송금하기</button>
+          </div>
         </div>
       </div>
-
-      <div class="palette-row">
-        <p class="row-label">TEXT-BUTTON · 인라인 링크 위계 · default / neutral / disabled</p>
-        <div class="btn-group">
-          <button class="text-btn" type="button">전체보기 <span class="chev">›</span></button>
-          <button class="text-btn neutral" type="button">접기 <span class="chev">›</span></button>
-          <button class="text-btn danger" type="button">연결 해제</button>
-          <button class="text-btn is-disabled" type="button" aria-disabled="true">더 불러올 수 없어요</button>
+      <div class="pv-cell" data-pv-cell="text-button">
+        <p class="pv-label">TEXT-BUTTON · 인라인 링크 위계 · default / neutral / disabled</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="btn-group">
+            <button class="text-btn" type="button">전체보기 <span class="chev">›</span></button>
+            <button class="text-btn neutral" type="button">접기 <span class="chev">›</span></button>
+            <button class="text-btn danger" type="button">연결 해제</button>
+            <button class="text-btn is-disabled" type="button" aria-disabled="true">더 불러올 수 없어요</button>
+          </div>
         </div>
       </div>
-
-      <div class="palette-row">
-        <p class="row-label">CHIP · resting / active / brand · removable</p>
-        <div class="chip-row">
-          <span class="chip">전체</span>
-          <span class="chip active">입금</span>
-          <span class="chip">출금</span>
-          <span class="chip">자동이체</span>
-          <span class="chip brand">+ 카테고리 추가</span>
-          <span class="chip active">엄마 <span class="x">×</span></span>
+      <div class="pv-cell" data-pv-cell="bottom-info">
+        <p class="pv-label">BOTTOM-INFO</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="bottom-info">
+            <span class="info-pill">수수료 없이 보내요</span>
+            <button class="bi-cta" type="button">120,000원 보내기</button>
+          </div>
         </div>
       </div>
-
-      <div class="palette-row">
-        <p class="row-label">BADGE · washed bg + 시맨틱 텍스트 컬러</p>
-        <div class="badge-row">
-          <span class="badge b-red">N</span>
-          <span class="badge b-green">완료</span>
-          <span class="badge b-blue">신규</span>
-          <span class="badge b-grey">예약</span>
+      <div class="pv-cell" data-pv-cell="list-footer">
+        <p class="pv-label">LIST-FOOTER</p>
+        <div class="pv-stage pv-stage--stack">
+          <button class="list-footer" type="button">더보기 <span class="chev">›</span></button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 02 INPUT + CONTROLS + RADIUS -->
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <span class="num">02.</span>
-        <h2>Inputs · Switch</h2>
-      </div>
-
-      <div class="two-up">
-        <div class="card">
-          <p class="row-label">TEXT FIELD — idle / focused / error</p>
+  <section class="pv-zone" data-pv-zone="inputs" aria-labelledby="pv-inputs">
+    <h2 class="pv-zone-title" id="pv-inputs">입력</h2>
+    <div class="pv-cells">
+      <div class="pv-cell" data-pv-cell="text-field">
+        <p class="pv-label">TEXT FIELD — idle / focused / error</p>
+        <div class="pv-stage pv-stage--stack">
           <div class="field-stack">
             <div class="field">
               <label for="t-1">받는 분</label>
@@ -1655,125 +1843,10 @@
             </div>
           </div>
         </div>
-
-        <div class="card">
-          <p class="row-label">SWITCH · CHECKBOX (resting / on)</p>
-          <div class="ctrl-stack">
-            <label class="ctrl-line">
-              <span class="tds-switch on" aria-hidden="true"></span>
-              <span>잔액 자동 채우기</span>
-            </label>
-            <label class="ctrl-line">
-              <span class="tds-switch" aria-hidden="true"></span>
-              <span>매월 정기 송금 알림</span>
-            </label>
-            <label class="ctrl-line">
-              <span class="tds-check on" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              </span>
-              <span>토스 서비스 이용약관에 동의해요</span>
-            </label>
-            <label class="ctrl-line">
-              <span class="tds-check" aria-hidden="true"></span>
-              <span>마케팅 정보 수신에 동의해요 (선택)</span>
-            </label>
-          </div>
-        </div>
       </div>
-    </div>
-  </section>
-
-  <!-- 03 LIST ROW + TOAST + DIALOG -->
-  <section class="section canvas">
-    <div class="container">
-      <div class="section-head">
-        <span class="num">03.</span>
-        <h2>List · Toast · Dialog</h2>
-      </div>
-
-      <div class="two-up">
-        <div class="listcard">
-          <div class="list-header">
-            <h3>최근 거래 내역</h3>
-            <a href="#">전체보기 ›</a>
-          </div>
-          <p class="catalog-dummy">아래 거래 내역의 이름·가맹점명·계좌·금액·시각은 모두 레이아웃 시연용 더미 데이터이며, 실제 거래가 아닙니다.</p>
-          <div class="lrow">
-            <div class="av">😊</div>
-            <div class="body"><div class="ttl">엄마</div><div class="sub">토스뱅크 · 1234</div></div>
-            <div class="right"><div class="amt plus">+50,000원</div><div class="stamp">방금 전</div></div>
-          </div>
-          <div class="lrow">
-            <div class="av av-blue">🚕</div>
-            <div class="body"><div class="ttl">카카오T 택시</div><div class="sub">교통</div></div>
-            <div class="right"><div class="amt">−12,300원</div><div class="stamp">오후 2:14</div></div>
-          </div>
-          <div class="lrow">
-            <div class="av av-grey">📦</div>
-            <div class="body"><div class="ttl">쿠팡</div><div class="sub">쇼핑 · 즉시 결제</div></div>
-            <div class="right"><div class="amt">−34,900원</div><div class="stamp">어제</div></div>
-          </div>
-          <div class="lrow">
-            <div class="av av-warm">🏷️</div>
-            <div class="body"><div class="ttl">정기적금 자동이체</div><div class="sub">매월 25일</div></div>
-            <div class="right"><div class="arrow">›</div></div>
-          </div>
-        </div>
-
-        <div style="display: flex; flex-direction: column; gap: 16px;">
-          <div>
-            <p class="row-label"><span data-theme-text="">TOAST · grey-900 surface + 흰 라벨</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">TOAST · grey-200 surface + 밝은 라벨 (다크)</span></template></p>
-            <div class="toast">
-              <div class="ic">✓</div>
-              <div class="txt">송금이 완료되었어요</div>
-            </div>
-          </div>
-
-          <div>
-            <p class="row-label">DIALOG · radius 20 · shadow-3</p>
-            <div class="dialog">
-              <div class="dlg-title">송금을 취소할까요?</div>
-              <div class="dlg-body">취소하면 작성하던 내용이 사라져요.</div>
-              <div class="dlg-actions">
-                <button class="dlg-btn secondary">계속 작성</button>
-                <button class="dlg-btn primary">취소</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 04 NEW COMPONENTS — new bundle -->
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <span class="num">04.</span>
-        <h2>NEW · 새 번들에서 surface된 컴포넌트</h2>
-        <span class="caption">segmented · search · progress · rating · slider · tooltip · sheet · filter chips · 치수 (가정)</span>
-      </div>
-
-      <div class="comp-grid">
-        <div class="comp-card">
-          <h4>Segmented Control</h4>
-          <p class="comp-caption">pill 3-segments · underline tab</p>
-          <div class="seg">
-            <div class="it active">전체</div>
-            <div class="it">입금</div>
-            <div class="it">출금</div>
-          </div>
-          <div class="seg-line">
-            <div class="it active">예금</div>
-            <div class="it">적금</div>
-            <div class="it">투자</div>
-            <div class="it">대출</div>
-          </div>
-        </div>
-
-        <div class="comp-card">
-          <h4>Search Field</h4>
-          <p class="comp-caption"><span data-theme-text="">grey-100 resting → focus white + 1.5px blue</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">grey-100 resting → focus near-black + 1.5px blue</span></template></p>
+      <div class="pv-cell" data-pv-cell="search-field">
+        <p class="pv-label">Search Field, <span data-theme-text="">grey-100 resting → focus white + 1.5px blue</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">grey-100 resting → focus near-black + 1.5px blue</span></template></p>
+        <div class="pv-stage pv-stage--stack">
           <div style="display:flex; flex-direction:column; gap:12px;">
             <div class="search-field">
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"></circle><path d="m20 20-3.5-3.5"></path></svg>
@@ -1786,122 +1859,383 @@
             </div>
           </div>
         </div>
-
-        <div class="comp-card">
-          <h4>Progress Bar</h4>
-          <p class="comp-caption">8px track · brand / success / danger fill · 320ms ease</p>
-          <div class="pb-row">
-            <div class="pb-head"><div class="pb-lab">목표 달성률</div><div class="pb-val">68%</div></div>
-            <div class="pb-track l"><div class="pb-fill brand-grad" style="width: 68%;"></div></div>
-          </div>
-          <div class="pb-row">
-            <div class="pb-head"><div class="pb-lab">업로드 중</div><div class="pb-val">12 / 30 MB</div></div>
-            <div class="pb-track"><div class="pb-fill" style="width: 40%;"></div></div>
-          </div>
-          <div class="pb-row">
-            <div class="pb-head"><div class="pb-lab">한도 사용</div><div class="pb-val">92%</div></div>
-            <div class="pb-track"><div class="pb-fill danger" style="width: 92%;"></div></div>
-          </div>
-          <div class="pb-row">
-            <div class="pb-head"><div class="pb-lab">백업 완료</div><div class="pb-val">100%</div></div>
-            <div class="pb-track s"><div class="pb-fill success" style="width: 100%;"></div></div>
-          </div>
-        </div>
-
-        <div class="comp-card">
-          <h4>Rating</h4>
-          <p class="comp-caption">5-star · half-fill · yellow-500 body</p>
-          <div class="rating-row">
-            <div class="rating-stars lg">
-              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" style="fill: var(--tds-yellow-500)"></path></svg>
-              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" style="fill: var(--tds-yellow-500)"></path></svg>
-              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" style="fill: var(--tds-yellow-500)"></path></svg>
-              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" style="fill: var(--tds-yellow-500)"></path></svg>
-              <svg viewBox="0 0 24 24"><defs><linearGradient id="half-l-1"><stop offset="50%" style="stop-color: var(--tds-yellow-500)"></stop><stop offset="50%" stop-color="oklch(0.930 0.005 248)"></stop></linearGradient></defs><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="url(#half-l-1)"></path></svg><template data-theme-variant="dark" data-theme-op="swap"><svg viewBox="0 0 24 24"><defs><linearGradient id="half-d-1"><stop offset="50%" style="stop-color: var(--tds-yellow-500)"></stop><stop offset="50%" stop-color="oklch(0.361 0.019 285)"></stop></linearGradient></defs><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="url(#half-d-1)"></path></svg></template>
+      </div>
+      <div class="pv-cell" data-pv-cell="slider">
+        <p class="pv-label">Slider, 8px track · 28px thumb · tabular value</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="demo-block">
+            <div class="slider-row">
+              <div class="slider-head">
+                <div class="slider-lab">월 저축 금액</div>
+                <div class="slider-val">300,000원</div>
+              </div>
+              <div class="slider-track">
+                <div class="slider-fill" style="width: 35%;"></div>
+                <div class="slider-thumb" style="left: 35%;"></div>
+              </div>
+              <div class="slider-ticks"><span>0</span><span>500K</span><span>1M</span></div>
             </div>
-            <div class="rating-score">4.5</div>
-          </div>
-          <div class="rating-row" style="margin-top: 16px;">
-            <div class="rating-stars">
-              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" style="fill: var(--tds-yellow-500)"></path></svg>
-              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" style="fill: var(--tds-yellow-500)"></path></svg>
-              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" style="fill: var(--tds-yellow-500)"></path></svg>
-              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.930 0.005 248)"></path></svg><template data-theme-variant="dark" data-theme-op="swap"><svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.361 0.019 285)"></path></svg></template>
-              <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.930 0.005 248)"></path></svg><template data-theme-variant="dark" data-theme-op="swap"><svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.361 0.019 285)"></path></svg></template>
-            </div>
-            <div class="pb-val">3 / 5</div>
-          </div>
-        </div>
-
-        <div class="comp-card">
-          <h4>Slider</h4>
-          <p class="comp-caption">8px track · 28px thumb · tabular value</p>
-          <div class="slider-row">
-            <div class="slider-head">
-              <div class="slider-lab">월 저축 금액</div>
-              <div class="slider-val">300,000원</div>
-            </div>
-            <div class="slider-track">
-              <div class="slider-fill" style="width: 35%;"></div>
-              <div class="slider-thumb" style="left: 35%;"></div>
-            </div>
-            <div class="slider-ticks"><span>0</span><span>500K</span><span>1M</span></div>
-          </div>
-          <div class="slider-row">
-            <div class="slider-head">
-              <div class="slider-lab">기간</div>
-              <div class="slider-val">12개월</div>
-            </div>
-            <div class="slider-track">
-              <div class="slider-fill" style="width: 67%;"></div>
-              <div class="slider-thumb" style="left: 67%;"></div>
+            <div class="slider-row">
+              <div class="slider-head">
+                <div class="slider-lab">기간</div>
+                <div class="slider-val">12개월</div>
+              </div>
+              <div class="slider-track">
+                <div class="slider-fill" style="width: 67%;"></div>
+                <div class="slider-thumb" style="left: 67%;"></div>
+              </div>
             </div>
           </div>
         </div>
-
-        <div class="comp-card">
-          <h4>Tooltip</h4>
-          <p class="comp-caption"><span data-theme-text="">grey-900 surface · caret · 10px gap</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">grey-200 surface · caret · 10px gap</span></template></p>
-          <div class="tt-stage">
-            <div class="tt-anchor-wrap">
-              <div class="tt-anchor">최대 한도</div>
-              <div class="tt top">월 1,000만원까지 한 번에</div>
-            </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="numeric-spinner">
+        <p class="pv-label">NUMERIC-SPINNER</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="num-spin">
+            <button type="button" aria-label="감소">−</button>
+            <span class="nv num-tab">2</span>
+            <button type="button" aria-label="증가">+</button>
           </div>
-          <div class="tt-stage" style="margin-top: 12px;">
-            <div class="tt-anchor-wrap">
-              <div class="tt-anchor">자동이체</div>
-              <div class="tt top brand">매월 25일에 빠져나가요</div>
+        </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="stepper">
+        <p class="pv-label">STEPPER</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="v-step">
+            <button type="button" aria-label="증가">▲</button>
+            <span class="sv num-tab">3</span>
+            <button type="button" aria-label="감소">▼</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pv-zone" data-pv-zone="selection" aria-labelledby="pv-selection">
+    <h2 class="pv-zone-title" id="pv-selection">선택</h2>
+    <div class="pv-cells">
+      <div class="pv-cell" data-pv-cell="switch-checkbox">
+        <p class="pv-label">SWITCH · CHECKBOX (resting / on)</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="ctrl-stack">
+            <label class="ctrl-line">
+              <input class="ctrl-input" type="checkbox" role="switch" checked="">
+              <span class="tds-switch" aria-hidden="true"></span>
+              <span>잔액 자동 채우기</span>
+            </label>
+            <label class="ctrl-line">
+              <input class="ctrl-input" type="checkbox" role="switch">
+              <span class="tds-switch" aria-hidden="true"></span>
+              <span>매월 정기 송금 알림</span>
+            </label>
+            <label class="ctrl-line">
+              <input class="ctrl-input" type="checkbox" checked="">
+              <span class="tds-check" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </span>
+              <span>토스 서비스 이용약관에 동의해요</span>
+            </label>
+            <label class="ctrl-line">
+              <input class="ctrl-input" type="checkbox">
+              <span class="tds-check" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </span>
+              <span>마케팅 정보 수신에 동의해요 (선택)</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="segmented-control">
+        <p class="pv-label">Segmented Control, pill 3-segments · underline tab</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="demo-block">
+            <div class="seg" role="radiogroup" data-pv-toggle="aria-checked">
+              <button class="it" type="button" role="radio" aria-checked="true" data-pv-option="">전체</button>
+              <button class="it" type="button" role="radio" aria-checked="false" data-pv-option="">입금</button>
+              <button class="it" type="button" role="radio" aria-checked="false" data-pv-option="">출금</button>
+            </div>
+            <div class="seg-line" role="tablist" data-pv-toggle="aria-selected">
+              <button class="it" type="button" role="tab" aria-selected="true" data-pv-option="">예금</button>
+              <button class="it" type="button" role="tab" aria-selected="false" data-pv-option="">적금</button>
+              <button class="it" type="button" role="tab" aria-selected="false" data-pv-option="">투자</button>
+              <button class="it" type="button" role="tab" aria-selected="false" data-pv-option="">대출</button>
             </div>
           </div>
         </div>
-
-        <div class="comp-card">
-          <h4>Filter Chips — scrollable row</h4>
-          <p class="comp-caption">multi-select · grey-900 active · S 28 / M 34 / L 42</p>
-          <div class="chip-row" style="overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px;">
-            <span class="chip active">
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path d="m5 12 5 5L20 7"></path></svg>
-              전체
-            </span>
-            <span class="chip">결제</span>
-            <span class="chip">송금</span>
-            <span class="chip">이자</span>
-            <span class="chip">투자</span>
-            <span class="chip">자동이체</span>
-            <span class="chip">기타</span>
-          </div>
-          <p class="comp-caption" style="margin-top: 16px;">size · S 28 / M 34 / L 42</p>
+      </div>
+      <div class="pv-cell" data-pv-cell="chip">
+        <p class="pv-label">CHIP · resting / active / brand · removable</p>
+        <div class="pv-stage pv-stage--stack">
           <div class="chip-row">
-            <span class="chip" style="height: 28px; padding: 0 10px; font-size: 12px;">S</span>
-            <span class="chip">M · 34</span>
-            <span class="chip" style="height: 42px; padding: 0 16px; font-size: 15px;">L · 42</span>
+            <span class="chip">전체</span>
+            <span class="chip active">입금</span>
+            <span class="chip">출금</span>
+            <span class="chip">자동이체</span>
+            <span class="chip brand">+ 카테고리 추가</span>
+            <span class="chip active">엄마 <span class="x">×</span></span>
           </div>
         </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="filter-chips">
+        <p class="pv-label">Filter Chips — scrollable row, multi-select · grey-900 active · S 28 / M 34 / L 42</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="demo-block">
+            <div class="chip-row" style="overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px;">
+              <span class="chip active">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path d="m5 12 5 5L20 7"></path></svg>
+                전체
+              </span>
+              <span class="chip">결제</span>
+              <span class="chip">송금</span>
+              <span class="chip">이자</span>
+              <span class="chip">투자</span>
+              <span class="chip">자동이체</span>
+              <span class="chip">기타</span>
+            </div>
+            <p class="comp-caption" style="margin-top: 16px;">size · S 28 / M 34 / L 42</p>
+            <div class="chip-row">
+              <span class="chip" style="height: 28px; padding: 0 10px; font-size: 12px;">S</span>
+              <span class="chip">M · 34</span>
+              <span class="chip" style="height: 42px; padding: 0 16px; font-size: 15px;">L · 42</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        <div class="comp-card">
-          <h4>Bottom Sheet — grab handle</h4>
-          <p class="comp-caption"><span data-theme-text="">scrim 56% · radius 24 top · grey-300 handle bar</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">scrim 64% · radius 24 top · grey-300 handle bar</span></template></p>
+  <section class="pv-zone" data-pv-zone="navigation" aria-labelledby="pv-navigation">
+    <h2 class="pv-zone-title" id="pv-navigation">내비게이션</h2>
+    <div class="pv-cells">
+      <div class="pv-cell" data-pv-cell="navigation-apps-in-toss">
+        <p class="pv-label">NAVIGATION · APPS IN TOSS</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="nav-ait">
+            <span class="nav-back">‹</span>
+            <span class="nav-title">미니앱 홈</span>
+            <span class="host"><img src="/logos/toss.png" alt="">토스 안에서 실행 중</span>
+          </div>
+        </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="tab">
+        <p class="pv-label">TAB</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="tab-inline" role="tablist" data-pv-toggle="aria-selected">
+            <button class="ti" type="button" role="tab" aria-selected="true" data-pv-option="">홈</button>
+            <button class="ti" type="button" role="tab" aria-selected="false" data-pv-option="">송금</button>
+            <button class="ti" type="button" role="tab" aria-selected="false" data-pv-option="">내역</button>
+          </div>
+        </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="menu">
+        <p class="pv-label">MENU</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="menu-pop">
+            <div class="mi active">최신순 <span class="ck">✓</span></div>
+            <div class="mi">가나다순</div>
+            <div class="mi">금액순</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pv-zone" data-pv-zone="content" aria-labelledby="pv-content">
+    <h2 class="pv-zone-title" id="pv-content">콘텐츠</h2>
+    <div class="pv-cells">
+      <div class="pv-cell" data-pv-cell="list-row">
+        <p class="pv-label">list-header, list-row</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="listcard">
+            <div class="list-header">
+              <h3>최근 거래 내역</h3>
+              <a href="#">전체보기 ›</a>
+            </div>
+            <p class="catalog-dummy">아래 거래 내역의 이름·가맹점명·계좌·금액·시각은 모두 레이아웃 시연용 더미 데이터이며, 실제 거래가 아닙니다.</p>
+            <div class="lrow">
+              <div class="av">😊</div>
+              <div class="body"><div class="ttl">엄마</div><div class="sub">토스뱅크 · 1234</div></div>
+              <div class="right"><div class="amt plus">+50,000원</div><div class="stamp">방금 전</div></div>
+            </div>
+            <div class="lrow">
+              <div class="av av-blue">🚕</div>
+              <div class="body"><div class="ttl">카카오T 택시</div><div class="sub">교통</div></div>
+              <div class="right"><div class="amt">−12,300원</div><div class="stamp">오후 2:14</div></div>
+            </div>
+            <div class="lrow">
+              <div class="av av-grey">📦</div>
+              <div class="body"><div class="ttl">쿠팡</div><div class="sub">쇼핑 · 즉시 결제</div></div>
+              <div class="right"><div class="amt">−34,900원</div><div class="stamp">어제</div></div>
+            </div>
+            <div class="lrow">
+              <div class="av av-warm">🏷️</div>
+              <div class="body"><div class="ttl">정기적금 자동이체</div><div class="sub">매월 25일</div></div>
+              <div class="right"><div class="arrow">›</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="badge">
+        <p class="pv-label">BADGE · washed bg + 시맨틱 텍스트 컬러</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="badge-row">
+            <span class="badge b-red">N</span>
+            <span class="badge b-green">완료</span>
+            <span class="badge b-blue">신규</span>
+            <span class="badge b-grey">예약</span>
+          </div>
+        </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="rating">
+        <p class="pv-label">Rating, 5-star · half-fill · yellow-500 body</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="demo-block">
+            <div class="rating-row">
+              <div class="rating-stars lg">
+                <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" style="fill: var(--tds-yellow-500)"></path></svg>
+                <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" style="fill: var(--tds-yellow-500)"></path></svg>
+                <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" style="fill: var(--tds-yellow-500)"></path></svg>
+                <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" style="fill: var(--tds-yellow-500)"></path></svg>
+                <svg viewBox="0 0 24 24"><defs><linearGradient id="half-l-1"><stop offset="50%" style="stop-color: var(--tds-yellow-500)"></stop><stop offset="50%" stop-color="oklch(0.930 0.005 248)"></stop></linearGradient></defs><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="url(#half-l-1)"></path></svg><template data-theme-variant="dark" data-theme-op="swap"><svg viewBox="0 0 24 24"><defs><linearGradient id="half-d-1"><stop offset="50%" style="stop-color: var(--tds-yellow-500)"></stop><stop offset="50%" stop-color="oklch(0.361 0.019 285)"></stop></linearGradient></defs><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="url(#half-d-1)"></path></svg></template>
+              </div>
+              <div class="rating-score">4.5</div>
+            </div>
+            <div class="rating-row" style="margin-top: 16px;">
+              <div class="rating-stars">
+                <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" style="fill: var(--tds-yellow-500)"></path></svg>
+                <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" style="fill: var(--tds-yellow-500)"></path></svg>
+                <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" style="fill: var(--tds-yellow-500)"></path></svg>
+                <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.930 0.005 248)"></path></svg><template data-theme-variant="dark" data-theme-op="swap"><svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.361 0.019 285)"></path></svg></template>
+                <svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.930 0.005 248)"></path></svg><template data-theme-variant="dark" data-theme-op="swap"><svg viewBox="0 0 24 24"><path d="m12 17.3-6.2 3.8 1.7-7.1L2 9.1l7.2-.6L12 2l2.8 6.5 7.2.6-5.5 4.9 1.7 7.1z" fill="oklch(0.361 0.019 285)"></path></svg></template>
+              </div>
+              <div class="pb-val">3 / 5</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="board-row">
+        <p class="pv-label">BOARD-ROW</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="board-row">
+            <span class="rank lead">1</span>
+            <span class="b-av">🦁</span>
+            <span class="b-name">김토스</span>
+            <span class="b-score num-tab">2,840P</span>
+          </div>
+          <div class="board-row">
+            <span class="rank">2</span>
+            <span class="b-av blue">🐱</span>
+            <span class="b-name">이서연</span>
+            <span class="b-score num-tab">2,610P</span>
+          </div>
+        </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="bar-chart">
+        <p class="pv-label">BAR-CHART</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="bar-chart">
+            <div class="bc-col"><span class="bc-bar" style="height: 40%;"></span><span class="bc-lab">월</span></div>
+            <div class="bc-col"><span class="bc-bar" style="height: 64%;"></span><span class="bc-lab">화</span></div>
+            <div class="bc-col"><span class="bc-bar on" style="height: 100%;"></span><span class="bc-lab">수</span></div>
+            <div class="bc-col"><span class="bc-bar" style="height: 52%;"></span><span class="bc-lab">목</span></div>
+            <div class="bc-col"><span class="bc-bar" style="height: 76%;"></span><span class="bc-lab">금</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="grid-list">
+        <p class="pv-label">GRID-LIST</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="grid-list">
+            <div class="gl-tile"><span class="gl-ic">💸</span><span class="gl-lab">송금</span></div>
+            <div class="gl-tile"><span class="gl-ic">💳</span><span class="gl-lab">결제</span></div>
+            <div class="gl-tile"><span class="gl-ic">📈</span><span class="gl-lab">투자</span></div>
+            <div class="gl-tile"><span class="gl-ic">🧾</span><span class="gl-lab">내역</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="post">
+        <p class="pv-label">POST</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="post">
+            <div class="p-head">
+              <span class="p-av">🦊</span>
+              <span class="p-name">토스증권</span>
+              <span class="p-time">3시간 전</span>
+            </div>
+            <p class="p-body">오늘 코스피가 2,650선을 회복했어요. 관심 종목 알림을 켜두면 변동을 바로 받아볼 수 있어요.</p>
+            <div class="p-react">
+              <span class="rx on">♥ 128</span>
+              <span class="rx">💬 24</span>
+              <span class="rx">↗ 공유</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="bubble">
+        <p class="pv-label">BUBBLE</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="bubble-demo">
+            <div class="bubble them">언제 보내줄 수 있어?</div>
+            <div class="bubble me">방금 보냈어요</div>
+          </div>
+        </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="table-row">
+        <p class="pv-label">TABLE-ROW</p>
+        <div class="pv-stage pv-stage--stack">
+          <table class="table-mini">
+            <caption class="catalog-dummy">표에 든 종목명·현재가·등락률은 레이아웃 시연용 더미 데이터입니다 — 실제 시세가 아닙니다.</caption>
+            <thead>
+              <tr><th>종목</th><th class="amt-cell">현재가</th><th class="amt-cell">등락</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>삼성전자</td><td class="amt-cell">74,200</td><td class="amt-cell" style="color: var(--tds-blue-500);">+1.2%</td></tr>
+              <tr><td>SK하이닉스</td><td class="amt-cell">182,500</td><td class="amt-cell" style="color: var(--tds-red-500);">−0.8%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="border">
+        <p class="pv-label">BORDER</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="border-demo">
+            <div class="bl-row"><span class="lbl">subtle</span><span class="hr subtle"></span></div>
+            <div class="bl-row"><span class="lbl">default</span><span class="hr def"></span></div>
+            <div class="bl-row"><span class="lbl">strong</span><span class="hr strong"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pv-zone" data-pv-zone="feedback" aria-labelledby="pv-feedback">
+    <h2 class="pv-zone-title" id="pv-feedback">피드백</h2>
+    <div class="pv-cells">
+      <div class="pv-cell" data-pv-cell="toast">
+        <p class="pv-label"><span data-theme-text="">TOAST · grey-900 surface + 흰 라벨</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">TOAST · grey-200 surface + 밝은 라벨 (다크)</span></template></p>
+        <div class="pv-stage">
+          <div class="toast">
+            <div class="ic">✓</div>
+            <div class="txt">송금이 완료되었어요</div>
+          </div>
+        </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="dialog">
+        <p class="pv-label">DIALOG · radius 20 · shadow-3</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="dialog">
+            <div class="dlg-title">송금을 취소할까요?</div>
+            <div class="dlg-body">취소하면 작성하던 내용이 사라져요.</div>
+            <div class="dlg-actions">
+              <button class="dlg-btn secondary">계속 작성</button>
+              <button class="dlg-btn primary">취소</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="bottom-sheet">
+        <p class="pv-label">Bottom Sheet — grab handle, <span data-theme-text="">scrim 56% · radius 24 top · grey-300 handle bar</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">scrim 64% · radius 24 top · grey-300 handle bar</span></template></p>
+        <div class="pv-stage pv-stage--stack">
           <div class="sheet-stage">
             <div class="sheet">
               <div class="grab"></div>
@@ -1928,459 +2262,104 @@
           </div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- 05 FULL COMPONENT GRID — remaining Figma surfaces -->
-  <section class="section canvas">
-    <div class="container">
-      <div class="section-head">
-        <span class="num">05.</span>
-        <h2>Full component grid — 나머지 Figma surface</h2>
-        <span class="caption">Board-Row · Border · Bottom-Info · Bubble · Grid-List · List-Footer · Loader · Menu · Nav · Numeric-Spinner · Post · Progress-Bar · Progress-Stepper · Stepper · Tab · Table-Row</span>
+      <div class="pv-cell" data-pv-cell="tooltip">
+        <p class="pv-label">Tooltip, <span data-theme-text="">grey-900 surface · caret · 10px gap</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">grey-200 surface · caret · 10px gap</span></template></p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="demo-block">
+            <div class="tt-stage">
+              <div class="tt-anchor-wrap">
+                <div class="tt-anchor">최대 한도</div>
+                <div class="tt top">월 1,000만원까지 한 번에</div>
+              </div>
+            </div>
+            <div class="tt-stage" style="margin-top: 12px;">
+              <div class="tt-anchor-wrap">
+                <div class="tt-anchor">자동이체</div>
+                <div class="tt top brand">매월 25일에 빠져나가요</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <div class="full-grid">
-        <!-- Board-Row -->
-        <div class="ftile">
-          <span class="text-meta-caps">BOARD-ROW</span>
-          <div class="ftile-demo" style="gap: 10px;">
-            <div class="board-row">
-              <span class="rank lead">1</span>
-              <span class="b-av">🦁</span>
-              <span class="b-name">김토스</span>
-              <span class="b-score num-tab">2,840P</span>
-            </div>
-            <div class="board-row">
-              <span class="rank">2</span>
-              <span class="b-av blue">🐱</span>
-              <span class="b-name">이서연</span>
-              <span class="b-score num-tab">2,610P</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Bar-Chart -->
-        <div class="ftile">
-          <span class="text-meta-caps">BAR-CHART</span>
-          <div class="ftile-demo">
-            <div class="bar-chart">
-              <div class="bc-col"><span class="bc-bar" style="height: 40%;"></span><span class="bc-lab">월</span></div>
-              <div class="bc-col"><span class="bc-bar" style="height: 64%;"></span><span class="bc-lab">화</span></div>
-              <div class="bc-col"><span class="bc-bar on" style="height: 100%;"></span><span class="bc-lab">수</span></div>
-              <div class="bc-col"><span class="bc-bar" style="height: 52%;"></span><span class="bc-lab">목</span></div>
-              <div class="bc-col"><span class="bc-bar" style="height: 76%;"></span><span class="bc-lab">금</span></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Border -->
-        <div class="ftile">
-          <span class="text-meta-caps">BORDER</span>
-          <div class="ftile-demo">
-            <div class="border-demo">
-              <div class="bl-row"><span class="lbl">subtle</span><span class="hr subtle"></span></div>
-              <div class="bl-row"><span class="lbl">default</span><span class="hr def"></span></div>
-              <div class="bl-row"><span class="lbl">strong</span><span class="hr strong"></span></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Bottom-Info -->
-        <div class="ftile">
-          <span class="text-meta-caps">BOTTOM-INFO</span>
-          <div class="ftile-demo">
-            <div class="bottom-info">
-              <span class="info-pill">수수료 없이 보내요</span>
-              <button class="bi-cta" type="button">120,000원 보내기</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Bubble -->
-        <div class="ftile">
-          <span class="text-meta-caps">BUBBLE</span>
-          <div class="ftile-demo">
-            <div class="bubble-demo">
-              <div class="bubble them">언제 보내줄 수 있어?</div>
-              <div class="bubble me">방금 보냈어요</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Grid-List -->
-        <div class="ftile">
-          <span class="text-meta-caps">GRID-LIST</span>
-          <div class="ftile-demo">
-            <div class="grid-list">
-              <div class="gl-tile"><span class="gl-ic">💸</span><span class="gl-lab">송금</span></div>
-              <div class="gl-tile"><span class="gl-ic">💳</span><span class="gl-lab">결제</span></div>
-              <div class="gl-tile"><span class="gl-ic">📈</span><span class="gl-lab">투자</span></div>
-              <div class="gl-tile"><span class="gl-ic">🧾</span><span class="gl-lab">내역</span></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- List-Footer -->
-        <div class="ftile">
-          <span class="text-meta-caps">LIST-FOOTER</span>
-          <div class="ftile-demo">
-            <button class="list-footer" type="button">더보기 <span class="chev">›</span></button>
-          </div>
-        </div>
-
-        <!-- Loader -->
-        <div class="ftile">
-          <span class="text-meta-caps">LOADER</span>
-          <div class="ftile-demo">
-            <div class="loader-3"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
-          </div>
-        </div>
-
-        <!-- Menu -->
-        <div class="ftile">
-          <span class="text-meta-caps">MENU</span>
-          <div class="ftile-demo">
-            <div class="menu-pop">
-              <div class="mi active">최신순 <span class="ck">✓</span></div>
-              <div class="mi">가나다순</div>
-              <div class="mi">금액순</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Navigation - Apps in Toss -->
-        <div class="ftile">
-          <span class="text-meta-caps">NAVIGATION · APPS IN TOSS</span>
-          <div class="ftile-demo">
-            <div class="nav-ait">
-              <span class="nav-back">‹</span>
-              <span class="nav-title">미니앱 홈</span>
-              <span class="host"><img src="/logos/toss.png" alt="">토스 안에서 실행 중</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Numeric-Spinner -->
-        <div class="ftile">
-          <span class="text-meta-caps">NUMERIC-SPINNER</span>
-          <div class="ftile-demo">
-            <div class="num-spin">
-              <button type="button" aria-label="감소">−</button>
-              <span class="nv num-tab">2</span>
-              <button type="button" aria-label="증가">+</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Post -->
-        <div class="ftile">
-          <span class="text-meta-caps">POST</span>
-          <div class="ftile-demo">
-            <div class="post">
-              <div class="p-head">
-                <span class="p-av">🦊</span>
-                <span class="p-name">토스증권</span>
-                <span class="p-time">3시간 전</span>
-              </div>
-              <p class="p-body">오늘 코스피가 2,650선을 회복했어요. 관심 종목 알림을 켜두면 변동을 바로 받아볼 수 있어요.</p>
-              <div class="p-react">
-                <span class="rx on">♥ 128</span>
-                <span class="rx">💬 24</span>
-                <span class="rx">↗ 공유</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Progress-Bar (tile) -->
-        <div class="ftile">
-          <span class="text-meta-caps">PROGRESS-BAR</span>
-          <div class="ftile-demo">
+      <div class="pv-cell" data-pv-cell="progress-bar">
+        <p class="pv-label">Progress Bar, 8px track · brand / success / danger fill · 320ms ease</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="demo-block">
             <div class="pb-row">
-              <div class="pb-head"><div class="pb-lab">목표 달성률</div><div class="pb-val num-tab">60%</div></div>
-              <div class="pb-track l"><div class="pb-fill" style="width: 60%;"></div></div>
+              <div class="pb-head"><div class="pb-lab">목표 달성률</div><div class="pb-val">68%</div></div>
+              <div class="pb-track l"><div class="pb-fill brand-grad" style="width: 68%;"></div></div>
+            </div>
+            <div class="pb-row">
+              <div class="pb-head"><div class="pb-lab">업로드 중</div><div class="pb-val">12 / 30 MB</div></div>
+              <div class="pb-track"><div class="pb-fill" style="width: 40%;"></div></div>
+            </div>
+            <div class="pb-row">
+              <div class="pb-head"><div class="pb-lab">한도 사용</div><div class="pb-val">92%</div></div>
+              <div class="pb-track"><div class="pb-fill danger" style="width: 92%;"></div></div>
+            </div>
+            <div class="pb-row">
+              <div class="pb-head"><div class="pb-lab">백업 완료</div><div class="pb-val">100%</div></div>
+              <div class="pb-track s"><div class="pb-fill success" style="width: 100%;"></div></div>
             </div>
           </div>
         </div>
-
-        <!-- Progress-Stepper -->
-        <div class="ftile">
-          <span class="text-meta-caps">PROGRESS-STEPPER</span>
-          <div class="ftile-demo">
-            <div class="pstep">
-              <span class="node done">✓</span>
-              <span class="seg done"></span>
-              <span class="node active">2</span>
-              <span class="seg"></span>
-              <span class="node">3</span>
-              <span class="seg"></span>
-              <span class="node">4</span>
-            </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="progress-bar-row">
+        <p class="pv-label">PROGRESS-BAR</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="pb-row">
+            <div class="pb-head"><div class="pb-lab">목표 달성률</div><div class="pb-val num-tab">60%</div></div>
+            <div class="pb-track l"><div class="pb-fill" style="width: 60%;"></div></div>
           </div>
         </div>
-
-        <!-- Stepper (vertical) -->
-        <div class="ftile">
-          <span class="text-meta-caps">STEPPER</span>
-          <div class="ftile-demo">
-            <div class="v-step">
-              <button type="button" aria-label="증가">▲</button>
-              <span class="sv num-tab">3</span>
-              <button type="button" aria-label="감소">▼</button>
-            </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="progress-stepper">
+        <p class="pv-label">PROGRESS-STEPPER</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="pstep">
+            <span class="node done">✓</span>
+            <span class="seg done"></span>
+            <span class="node active">2</span>
+            <span class="seg"></span>
+            <span class="node">3</span>
+            <span class="seg"></span>
+            <span class="node">4</span>
           </div>
         </div>
-
-        <!-- Tab (inline underline) -->
-        <div class="ftile">
-          <span class="text-meta-caps">TAB</span>
-          <div class="ftile-demo">
-            <div class="tab-inline">
-              <span class="ti active">홈</span>
-              <span class="ti">송금</span>
-              <span class="ti">내역</span>
-            </div>
-          </div>
+      </div>
+      <div class="pv-cell" data-pv-cell="loader">
+        <p class="pv-label">LOADER</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="loader-3"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
         </div>
+      </div>
+    </div>
+  </section>
 
-        <!-- Table-Row -->
-        <div class="ftile">
-          <span class="text-meta-caps">TABLE-ROW</span>
-          <div class="ftile-demo">
-            <table class="table-mini">
-              <caption class="catalog-dummy">표에 든 종목명·현재가·등락률은 레이아웃 시연용 더미 데이터입니다 — 실제 시세가 아닙니다.</caption>
-              <thead>
-                <tr><th>종목</th><th class="amt-cell">현재가</th><th class="amt-cell">등락</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>삼성전자</td><td class="amt-cell">74,200</td><td class="amt-cell" style="color: var(--tds-blue-500);">+1.2%</td></tr>
-                <tr><td>SK하이닉스</td><td class="amt-cell">182,500</td><td class="amt-cell" style="color: var(--tds-red-500);">−0.8%</td></tr>
-              </tbody>
-            </table>
+  <section class="pv-zone" data-pv-zone="brand" aria-labelledby="pv-brand">
+    <h2 class="pv-zone-title" id="pv-brand">브랜드 고유</h2>
+    <div class="pv-cells">
+      <div class="pv-cell" data-pv-cell="keypad">
+        <p class="pv-label">keypad</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="keypad-grid">
+            <button class="key">1</button>
+            <button class="key">2</button>
+            <button class="key">3</button>
+            <button class="key">4</button>
+            <button class="key">5</button>
+            <button class="key">6</button>
+            <button class="key">7</button>
+            <button class="key">8</button>
+            <button class="key">9</button>
+            <button class="key">00</button>
+            <button class="key">0</button>
+            <button class="key" aria-label="지우기">⌫</button>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 06 KEY SCREEN — Send-Money 5-screen flow -->
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <span class="num">06.</span>
-        <h2>Send-Money flow — 5 화면 click-through</h2>
-        <span class="caption">Home → Select → Amount → Confirm → Done · 360px iOS frame</span>
-      </div>
-
-      <div class="mock-frame">
-        <!-- PHONE 1 · HOME -->
-        <div class="stage">
-          <div class="stage-label"><span class="num">01.</span>홈 · 송금하기</div>
-          <div class="phone">
-            <div class="top-app-bar">
-              <div class="title" style="font-size: 22px; font-weight: 800; color: var(--tds-grey-900); padding-left: 4px; letter-spacing: -0.020em;">toss</div>
-              <div class="ic-btn">⌕</div>
-              <div class="ic-btn" style="position: relative;">
-                🔔
-                <span style="position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 999px; background: var(--tds-red-500); border: 1.5px solid #fff;"></span>
-              </div><template data-theme-variant="dark" data-theme-op="swap"><div class="ic-btn" style="position: relative;">
-                🔔
-                <span style="position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 999px; background: var(--tds-red-500); border: 1.5px solid var(--tds-near-black);"></span>
-              </div></template>
-            </div>
-            <div class="content">
-              <div class="balance-card">
-                <div class="balance-card-head">
-                  <span class="lbl">토스뱅크 통장</span>
-                  <span style="color: var(--tds-grey-400); font-size: 14px;">›</span>
-                </div>
-                <p class="balance num-tab">1,284,520<span class="unit">원</span></p>
-                <div class="home-quick-btns">
-                  <button class="qb">채우기</button>
-                  <button class="qb primary">보내기</button>
-                </div>
-              </div>
-
-              <p class="section-h">최근 송금</p>
-              <div class="list-card">
-                <div class="lrow">
-                  <div class="av">😊</div>
-                  <div class="body"><div class="ttl">엄마</div><div class="sub">토스뱅크 · 1234</div></div>
-                  <div class="right"><div class="arrow">›</div></div>
-                </div>
-                <div class="lrow">
-                  <div class="av av-blue">🧑‍💼</div>
-                  <div class="body"><div class="ttl">김민준</div><div class="sub">국민 · 5678</div></div>
-                  <div class="right"><div class="arrow">›</div></div>
-                </div>
-                <div class="lrow">
-                  <div class="av av-warm">🎂</div>
-                  <div class="body"><div class="ttl">이서연</div><div class="sub">신한 · 9012</div></div>
-                  <div class="right"><div class="arrow">›</div></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Floating Tab-Bar (홈 · 혜택 · 주식 · 전체) -->
-            <nav class="tab-bar" aria-label="하단 탭">
-              <span class="tab active">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 12 4l8 7"></path><path d="M6 10v9h12v-9"></path></svg>
-                홈
-              </span>
-              <span class="tab">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v8H4v-8"></path><path d="M2 8h20v4H2z"></path><path d="M12 8v12"></path><path d="M12 8S10 4 7.5 4 5 6 5 6s.5 2 3 2 4 0 4 0Z"></path></svg>
-                혜택
-              </span>
-              <span class="tab">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18 9 11l4 4 7-9"></path></svg>
-                주식
-              </span>
-              <span class="tab">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path></svg>
-                전체
-              </span>
-            </nav>
-
-            <div class="bottom-cta-wrap">
-              <div class="protection"></div>
-              <button class="bottom-cta" type="button">송금하기</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- PHONE 2 · SELECT -->
-        <div class="stage">
-          <div class="stage-label"><span class="num">02.</span>받는 사람 선택</div>
-          <div class="phone">
-            <div class="top-app-bar">
-              <div class="ic-btn">←</div>
-              <div class="title">누구에게 보낼까요?</div>
-              <div class="ic-btn right">×</div>
-            </div>
-            <div class="content" style="padding: 8px 16px 16px;">
-              <div class="search-field">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"></circle><path d="m20 20-3.5-3.5"></path></svg>
-                <input placeholder="이름, 전화번호 또는 계좌번호">
-              </div>
-              <p style="font-size: 13px; font-weight: 600; color: var(--tds-grey-600); margin: 18px 8px 6px;">자주 쓰는 친구</p>
-              <div class="lrow" style="padding: 10px 8px;">
-                <div class="av">😊</div>
-                <div class="body"><div class="ttl">엄마</div><div class="sub">토스뱅크 · 1234</div></div>
-                <div class="right"><div class="arrow">›</div></div>
-              </div>
-              <div class="lrow" style="padding: 10px 8px;">
-                <div class="av av-blue">🧑‍💼</div>
-                <div class="body"><div class="ttl">김민준</div><div class="sub">국민 · 5678</div></div>
-                <div class="right"><div class="arrow">›</div></div>
-              </div>
-              <div class="lrow" style="padding: 10px 8px;">
-                <div class="av av-warm">🎂</div>
-                <div class="body"><div class="ttl">이서연</div><div class="sub">신한 · 9012</div></div>
-                <div class="right"><div class="arrow">›</div></div>
-              </div>
-              <div class="lrow" style="padding: 10px 8px;">
-                <div class="av av-grey">🐶</div>
-                <div class="body"><div class="ttl">박지호</div><div class="sub">카카오뱅크 · 3456</div></div>
-                <div class="right"><div class="arrow">›</div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- PHONE 3 · AMOUNT -->
-        <div class="stage">
-          <div class="stage-label"><span class="num">03.</span>금액 입력</div>
-          <div class="phone">
-            <div class="top-app-bar">
-              <div class="ic-btn">←</div>
-              <div class="title" style="opacity: 0;">.</div>
-              <div class="ic-btn right">×</div>
-            </div>
-            <div class="content" style="padding: 4px 20px 8px;">
-              <p class="amt-screen-eyebrow">엄마 · 토스뱅크 1234</p>
-              <p class="amt-screen-value num-tab">120,000<span class="unit">원</span></p>
-              <p class="amt-screen-balance num-tab">출금 가능 1,284,520원</p>
-              <div class="amt-quick-chips">
-                <button class="qc">+1만</button>
-                <button class="qc">+5만</button>
-                <button class="qc">+10만</button>
-                <button class="qc">전액</button>
-              </div>
-              <div class="keypad-grid">
-                <button class="key">1</button>
-                <button class="key">2</button>
-                <button class="key">3</button>
-                <button class="key">4</button>
-                <button class="key">5</button>
-                <button class="key">6</button>
-                <button class="key">7</button>
-                <button class="key">8</button>
-                <button class="key">9</button>
-                <button class="key">00</button>
-                <button class="key">0</button>
-                <button class="key" aria-label="지우기">⌫</button>
-              </div>
-            </div>
-            <div class="bottom-cta-wrap">
-              <div class="protection"></div>
-              <button class="bottom-cta" type="button">120,000원 보내기</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- PHONE 4 · CONFIRM -->
-        <div class="stage">
-          <div class="stage-label"><span class="num">04.</span>확인</div>
-          <div class="phone">
-            <div class="top-app-bar">
-              <div class="ic-btn">←</div>
-              <div class="title" style="opacity: 0;">.</div>
-              <div class="ic-btn right">×</div>
-            </div>
-            <div class="content" style="padding: 8px 24px 16px;">
-              <p class="confirm-head">엄마님께<br>120,000원을 보낼까요?</p>
-              <div class="confirm-card">
-                <div class="kv"><span class="k">받는 분</span><span class="v">엄마</span></div>
-                <div class="kv"><span class="k">받는 계좌</span><span class="v">토스뱅크 1000-1234-5678</span></div>
-                <div class="kv"><span class="k">보내는 통장</span><span class="v">토스뱅크 통장</span></div>
-                <div class="kv"><span class="k">수수료</span><span class="v brand">없음</span></div>
-              </div>
-              <p class="tds-body-3" style="margin-top: 20px;">송금 후에는 취소할 수 없어요. 한 번 더 확인해주세요.</p>
-            </div>
-            <div class="bottom-cta-wrap">
-              <div class="protection"></div>
-              <button class="bottom-cta" type="button">120,000원 보내기</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- PHONE 5 · DONE -->
-        <div class="stage">
-          <div class="stage-label"><span class="num">05.</span>완료</div>
-          <div class="phone">
-            <div class="top-app-bar">
-              <div class="title" style="opacity: 0;">.</div>
-            </div>
-            <div class="content" style="padding: 0;">
-              <div class="done-stage">
-                <div class="done-check">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"></path></svg><template data-theme-variant="dark" data-theme-op="swap"><svg viewBox="0 0 24 24" fill="none" stroke="var(--tds-near-black)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"></path></svg></template>
-                </div>
-                <p class="done-title">송금 완료</p>
-                <p class="done-sub num-tab">엄마님께 120,000원을<br>보냈어요</p>
-                <div class="done-illo">😊</div>
-              </div>
-            </div>
-            <div class="bottom-cta-wrap">
-              <div class="protection"></div>
-              <button class="bottom-cta" type="button">확인</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
+</main>
 </body></html>
