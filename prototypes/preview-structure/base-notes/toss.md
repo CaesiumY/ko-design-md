@@ -198,6 +198,7 @@ node prototypes/preview-structure/base-notes/toss-rezone.mjs --in <1단계 파�
 | 프리뷰 검증기 | `pnpm validate:previews --slug toss --verbose` | 막힘 0, 경고 2(원본 4). 남은 둘은 `.grid-list`, `.keypad-grid` 의 bare `1fr` 과 접기 없음이다. 브랜드 스타일이라 손대지 않았다 |
 | 텍스트 요소 하한 80 | `pnpm audit:contrast:staged` | 테마마다 374 |
 | 다크 접기 전후의 렌더 | `dom-diff.ts`(1단계에서) | `SAME` |
+| 저장소 검사 묶음 | `pnpm gates` 의 단계를 하나씩 | 린트만 `dom-diff.ts` 의 기존 오류에서 멈추고 나머지는 통과(치지직 메모의 같은 줄) |
 
 ## 틀과 기준에 대해 알아낸 것
 

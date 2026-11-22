@@ -90,10 +90,10 @@ function structure(input: StructureInput): Array<string> {
   const body = doc.body
   if (!body.firstElementChild?.classList.contains("catalog-disclaimer"))
     out.push("body does not start with the disclaimer strip")
-  const main = doc.querySelector("main.pv-page")
-  if (main === null) return [...out, "no main.pv-page"]
-  const kids = Array.from(main.children)
-  const hero = kids[0]
+  const frame = doc.querySelector("main.pv-page")
+  if (frame === null) return [...out, "no main.pv-page"]
+  const kids = Array.from(frame.children)
+  const hero = kids.at(0)
   if (
     hero?.tagName !== "HEADER" ||
     !hero.classList.contains("pv-hero") ||
@@ -135,7 +135,9 @@ function structure(input: StructureInput): Array<string> {
     const lists = zone.querySelectorAll(":scope > .pv-cells")
     if (lists.length !== 1 || zone.children.length !== 2)
       out.push(`${id}: expected a title and one .pv-cells`)
-    const cells = Array.from(lists[0]?.children ?? [])
+    const cells = Array.from(
+      zone.querySelector(":scope > .pv-cells")?.children ?? []
+    )
     if (cells.length === 0) out.push(`${id}: an empty zone`)
     for (const cell of cells) {
       const name = cell.getAttribute("data-pv-cell") ?? ""
@@ -411,11 +413,19 @@ async function main(): Promise<void> {
           await settle(page)
           const found = await page.evaluate(layout)
           problems.push(...found.map((p) => `${width} ${theme}: ${p}`))
-          if (SHOTS !== undefined)
+          if (SHOTS !== undefined) {
             await page.screenshot({
               path: resolve(SHOTS, `${slug}-${width}-${theme}.png`),
               fullPage: true,
             })
+            // The whole page is too tall to read at a glance; the top of it
+            // (hero and the start of the screens zone) is what moved most.
+            await page.screenshot({
+              path: resolve(SHOTS, `${slug}-${width}-${theme}-top.png`),
+              clip: { x: 0, y: 0, width, height: 1400 },
+              fullPage: true,
+            })
+          }
         }
         if (width === 976) {
           await page.evaluate(() =>
