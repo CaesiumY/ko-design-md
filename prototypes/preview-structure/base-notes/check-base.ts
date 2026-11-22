@@ -4,12 +4,27 @@
 // cell, and whether the things that are meant to be operated really operate.
 //
 //   pnpm exec tsx prototypes/preview-structure/base-notes/check-base.ts <slug> [<slug> …]
+//   PV_SHOTS=<existing dir> … : also save a full-page picture per width and theme
 //
 // The preview is opened from this checkout's public/ over a loopback server
 // (the contrast harness's), so no dev server is needed.
 //
+// Two different documents are looked at, on purpose:
+//   - structure() reads the FILE's markup, parsed apart from the page. The shared
+//     iframe.js turns every <template data-theme-variant> into a comment before
+//     load, so the rendered page can never show where a dark variant sits.
+//   - layout() and operate() read the RENDERED page.
+//
+// What this does not see (do not read "ok" as covering these):
+//   - content a brand box cuts off with its own `overflow` (a clipped screen
+//     recreation is the brand's drawing, not a spill) — only the box is measured;
+//   - the markup inside a dark-variant <template>, beyond a label swap being a label;
+//   - whether a zone holds the right components for its use. That is a reading
+//     of the DESIGN.md, recorded in base-notes/{slug}.md.
+//
 // Exit 0: every check held. Exit 1: at least one did not (each is printed).
 
+import { readFileSync } from "node:fs"
 import { dirname, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 import {
@@ -19,14 +34,15 @@ import {
 import type { Page } from "playwright"
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..")
-// PV_SHOTS=<existing dir>: also save a full-page picture per width and theme.
 const SHOTS =
   process.env.PV_SHOTS === undefined || process.env.PV_SHOTS === ""
     ? undefined
     : resolve(process.env.PV_SHOTS)
 const WIDTHS = [375, 768, 976, 1440]
 const THEMES = ["light", "dark"]
-const ZONES: Array<[string, string]> = [
+// STANDARD §1. The same list lives in toss-rezone.mjs (ZONES) — a prototype
+// duplication; whichever structure wins keeps it in one place.
+const ZONES: Array<[id: string, title: string]> = [
   ["screens", "화면"],
   ["buttons", "버튼"],
   ["inputs", "입력"],
@@ -37,7 +53,18 @@ const ZONES: Array<[string, string]> = [
   ["brand", "브랜드 고유"],
 ]
 const CONTROLS =
-  "button, input, select, textarea, a[href], details, [tabindex], [data-pv-toggle]"
+  "button, input, select, textarea, a[href], details, [tabindex], [contenteditable], [data-pv-toggle]"
+
+/**
+ * The TypeScript runner wraps inner functions in a `__name(…)` helper. A
+ * function handed to the page is sent as its source, where no such helper
+ * exists, so the page gets a stand-in before any of them runs.
+ */
+function defineNameHelper(): void {
+  ;(globalThis as unknown as { __name: (f: unknown) => unknown }).__name = (
+    f
+  ) => f
+}
 
 async function settle(page: Page): Promise<void> {
   await page.evaluate(
@@ -49,16 +76,21 @@ async function settle(page: Page): Promise<void> {
   await page.waitForTimeout(60)
 }
 
-/** Shape of the document: does not depend on width or theme. */
-function structure(
-  zones: Array<[string, string]>,
+type StructureInput = {
+  html: string
+  zones: Array<[string, string]>
   controls: string
-): Array<string> {
+}
+
+/** Shape of the file's markup: does not depend on width, theme, or scripts. */
+function structure(input: StructureInput): Array<string> {
+  const { html, zones, controls } = input
+  const doc = new DOMParser().parseFromString(html, "text/html")
   const out: Array<string> = []
-  const body = document.body
+  const body = doc.body
   if (!body.firstElementChild?.classList.contains("catalog-disclaimer"))
     out.push("body does not start with the disclaimer strip")
-  const main = document.querySelector("main.pv-page")
+  const main = doc.querySelector("main.pv-page")
   if (main === null) return [...out, "no main.pv-page"]
   const kids = Array.from(main.children)
   const hero = kids[0]
@@ -69,16 +101,14 @@ function structure(
   ) {
     out.push("the first child of main is not header.pv-hero[data-pv-zone=hero]")
   }
-  if (
-    document.querySelectorAll("h1").length !== 1 ||
-    hero?.querySelector("h1") === null
-  )
+  if (doc.querySelectorAll("h1").length !== 1 || !hero?.querySelector("h1"))
     out.push("expected one h1, inside the hero")
-  const ids = kids
-    .slice(1)
-    .map(
-      (el) => el.getAttribute("data-pv-zone") ?? `<${el.tagName.toLowerCase()}>`
-    )
+  // STANDARD §1 row 10: an attribution line may close the page, after the zones.
+  const sections = kids.slice(1)
+  if (sections.at(-1)?.classList.contains("catalog-attribution")) sections.pop()
+  const ids = sections.map(
+    (el) => el.getAttribute("data-pv-zone") ?? `<${el.tagName.toLowerCase()}>`
+  )
   const known = zones.map(([id]) => id)
   const expected = known.filter((id) => ids.includes(id))
   if (ids.join(",") !== expected.join(","))
@@ -88,7 +118,7 @@ function structure(
   if (ids[0] !== "screens")
     out.push("the zone right after the hero is not screens")
   const seen = new Set<string>()
-  for (const zone of kids.slice(1)) {
+  for (const zone of sections) {
     const id = zone.getAttribute("data-pv-zone") ?? ""
     const title = zones.find(([z]) => z === id)?.[1]
     const h2 = zone.querySelector(":scope > h2.pv-zone-title")
@@ -109,17 +139,17 @@ function structure(
     if (cells.length === 0) out.push(`${id}: an empty zone`)
     for (const cell of cells) {
       const name = cell.getAttribute("data-pv-cell") ?? ""
+      const at = `${id}/${name}`
       if (!cell.classList.contains("pv-cell") || name === "")
         out.push(`${id}: a child of .pv-cells is not a named .pv-cell`)
-      if (seen.has(name))
-        out.push(`${id}: data-pv-cell "${name}" is used twice`)
+      if (seen.has(name)) out.push(`${at}: data-pv-cell is used twice`)
       seen.add(name)
-      // label, (dark variant), (dummy-data label), stage — in that order
+      // label, (dark variant of the label), (dummy-data label), stage — in that order
       const shape = Array.from(cell.children)
         .map((el) =>
           el.matches("p.pv-label")
             ? "L"
-            : el.matches("template[data-theme-variant]")
+            : el.matches('template[data-theme-variant="dark"]')
               ? "t"
               : el.matches(".catalog-dummy")
                 ? "d"
@@ -130,34 +160,60 @@ function structure(
         .join("")
       if (!/^Lt?d?S$/.test(shape))
         out.push(
-          `${id}/${name}: cell children are "${shape}" — expected label, (dark variant), (dummy label), stage`
+          `${at}: cell children are "${shape}" — expected label, (dark variant), (dummy label), stage`
         )
-      if ((cell.querySelector(".pv-screen") !== null) !== (id === "screens"))
+      // A dark variant swaps the node right before it (iframe.js). As a child
+      // of the cell that node is the label, so it must carry a label; inside
+      // the label it swaps one piece, so a piece must come before it.
+      for (const tpl of Array.from(
+        cell.querySelectorAll<HTMLTemplateElement>(
+          ':scope > template[data-theme-variant="dark"]'
+        )
+      )) {
+        const first = tpl.content.firstElementChild
+        if (first === null || !first.matches("p.pv-label"))
+          out.push(`${at}: the label's dark variant is not a p.pv-label`)
+      }
+      for (const tpl of Array.from(
+        cell.querySelectorAll(":scope > p.pv-label template")
+      )) {
+        if (
+          tpl.getAttribute("data-theme-variant") !== "dark" ||
+          tpl.previousElementSibling === null
+        )
+          out.push(
+            `${at}: a template inside the label has no piece before it to swap`
+          )
+      }
+      const screens = cell.querySelectorAll(".pv-screen").length
+      if (screens !== (id === "screens" ? 1 : 0))
         out.push(
-          `${id}/${name}: .pv-screen belongs to the screens zone, one per cell`
+          `${at}: ${screens} .pv-screen — a screens cell holds one, other cells none`
         )
     }
   }
-  for (const screen of Array.from(document.querySelectorAll(".pv-screen"))) {
+  for (const screen of Array.from(doc.querySelectorAll(".pv-screen"))) {
     if (
-      screen.querySelector('[class*="pv-"], [data-pv-zone], [data-pv-cell]') !==
-      null
+      screen.querySelector(
+        '[class*="pv-"], [data-pv-zone], [data-pv-cell], [data-pv-toggle], [data-pv-option]'
+      ) !== null
     )
-      out.push("a .pv-screen holds frame classes or zones")
+      out.push("a .pv-screen holds frame classes, zones, or a toggle group")
   }
   for (const img of Array.from(
-    document.querySelectorAll('.pv-screen [role="img"]')
+    doc.querySelectorAll('.pv-screen[role="img"], .pv-screen [role="img"]')
   )) {
     const n = img.querySelectorAll(controls).length
     if (n !== 0) out.push(`a role="img" screen holds ${n} real control(s)`)
   }
-  if (body.querySelector("script") !== null)
-    out.push("the page carries its own <script>")
-  if (document.querySelector('[role="tabpanel"]') !== null)
+  for (const script of Array.from(doc.querySelectorAll("script"))) {
+    const src = script.getAttribute("src") ?? ""
+    if (!src.endsWith("/preview/_runtime/iframe.js"))
+      out.push(`the page carries its own <script>${src && ` (${src})`}`)
+  }
+  if (doc.querySelector('[role="tabpanel"]') !== null)
     out.push("a tab panel exists")
-  for (const group of Array.from(
-    document.querySelectorAll("[data-pv-toggle]")
-  )) {
+  for (const group of Array.from(doc.querySelectorAll("[data-pv-toggle]"))) {
     const attr = group.getAttribute("data-pv-toggle") ?? ""
     const options = Array.from(group.querySelectorAll("[data-pv-option]"))
     const on = options.filter((o) => o.getAttribute(attr) === "true").length
@@ -171,15 +227,19 @@ function structure(
       )
     }
   }
-  for (const d of Array.from(document.querySelectorAll(".pv-zone details"))) {
-    const zone = d.closest(".pv-zone")
-    if (zone?.querySelector("details[open]") === null)
-      out.push("an accordion zone has no open <details>")
+  for (const zone of Array.from(doc.querySelectorAll(".pv-zone"))) {
+    if (
+      zone.querySelector("details") !== null &&
+      zone.querySelector("details[open]") === null
+    )
+      out.push(
+        `${zone.getAttribute("data-pv-zone")}: accordions with none open`
+      )
   }
   return out
 }
 
-/** Layout at one width and theme. */
+/** Layout of the rendered page at one width and theme. */
 function layout(): Array<string> {
   const out: Array<string> = []
   const root = document.documentElement
@@ -187,14 +247,19 @@ function layout(): Array<string> {
     out.push(
       `page scrolls sideways (${root.scrollWidth} > ${root.clientWidth})`
     )
-  const clipped = (el: Element, stop: Element): boolean => {
+  // A box that clips or scrolls along an axis owns what happens inside it on
+  // that axis; what it hides is not a spill out of the cell.
+  const clippedOn = (
+    el: Element,
+    stop: Element,
+    axis: "overflowX" | "overflowY"
+  ): boolean => {
     for (
       let p = el.parentElement;
       p !== null && p !== stop;
       p = p.parentElement
     ) {
-      const s = getComputedStyle(p)
-      if (s.overflowX !== "visible" || s.overflowY !== "visible") return true
+      if (getComputedStyle(p)[axis] !== "visible") return true
     }
     return false
   }
@@ -205,9 +270,13 @@ function layout(): Array<string> {
     for (const el of Array.from(cell.querySelectorAll("*"))) {
       const r = el.getBoundingClientRect()
       if (r.width === 0 && r.height === 0) continue
-      if (clipped(el, cell)) continue
-      if (r.right > box.right + 0.5 || r.left < box.left - 0.5) sideways++
-      if (r.bottom > box.bottom + 0.5) below++
+      if (
+        (r.right > box.right + 0.5 || r.left < box.left - 0.5) &&
+        !clippedOn(el, cell, "overflowX")
+      )
+        sideways++
+      if (r.bottom > box.bottom + 0.5 && !clippedOn(el, cell, "overflowY"))
+        below++
     }
     const name = cell.getAttribute("data-pv-cell")
     if (sideways !== 0)
@@ -227,6 +296,7 @@ function layout(): Array<string> {
   return out
 }
 
+/** Clicks what a visitor would click. The first entry is a count, not a problem. */
 async function operate(page: Page): Promise<Array<string>> {
   const out: Array<string> = []
   const shown = (): Promise<number> =>
@@ -243,6 +313,8 @@ async function operate(page: Page): Promise<Array<string>> {
     const attr = (await group.getAttribute("data-pv-toggle")) ?? ""
     const options = group.locator("[data-pv-option]")
     const n = await options.count()
+    // Nothing to move between; structure() already reports the group.
+    if (n < 2) continue
     const was = await options.evaluateAll(
       (els, a) => els.findIndex((el) => el.getAttribute(a) === "true"),
       attr
@@ -299,6 +371,10 @@ async function main(): Promise<void> {
   try {
     for (const slug of slugs) {
       const url = `http://127.0.0.1:${server.port}/preview/${slug}/preview.html`
+      const html = readFileSync(
+        resolve(ROOT, "public/preview", slug, "preview.html"),
+        "utf8"
+      )
       const problems: Array<string> = []
       let summary = ""
       for (const width of WIDTHS) {
@@ -306,8 +382,26 @@ async function main(): Promise<void> {
           width,
           online: false,
         })
+        await context.addInitScript(defineNameHelper)
         const page = await context.newPage()
         await page.goto(url, { waitUntil: "load" })
+        if (width === WIDTHS[0]) {
+          problems.push(
+            ...(await page.evaluate(structure, {
+              html,
+              zones: ZONES,
+              controls: CONTROLS,
+            }))
+          )
+          summary = await page.evaluate(() =>
+            Array.from(document.querySelectorAll(".pv-zone"))
+              .map(
+                (z) =>
+                  `${z.getAttribute("data-pv-zone")} ${z.querySelectorAll(".pv-cell").length}`
+              )
+              .join(", ")
+          )
+        }
         for (const theme of THEMES) {
           await page.evaluate(
             (value) =>
@@ -315,56 +409,22 @@ async function main(): Promise<void> {
             theme
           )
           await settle(page)
-          if (width === WIDTHS[0] && theme === THEMES[0]) {
-            problems.push(
-              ...(await page.evaluate(
-                ([z, c]) => (0, eval)(`(${z})`)(JSON.parse(c[0]), c[1]),
-                [
-                  structure.toString(),
-                  [JSON.stringify(ZONES), CONTROLS],
-                ] as const
-              ))
-            )
-            summary = await page.evaluate(() =>
-              Array.from(document.querySelectorAll(".pv-zone"))
-                .map(
-                  (z) =>
-                    `${z.getAttribute("data-pv-zone")} ${z.querySelectorAll(".pv-cell").length}`
-                )
-                .join(", ")
-            )
-          }
-          problems.push(
-            ...(
-              await page.evaluate(
-                (fn) => (0, eval)(`(${fn})`)(),
-                layout.toString()
-              )
-            ).map((p: string) => `${width} ${theme}: ${p}`)
-          )
-        }
-        if (SHOTS !== undefined) {
-          for (const theme of THEMES) {
-            await page.evaluate(
-              (value) =>
-                document.documentElement.setAttribute("data-theme", value),
-              theme
-            )
-            await settle(page)
+          const found = await page.evaluate(layout)
+          problems.push(...found.map((p) => `${width} ${theme}: ${p}`))
+          if (SHOTS !== undefined)
             await page.screenshot({
               path: resolve(SHOTS, `${slug}-${width}-${theme}.png`),
               fullPage: true,
             })
-          }
         }
         if (width === 976) {
           await page.evaluate(() =>
             document.documentElement.setAttribute("data-theme", "light")
           )
           await settle(page)
-          const result = await operate(page)
-          console.log(`${slug}: ${result[0]}`)
-          problems.push(...result.slice(1))
+          const [count, ...found] = await operate(page)
+          console.log(`${slug}: ${count}`)
+          problems.push(...found)
         }
         await context.close()
       }

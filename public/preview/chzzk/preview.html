@@ -248,8 +248,8 @@
   .more-line { flex: 1 1 0; min-width: 0; height: 1px; background: var(--line); }
   .pill-more { flex: 0 0 auto; max-width: 100%; white-space: nowrap; height: 25px; padding: 0 8px 0 11px; border-radius: 13px; box-shadow: inset 0 0 0 1px var(--line); color: var(--ink-3); font-size: 12px; display: inline-flex; align-items: center; font-weight: 600; }
   .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 16px; }
-  .tab { height: 28px; padding: 0 9px; border-radius: 14px; display: inline-flex; align-items: center; font-family: var(--font-display); font-size: 13px; line-height: 16px; font-weight: 400; letter-spacing: 0; border: 0; background: var(--chip-off); color: var(--ink-3); white-space: nowrap; }
-  .tab.is-on, .tab[aria-pressed="true"] { background: var(--chip-on); color: var(--chip-on-ink); }
+  .tab { height: 28px; padding: 0 9px; border-radius: 14px; display: inline-flex; align-items: center; font-family: var(--font-display); font-size: 13px; line-height: 16px; font-weight: 400; letter-spacing: 0; background: var(--chip-off); color: var(--ink-3); white-space: nowrap; }
+  .tab.is-on { background: var(--chip-on); color: var(--chip-on-ink); }
 
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px 14px; }
   .card { min-width: 0; }
@@ -514,7 +514,7 @@
                 <div class="main">
                   <div class="sec">
                     <div class="sec-row"><h3 class="sec-h">추천 라이브</h3><span class="more-link">전체보기</span></div>
-                    <div class="tabs" data-pv-toggle="aria-pressed"><button type="button" class="tab" data-pv-option aria-pressed="true">전체</button><button type="button" class="tab" data-pv-option aria-pressed="false">게임</button><button type="button" class="tab" data-pv-option aria-pressed="false">스포츠</button><button type="button" class="tab" data-pv-option aria-pressed="false">엔터</button><button type="button" class="tab" data-pv-option aria-pressed="false">기타</button></div>
+                    <div class="tabs"><span class="tab is-on">전체</span><span class="tab">게임</span><span class="tab">스포츠</span><span class="tab">엔터</span><span class="tab">기타</span></div>
                     <div class="grid">
                       <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">1.2천명</span></div>썸네일 자리</div><h3>방송 제목 자리 — 오늘의 라이브</h3><p>채널 A</p><div class="tags"><span class="tag is-em">드롭스</span><span class="tag">게임 이름</span></div></div>
                       <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">830명</span><span class="badge b-drops">드롭스</span></div>썸네일 자리</div><h3>두 줄까지 늘어나는 방송 제목 예시 텍스트</h3><p>채널 B</p><div class="tags"><span class="tag">토크</span></div></div>
