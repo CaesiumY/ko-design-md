@@ -423,12 +423,25 @@ head = removeRule(head, ".container", "640px")
 
 // 3. Finger feedback and toggles, each from services/toss.md.
 // Press: the press overlay over the fill, dur-fast with the base ease (md 319, 326, 358).
+// The button's hover (a brightness filter) goes with it: the md does not specify one,
+// and TDS Mobile's Button has no hover look (base-notes/toss.md, the upstream section).
 head = replaceOnce(
   head,
   "    transition: filter 120ms cubic-bezier(0.22, 0.61, 0.36, 1);\n  }\n  .btn:hover { filter: brightness(var(--tds-hover-brightness)); }\n",
-  "    transition: filter 120ms cubic-bezier(0.22, 0.61, 0.36, 1), box-shadow 120ms cubic-bezier(0.22, 0.61, 0.36, 1);\n  }\n  .btn:hover { filter: brightness(var(--tds-hover-brightness)); }\n  .btn:active { box-shadow: inset 0 0 0 999px var(--tds-overlay-press); }\n",
-  "button press"
+  "    transition: box-shadow 120ms cubic-bezier(0.22, 0.61, 0.36, 1);\n  }\n  .btn:active { box-shadow: inset 0 0 0 999px var(--tds-overlay-press); }\n",
+  "button press, and drop the button hover"
 )
+// The list row's hover goes for the same reason: TDS Mobile's ListRow has none.
+head = removeRule(head, ".lrow:hover")
+// The four tokens that only those two hovers read (light and dark).
+for (const token of [
+  "    --tds-hover-brightness: 0.96;\n",
+  "    --tds-bg-row-hover: oklch(0 0 0 / 0.018);\n",
+  "    --tds-hover-brightness: 1.08;\n",
+  "    --tds-bg-row-hover: oklch(1 0 0 / 0.03);\n",
+]) {
+  head = replaceOnce(head, token, "", `drop ${token.trim()}`)
+}
 head = replaceOnce(
   head,
   "  .dlg-btn.primary {",
