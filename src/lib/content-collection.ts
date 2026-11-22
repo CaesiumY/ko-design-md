@@ -92,8 +92,9 @@ const TOKENS_BY_SLUG = new Map<string, ServiceTokens>(
 const DOCS: Array<ServiceDoc> = sortDocsByAdded(
   Object.entries(RAW_MODULES).map(([filePath, raw]) => {
     // The build read this entry's frontmatter (`siteFrontmatterPlugin` in
-    // vite.config.ts) and failed on any empty key the site reads, so a
-    // missing record means the two globs disagree — not an empty entry.
+    // vite.config.ts) and failed on an empty key the site reads, bar the
+    // `FALLBACK_KEYS` of site-frontmatter.ts, so a missing record means the
+    // two globs disagree — not an empty entry.
     const frontmatter = siteFrontmatter[filePath]
     if (frontmatter === undefined) {
       throw new Error(
