@@ -7,6 +7,80 @@
 <link rel="stylesheet" href="/preview/_runtime/tokens.css">
 <script src="/preview/_runtime/iframe.js" defer></script>
 <style>
+/* pv-frame:start — PROTOTYPE. 모든 프리뷰가 글자 그대로 똑같이 갖는 틀.
+   짜임(배치, 간격, 크기)만 여기서 정하고 서체와 색은 항목이 :root 의 --pv-* 로 넣는다.
+   페이지 쪽 스타일은 .pv-* 선택자를 다시 정의하지 않는다. */
+.pv-page {
+  display: block;
+  min-width: 0;
+  background: var(--pv-canvas);
+  color: var(--pv-ink);
+  font-family: var(--pv-font);
+}
+.pv-zone {
+  min-width: 0;
+  padding: 48px 24px;
+  border-top: 1px solid var(--pv-line);
+}
+.pv-zone-title {
+  margin: 0 0 24px;
+  font-family: var(--pv-font-display, var(--pv-font));
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0;
+  color: var(--pv-ink);
+}
+.pv-cells {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  min-width: 0;
+}
+.pv-cell {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--pv-line);
+  border-radius: var(--pv-radius, 0px);
+  background: var(--pv-surface);
+}
+.pv-cell--wide {
+  grid-column: 1 / -1;
+}
+.pv-label {
+  margin: 0 0 14px;
+  font-family: var(--pv-font);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0;
+  color: var(--pv-ink-muted);
+}
+.pv-stage {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  max-width: 100%;
+}
+.pv-stage--stack {
+  flex-direction: column;
+  align-items: stretch;
+}
+.pv-screen {
+  min-width: 0;
+  max-width: 100%;
+}
+@media (max-width: 767px) {
+  .pv-zone {
+    padding: 32px 16px;
+  }
+  .pv-cells {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* pv-frame:end */
   :root {
     --chz-brand-neon: oklch(0.881 0.205 158.3);
     --chz-brand-black: oklch(0 0 0);
@@ -47,6 +121,7 @@
     --chz-subscribe-tier-1: oklch(0.421 0.187 278.4);
     --chz-subscribe-tier-2: oklch(0.476 0.231 296.6);
     --chz-white: oklch(1 0 0);
+    --chz-radius-lg: 12px;
 
     --brand: var(--chz-brand-strongest);
     --brand-ink: var(--chz-white);
@@ -70,6 +145,7 @@
     --outline-line: oklch(0 0 0 / 0.15);
     --chat-line: var(--chz-surface-base);
     --chip-on: var(--chz-surface-strongest);
+    --chip-on-ink: var(--chz-white);
     --cur-menu: var(--chz-brand-text-base);
     --em-strong: var(--chz-brand-text-weak);
     --em-weak: var(--chz-brand-text-weak);
@@ -89,13 +165,22 @@
     --font: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
     --font-display: "Sandoll Nemony2", var(--font);
     --font-system: -apple-system, BlinkMacSystemFont, "Malgun Gothic", "맑은 고딕", Helvetica, Arial, sans-serif;
+
+    --pv-font: var(--font);
+    --pv-font-display: var(--font-display);
+    --pv-ink: var(--ink);
+    --pv-ink-muted: var(--ink-3);
+    --pv-canvas: var(--canvas);
+    --pv-surface: var(--canvas);
+    --pv-line: var(--line);
+    --pv-radius: var(--chz-radius-lg);
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--canvas); color: var(--ink); font-family: var(--font); letter-spacing: -0.3px; }
   button { font-family: inherit; letter-spacing: inherit; }
   svg { display: block; }
 
-  .hdr { display: flex; align-items: center; gap: 16px; height: 60px; padding: 0 20px; background: var(--canvas); }
+  .hdr { display: flex; align-items: center; gap: 16px; height: 60px; padding: 0 20px; background: var(--canvas); transition: transform .2s ease-in-out; }
   .hdr-logo { display: flex; align-items: center; flex: 0 0 auto; }
   .icon-btn { width: 40px; height: 40px; border-radius: 20px; display: grid; place-items: center; flex: 0 0 auto; color: var(--ink-2); }
   .icon-btn svg { width: 24px; height: 24px; display: block; }
@@ -113,9 +198,9 @@
   .btn-3 { background: var(--btn-3); color: var(--btn-3-ink); }
   .btn-1, .btn-2, .btn-3 { font-family: var(--font-display); font-weight: 400; }
   .btn-out { background: transparent; color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--outline-line); }
-  .btn-1.is-hover, .btn-2.is-hover { background-image: linear-gradient(var(--ov-h), var(--ov-h)); }
+  .btn-1:hover, .btn-2:hover, .btn-1.is-hover, .btn-2.is-hover { background-image: linear-gradient(var(--ov-h), var(--ov-h)); }
   .btn-1.is-sel, .btn-2.is-sel { background-image: linear-gradient(var(--ov-s), var(--ov-s)); }
-  .btn-out.is-hover { background-color: var(--lighten-5); }
+  .btn-out:hover, .btn-out.is-hover { background-color: var(--lighten-5); }
   .btn-out.is-sel { background-color: var(--lighten-12); }
   .btn.is-off { background: var(--btn-2); color: var(--chz-text-weak); font-family: var(--font-display); font-weight: 400; }
   .btn-danger { background: var(--chz-live-red); color: var(--chz-white); }
@@ -126,7 +211,7 @@
   .side { padding: 16px 20px; background: var(--canvas); }
   .side-h { margin: 16px 6px 8px; font-size: 13px; line-height: 17px; font-weight: 600; color: var(--ink-3); }
   .side-i { display: flex; align-items: center; gap: 10px; height: 38px; padding: 7px 8px; border-radius: 8px; font-size: 15px; line-height: 19px; font-weight: 600; color: var(--ink-2); min-width: 0; }
-  .side-i.is-on { background: var(--hover); }
+  .side-i:hover, .side-i.is-on { background: var(--hover); }
   .side-i.is-sel { background: var(--lighten-12); }
   .side-i.is-cur { color: var(--cur-menu); }
   .side-ic { width: 24px; height: 24px; flex: 0 0 auto; display: grid; place-items: center; }
@@ -136,6 +221,7 @@
   .side-l { width: 6px; height: 6px; border-radius: 3px; background: var(--chz-live-red); flex: 0 0 auto; }
 
   .main { padding: 20px 24px 32px; min-width: 0; }
+  .hero-wrap { padding: 20px 24px 12px; min-width: 0; }
   .hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 24px; align-items: center; padding: 8px 0 28px; }
   .hero h1 { margin: 0 0 16px; font-size: 40px; line-height: 48px; font-weight: 800; }
   .hero-cta { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -143,7 +229,6 @@
   .hero-stage img { width: 28%; height: auto; display: block; }
   .hero-stage .badge { position: absolute; left: 12px; top: 12px; }
 
-  .cell-k { margin: 0 0 12px; font-size: 13px; line-height: 17px; font-weight: 700; color: var(--ink-3); }
   .sec { margin: 0 0 28px; min-width: 0; }
   .sec-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 0 12px; }
   .sec-h { margin: 0; min-width: 0; font-family: var(--font-display); font-size: 19px; line-height: 24px; font-weight: 400; letter-spacing: 0; }
@@ -152,8 +237,8 @@
   .more-line { flex: 1 1 0; min-width: 0; height: 1px; background: var(--line); }
   .pill-more { flex: 0 0 auto; max-width: 100%; white-space: nowrap; height: 25px; padding: 0 8px 0 11px; border-radius: 13px; box-shadow: inset 0 0 0 1px var(--line); color: var(--ink-3); font-size: 12px; display: inline-flex; align-items: center; font-weight: 600; }
   .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 16px; }
-  .tab { height: 28px; padding: 0 9px; border-radius: 14px; display: inline-flex; align-items: center; font-family: var(--font-display); font-size: 13px; line-height: 16px; font-weight: 400; letter-spacing: 0; background: var(--chip-off); color: var(--ink-3); white-space: nowrap; }
-  .tab.is-on { background: var(--chip-on); color: var(--chz-white); }
+  .tab { height: 28px; padding: 0 9px; border-radius: 14px; display: inline-flex; align-items: center; font-family: var(--font-display); font-size: 13px; line-height: 16px; font-weight: 400; letter-spacing: 0; border: 0; background: var(--chip-off); color: var(--ink-3); white-space: nowrap; }
+  .tab.is-on, .tab[aria-pressed="true"] { background: var(--chip-on); color: var(--chip-on-ink); }
 
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px 14px; }
   .card { min-width: 0; }
@@ -192,7 +277,9 @@
   .msg b { font-weight: 700; margin-right: 6px; }
   .chat-in { position: relative; display: flex; gap: 8px; align-items: center; margin: 8px; height: 42px; padding: 6px; border-radius: 8px; background: var(--btn-2); min-width: 0; }
   .chat-in span { flex: 1 1 0; min-width: 0; font-size: 14px; color: var(--ink-3); padding-left: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .chat-in.is-focus { background-image: linear-gradient(var(--lighten-5), var(--lighten-5)); }
+  .chat-in.is-focus, .chat-live:focus-within { background-image: linear-gradient(var(--lighten-5), var(--lighten-5)); }
+  .chat-live input { flex: 1 1 0; min-width: 0; border: 0; padding: 0 0 0 6px; background: transparent; font: inherit; font-size: 14px; letter-spacing: inherit; color: var(--ink-2); outline: none; }
+  .chat-live input::placeholder { color: var(--ink-3); }
   .chat-in.is-act::after { content: ""; position: absolute; inset: 0; border-radius: 8px; box-shadow: inset 0 0 0 2px var(--focus-line); pointer-events: none; }
   .chat-in.solo { margin: 0; }
   .chat-send { height: 32px; width: 46px; border-radius: 8px; background: var(--btn-2); color: var(--chz-text-weak); font-size: 13px; display: grid; place-items: center; font-weight: 700; flex: 0 0 auto; box-shadow: inset 0 0 0 1px var(--line); }
@@ -203,17 +290,12 @@
   .modal p { margin: 0 0 20px; font-size: 14px; line-height: 20px; color: var(--ink-3); }
   .modal .btn { width: 100%; height: 44px; border-radius: 8px; padding: 0 20px; font-family: var(--font-display); font-size: 14px; line-height: 18px; font-weight: 400; letter-spacing: 0; }
 
-  /* numbered sections */
-  .doc { padding: 12px 24px 48px; }
-  .dsec { margin: 0 0 40px; }
-  .dsec-head { display: flex; align-items: baseline; gap: 12px; margin: 0 0 16px; }
-  .dsec-idx { font-size: 13px; line-height: 17px; font-weight: 600; color: var(--ink-3); letter-spacing: 0; }
-  .dsec-head h2 { margin: 0; font-size: 22px; line-height: 30px; font-weight: 700; }
-  .cells { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
-  .cell { min-width: 0; display: flex; flex-direction: column; gap: 16px; padding: 20px; border-radius: 12px; background: var(--canvas); box-shadow: inset 0 0 0 1px var(--line); }
-  .cell.wide { grid-column: 1 / -1; }
-  .cell > .cell-k { margin: 0; }
-  .cell > .catalog-dummy { margin: 0; }
+  /* A stacked stage wraps (the frame sets flex-wrap on every stage), so the browser sizes each child's height
+     at its shrink-to-fit width before stretching it. A definite width keeps 16:9 boxes from spilling out. */
+  .vrows, .specs, .in-stack, .pop-wrap, .states, .lc-pair, .hcard, .cats, .ch, .chat, .modal { width: 100%; }
+  .screen-home, .screen-desk { width: 100vw; max-width: 100%; }
+
+  /* state and spec labels inside a stage */
   .states { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 20px; min-width: 0; }
   .state { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; min-width: 0; max-width: 100%; }
   .state.full { width: 100%; align-items: stretch; }
@@ -226,8 +308,8 @@
   .vrow-k { font-size: 13px; line-height: 17px; font-weight: 600; color: var(--ink-2); padding-bottom: 8px; }
 
   .ttabs { display: flex; gap: 4px; flex-wrap: wrap; }
-  .ttab { height: 40px; padding: 0 10px; display: inline-flex; align-items: center; font-size: 17px; line-height: 21px; font-weight: 800; color: var(--tab-off); }
-  .ttab.is-cur { color: var(--ink); }
+  .ttab { height: 40px; padding: 0 10px; border: 0; background: transparent; display: inline-flex; align-items: center; font-size: 17px; line-height: 21px; font-weight: 800; color: var(--tab-off); }
+  .ttab.is-cur, .ttab[aria-selected="true"] { color: var(--ink); }
 
   .pop-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-width: 0; }
   .pop { width: 180px; max-width: 100%; padding: 6px; border-radius: 8px; background: var(--pop-bg); box-shadow: var(--pop-shadow); border: 1px solid var(--pop-line); }
@@ -248,6 +330,9 @@
   .cat span { font-size: 12px; line-height: 16px; color: var(--ink-3); }
 
   .in-stack { display: flex; flex-direction: column; gap: 12px; }
+
+  /* desktop home mock */
+  .screen-home { min-width: 0; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: var(--canvas); }
 
   /* desktop watch mock */
   .screen-desk { min-width: 0; border-radius: 12px; overflow: hidden; background: var(--canvas); box-shadow: inset 0 0 0 1px var(--line); }
@@ -272,7 +357,7 @@
   .dk-chat .chat-b { flex: 1 1 auto; }
 
   /* mobile mock (dark only) */
-  .phone { width: min(100%, 390px); margin: 0 auto; padding: 8px; border-radius: 24px; background: var(--panel); box-shadow: inset 0 0 0 1px var(--line); }
+  .phone { width: 390px; max-width: 100%; margin: 0 auto; padding: 8px; border-radius: 24px; background: var(--panel); box-shadow: inset 0 0 0 1px var(--line); }
   .m-dark {
     --canvas: var(--chz-dark-bg-base);
     --ink: var(--chz-dark-text-primary);
@@ -286,9 +371,10 @@
     --em-line: var(--chz-dark-brand-base);
     --tag-bg: var(--chz-dark-surface-weak);
     --tab-off: var(--chz-dark-text-weak);
+    --chip-on: var(--chz-dark-surface-strongest);
+    --chip-on-ink: var(--chz-dark-bg-weak);
     background: var(--canvas); color: var(--ink);
   }
-  .m-dark .tab.is-on { background: var(--chz-dark-surface-strongest); color: var(--chz-dark-bg-weak); }
   .phone .screen { border-radius: 16px; overflow: hidden; }
   .m-hdr { display: flex; align-items: center; justify-content: space-between; height: 52px; padding: 0 16px; }
   .m-hdr img { height: 26px; width: auto; }
@@ -314,14 +400,14 @@
     .shell { grid-template-columns: minmax(0, 1fr); }
     .side { display: none; }
     .hdr-tabs { display: none; }
-    .cells { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 767px) {
+    .hero-wrap { padding: 16px 16px 4px; }
   }
   @media (max-width: 720px) {
     .hero, .lc-pair, .dk-body { grid-template-columns: minmax(0, 1fr); }
     .hero h1 { font-size: 32px; line-height: 40px; }
     .main { padding: 16px 16px 28px; }
-    .doc { padding: 8px 16px 40px; }
-    .cell { padding: 16px; }
     .hdr { padding: 0 12px; gap: 8px; }
     .hdr-theme { display: none; }
     .vrow { grid-template-columns: minmax(0, 1fr); gap: 4px; }
@@ -350,6 +436,7 @@
     --outline-line: oklch(1 0 0 / 0.15);
     --chat-line: oklch(0.251 0.005 248);
     --chip-on: oklch(0.913 0.011 269.5);
+    --chip-on-ink: oklch(0.168 0.003 248);
     --hover: oklch(1 0 0 / 0.05);
     --darken-5: oklch(0 0 0 / 0.05);
     --darken-12: oklch(0 0 0 / 0.12);
@@ -370,364 +457,413 @@
     --chz-white: oklch(1 0 0);
   }
   [data-theme="dark"] .hero-stage { background: oklch(0.168 0.003 248); }
-  [data-theme="dark"] .tab.is-on { color: oklch(0.168 0.003 248); }
   [data-theme="dark"] .modal { background: var(--panel); box-shadow: 0 6px 18px 6px oklch(0 0 0 / 0.2), 0 6px 6px 0 oklch(0 0 0 / 0.3); }
 </style>
 </head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
+<main class="pv-page">
 
-<header class="hdr">
-  <span class="icon-btn" role="img" aria-label="메뉴"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></span>
-  <div class="hdr-logo"><img src="/logos/chzzk.png" alt="치지직"></div>
-  <nav class="hdr-tabs" aria-label="주제 탭"><span class="hdr-tab">게임</span><span class="hdr-tab">e스포츠</span><span class="hdr-tab">스포츠</span><span class="hdr-tab">엔터+</span></nav>
-  <div class="hdr-search"><span class="hdr-search-t">채널, 라이브, 동영상 검색</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg></div>
-  <div class="hdr-actions"><span class="icon-btn hdr-theme" role="img" aria-label="테마 전환"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"/></svg></span><span class="btn btn-out">로그인</span></div>
-</header>
-
-<div class="shell">
-  <aside class="side" aria-label="사이드바">
-    <div class="side-i is-cur"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-6 8 6v8H4z"/></svg></span><span class="side-n">홈</span></div>
-    <div class="side-i"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M10 9.5l4 2.5-4 2.5z" fill="currentColor"/></svg></span><span class="side-n">전체 라이브</span></div>
-    <div class="side-i"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></span><span class="side-n">카테고리</span></div>
-    <div class="side-i"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18"/></svg></span><span class="side-n">동영상</span></div>
-    <p class="side-h">팔로잉 채널</p>
-    <p class="catalog-dummy">채널명과 방송 상태는 더미 데이터입니다.</p>
-    <div class="side-i is-on"><span class="side-av">A</span><span class="side-n">채널 A</span><span class="side-l"></span></div>
-    <div class="side-i"><span class="side-av">B</span><span class="side-n">채널 B</span><span class="side-l"></span></div>
-    <div class="side-i"><span class="side-av">C</span><span class="side-n">채널 C</span></div>
-    <div class="side-i"><span class="side-av">D</span><span class="side-n">채널 D</span></div>
-  </aside>
-
-  <main class="main">
-    <p class="catalog-dummy">히어로의 LIVE 배지는 레이아웃 시연용 더미 데이터입니다.</p>
-    <section class="hero">
-      <div>
-        <h1>지금, 스트리밍이 시작됩니다</h1>
-        <div class="hero-cta"><span class="btn btn-1">라이브 보러가기</span><span class="btn btn-2">팔로우</span></div>
-      </div>
-      <div class="hero-stage"><span class="badge b-live">LIVE</span><img src="/logos/chzzk.png" alt=""></div>
-    </section>
-
-    <section class="sec">
-      <div class="sec-row"><h2 class="sec-h">추천 라이브</h2><span class="more-link">전체보기</span></div>
-      <div class="tabs"><span class="tab is-on">전체</span><span class="tab">게임</span><span class="tab">스포츠</span><span class="tab">엔터</span><span class="tab">기타</span></div>
-      <p class="catalog-dummy">방송 제목, 채널명, 시청자 수, LIVE 배지, 다시보기 배지, 드롭스 배지, 태그는 레이아웃 시연용 더미 데이터입니다.</p>
-      <div class="grid">
-        <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">1.2천명</span></div>썸네일 자리</div><h3>방송 제목 자리 — 오늘의 라이브</h3><p>채널 A</p><div class="tags"><span class="tag is-em">드롭스</span><span class="tag">게임 이름</span></div></div>
-        <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">830명</span><span class="badge b-drops">드롭스</span></div>썸네일 자리</div><h3>두 줄까지 늘어나는 방송 제목 예시 텍스트</h3><p>채널 B</p><div class="tags"><span class="tag">토크</span></div></div>
-        <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-replay">다시보기</span></div>썸네일 자리</div><h3>다시보기 영상 제목</h3><p>채널 C</p></div>
-        <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">57명</span></div>썸네일 자리</div><h3>새벽 방송</h3><p>채널 D</p><div class="tags"><span class="tag">음악</span></div></div>
-      </div>
-      <div class="more-row"><span class="more-line"></span><span class="pill-more">추천 라이브 더보기</span><span class="more-line"></span></div>
-    </section>
-  </main>
-</div>
-
-<div class="doc">
-  <section class="dsec" aria-labelledby="s1">
-    <div class="dsec-head"><span class="dsec-idx">01</span><h2 id="s1">버튼</h2></div>
-    <div class="cells">
-      <div class="cell wide">
-        <p class="cell-k">button, 변형과 상태</p>
-        <div class="vrows">
-          <div class="vrow">
-            <span class="vrow-k">primary</span>
-            <div class="states">
-              <div class="state"><span class="state-l">기본</span><span class="btn btn-1">팔로우</span></div>
-              <div class="state"><span class="state-l">hover, darken 5%</span><span class="btn btn-1 is-hover">팔로우</span></div>
-              <div class="state"><span class="state-l">selected, darken 12%</span><span class="btn btn-1 is-sel">팔로우</span></div>
-              <div class="state"><span class="state-l">비활성 (면 가정)</span><span class="btn is-off" aria-disabled="true">팔로우</span></div>
-            </div>
-          </div>
-          <div class="vrow">
-            <span class="vrow-k">secondary</span>
-            <div class="states">
-              <div class="state"><span class="state-l">기본</span><span class="btn btn-2">알림</span></div>
-              <div class="state"><span class="state-l">hover, lighten 5%</span><span class="btn btn-2 is-hover">알림</span></div>
-              <div class="state"><span class="state-l">selected, lighten 12%</span><span class="btn btn-2 is-sel">알림</span></div>
-            </div>
-          </div>
-          <div class="vrow">
-            <span class="vrow-k">tertiary, 라이트 (가정)</span>
-            <template data-theme-variant="dark"><span class="vrow-k">tertiary</span></template>
-            <div class="states">
-              <div class="state"><span class="state-l">기본</span><span class="btn btn-3">구독</span></div>
-            </div>
-          </div>
-          <div class="vrow">
-            <span class="vrow-k">outlined, 테두리와 글자 (가정)</span>
-            <div class="states">
-              <div class="state"><span class="state-l">기본</span><span class="btn btn-out">로그인</span></div>
-              <div class="state"><span class="state-l">hover, 배경색 lighten 5%</span><span class="btn btn-out is-hover">로그인</span></div>
-              <div class="state"><span class="state-l">selected, 배경색 lighten 12%</span><span class="btn btn-out is-sel">로그인</span></div>
-            </div>
-          </div>
-          <div class="vrow">
-            <span class="vrow-k">아이콘 전용, danger (크기와 글자 가정)</span>
-            <div class="states">
-              <div class="state"><span class="state-l">아이콘 전용, radius 6</span><span class="btn btn-ic" role="img" aria-label="알림 설정"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20h4"/></svg></span></div>
-              <div class="state"><span class="state-l">danger, 면 live-red</span><span class="btn btn-danger">차단</span></div>
-            </div>
-          </div>
+  <header class="pv-hero" data-pv-zone="hero">
+    <div class="hero-wrap">
+      <p class="catalog-dummy">히어로의 LIVE 배지는 레이아웃 시연용 더미 데이터입니다.</p>
+      <div class="hero">
+        <div>
+          <h1>지금, 스트리밍이 시작됩니다</h1>
+          <div class="hero-cta"><span class="btn btn-1">라이브 보러가기</span><span class="btn btn-2">팔로우</span></div>
         </div>
-        <div class="specs">
-          <span class="spec">높이 34, radius 17, 좌우 12</span>
-          <span class="spec">글자 Nemony 14 / 18 / 400</span>
-          <span class="spec">primary 면 brand-strongest, 글자 white</span>
-          <template data-theme-variant="dark"><span class="spec">primary 면 brand-neon, 글자 dark-bg-weak</span></template>
-          <span class="spec">tertiary 면 surface-strongest, 글자 white (가정)</span>
-          <template data-theme-variant="dark"><span class="spec">tertiary 면 dark-surface-strongest, 글자 dark-bg-weak</span></template>
-        </div>
+        <div class="hero-stage"><span class="badge b-live">LIVE</span><img src="/logos/chzzk.png" alt="치지직"></div>
       </div>
     </div>
-  </section>
+  </header>
 
-  <section class="dsec" aria-labelledby="s2">
-    <div class="dsec-head"><span class="dsec-idx">02</span><h2 id="s2">탐색과 입력</h2></div>
-    <div class="cells">
-      <div class="cell">
-        <p class="cell-k">nav-item, 사이드바 항목</p>
-        <div class="states">
-          <div class="state"><span class="state-l">기본</span><div class="side-i"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></span><span class="side-n">카테고리</span></div></div>
-          <div class="state"><span class="state-l">hover, lighten 5%</span><div class="side-i is-on"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></span><span class="side-n">카테고리</span></div></div>
-          <div class="state"><span class="state-l">selected, lighten 12%</span><div class="side-i is-sel"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></span><span class="side-n">카테고리</span></div></div>
-          <div class="state"><span class="state-l">현재 메뉴</span><div class="side-i is-cur"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-6 8 6v8H4z"/></svg></span><span class="side-n">홈</span></div></div>
-        </div>
-        <div class="specs">
-          <span class="spec">높이 38, radius 8, 15 / 19 / 600</span>
-          <span class="spec">현재 메뉴 글자 brand-text-base</span>
-          <template data-theme-variant="dark"><span class="spec">현재 메뉴 글자 dark-brand-stronger</span></template>
-          <span class="spec">섹션 제목 13 / 17 / 600</span>
-        </div>
-      </div>
-
-      <div class="cell">
-        <p class="cell-k">상단 탭</p>
-        <div class="states">
-          <div class="state"><span class="state-l">현재, 글자 (가정)</span><div class="ttabs"><span class="ttab is-cur">게임</span></div></div>
-          <div class="state"><span class="state-l">비활성, 라이트 글자 (가정)</span><template data-theme-variant="dark"><span class="state-l">비활성</span></template><div class="ttabs"><span class="ttab">e스포츠</span><span class="ttab">스포츠</span><span class="ttab">엔터+</span></div></div>
-        </div>
-        <div class="specs">
-          <span class="spec">17 / 21 / 800</span>
-          <span class="spec">비활성 글자 text-weak (가정)</span>
-          <template data-theme-variant="dark"><span class="spec">비활성 글자 dark-text-weak</span></template>
-        </div>
-      </div>
-
-      <div class="cell">
-        <p class="cell-k">search-field</p>
-        <div class="in-stack">
-          <div class="state full"><span class="state-l">기본</span><div class="field"><span class="field-t">채널, 라이브, 동영상 검색</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg></div></div>
-          <div class="state full"><span class="state-l">포커스, 테두리와 캐럿</span><div class="field is-focus"><span class="field-t">검색어</span><span class="caret" aria-hidden="true"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg></div></div>
-          <div class="state full"><span class="state-l">직접 입력</span><label class="field fld-live"><input type="text" placeholder="채널, 라이브, 동영상 검색" aria-label="검색 시연"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg></label></div>
-        </div>
-        <div class="specs">
-          <span class="spec">높이 38, 폭 400, radius 19, 15 / 19 / 400 시스템 서체</span>
-          <span class="spec">테두리 border-weak, 포커스 brand-strong, 캐럿 brand-stronger</span>
-          <template data-theme-variant="dark"><span class="spec">테두리 dark-border-weak, 포커스 dark-brand-base, 캐럿 dark-brand-stronger</span></template>
-          <span class="hint">검색창을 눌러 입력해 보세요</span>
-        </div>
-      </div>
-
-      <div class="cell">
-        <p class="cell-k">팝오버, 정렬 메뉴 (치수, 바탕, 선택 항목 가정)</p>
-        <div class="pop-wrap">
-          <span class="btn btn-out">인기순</span>
-          <div class="pop"><div class="pop-i is-on">인기순</div><div class="pop-i">최신순</div><div class="pop-i">시청자 많은 순</div></div>
-        </div>
-        <div class="specs">
-          <span class="spec">그림자 없음, 테두리 1px border-weak</span>
-          <template data-theme-variant="dark"><span class="spec">테두리 없음 (가정), 그림자 shadow-popover 3겹</span></template>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="dsec" aria-labelledby="s3">
-    <div class="dsec-head"><span class="dsec-idx">03</span><h2 id="s3">라이브 카드와 배지</h2></div>
-    <div class="cells">
-      <div class="cell wide">
-        <p class="cell-k">live-card, 태그 칩 (칩 바탕, 치수, 글자 가정)</p>
-        <p class="catalog-dummy">방송 제목, 채널명, 시청자 수, LIVE 배지, 드롭스 배지, 태그는 레이아웃 시연용 더미 데이터입니다.</p>
-        <div class="lc-pair">
-          <div class="state"><span class="state-l">기본</span><div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">2,048명</span><span class="badge b-drops">드롭스</span></div>썸네일 자리</div><h3>방송 제목 자리 — 주말 정주행</h3><p>채널 E</p><div class="tags"><span class="tag is-em">드롭스</span><span class="tag">게임 이름</span><span class="tag">한국어</span></div></div></div>
-          <div class="state"><span class="state-l">hover, 덧씌움 검정 50%</span><div class="card"><div class="thumb is-hover"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">2,048명</span><span class="badge b-drops">드롭스</span></div>썸네일 자리</div><h3>방송 제목 자리 — 주말 정주행</h3><p>채널 E</p><div class="tags"><span class="tag is-em">드롭스</span><span class="tag">게임 이름</span><span class="tag">한국어</span></div></div></div>
-        </div>
-        <div class="specs">
-          <span class="spec">썸네일 372 × 209, radius 12</span>
-          <span class="spec">제목 15 / 19 / 600</span>
-          <span class="spec">덧씌움 0.2초</span>
-          <span class="spec">태그 칩 radius 4, 강조 글자 brand-text (가정)</span>
-          <template data-theme-variant="dark"><span class="spec">태그 칩 radius 4, 강조 글자 dark-brand-strong</span></template>
-          <span class="hint">썸네일에 마우스를 올려 보세요</span>
-        </div>
-      </div>
-
-      <div class="cell">
-        <p class="cell-k">badge</p>
-        <p class="catalog-dummy">시청자 수와 재생시간은 레이아웃 시연용 더미 데이터입니다.</p>
-        <div class="states">
-          <div class="state"><span class="state-l">LIVE</span><span class="badge b-live">LIVE</span></div>
-          <div class="state"><span class="state-l">시청자 수</span><span class="badge b-view">1.2천명</span></div>
-          <div class="state"><span class="state-l">재생시간</span><span class="badge b-view">1:42:07</span></div>
-          <div class="state"><span class="state-l">다시보기</span><span class="badge b-replay">다시보기</span></div>
-          <div class="state"><span class="state-l">드롭스, 면 (가정)</span><span class="badge b-drops">드롭스</span></div>
-        </div>
-        <div class="specs">
-          <span class="spec">높이 20, radius 4, 12 / 20 / 700</span>
-          <span class="spec">다시보기 Nemony 11</span>
-          <span class="spec">시청자 수 면 검정 80%</span>
-          <span class="spec">드롭스 글자 brand-text-weak</span>
-          <template data-theme-variant="dark"><span class="spec">드롭스 글자 brand-neon</span></template>
-        </div>
-      </div>
-
-      <div class="cell">
-        <p class="cell-k">가로형 추천 카드, 카테고리 카드 (치수 가정)</p>
-        <p class="catalog-dummy">영상 제목, 채널명, 다시보기 배지, 재생시간, 카테고리 이름, 시청자 수는 레이아웃 시연용 더미 데이터입니다.</p>
-        <div class="hcard"><div class="thumb"><div class="thumb-badges"><span class="badge b-replay">다시보기</span><span class="badge b-view">48:12</span></div>썸네일 자리</div><div><h3>가로형 카드 제목은 시스템 서체로 두 줄까지</h3><p>채널 F</p></div></div>
-        <div class="cats">
-          <div class="cat"><div class="cat-poster">[포스터 자리]</div><b>카테고리 1</b><span>시청자 3.1만</span></div>
-          <div class="cat"><div class="cat-poster">[포스터 자리]</div><b>카테고리 2</b><span>시청자 8,240</span></div>
-          <div class="cat"><div class="cat-poster">[포스터 자리]</div><b>카테고리 3</b><span>시청자 912</span></div>
-        </div>
-        <div class="specs">
-          <span class="spec">가로형 제목 15 / 21 / 500 시스템 서체</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="dsec" aria-labelledby="s4">
-    <div class="dsec-head"><span class="dsec-idx">04</span><h2 id="s4">채팅과 모달</h2></div>
-    <div class="cells">
-      <div class="cell">
-        <p class="cell-k">chat-input, 라이트 색, 전송 버튼, 헤더 높이 (가정)</p>
-        <template data-theme-variant="dark"><p class="cell-k">chat-input, 전송 버튼과 헤더 높이 (가정)</p></template>
-        <p class="catalog-dummy">채팅 닉네임과 메시지는 더미 데이터입니다.</p>
-        <div class="chat">
-          <div class="chat-h">채팅</div>
-          <div class="chat-b">
-            <div class="msg"><b>시청자1</b>안녕하세요</div>
-            <div class="msg"><b>시청자2</b>오늘 방송 기대했어요</div>
-            <div class="msg"><b>시청자3</b>ㅋㅋㅋㅋ</div>
-          </div>
-          <div class="chat-in"><span>채팅을 입력해주세요</span><div class="chat-send">전송</div></div>
-        </div>
-        <div class="in-stack">
-          <div class="state full"><span class="state-l">포커스, 오버레이 (가정)</span><div class="chat-in solo is-focus"><span>채팅을 입력해주세요</span><div class="chat-send">전송</div></div></div>
-          <div class="state full"><span class="state-l">활성, 2px 테두리 (색 가정)</span><div class="chat-in solo is-act"><span>반가워요</span><div class="chat-send">전송</div></div></div>
-        </div>
-        <div class="specs">
-          <span class="spec">입력 42, radius 8, 패딩 6</span>
-          <span class="spec">메시지 14 / 20 / 400, 행 28</span>
-          <span class="spec">헤더 Nemony 15 / 18</span>
-        </div>
-      </div>
-
-      <div class="cell">
-        <p class="cell-k">modal, 라이트 바탕 (가정)</p>
-        <template data-theme-variant="dark"><p class="cell-k">modal</p></template>
-        <div class="modal"><h4>알림 설정</h4><p>모달 본문 문구 예시입니다.</p><span class="btn btn-1">확인</span></div>
-        <div class="specs">
-          <span class="spec">폭 450, radius 12, shadow-level-6</span>
-          <span class="spec">확인 버튼 44, radius 8</span>
-          <span class="spec">제목 22 / 30 / 700 (가정)</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="dsec" aria-labelledby="s5">
-    <div class="dsec-head"><span class="dsec-idx">05</span><h2 id="s5">화면</h2></div>
-    <div class="cells">
-      <div class="cell wide">
-        <p class="cell-k">라이브 시청, 데스크톱 (채팅 폭, 제목 크기, 전송 버튼, 라이트 구독 버튼과 채팅 색 가정)</p>
-        <template data-theme-variant="dark"><p class="cell-k">라이브 시청, 데스크톱 (채팅 폭, 제목 크기, 전송 버튼 가정)</p></template>
-        <p class="catalog-dummy">방송 제목, 채널명, 시청자 수, 팔로워 수, 다음 방송 일정, 태그, LIVE 배지, 드롭스 배지, 채팅 닉네임과 메시지는 레이아웃 시연용 더미 데이터입니다.</p>
-        <div class="screen-desk" role="img" aria-label="라이브 시청 화면 목업">
-          <div class="dk-hdr">
-            <img src="/logos/chzzk.png" alt="">
-            <span class="hdr-search"><span class="hdr-search-t">채널, 라이브, 동영상 검색</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg></span>
-            <span class="btn btn-out">로그인</span>
-          </div>
-          <div class="dk-body">
-            <div class="dk-main">
-              <div class="player"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">3,402명</span><span class="badge b-drops">드롭스</span></div>[플레이어 자리]</div>
-              <h3 class="dk-title">방송 제목 자리 — 오늘도 끝까지 달립니다</h3>
-              <div class="dk-ch">
-                <span class="dk-av">G</span>
-                <div class="dk-who"><b>채널 G</b><span>팔로워 1.2만명</span><span class="dk-next">다음 방송 11.15 20:00</span></div>
-                <div class="dk-act"><span class="btn btn-1">팔로우</span><span class="btn btn-3">구독</span></div>
+  <section class="pv-zone" data-pv-zone="screens" aria-labelledby="pv-screens">
+    <h2 class="pv-zone-title" id="pv-screens">화면</h2>
+    <div class="pv-cells">
+      <div class="pv-cell pv-cell--wide" data-pv-cell="screen-home-desktop">
+        <p class="pv-label">홈, 데스크톱</p>
+        <p class="catalog-dummy">채널명과 방송 상태는 더미 데이터입니다.</p>
+        <p class="catalog-dummy">방송 제목, 채널명, 시청자 수, LIVE 배지, 다시보기 배지, 드롭스 배지, 태그는 레이아웃 시연용 더미 데이터입니다.</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="pv-screen">
+            <div class="screen-home">
+              <div class="hdr">
+                <span class="icon-btn" role="img" aria-label="메뉴"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></span>
+                <div class="hdr-logo"><img src="/logos/chzzk.png" alt=""></div>
+                <nav class="hdr-tabs" aria-label="주제 탭"><span class="hdr-tab">게임</span><span class="hdr-tab">e스포츠</span><span class="hdr-tab">스포츠</span><span class="hdr-tab">엔터+</span></nav>
+                <div class="hdr-search"><span class="hdr-search-t">채널, 라이브, 동영상 검색</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg></div>
+                <div class="hdr-actions"><span class="icon-btn hdr-theme" role="img" aria-label="테마 전환"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"/></svg></span><span class="btn btn-out">로그인</span></div>
               </div>
-              <div class="tags"><span class="tag is-em">드롭스</span><span class="tag">게임 이름</span><span class="tag">한국어</span></div>
-            </div>
-            <div class="dk-chat">
-              <div class="chat">
-                <div class="chat-h">채팅</div>
-                <div class="chat-b">
-                  <div class="msg"><b>시청자4</b>오늘도 왔어요</div>
-                  <div class="msg"><b>시청자5</b>드롭스 받으러 왔습니다</div>
-                  <div class="msg"><b>시청자6</b>화질 좋네요</div>
-                  <div class="msg"><b>시청자7</b>ㅋㅋㅋ</div>
-                  <div class="msg"><b>시청자8</b>다음 판도 화이팅</div>
+              <div class="shell">
+                <aside class="side" aria-label="사이드바">
+                  <div class="side-i is-cur"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-6 8 6v8H4z"/></svg></span><span class="side-n">홈</span></div>
+                  <div class="side-i"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M10 9.5l4 2.5-4 2.5z" fill="currentColor"/></svg></span><span class="side-n">전체 라이브</span></div>
+                  <div class="side-i"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></span><span class="side-n">카테고리</span></div>
+                  <div class="side-i"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18"/></svg></span><span class="side-n">동영상</span></div>
+                  <p class="side-h">팔로잉 채널</p>
+                  <div class="side-i is-on"><span class="side-av">A</span><span class="side-n">채널 A</span><span class="side-l"></span></div>
+                  <div class="side-i"><span class="side-av">B</span><span class="side-n">채널 B</span><span class="side-l"></span></div>
+                  <div class="side-i"><span class="side-av">C</span><span class="side-n">채널 C</span></div>
+                  <div class="side-i"><span class="side-av">D</span><span class="side-n">채널 D</span></div>
+                </aside>
+                <div class="main">
+                  <div class="sec">
+                    <div class="sec-row"><h3 class="sec-h">추천 라이브</h3><span class="more-link">전체보기</span></div>
+                    <div class="tabs" data-pv-toggle="aria-pressed"><button type="button" class="tab" data-pv-option aria-pressed="true">전체</button><button type="button" class="tab" data-pv-option aria-pressed="false">게임</button><button type="button" class="tab" data-pv-option aria-pressed="false">스포츠</button><button type="button" class="tab" data-pv-option aria-pressed="false">엔터</button><button type="button" class="tab" data-pv-option aria-pressed="false">기타</button></div>
+                    <div class="grid">
+                      <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">1.2천명</span></div>썸네일 자리</div><h3>방송 제목 자리 — 오늘의 라이브</h3><p>채널 A</p><div class="tags"><span class="tag is-em">드롭스</span><span class="tag">게임 이름</span></div></div>
+                      <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">830명</span><span class="badge b-drops">드롭스</span></div>썸네일 자리</div><h3>두 줄까지 늘어나는 방송 제목 예시 텍스트</h3><p>채널 B</p><div class="tags"><span class="tag">토크</span></div></div>
+                      <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-replay">다시보기</span></div>썸네일 자리</div><h3>다시보기 영상 제목</h3><p>채널 C</p></div>
+                      <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">57명</span></div>썸네일 자리</div><h3>새벽 방송</h3><p>채널 D</p><div class="tags"><span class="tag">음악</span></div></div>
+                    </div>
+                    <div class="more-row"><span class="more-line"></span><span class="pill-more">추천 라이브 더보기</span><span class="more-line"></span></div>
+                  </div>
                 </div>
-                <div class="chat-in"><span>채팅을 입력해주세요</span><div class="chat-send">전송</div></div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="cell">
-        <p class="cell-k">홈, 모바일 390 다크 전용 (치수와 하단 탭 가정)</p>
-        <p class="catalog-dummy">방송 제목, 채널명, 시청자 수, LIVE 배지, 드롭스 배지, 태그는 레이아웃 시연용 더미 데이터입니다.</p>
-        <div class="phone" role="img" aria-label="모바일 홈 목업">
-          <div class="screen m-dark">
-            <div class="m-hdr"><img src="/logos/chzzk.png" alt=""><span class="m-ics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></span></div>
-            <div class="m-chips"><span class="tab is-on">전체</span><span class="tab">게임</span><span class="tab">스포츠</span><span class="tab">엔터</span><span class="tab">기타</span></div>
-            <div class="m-list">
-              <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">5,310명</span><span class="badge b-drops">드롭스</span></div>썸네일 자리</div><h3>모바일 방송 제목 자리</h3><p>채널 H</p><div class="tags"><span class="tag is-em">드롭스</span><span class="tag">게임 이름</span></div></div>
-              <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">640명</span></div>썸네일 자리</div><h3>두 번째 방송 제목 자리</h3><p>채널 I</p></div>
-            </div>
-            <div class="m-bar">
-              <span class="is-cur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-6 8 6v8H4z"/></svg>홈</span>
-              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>카테고리</span>
-              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg>팔로잉</span>
-              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="9" r="4"/><path d="M4 20c1.5-4 4.5-5 8-5s6.5 1 8 5"/></svg>내 정보</span>
+      <div class="pv-cell pv-cell--wide" data-pv-cell="screen-live-watch">
+        <p class="pv-label">라이브 시청, 데스크톱 (채팅 폭, 제목 크기, 전송 버튼, 라이트 구독 버튼과 채팅 색 가정)</p>
+        <template data-theme-variant="dark"><p class="pv-label">라이브 시청, 데스크톱 (채팅 폭, 제목 크기, 전송 버튼 가정)</p></template>
+        <p class="catalog-dummy">방송 제목, 채널명, 시청자 수, 팔로워 수, 다음 방송 일정, 태그, LIVE 배지, 드롭스 배지, 채팅 닉네임과 메시지는 레이아웃 시연용 더미 데이터입니다.</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="pv-screen">
+            <div class="screen-desk" role="img" aria-label="라이브 시청 화면 목업">
+              <div class="dk-hdr">
+                <img src="/logos/chzzk.png" alt="">
+                <span class="hdr-search"><span class="hdr-search-t">채널, 라이브, 동영상 검색</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg></span>
+                <span class="btn btn-out">로그인</span>
+              </div>
+              <div class="dk-body">
+                <div class="dk-main">
+                  <div class="player"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">3,402명</span><span class="badge b-drops">드롭스</span></div>[플레이어 자리]</div>
+                  <h3 class="dk-title">방송 제목 자리 — 오늘도 끝까지 달립니다</h3>
+                  <div class="dk-ch">
+                    <span class="dk-av">G</span>
+                    <div class="dk-who"><b>채널 G</b><span>팔로워 1.2만명</span><span class="dk-next">다음 방송 11.15 20:00</span></div>
+                    <div class="dk-act"><span class="btn btn-1">팔로우</span><span class="btn btn-3">구독</span></div>
+                  </div>
+                  <div class="tags"><span class="tag is-em">드롭스</span><span class="tag">게임 이름</span><span class="tag">한국어</span></div>
+                </div>
+                <div class="dk-chat">
+                  <div class="chat">
+                    <div class="chat-h">채팅</div>
+                    <div class="chat-b">
+                      <div class="msg"><b>시청자4</b>오늘도 왔어요</div>
+                      <div class="msg"><b>시청자5</b>드롭스 받으러 왔습니다</div>
+                      <div class="msg"><b>시청자6</b>화질 좋네요</div>
+                      <div class="msg"><b>시청자7</b>ㅋㅋㅋ</div>
+                      <div class="msg"><b>시청자8</b>다음 판도 화이팅</div>
+                    </div>
+                    <div class="chat-in"><span>채팅을 입력해주세요</span><div class="chat-send">전송</div></div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="specs">
-          <span class="spec">비활성 탭 글자 dark-text-weak</span>
         </div>
       </div>
 
-      <div class="cell">
-        <p class="cell-k">채널 머리, 구독 티어 배지 (치수와 라이트 구독 버튼 가정)</p>
-        <template data-theme-variant="dark"><p class="cell-k">채널 머리, 구독 티어 배지 (치수 가정)</p></template>
-        <p class="catalog-dummy">채널명, 팔로워 수, LIVE 배지, 구독 티어, 구독 선물 배지는 레이아웃 시연용 더미 데이터입니다.</p>
-        <div class="ch">
-          <span class="ch-av">J</span>
-          <div class="ch-who">
-            <p class="ch-name">채널 J <span class="badge b-live">LIVE</span></p>
-            <p class="ch-meta">팔로워 4.8만명</p>
+      <div class="pv-cell pv-cell--wide" data-pv-cell="screen-home-mobile">
+        <p class="pv-label">홈, 모바일 390 다크 전용 (치수와 하단 탭 가정)</p>
+        <p class="catalog-dummy">방송 제목, 채널명, 시청자 수, LIVE 배지, 드롭스 배지, 태그는 레이아웃 시연용 더미 데이터입니다.</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="pv-screen">
+            <div class="phone" role="img" aria-label="모바일 홈 목업">
+              <div class="screen m-dark">
+                <div class="m-hdr"><img src="/logos/chzzk.png" alt=""><span class="m-ics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></span></div>
+                <div class="m-chips"><span class="tab is-on">전체</span><span class="tab">게임</span><span class="tab">스포츠</span><span class="tab">엔터</span><span class="tab">기타</span></div>
+                <div class="m-list">
+                  <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">5,310명</span><span class="badge b-drops">드롭스</span></div>썸네일 자리</div><h3>모바일 방송 제목 자리</h3><p>채널 H</p><div class="tags"><span class="tag is-em">드롭스</span><span class="tag">게임 이름</span></div></div>
+                  <div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">640명</span></div>썸네일 자리</div><h3>두 번째 방송 제목 자리</h3><p>채널 I</p></div>
+                </div>
+                <div class="m-bar">
+                  <span class="is-cur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-6 8 6v8H4z"/></svg>홈</span>
+                  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>카테고리</span>
+                  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg>팔로잉</span>
+                  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="9" r="4"/><path d="M4 20c1.5-4 4.5-5 8-5s6.5 1 8 5"/></svg>내 정보</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="ch-act"><span class="btn btn-1">팔로우</span><span class="btn btn-3">구독</span></div>
-        </div>
-        <div class="states">
-          <div class="state"><span class="state-l">구독 티어 1</span><span class="badge b-tier1">티어 1</span></div>
-          <div class="state"><span class="state-l">구독 티어 2</span><span class="badge b-tier2">티어 2</span></div>
-          <div class="state"><span class="state-l">구독 선물</span><span class="badge b-replay">구독 선물</span></div>
-        </div>
-        <div class="specs">
-          <span class="spec">채널명 28 / 36 / 700 (가정)</span>
-          <span class="spec">티어 면 subscribe-tier-1, subscribe-tier-2</span>
+          <div class="specs">
+            <span class="spec">비활성 탭 글자 dark-text-weak</span>
+          </div>
         </div>
       </div>
     </div>
   </section>
-</div>
+
+  <section class="pv-zone" data-pv-zone="buttons" aria-labelledby="pv-buttons">
+    <h2 class="pv-zone-title" id="pv-buttons">버튼</h2>
+    <div class="pv-cells">
+      <div class="pv-cell pv-cell--wide" data-pv-cell="button-variants">
+        <p class="pv-label">button, 변형과 상태</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="vrows">
+            <div class="vrow">
+              <span class="vrow-k">primary</span>
+              <div class="states">
+                <div class="state"><span class="state-l">기본</span><span class="btn btn-1">팔로우</span></div>
+                <div class="state"><span class="state-l">hover, darken 5%</span><span class="btn btn-1 is-hover">팔로우</span></div>
+                <div class="state"><span class="state-l">selected, darken 12%</span><span class="btn btn-1 is-sel">팔로우</span></div>
+                <div class="state"><span class="state-l">비활성 (면 가정)</span><span class="btn is-off" aria-disabled="true">팔로우</span></div>
+              </div>
+            </div>
+            <div class="vrow">
+              <span class="vrow-k">secondary</span>
+              <div class="states">
+                <div class="state"><span class="state-l">기본</span><span class="btn btn-2">알림</span></div>
+                <div class="state"><span class="state-l">hover, lighten 5%</span><span class="btn btn-2 is-hover">알림</span></div>
+                <div class="state"><span class="state-l">selected, lighten 12%</span><span class="btn btn-2 is-sel">알림</span></div>
+              </div>
+            </div>
+            <div class="vrow">
+              <span class="vrow-k">tertiary, 라이트 (가정)</span>
+              <template data-theme-variant="dark"><span class="vrow-k">tertiary</span></template>
+              <div class="states">
+                <div class="state"><span class="state-l">기본</span><span class="btn btn-3">구독</span></div>
+              </div>
+            </div>
+            <div class="vrow">
+              <span class="vrow-k">outlined, 테두리와 글자 (가정)</span>
+              <div class="states">
+                <div class="state"><span class="state-l">기본</span><span class="btn btn-out">로그인</span></div>
+                <div class="state"><span class="state-l">hover, 배경색 lighten 5%</span><span class="btn btn-out is-hover">로그인</span></div>
+                <div class="state"><span class="state-l">selected, 배경색 lighten 12%</span><span class="btn btn-out is-sel">로그인</span></div>
+              </div>
+            </div>
+            <div class="vrow">
+              <span class="vrow-k">아이콘 전용, danger (크기와 글자 가정)</span>
+              <div class="states">
+                <div class="state"><span class="state-l">아이콘 전용, radius 6</span><span class="btn btn-ic" role="img" aria-label="알림 설정"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20h4"/></svg></span></div>
+                <div class="state"><span class="state-l">danger, 면 live-red</span><span class="btn btn-danger">차단</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="specs">
+            <span class="spec">높이 34, radius 17, 좌우 12</span>
+            <span class="spec">글자 Nemony 14 / 18 / 400</span>
+            <span class="spec">primary 면 brand-strongest, 글자 white</span>
+            <template data-theme-variant="dark"><span class="spec">primary 면 brand-neon, 글자 dark-bg-weak</span></template>
+            <span class="spec">tertiary 면 surface-strongest, 글자 white (가정)</span>
+            <template data-theme-variant="dark"><span class="spec">tertiary 면 dark-surface-strongest, 글자 dark-bg-weak</span></template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pv-zone" data-pv-zone="inputs" aria-labelledby="pv-inputs">
+    <h2 class="pv-zone-title" id="pv-inputs">입력</h2>
+    <div class="pv-cells">
+      <div class="pv-cell" data-pv-cell="search-field">
+        <p class="pv-label">search-field</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="in-stack">
+            <div class="state full"><span class="state-l">기본</span><div class="field"><span class="field-t">채널, 라이브, 동영상 검색</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg></div></div>
+            <div class="state full"><span class="state-l">포커스, 테두리와 캐럿</span><div class="field is-focus"><span class="field-t">검색어</span><span class="caret" aria-hidden="true"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg></div></div>
+            <div class="state full"><span class="state-l">직접 입력</span><label class="field fld-live"><input type="text" placeholder="채널, 라이브, 동영상 검색" aria-label="검색 시연"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg></label></div>
+          </div>
+          <div class="specs">
+            <span class="spec">높이 38, 폭 400, radius 19, 15 / 19 / 400 시스템 서체</span>
+            <span class="spec">테두리 border-weak, 포커스 brand-strong, 캐럿 brand-stronger</span>
+            <template data-theme-variant="dark"><span class="spec">테두리 dark-border-weak, 포커스 dark-brand-base, 캐럿 dark-brand-stronger</span></template>
+            <span class="hint">검색창을 눌러 입력해 보세요</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pv-cell" data-pv-cell="chat-input">
+        <p class="pv-label">chat-input, 라이트 색, 전송 버튼, 헤더 높이 (가정)</p>
+        <template data-theme-variant="dark"><p class="pv-label">chat-input, 전송 버튼과 헤더 높이 (가정)</p></template>
+        <p class="catalog-dummy">채팅 닉네임과 메시지는 더미 데이터입니다.</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="chat">
+            <div class="chat-h">채팅</div>
+            <div class="chat-b">
+              <div class="msg"><b>시청자1</b>안녕하세요</div>
+              <div class="msg"><b>시청자2</b>오늘 방송 기대했어요</div>
+              <div class="msg"><b>시청자3</b>ㅋㅋㅋㅋ</div>
+            </div>
+            <div class="chat-in"><span>채팅을 입력해주세요</span><div class="chat-send">전송</div></div>
+          </div>
+          <div class="in-stack">
+            <div class="state full"><span class="state-l">포커스, 오버레이 (가정)</span><div class="chat-in solo is-focus"><span>채팅을 입력해주세요</span><div class="chat-send">전송</div></div></div>
+            <div class="state full"><span class="state-l">활성, 2px 테두리 (색 가정)</span><div class="chat-in solo is-act"><span>반가워요</span><div class="chat-send">전송</div></div></div>
+            <div class="state full"><span class="state-l">직접 입력</span><div class="chat-in solo chat-live"><input type="text" placeholder="채팅을 입력해주세요" aria-label="채팅 입력 시연"><div class="chat-send">전송</div></div></div>
+          </div>
+          <div class="specs">
+            <span class="spec">입력 42, radius 8, 패딩 6</span>
+            <span class="spec">메시지 14 / 20 / 400, 행 28</span>
+            <span class="spec">헤더 Nemony 15 / 18</span>
+            <span class="hint">입력창을 눌러 입력해 보세요</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pv-cell" data-pv-cell="popover-sort-menu">
+        <p class="pv-label">팝오버, 정렬 메뉴 (치수, 바탕, 선택 항목 가정)</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="pop-wrap">
+            <span class="btn btn-out">인기순</span>
+            <div class="pop"><div class="pop-i is-on">인기순</div><div class="pop-i">최신순</div><div class="pop-i">시청자 많은 순</div></div>
+          </div>
+          <div class="specs">
+            <span class="spec">그림자 없음, 테두리 1px border-weak</span>
+            <template data-theme-variant="dark"><span class="spec">테두리 없음 (가정), 그림자 shadow-popover 3겹</span></template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pv-zone" data-pv-zone="navigation" aria-labelledby="pv-navigation">
+    <h2 class="pv-zone-title" id="pv-navigation">내비게이션</h2>
+    <div class="pv-cells">
+      <div class="pv-cell" data-pv-cell="nav-item">
+        <p class="pv-label">nav-item, 사이드바 항목</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="states">
+            <div class="state"><span class="state-l">기본</span><div class="side-i"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></span><span class="side-n">카테고리</span></div></div>
+            <div class="state"><span class="state-l">hover, lighten 5%</span><div class="side-i is-on"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></span><span class="side-n">카테고리</span></div></div>
+            <div class="state"><span class="state-l">selected, lighten 12%</span><div class="side-i is-sel"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></span><span class="side-n">카테고리</span></div></div>
+            <div class="state"><span class="state-l">현재 메뉴</span><div class="side-i is-cur"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-6 8 6v8H4z"/></svg></span><span class="side-n">홈</span></div></div>
+          </div>
+          <div class="specs">
+            <span class="spec">높이 38, radius 8, 15 / 19 / 600</span>
+            <span class="spec">현재 메뉴 글자 brand-text-base</span>
+            <template data-theme-variant="dark"><span class="spec">현재 메뉴 글자 dark-brand-stronger</span></template>
+            <span class="spec">섹션 제목 13 / 17 / 600</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pv-cell" data-pv-cell="top-tabs">
+        <p class="pv-label">상단 탭</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="states">
+            <div class="state"><span class="state-l">현재, 글자 (가정)</span><div class="ttabs"><span class="ttab is-cur">게임</span></div></div>
+            <div class="state"><span class="state-l">비활성, 라이트 글자 (가정)</span><template data-theme-variant="dark"><span class="state-l">비활성</span></template><div class="ttabs"><span class="ttab">e스포츠</span><span class="ttab">스포츠</span><span class="ttab">엔터+</span></div></div>
+            <div class="state"><span class="state-l">직접 선택</span><div class="ttabs" role="tablist" aria-label="상단 탭 시연" data-pv-toggle="aria-selected"><button type="button" class="ttab" role="tab" data-pv-option aria-selected="true">게임</button><button type="button" class="ttab" role="tab" data-pv-option aria-selected="false">e스포츠</button><button type="button" class="ttab" role="tab" data-pv-option aria-selected="false">스포츠</button><button type="button" class="ttab" role="tab" data-pv-option aria-selected="false">엔터+</button></div></div>
+          </div>
+          <div class="specs">
+            <span class="spec">17 / 21 / 800</span>
+            <span class="spec">비활성 글자 text-weak (가정)</span>
+            <template data-theme-variant="dark"><span class="spec">비활성 글자 dark-text-weak</span></template>
+            <span class="hint">탭을 눌러 보세요</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pv-zone" data-pv-zone="content" aria-labelledby="pv-content">
+    <h2 class="pv-zone-title" id="pv-content">콘텐츠</h2>
+    <div class="pv-cells">
+      <div class="pv-cell pv-cell--wide" data-pv-cell="live-card">
+        <p class="pv-label">live-card, 태그 칩 (칩 바탕, 치수, 글자 가정)</p>
+        <p class="catalog-dummy">방송 제목, 채널명, 시청자 수, LIVE 배지, 드롭스 배지, 태그는 레이아웃 시연용 더미 데이터입니다.</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="lc-pair">
+            <div class="state"><span class="state-l">기본</span><div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">2,048명</span><span class="badge b-drops">드롭스</span></div>썸네일 자리</div><h3>방송 제목 자리 — 주말 정주행</h3><p>채널 E</p><div class="tags"><span class="tag is-em">드롭스</span><span class="tag">게임 이름</span><span class="tag">한국어</span></div></div></div>
+            <div class="state"><span class="state-l">hover, 덧씌움 검정 50%</span><div class="card"><div class="thumb is-hover"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">2,048명</span><span class="badge b-drops">드롭스</span></div>썸네일 자리</div><h3>방송 제목 자리 — 주말 정주행</h3><p>채널 E</p><div class="tags"><span class="tag is-em">드롭스</span><span class="tag">게임 이름</span><span class="tag">한국어</span></div></div></div>
+          </div>
+          <div class="specs">
+            <span class="spec">썸네일 372 × 209, radius 12</span>
+            <span class="spec">제목 15 / 19 / 600</span>
+            <span class="spec">덧씌움 0.2초</span>
+            <span class="spec">태그 칩 radius 4, 강조 글자 brand-text (가정)</span>
+            <template data-theme-variant="dark"><span class="spec">태그 칩 radius 4, 강조 글자 dark-brand-strong</span></template>
+            <span class="hint">썸네일에 마우스를 올려 보세요</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pv-cell" data-pv-cell="badge">
+        <p class="pv-label">badge</p>
+        <p class="catalog-dummy">시청자 수와 재생시간은 레이아웃 시연용 더미 데이터입니다.</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="states">
+            <div class="state"><span class="state-l">LIVE</span><span class="badge b-live">LIVE</span></div>
+            <div class="state"><span class="state-l">시청자 수</span><span class="badge b-view">1.2천명</span></div>
+            <div class="state"><span class="state-l">재생시간</span><span class="badge b-view">1:42:07</span></div>
+            <div class="state"><span class="state-l">다시보기</span><span class="badge b-replay">다시보기</span></div>
+            <div class="state"><span class="state-l">드롭스, 면 (가정)</span><span class="badge b-drops">드롭스</span></div>
+          </div>
+          <div class="specs">
+            <span class="spec">높이 20, radius 4, 12 / 20 / 700</span>
+            <span class="spec">다시보기 Nemony 11</span>
+            <span class="spec">시청자 수 면 검정 80%</span>
+            <span class="spec">드롭스 글자 brand-text-weak</span>
+            <template data-theme-variant="dark"><span class="spec">드롭스 글자 brand-neon</span></template>
+          </div>
+        </div>
+      </div>
+
+      <div class="pv-cell" data-pv-cell="side-card-category-card">
+        <p class="pv-label">가로형 추천 카드, 카테고리 카드 (치수 가정)</p>
+        <p class="catalog-dummy">영상 제목, 채널명, 다시보기 배지, 재생시간, 카테고리 이름, 시청자 수는 레이아웃 시연용 더미 데이터입니다.</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="hcard"><div class="thumb"><div class="thumb-badges"><span class="badge b-replay">다시보기</span><span class="badge b-view">48:12</span></div>썸네일 자리</div><div><h3>가로형 카드 제목은 시스템 서체로 두 줄까지</h3><p>채널 F</p></div></div>
+          <div class="cats">
+            <div class="cat"><div class="cat-poster">[포스터 자리]</div><b>카테고리 1</b><span>시청자 3.1만</span></div>
+            <div class="cat"><div class="cat-poster">[포스터 자리]</div><b>카테고리 2</b><span>시청자 8,240</span></div>
+            <div class="cat"><div class="cat-poster">[포스터 자리]</div><b>카테고리 3</b><span>시청자 912</span></div>
+          </div>
+          <div class="specs">
+            <span class="spec">가로형 제목 15 / 21 / 500 시스템 서체</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pv-cell" data-pv-cell="channel-head">
+        <p class="pv-label">채널 머리, 구독 티어 배지 (치수와 라이트 구독 버튼 가정)</p>
+        <template data-theme-variant="dark"><p class="pv-label">채널 머리, 구독 티어 배지 (치수 가정)</p></template>
+        <p class="catalog-dummy">채널명, 팔로워 수, LIVE 배지, 구독 티어, 구독 선물 배지는 레이아웃 시연용 더미 데이터입니다.</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="ch">
+            <span class="ch-av">J</span>
+            <div class="ch-who">
+              <p class="ch-name">채널 J <span class="badge b-live">LIVE</span></p>
+              <p class="ch-meta">팔로워 4.8만명</p>
+            </div>
+            <div class="ch-act"><span class="btn btn-1">팔로우</span><span class="btn btn-3">구독</span></div>
+          </div>
+          <div class="states">
+            <div class="state"><span class="state-l">구독 티어 1</span><span class="badge b-tier1">티어 1</span></div>
+            <div class="state"><span class="state-l">구독 티어 2</span><span class="badge b-tier2">티어 2</span></div>
+            <div class="state"><span class="state-l">구독 선물</span><span class="badge b-replay">구독 선물</span></div>
+          </div>
+          <div class="specs">
+            <span class="spec">채널명 28 / 36 / 700 (가정)</span>
+            <span class="spec">티어 면 subscribe-tier-1, subscribe-tier-2</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pv-zone" data-pv-zone="feedback" aria-labelledby="pv-feedback">
+    <h2 class="pv-zone-title" id="pv-feedback">피드백</h2>
+    <div class="pv-cells">
+      <div class="pv-cell" data-pv-cell="modal">
+        <p class="pv-label">modal, 라이트 바탕 (가정)</p>
+        <template data-theme-variant="dark"><p class="pv-label">modal</p></template>
+        <div class="pv-stage pv-stage--stack">
+          <div class="modal"><h4>알림 설정</h4><p>모달 본문 문구 예시입니다.</p><span class="btn btn-1">확인</span></div>
+          <div class="specs">
+            <span class="spec">폭 450, radius 12, shadow-level-6</span>
+            <span class="spec">확인 버튼 44, radius 8</span>
+            <span class="spec">제목 22 / 30 / 700 (가정)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
 </body>
 </html>
