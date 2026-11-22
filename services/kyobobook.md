@@ -3,7 +3,7 @@ name: 교보문고
 design_system_name: Kyobo Design System (KDS)
 slug: kyobobook
 category: commerce
-last_updated: "2026-08-22"
+last_updated: "2026-11-16"
 created_at: 2026-05-30
 lang: ko
 logo: https://getdesign.kr/logos/kyobobook.png
@@ -149,9 +149,11 @@ elevation:
 
 # Kyobo Design System (KDS) — design.md
 
+교보문고는 도서와 전자책, 음반, 기프트를 제공하는 온오프라인 도서쇼핑몰이고 [src:27], 페리윙클 인디고를 UI 기본색과 강조에 쓴다 [src:3].
+
 ## Brand & Style
 
-Kyobo Design System(KDS)은 교보문고의 디자인 시스템이며, 브랜드명(교보문고 / KYOBO Book Centre)과 디자인 시스템명은 별개의 이름이다 [src:2]. 교보문고는 1980년 설립된 한국 최대 서점 체인으로, 오프라인 서점·온라인 서점·전자책(sam / 교보 eBook)과 라이프스타일 리테일 서브브랜드 핫트랙스(Hottracks)를 아우르는 옴니채널 커머스 사업자다 [src:2].
+Kyobo Design System(KDS)은 교보문고의 디자인 시스템이며, 브랜드명(교보문고 / KYOBO Book Centre)과 디자인 시스템명은 별개의 이름이다 [src:2]. 상품을 보여 주는 썸네일 컴포넌트는 Book, eBook, Hottracks 세 변형을 따로 둔다 [src:24].
 
 시스템이 표방하는 북극성은 "Minimalist, readable design"이다 — 트렌디함을 덜어내고 가독성과 신뢰를 택하며, 데이터에 근거하고(Data-Driven) 학습이 거의 필요 없는 친숙한 UX를 지향한다 [src:2]. 시각 언어의 출발점은 "책을 읽는 것처럼 텍스트와 정보를 자연스러운 흐름으로 경험하게 한다"는 원칙이며, 콘텐츠가 페이지를 넘기듯 흐르는 reading-first 구조를 만든다 [src:2]. 불필요한 장식이 주의를 분산시키지 않도록 미니멀·고가독성을 우선하고, 고객 여정을 순환적(인입 → 탐색 → 주문 → 재방문)으로 전제해 플로우를 설계한다 [src:2].
 
@@ -443,3 +445,4 @@ KDS는 모든 화면 크기에서 일정한 6/12열 그리드를 유지하되, *
 24. https://design.kyobobook.co.kr/component/thumbnail/
 25. https://design.kyobobook.co.kr/component/toast/
 26. https://design.kyobobook.co.kr/component/tooltip/
+27. https://www.kyobobook.co.kr/ — 교보문고 온라인 서점 홈. 메타 설명에 회사의 서비스 정의가 있다.

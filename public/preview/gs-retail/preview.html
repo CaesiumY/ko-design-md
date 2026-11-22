@@ -30,8 +30,10 @@
       --gsr-white: oklch(1 0 0);
 
       /* ── 앱 내부 웹뷰 `.GS25` 스코프의 무채색 램프 + 딥 네이비.
-            값만 확인됐고 용도는 공개되지 않았다. 이름과 번호는 md 가 명도순으로
-            부여한 것이지 발행된 토큰명이 아니다. 이 프리뷰는 명도만 근거로
+            발행된 용도 설명은 없다. 웹뷰 CSS 에서 navy-deep 은 primary 버튼의
+            눌림 배경과 선택된 통신사 버튼 배경, neutral-300 은 기본, primary,
+            secondary 버튼의 비활성 배경이다. 이름과 번호는 md 가 명도순으로
+            부여한 것이지 발행된 토큰명이 아니다. 나머지는 명도만 근거로
             선·보조 텍스트에 배치했고, 그것은 렌더를 위한 선택이다. ───────── */
       --gsr-neutral-50: oklch(0.971 0.008 279);
       --gsr-neutral-200: oklch(0.885 0.011 270);
@@ -85,9 +87,10 @@
 
       --cta-bg: var(--gsr-primary-dark);
       --cta-ink: var(--gsr-white);
-      --cta-bg-pressed: color-mix(in oklab, var(--gsr-primary-dark) 78%, var(--gsr-white));
-      --cta-bg-disabled: color-mix(in oklab, var(--gsr-primary-dark) 20%, var(--gsr-white));
-      --cta-ink-disabled: color-mix(in oklab, var(--gsr-primary-dark) 42%, var(--gsr-white));
+      /* 웹뷰 CSS 의 [class*=button-primary]:active, :disabled 값 */
+      --cta-bg-pressed: var(--gsr-navy-deep);
+      --cta-bg-disabled: var(--gsr-neutral-300);
+      --cta-ink-disabled: oklch(1 0 0 / 0.867);
 
       --brand-face: var(--gsr-signature-cyan);
       --brand-ink: var(--gsr-white);
@@ -98,9 +101,11 @@
       --shade: 0 1px 2px oklch(0 0 0 / 0.05), 0 8px 20px oklch(0 0 0 / 0.07);
       --shade-lift: 0 6px 16px oklch(0 0 0 / 0.18);
 
-      /* radius 수치도 하나도 공개돼 있지 않다. 관찰된 것은 성격뿐이라
+      /* 네이티브 radius 수치는 공개돼 있지 않다. 관찰된 것은 성격뿐이라
          (정보는 둥근 직사각 카드, 액션·아이콘·상태는 원 또는 필) 그 성격만
-         재현한다. 이 수치들은 화면 어디에도 값으로 표시하지 않는다. */
+         재현한다. button-primary 데모만 웹뷰 CSS 의 [class*=button-] 36px 를 따른다.
+         이 수치들은 화면 어디에도 값으로 표시하지 않는다. */
+      --r-button: 36px;
       --r-card: 18px;
       --r-inner: 12px;
       --r-chip: 999px;
@@ -259,6 +264,7 @@
       background: transparent; color: var(--ink);
       border: 1px solid var(--rule-strong);
     }
+    .btn-webview { border-radius: var(--r-button); }
     .btn.is-pressed { background: var(--cta-bg-pressed); }
     .btn[disabled] { background: var(--cta-bg-disabled); color: var(--cta-ink-disabled); cursor: not-allowed; }
     .btn-block { display: block; width: 100%; }
@@ -571,7 +577,9 @@
       --ink-faint-text: var(--ink-faint);
 
       /* primary-dark 는 근접 검정이라 어두운 지면에서 사라진다. 색상각과
-         채도는 유지한 채 명도만 올렸다. 발행된 다크 토큰이 아니다. */
+         채도는 유지한 채 명도만 올렸다. 발행된 다크 토큰이 아니다.
+         눌림과 비활성도 (가정): 눌림은 라이트처럼 기본보다 어둡게, 비활성
+         배경은 어두운 지면에 가깝게, 비활성 글자는 흐린 회색으로 두었다. */
       --cta-bg: oklch(0.430 0.036 259);
       --cta-bg-pressed: oklch(0.355 0.032 259);
       --cta-bg-disabled: oklch(0.278 0.018 265);
@@ -679,16 +687,16 @@
         <div class="demo">
           <div class="btn-row">
             <div class="btn-demo">
-              <button class="btn" type="button">결제하기</button>
-              <span class="lab">기본 — 확인된 값</span>
+              <button class="btn btn-webview" type="button">결제하기</button>
+              <span class="lab">기본 — 확인된 값(다크는 가정)</span>
             </div>
             <div class="btn-demo">
-              <button class="btn is-pressed" type="button">결제하기</button>
-              <span class="lab">누름 — 프리뷰 렌더</span>
+              <button class="btn btn-webview is-pressed" type="button">결제하기</button>
+              <span class="lab">누름 — 확인된 값(다크는 가정)</span>
             </div>
             <div class="btn-demo">
-              <button class="btn" type="button" disabled>결제하기</button>
-              <span class="lab">비활성 — 프리뷰 렌더</span>
+              <button class="btn btn-webview" type="button" disabled>결제하기</button>
+              <span class="lab">비활성 — 확인된 값(다크는 가정)</span>
             </div>
           </div>
         </div>

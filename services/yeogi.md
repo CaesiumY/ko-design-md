@@ -3,7 +3,7 @@ name: 여기어때
 design_system_name: Yeogi Design System
 slug: yeogi
 category: travel
-last_updated: "2026-08-02"
+last_updated: "2026-11-15"
 created_at: "2026-07-18"
 lang: ko
 logo: https://getdesign.kr/logos/yeogi.png
@@ -268,6 +268,8 @@ font-display-src: https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/J
 ---
 
 # 여기어때 — design.md
+
+여기어때는 숙소와 항공권, 패키지여행을 예약하는 서비스이고 [src:44], 로고에는 Yeogi Red를, 주요 버튼에는 그와 다른 Lively red를 쓴다 [src:5][src:12].
 
 > 여기어때는 GC COMPANY(여기어때컴퍼니)가 운영하는 여행·숙박 플랫폼이고, 그 공개 문서 사이트가 **여기어때 Design Library**다 [src:1]. 문서 본문이 스스로를 지칭하는 시스템 이름은 **YDS(Yeogi Design System)**이며 [src:12][src:19], Layout 문서 기준 현재 버전은 **YDS 6.0**이다 [src:18].
 
@@ -644,3 +646,4 @@ Button 개요에 변종으로 이름만 공개된다 [src:29]. "필 없이 텍�
 41. https://techblog.gccompany.co.kr/여기어때-비주얼-에셋-새롭게-정의하다-a247c28bc5d8 — GC COMPANY 기술블로그(Design Library 아카이브 정의 인용문 1건). 근거 강도: 이 인용문은 2026-07-16 리서치 단계의 fetch로 확보해 독립 검증(3표 일치)을 거쳤고, 이후 재확인 시도는 Medium 인증벽(본문 미로드)에 막혀 원문 대조가 불가능하다 — 인용문 자체는 검증된 fetch 산출물이나 상시 재확인은 되지 않는 소스로 취급할 것
 42. https://noonnu.cc/font_page/115 — 여기어때 잘난체 공식 배포처(소유권·라이선스 조건·웹폰트 @font-face 스니펫)
 43. https://data.jsdelivr.com/v1/packages/gh/projectnoonnu/noonfonts_four@1.2 — jsDelivr 파일 인덱스(JalnanOTF00.woff 실재 및 CSS 엔트리포인트 부재 검증)
+44. https://www.yeogi.com/ — 여기어때 예약 서비스 홈. 페이지 제목에 예약 상품의 범위가 있다.

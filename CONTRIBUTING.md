@@ -105,7 +105,7 @@
 규칙:
 
 - **큰 변경(섹션 신설, frontmatter 구조 변경, 새 항목 작성)은 스킬 권장**. 일관성 유지를 위해.
-- 수정 시에도 `pnpm build`로 frontmatter 검증을 통과해야 합니다 (`src/lib/site-frontmatter.ts`가 빌드 중에 엄격히 검증 — 사이트가 읽는 키를 값 없이 쓰면 빌드가 실패합니다).
+- 수정 시에도 `pnpm build`로 frontmatter 검증을 통과해야 합니다 (`src/lib/site-frontmatter.ts`가 빌드 중에 엄격히 검증 — 사이트가 읽는 키를 값 없이 쓰면 빌드가 실패합니다. 그 파일의 `FALLBACK_KEYS`에 올린 키만 예외로, 비어 있으면 없는 키처럼 다룹니다).
 - 항목 파일명은 `_`로 시작할 수 없습니다 — 사이트는 그런 파일도 항목으로 싣기 때문에 `pnpm validate:catalog`가 막습니다(초기의 `_demo-*` 데모 픽스처는 제거됐습니다).
 
 ---

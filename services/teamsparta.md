@@ -3,7 +3,7 @@ name: 팀스파르타
 slug: teamsparta
 category: education
 logo: https://getdesign.kr/logos/teamsparta-favicon.png
-last_updated: "2026-11-10"
+last_updated: "2026-11-15"
 created_at: "2026-05-13"
 lang: ko
 colors:
@@ -331,6 +331,8 @@ fonts:
 
 # 팀스파르타 (스파르타클럽) — design.md
 
+팀스파르타는 내일배움캠프 등 스파르타클럽 학습 서비스를 운영하고, 흰 화면 위에 브랜드 빨강을 큰 프로그램 카드와 강조 면에 쓴다 [src:1][src:2][src:5].
+
 > 팀스파르타가 운영하는 스파르타클럽 학습 생태계의 인증 대시보드 디자인 시스템이다. 본 문서는 Claude Design handoff bundle의 `스파르타클럽 Design System` README, `colors_and_type.css`, preview cards, dashboard UI kit, chat transcript를 1차 출처로 합성했다. 공개 공식 사이트와 내일배움캠프, 기업교육, 커리어 surface는 서비스 범위와 브랜드 맥락 확인용 보조 출처로 사용했다 [src:1][src:2][src:3][src:4]. 색 역할 계층, 원시 팔레트, 컴포넌트 토큰은 팀스파르타가 npm에 발행한 토큰 패키지에서 옮겼다 [src:5]. 타이포, 스페이싱, 라운드와 컴포넌트의 크기와 여백은 이 핸드오프 번들에서 재구성했다. 색은 발행 패키지에 대응 값이 없는 번들 파랑 `interaction-blue`와, 같은 파랑에 투명도를 건 `focus-ring`과 본문의 `input-focus-ring`만 번들 값으로 남겼다(Colors 절 감사 메모 참조).
 
 ## Brand & Style
@@ -346,6 +348,8 @@ fonts:
 > **번들 팔레트 정리(2026-11-10).** 팀스파르타는 디자인 토큰을 npm 패키지 `@teamsparta/stack-tokens`로 발행한다 [src:5]. 2026-11-10에 조회한 최신판은 2.6.0이다(배포 tgz shasum `79158eaf…1edf` 가 11-01 캐시 사본과 같음). 이 패키지는 원시 팔레트 `primitiveColor` 위에 역할 계층을 정의한다 — 라이트는 `baseSemanticColor`(스파르타클럽 테마 `sccLight`는 여기에 같은 brand 값만 다시 적는다), 다크는 `sccDark`다. 컴포넌트 토큰은 `baseComponent`가 역할과 원시 단계를 가리켜 정의하고, `sccDark`가 그중 일부를 다시 가리킨다. 내일배움캠프는 역할을 `--stack-semantic-*` 커스텀 프로퍼티로 서빙한다 [src:2]. 아래 역할 표의 45개 역할은 패키지에서 옮겼고, 2026-11-01에 라이트 45개를 내일배움캠프 라이브 값과 hex로 대조하니 불일치는 0개였다. 내일배움캠프 라이브 페이지는 다크 테마 정의가 없어 다크 값은 패키지로만 대조했다. 이번에는 핸드오프 번들에서 온 팔레트를 발행값으로 옮겼다. 번들 회색 `gray-*` 11단계와 `white`, `black`은 지웠고(발행 `neutral-*`와 같은 값은 `gray-400`, `gray-950` 둘뿐이었다), 그 값을 쓰던 자리는 발행 역할(`text-primary`, `background-subtle`, `line-nonClickable` 등)이나 패키지 컴포넌트 토큰으로 옮겼다. 번들 이름으로 발행값을 싣던 `brand-red`, `brand-red-dark`, `danger`는 발행 `red-70`, `red-80`, `orange-red-70`과 같은 값이라 지우고, 대표색 별칭 `primary`가 `red-70`을 가리키게 했다. `success`, `warning`, `modal-backdrop`은 같은 자리를 맡는 발행 역할 `status-success-default`, `status-warning-default`, `dimm-default`로 바꿨고, `info`는 `interaction-blue`와 같은 값의 별칭이라 지웠다. 번들 `teal-strong`은 발행 `skyBlue[90]`과 같은 값이라 `sky-blue-90`으로 바꿨다. red 배지 바탕 `brand-red-soft`는 brand 역할의 가장 옅은 칸 `brand-subtlest`로 옮겼다. 값이 가장 가까운 칸은 `brand-subtler`(`red[20]`)지만, 다크에서 그 칸은 `red[90]`이 되어 글자 `brand-strong`(`red[50]`)과 대비가 무너진다. 나머지 번들 배지색 `badge-teal-bg`, `badge-green-bg`, `badge-blue-bg`와 green 배지 글자(번들 `success`), ghost hover 표면 `interaction-blue-soft`는 가장 가까운 발행 단계 `skyBlue[10]`, `green[10]`, `blue[20]`, `green[80]`, `deepBlue[10]`으로 옮겼다. 다만 green 배지 글자는 `green[80]`이 `green[10]` 바탕 위 3.39:1 로 글자 기준에 못 미쳐, 한 단계 어두운 `green[90]`(4.9:1)으로 다시 옮겼다. 배지 대응은 상류가 정한 것이 아니라 이 카탈로그의 선택이다(Known Gaps). 남긴 번들 색은 `interaction-blue`와 같은 값의 `focus-ring` 둘이다. 발행 원시 팔레트에 가까운 값이 없고(가장 가까운 `deepBlue[80]`도 ΔE 0.106), 패키지에 포커스 링 토큰도 없어 링크, ghost 액션, 포커스 링의 번들 파랑을 그대로 두었다.
 >
 > **`interaction-blue`는 sRGB 색역 밖이다.** `oklch(0.429 0.297 264)`를 선형 sRGB로 풀면 red 채널이 −0.0002로 음수라, 브라우저는 이 값을 그대로 그리지 못하고 클리핑한다. 라이브 사이트가 쓰는 가장 가까운 파랑은 `#003CDC` = `oklch(0.457 0.245 264)`로 **hue는 같고 채도가 낮은**(색역 안) 값이며 ΔE 0.059 떨어져 있다. 방침대로 값은 그대로 두고 차이만 적는다 — 이 토큰을 참조하는 `focus-ring`과 `input-focus-ring`도 같은 값을 쓰므로 세 줄 모두에 같은 단서를 달았다. 다만 사이드카로 실려 나가는 건 앞의 둘뿐이다 — `input-focus-ring`은 컴포넌트 절에 있어 `tokens:build`의 색 토큰 추출 대상이 아니다.
+
+화면에서 브랜드 빨강은 큰 면으로 나온다. 스파르타클럽 홈은 흰 바탕 위에 빨강, 남청록, 보라 프로그램 카드를 나란히 두고 빨강 카드에 취업 캠프를 싣는다 [src:1]. 내일배움캠프 첫 화면도 큰 강조 카드 면을 빨강으로 채운다 [src:2].
 
 색은 두 층이다. 역할 계층과 그것이 가리키는 원시 팔레트 단계는 발행 패키지에서 옮겼고, 컴포넌트 토큰이 가리키는 단계(`neutral-40`, `neutral-70`, `orange-red-80`, `green-80`)와 번들 색을 옮겨 간 단계 가운데 역할이 가리키지 않던 것(`sky-blue-10`, `sky-blue-90`, `deep-blue-10`)도 같은 원시 팔레트에서 왔다 [src:5]. 번들에서 온 색은 위 메모가 남긴 파랑뿐이다. 모두 catalog 규약에 따라 OKLCH로 변환해 표기한다. Blue는 interaction/info, red는 brand/CTA, sky blue는 informational active surface, neutral은 dashboard structure를 담당한다.
 

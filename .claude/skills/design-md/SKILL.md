@@ -30,7 +30,7 @@ This skill builds a complete catalog entry through a 5-subagent pipeline with on
                                                          END
 ```
 
-**Loop termination**: design loop is blocking — score must reach 8/10 within 3 iterations or the user decides at the checkpoint. Preview loop is non-blocking — proceed with warning if score < 8 at iteration 3.
+**Loop termination**: design loop is blocking — score must reach 8/10 within 3 iterations or the user decides at the checkpoint. Preview loop is non-blocking — proceed with warning if, at iteration 3, the score is still under 8 or the preview is still under the CI contrast job's text-element floor (9c).
 
 **Key reference files** (read these before dispatching subagents that need them):
 - `.claude/skills/design-md/references/stitch-format.md`
@@ -222,7 +222,7 @@ After return, verify `{cache_dir}/draft.md` exists and is non-empty. If missing,
 
 ### 6a2. Deterministic draft gate (machine validation)
 
-Before spending a reviewer dispatch, run the draft validator — it covers every mechanically checkable rubric item (frontmatter read and field values, section presence/order, OKLCH-only token values, `[src:N]`/References integrity, expected logo) so the reviewer model never has to "grep mentally":
+Before spending a reviewer dispatch, run the draft validator — it covers every mechanically checkable rubric item (frontmatter read and field values, section presence/order, OKLCH-only token values, `[src:N]`/References integrity, expected logo, the tagline line's form) so the reviewer model never has to "grep mentally":
 
 ```bash
 cd "${repo_root}" && pnpm validate:draft .claude/cache/design-md/{slug}/draft.md \
@@ -255,9 +255,10 @@ Follow your agent definition. Write exactly one file at output_path.
 
 The machine report has already verified the deterministically checkable items
 (frontmatter read and field values, section presence/order, OKLCH-only token scan,
-[src:N]/References integrity, expected logo). Do not re-verify those — spend
-your review on judgment items: Brand fidelity semantics against research.md,
-Voice/tone, and cross-section token contradictions.
+[src:N]/References integrity, expected logo, the tagline line's form). Do not
+re-verify those — spend your review on judgment items: Brand fidelity semantics
+against research.md, Voice/tone with the tagline line's three checks, and
+cross-section token contradictions.
 ```
 
 After return, `Read` `{cache_dir}/review-{N}.json`.
@@ -272,10 +273,11 @@ After return, `Read` `{cache_dir}/review-{N}.json`.
 
 This is the gate **every** entry passes through — Stage 4c precedes it only when a design board is upstream. Show the user:
 
-1. The current `draft.md` content (read it and display the full file inline, formatted as markdown — paste in code fences).
-2. The latest `review-{final}.json` verdict — extract `score`, `passed`, `verdict`, and bullet the issues array.
-3. If `## Known Gaps` lists package component tokens whose key is undecided (`references/stitch-format.md`, "Variants are flat names" — no keying rule covers them yet, so the author leaves them out of the map; find them by the fixed bullet form `` `{package path}` — 키 미정(패키지 컴포넌트 토큰) ``), list them here and tell the user they stay out of the map in this entry, with their values in the body's package token table. Keying one needs a rule added to `references/stitch-format.md` first (a maintainer decision, made outside this run), so the reviewer blocks a map row for them until then; approving keeps them as they are.
-4. If iteration > 1, show a brief diff highlight: `"Iter 1 score: X → Iter {final} score: Y"` plus the top 1–2 issues that improved between iterations (compare `review-1.json.issues` and `review-{final}.json.issues`).
+1. The tagline line (한 줄 소개; rules: `references/stitch-format.md`, "Standard section order"), on its own and before the draft, because it is the one sentence readers meet outside the entry. `design-md-skill-tagline.test.ts` holds this item ahead of the draft. Run `pnpm validate:draft .claude/cache/design-md/{slug}/draft.md` and show the `tagline:` line it prints: the character count over the limit, then the sentence as the reader sees it. Take the count from that line; do not count by eye. Say where the sentence is shown: the home list, the detail page header, the share card (its first sentence), the search description, the catalog index (`llms.txt`) and the RSS item. If the run reports a `tagline-*` block or warning, list it under the sentence.
+2. The current `draft.md` content (read it and display the full file inline, formatted as markdown — paste in code fences).
+3. The latest `review-{final}.json` verdict — extract `score`, `passed`, `verdict`, and bullet the issues array.
+4. If `## Known Gaps` lists package component tokens whose key is undecided (`references/stitch-format.md`, "Variants are flat names" — no keying rule covers them yet, so the author leaves them out of the map; find them by the fixed bullet form `` `{package path}` — 키 미정(패키지 컴포넌트 토큰) ``), list them here and tell the user they stay out of the map in this entry, with their values in the body's package token table. Keying one needs a rule added to `references/stitch-format.md` first (a maintainer decision, made outside this run), so the reviewer blocks a map row for them until then; approving keeps them as they are.
+5. If iteration > 1, show a brief diff highlight: `"Iter 1 score: X → Iter {final} score: Y"` plus the top 1–2 issues that improved between iterations (compare `review-1.json.issues` and `review-{final}.json.issues`).
 
 Then `AskUserQuestion`:
 
@@ -349,11 +351,12 @@ cd "${repo_root}" && pnpm audit:contrast:staged \
   --iteration {M} --json-out "${repo_root}/.claude/cache/design-md/{slug}/preview-review-machine-{M}.json"
 ```
 
-It writes into the **same** machine report 9a2 just wrote, so the reviewer and the retrying author keep their one path each. It adds a `render` object and, for each contrast shortfall, a `warn` item in `issues` (dark-theme text first — the only kind the rubric scores — then light-theme text, then non-text, each lowest ratio first, capped; the rest are counted in `render.observed.omitted`). It never adds a `block` and never changes `passed`.
+It writes into the **same** machine report 9a2 just wrote, so the reviewer and the retrying author keep their one path each. It adds a `render` object and, for each contrast shortfall, a `warn` item in `issues` (dark-theme text first — the only contrast kind the rubric scores — then light-theme text, then non-text, each lowest ratio first, capped; the rest are counted in `render.observed.omitted`). It also counts each theme's text elements the way the CI contrast job does, in `render.observed.textElements`, and when a theme falls under that job's floor (`MIN_TEXT_ELEMENTS`) it puts one thin-preview `warn` ahead of the contrast items, outside the cap and not counted in `omitted` — the item whose `section` starts with `text elements —`, which the rubric's Item 4 scores. It never adds a `block` and never changes `passed`.
 
-- **Always proceed to 9b** after it, whatever it found. 9a3 is an observation, not a gate: a staged preview has no baseline row, so a shortfall cannot be told apart from two published brand values that simply fall short, and blocking would push the author to discard a published value to get through. Convergence stays with the reviewer's score; drift stays with the CI contrast job.
+- **Always proceed to 9b** after it, whatever it found. 9a3 is an observation, not a gate: a staged preview has no baseline row, so a shortfall cannot be told apart from two published brand values that simply fall short, and blocking would push the author to discard a published value to get through. Convergence stays with the reviewer's score, plus one thing 9c checks besides it — a thin preview gets another author pass (see `size_result` below); drift stays with the CI contrast job.
 - **`render.skipped`** (no Chromium on this machine, or the measurement broke) → note it for Stage 13 as `render_result = skipped` with the `reason`, and proceed. Do **not** install a browser inside the session. A skipped report carries no `observed` key at all, so it can never be read as a clean run.
 - Otherwise, when `render.observed.measured` is 0, record `render_result = empty` — the page rendered but nothing was collected, which is no more a pass than a skip. When `render.observed.fail` is 0, record `render_result = ok` with `render.observed.held` (rows the judge could not decide — a gradient, an overlay); else `render_result = warn` with the fail count.
+- Separately, for the preview's size: when `issues` carries the item whose `section` starts with `text elements —`, record `size_result = thin` with `render.observed.textElements`; otherwise, under `render.observed`, `size_result = ok` with the same counts; under `render.skipped`, `size_result = skipped` with the same `reason`. Size is not contrast — a preview with no shortfall can still be too thin for the CI contrast job — so the two results are kept apart.
 - **Exit 2** means the command or a file it names was wrong — an unknown flag, a staged path that is not a readable file, a report path that cannot be written, an existing report from a different iteration than `--iteration`, or an existing report file that is not a machine report (not JSON, or not the 9a2 envelope — a reviewer's `preview-review-{M}.json` named by mistake is refused rather than overwritten). Fix that and rerun; it is not a measurement result. The command has no other failure exit: anything that goes wrong while measuring is the `render.skipped` outcome above.
 
 ### 9b. Dispatch preview-html-reviewer
@@ -385,16 +388,19 @@ Typography hierarchy, and dark-mode appropriateness.
 The report's `render` object is the one rendered observation in the loop.
 Under `render.observed`, its contrast `warn` items are measured shortfalls:
 score them as the rubric's Item 5 says and mirror each into your `issues`
-as `warn`, so the next author pass sees them. Under `render.skipped`, nothing
+as `warn`, so the next author pass sees them. If it carries the item
+whose `section` starts with `text elements —`, the preview is under the CI
+contrast job's text-element floor: score Item 4 as the rubric's Render size
+(9a3) paragraph says and mirror that item too. Under `render.skipped`, nothing
 was rendered — say "렌더 관측 없음" in your verdict and judge Item 5 from the
 CSS alone.
 ```
 
 ### 9c. Loop decision (non-blocking)
 
-- If `passed && score >= 8` → exit loop, go to Stage 10.
-- Else if `M < 3` → `M += 1`, go back to 9a.
-- Else (`M == 3` and not passed) → log the warning, exit loop, go to Stage 10 anyway. Preview review is non-blocking because visual previews iterate naturally during real use; the user already approved the design.md the preview is built from.
+- If `passed && score >= 8` and this pass's 9a3 did not record `size_result = thin` → exit loop, go to Stage 10.
+- Else if `M < 3` → `M += 1`, go back to 9a. A thin preview gets this pass whatever its score: the rubric caps Item 4 at 1 point for it, which leaves a preview good everywhere else at 9, and without another pass the author would never see the warning the reviewer mirrored.
+- Else (`M == 3`, and not passed or still thin) → log the warning, exit loop, go to Stage 10 anyway. Preview review is non-blocking because visual previews iterate naturally during real use; the user already approved the design.md the preview is built from.
 
 ## Stage 10 — Write previews to public/
 
@@ -667,6 +673,12 @@ Print a summary message containing:
   - `render_result = skipped` → `렌더 대비: ⏭ 관측 건너뜀 — {reason}`
 
   Neither the skipped line nor the empty line may read like the ok line: no Chromium, or a run that collected nothing, means nothing was measured, which is not the same fact as nothing falling short. The ok line carries the held count for the same reason — rows on a gradient or under an overlay were measured but not judged. If the Stage 12 responsive auto-fix rewrote the preview after the loop, add `(Stage 12 자동수정 전 파일 기준)` to the line — 9a3 measured the file the loop ended with, not the one that shipped.
+- Render size (Stage 9a3, the same machine report) — pick the line by state:
+  - `size_result = ok` → `렌더 분량: ✅ 텍스트 요소 라이트 {light}, 다크 {dark} — CI 하한 이상`
+  - `size_result = thin` → `렌더 분량: ⚠️ 텍스트 요소 라이트 {light}, 다크 {dark} — CI 하한 아래({short})라 PR 의 contrast 잡이 막는다`
+  - `size_result = skipped` → `렌더 분량: ⏭ 분량을 재지 않음 — {reason}`
+
+  The floor is `MIN_TEXT_ELEMENTS`; the line names it as "CI 하한" rather than copying its number. `{short}` is each theme the thin item's `fix` names with how many it is short, in Korean (`라이트 10개 모자람`). Put that item's `fix` on the next line, indented, instead of in the warn list below. With `render_result = empty` the counts are 0 because nothing was collected, so add `(수집된 글자 0개 — 수집기가 프리뷰에 닿지 못했을 수 있음)`: CI may read the same preview differently. The skipped line must not read like the ok line, for the reason given for the contrast lines above, and the Stage 12 note above applies to this line too.
 - Responsive verification (Stage 12 sweep) — pick the line by state:
   - `responsive_result = ok` → `반응형: ✅ 375/768/976/1440 가로 오버플로 없음 (자동수정 {attempts}회)`
   - `responsive_result = warn` → `반응형: ⚠️ 잔여 오버플로 — {file} @{width}px {overflowPx}px, 요소 {culprits} (스크린샷 {path}, 자동수정 2회 후 잔존)`
@@ -679,7 +691,7 @@ Print a summary message containing:
 
   **No two of the four may print the same line** — that is what the contract test pins. Three of them are where it actually happens: `discrepancies` carries a ⚠️ and is never mistaken for silence, while the other three all look like nothing-to-see. "보드가 없었다" · "대조했고 어긋난 것이 없었다" · "대조가 아예 안 돌았다" 는 서로 다른 사실이고, 이 저장소에서 반복적으로 같은 침묵으로 보고돼 왔다. 특히 `skipped` 를 침묵으로 처리하면 사람은 초록으로 읽는다.
 - Leftover TODOs:
-  - **Every `warn` in the final preview review, whatever the score.** The rubric's four advisory sections — `Mobile overflow`, `Dummy-data labelling`, `Explanatory prose`, `Reduced motion` — and the `Token gap` warn under Item 5 add no points by design, so a preview can carry all of them and still pass 9c's `score >= 8` on the first iteration and exit without the author ever seeing the review. Reporting them only when iteration 3 fell short drops them in exactly the case they exist for: `remember` scored 10/10 with 61% of its rendered text restating the design.md. List each one's `section` and `fix` verbatim. If the list is empty, say so — an absent line reads as "none found" whether or not the check ran. The one exception is the render contrast warns the reviewer mirrored from 9a3 (their `section` starts with `contrast —`): the Render contrast line above already reports them, and each carries the same guidance sentence, so list only their element paths under that line instead of repeating every `fix` — twenty copies of one sentence bury the advisory warns this list exists for.
+  - **Every `warn` in the final preview review, whatever the score.** The rubric's four advisory sections — `Mobile overflow`, `Dummy-data labelling`, `Explanatory prose`, `Reduced motion` — and the `Token gap` warn under Item 5 add no points by design, so a preview can carry all of them and still pass 9c's `score >= 8` on the first iteration and exit without the author ever seeing the review. Reporting them only when iteration 3 fell short drops them in exactly the case they exist for: `remember` scored 10/10 with 61% of its rendered text restating the design.md. List each one's `section` and `fix` verbatim. If the list is empty, say so — an absent line reads as "none found" whether or not the check ran. There are two exceptions. One is the render contrast warns the reviewer mirrored from 9a3 (their `section` starts with `contrast —`): the Render contrast line above already reports them, and each carries the same guidance sentence, so list only their element paths under that line instead of repeating every `fix` — twenty copies of one sentence bury the advisory warns this list exists for. The thin-preview warn the reviewer mirrored (its `section` starts with `text elements —`) is the other: the Render size line above already carries its `fix`.
 - **What is left for the person to look at.** Close the report by saying the loops are already done — the draft gate and review (6a2/6b), the preview gate, render contrast observation and review (9a2/9a3/9b) and the Stage 12 sweep have all run — and then name what they do not cover, so the user spends their pass on the residue instead of re-checking what a machine just checked. On `remember` every gate was green when the user found four things: the preview was more than half explanatory text, button sizes disagreed between sections, a mobile mock duplicated what the responsive rules already produced at 375px, and a dialog carried an animation nobody wanted. Taste, proportion and redundancy are that residue. **When `board_result` is `ok` or `discrepancies`, say so and drop application site from that list** — the board cross-check just looked at it. When it is either of the `skipped` states, application site is still residue and the closing line must name it, because on `remember` that is where the one real discrepancy was. Do not present the preview as unverified, and do not present it as finished either.
 
 `AskUserQuestion`: "캐시 정리할까요?"

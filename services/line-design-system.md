@@ -3,7 +3,7 @@ name: 라인
 design_system_name: LINE Design System for Global Family Service (LDSG)
 slug: line-design-system
 category: messenger
-last_updated: "2026-08-02"
+last_updated: "2026-11-16"
 created_at: 2026-05-25
 lang: ko
 logo: https://getdesign.kr/logos/line-design-system.png
@@ -105,13 +105,15 @@ elevation:
   ldsg-shadow-on-gray-300: 0px 1px 15px oklch(0 0 0 / 0.04)
 ---
 
+라인은 일본과 태국, 대만, 인도네시아에 사용자가 몰린 메신저이고 [src:4], LINE Green과 검정, 회색으로 조용한 화면을 짠다 [src:1][src:2].
+
 ## Brand & Style
 
 라인의 디자인 시스템은 두 갈래로 나뉜다. **LDSM(LINE Design System for Messenger)**은 라인 메신저 본체의 시스템이고, **LDSG(LINE Design System for Global Family Service)**는 LY Corporation 산하 **글로벌 패밀리 서비스**가 동일한 UX 표준을 공유하도록 설계된 공용 시스템이다 [src:2]. 여기서 "패밀리 서비스"는 단일 메신저 스킨이 아니라 Messenger·LINE Pay·LINE Music·LINE Manga·LINE Shopping 등 라인 계열 앱 전반을 가로지르는 **크로스-프로덕트 레이어**를 가리킨다 [src:2]. 목표는 모든 패밀리 서비스가 "같은 가족의 일부처럼" 느껴지게 하면서도, 각 제품이 자기만의 Primary 컬러·브랜드 이미지·카피 톤을 재정의할 수 있게 하는 것이다 [src:2]. 본 카탈로그 항목은 LDSG에 한정한다 — LDSM의 "LINE Semantic Colors" 명명 체계나 다크모드 자동 매핑은 이 문서의 토큰 정의에 포함하지 않는다 [src:2][src:17].
 
 LDSG의 컬러 구조는 세 층으로 나뉜다 — **Rainbow Colors(불변)**, **Theme Colors(서비스별 교체 가능)**, **Language Packs(언어별 폰트 세트)**다 [src:1][src:2][src:3]. Rainbow Colors는 모든 컴포넌트를 만드는 불변 팔레트이고, Theme Colors는 각 패밀리 서비스가 자기 색으로 바꿀 수 있는 Brand·Role 토큰이며, 그 변경조차 Rainbow Colors 범위 안에 머물러야 한다 [src:1]. 이 "공통 골격은 고정, 색·언어는 교체"라는 분업이 LDSG가 한 시스템으로 여러 제품을 묶는 방식이다 [src:1][src:2].
 
-타깃 사용자는 일본·대만·태국을 중심으로 한 동아시아·동남아 메신저 및 패밀리 서비스 사용자다 [src:4]. 라인은 일본에서 압도적 1위, 대만 보급률이 높은 국민 메신저 포지션을 갖고 있고 [src:4], LDSG는 이들 시장의 라인 패밀리 서비스 UI 일관성을 책임진다 [src:2]. 한국(KR)은 LDSG의 1차 시장이 아니며 공식 Language Pack에서도 의도적으로 빠져 있지만(EN/JP/TC/TH만 1급), 라인 본사의 모태가 한국 NHN(Naver) 자회사이고 한국 디자인 팀이 라인 시스템에 직접 기여하는 구조라 연결은 사용자 노출보다 조직 차원에서 깊다 [src:4].
+타깃 사용자는 일본·대만·태국을 중심으로 한 동아시아·동남아 메신저 및 패밀리 서비스 사용자다 [src:4]. 위키백과는 라인을 2023년 기준 일본 인구의 70% 넘게 쓰고 인도네시아와 대만, 태국에서도 주로 쓰이는 메신저로 적고 [src:4], LDSG는 이들 시장의 라인 패밀리 서비스 UI 일관성을 책임진다 [src:2]. 한국(KR)은 LDSG의 1차 시장이 아니며 공식 Language Pack에서도 의도적으로 빠져 있지만(EN/JP/TC/TH만 1급), 라인 본사의 모태가 한국 NHN(Naver) 자회사이고 한국 디자인 팀이 라인 시스템에 직접 기여하는 구조라 연결은 사용자 노출보다 조직 차원에서 깊다 [src:4].
 
 감성 톤은 절제된 친근함이다 — 채팅 제품치고 "유난히 조용한" 시스템으로, 차분하고 중립적이며 "은행 창구의 예의 바른 직원" 같은 인상을 노린다 [src:2]. 그라데이션·네온·보라-파랑 워시·장식 액센트가 없고, LINE Green·Black·11단 그레이 세 색이 거의 모든 일을 한다 [src:2]. 호버/프레스를 색상 변화가 아닌 단순 opacity 조정(Hover 70%, Pressed 50%)으로 일관 처리해, 컬러 체계가 작아도 시각 피드백이 명료하게 작동하도록 설계되어 있다 — 이 opacity 기반 상태 모델이 LDSG의 가장 특징적인 시스템 트레이트다 [src:1][src:2]. 카카오톡 같은 강한 채도의 노랑이나 큐트한 라운드와 달리, 차분한 LINE Green과 보수적인 5/12px 라운드로 톤이 기운다 [src:2]. 일러스트도 검정 라인아트(흰 배경 위 검정, 폰을 든 친근한 캐릭터)로 통일되어 있고, 모션은 시트/드로어/팝업이 ~200–300ms ease-out으로 슬라이드-페이드하는 절제된 수준이다 [src:2].
 

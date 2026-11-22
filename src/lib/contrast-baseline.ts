@@ -69,9 +69,36 @@ export interface BaselineComparison {
  * holds it, and from the recorded table in the corpus test, so pasting a thin
  * row fails `pnpm test` too. The recorded check alone would trust whoever
  * pasted the numbers: `elements` is the one count the exact comparison leaves
- * out, so a hand-raised value would pass it.
+ * out, so a hand-raised value would pass it. The onboarding loop's render
+ * observation (`staged-contrast-report.ts`) reads it as well, to warn about a
+ * staged preview before CI does — so moving the floor moves that warning and
+ * its tests too.
  */
 export const MIN_TEXT_ELEMENTS = 80
+
+/**
+ * What to tell an author whose preview sits under `MIN_TEXT_ELEMENTS`: what
+ * raises the count, and which text it does not count.
+ *
+ * Said in places that must not drift apart — the CI gate's failure output
+ * here, the onboarding loop's render observation
+ * (`staged-contrast-report.ts`), which warns about the same floor before the
+ * PR exists, and the corpus test that fails on a thin row pasted into the
+ * table. A second wording of "not counted" would be the one that forgets a
+ * case and sends an author to add disabled states.
+ *
+ * Kept as the lines the CI output prints, so that output stays as it was; the
+ * other two join them into one run of sentences. What is about the recorded
+ * table is not in here, and each place that has a table says it in its own
+ * words: a staged preview has no row to rewrite.
+ */
+export const THIN_PREVIEW_ADVICE: ReadonlyArray<string> = Object.freeze([
+  "Add the non-disabled component states and screen mockups the md describes",
+  "(.claude/skills/design-md/references/rubric-preview.md). A copied card",
+  "raises this count without showing more, so it is not the fix.",
+  "Disabled, hidden, opacity-0, clipped-to-a-pixel and covered text is not counted —",
+  "the contrast collector skips it — so a disabled state does not raise it.",
+])
 
 const keyOf = (t: Pick<SlugTotals, "slug" | "theme" | "kind">): string =>
   `${t.slug}|${t.theme}|${t.kind}`
@@ -312,11 +339,7 @@ export function renderBaselineFailure(
   if (c.thin.length > 0) {
     out.push(
       `FAIL contrast baseline — ${c.thin.length} text row(s) under ${MIN_TEXT_ELEMENTS} elements, thinner than any preview the catalogue kept.`,
-      "  Add the non-disabled component states and screen mockups the md describes",
-      "  (.claude/skills/design-md/references/rubric-preview.md). A copied card",
-      "  raises this count without showing more, so it is not the fix.",
-      "  Disabled, hidden, opacity-0, clipped-to-a-pixel and covered text is not counted —",
-      "  the contrast collector skips it — so a disabled state does not raise it.",
+      ...THIN_PREVIEW_ADVICE.map((line) => `  ${line}`),
       "  Rewriting the table does not clear it: the floor reads the measured count.",
       "  A new entry adds its rows to the table only after the preview clears the floor:",
       "  the next CI run then fails on the rows the table lacks and prints them to paste.",
@@ -503,21 +526,21 @@ export const BASELINE_TABLE = `\
 | baemin | dark | non-text | 4 | 15 | 2 | 0 | 0 |
 | baemin | light | text | 86 | 157 | 17 | 6 | 2 |
 | baemin | light | non-text | 4 | 15 | 2 | 0 | 0 |
-| banksalad | dark | text | 173 | 381 | 46 | 0 | 3 |
+| banksalad | dark | text | 173 | 381 | 47 | 0 | 1 |
 | banksalad | dark | non-text | 17 | 23 | 15 | 0 | 0 |
-| banksalad | light | text | 171 | 381 | 65 | 3 | 3 |
+| banksalad | light | text | 171 | 381 | 66 | 4 | 1 |
 | banksalad | light | non-text | 17 | 23 | 15 | 0 | 0 |
 | bezier | dark | text | 175 | 349 | 71 | 5 | 9 |
 | bezier | dark | non-text | 42 | 45 | 10 | 2 | 1 |
 | bezier | light | text | 175 | 349 | 54 | 10 | 9 |
 | bezier | light | non-text | 41 | 44 | 18 | 9 | 1 |
-| chzzk | dark | text | 139 | 300 | 9 | 1 | 3 |
+| chzzk | dark | text | 139 | 300 | 10 | 1 | 2 |
 | chzzk | dark | non-text | 4 | 4 | 1 | 0 | 0 |
-| chzzk | light | text | 141 | 300 | 16 | 0 | 3 |
+| chzzk | light | text | 141 | 300 | 17 | 0 | 2 |
 | chzzk | light | non-text | 4 | 4 | 2 | 0 | 0 |
-| class101 | dark | text | 99 | 160 | 24 | 0 | 5 |
+| class101 | dark | text | 100 | 160 | 24 | 0 | 6 |
 | class101 | dark | non-text | 16 | 18 | 11 | 1 | 0 |
-| class101 | light | text | 99 | 160 | 35 | 2 | 5 |
+| class101 | light | text | 100 | 160 | 35 | 2 | 6 |
 | class101 | light | non-text | 15 | 18 | 7 | 3 | 0 |
 | codeit | dark | text | 147 | 224 | 1 | 1 | 0 |
 | codeit | dark | non-text | 27 | 38 | 14 | 4 | 0 |
@@ -559,9 +582,9 @@ export const BASELINE_TABLE = `\
 | likelion | dark | non-text | 21 | 21 | 14 | 0 | 0 |
 | likelion | light | text | 92 | 194 | 35 | 1 | 0 |
 | likelion | light | non-text | 21 | 21 | 14 | 7 | 0 |
-| line-design-system | dark | text | 109 | 234 | 17 | 0 | 12 |
+| line-design-system | dark | text | 110 | 234 | 21 | 0 | 9 |
 | line-design-system | dark | non-text | 43 | 61 | 17 | 0 | 4 |
-| line-design-system | light | text | 109 | 234 | 51 | 12 | 11 |
+| line-design-system | light | text | 110 | 234 | 55 | 12 | 8 |
 | line-design-system | light | non-text | 44 | 62 | 36 | 0 | 3 |
 | nol | dark | text | 198 | 420 | 0 | 0 | 7 |
 | nol | dark | non-text | 17 | 19 | 3 | 4 | 1 |
@@ -571,33 +594,33 @@ export const BASELINE_TABLE = `\
 | remember | dark | non-text | 3 | 8 | 1 | 0 | 0 |
 | remember | light | text | 99 | 184 | 40 | 0 | 3 |
 | remember | light | non-text | 3 | 8 | 2 | 0 | 0 |
-| ridi | dark | text | 195 | 512 | 65 | 0 | 24 |
+| ridi | dark | text | 195 | 512 | 67 | 0 | 3 |
 | ridi | dark | non-text | 20 | 25 | 18 | 0 | 2 |
-| ridi | light | text | 195 | 512 | 40 | 31 | 24 |
+| ridi | light | text | 195 | 512 | 43 | 31 | 3 |
 | ridi | light | non-text | 19 | 24 | 11 | 0 | 2 |
 | samsung-one-ui | dark | text | 52 | 108 | 0 | 0 | 1 |
 | samsung-one-ui | dark | non-text | 25 | 29 | 9 | 6 | 3 |
 | samsung-one-ui | light | text | 52 | 108 | 0 | 2 | 1 |
 | samsung-one-ui | light | non-text | 25 | 29 | 18 | 1 | 3 |
-| seed-design | dark | text | 131 | 268 | 4 | 1 | 2 |
+| seed-design | dark | text | 131 | 268 | 4 | 1 | 1 |
 | seed-design | dark | non-text | 31 | 57 | 15 | 1 | 0 |
-| seed-design | light | text | 131 | 268 | 68 | 1 | 2 |
+| seed-design | light | text | 131 | 268 | 68 | 1 | 1 |
 | seed-design | light | non-text | 29 | 57 | 16 | 8 | 0 |
-| socar | dark | text | 145 | 246 | 57 | 0 | 6 |
+| socar | dark | text | 145 | 246 | 58 | 0 | 5 |
 | socar | dark | non-text | 20 | 28 | 9 | 0 | 0 |
-| socar | light | text | 145 | 246 | 58 | 0 | 6 |
+| socar | light | text | 145 | 246 | 59 | 0 | 5 |
 | socar | light | non-text | 18 | 26 | 9 | 0 | 0 |
-| teamsparta | dark | text | 87 | 119 | 6 | 1 | 0 |
+| teamsparta | dark | text | 87 | 119 | 6 | 1 | 1 |
 | teamsparta | dark | non-text | 15 | 17 | 5 | 0 | 3 |
-| teamsparta | light | text | 87 | 119 | 12 | 0 | 0 |
+| teamsparta | light | text | 87 | 119 | 12 | 0 | 1 |
 | teamsparta | light | non-text | 15 | 17 | 3 | 0 | 3 |
 | toss | dark | text | 197 | 388 | 25 | 2 | 16 |
 | toss | dark | non-text | 23 | 33 | 10 | 4 | 0 |
 | toss | light | text | 197 | 388 | 54 | 1 | 16 |
 | toss | light | non-text | 23 | 33 | 11 | 4 | 0 |
-| vapor-ui | dark | text | 133 | 262 | 15 | 0 | 3 |
+| vapor-ui | dark | text | 134 | 262 | 17 | 0 | 2 |
 | vapor-ui | dark | non-text | 22 | 31 | 17 | 0 | 0 |
-| vapor-ui | light | text | 134 | 265 | 1 | 14 | 3 |
+| vapor-ui | light | text | 135 | 265 | 3 | 14 | 2 |
 | vapor-ui | light | non-text | 22 | 31 | 11 | 1 | 0 |
 | wanted | dark | text | 134 | 234 | 20 | 0 | 6 |
 | wanted | dark | non-text | 22 | 22 | 5 | 0 | 1 |
@@ -607,9 +630,9 @@ export const BASELINE_TABLE = `\
 | yeogi | dark | non-text | 14 | 14 | 9 | 0 | 0 |
 | yeogi | light | text | 70 | 94 | 34 | 2 | 2 |
 | yeogi | light | non-text | 13 | 13 | 8 | 0 | 0 |
-| zigbang | dark | text | 219 | 366 | 40 | 0 | 5 |
+| zigbang | dark | text | 221 | 367 | 40 | 0 | 7 |
 | zigbang | dark | non-text | 34 | 40 | 11 | 1 | 2 |
-| zigbang | light | text | 219 | 366 | 87 | 0 | 5 |
+| zigbang | light | text | 221 | 367 | 87 | 0 | 7 |
 | zigbang | light | non-text | 34 | 40 | 22 | 2 | 2 |`
 
 /** The recorded table as rows, parsed once. */

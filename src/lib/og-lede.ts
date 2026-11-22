@@ -17,11 +17,24 @@
 // stops at the EARLIEST sentence boundary regardless of type. Splitting
 // into two sequential regexes would let the Korean arm jump past an
 // earlier `?` to grab a later `다.`.
-const FIRST_SENTENCE = /^(.{8,90}?(?:[다요죠함음네지야]\.|[.!?？！]))(?:\s|$)/u
+//
+// The tagline line rule in the design-md format guide states this same limit;
+// `design-md-skill-tagline.test.ts` holds the two together.
+export const OG_LEDE_MAX_CHARS = 90
+
+// What ends a sentence, as a regex source: a terminator the share card cuts
+// after when whitespace or the end of the text follows it. The draft gate
+// counts a tagline's sentences with the same judgement.
+export const SENTENCE_END = "(?:[다요죠함음네지야]\\.|[.!?？！])"
+
+const FIRST_SENTENCE = new RegExp(
+  `^(.{8,${OG_LEDE_MAX_CHARS}}?${SENTENCE_END})(?:\\s|$)`,
+  "u"
+)
 
 export function ogLede(tagline: string): string {
   const match = tagline.match(FIRST_SENTENCE)
   if (match) return match[1]
-  if (tagline.length <= 90) return tagline
-  return tagline.slice(0, 87).trimEnd() + "…"
+  if (tagline.length <= OG_LEDE_MAX_CHARS) return tagline
+  return tagline.slice(0, OG_LEDE_MAX_CHARS - 3).trimEnd() + "…"
 }

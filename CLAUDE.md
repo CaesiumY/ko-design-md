@@ -53,6 +53,8 @@ pnpm validate:spec      # 로컬 진단용 출력. 실제 게이트는 pnpm test
   `node -e "…"`나 `printf`에 큰따옴표로 넘기면 **백틱 안 내용을 셸이 명령 치환해 통째로 날린다.**
   PowerShell here-string `@'…'@`을 Bash에 쓰면 리터럴 `@`가 박히는 것도 같은 계열이다.
 - 무관 파일 대량 재포맷은 별도 `style:` PR로 분리.
+- **내용 PR 이 아직 main 에 없는 규칙에 기대면, 그 규칙만 별도 PR 로 먼저 머지한다.** CI 리뷰 봇은 main 의
+  규칙으로 판정해 push 마다 같은 [차단]을 내고, 본문의 `Blocked by:` 줄로는 멈추지 않는다.
 - **머지 직전 `origin/main`을 가져와 합본 상태에서 게이트를 다시 돌린다** —
   `git fetch origin && git merge origin/main --no-commit --no-ff` → `pnpm gates` → `git merge --abort`.
   PR 단위 CI 는 각 브랜치를 자기 base 에서 돌리므로, 둘 다 green 인데 합치면 깨지는 경우(예: 슬러그별 표가
