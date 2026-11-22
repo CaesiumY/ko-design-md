@@ -62,6 +62,7 @@ const GRADIENT_FILE = join("scripts", "fixtures", "gradient-backdrop.html")
 const PSEUDO_FILE = join("scripts", "fixtures", "pseudo-background.html")
 const CANVAS_BODY_FILE = join("scripts", "fixtures", "pseudo-canvas-body.html")
 const CANVAS_ROOT_FILE = join("scripts", "fixtures", "pseudo-canvas-root.html")
+const CANVAS_STOP_FILE = join("scripts", "fixtures", "pseudo-canvas-stop.html")
 const ORACLE_URL_PATH = "/__oracle/preview.html"
 const ORACLE_WIDTH = 976
 /** Wide enough to absorb 8-bit quantisation, tight enough to catch a drift. */
@@ -578,6 +579,79 @@ const GRADIENT_ANCHORS: Array<PathAnchor> = [
  *   0 0)`, held, and by `visibility: collapse`, left out, so the run reads
  *   (1.05) / (0.2659) = 3.95 on white, a fail. Composed as the black under
  *   the run either would read 5.32, a pass.
+ *
+ * Those that follow are a pseudo-element the stack never reaches: one of an
+ * ancestor of what is read, past the opaque layer the stack stops at, that
+ * takes no pointer events. oklch(0.3 0 0) is rgb(46), luminance 0.0273, and
+ * black on it is 1.55.
+ *
+ * - `.past` lays an opaque oklch(0.3 0 0) `::before` of the panel over an
+ *   in-flow white block and under a raised run: on screen 1.55, a fail. The
+ *   stack stops at the block's white and would read 21: held.
+ * - `.pastbox` is `.past` with a black 40x40 surface in place of the run,
+ *   read on the non-text path: held, where it would read 21.
+ * - `.overblock` puts `.veil`'s 60% black wash over an in-flow white block and a
+ *   run in normal flow: on screen 3.66, a fail, read as the block's white,
+ *   21: held.
+ * - `.lifted` raises the white block of `.past` (`position: relative`) with
+ *   its run in normal flow inside. The panel's `::before` precedes it on the
+ *   same layer and paints under it, out of sight: a pass at 21, released.
+ * - `.corner` cuts that raised block to a 200x100 ellipse with the run at
+ *   its top-left corner, past the curve, where the run's ends sit on the
+ *   dark wash: the block does not hold the line, so held. Released, it would
+ *   read 21.
+ * - `.pastedge` is `.past` with a `::before` that paints no background and
+ *   draws only a 60px oklch(0.3 0 0) border on each side of the panel's
+ *   300x120 box, so the borders cover it whole: on screen 1.55, a fail,
+ *   where the stack reads 21: held.
+ * - `.pastclip` raises the white block of `.lifted` inside a 40px wrapper
+ *   with `overflow: hidden`, under an absolute run wider than the wrapper:
+ *   the run's ends sit on the wash, 1.55, a fail. The block's box holds the
+ *   line, so released it would read 21; the wrapper's clip holds it.
+ * - `.pastescape` puts that clip on the owner of the wash, a static 40px
+ *   wrapper whose absolute `::before` is placed in the panel, outside the
+ *   clip, as is the absolute run inside the wrapper: the run's ends sit on
+ *   the wash, 1.55, a fail; released it would
+ *   read 21. Held.
+ * - `.pastimage` is `.past` with a `::before` that paints only a filled
+ *   60px `border-image` of flat oklch(0.3 0 0) over the panel: on screen
+ *   rgb(45) to rgb(46) as the gradient rounds, about 1.55, a fail, where the
+ *   stack reads 21: held.
+ * - `.pastshape` and `.pastcontain` cut an absolute white layer across the
+ *   panel down to its middle 40px by a static wrapper, with `clip-path` in
+ *   the one and `contain: paint` in the other, under an absolute run wider
+ *   than that: the run's ends sit on the wash, 1.55, a fail, where the
+ *   layer's box holds the line and released it would read 21. Held;
+ *   `.pastcontain` also by its wrapper's `contain`, which leaves the paint
+ *   order unknown.
+ * - `.pastrect` cuts the absolute white layer itself to that strip with the
+ *   legacy `clip: rect()`: the run's ends sit on the wash, 1.55, a fail,
+ *   where released it would read 21. Held.
+ * - `.pastboth` puts an `overflow: hidden` and a `clip-path` that cuts
+ *   nothing on one static 40px wrapper, over a raised white layer and an
+ *   absolute wash and run placed in the panel: the overflow cuts the layer
+ *   and lets the wash through, so the run's ends sit on it, 1.55, a fail,
+ *   where released it would read 21. Held.
+ * - `.pastmaskbox` masks the absolute white layer away with a transparent
+ *   `-webkit-mask-box-image`, which leaves the hit test alone: the run sits
+ *   on the wash, 1.55, a fail, where released it would read 21. Held.
+ * - `.pastturn` turns a 200x10 white band 30 degrees: the hit test at the
+ *   line's centre meets it, the line's ends lie off it on the wash, 1.55, a
+ *   fail, and its rect round the turned band holds the line, so released
+ *   it would read 21. Held.
+ * - `.pastpath` turns the same band by a 30 degree `offset-path` with no
+ *   `transform`: the same rect and the same 1.55 at the line's ends. Held.
+ * - `.stackedge` has the panel itself, the white layer the stack stops at,
+ *   draw a 60px oklch(0.3 0 0) border from its own `::after`, over the run,
+ *   which it hides, where the stack reads 21. Held.
+ * - `.stackunder` moves that border to `z-index: -1` in the panel's own
+ *   stacking context: over the panel's white, under the run, 1.55, a fail.
+ *   Under the panel's content is not under its background, so held where
+ *   released it would read 21.
+ * - `.pastinline` stops the stack at a white inline span broken over two
+ *   lines, x 150..273 and x 0..79, over the panel's negative-layer wash: the
+ *   run's left end, x 110..150, sits on the wash, 1.55, a fail, where the
+ *   span's rect holds the line and released it would read 21. Held.
  */
 const PSEUDO_ANCHORS: Array<PathAnchor> = [
   {
@@ -986,6 +1060,178 @@ const PSEUDO_ANCHORS: Array<PathAnchor> = [
     verdict: "indeterminate",
     blockers: ["overlay", "pseudo-background"],
   },
+  {
+    id: "raised text over a wash of an ancestor past an opaque block",
+    pathEnds: "div.past > div.o > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "surface over a wash of an ancestor past an opaque block",
+    pathEnds: "div.pastbox > div.o > span.box",
+    theme: "light",
+    state: "default",
+    kind: "non-text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text under a wash of an ancestor past an opaque block",
+    pathEnds: "div.overblock > div.o > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text in a raised block over a wash of an ancestor under it",
+    pathEnds: "div.lifted > div.o > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "pass",
+    blockers: [],
+    ratio: 21,
+  },
+  {
+    id: "text past the curve of a raised block over a wash of an ancestor",
+    pathEnds: "div.corner > div.o > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a border of an ancestor past an opaque block",
+    pathEnds: "div.pastedge > div.o > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a clipped block over a wash of an ancestor",
+    pathEnds: "div.pastclip > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a block clipped at the owner of an escaping wash",
+    pathEnds: "div.pastescape > div.f > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a border image of an ancestor past an opaque block",
+    pathEnds: "div.pastimage > div.o > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a layer cut to a strip by a shape",
+    pathEnds: "div.pastshape > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a layer cut to a strip by paint containment",
+    pathEnds: "div.pastcontain > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a layer cut to a strip by its own clip",
+    pathEnds: "div.pastrect > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a layer an overflow clip cuts beside a shape",
+    pathEnds: "div.pastboth > div.w > div.f > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a layer masked away by a mask border",
+    pathEnds: "div.pastmaskbox > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a turned band whose rect holds the line",
+    pathEnds: "div.pastturn > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over a band a motion path turns",
+    pathEnds: "div.pastpath > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text on a layer whose own pseudo-element draws a border over it",
+    pathEnds: "div.stackedge > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "text over a negative-z border of the layer the stack stops at",
+    pathEnds: "div.stackunder > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+  {
+    id: "raised text over an inline layer broken over two lines",
+    pathEnds: "div.pastinline > span.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
 ]
 
 /**
@@ -1013,6 +1259,17 @@ const CANVAS_BODY_ANCHORS: Array<PathAnchor> = [
 const CANVAS_ROOT_ANCHORS: Array<PathAnchor> = [
   {
     id: "text over a negative-z wash of the root element",
+    pathEnds: "p.t",
+    theme: "light",
+    state: "default",
+    kind: "text",
+    verdict: "indeterminate",
+    blockers: ["pseudo-background"],
+  },
+]
+const CANVAS_STOP_ANCHORS: Array<PathAnchor> = [
+  {
+    id: "text over a negative-z wash of the root past a body on the canvas",
     pathEnds: "p.t",
     theme: "light",
     state: "default",
@@ -1233,6 +1490,7 @@ export async function selfCheck(root: string): Promise<CheckResult> {
   const pseudoFixture = readFileSync(join(root, PSEUDO_FILE), "utf8")
   const canvasBodyFixture = readFileSync(join(root, CANVAS_BODY_FILE), "utf8")
   const canvasRootFixture = readFileSync(join(root, CANVAS_ROOT_FILE), "utf8")
+  const canvasStopFixture = readFileSync(join(root, CANVAS_STOP_FILE), "utf8")
   const server = await serveStatic(`${root}/public`)
   const browser = await chromium.launch()
   const lines: Array<string> = []
@@ -1401,6 +1659,9 @@ export async function selfCheck(root: string): Promise<CheckResult> {
     lines.push(
       `fixture: ${CANVAS_ROOT_FILE} (${canvasRootFixture.length} bytes, synthetic)`
     )
+    lines.push(
+      `fixture: ${CANVAS_STOP_FILE} (${canvasStopFixture.length} bytes, synthetic)`
+    )
     const base = `http://127.0.0.1:${server.port}`
     for (const current of VARIANTS) {
       variant = current
@@ -1473,6 +1734,12 @@ export async function selfCheck(root: string): Promise<CheckResult> {
         canvasRootFixture
       )
       for (const anchor of CANVAS_ROOT_ANCHORS) checkPath(canvasRoot, anchor)
+      const canvasStop = await collect(
+        `${base}${ORACLE_URL_PATH}?fixture=canvas-stop`,
+        "oracle-canvas-stop",
+        canvasStopFixture
+      )
+      for (const anchor of CANVAS_STOP_ANCHORS) checkPath(canvasStop, anchor)
 
       // `CSS.forcePseudoState` is accepted and ignored when it is handed a
       // node id the document no longer has, so a hover pass can look like it

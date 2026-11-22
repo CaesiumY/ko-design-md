@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>text over a negative-z wash of the root past a body on the canvas</title>
+    <!--
+      Synthetic, written for scripts/audit-contrast-oracle.ts (#692). See
+      scripts/fixtures/README.md: the expectation is derived from this CSS by
+      hand, so a change here changes the derivation in the oracle too.
+
+      The root has no background, so `body`'s white passes on to the canvas
+      and `body` paints none on its own box. The root's `::before` is an
+      opaque oklch(0.3 0 0) wash (rgb(46), luminance 0.0273) at `z-index: -1`
+      over the viewport, taking no pointer events: it is in the root's
+      negative layer, over the canvas and under the text. On screen the black
+      run sits on rgb(46), (0.0273 + 0.05) / 0.05 = 1.55, a fail. The hit
+      test returns `body` with its computed white, where the stack stops, and
+      the root, past it, is never read. Read as under `body`'s white, the
+      wash would be out of sight and the run a pass at 21. A layer whose
+      background is the canvas's hides nothing under it, so the reading is
+      held.
+
+      A document of its own: the propagation is a property of the whole
+      document, so it cannot share one with the other pseudo-element panels.
+    -->
+    <style>
+      html::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background: oklch(0.3 0 0);
+        pointer-events: none;
+      }
+      body {
+        margin: 0;
+        padding: 24px;
+        background: oklch(1 0 0);
+      }
+      .t {
+        margin: 0;
+        color: oklch(0 0 0);
+        font: 400 16px / 1.5 sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="t">Sample text</p>
+  </body>
+</html>
