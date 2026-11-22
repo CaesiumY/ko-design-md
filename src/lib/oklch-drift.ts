@@ -773,7 +773,7 @@ const SELECT_KEEPS: ReadonlySet<string> = new Set([
  *
  * parse5 follows the HTML parser before Chromium's customizable `<select>`:
  * inside `<select>` it drops every start tag but a few, so a `<style>` there,
- * which Chromium 153 applies, is lost, and a raw-text element such as
+ * which the Chromium that measures contrast applies, is lost, and a raw-text element such as
  * `<noscript>` loses its tag and lets its content read as markup. Rather than
  * pass a value the screen paints, this throws when a `<select>`'s source holds
  * any other start tag, even as text in a comment, a script or an attribute
@@ -814,7 +814,7 @@ function styleBlocks(previewHtml: string): Array<string> {
           .find((tag) => !SELECT_KEEPS.has(tag))
         if (dropped !== undefined)
           throw new UnreadableStylesheetError(
-            `<select> holds <${dropped}>, which parse5 drops while Chromium 153 keeps it, so this check cannot read the page as the browser does. ` +
+            `<select> holds <${dropped}>, which parse5 drops while Chromium keeps it, so this check cannot read the page as the browser does. ` +
               `Move the <${dropped}> out of the <select> (a <style> goes into <head>). ` +
               "Text spelling a tag inside the <select> (a comment, a script string, an attribute value) stops the check too; reword it."
           )
