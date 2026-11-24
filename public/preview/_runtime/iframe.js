@@ -153,7 +153,116 @@
       : "light"
   }
 
+  // PROTOTYPE (preview structure "custom-tags", ticket 731): the page writes
+  // the frame as its own tags and this runtime draws the frame's markup from
+  // them, before the dark variants are collected.
+  //   <pv-page>                → <main class="pv-page">
+  //   <pv-hero>                → <header class="pv-hero" data-pv-zone="hero">
+  //   <pv-zone name="buttons"> → <section class="pv-zone" …> + <h2> title from
+  //                              ZONES + <div class="pv-cells">
+  //   <pv-cell name label [label-dark] [wide] [stack]>
+  //                            → <div class="pv-cell" data-pv-cell> + label
+  //                              <p> (+ dark <template>) + leading
+  //                              .catalog-dummy children + <div class="pv-stage">
+  //   <pv-screen>              → <div class="pv-screen">
+  var ZONES = {
+    screens: "화면",
+    buttons: "버튼",
+    inputs: "입력",
+    selection: "선택",
+    navigation: "내비게이션",
+    content: "콘텐츠",
+    feedback: "피드백",
+    brand: "브랜드 고유",
+  }
+
+  function el(tag, attrs) {
+    var node = document.createElement(tag)
+    for (var k in attrs) node.setAttribute(k, attrs[k])
+    return node
+  }
+
+  function moveChildren(from, to) {
+    while (from.firstChild !== null) to.appendChild(from.firstChild)
+  }
+
+  function replaceTags(selector, build) {
+    var found = document.querySelectorAll(selector)
+    for (var i = 0; i < found.length; i++) {
+      var tag = found[i]
+      tag.parentNode.replaceChild(build(tag), tag)
+    }
+  }
+
+  function label(text) {
+    var p = el("p", { class: "pv-label" })
+    p.textContent = text
+    return p
+  }
+
+  function drawTags() {
+    replaceTags("pv-screen", function (tag) {
+      var out = el("div", { class: "pv-screen" })
+      moveChildren(tag, out)
+      return out
+    })
+    replaceTags("pv-cell", function (tag) {
+      var name = tag.getAttribute("name")
+      var out = el("div", {
+        class: tag.hasAttribute("wide") ? "pv-cell pv-cell--wide" : "pv-cell",
+        "data-pv-cell": name,
+      })
+      out.appendChild(label(tag.getAttribute("label") || ""))
+      if (tag.hasAttribute("label-dark")) {
+        var tpl = el("template", { "data-theme-variant": "dark" })
+        tpl.content.appendChild(label(tag.getAttribute("label-dark")))
+        out.appendChild(tpl)
+      }
+      // Leading dummy-data notes stay outside the stage.
+      var first = tag.firstElementChild
+      while (first !== null && first.classList.contains("catalog-dummy")) {
+        while (tag.firstChild !== first) tag.removeChild(tag.firstChild)
+        out.appendChild(first)
+        first = tag.firstElementChild
+      }
+      var stage = el("div", {
+        class: tag.hasAttribute("stack")
+          ? "pv-stage pv-stage--stack"
+          : "pv-stage",
+      })
+      moveChildren(tag, stage)
+      out.appendChild(stage)
+      return out
+    })
+    replaceTags("pv-zone", function (tag) {
+      var name = tag.getAttribute("name")
+      var out = el("section", {
+        class: "pv-zone",
+        "data-pv-zone": name,
+        "aria-labelledby": "pv-" + name,
+      })
+      var h2 = el("h2", { class: "pv-zone-title", id: "pv-" + name })
+      h2.textContent = ZONES[name] || ""
+      var cells = el("div", { class: "pv-cells" })
+      moveChildren(tag, cells)
+      out.appendChild(h2)
+      out.appendChild(cells)
+      return out
+    })
+    replaceTags("pv-hero", function (tag) {
+      var out = el("header", { class: "pv-hero", "data-pv-zone": "hero" })
+      moveChildren(tag, out)
+      return out
+    })
+    replaceTags("pv-page", function (tag) {
+      var out = el("main", { class: "pv-page" })
+      moveChildren(tag, out)
+      return out
+    })
+  }
+
   function start() {
+    drawTags()
     collect()
     apply(themeNow())
     new MutationObserver(function () {
