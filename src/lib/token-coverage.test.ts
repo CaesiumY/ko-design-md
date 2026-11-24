@@ -114,6 +114,7 @@ const TOKEN_COVERAGE: Partial<Record<string, Coverage>> = {
   greeting: { annotated: 112, judged: 112, drift: 130, references: 51 },
   "gs-retail": { annotated: 23, judged: 23, drift: 23 },
   "gs-shop": { annotated: 52, judged: 52, drift: 52, references: 1 },
+  kbstar: { annotated: 61, judged: 61, drift: 61 },
   krds: { annotated: 44, judged: 44, drift: 55, references: 1 },
   kyobobook: { annotated: 26, judged: 26, drift: 56, references: 1 },
   laftel: { annotated: 32, judged: 32, drift: 32 },

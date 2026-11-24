@@ -1,0 +1,1495 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KB국민은행 preview</title>
+  <link rel="stylesheet" href="/preview/_runtime/tokens.css">
+  <script src="/preview/_runtime/iframe.js" defer></script>
+  <style>
+    :root {
+      /* 발행 CI 색 */
+      --kb-kb-yellow-positive: oklch(0.835 0.172 83);
+      --kb-kb-yellow-negative: oklch(0.865 0.177 90);
+      --kb-kb-gray: oklch(0.464 0.021 78);
+      --kb-kb-dark-gray: oklch(0.432 0.018 90);
+
+      /* 데스크톱 웹 관측(미발행) */
+      --kb-web-intro-menu1: oklch(0.869 0.176 91);
+      --kb-web-wrap-menu: oklch(0.874 0.163 91);
+      --kb-web-wrap-menu-on: oklch(0.825 0.163 83);
+      --kb-web-headline: oklch(0.871 0.176 92);
+      --kb-web-quick-bar: oklch(0.865 0.177 90);
+      --kb-web-btn-com-c1: oklch(0.889 0.183 96);
+      --kb-web-btn-action-c1: oklch(0.871 0.176 92);
+      --kb-web-pagination-on: oklch(0.857 0.175 91);
+      --kb-web-submenu-line: oklch(0.891 0.183 96);
+      --kb-web-navbar-btn-hover: oklch(0.835 0.172 83);
+      --kb-web-white: oklch(1.000 0.000 0);
+      --kb-web-intro-hero: oklch(0.976 0.026 100);
+      --kb-web-main-product: oklch(0.961 0.000 0);
+      --kb-web-area2: oklch(0.973 0.000 0);
+      --kb-web-submenu: oklch(0.985 0.000 0);
+      --kb-web-area-form: oklch(0.909 0.010 94);
+      --kb-web-wrap-menu-text: oklch(0.303 0.028 55);
+      --kb-web-btn-com-c2: oklch(0.631 0.016 51);
+      --kb-web-nav-aside-head: oklch(0.568 0.019 70);
+      --kb-web-ui-btn: oklch(0.563 0.022 65);
+      --kb-web-nav-aside-cell: oklch(0.948 0.008 74);
+      --kb-web-nav-aside-link: oklch(0.463 0.021 81);
+      --kb-web-snb: oklch(0.518 0.034 67);
+      --kb-web-snb-on: oklch(0.442 0.030 65);
+      --kb-web-top-notice: oklch(0.345 0.013 67);
+      --kb-web-gray-5a: oklch(0.468 0.000 0);
+      --kb-web-brown-4e: oklch(0.402 0.016 71);
+      --kb-web-gray-222: oklch(0.252 0.000 0);
+      --kb-web-gray-333: oklch(0.321 0.000 0);
+      --kb-web-card-line: oklch(0.898 0.000 0);
+      --kb-web-input-line: oklch(0.867 0.000 0);
+      --kb-web-ttype01-line: oklch(0.923 0.001 17);
+      --kb-web-icon-mark-pro1: oklch(0.685 0.174 51);
+      --kb-web-icon-mark-pro3: oklch(0.638 0.152 259);
+      --kb-web-icon-mark-c2: oklch(0.682 0.159 57);
+      --kb-web-branch-hours: oklch(0.679 0.194 45);
+      --kb-web-ui-overlay: oklch(0.738 0.000 0);
+      /* 데스크톱 본문 스펙에 적힌 값 */
+      --kb-web-form-search-line: oklch(0.895 0.003 85);
+      --kb-web-btn-line: oklch(0.754 0.000 0);
+      --kb-web-btn-line-bottom: oklch(0.608 0.012 63);
+      --kb-web-btn-com-c1-bottom: oklch(0.825 0.171 80);
+      --kb-web-btn-action-line: oklch(0.811 0.000 0);
+      --kb-web-btn-action-line-bottom: oklch(0.660 0.000 0);
+      --kb-web-ttype01-th: oklch(0.973 0.001 106);
+
+      /* 모바일 웹 관측(미발행) */
+      --kb-mweb-btn01: oklch(0.901 0.186 98);
+      --kb-mweb-tab-type01-off: oklch(0.907 0.008 91);
+      --kb-mweb-home-tab-off: oklch(0.547 0.018 67);
+      --kb-mweb-white: oklch(1.000 0.000 0);
+      --kb-mweb-body: oklch(0.321 0.000 0);
+      --kb-mweb-black: oklch(0.000 0.000 0);
+      --kb-mweb-section-band: oklch(0.961 0.000 0);
+      --kb-mweb-btn03: oklch(0.947 0.011 257);
+      --kb-mweb-input-line: oklch(0.907 0.000 0);
+      --kb-mweb-btn02-line: oklch(0.764 0.000 0);
+      --kb-mweb-distance: oklch(0.738 0.183 55);
+      --kb-mweb-branch-list-line: oklch(0.499 0.044 257);
+      --kb-mweb-copy-area: oklch(0.982 0.000 0);
+      --kb-mweb-geo-bnr: oklch(0.979 0.000 0);
+      --kb-mweb-geo-bnr-label: oklch(0.572 0.149 324);
+
+      /* 앱 스크린샷 판독(추정값) */
+      --kb-app-list-bg: oklch(0.963 0.003 248);
+      --kb-app-card: oklch(1.000 0.000 0);
+      --kb-app-transfer-button: oklch(0.880 0.166 92);
+      --kb-app-pale-button: oklch(0.966 0.051 94);
+      --kb-app-chip-selected: oklch(0.981 0.018 81);
+      --kb-app-ink: oklch(0.243 0.008 264);
+      --kb-app-label: oklch(0.530 0.014 260);
+      --kb-app-chip-off: oklch(0.976 0.001 286);
+
+      /* 그림자(관측) */
+      --kb-web-box-shadow: 4px 4px 12px oklch(0.000 0.000 0 / 15%);
+      --kb-web-main-con1: 0 15px 30px 0 oklch(0.000 0.000 0 / 10%);
+      --kb-web-ui-btn-shadow: 10px 15px 48px 0 oklch(0.000 0.000 0 / 25%);
+
+      /* 카탈로그 페이지 면 (브랜드 값 아님) */
+      --background: oklch(0.985 0.004 85);
+      --foreground: oklch(0.22 0.010 78);
+      --card: oklch(1 0 0);
+      --muted-foreground: oklch(0.45 0.012 78);
+      --border: oklch(0.22 0.010 78 / 0.14);
+      --accent-glow: var(--kb-kb-gray);
+      --primary-foreground: oklch(1 0 0);
+      --pv-hero-ink: var(--kb-kb-dark-gray);
+      --pv-plate: oklch(1 0 0);
+    }
+
+    body { line-height: 1.5; }
+    img { display: block; }
+
+    /* ── Hero ───────────────────────────────── */
+    .hero {
+      border-bottom: 6px solid var(--kb-kb-yellow-positive);
+      background: var(--background);
+    }
+    .hero-grid {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 56px 24px 48px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 40px;
+      align-items: center;
+    }
+    .hero-copy { min-width: 0; }
+    .hero-lockup { display: flex; align-items: center; }
+    .hero-wm { height: 40px; width: auto; }
+    .hero h1 {
+      margin: 28px 0 0;
+      font-size: 56px;
+      line-height: 1.1;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--pv-hero-ink);
+    }
+    .hero-tiers {
+      list-style: none;
+      margin: 18px 0 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .hero-tiers li {
+      padding: 3px 10px;
+      border: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--foreground);
+    }
+    .hero-cta { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 10px; }
+    .cta-primary, .cta-ghost {
+      display: inline-flex;
+      align-items: center;
+      height: 48px;
+      padding: 0 26px;
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .cta-primary {
+      background: var(--kb-kb-yellow-positive);
+      color: var(--kb-kb-dark-gray);
+    }
+    .cta-ghost {
+      border: 1px solid var(--pv-hero-ink);
+      color: var(--pv-hero-ink);
+    }
+    .hero-mark { min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .mark-plate {
+      background: var(--pv-plate);
+      border: 1px solid var(--border);
+      padding: 40px 48px;
+    }
+    .mark-img { height: 120px; width: auto; }
+    .mark-k { margin: 0; font-size: 12px; color: var(--muted-foreground); }
+
+    /* ── Sections ───────────────────────────── */
+    .sec { max-width: 1180px; margin: 0 auto; padding: 56px 24px 8px; }
+    .sec-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; margin-bottom: 20px; }
+    .sec-idx { font-size: 14px; font-weight: 800; color: var(--muted-foreground); }
+    .sec-head h2 { margin: 0; font-size: 28px; line-height: 1.25; font-weight: 800; color: var(--foreground); }
+    .tier {
+      font-size: 12px;
+      padding: 2px 8px;
+      border: 1px solid var(--border);
+      color: var(--muted-foreground);
+    }
+    .sub-h { margin: 36px 0 12px; font-size: 17px; font-weight: 700; color: var(--foreground); }
+    .cell-k {
+      margin: 0 0 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--foreground);
+      overflow-wrap: anywhere;
+    }
+    .cell-k .assume, .cell-k .hint {
+      font-weight: 400;
+      color: var(--muted-foreground);
+    }
+    .mock { min-width: 0; margin-bottom: 28px; }
+
+    .spec-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+      gap: 16px;
+    }
+    .spec { min-width: 0; display: flex; flex-direction: column; }
+    .spec-wide { grid-column: 1 / -1; }
+    .row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px; }
+    .demo { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-width: 0; }
+    .st { font-size: 11px; line-height: 1.4; }
+
+    /* ── 데스크톱 웹 (web- 토큰만) ───────────── */
+    .w-screen, .w-stage {
+      background: var(--kb-web-white);
+      color: var(--kb-web-gray-5a);
+      font-size: 13px;
+      line-height: 21.45px;
+    }
+    .w-screen {
+      max-width: 980px;
+      margin: 0 auto;
+      border: 1px solid var(--kb-web-card-line);
+      overflow: hidden;
+    }
+    .w-stage {
+      flex: 1 1 auto;
+      border: 1px solid var(--kb-web-card-line);
+      padding: 18px;
+    }
+    .w-stage .st { color: var(--kb-web-gray-5a); }
+
+    .w-head { padding: 14px 16px 0; border-bottom: 1px solid var(--kb-web-main-product); }
+    .w-head-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; }
+    .w-logo { height: 16px; width: auto; }
+    .w-util { display: flex; flex-wrap: wrap; align-items: center; min-width: 0; }
+    .w-util span {
+      padding: 0 10px;
+      font-size: 13px;
+      line-height: 26px;
+      font-weight: 400;
+      color: var(--kb-web-gray-5a);
+    }
+    .w-util .is-on { font-weight: 700; color: var(--kb-web-gray-333); }
+    .w-head-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 22px; padding: 6px 0 12px 14px; }
+    .w-h2 { font-size: 24px; line-height: 30px; font-weight: 700; color: var(--kb-web-gray-222); }
+    .w-pair { display: inline-flex; gap: 0; }
+    .w-pair .w-btn-sub1 + .w-btn-sub1 { margin-left: -1px; }
+
+    .w-wrap-menu {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      background: var(--kb-web-wrap-menu);
+    }
+    .w-wrap-menu span {
+      min-width: 0;
+      padding: 0 6px;
+      text-align: center;
+      font-size: 17px;
+      line-height: 50px;
+      font-weight: 700;
+      color: var(--kb-web-wrap-menu-text);
+      transition: background-color 0.3s ease;
+      overflow-wrap: anywhere;
+    }
+    .w-wrap-menu span:hover,
+    .w-wrap-menu .is-on { background: var(--kb-web-wrap-menu-on); }
+
+    .w-submenu {
+      display: flex;
+      flex-wrap: wrap;
+      background: var(--kb-web-submenu);
+      border-bottom: 1px solid var(--kb-web-card-line);
+    }
+    .w-submenu span {
+      padding: 2px 26px 0;
+      font-size: 15px;
+      line-height: 43px;
+      font-weight: 700;
+      color: var(--kb-web-gray-222);
+      border-bottom: 3px solid var(--kb-web-white);
+      transition: border-color 0.3s ease;
+    }
+    .w-submenu span:hover,
+    .w-submenu .is-on { border-bottom-color: var(--kb-web-submenu-line); }
+
+    .w-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 84px;
+      gap: 0;
+    }
+    .w-main { min-width: 0; }
+    .w-search-row { padding: 20px 16px; }
+    .w-form-search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: min(350px, 100%);
+      height: 38px;
+      padding: 0 16px 0 22px;
+      border: 1px solid var(--kb-web-form-search-line);
+      border-radius: 20px;
+      background: var(--kb-web-white);
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 400;
+      color: var(--kb-web-gray-222);
+    }
+    .w-form-search .txt { flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .w-form-search svg { flex: none; }
+    .w-ph {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 180px;
+      padding: 16px;
+      background: var(--kb-web-area2);
+      border-top: 1px dashed var(--kb-web-card-line);
+      border-bottom: 1px dashed var(--kb-web-card-line);
+      color: var(--kb-web-gray-5a);
+      font-size: 13px;
+      text-align: center;
+    }
+    .w-product-area { background: var(--kb-web-main-product); padding: 0 16px 28px; }
+    .w-quick {
+      position: relative;
+      margin-top: -40px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      background: var(--kb-web-white);
+      border: 1px solid var(--kb-web-card-line);
+    }
+    .w-quick > div {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 18px 8px;
+      text-align: center;
+      color: var(--kb-web-gray-5a);
+    }
+    .w-quick > div + div { border-left: 1px solid var(--kb-web-card-line); }
+    .w-quick b { font-size: 20px; line-height: 28px; font-weight: 400; color: var(--kb-web-gray-222); overflow-wrap: anywhere; }
+    .w-quick small { font-size: 13px; line-height: 18px; color: var(--kb-web-gray-5a); }
+    .w-cards {
+      margin-top: 40px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .w-card {
+      position: relative;
+      min-width: 0;
+      min-height: 130px;
+      padding: 26px 16px 16px;
+      background: var(--kb-web-white);
+      border: 1px solid var(--kb-web-card-line);
+      color: var(--kb-web-gray-5a);
+      text-align: center;
+    }
+    .w-card.is-headline { background: var(--kb-web-headline); border-color: var(--kb-web-headline); color: var(--kb-web-gray-222); }
+    .w-card .w-mark { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); }
+    .w-card strong { display: block; font-size: 16px; line-height: 24px; color: var(--kb-web-gray-222); }
+    .w-card p { margin: 6px 0 0; }
+
+    .w-mark {
+      display: inline-block;
+      padding: 7px 10px;
+      font-size: 14px;
+      line-height: 14px;
+      white-space: nowrap;
+      border: 1px solid transparent;
+    }
+    .w-mark.pro1 { background: var(--kb-web-icon-mark-pro1); border-color: var(--kb-web-icon-mark-pro1); color: var(--kb-web-white); }
+    .w-mark.pro3 { background: var(--kb-web-icon-mark-pro3); border-color: var(--kb-web-icon-mark-pro3); color: var(--kb-web-white); }
+    .w-mark.out-c1 { background: var(--kb-web-white); border-color: var(--kb-web-icon-mark-pro3); color: var(--kb-web-icon-mark-pro3); }
+    .w-mark.out-c2 { background: var(--kb-web-white); border-color: var(--kb-web-icon-mark-c2); color: var(--kb-web-icon-mark-c2); }
+
+    .w-aside {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1px;
+      padding: 16px 0 16px;
+      border-left: 1px solid var(--kb-web-card-line);
+      background: var(--kb-web-white);
+    }
+    .w-aside-head {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 50px;
+      background: var(--kb-web-nav-aside-head);
+      border-radius: 3px 3px 0 0;
+      color: var(--kb-web-white);
+    }
+    .w-aside-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 10px 2px;
+      background: var(--kb-web-nav-aside-cell);
+      color: var(--kb-web-nav-aside-link);
+      font-size: 12px;
+      line-height: 16px;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+    .w-aside-close { display: flex; justify-content: center; padding-top: 12px; }
+    .w-ui-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: var(--kb-web-ui-btn);
+      box-shadow: var(--kb-web-ui-btn-shadow);
+      color: var(--kb-web-white);
+    }
+
+    /* 인트로 */
+    .w-top-notice {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px 16px;
+      padding: 10px 16px;
+      background: var(--kb-web-top-notice);
+      color: var(--kb-web-white);
+      font-size: 12px;
+    }
+    .w-notice-link { min-width: 0; font-size: 14px; color: var(--kb-web-quick-bar); text-decoration: underline; overflow-wrap: anywhere; }
+    .w-notice-ctl { display: inline-flex; align-items: center; gap: 12px; }
+    .w-check { display: inline-flex; align-items: center; gap: 5px; }
+    .w-check i { display: inline-block; width: 12px; height: 12px; border: 1px solid var(--kb-web-white); }
+    .w-intro-hero {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 190px;
+      padding: 16px 16px 50px;
+      background: var(--kb-web-intro-hero);
+      color: var(--kb-web-gray-333);
+      font-size: 13px;
+      text-align: center;
+    }
+    .w-main-con1 {
+      position: relative;
+      margin: -35px 16px 0;
+      min-height: 70px;
+      display: grid;
+      grid-template-columns: minmax(0, 180px) minmax(0, 1fr);
+      background: var(--kb-web-white);
+      box-shadow: var(--kb-web-main-con1);
+    }
+    .w-main-con1 .lead {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      background: var(--kb-web-intro-menu1);
+      color: var(--kb-web-gray-333);
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+    }
+    .w-main-con1 ul {
+      list-style: none;
+      margin: 0;
+      padding: 8px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px 22px;
+      color: var(--kb-web-gray-333);
+      font-size: 14px;
+    }
+    .w-news { padding: 28px 16px 24px; }
+    .w-h2-intro { margin: 0 0 10px; font-size: 20px; line-height: 26px; font-weight: 700; letter-spacing: -1px; color: var(--kb-web-gray-333); }
+    .w-news ul { list-style: none; margin: 0; padding: 0; }
+    .w-news li {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 6px 0;
+      border-top: 1px solid var(--kb-web-card-line);
+      font-size: 14px;
+      line-height: 21px;
+      color: var(--kb-web-gray-333);
+    }
+    .w-news li span:first-child { min-width: 0; overflow-wrap: anywhere; }
+    .w-news li span:last-child { flex: none; color: var(--kb-web-gray-5a); }
+
+    /* 빠른조회 */
+    .w-quick-screen { color: var(--kb-web-brown-4e); font-size: 12px; line-height: 19.8px; }
+    .w-quick-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 16px;
+      background: var(--kb-web-quick-bar);
+    }
+    .w-h1-quick { font-size: 18px; line-height: 30px; font-weight: 700; color: var(--kb-web-gray-222); padding: 8px 0; }
+    .w-logo-ph {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 96px;
+      height: 16px;
+      border: 1px dashed var(--kb-web-gray-222);
+      color: var(--kb-web-gray-222);
+      font-size: 10px;
+      line-height: 1;
+    }
+    .w-btn-ph { width: 43px; height: 32px; text-align: center; }
+    .w-quick-body { padding: 16px; }
+    .w-qrow {
+      display: grid;
+      grid-template-columns: minmax(0, 34%) minmax(0, 1fr);
+      border-top: 1px solid var(--kb-web-ttype01-line);
+    }
+    .w-qrow:last-of-type { border-bottom: 1px solid var(--kb-web-ttype01-line); }
+    .w-qrow .th {
+      padding: 5px 5px 4px 15px;
+      background: var(--kb-web-ttype01-th);
+      font-weight: 400;
+      color: var(--kb-web-brown-4e);
+      display: flex;
+      align-items: center;
+      min-height: 30px;
+      overflow-wrap: anywhere;
+    }
+    .w-qrow .td { padding: 4px 8px; display: flex; align-items: center; min-width: 0; }
+    .w-qrow .w-input { height: 27px; padding: 3px 9px; }
+    .w-btn-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 14px; }
+
+    .w-input {
+      display: inline-flex;
+      align-items: center;
+      width: min(220px, 100%);
+      height: 35px;
+      padding: 8px 9px 7px;
+      border: 1px solid var(--kb-web-input-line);
+      border-radius: 0;
+      background: var(--kb-web-white);
+      color: var(--kb-web-gray-222);
+      font-size: 12px;
+      line-height: 19.8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .w-input.is-readonly { background: var(--kb-web-area2); }
+
+    /* 버튼 */
+    .w-btn-com, .w-btn-action, .w-btn-sub1 {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0;
+      white-space: nowrap;
+    }
+    .w-btn-com {
+      height: 35px;
+      min-width: 80px;
+      padding: 0 14px;
+      background: var(--kb-web-white);
+      border: 1px solid var(--kb-web-btn-line);
+      border-bottom-color: var(--kb-web-btn-line-bottom);
+      color: var(--kb-web-brown-4e);
+      font-size: 12px;
+      line-height: 35px;
+    }
+    .w-btn-com.c1 { background: var(--kb-web-btn-com-c1); border-bottom-color: var(--kb-web-btn-com-c1-bottom); }
+    .w-btn-com.c2 {
+      background: var(--kb-web-btn-com-c2);
+      border-color: var(--kb-web-btn-com-c2);
+      color: var(--kb-web-white);
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .w-btn-com[aria-disabled="true"] { opacity: 0.65; }
+    .w-btn-action {
+      height: 40px;
+      min-width: 120px;
+      padding: 0 28px;
+      background: var(--kb-web-white);
+      border: 1px solid var(--kb-web-btn-action-line);
+      border-bottom-color: var(--kb-web-btn-action-line-bottom);
+      color: var(--kb-web-brown-4e);
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .w-btn-action.c1 { background: var(--kb-web-btn-action-c1); }
+    .w-btn-sub1 {
+      height: 27px;
+      padding: 1px 9px 0;
+      background: var(--kb-web-white);
+      border: 1px solid var(--kb-web-btn-line);
+      border-bottom-color: var(--kb-web-btn-line-bottom);
+      color: var(--kb-web-brown-4e);
+      font-size: 12px;
+      line-height: 26px;
+      font-weight: 400;
+    }
+
+    /* 상품 검색 띠와 지점안내 */
+    .w-area-form {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      padding: 20px 16px;
+      background: var(--kb-web-area-form);
+    }
+    .w-holder {
+      flex: 1 1 260px;
+      min-width: 0;
+      max-width: 460px;
+      display: flex;
+      align-items: center;
+      height: 46px;
+      padding: 0 20px;
+      border: 1px solid var(--kb-web-white);
+      border-radius: 23px;
+      background: var(--kb-web-white);
+      color: var(--kb-web-gray-222);
+      font-size: 16px;
+      line-height: 26.4px;
+    }
+    .w-holder span { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .w-btn-com.is-result { width: 140px; height: 90px; min-width: 0; max-width: 100%; }
+    .w-snb { display: flex; flex-wrap: wrap; background: var(--kb-web-snb); }
+    .w-snb span { padding: 0 18px; line-height: 40px; font-size: 14px; color: var(--kb-web-white); }
+    .w-snb .is-on { background: var(--kb-web-snb-on); }
+    .w-branch {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px 16px;
+      align-items: center;
+      padding: 18px 16px;
+      border-bottom: 1px solid var(--kb-web-card-line);
+    }
+    .w-branch-name { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .w-h2-branch { font-size: 18px; line-height: 27px; font-weight: 700; color: var(--kb-web-gray-222); }
+    .w-hours b { color: var(--kb-web-branch-hours); font-weight: 700; }
+    .w-branch-act { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    /* 표, 페이지네이션, 떠 있는 상자, 덮개 */
+    .w-table {
+      width: 100%;
+      border-collapse: collapse;
+      color: var(--kb-web-gray-5a);
+      font-size: 12px;
+      line-height: 19.8px;
+    }
+    .w-table th, .w-table td {
+      padding: 5px 5px 4px 15px;
+      border: 1px solid var(--kb-web-ttype01-line);
+      text-align: left;
+      overflow-wrap: anywhere;
+    }
+    .w-table th { background: var(--kb-web-ttype01-th); font-weight: 400; color: var(--kb-web-brown-4e); }
+    .w-table td { background: var(--kb-web-white); }
+    .w-table tfoot td { background: var(--kb-web-area2); }
+    .w-pager { display: flex; flex-wrap: wrap; gap: 4px; }
+    .w-pager span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 27px;
+      height: 27px;
+      border: 1px solid var(--kb-web-card-line);
+      color: var(--kb-web-gray-5a);
+      font-size: 12px;
+    }
+    .w-pager .is-on { background: var(--kb-web-pagination-on); border-color: var(--kb-web-pagination-on); color: var(--kb-web-gray-222); font-weight: 700; }
+    .w-float {
+      padding: 12px 14px;
+      border: 1px solid var(--kb-web-card-line);
+      border-radius: 4px;
+      background: var(--kb-web-white);
+      box-shadow: var(--kb-web-box-shadow);
+      color: var(--kb-web-gray-222);
+      font-size: 12px;
+    }
+    .w-veil-host { position: relative; padding: 16px; border: 1px solid var(--kb-web-card-line); }
+    .w-veil-host p { margin: 0; color: var(--kb-web-gray-222); }
+    .w-veil { position: absolute; inset: 0; background: var(--kb-web-ui-overlay); opacity: 0.3; }
+
+    /* ── 모바일 웹 (mweb- 토큰만) ────────────── */
+    .phones {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr));
+      gap: 24px;
+    }
+    .phone-col { min-width: 0; }
+    .m-screen, .m-stage {
+      background: var(--kb-mweb-white);
+      color: var(--kb-mweb-body);
+      font-size: 14px;
+      line-height: 19.6px;
+    }
+    .m-screen {
+      width: min(375px, 100%);
+      margin: 0 auto;
+      border: 1px solid var(--kb-mweb-input-line);
+      overflow: hidden;
+    }
+    .m-stage { flex: 1 1 auto; padding: 18px; border: 1px solid var(--kb-mweb-input-line); }
+    .m-stage .st { color: var(--kb-mweb-body); }
+    .m-header {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 55px;
+      padding: 0 52px;
+      color: var(--kb-mweb-black);
+    }
+    .m-logo { height: 21px; width: auto; }
+    .m-header .ico-l, .m-header .ico-r { position: absolute; top: 15px; display: inline-flex; }
+    .m-header .ico-l { left: 14px; }
+    .m-header .ico-r { right: 14px; }
+    .m-title { font-size: 19px; line-height: 26px; font-weight: 400; color: var(--kb-mweb-black); }
+    .m-ph {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 170px;
+      padding: 12px;
+      background: var(--kb-mweb-section-band);
+      border: 1px dashed var(--kb-mweb-input-line);
+      color: var(--kb-mweb-body);
+      font-size: 13px;
+      text-align: center;
+    }
+    .m-home-tab { display: flex; }
+    .m-home-tab span {
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 17px 2px;
+      text-align: center;
+      font-size: 15px;
+      line-height: 20px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      background: var(--kb-mweb-home-tab-off);
+      color: var(--kb-mweb-white);
+    }
+    .m-home-tab .is-on { background: var(--kb-mweb-white); color: var(--kb-mweb-black); }
+    .m-band { height: 7px; background: var(--kb-mweb-section-band); }
+    .m-sec { padding: 22px 20px 6px; }
+    .m-h3 { margin: 0 0 12px; font-size: 16px; line-height: 19.6px; font-weight: 700; letter-spacing: -1px; color: var(--kb-mweb-black); }
+    .m-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 20px;
+    }
+    .m-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      height: 52px;
+      border-top: 1px solid var(--kb-mweb-section-band);
+      color: var(--kb-mweb-body);
+    }
+    .m-list svg { flex: none; }
+    .m-geo {
+      margin: 6px 20px 20px;
+      padding: 20px;
+      border-radius: 12px;
+      background: var(--kb-mweb-geo-bnr);
+      color: var(--kb-mweb-black);
+    }
+    .m-geo-label {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 2px;
+      background: var(--kb-mweb-geo-bnr-label);
+      color: var(--kb-mweb-white);
+      font-size: 12px;
+      line-height: 18px;
+    }
+    .m-geo p { margin: 8px 0 0; font-size: 15px; font-weight: 700; }
+    .m-login-wrap { padding: 0 20px 22px; }
+    .m-btn-login {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 45px;
+      background: var(--kb-mweb-btn01);
+      color: var(--kb-mweb-black);
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .m-copy {
+      padding: 16px 20px;
+      background: var(--kb-mweb-copy-area);
+      color: var(--kb-mweb-body);
+      font-size: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 14px;
+    }
+    .m-tab01 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1px;
+      background: var(--kb-mweb-white);
+    }
+    .m-tab01 span {
+      min-width: 0;
+      padding: 15px 0 11px;
+      text-align: center;
+      background: var(--kb-mweb-tab-type01-off);
+      color: var(--kb-mweb-black);
+    }
+    .m-tab01 .is-on { background: var(--kb-mweb-btn01); font-weight: 700; }
+    .m-pad { padding: 10px 20px 0; }
+    .m-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin-top: 12px; }
+    .m-select, .m-input {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      min-width: 0;
+      height: 36px;
+      padding: 0 10px;
+      border: 1px solid var(--kb-mweb-input-line);
+      border-radius: 0;
+      background: var(--kb-mweb-white);
+      color: var(--kb-mweb-body);
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .m-input { padding: 5px 10px 7px; }
+    .m-select.is-focus, .m-input.is-focus { background: var(--kb-mweb-btn01); border-color: var(--kb-mweb-btn01); color: var(--kb-mweb-black); }
+    .m-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .m-btn01, .m-btn02, .m-btn03 {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 106px;
+      padding: 11px 20px 9px;
+      border: 1px solid transparent;
+      border-radius: 0;
+      color: var(--kb-mweb-black);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+    .m-btn01 { background: var(--kb-mweb-btn01); border-color: var(--kb-mweb-btn01); }
+    .m-btn02 { background: var(--kb-mweb-white); border-color: var(--kb-mweb-btn02-line); }
+    .m-btn03 { background: var(--kb-mweb-btn03); border-color: var(--kb-mweb-btn03); }
+    .m-map { margin-top: 14px; min-height: 160px; }
+    .m-branch-list { list-style: none; margin: 18px 20px 20px; padding: 0; border-top: 2px solid var(--kb-mweb-branch-list-line); }
+    .m-branch-list li { padding: 14px 0 6px; font-size: 14px; line-height: 22.4px; }
+    .m-branch-name { margin: 0; font-size: 15px; line-height: 22.4px; font-weight: 700; color: var(--kb-mweb-black); }
+    .m-branch-list p { margin: 0; }
+    .m-distance { color: var(--kb-mweb-distance); font-weight: 700; }
+
+    /* ── 앱 (app- 토큰만) ───────────────────── */
+    .app-wrap {
+      display: grid;
+      grid-template-columns: minmax(0, 400px) minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+    .app-col { min-width: 0; }
+    .a-frame {
+      width: min(375px, 100%);
+      margin: 0 auto;
+      padding: 10px;
+      border-radius: 36px;
+      background: var(--foreground);
+    }
+    .a-screen, .a-stage {
+      background: var(--kb-app-list-bg);
+      color: var(--kb-app-ink);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    .a-screen { border-radius: 28px; overflow: hidden; container-type: inline-size; }
+    .a-stage { flex: 1 1 auto; padding: 18px; border: 1px solid var(--kb-app-chip-off); }
+    .a-stage .st { color: var(--kb-app-ink); }
+    .a-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 18px 5.4%;
+      background: var(--kb-app-card);
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .a-head .ico { display: inline-flex; gap: 14px; }
+    .a-body { display: flex; flex-direction: column; gap: 12px; padding: 14px 5.35% 18px; }
+    .a-card {
+      padding: 18px 18px;
+      border-radius: 18px;
+      background: var(--kb-app-card);
+    }
+    .a-card.is-row { display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
+    .a-acc-top { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .a-sym { height: 20px; width: auto; flex: none; }
+    .a-acc-name { font-weight: 700; min-width: 0; overflow-wrap: anywhere; }
+    .a-acc-no { margin: 2px 0 0 36px; color: var(--kb-app-label); font-size: 13px; }
+    .a-bal { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 16px 0 14px 36px; }
+    .a-bal b { font-size: 24px; line-height: 1.2; font-weight: 700; }
+    .a-pill {
+      display: inline-block;
+      padding: 1px 8px;
+      border: 1px solid var(--kb-app-label);
+      border-radius: 999px;
+      color: var(--kb-app-label);
+      font-size: 12px;
+    }
+    .a-transfer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 65.6cqw;
+      margin: 0 auto;
+      height: 44px;
+      border-radius: 3px;
+      background: var(--kb-app-transfer-button);
+      color: var(--kb-app-ink);
+      font-size: 15px;
+    }
+    .a-pale {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 12px;
+      border-radius: 12px;
+      background: var(--kb-app-pale-button);
+      color: var(--kb-app-ink);
+      font-weight: 700;
+      text-align: center;
+    }
+    .a-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .a-chip {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--kb-app-chip-off);
+      color: var(--kb-app-ink);
+      font-size: 13px;
+    }
+    .a-chip.is-on { background: var(--kb-app-chip-selected); font-weight: 700; }
+    .a-total { display: flex; flex-direction: column; gap: 6px; }
+    .a-total .lbl { color: var(--kb-app-label); }
+    .a-total .amt { display: flex; justify-content: flex-end; align-items: center; gap: 8px; }
+    .a-total .amt b { font-size: 20px; }
+    .a-tabbar {
+      display: flex;
+      background: var(--kb-app-card);
+      padding: 10px 2px 14px;
+    }
+    .a-tabbar span {
+      flex: 1 1 0;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: var(--kb-app-label);
+      font-size: 11px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .app-specs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 16px; }
+
+    footer.pv-foot { max-width: 1180px; margin: 40px auto 0; padding: 24px; border-top: 1px solid var(--border); }
+    footer.pv-foot p { margin: 0; font-size: 12px; color: var(--muted-foreground); }
+
+    @media (max-width: 720px) {
+      .hero-grid { grid-template-columns: minmax(0, 1fr); padding-top: 40px; }
+      .hero h1 { font-size: 40px; }
+      .sec { padding-left: 16px; padding-right: 16px; }
+      .w-body { grid-template-columns: minmax(0, 1fr); }
+      .w-aside {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+        border-left: 0;
+        border-top: 1px solid var(--kb-web-card-line);
+        padding: 12px;
+      }
+      .w-wrap-menu { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .w-quick { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .w-quick > div + div { border-left: 0; }
+      .w-quick > div:nth-child(even) { border-left: 1px solid var(--kb-web-card-line); }
+      .w-quick > div:nth-child(n+3) { border-top: 1px solid var(--kb-web-card-line); }
+      .w-cards { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+      .w-main-con1 { grid-template-columns: minmax(0, 1fr); }
+      .w-qrow { grid-template-columns: minmax(0, 40%) minmax(0, 1fr); }
+      .w-branch { grid-template-columns: minmax(0, 1fr); }
+      .spec-grid, .app-specs { grid-template-columns: minmax(0, 1fr); }
+      .phones { grid-template-columns: minmax(0, 1fr); }
+      .app-wrap { grid-template-columns: minmax(0, 1fr); }
+      .m-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .m-fields { grid-template-columns: minmax(0, 1fr); }
+      .m-tab01 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (min-width: 721px) and (max-width: 900px) {
+      .app-wrap { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+  <style>
+    [data-theme="dark"] {
+      --background: oklch(0.19 0.010 78);
+      --foreground: oklch(0.95 0.006 85);
+      --card: oklch(0.23 0.010 78);
+      --muted-foreground: oklch(0.77 0.012 80);
+      --border: oklch(0.95 0.006 85 / 0.18);
+      --pv-hero-ink: var(--kb-kb-yellow-negative);
+    }
+  </style>
+</head>
+<body>
+<div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
+
+  <header class="hero">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <div class="hero-lockup"><img class="hero-wm" src="/logos/kbstar-logotype.png" alt="KB국민은행" height="40"><template data-theme-variant="dark"><img class="hero-wm" src="/logos/kbstar-logotype-dark.png" alt="KB국민은행" height="40"></template></div>
+        <h1>KB국민은행</h1>
+        <ul class="hero-tiers">
+          <li>데스크톱 웹</li>
+          <li>모바일 웹</li>
+          <li>앱 (스크린샷 판독)</li>
+        </ul>
+        <div class="hero-cta">
+          <a class="cta-primary" href="#web">화면 보기</a>
+          <a class="cta-ghost" href="#app">앱 화면</a>
+        </div>
+      </div>
+      <div class="hero-mark">
+        <div class="mark-plate"><img class="mark-img" src="/logos/kbstar.png" alt="KB국민은행 심볼마크 Star-b" height="120"></div>
+        <p class="mark-k">심볼마크 Star-b</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── 01 데스크톱 웹 ─────────────────────── -->
+  <section class="sec" id="web">
+    <div class="sec-head">
+      <span class="sec-idx">01</span>
+      <h2>데스크톱 웹</h2>
+      <span class="tier">관측(미발행)</span>
+    </div>
+
+    <div class="mock">
+      <p class="catalog-dummy">더미 데이터: 상품 카드의 상품명과 금리, 예금과 대출 꼬리표, 이달의 추천 표시, 2단 메뉴 항목은 레이아웃 시연용이며 KB국민은행의 실제 상품, 금리, 추천 순위가 아닙니다.</p>
+      <p class="cell-k">개인뱅킹 첫 화면 <span class="assume">'개인' 글자 크기 (가정), 퀵메뉴 칸 구분 (가정)</span> <span class="hint">메뉴 칸에 마우스를 올려 보세요</span></p>
+      <div class="w-screen">
+        <div class="w-head">
+          <div class="w-head-top">
+            <img class="w-logo" src="/logos/kbstar-logotype.png" alt="KB국민은행" height="16">
+            <div class="w-util"><span class="is-on">개인</span><span>기업</span><span>자산관리</span><span>부동산</span><span>퇴직연금</span><span>카드</span><span>전체서비스</span></div>
+          </div>
+          <div class="w-head-row">
+            <span class="w-h2">개인</span>
+            <span class="w-pair"><span class="w-btn-sub1">로그인</span><span class="w-btn-sub1">인증센터</span></span>
+          </div>
+          <div class="w-wrap-menu"><span class="is-on">조회</span><span>이체</span><span>공과금</span><span>금융상품</span><span>외환</span><span>뱅킹관리</span></div>
+        </div>
+        <div class="w-submenu"><span class="is-on">계좌조회</span><span>거래내역조회</span><span>수표조회</span><span>통합조회</span></div>
+        <div class="w-body">
+          <div class="w-main">
+            <div class="w-search-row">
+              <span class="w-form-search"><span class="txt">검색어를 입력하세요.</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/></svg></span>
+            </div>
+            <div class="w-ph">그림 자리: 홍보 배너</div>
+            <div class="w-product-area">
+              <div class="w-quick">
+                <div><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true"><rect x="3" y="4" width="13" height="16" rx="1"/><path d="M6 9h7M6 13h5"/><circle cx="17" cy="15" r="3.5"/><path d="M19.5 17.5L22 20"/></svg><b>전체계좌조회</b><small>바로가기</small></div>
+                <div><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="12" r="7"/><path d="M6.5 10l1.5 5 2-4 2 4 1.5-5M18 12h5M21 10l2 2-2 2"/></svg><b>계좌이체</b><small>바로가기</small></div>
+                <div><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="12" r="8"/><path d="M11 7v5l3 2"/></svg><b>자동이체</b><small>바로가기</small></div>
+                <div><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true"><path d="M4 20h16M7 20V10M11 20V5M15 20v-8M19 20v-5"/></svg><b>자산관리</b><small>바로가기</small></div>
+              </div>
+              <div class="w-cards">
+                <div class="w-card is-headline"><strong>이달의 추천</strong><p>더미 상품 모음</p></div>
+                <div class="w-card"><span class="w-mark pro1">예금</span><strong>더미 정기예금</strong><p>연 0.00% (더미)</p></div>
+                <div class="w-card"><span class="w-mark pro3">신용대출</span><strong>더미 신용대출</strong><p>연 0.00% (더미)</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="w-aside">
+            <div class="w-aside-head"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg></div>
+            <div class="w-aside-cell">장바구니</div>
+            <div class="w-aside-cell">최근본상품</div>
+            <div class="w-aside-cell">MY MENU</div>
+            <div class="w-aside-cell">고객센터</div>
+            <div class="w-aside-cell">지점찾기</div>
+            <div class="w-aside-cell">글자 크기</div>
+            <div class="w-aside-cell">TOP</div>
+            <div class="w-aside-close"><span class="w-ui-btn"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8l4-4 4 4"/></svg></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mock">
+      <p class="catalog-dummy">더미 데이터: 공지 제목, 새소식 목록과 날짜는 레이아웃 시연용이며 KB국민은행의 실제 공지가 아닙니다.</p>
+      <p class="cell-k">인트로 화면 <span class="assume">web-top-notice, web-main-con1, 공지 띠 높이 (가정), 빠른 서비스 문구 (가정)</span></p>
+      <div class="w-screen">
+        <div class="w-top-notice">
+          <span class="w-notice-link">[공지] 더미 시스템 점검 안내</span>
+          <span class="w-notice-ctl"><span class="w-check"><i></i>1일동안 열지않기</span><span>닫기</span></span>
+        </div>
+        <div class="w-intro-hero">그림 자리: 인트로 히어로 사진과 홍보 문구</div>
+        <div class="w-main-con1">
+          <div class="lead">빠른 서비스</div>
+          <ul><li>조회</li><li>이체</li><li>공과금</li><li>외환</li><li>인증센터</li></ul>
+        </div>
+        <div class="w-news">
+          <h3 class="w-h2-intro">새소식</h3>
+          <ul>
+            <li><span>더미 공지 제목 첫째 줄</span><span>0000.00.00</span></li>
+            <li><span>더미 공지 제목 둘째 줄</span><span>0000.00.00</span></li>
+            <li><span>더미 공지 제목 셋째 줄</span><span>0000.00.00</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="mock">
+      <p class="catalog-dummy">더미 데이터: 계좌번호와 조회기간은 레이아웃 시연용 값입니다.</p>
+      <p class="cell-k">빠른조회 <span class="assume">web-quick-bar, 머리 띠 로고와 조회 단추는 그림 자리, 입력 테두리 (가정)</span></p>
+      <div class="w-screen w-quick-screen">
+        <div class="w-quick-bar"><span class="w-h1-quick">빠른조회</span><span class="w-logo-ph">로고 자리</span></div>
+        <div class="w-quick-body">
+          <div class="w-qrow"><span class="th">계좌번호</span><span class="td"><span class="w-input">000000-00-000000</span></span></div>
+          <div class="w-qrow"><span class="th">계좌비밀번호</span><span class="td"><span class="w-input">●●●●</span></span></div>
+          <div class="w-qrow"><span class="th">조회기간</span><span class="td"><span class="w-input is-readonly">최근 1개월</span></span></div>
+          <div class="w-btn-row"><span class="w-logo-ph w-btn-ph">조회 그림 자리</span><span class="w-btn-com">다시 입력</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mock">
+      <p class="catalog-dummy">더미 데이터: 지점 이름, 영업시간, 관리지점 표시는 레이아웃 시연용이며 실제 영업점 정보가 아닙니다.</p>
+      <p class="cell-k">상품 검색 띠와 지점안내 <span class="assume">web-area-form, web-btn-com-c2, web-btn-sub1</span></p>
+      <div class="w-screen">
+        <div class="w-area-form">
+          <span class="w-holder"><span>상품명을 입력하세요.</span></span>
+          <span class="w-btn-com c2 is-result">결과보기</span>
+        </div>
+        <div class="w-snb"><span class="is-on">지점찾기</span><span>ATM찾기</span><span>환전지점</span></div>
+        <div class="w-branch">
+          <div>
+            <div class="w-branch-name"><span class="w-h2-branch">더미중앙지점</span><span class="w-btn-sub1">관리지점</span></div>
+            <p class="w-hours" style="margin:4px 0 0">영업시간 <b>00:00 ~ 00:00</b></p>
+          </div>
+          <div class="w-branch-act"><span class="w-btn-com c2">지점 조회</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub-h">버튼, 입력, 꼬리표</h3>
+    <div class="spec-grid">
+      <div class="spec">
+        <p class="cell-k">web-btn-com</p>
+        <div class="w-stage row">
+          <span class="demo"><span class="w-btn-com">확인</span><span class="st">기본</span></span>
+          <span class="demo"><span class="w-btn-com" aria-disabled="true">확인</span><span class="st">disabled 0.65</span></span>
+        </div>
+      </div>
+      <div class="spec">
+        <p class="cell-k">web-btn-com-c1, web-btn-com-c2</p>
+        <div class="w-stage row">
+          <span class="demo"><span class="w-btn-com c1">조회</span><span class="st">c1</span></span>
+          <span class="demo"><span class="w-btn-com c2">지점 조회</span><span class="st">c2 14/700</span></span>
+        </div>
+      </div>
+      <div class="spec">
+        <p class="cell-k">web-btn-action, web-btn-action-c1</p>
+        <div class="w-stage row">
+          <span class="demo"><span class="w-btn-action">취소</span><span class="st">기본 40px</span></span>
+          <span class="demo"><span class="w-btn-action c1">신청</span><span class="st">c1</span></span>
+        </div>
+      </div>
+      <div class="spec">
+        <p class="cell-k">web-btn-sub1</p>
+        <div class="w-stage row">
+          <span class="demo"><span class="w-btn-sub1">관리지점</span><span class="st">27px</span></span>
+        </div>
+      </div>
+      <div class="spec">
+        <p class="cell-k">web-input</p>
+        <div class="w-stage row">
+          <span class="demo"><span class="w-input">입력값</span><span class="st">기본</span></span>
+          <span class="demo"><span class="w-input is-readonly">읽기 전용</span><span class="st">readonly</span></span>
+        </div>
+      </div>
+      <div class="spec">
+        <p class="cell-k">web-form-search</p>
+        <div class="w-stage row">
+          <span class="demo" style="width:100%"><span class="w-form-search"><span class="txt">검색어를 입력하세요.</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/></svg></span><span class="st">반경 20px</span></span>
+        </div>
+      </div>
+      <div class="spec">
+        <p class="cell-k">web-icon-mark-pro1, web-icon-mark-pro3</p>
+        <div class="w-stage row">
+          <span class="demo"><span class="w-mark pro1">예금</span><span class="st">pro1</span></span>
+          <span class="demo"><span class="w-mark pro3">대출</span><span class="st">pro3</span></span>
+          <span class="demo"><span class="w-mark out-c1">대출</span><span class="st">윤곽 c1</span></span>
+          <span class="demo"><span class="w-mark out-c2">예금</span><span class="st">윤곽 c2</span></span>
+        </div>
+      </div>
+      <div class="spec">
+        <p class="cell-k">web-wrap-menu-on <span class="hint">칸에 마우스를 올려 보세요</span></p>
+        <div class="w-stage">
+          <div class="w-wrap-menu" style="grid-template-columns:repeat(3, minmax(0, 1fr))"><span class="is-on">조회</span><span>이체</span><span>외환</span></div>
+          <span class="st">현재 칸, hover 칸</span>
+        </div>
+      </div>
+      <div class="spec">
+        <p class="cell-k">web-submenu <span class="hint">항목에 마우스를 올려 보세요</span></p>
+        <div class="w-stage">
+          <div class="w-submenu"><span class="is-on">계좌조회</span><span>수표조회</span></div>
+          <span class="st">현재 칸 아래 선 3px</span>
+        </div>
+      </div>
+      <div class="spec">
+        <p class="cell-k">web-nav-aside 첫 칸, web-ui-btn</p>
+        <div class="w-stage row">
+          <span class="demo" style="width:84px"><span class="w-aside-head" style="width:84px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg></span><span class="w-aside-cell" style="width:84px">지점찾기</span></span>
+          <span class="demo"><span class="w-ui-btn"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 3l6 6M9 3L3 9"/></svg></span><span class="st">닫기 25px</span></span>
+        </div>
+      </div>
+      <div class="spec">
+        <p class="cell-k">떠 있는 상자 .boxShadow <span class="assume">상자 문구 (가정)</span></p>
+        <div class="w-stage row">
+          <span class="demo"><span class="w-float">입력하신 내용을 확인하십시오.</span><span class="st">반경 4px</span></span>
+        </div>
+      </div>
+      <div class="spec">
+        <p class="cell-k">로딩 덮개</p>
+        <div class="w-stage">
+          <div class="w-veil-host"><p>조회 결과 영역</p><span class="w-veil" aria-hidden="true"></span></div>
+          <span class="st">불투명도 0.30</span>
+        </div>
+      </div>
+      <div class="spec spec-wide">
+        <p class="cell-k">web-ttype01, 페이지네이션 <span class="assume">현재 쪽 글자색 (가정)</span></p>
+        <table class="w-table">
+          <caption class="catalog-dummy">더미 데이터: 표의 상품명, 기간, 이율은 레이아웃 시연용이며 KB국민은행의 실제 상품 조건이 아닙니다.</caption>
+          <thead><tr><th scope="col">상품</th><th scope="col">기간</th><th scope="col">이율</th></tr></thead>
+          <tbody>
+            <tr><td>더미 정기예금</td><td>12개월</td><td>연 0.00%</td></tr>
+            <tr><td>더미 적금</td><td>24개월</td><td>연 0.00%</td></tr>
+          </tbody>
+          <tfoot><tr><td>합계</td><td>2건</td><td>-</td></tr></tfoot>
+        </table>
+        <div class="w-stage" style="margin-top:10px">
+          <div class="w-pager"><span>1</span><span class="is-on">2</span><span>3</span><span>4</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 02 모바일 웹 ───────────────────────── -->
+  <section class="sec" id="mweb">
+    <div class="sec-head">
+      <span class="sec-idx">02</span>
+      <h2>모바일 웹</h2>
+      <span class="tier">관측(미발행)</span>
+    </div>
+
+    <div class="phones">
+      <div class="phone-col">
+        <p class="catalog-dummy">더미 데이터: 추천 배너 문구와 금융상품 목록은 레이아웃 시연용입니다.</p>
+        <p class="cell-k">모바일 홈 <span class="assume">mweb-header, mweb-home-tab, mweb-geo-bnr, mweb-btn-login</span></p>
+        <div class="m-screen">
+          <div class="m-header">
+            <img class="m-logo" src="/logos/kbstar-logotype.png" alt="KB국민은행" height="21">
+            <span class="ico-r"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></span>
+          </div>
+          <div class="m-ph">그림 자리: 히어로 캐러셀</div>
+          <div class="m-home-tab"><span class="is-on">금융상품</span><span>오늘의 환율</span><span>새 소식</span></div>
+          <div class="m-band"></div>
+          <div class="m-sec">
+            <h3 class="m-h3">금융상품</h3>
+            <ul class="m-list">
+              <li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><rect x="4" y="9" width="16" height="10"/><path d="M8 9V6h8v3"/></svg>예금</li>
+              <li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 20h16M7 20V10M11 20V5M15 20v-8"/></svg>펀드</li>
+              <li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M15 16l4 4"/></svg>대출</li>
+              <li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 18 0z"/><path d="M12 12v6"/></svg>보험</li>
+            </ul>
+          </div>
+          <div class="m-band"></div>
+          <div class="m-geo">
+            <span class="m-geo-label">추천</span>
+            <p>가까운 영업점 미리 보기</p>
+          </div>
+          <div class="m-login-wrap"><span class="m-btn-login">로그인</span></div>
+          <div class="m-copy"><span>이용약관</span><span>개인정보처리방침</span><span>PC버전</span></div>
+        </div>
+      </div>
+
+      <div class="phone-col">
+        <p class="catalog-dummy">더미 데이터: 지점 이름, 주소, 영업시간, 거리는 레이아웃 시연용이며 실제 영업점 정보가 아닙니다.</p>
+        <p class="cell-k">지점찾기 <span class="assume">mweb-branch-list, mweb-select, 제목 굵기 (가정)</span></p>
+        <div class="m-screen">
+          <div class="m-header">
+            <span class="ico-l"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M6 10v10h12V10"/></svg></span>
+            <span class="m-title">지점찾기</span>
+            <span class="ico-r"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></span>
+          </div>
+          <div class="m-pad">
+            <div class="m-tab01"><span class="is-on">영업점</span><span>ATM</span></div>
+            <div class="m-fields">
+              <span class="m-select">서울특별시 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M2 4l4 4 4-4"/></svg></span>
+              <span class="m-input is-focus">더미동</span>
+            </div>
+            <div class="m-btns"><span class="m-btn01">검색</span><span class="m-btn02">내 위치</span></div>
+            <div class="m-ph m-map">그림 자리: 지도</div>
+          </div>
+          <ul class="m-branch-list">
+            <li>
+              <p class="m-branch-name">더미중앙지점</p>
+              <p>[영업시간] 00:00 ~ 00:00</p>
+              <p>[도로명] 더미시 더미구 더미로 0</p>
+              <p class="m-distance">000m</p>
+            </li>
+            <li>
+              <p class="m-branch-name">더미역지점</p>
+              <p>[영업시간] 00:00 ~ 00:00</p>
+              <p class="m-distance">0.0km</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub-h">버튼, 탭, 입력</h3>
+    <div class="spec-grid">
+      <div class="spec">
+        <p class="cell-k">mweb-btn01, mweb-btn02</p>
+        <div class="m-stage row">
+          <span class="demo"><span class="m-btn01">확인</span><span class="st">btn01</span></span>
+          <span class="demo"><span class="m-btn02">취소</span><span class="st">btn02</span></span>
+          <span class="demo"><span class="m-btn03">더보기</span><span class="st">btn03</span></span>
+        </div>
+      </div>
+      <div class="spec">
+        <p class="cell-k">mweb-btn-login</p>
+        <div class="m-stage">
+          <span class="m-btn-login">로그인</span>
+          <span class="st">높이 45px</span>
+        </div>
+      </div>
+      <div class="spec">
+        <p class="cell-k">mweb-tab-type01-on, mweb-tab-type01-off</p>
+        <div class="m-stage">
+          <div class="m-tab01"><span class="is-on">영업점</span><span>ATM</span></div>
+          <span class="st">선택, 비선택</span>
+        </div>
+      </div>
+      <div class="spec">
+        <p class="cell-k">mweb-home-tab-on, mweb-home-tab-off</p>
+        <div class="m-stage">
+          <div class="m-home-tab"><span class="is-on">금융상품</span><span>오늘의 환율</span><span>새 소식</span></div>
+          <span class="st">선택, 비선택</span>
+        </div>
+      </div>
+      <div class="spec">
+        <p class="cell-k">mweb-select</p>
+        <div class="m-stage">
+          <div class="m-fields" style="margin-top:0">
+            <span class="demo"><span class="m-select" style="width:100%">서울특별시</span><span class="st">기본</span></span>
+            <span class="demo"><span class="m-select is-focus" style="width:100%">서울특별시</span><span class="st">focus</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="spec">
+        <p class="cell-k">mweb-geo-bnr</p>
+        <div class="m-stage">
+          <div class="m-geo" style="margin:0">
+            <span class="m-geo-label">추천</span>
+            <p>가까운 영업점 미리 보기</p>
+          </div>
+          <span class="st">반경 12px, 라벨 반경 2px</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 03 앱 ─────────────────────────────── -->
+  <section class="sec" id="app">
+    <div class="sec-head">
+      <span class="sec-idx">03</span>
+      <h2>앱</h2>
+      <span class="tier">스크린샷 판독 ≈</span>
+    </div>
+
+    <div class="app-wrap">
+      <div class="app-col">
+        <p class="catalog-dummy">더미 데이터: 통장 이름, 계좌번호, 잔액, 총 자산, 고객 호칭, 투자 분류는 레이아웃 시연용이며 실제 계좌나 상품이 아닙니다.</p>
+        <p class="cell-k">앱 홈 <span class="assume">app-account-card, 하단 탭 선택 표시 (가정)</span></p>
+        <div class="a-frame">
+          <div class="a-screen">
+            <div class="a-head">
+              <span>고객님 ›</span>
+              <span class="ico">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 17V11a6 6 0 0 1 12 0v6l2 2H4z"/><path d="M10 21h4"/></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+              </span>
+            </div>
+            <div class="a-body">
+              <div class="a-card is-row"><span>내 계좌 전체보기</span><span aria-hidden="true">›</span></div>
+              <div class="a-card">
+                <div class="a-acc-top"><img class="a-sym" src="/logos/kbstar.png" alt="KB국민은행" height="20"><span class="a-acc-name">자유입출금 통장</span></div>
+                <p class="a-acc-no">000000-00-000000</p>
+                <div class="a-bal"><b>1,234,000원</b><span class="a-pill">숨김</span></div>
+                <span class="a-transfer">이체</span>
+              </div>
+              <span class="a-pale">내 투자성향 알아보기</span>
+              <div class="a-chips"><span class="a-chip is-on">안전자산</span><span class="a-chip">주식</span><span class="a-chip">채권</span></div>
+              <div class="a-card a-total">
+                <span class="lbl">나의 총 자산</span>
+                <span class="amt"><span class="a-pill">숨김</span><b>12,345,000원</b></span>
+              </div>
+            </div>
+            <div class="a-tabbar">
+              <span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="5" y="8" width="14" height="12" rx="2"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>상품</span>
+              <span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4v8h8"/></svg>자산</span>
+              <span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/></svg>지갑</span>
+              <span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="4" y="9" width="16" height="11"/><path d="M12 9v11M4 13h16"/></svg>혜택</span>
+              <span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/></svg>테마</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="app-col">
+        <div class="app-specs">
+          <div class="spec">
+            <p class="cell-k">app-transfer-button <span class="assume">글자색 (가정)</span></p>
+            <div class="a-stage">
+              <span class="a-transfer" style="width:100%">이체</span>
+              <span class="st">반경 ≈ 3px</span>
+            </div>
+          </div>
+          <div class="spec">
+            <p class="cell-k">app-pale-button <span class="assume">글자색, 반경 (가정)</span></p>
+            <div class="a-stage">
+              <span class="a-pale">내 투자성향 알아보기</span>
+            </div>
+          </div>
+          <div class="spec">
+            <p class="cell-k">app-chip-selected <span class="assume">알약 반경 (가정)</span></p>
+            <div class="a-stage">
+              <div class="a-chips"><span class="a-chip is-on">안전자산</span><span class="a-chip">주식</span></div>
+              <span class="st">선택, 비선택</span>
+            </div>
+          </div>
+          <div class="spec">
+            <p class="cell-k">app-account-card</p>
+            <div class="a-stage">
+              <div class="a-card">
+                <div class="a-acc-top"><img class="a-sym" src="/logos/kbstar.png" alt="KB국민은행" height="20"><span class="a-acc-name">자유입출금 통장</span></div>
+                <div class="a-bal" style="margin-bottom:0"><b>0원</b><span class="a-pill">숨김</span></div>
+              </div>
+              <span class="st">반경 ≈ 18px</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="pv-foot">
+    <p class="catalog-attribution">로고 파일은 KB금융그룹과 KB국민은행이 공개한 CI 자료이며, 이 화면은 카탈로그의 비공식 재현입니다.</p>
+  </footer>
+</body>
+</html>

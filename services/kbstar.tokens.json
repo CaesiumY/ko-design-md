@@ -1,0 +1,503 @@
+{
+  "colors": [
+    {
+      "name": "kb-yellow-positive",
+      "value": "oklch(0.835 0.172 83)",
+      "note": "발행, KB Yellow Positive, R255 G188 B0 발행, #FFBC00 은 인쇄 RGB 255 188 0 을 옮긴 값(hex 미발행), Pantone 130 C, 은행 화면에서는 거의 관측되지 않음",
+      "group": "발행 CI 색 (그룹 CI 와 은행 CI 의 Main Color, Sub Color)"
+    },
+    {
+      "name": "kb-yellow-negative",
+      "value": "oklch(0.865 0.177 90)",
+      "note": "발행, KB Yellow Negative, R255 G204 B0 발행, #FFCC00 은 인쇄 RGB 255 204 0 을 옮긴 값(hex 미발행), Pantone 1235 C",
+      "group": "발행 CI 색 (그룹 CI 와 은행 CI 의 Main Color, Sub Color)"
+    },
+    {
+      "name": "kb-gray",
+      "value": "oklch(0.464 0.021 78)",
+      "note": "발행, KB Gray, R96 G88 B76 발행, #60584C 는 인쇄 RGB 96 88 76 을 옮긴 값(hex 미발행), Pantone 404 C",
+      "group": "발행 CI 색 (그룹 CI 와 은행 CI 의 Main Color, Sub Color)"
+    },
+    {
+      "name": "kb-dark-gray",
+      "value": "oklch(0.432 0.018 90)",
+      "note": "발행, KB Dark Gray(Sub Color), R84 G80 B69 발행, #545045 는 인쇄 RGB 84 80 69 를 옮긴 값(hex 미발행), Pantone 411 C",
+      "group": "발행 CI 색 (그룹 CI 와 은행 CI 의 Main Color, Sub Color)"
+    },
+    {
+      "name": "web-intro-menu1",
+      "value": "oklch(0.869 0.176 91)",
+      "note": "#FFCE0B, 관측(미발행), www 인트로 빠른메뉴 띠 ul.menu1 바탕",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-wrap-menu",
+      "value": "oklch(0.874 0.163 91)",
+      "note": "#FED03A, 관측(미발행), 개인뱅킹 메인과 상품의 1단 메뉴 띠 .wrap-menu 바탕(CSS 3회)",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-wrap-menu-on",
+      "value": "oklch(0.825 0.163 83)",
+      "note": "#F9BA21, 관측(미발행), .wrap-menu 현재 칸과 hover 칸(CSS 2회)",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-headline",
+      "value": "oklch(0.871 0.176 92)",
+      "note": "#FFCF10, 관측(미발행), 개인뱅킹 div.headline 헤드라인 박스와 목록 활성 칸",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-quick-bar",
+      "value": "oklch(0.865 0.177 90)",
+      "note": "#FFCC00, 관측(미발행), 빠른조회 머리 띠 바탕과 인트로 공지 링크 글자 1개, 발행 KB Yellow Negative 와 같은 값이지만 별도 관측 값",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-btn-com-c1",
+      "value": "oklch(0.889 0.183 96)",
+      "note": "#FFD800, 관측(미발행), .btn-com.c1 바탕, CSS 규칙만, 렌더 표본 없음",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-btn-action-c1",
+      "value": "oklch(0.871 0.176 92)",
+      "note": "#FFCF0F, 관측(미발행), .btn-action.c1 바탕, CSS 규칙만, 렌더 표본 없음",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-pagination-on",
+      "value": "oklch(0.857 0.175 91)",
+      "note": "#FBCA00, 관측(미발행), 페이지네이션 현재 쪽, CSS 규칙만, 렌더 표본 없음",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-submenu-line",
+      "value": "oklch(0.891 0.183 96)",
+      "note": "#FFD900, 관측(미발행), 2단 메뉴 hover 와 현재 칸 아래 선, CSS 규칙만, 렌더 표본 없음",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-navbar-btn-hover",
+      "value": "oklch(0.835 0.172 83)",
+      "note": "#FFBC00, 관측(미발행), .navbar-nav .btn hover 바탕, 데스크톱 CSS 46개 파일에서 이 한 곳, 렌더 표본 없음",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-white",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "#FFFFFF, 관측(미발행), 안쪽 래퍼의 흰 면(CSS 646회), 버튼 베이스와 입력창 바탕, .btn-com.c2 와 상품 꼬리표 채움형의 흰 글자, 상품 검색 입력 테두리",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-intro-hero",
+      "value": "oklch(0.976 0.026 100)",
+      "note": "#FBF8E4, 관측(미발행), 인트로 히어로 div.wrap-visual 바탕",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-main-product",
+      "value": "oklch(0.961 0.000 0)",
+      "note": "#F2F2F2, 관측(미발행), 개인뱅킹 div.section-main.main-product 바탕",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-area2",
+      "value": "oklch(0.973 0.000 0)",
+      "note": "#F6F6F6, 관측(미발행), 옵션 영역, 읽기 전용 입력, 지점 필터 div.area2, 표 .tType01 tfoot",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-submenu",
+      "value": "oklch(0.985 0.000 0)",
+      "note": "#FAFAFA, 관측(미발행), 2단 메뉴 div.submenu 바탕",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-area-form",
+      "value": "oklch(0.909 0.010 94)",
+      "note": "#E3E1DA, 관측(미발행), 상품 검색 띠 div.area-form 바탕",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-wrap-menu-text",
+      "value": "oklch(0.303 0.028 55)",
+      "note": "#3A2B21, 관측(미발행), .wrap-menu 글자와 .nav-snb 링크",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-btn-com-c2",
+      "value": "oklch(0.631 0.016 51)",
+      "note": "#928781, 관측(미발행), .btn-com.c2 바탕과 테두리(상품 결과보기, 지점 조회)",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-nav-aside-head",
+      "value": "oklch(0.568 0.019 70)",
+      "note": "#7E756B, 관측(미발행), 오른쪽 퀵메뉴 .nav-aside 첫 칸",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-ui-btn",
+      "value": "oklch(0.563 0.022 65)",
+      "note": "#7F7368, 관측(미발행), 퀵메뉴 닫기 button.ui-btn 원형",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-nav-aside-cell",
+      "value": "oklch(0.948 0.008 74)",
+      "note": "#F1EDE8, 관측(미발행), 퀵메뉴 .nav-aside 칸",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-nav-aside-link",
+      "value": "oklch(0.463 0.021 81)",
+      "note": "#5F584C, 관측(미발행), .nav-aside 링크 글자와 .layerType 테두리, 발행 KB Gray 와 R 만 1 다름",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-snb",
+      "value": "oklch(0.518 0.034 67)",
+      "note": "#766554, 관측(미발행), 지점안내 ul.snb_2015 바탕(글자 흰색)",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-snb-on",
+      "value": "oklch(0.442 0.030 65)",
+      "note": "#5F5042, 관측(미발행), 지점안내 a.activated 바탕",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-top-notice",
+      "value": "oklch(0.345 0.013 67)",
+      "note": "#3E3832, 관측(미발행), 인트로 공지 띠 div.topNoticelayer 바탕",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-gray-5a",
+      "value": "oklch(0.468 0.000 0)",
+      "note": "#5A5A5A, 관측(미발행), 인트로, 개인뱅킹 메인, 상품, 지점의 body 글자",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-brown-4e",
+      "value": "oklch(0.402 0.016 71)",
+      "note": "#4E473F, 관측(미발행), 빠른조회 body 와 base.css body 글자(CSS 125회), .btn-com 글자",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-gray-222",
+      "value": "oklch(0.252 0.000 0)",
+      "note": "#222222, 관측(미발행), 개인뱅킹과 지점안내 큰 제목, 2단 메뉴 글자(CSS 글자 227회)",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-gray-333",
+      "value": "oklch(0.321 0.000 0)",
+      "note": "#333333, 관측(미발행), 인트로 제목과 링크(42개 요소)",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-card-line",
+      "value": "oklch(0.898 0.000 0)",
+      "note": "#DDDDDD, 관측(미발행), 카드와 목록 1px 선, 지점 필터 바깥 테두리",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-input-line",
+      "value": "oklch(0.867 0.000 0)",
+      "note": "#D3D3D3, 관측(미발행), 상품 dd 와 input.input 테두리",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-ttype01-line",
+      "value": "oklch(0.923 0.001 17)",
+      "note": "#E6E5E5, 관측(미발행), 표 .tType01 칸 테두리(CSS 131회)",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-icon-mark-pro1",
+      "value": "oklch(0.685 0.174 51)",
+      "note": "#EB7311, 관측(미발행), 상품 꼬리표 .pro1 .icon-mark1 채움",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-icon-mark-pro3",
+      "value": "oklch(0.638 0.152 259)",
+      "note": "#508AE6, 관측(미발행), 상품 꼬리표 .pro3 .icon-mark1 채움과 윤곽형 c1",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-icon-mark-c2",
+      "value": "oklch(0.682 0.159 57)",
+      "note": "#E07B16, 관측(미발행), 윤곽형 .icon-mark1.c2 글자와 테두리",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-branch-hours",
+      "value": "oklch(0.679 0.194 45)",
+      "note": "#F46600, 관측(미발행), 지점 영업시간 숫자",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "web-ui-overlay",
+      "value": "oklch(0.738 0.000 0)",
+      "note": "#AAAAAA, 관측(미발행), 로딩 덮개 div.ui-widget-overlay, 불투명도 0.30 으로 칠함",
+      "group": "데스크톱 웹 관측(미발행)"
+    },
+    {
+      "name": "mweb-btn01",
+      "value": "oklch(0.901 0.186 98)",
+      "note": "#FFDE00, 관측(미발행), .btn01, .btnLogin 바탕, .tab_type01 선택 칸, 포커스 입력(CSS 26회), 글자색으로는 안 씀",
+      "group": "모바일 웹 관측(미발행)"
+    },
+    {
+      "name": "mweb-tab-type01-off",
+      "value": "oklch(0.907 0.008 91)",
+      "note": "#E2E0DA, 관측(미발행), .tab_type01 비선택 칸",
+      "group": "모바일 웹 관측(미발행)"
+    },
+    {
+      "name": "mweb-home-tab-off",
+      "value": "oklch(0.547 0.018 67)",
+      "note": "#786F66, 관측(미발행), 홈 가운데 탭 줄 비선택 칸(글자 흰색)",
+      "group": "모바일 웹 관측(미발행)"
+    },
+    {
+      "name": "mweb-white",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "#FFFFFF, 관측(미발행), 홈 탭 줄 선택 칸과 비선택 칸 글자, .btn02 바탕",
+      "group": "모바일 웹 관측(미발행)"
+    },
+    {
+      "name": "mweb-body",
+      "value": "oklch(0.321 0.000 0)",
+      "note": "#333333, 관측(미발행), body 글자와 링크",
+      "group": "모바일 웹 관측(미발행)"
+    },
+    {
+      "name": "mweb-black",
+      "value": "oklch(0.000 0.000 0)",
+      "note": "#000000, 관측(미발행), 버튼 글자(omweb_2017.css 101회로 1위)",
+      "group": "모바일 웹 관측(미발행)"
+    },
+    {
+      "name": "mweb-section-band",
+      "value": "oklch(0.961 0.000 0)",
+      "note": "#F2F2F2, 관측(미발행), 홈 섹션 사이 7px 띠, 금융상품 목록 위 선",
+      "group": "모바일 웹 관측(미발행)"
+    },
+    {
+      "name": "mweb-btn03",
+      "value": "oklch(0.947 0.011 257)",
+      "note": "#E9EEF5, 관측(미발행), .btn03, .btn04 바탕",
+      "group": "모바일 웹 관측(미발행)"
+    },
+    {
+      "name": "mweb-input-line",
+      "value": "oklch(0.907 0.000 0)",
+      "note": "#E0E0E0, 관측(미발행), 입력과 셀렉트 테두리 0.1rem",
+      "group": "모바일 웹 관측(미발행)"
+    },
+    {
+      "name": "mweb-btn02-line",
+      "value": "oklch(0.764 0.000 0)",
+      "note": "#B2B2B2, 관측(미발행), .btn02 테두리 1px",
+      "group": "모바일 웹 관측(미발행)"
+    },
+    {
+      "name": "mweb-distance",
+      "value": "oklch(0.738 0.183 55)",
+      "note": "#FF8400, 관측(미발행), 지점 거리 숫자 p.distance",
+      "group": "모바일 웹 관측(미발행)"
+    },
+    {
+      "name": "mweb-branch-list-line",
+      "value": "oklch(0.499 0.044 257)",
+      "note": "#53647C, 관측(미발행), ul.branch_list 위 2px 선",
+      "group": "모바일 웹 관측(미발행)"
+    },
+    {
+      "name": "mweb-copy-area",
+      "value": "oklch(0.982 0.000 0)",
+      "note": "#F9F9F9, 관측(미발행), 푸터 .copyArea 바탕",
+      "group": "모바일 웹 관측(미발행)"
+    },
+    {
+      "name": "mweb-geo-bnr",
+      "value": "oklch(0.979 0.000 0)",
+      "note": "#F8F8F8, 관측(미발행), 추천 배너 .geo_bnr 바탕",
+      "group": "모바일 웹 관측(미발행)"
+    },
+    {
+      "name": "mweb-geo-bnr-label",
+      "value": "oklch(0.572 0.149 324)",
+      "note": "#A155A9, 관측(미발행), 추천 배너 라벨 바탕(글자 흰색)",
+      "group": "모바일 웹 관측(미발행)"
+    },
+    {
+      "name": "app-list-bg",
+      "value": "oklch(0.963 0.003 248)",
+      "note": "≈ #F1F3F5, 스토어 스크린샷 판독(추정값), 화면과 목록 바탕, 아이폰과 아이패드 그림에서 같은 값",
+      "group": "앱 스크린샷 판독 (KB스타뱅킹, 모두 추정값)"
+    },
+    {
+      "name": "app-card",
+      "value": "oklch(1.000 0.000 0)",
+      "note": "≈ #FFFFFF, 스토어 스크린샷 판독(추정값), 카드와 헤더 면",
+      "group": "앱 스크린샷 판독 (KB스타뱅킹, 모두 추정값)"
+    },
+    {
+      "name": "app-transfer-button",
+      "value": "oklch(0.880 0.166 92)",
+      "note": "≈ #FFD338, 스토어 스크린샷 판독(추정값), 계좌 카드 이체 버튼 채움, 발행 노랑과 같은 토큰인지 알 수 없음",
+      "group": "앱 스크린샷 판독 (KB스타뱅킹, 모두 추정값)"
+    },
+    {
+      "name": "app-pale-button",
+      "value": "oklch(0.966 0.051 94)",
+      "note": "≈ #FFF4CE, 스토어 스크린샷 판독(추정값), 연한 노랑 안내 버튼 바탕",
+      "group": "앱 스크린샷 판독 (KB스타뱅킹, 모두 추정값)"
+    },
+    {
+      "name": "app-chip-selected",
+      "value": "oklch(0.981 0.018 81)",
+      "note": "≈ #FFF8EC, 스토어 스크린샷 판독(추정값), 선택된 분류 칩 바탕",
+      "group": "앱 스크린샷 판독 (KB스타뱅킹, 모두 추정값)"
+    }
+  ],
+  "typography": [
+    {
+      "name": "web-h2-obank",
+      "size": "24px",
+      "weight": 700,
+      "lineHeight": "30px",
+      "note": "관측(미발행), 개인뱅킹 메인 섹션 h2(새소식, 이벤트), 글자 #222222"
+    },
+    {
+      "name": "web-link-obank",
+      "size": "13px",
+      "weight": 400,
+      "lineHeight": "21.45px",
+      "note": "관측(미발행), 개인뱅킹 메인 링크 a 요소, strong 은 700"
+    },
+    {
+      "name": "web-h2-products",
+      "size": "24px",
+      "weight": 700,
+      "lineHeight": "36px",
+      "note": "관측(미발행), 상품 화면 h2(예금 계산기 제목)"
+    },
+    {
+      "name": "web-display-products",
+      "size": "32px",
+      "weight": 700,
+      "lineHeight": "38.4px",
+      "note": "관측(미발행), 상품 화면의 가장 큰 글자 b 요소"
+    },
+    {
+      "name": "web-wrap-menu",
+      "size": "17px",
+      "weight": 700,
+      "lineHeight": "50px",
+      "note": "관측(미발행), 1단 메뉴 띠 .wrap-menu 글자"
+    },
+    {
+      "name": "web-submenu",
+      "size": "15px",
+      "weight": 700,
+      "lineHeight": "43px",
+      "note": "관측(미발행), 2단 메뉴 div.submenu 글자"
+    },
+    {
+      "name": "web-util-nav",
+      "size": "13px",
+      "weight": 400,
+      "lineHeight": "26px",
+      "note": "관측(미발행), 상단 유틸리티 내비, 현재 칸은 700"
+    },
+    {
+      "name": "web-h2-intro",
+      "size": "20px",
+      "weight": 700,
+      "lineHeight": "26px",
+      "tracking": "-1px",
+      "note": "관측(미발행), www 인트로 섹션 h2(새소식, 금융상품), 글자 #333333"
+    },
+    {
+      "name": "web-list-intro",
+      "size": "14px",
+      "weight": 400,
+      "lineHeight": "21px",
+      "note": "관측(미발행), www 인트로 새소식 목록 링크"
+    },
+    {
+      "name": "web-h2-branch",
+      "size": "18px",
+      "weight": 700,
+      "lineHeight": "27px",
+      "note": "관측(미발행), 지점안내 h2.tit_dep2"
+    },
+    {
+      "name": "web-h1-quick",
+      "size": "18px",
+      "weight": 700,
+      "lineHeight": "30px",
+      "note": "관측(미발행), 빠른조회 h1.tit_dep1"
+    },
+    {
+      "name": "web-quick-body",
+      "size": "12px",
+      "weight": 400,
+      "lineHeight": "19.8px",
+      "note": "관측(미발행), 빠른조회 화면 나머지 글자 대부분"
+    },
+    {
+      "name": "mweb-link",
+      "size": "14px",
+      "weight": 400,
+      "lineHeight": "19.6px",
+      "note": "관측(미발행), 모바일 웹 홈 링크(행간 140%)"
+    },
+    {
+      "name": "mweb-h3",
+      "size": "16px",
+      "weight": 700,
+      "lineHeight": "19.6px",
+      "tracking": "-1px",
+      "note": "관측(미발행), 모바일 웹 홈 섹션 제목 h3(7개)"
+    },
+    {
+      "name": "mweb-header-h1",
+      "size": "19px",
+      "note": "관측(미발행), 고정 헤더 제목 h1 1.9rem, 굵기와 행간 미측정"
+    },
+    {
+      "name": "mweb-branch-name",
+      "size": "15px",
+      "weight": 700,
+      "lineHeight": "22.4px",
+      "note": "관측(미발행), 지점찾기 목록 p.branch_name"
+    }
+  ],
+  "spacing": [],
+  "radius": [],
+  "elevation": [
+    {
+      "name": "web-box-shadow",
+      "value": "4px 4px 12px oklch(0.000 0.000 0 / 15%)",
+      "note": "관측(미발행), .boxShadow 와 .verticalTab .on a(CSS 6회)"
+    },
+    {
+      "name": "web-main-con1",
+      "value": "0 15px 30px 0 oklch(0.000 0.000 0 / 10%)",
+      "note": "관측(미발행), 인트로 빠른메뉴 띠 div.main-con1"
+    },
+    {
+      "name": "web-ui-btn-shadow",
+      "value": "10px 15px 48px 0 oklch(0.000 0.000 0 / 25%)",
+      "note": "관측(미발행), 퀵메뉴 닫기 button.ui-btn"
+    }
+  ]
+}
