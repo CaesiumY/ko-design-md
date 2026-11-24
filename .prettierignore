@@ -4,3 +4,5 @@ yarn.lock
 
 # 생성 파일 (TanStack Router) — 빌드 시 재생성되므로 포맷 대상에서 제외
 src/routeTree.gen.ts
+# 구조 겨루기 "컴포넌트": 항목의 CSS 는 빌드가 글자 그대로 싣는다. 포맷하면 서빙 HTML 이 바뀐다
+prototypes/preview-structure/components/entries/**/*.css
