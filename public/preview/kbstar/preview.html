@@ -60,6 +60,8 @@
       --kb-web-btn-action-line: oklch(0.811 0.000 0);
       --kb-web-btn-action-line-bottom: oklch(0.660 0.000 0);
       --kb-web-ttype01-th: oklch(0.973 0.001 106);
+      /* 문서는 퀵메뉴 상자의 반경만 적고 테두리 색 값이 없다. 이름표의 (가정) 자리 */
+      --kb-web-nav-aside-box-line: oklch(0.874 0.006 75);
 
       /* 모바일 웹 관측(미발행) */
       --kb-mweb-btn01: oklch(0.901 0.186 98);
@@ -288,7 +290,7 @@
 
     .w-body {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 84px;
+      grid-template-columns: minmax(0, 1fr) 90px;
       gap: 0;
     }
     .w-main { min-width: 0; }
@@ -381,12 +383,14 @@
 
     .w-aside {
       min-width: 0;
+      align-self: start;
       display: flex;
       flex-direction: column;
       align-items: stretch;
       gap: 1px;
-      padding: 16px 0 16px;
-      border-left: 1px solid var(--kb-web-card-line);
+      margin: 16px 6px 29px 0;
+      border: 1px solid var(--kb-web-nav-aside-box-line);
+      border-radius: 4px;
       background: var(--kb-web-white);
     }
     .w-aside-head {
@@ -398,6 +402,7 @@
       border-radius: 3px 3px 0 0;
       color: var(--kb-web-white);
     }
+    .w-aside > .w-aside-head { margin: -1px -1px 0; }
     .w-aside-cell {
       display: flex;
       flex-direction: column;
@@ -411,7 +416,7 @@
       text-align: center;
       overflow-wrap: anywhere;
     }
-    .w-aside-close { display: flex; justify-content: center; padding-top: 12px; }
+    .w-aside-close { display: flex; justify-content: center; margin: 12px 0 -13px; }
     .w-ui-btn {
       display: inline-flex;
       align-items: center;
@@ -995,10 +1000,11 @@
       .w-aside {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
-        border-left: 0;
-        border-top: 1px solid var(--kb-web-card-line);
+        margin: 12px;
         padding: 12px;
       }
+      .w-aside > .w-aside-head { margin: 0; }
+      .w-aside-close { margin: 0; align-items: center; }
       .w-wrap-menu { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .w-quick { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .w-quick > div + div { border-left: 0; }
@@ -1069,7 +1075,7 @@
 
     <div class="mock">
       <p class="catalog-dummy">더미 데이터: 상품 카드의 상품명과 금리, 예금과 대출 꼬리표, 이달의 추천 표시, 2단 메뉴 항목은 레이아웃 시연용이며 KB국민은행의 실제 상품, 금리, 추천 순위가 아닙니다.</p>
-      <p class="cell-k">개인뱅킹 첫 화면 <span class="assume">'개인' 글자 크기 (가정), 퀵메뉴 칸 구분 (가정), 유틸 현재 칸 글자색 (가정), 머리 아래 선 (가정), 2단 메뉴 띠 아래 1px 선 (가정), 오른쪽 퀵메뉴 첫 칸과 둥근 단추 아이콘 색 (가정)</span> <span class="hint">메뉴 칸에 마우스를 올려 보세요</span></p>
+      <p class="cell-k">개인뱅킹 첫 화면 <span class="assume">'개인' 글자 크기 (가정), 퀵메뉴 칸 구분 (가정), 유틸 현재 칸 글자색 (가정), 머리 아래 선 (가정), 2단 메뉴 띠 아래 1px 선 (가정), 오른쪽 퀵메뉴 첫 칸과 둥근 단추 아이콘 색 (가정), 오른쪽 퀵메뉴 상자 테두리 색 (가정)</span> <span class="hint">메뉴 칸에 마우스를 올려 보세요</span></p>
       <div class="w-screen">
         <div class="w-head">
           <div class="w-head-top">
@@ -1416,7 +1422,7 @@
     <div class="app-wrap">
       <div class="app-col">
         <p class="catalog-dummy">더미 데이터: 통장 이름, 계좌번호, 잔액, 총 자산, 고객 호칭, 투자 분류는 레이아웃 시연용이며 실제 계좌나 상품이 아닙니다.</p>
-        <p class="cell-k">앱 홈 <span class="assume">app-account-card, 하단 탭 선택 표시 (가정), 이체 버튼 글자색 (가정), 안내 버튼 글자색과 반경 (가정), 칩 알약 반경 (가정)</span></p>
+        <p class="cell-k">앱 홈 <span class="assume">app-account-card, 이체 버튼 글자색 (가정), 안내 버튼 글자색과 반경 (가정), 칩 알약 반경 (가정)</span></p>
         <div class="a-frame">
           <div class="a-screen">
             <div class="a-head">

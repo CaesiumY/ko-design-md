@@ -202,6 +202,7 @@ components:
   web-nav-aside:
     backgroundColor: "{colors.web-nav-aside-cell}"
     textColor: "{colors.web-nav-aside-link}"
+    rounded: 4px
   web-ui-btn:
     backgroundColor: "{colors.web-ui-btn}"
     size: 25px
@@ -512,9 +513,10 @@ height: 35px, padding: 8px 9px 7px
 
 ### web-nav-aside
 
-오른쪽에 떠 있는 세로 퀵메뉴다. 칸 바탕 `{colors.web-nav-aside-cell}`, 첫 칸 `{colors.web-nav-aside-head}`(위 모서리 3px), 링크 `{colors.web-nav-aside-link}` 이고 항목은 장바구니, 최근본상품, MY MENU, 고객센터, 지점찾기, 글자 크기, TOP 이다 [src:19].
+오른쪽에 떠 있는 세로 퀵메뉴다. 바깥 상자(`#uiNavAside`) 반경 4px, 칸 바탕 `{colors.web-nav-aside-cell}`, 첫 칸 `{colors.web-nav-aside-head}`(위 모서리 3px), 링크 `{colors.web-nav-aside-link}` 이고 항목은 장바구니, 최근본상품, MY MENU, 고객센터, 지점찾기, 글자 크기, TOP 이다 [src:19].
 
 ```text
+radius: 4px
 cell: {colors.web-nav-aside-cell}
 head: {colors.web-nav-aside-head}, radius 3px 3px 0 0
 link: {colors.web-nav-aside-link}
