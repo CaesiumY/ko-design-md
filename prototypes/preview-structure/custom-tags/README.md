@@ -54,6 +54,7 @@ pnpm exec tsx prototypes/preview-structure/custom-tags/hurdles.ts --base <바탕
 ## 3. 기존 검사를 순서대로 돌린 결과
 
 티켓은 처음 막히는 곳에서 멈추라고 했다. **세 검사 가운데 막은 것이 없었다.** 아래가 그 실행이다.
+막힘이 없는 것은 그리는 코드를 공용 런타임 `iframe.js` 안에 둔 결과다. 그리는 코드를 별도 파일로 실으면 1번 검사(프리뷰 검사기)의 `foreign-script` 에서 처음 막힌다. 그 메시지는 4.1에 있다.
 
 | 순서 | 검사 | 명령 | 결과 |
 | --- | --- | --- | --- |
@@ -65,6 +66,9 @@ pnpm exec tsx prototypes/preview-structure/custom-tags/hurdles.ts --base <바탕
 
 - **검사기의 통과는 "보지 못했다"에 가깝다.** 검사기는 스크립트를 돌리지 않고 파일의 글자를 읽는다. 바뀐 틀(구역 제목, 칸 이름표, 다크 이름표)은 파일에 글로 없으니 검사 대상에서 빠졌다. 지금 검사기에는 `.pv-*` 틀을 보는 규칙이 없어서, 빠졌어도 결과 줄이 같다. 아래 걸림돌 2와 4가 빠진 것을 재 보인다.
 - **대비 관찰과 화면 비교의 통과는 "봤고 같다"이다.** 둘은 Chromium 에서 스크립트가 그린 뒤의 문서를 잰다. 그리는 코드가 그림자 DOM 을 쓰지 않고 표준 마크업을 문서에 그대로 그리기 때문이다.
+
+티켓 순서 밖의 도구 하나도 돌렸다. 공통 바탕의 `pnpm exec tsx prototypes/preview-structure/base-notes/check-base.ts chzzk` 는 exit 1, `chzzk: FAIL no main.pv-page` 이다.
+이 도구의 구조 검사는 스크립트를 돌리지 않고 파일의 마크업을 따로 파싱해 읽는다(머리 주석). 같은 실행에서 브라우저로 잰 구역 수(`zones screens 3, buttons 1, inputs 3, navigation 2, content 4, feedback 1`)는 바탕과 같다. 본 순서의 판정에는 넣지 않는다.
 
 완료 조건 1(브라우저에서 그려진다)의 증거는 화면 비교의 `SAME` 과, 스크립트를 켠 Chromium 에서 센 수다. 구역 6, 칸 14, 이름표 14, 높이 6720px 로 바탕과 같다(`hurdles.ts --only 5` 의 첫 줄).
 
@@ -83,12 +87,13 @@ pnpm exec tsx prototypes/preview-structure/custom-tags/hurdles.ts --base <바탕
 
 ### 4.2 속성에 든 이름표를 산문 검사가 읽지 못함: 그렇다
 
-- 쪽: 원본 글자(검사기의 `visibleText`, 그리고 원본 HTML 을 읽는 산문 감사).
+- 쪽: 원본 글자(검사기의 `visibleText`).
 - 같은 문구 `All rights reserved` 를 심어 비교했다.
   - 칸 이름표 속성(`label="badge, All rights reserved"`)에 심은 사본: exit 0, `PASSED`.
   - 요소의 글(`<span class="spec">`)로 심은 사본: exit 1, `BLOCK [rights-reserved-claim] … contains "All rights reserved"` (막힘 2).
 - 검사기의 보이는 글(`visibleText`, 태그를 속성째 지운다)에 바탕의 이름표, 다크 이름표, 구역 제목 24개가 몇 개 남는지 셌다. 바탕 24개, 태그 구조 3개다. 남은 셋("화면", "버튼", "입력")은 이름표가 아니라 다른 글에 같은 낱말이 있어서 걸린 것이다. 사실상 0개다.
-- 같은 이유로 `type-scale-showcase`(이름표에 적힌 타입 토큰 이름을 센다)와 사람이나 에이전트가 원본을 읽는 프리뷰 산문 감사도 이름표를 글로 받지 못한다. 산문 감사는 속성 값을 읽으면 되지만, 검사기의 규칙은 바꿔야 한다.
+- `type-scale-showcase`(이름표에 적힌 타입 토큰 이름을 센다)도 같은 `visibleText` 를 읽으므로 이름표를 세지 않는다. 코드에서 읽은 것이고 따로 재지 않았다.
+- 프리뷰 산문 감사(`.claude/skills/preview-prose-audit/`)는 글을 뽑는 스크립트가 없고 에이전트가 원본을 읽는 절차뿐이다(`SKILL.md` 하나). 감사가 속성 안의 이름표를 읽는지는 확인하지 않았다.
 - 지키려는 것: 프리뷰에 실리는 모든 글이 금지 문구와 캡션 규칙의 검사를 받는 것.
 
 ### 4.3 대비 측정이 태그 안쪽을 보지 못함: 본 구조에서는 그렇지 않다. 그림자 DOM 으로 그리면 그렇다
@@ -114,7 +119,8 @@ pnpm exec tsx prototypes/preview-structure/custom-tags/hurdles.ts --base <바탕
 - 바탕, 스크립트 끔: 구역 6, 칸 14, 이름표 14, 높이 6720px. 스크립트를 켠 것과 같다.
 - 태그 구조, 스크립트 끔: 구역 0, 칸 0, 이름표 0, 높이 5296px. 브라우저는 모르는 태그를 인라인 요소로 두고, 틀 스타일은 `.pv-*` class 에 걸리므로 하나도 적용되지 않는다.
 - 바탕에 보이고 태그 구조에 안 보이는 줄은 20개다. 구역 제목 6과 칸 이름표 14 전부다. 시연 안의 글과 더미 데이터 표기는 남는다.
-- `iframe.js` 머리 주석의 약속("With no script at all the file is the light theme")이 이 구조에서는 성립하지 않는다. 사이트 밖으로 복사된 파일(ADR 0006)도 런타임 없이는 틀이 없다.
+- `iframe.js` 머리 주석의 약속("With no script at all the file is the light theme")이 이 구조에서는 성립하지 않는다.
+  검사기의 면책 띠 규칙도 같은 전제를 둔다. 런타임은 단독으로 열거나 재배포한 사본에 면책 띠를 넣을 수 없으니 정적 마크업으로 두라고 한다(`missing-disclaimer-banner` 메시지, "standalone or redistributed copy"). 그런 사본에서 이 구조는 틀을 잃는다.
 
 ## 5. 이 구조로 같은 일을 하려면 무엇을 바꿔야 하나
 
@@ -125,4 +131,4 @@ pnpm exec tsx prototypes/preview-structure/custom-tags/hurdles.ts --base <바탕
 | 이름표와 구역 제목이 검사기의 글 검사 밖(4.2) | 검사기가 글 검사 전에 원본을 jsdom 에서 `drawTags()` 로 펼친다. `preview-halves.ts` 의 반쪽 짜기도 펼친 뒤에 해야 한다 | 이름표를 속성이 아니라 자식 요소로 쓴다. 그러면 태그가 하는 일은 class 와 감싸개를 다는 것뿐이다 |
 | 다크 이름표가 검사기의 다크 반쪽 밖(4.4) | 위와 같다. 펼친 뒤에 다크 반쪽을 짜야 `dark-swap-anchor` 가 다시 본다 | 다크 이름표를 칸 안의 진짜 `<p class="pv-label">` 와 그 뒤 `<template>` 으로 쓴다(바탕과 같은 꼴) |
 | 인라인 스크립트를 검사기가 잡지 않음(4.1) | `foreign-script` 가 `src` 없는 `<script>` 도 본다 | (구조와 무관) |
-| 스크립트 없이 틀이 없음(4.5) | 성질 자체를 버리고 `iframe.js` 머리 주석과 ADR 0002, 0006 을 고친다 | 빌드 단계에서 태그를 펼친 산출물을 서빙한다. 그러면 원본과 산출물이 갈라진다 |
+| 스크립트 없이 틀이 없음(4.5) | 성질 자체를 버리고 `iframe.js` 머리 주석을 고친다 | 빌드 단계에서 태그를 펼친 산출물을 서빙한다. 그러면 원본과 산출물이 갈라진다 |
