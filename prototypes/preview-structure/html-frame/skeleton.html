@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{브랜드} preview</title>
+<link rel="stylesheet" href="/preview/_runtime/tokens.css">
+<link rel="stylesheet" href="/preview/_runtime/frame.css">
+<script src="/preview/_runtime/iframe.js" defer></script>
+<style>
+  :root {
+    /* 브랜드 토큰. 값은 services/{slug}.md 의 OKLCH 그대로 */
+    --font: "Pretendard", system-ui, sans-serif;
+    --ink: oklch(0.2 0 0);
+    --ink-muted: oklch(0.5 0 0);
+    --canvas: oklch(1 0 0);
+    --surface: oklch(1 0 0);
+    --line: oklch(0.9 0 0);
+    --radius-card: 12px;
+
+    /* 틀이 읽는 변수. 일곱은 반드시 var(--…) 참조로 준다 */
+    --pv-font: var(--font);
+    --pv-ink: var(--ink);
+    --pv-ink-muted: var(--ink-muted);
+    --pv-canvas: var(--canvas);
+    --pv-surface: var(--surface);
+    --pv-line: var(--line);
+    --pv-radius: var(--radius-card);
+    /* (선택) --pv-title-weight: 700; --pv-tracking: 0; */
+  }
+  body { margin: 0; background: var(--canvas); color: var(--ink); font-family: var(--font); }
+  .hero-wrap { padding: 48px var(--pv-gutter); }
+  .hero-logo { height: 40px; width: auto; }
+  /* 브랜드 컴포넌트 스타일은 여기에. .pv-* 선택자는 쓰지 않는다 */
+</style>
+<style>
+  [data-theme="dark"] {
+    /* 다크에서 달라지는 토큰만 다시 정의한다 */
+    --ink: oklch(0.95 0 0);
+    --canvas: oklch(0.18 0 0);
+    --surface: oklch(0.18 0 0);
+  }
+</style>
+</head>
+<body>
+<div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
+<main class="pv-page">
+
+  <header class="pv-hero" data-pv-zone="hero">
+    <div class="hero-wrap">
+      <img class="hero-logo" src="/logos/{slug}.svg" alt="{브랜드}">
+      <h1>{브랜드}</h1>
+    </div>
+  </header>
+
+  <section class="pv-zone" data-pv-zone="screens" aria-labelledby="pv-screens">
+    <h2 class="pv-zone-title" id="pv-screens">화면</h2>
+    <div class="pv-cells">
+      <div class="pv-cell pv-cell--wide" data-pv-cell="screen-home">
+        <p class="pv-label">홈, 모바일</p>
+        <div class="pv-stage pv-stage--stack">
+          <div class="pv-screen"><!-- 화면 재현. 안쪽은 브랜드 마크업만 --></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pv-zone" data-pv-zone="buttons" aria-labelledby="pv-buttons">
+    <h2 class="pv-zone-title" id="pv-buttons">버튼</h2>
+    <div class="pv-cells">
+      <div class="pv-cell" data-pv-cell="button-primary">
+        <p class="pv-label">button-primary</p>
+        <div class="pv-stage"><!-- 시연 --></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>
