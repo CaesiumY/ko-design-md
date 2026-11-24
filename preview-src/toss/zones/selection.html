@@ -1,0 +1,79 @@
+<pv-cell name="switch-checkbox" stack>
+  <pv-label>SWITCH · CHECKBOX (resting / on)</pv-label>
+  <div class="ctrl-stack">
+    <label class="ctrl-line">
+      <input class="ctrl-input" type="checkbox" role="switch" checked="">
+      <span class="tds-switch" aria-hidden="true"></span>
+      <span>잔액 자동 채우기</span>
+    </label>
+    <label class="ctrl-line">
+      <input class="ctrl-input" type="checkbox" role="switch">
+      <span class="tds-switch" aria-hidden="true"></span>
+      <span>매월 정기 송금 알림</span>
+    </label>
+    <label class="ctrl-line">
+      <input class="ctrl-input" type="checkbox" checked="">
+      <span class="tds-check" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </span>
+      <span>토스 서비스 이용약관에 동의해요</span>
+    </label>
+    <label class="ctrl-line">
+      <input class="ctrl-input" type="checkbox">
+      <span class="tds-check" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </span>
+      <span>마케팅 정보 수신에 동의해요 (선택)</span>
+    </label>
+  </div>
+</pv-cell>
+<pv-cell name="segmented-control" stack>
+  <pv-label>Segmented Control, pill 3-segments · underline tab, 치수 (가정)</pv-label>
+  <div class="demo-block">
+    <div class="seg" role="radiogroup" data-pv-toggle="aria-checked">
+      <button class="it" type="button" role="radio" aria-checked="true" data-pv-option="">전체</button>
+      <button class="it" type="button" role="radio" aria-checked="false" data-pv-option="">입금</button>
+      <button class="it" type="button" role="radio" aria-checked="false" data-pv-option="">출금</button>
+    </div>
+    <div class="seg-line" role="radiogroup" data-pv-toggle="aria-checked">
+      <button class="it" type="button" role="radio" aria-checked="true" data-pv-option="">예금</button>
+      <button class="it" type="button" role="radio" aria-checked="false" data-pv-option="">적금</button>
+      <button class="it" type="button" role="radio" aria-checked="false" data-pv-option="">투자</button>
+      <button class="it" type="button" role="radio" aria-checked="false" data-pv-option="">대출</button>
+    </div>
+  </div>
+</pv-cell>
+<pv-cell name="chip" stack>
+  <pv-label>CHIP · resting / active / brand · removable</pv-label>
+  <div class="chip-row">
+    <span class="chip">전체</span>
+    <span class="chip active">입금</span>
+    <span class="chip">출금</span>
+    <span class="chip">자동이체</span>
+    <span class="chip brand">+ 카테고리 추가</span>
+    <span class="chip active">엄마 <span class="x">×</span></span>
+  </div>
+</pv-cell>
+<pv-cell name="filter-chips" stack>
+  <pv-label>Filter Chips — scrollable row, multi-select · grey-900 active · S 28 / M 34 / L 42, 치수 (가정)</pv-label>
+  <div class="demo-block">
+    <div class="chip-row" style="overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px;">
+      <span class="chip active">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path d="m5 12 5 5L20 7"></path></svg>
+        전체
+      </span>
+      <span class="chip">결제</span>
+      <span class="chip">송금</span>
+      <span class="chip">이자</span>
+      <span class="chip">투자</span>
+      <span class="chip">자동이체</span>
+      <span class="chip">기타</span>
+    </div>
+    <p class="comp-caption" style="margin-top: 16px;">size · S 28 / M 34 / L 42</p>
+    <div class="chip-row">
+      <span class="chip" style="height: 28px; padding: 0 10px; font-size: 12px;">S</span>
+      <span class="chip">M · 34</span>
+      <span class="chip" style="height: 42px; padding: 0 16px; font-size: 15px;">L · 42</span>
+    </div>
+  </div>
+</pv-cell>

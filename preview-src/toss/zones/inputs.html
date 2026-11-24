@@ -1,0 +1,84 @@
+<pv-cell name="text-field" stack>
+  <pv-label>TEXT FIELD — idle / focused / error</pv-label>
+  <div class="field-stack">
+    <div class="field">
+      <label for="t-1">받는 분</label>
+      <input id="t-1" class="input" type="text" placeholder="이름 또는 계좌번호">
+      <p class="helper">최근 송금한 사람부터 자동 추천돼요.</p>
+    </div>
+    <div class="field">
+      <label for="t-2">금액</label>
+      <input id="t-2" class="input focused num-tab" type="text" value="120,000원">
+      <p class="helper">잔액 1,234,567원 중 사용</p>
+    </div>
+    <div class="field">
+      <label for="t-3">받는 분 메모</label>
+      <input id="t-3" class="input error" type="text" value="20자 초과 입력했어요">
+      <p class="helper error">20자까지 입력할 수 있어요.</p>
+    </div>
+  </div>
+</pv-cell>
+<pv-cell name="search-field" stack>
+  <pv-label>Search Field, <span data-theme-text="">grey-100 resting → focus white + 1.5px blue</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">grey-100 resting → focus near-black + 1.5px blue</span></template>, 치수 (가정)</pv-label>
+  <div style="display:flex; flex-direction:column; gap:12px;">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      <input placeholder="검색어를 입력해주세요">
+    </div>
+    <div class="search-field focus">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      <input value="토스뱅크">
+      <div class="clear-x">×</div>
+    </div>
+  </div>
+</pv-cell>
+<pv-cell name="slider" stack>
+  <pv-label>Slider, 8px track · 28px thumb · tabular value, 치수 (가정)</pv-label>
+  <div class="demo-block">
+    <div class="slider-row">
+      <div class="slider-head">
+        <div class="slider-lab">월 저축 금액</div>
+        <div class="slider-val">300,000원</div>
+      </div>
+      <div class="slider-track">
+        <div class="slider-fill" style="width: 35%;"></div>
+        <div class="slider-thumb" style="left: 35%;"></div>
+      </div>
+      <div class="slider-ticks"><span>0</span><span>500K</span><span>1M</span></div>
+    </div>
+    <div class="slider-row">
+      <div class="slider-head">
+        <div class="slider-lab">기간</div>
+        <div class="slider-val">12개월</div>
+      </div>
+      <div class="slider-track">
+        <div class="slider-fill" style="width: 67%;"></div>
+        <div class="slider-thumb" style="left: 67%;"></div>
+      </div>
+    </div>
+  </div>
+</pv-cell>
+<pv-cell name="numeric-spinner" stack>
+  <pv-label>NUMERIC-SPINNER</pv-label>
+  <div class="num-spin">
+    <button type="button" aria-label="감소">−</button>
+    <span class="nv num-tab">2</span>
+    <button type="button" aria-label="증가">+</button>
+  </div>
+</pv-cell>
+<pv-cell name="stepper" stack>
+  <pv-label>STEPPER</pv-label>
+  <div class="v-step">
+    <button type="button" aria-label="증가">▲</button>
+    <span class="sv num-tab">3</span>
+    <button type="button" aria-label="감소">▼</button>
+  </div>
+</pv-cell>
+<pv-cell name="menu" stack>
+  <pv-label>MENU</pv-label>
+  <div class="menu-pop">
+    <div class="mi active">최신순 <span class="ck">✓</span></div>
+    <div class="mi">가나다순</div>
+    <div class="mi">금액순</div>
+  </div>
+</pv-cell>

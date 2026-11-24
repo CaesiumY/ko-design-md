@@ -1,0 +1,80 @@
+[data-theme="dark"] {
+    /* === TDS base palette — DARK.
+       이름이 TDS step과 대응하는 값은 @toss/tds-colors 의 colors.dark.css 발행값이다
+       (services/toss.md 의 dark-* 토큰). TDS는 다크를 같은 이름으로 발행해 grey900 이
+       흰색, grey50 이 가장 어두운 회색이다.
+       번들 고유 step(blue-600/700, grey-150, yellow-600, orange-*, green-500)은 발행된
+       다크 짝이 없어 이 프리뷰가 라이트 값에서 파생한 값이다. === */
+
+    --tds-blue-500: oklch(0.630 0.192 258);   /* TDS dark blue500 */
+    --tds-blue-600: oklch(0.620 0.168 256);   /* derived — 번들 고유 step */
+    --tds-blue-700: oklch(0.546 0.170 258);   /* derived — 번들 고유 step */
+    --tds-blue-50:  oklch(0.300 0.062 267);   /* TDS dark blue50 */
+
+    --tds-grey-900: oklch(1.000 0.000 0);     /* TDS dark grey900 — primary text on dark */
+    --tds-grey-800: oklch(0.919 0.001 286);
+    --tds-grey-700: oklch(0.818 0.004 286);   /* secondary text on dark */
+    --tds-grey-600: oklch(0.701 0.009 286);
+    --tds-grey-500: oklch(0.596 0.014 286);
+    --tds-grey-400: oklch(0.500 0.017 286);   /* disabled / strong line */
+    --tds-grey-300: oklch(0.425 0.020 286);
+    --tds-grey-200: oklch(0.361 0.019 285);   /* default divider on dark */
+    --tds-grey-150: oklch(0.329 0.018 285);   /* derived — TDS에 없는 step, grey-100·200 중간 */
+    --tds-grey-100: oklch(0.297 0.016 285);   /* secondary surface */
+    --tds-grey-50:  oklch(0.247 0.013 285);   /* page bg */
+    --tds-near-black: oklch(0.118 0.020 257); /* canvas card bg */
+
+    --tds-yellow-500: oklch(0.816 0.158 74);  /* TDS dark yellow500 */
+    --tds-orange-500: oklch(0.780 0.176 56);  /* derived — 번들 고유 step */
+    --tds-red-500:    oklch(0.639 0.209 21);  /* TDS dark red500 */
+    --tds-green-500:  oklch(0.620 0.143 154); /* derived — 번들 고유 step */
+
+    /* Semantic alias — dark */
+
+    --tds-fg-tertiary:       oklch(1 0 0 / 0.56);
+    --tds-fg-quaternary:     oklch(1 0 0 / 0.28);
+    --tds-fg-alt:            var(--tds-near-black);
+
+    --tds-border-subtle:     oklch(1 0 0 / 0.08);
+
+    --tds-overlay-scrim:     oklch(0 0 0 / 0.64);
+    --tds-overlay-press:     oklch(1 0 0 / 0.16);
+
+    --tds-shadow-1: 0 1px 2px oklch(0.155 0.060 261 / 0.30), 0 1px 1px oklch(0.155 0.060 261 / 0.24);
+    --tds-shadow-2: 0 4px 12px oklch(0.155 0.060 261 / 0.36), 0 1px 2px oklch(0.155 0.060 261 / 0.24);
+    --tds-shadow-3: 0 12px 32px oklch(0.155 0.060 261 / 0.48), 0 2px 6px oklch(0.155 0.060 261 / 0.30);
+    --tds-shadow-toast: 0 8px 24px oklch(0.155 0.060 261 / 0.56);
+    --tds-shadow-sheet: 0 -2px 12px oklch(0.155 0.060 261 / 0.36);
+
+    /* Mapped onto runtime tokens */
+    --card: var(--tds-grey-100);
+    --primary-foreground: var(--tds-near-black);
+
+    /* 라이트 :root 의 같은 이름을 다크 값으로 다시 정의한다 */
+    --tds-bg-canvas: var(--tds-near-black);
+    --tds-fg-on-fill: var(--tds-near-black);
+    --tds-bg-chip-x: oklch(1 0 0 / 0.12);
+    --tds-bg-chip-x-active: oklch(0 0 0 / 0.22);
+    --tds-bg-badge-red: oklch(0.220 0.062 18);
+    --tds-bg-badge-green: oklch(0.240 0.056 154);
+    --tds-fg-placeholder: oklch(1 0 0 / 0.50);
+    --tds-shadow-focus-halo: 0 0 0 4px oklch(0.630 0.192 258 / 0.20);
+    --tds-shadow-knob: 0 1px 2px oklch(0 0 0 / 0.40);
+    --tds-bg-check: var(--tds-grey-100);
+    --tds-bg-fill-weak: var(--tds-grey-200);
+    --tds-bg-inverse: var(--tds-grey-200);
+    --tds-fg-inverse: var(--tds-grey-900);
+    --tds-bg-selected: var(--tds-grey-200);
+    --tds-shadow-selected: 0 1px 3px oklch(0 0 0 / 0.40);
+    --tds-fg-on-grey: var(--tds-white);
+    --tds-shadow-thumb: 0 2px 6px oklch(0 0 0 / 0.50), 0 0 0 1px oklch(0 0 0 / 0.30);
+    --tds-bg-raised: var(--tds-grey-150);
+    --tds-shadow-sheet-lift: 0 -8px 28px oklch(0 0 0 / 0.56);
+    --tds-bg-stepper: oklch(0.230 0.012 285);
+    --tds-bg-inset: var(--tds-grey-100);
+    --tds-line-row: var(--tds-grey-200);
+    --tds-bg-canvas-clear: oklch(0.118 0.020 257 / 0);
+    --tds-line-key: var(--tds-grey-150);
+    --tds-shadow-done: 0 8px 24px oklch(0.630 0.192 258 / 0.40);
+  }
+[data-theme="dark"] .dialog { border: 1px solid var(--tds-grey-200); }

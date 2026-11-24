@@ -1,0 +1,52 @@
+<pv-cell name="search-field" stack>
+  <pv-label>search-field</pv-label>
+  <div class="in-stack">
+    <div class="state full"><span class="state-l">기본</span><div class="field"><span class="field-t">채널, 라이브, 동영상 검색</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg></div></div>
+    <div class="state full"><span class="state-l">포커스, 테두리와 캐럿</span><div class="field is-focus"><span class="field-t">검색어</span><span class="caret" aria-hidden="true"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg></div></div>
+    <div class="state full"><span class="state-l">직접 입력</span><label class="field fld-live"><input type="text" placeholder="채널, 라이브, 동영상 검색" aria-label="검색 시연"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg></label></div>
+  </div>
+  <div class="specs">
+    <span class="spec">높이 38, 폭 400, radius 19, 15 / 19 / 400 시스템 서체</span>
+    <span class="spec">테두리 border-weak, 포커스 brand-strong, 캐럿 brand-stronger</span>
+    <template data-theme-variant="dark"><span class="spec">테두리 dark-border-weak, 포커스 dark-brand-base, 캐럿 dark-brand-stronger</span></template>
+    <span class="hint">검색창을 눌러 입력해 보세요</span>
+  </div>
+</pv-cell>
+
+<pv-cell name="chat-input" stack>
+  <pv-label>chat-input, 라이트 색, 전송 버튼, 헤더 높이 (가정)</pv-label>
+  <template data-theme-variant="dark"><pv-label>chat-input, 전송 버튼과 헤더 높이 (가정)</pv-label></template>
+  <p class="catalog-dummy">채팅 닉네임과 메시지는 더미 데이터입니다.</p>
+  <div class="chat">
+    <div class="chat-h">채팅</div>
+    <div class="chat-b">
+      <div class="msg"><b>시청자1</b>안녕하세요</div>
+      <div class="msg"><b>시청자2</b>오늘 방송 기대했어요</div>
+      <div class="msg"><b>시청자3</b>ㅋㅋㅋㅋ</div>
+    </div>
+    <div class="chat-in"><span>채팅을 입력해주세요</span><div class="chat-send">전송</div></div>
+  </div>
+  <div class="in-stack">
+    <div class="state full"><span class="state-l">포커스, 오버레이 (가정)</span><div class="chat-in solo is-focus"><span>채팅을 입력해주세요</span><div class="chat-send">전송</div></div></div>
+    <div class="state full"><span class="state-l">활성, 2px 테두리 (색 가정)</span><div class="chat-in solo is-act"><span>반가워요</span><div class="chat-send">전송</div></div></div>
+    <div class="state full"><span class="state-l">직접 입력</span><div class="chat-in solo chat-live"><input type="text" placeholder="채팅을 입력해주세요" aria-label="채팅 입력 시연"><div class="chat-send">전송</div></div></div>
+  </div>
+  <div class="specs">
+    <span class="spec">입력 42, radius 8, 패딩 6</span>
+    <span class="spec">메시지 14 / 20 / 400, 행 28</span>
+    <span class="spec">헤더 Nemony 15 / 18</span>
+    <span class="hint">입력창을 눌러 입력해 보세요</span>
+  </div>
+</pv-cell>
+
+<pv-cell name="popover-sort-menu" stack>
+  <pv-label>팝오버, 정렬 메뉴 (치수, 바탕, 선택 항목 가정)</pv-label>
+  <div class="pop-wrap">
+    <span class="btn btn-out">인기순</span>
+    <div class="pop"><div class="pop-i is-on">인기순</div><div class="pop-i">최신순</div><div class="pop-i">시청자 많은 순</div></div>
+  </div>
+  <div class="specs">
+    <span class="spec">그림자 없음, 테두리 1px border-weak</span>
+    <template data-theme-variant="dark"><span class="spec">테두리 없음 (가정), 그림자 shadow-popover 3겹</span></template>
+  </div>
+</pv-cell>

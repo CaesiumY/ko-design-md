@@ -1,0 +1,205 @@
+<pv-cell name="screen-send-home">
+  <pv-label>01. 홈 · 송금하기</pv-label>
+  <pv-screen>
+    <div class="phone">
+      <div class="top-app-bar">
+        <div class="title" style="font-size: 22px; font-weight: 800; color: var(--tds-grey-900); padding-left: 4px; letter-spacing: -0.020em;">toss</div>
+        <div class="ic-btn">⌕</div>
+        <div class="ic-btn" style="position: relative;">
+          🔔
+          <span style="position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 999px; background: var(--tds-red-500); border: 1.5px solid #fff;"></span>
+        </div><template data-theme-variant="dark" data-theme-op="swap"><div class="ic-btn" style="position: relative;">
+          🔔
+          <span style="position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 999px; background: var(--tds-red-500); border: 1.5px solid var(--tds-near-black);"></span>
+        </div></template>
+      </div>
+      <div class="content">
+        <div class="balance-card">
+          <div class="balance-card-head">
+            <span class="lbl">토스뱅크 통장</span>
+            <span style="color: var(--tds-grey-400); font-size: 14px;">›</span>
+          </div>
+          <p class="balance num-tab">1,284,520<span class="unit">원</span></p>
+          <div class="home-quick-btns">
+            <button class="qb">채우기</button>
+            <button class="qb primary">보내기</button>
+          </div>
+        </div>
+
+        <p class="section-h">최근 송금</p>
+        <div class="list-card">
+          <div class="lrow">
+            <div class="av">😊</div>
+            <div class="body"><div class="ttl">엄마</div><div class="sub">토스뱅크 · 1234</div></div>
+            <div class="right"><div class="arrow">›</div></div>
+          </div>
+          <div class="lrow">
+            <div class="av av-blue">🧑‍💼</div>
+            <div class="body"><div class="ttl">김민준</div><div class="sub">국민 · 5678</div></div>
+            <div class="right"><div class="arrow">›</div></div>
+          </div>
+          <div class="lrow">
+            <div class="av av-warm">🎂</div>
+            <div class="body"><div class="ttl">이서연</div><div class="sub">신한 · 9012</div></div>
+            <div class="right"><div class="arrow">›</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating Tab-Bar (홈 · 혜택 · 주식 · 전체) -->
+      <nav class="tab-bar" aria-label="하단 탭">
+        <span class="tab active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 12 4l8 7"></path><path d="M6 10v9h12v-9"></path></svg>
+          홈
+        </span>
+        <span class="tab">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v8H4v-8"></path><path d="M2 8h20v4H2z"></path><path d="M12 8v12"></path><path d="M12 8S10 4 7.5 4 5 6 5 6s.5 2 3 2 4 0 4 0Z"></path></svg>
+          혜택
+        </span>
+        <span class="tab">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18 9 11l4 4 7-9"></path></svg>
+          주식
+        </span>
+        <span class="tab">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path></svg>
+          전체
+        </span>
+      </nav>
+
+      <div class="bottom-cta-wrap">
+        <div class="protection"></div>
+        <button class="bottom-cta" type="button">송금하기</button>
+      </div>
+    </div>
+  </pv-screen>
+</pv-cell>
+<pv-cell name="screen-send-select">
+  <pv-label>02. 받는 사람 선택</pv-label>
+  <pv-screen>
+    <div class="phone">
+      <div class="top-app-bar">
+        <div class="ic-btn">←</div>
+        <div class="title">누구에게 보낼까요?</div>
+        <div class="ic-btn right">×</div>
+      </div>
+      <div class="content" style="padding: 8px 16px 16px;">
+        <div class="search-field">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"></circle><path d="m20 20-3.5-3.5"></path></svg>
+          <input placeholder="이름, 전화번호 또는 계좌번호">
+        </div>
+        <p style="font-size: 13px; font-weight: 600; color: var(--tds-grey-600); margin: 18px 8px 6px;">자주 쓰는 친구</p>
+        <div class="lrow" style="padding: 10px 8px;">
+          <div class="av">😊</div>
+          <div class="body"><div class="ttl">엄마</div><div class="sub">토스뱅크 · 1234</div></div>
+          <div class="right"><div class="arrow">›</div></div>
+        </div>
+        <div class="lrow" style="padding: 10px 8px;">
+          <div class="av av-blue">🧑‍💼</div>
+          <div class="body"><div class="ttl">김민준</div><div class="sub">국민 · 5678</div></div>
+          <div class="right"><div class="arrow">›</div></div>
+        </div>
+        <div class="lrow" style="padding: 10px 8px;">
+          <div class="av av-warm">🎂</div>
+          <div class="body"><div class="ttl">이서연</div><div class="sub">신한 · 9012</div></div>
+          <div class="right"><div class="arrow">›</div></div>
+        </div>
+        <div class="lrow" style="padding: 10px 8px;">
+          <div class="av av-grey">🐶</div>
+          <div class="body"><div class="ttl">박지호</div><div class="sub">카카오뱅크 · 3456</div></div>
+          <div class="right"><div class="arrow">›</div></div>
+        </div>
+      </div>
+    </div>
+  </pv-screen>
+</pv-cell>
+<pv-cell name="screen-send-amount">
+  <pv-label>03. 금액 입력</pv-label>
+  <pv-screen>
+    <div class="phone">
+      <div class="top-app-bar">
+        <div class="ic-btn">←</div>
+        <div class="title" style="opacity: 0;">.</div>
+        <div class="ic-btn right">×</div>
+      </div>
+      <div class="content" style="padding: 4px 20px 8px;">
+        <p class="amt-screen-eyebrow">엄마 · 토스뱅크 1234</p>
+        <p class="amt-screen-value num-tab">120,000<span class="unit">원</span></p>
+        <p class="amt-screen-balance num-tab">출금 가능 1,284,520원</p>
+        <div class="amt-quick-chips">
+          <button class="qc">+1만</button>
+          <button class="qc">+5만</button>
+          <button class="qc">+10만</button>
+          <button class="qc">전액</button>
+        </div>
+        <div class="keypad-grid">
+          <button class="key">1</button>
+          <button class="key">2</button>
+          <button class="key">3</button>
+          <button class="key">4</button>
+          <button class="key">5</button>
+          <button class="key">6</button>
+          <button class="key">7</button>
+          <button class="key">8</button>
+          <button class="key">9</button>
+          <button class="key">00</button>
+          <button class="key">0</button>
+          <button class="key" aria-label="지우기">⌫</button>
+        </div>
+      </div>
+      <div class="bottom-cta-wrap">
+        <div class="protection"></div>
+        <button class="bottom-cta" type="button">120,000원 보내기</button>
+      </div>
+    </div>
+  </pv-screen>
+</pv-cell>
+<pv-cell name="screen-send-confirm">
+  <pv-label>04. 확인</pv-label>
+  <pv-screen>
+    <div class="phone">
+      <div class="top-app-bar">
+        <div class="ic-btn">←</div>
+        <div class="title" style="opacity: 0;">.</div>
+        <div class="ic-btn right">×</div>
+      </div>
+      <div class="content" style="padding: 8px 24px 16px;">
+        <p class="confirm-head">엄마님께<br>120,000원을 보낼까요?</p>
+        <div class="confirm-card">
+          <div class="kv"><span class="k">받는 분</span><span class="v">엄마</span></div>
+          <div class="kv"><span class="k">받는 계좌</span><span class="v">토스뱅크 1000-1234-5678</span></div>
+          <div class="kv"><span class="k">보내는 통장</span><span class="v">토스뱅크 통장</span></div>
+          <div class="kv"><span class="k">수수료</span><span class="v brand">없음</span></div>
+        </div>
+        <p class="tds-body-3" style="margin-top: 20px;">송금 후에는 취소할 수 없어요. 한 번 더 확인해주세요.</p>
+      </div>
+      <div class="bottom-cta-wrap">
+        <div class="protection"></div>
+        <button class="bottom-cta" type="button">120,000원 보내기</button>
+      </div>
+    </div>
+  </pv-screen>
+</pv-cell>
+<pv-cell name="screen-send-done">
+  <pv-label>05. 완료</pv-label>
+  <pv-screen>
+    <div class="phone">
+      <div class="top-app-bar">
+        <div class="title" style="opacity: 0;">.</div>
+      </div>
+      <div class="content" style="padding: 0;">
+        <div class="done-stage">
+          <div class="done-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"></path></svg><template data-theme-variant="dark" data-theme-op="swap"><svg viewBox="0 0 24 24" fill="none" stroke="var(--tds-near-black)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"></path></svg></template>
+          </div>
+          <p class="done-title">송금 완료</p>
+          <p class="done-sub num-tab">엄마님께 120,000원을<br>보냈어요</p>
+          <div class="done-illo">😊</div>
+        </div>
+      </div>
+      <div class="bottom-cta-wrap">
+        <div class="protection"></div>
+        <button class="bottom-cta" type="button">확인</button>
+      </div>
+    </div>
+  </pv-screen>
+</pv-cell>

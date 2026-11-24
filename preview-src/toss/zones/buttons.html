@@ -1,0 +1,46 @@
+<pv-cell name="button-size" stack>
+  <pv-label>SIZE · XL 56 / L 48 / M 40 / S 32</pv-label>
+  <div class="btn-group">
+    <button class="btn btn-xl btn-brand" type="button">송금하기</button>
+    <button class="btn btn-l btn-brand" type="button">다음</button>
+    <button class="btn btn-m btn-brand" type="button">확인</button>
+    <button class="btn btn-s btn-brand" type="button">선택</button>
+  </div>
+</pv-cell>
+<pv-cell name="button-variant" stack>
+  <pv-label>VARIANT · primary / neutral / danger / ghost</pv-label>
+  <div class="btn-group">
+    <button class="btn btn-l btn-brand" type="button">송금하기</button>
+    <button class="btn btn-l btn-neutral" type="button">취소</button>
+    <button class="btn btn-l btn-danger" type="button">삭제</button>
+    <button class="btn btn-l btn-ghost" type="button">자세히</button>
+  </div>
+</pv-cell>
+<pv-cell name="button-state" stack>
+  <pv-label><span data-theme-text="">STATE · default / pressed (검정 26% overlay) / disabled (opacity 30%)</span><template data-theme-variant="dark" data-theme-op="swap"><span data-theme-text="">STATE · default / pressed (가정) / disabled (opacity 30%)</span></template></pv-label>
+  <div class="btn-group">
+    <button class="btn btn-l btn-brand" type="button">송금하기</button>
+    <button class="btn btn-l btn-brand pressed" type="button">송금하기</button>
+    <button class="btn btn-l btn-brand btn-disabled" type="button" aria-disabled="true">송금하기</button>
+  </div>
+</pv-cell>
+<pv-cell name="text-button" stack>
+  <pv-label>TEXT-BUTTON · 인라인 링크 위계 · default / neutral / disabled</pv-label>
+  <div class="btn-group">
+    <button class="text-btn" type="button">전체보기 <span class="chev">›</span></button>
+    <button class="text-btn neutral" type="button">접기 <span class="chev">›</span></button>
+    <button class="text-btn danger" type="button">연결 해제</button>
+    <button class="text-btn is-disabled" type="button" aria-disabled="true">더 불러올 수 없어요</button>
+  </div>
+</pv-cell>
+<pv-cell name="bottom-info" stack>
+  <pv-label>BOTTOM-INFO</pv-label>
+  <div class="bottom-info">
+    <span class="info-pill">수수료 없이 보내요</span>
+    <button class="bi-cta" type="button">120,000원 보내기</button>
+  </div>
+</pv-cell>
+<pv-cell name="list-footer" stack>
+  <pv-label>LIST-FOOTER</pv-label>
+  <button class="list-footer" type="button">더보기 <span class="chev">›</span></button>
+</pv-cell>

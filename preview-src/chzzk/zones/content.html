@@ -1,0 +1,72 @@
+<pv-cell name="live-card" wide stack>
+  <pv-label>live-card, 태그 칩 (칩 바탕, 치수, 글자 가정)</pv-label>
+  <p class="catalog-dummy">방송 제목, 채널명, 시청자 수, LIVE 배지, 드롭스 배지, 태그는 레이아웃 시연용 더미 데이터입니다.</p>
+  <div class="lc-pair">
+    <div class="state"><span class="state-l">기본</span><div class="card"><div class="thumb"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">2,048명</span><span class="badge b-drops">드롭스</span></div>썸네일 자리</div><h3>방송 제목 자리 — 주말 정주행</h3><p>채널 E</p><div class="tags"><span class="tag is-em">드롭스</span><span class="tag">게임 이름</span><span class="tag">한국어</span></div></div></div>
+    <div class="state"><span class="state-l">hover, 덧씌움 검정 50%</span><div class="card"><div class="thumb is-hover"><div class="thumb-badges"><span class="badge b-live">LIVE</span><span class="badge b-view">2,048명</span><span class="badge b-drops">드롭스</span></div>썸네일 자리</div><h3>방송 제목 자리 — 주말 정주행</h3><p>채널 E</p><div class="tags"><span class="tag is-em">드롭스</span><span class="tag">게임 이름</span><span class="tag">한국어</span></div></div></div>
+  </div>
+  <div class="specs">
+    <span class="spec">썸네일 372 × 209, radius 12</span>
+    <span class="spec">제목 15 / 19 / 600</span>
+    <span class="spec">덧씌움 0.2초</span>
+    <span class="spec">태그 칩 radius 4, 강조 글자 brand-text (가정)</span>
+    <template data-theme-variant="dark"><span class="spec">태그 칩 radius 4, 강조 글자 dark-brand-strong</span></template>
+    <span class="hint">썸네일에 마우스를 올려 보세요</span>
+  </div>
+</pv-cell>
+
+<pv-cell name="badge" stack>
+  <pv-label>badge</pv-label>
+  <p class="catalog-dummy">시청자 수와 재생시간은 레이아웃 시연용 더미 데이터입니다.</p>
+  <div class="states">
+    <div class="state"><span class="state-l">LIVE</span><span class="badge b-live">LIVE</span></div>
+    <div class="state"><span class="state-l">시청자 수</span><span class="badge b-view">1.2천명</span></div>
+    <div class="state"><span class="state-l">재생시간</span><span class="badge b-view">1:42:07</span></div>
+    <div class="state"><span class="state-l">다시보기</span><span class="badge b-replay">다시보기</span></div>
+    <div class="state"><span class="state-l">드롭스, 면 (가정)</span><span class="badge b-drops">드롭스</span></div>
+  </div>
+  <div class="specs">
+    <span class="spec">높이 20, radius 4, 12 / 20 / 700</span>
+    <span class="spec">다시보기 Nemony 11</span>
+    <span class="spec">시청자 수 면 검정 80%</span>
+    <span class="spec">드롭스 글자 brand-text-weak</span>
+    <template data-theme-variant="dark"><span class="spec">드롭스 글자 brand-neon</span></template>
+  </div>
+</pv-cell>
+
+<pv-cell name="side-card-category-card" stack>
+  <pv-label>가로형 추천 카드, 카테고리 카드 (치수 가정)</pv-label>
+  <p class="catalog-dummy">영상 제목, 채널명, 다시보기 배지, 재생시간, 카테고리 이름, 시청자 수는 레이아웃 시연용 더미 데이터입니다.</p>
+  <div class="hcard"><div class="thumb"><div class="thumb-badges"><span class="badge b-replay">다시보기</span><span class="badge b-view">48:12</span></div>썸네일 자리</div><div><h3>가로형 카드 제목은 시스템 서체로 두 줄까지</h3><p>채널 F</p></div></div>
+  <div class="cats">
+    <div class="cat"><div class="cat-poster">[포스터 자리]</div><b>카테고리 1</b><span>시청자 3.1만</span></div>
+    <div class="cat"><div class="cat-poster">[포스터 자리]</div><b>카테고리 2</b><span>시청자 8,240</span></div>
+    <div class="cat"><div class="cat-poster">[포스터 자리]</div><b>카테고리 3</b><span>시청자 912</span></div>
+  </div>
+  <div class="specs">
+    <span class="spec">가로형 제목 15 / 21 / 500 시스템 서체</span>
+  </div>
+</pv-cell>
+
+<pv-cell name="channel-head" stack>
+  <pv-label>채널 머리, 구독 티어 배지 (치수와 라이트 구독 버튼 가정)</pv-label>
+  <template data-theme-variant="dark"><pv-label>채널 머리, 구독 티어 배지 (치수 가정)</pv-label></template>
+  <p class="catalog-dummy">채널명, 팔로워 수, LIVE 배지, 구독 티어, 구독 선물 배지는 레이아웃 시연용 더미 데이터입니다.</p>
+  <div class="ch">
+    <span class="ch-av">J</span>
+    <div class="ch-who">
+      <p class="ch-name">채널 J <span class="badge b-live">LIVE</span></p>
+      <p class="ch-meta">팔로워 4.8만명</p>
+    </div>
+    <div class="ch-act"><span class="btn btn-1">팔로우</span><span class="btn btn-3">구독</span></div>
+  </div>
+  <div class="states">
+    <div class="state"><span class="state-l">구독 티어 1</span><span class="badge b-tier1">티어 1</span></div>
+    <div class="state"><span class="state-l">구독 티어 2</span><span class="badge b-tier2">티어 2</span></div>
+    <div class="state"><span class="state-l">구독 선물</span><span class="badge b-replay">구독 선물</span></div>
+  </div>
+  <div class="specs">
+    <span class="spec">채널명 28 / 36 / 700 (가정)</span>
+    <span class="spec">티어 면 subscribe-tier-1, subscribe-tier-2</span>
+  </div>
+</pv-cell>

@@ -1,11 +1,13 @@
 <!doctype html>
-<html lang="ko" data-theme="light"><head>
+<html lang="ko" data-theme="light">
+<head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>토스 preview</title>
+<!-- 조립된 파일이다. 손으로 고치지 않는다. 원본은 preview-src/toss/, 다시 만들기는 pnpm previews:build toss, 이 파일의 줄에서 원본 찾기는 pnpm previews:where toss <줄> -->
 <link rel="stylesheet" href="/preview/_runtime/tokens.css">
-<script src="/preview/_runtime/iframe.js" defer=""></script>
+<script src="/preview/_runtime/iframe.js" defer></script>
 <style>
 /* pv-frame:start — PROTOTYPE. 모든 프리뷰가 글자 그대로 똑같이 갖는 틀.
    짜임(배치, 간격, 크기)만 여기서 정하고 서체와 색은 항목이 :root 의 --pv-* 로 넣는다.
@@ -1501,7 +1503,8 @@
     --tds-shadow-done: 0 8px 24px oklch(0.630 0.192 258 / 0.40);
   }
 [data-theme="dark"] .dialog { border: 1px solid var(--tds-grey-200); }
-</style></head>
+</style>
+</head>
 <body>
 <div class="catalog-disclaimer" role="note"><b>ko/design.md 카탈로그 프리뷰</b> — 이 카탈로그는 어떤 브랜드와도 제휴·후원 관계가 없습니다. 이 화면은 공식 배포본이 아닌 공개 자료 기반 비공식 재현이며, 표시된 상품·가격·평점·거래·채용 정보는 레이아웃 시연용 더미 데이터입니다.</div>
 <main class="pv-page">
@@ -2339,6 +2342,6 @@
       </div>
     </div>
   </section>
-
 </main>
-</body></html>
+</body>
+</html>

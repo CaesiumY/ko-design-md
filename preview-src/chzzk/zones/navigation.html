@@ -1,0 +1,30 @@
+<pv-cell name="nav-item" stack>
+  <pv-label>nav-item, 사이드바 항목</pv-label>
+  <div class="states">
+    <div class="state"><span class="state-l">기본</span><div class="side-i"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></span><span class="side-n">카테고리</span></div></div>
+    <div class="state"><span class="state-l">hover, lighten 5%</span><div class="side-i is-on"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></span><span class="side-n">카테고리</span></div></div>
+    <div class="state"><span class="state-l">selected, lighten 12%</span><div class="side-i is-sel"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></span><span class="side-n">카테고리</span></div></div>
+    <div class="state"><span class="state-l">현재 메뉴</span><div class="side-i is-cur"><span class="side-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-6 8 6v8H4z"/></svg></span><span class="side-n">홈</span></div></div>
+  </div>
+  <div class="specs">
+    <span class="spec">높이 38, radius 8, 15 / 19 / 600</span>
+    <span class="spec">현재 메뉴 글자 brand-text-base</span>
+    <template data-theme-variant="dark"><span class="spec">현재 메뉴 글자 dark-brand-stronger</span></template>
+    <span class="spec">섹션 제목 13 / 17 / 600</span>
+  </div>
+</pv-cell>
+
+<pv-cell name="top-tabs" stack>
+  <pv-label>상단 탭</pv-label>
+  <div class="states">
+    <div class="state"><span class="state-l">현재, 글자 (가정)</span><div class="ttabs"><span class="ttab is-cur">게임</span></div></div>
+    <div class="state"><span class="state-l">비활성, 라이트 글자 (가정)</span><template data-theme-variant="dark"><span class="state-l">비활성</span></template><div class="ttabs"><span class="ttab">e스포츠</span><span class="ttab">스포츠</span><span class="ttab">엔터+</span></div></div>
+    <div class="state"><span class="state-l">직접 선택</span><div class="ttabs" role="tablist" aria-label="상단 탭 시연" data-pv-toggle="aria-selected"><button type="button" class="ttab" role="tab" data-pv-option aria-selected="true">게임</button><button type="button" class="ttab" role="tab" data-pv-option aria-selected="false">e스포츠</button><button type="button" class="ttab" role="tab" data-pv-option aria-selected="false">스포츠</button><button type="button" class="ttab" role="tab" data-pv-option aria-selected="false">엔터+</button></div></div>
+  </div>
+  <div class="specs">
+    <span class="spec">17 / 21 / 800</span>
+    <span class="spec">비활성 글자 text-weak (가정)</span>
+    <template data-theme-variant="dark"><span class="spec">비활성 글자 dark-text-weak</span></template>
+    <span class="hint">탭을 눌러 보세요</span>
+  </div>
+</pv-cell>

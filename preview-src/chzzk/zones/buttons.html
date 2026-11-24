@@ -1,0 +1,52 @@
+<pv-cell name="button-variants" wide stack>
+  <pv-label>button, 변형과 상태</pv-label>
+  <div class="vrows">
+    <div class="vrow">
+      <span class="vrow-k">primary</span>
+      <div class="states">
+        <div class="state"><span class="state-l">기본</span><span class="btn btn-1">팔로우</span></div>
+        <div class="state"><span class="state-l">hover, darken 5%</span><span class="btn btn-1 is-hover">팔로우</span></div>
+        <div class="state"><span class="state-l">selected, darken 12%</span><span class="btn btn-1 is-sel">팔로우</span></div>
+        <div class="state"><span class="state-l">비활성 (면 가정)</span><span class="btn is-off" aria-disabled="true">팔로우</span></div>
+      </div>
+    </div>
+    <div class="vrow">
+      <span class="vrow-k">secondary</span>
+      <div class="states">
+        <div class="state"><span class="state-l">기본</span><span class="btn btn-2">알림</span></div>
+        <div class="state"><span class="state-l">hover, lighten 5%</span><span class="btn btn-2 is-hover">알림</span></div>
+        <div class="state"><span class="state-l">selected, lighten 12%</span><span class="btn btn-2 is-sel">알림</span></div>
+      </div>
+    </div>
+    <div class="vrow">
+      <span class="vrow-k">tertiary, 라이트 (가정)</span>
+      <template data-theme-variant="dark"><span class="vrow-k">tertiary</span></template>
+      <div class="states">
+        <div class="state"><span class="state-l">기본</span><span class="btn btn-3">구독</span></div>
+      </div>
+    </div>
+    <div class="vrow">
+      <span class="vrow-k">outlined, 테두리와 글자 (가정)</span>
+      <div class="states">
+        <div class="state"><span class="state-l">기본</span><span class="btn btn-out">로그인</span></div>
+        <div class="state"><span class="state-l">hover, 배경색 lighten 5%</span><span class="btn btn-out is-hover">로그인</span></div>
+        <div class="state"><span class="state-l">selected, 배경색 lighten 12%</span><span class="btn btn-out is-sel">로그인</span></div>
+      </div>
+    </div>
+    <div class="vrow">
+      <span class="vrow-k">아이콘 전용, danger (크기와 글자 가정)</span>
+      <div class="states">
+        <div class="state"><span class="state-l">아이콘 전용, radius 6</span><span class="btn btn-ic" role="img" aria-label="알림 설정"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20h4"/></svg></span></div>
+        <div class="state"><span class="state-l">danger, 면 live-red</span><span class="btn btn-danger">차단</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="specs">
+    <span class="spec">높이 34, radius 17, 좌우 12</span>
+    <span class="spec">글자 Nemony 14 / 18 / 400</span>
+    <span class="spec">primary 면 brand-strongest, 글자 white</span>
+    <template data-theme-variant="dark"><span class="spec">primary 면 brand-neon, 글자 dark-bg-weak</span></template>
+    <span class="spec">tertiary 면 surface-strongest, 글자 white (가정)</span>
+    <template data-theme-variant="dark"><span class="spec">tertiary 면 dark-surface-strongest, 글자 dark-bg-weak</span></template>
+  </div>
+</pv-cell>
