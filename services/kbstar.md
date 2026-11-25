@@ -246,6 +246,8 @@ components:
   mweb-header:
     typography: "{typography.mweb-header-h1}"
     height: 55px
+  mweb-branch-list:
+    typography: "{typography.mweb-branch-name}"
   app-transfer-button:
     backgroundColor: "{colors.app-transfer-button}"
   app-pale-button:

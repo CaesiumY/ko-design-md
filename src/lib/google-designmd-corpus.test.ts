@@ -38,7 +38,7 @@ const NO_TYPE_SCALE: Record<string, string> = {}
 const COMPONENT_COUNTS: Record<string, number> = {
   banksalad: 16,
   chzzk: 12,
-  kbstar: 33,
+  kbstar: 34,
   laftel: 11,
   ridi: 11,
   // 10 → 43 (#659): the `@teamsparta/stack-tokens` component tokens, one row

@@ -542,7 +542,7 @@
       grid-template-columns: 266px minmax(0, 1fr);
       border-top: 1px solid var(--kb-web-ttype01-line);
     }
-    .w-qrow:last-of-type { border-bottom: 1px solid var(--kb-web-ttype01-line); }
+    .w-qrow:has(+ .w-btn-row) { border-bottom: 1px solid var(--kb-web-ttype01-line); }
     .w-qrow .th {
       padding: 5px 5px 4px 15px;
       background: var(--kb-web-ttype01-th);
