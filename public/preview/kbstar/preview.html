@@ -258,7 +258,7 @@
     }
     .w-wrap-menu span {
       min-width: 0;
-      padding: 0 6px;
+      padding: 0 30px;
       text-align: center;
       font-size: 17px;
       line-height: 50px;
@@ -269,6 +269,12 @@
     }
     .w-wrap-menu span:hover,
     .w-wrap-menu .is-on { background: var(--kb-web-wrap-menu-on); }
+    @media (max-width: 900px) {
+      .w-wrap-menu { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @media (max-width: 520px) {
+      .w-wrap-menu { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
 
     .w-submenu {
       display: flex;
@@ -529,7 +535,7 @@
     .w-quick-body { padding: 16px; }
     .w-qrow {
       display: grid;
-      grid-template-columns: minmax(0, 34%) minmax(0, 1fr);
+      grid-template-columns: 266px minmax(0, 1fr);
       border-top: 1px solid var(--kb-web-ttype01-line);
     }
     .w-qrow:last-of-type { border-bottom: 1px solid var(--kb-web-ttype01-line); }
@@ -543,7 +549,7 @@
       min-height: 30px;
       overflow-wrap: anywhere;
     }
-    .w-qrow .td { padding: 4px 8px; display: flex; align-items: center; min-width: 0; }
+    .w-qrow .td { padding: 5px 5px 4px 15px; display: flex; align-items: center; min-width: 0; }
     .w-qrow .w-input { height: 27px; padding: 3px 9px; }
     .w-btn-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 14px; }
 
@@ -728,7 +734,7 @@
       align-items: center;
       justify-content: center;
       height: 55px;
-      padding: 0 52px;
+      padding: 0 65px;
       color: var(--kb-mweb-black);
     }
     .m-logo { height: 21px; width: auto; }
@@ -1005,7 +1011,6 @@
       }
       .w-aside > .w-aside-head { margin: 0; }
       .w-aside-close { margin: 0; align-items: center; }
-      .w-wrap-menu { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .w-quick { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .w-quick > div + div { border-left: 0; }
       .w-quick > div:nth-child(even) { border-left: 1px solid var(--kb-web-card-line); }
@@ -1126,7 +1131,7 @@
 
     <div class="mock">
       <p class="catalog-dummy">더미 데이터: 공지 제목, 새소식 목록과 날짜는 레이아웃 시연용이며 KB국민은행의 실제 공지가 아닙니다.</p>
-      <p class="cell-k">인트로 화면 <span class="assume">web-top-notice, web-main-con1, 공지 띠 높이 (가정), 빠른 서비스 문구 (가정), 체크와 닫기 글자색 (가정)</span></p>
+      <p class="cell-k">인트로 화면, web-top-notice, web-main-con1 <span class="assume">공지 띠 높이 (가정), 빠른 서비스 문구 (가정), 체크와 닫기 글자색 (가정)</span></p>
       <div class="w-screen">
         <div class="w-top-notice">
           <span class="w-notice-link">[공지] 더미 시스템 점검 안내</span>
@@ -1150,7 +1155,7 @@
 
     <div class="mock">
       <p class="catalog-dummy">더미 데이터: 계좌번호와 조회기간은 레이아웃 시연용 값입니다.</p>
-      <p class="cell-k">빠른조회 <span class="assume">web-quick-bar, 머리 띠 로고와 조회 단추는 그림 자리, 입력 테두리 (가정)</span></p>
+      <p class="cell-k">빠른조회, web-quick-bar <span class="assume">입력 테두리 (가정)</span></p>
       <div class="w-screen w-quick-screen">
         <div class="w-quick-bar"><span class="w-h1-quick">빠른조회</span><span class="w-logo-ph">로고 자리</span></div>
         <div class="w-quick-body">
@@ -1164,7 +1169,7 @@
 
     <div class="mock">
       <p class="catalog-dummy">더미 데이터: 지점 이름, 영업시간, 관리지점 표시는 레이아웃 시연용이며 실제 영업점 정보가 아닙니다.</p>
-      <p class="cell-k">상품 검색 띠와 지점안내 <span class="assume">web-area-form, web-btn-com-c2, web-btn-sub1, 검색 입력 글자색 (가정)</span></p>
+      <p class="cell-k">상품 검색 띠와 지점안내, web-area-form, web-btn-com-c2, web-btn-sub1 <span class="assume">검색 입력 글자색 (가정)</span></p>
       <div class="w-screen">
         <div class="w-area-form">
           <span class="w-holder"><span>상품명을 입력하세요.</span></span>
@@ -1217,7 +1222,7 @@
           <span class="demo"><span class="w-input is-readonly">읽기 전용</span><span class="st">readonly</span></span>
         </div>
       </div>
-      <div class="spec">
+      <div class="spec spec-wide">
         <p class="cell-k">web-form-search</p>
         <div class="w-stage row">
           <span class="demo" style="width:100%"><span class="w-form-search"><span class="txt">검색어를 입력하세요.</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/></svg></span><span class="st">반경 20px</span></span>
@@ -1232,10 +1237,10 @@
           <span class="demo"><span class="w-mark out-c2">예금</span><span class="st">윤곽 c2</span></span>
         </div>
       </div>
-      <div class="spec">
+      <div class="spec spec-wide">
         <p class="cell-k">web-wrap-menu-on <span class="hint">칸에 마우스를 올려 보세요</span></p>
         <div class="w-stage">
-          <div class="w-wrap-menu" style="grid-template-columns:repeat(3, minmax(0, 1fr))"><span class="is-on">조회</span><span>이체</span><span>외환</span></div>
+          <div class="w-wrap-menu" style="grid-template-columns:repeat(3, minmax(0, 1fr));max-width:420px"><span class="is-on">조회</span><span>이체</span><span>외환</span></div>
           <span class="st">현재 칸, hover 칸</span>
         </div>
       </div>
@@ -1295,7 +1300,7 @@
     <div class="phones">
       <div class="phone-col">
         <p class="catalog-dummy">더미 데이터: 추천 배너 문구와 금융상품 목록은 레이아웃 시연용입니다.</p>
-        <p class="cell-k">모바일 홈 <span class="assume">mweb-header, mweb-home-tab, mweb-geo-bnr, mweb-btn-login, 섹션 제목 글자색 (가정), 홈 탭 선택 칸 글자색 (가정), 추천 배너 문구 글자색 (가정)</span></p>
+        <p class="cell-k">모바일 홈, mweb-header, mweb-home-tab-on, mweb-home-tab-off, mweb-geo-bnr, mweb-btn-login <span class="assume">섹션 제목 글자색 (가정), 홈 탭 선택 칸 글자색 (가정), 추천 배너 문구 글자색 (가정)</span></p>
         <div class="m-screen">
           <div class="m-header">
             <img class="m-logo" src="/logos/kbstar-logotype.png" alt="KB국민은행" height="21">
@@ -1325,7 +1330,7 @@
 
       <div class="phone-col">
         <p class="catalog-dummy">더미 데이터: 지점 이름, 주소, 영업시간, 거리는 레이아웃 시연용이며 실제 영업점 정보가 아닙니다.</p>
-        <p class="cell-k">지점찾기 <span class="assume">mweb-branch-list, mweb-select, 제목 굵기와 글자색 (가정), 지점 이름 글자색 (가정), 상자 탭 비선택 칸 글자색 (가정), 지역 선택 상자 바탕과 글자색 (가정)</span></p>
+        <p class="cell-k">지점찾기, mweb-branch-list, mweb-select <span class="assume">제목 굵기와 글자색 (가정), 지점 이름 글자색 (가정), 상자 탭 비선택 칸 글자색 (가정), 지역 선택 상자 바탕과 글자색 (가정)</span></p>
         <div class="m-screen">
           <div class="m-header">
             <span class="ico-l"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M6 10v10h12V10"/></svg></span>
@@ -1422,7 +1427,7 @@
     <div class="app-wrap">
       <div class="app-col">
         <p class="catalog-dummy">더미 데이터: 통장 이름, 계좌번호, 잔액, 총 자산, 고객 호칭, 투자 분류는 레이아웃 시연용이며 실제 계좌나 상품이 아닙니다.</p>
-        <p class="cell-k">앱 홈 <span class="assume">app-account-card, 이체 버튼 글자색 (가정), 안내 버튼 글자색과 반경 (가정), 칩 알약 반경 (가정)</span></p>
+        <p class="cell-k">앱 홈, app-account-card <span class="assume">이체 버튼 글자색 (가정), 안내 버튼 글자색과 반경 (가정), 칩 알약 반경 (가정)</span></p>
         <div class="a-frame">
           <div class="a-screen">
             <div class="a-head">
