@@ -9,7 +9,7 @@
 - 공통 뼈대(`<head>`, 면책 띠, `<main>`, 구역 래퍼와 제목, 칸과 이름표와 시연 자리의 감싸개, 틀 스타일)는 조립기가 쓴다.
 - 조립기가 둘을 합쳐 서빙되는 `public/preview/{slug}/preview.html` 한 장을 만든다. **그 파일도 커밋한다.** 서빙 주소는 그대로다.
 - 원본과 서빙 파일이 어긋나면 `pnpm test` 가 막는다(토큰 사이드카와 같은 방식. 아래 「어긋남 검사」).
-- 이 구조로 쓰인 항목은 지금 `chzzk`, `toss` 둘이다. 나머지 항목은 예전처럼 HTML 한 장이고 이 구조와 무관하다.
+- 이 구조로 쓰인 항목은 `preview-src/` 아래에 폴더가 있는 항목이다(지금은 `chzzk`, `toss`). 나머지 항목은 예전처럼 HTML 한 장이고 이 구조와 무관하다.
 
 ## 원본이 놓이는 곳과 꼴
 
@@ -56,7 +56,7 @@ preview-src/{slug}/
 | `<pv-screen>` / `</pv-screen>` (줄에 홀로) | `<div class="pv-screen">` / `</div>` |
 | `</pv-cell>` (줄 머리) | 시연 자리와 칸을 닫는 두 줄 |
 
-- 이름표 안에 마크업을 둘 수 있다. 이름표의 한 조각만 다크에서 달라지면 그 조각 뒤에 `<template data-theme-variant="dark">` 를 이름표 안에 둔다(토스의 다섯 칸. STANDARD 2절).
+- 이름표 안에 마크업을 둘 수 있다. 이름표의 한 조각만 다크에서 달라지면 그 조각 뒤에 `<template data-theme-variant="dark">` 를 이름표 안에 둔다(토스의 원본에 본보기가 있다. STANDARD 2절).
 - 조각에는 `pv-` class 와 `data-pv-zone`, `data-pv-cell` 을 쓰지 않는다. 쓰면 약속 검사가 막는다. `data-pv-toggle`, `data-pv-option` 은 브랜드 마크업의 것이라 쓴다(STANDARD 5절).
 - 칸, 이름표, 시연 자리의 서빙 마크업은 `assemble.ts` 의 `assemble()` 끝, 칸을 내보내는 반복문 한 곳에서 쓴다. 이름표는 거기서 두 번 쓰인다(이름표 줄과 다크 `<template>` 안의 이름표 줄). **이름표에 `id` 같은 속성을 달면 두 줄 모두에 같은 값을 단다.** 다크에서는 공용 `iframe.js` 가 `<template>` 안의 이름표를 바로 앞 이름표와 바꿔 끼우므로, 한쪽에만 달면 다크에서 그 속성이 사라진다. 그래서 서빙 파일의 글자로는 같은 `id` 가 칸 하나에 두 번 나온다(하나는 `<template>` 안이라 문서에는 한 번만 있다). `id` 겹침을 검사할 때는 `<template>` 안을 빼고 센다. 칸의 마크업 약속을 바꾸면 그 반복문과 `contract.ts` 의 칸 검사를 함께 고치고 `pnpm previews:build` 로 모든 항목을 다시 만든다.
 - 칸 사이의 빈 줄은 그대로 서빙 파일에 나온다. 칸 밖에는 빈 줄 말고 아무것도 두지 않는다.
@@ -154,6 +154,6 @@ preview-src/toss/zones/buttons.html:4  ← 원본
 | `prototypes/preview-structure/fragments/convert.ts` | 공통 바탕의 HTML 한 장을 조각으로 자르는 변환 스크립트(토스, 치지직) |
 | `prototypes/preview-structure/fragments/fragments.test.ts` | 약속 검사와 어긋남 검사의 테스트 |
 | `preview-src/chzzk/`, `preview-src/toss/` | 두 항목의 원본 |
-| `package.json` | 명령 셋(`previews:build`, `previews:check`, `previews:where`) |
+| `package.json` | 명령(`previews:build`, `previews:check`, `previews:where`) |
 
 수치와 알려진 고장 방식은 같은 폴더의 `STATS.md` 에 있다.

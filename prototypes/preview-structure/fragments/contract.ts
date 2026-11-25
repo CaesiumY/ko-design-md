@@ -1,6 +1,6 @@
 // PROTOTYPE — the promise check of the "fragments" structure (ticket 729).
 //
-// Two halves:
+// It reads the fragments and the served HTML:
 //   - checkPreview(source): the fragment grammar (unknown zone file, missing
 //     required zone, cell without a label, frame markup written by hand, …)
 //     and then the served-file promises on a fresh assembly, every finding

@@ -1,4 +1,4 @@
-// PROTOTYPE — "fragments" structure (ticket 729). One entry point, three verbs.
+// PROTOTYPE — "fragments" structure (ticket 729). One entry point: build, check, where.
 //
 //   pnpm previews:build [slug…]                 assemble preview-src/{slug}/ into
 //                                               public/preview/{slug}/preview.html (no slug: all)
