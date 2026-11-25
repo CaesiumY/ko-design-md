@@ -1996,7 +1996,8 @@ function checkDarkSheetCopy(
           'Write the scope as a leading [data-theme="dark"] (data-theme sits on the root element): ' +
           '[data-theme="dark"] .btn, not :is([data-theme="dark"]) .btn or body[data-theme="dark"] .btn. ' +
           "A dark rule is read against the light rule with the same selector, and one scoped any other way pairs with nothing — a copied rule behind it would not be found. " +
-          "A rule meant for light only needs no scope: light is what is written bare, and the dark rule overrides it."
+          "A rule meant for light only needs no scope: light is what is written bare, and the dark rule overrides it. " +
+          "data-theme is the page's theme switch and nothing else: a demo element that needs an attribute of its own (a theme picker's option) takes another name."
       )
     )
   }

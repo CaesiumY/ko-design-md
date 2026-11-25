@@ -403,7 +403,8 @@ describe("dark-sheet-copy — a scope spelled another way", () => {
 
 // What the pairing cannot read is not left to pass as "no copy found". A rule
 // that names the dark theme anywhere but on the root, in front, is refused
-// outright — on the not-yet-walked list too, since no shipped preview has one.
+// outright — on the not-yet-walked list too: the list excuses copies that
+// were found, not rules that were never read.
 describe("dark-scope-unread", () => {
   const COPIED_BTN =
     ".btn { padding: 8px 12px; border-radius: 8px; background: oklch(0.62 0.18 250); }"
@@ -455,12 +456,43 @@ describe("dark-scope-unread", () => {
     expect(issues[0].fix).toContain("needs no scope")
   })
 
+  // The attribute is the page's theme switch. A demo element that carries it
+  // (a theme picker's option) reads as a dark rule the pairing cannot place.
+  it("blocks a demo element that borrows the attribute, and says to rename it", () => {
+    const issues = unread(
+      `${LIGHT}\n.picker button[data-theme="dark"] { color: var(--fg); }`,
+      DARK_TOKENS
+    )
+    expect(issues.map((i) => i.severity)).toEqual(["block"])
+    expect(issues[0].fix).toContain("another name")
+  })
+
+  it("names one under an at-rule with the at-rule it sits in", () => {
+    const issues = unread(
+      LIGHT,
+      `${DARK_TOKENS}\n@media (min-width: 600px) { :is([data-theme="dark"]) ${COPIED_BTN} }`
+    )
+    expect(issues.map((i) => i.severity)).toEqual(["block"])
+    expect(issues[0].fix).toContain("600px")
+  })
+
+  it("blocks a rule for one unread arm of its selector list", () => {
+    expect(
+      unread(
+        LIGHT,
+        `${DARK_TOKENS}\n[data-theme="dark"] .hero, body[data-theme="dark"] .btn { margin: 0; }`
+      ).map((i) => i.severity)
+    ).toEqual(["block"])
+  })
+
   it("is quiet for every spelling the pairing reads", () => {
     const dark = [
       DARK_TOKENS,
       '[data-theme="dark"] .hero { outline: 1px solid var(--fg); }',
       'html[data-theme="dark"] .btn { background: oklch(0.7 0.15 250); }',
       ":root[data-theme='dark'] .btn:hover { background: oklch(0.6 0.15 250); }",
+      'html[data-theme="dark"][data-theme="dark"] .hero h1 { margin: 0; }',
+      '@media (min-width: 600px) { [data-theme="dark"] .hero, [data-theme="dark"] :is(.btn, .hero):not(.x) { gap: 0; } }',
     ].join("\n")
     expect(
       unread(
