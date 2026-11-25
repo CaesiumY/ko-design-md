@@ -275,6 +275,10 @@
     @media (max-width: 520px) {
       .w-wrap-menu { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
+    .w-wrap-menu-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 420px; }
+    @media (max-width: 360px) {
+      .w-wrap-menu-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
 
     .w-submenu {
       display: flex;
@@ -1240,7 +1244,7 @@
       <div class="spec spec-wide">
         <p class="cell-k">web-wrap-menu-on <span class="hint">칸에 마우스를 올려 보세요</span></p>
         <div class="w-stage">
-          <div class="w-wrap-menu" style="grid-template-columns:repeat(3, minmax(0, 1fr));max-width:420px"><span class="is-on">조회</span><span>이체</span><span>외환</span></div>
+          <div class="w-wrap-menu w-wrap-menu-3"><span class="is-on">조회</span><span>이체</span><span>외환</span></div>
           <span class="st">현재 칸, hover 칸</span>
         </div>
       </div>
