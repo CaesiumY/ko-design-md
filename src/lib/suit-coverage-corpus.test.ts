@@ -86,17 +86,22 @@ describe("SUIT glyph coverage", () => {
     // 가 is in every build; U+0378 is an unassigned code point no font maps.
     expect(covered.has("가".codePointAt(0)!)).toBe(true)
     expect(covered.has(0x0378)).toBe(false)
-    // Over-counting guard: the declared woff2 is a subset of the package's
-    // ttf, so it must cover strictly fewer syllables than the full build.
-    // A parser that ignores idDelta or glyph 0 would count them the same.
+    // Over-counting guard: the package's woff2 is a subset of its ttf, so it
+    // must cover strictly fewer syllables than the full build. A parser that
+    // ignores idDelta or glyph 0 would count them the same. Both paths are
+    // fixed here, not read from the @font-face, so pointing that declaration
+    // at the ttf (what the coverage test's message advises) leaves this valid.
     const syllables = (set: Set<number>) =>
       [...set].filter((cp) => cp >= 0xac00 && cp <= 0xd7a3).length
-    const fullTtf = join(
-      ROOT,
-      "node_modules/@sun-typeface/suit/fonts/variable/ttf/SUIT-Variable.ttf"
+    const suit = join(ROOT, "node_modules/@sun-typeface/suit/fonts/variable")
+    const subset = coveredCodePoints(
+      readFileSync(join(suit, "woff2/SUIT-Variable.woff2"))
     )
-    expect(syllables(coveredCodePoints(readFileSync(fullTtf)))).toBe(11172)
-    expect(syllables(covered)).toBeLessThan(11172)
+    const full = coveredCodePoints(
+      readFileSync(join(suit, "ttf/SUIT-Variable.ttf"))
+    )
+    expect(syllables(full)).toBe(11172)
+    expect(syllables(subset)).toBeLessThan(11172)
   })
 
   it("scans the catalogue and the screen sources (input is not empty)", () => {
