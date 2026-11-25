@@ -1853,8 +1853,7 @@ const DARK_COPY_NAMED = 3
  *
  * Severity comes from the not-yet-walked list, in the three cases
  * `darkCopyVerdict` names. One issue per document however many rules there are:
- * an unwalked sheet restates light a few hundred times, and the finding is the
- * sheet, not each rule.
+ * the finding is the sheet, not each rule in it.
  */
 function checkDarkSheetCopy(
   input: PreviewValidationInput,
@@ -1877,7 +1876,8 @@ function checkDarkSheetCopy(
     )
     return
   }
-  const named = copies.slice(0, DARK_COPY_NAMED).join(" · ")
+  // Joined with a semicolon: a selector list carries commas of its own.
+  const named = copies.slice(0, DARK_COPY_NAMED).join("; ")
   const rest = copies.length - DARK_COPY_NAMED
   const what =
     `the [data-theme="dark"] sheet restates ${copies.length} light ` +

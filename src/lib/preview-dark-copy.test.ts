@@ -208,7 +208,7 @@ describe("dark-sheet-copy", () => {
     const issues = found(mergedInput(light, dark))
     expect(issues).toHaveLength(1)
     expect(issues[0].fix).toContain("restates 4 light rule(s)")
-    expect(issues[0].fix).toContain(".hero · .btn · .btn:hover and 1 more")
+    expect(issues[0].fix).toContain(".hero; .btn; .btn:hover and 1 more")
   })
 
   // The remedy is the half an author acts on. Deleting a same-valued dark rule
@@ -258,7 +258,10 @@ describe("dark-sheet-copy — the not-yet-walked list", () => {
     validatePreviewPair(
       mergedInput(LIGHT, dark, { darkCopyBacklog: new Set(backlog) })
     )
-      .issues.filter((i) => i.rule.startsWith("dark-"))
+      .issues.filter(
+        (i) =>
+          i.rule === "dark-sheet-copy" || i.rule === "dark-copy-backlog-stale"
+      )
       .map((i) => `${i.severity} ${i.rule}`)
 
   it("warns on a copy in a listed slug", () => {

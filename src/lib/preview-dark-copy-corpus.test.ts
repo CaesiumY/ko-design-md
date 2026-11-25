@@ -39,7 +39,7 @@ describe("darkCopyVerdict — the three cases of the list, and the quiet one", (
 
 describe("the dark sheets of the shipped catalogue", () => {
   // Merged previews only: a split pair has no dark sheet to read against light
-  // (see `checkDarkSheetCopy`). No slug ships split today.
+  // (see `checkDarkSheetCopy`).
   const { slugs } = readPreviewSlugs(PREVIEW)
 
   const reports = new Map<string, DarkSheetReport>()
@@ -81,11 +81,10 @@ describe("the dark sheets of the shipped catalogue", () => {
       const listed = DARK_COPY_BACKLOG.has(slug)
       const { copies } = reportOf(slug)
       const verdict = darkCopyVerdict(listed, copies.length)
-      const first = copies.slice(0, 3).join(" · ")
       expect(
         verdict,
         verdict === "block"
-          ? `${slug} is not on the not-yet-walked list, but its [data-theme="dark"] sheet restates ${copies.length} light rule(s) (${first}). Move the colours that differ into tokens redefined under [data-theme="dark"] and compare the rendering with \`pnpm preview:dom-diff\`; do not add the slug to DARK_COPY_BACKLOG, which only shrinks.`
+          ? `${slug} is not on the not-yet-walked list, but its [data-theme="dark"] sheet restates ${copies.length} light rule(s). \`pnpm validate:previews --slug ${slug} --verbose\` names them and says how to fix them; do not add the slug to DARK_COPY_BACKLOG, which only shrinks.`
           : `${slug} is on the not-yet-walked list, but its dark sheet no longer restates any light rule. Take it out of DARK_COPY_BACKLOG in src/lib/dark-sheet-backlog.ts.`
       ).toBe(listed ? "warn" : "clean")
     })
