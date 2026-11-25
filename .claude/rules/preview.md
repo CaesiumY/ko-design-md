@@ -45,7 +45,10 @@ paths:
     규칙과 스코프를 다르게 적은 규칙(`html[data-theme="dark"] .a` 등)도 같은 다크 규칙으로 읽는다.
     다크 스코프는 선택자 맨 앞, 루트 요소에 적는다. 다른 자리에 적은 규칙(`:is([data-theme="dark"]) .a`,
     `body[data-theme="dark"] .a`, `.wrap [data-theme="dark"] .a`)은 라이트 규칙과 짝지어 읽을 수 없어, 목록
-    여부와 무관하게 검증기가 그 규칙 자체를 막는다(정의는 `unreadDarkScopes` 주석).
+    여부와 무관하게 검증기가 그 규칙 자체를 막는다(정의는 `unreadDarkScopes` 주석). 같은 이유로 다크를
+    빼려고 이름을 적은 라이트 규칙(`:root:not([data-theme="dark"]) .a`)과 `data-theme` 속성을 빌려 쓴 시연
+    요소(`button[data-theme="dark"]`)도 막힌다. 라이트는 스코프 없이 적고, `data-theme` 은 페이지의 테마
+    스위치로만 쓴다.
     "토큰만 허용"으로 막지 않는 대신 그 수를 고정한 것이다. 늘어도 줄어도 `pnpm test` 가 막고, 실패 메시지가
     적을 줄을 말한다. 늘릴 때는 그 규칙이 왜 토큰으로 안 되는지를 PR 에 적는다.
   - **복사본을 걷을 때는 보이는 대로 지우지 않는다.** `[data-theme="dark"] .a` 는 선택자가 하나 더 붙어 라이트의
