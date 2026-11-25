@@ -34,12 +34,11 @@
 //     the document ships them)
 //   - a state written inside :has() or :not() — `.chip:has(input:focus-visible)`
 //     forces the chip, and the input inside it is what would have to be
-//     focused, so the rule never applies on either side. Of the 420 state
-//     selectors the catalogue shipped when this was written, 13 are this shape,
-//     all `:has(input:focus-visible)` in nol and zigbang
+//     focused, so the rule never applies on either side. The focus rings some
+//     previews hang on a label around a hidden input are written this way
 //   - a state on no named element (`:focus-visible` alone, `.menu :hover`):
 //     nothing is forced for it, so it shows only on elements another rule had
-//     forced. One such selector shipped, gs-retail's focus ring
+//     forced
 //   - where an element sits while it animates (see the last pass above)
 //   - anything a script does after a click: the pages are read, not operated
 //   - fonts: outside requests are blocked, so both sides fall back alike
@@ -336,7 +335,7 @@ function markElements(selectors: Array<string>): number {
     try {
       document.querySelectorAll(selector).forEach((el) => seen.add(el))
     } catch {
-      // A selector the stripping broke names nothing.
+      // A selector the browser cannot read names nothing.
     }
   }
   let n = 0

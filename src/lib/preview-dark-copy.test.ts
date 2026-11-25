@@ -267,7 +267,7 @@ describe("dark rules a light sheet carries", () => {
     ).toEqual({ copies: [], overrideRules: 1 })
   })
 
-  // The dark sheet's own rules are read first, so what a light sheet carries
+  // Each group lines up with light on its own, so what a light sheet carries
   // cannot move the pairing the dark sheet already had.
   it("does not move how the dark sheet's own rules pair", () => {
     expect(
@@ -276,6 +276,19 @@ describe("dark rules a light sheet carries", () => {
         `${DARK_TOKENS}\n[data-theme="dark"] .btn { padding: 8px 12px; border-radius: 8px; background: oklch(0.62 0.18 250); }`
       )
     ).toEqual({ copies: [".btn"], overrideRules: 1 })
+  })
+
+  // …and the other way round: the dark sheet's rules do not use up the
+  // position one of these is paired at. Counted together, the rule below
+  // would be read against light's second `.btn` and its repeated padding
+  // would pass for a change.
+  it("pairs one with light by its own position, not after the dark sheet's", () => {
+    expect(
+      report(
+        `${LIGHT}\n.btn { margin: 0; }\n[data-theme="dark"] .btn { padding: 8px 12px; }`,
+        `${DARK_TOKENS}\n[data-theme="dark"] .btn { background: oklch(0.7 0.15 250); }`
+      )
+    ).toEqual({ copies: ['[data-theme="dark"] .btn'], overrideRules: 1 })
   })
 
   // A sheet copied whole repeats these rules too, with the scope on twice

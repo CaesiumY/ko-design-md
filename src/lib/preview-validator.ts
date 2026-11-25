@@ -891,7 +891,7 @@ export interface DarkSheetReport {
   /**
    * The dark rules that restate light, each named by its selector under the
    * at-rules it sits in (`.btn:hover`, `@media (max-width: 720px) / .grid`).
-   * The dark sheet's in sheet order, then any an earlier sheet carries.
+   * The dark sheet's in sheet order, then those an earlier sheet carries.
    */
   copies: Array<string>
   /**
@@ -939,18 +939,24 @@ export interface DarkSheetReport {
  * read. The layout deals out the LAST sheet as dark; a rule in an earlier sheet
  * that names the dark theme (`[data-theme="dark"] .btn`,
  * `html[data-theme="dark"] .snackbar`) stays in the light half with its scope
- * on, and it is a dark rule all the same. Such a rule is judged with the dark
- * ones — after them, so the pairing the dark sheet had does not move — and a
- * copy among them is named as it is written, scope and all, so it can be found.
- * Otherwise which sheet a rule sits in would decide whether it is read at all.
+ * on, and it is a dark rule all the same. Such a rule is judged the way the
+ * dark sheet's are, as a group of its own — paired with light by its own
+ * position, so neither group moves how the other lines up — and a copy among
+ * them is named as it is written, scope and all, so it can be found. Otherwise
+ * which sheet a rule sits in would decide whether it is read at all.
  *
- * It also stays on the light side, under the selector it is written with. A
- * sheet copied whole repeats it with the scope on twice
+ * Such a rule also stays on the light side, under the selector it is written
+ * with. A sheet copied whole repeats it with the scope on twice
  * (`html[data-theme="dark"][data-theme="dark"] .snackbar`), which comes off to
  * exactly that selector: the repeat pairs with the rule it repeats and is a
  * copy, and the override is counted once, where it is written. The rule
  * itself is read against the light rules that are not dark, so it can never be
  * paired with its own text.
+ *
+ * A scope spelled in a way `unscopeSelector` cannot take off
+ * (`body[data-theme="dark"] .x`, `[data-theme='dark'] .x`) pairs with nothing:
+ * the rule is counted, and never named a copy. The count moving is what brings
+ * it to a reader.
  */
 export function darkSheetReport(
   lightRaw: string,
@@ -979,8 +985,6 @@ export function darkSheetReport(
   const atBlockKey = (at: CssAtBlock) =>
     `${atBlockName(at)} { ${at.body.replace(/\s+/g, " ").trim()} }`
 
-  // The dark sheet's own rules first, so what a light sheet adds below comes
-  // after them and cannot move the position they were paired at.
   type Twins = Map<string, Array<Map<string, string>>>
   // What the dark sheet's rules are read against: every rule of the light
   // half, as written. What a dark rule from the light half is read against:
@@ -988,58 +992,71 @@ export function darkSheetReport(
   // does not come off would pair with itself and pass as a copy of nothing.
   const lightByKey: Twins = new Map()
   const plainLightByKey: Twins = new Map()
-  const darkRules = dark.rules.map((rule) => ({
-    rule,
-    name: nameOf(rule),
-    twinsByKey: lightByKey,
-  }))
-  const file = (into: Twins, rule: CssRule) => {
+  const addTwin = (twinsByKey: Twins, rule: CssRule) => {
     const key = keyOf(rule)
-    const list = into.get(key) ?? []
+    const list = twinsByKey.get(key) ?? []
     list.push(parseDeclarations(rule.declarations))
-    into.set(key, list)
+    twinsByKey.set(key, list)
   }
+  // A dark rule a light sheet carries: the rule with its scope taken off, to
+  // be paired on, and the name it is written under, to be found by.
+  const carried: Array<{ rule: CssRule; name: string }> = []
   for (const rule of light.rules) {
     const arms = splitSelectorList(rule.selector)
     const scoped = arms.filter(mentionsDarkScope)
     if (scoped.length > 0) {
-      darkRules.push({
+      carried.push({
         rule: { ...rule, selector: scoped.map(unscopeSelector).join(", ") },
         name: nameOf(rule),
-        twinsByKey: plainLightByKey,
       })
     }
-    file(lightByKey, rule)
-    if (scoped.length < arms.length) file(plainLightByKey, rule)
+    addTwin(lightByKey, rule)
+    if (scoped.length < arms.length) addTwin(plainLightByKey, rule)
   }
   const lightAtBlocks = new Set(light.atBlocks.map(atBlockKey))
 
   const copies: Array<string> = []
   let overrideRules = 0
-  const seen = new Map<string, number>()
-  for (const { rule, name, twinsByKey } of darkRules) {
-    const key = keyOf(rule)
-    const nth = seen.get(key) ?? 0
-    seen.set(key, nth + 1)
-    const twins = twinsByKey.get(key) ?? []
-    const pair = twins.at(nth)
-    const last = twins.at(-1)
-    const declarations = [...parseDeclarations(rule.declarations)]
-    if (declarations.length === 0) continue
-    const restated = declarations.filter(
-      ([name, value]) => pair?.get(name) === value || last?.get(name) === value
-    )
-    const isToken = ([name]: [string, string]) => name.startsWith("--")
-    if (
-      restated.length === declarations.length ||
-      restated.some((d) => !isToken(d))
-    ) {
-      copies.push(name)
-    }
-    if (declarations.some((d) => !isToken(d) && !restated.includes(d))) {
-      overrideRules++
+  // One group of dark rules against the light rules it is read beside. The nth
+  // rule of a selector pairs with the nth light one, counted within the group:
+  // the dark sheet and an earlier sheet's dark rules each line up with light
+  // on their own, and neither uses up a position the other is paired at.
+  const judge = (
+    darkRules: Array<{ rule: CssRule; name: string }>,
+    twinsByKey: Twins
+  ) => {
+    const seen = new Map<string, number>()
+    for (const { rule, name } of darkRules) {
+      const key = keyOf(rule)
+      const nth = seen.get(key) ?? 0
+      seen.set(key, nth + 1)
+      const twins = twinsByKey.get(key) ?? []
+      const pair = twins.at(nth)
+      const last = twins.at(-1)
+      const declarations = [...parseDeclarations(rule.declarations)]
+      if (declarations.length === 0) continue
+      const restated = declarations.filter(
+        ([property, value]) =>
+          pair?.get(property) === value || last?.get(property) === value
+      )
+      const isToken = ([property]: [string, string]) =>
+        property.startsWith("--")
+      if (
+        restated.length === declarations.length ||
+        restated.some((d) => !isToken(d))
+      ) {
+        copies.push(name)
+      }
+      if (declarations.some((d) => !isToken(d) && !restated.includes(d))) {
+        overrideRules++
+      }
     }
   }
+  judge(
+    dark.rules.map((rule) => ({ rule, name: nameOf(rule) })),
+    lightByKey
+  )
+  judge(carried, plainLightByKey)
   for (const at of dark.atBlocks) {
     if (lightAtBlocks.has(atBlockKey(at))) copies.push(atBlockName(at))
     else overrideRules++
