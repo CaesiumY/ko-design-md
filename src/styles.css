@@ -1,7 +1,15 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@sun-typeface/suit/fonts/variable/woff2/SUIT-Variable.css";
+
+/* The package CSS declares no font-display, so text stays hidden until the whole
+   ~610KB file arrives. Declare the face here with swap instead. */
+@font-face {
+    font-family: 'SUIT Variable';
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('@sun-typeface/suit/fonts/variable/woff2/SUIT-Variable.woff2') format('woff2-variations');
+}
 
 @custom-variant dark (&:is([data-theme="dark"] *));
 
@@ -163,12 +171,12 @@
 }
 
 @layer utilities {
+    /* No font-feature-settings: Pretendard's 'ss01'/'cv11' do not exist in SUIT —
+       there 'ss01' swaps 0 and 3 for alternate digits and 'cv11' does nothing. */
     .text-display {
-        font-feature-settings: 'ss01', 'cv11';
         letter-spacing: -0.05em;
     }
     .text-display-massive {
-        font-feature-settings: 'ss01', 'cv11';
         font-weight: 900;
         letter-spacing: -0.07em;
         line-height: 0.85;
