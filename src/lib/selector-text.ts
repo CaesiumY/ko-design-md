@@ -9,7 +9,7 @@ const ANY_DARK_SCOPE = String.raw`\[\s*data-theme\s*[~|^$*]?=\s*["']?dark["']?\s
 const MENTIONS_DARK_SCOPE = new RegExp(ANY_DARK_SCOPE)
 // The scope where it scopes: at the front of the selector, on the root element
 // however that is named, bare or inside `:where()`, once or (as the merge
-// leaves a hand-written `html[data-theme="dark"]`) twice.
+// leaves a hand-written `html[data-theme="dark"]`) more than once.
 const LEADING_DARK_SCOPE = new RegExp(
   String.raw`^(?:(?:html|:root)?(?:${ANY_DARK_SCOPE})+|:where\(\s*${ANY_DARK_SCOPE}\s*\))`
 )
@@ -21,7 +21,9 @@ const LEADING_ROOT = /^(?:html|:root)\s+(?![>+~])/
  * Wider than `DARK_SCOPE` on purpose — any quoting, any spacing — and wider
  * than what `unscopeSelector` can take back off, which is one spelling only. A
  * spelling this missed would pass unread; one it recognises is read as a dark
- * rule, and `lightSpellingOf` is how it is then paired.
+ * rule, and `lightSpellingOf` is how it is then paired. One that still speaks
+ * of the dark theme after `lightSpellingOf` names it where it cannot be read,
+ * and the validator refuses that rule (`unreadDarkScopes`).
  */
 export function mentionsDarkScope(selector: string): boolean {
   return MENTIONS_DARK_SCOPE.test(selector)

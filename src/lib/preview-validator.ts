@@ -888,6 +888,47 @@ function selectorKey(selector: string): string {
     .trim()
 }
 
+/** Every style rule and unopened at-rule block of a document's sheets. */
+function readSheets(html: string): {
+  rules: Array<CssRule>
+  atBlocks: Array<CssAtBlock>
+} {
+  const rules: Array<CssRule> = []
+  const atBlocks: Array<CssAtBlock> = []
+  walkCssRules(stripCssComments(styleContent(html)), false, "", rules, atBlocks)
+  return { rules, atBlocks }
+}
+
+/** A rule as a finding names it: its selector under the at-rules it sits in. */
+function cssRuleName(rule: CssRule): string {
+  return `${rule.condition}${rule.selector.replace(/\s+/g, " ").trim()}`
+}
+
+/**
+ * The rules that name the dark theme where `darkSheetReport` cannot read it —
+ * anywhere but on the root element at the front of the selector
+ * (`:is([data-theme="dark"]) .btn`, `body[data-theme="dark"] .x`,
+ * `.wrap [data-theme="dark"] .y`), in either half, named as written.
+ *
+ * Such a rule pairs with no light rule, so a copy behind it would be no copy.
+ * It is refused instead of guessed at: every rule that names the dark theme is
+ * then either read against light or reported here. What still gets past is a
+ * dark rule that does not name the theme at all (`:root:not([data-theme=
+ * "light"]) .x`), and `DARK_OVERRIDE_RULES` counts that one.
+ */
+export function unreadDarkScopes(
+  lightRaw: string,
+  darkRaw: string
+): Array<string> {
+  return [...readSheets(darkRaw).rules, ...readSheets(lightRaw).rules]
+    .filter((rule) =>
+      splitSelectorList(rule.selector).some((arm) =>
+        mentionsDarkScope(lightSpellingOf(arm))
+      )
+    )
+    .map(cssRuleName)
+}
+
 export interface DarkSheetReport {
   /**
    * The dark rules that restate light, each named by its selector under the
@@ -962,6 +1003,9 @@ export interface DarkSheetReport {
  * (`lightSpellingOf`), in either group — or a sheet copied whole behind another
  * spelling would be no copy at all. Its own text comes first because the
  * doubled-scope repeat above must go on pairing with the rule it repeats.
+ * A scope written anywhere else (`:is([data-theme="dark"]) .btn`,
+ * `body[data-theme="dark"] .btn`) cannot be taken off and is not judged here
+ * at all: `unreadDarkScopes` names the rule and the validator refuses it.
  *
  * What `overrideRules` counts, in full — the one place it is defined:
  *
@@ -979,24 +1023,11 @@ export function darkSheetReport(
   lightRaw: string,
   darkRaw: string
 ): DarkSheetReport {
-  const read = (html: string) => {
-    const rules: Array<CssRule> = []
-    const atBlocks: Array<CssAtBlock> = []
-    walkCssRules(
-      stripCssComments(styleContent(html)),
-      false,
-      "",
-      rules,
-      atBlocks
-    )
-    return { rules, atBlocks }
-  }
-  const light = read(lightRaw)
-  const dark = read(darkRaw)
+  const light = readSheets(lightRaw)
+  const dark = readSheets(darkRaw)
   const keyOf = (rule: CssRule) =>
     `${rule.condition}${selectorKey(rule.selector)}`
-  const nameOf = (rule: CssRule) =>
-    `${rule.condition}${rule.selector.replace(/\s+/g, " ").trim()}`
+  const nameOf = cssRuleName
   const atBlockName = (at: CssAtBlock) =>
     `${at.condition}${at.prelude.replace(/\s+/g, " ")}`
   const atBlockKey = (at: CssAtBlock) =>
@@ -1951,6 +1982,24 @@ function checkDarkSheetCopy(
   if (served?.length !== 1) return
   const [{ name }] = served
   const backlog = input.darkCopyBacklog ?? DARK_COPY_BACKLOG
+  // Before the copies, and whatever the list says: a rule the pairing cannot
+  // read is not one it found clean.
+  const unread = unreadDarkScopes(input.lightRaw, input.darkRaw)
+  if (unread.length > 0) {
+    const rest = unread.length - DARK_COPY_NAMED
+    issues.push(
+      block(
+        "dark-scope-unread",
+        name,
+        `${unread.length} rule(s) name the dark theme where the copy check cannot read it — ` +
+          `${unread.slice(0, DARK_COPY_NAMED).join("; ")}${rest > 0 ? ` and ${rest} more` : ""}. ` +
+          'Write the scope as a leading [data-theme="dark"] (data-theme sits on the root element): ' +
+          '[data-theme="dark"] .btn, not :is([data-theme="dark"]) .btn or body[data-theme="dark"] .btn. ' +
+          "A dark rule is read against the light rule with the same selector, and one scoped any other way pairs with nothing — a copied rule behind it would not be found. " +
+          "A rule meant for light only needs no scope: light is what is written bare, and the dark rule overrides it."
+      )
+    )
+  }
   const { copies } = darkSheetReport(input.lightRaw, input.darkRaw)
   const verdict = darkCopyVerdict(backlog.has(input.slug), copies.length)
   if (verdict === "clean") return

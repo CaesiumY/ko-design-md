@@ -401,6 +401,76 @@ describe("dark-sheet-copy — a scope spelled another way", () => {
   })
 })
 
+// What the pairing cannot read is not left to pass as "no copy found". A rule
+// that names the dark theme anywhere but on the root, in front, is refused
+// outright — on the not-yet-walked list too, since no shipped preview has one.
+describe("dark-scope-unread", () => {
+  const COPIED_BTN =
+    ".btn { padding: 8px 12px; border-radius: 8px; background: oklch(0.62 0.18 250); }"
+  const unread = (
+    light: string,
+    dark: string,
+    overrides: Partial<PreviewValidationInput> = {}
+  ) =>
+    validatePreviewPair(mergedInput(light, dark, overrides)).issues.filter(
+      (i) => i.rule === "dark-scope-unread"
+    )
+
+  it.each([
+    ':is([data-theme="dark"])',
+    'html:not([data-theme="light"])[data-theme="dark"]',
+    'body[data-theme="dark"]',
+    'html [data-theme="dark"]',
+  ])("blocks a dark-sheet rule scoped with %s, and names it", (scope) => {
+    const issues = unread(LIGHT, `${DARK_TOKENS}\n${scope} ${COPIED_BTN}`)
+    expect(issues.map((i) => i.severity)).toEqual(["block"])
+    expect(issues[0].fix).toContain(".btn")
+  })
+
+  it("blocks one in an earlier sheet, named as it is written", () => {
+    const issues = unread(
+      `${LIGHT}\n.wrap [data-theme="dark"] ${COPIED_BTN}`,
+      DARK_TOKENS
+    )
+    expect(issues.map((i) => i.severity)).toEqual(["block"])
+    expect(issues[0].fix).toContain('.wrap [data-theme="dark"] .btn')
+  })
+
+  it("blocks on the not-yet-walked list as well", () => {
+    expect(
+      unread(LIGHT, `${DARK_TOKENS}\n:is([data-theme="dark"]) ${COPIED_BTN}`, {
+        darkCopyBacklog: new Set(["demo"]),
+      }).map((i) => i.severity)
+    ).toEqual(["block"])
+  })
+
+  // Light is what is written bare, so "everywhere but dark" is no scope the
+  // pairing knows: it would read the rule as a dark one.
+  it("blocks a light rule that is scoped by naming dark to exclude it", () => {
+    const issues = unread(
+      `${LIGHT}\n:root:not([data-theme="dark"]) .btn { margin: 0; }`,
+      DARK_TOKENS
+    )
+    expect(issues.map((i) => i.severity)).toEqual(["block"])
+    expect(issues[0].fix).toContain("needs no scope")
+  })
+
+  it("is quiet for every spelling the pairing reads", () => {
+    const dark = [
+      DARK_TOKENS,
+      '[data-theme="dark"] .hero { outline: 1px solid var(--fg); }',
+      'html[data-theme="dark"] .btn { background: oklch(0.7 0.15 250); }',
+      ":root[data-theme='dark'] .btn:hover { background: oklch(0.6 0.15 250); }",
+    ].join("\n")
+    expect(
+      unread(
+        `${LIGHT}\n[data-theme=dark] .hero { border: 0; }\n[data-theme="light"] .hero { margin: 0; }`,
+        dark
+      )
+    ).toEqual([])
+  })
+})
+
 describe("dark-sheet-copy — the split layout", () => {
   // A split pair's dark file is the whole page: it must carry every structural
   // rule itself, and every one of them is also in light. Not a copy.
