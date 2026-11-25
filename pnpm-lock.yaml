@@ -11,6 +11,9 @@ importers:
       '@base-ui/react':
         specifier: ^1.9.0
         version: 1.9.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@sun-typeface/suit':
+        specifier: ^2.0.5
+        version: 2.0.5
       '@tailwindcss/vite':
         specifier: ^4.3.5
         version: 4.3.5(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
@@ -1430,6 +1433,9 @@ packages:
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: ^9.0.0 || ^10.0.0
+
+  '@sun-typeface/suit@2.0.5':
+    resolution: {integrity: sha512-NJ0hxmQgDjDBFkocQ7rxx3wPahJbj3uATfXudN3oj6hh/rAedElhdYBbsSwz4qJsdjac6aW6cqK6R1bpsNGOaQ==}
 
   '@tailwindcss/node@4.3.5':
     resolution: {integrity: sha512-yT53FzV4ke0cr/BguDxhWMpm5MJu1O2muzk+tKw6lKHjODAsYArBbWwFbJiaksfzFv1tpkO9QHGzmfs1hJT66g==}
@@ -5559,6 +5565,8 @@ snapshots:
       espree: 10.4.0
       estraverse: 5.3.0
       picomatch: 4.0.7
+
+  '@sun-typeface/suit@2.0.5': {}
 
   '@tailwindcss/node@4.3.5':
     dependencies:

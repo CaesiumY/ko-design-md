@@ -62,6 +62,7 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
+    "@sun-typeface/suit": "^2.0.5",
     "@tailwindcss/vite": "^4.3.5",
     "@tanstack/react-devtools": "^0.10.14",
     "@tanstack/react-router": "^1.170.46",
