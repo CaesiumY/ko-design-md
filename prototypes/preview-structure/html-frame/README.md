@@ -122,6 +122,40 @@
 - 넓게 써야 하는 칸은 `pv-cell--wide`, 세로로 쌓는 시연은 `pv-stage--stack` 을 더한다. 틀의 class 는 `frame.css` 에 있는 것만 쓴다.
 - 화면 구역의 칸은 시연 자리 안에 `<div class="pv-screen">` 하나를 두고 그 안에 화면을 그린다. `.pv-screen` 안에는 `pv-` class 를 쓰지 않는다.
 
+### 라이트와 다크
+
+한 파일이 두 테마를 다 싣는다. 파일은 `<html data-theme="light">` 로 열리고, 테마 전환은 공용 `iframe.js` 가 `data-theme` 값을 바꿔서 한다. `prefers-color-scheme` 은 쓰지 않는다.
+
+**색은 토큰으로 바꾼다.**
+
+- 첫 `<style>` 의 `:root` 에 라이트 값을 적는다. 컴포넌트 규칙은 색을 `var(--토큰)` 으로 읽는다.
+- 두 번째 `<style>` 의 `[data-theme="dark"]` 블록에서 다크에서 값이 달라지는 토큰만 다시 정의한다. 그러면 같은 컴포넌트 규칙이 두 테마를 함께 그린다.
+- 틀도 같은 길로 따라간다. `--pv-*` 가 브랜드 토큰의 참조이므로, 다크에서 토큰이 바뀌면 구역 제목, 칸 바탕, 선, 이름표 색이 함께 바뀐다. 그래서 `--pv-*` 를 글자 값으로 주면 `frame-var` 로 막힌다.
+- 토큰으로 안 되는 곳만 다크 시트에 규칙을 둔다. 그 규칙에는 다크에서 달라지는 선언만 적는다. 라이트 규칙을 통째로 복사하지 않는다.
+
+```html
+<style>
+  [data-theme="dark"] {
+    --ink: oklch(0.95 0 0);
+    --canvas: oklch(0.18 0 0);
+  }
+  [data-theme="dark"] .dialog { border: 1px solid var(--line); }
+</style>
+```
+
+**글이 테마마다 다르면 template 으로 바꿔 낀다.** 같은 글을 두 벌 싣고 CSS 로 하나를 숨기지 않는다. 숨긴 글이 찾기, 복사, 보조 기술에 새어 나온다.
+
+- `iframe.js` 는 `<template data-theme-variant="dark">` 를 만나면 **바로 앞 형제 노드**를 다크에서 template 의 내용으로 바꿔 낀다.
+- 칸 이름표의 글 전체가 다르면, template 을 이름표 바로 뒤 형제로 둔다(칸 조각의 2번).
+- 이름표의 한 조각만 다르면, 그 조각을 `<span>` 으로 감싸고 template 을 이름표 **안**, 그 `<span>` 바로 뒤에 둔다.
+
+  ```html
+  <p class="pv-label">search-field, <span>테두리 line-weak</span><template data-theme-variant="dark"><span>테두리 dark-line-weak</span></template></p>
+  ```
+
+- 시연 자리 안의 상태 이름표나 스펙 줄도 같은 방법이다. 바꿀 요소 바로 뒤에 template 을 둔다.
+- 화면 안의 요소에 다는 `(가정)` 표지와 더미 데이터 표기는 화면 밖, 그 칸의 이름표 쪽에 둔다.
+
 ## 4. 한 줄 실행 명령
 
 빌드가 없으므로 따로 만들 것이 없다. 고친 파일이 곧 서빙되는 파일이다. 확인은 두 줄이다.
