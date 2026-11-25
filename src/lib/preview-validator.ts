@@ -729,6 +729,12 @@ interface CssRule {
    * alone cannot tell two media queries apart.
    */
   condition: string
+  /**
+   * `condition` as text two sheets can be paired on, whatever spelling each
+   * one used (`atRulePreludeKey`). `condition` stays as written, for naming
+   * the rule in a finding.
+   */
+  conditionKey: string
 }
 
 /** A block the splitter does not look inside: `@font-face`, `@keyframes`. */
@@ -736,6 +742,27 @@ interface CssAtBlock {
   prelude: string
   body: string
   condition: string
+  conditionKey: string
+}
+
+/**
+ * An at-rule prelude as text two sheets can be paired on. The name is the same
+ * at-rule in any case. In a media, supports or container query the spaces
+ * around brackets, colons, commas and comparison signs say nothing, so
+ * `(max-width:720px)` is `(max-width: 720px)`. What a prelude names — a
+ * container, a layer, a keyframes block — keeps its case, and an at-rule whose
+ * prelude holds a selector (`@scope`, `@supports selector(…)`) keeps its
+ * spaces: there a space is a combinator.
+ */
+function atRulePreludeKey(prelude: string): string {
+  const text = prelude
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/^@[\w-]+/, (name) => name.toLowerCase())
+  const isQuery =
+    /^@(media|container)\b/.test(text) ||
+    (/^@supports\b/.test(text) && !/selector\(/i.test(text))
+  return isQuery ? text.replace(/\s*([():,<>=])\s*/g, "$1") : text
 }
 
 function stripCssComments(css: string): string {
@@ -771,7 +798,7 @@ function dropStatementAtRules(prelude: string): string {
 
 function parseCssRules(css: string): Array<CssRule> {
   const out: Array<CssRule> = []
-  walkCssRules(css, false, "", out, [])
+  walkCssRules(css, false, { text: "", key: "" }, out, [])
   return out
 }
 
@@ -783,7 +810,7 @@ function parseCssRules(css: string): Array<CssRule> {
 function walkCssRules(
   css: string,
   inMedia: boolean,
-  condition: string,
+  condition: { text: string; key: string },
   out: Array<CssRule>,
   atBlocks: Array<CssAtBlock>
 ): void {
@@ -812,7 +839,10 @@ function walkCssRules(
       j++
     }
     const inner = css.slice(open + 1, j - 1)
-    const nested = `${condition}${selector.replace(/\s+/g, " ")} / `
+    const nested = {
+      text: `${condition.text}${selector.replace(/\s+/g, " ")} / `,
+      key: `${condition.key}${atRulePreludeKey(selector)} / `,
+    }
     // An at-rule's name is the same rule in any case.
     if (/^@(media|supports|container)\b/i.test(selector)) {
       walkCssRules(inner, true, nested, out, atBlocks)
@@ -821,9 +851,20 @@ function walkCssRules(
       // their rules unconditionally, so they keep the enclosing `inMedia`.
       walkCssRules(inner, inMedia, nested, out, atBlocks)
     } else if (!selector.startsWith("@")) {
-      out.push({ selector, declarations: inner, inMedia, condition })
+      out.push({
+        selector,
+        declarations: inner,
+        inMedia,
+        condition: condition.text,
+        conditionKey: condition.key,
+      })
     } else {
-      atBlocks.push({ prelude: selector, body: inner, condition })
+      atBlocks.push({
+        prelude: selector,
+        body: inner,
+        condition: condition.text,
+        conditionKey: condition.key,
+      })
     }
     i = j
   }
@@ -897,7 +938,13 @@ function readSheets(html: string): {
 } {
   const rules: Array<CssRule> = []
   const atBlocks: Array<CssAtBlock> = []
-  walkCssRules(stripCssComments(styleContent(html)), false, "", rules, atBlocks)
+  walkCssRules(
+    stripCssComments(styleContent(html)),
+    false,
+    { text: "", key: "" },
+    rules,
+    atBlocks
+  )
   return { rules, atBlocks }
 }
 
@@ -964,6 +1011,11 @@ const UNREAD_WHY = {
  *   script
  * - text that throws the splitter: a comment opener inside a string, a string
  *   that ends in an escaped backslash
+ *
+ * It errs the other way in one place: a `<style>` element inside an HTML
+ * comment. The sheets are cut out of the document's text, so one that is
+ * commented out is read as live, and a dark rule in it is judged like any
+ * other — refused, if it has one of the shapes above.
  */
 function unreadDarkScopes(lightRaw: string, darkRaw: string): Array<string> {
   const why = (rule: CssRule, isDark: boolean): string | null => {
@@ -1044,6 +1096,22 @@ export interface DarkSheetReport {
  * the shape this rule asks authors to write towards, and the catalogue's
  * token-only dark sheets do exactly that.
  *
+ * Position is read before outcome. Where light writes one selector twice and
+ * the later rule overrides the earlier, a lone dark rule that puts the earlier
+ * value back is paired with that earlier rule and read as restating it, though
+ * dark ends up unlike light. Light written as one rule leaves nothing to
+ * mistake.
+ *
+ * Pairs are found by text, not by what a browser makes of it. The text is
+ * folded where two spellings are plainly one thing: the spacing of a selector
+ * (`selectorKey`), the spelling of the dark scope (`lightSpellingOf`), the
+ * name of an at-rule and the spacing of its query (`atRulePreludeKey`), the
+ * case of a property name, the run of spaces inside a value. Everything else
+ * is compared as written — a value spelled another way (`#FFF` for `#fff`,
+ * `.5` for `0.5`), a renamed class, the body of an at-rule block. A copy
+ * behind such a difference is not found as one. It lands in `overrideRules`
+ * instead, a count that has to be recorded and answered for.
+ *
  * "Copy" is not "dead code". `[data-theme="dark"] .btn` outranks a light
  * `.btn:hover` it would otherwise lose to, so a same-valued dark rule can be
  * holding the dark rendering in place. That is why the finding's remedy is to
@@ -1102,11 +1170,11 @@ export function darkSheetReport(
   const light = readSheets(lightRaw)
   const dark = readSheets(darkRaw)
   const keyOf = (rule: CssRule) =>
-    `${rule.condition}${selectorKey(rule.selector)}`
+    `${rule.conditionKey}${selectorKey(rule.selector)}`
   const nameOf = cssRuleName
   const atBlockName = cssAtBlockName
   const atBlockKey = (at: CssAtBlock) =>
-    `${atBlockName(at)} { ${at.body.replace(/\s+/g, " ").trim()} }`
+    `${at.conditionKey}${atRulePreludeKey(at.prelude)} { ${at.body.replace(/\s+/g, " ").trim()} }`
 
   type Twins = Map<string, Array<Map<string, string>>>
   // What the dark sheet's rules are read against: every rule of the light

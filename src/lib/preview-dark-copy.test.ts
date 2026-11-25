@@ -413,6 +413,95 @@ describe("dark-sheet-copy — a scope spelled another way", () => {
   })
 })
 
+// A pair is the same selector under the same at-rules, and an at-rule's
+// prelude has spellings too: `(max-width:720px)` is the query
+// `(max-width: 720px)` is. Read as two at-rules, a copy under one pairs with
+// nothing and is no copy.
+describe("dark-sheet-copy — an at-rule prelude spelled another way", () => {
+  const report = (light: string, dark: string) => {
+    const html = mergedFile(light, dark)
+    const halves = splitMergedPreview(html, Buffer.byteLength(html))
+    return darkSheetReport(halves.light, halves.dark)
+  }
+  const NARROW = ".btn { padding: 4px 8px; }"
+
+  it.each([
+    ["@media (max-width: 720px)", "@media (max-width:720px)"],
+    ["@media (max-width: 720px)", "@media ( max-width : 720px )"],
+    ["@media (max-width: 720px)", "@MEDIA (max-width: 720px)"],
+    [
+      "@media screen and (min-width: 600px)",
+      "@media screen and (min-width:600px)",
+    ],
+    ["@media (width >= 600px)", "@media (width>=600px)"],
+    ["@supports (display: grid)", "@supports (display:grid)"],
+    ["@container card (min-width: 400px)", "@container card (min-width:400px)"],
+  ])("pairs a rule under %s with one under %s", (lightAt, darkAt) => {
+    expect(
+      report(
+        `${LIGHT}\n${lightAt} { ${NARROW} }`,
+        `${DARK_TOKENS}\n${darkAt} { [data-theme="dark"] ${NARROW} }`
+      )
+    ).toEqual({ copies: [`${darkAt} / .btn`], overrideRules: 0 })
+  })
+
+  it("blocks the copy the reviewer's input carries", () => {
+    const issues = found(
+      mergedInput(
+        `${LIGHT}\n@media (max-width: 720px){.btn{padding:8px;color:red}}`,
+        `${DARK_TOKENS}\n@media (max-width:720px){[data-theme="dark"] .btn{padding:8px;color:red}}`
+      )
+    )
+    expect(issues).toHaveLength(1)
+    expect(issues[0].severity).toBe("block")
+  })
+
+  it("pairs a dark rule an earlier sheet carries the same way", () => {
+    expect(
+      report(
+        `${LIGHT}\n@media (max-width: 720px) { ${NARROW} }\n@media (max-width:720px) { [data-theme="dark"] ${NARROW} }`,
+        DARK_TOKENS
+      )
+    ).toEqual({
+      copies: ['@media (max-width:720px) / [data-theme="dark"] .btn'],
+      overrideRules: 0,
+    })
+  })
+
+  it("pairs an at-rule block under one the same way", () => {
+    const spin = "@keyframes spin { to { transform: rotate(360deg); } }"
+    expect(
+      report(
+        `${LIGHT}\n@media (min-width: 600px) { ${spin} }`,
+        `${DARK_TOKENS}\n@media (min-width:600px) { ${spin} }`
+      )
+    ).toEqual({
+      copies: ["@media (min-width:600px) / @keyframes spin"],
+      overrideRules: 0,
+    })
+  })
+
+  // The other direction: a different query is a different at-rule, and what a
+  // prelude names keeps its case and its spaces where they say something.
+  it.each([
+    ["@media (max-width: 720px)", "@media (max-width: 72px)"],
+    ["@media (max-width: 720px)", "@media (min-width: 720px)"],
+    [
+      "@container card (min-width: 400px)",
+      "@container Card (min-width: 400px)",
+    ],
+    ["@layer base", "@layer Base"],
+    ["@scope (.card :hover)", "@scope (.card:hover)"],
+  ])("does not pair a rule under %s with one under %s", (lightAt, darkAt) => {
+    expect(
+      report(
+        `${LIGHT}\n${lightAt} { ${NARROW} }`,
+        `${DARK_TOKENS}\n${darkAt} { [data-theme="dark"] ${NARROW} }`
+      )
+    ).toEqual({ copies: [], overrideRules: 1 })
+  })
+})
+
 // What the pairing cannot read is not left to pass as "no copy found". A rule
 // that names the dark theme anywhere but on the root, in front, is refused
 // outright — on the not-yet-walked list too: the list excuses copies that
