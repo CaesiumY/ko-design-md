@@ -91,7 +91,7 @@ pnpm exec tsx prototypes/preview-structure/custom-tags/hurdles.ts --base <바탕
 ## 4. 걸림돌 다섯
 
 모두 `hurdles.ts` 로 쟀다. 사본은 OS 임시 폴더에 만들고, 서빙되는 파일은 건드리지 않았다.
-이 절과 3절의 수는 실행 결과의 기록이고, 잰 커밋은 `STATS.md` 맨 위에 적는다.
+이 절과 3절의 수는 커밋 177bd91f 에서 `hurdles.ts` 와 3절의 명령으로 잰 기록이다.
 
 ### 4.1 공용 스크립트 밖 스크립트 금지: 조건부. `src` 로 실은 별도 파일이면 그렇고, 그 밖이면 그렇지 않다
 
