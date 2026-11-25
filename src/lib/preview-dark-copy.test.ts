@@ -437,6 +437,10 @@ describe("dark-sheet-copy — an at-rule prelude spelled another way", () => {
     ["@supports (display: grid)", "@supports (display:grid)"],
     ["@container card (min-width: 400px)", "@container card (min-width:400px)"],
     ["@media (aspect-ratio: 16 / 9)", "@media (aspect-ratio:16/9)"],
+    // No space after the name, the way a minifier writes it.
+    ["@media (max-width: 720px)", "@media(max-width:720px)"],
+    ["@supports (display: grid)", "@supports(display:grid)"],
+    ["@container (min-width: 400px)", "@container(min-width:400px)"],
   ])("pairs a rule under %s with one under %s", (lightAt, darkAt) => {
     expect(
       report(

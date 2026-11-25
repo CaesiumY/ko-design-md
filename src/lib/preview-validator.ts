@@ -749,12 +749,15 @@ interface CssAtBlock {
  * An at-rule prelude as text two sheets can be paired on. The name is the same
  * at-rule in any case. In a media, supports or container query the spaces
  * just inside a bracket and around a colon, comma, slash or comparison sign
- * say nothing, so `(max-width:720px)` is `( max-width : 720px )`.
+ * say nothing, so `(max-width:720px)` is `( max-width : 720px )`. Neither
+ * does the space between the name and a bracket right behind it: a minifier
+ * writes `@media(max-width:720px)`.
  *
- * Left as written: the space in front of a bracket (`not (…)` is a query,
- * `not(…)` a function the browser does not know), a quoted string, and the
- * case of everything after the name — a container, a layer and a keyframes
- * block are named in a case, and a query's own words are simply not folded.
+ * Left as written: the space in front of any other bracket (`not (…)` is a
+ * query, `not(…)` a function the browser does not know), a quoted string, and
+ * the case of everything after the name — a container, a layer and a
+ * keyframes block are named in a case, and a query's own words are simply not
+ * folded.
  * A prelude that holds a selector (`@scope`, `@supports selector(…)`) or a
  * style query (`style(--k: a, b)`) keeps every space that is not a run of
  * them: in a selector a space is a combinator, in a custom property's value
@@ -774,9 +777,11 @@ function atRulePreludeKey(prelude: string): string {
     /^@(media|container|supports)\b/.test(text) &&
     !/(selector|style)\(/i.test(text)
   if (!isQuery) return text
-  return text.replace(/"[^"]*"|'[^']*'|\(\s+|\s+\)|\s*[:,/<>=]\s*/g, (found) =>
-    /^["']/.test(found) ? found : found.trim()
-  )
+  return text
+    .replace(/^(@[\w-]+) \(/, "$1(")
+    .replace(/"[^"]*"|'[^']*'|\(\s+|\s+\)|\s*[:,/<>=]\s*/g, (found) =>
+      /^["']/.test(found) ? found : found.trim()
+    )
 }
 
 function stripCssComments(css: string): string {
