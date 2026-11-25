@@ -334,8 +334,16 @@ function readRuleSelectors(): Array<string> {
  * Runs in the page. Marks every element the given selectors find, and returns
  * how many — the count goes into the pass label, so two sides that force a
  * different number of elements do not compare as the same pass.
+ *
+ * The marks of an earlier call come off first. A page is marked once per
+ * theme, and an element only the other theme's selectors found
+ * (`[data-theme="light"] .a:hover`) would otherwise stay marked and be forced
+ * beyond the count the label gives.
  */
 function markElements(selectors: Array<string>): number {
+  document.querySelectorAll("[data-dd-force]").forEach((el) => {
+    el.removeAttribute("data-dd-force")
+  })
   const seen = new Set<Element>()
   for (const selector of selectors) {
     try {
