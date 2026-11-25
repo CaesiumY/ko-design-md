@@ -7,8 +7,9 @@
    This is the package's variable .woff2, a subset: it holds fewer Hangul syllables
    than the package's fonts/variable/ttf build, and neither build has — – ≤ ≥ − № Δ §
    and some other symbols. Glyphs the file lacks fall back to the system fonts below.
-   suit-coverage-corpus.test.ts fails if the site shows a Hangul syllable this file
-   lacks; symbols are accepted, so the fallback only ever draws those. */
+   suit-coverage-corpus.test.ts reads the file from this declaration and fails if the
+   site shows a Hangul syllable or compatibility jamo it lacks; symbols are accepted,
+   so the fallback only ever draws those. */
 @font-face {
     font-family: 'SUIT Variable';
     font-weight: 100 900;
