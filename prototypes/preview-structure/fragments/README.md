@@ -57,6 +57,7 @@ preview-src/{slug}/
 
 - 이름표 안에 마크업을 둘 수 있다. 이름표의 한 조각만 다크에서 달라지면 그 조각 뒤에 `<template data-theme-variant="dark">` 를 이름표 안에 둔다(토스의 다섯 칸. STANDARD 2절).
 - 조각에는 `pv-` class 와 `data-pv-zone`, `data-pv-cell` 을 쓰지 않는다. 쓰면 약속 검사가 막는다. `data-pv-toggle`, `data-pv-option` 은 브랜드 마크업의 것이라 쓴다(STANDARD 5절).
+- 칸, 이름표, 시연 자리의 서빙 마크업은 `assemble.ts` 의 `assemble()` 끝, 칸을 내보내는 반복문 한 곳에서 쓴다. 이름표는 거기서 두 번 쓰인다(이름표 줄과 다크 `<template>` 안의 이름표 줄). 칸의 마크업 약속을 바꾸면 그 반복문과 `contract.ts` 의 칸 검사를 함께 고치고 `pnpm previews:build` 로 모든 항목을 다시 만든다.
 - 칸 사이의 빈 줄은 그대로 서빙 파일에 나온다. 칸 밖에는 빈 줄 말고 아무것도 두지 않는다.
 
 ## 한 줄 명령

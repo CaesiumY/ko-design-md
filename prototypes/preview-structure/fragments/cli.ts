@@ -11,8 +11,8 @@
 // Exit 0: fine. Exit 1: findings (printed, each with file:line and how to fix).
 // Exit 2: bad arguments or unreadable files.
 
-import { readFileSync, writeFileSync } from "node:fs"
-import { resolve } from "node:path"
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs"
+import { dirname, resolve } from "node:path"
 import { checkPreview, checkServed } from "./contract"
 import {
   FragmentError,
@@ -41,6 +41,11 @@ function report(tag: string, findings: Array<Finding>): number {
   return findings.length > 0 ? 1 : 0
 }
 
+function write(path: string, html: string) {
+  mkdirSync(dirname(path), { recursive: true })
+  writeFileSync(path, html)
+}
+
 function build(argv: Array<string>): number {
   const { named, rest } = opts(argv)
   const src = named.get("--src")
@@ -51,13 +56,13 @@ function build(argv: Array<string>): number {
       console.error("--src 에는 --slug 와 --out 이 함께 필요하다")
       return 2
     }
-    writeFileSync(resolve(out), buildSlug(loadSource(slug, src)).html)
+    write(resolve(out), buildSlug(loadSource(slug, src)).html)
     console.log(`[previews:build] ${slug} → ${out}`)
     return 0
   }
   const slugs = rest.length > 0 ? rest : listSourceSlugs()
   for (const slug of slugs) {
-    writeFileSync(servedPath(slug), buildSlug(loadSource(slug)).html)
+    write(servedPath(slug), buildSlug(loadSource(slug)).html)
     console.log(
       `[previews:build] ${slug} → public/preview/${slug}/preview.html`
     )
