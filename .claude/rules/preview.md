@@ -4,6 +4,10 @@ paths:
   - "src/lib/preview-validator*"
   - "src/lib/validate-preview-cli.test.ts"
   - "scripts/validate-preview.ts"
+  - "src/lib/dark-sheet-backlog.ts"
+  - "src/lib/preview-dark-copy*"
+  - "src/lib/preview-dom-diff*"
+  - "scripts/preview-dom-diff.ts"
   - "src/lib/*contrast*"
   - "scripts/*contrast*"
   - "docs/preview-contrast-baseline.md"
@@ -25,6 +29,24 @@ paths:
 - 컬러 표면 위 텍스트는 `var(--primary-foreground)` 계열 토큰 — 흰색 하드코딩 시
   다크 모드에서 대비 붕괴.
 - 사이트 chrome은 라이트 고정; `[data-theme="dark"]`는 프리뷰 iframe 전용.
+- **다크용 스타일(맨 끝의 `[data-theme="dark"]` 시트)에는 다크에서 달라지는 것만 적는다**(ADR 0015).
+  기본은 토큰 재정의다. 달라지는 색은 `[data-theme="dark"]` 아래에서 커스텀 프로퍼티를 다시 정의해 바꾸고,
+  토큰으로 옮길 수 없는 곳(로고를 `filter` 로 뒤집는 경우 등)만 그 속성을 바꾸는 규칙으로 남긴다. 라이트 규칙을
+  다크 시트에 다시 적은 복사본은 두지 않는다. 검증기가 복사본을 막고, 무엇이 복사본인지의 정의는
+  `src/lib/preview-validator.ts` 의 `darkSheetReport` 주석이 정본이다.
+  - **이행 중(#734 → #738)**: 아직 걷지 않은 슬러그의 목록(`src/lib/dark-sheet-backlog.ts` 의
+    `DARK_COPY_BACKLOG`)에 있는 항목은 복사본이 경고로만 난다. 목록은 줄어들기만 하고 새로 넣지 않는다. 걷은
+    PR 이 그 슬러그를 목록에서 뺀다. 빼지 않으면 `pnpm validate:previews` 와 `pnpm test` 가 막는다. 목록이 비면
+    목록과 이 문단을 걷는다.
+  - **토큰 재정의가 아닌 다크 규칙의 수는 슬러그별로 같은 파일의 `DARK_OVERRIDE_RULES` 에 정확값으로 적는다.**
+    "토큰만 허용"으로 막지 않는 대신 그 수를 고정한 것이다. 늘어도 줄어도 `pnpm test` 가 막고, 실패 메시지가
+    적을 줄을 말한다. 늘릴 때는 그 규칙이 왜 토큰으로 안 되는지를 PR 에 적는다.
+  - **복사본을 걷을 때는 보이는 대로 지우지 않는다.** `[data-theme="dark"] .a` 는 선택자가 하나 더 붙어 라이트의
+    더 구체적인 규칙을 이기므로, 값이 같은 다크 규칙이 다크 화면을 붙들고 있을 수 있다. 걷기 전 파일과 걷은 뒤
+    파일을 `pnpm preview:dom-diff --a <걷기 전> --b <걷은 뒤>` 로 비교해 차이가 없어야 한다(두 테마 × 위 검증 폭,
+    강제한 hover, 눌림, 초점, 선언된 전환). 로컬에서는 `pnpm exec playwright install chromium` 이 선행이고, 종료
+    코드는 차이 3, 도구 고장 1, 인자 오류 2 다. **이 도구는 프리뷰 기준 이행(#724) 동안만 쓰는 임시 도구다.**
+    "차이 없음"이 보장하지 않는 것(`::placeholder` 등)은 `scripts/preview-dom-diff.ts` 머리 주석에 있다.
 - **디자인 설명 캡션을 쓰지 않는다**(#499). 시연 자체의 글(히어로 브랜드명·슬로건·CTA, 섹션 제목,
   컴포넌트·목업 안 카피) 밖의 글은 닫힌 목록뿐이다 — `catalog-disclaimer` 띠 · `catalog-dummy`
   더미 데이터 표기 · `catalog-attribution` 줄 · 컴포넌트·상태 이름표(스펙·값 라벨 포함) · 조작 안내 ·

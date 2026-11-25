@@ -46,6 +46,7 @@
     "validate:draft": "tsx scripts/validate-draft.ts",
     "validate:catalog": "tsx scripts/validate-draft.ts --services",
     "validate:previews": "tsx scripts/validate-preview.ts",
+    "preview:dom-diff": "tsx scripts/preview-dom-diff.ts",
     "validate:spec": "tsx scripts/validate-spec.ts",
     "check:last-updated": "tsx scripts/check-last-updated.ts",
     "gates": "tsx scripts/gates.ts",

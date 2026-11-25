@@ -1,6 +1,7 @@
 import { brotliCompressSync, constants } from "node:zlib"
 import { readFrontmatter } from "./frontmatter"
 import { buildDoc } from "./site-frontmatter"
+import { DARK_COPY_BACKLOG, darkCopyVerdict } from "./dark-sheet-backlog"
 import { bodyOf, isBlankText, walkHtml } from "./html-walk"
 import { hasAppliedReduceBlock, hasCssMotion } from "./reduced-motion-block"
 import { ColorRefError, extractTokensFromMarkdown } from "./token-extractor"
@@ -59,6 +60,10 @@ export interface PreviewValidationInput {
   // logo-img-missing warn applies.
   expectedLogoSrc?: string
   expectedWordmarkSrc?: string
+  // Slugs whose dark sheet has not been walked yet — see `checkDarkSheetCopy`.
+  // Left out by every real caller, which then reads the recorded list; a test
+  // passes its own so it can put a fixture slug on or off it.
+  darkCopyBacklog?: ReadonlySet<string>
 }
 
 export interface CoverageMetric {
@@ -710,6 +715,20 @@ interface CssRule {
   selector: string
   declarations: string
   inMedia: boolean
+  /**
+   * The at-rule preludes this rule sits under, outermost first, each followed
+   * by " / " — empty at the top level. `.a` and `@media (…) { .a }` are
+   * different rules to anything that pairs rules across sheets, and `inMedia`
+   * alone cannot tell two media queries apart.
+   */
+  condition: string
+}
+
+/** A block the splitter does not look inside: `@font-face`, `@keyframes`. */
+interface CssAtBlock {
+  prelude: string
+  body: string
+  condition: string
 }
 
 function stripCssComments(css: string): string {
@@ -743,8 +762,24 @@ function dropStatementAtRules(prelude: string): string {
   return prelude.slice(cut)
 }
 
-function parseCssRules(css: string, inMedia = false): Array<CssRule> {
+function parseCssRules(css: string): Array<CssRule> {
   const out: Array<CssRule> = []
+  walkCssRules(css, false, "", out, [])
+  return out
+}
+
+/**
+ * The walk behind `parseCssRules`. `atBlocks` collects the at-rule blocks the
+ * walk does not descend into, for the one reader that asks whether a dark sheet
+ * repeats them.
+ */
+function walkCssRules(
+  css: string,
+  inMedia: boolean,
+  condition: string,
+  out: Array<CssRule>,
+  atBlocks: Array<CssAtBlock>
+): void {
   let i = 0
   while (i < css.length) {
     const open = css.indexOf("{", i)
@@ -770,24 +805,198 @@ function parseCssRules(css: string, inMedia = false): Array<CssRule> {
       j++
     }
     const inner = css.slice(open + 1, j - 1)
+    const nested = `${condition}${selector.replace(/\s+/g, " ")} / `
     if (/^@(media|supports|container)\b/.test(selector)) {
-      out.push(...parseCssRules(inner, true))
+      walkCssRules(inner, true, nested, out, atBlocks)
     } else if (/^@(layer|scope|starting-style)\b/.test(selector)) {
       // Rule-containing blocks that are not conditions: the browser applies
       // their rules unconditionally, so they keep the enclosing `inMedia`.
-      out.push(...parseCssRules(inner, inMedia))
+      walkCssRules(inner, inMedia, nested, out, atBlocks)
     } else if (!selector.startsWith("@")) {
-      out.push({ selector, declarations: inner, inMedia })
+      out.push({ selector, declarations: inner, inMedia, condition })
+    } else {
+      atBlocks.push({ prelude: selector, body: inner, condition })
     }
     i = j
   }
-  return out
 }
 
 function styleContent(html: string): string {
   return [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)]
     .map((m) => m[1])
     .join("\n")
+}
+
+// ── what the dark sheet repeats ──────────────────────────────────────────────
+
+/**
+ * One rule body as `property → value`, split on the `;` that separate
+ * declarations — not the ones inside a `url(…)`, a quoted string or a nested
+ * block. A property written twice keeps its last value, as the cascade does.
+ * Property names are folded to lower case, custom properties excepted: `--Bg`
+ * and `--bg` are two properties.
+ */
+function parseDeclarations(body: string): Map<string, string> {
+  const out = new Map<string, string>()
+  let depth = 0
+  let quote: '"' | "'" | null = null
+  let start = 0
+  for (let i = 0; i <= body.length; i++) {
+    const ch = body[i]
+    if (i < body.length) {
+      if (quote !== null) {
+        if (ch === "\\") i++
+        else if (ch === quote) quote = null
+        continue
+      }
+      if (ch === '"' || ch === "'") {
+        quote = ch
+        continue
+      }
+      if (ch === "(" || ch === "{") depth++
+      else if ((ch === ")" || ch === "}") && depth > 0) depth--
+      if (ch !== ";" || depth > 0) continue
+    }
+    const piece = body.slice(start, i)
+    start = i + 1
+    const colon = piece.indexOf(":")
+    if (colon === -1) continue
+    const name = piece.slice(0, colon).trim()
+    if (name === "") continue
+    out.set(
+      name.startsWith("--") ? name : name.toLowerCase(),
+      piece
+        .slice(colon + 1)
+        .replace(/\s+/g, " ")
+        .trim()
+    )
+  }
+  return out
+}
+
+/** Selector text two sheets can be paired on, whatever spacing each one used. */
+function selectorKey(selector: string): string {
+  return selector
+    .replace(/\s+/g, " ")
+    .replace(/\s*([,>+~])\s*/g, "$1")
+    .trim()
+}
+
+export interface DarkSheetReport {
+  /**
+   * The dark rules that restate light, in sheet order, each named by its
+   * selector under the at-rules it sits in (`.btn:hover`,
+   * `@media (max-width: 720px) / .grid`).
+   */
+  copies: Array<string>
+  /**
+   * How many dark rules set something other than a custom property, to a value
+   * light does not already give it. See `DARK_OVERRIDE_RULES`.
+   */
+  overrideRules: number
+}
+
+/**
+ * Read a dark sheet against the light sheets it ships beside (ADR 0015: the
+ * dark sheet says only what dark changes).
+ *
+ * `lightRaw` and `darkRaw` are the two halves `preview-halves.ts` deals out of
+ * a merged file — the dark one with its `[data-theme="dark"]` scope already
+ * taken off, so a dark rule and the light rule it shadows carry the same
+ * selector and can be paired on it. A pair is the same selector under the same
+ * at-rules; where a sheet writes one selector several times, the nth dark rule
+ * is read against the nth light one, which is how a copied sheet lines up.
+ *
+ * A dark declaration **restates** light when its pair gives the property the
+ * same value, or when the last light rule for that selector does (the value
+ * light ends up with, where a preview has since been walked and the two sheets
+ * no longer line up one to one). A dark rule is a **copy** when
+ *
+ * - every declaration in it restates light, or
+ * - any declaration that is not a custom property does.
+ *
+ * The second arm is what keeps a half-walked rule from passing: `color`
+ * retuned, `padding` and `border-radius` still carried along beside it. Custom
+ * properties are left out of that arm on purpose. A dark token block that
+ * redeclares a few tokens at their light value beside the ones it changes is
+ * the shape this rule asks authors to write towards, and the catalogue's
+ * token-only dark sheets do exactly that.
+ *
+ * "Copy" is not "dead code". `[data-theme="dark"] .btn` outranks a light
+ * `.btn:hover` it would otherwise lose to, so a same-valued dark rule can be
+ * holding the dark rendering in place. That is why the finding's remedy is to
+ * move the colours into tokens and compare the rendering, never to delete.
+ *
+ * An at-rule block the splitter does not open (`@font-face`, `@keyframes`) is a
+ * copy when light carries the same block word for word.
+ */
+export function darkSheetReport(
+  lightRaw: string,
+  darkRaw: string
+): DarkSheetReport {
+  const read = (html: string) => {
+    const rules: Array<CssRule> = []
+    const atBlocks: Array<CssAtBlock> = []
+    walkCssRules(
+      stripCssComments(styleContent(html)),
+      false,
+      "",
+      rules,
+      atBlocks
+    )
+    return { rules, atBlocks }
+  }
+  const light = read(lightRaw)
+  const dark = read(darkRaw)
+  const keyOf = (rule: CssRule) =>
+    `${rule.condition}${selectorKey(rule.selector)}`
+  const atBlockName = (at: CssAtBlock) =>
+    `${at.condition}${at.prelude.replace(/\s+/g, " ")}`
+  const atBlockKey = (at: CssAtBlock) =>
+    `${atBlockName(at)} { ${at.body.replace(/\s+/g, " ").trim()} }`
+
+  const lightByKey = new Map<string, Array<Map<string, string>>>()
+  for (const rule of light.rules) {
+    const key = keyOf(rule)
+    const list = lightByKey.get(key) ?? []
+    list.push(parseDeclarations(rule.declarations))
+    lightByKey.set(key, list)
+  }
+  const lightAtBlocks = new Set(light.atBlocks.map(atBlockKey))
+
+  const copies: Array<string> = []
+  let overrideRules = 0
+  const seen = new Map<string, number>()
+  for (const rule of dark.rules) {
+    const key = keyOf(rule)
+    const nth = seen.get(key) ?? 0
+    seen.set(key, nth + 1)
+    const twins = lightByKey.get(key) ?? []
+    const pair = twins.at(nth)
+    const last = twins.at(-1)
+    const declarations = [...parseDeclarations(rule.declarations)]
+    if (declarations.length === 0) continue
+    const restated = declarations.filter(
+      ([name, value]) => pair?.get(name) === value || last?.get(name) === value
+    )
+    const isToken = ([name]: [string, string]) => name.startsWith("--")
+    if (
+      restated.length === declarations.length ||
+      restated.some((d) => !isToken(d))
+    ) {
+      copies.push(
+        `${rule.condition}${rule.selector.replace(/\s+/g, " ").trim()}`
+      )
+    }
+    if (declarations.some((d) => !isToken(d) && !restated.includes(d))) {
+      overrideRules++
+    }
+  }
+  for (const at of dark.atBlocks) {
+    if (lightAtBlocks.has(atBlockKey(at))) copies.push(atBlockName(at))
+    else overrideRules++
+  }
+  return { copies, overrideRules }
 }
 
 // `minmax(min(170px, 100%), 1fr)` — the inner call's ")" is not the outer
@@ -1630,6 +1839,67 @@ function checkFile(
 
 // ── entry point ──────────────────────────────────────────────────────────────
 
+/** How many copied rules a finding names before it says "and N more". */
+const DARK_COPY_NAMED = 3
+
+/**
+ * The dark sheet says only what dark changes (ADR 0015); a rule in it that
+ * restates light is a finding. `darkSheetReport` decides what restating means.
+ *
+ * Only the merged layout is judged. A split pair's dark file is the whole page
+ * and has to carry every structural rule itself, so there every rule would pair
+ * as a copy. One download unit is how this file tells the two apart — the same
+ * signal the size gate reads.
+ *
+ * Severity comes from the not-yet-walked list, in the three cases
+ * `darkCopyVerdict` names. One issue per document however many rules there are:
+ * an unwalked sheet restates light a few hundred times, and the finding is the
+ * sheet, not each rule.
+ */
+function checkDarkSheetCopy(
+  input: PreviewValidationInput,
+  issues: Array<ValidationIssue>
+): void {
+  const served = input.served
+  if (served?.length !== 1) return
+  const [{ name }] = served
+  const backlog = input.darkCopyBacklog ?? DARK_COPY_BACKLOG
+  const { copies } = darkSheetReport(input.lightRaw, input.darkRaw)
+  const verdict = darkCopyVerdict(backlog.has(input.slug), copies.length)
+  if (verdict === "clean") return
+  if (verdict === "stale") {
+    issues.push(
+      block(
+        "dark-copy-backlog-stale",
+        name,
+        `${input.slug} is on the not-yet-walked list, but its [data-theme="dark"] sheet no longer restates any light rule. Take the slug out of DARK_COPY_BACKLOG in src/lib/dark-sheet-backlog.ts, so a copy that comes back is blocked rather than waved through as backlog.`
+      )
+    )
+    return
+  }
+  const named = copies.slice(0, DARK_COPY_NAMED).join(" · ")
+  const rest = copies.length - DARK_COPY_NAMED
+  const what =
+    `the [data-theme="dark"] sheet restates ${copies.length} light ` +
+    `rule(s) — ${named}${rest > 0 ? ` and ${rest} more` : ""}. `
+  const remedy =
+    "The dark sheet says only what dark changes: move each colour that " +
+    'differs into a custom property redefined under [data-theme="dark"], ' +
+    "keep a colour-property rule only where a token cannot carry the " +
+    "change, and let the rest go. Do not delete on sight — the dark scope " +
+    "outranks light rules a same-valued copy would otherwise lose to, so " +
+    "compare the rendering before and after with `pnpm preview:dom-diff`."
+  issues.push(
+    verdict === "block"
+      ? block("dark-sheet-copy", name, what + remedy)
+      : warn(
+          "dark-sheet-copy",
+          name,
+          `${what}${remedy} A warning only while ${input.slug} is on the not-yet-walked list (DARK_COPY_BACKLOG).`
+        )
+  )
+}
+
 export function validatePreviewPair(
   input: PreviewValidationInput
 ): PreviewValidationResult {
@@ -1810,6 +2080,8 @@ export function validatePreviewPair(
       )
     )
   }
+
+  checkDarkSheetCopy(input, issues)
 
   return {
     issues,

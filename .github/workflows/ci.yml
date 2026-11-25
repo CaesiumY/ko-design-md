@@ -286,6 +286,18 @@ jobs:
             .claude/cache/contrast-findings.json
           if-no-files-found: warn
 
+      # The screen comparison tool (`pnpm preview:dom-diff`) is run by hand, on
+      # the PRs that walk a preview's dark copies or move it onto the shared
+      # frame, and its answer there is "no difference". This is what keeps that
+      # answer worth something: a document must match itself, and one changed
+      # dark :hover rule must show up as exactly that. It rides in this job
+      # because the browser is already here, last and whichever way the gate
+      # went so that neither hides the other's result. Goes with the tool when
+      # the frame migration ends (spec #724).
+      - name: Does the screen comparison still see a difference?
+        if: always()
+        run: pnpm preview:dom-diff --self-check
+
   # The Playwright E2E smoke (`pnpm test:e2e`): the site's main paths — home
   # search and category filter, the detail tabs, the preview theme switch — in a
   # real browser against the production build. Its own job, in parallel with the

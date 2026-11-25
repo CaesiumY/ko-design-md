@@ -59,7 +59,7 @@ paths:
 - **본문 `{map.name}` 참조 검사가 읽는 모양과 일부러 읽지 않는 모양의 목록은 `src/lib/draft-validator.ts` 의
   `checkTokenReferences` 주석이 정본이다** — 리뷰가 새 모양을 들고 오면 규칙을 늘리기 전에 그 목록과 대조할 것.
 - **새 항목은 슬러그별 표에 자기 줄을 적는다. 아래가 그 전부이고, 다른 곳엔 통합 목록이
-  없다.** 셋은 늘 필요하고 일곱은 조건부다(그중 `PREVIEW_TOKEN_ALIASES` 와 `COMPONENT_COUNTS` 는 새 항목 거의
+  없다.** 셋은 늘 필요하고 여덟은 조건부다(그중 `PREVIEW_TOKEN_ALIASES` 와 `COMPONENT_COUNTS` 는 새 항목 거의
   전부에 해당한다).
 
   | 등록처 | 위치 | 언제 |
@@ -73,6 +73,7 @@ paths:
   | missing-primary 배열 | `google-designmd-corpus.test.ts` | `primary` 라는 이름의 토큰이 **없을 때** |
   | `KNOWN_SPEC_LIMITATIONS` | `src/lib/spec-limitations.ts` | `%` radius 를 쓸 때 |
   | `COMPONENT_COUNTS` | `google-designmd-corpus.test.ts` | frontmatter `components:` 를 쓸 때 (정확값 — 새 항목은 사실상 늘) |
+  | `DARK_OVERRIDE_RULES` | `src/lib/dark-sheet-backlog.ts` | 프리뷰의 다크 시트에 토큰 재정의가 아닌 규칙을 둘 때 (정확값 — 실패 메시지가 적을 줄을 낸다. `.claude/rules/preview.md` 의 다크 항) |
   | 역할 표 대조 함수 (`CASES`) | `role-reference-rows.test.ts` | 본문 역할 표의 역할을 frontmatter 참조 행으로도 실을 때 — 브랜드가 역할 계층을 발행했고 상류가 단일 팔레트 토큰이나 다른 역할을 가리키는 역할이 있으면 늘 그렇다 (양방향 · 등록 누락은 가드가 막는다) |
 
   **`PREVIEW_TOKEN_ALIASES` 를 빠뜨리면 조용히 0건 비교가 된다** — 드리프트 게이트가 이름을
