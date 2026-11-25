@@ -3,11 +3,12 @@
 @import "shadcn/tailwind.css";
 
 /* The package CSS declares no font-display, so text stays hidden until the whole
-   ~610KB file arrives. Declare the face here with swap instead.
-   SUIT covers only 2,668 of the 11,172 Hangul syllables and lacks — – ≤ ≥ − № Δ §
-   and a few more. Glyphs it lacks fall back to the system fonts below. At the time
-   of writing the site's own content uses no Hangul syllable outside SUIT (only
-   those symbols, mostly —), so the fallback is invisible in practice. */
+   file arrives. Declare the face here with swap instead.
+   This is the package's variable .woff2, a subset: it holds fewer Hangul syllables
+   than the package's fonts/variable/ttf build, and neither build has — – ≤ ≥ − № Δ §
+   and some other symbols. Glyphs the file lacks fall back to the system fonts below.
+   suit-coverage-corpus.test.ts fails if the site shows a Hangul syllable this file
+   lacks; symbols are accepted, so the fallback only ever draws those. */
 @font-face {
     font-family: 'SUIT Variable';
     font-weight: 100 900;
