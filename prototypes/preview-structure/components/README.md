@@ -8,7 +8,7 @@
 - 항목마다 **화면 코드 모듈**(`entries/{slug}/preview.ts`)이 있다. 모듈은 공용 부품(페이지, 구역, 칸)을 불러 브랜드의 시연 마크업을 넘긴다.
 - **빌드**가 모듈을 읽어 서빙되는 정적 HTML 한 장(`public/preview/{slug}/preview.html`)을 쓴다. 사이트의 머리글과 바닥글, 사이트 스타일은 들어가지 않는다.
 - 틀의 태그는 부품만 쓴다: `<head>`, 면책 띠, `main.pv-page`, `header.pv-hero`, `section.pv-zone` 과 제목, `.pv-cells`, `.pv-cell`, 칸의 이름표, 다크 이름표의 `<template>`, 칸의 더미 데이터 표기, `.pv-stage`, `.pv-screen`. 틀 CSS 는 `frame.css` 에서 읽어 넣는다.
-- 모듈은 **브랜드의 시연과 스타일만** 갖는다: 히어로 안쪽, 칸마다 이름표의 글, 시연 자리 안쪽 마크업, 그리고 브랜드 CSS 두 장(`light.css`, `dark.css`).
+- 모듈은 **브랜드의 시연과 스타일만** 갖는다: 히어로 안쪽, 칸마다 이름표의 글, 시연 자리 안쪽 마크업, 그리고 브랜드 CSS(`light.css`, `dark.css`).
 - 만들어진 HTML 은 **커밋한다**. 원본과 어긋나면 `pnpm test` 가 막는다(5절).
 
 경로는 모두 저장소 루트 기준이다. 이 폴더는 `prototypes/preview-structure/components/` 이고 아래에서 `components/` 로 줄여 쓴다.
@@ -81,7 +81,7 @@ export default definePreview({
 - 마크업은 **꼬리표 없는 템플릿 리터럴**(백틱)이다. 여는 백틱 바로 뒤에서 줄을 바꾸고, 내용은 아무 들여쓰기로 써도 된다. 빌드가 공통 들여쓰기를 걷고 제자리 깊이로 다시 들여 쓴다. 줄 순서와 줄 수는 그대로 서빙 HTML 에 들어간다.
   - 리터럴 안의 `` ` `` 는 `` \` ``, `${` 는 `\${`, `\` 는 `\\` 로 쓴다.
   - `html` 이나 `css` 같은 꼬리표를 붙이지 않는다. prettier 가 꼬리표 붙은 리터럴의 안쪽을 다시 포맷한다.
-- CSS 두 장은 빌드가 **글자 그대로** 싣는다. `light.css` 는 틀 블록 바로 뒤에 붙고, `dark.css` 는 둘째 `<style>` 의 전부다.
+- 브랜드 CSS 는 빌드가 **글자 그대로** 싣는다. `light.css` 는 틀 블록 바로 뒤에 붙고, `dark.css` 는 둘째 `<style>` 의 전부다.
   `.prettierignore` 가 이 CSS 를 포맷 대상에서 뺀다. `prettier --write` 를 폴더째 돌리지 않는다(CSS 를 다시 쓰면 서빙 HTML 이 바뀐다).
 - 틀 CSS 와 면책 띠, `<head>` 는 모듈에 쓰지 않는다. 바꿀 일이 있으면 7절의 공용 자리를 고친다.
 
@@ -101,7 +101,7 @@ export default definePreview({
 
 ## 4. 약속 검사
 
-세 겹이다.
+아래 층들로 이뤄진다.
 
 1. **타입**(`pnpm typecheck`, 곧 `tsc --noEmit`): 모르는 구역 이름, `name` 이나 `label` 이 빠진 칸, 화면 구역에 `cell(...)` 을 넣거나 다른 구역에 `screen(...)` 을 넣은 것.
 2. **`kit/check.ts`**: 만들어진 HTML(빌드 중이든 서빙 파일이든)을 읽는다. 잡는 것:
@@ -142,7 +142,7 @@ public/preview/toss/preview.html:1811 이 prototypes/preview-structure/component
 5. `pnpm pv:build {slug}` 로 산출물을 쓴다. 약속 검사에 걸리면 메시지의 `구역/칸` 을 모듈에서 고친다.
 6. `pnpm validate:previews --slug {slug}`, `pnpm pv:check {slug}`.
 7. `pnpm exec prettier --write prototypes/preview-structure/components/entries/{slug}/preview.ts`(포맷 검사는 ts 만 본다).
-8. 원본 셋과 산출물을 함께 커밋한다.
+8. 항목 폴더의 원본과 산출물을 함께 커밋한다.
 
 ## 7. 공용 자리를 고칠 때
 
@@ -218,7 +218,7 @@ public/preview/toss/preview.html:1768  ->  prototypes/preview-structure/componen
 
 ## 10. 변환 스크립트
 
-`components/convert.ts` 가 서빙 HTML 한 장(STANDARD 2절의 꼴)을 항목 폴더로 옮긴다. 치지직과 토스 둘 다 이것으로 옮겼고 손으로 마무리한 곳은 없다.
+`components/convert.ts` 가 서빙 HTML 한 장(STANDARD 2절의 꼴)을 항목 폴더로 옮긴다. 치지직과 토스를 이것으로 옮겼고 손으로 마무리한 곳은 없다(`STATS.md` 6절).
 
 ```
 pnpm exec tsx prototypes/preview-structure/components/convert.ts --in <preview.html> --out prototypes/preview-structure/components/entries/<slug>
