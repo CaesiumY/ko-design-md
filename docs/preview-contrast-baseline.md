@@ -464,6 +464,10 @@ run 번호로 `pnpm audit:contrast:rebaseline <run id>` 를 돌린다. 분류표
 | gs-shop | dark | non-text | 30 | 44 | 7 | 0 | 2 |
 | gs-shop | light | text | 130 | 248 | 38 | 2 | 8 |
 | gs-shop | light | non-text | 30 | 44 | 7 | 0 | 6 |
+| kbstar | dark | text | 163 | 308 | 11 | 0 | 1 |
+| kbstar | dark | non-text | 6 | 7 | 1 | 0 | 0 |
+| kbstar | light | text | 163 | 308 | 11 | 0 | 1 |
+| kbstar | light | non-text | 6 | 7 | 1 | 0 | 0 |
 | krds | dark | text | 141 | 289 | 1 | 0 | 0 |
 | krds | dark | non-text | 18 | 25 | 7 | 0 | 1 |
 | krds | light | text | 139 | 281 | 7 | 30 | 0 |

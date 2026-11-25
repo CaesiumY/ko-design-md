@@ -166,6 +166,7 @@ const MATCH_FLOOR: Partial<Record<string, number>> = {
   // this preview is allowed to declare.
   "gs-retail": 21,
   "gs-shop": 52,
+  kbstar: 61,
   krds: 33,
   kyobobook: 41,
   laftel: 16,

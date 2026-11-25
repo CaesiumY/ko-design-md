@@ -238,6 +238,13 @@ const PREVIEW_TOKEN_ALIASES: Partial<
   ],
   "gs-retail": [["", "gsr-"]],
   "gs-shop": [["", "gs-"]],
+  // The four published colours are named `kb-*` in the md (`kb-yellow-positive`),
+  // so the preview's namespace doubles on them (`--kb-kb-yellow-positive`). The
+  // catch-all alone skips a name that already starts with its target.
+  kbstar: [
+    ["kb-", "kb-kb-"],
+    ["", "kb-"],
+  ],
   krds: [["", "krds-"]],
   kyobobook: [["", "kds-"]],
   laftel: [["", "lft-"]],
