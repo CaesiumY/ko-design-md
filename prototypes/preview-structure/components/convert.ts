@@ -224,7 +224,7 @@ const module = `// Item module of the "components" structure. Converted from the
 // preview by prototypes/preview-structure/components/convert.ts.
 // Build: pnpm pv:build ${slug}   Check: pnpm pv:check ${slug}
 
-import { cell, definePreview, screen, zone } from "../../kit/parts.ts"
+import { cell, definePreview, screen, zone } from "#preview-kit"
 
 export default definePreview({
 slug: ${lit(slug)},

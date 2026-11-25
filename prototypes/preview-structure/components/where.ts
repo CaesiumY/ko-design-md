@@ -113,7 +113,7 @@ function locate(at: number): string {
   // dummy note at 8, the stage at 8, a screen at 10, and the pieces deeper.
   const cellOpen = up(
     at,
-    /^ {6}<div class="pv-cell[^"]*" data-pv-cell="[^"]+">$/,
+    /^ {6}<div class="pv-cell[^"]*"[^>]* data-pv-cell="[^"]+"[^>]*>$/,
     /^ {6}<\/div>$/
   )
   if (cellOpen === -1 || /^ {6}<\/div>$/.test(text))
@@ -123,19 +123,19 @@ function locate(at: number): string {
   if (at <= stageOpen) {
     if (at === cellOpen)
       return `${KIT} 가 쓴 칸의 겉 줄. 이 칸의 원본은 ${rel(moduleFile)}:${keyLine("name", name) + 1}`
-    if (/^ {8}<p class="pv-label">/.test(text)) {
+    if (/^ {8}<p class="pv-label"/.test(text)) {
       const k = keyLine("label", name)
       return `${rel(moduleFile)}:${k + 1}  (칸 ${name} 의 label. 겉의 <p class="pv-label"> 는 ${KIT} 가 쓴다)`
     }
     if (/^ {8}<template data-theme-variant="dark">/.test(text))
       return `${rel(moduleFile)}:${keyLine("labelDark", name) + 1}  (칸 ${name} 의 labelDark)`
-    if (/^ {8}<p class="catalog-dummy">/.test(text))
+    if (/^ {8}<p class="catalog-dummy"/.test(text))
       return `${rel(moduleFile)}:${keyLine("dummy", name) + 1}  (칸 ${name} 의 dummy)`
     return `${KIT} 가 쓴 줄(칸 ${name} 의 시연 자리 여는 줄)`
   }
   const stageClose = down(stageOpen, /^ {8}<\/div>$/)
   if (at >= stageClose) return `${KIT} 가 쓴 줄(칸 ${name} 을 닫는 줄)`
-  const screenOpen = /^ {10}<div class="pv-screen">$/.test(
+  const screenOpen = /^ {10}<div class="pv-screen"[^>]*>$/.test(
     served[stageOpen + 1]
   )
     ? stageOpen + 1

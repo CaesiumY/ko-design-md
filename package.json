@@ -25,6 +25,9 @@
     "claude-code"
   ],
   "type": "module",
+  "imports": {
+    "#preview-kit": "./prototypes/preview-structure/components/kit/parts.ts"
+  },
   "packageManager": "pnpm@10.11.1",
   "engines": {
     "node": ">=22.22.2"

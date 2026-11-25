@@ -1,0 +1,68 @@
+# 구조 "컴포넌트" 의 수치
+
+> PROTOTYPE. `SCENARIOS.md` 끝의 「구조마다 함께 적는 수치」 여섯 항목을 같은 순서로 적는다. 줄 수는 `wc -l` 이고 2026-11-25 브랜치 `proto/preview-structure-components` 기준이다.
+
+## 1. 항목당 원본, 공용 코드, 산출물
+
+| 항목 | 손으로 쓰는 원본 | 파일 수 | 산출물(`public/preview/{slug}/preview.html`) |
+| --- | --- | --- | --- |
+| 치지직 | 785줄(`preview.ts` 415, `light.css` 330, `dark.css` 40) | 3 | 866줄 |
+| 토스 | 2,294줄(`preview.ts` 887, `light.css` 1,327, `dark.css` 80) | 3 | 2,346줄 |
+
+- 틀 블록(약 85줄), `<head>`, 면책 띠, 구역과 칸의 겉 태그는 원본에 없고 빌드가 쓴다. 바탕의 같은 파일은 치지직 874줄, 토스 2,344줄이었다.
+- 공용 코드 903줄: `kit/zones.ts` 24, `kit/parts.ts` 232, `kit/check.ts` 329, `kit/entries.ts` 52, `build.ts` 110, `where.ts` 156. 틀 CSS 는 기존 `frame.css` 를 그대로 읽는다.
+- 그 밖: `convert.ts` 243(변환 스크립트), `components.test.ts` 135(테스트), `README.md`.
+
+타입 검사, 린트, 포맷 검사에 새로 들어오는 줄
+
+| 검사 | 새로 들어오는 줄 | 파일 |
+| --- | --- | --- |
+| 타입 검사(`tsc --noEmit`, `**/*.ts`) | 2,583 | 위 `.ts` 열 개(항목 모듈 1,302 포함) |
+| 린트(`eslint`, `prototypes/` 는 제외 목록에 없다) | 2,583 | 같은 열 개 |
+| 포맷 검사(`prettier --check "**/*.{ts,tsx,js,jsx}"`) | 2,583 | 같은 열 개. 항목 CSS 는 `.prettierignore` 로 뺐고, 원래 ts/js 만 본다 |
+
+세 검사 모두 이 줄들에서 통과한다(`pnpm exec tsc --noEmit`, `pnpm exec eslint prototypes/preview-structure/components`, `pnpm exec prettier --check` 를 `.ts` 에).
+
+## 2. 기존 검사기와 테스트에서 고친 줄, 새로 쓴 검사
+
+| 파일 | 고친 줄 | 까닭 |
+| --- | --- | --- |
+| `src/lib/`, `scripts/` (프리뷰 검증기와 그 테스트) | 0 | 산출물을 커밋하므로 검증기, 대비 측정, 사이트는 지금처럼 서빙 파일을 읽는다 |
+| `package.json` | +6 | 명령 셋(`pv:build`, `pv:check`, `pv:where`)과 `imports` 의 `#preview-kit` 세 줄. 항목 모듈을 어느 폴더에 두든 같은 줄로 부품을 부르기 위해서다 |
+| `.prettierignore` | +3, −1(마지막 줄에 줄바꿈이 붙음) | 항목 CSS 를 포맷에서 뺀다. 포맷하면 서빙 HTML 이 바뀐다 |
+
+새로 쓴 검사: `kit/check.ts` 329줄, 그 테스트 `components.test.ts` 135줄(테스트 11개: 약속 규칙 7, 렌더 2, 항목마다 원본과 산출물의 일치 2). `pnpm test` 전체는 99파일 2,869개 통과.
+
+## 3. 온보딩 스테이징 흐름(Stage 9~12)에 더해지는 단계
+
+- 9a: 저자가 `preview.html` 대신 항목 폴더 `{cache_dir}/entry/`(모듈과 CSS 둘)를 쓴다.
+- **9a1(새 단계)**: `pnpm pv:build --entry {cache_dir}/entry --out {cache_dir}/preview.html`. 타입 오류나 약속 검사에 걸리면 저자에게 돌려준다.
+- 9a2, 9a3, 9b: 그대로(빌드된 파일을 읽는다).
+- 10: `cp` 한 줄이 셋이 된다. 항목 폴더를 `entries/{slug}/` 로 복사, `pnpm pv:build {slug}`, `prettier --write …/preview.ts` 와 `pnpm pv:check {slug}`.
+- 12 자동 수정: 저자 재작성 뒤 9a1 과 10 을 다시 돈다.
+- 저자와 리뷰어 프롬프트는 이 브랜치에서 고치지 않았다. 저자 프롬프트가 HTML 한 장 대신 모듈을 쓰도록 바뀌어야 이 흐름이 돈다.
+
+## 4. 새로 생기는 고장 방식
+
+- **원본과 산출물의 어긋남**: 서빙 파일을 손으로 고치거나 빌드를 잊음. `pnpm test` 와 `pnpm pv:check` 가 막고 다시 만드는 명령을 말한다.
+- **빌드 실패**: 모듈의 타입 오류, 템플릿 리터럴 안의 이스케이프 빠짐(`` ` ``, `${`, `\`), 약속 검사 실패. 약속 검사에 걸리면 아무것도 쓰지 않는다.
+- **줄 번호 불일치**: 검사기는 서빙 줄로 말하고 원본은 다른 파일이다. `pnpm pv:where` 가 옮겨 주지만, 부품의 들여쓰기 약속(칸 6칸, 이름표와 시연 자리 8칸, `.pv-screen` 10칸)에 기대므로 부품의 들여쓰기를 바꾸면 `where.ts` 도 바꿔야 한다. 리터럴의 여는 백틱 뒤에서 줄을 바꾸지 않으면 한 줄 어긋난다.
+- **공용 자리 하나가 모든 산출물을 바꿈**: `frame.css`, `kit/zones.ts`, `kit/parts.ts` 를 고치면 모든 항목을 다시 빌드해 커밋해야 한다.
+- **CSS 포맷**: 누군가 폴더째 `prettier --write` 하면 CSS 가 바뀐다(`.prettierignore` 로 막음. 처음 만들 때 실제로 한 번 일어났다).
+- **임시 폴더 밖의 모듈**: 저장소 밖 폴더에서는 `#preview-kit` 이 풀리지 않는다.
+
+## 5. 고쳐 써야 하는 결정 기록
+
+- **ADR 0006(저장소 트리가 곧 배포물)**: 결과에 「프리뷰 HTML 은 `entries/{slug}/` 에서 빌드한 파생물이고, 숨기지 않고 커밋하며, 원본과 어긋나면 막는다」를 더해야 한다. 토큰 사이드카와 같은 꼴이다.
+- **ADR 0002(한 파일에 두 테마)**: 서빙 파일은 여전히 한 장이라 결정은 그대로다. 다만 "프리뷰 파일"이 원본 셋과 산출물 하나로 갈라지므로, 한 파일이라는 말이 서빙 파일을 가리킨다고 밝혀야 한다.
+- **ADR 0009(온보딩 루프가 렌더를 관측)**: 관측 전에 빌드(9a1)가 끼므로 그 순서를 적어야 한다.
+- ADR 0015 는 고칠 곳이 없다(틀을 부품이 쓰는 것은 결정의 구현이다).
+
+## 6. 토스 변환 스크립트
+
+- `convert.ts` 243줄. 치지직과 토스 둘 다 이 스크립트로 옮겼다. **손으로 마무리한 곳은 없다.** 변환 뒤 `prettier --write` 를 `preview.ts` 에 한 번 돌렸다(줄 배치만 바뀐다).
+- 같은 입력에 다시 돌리면 같은 결과다(import 줄의 세미콜론은 저장소 밖에서 돌린 prettier 의 설정 차이).
+- 변환으로 달라진 곳은 모두 공백과 `<head>` 의 꼴이다: 칸 사이 빈 줄(치지직 8곳), `<html …><head>` 한 줄과 `defer=""`, `</style></head>`, `</body></html>`(토스).
+- 화면 비교(`dom-diff.ts`, 바탕 폴더의 파일과): 치지직 16패스 608요소, 토스 16패스 730요소, 둘 다 `SAME`.
+- `pnpm validate:previews`: 치지직 막힘 0 경고 0, 토스 막힘 0 경고 2(바탕과 같은 `.grid-list`, `.keypad-grid`).
+- 바탕 도구도 산출물에서 통과: `paste-frame.mjs --check` ok, `check-base.ts chzzk toss` ok.

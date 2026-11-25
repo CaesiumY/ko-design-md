@@ -2,7 +2,7 @@
 // preview by prototypes/preview-structure/components/convert.ts.
 // Build: pnpm pv:build chzzk   Check: pnpm pv:check chzzk
 
-import { cell, definePreview, screen, zone } from "../../kit/parts.ts"
+import { cell, definePreview, screen, zone } from "#preview-kit"
 
 export default definePreview({
   slug: "chzzk",
