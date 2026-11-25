@@ -748,11 +748,15 @@ interface CssAtBlock {
 /**
  * An at-rule prelude as text two sheets can be paired on. The name is the same
  * at-rule in any case. In a media, supports or container query the spaces
- * around brackets, colons, commas and comparison signs say nothing, so
- * `(max-width:720px)` is `(max-width: 720px)`. What a prelude names — a
- * container, a layer, a keyframes block — keeps its case, and an at-rule whose
- * prelude holds a selector (`@scope`, `@supports selector(…)`) keeps its
- * spaces: there a space is a combinator.
+ * just inside a bracket and around a colon, comma, slash or comparison sign
+ * say nothing, so `(max-width:720px)` is `( max-width : 720px )`.
+ *
+ * Left as written: the space in front of a bracket (`not (…)` is a query,
+ * `not(…)` a function the browser does not know), the inside of a string, the
+ * case of everything after the name — a container, a layer and a keyframes
+ * block are named in a case, and a query's own words are simply not folded —
+ * and every space of an at-rule whose prelude holds a selector (`@scope`,
+ * `@supports selector(…)`): there a space is a combinator.
  */
 function atRulePreludeKey(prelude: string): string {
   const text = prelude
@@ -762,7 +766,10 @@ function atRulePreludeKey(prelude: string): string {
   const isQuery =
     /^@(media|container)\b/.test(text) ||
     (/^@supports\b/.test(text) && !/selector\(/i.test(text))
-  return isQuery ? text.replace(/\s*([():,<>=])\s*/g, "$1") : text
+  if (!isQuery) return text
+  return text.replace(/"[^"]*"|'[^']*'|\(\s+|\s+\)|\s*[:,/<>=]\s*/g, (found) =>
+    /^["']/.test(found) ? found : found.trim()
+  )
 }
 
 function stripCssComments(css: string): string {
@@ -1015,7 +1022,7 @@ const UNREAD_WHY = {
  * It errs the other way in one place: a `<style>` element inside an HTML
  * comment. The sheets are cut out of the document's text, so one that is
  * commented out is read as live, and a dark rule in it is judged like any
- * other — refused, if it has one of the shapes above.
+ * other — refused, if it is written one of the ways this function refuses.
  */
 function unreadDarkScopes(lightRaw: string, darkRaw: string): Array<string> {
   const why = (rule: CssRule, isDark: boolean): string | null => {
@@ -1108,9 +1115,10 @@ export interface DarkSheetReport {
  * name of an at-rule and the spacing of its query (`atRulePreludeKey`), the
  * case of a property name, the run of spaces inside a value. Everything else
  * is compared as written — a value spelled another way (`#FFF` for `#fff`,
- * `.5` for `0.5`), a renamed class, the body of an at-rule block. A copy
- * behind such a difference is not found as one. It lands in `overrideRules`
- * instead, a count that has to be recorded and answered for.
+ * `.5` for `0.5`), a query's words in another case (`(MAX-WIDTH: 720px)`), a
+ * renamed class, the body of an at-rule block. A copy behind such a
+ * difference is not found as one. It lands in `overrideRules` instead, a
+ * count that has to be recorded and answered for.
  *
  * "Copy" is not "dead code". `[data-theme="dark"] .btn` outranks a light
  * `.btn:hover` it would otherwise lose to, so a same-valued dark rule can be

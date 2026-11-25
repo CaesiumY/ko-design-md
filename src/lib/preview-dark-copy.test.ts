@@ -436,6 +436,7 @@ describe("dark-sheet-copy — an at-rule prelude spelled another way", () => {
     ["@media (width >= 600px)", "@media (width>=600px)"],
     ["@supports (display: grid)", "@supports (display:grid)"],
     ["@container card (min-width: 400px)", "@container card (min-width:400px)"],
+    ["@media (aspect-ratio: 16 / 9)", "@media (aspect-ratio:16/9)"],
   ])("pairs a rule under %s with one under %s", (lightAt, darkAt) => {
     expect(
       report(
@@ -481,11 +482,37 @@ describe("dark-sheet-copy — an at-rule prelude spelled another way", () => {
     })
   })
 
+  it("pairs an at-rule block whose own name is in capitals", () => {
+    const body = "{ to { transform: rotate(360deg); } }"
+    expect(
+      report(
+        `${LIGHT}\n@keyframes spin ${body}`,
+        `${DARK_TOKENS}\n@KEYFRAMES spin ${body}`
+      )
+    ).toEqual({ copies: ["@KEYFRAMES spin"], overrideRules: 0 })
+  })
+
+  it("pairs through one at-rule inside another, each spelled its own way", () => {
+    expect(
+      report(
+        `${LIGHT}\n@supports (display: grid) { @media (max-width: 720px) { ${NARROW} } }`,
+        `${DARK_TOKENS}\n@supports (display:grid) { @media (max-width:720px) { [data-theme="dark"] ${NARROW} } }`
+      )
+    ).toEqual({
+      copies: ["@supports (display:grid) / @media (max-width:720px) / .btn"],
+      overrideRules: 0,
+    })
+  })
+
   // The other direction: a different query is a different at-rule, and what a
   // prelude names keeps its case and its spaces where they say something.
   it.each([
     ["@media (max-width: 720px)", "@media (max-width: 72px)"],
     ["@media (max-width: 720px)", "@media (min-width: 720px)"],
+    // `not(` is a function to a browser, and the rule under it is dropped.
+    ["@supports not (display: grid)", "@supports not(display: grid)"],
+    // Inside a string a space is part of the value.
+    ['@container style(--k: "a: b")', '@container style(--k: "a:b")'],
     [
       "@container card (min-width: 400px)",
       "@container Card (min-width: 400px)",
