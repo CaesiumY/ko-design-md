@@ -512,7 +512,10 @@ describe("dark-sheet-copy — an at-rule prelude spelled another way", () => {
     // `not(` is a function to a browser, and the rule under it is dropped.
     ["@supports not (display: grid)", "@supports not(display: grid)"],
     // Inside a string a space is part of the value.
+    ['@supports (content: "a: b")', '@supports (content: "a:b")'],
     ['@container style(--k: "a: b")', '@container style(--k: "a:b")'],
+    // A style query holds a custom property's value, where a space counts.
+    ["@container style(--k: a, b)", "@container style(--k: a,b)"],
     [
       "@container card (min-width: 400px)",
       "@container Card (min-width: 400px)",

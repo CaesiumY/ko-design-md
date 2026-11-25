@@ -752,11 +752,18 @@ interface CssAtBlock {
  * say nothing, so `(max-width:720px)` is `( max-width : 720px )`.
  *
  * Left as written: the space in front of a bracket (`not (…)` is a query,
- * `not(…)` a function the browser does not know), the inside of a string, the
+ * `not(…)` a function the browser does not know), a quoted string, and the
  * case of everything after the name — a container, a layer and a keyframes
- * block are named in a case, and a query's own words are simply not folded —
- * and every space of an at-rule whose prelude holds a selector (`@scope`,
- * `@supports selector(…)`): there a space is a combinator.
+ * block are named in a case, and a query's own words are simply not folded.
+ * A prelude that holds a selector (`@scope`, `@supports selector(…)`) or a
+ * style query (`style(--k: a, b)`) keeps every space that is not a run of
+ * them: in a selector a space is a combinator, in a custom property's value
+ * it is part of the value.
+ *
+ * This reads text, it does not parse it. A run of spaces is one space
+ * everywhere, a string included, and a string ends at its first closing
+ * quote, an escaped one too. Text no browser accepts can fold onto text one
+ * does (`< =` onto `<=`).
  */
 function atRulePreludeKey(prelude: string): string {
   const text = prelude
@@ -764,8 +771,8 @@ function atRulePreludeKey(prelude: string): string {
     .trim()
     .replace(/^@[\w-]+/, (name) => name.toLowerCase())
   const isQuery =
-    /^@(media|container)\b/.test(text) ||
-    (/^@supports\b/.test(text) && !/selector\(/i.test(text))
+    /^@(media|container|supports)\b/.test(text) &&
+    !/(selector|style)\(/i.test(text)
   if (!isQuery) return text
   return text.replace(/"[^"]*"|'[^']*'|\(\s+|\s+\)|\s*[:,/<>=]\s*/g, (found) =>
     /^["']/.test(found) ? found : found.trim()
