@@ -119,6 +119,15 @@ describe("renderPreview", () => {
     def.zones[1].cells[0].label = ""
     expect(() => renderPreview(def, STYLES)).toThrow(/button-primary.*이름표/)
   })
+
+  it("refuses a cell whose module leaves out the label altogether", () => {
+    const def = sample()
+    // What a module gets past the type check with (a cast, or plain JS).
+    delete (def.zones[1].cells[0] as { label?: string }).label
+    expect(() => renderPreview(def, STYLES)).toThrow(
+      /buttons\/button-primary.*이름표\(p\.pv-label\)가 없다/
+    )
+  })
 })
 
 describe("served previews", () => {

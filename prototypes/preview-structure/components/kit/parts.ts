@@ -134,10 +134,11 @@ export function place(fragment: string, depth: number): string {
 function renderCell(c: Cell): string {
   const cls = c.wide === true ? "pv-cell pv-cell--wide" : "pv-cell"
   const stage = c.stack === true ? "pv-stage pv-stage--stack" : "pv-stage"
-  const out = [
-    `      <div class="${cls}" data-pv-cell="${c.name}">`,
-    `        <p class="pv-label">${c.label}</p>`,
-  ]
+  const out = [`      <div class="${cls}" data-pv-cell="${c.name}">`]
+  // A module that left the label out (a cast, plain JS) gets no label line,
+  // so the contract check names the cell instead of serving "undefined".
+  const label = c.label as string | undefined
+  if (label !== undefined) out.push(`        <p class="pv-label">${label}</p>`)
   if (c.labelDark !== undefined)
     out.push(
       `        <template data-theme-variant="dark"><p class="pv-label">${c.labelDark}</p></template>`
