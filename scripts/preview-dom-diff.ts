@@ -21,6 +21,8 @@
 // lands on one node and does not reach its ancestors the way a pointer does,
 // so the element forced is the one a stylesheet rule writes the pseudo-class
 // on: the row for `.tbl tr:hover td`, not the cell (`stateTargetSelectors`).
+// The pointer is taken off the page first, so no pass carries a hover that
+// was not forced (`openPage`).
 // A last pass without reduced motion compares the declared transitions and
 // animations, and nothing else: with motion running a box is wherever its
 // animation has taken it, which differs between two captures of one file.
@@ -188,6 +190,13 @@ const STATES: Array<{ name: string; forced: Array<string> }> = [
 interface CaptureOptions {
   widths: Array<number>
   states: boolean
+  /**
+   * Start every page with the pointer resting on it. The self-check sets this:
+   * a Linux runner's fresh page has the pointer at the top-left corner and a
+   * Windows one has it nowhere, so without it the check for a leaking hover
+   * would only run where CI is.
+   */
+  pointerOnPage?: boolean
 }
 
 interface Args extends CaptureOptions {
@@ -413,6 +422,39 @@ async function forcedPass(
   }
 }
 
+/**
+ * Open the document with the pointer off it.
+ *
+ * A page is rendered under a pointer whether or not anyone moved one. On a
+ * Linux runner it rests at the top-left corner, and whatever sits there — and
+ * every ancestor — is hovered for real in every pass, the ones that force
+ * nothing included. A changed `:hover` rule then shows up in passes that are
+ * not about hover, and only on the machines where CI runs. So the pointer is
+ * put where no element is, and a page that still reports a hovered element
+ * afterwards is the tool failing, said as that rather than left to surface as
+ * differences nobody planted.
+ */
+async function openPage(
+  context: BrowserContext,
+  url: string,
+  options: CaptureOptions
+): Promise<Page> {
+  const page = await context.newPage()
+  await page.goto(url, { waitUntil: "load" })
+  if (options.pointerOnPage) await page.mouse.move(1, 1)
+  await page.mouse.move(-10, -10)
+  await settle(page)
+  const hovered = await page.evaluate(
+    () => document.querySelectorAll(":hover").length
+  )
+  if (hovered > 0) {
+    throw new Error(
+      `the pointer could not be taken off the page: ${hovered} element(s) are still hovered before any state was forced`
+    )
+  }
+  return page
+}
+
 /** One side: every pass, keyed by the label the report prints. */
 async function capture(
   browser: Browser,
@@ -424,8 +466,7 @@ async function capture(
 
   for (const width of options.widths) {
     const context = await newMeasuringContext(browser, { width, online: false })
-    const page = await context.newPage()
-    await page.goto(url, { waitUntil: "load" })
+    const page = await openPage(context, url, options)
     for (const theme of THEMES) {
       await setTheme(page, theme)
       out.set(
@@ -464,8 +505,7 @@ async function capture(
     const g = globalThis as unknown as Record<string, unknown>
     if (g.__name === undefined) g.__name = (fn: unknown) => fn
   })
-  const page = await motion.newPage()
-  await page.goto(url, { waitUntil: "load" })
+  const page = await openPage(motion, url, options)
   for (const theme of THEMES) {
     await setTheme(page, theme)
     out.set(
@@ -555,7 +595,11 @@ const SELF_CHECK_PLANTED: Array<PlantedDifference> = [
 async function selfCheck(browser: Browser): Promise<Array<string>> {
   const server = await serveStatic(join(ROOT, "public"))
   const url = `http://127.0.0.1:${server.port}${ORACLE_PATH}`
-  const options: CaptureOptions = { widths: DEFAULT_WIDTHS, states: true }
+  const options: CaptureOptions = {
+    widths: DEFAULT_WIDTHS,
+    states: true,
+    pointerOnPage: true,
+  }
   try {
     server.setOracle(selfCheckDocument(SELF_CHECK_SHIPPED))
     const first = await capture(browser, url, options)
