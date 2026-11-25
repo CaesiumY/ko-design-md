@@ -33,6 +33,8 @@
 
 새로 쓴 검사: `kit/check.ts` 329줄, 그 테스트 `components.test.ts` 135줄(테스트 11개: 약속 규칙 7, 렌더 2, 항목마다 원본과 산출물의 일치 2). `pnpm test` 전체는 99파일 2,869개 통과.
 
+`components.test.ts` 가 `pnpm test` 에 잡히는지: 잡힌다. `vite.config.ts` 의 `test.exclude` 는 기본값에 `.claude/worktrees`, `.claude/cache`, `e2e/` 만 더하고 `prototypes/` 는 빼지 않으며, 기본 include 가 `**/*.test.ts` 를 모은다. 실제로 `pnpm test --reporter=verbose` 의 출력에 `prototypes/preview-structure/components/components.test.ts > …` 줄이 이 파일의 테스트마다 찍히고 모두 통과했다. 그래서 프로토타입의 약속 검사와 어긋남 검사가 이 브랜치의 `pnpm test`(곧 CI 의 `pnpm test` 단계와 `pnpm gates` 의 테스트 단계)에 섞여 돈다. `pnpm pv:check` 명령 자체는 `pnpm gates` 의 단계 목록 밖이다.
+
 ## 3. 온보딩 스테이징 흐름(Stage 9~12)에 더해지는 단계
 
 - 9a: 저자가 `preview.html` 대신 항목 폴더 `{cache_dir}/entry/`(모듈과 CSS 둘)를 쓴다.
