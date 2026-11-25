@@ -53,7 +53,7 @@
 </style>
 ```
 
-- `--pv-*` 일곱(font, ink, ink-muted, canvas, surface, line, radius)은 **첫 `<style>`** 에 `var(--…)` 참조로 준다. 굵기와 자간 둘만 글자 값을 쓸 수 있다. 뜻은 `STANDARD.md` 3절의 표다.
+- 틀이 읽는 필수 변수(`--pv-font`, `--pv-ink`, `--pv-ink-muted`, `--pv-canvas`, `--pv-surface`, `--pv-line`, `--pv-radius`)는 **첫 `<style>`** 에 `var(--…)` 참조로 준다. 선택 변수인 굵기와 자간만 글자 값을 쓸 수 있다. 목록의 정본은 `check-frame.ts` 의 `FRAME_VARS` 와 `LITERAL_VARS` 다. 뜻은 `STANDARD.md` 3절의 표다.
 - `--pv-gutter` 는 틀이 내주는 값이다. 페이지는 `var(--pv-gutter)` 로 읽기만 한다(히어로 안쪽 여백 등).
 - `<body>` 안의 꼴은 `STANDARD.md` 2절 그대로다: 면책 띠, `<main class="pv-page">`, 그 안에 히어로 `<header class="pv-hero" data-pv-zone="hero">` 와 구역 `<section class="pv-zone" …>` 들. 아래 조각을 복사해 쓴다. `skeleton.html` 에도 같은 꼴이 있다.
 
@@ -105,7 +105,7 @@
       </div>
 ```
 
-넷을 다 갖춘 칸:
+모든 자식을 갖춘 칸:
 
 ```html
       <div class="pv-cell pv-cell--wide" data-pv-cell="{kebab-case 이름}">
@@ -166,7 +166,7 @@ pnpm validate:previews --slug toss                                              
 ```
 
 - 약속 검사의 인자는 슬러그(`public/preview/{slug}/preview.html` 을 본다)나 파일 경로다. 경로는 `/` 나 `\` 가 들었거나 `.html` 로 끝나는 인자다. 인자가 없거나 파일이 없으면 exit 2, 어긴 곳이 있으면 exit 1, 없으면 exit 0 이다.
-- 약속 검사의 테스트: `pnpm exec vitest run prototypes/preview-structure/html-frame`(14개). `pnpm test` 에도 들어 있다.
+- 약속 검사의 테스트: `pnpm exec vitest run prototypes/preview-structure/html-frame`. `pnpm test` 에도 들어 있다.
 - 화면 비교가 필요하면 `prototypes/preview-structure/dom-diff.ts` 를 쓴다. 두 HTML 파일을 서버 없이 각자의 `public/` 위에 얹어 열고, 요소마다 상자, 글, 계산된 스타일을 두 테마와 여러 폭에서 비교한다.
 
   ```bash
@@ -201,7 +201,7 @@ public/preview/toss/preview.html:1835  [zone-order] 구역 "inputs" 가 구역 "
 | `frame-copy` | 페이지에 틀 블록(`pv-frame:start`)을 붙여 넣음 |
 | `page-names-frame` | 페이지 스타일의 선택자가 `.pv-` 나 `[data-pv-` 를 이름함 |
 | `page-redefines-gutter` | 페이지 스타일이 `--pv-gutter` 를 정의함 |
-| `frame-var` | `--pv-*` 일곱 가운데 첫 `<style>` 에 없는 것, 글자 값으로 준 것, 틀이 모르는 `--pv-` 변수 |
+| `frame-var` | 필수 `--pv-*` 변수 가운데 첫 `<style>` 에 없는 것, 글자 값으로 준 것, 틀이 모르는 `--pv-` 변수 |
 | `frame-class` | 틀에 없는 `pv-` class(틀의 class 목록은 `frame.css` 에서 읽는다) |
 | `frame-inline` | `pv-` class 를 가진 요소의 인라인 `style` |
 | `own-script` | `src` 없는 `<script>` |
@@ -228,7 +228,7 @@ public/preview/toss/preview.html:1835  [zone-order] 구역 "inputs" 가 구역 "
 
 **틀의 모양을 바꾼다**(예: 구역 제목의 크기와 굵기): `public/preview/_runtime/frame.css` 한 파일을 고친다. 항목 파일은 건드리지 않는다. 모든 프리뷰의 화면이 함께 바뀐다.
 
-**틀의 태그를 바꾼다**(예: 모든 칸에 속성을 더한다): 틀의 마크업은 각 항목 파일에 있으므로 **항목 파일마다** 고친다. 칸이 많으면(토스 41칸, 치지직 14칸) 스크립트로 바꾸는 편이 빠르다. 새 약속은 `check-frame.ts` 의 `checkCell`(칸), `checkZone`(구역)에 더하고, 테스트를 `check-frame.test.ts` 에 더한다.
+**틀의 태그를 바꾼다**(예: 모든 칸에 속성을 더한다): 틀의 마크업은 각 항목 파일에 있으므로 **항목 파일마다** 고친다. 칸이 많으면 스크립트로 바꾸는 편이 빠르다. 새 약속은 `check-frame.ts` 의 `checkCell`(칸), `checkZone`(구역)에 더하고, 테스트를 `check-frame.test.ts` 에 더한다.
 
 **구역을 더하거나 순서를 바꾼다**: 구역의 식별자, 제목, 순서는 `check-frame.ts` 의 `ZONES` 배열 한 곳에 있다. 원소 하나가 구역 하나이고, 앞의 값이 식별자, 뒤의 값이 제목 글자이며, 배열의 순서가 구역의 순서다.
 
@@ -253,19 +253,19 @@ export const ZONES: ReadonlyArray<readonly [id: string, title: string]> = [
 
 1. `prototypes/preview-structure/html-frame/skeleton.html` 을 `public/preview/{slug}/preview.html` 로 복사한다.
 2. `<title>`, 로고 경로(`/logos/…`, md 의 logo 값), `h1` 을 그 브랜드 것으로 바꾼다.
-3. 첫 `<style>` 의 `:root` 에 md 의 토큰을 OKLCH 로 적고, `--pv-*` 일곱을 그 토큰의 참조로 준다.
+3. 첫 `<style>` 의 `:root` 에 md 의 토큰을 OKLCH 로 적고, 필수 `--pv-*` 변수를 그 토큰의 참조로 준다.
 4. 다크 `<style>` 에 다크에서 달라지는 토큰만 다시 정의한다.
 5. 히어로, 화면 구역, 그 뒤 md 가 규정한 구역을 `ZONES` 순서대로 쓴다. md 가 규정하지 않은 구역은 쓰지 않는다. 구역과 칸은 3절의 구역 조각과 칸 조각을 복사해 채운다.
 6. 약속 검사, `pnpm validate:previews --slug {slug}` 를 돌려 막히는 곳을 고친다.
 
-`skeleton.html` 에는 화면 구역과 버튼 구역만 있다. 그 밖의 구역은 구역 조각으로 쓴다. 버튼 구역에는 가장 짧은 칸과 넷을 다 갖춘 칸이 하나씩 있다. 면책 띠의 글은 글자 그대로 둔다(검증기가 본다).
+`skeleton.html` 에는 화면 구역과 버튼 구역만 있다. 그 밖의 구역은 구역 조각으로 쓴다. 버튼 구역에는 가장 짧은 칸과 모든 자식을 갖춘 칸이 하나씩 있다. 면책 띠의 글은 글자 그대로 둔다(검증기가 본다).
 
 ## 7. 온보딩의 임시 폴더 흐름에서 달라지는 것
 
 온보딩 스킬(`.claude/skills/design-md/SKILL.md`)의 흐름은 저자가 `.claude/cache/design-md/{slug}/preview.html` 에 쓰고, 검사하고, 9단계가 끝나면 `public/preview/{slug}/` 로 복사하는 것이다. 이 구조에서는 다음만 달라진다.
 
 - **저자가 쓰는 파일은 그대로 한 장이다.** 임시 폴더의 파일이 곧 서빙될 파일이고, 10단계의 복사(`cp`)도 그대로다. 사이에 빌드나 생성 단계가 없다.
-- **틀 링크가 임시 폴더에서도 풀린다.** 9a3 의 대비 관측(`pnpm audit:contrast:staged`)은 임시 파일을 서빙 주소에 얹고 그 아래에 저장소의 `public/` 을 깔아 연다. 그래서 `/preview/_runtime/frame.css` 가 tokens.css 와 똑같이 풀린다. 토스 사본을 저장소 밖 임시 폴더에 두고 돌려 텍스트 요소가 테마마다 325, 대비 미달 83 으로 공통 바탕과 같은 것을 확인했다.
+- **틀 링크가 임시 폴더에서도 풀린다.** 9a3 의 대비 관측(`pnpm audit:contrast:staged`)은 임시 파일을 서빙 주소에 얹고 그 아래에 저장소의 `public/` 을 깔아 연다. 그래서 `/preview/_runtime/frame.css` 가 tokens.css 와 똑같이 풀린다. 토스 사본을 저장소 밖 임시 폴더에 두고 돌려 관측 결과가 공통 바탕과 같은 것을 확인했다(수는 `STATS.md` 3절).
 - **9a2 옆에 약속 검사 한 줄이 더해진다**: `pnpm exec tsx prototypes/preview-structure/html-frame/check-frame.ts .claude/cache/design-md/{slug}/preview.html`. 경로 인자를 그대로 받는다. 막히면 9a2 의 검증기와 같이 저자에게 되돌린다.
 - 파일을 `file://` 로 직접 열면 틀이 보이지 않는다. tokens.css 와 iframe.js 도 같은 사이트 절대 경로라 원래부터 그렇다.
 - 저자 프롬프트와 리뷰어 프롬프트는 이 브랜치에서 고치지 않았다. 지금 저자 프롬프트는 틀 링크와 `--pv-*` 변수를 모른다(STATS 3절).
