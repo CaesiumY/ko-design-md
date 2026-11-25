@@ -57,6 +57,23 @@
 - `--pv-gutter` 는 틀이 내주는 값이다. 페이지는 `var(--pv-gutter)` 로 읽기만 한다(히어로 안쪽 여백 등).
 - `<body>` 안의 꼴은 `STANDARD.md` 2절 그대로다: 면책 띠, `<main class="pv-page">`, 그 안에 히어로 `<header class="pv-hero" data-pv-zone="hero">` 와 구역 `<section class="pv-zone" …>` 들. 아래 조각을 복사해 쓴다. `skeleton.html` 에도 같은 꼴이 있다.
 
+### 구역의 식별자와 제목
+
+구역은 히어로 다음에 아래 순서로 온다. 제목 글자는 표의 것을 글자 그대로 쓴다(약속 검사가 `zone-title` 로 본다). 이 표는 `check-frame.ts` 의 `ZONES` 를 옮겨 적은 것이다. 둘이 어긋나면 `ZONES` 가 맞다.
+
+| 순서 | 식별자 `{id}` | 제목 `{제목}` | 필수 |
+| --- | --- | --- | --- |
+| 1 | `screens` | 화면 | 예 |
+| 2 | `buttons` | 버튼 | md 가 규정했으면 |
+| 3 | `inputs` | 입력 | md 가 규정했으면 |
+| 4 | `selection` | 선택 | md 가 규정했으면 |
+| 5 | `navigation` | 내비게이션 | md 가 규정했으면 |
+| 6 | `content` | 콘텐츠 | md 가 규정했으면 |
+| 7 | `feedback` | 피드백 | md 가 규정했으면 |
+| 8 | `brand` | 브랜드 고유 | 있으면 |
+
+히어로는 구역 제목이 없고 `h1` 이 제목이다. 어떤 컴포넌트가 어느 구역에 드는지는 `STANDARD.md` 1절의 「담는 것」을 따른다.
+
 ### 구역 조각
 
 `{id}` 는 구역 식별자, `{제목}` 은 그 구역의 제목 글자다. `{id}` 는 세 곳(`data-pv-zone`, `aria-labelledby`, `h2` 의 `id`)에 같은 글자로 들어간다. 구역의 자식은 제목과 `.pv-cells` 둘뿐이다.
