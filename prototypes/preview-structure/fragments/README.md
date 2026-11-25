@@ -100,6 +100,17 @@ preview-src/{slug}/
 6. `pnpm previews:check {slug}` 와 `pnpm validate:previews --slug {slug}` 가 둘 다 통과할 때까지 원본을 고치고 4~5를 되풀이한다.
 7. 원본 폴더와 서빙 파일을 함께 커밋한다.
 
+## 구역을 더하거나 빼거나 순서를 바꿀 때
+
+구역의 식별자, 제목, 순서를 코드가 읽는 곳은 `prototypes/preview-structure/fragments/zones.ts` 하나다. 조립기, 약속 검사, 변환 스크립트가 모두 이 목록을 읽는다. 사람이 읽는 기준은 `STANDARD.md` 1절의 표다.
+
+1. `zones.ts` 의 `ZONES` 배열에 `{ id, title }` 를 더하거나 고친다. 배열의 순서가 서빙 파일의 구역 순서다. 모든 항목에 꼭 있어야 하는 구역이면 `REQUIRED_ZONES` 에도 넣는다.
+2. 순서나 제목만 바꿨으면 항목의 원본은 고치지 않는다.
+3. 새 구역에 칸을 옮기려면, 옮길 칸 블록(`<pv-cell …>` 줄부터 `</pv-cell>` 줄까지)을 원래 구역 파일에서 잘라 `preview-src/{slug}/zones/{새 식별자}.html` 에 붙인다. 칸 이름과 내용은 그대로 둔다. 원래 구역 파일에 칸이 하나도 남지 않으면 그 파일을 지운다.
+4. 식별자를 바꾸거나 뺐으면 그 이름의 구역 파일이 남은 항목이 없는지 본다. 남아 있으면 약속 검사가 "모르는 구역" 으로 막는다.
+5. `pnpm previews:build` 를 slug 없이 돌려 **모든 항목**을 다시 조립한다. 구역 목록은 모든 서빙 파일에 들어가므로 한 항목만 조립하면 나머지가 어긋남으로 막힌다.
+6. `pnpm previews:check` 와 `pnpm validate:previews` 를 돌리고, `zones.ts`, 바뀐 원본, 다시 만든 서빙 파일을 함께 커밋한다.
+
 ## 온보딩의 임시 폴더 흐름이 바뀌는 곳
 
 지금 흐름(`.claude/skills/design-md/SKILL.md` Stage 9~12)은 저자가 `.claude/cache/design-md/{slug}/preview.html` 한 장을 쓰고 Stage 10 이 그 파일을 `public/preview/{slug}/` 로 복사한다. 이 구조에서는 다음처럼 바뀐다. 스킬과 프롬프트는 이 브랜치에서 고치지 않았다.
