@@ -23,6 +23,7 @@ preview-src/{slug}/
 
 - 구역 파일의 이름은 `hero` 이거나 `zones.ts` 의 `ZONES` 에 있는 구역 식별자다. `hero` 와 `REQUIRED_ZONES` 에 든 구역은 꼭 있어야 한다. 규정되지 않은 구역은 파일을 만들지 않는다.
 - **구역의 순서와 제목은 항목이 정하지 않는다.** 공통 목록 `prototypes/preview-structure/fragments/zones.ts` 의 `ZONES` 한 곳이 정하고, 조립기는 파일이 어떤 순서로 있든 그 순서로 내보낸다.
+- **히어로 조각**(`zones/hero.html`)에는 `<header class="pv-hero" data-pv-zone="hero">` 의 안쪽만 쓴다. 감싸개 `<header>` 는 조립기가 쓴다. 담는 것은 STANDARD 1절의 히어로 줄(브랜드 이름, 슬로건, 주요 버튼, 로고)이고, `h1` 하나와 로고 `<img>`(사이트 상대 경로)가 있어야 한다(STANDARD 2절, 6절). 히어로 안의 브랜드 감싸개는 좌우 여백으로 틀이 내주는 `var(--pv-gutter)` 를 쓰고, 히어로는 자기 아래 선을 그리지 않는다(STANDARD 2절, 3절). 칸 문법(`<pv-cell>`, `<pv-label>`, `<pv-screen>`)과 `pv-` class 는 히어로에 쓰지 않는다. 줄은 서빙 파일보다 네 칸 덜 들여 쓴다(조립기가 네 칸을 더한다).
 - `<title>` 은 `services/{slug}.md` 의 `name` 에 ` preview` 를 붙여 만든다. 따로 적지 않는다.
 - 틀 스타일은 `prototypes/preview-structure/frame.css` 의 `/* pv-frame:start */` 부터 `/* pv-frame:end */` 까지다. 이 파일 한 곳을 고치면 조립할 때 모든 항목에 들어간다. 항목 쪽에는 사본이 없다.
 - `--pv-*` 변수는 예전처럼 항목이 `brand.css` 의 `:root` 에서 준다(STANDARD 3절).
