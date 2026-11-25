@@ -45,7 +45,10 @@ paths:
     규칙과 스코프를 다르게 적은 규칙(`html[data-theme="dark"] .a` 등)도 같은 다크 규칙으로 읽는다.
     다크 스코프는 선택자 맨 앞, 루트 요소에 적는다. 다른 자리에 적은 규칙(`:is([data-theme="dark"]) .a`,
     `body[data-theme="dark"] .a`, `.wrap [data-theme="dark"] .a`)은 라이트 규칙과 짝지어 읽을 수 없어, 목록
-    여부와 무관하게 검증기가 그 규칙 자체를 막는다(정의는 `unreadDarkScopes` 주석). 같은 이유로 다크를
+    여부와 무관하게 검증기가 그 규칙 자체를 막는다(정의는 `unreadDarkScopes` 주석). 다크 규칙은 평평하게
+    적는다. 다른 규칙 안에 중첩해 적은 다크 규칙(`.a { [data-theme="dark"] & { … } }`, 다크 시트의 규칙 안에
+    든 규칙)과 머리말에 다크 테마를 적은 at-rule 아래의 규칙(`@scope ([data-theme="dark"]) { .a { … } }`)도
+    검증기가 열어 읽지 못하므로 막힌다. 같은 이유로 다크를
     빼려고 이름을 적은 라이트 규칙(`:root:not([data-theme="dark"]) .a`)과 `data-theme` 속성을 빌려 쓴 시연
     요소(`button[data-theme="dark"]`)도 막힌다. 라이트는 스코프 없이 적고, `data-theme` 은 페이지의 테마
     스위치로만 쓴다.

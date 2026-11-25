@@ -10,14 +10,20 @@ describe("mentionsDarkScope", () => {
       '[ data-theme = "dark" ] .btn',
       'html[data-theme="dark"] .btn',
       '.note, :root[data-theme="dark"] .btn',
+      '[data-theme="dark" i] .btn',
+      '[data-theme="dark"s] .btn',
+      "[data-theme=dark I] .btn",
+      '[DATA-THEME="dark"] .btn',
     ]) {
       expect(mentionsDarkScope(selector), selector).toBe(true)
     }
   })
 
-  it("does not take the light scope, or a class, for it", () => {
+  it("does not take the light scope, a class or a longer value for it", () => {
     expect(mentionsDarkScope('[data-theme="light"] .btn')).toBe(false)
     expect(mentionsDarkScope(".dark .btn")).toBe(false)
+    expect(mentionsDarkScope('[data-theme="darker"] .btn')).toBe(false)
+    expect(mentionsDarkScope("[data-theme=darki] .btn")).toBe(false)
   })
 })
 
@@ -34,6 +40,8 @@ describe("lightSpellingOf", () => {
       ':root[data-theme="dark"] .btn',
       ':where([data-theme="dark"]) .btn',
       'html[data-theme="dark"][data-theme="dark"] .btn',
+      '[data-theme="dark" i] .btn',
+      ":root[data-theme=dark s] .btn",
     ]) {
       expect(lightSpellingOf(selector), selector).toBe(".btn")
     }

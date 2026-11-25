@@ -904,29 +904,91 @@ function cssRuleName(rule: CssRule): string {
   return `${rule.condition}${rule.selector.replace(/\s+/g, " ").trim()}`
 }
 
+/** An at-rule block as a finding names it, under the at-rules it sits in. */
+function cssAtBlockName(at: CssAtBlock): string {
+  return `${at.condition}${at.prelude.replace(/\s+/g, " ")}`
+}
+
 /**
- * The rules that name the dark theme where `darkSheetReport` cannot read it —
- * anywhere but on the root element at the front of the selector
- * (`:is([data-theme="dark"]) .btn`, `body[data-theme="dark"] .x`,
- * `.wrap [data-theme="dark"] .y`), in either half, named as written.
+ * Does a rule body hold a block of its own — a rule or an at-rule nested in
+ * it? The walk does not open one: it reaches the readers as part of a
+ * declaration. A brace inside a string or a `url(…)` is not a block.
+ */
+function holdsNestedBlock(body: string): boolean {
+  let depth = 0
+  let quote: '"' | "'" | null = null
+  for (let i = 0; i < body.length; i++) {
+    const ch = body[i]
+    if (quote !== null) {
+      if (ch === "\\") i++
+      else if (ch === quote) quote = null
+    } else if (ch === '"' || ch === "'") quote = ch
+    else if (ch === "(") depth++
+    else if (ch === ")" && depth > 0) depth--
+    else if (ch === "{" && depth === 0) return true
+  }
+  return false
+}
+
+/**
+ * The dark rules `darkSheetReport` cannot read, in either half, each named as
+ * written and followed by why:
+ *
+ * - the selector names the dark theme anywhere but on the root element at its
+ *   front (`:is([data-theme="dark"]) .btn`, `body[data-theme="dark"] .x`,
+ *   `.wrap [data-theme="dark"] .y`)
+ * - the rule sits under an at-rule whose prelude names the theme
+ *   (`@scope ([data-theme="dark"]) { .btn { … } }`): a dark rule whose selector
+ *   does not say so
+ * - a rule is nested in it, and the rule is a dark one or the nested text
+ *   names the theme (`[data-theme="dark"] { --bg: …; .hero { … } }`,
+ *   `.btn { [data-theme="dark"] & { … } }`): the walk hands over flat rules,
+ *   and the nested one arrives as part of a declaration
  *
  * Such a rule pairs with no light rule, so a copy behind it would be no copy.
- * It is refused instead of guessed at: every rule that names the dark theme is
- * then either read against light or reported here. What still gets past is a
- * dark rule that does not name the theme at all (`:root:not([data-theme=
- * "light"]) .x`), and `DARK_OVERRIDE_RULES` counts that one.
+ * It is refused instead of guessed at. The merge writes flat rules with a
+ * leading scope, so nothing it produces lands here.
+ *
+ * Light nesting that says nothing of dark is not this check's to refuse. What
+ * still gets past: a dark rule that does not name the theme in so many words
+ * — `:root:not([data-theme="light"]) .x`, a CSS escape inside the attribute —
+ * and `DARK_OVERRIDE_RULES` counts that one.
  */
-export function unreadDarkScopes(
-  lightRaw: string,
-  darkRaw: string
-): Array<string> {
-  return [...readSheets(darkRaw).rules, ...readSheets(lightRaw).rules]
-    .filter((rule) =>
-      splitSelectorList(rule.selector).some((arm) =>
-        mentionsDarkScope(lightSpellingOf(arm))
-      )
+function unreadDarkScopes(lightRaw: string, darkRaw: string): Array<string> {
+  const why = (rule: CssRule, isDark: boolean): string | null => {
+    // A stray "}" lands in the next rule's prelude, and the browser drops a
+    // rule whose prelude is no selector, block and all. Nothing in it
+    // applies, so nothing in it is a dark rule left unread.
+    if (rule.selector.replace(/"[^"]*"|'[^']*'/g, "").includes("}")) return null
+    const scopedElsewhere = splitSelectorList(rule.selector).some((arm) =>
+      mentionsDarkScope(lightSpellingOf(arm))
     )
-    .map(cssRuleName)
+    if (scopedElsewhere) return "scope not leading"
+    if (mentionsDarkScope(rule.condition))
+      return "under an at-rule naming the theme"
+    const dark =
+      isDark ||
+      mentionsDarkScope(rule.selector) ||
+      mentionsDarkScope(rule.declarations)
+    return dark && holdsNestedBlock(rule.declarations) ? "nests a rule" : null
+  }
+  const out: Array<string> = []
+  const halves: Array<[string, boolean]> = [
+    [darkRaw, true],
+    [lightRaw, false],
+  ]
+  for (const [raw, isDark] of halves) {
+    const { rules, atBlocks } = readSheets(raw)
+    for (const rule of rules) {
+      const reason = why(rule, isDark)
+      if (reason !== null) out.push(`${cssRuleName(rule)} [${reason}]`)
+    }
+    for (const at of atBlocks) {
+      if (mentionsDarkScope(at.condition))
+        out.push(`${cssAtBlockName(at)} [under an at-rule naming the theme]`)
+    }
+  }
+  return out
 }
 
 export interface DarkSheetReport {
@@ -1005,7 +1067,9 @@ export interface DarkSheetReport {
  * doubled-scope repeat above must go on pairing with the rule it repeats.
  * A scope written anywhere else (`:is([data-theme="dark"]) .btn`,
  * `body[data-theme="dark"] .btn`) cannot be taken off and is not judged here
- * at all: `unreadDarkScopes` names the rule and the validator refuses it.
+ * at all: `unreadDarkScopes` names the rule and the validator refuses it. So
+ * it does a dark rule nested in another rule, or put under an at-rule that
+ * names the theme — the walk hands this function neither.
  *
  * What `overrideRules` counts, in full — the one place it is defined:
  *
@@ -1028,8 +1092,7 @@ export function darkSheetReport(
   const keyOf = (rule: CssRule) =>
     `${rule.condition}${selectorKey(rule.selector)}`
   const nameOf = cssRuleName
-  const atBlockName = (at: CssAtBlock) =>
-    `${at.condition}${at.prelude.replace(/\s+/g, " ")}`
+  const atBlockName = cssAtBlockName
   const atBlockKey = (at: CssAtBlock) =>
     `${atBlockName(at)} { ${at.body.replace(/\s+/g, " ").trim()} }`
 
@@ -1991,11 +2054,11 @@ function checkDarkSheetCopy(
       block(
         "dark-scope-unread",
         name,
-        `${unread.length} rule(s) name the dark theme where the copy check cannot read it — ` +
+        `${unread.length} dark rule(s) are written where the copy check cannot read them — ` +
           `${unread.slice(0, DARK_COPY_NAMED).join("; ")}${rest > 0 ? ` and ${rest} more` : ""}. ` +
-          'Write the scope as a leading [data-theme="dark"] (data-theme sits on the root element): ' +
-          '[data-theme="dark"] .btn, not :is([data-theme="dark"]) .btn or body[data-theme="dark"] .btn. ' +
-          "A dark rule is read against the light rule with the same selector, and one scoped any other way pairs with nothing — a copied rule behind it would not be found. " +
+          'Write each dark rule flat, with the scope as a leading [data-theme="dark"] on its own selector (data-theme sits on the root element): ' +
+          '[data-theme="dark"] .btn, not :is([data-theme="dark"]) .btn or body[data-theme="dark"] .btn, not a rule nested inside another rule, and not a rule under an at-rule that names the theme. ' +
+          "A dark rule is read against the light rule with the same selector, and one written any other way pairs with nothing — a copied rule behind it would not be found. " +
           "A rule meant for light only needs no scope: light is what is written bare, and the dark rule overrides it. " +
           "data-theme is the page's theme switch and nothing else: a demo element that needs an attribute of its own (a theme picker's option) takes another name."
       )

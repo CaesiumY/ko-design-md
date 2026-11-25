@@ -5,20 +5,24 @@
 /** The scope the merged layout writes in front of every dark selector. */
 export const DARK_SCOPE = '[data-theme="dark"]'
 
-const ANY_DARK_SCOPE = String.raw`\[\s*data-theme\s*[~|^$*]?=\s*["']?dark["']?\s*\]`
-const MENTIONS_DARK_SCOPE = new RegExp(ANY_DARK_SCOPE)
+// The attribute selector in any spelling CSS takes for it: quoted or bare, with
+// an `i` or `s` flag, in either case.
+const ANY_DARK_SCOPE = String.raw`\[\s*data-theme\s*[~|^$*]?=\s*(?:["']dark["']\s*[is]?|dark(?:\s+[is])?)\s*\]`
+const MENTIONS_DARK_SCOPE = new RegExp(ANY_DARK_SCOPE, "i")
 // The scope where it scopes: at the front of the selector, on the root element
 // however that is named, bare or inside `:where()`, once or (as the merge
 // leaves a hand-written `html[data-theme="dark"]`) more than once.
 const LEADING_DARK_SCOPE = new RegExp(
-  String.raw`^(?:(?:html|:root)?(?:${ANY_DARK_SCOPE})+|:where\(\s*${ANY_DARK_SCOPE}\s*\))`
+  String.raw`^(?:(?:html|:root)?(?:${ANY_DARK_SCOPE})+|:where\(\s*${ANY_DARK_SCOPE}\s*\))`,
+  "i"
 )
 const LEADING_ROOT = /^(?:html|:root)\s+(?![>+~])/
 
 /**
- * Does this selector speak of the dark theme at all?
+ * Does this text — a selector, an at-rule prelude — speak of the dark theme at
+ * all?
  *
- * Wider than `DARK_SCOPE` on purpose — any quoting, any spacing — and wider
+ * Wider than `DARK_SCOPE` on purpose — any quoting, spacing, flag — and wider
  * than what `unscopeSelector` can take back off, which is one spelling only. A
  * spelling this missed would pass unread; one it recognises is read as a dark
  * rule, and `lightSpellingOf` is how it is then paired. One that still speaks

@@ -353,6 +353,7 @@ describe("dark-sheet-copy — a scope spelled another way", () => {
     "[data-theme='dark']",
     "[data-theme=dark]",
     ':where([data-theme="dark"])',
+    '[data-theme="dark" i]',
   ]
   const blocked = (light: string, dark: string) =>
     found(mergedInput(light, dark)).map((i) => i.severity)
@@ -483,6 +484,89 @@ describe("dark-scope-unread", () => {
         `${DARK_TOKENS}\n[data-theme="dark"] .hero, body[data-theme="dark"] .btn { margin: 0; }`
       ).map((i) => i.severity)
     ).toEqual(["block"])
+  })
+
+  // The walk hands the pairing flat rules. One written inside another is part
+  // of its parent's body, and one under an at-rule that names the theme is a
+  // dark rule whose selector does not say so.
+  const COPIED_HERO =
+    ".hero { padding: 24px; background: var(--bg); color: var(--fg); }"
+
+  it("blocks a dark-sheet rule that carries the light rules nested inside it", () => {
+    const issues = unread(
+      LIGHT,
+      `[data-theme="dark"] { --bg: oklch(0.2 0 0); ${COPIED_HERO} ${COPIED_BTN} }`
+    )
+    expect(issues.map((i) => i.severity)).toEqual(["block"])
+    expect(issues[0].fix).toContain(":root [nests a rule]")
+  })
+
+  it("blocks an earlier-sheet rule that nests its dark rule", () => {
+    const issues = unread(
+      `${LIGHT}\n.card { color: blue; [data-theme="dark"] & { color: navy; } }`,
+      DARK_TOKENS
+    )
+    expect(issues.map((i) => i.severity)).toEqual(["block"])
+    expect(issues[0].fix).toContain(".card [nests a rule]")
+  })
+
+  it("blocks an earlier-sheet dark rule that nests another", () => {
+    expect(
+      unread(
+        `${LIGHT}\n[data-theme="dark"] .card { .title { color: navy; } }`,
+        DARK_TOKENS
+      ).map((i) => i.severity)
+    ).toEqual(["block"])
+  })
+
+  it("blocks dark-sheet rules under an at-rule that names the theme", () => {
+    const issues = unread(
+      LIGHT,
+      `${DARK_TOKENS}\n@scope ([data-theme="dark"]) { ${COPIED_HERO} }`
+    )
+    expect(issues.map((i) => i.severity)).toEqual(["block"])
+    expect(issues[0].fix).toContain(".hero [under an at-rule naming the theme]")
+  })
+
+  it("blocks earlier-sheet rules under an at-rule that names the theme", () => {
+    const issues = unread(
+      `${LIGHT}\n@scope ([data-theme="dark"]) { .btn { background: navy; } }`,
+      DARK_TOKENS
+    )
+    expect(issues.map((i) => i.severity)).toEqual(["block"])
+    expect(issues[0].fix).toContain(
+      '@scope ([data-theme="dark"]) / .btn [under an at-rule naming the theme]'
+    )
+  })
+
+  it("leaves light nesting that says nothing of dark alone", () => {
+    expect(
+      unread(
+        `${LIGHT}\n.card { color: blue; &:hover { color: navy; } }\n@scope (.card) { .title { margin: 0; } }`,
+        DARK_TOKENS
+      )
+    ).toEqual([])
+  })
+
+  it("does not take a brace in a string for a nested rule", () => {
+    expect(
+      unread(
+        LIGHT,
+        `${DARK_TOKENS}\n[data-theme="dark"] .hero::before { content: "{"; }`
+      )
+    ).toEqual([])
+  })
+
+  // seed-design carries one: a stray "}" in front of an @media block. The
+  // browser drops the block with the prelude it cannot read as a selector, so
+  // what is inside applies in neither theme.
+  it("is quiet for a block the browser drops after a stray brace", () => {
+    expect(
+      unread(
+        LIGHT,
+        `${DARK_TOKENS}\n[data-theme="dark"] }\n@media (max-width: 720px) { .btn { margin: 0; } }`
+      )
+    ).toEqual([])
   })
 
   it("is quiet for every spelling the pairing reads", () => {
