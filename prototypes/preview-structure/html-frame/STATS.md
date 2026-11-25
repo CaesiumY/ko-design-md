@@ -1,5 +1,7 @@
 # 구조마다 함께 적는 수치: HTML 한 장 + 공용 틀 (`html-frame`)
 
+이 문서의 수는 커밋 `2e029132` 에서 잰 기록이다.
+
 > PROTOTYPE. `prototypes/preview-structure/SCENARIOS.md` 끝의 「구조마다 함께 적는 수치」 여섯 항목을 같은 순서로 적는다.
 > 브랜치 `proto/preview-structure-html-frame`, 공통 바탕 커밋 `9f72b96` 에서 갈라졌다. 줄 수는 `wc -l` 이다.
 
@@ -14,7 +16,7 @@
 
 - 항목마다 손으로 쓰는 원본은 HTML 한 장이다. 바탕보다 84줄씩 짧다(틀 블록 85줄을 걷고 링크 한 줄을 더했다).
 - 공용 코드로 새로 생긴 것은 `frame.css` 85줄뿐이다. 이 파일은 바탕의 `prototypes/preview-structure/frame.css` 를 `git mv` 로 옮긴 것이고 내용은 같다. 기존 공용 런타임 `tokens.css`(178줄)와 `iframe.js`(225줄)는 그대로다.
-- 새 항목을 시작할 뼈대 `html-frame/skeleton.html` 은 80줄이다. 서빙되지 않고 복사해서 쓴다.
+- 새 항목을 시작할 뼈대 `html-frame/skeleton.html` 은 90줄이다(리뷰 반영 전 80줄. 모든 자식을 갖춘 칸 하나를 더했다). 서빙되지 않고 복사해서 쓴다.
 
 ## 2. 기존 검사기와 테스트를 고친 줄, 새로 쓴 검사의 줄
 
