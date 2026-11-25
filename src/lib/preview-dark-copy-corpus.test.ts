@@ -5,6 +5,7 @@ import { readPreviewSlugs } from "../../scripts/audit-contrast-slugs"
 import {
   DARK_COPY_BACKLOG,
   DARK_OVERRIDE_RULES,
+  backlogDrift,
   darkCopyVerdict,
 } from "./dark-sheet-backlog"
 import { readPreviewHalves } from "./preview-halves"
@@ -15,9 +16,10 @@ import type { DarkSheetReport } from "./preview-validator"
 //
 // `validate:previews` already judges each preview against the not-yet-walked
 // list. What it cannot see is the list itself going wrong — a slug on it with
-// no preview behind it — or the second record at all: the number of dark rules
-// written outside tokens is not a property of one document being right or
-// wrong, it is a number that must not move unannounced.
+// no preview behind it, or a slug put on it to turn a block into a warning —
+// or the second record at all: the number of dark rules written outside tokens
+// is not a property of one document being right or wrong, it is a number that
+// must not move unannounced.
 
 const ROOT = fileURLToPath(new URL("../..", import.meta.url))
 const PREVIEW = join(ROOT, "public", "preview")
@@ -34,6 +36,79 @@ describe("darkCopyVerdict — the three cases of the list, and the quiet one", (
   })
   it("is clean for an unlisted slug with no copies", () => {
     expect(darkCopyVerdict(false, 0)).toBe("clean")
+  })
+})
+
+describe("backlogDrift — the list held against its pin", () => {
+  it("names a new slug put on the list", () => {
+    expect(backlogDrift(["toss", "newcomer"], ["toss"])).toEqual({
+      added: ["newcomer"],
+      walked: [],
+    })
+  })
+  // A set frozen at the first day's members would wave this one through: the
+  // walked slug would still be in it. The pin lost the slug when it was walked.
+  it("names a walked slug put back on the list", () => {
+    expect(backlogDrift(["toss", "krds"], ["toss"])).toEqual({
+      added: ["krds"],
+      walked: [],
+    })
+  })
+  it("names a slug taken off the list and left in the pin", () => {
+    expect(backlogDrift(["toss"], ["toss", "krds"])).toEqual({
+      added: [],
+      walked: ["krds"],
+    })
+  })
+  it("is quiet when the two agree, in any order", () => {
+    expect(backlogDrift(["toss", "krds"], ["krds", "toss"])).toEqual({
+      added: [],
+      walked: [],
+    })
+  })
+})
+
+// The list's lock. A test reads the tree and not its history, so "nothing is
+// added" can only be held by a second copy: putting a slug on the list takes
+// an edit here as well, and this is the edit the failure below refuses. It is
+// a duplicate on purpose, one slug a line so previews walked in parallel PRs
+// do not collide, and it leaves with the list (#738).
+const PINNED_BACKLOG = [
+  "11st",
+  "baemin",
+  "bezier",
+  "class101",
+  "codeit",
+  "gmarket",
+  "greeting",
+  "krds",
+  "kyobobook",
+  "line-design-system",
+  "samsung-one-ui",
+  "seed-design",
+  "socar",
+  "teamsparta",
+  "toss",
+  "vapor-ui",
+  "wanted",
+  "yeogi",
+]
+
+describe("the not-yet-walked list against its pin", () => {
+  const { added, walked } = backlogDrift(DARK_COPY_BACKLOG, PINNED_BACKLOG)
+
+  it("has had no slug added to it", () => {
+    expect(
+      added,
+      `put on DARK_COPY_BACKLOG (src/lib/dark-sheet-backlog.ts): ${added.join(", ")}. The list only shrinks. Do not add a slug to it, and do not add it to PINNED_BACKLOG here to get past this: walk the copies out of the preview instead. \`pnpm validate:previews --slug <slug> --verbose\` names them and says how.`
+    ).toEqual([])
+  })
+
+  it("has no walked slug left in the pin", () => {
+    expect(
+      walked,
+      `off DARK_COPY_BACKLOG and still in PINNED_BACKLOG: ${walked.join(", ")}. A walked slug leaves both. Take the line(s) out of PINNED_BACKLOG in this file.`
+    ).toEqual([])
   })
 })
 
@@ -84,8 +159,8 @@ describe("the dark sheets of the shipped catalogue", () => {
       expect(
         verdict,
         verdict === "block"
-          ? `${slug} is not on the not-yet-walked list, but its [data-theme="dark"] sheet restates ${copies.length} light rule(s). \`pnpm validate:previews --slug ${slug} --verbose\` names them and says how to fix them; do not add the slug to DARK_COPY_BACKLOG, which only shrinks.`
-          : `${slug} is on the not-yet-walked list, but its dark sheet no longer restates any light rule. Take it out of DARK_COPY_BACKLOG in src/lib/dark-sheet-backlog.ts.`
+          ? `${slug} is not on the not-yet-walked list, but its [data-theme="dark"] sheet restates ${copies.length} light rule(s). \`pnpm validate:previews --slug ${slug} --verbose\` names them and says how to fix them; do not add the slug to DARK_COPY_BACKLOG, which only shrinks (the pin in this file fails an addition).`
+          : `${slug} is on the not-yet-walked list, but its dark sheet no longer restates any light rule. Take it out of DARK_COPY_BACKLOG in src/lib/dark-sheet-backlog.ts, and out of PINNED_BACKLOG in this file.`
       ).toBe(listed ? "warn" : "clean")
     })
 

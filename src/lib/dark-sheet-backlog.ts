@@ -9,10 +9,17 @@
  * shrinks: a preview that is walked leaves it, and nothing is added.
  *
  * `validate:previews` reads it to pick a severity. On the list, a copy is a
- * warning; off it, a block — so a new preview, or one already walked, cannot
- * take a copy back in. A listed slug with nothing left to walk is a failure
- * too, so the list cannot go stale and keep exempting a slug that no longer
- * needs it. Once it is empty the list and its handling go (#738).
+ * warning; off it, a block — so a copy in a new preview, or in one already
+ * walked, is blocked for as long as its slug stays off the list. A listed slug
+ * with nothing left to walk is a failure too, so the list cannot go stale and
+ * keep exempting a slug that no longer needs it.
+ *
+ * Nothing here can stop a line being added to this set; what holds "nothing
+ * is added" is a pin, a second copy of the list in
+ * `preview-dark-copy-corpus.test.ts`. A slug put on the list fails `pnpm test`
+ * until the pin is edited too, and that failure says to walk the copies
+ * instead (`backlogDrift`). It is a lock of two edits, not an impossibility.
+ * Once the list is empty, it, the pin and their handling go (#738).
  */
 export const DARK_COPY_BACKLOG: ReadonlySet<string> = new Set([
   "11st",
@@ -50,6 +57,25 @@ export function darkCopyVerdict(
 ): DarkCopyVerdict {
   if (copies > 0) return listed ? "warn" : "block"
   return listed ? "stale" : "clean"
+}
+
+/**
+ * Where the list and its pin disagree. `added` is on the list and not in the
+ * pin: a slug someone put on the list. `walked` is in the pin and not on the
+ * list: a slug that was walked and whose pin line was left behind. The pin
+ * follows the list down, so a walked slug put back on the list is `added`
+ * like any new one.
+ */
+export function backlogDrift(
+  listed: Iterable<string>,
+  pinned: Iterable<string>
+): { added: Array<string>; walked: Array<string> } {
+  const list = new Set(listed)
+  const pin = new Set(pinned)
+  return {
+    added: [...list].filter((slug) => !pin.has(slug)),
+    walked: [...pin].filter((slug) => !list.has(slug)),
+  }
 }
 
 /**

@@ -2172,7 +2172,7 @@ function checkDarkSheetCopy(
       block(
         "dark-copy-backlog-stale",
         name,
-        `${input.slug} is on the not-yet-walked list, but its [data-theme="dark"] sheet no longer restates any light rule. Take the slug out of DARK_COPY_BACKLOG in src/lib/dark-sheet-backlog.ts, so a copy that comes back is blocked rather than waved through as backlog.`
+        `${input.slug} is on the not-yet-walked list, but its [data-theme="dark"] sheet no longer restates any light rule. Take the slug out of DARK_COPY_BACKLOG in src/lib/dark-sheet-backlog.ts and out of its pin (PINNED_BACKLOG in src/lib/preview-dark-copy-corpus.test.ts), so a copy that comes back is blocked rather than waved through as backlog.`
       )
     )
     return

@@ -37,9 +37,11 @@ paths:
   다크 시트에 다시 적은 복사본은 두지 않는다. 검증기가 복사본을 막고, 무엇이 복사본인지의 정의는
   `src/lib/preview-validator.ts` 의 `darkSheetReport` 주석이 정본이다.
   - **이행 중(#734 → #738)**: 아직 걷지 않은 슬러그의 목록(`src/lib/dark-sheet-backlog.ts` 의
-    `DARK_COPY_BACKLOG`)에 있는 항목은 복사본이 경고로만 난다. 목록은 줄어들기만 하고 새로 넣지 않는다. 걷은
-    PR 이 그 슬러그를 목록에서 뺀다. 빼지 않으면 `pnpm validate:previews` 와 `pnpm test` 가 막는다. 목록이 비면
-    목록과 이 문단을 걷는다.
+    `DARK_COPY_BACKLOG`)에 있는 항목은 복사본이 경고로만 난다. 목록은 줄어들기만 하고 새로 넣지 않는다. 목록과
+    같은 고정본(`src/lib/preview-dark-copy-corpus.test.ts` 의 `PINNED_BACKLOG`)이 있어, 목록에 슬러그를 더하면
+    `pnpm test` 가 막고 실패 메시지가 넣지 말고 복사본을 걷으라고 말한다. 두 곳을 함께 고치면 지나가는 잠금이므로
+    고정본에 줄을 더한 diff 는 리뷰에서 거절한다. 걷은 PR 이 그 슬러그를 목록과 고정본 두 곳에서 뺀다. 빼지 않으면
+    `pnpm validate:previews` 와 `pnpm test` 가 막는다. 목록이 비면 목록, 고정본, 이 문단을 걷는다.
   - **다크가 토큰 밖에서 라이트와 다르게 적는 것의 수는 슬러그별로 같은 파일의 `DARK_OVERRIDE_RULES` 에
     정확값으로 적는다.** 무엇을 세는지의 정의도 `darkSheetReport` 주석이 정본이다. 요지는 커스텀 프로퍼티가 아닌
     속성을 라이트가 주지 않는 값으로 적은 다크 규칙과, 다크에만 있는 `@keyframes`, `@font-face` 블록이다.
