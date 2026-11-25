@@ -47,7 +47,7 @@
 | `<pv-cell>` 첫머리의 `<p class="catalog-dummy">` | 시연 자리 밖, 이름표 아래에 남는다 | 정적 검사가 class 로 찾기 때문에 속성이 아니라 진짜 요소로 둔다 |
 | `<pv-screen>` | `<div class="pv-screen">` | |
 
-- 그리는 코드는 `iframe.js` 의 `drawTags()` 이고 `start()` 맨 앞, 다크 변형을 모으기(`collect()`) 전에 돈다. 108줄이다.
+- 그리는 코드는 `iframe.js` 의 `drawTags()` 이고 `start()` 맨 앞, 다크 변형을 모으기(`collect()`) 전에 돈다. 줄 수는 `STATS.md` 1절에 있다.
 - `<style>` 두 블록(틀 블록 포함)은 공통 바탕과 글자까지 같다. 틀 스타일은 그려진 `.pv-*` class 에 걸린다.
 - `name` 이 표에 없는 구역은 제목이 빈 채 그려진다. 이 구조에는 그것을 막는 검사가 없다.
 
@@ -91,6 +91,7 @@ pnpm exec tsx prototypes/preview-structure/custom-tags/hurdles.ts --base <바탕
 ## 4. 걸림돌 다섯
 
 모두 `hurdles.ts` 로 쟀다. 사본은 OS 임시 폴더에 만들고, 서빙되는 파일은 건드리지 않았다.
+이 절과 3절의 수는 실행 결과의 기록이고, 잰 커밋은 `STATS.md` 맨 위에 적는다.
 
 ### 4.1 공용 스크립트 밖 스크립트 금지: 조건부. `src` 로 실은 별도 파일이면 그렇고, 그 밖이면 그렇지 않다
 
@@ -98,7 +99,7 @@ pnpm exec tsx prototypes/preview-structure/custom-tags/hurdles.ts --base <바탕
 - 그리는 코드를 `/preview/_runtime/pv-tags.js` 로 따로 실은 사본은 exit 1 이다.
   `BLOCK [foreign-script] … loads a script other than the shared runtime: \`/preview/_runtime/pv-tags.js\`. Previews must stay self-contained (no frameworks, no per-slug runtime copies).` (라이트와 다크 반쪽에서 하나씩, 막힘 2)
 - 같은 코드를 `<head>` 의 인라인 `<script>` 로 둔 사본은 exit 0 이다. 규칙의 정규식이 `src` 가 있는 `<script>` 만 본다. 인라인 스크립트는 `STANDARD.md` 5절과 ADR 0015("프리뷰는 자기 스크립트를 갖지 않는다")가 금지하지만 검사기는 잡지 않는다(공통 바탕의 `check-base.ts` 만 본다).
-- 본 구조는 그리는 코드를 `iframe.js` 안에 넣어 이 규칙에 걸리지 않는다. 대가는 모든 프리뷰가 싣는 공용 런타임이 108줄 늘어난다는 것이다(225줄에서 334줄). 태그가 없는 다른 프리뷰에서는 `querySelectorAll` 다섯 번이 빈 결과를 낸다.
+- 본 구조는 그리는 코드를 `iframe.js` 안에 넣어 이 규칙에 걸리지 않는다. 대가는 모든 프리뷰가 싣는 공용 런타임이 그리는 코드만큼 늘어난다는 것이다(줄 수는 `STATS.md` 1절). 태그가 없는 다른 프리뷰에서는 태그마다 하는 `querySelectorAll` 이 빈 결과를 낸다.
 - 지키려는 것: 프리뷰가 스스로 완결되고 항목마다 런타임 사본이 생기지 않는 것.
 
 ### 4.2 속성에 든 이름표를 산문 검사가 읽지 못함: 그렇다
@@ -116,14 +117,14 @@ pnpm exec tsx prototypes/preview-structure/custom-tags/hurdles.ts --base <바탕
 
 - 쪽: 브라우저(`scripts/audit-contrast-collector.ts` 1342줄은 `document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT)` 로 글을 찾는다. 이 걷기는 그림자 루트 안으로 들어가지 않는다).
 - 본 구조(문서에 그대로 그린다): 측정 행 322, 미달 40, 텍스트 요소 326 / 326. 바탕과 같다.
-- 변형(같은 태그를 그린 뒤 칸마다 내용을 그림자 루트로 옮김. 그림자 DOM 으로 그리는 런타임이 남길 모습을 인라인 스크립트로 흉내 냈다): 측정 행 20, 미달 2, 텍스트 요소 15 / 15. 칸 안의 글이 측정에서 통째로 빠지고, 얇은 프리뷰 하한(80)에도 걸린다.
+- 변형(같은 태그를 그린 뒤 칸마다 내용을 그림자 루트로 옮김. 그림자 DOM 으로 그리는 런타임이 남길 모습을 인라인 스크립트로 흉내 냈다): 측정 행 20, 미달 2, 텍스트 요소 15 / 15. 칸 안의 글이 측정에서 통째로 빠지고, 얇은 프리뷰 하한(`MIN_TEXT_ELEMENTS`)에도 걸린다.
 - 그래서 본 구조는 커스텀 엘리먼트(`customElements.define`)와 그림자 DOM 을 쓰지 않고, 태그를 표준 마크업으로 바꿔 끼는 함수 하나로 그렸다.
 
 ### 4.4 다크에서 글이 달라지는 이름표의 묶임: 그렇다. 브라우저에서는 풀리지만 검사기는 다크 이름표를 보지 못한다
 
 - 쪽: 둘 다.
 - 본 구조(`label-dark` 속성): 다크로 연 Chromium 에서 `screen-live-watch` 칸의 이름표는 다크 글 하나만 보인다(`["라이브 시청, 데스크톱 (채팅 폭, 제목 크기, 전송 버튼 가정)"]`). 런타임이 `<template>` 을 만든 뒤 기존 바꿔 끼기가 돈다.
-- 그러나 검사기가 원본에서 다시 짠 다크 반쪽(`splitMergedPreview`)에는 다크 이름표도 라이트 이름표도 없다(바탕은 다크 이름표가 있다). 다크 이름표 네 개(`screen-live-watch`, `chat-input`, `channel-head`, `modal`)는 검사기의 `dark-swap-anchor` 짝 검사와 다크 반쪽의 모든 글 검사 밖에 있다.
+- 그러나 검사기가 원본에서 다시 짠 다크 반쪽(`splitMergedPreview`)에는 다크 이름표도 라이트 이름표도 없다(바탕은 다크 이름표가 있다). `label-dark` 를 단 칸(`screen-live-watch`, `chat-input`, `channel-head`, `modal`)의 다크 이름표는 검사기의 `dark-swap-anchor` 짝 검사와 다크 반쪽의 모든 글 검사 밖에 있다.
 - 다른 꼴(다크 이름표를 칸의 첫 자식 `<template>` 으로 쓰기)은 검사기가 막는다. exit 1,
   `BLOCK [unreadable-merged-preview] … a template[data-theme-variant="dark"] with no preceding node has nothing to swap.` 원본에서 그 template 앞에 라이트 이름표가 없기 때문이다. 브라우저에서도 틀린다. 다크에서 라이트 이름표와 다크 이름표가 둘 다 보인다.
 - 이름표의 한 조각만 다크에서 달라지는 경우(`STANDARD.md` 2절의 template 을 이름표 안에 두는 꼴)는 속성 하나로 적을 수 없다. 치지직에는 그런 칸 이름표가 없어 재지 않았다.

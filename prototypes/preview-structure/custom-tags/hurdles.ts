@@ -73,7 +73,7 @@ function validate(path: string): string {
   return `exit ${r.status}\n    ${out}`
 }
 
-// Same five replaces as `visibleText` in src/lib/preview-validator.ts (not
+// Same replaces as `visibleText` in src/lib/preview-validator.ts (not
 // exported): what the validator's prose rules read.
 function visibleText(html: string): string {
   return html
