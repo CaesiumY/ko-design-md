@@ -55,7 +55,55 @@
 
 - `--pv-*` 일곱(font, ink, ink-muted, canvas, surface, line, radius)은 **첫 `<style>`** 에 `var(--…)` 참조로 준다. 굵기와 자간 둘만 글자 값을 쓸 수 있다. 뜻은 `STANDARD.md` 3절의 표다.
 - `--pv-gutter` 는 틀이 내주는 값이다. 페이지는 `var(--pv-gutter)` 로 읽기만 한다(히어로 안쪽 여백 등).
-- `<body>` 안의 꼴은 `STANDARD.md` 2절 그대로다: 면책 띠, `<main class="pv-page">`, 그 안에 히어로 `<header class="pv-hero" data-pv-zone="hero">` 와 구역 `<section class="pv-zone" …>` 들. 구역과 칸 조각은 `skeleton.html` 에서 복사한다.
+- `<body>` 안의 꼴은 `STANDARD.md` 2절 그대로다: 면책 띠, `<main class="pv-page">`, 그 안에 히어로 `<header class="pv-hero" data-pv-zone="hero">` 와 구역 `<section class="pv-zone" …>` 들. 아래 조각을 복사해 쓴다. `skeleton.html` 에도 같은 꼴이 있다.
+
+### 구역 조각
+
+`{id}` 는 구역 식별자, `{제목}` 은 그 구역의 제목 글자다. `{id}` 는 세 곳(`data-pv-zone`, `aria-labelledby`, `h2` 의 `id`)에 같은 글자로 들어간다. 구역의 자식은 제목과 `.pv-cells` 둘뿐이다.
+
+```html
+  <section class="pv-zone" data-pv-zone="{id}" aria-labelledby="pv-{id}">
+    <h2 class="pv-zone-title" id="pv-{id}">{제목}</h2>
+    <div class="pv-cells">
+      <!-- 칸들 -->
+    </div>
+  </section>
+```
+
+### 칸 조각
+
+칸의 자식은 **이 순서**다. 괄호 안은 있을 때만 둔다.
+
+1. 칸의 이름표 `<p class="pv-label">`. 비어 있으면 안 된다.
+2. (다크에서 이름표 글이 다를 때) `<template data-theme-variant="dark">` 하나. 안에 바꿔 낄 `<p class="pv-label">` 하나만 둔다.
+3. (칸에 더미 데이터가 있을 때) `<p class="catalog-dummy">` 하나.
+4. 시연 자리 `<div class="pv-stage">` 하나. 마지막 자식이다.
+
+가장 짧은 칸:
+
+```html
+      <div class="pv-cell" data-pv-cell="{kebab-case 이름}">
+        <p class="pv-label">{md 의 컴포넌트 이름}</p>
+        <div class="pv-stage"><!-- 시연 --></div>
+      </div>
+```
+
+넷을 다 갖춘 칸:
+
+```html
+      <div class="pv-cell pv-cell--wide" data-pv-cell="{kebab-case 이름}">
+        <p class="pv-label">{이름}, {스펙} (라이트 색 가정)</p>
+        <template data-theme-variant="dark"><p class="pv-label">{이름}, {스펙}</p></template>
+        <p class="catalog-dummy">{무엇}은 레이아웃 시연용 더미 데이터입니다.</p>
+        <div class="pv-stage pv-stage--stack">
+          <!-- 시연. 상태나 변형을 밝히는 이름표는 브랜드 class 로 이 안에 둔다 -->
+        </div>
+      </div>
+```
+
+- `data-pv-cell` 은 소문자, 숫자, 하이픈으로 쓰고 파일 안에서 겹치지 않는다.
+- 넓게 써야 하는 칸은 `pv-cell--wide`, 세로로 쌓는 시연은 `pv-stage--stack` 을 더한다. 틀의 class 는 `frame.css` 에 있는 것만 쓴다.
+- 화면 구역의 칸은 시연 자리 안에 `<div class="pv-screen">` 하나를 두고 그 안에 화면을 그린다. `.pv-screen` 안에는 `pv-` class 를 쓰지 않는다.
 
 ## 4. 한 줄 실행 명령
 
@@ -122,10 +170,10 @@ public/preview/toss/preview.html:1835  [zone-order] 구역 "inputs" 가 구역 "
 2. `<title>`, 로고 경로(`/logos/…`, md 의 logo 값), `h1` 을 그 브랜드 것으로 바꾼다.
 3. 첫 `<style>` 의 `:root` 에 md 의 토큰을 OKLCH 로 적고, `--pv-*` 일곱을 그 토큰의 참조로 준다.
 4. 다크 `<style>` 에 다크에서 달라지는 토큰만 다시 정의한다.
-5. 히어로, 화면 구역, 그 뒤 md 가 규정한 구역을 `ZONES` 순서대로 쓴다. md 가 규정하지 않은 구역은 쓰지 않는다. 칸 조각은 뼈대의 것을 복사한다.
+5. 히어로, 화면 구역, 그 뒤 md 가 규정한 구역을 `ZONES` 순서대로 쓴다. md 가 규정하지 않은 구역은 쓰지 않는다. 구역과 칸은 3절의 구역 조각과 칸 조각을 복사해 채운다.
 6. 약속 검사, `pnpm validate:previews --slug {slug}` 를 돌려 막히는 곳을 고친다.
 
-`skeleton.html` 은 화면 구역과 버튼 구역 하나씩만 갖는다. 면책 띠의 글은 글자 그대로이고(검증기가 본다), 구역 제목은 `ZONES` 의 글자다.
+`skeleton.html` 에는 화면 구역과 버튼 구역만 있다. 그 밖의 구역은 구역 조각으로 쓴다. 버튼 구역에는 가장 짧은 칸과 넷을 다 갖춘 칸이 하나씩 있다. 면책 띠의 글은 글자 그대로 둔다(검증기가 본다).
 
 ## 7. 온보딩의 임시 폴더 흐름에서 달라지는 것
 

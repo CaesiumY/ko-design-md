@@ -68,9 +68,19 @@
   <section class="pv-zone" data-pv-zone="buttons" aria-labelledby="pv-buttons">
     <h2 class="pv-zone-title" id="pv-buttons">버튼</h2>
     <div class="pv-cells">
+      <!-- 가장 짧은 칸: 이름표와 시연 자리 -->
       <div class="pv-cell" data-pv-cell="button-primary">
         <p class="pv-label">button-primary</p>
         <div class="pv-stage"><!-- 시연 --></div>
+      </div>
+      <!-- 온전한 칸: 이름표, (다크에서 글이 다른 이름표), (더미 데이터 표기), 시연 자리. 이 순서다 -->
+      <div class="pv-cell pv-cell--wide" data-pv-cell="button-variants">
+        <p class="pv-label">button, 변형과 상태 (라이트 색 가정)</p>
+        <template data-theme-variant="dark"><p class="pv-label">button, 변형과 상태</p></template>
+        <p class="catalog-dummy">버튼 글자는 레이아웃 시연용 더미 데이터입니다.</p>
+        <div class="pv-stage pv-stage--stack">
+          <!-- 시연. 상태나 변형을 밝히는 이름표는 브랜드 class 로 이 안에 둔다 -->
+        </div>
       </div>
     </div>
   </section>
