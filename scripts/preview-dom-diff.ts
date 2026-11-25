@@ -352,9 +352,9 @@ function markElements(selectors: Array<string>): number {
 }
 
 /**
- * Mark the elements the forced passes put into a state: the ones a :hover /
- * :active / :focus rule hangs its state on, which `stateTargetSelectors` reads
- * out of each selector — the `tr` of `tr:hover td`, not the `td`.
+ * Mark the elements the forced passes put into a state: the ones a rule hangs
+ * one of the `FORCED_STATES` on, which `stateTargetSelectors` reads out of
+ * each selector — the `tr` of `tr:hover td`, not the `td`.
  */
 async function markStateTargets(page: Page): Promise<number> {
   const targets = new Set<string>()

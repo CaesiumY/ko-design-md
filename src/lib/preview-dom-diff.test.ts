@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest"
 import {
+  FORCED_STATES,
   compareDomPasses,
   selfCheckProblems,
   stateTargetSelectors,
@@ -194,6 +195,31 @@ describe("stateTargetSelectors", () => {
     expect(stateTargetSelectors(".btn")).toEqual([])
     expect(stateTargetSelectors(":focus-visible")).toEqual([])
     expect(stateTargetSelectors(".menu :hover")).toEqual([])
+  })
+
+  it("names the element a :focus-within rule hangs its state on", () => {
+    expect(stateTargetSelectors(".sbar:focus-within input")).toEqual([".sbar"])
+  })
+
+  it("takes a longer state name whole, not the :focus it starts with", () => {
+    expect(stateTargetSelectors(".a:focus-visible")).toEqual([".a"])
+    expect(stateTargetSelectors(".a:focus-within")).toEqual([".a"])
+    expect(stateTargetSelectors(".a:focused")).toEqual([])
+  })
+})
+
+describe("FORCED_STATES", () => {
+  // An element is found for a state and then put into it. A state found and
+  // not forced is the tool saying "no difference" about a rule it never ran.
+  it("forces, in the focus pass, all three states a real focus brings", () => {
+    const focus = FORCED_STATES.find((pass) => pass.name === "focus")
+    expect(focus?.forced).toEqual(["focus", "focus-visible", "focus-within"])
+  })
+
+  it("finds an element for every state a pass forces", () => {
+    for (const state of FORCED_STATES.flatMap((pass) => pass.forced)) {
+      expect(stateTargetSelectors(`.a:${state} .b`), state).toEqual([".a"])
+    }
   })
 })
 
