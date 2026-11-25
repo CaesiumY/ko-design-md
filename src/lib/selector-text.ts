@@ -5,16 +5,58 @@
 /** The scope the merged layout writes in front of every dark selector. */
 export const DARK_SCOPE = '[data-theme="dark"]'
 
+const ANY_DARK_SCOPE = String.raw`\[\s*data-theme\s*[~|^$*]?=\s*["']?dark["']?\s*\]`
+const MENTIONS_DARK_SCOPE = new RegExp(ANY_DARK_SCOPE)
+// The scope where it scopes: at the front of the selector, on the root element
+// however that is named, bare or inside `:where()`, once or (as the merge
+// leaves a hand-written `html[data-theme="dark"]`) twice.
+const LEADING_DARK_SCOPE = new RegExp(
+  String.raw`^(?:(?:html|:root)?(?:${ANY_DARK_SCOPE})+|:where\(\s*${ANY_DARK_SCOPE}\s*\))`
+)
+const LEADING_ROOT = /^(?:html|:root)\s+(?![>+~])/
+
 /**
  * Does this selector speak of the dark theme at all?
  *
  * Wider than `DARK_SCOPE` on purpose — any quoting, any spacing — and wider
- * than what `unscopeSelector` can take back off. A spelling this recognises and
- * that one cannot undo is still read as a dark rule, and shows up as one that
- * pairs with nothing; a spelling this missed would pass unread.
+ * than what `unscopeSelector` can take back off, which is one spelling only. A
+ * spelling this missed would pass unread; one it recognises is read as a dark
+ * rule, and `lightSpellingOf` is how it is then paired.
  */
 export function mentionsDarkScope(selector: string): boolean {
-  return /\[\s*data-theme\s*[~|^$*]?=\s*["']?dark["']?\s*\]/.test(selector)
+  return MENTIONS_DARK_SCOPE.test(selector)
+}
+
+/**
+ * A dark selector as a light sheet would have written it, whichever way its
+ * scope is spelled: `html[data-theme="dark"] .btn`, `:root[data-theme='dark']
+ * .btn`, `[data-theme=dark] .btn` and the `html .btn` that `unscopeSelector`
+ * leaves of the first all come out `.btn`. Each selector of a list on its own.
+ *
+ * For pairing a dark rule with the light rule it may restate, and only as the
+ * second thing tried: it is a guess at the author's intent, where
+ * `unscopeSelector` is an exact inverse, and a rule that pairs under its own
+ * text must keep doing so.
+ *
+ * The scope is read only where it scopes, on the root element at the front of
+ * the selector. `body[data-theme="dark"] .x` and `.x [data-theme="dark"]` come
+ * back as they are: they name other elements, and stripping the attribute would
+ * invent a selector.
+ */
+export function lightSpellingOf(selector: string): string {
+  return splitSelectorList(selector)
+    .map((arm) => {
+      const scope = LEADING_DARK_SCOPE.exec(arm)
+      if (scope === null) return arm.replace(LEADING_ROOT, "")
+      const rest = arm.slice(scope[0].length)
+      const below = rest.trim()
+      if (below === "") return ":root"
+      // A descendant of the root is written without it; a compound on the
+      // root (`.panel`) or a child of it (`> body`) is not.
+      if (!/^\s/.test(rest)) return `:root${rest}`
+      return /^[>+~]/.test(below) ? `:root ${below}` : below
+    })
+    .join(", ")
 }
 
 /**

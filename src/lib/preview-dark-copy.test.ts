@@ -305,8 +305,23 @@ describe("dark rules a light sheet carries", () => {
     ).toEqual({ copies: ['html[data-theme="dark"] .btn'], overrideRules: 1 })
   })
 
-  // A spelling the scope cannot be taken off is still a dark rule: it pairs
-  // with nothing and is counted, rather than passing unread.
+  // The count's other member, and where each kind of copy lands in the list.
+  it("counts an at-rule block light lacks as one, and lists block copies last", () => {
+    const spin = "@keyframes spin { to { transform: rotate(360deg); } }"
+    const pulse = "@keyframes pulse { to { opacity: 0.4; } }"
+    expect(
+      report(
+        `${LIGHT}\n${spin}\n[data-theme="dark"] .btn:hover { background: oklch(0.56 0.18 250); }`,
+        `${DARK_TOKENS}\n${spin}\n${pulse}\n[data-theme="dark"] .hero { padding: 24px; }`
+      )
+    ).toEqual({
+      copies: [".hero", '[data-theme="dark"] .btn:hover', "@keyframes spin"],
+      overrideRules: 1,
+    })
+  })
+
+  // Another spelling of the scope is read like the usual one: here the rule
+  // changes the background light gives `.btn`, so it is counted.
   it("counts one whose scope is spelled another way", () => {
     expect(
       report(
@@ -323,6 +338,66 @@ describe("dark rules a light sheet carries", () => {
         DARK_TOKENS
       ).overrideRules
     ).toBe(1)
+  })
+})
+
+// The scope has one spelling the merge writes and several a hand can. A copy is
+// a copy under any of them: were only the usual one read, a sheet copied whole
+// behind `html[data-theme="dark"]` would pass the check that exists to stop it.
+describe("dark-sheet-copy — a scope spelled another way", () => {
+  const COPIED_BTN =
+    ".btn { padding: 8px 12px; border-radius: 8px; background: oklch(0.62 0.18 250); }"
+  const SPELLINGS = [
+    'html[data-theme="dark"]',
+    ':root[data-theme="dark"]',
+    "[data-theme='dark']",
+    "[data-theme=dark]",
+    ':where([data-theme="dark"])',
+  ]
+  const blocked = (light: string, dark: string) =>
+    found(mergedInput(light, dark)).map((i) => i.severity)
+
+  it.each(SPELLINGS)(
+    "blocks a copied rule in the dark sheet under %s",
+    (scope) => {
+      expect(blocked(LIGHT, `${DARK_TOKENS}\n${scope} ${COPIED_BTN}`)).toEqual([
+        "block",
+      ])
+    }
+  )
+
+  it.each(SPELLINGS)("blocks one in an earlier sheet under %s", (scope) => {
+    expect(blocked(`${LIGHT}\n${scope} ${COPIED_BTN}`, DARK_TOKENS)).toEqual([
+      "block",
+    ])
+  })
+
+  // The usual spelling is tried first. seed-design's dark sheet repeats
+  // `html[data-theme="dark"] .snackbar` from an earlier sheet, and that repeat
+  // pairs with the rule it repeats — not with light's `.snackbar`, which it
+  // differs from.
+  it("still pairs a rule with its own text before any other spelling of it", () => {
+    const html = mergedFile(
+      `${LIGHT}\nhtml[data-theme="dark"] .btn { background: oklch(0.7 0.15 250); }`,
+      `${DARK_TOKENS}\nhtml[data-theme="dark"][data-theme="dark"] .btn { background: oklch(0.7 0.15 250); }`
+    )
+    const halves = splitMergedPreview(html, Buffer.byteLength(html))
+    expect(darkSheetReport(halves.light, halves.dark)).toEqual({
+      copies: ['html[data-theme="dark"] .btn'],
+      overrideRules: 1,
+    })
+  })
+
+  it("does not take a scope for one where it names another element", () => {
+    const html = mergedFile(
+      LIGHT,
+      `${DARK_TOKENS}\nbody[data-theme="dark"] ${COPIED_BTN}`
+    )
+    const halves = splitMergedPreview(html, Buffer.byteLength(html))
+    expect(darkSheetReport(halves.light, halves.dark)).toEqual({
+      copies: [],
+      overrideRules: 1,
+    })
   })
 })
 

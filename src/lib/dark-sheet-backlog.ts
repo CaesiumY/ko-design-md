@@ -53,15 +53,14 @@ export function darkCopyVerdict(
 }
 
 /**
- * How many dark rules of each preview set something other than a custom
- * property and differ from light in doing so — a colour written straight onto a
- * component, almost always. A slug that is not here has none.
- *
- * It is not every dark rule that is not a token redefinition: a rule that only
- * restates light is a copy, which `dark-sheet-copy` reports and this number
- * leaves out. And it is not only the last sheet's: a `[data-theme="dark"]` rule
- * written in an earlier sheet is counted where it is written (seed-design's
- * two snackbar rules).
+ * How much each preview's dark says outside tokens that light does not — a
+ * colour written straight onto a component, almost always. A slug that is not
+ * here has none. What exactly is counted is defined in one place, the comment
+ * on `darkSheetReport` (`preview-validator.ts`); in short, dark rules that set
+ * a property other than a custom property to a value light does not give it,
+ * wherever they are written, and dark-only `@keyframes` / `@font-face` blocks.
+ * A rule that only restates light is not in the number: that is a copy, and
+ * `dark-sheet-copy` reports it.
  *
  * Token redefinition is the default way to write dark, but it is not the only
  * one allowed: some changes a token cannot carry (a logo inverted with

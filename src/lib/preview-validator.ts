@@ -5,6 +5,7 @@ import { DARK_COPY_BACKLOG, darkCopyVerdict } from "./dark-sheet-backlog"
 import { bodyOf, isBlankText, walkHtml } from "./html-walk"
 import { hasAppliedReduceBlock, hasCssMotion } from "./reduced-motion-block"
 import {
+  lightSpellingOf,
   mentionsDarkScope,
   splitSelectorList,
   unscopeSelector,
@@ -891,12 +892,13 @@ export interface DarkSheetReport {
   /**
    * The dark rules that restate light, each named by its selector under the
    * at-rules it sits in (`.btn:hover`, `@media (max-width: 720px) / .grid`).
-   * The dark sheet's in sheet order, then those an earlier sheet carries.
+   * Order and membership are defined at `darkSheetReport`.
    */
   copies: Array<string>
   /**
-   * How many dark rules set something other than a custom property, to a value
-   * light does not already give it. See `DARK_OVERRIDE_RULES`.
+   * How many dark rules and at-rule blocks say something light does not —
+   * defined in full at `darkSheetReport`, recorded per slug in
+   * `DARK_OVERRIDE_RULES`.
    */
   overrideRules: number
 }
@@ -953,10 +955,25 @@ export interface DarkSheetReport {
  * itself is read against the light rules that are not dark, so it can never be
  * paired with its own text.
  *
- * A scope spelled in a way `unscopeSelector` cannot take off
- * (`body[data-theme="dark"] .x`, `[data-theme='dark'] .x`) pairs with nothing:
- * the rule is counted, and never named a copy. The count moving is what brings
- * it to a reader.
+ * The scope has one spelling the merge writes and several a hand can
+ * (`html[data-theme="dark"] .btn`, `:root[data-theme="dark"] .btn`,
+ * `[data-theme='dark'] .btn`). A rule that pairs with nothing under its own
+ * text is tried again under the selector light would have written for it
+ * (`lightSpellingOf`), in either group — or a sheet copied whole behind another
+ * spelling would be no copy at all. Its own text comes first because the
+ * doubled-scope repeat above must go on pairing with the rule it repeats.
+ *
+ * What `overrideRules` counts, in full — the one place it is defined:
+ *
+ * - a dark rule, from either group, with at least one declaration that is not
+ *   a custom property and does not restate light. A rule that pairs with no
+ *   light rule restates nothing, so every such declaration in it counts
+ * - a dark-sheet at-rule block the splitter does not open (`@keyframes`,
+ *   `@font-face`) that light does not carry word for word, as one each
+ *
+ * A rule can be both a copy and counted: `color` retuned beside a `padding`
+ * carried along. `copies` lists the dark sheet's rules, then an earlier
+ * sheet's, then the at-rule blocks.
  */
 export function darkSheetReport(
   lightRaw: string,
@@ -1027,7 +1044,13 @@ export function darkSheetReport(
   ) => {
     const seen = new Map<string, number>()
     for (const { rule, name } of darkRules) {
-      const key = keyOf(rule)
+      // Under its own text first; failing that, under the selector light
+      // would have written for it, so a scope spelled another way
+      // (`html[data-theme="dark"] .btn`) still finds the `.btn` it restates.
+      const ownKey = keyOf(rule)
+      const key = twinsByKey.has(ownKey)
+        ? ownKey
+        : keyOf({ ...rule, selector: lightSpellingOf(rule.selector) })
       const nth = seen.get(key) ?? 0
       seen.set(key, nth + 1)
       const twins = twinsByKey.get(key) ?? []
