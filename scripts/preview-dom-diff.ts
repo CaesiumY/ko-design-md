@@ -17,7 +17,9 @@
 //   - its box (page coordinates, half a pixel of tolerance)
 //   - a fixed list of computed style properties, plus ::before and ::after
 // in light and dark at 375 / 768 / 976 / 1440, and once more per theme, at one
-// width, with :hover, :active and :focus(-visible) forced. A forced state
+// width, with :hover, :active and :focus forced — the last together with
+// :focus-visible and :focus-within, which a real focus brings and a forced one
+// does not (`FORCED_STATES`). A forced state
 // lands on one node and does not reach its ancestors the way a pointer does,
 // so the element forced is the one a stylesheet rule writes the pseudo-class
 // on: the row for `.tbl tr:hover td`, not the cell (`stateTargetSelectors`).
@@ -60,6 +62,7 @@ import { existsSync, readFileSync } from "node:fs"
 import { dirname, join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 import {
+  FORCED_STATES,
   compareDomPasses,
   selfCheckProblems,
   stateTargetSelectors,
@@ -179,12 +182,6 @@ const PSEUDO_PROPS = [
   "box-shadow",
   "opacity",
   "transform",
-]
-
-const STATES: Array<{ name: string; forced: Array<string> }> = [
-  { name: "hover", forced: ["hover"] },
-  { name: "active", forced: ["active"] },
-  { name: "focus", forced: ["focus", "focus-visible"] },
 ]
 
 interface CaptureOptions {
@@ -479,10 +476,10 @@ async function capture(
       )
       if (options.states && width === stateWidth) {
         const marked = await markStateTargets(page)
-        for (const state of STATES) {
+        for (const state of FORCED_STATES) {
           out.set(
             `${theme} @${width} :${state.name} (${marked} forced)`,
-            await forcedPass(context, page, state.forced)
+            await forcedPass(context, page, [...state.forced])
           )
         }
       }
@@ -525,29 +522,34 @@ async function capture(
 // ── self-check ───────────────────────────────────────────────────────────────
 
 /**
- * The two dark `:hover` colours the self-check's second document changes: one
- * on a rule whose state sits on the element it styles (`.btn:hover`), one on a
- * rule whose state sits on an ancestor (`.card:hover .label`). They are two
- * shapes because the tool reaches them by different elements, and it was blind
- * to the second while it still saw the first.
+ * The dark state colours the self-check's second document changes: a `:hover`
+ * rule whose state sits on the element it styles (`.btn:hover`), one whose
+ * state sits on an ancestor (`.card:hover .label`), and a `:focus-within` rule
+ * (`.field:focus-within`). They are separate shapes because the tool reaches
+ * each a different way — by a different element, or by a state that has to be
+ * forced under its own name — and it was blind to one while it still saw the
+ * others.
  */
 interface SelfCheckColours {
   own: string
   ancestor: string
+  within: string
 }
 const SELF_CHECK_SHIPPED: SelfCheckColours = {
   own: "rgb(119, 170, 255)",
   ancestor: "rgb(40, 50, 60)",
+  within: "rgb(30, 40, 30)",
 }
 const SELF_CHECK_CHANGED: SelfCheckColours = {
   own: "rgb(153, 204, 255)",
   ancestor: "rgb(70, 60, 50)",
+  within: "rgb(60, 30, 60)",
 }
 
 /**
  * A page small enough to read in full, shaped like a merged preview: the page's
- * own sheet, then the dark sheet. The two dark hover colours are the only
- * things the second document changes.
+ * own sheet, then the dark sheet. The dark state colours are the only things
+ * the second document changes.
  */
 function selfCheckDocument(dark: SelfCheckColours): string {
   return [
@@ -562,6 +564,8 @@ function selfCheckDocument(dark: SelfCheckColours): string {
     ".card:hover .label { background: rgb(238, 238, 238); }",
     ".btn { padding: 8px 12px; border: 0; background: rgb(51, 102, 204); color: rgb(255, 255, 255); }",
     ".btn:hover { background: rgb(34, 85, 170); }",
+    ".field { display: block; padding: 4px; }",
+    ".field:focus-within { background: rgb(238, 244, 238); }",
     // Something that moves, because the previews have spinners and progress
     // bars: a pass that reads a moving box reads a different one each time.
     "@keyframes dd-slide { from { margin-left: 0; } to { margin-left: 240px; } }",
@@ -574,23 +578,37 @@ function selfCheckDocument(dark: SelfCheckColours): string {
     // reads `currentColor`, and the check asks for the planted property alone.
     `[data-theme="dark"] .card:hover .label { background: ${dark.ancestor}; }`,
     `[data-theme="dark"] .btn:hover { background: ${dark.own}; }`,
+    `[data-theme="dark"] .field:focus-within { background: ${dark.within}; }`,
     "</style>",
     "</head>",
-    '<body><main><div class="card"><p class="label">화면 비교 자기 확인</p><button class="btn">확인</button><i class="slide"></i></div></main></body>',
+    '<body><main><div class="card"><p class="label">화면 비교 자기 확인</p><button class="btn">확인</button><label class="field">이름 <input class="in"></label><i class="slide"></i></div></main></body>',
     "</html>",
   ].join("\n")
 }
 
-const SELF_CHECK_PASS = `dark @${hoverWidthOf(DEFAULT_WIDTHS)} :hover`
+const SELF_CHECK_DARK = `dark @${hoverWidthOf(DEFAULT_WIDTHS)}`
 const SELF_CHECK_PLANTED: Array<PlantedDifference> = [
-  { pass: SELF_CHECK_PASS, who: "button.btn", what: "background-color" },
-  { pass: SELF_CHECK_PASS, who: "p.label", what: "background-color" },
+  {
+    pass: `${SELF_CHECK_DARK} :hover`,
+    who: "button.btn",
+    what: "background-color",
+  },
+  {
+    pass: `${SELF_CHECK_DARK} :hover`,
+    who: "p.label",
+    what: "background-color",
+  },
+  {
+    pass: `${SELF_CHECK_DARK} :focus`,
+    who: "label.field",
+    what: "background-color",
+  },
 ]
 
 /**
  * Does the tool still see? A document against a second capture of itself must
- * show nothing; against a copy with the two dark `:hover` rules changed, those
- * two differences and no other.
+ * show nothing; against a copy with the dark state rules changed, those
+ * differences and no other.
  */
 async function selfCheck(browser: Browser): Promise<Array<string>> {
   const server = await serveStatic(join(ROOT, "public"))
@@ -669,7 +687,7 @@ async function main(): Promise<void> {
     }
     if (problems.length === 0) {
       console.log(
-        "preview:dom-diff self-check: a document matches itself, and two changed dark :hover rules — one on the element, one on an ancestor — show up as exactly those."
+        "preview:dom-diff self-check: a document matches itself, and the changed dark state rules — :hover on the element, :hover on an ancestor, :focus-within — show up as exactly those."
       )
       return
     }

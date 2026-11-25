@@ -136,7 +136,28 @@ export function compareDomPasses(a: DomPasses, b: DomPasses): Array<DomDiff> {
   return diffs
 }
 
-const STATE_PSEUDO = "(?:hover|active|focus-visible|focus-within|focus)"
+/**
+ * The forced passes, and the pseudo-classes each one forces on the elements it
+ * puts into a state.
+ *
+ * A forced state is set under its own name and brings no other with it: a real
+ * focus makes an element `:focus`, `:focus-visible` and `:focus-within` at
+ * once, a forced `:focus` makes it `:focus` alone. So the focus pass names all
+ * three. The rules whose elements get forced are found by these same names
+ * (`stateTargetSelectors`), which is why there is one list: a state looked for
+ * and not forced compares as "no difference" whatever the rule says.
+ */
+export const FORCED_STATES: ReadonlyArray<{
+  name: string
+  forced: ReadonlyArray<string>
+}> = [
+  { name: "hover", forced: ["hover"] },
+  { name: "active", forced: ["active"] },
+  { name: "focus", forced: ["focus", "focus-visible", "focus-within"] },
+]
+
+// The lookahead keeps `:focus` from matching the start of `:focus-visible`.
+const STATE_PSEUDO = `(?:${FORCED_STATES.flatMap((s) => s.forced).join("|")})`
 const HAS_STATE = new RegExp(`:${STATE_PSEUDO}(?![\\w-])`)
 const EVERY_STATE = new RegExp(HAS_STATE.source, "g")
 const PSEUDO_ELEMENT = /::[\w-]+(?:\([^)]*\))?/g
