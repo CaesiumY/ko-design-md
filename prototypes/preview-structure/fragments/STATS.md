@@ -19,8 +19,8 @@
 | `fragments/assemble.ts` (원본 읽기와 꼴 검사, 조립, 줄 출처) | 440 |
 | `fragments/contract.ts` (서빙 파일 약속 검사) | 227 |
 | `fragments/repo.ts` (파일 찾기, 제목, 어긋남 비교) | 112 |
-| `fragments/cli.ts` (명령 셋) | 155 |
-| 합계 | 971 |
+| `fragments/cli.ts` (명령 셋) | 160 |
+| 합계 | 976 |
 | `frame.css` (바탕부터 있던 틀. 이 구조에서는 조립기가 읽는 원본이다) | 85 |
 | `package.json` 에 더한 명령 줄 | 3 |
 
