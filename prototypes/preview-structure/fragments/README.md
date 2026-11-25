@@ -21,7 +21,7 @@ preview-src/{slug}/
   zones/{구역}.html   그리는 구역마다 하나. 칸 블록만 담는다
 ```
 
-- 구역 파일의 이름은 구역 식별자다: `screens`, `buttons`, `inputs`, `selection`, `navigation`, `content`, `feedback`, `brand`. `hero` 와 `screens` 는 꼭 있어야 한다. 규정되지 않은 구역은 파일을 만들지 않는다.
+- 구역 파일의 이름은 `hero` 이거나 `zones.ts` 의 `ZONES` 에 있는 구역 식별자다. `hero` 와 `REQUIRED_ZONES` 에 든 구역은 꼭 있어야 한다. 규정되지 않은 구역은 파일을 만들지 않는다.
 - **구역의 순서와 제목은 항목이 정하지 않는다.** 공통 목록 `prototypes/preview-structure/fragments/zones.ts` 의 `ZONES` 한 곳이 정하고, 조립기는 파일이 어떤 순서로 있든 그 순서로 내보낸다.
 - `<title>` 은 `services/{slug}.md` 의 `name` 에 ` preview` 를 붙여 만든다. 따로 적지 않는다.
 - 틀 스타일은 `prototypes/preview-structure/frame.css` 의 `/* pv-frame:start */` 부터 `/* pv-frame:end */` 까지다. 이 파일 한 곳을 고치면 조립할 때 모든 항목에 들어간다. 항목 쪽에는 사본이 없다.
@@ -78,7 +78,7 @@ preview-src/{slug}/
 
 `pnpm previews:check` 가 두 층을 본다.
 
-1. **원본의 꼴.** 모르는 구역 파일(`zones/tables.html` 처럼 `ZONES` 에 없는 이름), 빠진 필수 구역, 이름표가 없는 칸, 빈 이름표, kebab-case 가 아니거나 두 번 쓰인 칸 이름, 모르는 칸 속성, 닫히지 않은 칸, 칸 밖의 내용, 조각 안에 손으로 쓴 틀 마크업. 지적은 원본 파일과 줄을 가리킨다.
+1. **원본의 꼴.** 모르는 구역 파일(이름이 `hero` 도 아니고 `ZONES` 에도 없는 파일), 빠진 필수 구역, 이름표가 없는 칸, 빈 이름표, kebab-case 가 아니거나 두 번 쓰인 칸 이름, 모르는 칸 속성, 닫히지 않은 칸, 칸 밖의 내용, 조각 안에 손으로 쓴 틀 마크업. 지적은 원본 파일과 줄을 가리킨다.
 2. **서빙 파일의 약속.** 원본이 깨끗하면 새로 조립한 결과를 읽어 본다: 면책 띠가 `<body>` 의 첫 자식인지, 히어로가 `<main>` 의 첫 자식인지, 구역이 목록 안에 있고 목록 순서이고 한 번씩인지, 구역 제목과 `aria-labelledby`, 칸의 자식 순서(이름표, 다크 이름표, 더미 데이터 표기, 시연 자리). 지적은 그 줄을 만든 원본의 파일과 줄로 옮겨 적고, 괄호에 서빙 파일의 줄을 덧붙인다.
 
 **구역 순서는 원본에서 틀릴 수 없다.** 순서는 공통 목록이 정하기 때문이다. 틀린 순서는 서빙 파일을 손으로 고쳤을 때만 생기고, 그때는 어긋남 검사와 서빙 파일 검사가 함께 잡는다. 아무 HTML 을 직접 보려면 `pnpm previews:check --served <html>` 이다.
@@ -92,7 +92,7 @@ preview-src/{slug}/
 
 ## 새 항목을 쓰는 순서
 
-1. `preview-src/{slug}/` 에 `brand.css`, `dark.css`, `zones/hero.html`, `zones/screens.html` 을 만든다. 치지직과 토스의 원본이 본보기다.
+1. `preview-src/{slug}/` 에 `brand.css`, `dark.css`, `zones/hero.html` 과 필수 구역(`REQUIRED_ZONES`)의 조각을 만든다. 치지직과 토스의 원본이 본보기다.
 2. `brand.css` 의 `:root` 에 브랜드 토큰과 `--pv-*` 변수를 둔다. `dark.css` 는 `[data-theme="dark"]` 에서 토큰을 다시 정의한다(STANDARD 3, 4절).
 3. md 가 규정한 구역마다 `zones/{구역}.html` 을 만들고 칸을 `<pv-cell>` 로 쓴다.
 4. `pnpm previews:check {slug}` 로 원본의 꼴을 본다. 처음에는 서빙 파일이 없어 어긋남을 하나 낸다.
