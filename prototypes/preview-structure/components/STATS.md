@@ -1,6 +1,8 @@
 # 구조 "컴포넌트" 의 수치
 
-> PROTOTYPE. `SCENARIOS.md` 끝의 「구조마다 함께 적는 수치」 여섯 항목을 같은 순서로 적는다. 줄 수는 `wc -l` 이고 2026-11-25 브랜치 `proto/preview-structure-components` 기준이다.
+> PROTOTYPE. `SCENARIOS.md` 끝의 「구조마다 함께 적는 수치」 여섯 항목을 같은 순서로 적는다. 줄 수는 `wc -l` 이다.
+
+이 문서의 수는 커밋 89c1193f 에서 잰 기록이다.
 
 ## 1. 항목당 원본, 공용 코드, 산출물
 
@@ -10,16 +12,16 @@
 | 토스 | 2,294줄(`preview.ts` 887, `light.css` 1,327, `dark.css` 80) | 3 | 2,346줄 |
 
 - 틀 블록(약 85줄), `<head>`, 면책 띠, 구역과 칸의 겉 태그는 원본에 없고 빌드가 쓴다. 바탕의 같은 파일은 치지직 874줄, 토스 2,344줄이었다.
-- 공용 코드 903줄: `kit/zones.ts` 24, `kit/parts.ts` 232, `kit/check.ts` 329, `kit/entries.ts` 52, `build.ts` 110, `where.ts` 156. 틀 CSS 는 기존 `frame.css` 를 그대로 읽는다.
+- 공용 코드 904줄: `kit/zones.ts` 24, `kit/parts.ts` 233, `kit/check.ts` 329, `kit/entries.ts` 52, `build.ts` 110, `where.ts` 156. 틀 CSS 는 기존 `frame.css` 를 그대로 읽는다.
 - 그 밖: `convert.ts` 243(변환 스크립트), `components.test.ts` 135(테스트), `README.md`.
 
 타입 검사, 린트, 포맷 검사에 새로 들어오는 줄
 
 | 검사 | 새로 들어오는 줄 | 파일 |
 | --- | --- | --- |
-| 타입 검사(`tsc --noEmit`, `**/*.ts`) | 2,583 | 위 `.ts` 열 개(항목 모듈 1,302 포함) |
-| 린트(`eslint`, `prototypes/` 는 제외 목록에 없다) | 2,583 | 같은 열 개 |
-| 포맷 검사(`prettier --check "**/*.{ts,tsx,js,jsx}"`) | 2,583 | 같은 열 개. 항목 CSS 는 `.prettierignore` 로 뺐고, 원래 ts/js 만 본다 |
+| 타입 검사(`tsc --noEmit`, `**/*.ts`) | 2,593 | 위 `.ts` 열 개(항목 모듈 1,302 포함) |
+| 린트(`eslint`, `prototypes/` 는 제외 목록에 없다) | 2,593 | 같은 열 개 |
+| 포맷 검사(`prettier --check "**/*.{ts,tsx,js,jsx}"`) | 2,593 | 같은 열 개. 항목 CSS 는 `.prettierignore` 로 뺐고, 원래 ts/js 만 본다 |
 
 세 검사 모두 이 줄들에서 통과한다(`pnpm exec tsc --noEmit`, `pnpm exec eslint prototypes/preview-structure/components`, `pnpm exec prettier --check` 를 `.ts` 에).
 
@@ -31,7 +33,7 @@
 | `package.json` | +6 | 명령 셋(`pv:build`, `pv:check`, `pv:where`)과 `imports` 의 `#preview-kit` 세 줄. 항목 모듈을 어느 폴더에 두든 같은 줄로 부품을 부르기 위해서다 |
 | `.prettierignore` | +3, −1(마지막 줄에 줄바꿈이 붙음) | 항목 CSS 를 포맷에서 뺀다. 포맷하면 서빙 HTML 이 바뀐다 |
 
-새로 쓴 검사: `kit/check.ts` 329줄, 그 테스트 `components.test.ts` 135줄(테스트 11개: 약속 규칙 7, 렌더 2, 항목마다 원본과 산출물의 일치 2). `pnpm test` 전체는 99파일 2,869개 통과.
+새로 쓴 검사: `kit/check.ts` 329줄, 그 테스트 `components.test.ts` 144줄(테스트 12개: 약속 규칙 7, 렌더 3, 항목마다 원본과 산출물의 일치 2). `pnpm test` 전체는 99파일 2,870개 통과.
 
 `components.test.ts` 가 `pnpm test` 에 잡히는지: 잡힌다. `vite.config.ts` 의 `test.exclude` 는 기본값에 `.claude/worktrees`, `.claude/cache`, `e2e/` 만 더하고 `prototypes/` 는 빼지 않으며, 기본 include 가 `**/*.test.ts` 를 모은다. 실제로 `pnpm test --reporter=verbose` 의 출력에 `prototypes/preview-structure/components/components.test.ts > …` 줄이 이 파일의 테스트마다 찍히고 모두 통과했다. 그래서 프로토타입의 약속 검사와 어긋남 검사가 이 브랜치의 `pnpm test`(곧 CI 의 `pnpm test` 단계와 `pnpm gates` 의 테스트 단계)에 섞여 돈다. `pnpm pv:check` 명령 자체는 `pnpm gates` 의 단계 목록 밖이다.
 
