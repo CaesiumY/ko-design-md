@@ -7,6 +7,7 @@ import {
   MERGED_PREVIEW_FILE,
   resolvePreviewLayout,
 } from "./preview-layout"
+import { DARK_SCOPE, unscopeSelector } from "./selector-text"
 import type {
   AnchorSig,
   ServedDocument,
@@ -265,7 +266,9 @@ export function splitMergedPreview(raw: string, bytes: number): PreviewHalves {
  * are the validator's problem and it solves them by normalising both sides.
  * ------------------------------------------------------------------------ */
 
-const DARK_SCOPE = '[data-theme="dark"]'
+// `DARK_SCOPE` and `unscopeSelector` — the inverse of the merge's
+// `scopeSelector` — live in `selector-text.ts`, where the validator can reach
+// them without taking this module's jsdom along.
 const NESTED_AT_RULE = /^@(media|supports|container|layer|scope)\b/i
 
 /**
@@ -351,48 +354,6 @@ function statementCut(prelude: string): number {
     else if (paren === 0 && c === ";") cut = i
   }
   return cut
-}
-
-/**
- * The inverse of the merge script's `scopeSelector`.
- *
- * A bare `[data-theme="dark"]` maps back to `:root` because that is what the
- * merge rewrote — and where the dark half wrote it itself, mapping it to the
- * light half's spelling of the same element is exactly what the copy question
- * wants.
- *
- * A compound (`[data-theme="dark"].panel`) is inverted the same way, to
- * `:root.panel`, because the merge produces exactly that from `:root.panel`
- * (`scopeSelector` REPLACES a leading `:root` with the attribute rather than
- * descending from it). Reading the two apart is impossible after the fact: the
- * merge collapses `:root.panel` and an author's own `[data-theme="dark"].panel`
- * onto the same text. Inverting is the same bet the bare form already makes, and
- * it loses nothing measurable — no `:root` compound exists anywhere in the
- * catalogue's halves, so this arm is unreachable today and only stops a future
- * one from arriving unnoticed.
- *
- * The `html` arm is NOT that bet, and the difference matters because this one is
- * reachable: seed-design writes `html[data-theme="dark"] .snackbar` by hand.
- * That arm is exact only because `scopeSelector` refuses to treat such a
- * selector as already-scoped and lets it come out with the attribute twice —
- * stripping one prefix lands on the author's own text. Take the doubling away
- * (it reads like a defect; it has been "fixed" once) and this arm starts
- * inventing `html .snackbar`, a selector neither half ever held. If you change
- * either side, change both: they are one function and its inverse.
- */
-function unscopeSelector(sel: string): string {
-  const s = sel.trim()
-  if (s.startsWith(`html${DARK_SCOPE}`))
-    return `html${s.slice(`html${DARK_SCOPE}`.length)}`
-  if (s.startsWith(`:where(${DARK_SCOPE})`))
-    return s.slice(`:where(${DARK_SCOPE})`.length).trim()
-  if (s === DARK_SCOPE) return ":root"
-  if (s.startsWith(DARK_SCOPE)) {
-    const rest = s.slice(DARK_SCOPE.length)
-    if (/^\s/.test(rest)) return rest.trim()
-    return `:root${rest}`
-  }
-  return s
 }
 
 const STYLE_BLOCK = /<style[^>]*>([\s\S]*?)<\/style>/gi

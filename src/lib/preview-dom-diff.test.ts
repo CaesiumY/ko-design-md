@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest"
-import { compareDomPasses, selfCheckProblems } from "./preview-dom-diff"
+import {
+  compareDomPasses,
+  selfCheckProblems,
+  stateTargetSelectors,
+} from "./preview-dom-diff"
 import type { DomDiff, DomPasses, DomRow } from "./preview-dom-diff"
 
 // The judging half of the screen comparison tool (`pnpm preview:dom-diff`):
@@ -145,39 +149,105 @@ describe("compareDomPasses", () => {
   })
 })
 
+// A forced state lands on one node and does not reach its ancestors the way a
+// real pointer does, so the element to force is the one the pseudo-class is
+// written on — not the one the rule ends up styling.
+describe("stateTargetSelectors", () => {
+  it("names the element itself when the pseudo-class is on the subject", () => {
+    expect(stateTargetSelectors(".btn:hover")).toEqual([".btn"])
+  })
+
+  it("names the ancestor a descendant rule hangs its state on", () => {
+    expect(stateTargetSelectors(".tbl tr:hover td")).toEqual([".tbl tr"])
+    expect(stateTargetSelectors(".cell:hover > .toast")).toEqual([".cell"])
+  })
+
+  it("names every element that carries a state, each with what leads to it", () => {
+    expect(stateTargetSelectors(".a:hover .b:focus-visible i")).toEqual([
+      ".a",
+      ".a .b",
+    ])
+  })
+
+  it("reads each selector of a list, and not the commas inside one", () => {
+    expect(
+      stateTargetSelectors(
+        ".tbl tr:hover td, .tbl tr:hover td.col-no, .x:is(.a, .b):active"
+      )
+    ).toEqual([".tbl tr", ".x:is(.a, .b)"])
+  })
+
+  it("drops a pseudo-element, which names no element of its own", () => {
+    expect(stateTargetSelectors(".thumb:hover::before")).toEqual([".thumb"])
+  })
+
+  it("does not cut inside an attribute value or a functional pseudo-class", () => {
+    expect(stateTargetSelectors('a[title="x > y"]:focus span')).toEqual([
+      'a[title="x > y"]',
+    ])
+    expect(stateTargetSelectors("li:nth-child(2n + 1):hover b")).toEqual([
+      "li:nth-child(2n + 1)",
+    ])
+  })
+
+  it("names nothing for a selector with no state, or a state on no named element", () => {
+    expect(stateTargetSelectors(".btn")).toEqual([])
+    expect(stateTargetSelectors(":focus-visible")).toEqual([])
+    expect(stateTargetSelectors(".menu :hover")).toEqual([])
+  })
+})
+
 describe("selfCheckProblems", () => {
-  const EXPECTED = {
-    pass: "dark @976 :hover",
-    who: "button.btn",
-    what: "background-color",
-  }
+  const EXPECTED = [
+    {
+      pass: "dark @976 :hover",
+      who: "button.btn",
+      what: "background-color",
+    },
+    { pass: "dark @976 :hover", who: "p.label", what: "background-color" },
+  ]
   const hit: DomDiff = {
-    pass: "dark @976 :hover (1 forced)",
+    pass: "dark @976 :hover (2 forced)",
     index: 3,
     who: "button.btn",
     what: "background-color",
     a: "rgb(119, 170, 255)",
     b: "rgb(153, 204, 255)",
   }
+  const ancestorHit: DomDiff = {
+    ...hit,
+    index: 2,
+    who: "p.label",
+  }
 
-  it("is satisfied by no difference against itself and the one planted difference", () => {
-    expect(selfCheckProblems([], [hit], EXPECTED)).toEqual([])
+  it("is satisfied by no difference against itself and every planted difference", () => {
+    expect(selfCheckProblems([], [hit, ancestorHit], EXPECTED)).toEqual([])
   })
 
   it("fails when the same document differs from itself", () => {
-    expect(selfCheckProblems([hit], [hit], EXPECTED)).toHaveLength(1)
+    expect(selfCheckProblems([hit], [hit, ancestorHit], EXPECTED)).toHaveLength(
+      1
+    )
   })
 
   // The failure that matters most: a tool that sees nothing says "no
   // difference" about everything.
-  it("fails when the planted difference is not found", () => {
-    expect(selfCheckProblems([], [], EXPECTED)).toHaveLength(1)
+  it("fails when no planted difference is found", () => {
+    expect(selfCheckProblems([], [], EXPECTED)).toHaveLength(2)
   })
 
-  it("fails when the planted difference shows up anywhere else as well", () => {
-    const stray: DomDiff = { ...hit, pass: "light @976 :hover (1 forced)" }
-    const problems = selfCheckProblems([], [hit, stray], EXPECTED)
+  // Each shape is its own blind spot: a tool that still forces `.btn:hover`
+  // can have stopped reaching the state an ancestor carries.
+  it("fails for the one planted difference that is missing, by name", () => {
+    const problems = selfCheckProblems([], [hit], EXPECTED)
     expect(problems).toHaveLength(1)
-    expect(problems[0]).toContain("light @976 :hover (1 forced)")
+    expect(problems[0]).toContain("p.label")
+  })
+
+  it("fails when a difference shows up outside the planted ones", () => {
+    const stray: DomDiff = { ...hit, pass: "light @976 :hover (2 forced)" }
+    const problems = selfCheckProblems([], [hit, ancestorHit, stray], EXPECTED)
+    expect(problems).toHaveLength(1)
+    expect(problems[0]).toContain("light @976 :hover (2 forced)")
   })
 })

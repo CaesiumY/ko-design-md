@@ -48,6 +48,7 @@ import { fileURLToPath } from "node:url"
 import {
   compareDomPasses,
   selfCheckProblems,
+  stateTargetSelectors,
 } from "../src/lib/preview-dom-diff"
 import {
   hoverWidthOf,
@@ -232,10 +233,15 @@ function parseArgs(argv: Array<string>): Args {
   return args
 }
 
-/** Runs in the page. Every element under <body>, in document order. */
+/**
+ * Runs in the page. Every element under <body>, in document order. `box: false`
+ * leaves the boxes out (all zero) — for the pass that reads the page while its
+ * animations run, where a box is wherever the animation happens to be.
+ */
 function collectRows(input: {
   props: Array<string>
   pseudoProps: Array<string>
+  box: boolean
 }): Array<DomRow> {
   const rows: Array<DomRow> = []
   const skip = new Set(["TEMPLATE", "SCRIPT", "STYLE"])
@@ -274,12 +280,11 @@ function collectRows(input: {
           (el.id ? `#${el.id}` : "") +
           (classes === "" ? "" : `.${classes.split(/\s+/).join(".")}`),
         text: text.replace(/\s+/g, " ").trim(),
-        rect: [
-          r.x + window.scrollX,
-          r.y + window.scrollY,
-          r.width,
-          r.height,
-        ].map((v) => Math.round(v * 2) / 2),
+        rect: input.box
+          ? [r.x + window.scrollX, r.y + window.scrollY, r.width, r.height].map(
+              (v) => Math.round(v * 2) / 2
+            )
+          : [0, 0, 0, 0],
         style,
       })
     }
@@ -288,36 +293,13 @@ function collectRows(input: {
   return rows
 }
 
-/**
- * Runs in the page. Marks every element a :hover / :active / :focus rule names,
- * and returns how many — the count goes into the pass label, so two sides that
- * force a different number of elements do not compare as the same pass.
- */
-function markStateTargets(): number {
-  const state = /:(hover|active|focus-visible|focus-within|focus)\b/
-  const everyState = new RegExp(state.source, "g")
-  const seen = new Set<Element>()
+/** Runs in the page. The selector of every style rule the page's sheets hold. */
+function readRuleSelectors(): Array<string> {
+  const out: Array<string> = []
   const visit = (rules: CSSRuleList): void => {
     for (const rule of Array.from(rules)) {
-      if (rule instanceof CSSStyleRule) {
-        for (const part of rule.selectorText.split(",")) {
-          if (!state.test(part)) continue
-          // `.thumb:hover::before` names the element `.thumb`; a selector that
-          // still ends in a pseudo-element matches nothing in querySelectorAll.
-          const base = part
-            .replace(everyState, "")
-            .replace(/::[a-z-]+/g, "")
-            .trim()
-          if (base === "") continue
-          try {
-            document.querySelectorAll(base).forEach((el) => seen.add(el))
-          } catch {
-            // A selector the stripping broke names nothing.
-          }
-        }
-      } else if (rule instanceof CSSGroupingRule) {
-        visit(rule.cssRules)
-      }
+      if (rule instanceof CSSStyleRule) out.push(rule.selectorText)
+      else if (rule instanceof CSSGroupingRule) visit(rule.cssRules)
     }
   }
   for (const sheet of Array.from(document.styleSheets)) {
@@ -327,11 +309,41 @@ function markStateTargets(): number {
       // A cross-origin sheet (the font import) is not readable, and not ours.
     }
   }
+  return out
+}
+
+/**
+ * Runs in the page. Marks every element the given selectors find, and returns
+ * how many — the count goes into the pass label, so two sides that force a
+ * different number of elements do not compare as the same pass.
+ */
+function markElements(selectors: Array<string>): number {
+  const seen = new Set<Element>()
+  for (const selector of selectors) {
+    try {
+      document.querySelectorAll(selector).forEach((el) => seen.add(el))
+    } catch {
+      // A selector the stripping broke names nothing.
+    }
+  }
   let n = 0
   seen.forEach((el) => {
     el.setAttribute("data-dd-force", String(n++))
   })
   return n
+}
+
+/**
+ * Mark the elements the forced passes put into a state: the ones a :hover /
+ * :active / :focus rule hangs its state on, which `stateTargetSelectors` reads
+ * out of each selector — the `tr` of `tr:hover td`, not the `td`.
+ */
+async function markStateTargets(page: Page): Promise<number> {
+  const targets = new Set<string>()
+  for (const selectorText of await page.evaluate(readRuleSelectors)) {
+    for (const target of stateTargetSelectors(selectorText)) targets.add(target)
+  }
+  return page.evaluate(markElements, [...targets])
 }
 
 async function settle(page: Page): Promise<void> {
@@ -375,6 +387,7 @@ async function forcedPass(
     const rows = await page.evaluate(collectRows, {
       props: STYLE_PROPS,
       pseudoProps: PSEUDO_PROPS,
+      box: true,
     })
     for (const nodeId of nodeIds) {
       await cdp.send("CSS.forcePseudoState", {
@@ -408,10 +421,11 @@ async function capture(
         await page.evaluate(collectRows, {
           props: STYLE_PROPS,
           pseudoProps: PSEUDO_PROPS,
+          box: true,
         })
       )
       if (options.states && width === stateWidth) {
-        const marked = await page.evaluate(markStateTargets)
+        const marked = await markStateTargets(page)
         for (const state of STATES) {
           out.set(
             `${theme} @${width} :${state.name} (${marked} forced)`,
@@ -444,7 +458,12 @@ async function capture(
     await setTheme(page, theme)
     out.set(
       `${theme} @${stateWidth} motion`,
-      await page.evaluate(collectRows, { props: MOTION_PROPS, pseudoProps: [] })
+      await page.evaluate(collectRows, {
+        props: MOTION_PROPS,
+        pseudoProps: [],
+        // The animations are running here, so a box is a moment, not a fact.
+        box: false,
+      })
     )
   }
   await motion.close()
@@ -453,16 +472,32 @@ async function capture(
 
 // ── self-check ───────────────────────────────────────────────────────────────
 
-/** The dark `:hover` background the self-check's second document changes. */
-const SELF_CHECK_HOVER = "rgb(119, 170, 255)"
-const SELF_CHECK_HOVER_CHANGED = "rgb(153, 204, 255)"
+/**
+ * The two dark `:hover` colours the self-check's second document changes: one
+ * on a rule whose state sits on the element it styles (`.btn:hover`), one on a
+ * rule whose state sits on an ancestor (`.card:hover .label`). They are two
+ * shapes because the tool reaches them by different elements, and it was blind
+ * to the second while it still saw the first.
+ */
+interface SelfCheckColours {
+  own: string
+  ancestor: string
+}
+const SELF_CHECK_SHIPPED: SelfCheckColours = {
+  own: "rgb(119, 170, 255)",
+  ancestor: "rgb(40, 50, 60)",
+}
+const SELF_CHECK_CHANGED: SelfCheckColours = {
+  own: "rgb(153, 204, 255)",
+  ancestor: "rgb(70, 60, 50)",
+}
 
 /**
  * A page small enough to read in full, shaped like a merged preview: the page's
- * own sheet, then the dark sheet. The button's dark hover colour is the one
- * thing the second document changes.
+ * own sheet, then the dark sheet. The two dark hover colours are the only
+ * things the second document changes.
  */
-function selfCheckDocument(darkHover: string): string {
+function selfCheckDocument(dark: SelfCheckColours): string {
   return [
     "<!doctype html>",
     '<html lang="ko" data-theme="light">',
@@ -472,39 +507,48 @@ function selfCheckDocument(darkHover: string): string {
     ":root { --bg: rgb(255, 255, 255); --fg: rgb(17, 17, 17); }",
     "body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.5 sans-serif; }",
     ".card { padding: 16px; }",
+    ".card:hover .label { background: rgb(238, 238, 238); }",
     ".btn { padding: 8px 12px; border: 0; background: rgb(51, 102, 204); color: rgb(255, 255, 255); }",
     ".btn:hover { background: rgb(34, 85, 170); }",
+    // Something that moves, because the previews have spinners and progress
+    // bars: a pass that reads a moving box reads a different one each time.
+    "@keyframes dd-slide { from { margin-left: 0; } to { margin-left: 240px; } }",
+    ".slide { display: block; width: 16px; height: 16px; animation: dd-slide 0.37s linear infinite alternate; }",
+    "@media (prefers-reduced-motion: reduce) { .slide { animation: none; } }",
     "</style>",
     "<style>",
     '[data-theme="dark"] { --bg: rgb(17, 17, 17); --fg: rgb(238, 238, 238); }',
-    `[data-theme="dark"] .btn:hover { background: ${darkHover}; }`,
+    // A background, not `color`: a colour change reaches every property that
+    // reads `currentColor`, and the check asks for the planted property alone.
+    `[data-theme="dark"] .card:hover .label { background: ${dark.ancestor}; }`,
+    `[data-theme="dark"] .btn:hover { background: ${dark.own}; }`,
     "</style>",
     "</head>",
-    '<body><main><div class="card"><p>화면 비교 자기 확인</p><button class="btn">확인</button></div></main></body>',
+    '<body><main><div class="card"><p class="label">화면 비교 자기 확인</p><button class="btn">확인</button><i class="slide"></i></div></main></body>',
     "</html>",
   ].join("\n")
 }
 
-const SELF_CHECK_PLANTED: PlantedDifference = {
-  pass: `dark @${hoverWidthOf(DEFAULT_WIDTHS)} :hover`,
-  who: "button.btn",
-  what: "background-color",
-}
+const SELF_CHECK_PASS = `dark @${hoverWidthOf(DEFAULT_WIDTHS)} :hover`
+const SELF_CHECK_PLANTED: Array<PlantedDifference> = [
+  { pass: SELF_CHECK_PASS, who: "button.btn", what: "background-color" },
+  { pass: SELF_CHECK_PASS, who: "p.label", what: "background-color" },
+]
 
 /**
  * Does the tool still see? A document against a second capture of itself must
- * show nothing; against a copy with one dark `:hover` rule changed, that one
- * difference and no other.
+ * show nothing; against a copy with the two dark `:hover` rules changed, those
+ * two differences and no other.
  */
 async function selfCheck(browser: Browser): Promise<Array<string>> {
   const server = await serveStatic(join(ROOT, "public"))
   const url = `http://127.0.0.1:${server.port}${ORACLE_PATH}`
   const options: CaptureOptions = { widths: DEFAULT_WIDTHS, states: true }
   try {
-    server.setOracle(selfCheckDocument(SELF_CHECK_HOVER))
+    server.setOracle(selfCheckDocument(SELF_CHECK_SHIPPED))
     const first = await capture(browser, url, options)
     const again = await capture(browser, url, options)
-    server.setOracle(selfCheckDocument(SELF_CHECK_HOVER_CHANGED))
+    server.setOracle(selfCheckDocument(SELF_CHECK_CHANGED))
     const changed = await capture(browser, url, options)
     return selfCheckProblems(
       compareDomPasses(first, again),
@@ -569,7 +613,7 @@ async function main(): Promise<void> {
     }
     if (problems.length === 0) {
       console.log(
-        "preview:dom-diff self-check: a document matches itself, and one changed dark :hover rule shows up as exactly that."
+        "preview:dom-diff self-check: a document matches itself, and two changed dark :hover rules — one on the element, one on an ancestor — show up as exactly those."
       )
       return
     }
