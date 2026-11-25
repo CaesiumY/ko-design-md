@@ -9,6 +9,7 @@ import {
   mentionsDarkScope,
   splitSelectorList,
   unscopeSelector,
+  withoutStrings,
 } from "./selector-text"
 import { ColorRefError, extractTokensFromMarkdown } from "./token-extractor"
 import type { WalkNode } from "./html-walk"
@@ -812,9 +813,10 @@ function walkCssRules(
     }
     const inner = css.slice(open + 1, j - 1)
     const nested = `${condition}${selector.replace(/\s+/g, " ")} / `
-    if (/^@(media|supports|container)\b/.test(selector)) {
+    // An at-rule's name is the same rule in any case.
+    if (/^@(media|supports|container)\b/i.test(selector)) {
       walkCssRules(inner, true, nested, out, atBlocks)
-    } else if (/^@(layer|scope|starting-style)\b/.test(selector)) {
+    } else if (/^@(layer|scope|starting-style)\b/i.test(selector)) {
       // Rule-containing blocks that are not conditions: the browser applies
       // their rules unconditionally, so they keep the enclosing `inMedia`.
       walkCssRules(inner, inMedia, nested, out, atBlocks)
@@ -912,23 +914,25 @@ function cssAtBlockName(at: CssAtBlock): string {
 /**
  * Does a rule body hold a block of its own — a rule or an at-rule nested in
  * it? The walk does not open one: it reaches the readers as part of a
- * declaration. A brace inside a string or a `url(…)` is not a block.
+ * declaration. A brace inside a string or a `url(…)` is not a block. A custom
+ * property whose value is a brace block reads the same and is taken for one.
  */
 function holdsNestedBlock(body: string): boolean {
   let depth = 0
-  let quote: '"' | "'" | null = null
-  for (let i = 0; i < body.length; i++) {
-    const ch = body[i]
-    if (quote !== null) {
-      if (ch === "\\") i++
-      else if (ch === quote) quote = null
-    } else if (ch === '"' || ch === "'") quote = ch
-    else if (ch === "(") depth++
+  for (const ch of withoutStrings(body)) {
+    if (ch === "(") depth++
     else if (ch === ")" && depth > 0) depth--
     else if (ch === "{" && depth === 0) return true
   }
   return false
 }
+
+/** Why `unreadDarkScopes` could not read a rule, as its finding says it. */
+const UNREAD_WHY = {
+  scope: "scope not leading",
+  atRule: "under an at-rule naming the theme",
+  nested: "nests a rule",
+} as const
 
 /**
  * The dark rules `darkSheetReport` cannot read, in either half, each named as
@@ -946,31 +950,39 @@ function holdsNestedBlock(body: string): boolean {
  *   and the nested one arrives as part of a declaration
  *
  * Such a rule pairs with no light rule, so a copy behind it would be no copy.
- * It is refused instead of guessed at. The merge writes flat rules with a
- * leading scope, so nothing it produces lands here.
+ * It is refused instead of guessed at. Light nesting that says nothing of dark
+ * is not this check's to refuse.
  *
- * Light nesting that says nothing of dark is not this check's to refuse. What
- * still gets past: a dark rule that does not name the theme in so many words
- * — `:root:not([data-theme="light"]) .x`, a CSS escape inside the attribute —
- * and `DARK_OVERRIDE_RULES` counts that one.
+ * This is a reading of the text in the document's `<style>` elements, not a
+ * browser, and what gets past it is of three kinds:
+ *
+ * - a dark rule that does not name the theme in so many words
+ *   (`:root:not([data-theme="light"]) .x`, a CSS escape in the attribute or in
+ *   an at-rule's name). Read as a light rule; if it is in the dark sheet,
+ *   `DARK_OVERRIDE_RULES` counts it
+ * - CSS that is not in a `<style>` element: imported, linked, or put in by a
+ *   script
+ * - text that throws the splitter: a comment opener inside a string, a string
+ *   that ends in an escaped backslash
  */
 function unreadDarkScopes(lightRaw: string, darkRaw: string): Array<string> {
   const why = (rule: CssRule, isDark: boolean): string | null => {
     // A stray "}" lands in the next rule's prelude, and the browser drops a
     // rule whose prelude is no selector, block and all. Nothing in it
     // applies, so nothing in it is a dark rule left unread.
-    if (rule.selector.replace(/"[^"]*"|'[^']*'/g, "").includes("}")) return null
+    if (withoutStrings(rule.selector).includes("}")) return null
     const scopedElsewhere = splitSelectorList(rule.selector).some((arm) =>
       mentionsDarkScope(lightSpellingOf(arm))
     )
-    if (scopedElsewhere) return "scope not leading"
-    if (mentionsDarkScope(rule.condition))
-      return "under an at-rule naming the theme"
+    if (scopedElsewhere) return UNREAD_WHY.scope
+    if (mentionsDarkScope(rule.condition)) return UNREAD_WHY.atRule
     const dark =
       isDark ||
       mentionsDarkScope(rule.selector) ||
       mentionsDarkScope(rule.declarations)
-    return dark && holdsNestedBlock(rule.declarations) ? "nests a rule" : null
+    return dark && holdsNestedBlock(rule.declarations)
+      ? UNREAD_WHY.nested
+      : null
   }
   const out: Array<string> = []
   const halves: Array<[string, boolean]> = [
@@ -985,7 +997,7 @@ function unreadDarkScopes(lightRaw: string, darkRaw: string): Array<string> {
     }
     for (const at of atBlocks) {
       if (mentionsDarkScope(at.condition))
-        out.push(`${cssAtBlockName(at)} [under an at-rule naming the theme]`)
+        out.push(`${cssAtBlockName(at)} [${UNREAD_WHY.atRule}]`)
     }
   }
   return out
@@ -1067,9 +1079,9 @@ export interface DarkSheetReport {
  * doubled-scope repeat above must go on pairing with the rule it repeats.
  * A scope written anywhere else (`:is([data-theme="dark"]) .btn`,
  * `body[data-theme="dark"] .btn`) cannot be taken off and is not judged here
- * at all: `unreadDarkScopes` names the rule and the validator refuses it. So
- * it does a dark rule nested in another rule, or put under an at-rule that
- * names the theme — the walk hands this function neither.
+ * at all: `unreadDarkScopes` names the rule and the validator refuses it. A
+ * dark rule nested in another rule, or put under an at-rule that names the
+ * theme, is refused the same way — the walk hands this function neither.
  *
  * What `overrideRules` counts, in full — the one place it is defined:
  *

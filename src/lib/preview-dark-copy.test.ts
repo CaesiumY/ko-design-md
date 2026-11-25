@@ -258,6 +258,17 @@ describe("dark rules a light sheet carries", () => {
     ).toEqual({ copies: [], overrideRules: 1 })
   })
 
+  // An at-rule's name is the same rule in any case. One the walk did not open
+  // would keep its rules from both the count and the copy check.
+  it("counts one under an at-rule whose name is in capitals", () => {
+    expect(
+      report(
+        `${LIGHT}\n@MEDIA (min-width: 1px) { [data-theme="dark"] .btn { background: oklch(0.7 0.15 250); } }`,
+        DARK_TOKENS
+      )
+    ).toEqual({ copies: [], overrideRules: 1 })
+  })
+
   it("leaves a token block there uncounted", () => {
     expect(
       report(
@@ -568,6 +579,20 @@ describe("dark-scope-unread", () => {
       )
     ).toEqual([])
   })
+
+  // A "}" that is part of a string or escaped is no stray brace: the browser
+  // applies that rule, so it is not excused.
+  it.each(['.btn[title="\\"}"]', ".btn\\}x"])(
+    "still blocks a rule whose selector %s only spells a brace",
+    (selector) => {
+      expect(
+        unread(
+          `${LIGHT}\n:is([data-theme="dark"]) ${selector} { margin: 0; }`,
+          DARK_TOKENS
+        ).map((i) => i.severity)
+      ).toEqual(["block"])
+    }
+  )
 
   it("is quiet for every spelling the pairing reads", () => {
     const dark = [

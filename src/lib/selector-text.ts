@@ -5,9 +5,11 @@
 /** The scope the merged layout writes in front of every dark selector. */
 export const DARK_SCOPE = '[data-theme="dark"]'
 
-// The attribute selector in any spelling CSS takes for it: quoted or bare, with
-// an `i` or `s` flag, in either case.
-const ANY_DARK_SCOPE = String.raw`\[\s*data-theme\s*[~|^$*]?=\s*(?:["']dark["']\s*[is]?|dark(?:\s+[is])?)\s*\]`
+// The attribute selector in the spellings CSS takes for it: quoted or bare,
+// with an `i` or `s` flag, behind a namespace bar, in either case. A value in
+// capitals without the `i` flag matches nothing in a browser and is read as
+// dark all the same — that rule is dead, not light.
+const ANY_DARK_SCOPE = String.raw`\[\s*(?:\*?\|)?data-theme\s*[~|^$*]?=\s*(?:["']dark["']\s*[is]?|dark(?:\s+[is])?)\s*\]`
 const MENTIONS_DARK_SCOPE = new RegExp(ANY_DARK_SCOPE, "i")
 // The scope where it scopes: at the front of the selector, on the root element
 // however that is named, bare or inside `:where()`, once or (as the merge
@@ -16,7 +18,7 @@ const LEADING_DARK_SCOPE = new RegExp(
   String.raw`^(?:(?:html|:root)?(?:${ANY_DARK_SCOPE})+|:where\(\s*${ANY_DARK_SCOPE}\s*\))`,
   "i"
 )
-const LEADING_ROOT = /^(?:html|:root)\s+(?![>+~])/
+const LEADING_ROOT = /^(?:html|:root)\s+(?![>+~])/i
 
 /**
  * Does this text — a selector, an at-rule prelude — speak of the dark theme at
@@ -63,6 +65,32 @@ export function lightSpellingOf(selector: string): string {
       return /^[>+~]/.test(below) ? `:root ${below}` : below
     })
     .join(", ")
+}
+
+/**
+ * CSS text with what only spells a character blanked out: the inside of each
+ * quoted string, and any character behind a backslash. What is left can be
+ * searched for a brace, a comma or a parenthesis that means one.
+ */
+export function withoutStrings(text: string): string {
+  let out = ""
+  let quote: string | null = null
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i]
+    if (ch === "\\") {
+      out += "  "
+      i++
+    } else if (quote === null) {
+      if (ch === '"' || ch === "'") quote = ch
+      out += ch
+    } else if (ch === quote) {
+      quote = null
+      out += ch
+    } else {
+      out += " "
+    }
+  }
+  return out
 }
 
 /**

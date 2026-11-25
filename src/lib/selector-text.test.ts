@@ -14,6 +14,8 @@ describe("mentionsDarkScope", () => {
       '[data-theme="dark"s] .btn',
       "[data-theme=dark I] .btn",
       '[DATA-THEME="dark"] .btn',
+      '[|data-theme="dark"] .btn',
+      '[*|data-theme="dark"] .btn',
     ]) {
       expect(mentionsDarkScope(selector), selector).toBe(true)
     }
@@ -42,6 +44,8 @@ describe("lightSpellingOf", () => {
       'html[data-theme="dark"][data-theme="dark"] .btn',
       '[data-theme="dark" i] .btn',
       ":root[data-theme=dark s] .btn",
+      '[|data-theme="dark"] .btn',
+      'HTML[data-theme="dark"] .btn',
     ]) {
       expect(lightSpellingOf(selector), selector).toBe(".btn")
     }
@@ -51,6 +55,7 @@ describe("lightSpellingOf", () => {
   // the dark sheet into `html .btn`, which is what reaches the pairing.
   it("drops a root that only leads to a descendant", () => {
     expect(lightSpellingOf("html .btn")).toBe(".btn")
+    expect(lightSpellingOf("HTML .btn")).toBe(".btn")
     expect(lightSpellingOf(":root .btn:hover")).toBe(".btn:hover")
   })
 
