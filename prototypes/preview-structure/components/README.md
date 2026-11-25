@@ -150,11 +150,35 @@ public/preview/toss/preview.html:1811 이 prototypes/preview-structure/component
 | --- | --- | --- |
 | 틀의 모양(구역 제목 글씨, 간격, 칸) | `prototypes/preview-structure/frame.css` 의 블록 | `pnpm pv:build` |
 | 틀의 태그와 속성(칸, 이름표, 구역의 마크업) | `components/kit/parts.ts` 의 `renderCell`, `renderZone` | 약속이 바뀌면 `kit/check.ts` 와 테스트, `pnpm pv:build` |
-| 구역의 목록, 제목, 순서 | `components/kit/zones.ts` 한 곳 | `pnpm pv:build`. 새 구역에 칸을 옮기면 그 모듈의 `zone(...)` |
+| 구역의 목록, 제목, 순서 | `components/kit/zones.ts` 한 곳 | 아래 「구역을 더하거나 순서를 바꾸는 법」 |
 | `<head>`, 면책 띠 | `components/kit/parts.ts` 의 `renderUnchecked`, `DISCLAIMER` | `pnpm pv:build` |
 
 - `pnpm pv:where` 는 부품이 칸을 6칸, 칸의 이름표와 시연 자리를 8칸, `.pv-screen` 을 10칸 들여 쓴다고 보고 줄을 센다. `renderCell` 의 들여쓰기를 바꾸면 `where.ts` 의 정규식도 같이 바꾼다. 속성을 더하는 것은 괜찮다.
-- 공통 바탕의 도구(`base-notes/check-base.ts`, `base-notes/paste-frame.mjs --check`)도 산출물에 그대로 쓸 수 있다. 다만 `check-base.ts` 의 구역 목록은 그 파일 안에 따로 있다.
+- 공통 바탕의 도구(`base-notes/check-base.ts`, `base-notes/paste-frame.mjs --check`)도 산출물에 그대로 쓸 수 있다. 다만 `check-base.ts` 의 구역 목록은 그 파일 안에 따로 있다(아래).
+
+### 구역을 더하거나 순서를 바꾸는 법
+
+구역 목록은 `components/kit/zones.ts` 의 `ZONES` 배열 하나다. 항목 하나가 `{ id, title }` 이고, 배열의 순서가 곧 페이지의 순서다. 이 배열에서 나오는 것:
+
+- 타입 `ZoneId`(모듈의 `zone("…", …)` 에 쓸 수 있는 이름). 배열에 더하면 그 이름을 쓸 수 있고, 빼면 그 이름을 쓴 모듈이 타입 검사에서 걸린다.
+- 빌드의 순서. 부품이 구역을 이 배열 순서로 늘어놓으므로 **순서를 바꾸는 일은 배열의 자리만 바꾸는 것**이고, 항목 모듈은 고치지 않는다.
+- 구역 제목(`h2` 의 글자)과 약속 검사(`kit/check.ts`)의 순서, 모르는 구역, 제목 판정.
+
+새 구역이 무엇을 받는지: `zone()` 은 `"screens"` 에만 `screen(...)` 칸을, 나머지 모든 구역에는 `cell(...)` 칸을 받는다(`kit/parts.ts` 의 `zone` 겹침 선언). 그래서 배열에 더한 구역은 따로 손대지 않아도 버튼이나 콘텐츠 같은 보통 구역이 된다. 화면 칸처럼 다른 칸을 받게 하려면 `zone` 선언과 `renderCell`, `kit/check.ts` 의 `.pv-screen` 규칙을 함께 고친다.
+
+순서:
+
+1. `kit/zones.ts` 의 `ZONES` 에 `{ id: "…", title: "…" }` 를 원하는 자리에 넣거나, 항목의 자리를 옮긴다. `id` 는 kebab-case 영문, `title` 은 구역 제목 글자다.
+2. 칸을 새 구역으로 옮기려면 그 항목 모듈에서 `cell({ … })` 덩어리를 원래 `zone(...)` 배열에서 잘라 `zone("새 id", [ … ])` 안에 넣는다. 모듈 안 `zone(...)` 들의 순서는 상관없다. 칸을 다 옮겨 빈 `zone` 이 남으면 지운다(빈 구역은 약속 검사가 막는다).
+3. `pnpm typecheck` 뒤 `pnpm pv:build` 로 **모든 항목**을 다시 만든다(순서가 바뀌면 모든 산출물이 바뀐다).
+4. `pnpm pv:check`, `pnpm exec vitest run prototypes/preview-structure/components`. 테스트의 견본 페이지(`components.test.ts` 의 `sample`)가 기대하는 구역 순서와 어긋나면 그 테스트의 기대를 새 순서에 맞춘다.
+5. 산출물과 함께 커밋한다.
+
+구역 목록이 `ZONES` 말고도 적혀 있는 곳(이 구조의 빌드와 약속 검사는 읽지 않는다):
+
+- `prototypes/preview-structure/base-notes/check-base.ts` 의 `ZONES`: 공통 바탕의 점검 도구다. 고치지 않으면 새 순서의 산출물을 "순서가 틀렸다"고 본다. 이 구조의 약속 검사는 `pnpm pv:check` 다.
+- `prototypes/preview-structure/STANDARD.md` 1절의 표: 기준 문서다.
+- `components/where.ts` 는 구역 목록을 쓰지 않는다(구역 이름을 몰라도 줄을 찾는다).
 
 ## 8. 온보딩(`/design-md` Stage 9~12)의 임시 폴더 흐름이 바뀌는 곳
 
