@@ -149,7 +149,7 @@ public/preview/toss/preview.html:1811 이 prototypes/preview-structure/component
 | 바꾸려는 것 | 고칠 곳 | 그다음 |
 | --- | --- | --- |
 | 틀의 모양(구역 제목 글씨, 간격, 칸) | `prototypes/preview-structure/frame.css` 의 블록 | `pnpm pv:build` |
-| 틀의 태그와 속성(칸, 이름표, 구역의 마크업) | `components/kit/parts.ts` 의 `renderCell`, `renderZone` | 약속이 바뀌면 `kit/check.ts` 와 테스트, `pnpm pv:build` |
+| 틀의 태그와 속성(칸, 이름표, 구역의 마크업) | `components/kit/parts.ts` 의 `renderCell`, `renderZone` | 약속이 바뀌면 `kit/check.ts` 와 테스트, `pnpm pv:build`. **주의**: `pnpm pv:where` 는 이 태그들의 들여쓰기와 첫머리로 줄을 센다(아래 첫 항목). 속성을 더하는 것은 괜찮지만, 들여쓰기를 바꾸거나 태그를 줄로 쪼개거나 겉 요소를 한 겹 더하면 `where.ts` 의 정규식도 같이 고치고 `pnpm pv:where` 로 칸 하나를 짚어 본다 |
 | 구역의 목록, 제목, 순서 | `components/kit/zones.ts` 한 곳 | 아래 「구역을 더하거나 순서를 바꾸는 법」 |
 | `<head>`, 면책 띠 | `components/kit/parts.ts` 의 `renderUnchecked`, `DISCLAIMER` | `pnpm pv:build` |
 
