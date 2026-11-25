@@ -167,7 +167,24 @@ pnpm validate:previews --slug toss                                              
 
 - 약속 검사의 인자는 슬러그(`public/preview/{slug}/preview.html` 을 본다)나 파일 경로다. 경로는 `/` 나 `\` 가 들었거나 `.html` 로 끝나는 인자다. 인자가 없거나 파일이 없으면 exit 2, 어긴 곳이 있으면 exit 1, 없으면 exit 0 이다.
 - 약속 검사의 테스트: `pnpm exec vitest run prototypes/preview-structure/html-frame`(14개). `pnpm test` 에도 들어 있다.
-- 화면 비교가 필요하면 `prototypes/preview-structure/dom-diff.ts` 의 머리 주석대로 돌린다. 이 구조는 원본이 곧 서빙 파일이라 `--b` 에 `public/preview/{slug}/preview.html`, `--public-b` 에 `public` 을 준다.
+- 화면 비교가 필요하면 `prototypes/preview-structure/dom-diff.ts` 를 쓴다. 두 HTML 파일을 서버 없이 각자의 `public/` 위에 얹어 열고, 요소마다 상자, 글, 계산된 스타일을 두 테마와 여러 폭에서 비교한다.
+
+  ```bash
+  pnpm exec tsx prototypes/preview-structure/dom-diff.ts \
+    --a <비교 기준 HTML> --public-a <그 쪽의 public 폴더> \
+    --b public/preview/{slug}/preview.html --public-b public \
+    [--widths 375,768,976,1440] [--max 25] [--no-states]
+  ```
+
+  | 인자 | 뜻 |
+  | --- | --- |
+  | `--a`, `--b` | 비교할 두 HTML 파일. 이 구조는 원본이 곧 서빙 파일이라 이 브랜치 쪽은 `public/preview/{slug}/preview.html` 이다 |
+  | `--public-a`, `--public-b` | 각 파일 아래에 깔 `public/` 폴더. `/preview/_runtime/frame.css` 같은 사이트 절대 경로가 여기서 풀린다. 틀을 바꾼 브랜치끼리 비교하면 각자의 `public` 을 줘야 각자의 `frame.css` 가 실린다 |
+  | `--widths` | 잴 폭(쉼표로). 안 주면 375, 768, 976, 1440 |
+  | `--max` | 출력할 차이의 최대 개수 |
+  | `--no-states` | hover, 눌림, 초점을 강제로 켠 패스를 건너뛴다 |
+
+  끝 줄이 `SAME: no difference in any pass.` 이고 exit 0 이면 차이가 없다. 차이가 있으면 exit 1 과 차이 목록, 인자가 틀리면 exit 2 다. 브라우저 시간 초과는 차이가 아니니 다시 돌린다.
 
 ## 5. 약속 검사가 보는 것과 메시지
 
