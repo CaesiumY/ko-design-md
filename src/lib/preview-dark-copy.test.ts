@@ -384,11 +384,71 @@ describe("dark-sheet-copy — a scope spelled another way", () => {
     ])
   })
 
-  // The usual spelling is tried first. seed-design's dark sheet repeats
-  // `html[data-theme="dark"] .snackbar` from an earlier sheet, and that repeat
-  // pairs with the rule it repeats — not with light's `.snackbar`, which it
-  // differs from.
-  it("still pairs a rule with its own text before any other spelling of it", () => {
+  // An earlier sheet may already carry a dark rule under the very text the
+  // dark sheet's rule comes out as. That rule is read as well, but it does not
+  // stand in for light: a rule that restates light's `.btn` is a copy whether
+  // or not an earlier sheet overrides `.btn` under the same spelling.
+  const report = (light: string, dark: string) => {
+    const html = mergedFile(light, dark)
+    const halves = splitMergedPreview(html, Buffer.byteLength(html))
+    return darkSheetReport(halves.light, halves.dark)
+  }
+  const EARLIER_OVERRIDE = ".btn { background: oklch(0.7 0.15 250); }"
+
+  it.each([
+    [':root[data-theme="dark"]', ':root[data-theme="dark"]'],
+    ["[data-theme='dark']", "[data-theme='dark']"],
+    // The split takes one layer off a doubled scope, and what is left is the
+    // earlier sheet's spelling.
+    ['html[data-theme="dark"][data-theme="dark"]', 'html[data-theme="dark"]'],
+    // Spellings that never met in one key, for the same answer.
+    [':root[data-theme="dark"]', 'html[data-theme="dark"]'],
+    ['[data-theme="dark"]', '[data-theme="dark"]'],
+  ])(
+    "blocks a copy of light under %s though an earlier sheet overrides under %s",
+    (copy, earlier) => {
+      expect(
+        blocked(
+          `${LIGHT}\n${earlier} ${EARLIER_OVERRIDE}`,
+          `${DARK_TOKENS}\n${copy} ${COPIED_BTN}`
+        )
+      ).toEqual(["block"])
+    }
+  )
+
+  it("names the reviewer's copy, and counts the earlier override once", () => {
+    expect(
+      report(
+        '.btn{color:red;padding:4px}\n:root[data-theme="dark"] .btn{color:blue}',
+        '[data-theme="dark"]{--bg:black}\n:root[data-theme="dark"] .btn{color:red;padding:4px}'
+      )
+    ).toEqual({ copies: [':root[data-theme="dark"] .btn'], overrideRules: 1 })
+  })
+
+  it("reads a dark-sheet rule against light the same with or without that earlier rule", () => {
+    const dark = `${DARK_TOKENS}\n:root[data-theme="dark"] ${COPIED_BTN}`
+    const alone = report(LIGHT, dark).copies
+    expect(alone).toEqual([':root[data-theme="dark"] .btn'])
+    expect(
+      report(`${LIGHT}\n:root[data-theme="dark"] ${EARLIER_OVERRIDE}`, dark)
+        .copies
+    ).toEqual(alone)
+  })
+
+  it("leaves a value neither light nor the earlier rule gives counted, and no copy", () => {
+    expect(
+      report(
+        `${LIGHT}\n:root[data-theme="dark"] ${EARLIER_OVERRIDE}`,
+        `${DARK_TOKENS}\n:root[data-theme="dark"] .btn { background: oklch(0.8 0.1 250); }`
+      )
+    ).toEqual({ copies: [], overrideRules: 2 })
+  })
+
+  // seed-design's dark sheet repeats `html[data-theme="dark"] .snackbar` from
+  // an earlier sheet. The repeat is read against the rule it repeats as well
+  // as against light's `.snackbar`, which it differs from, and is a copy of
+  // the first.
+  it("still pairs a rule with the earlier sheet's rule of the same text", () => {
     const html = mergedFile(
       `${LIGHT}\nhtml[data-theme="dark"] .btn { background: oklch(0.7 0.15 250); }`,
       `${DARK_TOKENS}\nhtml[data-theme="dark"][data-theme="dark"] .btn { background: oklch(0.7 0.15 250); }`

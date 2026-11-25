@@ -41,10 +41,10 @@ export function mentionsDarkScope(selector: string): boolean {
  * .btn`, `[data-theme=dark] .btn` and the `html .btn` that `unscopeSelector`
  * leaves of the first all come out `.btn`. Each selector of a list on its own.
  *
- * For pairing a dark rule with the light rule it may restate, and only as the
- * second thing tried: it is a guess at the author's intent, where
- * `unscopeSelector` is an exact inverse, and a rule that pairs under its own
- * text must keep doing so.
+ * For pairing a dark rule with the light rule it may restate. It is a guess at
+ * the author's intent, where `unscopeSelector` is an exact inverse, so the
+ * pairing reads a rule under this spelling beside its own text and never in
+ * place of it: a rule that pairs under its own text must keep doing so.
  *
  * The scope is read only where it scopes, on the root element at the front of
  * the selector. `body[data-theme="dark"] .x` and `.x [data-theme="dark"]` come
