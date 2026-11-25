@@ -6,6 +6,8 @@ paths:
   - "scripts/validate-preview.ts"
   - "src/lib/dark-sheet-backlog.ts"
   - "src/lib/preview-dark-copy*"
+  - "src/lib/selector-text*"
+  - "src/lib/preview-halves*"
   - "src/lib/preview-dom-diff*"
   - "scripts/preview-dom-diff.ts"
   - "src/lib/*contrast*"
