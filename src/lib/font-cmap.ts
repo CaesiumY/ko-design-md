@@ -158,19 +158,26 @@ export function coveredCodePoints(font: Buffer): Set<number> {
       const segmentsX2 = cmap.readUInt16BE(offset + 6)
       const endCodes = offset + 14
       const startCodes = endCodes + segmentsX2 + 2
-      const idRangeOffsets = startCodes + segmentsX2 + segmentsX2
+      const idDeltas = startCodes + segmentsX2
+      const idRangeOffsets = idDeltas + segmentsX2
       for (let s = 0; s < segmentsX2 / 2; s++) {
         const end = cmap.readUInt16BE(endCodes + s * 2)
         const start = cmap.readUInt16BE(startCodes + s * 2)
+        const idDelta = cmap.readUInt16BE(idDeltas + s * 2)
         const rangeOffset = cmap.readUInt16BE(idRangeOffsets + s * 2)
         for (let c = start; c <= end && c !== 0xffff; c++) {
+          // The glyph id is what counts: id 0 is .notdef, a code point the
+          // font does not draw. idDelta shifts the id in both branches.
+          let glyph: number
           if (rangeOffset === 0) {
-            covered.add(c)
+            glyph = (c + idDelta) & 0xffff
           } else {
             const glyphAt =
               idRangeOffsets + s * 2 + rangeOffset + (c - start) * 2
-            if (cmap.readUInt16BE(glyphAt) !== 0) covered.add(c)
+            const raw = cmap.readUInt16BE(glyphAt)
+            glyph = raw === 0 ? 0 : (raw + idDelta) & 0xffff
           }
+          if (glyph !== 0) covered.add(c)
         }
       }
     }

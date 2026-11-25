@@ -2,14 +2,17 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/* The package CSS declares no font-display, so text stays hidden until the whole
-   file arrives. Declare the face here with swap instead.
+/* The package CSS declares no font-display, which means auto: text is invisible for a
+   block period (up to about 3s) while the file loads, then drawn in a system font.
+   Declare the face here with swap instead.
    This is the package's variable .woff2, a subset: it holds fewer Hangul syllables
    than the package's fonts/variable/ttf build, and neither build has — – ≤ ≥ − № Δ §
    and some other symbols. Glyphs the file lacks fall back to the system fonts below.
    suit-coverage-corpus.test.ts reads the file from this declaration and fails if the
-   site shows a Hangul syllable or compatibility jamo it lacks; symbols are accepted,
-   so the fallback only ever draws those. */
+   Hangul in the catalogue and source files uses a syllable or compatibility jamo it
+   lacks; symbols are accepted there, so the fallback draws those. Text typed into the
+   home search box (or arriving as ?q=) is not in those files: a syllable outside the
+   subset, such as 펲, is drawn by the system font. That gap is known and accepted. */
 @font-face {
     font-family: 'SUIT Variable';
     font-weight: 100 900;

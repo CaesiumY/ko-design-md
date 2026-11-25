@@ -11,9 +11,11 @@ import { coveredCodePoints } from "./font-cmap"
 // middle of a SUIT line, and nothing else would notice.
 //
 // So this asks the one question that can go quietly wrong: does any Hangul
-// syllable or compatibility jamo (ㄱ…ㅎ, the category index letters) the site can
-// show fall outside the declared file? Symbols outside it (— ≤ ≥ and the like)
-// are known and accepted, so they are not asserted here.
+// syllable or compatibility jamo (ㄱ…ㅎ, the category index letters) in the
+// catalogue and source files fall outside the declared file? Symbols outside it
+// (— ≤ ≥ and the like) are known and accepted, so they are not asserted here.
+// Text a visitor types (the home search box, `?q=`) is not in those files and
+// is not covered; see the comment above the @font-face.
 //
 // The file is read from the `@font-face` in `src/styles.css`, not from a path
 // written here, so changing that declaration changes what is checked.
@@ -84,6 +86,17 @@ describe("SUIT glyph coverage", () => {
     // 가 is in every build; U+0378 is an unassigned code point no font maps.
     expect(covered.has("가".codePointAt(0)!)).toBe(true)
     expect(covered.has(0x0378)).toBe(false)
+    // Over-counting guard: the declared woff2 is a subset of the package's
+    // ttf, so it must cover strictly fewer syllables than the full build.
+    // A parser that ignores idDelta or glyph 0 would count them the same.
+    const syllables = (set: Set<number>) =>
+      [...set].filter((cp) => cp >= 0xac00 && cp <= 0xd7a3).length
+    const fullTtf = join(
+      ROOT,
+      "node_modules/@sun-typeface/suit/fonts/variable/ttf/SUIT-Variable.ttf"
+    )
+    expect(syllables(coveredCodePoints(readFileSync(fullTtf)))).toBe(11172)
+    expect(syllables(covered)).toBeLessThan(11172)
   })
 
   it("scans the catalogue and the screen sources (input is not empty)", () => {
@@ -93,7 +106,7 @@ describe("SUIT glyph coverage", () => {
     expect(SHOWN_TEXT).toContain(join("src", "lib", "category-style.ts"))
   })
 
-  it("covers every Hangul syllable and jamo the site can show", () => {
+  it("covers every Hangul syllable and jamo in the catalogue and sources", () => {
     const missing = new Map<string, Set<string>>()
     for (const file of SHOWN_TEXT) {
       for (const match of readFileSync(join(ROOT, file), "utf8").matchAll(
