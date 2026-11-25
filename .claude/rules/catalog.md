@@ -73,7 +73,7 @@ paths:
   | missing-primary 배열 | `google-designmd-corpus.test.ts` | `primary` 라는 이름의 토큰이 **없을 때** |
   | `KNOWN_SPEC_LIMITATIONS` | `src/lib/spec-limitations.ts` | `%` radius 를 쓸 때 |
   | `COMPONENT_COUNTS` | `google-designmd-corpus.test.ts` | frontmatter `components:` 를 쓸 때 (정확값 — 새 항목은 사실상 늘) |
-  | `DARK_OVERRIDE_RULES` | `src/lib/dark-sheet-backlog.ts` | 프리뷰의 다크 시트에 토큰 재정의가 아닌 규칙을 둘 때 (정확값 — 실패 메시지가 적을 줄을 낸다. `.claude/rules/preview.md` 의 다크 항) |
+  | `DARK_OVERRIDE_RULES` | `src/lib/dark-sheet-backlog.ts` | 프리뷰의 다크 규칙이 토큰 밖에서 라이트와 다른 값을 적을 때 (정확값 — 실패 메시지가 적을 줄을 낸다. `.claude/rules/preview.md` 의 다크 항) |
   | 역할 표 대조 함수 (`CASES`) | `role-reference-rows.test.ts` | 본문 역할 표의 역할을 frontmatter 참조 행으로도 실을 때 — 브랜드가 역할 계층을 발행했고 상류가 단일 팔레트 토큰이나 다른 역할을 가리키는 역할이 있으면 늘 그렇다 (양방향 · 등록 누락은 가드가 막는다) |
 
   **`PREVIEW_TOKEN_ALIASES` 를 빠뜨리면 조용히 0건 비교가 된다** — 드리프트 게이트가 이름을

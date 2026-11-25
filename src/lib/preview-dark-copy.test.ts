@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { splitMergedPreview } from "./preview-halves"
-import { validatePreviewPair } from "./preview-validator"
+import { darkSheetReport, validatePreviewPair } from "./preview-validator"
 import type { ValidationIssue } from "./draft-validator"
 import type { PreviewValidationInput } from "./preview-validator"
 
@@ -224,6 +224,92 @@ describe("dark-sheet-copy", () => {
     expect(issue.fix).toContain("custom property")
     expect(issue.fix).toContain("Do not delete on sight")
     expect(issue.fix).toContain("pnpm preview:dom-diff")
+  })
+})
+
+// The layout deals only the LAST sheet out as "the dark sheet". A dark-scoped
+// rule written in a sheet before it stays in the light half, scope and all —
+// and is a dark rule all the same. Where it sits must not decide whether it is
+// read.
+describe("dark rules a light sheet carries", () => {
+  const report = (light: string, dark: string) => {
+    const html = mergedFile(light, dark)
+    const halves = splitMergedPreview(html, Buffer.byteLength(html))
+    return darkSheetReport(halves.light, halves.dark)
+  }
+
+  it("names one that repeats its light rule, as it is written", () => {
+    const issues = found(
+      mergedInput(
+        `${LIGHT}\n[data-theme="dark"] .btn { padding: 8px 12px; border-radius: 8px; background: oklch(0.62 0.18 250); }`,
+        DARK_TOKENS
+      )
+    )
+    expect(issues).toHaveLength(1)
+    expect(issues[0].fix).toContain('[data-theme="dark"] .btn')
+  })
+
+  it("counts one that sets something outside tokens", () => {
+    expect(
+      report(
+        `${LIGHT}\n[data-theme="dark"] .btn { background: oklch(0.7 0.15 250); }`,
+        DARK_TOKENS
+      )
+    ).toEqual({ copies: [], overrideRules: 1 })
+  })
+
+  it("leaves a token block there uncounted", () => {
+    expect(
+      report(
+        `${LIGHT}\n[data-theme="dark"] { --bg: oklch(0.2 0 0); --fg: oklch(0.96 0 0); }`,
+        '[data-theme="dark"] .hero { outline: 1px solid var(--fg); }'
+      )
+    ).toEqual({ copies: [], overrideRules: 1 })
+  })
+
+  // The dark sheet's own rules are read first, so what a light sheet carries
+  // cannot move the pairing the dark sheet already had.
+  it("does not move how the dark sheet's own rules pair", () => {
+    expect(
+      report(
+        `${LIGHT}\n[data-theme="dark"] .btn { background: oklch(0.7 0.15 250); }`,
+        `${DARK_TOKENS}\n[data-theme="dark"] .btn { padding: 8px 12px; border-radius: 8px; background: oklch(0.62 0.18 250); }`
+      )
+    ).toEqual({ copies: [".btn"], overrideRules: 1 })
+  })
+
+  // A sheet copied whole repeats these rules too, with the scope on twice
+  // (seed-design's snackbar). The repeat is a copy of the rule the earlier
+  // sheet carries, and the override is counted once — where it is written.
+  it("names the dark sheet's repeat of one as a copy, and counts it once", () => {
+    const rule = (scope: string) =>
+      `html${scope} .btn { background: oklch(0.7 0.15 250) !important; }`
+    expect(
+      report(
+        `${LIGHT}\n${rule('[data-theme="dark"]')}`,
+        `${DARK_TOKENS}\n${rule('[data-theme="dark"][data-theme="dark"]')}`
+      )
+    ).toEqual({ copies: ['html[data-theme="dark"] .btn'], overrideRules: 1 })
+  })
+
+  // A spelling the scope cannot be taken off is still a dark rule: it pairs
+  // with nothing and is counted, rather than passing unread.
+  it("counts one whose scope is spelled another way", () => {
+    expect(
+      report(
+        `${LIGHT}\n[data-theme='dark'] .btn { background: oklch(0.7 0.15 250); }`,
+        DARK_TOKENS
+      ).overrideRules
+    ).toBe(1)
+  })
+
+  it("reads the dark arm of a list that also names a light selector", () => {
+    expect(
+      report(
+        `${LIGHT}\n.note, [data-theme="dark"] .btn { background: oklch(0.7 0.15 250); }`,
+        DARK_TOKENS
+      ).overrideRules
+    ).toBe(1)
   })
 })
 

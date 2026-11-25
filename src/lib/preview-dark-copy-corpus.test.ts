@@ -99,8 +99,8 @@ describe("the dark sheets of the shipped catalogue", () => {
       expect(
         overrideRules,
         overrideRules > recorded
-          ? `${slug}: ${overrideRules} rule(s) in the [data-theme="dark"] sheet set something other than a custom property, and ${recorded} are recorded. Write the colour as a token redefined under [data-theme="dark"] instead. Where a token cannot carry the change, ${line} DARK_OVERRIDE_RULES (src/lib/dark-sheet-backlog.ts) and say in the PR what the rule is for.`
-          : `${slug}: ${overrideRules} rule(s) in the [data-theme="dark"] sheet set something other than a custom property, fewer than the ${recorded} recorded. The record follows the preview down: ${line} DARK_OVERRIDE_RULES (src/lib/dark-sheet-backlog.ts).`
+          ? `${slug}: ${overrideRules} [data-theme="dark"] rule(s) set something other than a custom property to a value light does not give it, and ${recorded} are recorded. Write the colour as a token redefined under [data-theme="dark"] instead. Where a token cannot carry the change, ${line} DARK_OVERRIDE_RULES (src/lib/dark-sheet-backlog.ts) and say in the PR what the rule is for.`
+          : `${slug}: ${overrideRules} [data-theme="dark"] rule(s) set something other than a custom property to a value light does not give it, fewer than the ${recorded} recorded. The record follows the preview down: ${line} DARK_OVERRIDE_RULES (src/lib/dark-sheet-backlog.ts).`
       ).toBe(recorded)
     })
   }

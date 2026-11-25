@@ -17,9 +17,13 @@
 //   - its box (page coordinates, half a pixel of tolerance)
 //   - a fixed list of computed style properties, plus ::before and ::after
 // in light and dark at 375 / 768 / 976 / 1440, and once more per theme, at one
-// width, with :hover, :active and :focus(-visible) forced on every element a
-// stylesheet rule names with one of those pseudo-classes. A last pass without
-// reduced motion compares the declared transitions and animations.
+// width, with :hover, :active and :focus(-visible) forced. A forced state
+// lands on one node and does not reach its ancestors the way a pointer does,
+// so the element forced is the one a stylesheet rule writes the pseudo-class
+// on: the row for `.tbl tr:hover td`, not the cell (`stateTargetSelectors`).
+// A last pass without reduced motion compares the declared transitions and
+// animations, and nothing else: with motion running a box is wherever its
+// animation has taken it, which differs between two captures of one file.
 //
 // What "no difference" does NOT cover:
 //   - properties outside the lists below
@@ -28,6 +32,15 @@
 //   - forced states at more than one width, and any state that is not hover,
 //     active or focus (:checked, :disabled and [aria-*] are compared only as
 //     the document ships them)
+//   - a state written inside :has() or :not() — `.chip:has(input:focus-visible)`
+//     forces the chip, and the input inside it is what would have to be
+//     focused, so the rule never applies on either side. Of the 420 state
+//     selectors the catalogue shipped when this was written, 13 are this shape,
+//     all `:has(input:focus-visible)` in nol and zigbang
+//   - a state on no named element (`:focus-visible` alone, `.menu :hover`):
+//     nothing is forced for it, so it shows only on elements another rule had
+//     forced. One such selector shipped, gs-retail's focus ring
+//   - where an element sits while it animates (see the last pass above)
 //   - anything a script does after a click: the pages are read, not operated
 //   - fonts: outside requests are blocked, so both sides fall back alike
 //

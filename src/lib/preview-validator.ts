@@ -4,6 +4,11 @@ import { buildDoc } from "./site-frontmatter"
 import { DARK_COPY_BACKLOG, darkCopyVerdict } from "./dark-sheet-backlog"
 import { bodyOf, isBlankText, walkHtml } from "./html-walk"
 import { hasAppliedReduceBlock, hasCssMotion } from "./reduced-motion-block"
+import {
+  mentionsDarkScope,
+  splitSelectorList,
+  unscopeSelector,
+} from "./selector-text"
 import { ColorRefError, extractTokensFromMarkdown } from "./token-extractor"
 import type { WalkNode } from "./html-walk"
 import type { ValidationIssue } from "./draft-validator"
@@ -884,9 +889,9 @@ function selectorKey(selector: string): string {
 
 export interface DarkSheetReport {
   /**
-   * The dark rules that restate light, in sheet order, each named by its
-   * selector under the at-rules it sits in (`.btn:hover`,
-   * `@media (max-width: 720px) / .grid`).
+   * The dark rules that restate light, each named by its selector under the
+   * at-rules it sits in (`.btn:hover`, `@media (max-width: 720px) / .grid`).
+   * The dark sheet's in sheet order, then any an earlier sheet carries.
    */
   copies: Array<string>
   /**
@@ -929,6 +934,23 @@ export interface DarkSheetReport {
  *
  * An at-rule block the splitter does not open (`@font-face`, `@keyframes`) is a
  * copy when light carries the same block word for word.
+ *
+ * "The dark sheet" is where dark rules belong, not the only place they are
+ * read. The layout deals out the LAST sheet as dark; a rule in an earlier sheet
+ * that names the dark theme (`[data-theme="dark"] .btn`,
+ * `html[data-theme="dark"] .snackbar`) stays in the light half with its scope
+ * on, and it is a dark rule all the same. Such a rule is judged with the dark
+ * ones — after them, so the pairing the dark sheet had does not move — and a
+ * copy among them is named as it is written, scope and all, so it can be found.
+ * Otherwise which sheet a rule sits in would decide whether it is read at all.
+ *
+ * It also stays on the light side, under the selector it is written with. A
+ * sheet copied whole repeats it with the scope on twice
+ * (`html[data-theme="dark"][data-theme="dark"] .snackbar`), which comes off to
+ * exactly that selector: the repeat pairs with the rule it repeats and is a
+ * copy, and the override is counted once, where it is written. The rule
+ * itself is read against the light rules that are not dark, so it can never be
+ * paired with its own text.
  */
 export function darkSheetReport(
   lightRaw: string,
@@ -950,28 +972,56 @@ export function darkSheetReport(
   const dark = read(darkRaw)
   const keyOf = (rule: CssRule) =>
     `${rule.condition}${selectorKey(rule.selector)}`
+  const nameOf = (rule: CssRule) =>
+    `${rule.condition}${rule.selector.replace(/\s+/g, " ").trim()}`
   const atBlockName = (at: CssAtBlock) =>
     `${at.condition}${at.prelude.replace(/\s+/g, " ")}`
   const atBlockKey = (at: CssAtBlock) =>
     `${atBlockName(at)} { ${at.body.replace(/\s+/g, " ").trim()} }`
 
-  const lightByKey = new Map<string, Array<Map<string, string>>>()
-  for (const rule of light.rules) {
+  // The dark sheet's own rules first, so what a light sheet adds below comes
+  // after them and cannot move the position they were paired at.
+  type Twins = Map<string, Array<Map<string, string>>>
+  // What the dark sheet's rules are read against: every rule of the light
+  // half, as written. What a dark rule from the light half is read against:
+  // the same without the rules that are dark themselves, or one whose scope
+  // does not come off would pair with itself and pass as a copy of nothing.
+  const lightByKey: Twins = new Map()
+  const plainLightByKey: Twins = new Map()
+  const darkRules = dark.rules.map((rule) => ({
+    rule,
+    name: nameOf(rule),
+    twinsByKey: lightByKey,
+  }))
+  const file = (into: Twins, rule: CssRule) => {
     const key = keyOf(rule)
-    const list = lightByKey.get(key) ?? []
+    const list = into.get(key) ?? []
     list.push(parseDeclarations(rule.declarations))
-    lightByKey.set(key, list)
+    into.set(key, list)
+  }
+  for (const rule of light.rules) {
+    const arms = splitSelectorList(rule.selector)
+    const scoped = arms.filter(mentionsDarkScope)
+    if (scoped.length > 0) {
+      darkRules.push({
+        rule: { ...rule, selector: scoped.map(unscopeSelector).join(", ") },
+        name: nameOf(rule),
+        twinsByKey: plainLightByKey,
+      })
+    }
+    file(lightByKey, rule)
+    if (scoped.length < arms.length) file(plainLightByKey, rule)
   }
   const lightAtBlocks = new Set(light.atBlocks.map(atBlockKey))
 
   const copies: Array<string> = []
   let overrideRules = 0
   const seen = new Map<string, number>()
-  for (const rule of dark.rules) {
+  for (const { rule, name, twinsByKey } of darkRules) {
     const key = keyOf(rule)
     const nth = seen.get(key) ?? 0
     seen.set(key, nth + 1)
-    const twins = lightByKey.get(key) ?? []
+    const twins = twinsByKey.get(key) ?? []
     const pair = twins.at(nth)
     const last = twins.at(-1)
     const declarations = [...parseDeclarations(rule.declarations)]
@@ -984,9 +1034,7 @@ export function darkSheetReport(
       restated.length === declarations.length ||
       restated.some((d) => !isToken(d))
     ) {
-      copies.push(
-        `${rule.condition}${rule.selector.replace(/\s+/g, " ").trim()}`
-      )
+      copies.push(name)
     }
     if (declarations.some((d) => !isToken(d) && !restated.includes(d))) {
       overrideRules++

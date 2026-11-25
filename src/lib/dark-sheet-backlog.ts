@@ -53,9 +53,15 @@ export function darkCopyVerdict(
 }
 
 /**
- * How many rules of each dark sheet set something other than a custom property
- * and differ from light in doing so — a colour written straight onto a
+ * How many dark rules of each preview set something other than a custom
+ * property and differ from light in doing so — a colour written straight onto a
  * component, almost always. A slug that is not here has none.
+ *
+ * It is not every dark rule that is not a token redefinition: a rule that only
+ * restates light is a copy, which `dark-sheet-copy` reports and this number
+ * leaves out. And it is not only the last sheet's: a `[data-theme="dark"]` rule
+ * written in an earlier sheet is counted where it is written (seed-design's
+ * two snackbar rules).
  *
  * Token redefinition is the default way to write dark, but it is not the only
  * one allowed: some changes a token cannot carry (a logo inverted with
@@ -81,7 +87,7 @@ export const DARK_OVERRIDE_RULES: Readonly<Record<string, number>> = {
   nol: 5,
   remember: 3,
   "samsung-one-ui": 8,
-  "seed-design": 26,
+  "seed-design": 28,
   socar: 6,
   teamsparta: 1,
   toss: 63,
