@@ -1,13 +1,30 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
+
+/* The package CSS declares no font-display, which means auto: text is invisible for a
+   block period (up to about 3s) while the file loads, then drawn in a system font.
+   Declare the face here with swap instead.
+   This is the package's variable .woff2, a subset: it holds fewer Hangul syllables
+   than the package's fonts/variable/ttf build, and neither build has — – ≤ ≥ − № Δ §
+   and some other symbols. Glyphs the file lacks fall back to the system fonts below.
+   suit-coverage-corpus.test.ts reads the file from this declaration and fails if the
+   Hangul in the catalogue and source files uses a syllable or compatibility jamo it
+   lacks; symbols are accepted there, so the fallback draws those. Text typed into the
+   home search box (or arriving as ?q=) is not in those files: a syllable outside the
+   subset, such as 펲, is drawn by the system font. That gap is known and accepted. */
+@font-face {
+    font-family: 'SUIT Variable';
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('@sun-typeface/suit/fonts/variable/woff2/SUIT-Variable.woff2') format('woff2-variations');
+}
 
 @custom-variant dark (&:is([data-theme="dark"] *));
 
 @theme inline {
     --font-heading: var(--font-sans);
-    --font-sans: 'Pretendard Variable', -apple-system, BlinkMacSystemFont, system-ui, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+    --font-sans: 'SUIT Variable', -apple-system, BlinkMacSystemFont, system-ui, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -163,12 +180,12 @@
 }
 
 @layer utilities {
+    /* No font-feature-settings: Pretendard's 'ss01'/'cv11' meant something else.
+       In SUIT 'ss01' swaps 0 and 3 for alternate digits and 'cv11' is absent. */
     .text-display {
-        font-feature-settings: 'ss01', 'cv11';
         letter-spacing: -0.05em;
     }
     .text-display-massive {
-        font-feature-settings: 'ss01', 'cv11';
         font-weight: 900;
         letter-spacing: -0.07em;
         line-height: 0.85;

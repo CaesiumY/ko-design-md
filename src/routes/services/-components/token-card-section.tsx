@@ -19,7 +19,7 @@ import {
 } from "@/lib/token-curation"
 
 // A pangram-ish sample that exercises Hangul, Latin, and numerals at every
-// ramp step. It renders in the SITE font (Pretendard), not the brand typeface
+// ramp step. It renders in the SITE font (SUIT), not the brand typeface
 // — brand @font-face only loads inside the preview iframe — so the sample
 // communicates size/weight/tracking hierarchy, not the actual letterforms.
 const TYPE_SAMPLE = "한글 Ag 다람쥐 0123"
