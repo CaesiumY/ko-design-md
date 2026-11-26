@@ -47,7 +47,7 @@ describe("requireSiteUrlPlugin", () => {
     await expect(resolve("build")).rejects.toThrow(/VITE_SITE_URL/)
   })
 
-  it.each(["/", "//", " ", " / "])(
+  it.each(["/", "//", " ", " / ", "/ /"])(
     "treats %j as missing: only spaces and trailing slashes",
     async (value) => {
       vi.stubEnv("VITE_SITE_URL", value)
