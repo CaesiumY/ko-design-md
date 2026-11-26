@@ -7,7 +7,7 @@ import {
   MERGED_PREVIEW_FILE,
   resolvePreviewLayout,
 } from "./preview-layout"
-import { DARK_SCOPE, unscopeSelector } from "./selector-text"
+import { DARK_SCOPE, endOfSpelling, unscopeSelector } from "./selector-text"
 import type {
   AnchorSig,
   ServedDocument,
@@ -296,6 +296,12 @@ const NESTED_AT_RULE = /^@(media|supports|container|layer|scope)\b/i
  * (`.claude/agents/preview-html-author.md`), and `content: "{"` is ordinary in a
  * preview that puts code or CSS syntax on screen.
  *
+ * A character behind a backslash (`.a\{`) and the inside of an unquoted
+ * `url(…)` (`url(a{b.png)`) are the same failure a third and fourth time, and
+ * are blanked with them. The validator's rule walk reads the same four things
+ * the same way, through the same function, so a sheet is not cut one way here
+ * and another way there.
+ *
  * Blanking rather than deleting is what lets the emitted text keep the author's
  * bytes: the scan and the original stay index-for-index aligned, so every slice
  * can be taken from the original. Newlines are left alone so line offsets hold
@@ -316,20 +322,17 @@ function blankInert(css: string): string {
       i = stop
       continue
     }
-    if (c === '"' || c === "'") {
-      // An unterminated string ends at the newline, the way a CSS parser
-      // recovers from one; that newline is not part of the string.
-      let k = i + 1
-      while (k < css.length) {
-        if (css[k] === "\\") {
-          k += 2
-          continue
-        }
-        if (css[k] === c || css[k] === "\n") break
-        k++
-      }
-      blank(i, k < css.length && css[k] === c ? k + 1 : k)
-      i = k < css.length && css[k] === c ? k + 1 : k
+    // A string, the character behind a backslash, the inside of an unquoted
+    // `url(…)`: the same reading the validator's rule walk makes
+    // (`endOfSpelling`), so the two cut a sheet at the same braces. An
+    // unterminated string ends at the newline, the way a CSS parser recovers
+    // from one; that newline is not part of the string. Of a url the brackets
+    // stay, for the readers below that count them.
+    const end = endOfSpelling(css, i)
+    if (end !== i) {
+      if (c === '"' || c === "'" || c === "\\") blank(i, end + 1)
+      else blank(i + 4, css[end] === ")" ? end : end + 1)
+      i = end + 1
       continue
     }
     i++
@@ -341,8 +344,8 @@ function blankInert(css: string): string {
  * The last `;` outside parens — where a prelude's at-rules end.
  *
  * Always handed a slice of the blanked scan, so a `;` inside a quoted value has
- * already been erased. Parens are still tracked here for the unquoted `url(…)`
- * form, which `blankInert` leaves alone.
+ * already been erased, and so has one inside an unquoted `url(…)`. Parens are
+ * still tracked here for every other function (`@import x supports(a; b)`).
  */
 function statementCut(prelude: string): number {
   let paren = 0

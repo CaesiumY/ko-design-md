@@ -1,5 +1,50 @@
 import { describe, expect, it } from "vitest"
-import { lightSpellingOf, mentionsDarkScope } from "./selector-text"
+import {
+  endOfSpelling,
+  lightSpellingOf,
+  mentionsDarkScope,
+} from "./selector-text"
+
+// Where a scan may go on reading after text that only spells characters. The
+// indices are counted by hand from the strings.
+describe("endOfSpelling", () => {
+  it("ends a string at its closing quote, braces and all", () => {
+    expect(endOfSpelling('a"b{"c', 1)).toBe(4)
+    expect(endOfSpelling("a'}'c", 1)).toBe(3)
+  })
+
+  it("does not close a string at an escaped quote", () => {
+    expect(endOfSpelling(String.raw`"a\"{"x`, 0)).toBe(5)
+    expect(endOfSpelling(String.raw`"a\\"x`, 0)).toBe(4)
+  })
+
+  it("ends an unclosed string in front of its line break, or at the end", () => {
+    expect(endOfSpelling('"ab\ncd', 0)).toBe(2)
+    expect(endOfSpelling('"ab', 0)).toBe(2)
+  })
+
+  it("takes the character behind a backslash", () => {
+    expect(endOfSpelling(String.raw`\{x`, 0)).toBe(1)
+    expect(endOfSpelling(String.raw`a\"b`, 1)).toBe(2)
+    expect(endOfSpelling("a\\", 1)).toBe(1)
+  })
+
+  it("takes an unquoted url up to its closing bracket", () => {
+    expect(endOfSpelling("url(a{b)c", 0)).toBe(7)
+    expect(endOfSpelling('url( a"b )x', 0)).toBe(9)
+    expect(endOfSpelling("URL(a})", 0)).toBe(6)
+    expect(endOfSpelling(String.raw`url(a\)b)`, 0)).toBe(8)
+    expect(endOfSpelling("url(a{b", 0)).toBe(6)
+  })
+
+  it("leaves a quoted url, another function and any other character alone", () => {
+    expect(endOfSpelling('url("a{b")', 0)).toBe(0)
+    expect(endOfSpelling("url()", 0)).toBe(0)
+    expect(endOfSpelling("my-url(a{b)", 3)).toBe(3)
+    expect(endOfSpelling("under{", 0)).toBe(0)
+    expect(endOfSpelling("a{b", 1)).toBe(1)
+  })
+})
 
 describe("mentionsDarkScope", () => {
   it("recognises the scope however it is quoted or spaced", () => {

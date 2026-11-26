@@ -453,6 +453,32 @@ describe("unscopeDarkSheet", () => {
     }
   )
 
+  // The same failure outside a string: a character behind a backslash, and the
+  // inside of an unquoted url. The rules behind came back still scoped.
+  it.each([
+    ["an escaped { in a selector", String.raw`.x\{`, "color:red"],
+    ["an escaped quote in a selector", String.raw`.x\"`, "color:red"],
+    ["an escaped quote in a value", ".x", String.raw`--q:\"`],
+    ["a { in an unquoted url", ".x", "background:url(a{b.png)"],
+    ["a } in an unquoted url", ".x", "background:url(a}b.png)"],
+    ["a quote in an unquoted url", ".x", 'background:url(a"b.png)'],
+  ])("does not let %s slide the walk", (_name, selector, body) => {
+    const out = unscopeDarkSheet(
+      `[data-theme="dark"] ${selector}{${body}}\n` +
+        `[data-theme="dark"] .y{color:red}\n` +
+        `[data-theme="dark"] .z{color:blue}`
+    )
+    expect(out).toBe(`${selector}{${body}}\n.y{color:red}\n.z{color:blue}`)
+  })
+
+  it("does not cut a statement at a semicolon inside an unquoted url", () => {
+    expect(
+      unscopeDarkSheet(
+        '@import url(https://a.test/css?wght@400;700);\n[data-theme="dark"] .y{color:red}'
+      )
+    ).toBe("@import url(https://a.test/css?wght@400;700);\n.y{color:red}")
+  })
+
   // A comma inside an attribute value is not a selector separator either.
   it("does not split a selector list on a comma inside an attribute", () => {
     expect(

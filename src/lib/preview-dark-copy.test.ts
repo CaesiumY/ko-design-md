@@ -921,6 +921,85 @@ describe("dark-scope-unread", () => {
   })
 })
 
+// The rules are cut out of the sheet as text. A brace or a quote that only
+// spells a character — in a string, behind a backslash, in an unquoted url —
+// must not move where a rule ends, or every rule behind it goes unread: a copy
+// there would be no copy, and a rule the check refuses would pass.
+describe("dark rules behind text that only spells a brace or a quote", () => {
+  const LIGHT_RULES =
+    ".btn{color:red;padding:4px;border-radius:8px}\n.q{color:red}"
+  const COPY = "{color:red;padding:4px;border-radius:8px}"
+  const D = '[data-theme="dark"]'
+  // Each is CSS a browser reads as the one rule it looks like, and goes on.
+  const SPELLED: Array<[string, string]> = [
+    ["a { in a selector's string", `${D} .q[title="{"]{color:blue}`],
+    ["a { in a single-quoted string", `${D} .q[title='{']{color:blue}`],
+    ["a } in a selector's string", `${D} .q[title='}']{color:blue}`],
+    [
+      "a { behind an escaped quote in a string",
+      `${D} .q[title="a\\"{"]{color:blue}`,
+    ],
+    ["an escaped { in a selector", `${D} .q\\{{color:blue}`],
+    ["an escaped quote in a selector", `${D} .q\\"{color:blue}`],
+    [
+      "a string that ends in an escaped backslash",
+      `${D} .q{color:blue;content:"\\\\"}`,
+    ],
+    ["an escaped quote in a value", `${D} .q{color:blue;--x:\\"}`],
+    ["a { in an unquoted url", `${D} .q{color:blue;background:url(a{b.png)}`],
+    ["a } in an unquoted url", `${D} .q{color:blue;background:url(a}b.png)}`],
+    [
+      "a quote in an unquoted url",
+      `${D} .q{color:blue;background:url(a"b.png)}`,
+    ],
+    [
+      "a { in an at-rule's string",
+      `@supports (content:"{"){${D} .q{color:blue}}`,
+    ],
+  ]
+  const input = (first: string, behind: string) =>
+    mergedInput(LIGHT_RULES, `${D}{--bg:black}\n${first}\n${behind}`)
+  const report = (first: string, behind: string) => {
+    const { lightRaw, darkRaw } = input(first, behind)
+    return darkSheetReport(lightRaw, darkRaw)
+  }
+
+  it.each(SPELLED)("names a copy written behind %s", (_name, first) => {
+    expect(report(first, `${D} .btn${COPY}`)).toEqual({
+      copies: [".btn"],
+      overrideRules: 1,
+    })
+    expect(
+      found(input(first, `${D} .btn${COPY}`)).map((i) => i.severity)
+    ).toEqual(["block"])
+  })
+
+  it.each(SPELLED)(
+    "refuses an unread rule written behind %s",
+    (_name, first) => {
+      const issues = validatePreviewPair(
+        input(first, `:is(${D}) .btn${COPY}`)
+      ).issues.filter((i) => i.rule === "dark-scope-unread")
+      expect(issues.map((i) => i.severity)).toEqual(["block"])
+      expect(issues[0].fix).toContain(`:is(${D}) .btn [scope not leading]`)
+    }
+  )
+
+  it.each(SPELLED)(
+    "goes on counting the rule that holds %s",
+    (_name, first) => {
+      expect(report(first, "")).toEqual({ copies: [], overrideRules: 1 })
+    }
+  )
+
+  // A statement at-rule sits in front of the next selector, string and all.
+  it("reads the rule behind a statement at-rule whose string holds a brace", () => {
+    expect(
+      report(`@namespace svg "http://a{b";`, `${D} .btn${COPY}`).copies
+    ).toEqual([".btn"])
+  })
+})
+
 describe("dark-sheet-copy — the split layout", () => {
   // A split pair's dark file is the whole page: it must carry every structural
   // rule itself, and every one of them is also in light. Not a copy.

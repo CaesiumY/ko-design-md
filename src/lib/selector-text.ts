@@ -91,6 +91,42 @@ export function lightSpellingOf(selector: string): string {
 }
 
 /**
+ * Where the text that only spells characters ends, when `at` opens some: the
+ * character behind a backslash, a quoted string, an unquoted `url(…)`. A brace,
+ * a quote or a semicolon in there is a character of a name or a value, never
+ * the end of a rule. Returns the index of the last such character, or `at`
+ * itself where the character means what it looks like, so a scan that steps
+ * one past the answer lands on the next character to read.
+ *
+ * A string that is not closed ends in front of its line break, the way a
+ * browser gives up on one: a stray quote costs the rest of a line and no more.
+ * A `url(` with a quote behind it is an ordinary function around a string, and
+ * the string is read when the scan gets to it.
+ *
+ * Comments are not known here. Hand over text with them taken out.
+ */
+export function endOfSpelling(css: string, at: number): number {
+  const ch = css[at]
+  if (ch === "\\") return Math.min(at + 1, css.length - 1)
+  if (ch === '"' || ch === "'") {
+    for (let k = at + 1; k < css.length; k++) {
+      if (css[k] === "\\") k++
+      else if (css[k] === ch) return k
+      else if (css[k] === "\n") return k - 1
+    }
+    return css.length - 1
+  }
+  if (ch !== "u" && ch !== "U") return at
+  if (!/^url\(\s*[^\s"')]/i.test(css.slice(at, at + 64))) return at
+  if (at > 0 && /[\w-]/.test(css[at - 1])) return at
+  for (let k = at + 4; k < css.length; k++) {
+    if (css[k] === "\\") k++
+    else if (css[k] === ")") return k
+  }
+  return css.length - 1
+}
+
+/**
  * CSS text with what only spells a character blanked out: the inside of each
  * quoted string, and any character behind a backslash. What is left can be
  * searched for a brace, a comma or a parenthesis that means one.

@@ -5,6 +5,7 @@ import { DARK_COPY_BACKLOG, darkCopyVerdict } from "./dark-sheet-backlog"
 import { bodyOf, isBlankText, walkHtml } from "./html-walk"
 import { hasAppliedReduceBlock, hasCssMotion } from "./reduced-motion-block"
 import {
+  endOfSpelling,
   lightSpellingOf,
   mentionsDarkScope,
   splitSelectorList,
@@ -802,17 +803,28 @@ function stripCssComments(css: string): string {
 function dropStatementAtRules(prelude: string): string {
   let cut = 0
   let depth = 0
-  let quote: '"' | "'" | null = null
   for (let k = 0; k < prelude.length; k++) {
     const ch = prelude[k]
-    if (quote !== null) {
-      if (ch === quote && prelude[k - 1] !== "\\") quote = null
-    } else if (ch === '"' || ch === "'") quote = ch
-    else if (ch === "(") depth++
+    if (ch === "(") depth++
     else if (ch === ")") depth--
     else if (ch === ";" && depth === 0) cut = k + 1
+    else k = endOfSpelling(prelude, k)
   }
   return prelude.slice(cut)
+}
+
+/**
+ * The "{" that opens the next block at or after `from`, or -1. One that only
+ * spells a character (`[title="{"]`, `.a\{`) opens nothing: read as the end of
+ * the prelude, it leaves the rest of the sheet inside one rule's body, and
+ * every rule behind it unread.
+ */
+function blockOpen(css: string, from: number): number {
+  for (let k = from; k < css.length; k++) {
+    if (css[k] === "{") return k
+    k = endOfSpelling(css, k)
+  }
+  return -1
 }
 
 function parseCssRules(css: string): Array<CssRule> {
@@ -835,26 +847,20 @@ function walkCssRules(
 ): void {
   let i = 0
   while (i < css.length) {
-    const open = css.indexOf("{", i)
+    const open = blockOpen(css, i)
     if (open === -1) break
     const selector = dropStatementAtRules(css.slice(i, open)).trim()
     let depth = 1
     let j = open + 1
-    // Braces inside string literals (`content: "{"`, data URIs) must not
-    // distort the depth count — otherwise one such declaration swallows every
-    // later rule (including @media collapse redeclarations) into this rule.
-    let inString: '"' | "'" | null = null
+    // Braces that only spell a character (`content: "{"`, a data URI, `\}`)
+    // must not distort the depth count — otherwise one such declaration
+    // swallows every later rule (including @media collapse redeclarations)
+    // into this rule.
     while (j < css.length && depth > 0) {
       const ch = css[j]
-      if (inString) {
-        if (ch === inString && css[j - 1] !== "\\") inString = null
-      } else if (ch === '"' || ch === "'") {
-        inString = ch
-      } else if (ch === "{") {
-        depth++
-      } else if (ch === "}") {
-        depth--
-      }
+      if (ch === "{") depth++
+      else if (ch === "}") depth--
+      else j = endOfSpelling(css, j)
       j++
     }
     const inner = css.slice(open + 1, j - 1)
@@ -1031,7 +1037,7 @@ const UNREAD_WHY = {
  * writes a property that is not a custom one.
  *
  * This is a reading of the text in the document's `<style>` elements, not a
- * browser, and what gets past it is of three kinds:
+ * browser, and these get past it:
  *
  * - a dark rule that does not name the theme in so many words
  *   (`:root:not([data-theme="light"]) .x`, a CSS escape in the attribute or in
@@ -1039,8 +1045,15 @@ const UNREAD_WHY = {
  *   `DARK_OVERRIDE_RULES` counts it
  * - CSS that is not in a `<style>` element: imported, linked, or put in by a
  *   script
- * - text that throws the splitter: a comment opener inside a string, a string
- *   that ends in an escaped backslash
+ * - text that throws the comment stripper: a comment opener inside a string
+ *   or an unquoted `url(…)` (`content: "/*"`), which takes everything up to
+ *   the next comment closer out with it. Strings, escaped characters and
+ *   unquoted urls are otherwise read as a browser reads them, in a selector
+ *   and in a body alike (`endOfSpelling`), so a brace or a quote that only
+ *   spells a character does not move where a rule ends
+ * - a brace inside round or square brackets that nothing spells
+ *   (`[title={]`): no selector a browser accepts, and the rule is cut there
+ *   all the same
  *
  * It errs the other way in one place: a `<style>` element inside an HTML
  * comment. The sheets are cut out of the document's text, so one that is
