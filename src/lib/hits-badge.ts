@@ -20,9 +20,9 @@ export function hitsBadgeUrl(namespace: string, slug: string): string {
 // separate env var needed. hits.sh wants a domain, so we take the hostname
 // (`https://getdesign.kr` → `getdesign.kr`); using `hostname` (not `host`)
 // drops any port, so a non-standard-port origin can't break the API. Returns
-// null when the URL is empty or unset (dev server and tests; a production build
-// requires a value) or unparseable, which makes the badge hide itself instead
-// of pointing at a bogus counter.
+// null when the URL is empty or unset (tests, or a dev server with no value; a
+// production build requires one) or unparseable, which makes the badge hide
+// itself instead of pointing at a bogus counter.
 export function hitsNamespaceFromSiteUrl(
   siteUrl: string | undefined
 ): string | null {

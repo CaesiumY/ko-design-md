@@ -3,7 +3,7 @@ import { hitsBadgeUrl, hitsNamespaceFromSiteUrl } from "@/lib/hits-badge"
 
 // Public view-count badge served by hits.sh as an SVG image. The namespace is
 // derived from VITE_SITE_URL (read at render time so tests can stub it): empty
-// or unset (dev server, tests) → the badge hides; set → counts under that host.
+// or unset → the badge hides; set → counts under that host.
 // `onError` hides it if hits.sh is down or blocked, keeping the page intact.
 export function ViewCountBadge({ slug }: { slug: string }) {
   const namespace = hitsNamespaceFromSiteUrl(import.meta.env.VITE_SITE_URL)
