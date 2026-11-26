@@ -17,7 +17,7 @@ describe("hitsNamespaceFromSiteUrl", () => {
     )
   })
 
-  it("returns null when unset (pre-deploy) so the badge hides", () => {
+  it("returns null when empty or unset so the badge hides", () => {
     expect(hitsNamespaceFromSiteUrl("")).toBeNull()
     expect(hitsNamespaceFromSiteUrl(undefined)).toBeNull()
   })
