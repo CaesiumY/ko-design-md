@@ -298,9 +298,11 @@ const NESTED_AT_RULE = /^@(media|supports|container|layer|scope)\b/i
  *
  * A character behind a backslash (`.a\{`) and the inside of an unquoted
  * `url(…)` (`url(a{b.png)`) are the same failure a third and fourth time, and
- * are blanked with them. The validator's rule walk reads the same four things
- * the same way, through the same function, so a sheet is not cut one way here
- * and another way there.
+ * are blanked with them. The validator's rule walk reads strings, escaped
+ * characters and unquoted urls through the same function (`endOfSpelling`), so
+ * on those a sheet is not cut one way here and another way there. Comments it
+ * does not read this way: its stripper knows no strings, and a comment opener
+ * inside one is on the list `unreadDarkScopes` keeps.
  *
  * Blanking rather than deleting is what lets the emitted text keep the author's
  * bytes: the scan and the original stay index-for-index aligned, so every slice

@@ -98,8 +98,9 @@ export function lightSpellingOf(selector: string): string {
  * itself where the character means what it looks like, so a scan that steps
  * one past the answer lands on the next character to read.
  *
- * A string that is not closed ends in front of its line break, the way a
- * browser gives up on one: a stray quote costs the rest of a line and no more.
+ * A string that is not closed ends in front of its line break (a line feed, a
+ * carriage return or a form feed), the way a browser gives up on one: a stray
+ * quote costs the rest of a line and no more.
  * A `url(` with a quote behind it is an ordinary function around a string, and
  * the string is read when the scan gets to it.
  *
@@ -112,14 +113,17 @@ export function endOfSpelling(css: string, at: number): number {
     for (let k = at + 1; k < css.length; k++) {
       if (css[k] === "\\") k++
       else if (css[k] === ch) return k
-      else if (css[k] === "\n") return k - 1
+      else if (/[\n\r\f]/.test(css[k])) return k - 1
     }
     return css.length - 1
   }
   if (ch !== "u" && ch !== "U") return at
-  if (!/^url\(\s*[^\s"')]/i.test(css.slice(at, at + 64))) return at
+  if (css.slice(at, at + 4).toLowerCase() !== "url(") return at
   if (at > 0 && /[\w-]/.test(css[at - 1])) return at
-  for (let k = at + 4; k < css.length; k++) {
+  let k = at + 4
+  while (k < css.length && /\s/.test(css[k])) k++
+  if (k === css.length || /["')]/.test(css[k])) return at
+  for (; k < css.length; k++) {
     if (css[k] === "\\") k++
     else if (css[k] === ")") return k
   }

@@ -23,6 +23,14 @@ describe("endOfSpelling", () => {
     expect(endOfSpelling('"ab', 0)).toBe(2)
   })
 
+  // CSS counts a carriage return and a form feed as line breaks too.
+  it.each([
+    ["a carriage return", 13],
+    ["a form feed", 12],
+  ])("ends an unclosed string in front of %s", (_name, code) => {
+    expect(endOfSpelling(`"ab${String.fromCharCode(code)}cd`, 0)).toBe(2)
+  })
+
   it("takes the character behind a backslash", () => {
     expect(endOfSpelling(String.raw`\{x`, 0)).toBe(1)
     expect(endOfSpelling(String.raw`a\"b`, 1)).toBe(2)
@@ -36,6 +44,18 @@ describe("endOfSpelling", () => {
     expect(endOfSpelling(String.raw`url(a\)b)`, 0)).toBe(8)
     expect(endOfSpelling("url(a{b", 0)).toBe(6)
   })
+
+  // However much white space leads the url: 4 for `url(`, the spaces, `a{b`,
+  // and the bracket is the next index.
+  it.each([1, 70, 500])(
+    "takes an unquoted url behind %i spaces of white space",
+    (spaces) => {
+      expect(endOfSpelling(`url(${" ".repeat(spaces)}a{b)c`, 0)).toBe(
+        4 + spaces + 3
+      )
+      expect(endOfSpelling(`url(${" ".repeat(spaces)}"a{b")c`, 0)).toBe(0)
+    }
+  )
 
   it("leaves a quoted url, another function and any other character alone", () => {
     expect(endOfSpelling('url("a{b")', 0)).toBe(0)
