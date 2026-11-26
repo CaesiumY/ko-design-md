@@ -697,7 +697,7 @@ describe("siteUrlFromRequest", () => {
   })
 
   it("falls back to the request origin only when nothing is configured", () => {
-    // The dev/test path: VITE_SITE_URL unset, so relative-ish URLs resolve
+    // The dev/test path: VITE_SITE_URL empty, so relative-ish URLs resolve
     // against whatever served them.
     expect(siteUrlFromRequest("", forged)).toBe("https://evil.example")
   })

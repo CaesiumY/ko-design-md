@@ -11,7 +11,7 @@ import {
 // absoluteUrl returns the path unchanged. The build failing on a missing value
 // is covered by require-site-url-plugin.test.ts.
 
-describe("site-config (test env, VITE_SITE_URL unset)", () => {
+describe("site-config (test env, VITE_SITE_URL pinned empty)", () => {
   it("runs with VITE_SITE_URL pinned empty by vite.config.ts", () => {
     // Fails with `undefined` if the `test.env` pin is dropped, even on a
     // machine (CI included) that has no value to leak.
