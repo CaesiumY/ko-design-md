@@ -1160,20 +1160,32 @@ export interface DarkSheetReport {
  *
  * The scope has one spelling the merge writes and several a hand can
  * (`html[data-theme="dark"] .btn`, `:root[data-theme="dark"] .btn`,
- * `[data-theme='dark'] .btn`). A dark rule, in either group, is read under the
- * selector light would have written for it (`lightSpellingOf`) — or a sheet
- * copied whole behind another spelling would be no copy at all. Where its own
- * text is another text, it is read under that first. If every declaration is
- * given there, it is that rule again, as the doubled-scope repeat above is: a
- * copy of the rule it repeats, and it takes no position among light's rules.
- * In a sheet copied whole it lines up with the earlier rule, and the copies of
- * light around it go on lining up with light. Any other rule is read under
- * light's selector as well, taking a position there, and a declaration
- * restates when either reading gives its value. The two are added together,
- * never one in place of the other: were an earlier sheet's dark rule of the
- * same text to stand in for light, a rule restating light's `.btn` would stop
- * being a copy the moment an earlier sheet overrode `.btn` under that
- * spelling.
+ * `[data-theme='dark'] .btn`). A rule that pairs with nothing under its own
+ * text is paired under the selector light would have written for it
+ * (`lightSpellingOf`), in either group — or a sheet copied whole behind another
+ * spelling would be no copy at all. Its own text comes first because the
+ * doubled-scope repeat above must go on pairing with the rule it repeats.
+ *
+ * A rule that does pair under its own text, where light would have written
+ * another, shares that text with a rule already there: an earlier sheet's
+ * dark rule, or a light rule written out from the root (`html .btn`). It may
+ * be that rule again or a copy of light's `.btn` behind the same spelling,
+ * and nothing in the text says which. So besides its pairing it is
+ * read against every light rule of its selector, and a declaration restates
+ * when the pairing or any of those gives its value: were the earlier rule to
+ * stand in for light, a rule restating light's `.btn` would stop being a copy
+ * the moment an earlier sheet overrode `.btn` under that spelling. The reading
+ * is added to the pairing, never put in its place, and takes no position among
+ * light's rules, so no other rule is paired anywhere else for it. Two things
+ * follow, both where light writes one selector more than once. Such a rule is
+ * a copy when any light rule of its selector gives the value, a middle one
+ * too, where a rule paired with light is held to its own position and the
+ * last. And it uses up no position among light's rules though it would were
+ * the earlier rule not there: with light's `.s` written three times, an
+ * earlier sheet's `:root[data-theme="dark"] .s`, and a dark sheet of
+ * `:root[data-theme="dark"] .s` then `.s`, `.s` copying the three in turn, the
+ * second is read at the first position and is not named a copy.
+ *
  * A scope written anywhere else (`:is([data-theme="dark"]) .btn`,
  * `body[data-theme="dark"] .btn`) cannot be taken off and is not judged here
  * at all: `unreadDarkScopes` names the rule and the validator refuses it. A
@@ -1238,47 +1250,43 @@ export function darkSheetReport(
   const copies: Array<string> = []
   let overrideRules = 0
   // One group of dark rules against the light rules it is read beside. The nth
-  // rule of a key pairs with the nth light one of that key, counted within the
-  // group: the dark sheet and an earlier sheet's dark rules each line up with
-  // light on their own, and neither uses up a position the other is paired at.
+  // rule of a selector pairs with the nth light one, counted within the group:
+  // the dark sheet and an earlier sheet's dark rules each line up with light
+  // on their own, and neither uses up a position the other is paired at.
   const judge = (
     darkRules: Array<{ rule: CssRule; name: string }>,
     twinsByKey: Twins
   ) => {
     const seen = new Map<string, number>()
-    // What one reading under a key is held against: the rule at this
-    // reading's position among the group's readings under that key, and the
-    // last. Each key keeps its own count, and only a reading moves it.
-    const twinsAt = (key: string) => {
-      const nth = seen.get(key) ?? 0
-      seen.set(key, nth + 1)
-      const twins = twinsByKey.get(key) ?? []
-      return [twins.at(nth), twins.at(-1)]
-    }
     for (const { rule, name } of darkRules) {
-      // Under its own text first, when that is not the selector light would
-      // have written. A rule whose every declaration is given there is the
-      // rule of that text again: a copy of it, and it is not read under
-      // light's selector, so it takes no position there. Any other rule is
-      // read under light's selector, taking a position, with what its own
-      // text gave added in — one more thing it may restate, never a stand-in
-      // for light.
+      // Paired under its own text first; failing that, under the selector
+      // light would have written for it, so a scope spelled another way
+      // (`html[data-theme="dark"] .btn`) still finds the `.btn` it restates.
       const ownKey = keyOf(rule)
       const lightKey = keyOf({
         ...rule,
         selector: lightSpellingOf(rule.selector),
       })
+      const key = twinsByKey.has(ownKey) ? ownKey : lightKey
+      const nth = seen.get(key) ?? 0
+      seen.set(key, nth + 1)
+      const twins = twinsByKey.get(key) ?? []
+      const pair = twins.at(nth)
+      const last = twins.at(-1)
+      // A rule paired under a text light would not have written shares that
+      // text with a rule already there. It may be that rule again or a copy
+      // of light behind the same spelling, and the text does not say which,
+      // so it is read against every light rule of its selector besides. That
+      // reading is added to the pairing and takes no position.
+      const lightToo = key === lightKey ? [] : (twinsByKey.get(lightKey) ?? [])
       const declarations = [...parseDeclarations(rule.declarations)]
-      const gives =
-        (twins: Array<Map<string, string> | undefined>) =>
-        ([property, value]: [string, string]) =>
-          twins.some((twin) => twin?.get(property) === value)
-      const own = ownKey === lightKey ? [] : twinsAt(ownKey)
-      const repeatsOwn =
-        declarations.length > 0 && declarations.every(gives(own))
-      const against = repeatsOwn ? own : [...twinsAt(lightKey), ...own]
       if (declarations.length === 0) continue
-      const restated = declarations.filter(gives(against))
+      const restated = declarations.filter(
+        ([property, value]) =>
+          pair?.get(property) === value ||
+          last?.get(property) === value ||
+          lightToo.some((twin) => twin.get(property) === value)
+      )
       const isToken = ([property]: [string, string]) =>
         property.startsWith("--")
       if (

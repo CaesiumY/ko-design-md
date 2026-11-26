@@ -470,6 +470,50 @@ describe("dark-sheet-copy — a scope spelled another way", () => {
     }
   )
 
+  // Whatever the rule of the earlier sheet's text holds — that rule and one
+  // declaration more, another value, nothing — it takes no position among
+  // light's rules, and the copies of light behind it are read where they
+  // stand.
+  it.each([
+    [
+      "with a declaration added",
+      "color:blue;margin:0",
+      ['html[data-theme="dark"] .s', ".s", ".s"],
+      2,
+    ],
+    ["retuned", "color:pink", [".s", ".s"], 2],
+    ["emptied", "", [".s", ".s"], 1],
+  ])(
+    "keeps the copies behind the earlier rule's repeat in place, the repeat %s",
+    (_how, body, copies, overrideRules) => {
+      expect(
+        report(
+          'html[data-theme="dark"] .s{color:blue}\n.s{color:red}\n.s{color:green}',
+          `[data-theme="dark"]{--bg:black}\nhtml[data-theme="dark"][data-theme="dark"] .s{${body}}\n[data-theme="dark"] .s{color:red}\n[data-theme="dark"] .s{color:green}`
+        )
+      ).toEqual({ copies, overrideRules })
+    }
+  )
+
+  // A rule of the earlier sheet's text is read against every light rule of
+  // its selector, the middle one too: with first-and-last alone, the second
+  // of these three copies would be no copy.
+  it("names each copy of a selector light writes three times, behind a scope an earlier sheet also uses", () => {
+    expect(
+      report(
+        '.s{color:red}\n.s{color:green}\n.s{color:teal}\n:root[data-theme="dark"] .s{color:blue}',
+        '[data-theme="dark"]{--bg:black}\n:root[data-theme="dark"] .s{color:red}\n:root[data-theme="dark"] .s{color:green}\n:root[data-theme="dark"] .s{color:teal}'
+      )
+    ).toEqual({
+      copies: [
+        ':root[data-theme="dark"] .s',
+        ':root[data-theme="dark"] .s',
+        ':root[data-theme="dark"] .s',
+      ],
+      overrideRules: 1,
+    })
+  })
+
   // seed-design's dark sheet repeats `html[data-theme="dark"] .snackbar` from
   // an earlier sheet. The repeat is read against the rule it repeats, gives
   // nothing that rule does not, and is a copy of it.
