@@ -41,8 +41,8 @@ export function absoluteUrl(path: string): string {
 // hits the production CDN for every card-grid logo, which breaks when
 // prod is down, the asset isn't deployed yet, or the user is offline.
 //
-// When VITE_SITE_URL is unset (test/SSR/dev-without-env), the input is
-// returned unchanged — the browser will resolve it as-is.
+// When VITE_SITE_URL is empty or unset (test/SSR/dev-without-env), the input
+// is returned unchanged — the browser will resolve it as-is.
 export function siteRelativeIfSelf(
   url: string | undefined
 ): string | undefined {
