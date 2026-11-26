@@ -26,11 +26,18 @@
 // The pointer is taken off the page first, so no pass carries a hover that
 // was not forced (`openPage`).
 // A last pass without reduced motion compares the declared transitions and
-// animations, and nothing else: with motion running a box is wherever its
-// animation has taken it, which differs between two captures of one file.
+// animations, of the element and of its ::before and ::after, and nothing
+// else: with motion running a box is wherever its animation has taken it,
+// which differs between two captures of one file.
 //
 // What "no difference" does NOT cover:
-//   - properties outside the lists below
+//   - properties outside the lists below. The lists were filled from what the
+//     dark sheets of the previews still to be walked write (`STYLE_PROPS`), so
+//     a property a preview starts to use later is not compared until it is
+//     put there. Not there on purpose: the `src` and `font-display` of an
+//     `@font-face` (see fonts, below), `-webkit-overflow-scrolling`, which
+//     Chromium does not implement, and the longhands a shorthand resets
+//     without a preview ever writing them (`font-stretch` under `font`)
 //   - pseudo-elements other than ::before and ::after — ::placeholder,
 //     ::selection, ::marker
 //   - forced states at more than one width, and any state that is not hover,
@@ -159,6 +166,40 @@ const STYLE_PROPS = [
   "z-index",
   "caret-color",
   "accent-color",
+  // What the dark sheets still to be walked write and nothing above shows: a
+  // change in one of these moves no box and no colour that is compared.
+  "background-size",
+  "background-position",
+  "background-repeat",
+  "background-clip",
+  "-webkit-text-fill-color",
+  "text-decoration-thickness",
+  "text-underline-offset",
+  "text-overflow",
+  "overflow-wrap",
+  "word-break",
+  "-webkit-line-clamp",
+  "-webkit-box-orient",
+  "font-variant-numeric",
+  "font-feature-settings",
+  "-webkit-font-smoothing",
+  "object-fit",
+  "border-collapse",
+  "list-style-type",
+  "list-style-position",
+  "list-style-image",
+  "stroke-width",
+  "stroke-linecap",
+  "stroke-linejoin",
+  "vector-effect",
+  "clip-path",
+  "pointer-events",
+  "user-select",
+  "appearance",
+  "resize",
+  "scrollbar-width",
+  "color-scheme",
+  "scroll-margin-top",
 ]
 
 const MOTION_PROPS = [
@@ -170,21 +211,26 @@ const MOTION_PROPS = [
   "animation-duration",
   "animation-timing-function",
   "animation-iteration-count",
+  "animation-delay",
+  "animation-direction",
+  "animation-fill-mode",
+  "animation-play-state",
 ]
 
+// A pseudo-element has no box of its own to measure, so where it sits and how
+// large it is are read as properties, next to everything an element is read
+// for. One list rather than a shorter one of its own: the shorter one had left
+// out the corner radius, the clip and the offsets of the very thumbs and ticks
+// the previews draw with ::before.
 const PSEUDO_PROPS = [
   "content",
-  "display",
-  "color",
-  "background-color",
-  "background-image",
   "width",
   "height",
-  "border-top-color",
-  "border-top-width",
-  "box-shadow",
-  "opacity",
-  "transform",
+  "top",
+  "right",
+  "bottom",
+  "left",
+  ...STYLE_PROPS,
 ]
 
 interface CaptureOptions {
@@ -520,7 +566,8 @@ async function capture(
       `${theme} @${stateWidth} motion`,
       await page.evaluate(collectRows, {
         props: MOTION_PROPS,
-        pseudoProps: [],
+        // A thumb drawn with ::before carries the transition that moves it.
+        pseudoProps: MOTION_PROPS,
         // The animations are running here, so a box is a moment, not a fact.
         box: false,
       })
