@@ -13,15 +13,16 @@
 // (`require-site-url-plugin.ts`); the check below is the runtime backstop. The
 // dev server keeps the empty-fallback ergonomics — browsers resolve relative
 // URLs against document.URL so local development still works.
-const RAW = import.meta.env.VITE_SITE_URL ?? ""
+import { normalizeSiteUrl } from "./normalize-site-url"
 
-if (import.meta.env.PROD && !RAW) {
+export const SITE_URL = normalizeSiteUrl(import.meta.env.VITE_SITE_URL ?? "")
+
+if (import.meta.env.PROD && !SITE_URL) {
   throw new Error(
     "VITE_SITE_URL must be set for production builds. See .env.example for the expected shape."
   )
 }
 
-export const SITE_URL = RAW.replace(/\/+$/, "")
 export const SITE_NAME = "ko/design.md"
 
 export function absoluteUrl(path: string): string {

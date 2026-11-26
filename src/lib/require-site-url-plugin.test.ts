@@ -47,6 +47,14 @@ describe("requireSiteUrlPlugin", () => {
     await expect(resolve("build")).rejects.toThrow(/VITE_SITE_URL/)
   })
 
+  it.each(["/", "//"])(
+    "treats %s as missing: nothing is left after the trailing slashes",
+    async (value) => {
+      vi.stubEnv("VITE_SITE_URL", value)
+      await expect(resolve("build")).rejects.toThrow(/VITE_SITE_URL/)
+    }
+  )
+
   it("accepts a value from the shell", async () => {
     vi.stubEnv("VITE_SITE_URL", "https://example.test")
     await expect(resolve("build")).resolves.toBeDefined()
