@@ -9,9 +9,10 @@
 //
 // Production builds without the env are a hard error: shipping with
 // relative og:image is one of those bugs you only discover when someone
-// shares the link on Slack and the preview is blank. Dev builds keep the
-// empty-fallback ergonomics — browsers resolve relative URLs against
-// document.URL so local development still works.
+// shares the link on Slack and the preview is blank. `vite build` fails on it
+// (`require-site-url-plugin.ts`); the check below is the runtime backstop. The
+// dev server keeps the empty-fallback ergonomics — browsers resolve relative
+// URLs against document.URL so local development still works.
 const RAW = import.meta.env.VITE_SITE_URL ?? ""
 
 if (import.meta.env.PROD && !RAW) {

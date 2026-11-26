@@ -681,10 +681,10 @@ describe("robots.txt", () => {
 // Every absolute URL this site emits - llms.txt links, sitemap locs, the
 // markdown representations, the skill discovery index - runs through here. A
 // reviewer asked whether the Host header can reach those bodies, which is the
-// shape of a cache-poisoning bug. It cannot in production: `site-config` throws
-// at build time when `VITE_SITE_URL` is unset under PROD, so the configured
-// origin is always present and always wins. The request is consulted only in
-// dev and test, where no shared cache is involved.
+// shape of a cache-poisoning bug. It cannot in production: `vite build` fails
+// when `VITE_SITE_URL` is unset, and `site-config` throws if a PROD bundle runs
+// without it, so the configured origin is always present and always wins. The
+// request is consulted only in dev and test, where no shared cache is involved.
 describe("siteUrlFromRequest", () => {
   const forged = new Request("https://evil.example/", {
     headers: { Host: "evil.example" },
