@@ -4,23 +4,25 @@
 // no page-URL context, so a relative path silently fails the preview.
 //
 // Set `VITE_SITE_URL=https://your-domain` at build time. See `.env.example`
-// for the expected shape. Trailing slashes are stripped so callers can
-// compose paths starting with "/".
+// for the expected shape. Surrounding spaces and trailing slashes are stripped
+// so callers can compose paths starting with "/".
 //
 // Production builds without the env are a hard error: shipping with
 // relative og:image is one of those bugs you only discover when someone
-// shares the link on Slack and the preview is blank. Dev builds keep the
-// empty-fallback ergonomics — browsers resolve relative URLs against
-// document.URL so local development still works.
-const RAW = import.meta.env.VITE_SITE_URL ?? ""
+// shares the link on Slack and the preview is blank. `vite build` fails on it
+// (`require-site-url-plugin.ts`); the check below is the runtime backstop. The
+// dev server keeps the empty-fallback ergonomics — browsers resolve relative
+// URLs against document.URL so local development still works.
+import { trimSiteUrl } from "./trim-site-url"
 
-if (import.meta.env.PROD && !RAW) {
+export const SITE_URL = trimSiteUrl(import.meta.env.VITE_SITE_URL ?? "")
+
+if (import.meta.env.PROD && !SITE_URL) {
   throw new Error(
     "VITE_SITE_URL must be set for production builds. See .env.example for the expected shape."
   )
 }
 
-export const SITE_URL = RAW.replace(/\/+$/, "")
 export const SITE_NAME = "ko/design.md"
 
 export function absoluteUrl(path: string): string {
@@ -40,8 +42,8 @@ export function absoluteUrl(path: string): string {
 // hits the production CDN for every card-grid logo, which breaks when
 // prod is down, the asset isn't deployed yet, or the user is offline.
 //
-// When VITE_SITE_URL is unset (test/SSR/dev-without-env), the input is
-// returned unchanged — the browser will resolve it as-is.
+// When VITE_SITE_URL is empty or unset (test/SSR/dev-without-env), the input
+// is returned unchanged — the browser will resolve it as-is.
 export function siteRelativeIfSelf(
   url: string | undefined
 ): string | undefined {

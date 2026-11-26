@@ -9,6 +9,7 @@ import viteReact from "@vitejs/plugin-react"
 import tailwindcss from "@tailwindcss/vite"
 import { nitro } from "nitro/vite"
 import { lightScopeFile, resolvePreviewLayout } from "./src/lib/preview-layout"
+import { requireSiteUrlPlugin } from "./src/lib/require-site-url-plugin"
 import { siteFrontmatterPlugin } from "./src/lib/site-frontmatter-plugin"
 import type { Plugin, UserConfig } from "vite"
 
@@ -208,8 +209,13 @@ const config = defineConfig({
       "**/.claude/cache/**",
       "e2e/**",
     ],
+    // Tests assume no site origin. Without this pin, a VITE_SITE_URL left in
+    // the shell or in .env.local fails the SEO and site-config tests. Cases
+    // that need a value use `vi.stubEnv`.
+    env: { VITE_SITE_URL: "" },
   },
   plugins: [
+    requireSiteUrlPlugin(),
     previewSlugsPlugin(),
     siteFrontmatterPlugin(),
     previewCacheHeadersPlugin(),

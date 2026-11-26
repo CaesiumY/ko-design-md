@@ -7,11 +7,17 @@ import {
 } from "./site-config"
 
 // In test mode (vitest sets NODE_ENV=test, import.meta.env.PROD = false),
-// VITE_SITE_URL is unset, so SITE_URL is the empty string and absoluteUrl
-// returns the path unchanged. Production assertion path is exercised by
-// the build pipeline itself failing if the env is missing.
+// vite.config.ts pins VITE_SITE_URL to "", so SITE_URL is the empty string and
+// absoluteUrl returns the path unchanged. The build failing on a missing value
+// is covered by require-site-url-plugin.test.ts.
 
-describe("site-config (test env, VITE_SITE_URL unset)", () => {
+describe("site-config (test env, VITE_SITE_URL pinned empty)", () => {
+  it("runs with VITE_SITE_URL pinned empty by vite.config.ts", () => {
+    // Fails with `undefined` if the `test.env` pin is dropped, even on a
+    // machine (CI included) that has no value to leak.
+    expect(import.meta.env.VITE_SITE_URL).toBe("")
+  })
+
   it("SITE_URL is empty when no env is configured", () => {
     expect(SITE_URL).toBe("")
   })

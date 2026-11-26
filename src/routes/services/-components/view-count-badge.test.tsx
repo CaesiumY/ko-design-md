@@ -9,7 +9,7 @@ afterEach(() => {
 })
 
 describe("ViewCountBadge", () => {
-  it("renders nothing when VITE_SITE_URL is unset (e.g. before deploy)", () => {
+  it("renders nothing when VITE_SITE_URL is empty", () => {
     vi.stubEnv("VITE_SITE_URL", "")
     const { container } = render(<ViewCountBadge slug="gmarket" />)
     expect(container.innerHTML).toBe("")

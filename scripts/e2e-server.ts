@@ -68,7 +68,7 @@ function build(): void {
   const result = spawnSync("pnpm build", {
     cwd: ROOT,
     stdio: "inherit",
-    // A production build throws without a site URL (src/lib/site-config.ts).
+    // `pnpm build` fails without a site URL (src/lib/require-site-url-plugin.ts).
     // Only metadata (canonical, og, JSON-LD) uses it; every in-page link is
     // relative, so the suite never navigates to the real site.
     env: {

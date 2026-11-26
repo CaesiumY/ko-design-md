@@ -14,7 +14,7 @@ pnpm gates              # CI build 잡이 pnpm build 전에 돌리는 검사 전
                         # 준비 액션의 with(Node 버전 등)는 CI 환경이라 대조 밖이다
                         # 날짜 검사의 기준은 origin/main, 다른 브랜치 위에 쌓은 브랜치는
                         # pnpm gates --base origin/<그 브랜치>
-pnpm build              # build:og + vite build
+pnpm build              # build:og + vite build, VITE_SITE_URL 필요(셸이나 .env.production.local)
 pnpm test:http          # pnpm build 뒤 빌드된 Nitro 서버 HTTP 회귀 검사
 pnpm test:e2e           # E2E 스모크 — 빌드된 서버 + Chromium, CI 는 별도 e2e 잡
 pnpm validate:spec      # 로컬 진단용 출력. 실제 게이트는 pnpm test 안의

@@ -115,10 +115,10 @@ git clone https://github.com/CaesiumY/ko-design-md.git
 cd ko-design-md
 pnpm install      # pnpm 필요
 pnpm dev          # → http://localhost:3000
-pnpm build        # OG 이미지 생성 + 사이트 빌드
+pnpm build        # OG 이미지 생성 + 사이트 빌드 (VITE_SITE_URL 필요)
 ```
 
-요구사항: Node 22.22.2 이상, pnpm 10.
+요구사항: Node 22.22.2 이상, pnpm 10. `pnpm build` 는 사이트 주소 `VITE_SITE_URL` 이 없으면 실패합니다 — [`.env.example`](./.env.example)을 `.env.production.local`(빌드만 읽는 파일)로 복사해 두면 됩니다. `pnpm dev` 는 없어도 돕니다.
 
 ## 새 항목 기여
 
