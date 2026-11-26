@@ -68,6 +68,61 @@ describe("lightSpellingOf", () => {
     expect(lightSpellingOf("html")).toBe("html")
   })
 
+  // `html` and `:root` beside the scope, in the same compound, name the element
+  // the scope is already on. `unscopeSelector` leaves `:root:root .btn` of the
+  // first and `html:root .btn` of the third, and those reach the pairing too.
+  it("reads the root named again beside the scope as the root once", () => {
+    for (const selector of [
+      '[data-theme="dark"]:root .btn',
+      "[data-theme='dark']:root .btn",
+      'html[data-theme="dark"]:root .btn',
+      ':root[data-theme="dark"]:root .btn',
+      'html:root[data-theme="dark"] .btn',
+      ':root:root[data-theme="dark"] .btn',
+      '[data-theme="dark"]:root[data-theme="dark"] .btn',
+      '[data-theme="dark"]:ROOT .btn',
+      ':root:where([data-theme="dark"]) .btn',
+      'html:where([data-theme="dark"]) .btn',
+      ':where([data-theme="dark"]):root .btn',
+      ":root:root .btn",
+      "html:root .btn",
+      "html:root:root .btn",
+    ]) {
+      expect(lightSpellingOf(selector), selector).toBe(".btn")
+    }
+    for (const selector of [
+      '[data-theme="dark"]:root',
+      'html[data-theme="dark"]:root',
+      ":root:root",
+      "html:root",
+    ]) {
+      expect(lightSpellingOf(selector), selector).toBe(":root")
+    }
+    expect(lightSpellingOf('[data-theme="dark"]:root.panel .x')).toBe(
+      ":root.panel .x"
+    )
+    expect(lightSpellingOf(":root:root > body")).toBe(":root > body")
+  })
+
+  // Anything else in that compound is a condition on the root, and is kept: it
+  // is another selector than the bare one, even where it happens to name the
+  // root (`:is(html)`). Such a rule pairs with a light rule spelled the same.
+  it("keeps any other compound on the root as it is written", () => {
+    expect(lightSpellingOf('[data-theme="dark"].panel .btn')).toBe(
+      ":root.panel .btn"
+    )
+    expect(lightSpellingOf('[data-theme="dark"]:not(.x) .btn')).toBe(
+      ":root:not(.x) .btn"
+    )
+    expect(lightSpellingOf('[data-theme="dark"]:is(html) .btn')).toBe(
+      ":root:is(html) .btn"
+    )
+    expect(lightSpellingOf('[data-theme="dark"]:where(:root) .btn')).toBe(
+      ":root:where(:root) .btn"
+    )
+    expect(lightSpellingOf(":root-ish .btn")).toBe(":root-ish .btn")
+  })
+
   it("reads each selector of a list on its own", () => {
     expect(lightSpellingOf("[data-theme='dark'] .a, .b, html .c")).toBe(
       ".a, .b, .c"

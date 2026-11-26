@@ -11,11 +11,24 @@ export const DARK_SCOPE = '[data-theme="dark"]'
 // dark all the same — that rule is dead, not light.
 const ANY_DARK_SCOPE = String.raw`\[\s*(?:\*?\|)?data-theme\s*[~|^$*]?=\s*(?:["']dark["']\s*[is]?|dark(?:\s+[is])?)\s*\]`
 const MENTIONS_DARK_SCOPE = new RegExp(ANY_DARK_SCOPE, "i")
+// `:root` and nothing longer: `:root-ish` is another name.
+const ROOT_PSEUDO = String.raw`:root(?![\w-])`
+const DARK_SCOPE_ONCE = String.raw`(?:${ANY_DARK_SCOPE}|:where\(\s*${ANY_DARK_SCOPE}\s*\))`
 // The scope where it scopes: at the front of the selector, on the root element
 // however that is named, bare or inside `:where()`, once or (as the merge
-// leaves a hand-written `html[data-theme="dark"]`) more than once.
+// leaves a hand-written `html[data-theme="dark"]`) more than once. `html` and
+// `:root` in that compound, before the scope or after it, name the element the
+// scope is already on and are taken with it. Anything else there (`.panel`,
+// `:not(.x)`, `:is(html)`) is a condition on the root and is left standing.
 const LEADING_DARK_SCOPE = new RegExp(
-  String.raw`^(?:(?:html|:root)?(?:${ANY_DARK_SCOPE})+|:where\(\s*${ANY_DARK_SCOPE}\s*\))`,
+  String.raw`^(?:html)?(?:${ROOT_PSEUDO})*(?:${DARK_SCOPE_ONCE}(?:${ROOT_PSEUDO})*)+`,
+  "i"
+)
+// The root named twice over with no scope left beside it: what
+// `unscopeSelector` makes of `[data-theme="dark"]:root` (`:root:root`) and of
+// `html[data-theme="dark"]:root` (`html:root`).
+const LEADING_ROOT_AGAIN = new RegExp(
+  String.raw`^(?:html(?:${ROOT_PSEUDO})+|(?:${ROOT_PSEUDO}){2,})`,
   "i"
 )
 const LEADING_ROOT = /^(?:html|:root)\s+(?![>+~])/i
@@ -52,11 +65,19 @@ export function mentionsDarkScope(selector: string): boolean {
  * the selector. `body[data-theme="dark"] .x` and `.x [data-theme="dark"]` come
  * back as they are: they name other elements, and stripping the attribute would
  * invent a selector.
+ *
+ * The root named again in the scope's own compound is the root once:
+ * `[data-theme="dark"]:root .btn`, `html:root[data-theme="dark"] .btn` and the
+ * `:root:root .btn` that `unscopeSelector` leaves of the first come out `.btn`
+ * as well. Only `html` and `:root` are read so. Any other compound there is
+ * kept as written, also one that happens to name the root
+ * (`[data-theme="dark"]:is(html) .btn` comes out `:root:is(html) .btn`), and
+ * pairs with a light rule spelled the same or with none.
  */
 export function lightSpellingOf(selector: string): string {
   return splitSelectorList(selector)
     .map((arm) => {
-      const scope = LEADING_DARK_SCOPE.exec(arm)
+      const scope = LEADING_DARK_SCOPE.exec(arm) ?? LEADING_ROOT_AGAIN.exec(arm)
       if (scope === null) return arm.replace(LEADING_ROOT, "")
       const rest = arm.slice(scope[0].length)
       const below = rest.trim()

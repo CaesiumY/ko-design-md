@@ -58,7 +58,10 @@ paths:
     at-rule 아래의 규칙(`@scope ([data-theme="dark"]) { .a { … } }`)이다. 같은 이유로 다크를 빼려고 이름을
     적은 라이트 규칙(`:root:not([data-theme="dark"]) .a`)과 `data-theme` 속성을 빌려 쓴 시연
     요소(`button[data-theme="dark"]`)도 막힌다. 라이트는 스코프 없이 적고, `data-theme` 은 페이지의 테마
-    스위치로만 쓴다.
+    스위치로만 쓴다. 스코프 옆에 루트를 한 번 더 부른 표기(`[data-theme="dark"]:root .a`)는 `.a` 로 읽는다.
+    스코프에 다른 조건을 붙인 표기(`[data-theme="dark"].panel .a`, `[data-theme="dark"]:is(html) .a`)는 막지
+    않고 적힌 그대로 `:root.panel .a` 로 읽으므로, 같은 조건을 적은 라이트 규칙 옆에서만 복사본이 되고 그 밖에는
+    `DARK_OVERRIDE_RULES` 의 수에 든다.
   - **복사본을 걷을 때는 보이는 대로 지우지 않는다.** `[data-theme="dark"] .a` 는 선택자가 하나 더 붙어 라이트의
     더 구체적인 규칙을 이기므로, 값이 같은 다크 규칙이 다크 화면을 붙들고 있을 수 있다. 걷기 전 파일과 걷은 뒤
     파일을 `pnpm preview:dom-diff --a <걷기 전> --b <걷은 뒤>` 로 비교해 차이가 없어야 한다. 로컬에서는

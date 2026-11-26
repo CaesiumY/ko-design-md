@@ -368,6 +368,11 @@ describe("dark-sheet-copy — a scope spelled another way", () => {
   ]
   const blocked = (light: string, dark: string) =>
     found(mergedInput(light, dark)).map((i) => i.severity)
+  const report = (light: string, dark: string) => {
+    const html = mergedFile(light, dark)
+    const halves = splitMergedPreview(html, Buffer.byteLength(html))
+    return darkSheetReport(halves.light, halves.dark)
+  }
 
   it.each(SPELLINGS)(
     "blocks a copied rule in the dark sheet under %s",
@@ -384,15 +389,67 @@ describe("dark-sheet-copy — a scope spelled another way", () => {
     ])
   })
 
+  // `html` and `:root` written beside the scope, in its compound, name the
+  // element the scope is already on. The split leaves `:root:root .btn` of the
+  // first of these, with no scope left on it to be refused by.
+  const ROOT_NAMED_AGAIN = [
+    '[data-theme="dark"]:root',
+    "[data-theme='dark']:root",
+    'html[data-theme="dark"]:root',
+    ':root[data-theme="dark"]:root',
+    'html:root[data-theme="dark"]',
+    ':root:root[data-theme="dark"]',
+    '[data-theme="dark"]:root[data-theme="dark"]',
+    ':root:where([data-theme="dark"])',
+    'html:where([data-theme="dark"])',
+  ]
+
+  it.each(ROOT_NAMED_AGAIN)(
+    "blocks a copied rule in the dark sheet under %s",
+    (scope) => {
+      expect(blocked(LIGHT, `${DARK_TOKENS}\n${scope} ${COPIED_BTN}`)).toEqual([
+        "block",
+      ])
+    }
+  )
+
+  it.each(ROOT_NAMED_AGAIN)(
+    "blocks one in an earlier sheet under %s",
+    (scope) => {
+      expect(blocked(`${LIGHT}\n${scope} ${COPIED_BTN}`, DARK_TOKENS)).toEqual([
+        "block",
+      ])
+    }
+  )
+
+  it("names a root block restated behind the scope with :root after it", () => {
+    expect(
+      report(
+        ":root{--bg:white;color:black}",
+        '[data-theme="dark"]{--ink:white}\n[data-theme="dark"]:root{--bg:white;color:black}'
+      )
+    ).toEqual({ copies: [":root:root"], overrideRules: 0 })
+  })
+
+  // Anything else in the scope's compound is a condition on the root, and the
+  // rule is read as it is written: beside a light rule written the same way it
+  // is a copy, beside the bare `.btn` it is another selector and is counted.
+  it("reads a rule with another compound on the scope against light's rule of that compound", () => {
+    const dark = `[data-theme="dark"]{--ink:white}\n[data-theme="dark"].panel .btn{color:red;padding:4px}`
+    expect(report(":root.panel .btn{color:red;padding:4px}", dark)).toEqual({
+      copies: [":root.panel .btn"],
+      overrideRules: 0,
+    })
+    expect(report(".btn{color:red;padding:4px}", dark)).toEqual({
+      copies: [],
+      overrideRules: 1,
+    })
+  })
+
   // An earlier sheet may already carry a dark rule under the very text the
   // dark sheet's rule comes out as. That rule is read as well, but it does not
   // stand in for light: a rule that restates light's `.btn` is a copy whether
   // or not an earlier sheet overrides `.btn` under the same spelling.
-  const report = (light: string, dark: string) => {
-    const html = mergedFile(light, dark)
-    const halves = splitMergedPreview(html, Buffer.byteLength(html))
-    return darkSheetReport(halves.light, halves.dark)
-  }
   const EARLIER_OVERRIDE = ".btn { background: oklch(0.7 0.15 250); }"
 
   it.each([
@@ -425,7 +482,7 @@ describe("dark-sheet-copy — a scope spelled another way", () => {
     ).toEqual({ copies: [':root[data-theme="dark"] .btn'], overrideRules: 1 })
   })
 
-  it("reads a dark-sheet rule against light the same with or without that earlier rule", () => {
+  it("names the same copy in the dark sheet with or without that earlier rule", () => {
     const dark = `${DARK_TOKENS}\n:root[data-theme="dark"] ${COPIED_BTN}`
     const alone = report(LIGHT, dark).copies
     expect(alone).toEqual([':root[data-theme="dark"] .btn'])

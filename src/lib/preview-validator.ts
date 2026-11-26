@@ -1019,6 +1019,15 @@ const UNREAD_WHY = {
  * It is refused instead of guessed at. Light nesting that says nothing of dark
  * is not this check's to refuse.
  *
+ * A scope on the root at the front is read, with whatever else is written in
+ * that compound. `html` and `:root` there name the root again and are folded
+ * into it (`[data-theme="dark"]:root .btn` is read as `.btn`). Any other
+ * compound is a condition on the root and is kept as written
+ * (`[data-theme="dark"].panel .btn` is read as `:root.panel .btn`), also one
+ * that names the root in other words (`:is(html)`, `:where(:root)`): that rule
+ * is a copy beside a light rule written with the same compound, and beside a
+ * bare `.btn` it is not refused and not a copy. `DARK_OVERRIDE_RULES` counts it.
+ *
  * This is a reading of the text in the document's `<style>` elements, not a
  * browser, and what gets past it is of three kinds:
  *
@@ -1165,6 +1174,11 @@ export interface DarkSheetReport {
  * (`lightSpellingOf`), in either group — or a sheet copied whole behind another
  * spelling would be no copy at all. Its own text comes first because the
  * doubled-scope repeat above must go on pairing with the rule it repeats.
+ * The root named again beside the scope (`[data-theme="dark"]:root .btn`,
+ * `html:root[data-theme="dark"] .btn`) is one more such spelling. Another
+ * compound there (`.panel`, `:not(.x)`, `:is(html)`) is not: it is part of the
+ * selector, and the rule pairs with a light rule that carries it or with none
+ * (`unreadDarkScopes`).
  *
  * A rule that does pair under its own text, where light would have written
  * another, shares that text with a rule already there: an earlier sheet's
