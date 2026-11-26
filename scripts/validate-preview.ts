@@ -171,7 +171,7 @@ function validateSlugDir(
       severity: "block",
       rule: "missing-preview-file",
       section: "preview",
-      fix: `public/preview/${slug}/ has no usable preview — it needs either ${MERGED_PREVIEW_FILE} or both ${LIGHT_PREVIEW_FILE} and ${DARK_PREVIEW_FILE}.`,
+      fix: `public/preview/${slug}/ has no usable preview — it needs ${MERGED_PREVIEW_FILE}, one file carrying both themes. (A ${LIGHT_PREVIEW_FILE} and ${DARK_PREVIEW_FILE} pair would be read here, but \`pnpm test\` refuses a preview shipped as two files.)`,
     })
   }
   if (!existsSync(mdPath)) {

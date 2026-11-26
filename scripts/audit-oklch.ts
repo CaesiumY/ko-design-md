@@ -287,8 +287,9 @@ for (const slug of slugs) {
   if (layout === null) {
     console.error(
       `\n${slug}: no usable preview under public/preview/${slug}/ — the drift ` +
-        `check cannot run for this slug. It needs either ${MERGED_PREVIEW_FILE} ` +
-        `or both ${LIGHT_PREVIEW_FILE} and ${DARK_PREVIEW_FILE}. Most likely ` +
+        `check cannot run for this slug. It needs ${MERGED_PREVIEW_FILE} (a ` +
+        `${LIGHT_PREVIEW_FILE} and ${DARK_PREVIEW_FILE} pair would be read here, ` +
+        `but \`pnpm test\` refuses a preview shipped as two files). Most likely ` +
         `this services/*.md landed before its preview files were generated; ` +
         `run the preview pipeline for ${slug}. Less likely: the preview format ` +
         `changed again, in which case teach src/lib/preview-layout.ts the new ` +

@@ -35,7 +35,9 @@ paths:
   기본은 토큰 재정의다. 달라지는 색은 `[data-theme="dark"]` 아래에서 커스텀 프로퍼티를 다시 정의해 바꾸고,
   토큰으로 옮길 수 없는 곳(로고를 `filter` 로 뒤집는 경우 등)만 그 속성을 바꾸는 규칙으로 남긴다. 라이트 규칙을
   다크 시트에 다시 적은 복사본은 두지 않는다. 검증기가 복사본을 막고, 무엇이 복사본인지의 정의는
-  `src/lib/preview-validator.ts` 의 `darkSheetReport` 주석이 정본이다.
+  `src/lib/preview-validator.ts` 의 `darkSheetReport` 주석이 정본이다. 이 검사들은 `preview.html` 한 장을
+  읽는다. 두 파일(`light.html`, `dark.html`)로 나눈 프리뷰는 대조할 다크 시트가 없어 판정하지 않으므로
+  카탈로그에 내지 않고, 내면 `pnpm test` 가 막는다.
   - **이행 중(#734 → #738)**: 아직 걷지 않은 슬러그의 목록(`src/lib/dark-sheet-backlog.ts` 의
     `DARK_COPY_BACKLOG`)에 있는 항목은 복사본이 경고로만 난다. 목록은 줄어들기만 하고 새로 넣지 않는다. 목록과
     같은 고정본(`src/lib/preview-dark-copy-corpus.test.ts` 의 `PINNED_BACKLOG`)이 있어, 목록에 슬러그를 더하면

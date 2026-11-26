@@ -114,8 +114,11 @@ describe("the not-yet-walked list against its pin", () => {
 
 describe("the dark sheets of the shipped catalogue", () => {
   // Merged previews only: a split pair has no dark sheet to read against light
-  // (see `checkDarkSheetCopy`).
-  const { slugs } = readPreviewSlugs(PREVIEW)
+  // (see `checkDarkSheetCopy`). So that a preview cannot leave these checks by
+  // shipping as two files, none may: "ships no preview as two files" below. A
+  // directory with no usable preview at all is `missing-preview-file` in
+  // `validate:previews`.
+  const { slugs, split } = readPreviewSlugs(PREVIEW)
 
   const reports = new Map<string, DarkSheetReport>()
   function reportOf(slug: string): DarkSheetReport {
@@ -131,6 +134,13 @@ describe("the dark sheets of the shipped catalogue", () => {
   it("finds previews to check", () => {
     // A silent zero here would make every assertion below vacuous.
     expect(slugs.length).toBeGreaterThan(0)
+  })
+
+  it("ships no preview as two files", () => {
+    expect(
+      split,
+      `shipped as light.html + dark.html: ${split.join(", ")}. Ship one preview.html carrying both themes instead: the light rules written bare, and a last <style> that says only what dark changes, under [data-theme="dark"] (.claude/rules/preview.md). The dark-sheet checks (dark-sheet-copy, dark-scope-unread, the rule count recorded in DARK_OVERRIDE_RULES) read one document and judge nothing in a pair, where dark.html is the whole page written again. The site's preview frame asks for preview.html as well, so a pair is a preview no visitor is shown.`
+    ).toEqual([])
   })
 
   it("lists only slugs that ship a merged preview", () => {

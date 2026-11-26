@@ -39,7 +39,8 @@ export interface PreviewSlugs {
  * this audit can read. The sweep asks for `/preview/{slug}/preview.html` and
  * switches themes on that one document, so a split slug would answer 404 and be
  * reported with no findings — a zero indistinguishable from a clean bill.
- * Every slug is merged today (#235 converted them).
+ * Every slug is merged today (#235 converted them), and
+ * `src/lib/preview-dark-copy-corpus.test.ts` fails on one that is not.
  */
 export function readPreviewSlugs(previewDir: string): PreviewSlugs {
   const dirs = readdirSync(previewDir, { withFileTypes: true })
@@ -68,9 +69,10 @@ export function skippedNotices(found: PreviewSlugs): Array<string> {
     notices.push(
       `${found.unusable.length} slug(s) under public/preview/ have no usable ` +
         `preview, so the sweep is not exhaustive: ${found.unusable.join(", ")}. ` +
-        `Each needs either ${MERGED_PREVIEW_FILE} or both ${LIGHT_PREVIEW_FILE} ` +
-        `and ${DARK_PREVIEW_FILE}. Most likely their preview files have not been ` +
-        `generated yet.`
+        `Each needs ${MERGED_PREVIEW_FILE} (a ${LIGHT_PREVIEW_FILE} and ` +
+        `${DARK_PREVIEW_FILE} pair is a layout other tools read, but \`pnpm test\` ` +
+        `refuses a preview shipped as two files). Most likely their preview ` +
+        `files have not been generated yet.`
     )
   }
   if (found.split.length > 0) {

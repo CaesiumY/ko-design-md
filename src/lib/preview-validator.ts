@@ -2191,7 +2191,10 @@ const DARK_COPY_NAMED = 3
  * Only the merged layout is judged. A split pair's dark file is the whole page
  * and has to carry every structural rule itself, so there every rule would pair
  * as a copy. One download unit is how this file tells the two apart — the same
- * signal the size gate reads.
+ * signal the size gate reads. A preview cannot leave this check by shipping as
+ * a pair, because the catalogue ships none: `preview-dark-copy-corpus.test.ts`
+ * fails on a slug in `public/preview/` that holds two files. A pair still
+ * arrives here from staging (`--light` with `--dark`), and is not judged.
  *
  * Severity comes from the not-yet-walked list, in the three cases
  * `darkCopyVerdict` names. One issue per document however many rules there are:
