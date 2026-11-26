@@ -1152,9 +1152,16 @@ export interface DarkSheetReport {
  * case of a property name, the run of spaces inside a value. Everything else
  * is compared as written — a value spelled another way (`#FFF` for `#fff`,
  * `.5` for `0.5`), a query's words in another case (`(MAX-WIDTH: 720px)`), a
- * renamed class, the body of an at-rule block. A copy behind such a
- * difference is not found as one. It lands in `overrideRules` instead, a
- * count that has to be recorded and answered for.
+ * renamed class, the body of an at-rule block. So is the light side of a
+ * pair. A light rule written under a scope that names the light theme
+ * (`[data-theme="light"] .btn`, `:where(html[data-theme="light"]) .btn`) is
+ * not the light rule of `.btn`: the scope is not folded away, because a rule
+ * light alone applies leaves the dark rule beside it the only one giving dark
+ * that value, which is an override and no copy. And a selector list is one
+ * selector: it pairs with the same list in the same order, not with one
+ * selector out of it, the list reordered, or two rules gathered into one. A
+ * copy behind such a difference is not found as one. It lands in
+ * `overrideRules` instead, a count that has to be recorded and answered for.
  *
  * "Copy" is not "dead code". `[data-theme="dark"] .btn` outranks a light
  * `.btn:hover` it would otherwise lose to, so a same-valued dark rule can be

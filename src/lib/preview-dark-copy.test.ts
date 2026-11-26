@@ -722,6 +722,60 @@ describe("dark-sheet-copy — an at-rule prelude spelled another way", () => {
   })
 })
 
+// The pairing is by text, so a copy can sit where no light rule carries the
+// dark rule's selector. Such a copy is not named — and it is not dropped: it
+// is counted, and the count is a recorded number. What is pinned here is that
+// floor, not the missing name, so pairing one of these later breaks nothing.
+describe("a copy the pairing does not find is still counted", () => {
+  const DECLS = "{ padding: 8px 12px; border-radius: 8px; }"
+  const D = '[data-theme="dark"]'
+  const report = (light: string, dark: string) => {
+    const html = mergedFile(light, dark)
+    const halves = splitMergedPreview(html, Buffer.byteLength(html))
+    return darkSheetReport(halves.light, halves.dark)
+  }
+
+  it.each([
+    [
+      "light written under a scope that names the light theme",
+      `[data-theme="light"] .btn ${DECLS}`,
+      `${D} .btn ${DECLS}`,
+    ],
+    [
+      "light written under :where(html[data-theme=light])",
+      `:where(html[data-theme="light"]) .btn ${DECLS}`,
+      `${D} .btn ${DECLS}`,
+    ],
+    [
+      "one selector out of a light rule's list",
+      `.btn, .link ${DECLS}`,
+      `${D} .btn ${DECLS}`,
+    ],
+    [
+      "a light rule's list in another order",
+      `.btn, .link ${DECLS}`,
+      `${D} .link, ${D} .btn ${DECLS}`,
+    ],
+    [
+      "two light rules gathered into one list",
+      `.btn ${DECLS}\n.link ${DECLS}`,
+      `${D} .btn, ${D} .link ${DECLS}`,
+    ],
+  ])("%s", (_name, light, dark) => {
+    const { copies, overrideRules } = report(light, `${DARK_TOKENS}\n${dark}`)
+    expect(copies.length + overrideRules).toBeGreaterThan(0)
+  })
+
+  it("names the copy when the list is the light rule's own, in its order", () => {
+    expect(
+      report(
+        `.btn, .link ${DECLS}`,
+        `${DARK_TOKENS}\n${D} .btn, ${D} .link ${DECLS}`
+      )
+    ).toEqual({ copies: [".btn, .link"], overrideRules: 0 })
+  })
+})
+
 // What the pairing cannot read is not left to pass as "no copy found". A rule
 // that names the dark theme anywhere but on the root, in front, is refused
 // outright — on the not-yet-walked list too: the list excuses copies that
