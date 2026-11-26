@@ -1026,7 +1026,9 @@ const UNREAD_WHY = {
  * (`[data-theme="dark"].panel .btn` is read as `:root.panel .btn`), also one
  * that names the root in other words (`:is(html)`, `:where(:root)`): that rule
  * is a copy beside a light rule written with the same compound, and beside a
- * bare `.btn` it is not refused and not a copy. `DARK_OVERRIDE_RULES` counts it.
+ * bare `.btn` it is not refused and not a copy. It is counted in
+ * `DARK_OVERRIDE_RULES` as any dark rule is (`darkSheetReport`): where it
+ * writes a property that is not a custom one.
  *
  * This is a reading of the text in the document's `<style>` elements, not a
  * browser, and what gets past it is of three kinds:
