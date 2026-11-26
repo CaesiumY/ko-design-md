@@ -43,6 +43,9 @@
 //   - a state on no named element (`:focus-visible` alone, `.menu :hover`):
 //     nothing is forced for it, so it shows only on elements another rule had
 //     forced
+//   - a state written in a rule nested inside another (`.card { &:hover { … } }`):
+//     only the selectors of top-level rules and of rules under an at-rule are
+//     read (`readRuleSelectors`), so nothing is forced for the nested one
 //   - where an element sits while it animates (see the last pass above)
 //   - anything a script does after a click: the pages are read, not operated
 //   - fonts: outside requests are blocked, so both sides fall back alike
