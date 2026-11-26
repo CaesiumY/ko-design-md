@@ -43,8 +43,9 @@ export function mentionsDarkScope(selector: string): boolean {
  *
  * For pairing a dark rule with the light rule it may restate. It is a guess at
  * the author's intent, where `unscopeSelector` is an exact inverse, so the
- * pairing reads a rule under this spelling beside its own text and never in
- * place of it: a rule that pairs under its own text must keep doing so.
+ * pairing reads a rule under its own text first and under this spelling only
+ * when its own text does not account for all of it — then beside that reading,
+ * never in place of it.
  *
  * The scope is read only where it scopes, on the root element at the front of
  * the selector. `body[data-theme="dark"] .x` and `.x [data-theme="dark"]` come

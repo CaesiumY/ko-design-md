@@ -444,10 +444,35 @@ describe("dark-sheet-copy — a scope spelled another way", () => {
     ).toEqual({ copies: [], overrideRules: 2 })
   })
 
+  // A sheet copied whole repeats the earlier sheet's dark rule among its
+  // copies of light. That repeat is the earlier rule again and lines up with
+  // it, not with a light rule: were it to take one of light's positions, the
+  // copies behind it would each be read one rule off.
+  it.each([
+    [
+      "ahead of them",
+      'html[data-theme="dark"] .s{color:blue}\n.s{color:red}\n.s{color:green}',
+      'html[data-theme="dark"][data-theme="dark"] .s{color:blue}\n[data-theme="dark"] .s{color:red}\n[data-theme="dark"] .s{color:green}',
+      ['html[data-theme="dark"] .s', ".s", ".s"],
+    ],
+    [
+      "between them",
+      '.s{color:red}\nhtml[data-theme="dark"] .s{color:blue}\n.s{color:green}\n.s{color:teal}',
+      '[data-theme="dark"] .s{color:red}\nhtml[data-theme="dark"][data-theme="dark"] .s{color:blue}\n[data-theme="dark"] .s{color:green}\n[data-theme="dark"] .s{color:teal}',
+      [".s", 'html[data-theme="dark"] .s', ".s", ".s"],
+    ],
+  ])(
+    "lines a whole copy up with light's repeated selector, the earlier rule's repeat %s",
+    (_where, light, dark, copies) => {
+      expect(report(light, `[data-theme="dark"]{--bg:black}\n${dark}`)).toEqual(
+        { copies, overrideRules: 1 }
+      )
+    }
+  )
+
   // seed-design's dark sheet repeats `html[data-theme="dark"] .snackbar` from
-  // an earlier sheet. The repeat is read against the rule it repeats as well
-  // as against light's `.snackbar`, which it differs from, and is a copy of
-  // the first.
+  // an earlier sheet. The repeat is read against the rule it repeats, gives
+  // nothing that rule does not, and is a copy of it.
   it("still pairs a rule with the earlier sheet's rule of the same text", () => {
     const html = mergedFile(
       `${LIGHT}\nhtml[data-theme="dark"] .btn { background: oklch(0.7 0.15 250); }`,
