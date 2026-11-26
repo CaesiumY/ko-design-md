@@ -6,6 +6,7 @@ import {
   SKILL_INSTALL_CMD,
   STATIC_PAGE_PATHS,
 } from "./site-config"
+import { trimSiteUrl } from "./trim-site-url"
 import type { ServiceDoc } from "./content-types"
 
 const SITE_DESCRIPTION =
@@ -17,7 +18,7 @@ interface FeedInput {
 }
 
 function normalizeSiteUrl(siteUrl: string): string {
-  const normalized = siteUrl.trim().replace(/\/+$/, "")
+  const normalized = trimSiteUrl(siteUrl)
   if (!/^https?:\/\/[^/]+/.test(normalized)) {
     throw new Error(
       `siteUrl must be an absolute URL, got "${siteUrl || "(empty)"}"`

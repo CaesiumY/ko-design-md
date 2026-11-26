@@ -4,8 +4,8 @@
 // no page-URL context, so a relative path silently fails the preview.
 //
 // Set `VITE_SITE_URL=https://your-domain` at build time. See `.env.example`
-// for the expected shape. Trailing slashes are stripped so callers can
-// compose paths starting with "/".
+// for the expected shape. Surrounding spaces and trailing slashes are stripped
+// so callers can compose paths starting with "/".
 //
 // Production builds without the env are a hard error: shipping with
 // relative og:image is one of those bugs you only discover when someone
@@ -13,9 +13,9 @@
 // (`require-site-url-plugin.ts`); the check below is the runtime backstop. The
 // dev server keeps the empty-fallback ergonomics — browsers resolve relative
 // URLs against document.URL so local development still works.
-import { normalizeSiteUrl } from "./normalize-site-url"
+import { trimSiteUrl } from "./trim-site-url"
 
-export const SITE_URL = normalizeSiteUrl(import.meta.env.VITE_SITE_URL ?? "")
+export const SITE_URL = trimSiteUrl(import.meta.env.VITE_SITE_URL ?? "")
 
 if (import.meta.env.PROD && !SITE_URL) {
   throw new Error(
