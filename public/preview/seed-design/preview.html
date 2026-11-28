@@ -1519,9 +1519,6 @@
       background: var(--brand);
     }
 
-    }
-
-
     @media (max-width: 720px) {
       .fx-swatches { grid-template-columns: minmax(0, 1fr); }
       .fx-rads,
@@ -3112,15 +3109,8 @@ html[data-theme="dark"][data-theme="dark"] .snackbar span {
       border-radius: 999px;
       background: var(--brand);
     }
-[data-theme="dark"] }
-
-
-    @media (max-width: 720px) {
-      .fx-swatches { grid-template-columns: minmax(0, 1fr); }
-      .fx-rads,
-      .fx-elevs,
-      .fx-grads { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
+@media (max-width: 720px) {[data-theme="dark"] .fx-swatches { grid-template-columns: minmax(0, 1fr); }
+[data-theme="dark"] .fx-rads, [data-theme="dark"] .fx-elevs, [data-theme="dark"] .fx-grads { grid-template-columns: repeat(2, minmax(0, 1fr)); }}
 /* ── 모바일 예시 표면 ─────────────────────────────────────────────── */
 [data-theme="dark"] .i-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 [data-theme="dark"] .ic {
