@@ -33,7 +33,6 @@ export const DARK_COPY_BACKLOG: ReadonlySet<string> = new Set([
   "samsung-one-ui",
   "seed-design",
   "teamsparta",
-  "vapor-ui",
   "wanted",
   "yeogi",
 ])
@@ -112,7 +111,7 @@ export const DARK_OVERRIDE_RULES: Readonly<Record<string, number>> = {
   socar: 5,
   teamsparta: 1,
   toss: 2,
-  "vapor-ui": 32,
+  "vapor-ui": 1,
   wanted: 28,
   yeogi: 1,
   zigbang: 2,
