@@ -201,13 +201,14 @@ function primaryButtons(document: Document): Array<Element> {
  * only. An inline `style` background on a primary button paints both states,
  * and a rule on a primary button's pseudo-element is refused outright.
  *
- * The rules that paint a state must be exactly the preview's own, in order:
- * `.btn.pri` (plus the state) in light, and in dark that rule followed by its
- * `[data-theme="dark"]` override — the merged layout's one designed
- * cross-sheet override. Each sets one background property. Anything else is
- * refused rather than ordered: which rule wins is the cascade's call, and
- * re-implementing it is how this reader missed `.btn.l` and a dark rule in the
- * first sheet before.
+ * The rule that paints a state must be exactly the preview's own, in both
+ * themes: `.btn.pri` (plus the state), setting one background property. Dark
+ * differs through the variable that rule reads, which the dark token block
+ * redefines (ADR 0015) — a `[data-theme="dark"]` rule on the button is
+ * refused like any other extra painter, whether it restates the light rule
+ * or changes it. Anything else is refused rather than ordered: which rule
+ * wins is the cascade's call, and re-implementing it is how this reader
+ * missed `.btn.l` and a dark rule in the first sheet before.
  */
 function paintingValue(html: string, theme: Theme, state: State): string {
   const document = themeDocument(html, theme)
@@ -249,7 +250,7 @@ function paintingValue(html: string, theme: Theme, state: State): string {
     }
   }
   const own = state === "hover" ? ".btn.pri:hover" : ".btn.pri"
-  const expected = theme === "light" ? [own] : [own, `${DARK_SCOPE} ${own}`]
+  const expected = [own]
   const found = painters.map((p) => p.selector)
   const list = (xs: Array<string>) => xs.map((x) => `\`${x}\``).join(" | ")
   if (found.length === 0) {
@@ -341,18 +342,18 @@ function primaryColor(html: string, theme: Theme, state: State): string {
 // A preview carries both themes in one file: the first `<style>` is light and
 // the last is `[data-theme="dark"]`-scoped, and in dark the browser applies
 // BOTH. Rules from either sheet compete for the dark buttons (#666 review).
+// The dark sheet here is the walked shape: tokens only.
 describe("both sheets compete for the primary buttons of each theme", () => {
   const LIGHT =
-    ":root{--x:#6157ea;}\n.btn.pri{background:var(--x);}\n.btn.pri:hover{background:#5146e4;}\n"
-  const DARK =
-    '[data-theme="dark"]{--x:#8082ff;}\n[data-theme="dark"] .btn.pri{background:var(--x);}\n[data-theme="dark"] .btn.pri:hover{background:#9698ff;}\n'
+    ":root{--x:#6157ea;--h:#5146e4;}\n.btn.pri{background:var(--x);}\n.btn.pri:hover{background:var(--h);}\n"
+  const DARK = '[data-theme="dark"]{--x:#8082ff;--h:#9698ff;}\n'
   const BODY =
     '<button class="btn pri">a</button><button class="btn pri l">b</button>' +
     '<div class="hero"><button class="btn pri s">c</button></div>'
   const merged = (lightExtra = "", darkExtra = "") =>
     `<!doctype html><html data-theme="light"><head><style>${LIGHT}${lightExtra}</style><style>${DARK}${darkExtra}</style></head><body>${BODY}</body></html>`
 
-  it("reads each theme's own rule and variable", () => {
+  it("reads the one rule through each theme's variable", () => {
     const html = merged()
     expect(primaryColor(html, "light", "base")).toBe("#6157ea")
     expect(primaryColor(html, "light", "hover")).toBe("#5146e4")
@@ -361,6 +362,18 @@ describe("both sheets compete for the primary buttons of each theme", () => {
   })
 
   const refused: Array<[string, string, string, State]> = [
+    [
+      "a dark copy of the button's own rule",
+      "",
+      '[data-theme="dark"] .btn.pri{background:var(--x);}',
+      "base",
+    ],
+    [
+      "a dark rule that repaints the hover",
+      "",
+      '[data-theme="dark"] .btn.pri:hover{background:#123456;}',
+      "hover",
+    ],
     [
       "a dark-scoped rule in the first sheet",
       '[data-theme="dark"] .btn.pri.l{background:#123456;}',
