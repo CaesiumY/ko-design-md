@@ -59,7 +59,7 @@
     --krds-masthead-bg: var(--background);
     --krds-divider: var(--krds-gray-20);
     --krds-fg-3: var(--krds-gray-60);
-    --krds-fg-2: var(--krds-gray-70);
+    --krds-link-secondary-fg: var(--krds-gray-70);
     --krds-border-default: var(--krds-gray-30);
     --krds-fg-strong: var(--krds-gray-90);
     --krds-bg-muted: var(--krds-secondary-10);
@@ -69,13 +69,12 @@
     --krds-btn-primary-active-bg: var(--krds-primary-70);
     --krds-btn-disabled-bg: var(--krds-gray-30);
     --krds-fg-4: var(--krds-gray-50);
-    --krds-bg-subtle: oklch(1 0 0);
-    --krds-border-strong: var(--krds-gray-30);
+    --krds-control-border: var(--krds-gray-30);
     --krds-btn-tertiary-hover-bg: var(--krds-gray-10);
     --krds-btn-tertiary-hover-border: var(--krds-gray-50);
     --krds-rule-heading: var(--krds-gray-100);
-    --krds-modal-body-fg: var(--krds-gray-80);
-    --krds-toast-stage-bg: var(--krds-gray-10);
+    --krds-fg-2: var(--krds-gray-80);
+    --krds-bg-subtle: var(--krds-gray-10);
     --krds-toast-bg: var(--krds-gray-100);
     --krds-fg-on-inverse: oklch(1 0 0);
     --krds-footer-bg: var(--krds-gray-100);
@@ -83,7 +82,7 @@
     --krds-footer-divider: oklch(0.25 0.005 264);
     --krds-footer-meta-fg: oklch(0.65 0 0);
     --krds-mock-frame-bg: var(--krds-gray-10);
-    --krds-field-bg: oklch(1 0 0);
+    --krds-bg-canvas: oklch(1 0 0);
     --krds-badge-success-bg: color-mix(in oklab, var(--krds-success) 10%, var(--card));
     --krds-badge-danger-bg: color-mix(in oklab, var(--krds-danger) 2%, var(--card));
     --krds-alert-body-fg: var(--krds-gray-80);
@@ -131,7 +130,7 @@
   }
   .utility-row a {
     padding: 0 12px;
-    color: var(--krds-fg-2);
+    color: var(--krds-link-secondary-fg);
     text-decoration: none;
     border-right: 1px solid var(--krds-border-default);
     line-height: 14px;
@@ -304,7 +303,7 @@
   .btn-primary[disabled] { background: var(--krds-btn-disabled-bg); color: var(--krds-fg-4); cursor: not-allowed; }
   .btn-secondary { background: var(--krds-primary-10); color: var(--krds-primary-60); border-color: var(--krds-primary-50); }
   .btn-secondary:hover { background: var(--krds-primary-20); }
-  .btn-tertiary { background: var(--krds-bg-subtle); color: var(--krds-fg-1); border-color: var(--krds-border-strong); }
+  .btn-tertiary { background: var(--card); color: var(--krds-fg-1); border-color: var(--krds-control-border); }
   .btn-tertiary:hover { background: var(--krds-btn-tertiary-hover-bg); border-color: var(--krds-btn-tertiary-hover-border); }
 
   /* === Section frame === */
@@ -359,7 +358,7 @@
     gap: 16px;
   }
   .tile {
-    background: var(--krds-bg-subtle);
+    background: var(--card);
     border: 1px solid var(--krds-border-default);
     border-radius: 12px;
     padding: 24px;
@@ -406,7 +405,7 @@
     letter-spacing: -0.01em;
   }
   .notice-col-head a {
-    color: var(--krds-fg-2);
+    color: var(--krds-link-secondary-fg);
     font-size: 13px;
     text-decoration: none;
   }
@@ -481,13 +480,13 @@
   .modal p {
     font-size: 17px;
     line-height: 1.55;
-    color: var(--krds-modal-body-fg);
+    color: var(--krds-fg-2);
     margin: 0 0 24px;
   }
   .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
 
   .toast-stage {
-    background: var(--krds-toast-stage-bg);
+    background: var(--krds-bg-subtle);
     border: 1px solid var(--krds-border-default);
     border-radius: 12px;
     padding: 64px 32px;
@@ -518,7 +517,7 @@
   /* === Card states === */
   .card-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
   .card-state {
-    background: var(--krds-bg-subtle);
+    background: var(--card);
     border: 1px solid var(--krds-border-default);
     border-radius: 12px;
     padding: 24px;
@@ -580,8 +579,8 @@
     margin-top: 24px;
   }
   .mock-screen {
-    background: var(--krds-bg-subtle);
-    border: 1px solid var(--krds-border-strong);
+    background: var(--card);
+    border: 1px solid var(--krds-control-border);
     border-radius: 8px;
     padding: 32px;
   }
@@ -611,13 +610,13 @@
   .mock-form input, .mock-form select {
     width: 100%;
     height: 48px;
-    border: 1px solid var(--krds-border-strong);
+    border: 1px solid var(--krds-control-border);
     border-radius: 6px;
     padding: 0 16px;
     font-size: 17px;
     font-family: inherit;
     color: var(--krds-fg-1);
-    background: var(--krds-field-bg);
+    background: var(--krds-bg-canvas);
   }
   .mock-form input::placeholder { color: var(--krds-fg-3); }
   .mock-form input:focus, .mock-form select:focus {
@@ -854,15 +853,15 @@
     --krds-gov-strip-bg: oklch(0 0 0);
     --krds-masthead-bg: var(--krds-bg-subtle);
     --krds-divider: var(--krds-border-default);
+    --krds-link-secondary-fg: var(--krds-fg-2);
     --krds-fg-strong: var(--krds-fg-1);
     --krds-search-divider: var(--krds-border-default);
     --krds-btn-primary-active-bg: var(--krds-primary-40);
     --krds-btn-disabled-bg: var(--krds-bg-raised);
+    --krds-control-border: var(--krds-border-strong);
     --krds-btn-tertiary-hover-bg: var(--krds-bg-raised);
     --krds-btn-tertiary-hover-border: var(--krds-primary-50);
     --krds-rule-heading: var(--krds-fg-1);
-    --krds-modal-body-fg: var(--krds-fg-2);
-    --krds-toast-stage-bg: var(--krds-bg-subtle);
     --krds-toast-bg: var(--krds-bg-raised);
     --krds-fg-on-inverse: var(--krds-fg-1);
     --krds-footer-bg: oklch(0.08 0.003 264);
@@ -870,7 +869,6 @@
     --krds-footer-divider: var(--krds-border-default);
     --krds-footer-meta-fg: var(--krds-fg-4);
     --krds-mock-frame-bg: var(--krds-bg-muted);
-    --krds-field-bg: var(--krds-bg-canvas);
     --krds-badge-success-bg: color-mix(in oklab, var(--krds-success) 16%, var(--card));
     --krds-badge-danger-bg: color-mix(in oklab, var(--krds-danger) 16%, var(--card));
     --krds-alert-body-fg: var(--muted-foreground);
