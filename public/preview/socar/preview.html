@@ -1512,6 +1512,83 @@
      * shell is the correct, expected result (not an inverted fake-dark).
      */
 [data-theme="dark"] {
+      --sf-primary-regular: var(--sf-blue-500);
+      --sf-primary-strong: var(--sf-blue-600);
+      --sf-primary-heavy: var(--sf-blue-700);
+      --sf-service-business: var(--sf-blue-900);
+      --sf-blue-50: oklch(0.966 0.017 248);
+      --sf-blue-100: oklch(0.931 0.035 247);
+      --sf-blue-200: oklch(0.832 0.089 247);
+      --sf-blue-500: oklch(0.599 0.220 258);
+      --sf-blue-600: oklch(0.569 0.237 260);
+      --sf-blue-700: oklch(0.498 0.226 262);
+      --sf-blue-900: oklch(0.388 0.193 263);
+      --sf-secondary-bg: oklch(0.931 0.035 247);
+
+      --sf-gray-50: oklch(0.983 0.003 286);
+      --sf-gray-100: oklch(0.965 0.007 277);
+      --sf-gray-200: oklch(0.931 0.010 267);
+      --sf-gray-300: oklch(0.859 0.017 263);
+      --sf-gray-400: oklch(0.792 0.024 267);
+      --sf-gray-500: oklch(0.708 0.025 264);
+      --sf-gray-600: oklch(0.553 0.028 260);
+      --sf-gray-700: oklch(0.449 0.032 257);
+      --sf-gray-800: oklch(0.372 0.035 258);
+      --sf-gray-900: oklch(0.302 0.027 258);
+      --sf-gray-1000: oklch(0.217 0.022 261);
+
+      --sf-green-50: oklch(0.976 0.031 160);
+      --sf-green-500: oklch(0.740 0.171 159);
+      --sf-orange-50: oklch(0.980 0.025 89);
+      --sf-orange-500: oklch(0.744 0.181 56);
+      --sf-red-50: oklch(0.968 0.017 4);
+      --sf-red-500: oklch(0.659 0.229 18);
+      --sf-purple-500: oklch(0.643 0.210 293);
+      --sf-indigo-700: oklch(0.503 0.251 268);
+
+      --sf-text-strong: var(--sf-gray-1000);
+      --sf-text-primary: var(--sf-gray-800);
+      --sf-text-secondary: var(--sf-gray-600);
+      --sf-text-tertiary: var(--sf-gray-500);
+      --sf-text-disabled: var(--sf-gray-400);
+
+      --sf-background-regular: var(--sf-gray-100);
+      --sf-border-regular: var(--sf-gray-200);
+      --sf-divider-regular: var(--sf-gray-200);
+      --sf-white: oklch(1.000 0.000 0);
+      --sf-black: oklch(0.000 0.000 0);
+      --sf-dimmed-regular: oklch(0.217 0.022 261 / 0.44);
+      --sf-pressed-regular: oklch(0.217 0.022 261 / 0.06);
+      --sf-pressed-dark-regular: oklch(0.965 0.007 277 / 0.66);
+
+      --sf-status-information-weak: var(--sf-blue-50);
+      --sf-status-information-regular: var(--sf-blue-500);
+      --sf-status-positive-weak: var(--sf-green-50);
+      --sf-status-positive-regular: var(--sf-green-500);
+      --sf-status-caution-weak: var(--sf-orange-50);
+      --sf-status-caution-regular: var(--sf-orange-500);
+      --sf-status-negative-weak: var(--sf-red-50);
+      --sf-status-negative-regular: var(--sf-red-500);
+      --sf-notification-red: var(--sf-red-500);
+      --sf-accent-purple: var(--sf-purple-500);
+
+      --sf-location-rental: var(--sf-blue-500);
+      --sf-location-return: var(--sf-indigo-700);
+
+      --sf-shadow-sm: 0 1px 2px oklch(0.217 0.022 261 / 0.04);
+      --sf-shadow-card: 0 2px 4px oklch(0.217 0.022 261 / 0.06);
+      --sf-shadow-tip: 0 2px 4px oklch(0.000 0.000 0 / 0.12);
+      --sf-shadow-sheet: 0 0 20px oklch(0.000 0.000 0 / 0.25);
+
+      --sf-ease-standard: cubic-bezier(0.42, 0, 0.58, 1);
+
+      --shell-bg: var(--background);
+      --shell-fg: var(--foreground);
+      --shell-muted: var(--muted-foreground);
+      --shell-line: var(--border);
+      --shell-rule: var(--rule-strong);
+      --shell-card: var(--card);
+
       /* 라이트 :root 의 같은 이름을 다크 값으로 다시 정의한다 */
       --shell-accent: oklch(0.781 0.150 257);
     }
