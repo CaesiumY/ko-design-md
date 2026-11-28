@@ -24,7 +24,6 @@
 export const DARK_COPY_BACKLOG: ReadonlySet<string> = new Set([
   "11st",
   "baemin",
-  "bezier",
   "class101",
   "codeit",
   "gmarket",
@@ -96,7 +95,7 @@ export function backlogDrift(
 export const DARK_OVERRIDE_RULES: Readonly<Record<string, number>> = {
   "11st": 51,
   baemin: 37,
-  bezier: 62,
+  bezier: 2,
   chzzk: 3,
   class101: 1,
   codeit: 3,

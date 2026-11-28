@@ -76,7 +76,6 @@ describe("backlogDrift — the list held against its pin", () => {
 const PINNED_BACKLOG = [
   "11st",
   "baemin",
-  "bezier",
   "class101",
   "codeit",
   "gmarket",
