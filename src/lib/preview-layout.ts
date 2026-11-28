@@ -5,7 +5,11 @@
 // instead of two (issue #235). The split one — `light.html` and `dark.html`,
 // near-duplicates that differ only in `data-theme`, the palette block and a
 // title — is what it replaced, and is still resolvable for anything that has
-// not been converted.
+// not been converted. Nothing in `public/preview/` may be:
+// `preview-dark-copy-corpus.test.ts` fails on a slug shipped as two files,
+// which the dark-sheet checks cannot judge and the preview frame does not
+// request. What still hands over a pair is staging (`validate:previews --light
+// … --dark …`).
 //
 // Readers ask here rather than joining a filename themselves. That is the whole
 // point: a reader that hardcodes `light.html` does not fail when the layout

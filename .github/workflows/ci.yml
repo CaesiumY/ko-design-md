@@ -143,7 +143,11 @@ jobs:
       # `--with-deps` ran apt against the archive mirror on every run, and in
       # doing so upgraded mesa to whatever the archive held that day — part of
       # the measurement environment moving with no PR behind it.
+      #
+      # The id is read by the last step of this job, which runs only where a
+      # browser was installed.
       - name: Install Chromium
+        id: chromium
         run: pnpm exec playwright install chromium
 
       # The font steps below all run before the browser is ever launched,
@@ -285,6 +289,21 @@ jobs:
             .claude/cache/contrast-report.md
             .claude/cache/contrast-findings.json
           if-no-files-found: warn
+
+      # The screen comparison tool (`pnpm preview:dom-diff`) is run by hand, on
+      # the PRs that walk a preview's dark copies or move it onto the shared
+      # frame, and its answer there is "no difference". This is what keeps that
+      # answer worth something: a document must match itself, and one changed
+      # dark :hover rule must show up as exactly that — one written on the
+      # element and one hung on an ancestor. It rides in this job because the
+      # browser is already here, last and whichever way the gate went so that
+      # neither hides the other's result. Not `always()`: on a cancelled run, or
+      # one where the browser never installed, it could only fail for a reason
+      # that is not its own and bury the real one. Goes with the tool when the
+      # frame migration ends (spec #724).
+      - name: Does the screen comparison still see a difference?
+        if: ${{ !cancelled() && steps.chromium.outcome == 'success' }}
+        run: pnpm preview:dom-diff --self-check
 
   # The Playwright E2E smoke (`pnpm test:e2e`): the site's main paths — home
   # search and category filter, the detail tabs, the preview theme switch — in a

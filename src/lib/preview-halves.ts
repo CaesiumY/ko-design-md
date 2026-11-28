@@ -7,6 +7,7 @@ import {
   MERGED_PREVIEW_FILE,
   resolvePreviewLayout,
 } from "./preview-layout"
+import { DARK_SCOPE, endOfSpelling, unscopeSelector } from "./selector-text"
 import type {
   AnchorSig,
   ServedDocument,
@@ -265,7 +266,9 @@ export function splitMergedPreview(raw: string, bytes: number): PreviewHalves {
  * are the validator's problem and it solves them by normalising both sides.
  * ------------------------------------------------------------------------ */
 
-const DARK_SCOPE = '[data-theme="dark"]'
+// `DARK_SCOPE` and `unscopeSelector` — the inverse of the merge's
+// `scopeSelector` — live in `selector-text.ts`, where the validator can reach
+// them without taking this module's jsdom along.
 const NESTED_AT_RULE = /^@(media|supports|container|layer|scope)\b/i
 
 /**
@@ -293,6 +296,14 @@ const NESTED_AT_RULE = /^@(media|supports|container|layer|scope)\b/i
  * (`.claude/agents/preview-html-author.md`), and `content: "{"` is ordinary in a
  * preview that puts code or CSS syntax on screen.
  *
+ * A character behind a backslash (`.a\{`) and the inside of an unquoted
+ * `url(…)` (`url(a{b.png)`) are the same failure a third and fourth time, and
+ * are blanked with them. The validator's rule walk reads strings, escaped
+ * characters and unquoted urls through the same function (`endOfSpelling`), so
+ * on those a sheet is not cut one way here and another way there. Comments it
+ * does not read this way: its stripper knows no strings, and a comment opener
+ * inside one is on the list `unreadDarkScopes` keeps.
+ *
  * Blanking rather than deleting is what lets the emitted text keep the author's
  * bytes: the scan and the original stay index-for-index aligned, so every slice
  * can be taken from the original. Newlines are left alone so line offsets hold
@@ -313,20 +324,17 @@ function blankInert(css: string): string {
       i = stop
       continue
     }
-    if (c === '"' || c === "'") {
-      // An unterminated string ends at the newline, the way a CSS parser
-      // recovers from one; that newline is not part of the string.
-      let k = i + 1
-      while (k < css.length) {
-        if (css[k] === "\\") {
-          k += 2
-          continue
-        }
-        if (css[k] === c || css[k] === "\n") break
-        k++
-      }
-      blank(i, k < css.length && css[k] === c ? k + 1 : k)
-      i = k < css.length && css[k] === c ? k + 1 : k
+    // A string, the character behind a backslash, the inside of an unquoted
+    // `url(…)`: the same reading the validator's rule walk makes
+    // (`endOfSpelling`), so the two cut a sheet at the same braces. An
+    // unterminated string ends at the newline, the way a CSS parser recovers
+    // from one; that newline is not part of the string. Of a url the brackets
+    // stay, for the readers below that count them.
+    const end = endOfSpelling(css, i)
+    if (end !== i) {
+      if (c === '"' || c === "'" || c === "\\") blank(i, end + 1)
+      else blank(i + 4, css[end] === ")" ? end : end + 1)
+      i = end + 1
       continue
     }
     i++
@@ -338,8 +346,8 @@ function blankInert(css: string): string {
  * The last `;` outside parens — where a prelude's at-rules end.
  *
  * Always handed a slice of the blanked scan, so a `;` inside a quoted value has
- * already been erased. Parens are still tracked here for the unquoted `url(…)`
- * form, which `blankInert` leaves alone.
+ * already been erased, and so has one inside an unquoted `url(…)`. Parens are
+ * still tracked here for every other function (`@import x supports(a; b)`).
  */
 function statementCut(prelude: string): number {
   let paren = 0
@@ -351,48 +359,6 @@ function statementCut(prelude: string): number {
     else if (paren === 0 && c === ";") cut = i
   }
   return cut
-}
-
-/**
- * The inverse of the merge script's `scopeSelector`.
- *
- * A bare `[data-theme="dark"]` maps back to `:root` because that is what the
- * merge rewrote — and where the dark half wrote it itself, mapping it to the
- * light half's spelling of the same element is exactly what the copy question
- * wants.
- *
- * A compound (`[data-theme="dark"].panel`) is inverted the same way, to
- * `:root.panel`, because the merge produces exactly that from `:root.panel`
- * (`scopeSelector` REPLACES a leading `:root` with the attribute rather than
- * descending from it). Reading the two apart is impossible after the fact: the
- * merge collapses `:root.panel` and an author's own `[data-theme="dark"].panel`
- * onto the same text. Inverting is the same bet the bare form already makes, and
- * it loses nothing measurable — no `:root` compound exists anywhere in the
- * catalogue's halves, so this arm is unreachable today and only stops a future
- * one from arriving unnoticed.
- *
- * The `html` arm is NOT that bet, and the difference matters because this one is
- * reachable: seed-design writes `html[data-theme="dark"] .snackbar` by hand.
- * That arm is exact only because `scopeSelector` refuses to treat such a
- * selector as already-scoped and lets it come out with the attribute twice —
- * stripping one prefix lands on the author's own text. Take the doubling away
- * (it reads like a defect; it has been "fixed" once) and this arm starts
- * inventing `html .snackbar`, a selector neither half ever held. If you change
- * either side, change both: they are one function and its inverse.
- */
-function unscopeSelector(sel: string): string {
-  const s = sel.trim()
-  if (s.startsWith(`html${DARK_SCOPE}`))
-    return `html${s.slice(`html${DARK_SCOPE}`.length)}`
-  if (s.startsWith(`:where(${DARK_SCOPE})`))
-    return s.slice(`:where(${DARK_SCOPE})`.length).trim()
-  if (s === DARK_SCOPE) return ":root"
-  if (s.startsWith(DARK_SCOPE)) {
-    const rest = s.slice(DARK_SCOPE.length)
-    if (/^\s/.test(rest)) return rest.trim()
-    return `:root${rest}`
-  }
-  return s
 }
 
 const STYLE_BLOCK = /<style[^>]*>([\s\S]*?)<\/style>/gi

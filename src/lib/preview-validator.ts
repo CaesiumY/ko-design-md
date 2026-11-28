@@ -1,8 +1,17 @@
 import { brotliCompressSync, constants } from "node:zlib"
 import { readFrontmatter } from "./frontmatter"
 import { buildDoc } from "./site-frontmatter"
+import { DARK_COPY_BACKLOG, darkCopyVerdict } from "./dark-sheet-backlog"
 import { bodyOf, isBlankText, walkHtml } from "./html-walk"
 import { hasAppliedReduceBlock, hasCssMotion } from "./reduced-motion-block"
+import {
+  endOfSpelling,
+  lightSpellingOf,
+  mentionsDarkScope,
+  splitSelectorList,
+  unscopeSelector,
+  withoutStrings,
+} from "./selector-text"
 import { ColorRefError, extractTokensFromMarkdown } from "./token-extractor"
 import type { WalkNode } from "./html-walk"
 import type { ValidationIssue } from "./draft-validator"
@@ -59,6 +68,10 @@ export interface PreviewValidationInput {
   // logo-img-missing warn applies.
   expectedLogoSrc?: string
   expectedWordmarkSrc?: string
+  // Slugs whose dark sheet has not been walked yet — see `checkDarkSheetCopy`.
+  // Left out by every real caller, which then reads the recorded list; a test
+  // passes its own so it can put a fixture slug on or off it.
+  darkCopyBacklog?: ReadonlySet<string>
 }
 
 export interface CoverageMetric {
@@ -710,6 +723,66 @@ interface CssRule {
   selector: string
   declarations: string
   inMedia: boolean
+  /**
+   * The at-rule preludes this rule sits under, outermost first, each followed
+   * by " / " — empty at the top level. `.a` and `@media (…) { .a }` are
+   * different rules to anything that pairs rules across sheets, and `inMedia`
+   * alone cannot tell two media queries apart.
+   */
+  condition: string
+  /**
+   * `condition` as text two sheets can be paired on, whatever spelling each
+   * one used (`atRulePreludeKey`). `condition` stays as written, for naming
+   * the rule in a finding.
+   */
+  conditionKey: string
+}
+
+/** A block the splitter does not look inside: `@font-face`, `@keyframes`. */
+interface CssAtBlock {
+  prelude: string
+  body: string
+  condition: string
+  conditionKey: string
+}
+
+/**
+ * An at-rule prelude as text two sheets can be paired on. The name is the same
+ * at-rule in any case. In a media, supports or container query the spaces
+ * just inside a bracket and around a colon, comma, slash or comparison sign
+ * say nothing, so `(max-width:720px)` is `( max-width : 720px )`. Neither
+ * does the space between the name and a bracket right behind it: a minifier
+ * writes `@media(max-width:720px)`.
+ *
+ * Left as written: the space in front of any other bracket (`not (…)` is a
+ * query, `not(…)` a function the browser does not know), a quoted string, and
+ * the case of everything after the name — a container, a layer and a
+ * keyframes block are named in a case, and a query's own words are simply not
+ * folded.
+ * A prelude that holds a selector (`@scope`, `@supports selector(…)`) or a
+ * style query (`style(--k: a, b)`) keeps every space that is not a run of
+ * them: in a selector a space is a combinator, in a custom property's value
+ * it is part of the value.
+ *
+ * This reads text, it does not parse it. A run of spaces is one space
+ * everywhere, a string included, and a string ends at its first closing
+ * quote, an escaped one too. Text no browser accepts can fold onto text one
+ * does (`< =` onto `<=`).
+ */
+function atRulePreludeKey(prelude: string): string {
+  const text = prelude
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/^@[\w-]+/, (name) => name.toLowerCase())
+  const isQuery =
+    /^@(media|container|supports)\b/.test(text) &&
+    !/(selector|style)\(/i.test(text)
+  if (!isQuery) return text
+  return text
+    .replace(/^(@[\w-]+) \(/, "$1(")
+    .replace(/"[^"]*"|'[^']*'|\(\s+|\s+\)|\s*[:,/<>=]\s*/g, (found) =>
+      /^["']/.test(found) ? found : found.trim()
+    )
 }
 
 function stripCssComments(css: string): string {
@@ -730,64 +803,549 @@ function stripCssComments(css: string): string {
 function dropStatementAtRules(prelude: string): string {
   let cut = 0
   let depth = 0
-  let quote: '"' | "'" | null = null
   for (let k = 0; k < prelude.length; k++) {
     const ch = prelude[k]
-    if (quote !== null) {
-      if (ch === quote && prelude[k - 1] !== "\\") quote = null
-    } else if (ch === '"' || ch === "'") quote = ch
-    else if (ch === "(") depth++
+    if (ch === "(") depth++
     else if (ch === ")") depth--
     else if (ch === ";" && depth === 0) cut = k + 1
+    else k = endOfSpelling(prelude, k)
   }
   return prelude.slice(cut)
 }
 
-function parseCssRules(css: string, inMedia = false): Array<CssRule> {
+/**
+ * The "{" that opens the next block at or after `from`, or -1. One that only
+ * spells a character (`[title="{"]`, `.a\{`) opens nothing: read as the end of
+ * the prelude, it leaves the rest of the sheet inside one rule's body, and
+ * every rule behind it unread.
+ */
+function blockOpen(css: string, from: number): number {
+  for (let k = from; k < css.length; k++) {
+    if (css[k] === "{") return k
+    k = endOfSpelling(css, k)
+  }
+  return -1
+}
+
+function parseCssRules(css: string): Array<CssRule> {
   const out: Array<CssRule> = []
+  walkCssRules(css, false, { text: "", key: "" }, out, [])
+  return out
+}
+
+/**
+ * The walk behind `parseCssRules`. `atBlocks` collects the at-rule blocks the
+ * walk does not descend into, for the one reader that asks whether a dark sheet
+ * repeats them.
+ */
+function walkCssRules(
+  css: string,
+  inMedia: boolean,
+  condition: { text: string; key: string },
+  out: Array<CssRule>,
+  atBlocks: Array<CssAtBlock>
+): void {
   let i = 0
   while (i < css.length) {
-    const open = css.indexOf("{", i)
+    const open = blockOpen(css, i)
     if (open === -1) break
     const selector = dropStatementAtRules(css.slice(i, open)).trim()
     let depth = 1
     let j = open + 1
-    // Braces inside string literals (`content: "{"`, data URIs) must not
-    // distort the depth count — otherwise one such declaration swallows every
-    // later rule (including @media collapse redeclarations) into this rule.
-    let inString: '"' | "'" | null = null
+    // Braces that only spell a character (`content: "{"`, a data URI, `\}`)
+    // must not distort the depth count — otherwise one such declaration
+    // swallows every later rule (including @media collapse redeclarations)
+    // into this rule.
     while (j < css.length && depth > 0) {
       const ch = css[j]
-      if (inString) {
-        if (ch === inString && css[j - 1] !== "\\") inString = null
-      } else if (ch === '"' || ch === "'") {
-        inString = ch
-      } else if (ch === "{") {
-        depth++
-      } else if (ch === "}") {
-        depth--
-      }
+      if (ch === "{") depth++
+      else if (ch === "}") depth--
+      else j = endOfSpelling(css, j)
       j++
     }
     const inner = css.slice(open + 1, j - 1)
-    if (/^@(media|supports|container)\b/.test(selector)) {
-      out.push(...parseCssRules(inner, true))
-    } else if (/^@(layer|scope|starting-style)\b/.test(selector)) {
+    const nested = {
+      text: `${condition.text}${selector.replace(/\s+/g, " ")} / `,
+      key: `${condition.key}${atRulePreludeKey(selector)} / `,
+    }
+    // An at-rule's name is the same rule in any case.
+    if (/^@(media|supports|container)\b/i.test(selector)) {
+      walkCssRules(inner, true, nested, out, atBlocks)
+    } else if (/^@(layer|scope|starting-style)\b/i.test(selector)) {
       // Rule-containing blocks that are not conditions: the browser applies
       // their rules unconditionally, so they keep the enclosing `inMedia`.
-      out.push(...parseCssRules(inner, inMedia))
+      walkCssRules(inner, inMedia, nested, out, atBlocks)
     } else if (!selector.startsWith("@")) {
-      out.push({ selector, declarations: inner, inMedia })
+      out.push({
+        selector,
+        declarations: inner,
+        inMedia,
+        condition: condition.text,
+        conditionKey: condition.key,
+      })
+    } else {
+      atBlocks.push({
+        prelude: selector,
+        body: inner,
+        condition: condition.text,
+        conditionKey: condition.key,
+      })
     }
     i = j
   }
-  return out
 }
 
 function styleContent(html: string): string {
   return [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)]
     .map((m) => m[1])
     .join("\n")
+}
+
+// ── what the dark sheet repeats ──────────────────────────────────────────────
+
+/**
+ * One rule body as `property → value`, split on the `;` that separate
+ * declarations — not the ones inside a `url(…)`, a quoted string or a nested
+ * block. A property written twice keeps its last value, as the cascade does.
+ * Property names are folded to lower case, custom properties excepted: `--Bg`
+ * and `--bg` are two properties.
+ */
+function parseDeclarations(body: string): Map<string, string> {
+  const out = new Map<string, string>()
+  let depth = 0
+  let quote: '"' | "'" | null = null
+  let start = 0
+  for (let i = 0; i <= body.length; i++) {
+    const ch = body[i]
+    if (i < body.length) {
+      if (quote !== null) {
+        if (ch === "\\") i++
+        else if (ch === quote) quote = null
+        continue
+      }
+      if (ch === '"' || ch === "'") {
+        quote = ch
+        continue
+      }
+      if (ch === "(" || ch === "{") depth++
+      else if ((ch === ")" || ch === "}") && depth > 0) depth--
+      if (ch !== ";" || depth > 0) continue
+    }
+    const piece = body.slice(start, i)
+    start = i + 1
+    const colon = piece.indexOf(":")
+    if (colon === -1) continue
+    const name = piece.slice(0, colon).trim()
+    if (name === "") continue
+    out.set(
+      name.startsWith("--") ? name : name.toLowerCase(),
+      piece
+        .slice(colon + 1)
+        .replace(/\s+/g, " ")
+        .trim()
+    )
+  }
+  return out
+}
+
+/** Selector text two sheets can be paired on, whatever spacing each one used. */
+function selectorKey(selector: string): string {
+  return selector
+    .replace(/\s+/g, " ")
+    .replace(/\s*([,>+~])\s*/g, "$1")
+    .trim()
+}
+
+/** Every style rule and unopened at-rule block of a document's sheets. */
+function readSheets(html: string): {
+  rules: Array<CssRule>
+  atBlocks: Array<CssAtBlock>
+} {
+  const rules: Array<CssRule> = []
+  const atBlocks: Array<CssAtBlock> = []
+  walkCssRules(
+    stripCssComments(styleContent(html)),
+    false,
+    { text: "", key: "" },
+    rules,
+    atBlocks
+  )
+  return { rules, atBlocks }
+}
+
+/** A rule as a finding names it: its selector under the at-rules it sits in. */
+function cssRuleName(rule: CssRule): string {
+  return `${rule.condition}${rule.selector.replace(/\s+/g, " ").trim()}`
+}
+
+/** An at-rule block as a finding names it, under the at-rules it sits in. */
+function cssAtBlockName(at: CssAtBlock): string {
+  return `${at.condition}${at.prelude.replace(/\s+/g, " ")}`
+}
+
+/**
+ * Does a rule body hold a block of its own — a rule or an at-rule nested in
+ * it? The walk does not open one: it reaches the readers as part of a
+ * declaration. A brace inside a string or a `url(…)` is not a block. A custom
+ * property whose value is a brace block reads the same and is taken for one.
+ */
+function holdsNestedBlock(body: string): boolean {
+  let depth = 0
+  for (const ch of withoutStrings(body)) {
+    if (ch === "(") depth++
+    else if (ch === ")" && depth > 0) depth--
+    else if (ch === "{" && depth === 0) return true
+  }
+  return false
+}
+
+/** Why `unreadDarkScopes` could not read a rule, as its finding says it. */
+const UNREAD_WHY = {
+  scope: "scope not leading",
+  atRule: "under an at-rule naming the theme",
+  nested: "nests a rule",
+} as const
+
+/**
+ * The dark rules `darkSheetReport` cannot read, in either half, each named as
+ * written and followed by why:
+ *
+ * - the selector names the dark theme anywhere but on the root element at its
+ *   front (`:is([data-theme="dark"]) .btn`, `body[data-theme="dark"] .x`,
+ *   `.wrap [data-theme="dark"] .y`)
+ * - the rule sits under an at-rule whose prelude names the theme
+ *   (`@scope ([data-theme="dark"]) { .btn { … } }`): a dark rule whose selector
+ *   does not say so
+ * - a rule is nested in it, and the rule is a dark one or the nested text
+ *   names the theme (`[data-theme="dark"] { --bg: …; .hero { … } }`,
+ *   `.btn { [data-theme="dark"] & { … } }`): the walk hands over flat rules,
+ *   and the nested one arrives as part of a declaration
+ *
+ * Such a rule pairs with no light rule, so a copy behind it would be no copy.
+ * It is refused instead of guessed at. Light nesting that says nothing of dark
+ * is not this check's to refuse.
+ *
+ * A scope on the root at the front is read, with whatever else is written in
+ * that compound. `html` and `:root` there name the root again and are folded
+ * into it (`[data-theme="dark"]:root .btn` is read as `.btn`). Any other
+ * compound is a condition on the root and is kept as written
+ * (`[data-theme="dark"].panel .btn` is read as `:root.panel .btn`), also one
+ * that names the root in other words (`:is(html)`, `:where(:root)`): that rule
+ * is a copy beside a light rule written with the same compound, and beside a
+ * bare `.btn` it is not refused and not a copy. It is counted in
+ * `DARK_OVERRIDE_RULES` as any dark rule is (`darkSheetReport`): where it
+ * writes a property that is not a custom one.
+ *
+ * This is a reading of the text in the document's `<style>` elements, not a
+ * browser, and these get past it:
+ *
+ * - a dark rule that does not name the theme in so many words
+ *   (`:root:not([data-theme="light"]) .x`, a CSS escape in the attribute or in
+ *   an at-rule's name). Read as a light rule; if it is in the dark sheet,
+ *   `DARK_OVERRIDE_RULES` counts it
+ * - CSS that is not in a `<style>` element: imported, linked, or put in by a
+ *   script
+ * - text that throws the comment stripper: a comment opener inside a string
+ *   or an unquoted `url(…)` (`content: "/*"`), which takes everything up to
+ *   the next comment closer out with it. Strings, escaped characters and
+ *   unquoted urls are otherwise read as a browser reads them, in a selector
+ *   and in a body alike (`endOfSpelling`), so a brace or a quote that only
+ *   spells a character does not move where a rule ends
+ * - a brace inside round or square brackets that nothing spells
+ *   (`[title={]`): no selector a browser accepts, and the rule is cut there
+ *   all the same
+ *
+ * It errs the other way in one place: a `<style>` element inside an HTML
+ * comment. The sheets are cut out of the document's text, so one that is
+ * commented out is read as live, and a dark rule in it is judged like any
+ * other — refused, if it is written one of the ways this function refuses.
+ */
+function unreadDarkScopes(lightRaw: string, darkRaw: string): Array<string> {
+  const why = (rule: CssRule, isDark: boolean): string | null => {
+    // A stray "}" lands in the next rule's prelude, and the browser drops a
+    // rule whose prelude is no selector, block and all. Nothing in it
+    // applies, so nothing in it is a dark rule left unread.
+    if (withoutStrings(rule.selector).includes("}")) return null
+    const scopedElsewhere = splitSelectorList(rule.selector).some((arm) =>
+      mentionsDarkScope(lightSpellingOf(arm))
+    )
+    if (scopedElsewhere) return UNREAD_WHY.scope
+    if (mentionsDarkScope(rule.condition)) return UNREAD_WHY.atRule
+    const dark =
+      isDark ||
+      mentionsDarkScope(rule.selector) ||
+      mentionsDarkScope(rule.declarations)
+    return dark && holdsNestedBlock(rule.declarations)
+      ? UNREAD_WHY.nested
+      : null
+  }
+  const out: Array<string> = []
+  const halves: Array<[string, boolean]> = [
+    [darkRaw, true],
+    [lightRaw, false],
+  ]
+  for (const [raw, isDark] of halves) {
+    const { rules, atBlocks } = readSheets(raw)
+    for (const rule of rules) {
+      const reason = why(rule, isDark)
+      if (reason !== null) out.push(`${cssRuleName(rule)} [${reason}]`)
+    }
+    for (const at of atBlocks) {
+      if (mentionsDarkScope(at.condition))
+        out.push(`${cssAtBlockName(at)} [${UNREAD_WHY.atRule}]`)
+    }
+  }
+  return out
+}
+
+export interface DarkSheetReport {
+  /**
+   * The dark rules that restate light, each named by its selector under the
+   * at-rules it sits in (`.btn:hover`, `@media (max-width: 720px) / .grid`).
+   * Order and membership are defined at `darkSheetReport`.
+   */
+  copies: Array<string>
+  /**
+   * How many dark rules and at-rule blocks say something light does not —
+   * defined in full at `darkSheetReport`, recorded per slug in
+   * `DARK_OVERRIDE_RULES`.
+   */
+  overrideRules: number
+}
+
+/**
+ * Read a dark sheet against the light sheets it ships beside (ADR 0015: the
+ * dark sheet says only what dark changes).
+ *
+ * `lightRaw` and `darkRaw` are the two halves `preview-halves.ts` deals out of
+ * a merged file — the dark one with its `[data-theme="dark"]` scope already
+ * taken off, so a dark rule and the light rule it shadows carry the same
+ * selector and can be paired on it. A pair is the same selector under the same
+ * at-rules; where a sheet writes one selector several times, the nth dark rule
+ * is read against the nth light one, which is how a copied sheet lines up.
+ *
+ * A dark declaration **restates** light when its pair gives the property the
+ * same value, or when the last light rule for that selector does (the value
+ * light ends up with, where a preview has since been walked and the two sheets
+ * no longer line up one to one). A dark rule is a **copy** when
+ *
+ * - every declaration in it restates light, or
+ * - any declaration that is not a custom property does.
+ *
+ * The second arm is what keeps a half-walked rule from passing: `color`
+ * retuned, `padding` and `border-radius` still carried along beside it. Custom
+ * properties are left out of that arm on purpose. A dark token block that
+ * redeclares a few tokens at their light value beside the ones it changes is
+ * the shape this rule asks authors to write towards, and the catalogue's
+ * token-only dark sheets do exactly that.
+ *
+ * Position is read before outcome. Where light writes one selector twice and
+ * the later rule overrides the earlier, a lone dark rule that puts the earlier
+ * value back is paired with that earlier rule and read as restating it, though
+ * dark ends up unlike light. Light written as one rule leaves nothing to
+ * mistake.
+ *
+ * Pairs are found by text, not by what a browser makes of it. The text is
+ * folded where two spellings are plainly one thing: the spacing of a selector
+ * (`selectorKey`), the spelling of the dark scope (`lightSpellingOf`), the
+ * name of an at-rule and the spacing of its query (`atRulePreludeKey`), the
+ * case of a property name, the run of spaces inside a value. Everything else
+ * is compared as written — a value spelled another way (`#FFF` for `#fff`,
+ * `.5` for `0.5`), a query's words in another case (`(MAX-WIDTH: 720px)`), a
+ * renamed class, the body of an at-rule block. So is the light side of a
+ * pair. A light rule written under a scope that names the light theme
+ * (`[data-theme="light"] .btn`, `:where(html[data-theme="light"]) .btn`) is
+ * not the light rule of `.btn`: the scope is not folded away, because a rule
+ * light alone applies leaves the dark rule beside it the only one giving dark
+ * that value, which is an override and no copy. And a selector list is one
+ * selector: it pairs with the same list in the same order, not with one
+ * selector out of it, the list reordered, or two rules gathered into one. A
+ * copy behind such a difference is not found as one. It lands in
+ * `overrideRules` instead, a count that has to be recorded and answered for.
+ *
+ * "Copy" is not "dead code". `[data-theme="dark"] .btn` outranks a light
+ * `.btn:hover` it would otherwise lose to, so a same-valued dark rule can be
+ * holding the dark rendering in place. That is why the finding's remedy is to
+ * move the colours into tokens and compare the rendering, never to delete.
+ *
+ * An at-rule block the splitter does not open (`@font-face`, `@keyframes`) is a
+ * copy when light carries the same block word for word.
+ *
+ * "The dark sheet" is where dark rules belong, not the only place they are
+ * read. The layout deals out the LAST sheet as dark; a rule in an earlier sheet
+ * that names the dark theme (`[data-theme="dark"] .btn`,
+ * `html[data-theme="dark"] .snackbar`) stays in the light half with its scope
+ * on, and it is a dark rule all the same. Such a rule is judged the way the
+ * dark sheet's are, as a group of its own — paired with light by its own
+ * position, so neither group moves how the other lines up — and a copy among
+ * them is named as it is written, scope and all, so it can be found. Otherwise
+ * which sheet a rule sits in would decide whether it is read at all.
+ *
+ * Such a rule also stays on the light side, under the selector it is written
+ * with. A sheet copied whole repeats it with the scope on twice
+ * (`html[data-theme="dark"][data-theme="dark"] .snackbar`), which comes off to
+ * exactly that selector: the repeat pairs with the rule it repeats and is a
+ * copy, and the override is counted once, where it is written. The rule
+ * itself is read against the light rules that are not dark, so it can never be
+ * paired with its own text.
+ *
+ * The scope has one spelling the merge writes and several a hand can
+ * (`html[data-theme="dark"] .btn`, `:root[data-theme="dark"] .btn`,
+ * `[data-theme='dark'] .btn`). A rule that pairs with nothing under its own
+ * text is paired under the selector light would have written for it
+ * (`lightSpellingOf`), in either group — or a sheet copied whole behind another
+ * spelling would be no copy at all. Its own text comes first because the
+ * doubled-scope repeat above must go on pairing with the rule it repeats.
+ * The root named again beside the scope (`[data-theme="dark"]:root .btn`,
+ * `html:root[data-theme="dark"] .btn`) is one more such spelling. Another
+ * compound there (`.panel`, `:not(.x)`, `:is(html)`) is not: it is part of the
+ * selector, and the rule pairs with a light rule that carries it or with none
+ * (`unreadDarkScopes`).
+ *
+ * A rule that does pair under its own text, where light would have written
+ * another, shares that text with a rule already there: an earlier sheet's
+ * dark rule, or a light rule written out from the root (`html .btn`). It may
+ * be that rule again or a copy of light's `.btn` behind the same spelling,
+ * and nothing in the text says which. So besides its pairing it is
+ * read against every light rule of its selector, and a declaration restates
+ * when the pairing or any of those gives its value: were the earlier rule to
+ * stand in for light, a rule restating light's `.btn` would stop being a copy
+ * the moment an earlier sheet overrode `.btn` under that spelling. The reading
+ * is added to the pairing, never put in its place, and takes no position among
+ * light's rules, so no other rule is paired anywhere else for it. Two things
+ * follow, both where light writes one selector more than once. Such a rule is
+ * a copy when any light rule of its selector gives the value, a middle one
+ * too, where a rule paired with light is held to its own position and the
+ * last. And it uses up no position among light's rules though it would were
+ * the earlier rule not there: with light's `.s` written three times, an
+ * earlier sheet's `:root[data-theme="dark"] .s`, and a dark sheet of
+ * `:root[data-theme="dark"] .s` then `.s`, `.s` copying the three in turn, the
+ * second is read at the first position and is not named a copy.
+ *
+ * A scope written anywhere else (`:is([data-theme="dark"]) .btn`,
+ * `body[data-theme="dark"] .btn`) cannot be taken off and is not judged here
+ * at all: `unreadDarkScopes` names the rule and the validator refuses it. A
+ * dark rule nested in another rule, or put under an at-rule that names the
+ * theme, is refused the same way — the walk hands this function neither.
+ *
+ * What `overrideRules` counts, in full — the one place it is defined:
+ *
+ * - a dark rule, from either group, with at least one declaration that is not
+ *   a custom property and does not restate light. A rule that pairs with no
+ *   light rule restates nothing, so every such declaration in it counts
+ * - a dark-sheet at-rule block the splitter does not open (`@keyframes`,
+ *   `@font-face`) that light does not carry word for word, as one each
+ *
+ * A rule can be both a copy and counted: `color` retuned beside a `padding`
+ * carried along. `copies` lists the dark sheet's rules, then an earlier
+ * sheet's, then the at-rule blocks.
+ */
+export function darkSheetReport(
+  lightRaw: string,
+  darkRaw: string
+): DarkSheetReport {
+  const light = readSheets(lightRaw)
+  const dark = readSheets(darkRaw)
+  const keyOf = (rule: CssRule) =>
+    `${rule.conditionKey}${selectorKey(rule.selector)}`
+  const nameOf = cssRuleName
+  const atBlockName = cssAtBlockName
+  const atBlockKey = (at: CssAtBlock) =>
+    `${at.conditionKey}${atRulePreludeKey(at.prelude)} { ${at.body.replace(/\s+/g, " ").trim()} }`
+
+  type Twins = Map<string, Array<Map<string, string>>>
+  // What the dark sheet's rules are read against: every rule of the light
+  // half, as written. What a dark rule from the light half is read against:
+  // the same without the rules that are dark themselves, or one whose scope
+  // does not come off would pair with itself and pass as a copy of nothing.
+  const lightByKey: Twins = new Map()
+  const plainLightByKey: Twins = new Map()
+  const addTwin = (twinsByKey: Twins, rule: CssRule) => {
+    const key = keyOf(rule)
+    const list = twinsByKey.get(key) ?? []
+    list.push(parseDeclarations(rule.declarations))
+    twinsByKey.set(key, list)
+  }
+  // A dark rule a light sheet carries: the rule with its scope taken off, to
+  // be paired on, and the name it is written under, to be found by.
+  const carried: Array<{ rule: CssRule; name: string }> = []
+  for (const rule of light.rules) {
+    const arms = splitSelectorList(rule.selector)
+    const scoped = arms.filter(mentionsDarkScope)
+    if (scoped.length > 0) {
+      carried.push({
+        rule: { ...rule, selector: scoped.map(unscopeSelector).join(", ") },
+        name: nameOf(rule),
+      })
+    }
+    addTwin(lightByKey, rule)
+    if (scoped.length < arms.length) addTwin(plainLightByKey, rule)
+  }
+  const lightAtBlocks = new Set(light.atBlocks.map(atBlockKey))
+
+  const copies: Array<string> = []
+  let overrideRules = 0
+  // One group of dark rules against the light rules it is read beside. The nth
+  // rule of a selector pairs with the nth light one, counted within the group:
+  // the dark sheet and an earlier sheet's dark rules each line up with light
+  // on their own, and neither uses up a position the other is paired at.
+  const judge = (
+    darkRules: Array<{ rule: CssRule; name: string }>,
+    twinsByKey: Twins
+  ) => {
+    const seen = new Map<string, number>()
+    for (const { rule, name } of darkRules) {
+      // Paired under its own text first; failing that, under the selector
+      // light would have written for it, so a scope spelled another way
+      // (`html[data-theme="dark"] .btn`) still finds the `.btn` it restates.
+      const ownKey = keyOf(rule)
+      const lightKey = keyOf({
+        ...rule,
+        selector: lightSpellingOf(rule.selector),
+      })
+      const key = twinsByKey.has(ownKey) ? ownKey : lightKey
+      const nth = seen.get(key) ?? 0
+      seen.set(key, nth + 1)
+      const twins = twinsByKey.get(key) ?? []
+      const pair = twins.at(nth)
+      const last = twins.at(-1)
+      // A rule paired under a text light would not have written shares that
+      // text with a rule already there. It may be that rule again or a copy
+      // of light behind the same spelling, and the text does not say which,
+      // so it is read against every light rule of its selector besides. That
+      // reading is added to the pairing and takes no position.
+      const lightToo = key === lightKey ? [] : (twinsByKey.get(lightKey) ?? [])
+      const declarations = [...parseDeclarations(rule.declarations)]
+      if (declarations.length === 0) continue
+      const restated = declarations.filter(
+        ([property, value]) =>
+          pair?.get(property) === value ||
+          last?.get(property) === value ||
+          lightToo.some((twin) => twin.get(property) === value)
+      )
+      const isToken = ([property]: [string, string]) =>
+        property.startsWith("--")
+      if (
+        restated.length === declarations.length ||
+        restated.some((d) => !isToken(d))
+      ) {
+        copies.push(name)
+      }
+      if (declarations.some((d) => !isToken(d) && !restated.includes(d))) {
+        overrideRules++
+      }
+    }
+  }
+  judge(
+    dark.rules.map((rule) => ({ rule, name: nameOf(rule) })),
+    lightByKey
+  )
+  judge(carried, plainLightByKey)
+  for (const at of dark.atBlocks) {
+    if (lightAtBlocks.has(atBlockKey(at))) copies.push(atBlockName(at))
+    else overrideRules++
+  }
+  return { copies, overrideRules }
 }
 
 // `minmax(min(170px, 100%), 1fr)` — the inner call's ")" is not the outer
@@ -1630,6 +2188,89 @@ function checkFile(
 
 // ── entry point ──────────────────────────────────────────────────────────────
 
+/** How many copied rules a finding names before it says "and N more". */
+const DARK_COPY_NAMED = 3
+
+/**
+ * The dark sheet says only what dark changes (ADR 0015); a rule in it that
+ * restates light is a finding. `darkSheetReport` decides what restating means.
+ *
+ * Only the merged layout is judged. A split pair's dark file is the whole page
+ * and has to carry every structural rule itself, so there every rule would pair
+ * as a copy. One download unit is how this file tells the two apart — the same
+ * signal the size gate reads. A preview cannot leave this check by shipping as
+ * a pair, because the catalogue ships none: `preview-dark-copy-corpus.test.ts`
+ * fails on a slug in `public/preview/` that holds two files. A pair still
+ * arrives here from staging (`--light` with `--dark`), and is not judged.
+ *
+ * Severity comes from the not-yet-walked list, in the three cases
+ * `darkCopyVerdict` names. One issue per document however many rules there are:
+ * the finding is the sheet, not each rule in it.
+ */
+function checkDarkSheetCopy(
+  input: PreviewValidationInput,
+  issues: Array<ValidationIssue>
+): void {
+  const served = input.served
+  if (served?.length !== 1) return
+  const [{ name }] = served
+  const backlog = input.darkCopyBacklog ?? DARK_COPY_BACKLOG
+  // Before the copies, and whatever the list says: a rule the pairing cannot
+  // read is not one it found clean.
+  const unread = unreadDarkScopes(input.lightRaw, input.darkRaw)
+  if (unread.length > 0) {
+    const rest = unread.length - DARK_COPY_NAMED
+    issues.push(
+      block(
+        "dark-scope-unread",
+        name,
+        `${unread.length} dark rule(s) are written where the copy check cannot read them — ` +
+          `${unread.slice(0, DARK_COPY_NAMED).join("; ")}${rest > 0 ? ` and ${rest} more` : ""}. ` +
+          'Write each dark rule flat, with the scope as a leading [data-theme="dark"] on its own selector (data-theme sits on the root element): ' +
+          '[data-theme="dark"] .btn, not :is([data-theme="dark"]) .btn or body[data-theme="dark"] .btn, not a rule nested inside another rule, and not a rule under an at-rule that names the theme. ' +
+          "A dark rule is read against the light rule with the same selector, and one written any other way pairs with nothing — a copied rule behind it would not be found. " +
+          "A rule meant for light only needs no scope: light is what is written bare, and the dark rule overrides it. " +
+          "data-theme is the page's theme switch and nothing else: a demo element that needs an attribute of its own (a theme picker's option) takes another name."
+      )
+    )
+  }
+  const { copies } = darkSheetReport(input.lightRaw, input.darkRaw)
+  const verdict = darkCopyVerdict(backlog.has(input.slug), copies.length)
+  if (verdict === "clean") return
+  if (verdict === "stale") {
+    issues.push(
+      block(
+        "dark-copy-backlog-stale",
+        name,
+        `${input.slug} is on the not-yet-walked list, but its [data-theme="dark"] sheet no longer restates any light rule. Take the slug out of DARK_COPY_BACKLOG in src/lib/dark-sheet-backlog.ts and out of its pin (PINNED_BACKLOG in src/lib/preview-dark-copy-corpus.test.ts), so a copy that comes back is blocked rather than waved through as backlog.`
+      )
+    )
+    return
+  }
+  // Joined with a semicolon: a selector list carries commas of its own.
+  const named = copies.slice(0, DARK_COPY_NAMED).join("; ")
+  const rest = copies.length - DARK_COPY_NAMED
+  const what =
+    `the [data-theme="dark"] sheet restates ${copies.length} light ` +
+    `rule(s) — ${named}${rest > 0 ? ` and ${rest} more` : ""}. `
+  const remedy =
+    "The dark sheet says only what dark changes: move each colour that " +
+    'differs into a custom property redefined under [data-theme="dark"], ' +
+    "keep a colour-property rule only where a token cannot carry the " +
+    "change, and let the rest go. Do not delete on sight — the dark scope " +
+    "outranks light rules a same-valued copy would otherwise lose to, so " +
+    "compare the rendering before and after with `pnpm preview:dom-diff`."
+  issues.push(
+    verdict === "block"
+      ? block("dark-sheet-copy", name, what + remedy)
+      : warn(
+          "dark-sheet-copy",
+          name,
+          `${what}${remedy} A warning only while ${input.slug} is on the not-yet-walked list (DARK_COPY_BACKLOG).`
+        )
+  )
+}
+
 export function validatePreviewPair(
   input: PreviewValidationInput
 ): PreviewValidationResult {
@@ -1810,6 +2451,8 @@ export function validatePreviewPair(
       )
     )
   }
+
+  checkDarkSheetCopy(input, issues)
 
   return {
     issues,
