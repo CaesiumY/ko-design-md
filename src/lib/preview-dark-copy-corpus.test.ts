@@ -81,7 +81,6 @@ const PINNED_BACKLOG = [
   "codeit",
   "gmarket",
   "greeting",
-  "krds",
   "kyobobook",
   "line-design-system",
   "samsung-one-ui",
