@@ -86,7 +86,6 @@ const PINNED_BACKLOG = [
   "line-design-system",
   "samsung-one-ui",
   "seed-design",
-  "socar",
   "teamsparta",
   "toss",
   "vapor-ui",
