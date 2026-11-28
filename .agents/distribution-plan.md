@@ -17,7 +17,7 @@
 |---|------|------|------|
 | 1 | 공개 접근 가능 | ✅ | getdesign.kr, 로그인 없음 |
 | 2 | 가격 페이지 | ➖ 해당 없음 | 무료 OSS. 등재 폼이 요구하면 "Free / MIT+CC BY" 로 답한다 |
-| 3 | 개인정보처리방침·약관 | ⚠️ **없음** | 사이트에 라우트 없음. `@vercel/analytics`가 도는 중이라 등재 폼에서 요구받을 수 있다 |
+| 3 | 개인정보처리방침·약관 | 🔶 부분 | 개인정보처리방침은 `/privacy` 에 있다(호스팅, 방문 통계, 외부 요청 고지). 약관 페이지는 없다. 방문 통계(Cloudflare Web Analytics, 도메인 이전 뒤 자동 설정을 켠 날부터 수집하며 그 전 기간은 비어 있음)를 쓰므로 등재 폼에서 요구받을 수 있다 |
 | 4 | 로고 자산 | 🔶 부분 | `favicon.svg`·`favicon.ico`·`apple-touch-icon.png`(180×180) 있음. **1024×1024 정사각 PNG 없음** — 다수 디렉터리 필수 |
 | 5 | 스크린샷 5~8장 + 데모 영상 | 🔶 부분 | `docs/catalog-home.png` 1장뿐. 60~90초 데모 영상 없음 |
 | 6 | GEO 준비(단일 H1·구조화 데이터) | 🔶 부분 | 단일 H1 ✅ · 계층 ✅ · Organization/ItemList/Breadcrumb ✅(이번 작업) · **FAQPage 없음** |
@@ -93,13 +93,12 @@
 스킬의 KPI 표는 DR·referring domains·signups를 본다. 이 프로젝트의 등가물은
 PRD가 정한 주간 순방문 500+ / Copy 1,000+월 / star 100+ / 자발 언급 2~3건이다.
 
-**계측 배선은 2026-08-25에 끝났다** — `design_md_copy`·`design_md_download`(둘의
-합이 primary metric)와 `asset_copy`(토큰·스와치·스킬 설치)로 이름을 갈라 발행한다.
-다만 **이벤트 값은 현재 플랜에서 조회할 수 없다** — Vercel Web Analytics 는 커스텀
-이벤트 조회를 Pro·Enterprise 에만 연다(2026-09-13 확인, #336). 등재 효과는 당분간
-페이지뷰·방문자로만 볼 수 있으니, 등재를 시작하기 전에 그것으로 최소 몇 주의
-baseline 을 확보할 것 — baseline 없이 등재하면 유입이 늘어도 그게 등재 덕인지 알 수
-없다.
+**복사와 다운로드 이벤트는 지금 계측하지 않는다.** 2026-08-25 부터 Vercel Analytics 로
+`design_md_copy`, `design_md_download`(둘의 합이 primary metric), `asset_copy` 를 보냈지만
+현재 플랜에서 조회할 수 없었고(2026-09-13 확인, #336), 호스팅을 Cloudflare 로 옮기며(2026-11)
+코드에서 걷어 냈다. Cloudflare Web Analytics 는 커스텀 이벤트를 지원하지 않는다. 등재 효과는
+페이지뷰와 방문자로만 볼 수 있으니, 등재를 시작하기 전에 그것으로 최소 몇 주의 baseline 을
+확보할 것. baseline 없이 등재하면 유입이 늘어도 그게 등재 덕인지 알 수 없다.
 
 - 남은 것: referrer 기록으로 채널별 기여 분리
 - star·자발 언급은 여전히 수동 확인

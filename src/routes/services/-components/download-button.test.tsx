@@ -1,10 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { track } from "@vercel/analytics"
 import { DownloadButton } from "./download-button"
-
-vi.mock("@vercel/analytics", () => ({ track: vi.fn() }))
 
 // jsdom implements neither object URLs nor navigation on anchor click, so both
 // are stubbed and the assertions read what the button handed them.
@@ -30,7 +27,6 @@ beforeEach(() => {
 afterEach(() => {
   cleanup()
   vi.restoreAllMocks()
-  vi.mocked(track).mockReset()
 })
 
 describe("DownloadButton", () => {
@@ -64,22 +60,5 @@ describe("DownloadButton", () => {
     } finally {
       vi.useRealTimers()
     }
-  })
-
-  it("measures the download under its own event name", () => {
-    render(<DownloadButton slug="toss" raw="# Toss" />)
-    fireEvent.click(screen.getByRole("button"))
-
-    expect(track).toHaveBeenCalledWith("design_md_download", { slug: "toss" })
-  })
-
-  it("still downloads when measurement throws", () => {
-    vi.mocked(track).mockImplementation(() => {
-      throw new Error("analytics down")
-    })
-    render(<DownloadButton slug="toss" raw="# Toss" />)
-
-    expect(() => fireEvent.click(screen.getByRole("button"))).not.toThrow()
-    expect(clicked).toHaveLength(1)
   })
 })

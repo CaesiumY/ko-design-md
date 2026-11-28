@@ -29,6 +29,8 @@ GitHub 은 이슈와 PR 이 번호 공간을 공유하므로 `#42` 만으로는 
 
 ## 포크에서 온 PR 의 CI 와 미리보기 배포
 
+> **호스트 이전과 묶인 항목.** 이 절의 Vercel 서술(포크 배포 승인, 실패로 남는 Vercel 체크)은 사이트가 Vercel 에 있는 동안의 절차다. 호스트를 Cloudflare Workers 로 옮기고 Vercel 의 GitHub 연결을 끊는 날, 이 두 서술을 지우고 Cloudflare 쪽 미리보기 배포가 포크 PR 에서 어떻게 도는지 확인해 새로 적는다.
+
 외부 기여자의 포크 PR 은 Vercel 포크 배포 승인에 걸리고, 처음 기여하는 사람이면 GitHub Actions 실행 승인에도 걸린다. 둘은 성격이 달라 다르게 다룬다. 이미 머지된 PR 이 있는 기여자의 실행은 승인 없이 바로 돌므로, 그 PR 의 diff 는 머지 전 리뷰에서 읽는다.
 
 - **GitHub Actions 는 실행 승인으로 돌린다.** 처음 기여하는 사람의 포크 PR 은 워크플로 실행이 메인테이너가 승인하기 전까지 `action_required` 로 멈춘다(저장소 설정 `approval_policy: first_time_contributors`, `gh api repos/CaesiumY/ko-design-md/actions/permissions/fork-pr-contributor-approval` 로 확인). 승인에는 비용이 들지 않고 기여자를 팀원으로 받을 필요도 없다. 다만 승인은 포크 코드를 러너에서 돌리는 일이라(`pull_request` 이벤트라 비밀 값은 주어지지 않는다) 읽기, 허락, 승인을 모두 한 커밋에 묶어 아래 순서로 한다.
